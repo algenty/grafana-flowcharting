@@ -1,0 +1,3 @@
+25/01 : Rechercher XML version dans mxGraph
+file:///D:/Dev/workspace/mxgraph-master/javascript/examples/jsondata.html to view xml code
+https://jgraph.github.io/mxgraph/javascript/examples/monitor.html to update graph

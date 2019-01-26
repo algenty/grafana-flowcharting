@@ -1,0 +1,22 @@
+<h5 class="section-heading">Flowchart Definition</h5>
+
+
+<label><input type="radio" ng-model="ctrl.panel.mode" value="url" ng-change="ctrl.refresh()">URL</label>
+<span> (This service should respond with a xml/plain response containing msgraph syntax <a target="_blank"
+	href="https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html">MxGraph Editor</a>.)
+</span>
+<input type="text"
+	style="width: 95%"
+	ng-model="ctrl.panel.mxgraphServiceUrl"
+	ng-change="ctrl.refresh()"
+	ng-model-onblur/>
+<label>
+<input type="radio"
+	ng-model="ctrl.panel.mode"
+	ng-change="ctrl.refresh()"
+	value="content">Content</label>
+<span> (This area uses <a target="_blank"
+	href="https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html">mxgraph editor</a>.)
+</span>
+<textarea class="gf-form-input" ng-model="ctrl.panel.content" rows="20"
+	style="width: 95%" ng-change="ctrl.refresh()" ng-model-onblur></textarea>

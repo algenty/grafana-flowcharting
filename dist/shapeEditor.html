@@ -1,0 +1,47 @@
+
+<div class="gf-form-group">
+	<div class="edit-tab-content">
+		<div class="gf-form-group">
+			<h5>Shapes <tip>Combines multiple metrics into a new name</tip></h5>
+			<div class="gf-form" ng-repeat="shape in ctrl.panel.shapes">
+
+				<div class="gf-form">
+					<label class="gf-form-label">
+						<i class="fa fa-trash pointer" ng-click="ctrl.removeShape(shape)"></i>
+					</label>
+				</div>
+				<div class="gf-form">
+					<label class="gf-form-label">Shape Name</label>
+				</div>
+				<div class="gf-form width-15">
+					<input type="text" ng-model="shape.name" ng-blur="ctrl.render()" class="gf-form-input width-15">
+				</div>
+
+				<!-- Metrics that comprise the shape-->
+				<div class="gf-form">
+					<label class="gf-form-label">Metrics<tip>Select Metrics members for shape</tip></label>
+				</div>
+				<div class="gf-form-inline" ng-repeat="metric in shape.metrics">
+					<div class="gf-form">
+						<label class="gf-form-label">
+							<i class="fa fa-trash pointer" ng-click="ctrl.removeMetricFromShape(shape, metric)"></i>
+						</label>
+					</div>
+					<div class="gf-form">
+						<select ng-options="f for f in ctrl.getSeriesNamesForShapes()" ng-model="metric.seriesName" ng-change="ctrl.refresh()"></select>
+					</div>
+				</div>
+				<div class="gf-form">
+					<label class="gf-form-label">
+						<i class="fa fa-plus pointer" ng-click="ctrl.addMetricToShape(shape)"></i>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<button class="btn btn-inverse" ng-click="ctrl.addShape()">
+			<i class="fa fa-plus"></i>&nbsp;Add Shape
+		</button>
+	</div>
+</div>
