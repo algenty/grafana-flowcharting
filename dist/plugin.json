@@ -1,6 +1,6 @@
 {
   "type": "panel",
-  "name": "Diagram",
+  "name": "FlowCharting",
   "id": "agenty-flowcharting-panel",
 
   "info": {
