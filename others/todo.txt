@@ -1,3 +1,8 @@
 25/01 : Rechercher XML version dans mxGraph
 file:///D:/Dev/workspace/mxgraph-master/javascript/examples/jsondata.html to view xml code
 https://jgraph.github.io/mxgraph/javascript/examples/monitor.html to update graph
+
+Test mxgraph en libs angular
+https://stackoverflow.com/questions/49922708/how-to-integrate-mxgraph-with-angular-4
+Supp. libs_dist si fonctionne
+//import {Globals} from './globals';

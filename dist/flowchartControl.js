@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn', './properties', 'lodash', './series_overrides_flowchart_ctrl'], function (_export, _context) {
+System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn', './mxgraph/javascript/dist/build.js', './properties', 'lodash', './series_overrides_flowchart_ctrl'], function (_export, _context) {
   "use strict";
 
-  var MetricsPanelCtrl, TimeSeries, kbn, flowchartEditor, displayEditor, shapeEditor, valueEditor, _, _createClass, panelDefaults, FlowchartCtrl;
+  var MetricsPanelCtrl, TimeSeries, kbn, mxClient, flowchartEditor, displayEditor, shapeEditor, valueEditor, _, _createClass, panelDefaults, FlowchartCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -42,6 +42,8 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
       TimeSeries = _appCoreTime_series.default;
     }, function (_appCoreUtilsKbn) {
       kbn = _appCoreUtilsKbn.default;
+    }, function (_mxgraphJavascriptDistBuildJs) {
+      mxClient = _mxgraphJavascriptDistBuildJs;
     }, function (_properties) {
       flowchartEditor = _properties.flowchartEditor;
       displayEditor = _properties.displayEditor;
@@ -136,30 +138,26 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         _createClass(FlowchartCtrl, [{
           key: 'initializeMxgraph',
           value: function initializeMxgraph() {
-            // initialize mxClient
-            // Checks if browser is supported
-            // if (!mxClient.isBrowserSupported())
-            // {
-            //   // Displays an error message if the browser is
-            //   // not supported.
-            //   mxUtils.error('Browser is not supported!', 200, false);
-            // }
-            // else
-            // {
-            //   // Creates the graph inside the given container
-            //   if ( this.graph != null) {
-            //     graph = new mxGraph(this.getFlowchartContainer());
-            //   }
-            //   graph.getModel().beginUpdate();
-            //   try{
-            //     var dec = new mxCodec(root.ownerDocument);
-            //     dec.decode(root, graph.getModel());
-            //   }
-            //   finally{
-            //     // Updates the display
-            //     graph.getModel().endUpdate();
-            //   }
-            // }
+            //initialize mxClient
+            //Checks if browser is supported
+            if (!mxClient.isBrowserSupported()) {
+              // Displays an error message if the browser is
+              // not supported.
+              mxUtils.error('Browser is not supported!', 200, false);
+            } else {
+              //Creates the graph inside the given container
+              if (this.graph != null) {
+                graph = new mxGraph(this.getFlowchartContainer());
+              }
+              graph.getModel().beginUpdate();
+              try {
+                var dec = new mxCodec(root.ownerDocument);
+                dec.decode(root, graph.getModel());
+              } finally {
+                // Updates the display
+                graph.getModel().endUpdate();
+              }
+            }
           }
         }, {
           key: 'getFlowchartContainer',
@@ -177,7 +175,7 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
         }, {
           key: 'onRender',
           value: function onRender() {
-            // initializeMxgraph();
+            this.initializeMxgraph();
           }
         }, {
           key: 'onDataReceived',

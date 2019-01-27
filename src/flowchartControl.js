@@ -1,10 +1,7 @@
 import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
-
-// mxGraph libs
-// var mxBasePath = './libs/mxgraph/src';
-// import mxClient from './libs/mxgraph/src/js/mxClient';
+import * as mxClient from './mxgraph/javascript/dist/build.js';
 
 import {
   flowchartEditor,
@@ -105,30 +102,30 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   initializeMxgraph() {
-    // initialize mxClient
-    // Checks if browser is supported
-    // if (!mxClient.isBrowserSupported())
-    // {
-    //   // Displays an error message if the browser is
-    //   // not supported.
-    //   mxUtils.error('Browser is not supported!', 200, false);
-    // }
-    // else
-    // {
-    //   // Creates the graph inside the given container
-    //   if ( this.graph != null) {
-    //     graph = new mxGraph(this.getFlowchartContainer());
-    //   }
-    //   graph.getModel().beginUpdate();
-    //   try{
-    //     var dec = new mxCodec(root.ownerDocument);
-    //     dec.decode(root, graph.getModel());
-    //   }
-    //   finally{
-    //     // Updates the display
-    //     graph.getModel().endUpdate();
-    //   }
-    // }
+    //initialize mxClient
+    //Checks if browser is supported
+    if (!mxClient.isBrowserSupported())
+    {
+      // Displays an error message if the browser is
+      // not supported.
+      mxUtils.error('Browser is not supported!', 200, false);
+    }
+    else
+    {
+      //Creates the graph inside the given container
+      if ( this.graph != null) {
+        graph = new mxGraph(this.getFlowchartContainer());
+      }
+      graph.getModel().beginUpdate();
+      try{
+        var dec = new mxCodec(root.ownerDocument);
+        dec.decode(root, graph.getModel());
+      }
+      finally{
+        // Updates the display
+        graph.getModel().endUpdate();
+      }
+    }
   }
 
   getFlowchartContainer() {
@@ -144,7 +141,7 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    // initializeMxgraph();
+    this.initializeMxgraph();
   }
 
   onDataReceived() {

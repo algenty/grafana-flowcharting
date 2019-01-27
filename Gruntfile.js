@@ -16,21 +16,21 @@ module.exports = (grunt) => {
       src_to_dist: {
         cwd: 'src',
         expand: true,
-        src: ['**/*', '!**/*.js', '!**/*.scss', '!img/**/*'],
+        src: ['**/*', '!**/*.js', '!**/*.scss', '!img/**/*', '.*'],
         dest: 'dist'
       },
-      js_to_dist: {
+      globals_to_dist: {
         cwd: 'src',
         expand: true,
-        src: ['**/*.js'],
+        src: ['**/globals.js'],
         dest: 'dist'
       },
       libs_to_dist: {
-        cwd: 'src/libs',
+		    cwd: 'node_modules',
         expand: true,
-        src: ['mxgraph/**/*'],
-        dest: 'dist/libs'
-      },
+		    src: ['mxgraph/**/*','mxgraph/**/*.js'],
+		    dest: 'dist'
+		},
       readme: {
         expand: true,
         src: ['README.md'],
@@ -73,7 +73,6 @@ module.exports = (grunt) => {
         options: {spawn: false}
       },
     },
-
     babel: {
       options: {
         sourceMap: true,
@@ -84,7 +83,7 @@ module.exports = (grunt) => {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js'],
+          src: ['*.js', '!**/globals.js' ],
           dest: 'dist',
           ext: '.js'
         }]
@@ -93,5 +92,5 @@ module.exports = (grunt) => {
 
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:libs_to_dist', 'copy:sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'copy:grafana']);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:sass', 'copy:readme', 'copy:globals_to_dist', 'copy:img_to_dist', 'copy:libs_to_dist', 'babel', 'copy:grafana']);
 };

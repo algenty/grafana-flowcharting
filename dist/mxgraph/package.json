@@ -1,0 +1,56 @@
+{
+  "_from": "mxgraph",
+  "_id": "mxgraph@3.9.12",
+  "_inBundle": false,
+  "_integrity": "sha512-fm15Ro1bc/d3T/qvrkOIPjdAgyaKuaE6+olMpu9QZOm3aHWimu+W+dGAusW8VGVmaF4VYII11a5sVNdLekRoEw==",
+  "_location": "/mxgraph",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "mxgraph",
+    "name": "mxgraph",
+    "escapedName": "mxgraph",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/mxgraph/-/mxgraph-3.9.12.tgz",
+  "_shasum": "5a5f75a79ab7e934ab935ce6ccfa0cff5c0da948",
+  "_spec": "mxgraph",
+  "_where": "D:\\Dev\\workspace\\grafana\\grafana-flowcharting",
+  "author": {
+    "name": "JGraph Ltd",
+    "email": "support@jgraph.com"
+  },
+  "bugs": {
+    "url": "https://github.com/jgraph/mxgraph/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "mxGraph is a fully client side JavaScript diagramming library that uses SVG and HTML for rendering.",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-webpack": "^2.0.1",
+    "load-grunt-tasks": "^3.5.2",
+    "webpack": "^2.2.1"
+  },
+  "homepage": "https://github.com/jgraph/mxgraph",
+  "license": "Apache-2.0",
+  "main": "./javascript/dist/build.js",
+  "name": "mxgraph",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgraph/mxgraph.git"
+  },
+  "scripts": {
+    "prepare": "grunt build --base ./ --gruntfile etc/build/Gruntfile.js"
+  },
+  "version": "3.9.12"
+}

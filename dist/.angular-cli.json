@@ -1,0 +1,3 @@
+"scripts": [
+  "./mxgraph/javascript/dist/build.js"
+]

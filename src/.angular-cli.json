@@ -1,0 +1,3 @@
+"scripts": [
+  "../node_modules/javascript/dist/build.js"
+]
