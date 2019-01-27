@@ -3,7 +3,7 @@
 System.register([], function (_export, _context) {
 	"use strict";
 
-	var pluginName, flowchartEditor, displayEditor, shapeEditor, valueEditor;
+	var pluginName, flowchartEditor, displayEditor, shapeEditor;
 	return {
 		setters: [],
 		execute: function () {
@@ -15,8 +15,6 @@ System.register([], function (_export, _context) {
 
 			_export('shapeEditor', shapeEditor = 'public/plugins/' + pluginName + '/shapeEditor.html');
 
-			_export('valueEditor', valueEditor = 'public/plugins/' + pluginName + '/valueEditor.html');
-
 			_export('pluginName', pluginName);
 
 			_export('flowchartEditor', flowchartEditor);
@@ -24,8 +22,6 @@ System.register([], function (_export, _context) {
 			_export('displayEditor', displayEditor);
 
 			_export('shapeEditor', shapeEditor);
-
-			_export('valueEditor', valueEditor);
 		}
 	};
 });

@@ -7,7 +7,10 @@ module.exports = (grunt) => {
 
   grunt.initConfig({
 
-    clean: ['dist'],
+    clean: {
+      options: { force: true },
+      stuff : ['dist','D:/Dev/grafana-5.4.3/data/plugins/grafana-flowcharting']
+    },
 
     copy: {
       src_to_dist: {
@@ -16,12 +19,46 @@ module.exports = (grunt) => {
         src: ['**/*', '!**/*.js', '!**/*.scss', '!img/**/*'],
         dest: 'dist'
       },
+      js_to_dist: {
+        cwd: 'src',
+        expand: true,
+        src: ['**/*.js'],
+        dest: 'dist'
+      },
+      libs_to_dist: {
+        cwd: 'src/libs',
+        expand: true,
+        src: ['mxgraph/**/*'],
+        dest: 'dist/libs'
+      },
       readme: {
         expand: true,
         src: ['README.md'],
         dest: 'dist',
       },
-      img_to_dist: {
+      grafana: {
+        cwd: './',
+        expand: true,
+        src: ['**/*', '!**/bower_components/**', '!**/node_modules/**', '!gitignore'],
+        dest: 'D:/Dev/grafana-5.4.3/data/plugins/grafana-flowcharting'
+      },
+      sass: {
+        dist: {
+          options: {
+            style: "expanded",
+          },
+          files: [
+          {
+            expand: true,
+            cwd: "src/css/",
+            src: ["*.scss"],
+            dest: "dist/css/",
+            ext: ".css",
+          },
+        ],
+      },
+    },
+    img_to_dist: {
         cwd: 'src',
         expand: true,
         src: ['img/**/*'],
@@ -56,5 +93,5 @@ module.exports = (grunt) => {
 
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:readme', 'copy:img_to_dist', 'babel']);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:libs_to_dist', 'copy:sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'copy:grafana']);
 };
