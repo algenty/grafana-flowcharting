@@ -1,15 +1,16 @@
+import * as mx from './libs/mxgraph-js/dist/mxgraph-js';
 import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
-import * as mxClient from './mxgraph/javascript/dist/build.js';
-
+// old version, used node_modules/mxgraph
+//import * as mxClient from './libs/mxgraph/javascript/dist/js/mxClient';
 import {
   flowchartEditor,
   displayEditor,
   shapeEditor,
   valueEditor
+  //mxBasePath
 } from './properties';
-
 import _ from 'lodash';
 import './series_overrides_flowchart_ctrl';
 
@@ -104,21 +105,23 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
   initializeMxgraph() {
     //initialize mxClient
     //Checks if browser is supported
-    if (!mxClient.isBrowserSupported())
+    //this.initLibs();
+
+    if (!mx.mxClient.isBrowserSupported())
     {
-      // Displays an error message if the browser is
-      // not supported.
-      mxUtils.error('Browser is not supported!', 200, false);
+      // Displays an error message if the browser is not supported.
+      mx.mxUtils.error('Browser is not supported!', 200, false);
     }
     else
     {
       //Creates the graph inside the given container
-      if ( this.graph != null) {
-        graph = new mxGraph(this.getFlowchartContainer());
+      if ( this.graph == null) {
+        // Creates the graph inside the given container
+        graph = new mx.mxGraph(container);
       }
       graph.getModel().beginUpdate();
       try{
-        var dec = new mxCodec(root.ownerDocument);
+        var dec = new mx.mxCodec(root.ownerDocument);
         dec.decode(root, graph.getModel());
       }
       finally{
@@ -126,6 +129,16 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
         graph.getModel().endUpdate();
       }
     }
+  }
+
+  initLibs(){
+    var node = document.createElement("script");
+    node.type = 'text/javascript';
+    node.async = true;
+    node.charset = 'utf-8';
+    var code = 'mxBasePath="'+ mxBasePath +'";';
+    node.text = code;
+    document.head.appendChild(node);
   }
 
   getFlowchartContainer() {

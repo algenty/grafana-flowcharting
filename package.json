@@ -40,7 +40,9 @@
     "grunt-execute": "~0.2.2",
     "grunt-sass": "^3.0.2",
     "grunt-systemjs-builder": "^1.0.0",
+    "gulp": "^4.0.0",
     "load-grunt-tasks": "~4.0.0",
+    "mxgraph-js": "^1.0.1",
     "sass": "^1.0.0-beta.3"
   },
   "dependencies": {

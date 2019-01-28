@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn', './mxgraph/javascript/dist/build.js', './properties', 'lodash', './series_overrides_flowchart_ctrl'], function (_export, _context) {
+System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn', './properties', 'lodash', './series_overrides_flowchart_ctrl'], function (_export, _context) {
   "use strict";
 
-  var MetricsPanelCtrl, TimeSeries, kbn, mxClient, flowchartEditor, displayEditor, shapeEditor, valueEditor, _, _createClass, panelDefaults, FlowchartCtrl;
+  var mx, MetricsPanelCtrl, TimeSeries, kbn, flowchartEditor, displayEditor, shapeEditor, valueEditor, _, _createClass, panelDefaults, FlowchartCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -36,14 +36,14 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
   }
 
   return {
-    setters: [function (_appPluginsSdk) {
+    setters: [function (_libsMxgraphJsDistMxgraphJs) {
+      mx = _libsMxgraphJsDistMxgraphJs;
+    }, function (_appPluginsSdk) {
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
     }, function (_appCoreTime_series) {
       TimeSeries = _appCoreTime_series.default;
     }, function (_appCoreUtilsKbn) {
       kbn = _appCoreUtilsKbn.default;
-    }, function (_mxgraphJavascriptDistBuildJs) {
-      mxClient = _mxgraphJavascriptDistBuildJs;
     }, function (_properties) {
       flowchartEditor = _properties.flowchartEditor;
       displayEditor = _properties.displayEditor;
@@ -140,24 +140,37 @@ System.register(['app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn
           value: function initializeMxgraph() {
             //initialize mxClient
             //Checks if browser is supported
-            if (!mxClient.isBrowserSupported()) {
-              // Displays an error message if the browser is
-              // not supported.
-              mxUtils.error('Browser is not supported!', 200, false);
+            //this.initLibs();
+
+            if (!mx.mxClient.isBrowserSupported()) {
+              // Displays an error message if the browser is not supported.
+              mx.mxUtils.error('Browser is not supported!', 200, false);
             } else {
               //Creates the graph inside the given container
-              if (this.graph != null) {
-                graph = new mxGraph(this.getFlowchartContainer());
+              if (this.graph == null) {
+                // Creates the graph inside the given container
+                graph = new mx.mxGraph(container);
               }
               graph.getModel().beginUpdate();
               try {
-                var dec = new mxCodec(root.ownerDocument);
+                var dec = new mx.mxCodec(root.ownerDocument);
                 dec.decode(root, graph.getModel());
               } finally {
                 // Updates the display
                 graph.getModel().endUpdate();
               }
             }
+          }
+        }, {
+          key: 'initLibs',
+          value: function initLibs() {
+            var node = document.createElement("script");
+            node.type = 'text/javascript';
+            node.async = true;
+            node.charset = 'utf-8';
+            var code = 'mxBasePath="' + mxBasePath + '";';
+            node.text = code;
+            document.head.appendChild(node);
           }
         }, {
           key: 'getFlowchartContainer',

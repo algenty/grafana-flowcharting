@@ -5,11 +5,12 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-sass');
 
+  var grafana_plugin_path = 'D:/Dev/grafana-5.4.3/data/plugins/agenty-grafana-flowcharting';
   grunt.initConfig({
 
     clean: {
       options: { force: true },
-      stuff : ['dist','D:/Dev/grafana-5.4.3/data/plugins/grafana-flowcharting']
+      stuff : ['dist', grafana_plugin_path]
     },
 
     copy: {
@@ -25,12 +26,19 @@ module.exports = (grunt) => {
         src: ['**/globals.js'],
         dest: 'dist'
       },
+    // version node_modules/mxgraph
+    //   libs_to_dist: {
+		//     cwd: 'node_modules',
+    //     expand: true,
+		//     src: ['mxgraph/javascript/src/**/*','mxgraph/javascript/dist/**/*'],
+		//     dest: 'dist/libs'
+		// },
       libs_to_dist: {
-		    cwd: 'node_modules',
+        cwd: 'node_modules',
         expand: true,
-		    src: ['mxgraph/**/*','mxgraph/**/*.js'],
-		    dest: 'dist'
-		},
+        src: ['mxgraph-js/dist/mxgraph-js.js'],
+        dest: 'dist/libs'
+      },
       readme: {
         expand: true,
         src: ['README.md'],
@@ -39,8 +47,8 @@ module.exports = (grunt) => {
       grafana: {
         cwd: './',
         expand: true,
-        src: ['**/*', '!**/bower_components/**', '!**/node_modules/**', '!gitignore'],
-        dest: 'D:/Dev/grafana-5.4.3/data/plugins/grafana-flowcharting'
+        src: ['**/*', '!**/bower_components/**', '!**/node_modules/**', '!gitignore', '!others', '!.git', "dist/.angular-cli.json"],
+        dest: grafana_plugin_path
       },
       sass: {
         dist: {
