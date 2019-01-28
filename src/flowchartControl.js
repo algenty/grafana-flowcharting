@@ -115,16 +115,43 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
     else
     {
       //Creates the graph inside the given container
-      if ( this.graph == null) {
-        // Creates the graph inside the given container
-        graph = new mx.mxGraph(container);
-      }
+      // if ( this.graph == null) {
+      //   // Creates the graph inside the given container
+      //   graph = new mx.mxGraph(this.getFlowchartContainer());
+      // }
+      // graph.getModel().beginUpdate();
+      // try{
+      //   var dec = new mx.mxCodec(root.ownerDocument);
+      //   dec.decode(root, graph.getModel());
+      // }
+      // finally{
+      //   // Updates the display
+      //   graph.getModel().endUpdate();
+      // }
+      // Disables the built-in context menu
+      var container = $(document.getElementById(this.containerDivId));
+      mx.mxEvent.disableContextMenu(container);
+
+      // Creates the graph inside the given container
+      var graph = new mx.mxGraph(container);
+
+      // Enables rubberband selection
+      new mx.mxRubberband(graph);
+
+      // Gets the default parent for inserting new cells. This
+      // is normally the first child of the root (ie. layer 0).
+      var parent = graph.getDefaultParent();
+
+      // Adds cells to the model in a single step
       graph.getModel().beginUpdate();
-      try{
-        var dec = new mx.mxCodec(root.ownerDocument);
-        dec.decode(root, graph.getModel());
+      try
+      {
+        var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
+        var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
+        var e1 = graph.insertEdge(parent, null, '', v1, v2);
       }
-      finally{
+      finally
+      {
         // Updates the display
         graph.getModel().endUpdate();
       }
