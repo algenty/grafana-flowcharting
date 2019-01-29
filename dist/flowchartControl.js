@@ -3,7 +3,7 @@
 System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn', './properties', 'lodash', './series_overrides_flowchart_ctrl'], function (_export, _context) {
   "use strict";
 
-  var mx, MetricsPanelCtrl, TimeSeries, kbn, flowchartEditor, displayEditor, shapeEditor, valueEditor, _, _createClass, panelDefaults, FlowchartCtrl;
+  var mxClient, mxGraph, mxUtils, mxEvent, MetricsPanelCtrl, TimeSeries, kbn, flowchartEditor, displayEditor, shapeEditor, valueEditor, _, _createClass, panelDefaults, FlowchartCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -37,7 +37,10 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
 
   return {
     setters: [function (_libsMxgraphJsDistMxgraphJs) {
-      mx = _libsMxgraphJsDistMxgraphJs;
+      mxClient = _libsMxgraphJsDistMxgraphJs.mxClient;
+      mxGraph = _libsMxgraphJsDistMxgraphJs.mxGraph;
+      mxUtils = _libsMxgraphJsDistMxgraphJs.mxUtils;
+      mxEvent = _libsMxgraphJsDistMxgraphJs.mxEvent;
     }, function (_appPluginsSdk) {
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
     }, function (_appCoreTime_series) {
@@ -141,12 +144,11 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
             //initialize mxClient
             //Checks if browser is supported
             //this.initLibs();
-
-            if (!mx.mxClient.isBrowserSupported()) {
+            if (!mxClient.isBrowserSupported()) {
               // Displays an error message if the browser is not supported.
-              mx.mxUtils.error('Browser is not supported!', 200, false);
+              mxUtils.error('Browser is not supported!', 200, false);
             } else {
-              //Creates the graph inside the given container
+              // Creates the graph inside the given container
               // if ( this.graph == null) {
               //   // Creates the graph inside the given container
               //   graph = new mx.mxGraph(this.getFlowchartContainer());
@@ -160,12 +162,12 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
               //   // Updates the display
               //   graph.getModel().endUpdate();
               // }
-              // Disables the built-in context menu
+              //Disables the built-in context menu
               var container = $(document.getElementById(this.containerDivId));
-              mx.mxEvent.disableContextMenu(container);
+              mxEvent.disableContextMenu(container);
 
               // Creates the graph inside the given container
-              var graph = new mx.mxGraph(container);
+              var graph = new mxGraph(container);
 
               // Enables rubberband selection
               new mx.mxRubberband(graph);
@@ -187,14 +189,24 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
             }
           }
         }, {
-          key: 'initLibs',
-          value: function initLibs() {
+          key: 'initGlobalvar',
+          value: function initGlobalvar(varname, value) {
             var node = document.createElement("script");
             node.type = 'text/javascript';
             node.async = true;
             node.charset = 'utf-8';
-            var code = 'mxBasePath="' + mxBasePath + '";';
+            var code = varname + '="' + value + '";';
             node.text = code;
+            document.head.appendChild(node);
+          }
+        }, {
+          key: 'loadGlobalJs',
+          value: function loadGlobalJs(filePath) {
+            var node = document.createElement("script");
+            node.type = 'text/javascript';
+            node.async = true;
+            node.charset = 'utf-8';
+            node.src = filePath;
             document.head.appendChild(node);
           }
         }, {

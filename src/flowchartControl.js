@@ -1,4 +1,4 @@
-import * as mx from './libs/mxgraph-js/dist/mxgraph-js';
+import {mxClient,mxGraph,mxUtils,mxEvent} from './libs/mxgraph-js/dist/mxgraph-js';
 import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
@@ -106,15 +106,14 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
     //initialize mxClient
     //Checks if browser is supported
     //this.initLibs();
-
-    if (!mx.mxClient.isBrowserSupported())
+    if (!mxClient.isBrowserSupported())
     {
       // Displays an error message if the browser is not supported.
-      mx.mxUtils.error('Browser is not supported!', 200, false);
+      mxUtils.error('Browser is not supported!', 200, false);
     }
     else
     {
-      //Creates the graph inside the given container
+      // Creates the graph inside the given container
       // if ( this.graph == null) {
       //   // Creates the graph inside the given container
       //   graph = new mx.mxGraph(this.getFlowchartContainer());
@@ -128,12 +127,12 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
       //   // Updates the display
       //   graph.getModel().endUpdate();
       // }
-      // Disables the built-in context menu
+      //Disables the built-in context menu
       var container = $(document.getElementById(this.containerDivId));
-      mx.mxEvent.disableContextMenu(container);
+      mxEvent.disableContextMenu(container);
 
       // Creates the graph inside the given container
-      var graph = new mx.mxGraph(container);
+      var graph = new mxGraph(container);
 
       // Enables rubberband selection
       new mx.mxRubberband(graph);
@@ -158,13 +157,22 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-  initLibs(){
+  initGlobalvar( varname, value){
     var node = document.createElement("script");
     node.type = 'text/javascript';
     node.async = true;
     node.charset = 'utf-8';
-    var code = 'mxBasePath="'+ mxBasePath +'";';
+    var code = varname+ '="'+ value +'";';
     node.text = code;
+    document.head.appendChild(node);
+  }
+
+  loadGlobalJs( filePath ){
+    var node = document.createElement("script");
+    node.type = 'text/javascript';
+    node.async = true;
+    node.charset = 'utf-8';
+    node.src = filePath;
     document.head.appendChild(node);
   }
 

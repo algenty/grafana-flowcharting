@@ -44,6 +44,12 @@ module.exports = (grunt) => {
         src: ['README.md'],
         dest: 'dist',
       },
+      js_to_dist: {
+        cwd: 'src',
+        expand: true,
+        src: ['**/*.js'],
+        dest: 'dist'
+      },
       grafana: {
         cwd: './',
         expand: true,
@@ -100,5 +106,5 @@ module.exports = (grunt) => {
 
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:sass', 'copy:readme', 'copy:globals_to_dist', 'copy:libs_to_dist', 'copy:img_to_dist', 'babel', 'copy:grafana']);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:sass', 'copy:readme', 'copy:globals_to_dist', 'copy:libs_to_dist', 'copy:img_to_dist', 'babel']);
 };
