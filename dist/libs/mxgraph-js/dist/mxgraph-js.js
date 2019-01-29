@@ -1202,7 +1202,8 @@
                             for (n.push(">\n"); null != l;) n.push(mxUtils.getPrettyXml(l, e, i + e)), l = l.nextSibling;
                             n.push(i + "</" + t.nodeName + ">\n")
                         } else n.push("/>\n")
-                    } return n.join("")
+                    }
+                return n.join("")
             },
             removeWhitespace: function(t, e) {
                 for (var i = e ? t.previousSibling : t.nextSibling; null != i && i.nodeType == mxConstants.NODETYPE_TEXT;) {
@@ -3966,13 +3967,13 @@
                     else {
                         var w = (this.matchHtmlAlignment && h && n > 0 ? Math.min(b, n) : b) / 2;
                         y -= w + 1
-                    }
-                else if (o == mxConstants.ALIGN_BOTTOM)
+                    } else if (o == mxConstants.ALIGN_BOTTOM)
                     if ("fill" == a) y -= n;
                     else {
                         var w = this.matchHtmlAlignment && h && n > 0 ? Math.min(b, n) : b;
                         y -= w + 2
-                    } for (var T = 0; T < E.length; T++) {
+                    }
+                for (var T = 0; T < E.length; T++) {
                     if (E[T].length > 0 && mxUtils.trim(E[T]).length > 0) {
                         var L = this.createElement("text");
                         L.setAttribute("x", this.format(t * p.scale) + this.textOffset), L.setAttribute("y", this.format(y * p.scale) + this.textOffset), mxUtils.write(L, E[T]), c.appendChild(L)
@@ -5003,11 +5004,11 @@
                             this.offsetWidth = a.offsetWidth + this.textWidthPadding, this.offsetHeight = a.offsetHeight, s = this.offsetWidth * this.scale, r = this.offsetHeight * this.scale
                         }
                     }
-                if (null != s && null != r) {
-                    var d = this.bounds.x + this.margin.x * s,
-                        p = this.bounds.y + this.margin.y * r;
-                    this.boundingBox = new mxRectangle(d, p, s, r)
-                }
+                    if (null != s && null != r) {
+                        var d = this.bounds.x + this.margin.x * s,
+                            p = this.bounds.y + this.margin.y * r;
+                        this.boundingBox = new mxRectangle(d, p, s, r)
+                    }
             }
             if (null != this.boundingBox)
                 if (0 != e) {
@@ -5542,8 +5543,7 @@
                                 this.root = n[s];
                                 break
                             }
-                }
-            else this.root = e;
+                } else this.root = e;
             if (null != this.root) {
                 if (this.resizeParent ? this.parentsChanged = new Object : this.parentsChanged = null, this.parentX = null, this.parentY = null, t != this.root && null != i.isVertex(t) && this.maintainParentLocation) {
                     var r = this.graph.getCellGeometry(t);
@@ -6234,7 +6234,8 @@
                     if (n.model.getParent(e[r]) == s[o]) {
                         i[r].swimlaneIndex = o;
                         break
-                    } var l = t.getEdges(e[r]);
+                    }
+                var l = t.getEdges(e[r]);
                 i[r].connectsAsSource = [];
                 for (var a = 0; a < l.length; a++) {
                     var h = t.getVisibleTerminal(l[a], !1);
@@ -6569,8 +6570,7 @@
                         var T = n[m][c - 1],
                             L = T.getGeneralPurposeVariable(m);
                         L = L + T.width / 2 + this.intraCellSpacing + p.width / 2, L < b ? (p.setGeneralPurposeVariable(m, b), w = !0) : L < p.getGeneralPurposeVariable(m) - u && (p.setGeneralPurposeVariable(m, L), w = !0)
-                    }
-                else if (b > S + u) {
+                    } else if (b > S + u) {
                     var A = n[m].length;
                     if (c == A - 1) p.setGeneralPurposeVariable(m, b), w = !0;
                     else {
@@ -6717,7 +6717,8 @@
                 if (e == s[o]) {
                     r = o;
                     break
-                } if (r < 0) return !1;
+                }
+            if (r < 0) return !1;
             var l = e.getGeneralPurposeVariable(i);
             if (n < l) {
                 if (0 == r) return !0;
@@ -6944,7 +6945,8 @@
                     if (null != n[r]) {
                         s = !1;
                         break
-                    } for (; !s;) {
+                    }
+                for (; !s;) {
                     for (var o = this.findRoots(t, n), l = 0; l < o.length; l++) {
                         var a = Object();
                         e.push(a), this.traverse(o[l], !0, null, i, a, e, n)
@@ -7007,7 +7009,8 @@
                                     var g = p[x],
                                         y = this.getVisibleTerminal(d[x], !g);
                                     y == m && (g ? c++ : c--)
-                                } c >= 0 && (s = this.traverse(m, e, d[a], n, s, r, o))
+                                }
+                            c >= 0 && (s = this.traverse(m, e, d[a], n, s, r, o))
                         }
                 }
             }
@@ -7143,7 +7146,8 @@
                     if (null != n[o]) {
                         r = !1;
                         break
-                    } for (var l = 0; !r && l < this.swimlanes.length;) {
+                    }
+                for (var l = 0; !r && l < this.swimlanes.length;) {
                     var a = this.findRoots(this.swimlanes[l], n);
                     if (0 != a.length) {
                         for (var s = 0; s < a.length; s++) {
@@ -7788,7 +7792,8 @@
                             n = r == o ? 0 : r > o ? 1 : -1
                         }
                         break
-                    } if (0 == n) {
+                    }
+                if (0 == n) {
                     var r = t.length,
                         o = e.length;
                     r != o && (n = r > o ? 1 : -1)
@@ -8753,7 +8758,8 @@
                             null != l && null != l.nextSibling ? l.nextSibling != n[s].node && n[s].node.parentNode.insertBefore(n[s].node, l.nextSibling) : n[s].node.parentNode.appendChild(n[s].node)
                         } else null != n[s].node.parentNode.firstChild && n[s].node.parentNode.firstChild != n[s].node && n[s].node.parentNode.insertBefore(n[s].node, n[s].node.parentNode.firstChild);
                     r ? i = n[s].node : e = n[s].node
-                } return [e, i]
+                }
+            return [e, i]
         }, mxCellRenderer.prototype.getShapesForState = function(t) {
             return [t.shape, t.text, t.control]
         }, mxCellRenderer.prototype.redraw = function(t, e, i) {
@@ -8859,7 +8865,8 @@
                                 d = Math.min(e.y + e.height, i.y + i.height);
                             l = u == d
                         }
-                    } l || !o && t.style[mxConstants.STYLE_ELBOW] != mxConstants.ELBOW_VERTICAL ? mxEdgeStyle.SideToSide(t, e, i, n, s) : mxEdgeStyle.TopToBottom(t, e, i, n, s)
+                    }
+                l || !o && t.style[mxConstants.STYLE_ELBOW] != mxConstants.ELBOW_VERTICAL ? mxEdgeStyle.SideToSide(t, e, i, n, s) : mxEdgeStyle.TopToBottom(t, e, i, n, s)
             },
             SideToSide: function(t, e, i, n, s) {
                 var r = t.view,
@@ -9204,7 +9211,8 @@
                     if (i.isVertex(t[n]) || i.isEdge(t[n])) {
                         var s = this.getState(t[n]);
                         null != s && (null == e ? e = mxRectangle.fromRectangle(s) : e.add(s))
-                    } return e
+                    }
+            return e
         }, mxGraphView.prototype.setCurrentRoot = function(t) {
             if (this.currentRoot != t) {
                 var e = new mxCurrentRootChange(this, t);
@@ -9436,7 +9444,8 @@
                         if (null != e[u]) {
                             var d = mxUtils.clone(e[u]);
                             s.push(this.transformControlPoint(t, d))
-                        } var p = t.absolutePoints;
+                        }
+                var p = t.absolutePoints;
                 s.push(p[p.length - 1]), t.absolutePoints = s
             }
         }, mxGraphView.prototype.transformControlPoint = function(t, e) {
@@ -10325,7 +10334,8 @@
                     if (this.model.isVertex(t[i]) || this.model.isEdge(t[i])) {
                         var n = this.view.getBoundingBox(this.view.getState(t[i]), !0);
                         null != n && (null == e ? e = mxRectangle.fromRectangle(n) : e.add(n))
-                    } return e
+                    }
+            return e
         }, mxGraph.prototype.cloneCells = function(t, e, i) {
             e = null == e || e;
             var n = null;
@@ -10408,7 +10418,8 @@
                                 }
                             }
                             e == d && i + u > this.model.getChildCount(e) && i--, this.model.add(e, t[u], i + u), this.autoSizeCellsOnAdd && this.autoSizeCell(t[u], !0), this.isExtendParentsOnAdd(t[u]) && this.isExtendParent(t[u]) && this.extendParent(t[u]), (null == o || o) && this.constrainChild(t[u]), null != n && this.cellConnected(t[u], n, !0), null != s && this.cellConnected(t[u], s, !1)
-                        } this.fireEvent(new mxEventObject(mxEvent.CELLS_ADDED, "cells", t, "parent", e, "index", i, "source", n, "target", s, "absolute", r))
+                        }
+                    this.fireEvent(new mxEventObject(mxEvent.CELLS_ADDED, "cells", t, "parent", e, "index", i, "source", n, "target", s, "absolute", r))
                 } finally {
                     this.model.endUpdate()
                 }
@@ -10522,7 +10533,8 @@
                                 this.foldCells(r, e, i)
                             }
                             this.constrainChild(t[s])
-                        } this.fireEvent(new mxEventObject(mxEvent.CELLS_FOLDED, "cells", t, "collapse", e, "recurse", i))
+                        }
+                    this.fireEvent(new mxEventObject(mxEvent.CELLS_FOLDED, "cells", t, "collapse", e, "recurse", i))
                 } finally {
                     this.model.endUpdate()
                 }
@@ -11080,7 +11092,8 @@
                             }
                             null != r && (null == i ? i = mxRectangle.fromRectangle(r) : i.add(r))
                         }
-                    } return i
+                    }
+            return i
         }, mxGraph.prototype.refresh = function(t) {
             this.view.clear(t, null == t), this.view.validate(), this.sizeDidChange(), this.fireEvent(new mxEventObject(mxEvent.REFRESH))
         }, mxGraph.prototype.snap = function(t) {
@@ -11112,8 +11125,7 @@
                             null != this.shiftPreview1.firstChild && this.container.insertBefore(this.shiftPreview1, i.parentNode), null != this.shiftPreview2.firstChild && this.container.appendChild(this.shiftPreview2)
                         }
                         this.shiftPreview1.style.left = t + "px", this.shiftPreview1.style.top = e + "px", this.shiftPreview2.style.left = t + "px", this.shiftPreview2.style.top = e + "px"
-                    }
-                else i.style.left = t + "px", i.style.top = e + "px";
+                    } else i.style.left = t + "px", i.style.top = e + "px";
                 this.panDx = t, this.panDy = e, this.fireEvent(new mxEventObject(mxEvent.PAN))
             }
         }, mxGraph.prototype.zoomIn = function() {
@@ -12528,7 +12540,8 @@
                             var r = s;
                             i.isVertex(t[n]) && null != s.shape && null != s.shape.boundingBox && (r = s.shape.boundingBox), null == e ? e = mxRectangle.fromRectangle(r) : e.add(r)
                         }
-                    } return e
+                    }
+            return e
         }, mxGraphHandler.prototype.createPreviewShape = function(t) {
             var e = new mxRectangleShape(t, null, this.previewColor);
             return e.isDashed = !0, this.htmlPreview ? (e.dialect = mxConstants.DIALECT_STRICTHTML, e.init(this.graph.container)) : (e.dialect = this.graph.dialect != mxConstants.DIALECT_SVG ? mxConstants.DIALECT_VML : mxConstants.DIALECT_SVG, e.init(this.graph.getView().getOverlayPane()), e.pointerEvents = !1, mxClient.IS_IOS && (e.getSvgScreenOffset = function() {
@@ -13831,7 +13844,8 @@
                             this.dblClickRemoveEnabled && this.removePoint(this.state, t)
                         }))), this.isHandleEnabled(i) && n.setCursor(r ? mxConstants.CURSOR_TERMINAL_HANDLE : mxConstants.CURSOR_BEND_HANDLE), e.push(n), r || (this.points.push(new mxPoint(0, 0)), n.node.style.visibility = "hidden")
                     })(i)
-                } return e
+                }
+            return e
         }, mxEdgeHandler.prototype.createVirtualBends = function() {
             var t = this.state.cell,
                 e = (this.abspoints[0], []);
@@ -13970,7 +13984,8 @@
                         if (l != this.index) {
                             var a = this.bends[l];
                             null != a && mxUtils.contains(a.bounds, t.x, t.y) && (this.index <= mxEvent.VIRTUAL_HANDLE ? s.splice(mxEvent.VIRTUAL_HANDLE - this.index, 1) : s.splice(this.index - 1, 1), o = s)
-                        } if (null == o && this.straightRemoveEnabled && (null == e || !mxEvent.isAltDown(e.getEvent()))) {
+                        }
+                    if (null == o && this.straightRemoveEnabled && (null == e || !mxEvent.isAltDown(e.getEvent()))) {
                         var h = this.graph.tolerance * this.graph.tolerance,
                             u = this.state.absolutePoints.slice();
                         u[this.index] = t;
@@ -14211,7 +14226,8 @@
                             x = d.y + (m.y - d.y) / 2;
                         e.bounds = new mxRectangle(Math.floor(c - e.bounds.width / 2), Math.floor(x - e.bounds.height / 2), e.bounds.width, e.bounds.height),
                             e.redraw(), mxUtils.setOpacity(e.node, this.virtualBendOpacity), d = m, this.manageLabelHandle && this.checkLabelHandle(e.bounds)
-                    } if (null != this.labelShape && this.labelShape.redraw(), null != this.customHandles)
+                    }
+            if (null != this.labelShape && this.labelShape.redraw(), null != this.customHandles)
                 for (var p = 0; p < this.customHandles.length; p++) this.customHandles[p].redraw()
         }, mxEdgeHandler.prototype.setHandlesVisible = function(t) {
             if (null != this.bends)
@@ -14383,14 +14399,16 @@
                         } else {
                             var r = i[0].y + (i[i.length - 1].y - i[0].y) / 2;
                             i[1] = new mxPoint(i[1].x, r), i[2] = new mxPoint(i[2].x, r)
-                        } for (var o = 0; o < i.length - 1; o++)
+                        }
+                    for (var o = 0; o < i.length - 1; o++)
                         if (null != this.bends[o + 1]) {
                             var t = i[o],
                                 e = i[o + 1],
                                 l = new mxPoint(t.x + (e.x - t.x) / 2, t.y + (e.y - t.y) / 2),
                                 a = this.bends[o + 1].bounds;
                             this.bends[o + 1].bounds = new mxRectangle(Math.floor(l.x - a.width / 2), Math.floor(l.y - a.height / 2), a.width, a.height), this.bends[o + 1].redraw(), this.manageLabelHandle && this.checkLabelHandle(this.bends[o + 1].bounds)
-                        } n && (mxUtils.setOpacity(this.bends[1].node, this.virtualBendOpacity), mxUtils.setOpacity(this.bends[3].node, this.virtualBendOpacity))
+                        }
+                    n && (mxUtils.setOpacity(this.bends[1].node, this.virtualBendOpacity), mxUtils.setOpacity(this.bends[3].node, this.virtualBendOpacity))
                 }
             }
         }, exports.mxEdgeSegmentHandler = mxEdgeSegmentHandler, mxKeyHandler.prototype.graph = null, mxKeyHandler.prototype.target = null, mxKeyHandler.prototype.normalKeys = null, mxKeyHandler.prototype.shiftKeys = null, mxKeyHandler.prototype.controlKeys = null, mxKeyHandler.prototype.controlShiftKeys = null, mxKeyHandler.prototype.enabled = !0, mxKeyHandler.prototype.isEnabled = function() {

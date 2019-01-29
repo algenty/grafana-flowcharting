@@ -3,7 +3,7 @@
 System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn', './properties', 'lodash', './series_overrides_flowchart_ctrl'], function (_export, _context) {
   "use strict";
 
-  var mxClient, mxGraph, mxUtils, mxEvent, MetricsPanelCtrl, TimeSeries, kbn, flowchartEditor, displayEditor, shapeEditor, valueEditor, _, _createClass, panelDefaults, FlowchartCtrl;
+  var mx, MetricsPanelCtrl, TimeSeries, kbn, flowchartEditor, displayEditor, shapeEditor, valueEditor, _, _createClass, panelDefaults, FlowchartCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -37,10 +37,7 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
 
   return {
     setters: [function (_libsMxgraphJsDistMxgraphJs) {
-      mxClient = _libsMxgraphJsDistMxgraphJs.mxClient;
-      mxGraph = _libsMxgraphJsDistMxgraphJs.mxGraph;
-      mxUtils = _libsMxgraphJsDistMxgraphJs.mxUtils;
-      mxEvent = _libsMxgraphJsDistMxgraphJs.mxEvent;
+      mx = _libsMxgraphJsDistMxgraphJs;
     }, function (_appPluginsSdk) {
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
     }, function (_appCoreTime_series) {
@@ -144,9 +141,9 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
             //initialize mxClient
             //Checks if browser is supported
             //this.initLibs();
-            if (!mxClient.isBrowserSupported()) {
+            if (!mx.mxClient.isBrowserSupported()) {
               // Displays an error message if the browser is not supported.
-              mxUtils.error('Browser is not supported!', 200, false);
+              mx.mxUtils.error('Browser is not supported!', 200, false);
             } else {
               // Creates the graph inside the given container
               // if ( this.graph == null) {
@@ -163,11 +160,12 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
               //   graph.getModel().endUpdate();
               // }
               //Disables the built-in context menu
+              mx.mxClient.init();
               var container = $(document.getElementById(this.containerDivId));
-              mxEvent.disableContextMenu(container);
+              mx.mxEvent.disableContextMenu(container);
 
               // Creates the graph inside the given container
-              var graph = new mxGraph(container);
+              var graph = new mx.mxGraph(container);
 
               // Enables rubberband selection
               new mx.mxRubberband(graph);

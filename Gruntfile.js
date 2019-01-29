@@ -106,5 +106,5 @@ module.exports = (grunt) => {
 
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:sass', 'copy:readme', 'copy:globals_to_dist', 'copy:libs_to_dist', 'copy:img_to_dist', 'babel']);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:sass', 'copy:readme', 'copy:globals_to_dist', 'copy:libs_to_dist', 'copy:img_to_dist', 'babel', 'copy:grafana']);
 };

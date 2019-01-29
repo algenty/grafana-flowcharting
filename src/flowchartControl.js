@@ -1,4 +1,4 @@
-import {mxClient,mxGraph,mxUtils,mxEvent} from './libs/mxgraph-js/dist/mxgraph-js';
+import * as mx from './libs/mxgraph-js/dist/mxgraph-js';
 import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
@@ -13,6 +13,7 @@ import {
 } from './properties';
 import _ from 'lodash';
 import './series_overrides_flowchart_ctrl';
+
 
 const panelDefaults = {
   content : '<mxGraphModel dx="2066" dy="1171" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169">\n'+
@@ -106,10 +107,10 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
     //initialize mxClient
     //Checks if browser is supported
     //this.initLibs();
-    if (!mxClient.isBrowserSupported())
+    if (!mx.mxClient.isBrowserSupported())
     {
       // Displays an error message if the browser is not supported.
-      mxUtils.error('Browser is not supported!', 200, false);
+      mx.mxUtils.error('Browser is not supported!', 200, false);
     }
     else
     {
@@ -129,10 +130,10 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
       // }
       //Disables the built-in context menu
       var container = $(document.getElementById(this.containerDivId));
-      mxEvent.disableContextMenu(container);
+      mx.mxEvent.disableContextMenu(container);
 
       // Creates the graph inside the given container
-      var graph = new mxGraph(container);
+      var graph = new mx.mxGraph(container);
 
       // Enables rubberband selection
       new mx.mxRubberband(graph);
