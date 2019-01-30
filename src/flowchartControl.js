@@ -1,15 +1,13 @@
-import * as mx from './libs/mxgraph-js/dist/mxgraph-js';
+//import './externals/globals.js';
+import mx from './libs/mxgraph-js/dist/mxgraph-js';
 import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
-// old version, used node_modules/mxgraph
-//import * as mxClient from './libs/mxgraph/javascript/dist/js/mxClient';
 import {
   flowchartEditor,
   displayEditor,
   shapeEditor,
   valueEditor
-  //mxBasePath
 } from './properties';
 import _ from 'lodash';
 import './series_overrides_flowchart_ctrl';
@@ -104,9 +102,7 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   initializeMxgraph() {
-    //initialize mxClient
-    //Checks if browser is supported
-    //this.initLibs();
+    // Checks if the browser is supported
     if (!mx.mxClient.isBrowserSupported())
     {
       // Displays an error message if the browser is not supported.
@@ -114,23 +110,8 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
     }
     else
     {
-      // Creates the graph inside the given container
-      // if ( this.graph == null) {
-      //   // Creates the graph inside the given container
-      //   graph = new mx.mxGraph(this.getFlowchartContainer());
-      // }
-      // graph.getModel().beginUpdate();
-      // try{
-      //   var dec = new mx.mxCodec(root.ownerDocument);
-      //   dec.decode(root, graph.getModel());
-      // }
-      // finally{
-      //   // Updates the display
-      //   graph.getModel().endUpdate();
-      // }
-      //Disables the built-in context menu
-      var container = $(document.getElementById(this.containerDivId));
-      mx.mxEvent.disableContextMenu(container);
+      // Disables the built-in context menu
+      mx.mxEvent.disableContextMenu(this.getFlowchartContainer());
 
       // Creates the graph inside the given container
       var graph = new mx.mxGraph(container);
@@ -156,25 +137,7 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
         graph.getModel().endUpdate();
       }
     }
-  }
 
-  initGlobalvar( varname, value){
-    var node = document.createElement("script");
-    node.type = 'text/javascript';
-    node.async = true;
-    node.charset = 'utf-8';
-    var code = varname+ '="'+ value +'";';
-    node.text = code;
-    document.head.appendChild(node);
-  }
-
-  loadGlobalJs( filePath ){
-    var node = document.createElement("script");
-    node.type = 'text/javascript';
-    node.async = true;
-    node.charset = 'utf-8';
-    node.src = filePath;
-    document.head.appendChild(node);
   }
 
   getFlowchartContainer() {

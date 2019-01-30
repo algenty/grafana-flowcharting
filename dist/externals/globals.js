@@ -12,5 +12,13 @@ function initGlobalVar(varName,varValue) {
   var code = varName + '="'+ varValue +'";';
   node.text = code;
   document.head.appendChild(node);
+};
 
-}
+loadGlobalJs( filePath ){
+  var node = document.createElement("script");
+  node.type = 'text/javascript';
+  node.async = true;
+  node.charset = 'utf-8';
+  node.src = filePath;
+  document.head.appendChild(node);
+};

@@ -20,19 +20,12 @@ module.exports = (grunt) => {
         src: ['**/*', '!**/*.js', '!**/*.scss', '!img/**/*', '.*'],
         dest: 'dist'
       },
-      js_to_dist: {
+      externals_to_dist: {
         cwd: 'src',
         expand: true,
-        src: ['**/globals.js'],
+        src: ['externals/**/*'],
         dest: 'dist'
       },
-    // version node_modules/mxgraph
-    //   libs_to_dist: {
-		//     cwd: 'node_modules',
-    //     expand: true,
-		//     src: ['mxgraph/javascript/src/**/*','mxgraph/javascript/dist/**/*'],
-		//     dest: 'dist/libs'
-		// },
       libs_to_dist: {
         cwd: 'node_modules',
         expand: true,
@@ -91,7 +84,7 @@ module.exports = (grunt) => {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js', '!**/globals.js' ],
+          src: ['*.js', '!externals/**' ],
           dest: 'dist',
           ext: '.js'
         }]
@@ -100,5 +93,5 @@ module.exports = (grunt) => {
 
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:sass', 'copy:readme', 'copy:js_to_dist', 'copy:libs_to_dist', 'copy:img_to_dist', 'babel']);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:sass', 'copy:readme', 'copy:libs_to_dist', 'copy:img_to_dist', 'babel', 'copy:externals_to_dist' ]);
 };

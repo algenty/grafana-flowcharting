@@ -37,7 +37,7 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
 
   return {
     setters: [function (_libsMxgraphJsDistMxgraphJs) {
-      mx = _libsMxgraphJsDistMxgraphJs;
+      mx = _libsMxgraphJsDistMxgraphJs.default;
     }, function (_appPluginsSdk) {
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
     }, function (_appCoreTime_series) {
@@ -138,30 +138,13 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
         _createClass(FlowchartCtrl, [{
           key: 'initializeMxgraph',
           value: function initializeMxgraph() {
-            //initialize mxClient
-            //Checks if browser is supported
-            //this.initLibs();
+            // Checks if the browser is supported
             if (!mx.mxClient.isBrowserSupported()) {
               // Displays an error message if the browser is not supported.
               mx.mxUtils.error('Browser is not supported!', 200, false);
             } else {
-              // Creates the graph inside the given container
-              // if ( this.graph == null) {
-              //   // Creates the graph inside the given container
-              //   graph = new mx.mxGraph(this.getFlowchartContainer());
-              // }
-              // graph.getModel().beginUpdate();
-              // try{
-              //   var dec = new mx.mxCodec(root.ownerDocument);
-              //   dec.decode(root, graph.getModel());
-              // }
-              // finally{
-              //   // Updates the display
-              //   graph.getModel().endUpdate();
-              // }
-              //Disables the built-in context menu
-              var container = $(document.getElementById(this.containerDivId));
-              mx.mxEvent.disableContextMenu(container);
+              // Disables the built-in context menu
+              mx.mxEvent.disableContextMenu(this.getFlowchartContainer());
 
               // Creates the graph inside the given container
               var graph = new mx.mxGraph(container);
@@ -184,27 +167,6 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
                 graph.getModel().endUpdate();
               }
             }
-          }
-        }, {
-          key: 'initGlobalvar',
-          value: function initGlobalvar(varname, value) {
-            var node = document.createElement("script");
-            node.type = 'text/javascript';
-            node.async = true;
-            node.charset = 'utf-8';
-            var code = varname + '="' + value + '";';
-            node.text = code;
-            document.head.appendChild(node);
-          }
-        }, {
-          key: 'loadGlobalJs',
-          value: function loadGlobalJs(filePath) {
-            var node = document.createElement("script");
-            node.type = 'text/javascript';
-            node.async = true;
-            node.charset = 'utf-8';
-            node.src = filePath;
-            document.head.appendChild(node);
           }
         }, {
           key: 'getFlowchartContainer',
