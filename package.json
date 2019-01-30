@@ -38,6 +38,7 @@
     "grunt-contrib-uglify": "~4.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-execute": "~0.2.2",
+    "grunt-jsvalidate": "^0.2.2",
     "grunt-sass": "^3.0.2",
     "grunt-systemjs-builder": "^1.0.0",
     "gulp": "^4.0.0",

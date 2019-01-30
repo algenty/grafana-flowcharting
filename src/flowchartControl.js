@@ -1,4 +1,5 @@
 //import './externals/globals.js';
+//import './externals/mxInt';
 import mx from './libs/mxgraph-js/dist/mxgraph-js';
 import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
@@ -101,7 +102,8 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
 
   }
 
-  initializeMxgraph() {
+  test(container)
+  {
     // Checks if the browser is supported
     if (!mx.mxClient.isBrowserSupported())
     {
@@ -111,7 +113,7 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
     else
     {
       // Disables the built-in context menu
-      mx.mxEvent.disableContextMenu(this.getFlowchartContainer());
+      mx.mxEvent.disableContextMenu(container);
 
       // Creates the graph inside the given container
       var graph = new mx.mxGraph(container);
@@ -137,7 +139,11 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
         graph.getModel().endUpdate();
       }
     }
+  }
 
+  initializeMxgraph() {
+      //mxInt.test(this.initializeMxgraph());
+      this.test(this.getFlowchartContainer());
   }
 
   getFlowchartContainer() {

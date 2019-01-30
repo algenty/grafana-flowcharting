@@ -136,15 +136,15 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
         }
 
         _createClass(FlowchartCtrl, [{
-          key: 'initializeMxgraph',
-          value: function initializeMxgraph() {
+          key: 'test',
+          value: function test(container) {
             // Checks if the browser is supported
             if (!mx.mxClient.isBrowserSupported()) {
               // Displays an error message if the browser is not supported.
               mx.mxUtils.error('Browser is not supported!', 200, false);
             } else {
               // Disables the built-in context menu
-              mx.mxEvent.disableContextMenu(this.getFlowchartContainer());
+              mx.mxEvent.disableContextMenu(container);
 
               // Creates the graph inside the given container
               var graph = new mx.mxGraph(container);
@@ -167,6 +167,12 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
                 graph.getModel().endUpdate();
               }
             }
+          }
+        }, {
+          key: 'initializeMxgraph',
+          value: function initializeMxgraph() {
+            //mxInt.test(this.initializeMxgraph());
+            this.test(this.getFlowchartContainer());
           }
         }, {
           key: 'getFlowchartContainer',
