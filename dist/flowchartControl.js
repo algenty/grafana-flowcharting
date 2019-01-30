@@ -160,7 +160,6 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
               //   graph.getModel().endUpdate();
               // }
               //Disables the built-in context menu
-              mx.mxClient.init();
               var container = $(document.getElementById(this.containerDivId));
               mx.mxEvent.disableContextMenu(container);
 
