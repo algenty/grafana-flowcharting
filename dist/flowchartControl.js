@@ -3,7 +3,7 @@
 System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/core/time_series2', 'app/core/utils/kbn', './properties', 'lodash', './series_overrides_flowchart_ctrl'], function (_export, _context) {
   "use strict";
 
-  var mx, MetricsPanelCtrl, TimeSeries, kbn, flowchartEditor, displayEditor, shapeEditor, valueEditor, _, _createClass, panelDefaults, FlowchartCtrl;
+  var arnaud, MetricsPanelCtrl, TimeSeries, kbn, flowchartEditor, displayEditor, shapeEditor, valueEditor, _, _createClass, panelDefaults, FlowchartCtrl;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -37,7 +37,7 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
 
   return {
     setters: [function (_libsMxgraphJsDistMxgraphJs) {
-      mx = _libsMxgraphJsDistMxgraphJs.default;
+      arnaud = _libsMxgraphJsDistMxgraphJs.arnaud;
     }, function (_appPluginsSdk) {
       MetricsPanelCtrl = _appPluginsSdk.MetricsPanelCtrl;
     }, function (_appCoreTime_series) {
@@ -139,18 +139,18 @@ System.register(['./libs/mxgraph-js/dist/mxgraph-js', 'app/plugins/sdk', 'app/co
           key: 'test',
           value: function test(container) {
             // Checks if the browser is supported
-            if (!mx.mxClient.isBrowserSupported()) {
+            if (!arnaud.mxClient.isBrowserSupported()) {
               // Displays an error message if the browser is not supported.
-              mx.mxUtils.error('Browser is not supported!', 200, false);
+              arnaud.mxUtils.error('Browser is not supported!', 200, false);
             } else {
               // Disables the built-in context menu
-              mx.mxEvent.disableContextMenu(container);
+              arnaud.mxEvent.disableContextMenu(container);
 
               // Creates the graph inside the given container
-              var graph = new mx.mxGraph(container);
+              var graph = new arnaud.mxGraph(container);
 
               // Enables rubberband selection
-              new mx.mxRubberband(graph);
+              new arnaud.mxRubberband(graph);
 
               // Gets the default parent for inserting new cells. This
               // is normally the first child of the root (ie. layer 0).

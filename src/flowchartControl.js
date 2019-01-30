@@ -1,6 +1,6 @@
 //import './externals/globals.js';
 //import './externals/mxInt';
-import mx from './libs/mxgraph-js/dist/mxgraph-js';
+import {arnaud} from './libs/mxgraph-js/dist/mxgraph-js';
 import {MetricsPanelCtrl} from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
@@ -105,21 +105,21 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
   test(container)
   {
     // Checks if the browser is supported
-    if (!mx.mxClient.isBrowserSupported())
+    if (!arnaud.mxClient.isBrowserSupported())
     {
       // Displays an error message if the browser is not supported.
-      mx.mxUtils.error('Browser is not supported!', 200, false);
+      arnaud.mxUtils.error('Browser is not supported!', 200, false);
     }
     else
     {
       // Disables the built-in context menu
-      mx.mxEvent.disableContextMenu(container);
+      arnaud.mxEvent.disableContextMenu(container);
 
       // Creates the graph inside the given container
-      var graph = new mx.mxGraph(container);
+      var graph = new arnaud.mxGraph(container);
 
       // Enables rubberband selection
-      new mx.mxRubberband(graph);
+      new arnaud.mxRubberband(graph);
 
       // Gets the default parent for inserting new cells. This
       // is normally the first child of the root (ie. layer 0).

@@ -1,4 +1,4 @@
-! function(t, e) {
+var arnaud = { ! function(t, e) {
     "object" == typeof exports && "object" == typeof module ? module.exports = e() : "function" == typeof define && define.amd ? define([], e) : "object" == typeof exports ? exports.mx = e() : t.mx = e()
 }(this, function() {
     return function(t) {
@@ -15687,3 +15687,6 @@
         }())
     }])
 });
+};
+
+export {arnaud};
