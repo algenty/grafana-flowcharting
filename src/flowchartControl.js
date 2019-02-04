@@ -11,7 +11,7 @@ import {
 } from './properties';
 import _ from 'lodash';
 //import './series_overrides_flowchart_ctrl';
-//const mxLoader = require("./mxgraph");
+const mxLoader = require("./mxgraph");
 
 
 
@@ -99,7 +99,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-    //this.onRender();
+    this.onRender();
 
   }
 
@@ -107,8 +107,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
     // Checks if the browser is supported
       console.log("ici");
+      console.log(mxLoader.mx);
       var me = this;
-      if (!mxClient.isBrowserSupported()) {
+      if (!mxLoader.mxClient.isBrowserSupported()) {
         // Displays an error message if the browser is not supported.
         console.log("initialisation");
         mxUtils.error('Browser is not supported!', 200, false);
@@ -117,7 +118,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         mxEvent.disableContextMenu(container);
 
         // Creates the graph inside the given container
-        var graph = new mxLoader.mxGraph(container);
+        var graph = new mxLoadermxGraph(container);
 
         // Enables rubberband selection
         new mxLoader.mxRubberband(graph);
@@ -146,9 +147,15 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   initializeMxgraph() {
     var me = this;
     var container = me.getFlowchartContainer();
-    mxLoader.initAndCall(function () {
+    var mxgraph = mxLoader.initAndCall()
+    mxgraph = mxLoader.initAndCall()
+    console.log(mxgraph);
+    mxLoader.initAndCall().then(function () {
                 me.test(container)
               })
+
+
+    me.test(container);
   }
 
   getFlowchartContainer() {
@@ -164,7 +171,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onRender() {
     console.log("onRender");
-    //this.initializeMxgraph();
+    this.initializeMxgraph();
   }
 
   onDataReceived() {
@@ -178,8 +185,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
 }
 
-
 export {
   FlowchartCtrl,
   FlowchartCtrl as MetricsPanelCtrl
-};
+}
+
+FlowchartCtrl.templateUrl = 'module.html';

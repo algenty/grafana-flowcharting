@@ -32,8 +32,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 //import './series_overrides_flowchart_ctrl';
-//const mxLoader = require("./mxgraph");
-
+var mxLoader = require("./mxgraph");
 
 var defaults = {
   content: '<mxGraphModel dx="2066" dy="1171" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169">\n' + '  <root>\n' + '    <mxCell id="0"/>\n' + '    <mxCell id="1" parent="0"/>\n' + '    <mxCell id="5" style="rounded=0;html=1;entryX=0.5;entryY=0;jettySize=auto;orthogonalLoop=1;edgeStyle=orthogonalEdgeStyle;curved=1;" edge="1" parent="1" source="2" target="3">\n' + '      <mxGeometry relative="1" as="geometry"/>\n' + '    </mxCell>\n' + '    <mxCell id="6" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;" edge="1" parent="1" source="2" target="4">\n' + '      <mxGeometry relative="1" as="geometry"/>\n' + '    </mxCell>\n' + '    <object label="Hello" composite="Hello" id="2">\n' + '      <mxCell style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#00FF00;" parent="1" vertex="1">\n' + '        <mxGeometry x="340" y="180" width="120" height="60" as="geometry"/>\n' + '      </mxCell>\n' + '    </object>\n' + '    <object label="mxGraph" composite="World" id="3">\n' + '      <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;gradientColor=#ffffff;fillColor=#E580FF;" parent="1" vertex="1">\n' + '        <mxGeometry x="274" y="320" width="80" height="80" as="geometry"/>\n' + '      </mxCell>\n' + '    </object>\n' + '    <mxCell id="4" value="Grafana" style="shape=mxgraph.flowchart.display;whiteSpace=wrap;html=1;fillColor=#FF7654;strokeColor=#000000;strokeWidth=2;gradientColor=#ffffff;" vertex="1" parent="1">\n' + '      <mxGeometry x="440" y="330" width="98" height="60" as="geometry"/>\n' + '    </mxCell>\n' + '    <mxCell id="7" value="Author : Arnaud GENTY&lt;br&gt;&lt;div style=&quot;text-align: left&quot;&gt;Manthor :&amp;nbsp;&lt;span&gt;Jeremy&amp;nbsp;&lt;/span&gt;&lt;span&gt;jdbranham&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">\n' + '      <mxGeometry x="260" y="407" width="280" height="40" as="geometry"/>\n' + '    </mxCell>\n' + '  </root>\n' + '</mxGraphModel>\n',
@@ -96,7 +95,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _this.events.on('data-error', _this.onDataError.bind(_this));
     _this.events.on('data-snapshot-load', _this.onDataReceived.bind(_this));
     _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_this));
-    //this.onRender();
+    _this.onRender();
 
     return _this;
   }
@@ -107,8 +106,9 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
       // Checks if the browser is supported
       console.log("ici");
+      console.log(mxLoader.mx);
       var me = this;
-      if (!mxClient.isBrowserSupported()) {
+      if (!mxLoader.mxClient.isBrowserSupported()) {
         // Displays an error message if the browser is not supported.
         console.log("initialisation");
         mxUtils.error('Browser is not supported!', 200, false);
@@ -117,7 +117,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
         mxEvent.disableContextMenu(container);
 
         // Creates the graph inside the given container
-        var graph = new mxLoader.mxGraph(container);
+        var graph = new mxLoadermxGraph(container);
 
         // Enables rubberband selection
         new mxLoader.mxRubberband(graph);
@@ -148,9 +148,14 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     value: function initializeMxgraph() {
       var me = this;
       var container = me.getFlowchartContainer();
-      mxLoader.initAndCall(function () {
+      var mxgraph = mxLoader.initAndCall();
+      mxgraph = mxLoader.initAndCall();
+      console.log(mxgraph);
+      mxLoader.initAndCall().then(function () {
         me.test(container);
       });
+
+      me.test(container);
     }
   }, {
     key: 'getFlowchartContainer',
@@ -169,7 +174,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     key: 'onRender',
     value: function onRender() {
       console.log("onRender");
-      //this.initializeMxgraph();
+      this.initializeMxgraph();
     }
   }, {
     key: 'onDataReceived',
@@ -188,3 +193,6 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
 exports.FlowchartCtrl = FlowchartCtrl;
 exports.MetricsPanelCtrl = FlowchartCtrl;
+
+
+FlowchartCtrl.templateUrl = 'module.html';
