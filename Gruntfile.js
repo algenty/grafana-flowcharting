@@ -4,13 +4,15 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-execute');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-sass');
+  const sass = require('node-sass');
 
-  var grafana_plugin_path = 'D:/Dev/grafana-5.4.3/data/plugins/agenty-grafana-flowcharting';
   grunt.initConfig({
 
     clean: {
-      options: { force: true },
-      stuff : ['dist', grafana_plugin_path]
+      options: {
+        force: true
+      },
+      stuff: ['dist']
     },
 
     copy: {
@@ -29,7 +31,7 @@ module.exports = (grunt) => {
       libs_to_dist: {
         cwd: 'node_modules',
         expand: true,
-        src: ['mxgraph-js/dist/mxgraph-js.js'],
+        src: ['mxgraph-js/dist/mxgraph-js.js', 'mxgraph/javascript/src/**/*'],
         dest: 'dist/libs'
       },
       readme: {
@@ -37,29 +39,7 @@ module.exports = (grunt) => {
         src: ['README.md'],
         dest: 'dist',
       },
-      grafana: {
-        cwd: './',
-        expand: true,
-        src: ['**/*', '!**/bower_components/**', '!**/node_modules/**', '!gitignore', '!others', '!.git', "dist/.angular-cli.json"],
-        dest: grafana_plugin_path
-      },
-      sass: {
-        dist: {
-          options: {
-            style: "expanded",
-          },
-          files: [
-          {
-            expand: true,
-            cwd: "src/css/",
-            src: ["*.scss"],
-            dest: "dist/css/",
-            ext: ".css",
-          },
-        ],
-      },
-    },
-    img_to_dist: {
+      img_to_dist: {
         cwd: 'src',
         expand: true,
         src: ['img/**/*'],
@@ -67,24 +47,37 @@ module.exports = (grunt) => {
       },
     },
 
+
+
     watch: {
       rebuild_all: {
         files: ['src/**/*', 'README.md'],
         tasks: ['default'],
-        options: {spawn: false}
+        options: {
+          spawn: false
+        }
       },
     },
-    babel: {
+
+
+    sass: {
       options: {
         sourceMap: true,
-        presets: ['es2015'],
-        plugins: ['transform-es2015-modules-systemjs', 'transform-es2015-for-of'],
+        implementation: sass,
       },
+      dist: {
+        files: {
+          'dist/css/diagram.css': 'src/css/diagram.scss'
+        }
+      }
+    },
+
+    babel: {
       dist: {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js', '!externals/**' ],
+          src: ['*.js'],
           dest: 'dist',
           ext: '.js'
         }]
@@ -93,5 +86,5 @@ module.exports = (grunt) => {
 
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'copy:sass', 'copy:readme', 'copy:libs_to_dist', 'copy:img_to_dist', 'babel', 'copy:externals_to_dist' ]);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'copy:libs_to_dist', ]);
 };

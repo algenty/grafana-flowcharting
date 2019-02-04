@@ -1,18 +1,15 @@
-'use strict';
+module.exports = {
 
-var mxBasePath = './libs/mxgraph/javascript/dist';
-var mxForceIncludes = false;
+  initGlobalVar : function (varName, varValue) {
 
-function initGlobalVar(varName,varValue) {
+    var node = document.createElement("script");
+    node.type = 'text/javascript';
+    node.async = true;
+    node.charset = 'utf-8';
+    var code = varName + '="' + varValue + '";';
+    node.text = code;
+    document.head.appendChild(node);
 
-  var node = document.createElement("script");
-  node.type = 'text/javascript';
-  node.async = true;
-  node.charset = 'utf-8';
-  var code = varName + '="'+ varValue +'";';
-  node.text = code;
-  document.head.appendChild(node);
-
-}
-
-initGlobalVar("mxBasePath",mxBasePath);
+  }
+  
+};

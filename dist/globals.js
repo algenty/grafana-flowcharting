@@ -1,12 +1,8 @@
 'use strict';
 
-System.register([], function (_export, _context) {
-  "use strict";
+module.exports = {
 
-  var mxBasePath, mxForceIncludes;
-
-
-  function initGlobalVar(varName, varValue) {
+  initGlobalVar: function initGlobalVar(varName, varValue) {
 
     var node = document.createElement("script");
     node.type = 'text/javascript';
@@ -17,13 +13,4 @@ System.register([], function (_export, _context) {
     document.head.appendChild(node);
   }
 
-  return {
-    setters: [],
-    execute: function () {
-      mxBasePath = './libs/mxgraph/javascript/dist';
-      mxForceIncludes = false;
-      initGlobalVar("mxBasePath", mxBasePath);
-    }
-  };
-});
-//# sourceMappingURL=globals.js.map
+};

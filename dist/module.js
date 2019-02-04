@@ -1,18 +1,12 @@
 'use strict';
 
-System.register(['./properties', './flowchartControl'], function (_export, _context) {
-	"use strict";
-
-	var pluginName, FlowchartCtrl;
-	return {
-		setters: [function (_properties) {
-			pluginName = _properties.pluginName;
-		}, function (_flowchartControl) {
-			FlowchartCtrl = _flowchartControl.FlowchartCtrl;
-		}],
-		execute: function () {
-			_export('PanelCtrl', FlowchartCtrl);
-		}
-	};
+Object.defineProperty(exports, "__esModule", {
+	value: true
 });
-//# sourceMappingURL=module.js.map
+exports.PanelCtrl = undefined;
+
+var _properties = require('./properties');
+
+var _flowchartControl = require('./flowchartControl');
+
+exports.PanelCtrl = _flowchartControl.FlowchartCtrl;

@@ -1,32 +1,19 @@
 'use strict';
 
-System.register([], function (_export, _context) {
-	"use strict";
-
-	var pluginName, flowchartEditor, displayEditor, valueEditor, shapeEditor;
-	return {
-		setters: [],
-		execute: function () {
-			_export('pluginName', pluginName = 'agenty-flowcharting-panel');
-
-			_export('flowchartEditor', flowchartEditor = 'public/plugins/' + pluginName + '/flowchartEditor.html');
-
-			_export('displayEditor', displayEditor = 'public/plugins/' + pluginName + '/displayEditor.html');
-
-			_export('valueEditor', valueEditor = 'public/plugins/' + pluginName + '/valueEditor.html');
-
-			_export('shapeEditor', shapeEditor = 'public/plugins/' + pluginName + '/shapeEditor.html');
-
-			_export('pluginName', pluginName);
-
-			_export('flowchartEditor', flowchartEditor);
-
-			_export('displayEditor', displayEditor);
-
-			_export('shapeEditor', shapeEditor);
-
-			_export('valueEditor', valueEditor);
-		}
-	};
+Object.defineProperty(exports, "__esModule", {
+	value: true
 });
-//# sourceMappingURL=properties.js.map
+
+var pluginName = 'agenty-flowcharting-panel',
+    flowchartEditor = 'public/plugins/' + pluginName + '/flowchartEditor.html',
+    displayEditor = 'public/plugins/' + pluginName + '/displayEditor.html',
+    valueEditor = 'public/plugins/' + pluginName + '/valueEditor.html',
+    shapeEditor = 'public/plugins/' + pluginName + '/shapeEditor.html';
+
+//,mxBasePath = '../public/plugins/'+ pluginName +'/libs/mxgraph/javascript/dist';
+
+exports.pluginName = pluginName;
+exports.flowchartEditor = flowchartEditor;
+exports.displayEditor = displayEditor;
+exports.shapeEditor = shapeEditor;
+exports.valueEditor = valueEditor;
