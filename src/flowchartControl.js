@@ -1,7 +1,6 @@
-//import './externals/globals.js';
-//import './externals/mxInt';
-import {arnaud} from './libs/mxgraph-js/dist/mxgraph-js';
-import {MetricsPanelCtrl} from 'app/plugins/sdk';
+import {
+  MetricsPanelCtrl
+} from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
 import {
@@ -11,41 +10,43 @@ import {
   valueEditor
 } from './properties';
 import _ from 'lodash';
-import './series_overrides_flowchart_ctrl';
+//import './series_overrides_flowchart_ctrl';
+//const mxLoader = require("./mxgraph");
 
 
-const panelDefaults = {
-  content : '<mxGraphModel dx="2066" dy="1171" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169">\n'+
-  '  <root>\n'+
-  '    <mxCell id="0"/>\n'+
-  '    <mxCell id="1" parent="0"/>\n'+
-  '    <mxCell id="5" style="rounded=0;html=1;entryX=0.5;entryY=0;jettySize=auto;orthogonalLoop=1;edgeStyle=orthogonalEdgeStyle;curved=1;" edge="1" parent="1" source="2" target="3">\n'+
-  '      <mxGeometry relative="1" as="geometry"/>\n'+
-  '    </mxCell>\n'+
-  '    <mxCell id="6" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;" edge="1" parent="1" source="2" target="4">\n'+
-  '      <mxGeometry relative="1" as="geometry"/>\n'+
-  '    </mxCell>\n'+
-  '    <object label="Hello" composite="Hello" id="2">\n'+
-  '      <mxCell style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#00FF00;" parent="1" vertex="1">\n'+
-  '        <mxGeometry x="340" y="180" width="120" height="60" as="geometry"/>\n'+
-  '      </mxCell>\n'+
-  '    </object>\n'+
-  '    <object label="mxGraph" composite="World" id="3">\n'+
-  '      <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;gradientColor=#ffffff;fillColor=#E580FF;" parent="1" vertex="1">\n'+
-  '        <mxGeometry x="274" y="320" width="80" height="80" as="geometry"/>\n'+
-  '      </mxCell>\n'+
-  '    </object>\n'+
-  '    <mxCell id="4" value="Grafana" style="shape=mxgraph.flowchart.display;whiteSpace=wrap;html=1;fillColor=#FF7654;strokeColor=#000000;strokeWidth=2;gradientColor=#ffffff;" vertex="1" parent="1">\n'+
-  '      <mxGeometry x="440" y="330" width="98" height="60" as="geometry"/>\n'+
-  '    </mxCell>\n'+
-  '    <mxCell id="7" value="Author : Arnaud GENTY&lt;br&gt;&lt;div style=&quot;text-align: left&quot;&gt;Manthor :&amp;nbsp;&lt;span&gt;Jeremy&amp;nbsp;&lt;/span&gt;&lt;span&gt;jdbranham&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">\n'+
-  '      <mxGeometry x="260" y="407" width="280" height="40" as="geometry"/>\n'+
-  '    </mxCell>\n'+
-  '  </root>\n'+
-  '</mxGraphModel>\n',
+
+const defaults = {
+  content: '<mxGraphModel dx="2066" dy="1171" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169">\n' +
+    '  <root>\n' +
+    '    <mxCell id="0"/>\n' +
+    '    <mxCell id="1" parent="0"/>\n' +
+    '    <mxCell id="5" style="rounded=0;html=1;entryX=0.5;entryY=0;jettySize=auto;orthogonalLoop=1;edgeStyle=orthogonalEdgeStyle;curved=1;" edge="1" parent="1" source="2" target="3">\n' +
+    '      <mxGeometry relative="1" as="geometry"/>\n' +
+    '    </mxCell>\n' +
+    '    <mxCell id="6" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;" edge="1" parent="1" source="2" target="4">\n' +
+    '      <mxGeometry relative="1" as="geometry"/>\n' +
+    '    </mxCell>\n' +
+    '    <object label="Hello" composite="Hello" id="2">\n' +
+    '      <mxCell style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#00FF00;" parent="1" vertex="1">\n' +
+    '        <mxGeometry x="340" y="180" width="120" height="60" as="geometry"/>\n' +
+    '      </mxCell>\n' +
+    '    </object>\n' +
+    '    <object label="mxGraph" composite="World" id="3">\n' +
+    '      <mxCell style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;gradientColor=#ffffff;fillColor=#E580FF;" parent="1" vertex="1">\n' +
+    '        <mxGeometry x="274" y="320" width="80" height="80" as="geometry"/>\n' +
+    '      </mxCell>\n' +
+    '    </object>\n' +
+    '    <mxCell id="4" value="Grafana" style="shape=mxgraph.flowchart.display;whiteSpace=wrap;html=1;fillColor=#FF7654;strokeColor=#000000;strokeWidth=2;gradientColor=#ffffff;" vertex="1" parent="1">\n' +
+    '      <mxGeometry x="440" y="330" width="98" height="60" as="geometry"/>\n' +
+    '    </mxCell>\n' +
+    '    <mxCell id="7" value="Author : Arnaud GENTY&lt;br&gt;&lt;div style=&quot;text-align: left&quot;&gt;Manthor :&amp;nbsp;&lt;span&gt;Jeremy&amp;nbsp;&lt;/span&gt;&lt;span&gt;jdbranham&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">\n' +
+    '      <mxGeometry x="260" y="407" width="280" height="40" as="geometry"/>\n' +
+    '    </mxCell>\n' +
+    '  </root>\n' +
+    '</mxGraphModel>\n',
   shapes: [],
   values: [],
-  graph : null,
+  graph: null,
   legend: {
     show: true,
     min: true,
@@ -79,16 +80,17 @@ const panelDefaults = {
 };
 
 
-export class FlowchartCtrl extends MetricsPanelCtrl {
+class FlowchartCtrl extends MetricsPanelCtrl {
 
   constructor($scope, $injector, $sce, $http) {
+    console.log("constructor");
     super($scope, $injector);
-    _.defaults(this.panel, panelDefaults);
+    _.defaults(this.panel, defaults);
     this.$http = $http;
     this.panel.graphId = 'flowchart_' + this.panel.id;
     this.containerDivId = 'container_' + this.panel.graphId;
     this.$sce = $sce;
-
+    this.templateUrl = 'module.html';
 
     // events
     this.events.on('render', this.onRender.bind(this));
@@ -97,59 +99,61 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-
-    this.onRender();
+    //this.onRender();
 
   }
 
-  test(container)
-  {
+  test(container) {
+
     // Checks if the browser is supported
-    if (!arnaud.mxClient.isBrowserSupported())
-    {
-      // Displays an error message if the browser is not supported.
-      arnaud.mxUtils.error('Browser is not supported!', 200, false);
-    }
-    else
-    {
-      // Disables the built-in context menu
-      arnaud.mxEvent.disableContextMenu(container);
+      console.log("ici");
+      var me = this;
+      if (!mxClient.isBrowserSupported()) {
+        // Displays an error message if the browser is not supported.
+        console.log("initialisation");
+        mxUtils.error('Browser is not supported!', 200, false);
+      } else {
+        // Disables the built-in context menu
+        mxEvent.disableContextMenu(container);
 
-      // Creates the graph inside the given container
-      var graph = new arnaud.mxGraph(container);
+        // Creates the graph inside the given container
+        var graph = new mxLoader.mxGraph(container);
 
-      // Enables rubberband selection
-      new arnaud.mxRubberband(graph);
+        // Enables rubberband selection
+        new mxLoader.mxRubberband(graph);
 
-      // Gets the default parent for inserting new cells. This
-      // is normally the first child of the root (ie. layer 0).
-      var parent = graph.getDefaultParent();
+        // Gets the default parent for inserting new cells. This
+        // is normally the first child of the root (ie. layer 0).
+        var parent = graph.getDefaultParent();
 
-      // Adds cells to the model in a single step
-      graph.getModel().beginUpdate();
-      try
-      {
-        var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-        var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-        var e1 = graph.insertEdge(parent, null, '', v1, v2);
+        // Adds cells to the model in a single step
+        graph.getModel().beginUpdate();
+        try {
+          var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
+          var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
+          var e1 = graph.insertEdge(parent, null, '', v1, v2);
+        } finally {
+          // Updates the display
+          graph.getModel().endUpdate();
+        }
       }
-      finally
-      {
-        // Updates the display
-        graph.getModel().endUpdate();
-      }
-    }
+  }
+
+  empty() {
+    console.log("empty");
   }
 
   initializeMxgraph() {
-      //mxInt.test(this.initializeMxgraph());
-      this.test(this.getFlowchartContainer());
+    var me = this;
+    var container = me.getFlowchartContainer();
+    mxLoader.initAndCall(function () {
+                me.test(container)
+              })
   }
 
   getFlowchartContainer() {
     return $(document.getElementById(this.containerDivId));
   }
-
 
   onInitEditMode() {
     this.addEditorTab('Flowchart', flowchartEditor, 2);
@@ -159,7 +163,8 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    this.initializeMxgraph();
+    console.log("onRender");
+    //this.initializeMxgraph();
   }
 
   onDataReceived() {
@@ -173,4 +178,8 @@ export class FlowchartCtrl extends MetricsPanelCtrl {
 
 }
 
-FlowchartCtrl.templateUrl = 'module.html';
+
+export {
+  FlowchartCtrl,
+  FlowchartCtrl as MetricsPanelCtrl
+};

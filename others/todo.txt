@@ -6,3 +6,6 @@ Test mxgraph en libs angular
 https://stackoverflow.com/questions/49922708/how-to-integrate-mxgraph-with-angular-4
 Supp. libs_dist si fonctionne
 //import {Globals} from './globals';
+
+Angular :
+https://itnext.io/how-to-integrate-mxgraph-with-angular-6-18c3a2bb8566
