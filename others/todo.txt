@@ -9,3 +9,9 @@ Supp. libs_dist si fonctionne
 
 Angular :
 https://itnext.io/how-to-integrate-mxgraph-with-angular-6-18c3a2bb8566
+
+Example mxgraph used :
+https://git-pub.intecracy.com/unitybase/ubjs/tree/master/packages/adminui-pub/_src/app/ux
+
+Angular solution
+https://github.com/jgraph/mxgraph/issues/88

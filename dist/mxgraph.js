@@ -1,10 +1,10 @@
 'use strict';
 
-var mx;
 module.exports = {
-  initAndCall: function initAndCall() {
-    window.mxImageBasePath = '/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images';
-    window.mxBasePath = '/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src';
+  initAndCall: function initAndCall(pluginPath) {
+    console.log("pluginPath :" + pluginPath);
+    window.mxImageBasePath = pluginPath + '/libs/mxgraph/javascript/src/images';
+    window.mxBasePath = pluginPath + '/libs/mxgraph/javascript/src';
     return System.import('/public/plugins/agenty-flowcharting-panel/libs/mxgraph-js/dist/mxgraph-js').then(function (mxgraph) {
       // if (window.mxGraph) return mxgraph
       // expose to global to allow mxGraph work correctly
@@ -46,9 +46,10 @@ module.exports = {
       window.mxCellOverlay = mxgraph.mxCellOverlay;
       window.mxImage = mxgraph.mxImage;
       window.mxPrintPreview = mxgraph.mxPrintPreview;
-      // console.log(mxgraph.mxClient.isBrowserSupported())
-      // console.log(mxgraph)
+      console.log('mxClient.isBrowserSupported :' + mxClient.isBrowserSupported());
       return mxgraph;
+    }).catch(function () {
+      console.log("echec System.import");
     });
   }
 };

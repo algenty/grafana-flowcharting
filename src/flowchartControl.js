@@ -7,7 +7,8 @@ import {
   flowchartEditor,
   displayEditor,
   shapeEditor,
-  valueEditor
+  valueEditor,
+  currentPath
 } from './properties';
 import _ from 'lodash';
 //import './series_overrides_flowchart_ctrl';
@@ -16,6 +17,7 @@ const mxLoader = require("./mxgraph");
 
 
 const defaults = {
+  currentPath: currentPath,
   content: '<mxGraphModel dx="2066" dy="1171" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169">\n' +
     '  <root>\n' +
     '    <mxCell id="0"/>\n' +
@@ -103,41 +105,53 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   }
 
+  initPlugin() {
+    let me = this;
+    let container = me.getFlowchartContainer();
+
+    me.xmInitPromise = new Promise(function(resolve, reject) {
+      mxLoader.initAndCall(defaults.currentPath).then(function() {
+        me.test(container);
+        resolve(me)
+      })
+    })
+  }
+
+
   test(container) {
 
     // Checks if the browser is supported
-      console.log("ici");
-      console.log(mxLoader.mx);
-      var me = this;
-      if (!mxLoader.mxClient.isBrowserSupported()) {
-        // Displays an error message if the browser is not supported.
-        console.log("initialisation");
-        mxUtils.error('Browser is not supported!', 200, false);
-      } else {
-        // Disables the built-in context menu
-        mxEvent.disableContextMenu(container);
+    console.log("test mx graph");
+    var me = this;
+    if (!mxClient.isBrowserSupported()) {
+      // Displays an error message if the browser is not supported.
+      console.log("initialisation");
+      mxUtils.error('Browser is not supported!', 200, false);
+    } else {
+      // Disables the built-in context menu
+      //mxEvent.disableContextMenu(container);
 
-        // Creates the graph inside the given container
-        var graph = new mxLoadermxGraph(container);
+      // Creates the graph inside the given container
+      var graph = new mxGraph(container);
 
-        // Enables rubberband selection
-        new mxLoader.mxRubberband(graph);
+      // Enables rubberband selection
+      new mxLoader.mxRubberband(graph);
 
-        // Gets the default parent for inserting new cells. This
-        // is normally the first child of the root (ie. layer 0).
-        var parent = graph.getDefaultParent();
+      // Gets the default parent for inserting new cells. This
+      // is normally the first child of the root (ie. layer 0).
+      var parent = graph.getDefaultParent();
 
-        // Adds cells to the model in a single step
-        graph.getModel().beginUpdate();
-        try {
-          var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-          var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-          var e1 = graph.insertEdge(parent, null, '', v1, v2);
-        } finally {
-          // Updates the display
-          graph.getModel().endUpdate();
-        }
+      // Adds cells to the model in a single step
+      graph.getModel().beginUpdate();
+      try {
+        var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
+        var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
+        var e1 = graph.insertEdge(parent, null, '', v1, v2);
+      } finally {
+        // Updates the display
+        graph.getModel().endUpdate();
       }
+    }
   }
 
   empty() {
@@ -145,17 +159,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   initializeMxgraph() {
-    var me = this;
-    var container = me.getFlowchartContainer();
-    var mxgraph = mxLoader.initAndCall()
-    mxgraph = mxLoader.initAndCall()
-    console.log(mxgraph);
-    mxLoader.initAndCall().then(function () {
-                me.test(container)
-              })
-
-
-    me.test(container);
+    this.initPlugin()
   }
 
   getFlowchartContainer() {
