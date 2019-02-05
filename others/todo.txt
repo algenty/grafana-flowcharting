@@ -15,3 +15,4 @@ https://git-pub.intecracy.com/unitybase/ubjs/tree/master/packages/adminui-pub/_s
 
 Angular solution
 https://github.com/jgraph/mxgraph/issues/88
+https://github.com/Cadmus/epicupsdraw
