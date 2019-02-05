@@ -1,29 +1,20 @@
 var mxgraph = require("mxgraph")({
-  mxImageBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images",
-  mxBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist",
+    mxImageBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images",
+    mxBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist",
 
-});
+  }),
+  mxGraph = mxgraph.mxGraph,
+  mxShape = mxgraph.mxShape,
+  mxConnectionConstraint = mxgraph.mxConnectionConstraint,
+  mxPoint = mxgraph.mxPoint,
+  mxPolyline = mxgraph.mxPolyline,
+  mxEvent = mxgraph.mxEvent,
+  mxRubberband = mxgraph.mxRubberband,
+  mxCellState = mxgraph.mxCellState;
 
-
-class Mx extends BaseObject {
-  constructor(bidon) {
-    if (options === undefined) {
-      throw new TypeError("Options not defined in Hero.");
-    }
-    super(bidon);
-    this._mxGraph = mxgraph.mxGraph;
-    this._mxShape = mxgraph.mxShape;
-    this._mxConnectionConstraint = mxgraph.mxConnectionConstraint;
-    this._mxPoint = mxgraph.mxPoint;
-    this._mxPolyline = mxgraph.mxPolyline;
-    this._mxEvent = mxgraph.mxEvent;
-    this._mxRubberband = mxgraph.mxRubberband;
-    this._mxCellState = mxgraph.mxCellState;
-    this.init();
-  }
-
+var mx = {
   init() {
-    this._mxGraph.prototype.getAllConnectionConstraints = function(terminal, source) {
+    mxGraph.prototype.getAllConnectionConstraints = function(terminal, source) {
       if (terminal != null && terminal.shape != null) {
         if (terminal.shape.stencil != null) {
           if (terminal.shape.stencil != null) {
@@ -36,10 +27,10 @@ class Mx extends BaseObject {
 
       return null;
     };
-  }
+  },
   draw() {
     var container = document.getElementById("this.containerDivId");
-    this._mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0), true),
+    mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0), true),
       new mxConnectionConstraint(new mxPoint(0.5, 0), true),
       new mxConnectionConstraint(new mxPoint(0.75, 0), true),
       new mxConnectionConstraint(new mxPoint(0, 0.25), true),
@@ -53,9 +44,9 @@ class Mx extends BaseObject {
       new mxConnectionConstraint(new mxPoint(0.75, 1), true)
     ];
     // Edges have no connection points
-    this._mxPolyline.prototype.constraints = null;
+    mxPolyline.prototype.constraints = null;
     // Disables the built-in context menu
-    this._mxEvent.disableContextMenu(container);
+    mxEvent.disableContextMenu(container);
 
     // Creates the graph inside the given container
     var graph = new mxGraph(container);
@@ -90,4 +81,7 @@ class Mx extends BaseObject {
     }
   }
 }
-export default Mx;
+
+export {mx};
+mx.init();
+mx.draw();

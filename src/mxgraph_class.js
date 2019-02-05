@@ -11,15 +11,14 @@ class Mx extends BaseObject {
       throw new TypeError("Options not defined in Hero.");
     }
     super(bidon);
-    this._mxGraph = mxgraph.mxGraph;
-    this._mxShape = mxgraph.mxShape;
-    this._mxConnectionConstraint = mxgraph.mxConnectionConstraint;
-    this._mxPoint = mxgraph.mxPoint;
-    this._mxPolyline = mxgraph.mxPolyline;
-    this._mxEvent = mxgraph.mxEvent;
-    this._mxRubberband = mxgraph.mxRubberband;
-    this._mxCellState = mxgraph.mxCellState;
-    this.init();
+    this._mxGraph = mxgraph.mxGraph,
+      this._mxShape = mxgraph.mxShape,
+      this._mxConnectionConstraint = mxgraph.mxConnectionConstraint,
+      this._mxPoint = mxgraph.mxPoint,
+      this._mxPolyline = mxgraph.mxPolyline,
+      this._mxEvent = mxgraph.mxEvent,
+      this._mxRubberband = mxgraph.mxRubberband,
+      this._mxCellState = mxgraph.mxCellState;
   }
 
   init() {

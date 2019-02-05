@@ -1,5 +1,5 @@
 var path = require("path"),
-    fs = require("fs");
+  fs = require("fs");
 
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);
@@ -90,8 +90,18 @@ module.exports = (grunt) => {
       mxgraph: {
         entry: "./src/mxgraph.js",
         mode: "development",
+        module: {
+          rules: [{
+              test: /\.js$/,
+              exclude: [/node_modules/],
+              use: {
+                loader: 'babel-loader',
+              }
+            }
+          ]
+        },
         output: {
-            path: path.resolve(process.cwd(), "./dist"),
+          path: path.resolve(process.cwd(), "./dist"),
           filename: "mxgraph.js"
         }
       }
