@@ -11,10 +11,8 @@ import {
   currentPath
 } from './properties';
 import _ from 'lodash';
-//import './series_overrides_flowchart_ctrl';
-const mxLoader = require("./mxgraph");
-
-
+//import './series_ovmxClient, mxGrapherrides_flowchart_ctrl';
+import mx from './mxgraph';
 
 const defaults = {
   currentPath: currentPath,
@@ -108,13 +106,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   initPlugin() {
     let me = this;
     let container = me.getFlowchartContainer();
-
-    me.xmInitPromise = new Promise(function(resolve, reject) {
-      mxLoader.initAndCall(defaults.currentPath).then(function() {
-        me.test(container);
-        resolve(me)
-      })
-    })
+    me.test(container);
   }
 
 
@@ -122,8 +114,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
     // Checks if the browser is supported
     console.log("test mx graph");
-    var me = this;
-    if (!mxClient.isBrowserSupported()) {
+    let me = this;
+    let mx = window.mxClient;
+    console.log(mx);
+    if (!mx.isBrowserSupported()) {
       // Displays an error message if the browser is not supported.
       console.log("initialisation");
       mxUtils.error('Browser is not supported!', 200, false);

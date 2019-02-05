@@ -23,6 +23,10 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _mxgraph = require('./mxgraph');
+
+var _mxgraph2 = _interopRequireDefault(_mxgraph);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30,9 +34,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+//import './series_ovmxClient, mxGrapherrides_flowchart_ctrl';
 
-//import './series_overrides_flowchart_ctrl';
-var mxLoader = require("./mxgraph");
 
 var defaults = {
   currentPath: _properties.currentPath,
@@ -106,13 +109,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     value: function initPlugin() {
       var me = this;
       var container = me.getFlowchartContainer();
-
-      me.xmInitPromise = new Promise(function (resolve, reject) {
-        mxLoader.initAndCall(defaults.currentPath).then(function () {
-          me.test(container);
-          resolve(me);
-        });
-      });
+      me.test(container);
     }
   }, {
     key: 'test',
@@ -121,7 +118,9 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       // Checks if the browser is supported
       console.log("test mx graph");
       var me = this;
-      if (!mxClient.isBrowserSupported()) {
+      var mx = window.mxClient;
+      console.log(mx);
+      if (!mx.isBrowserSupported()) {
         // Displays an error message if the browser is not supported.
         console.log("initialisation");
         mxUtils.error('Browser is not supported!', 200, false);

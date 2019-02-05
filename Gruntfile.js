@@ -1,3 +1,9 @@
+var path = require("path"),
+    fs = require("fs"),
+    mxClientContent,
+    deps;
+
+
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);
 
@@ -5,6 +11,15 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-sass');
   const sass = require('node-sass');
+
+  mxClientContent = fs.readFileSync(
+    path.join(process.cwd(), "./javascript/src/js/mxClient.js"),
+    "utf8"
+  );
+  deps = mxClientContent.match(/mxClient\.include\([^"']+["'](.*?)["']/gi).map(function(str) {
+    return "." + str.match(/mxClient\.include\([^"']+["'](.*?)["']/)[1];
+  });
+  deps = ["./js/mxClient.js"].concat(deps.slice(0));
 
   grunt.initConfig({
 

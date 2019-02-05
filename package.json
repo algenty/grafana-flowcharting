@@ -49,6 +49,7 @@
     "sass": "^1.0.0-beta.3"
   },
   "dependencies": {
+    "bower": "^1.8.8",
     "grunt-cli": "^1.3.2",
     "lodash": "~4.17.11",
     "mxgraph": "^3.9.12"
