@@ -89,6 +89,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _this.$http = $http;
     _this.panel.graphId = 'flowchart_' + _this.panel.id;
     _this.containerDivId = 'container_' + _this.panel.graphId;
+    console.log(_this.containerDivId);
     _this.$sce = $sce;
     _this.templateUrl = 'module.html';
 
@@ -175,10 +176,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     }
   }, {
     key: 'onRender',
-    value: function onRender() {
-      console.log("onRender");
-      this.initializeMxgraph();
-    }
+    value: function onRender() {}
   }, {
     key: 'onDataReceived',
     value: function onDataReceived() {

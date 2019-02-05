@@ -89,6 +89,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.$http = $http;
     this.panel.graphId = 'flowchart_' + this.panel.id;
     this.containerDivId = 'container_' + this.panel.graphId;
+    console.log(this.containerDivId);
     this.$sce = $sce;
     this.templateUrl = 'module.html';
 
@@ -168,8 +169,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    console.log("onRender");
-    this.initializeMxgraph();
+
   }
 
   onDataReceived() {
