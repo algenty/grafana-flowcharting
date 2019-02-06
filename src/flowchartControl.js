@@ -103,10 +103,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   }
 
-  getFlowchartContainer() {
-    return $(document.getElementById(this.containerDivId));
-  }
-
+  //
+  // EVENTS
+  //
   onInitEditMode() {
     this.addEditorTab('Flowchart', flowchartEditor, 2);
     this.addEditorTab('Display', displayEditor, 3);
@@ -115,17 +114,25 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-
+    let t = new mx(this.getFlowchartContainer());
+    t.draw();
   }
 
   onDataReceived() {
-    let t = new mx(this.getFlowchartContainer());
+    // TODO:
   }
 
   onDataError() {
     // TODO:
   }
 
+  //
+  // FUNCTIONS
+  //
+  getFlowchartContainer() {
+    console.log($(document.getElementById(this.containerDivId)));
+    return $(document.getElementById(this.containerDivId));
+  }
 
 }
 

@@ -4,24 +4,70 @@ var mxgraph = require("mxgraph")({
 
 });
 
+// for global calls
+// mxGraph = mxgraph.mxGraph;
+// mxShape = mxgraph.mxShape;
+// mxConnectionConstraint = mxgraph.mxConnectionConstraint;
+// mxPoint = mxgraph.mxPoint;
+// mxPolyline = mxgraph.mxPolyline;
+// mxEvent = mxgraph.mxEvent;
+// mxRubberband = mxgraph.mxRubberband;
+// mxCellState = mxgraph.mxCellState;
+window.mxGraph = mxgraph.mxGraph
+window.mxShape = mxgraph.mxShape
+window.mxConnectionConstraint = mxgraph.mxConnectionConstraint
+window.mxPoint = mxgraph.mxPoint
+window.mxPolyline = mxgraph.mxPolyline
+window.mxEvent = mxgraph.mxEvent
+window.mxRubberband = mxgraph.mxRubberband
+window.mxCellState = mxgraph.mxCellState
+window.mxClient = mxgraph.mxClient
+window.mxUtils = mxgraph.mxUtils
+window.mxConstants = mxgraph.mxConstants
+window.mxPopupMenu = mxgraph.mxPopupMenu
+window.mxDefaultPopupMenu = mxgraph.mxDefaultPopupMenu
+window.mxEditor = mxgraph.mxEditor
+window.mxGraphModel = mxgraph.mxGraphModel
+window.mxGraphView = mxgraph.mxGraphView
+window.mxToolbar = mxgraph.mxToolbar
+window.mxDefaultToolbar = mxgraph.mxDefaultToolbar
+window.mxGeometry = mxgraph.mxGeometry
+window.mxKeyHandler = mxgraph.mxKeyHandler
+window.mxDefaultKeyHandler = mxgraph.mxDefaultKeyHandler
+window.mxVertexHandler = mxgraph.mxVertexHandler
+window.mxStylesheet = mxgraph.mxStylesheet
+window.mxCellRenderer = mxgraph.mxCellRenderer
+window.mxCell = mxgraph.mxCell
+window.mxCodec = mxgraph.mxCodec
+window.mxDivResizer = mxgraph.mxDivResizer
+window.mxOutline = mxgraph.mxOutline
+window.mxUndoManager = mxgraph.mxUndoManager
+window.mxEdgeStyle = mxgraph.mxEdgeStyle
+window.mxCompactTreeLayout = mxgraph.mxCompactTreeLayout
+window.mxLabel = mxgraph.mxLabel
+window.mxRectangle = mxgraph.mxRectangle
+window.mxCellOverlay = mxgraph.mxCellOverlay
+window.mxImage = mxgraph.mxImage
+window.mxPrintPreview = mxgraph.mxPrintPreview
+
 
 class Mx {
   constructor(container) {
     console.log("Mx.constructor");
-    this._container = container;
-    this._mxGraph = mxgraph.mxGraph;
-    this._mxShape = mxgraph.mxShape;
-    this._mxConnectionConstraint = mxgraph.mxConnectionConstraint;
-    this._mxPoint = mxgraph.mxPoint;
-    this._mxPolyline = mxgraph.mxPolyline;
-    this._mxEvent = mxgraph.mxEvent;
-    this._mxRubberband = mxgraph.mxRubberband;
-    this._mxCellState = mxgraph.mxCellState;
+    // this._container = container;
+    // this._mxGraph = mxgraph.mxGraph;
+    // this._mxShape = mxgraph.mxShape;
+    // this._mxConnectionConstraint = mxgraph.mxConnectionConstraint;
+    // this._mxPoint = mxgraph.mxPoint;
+    // this._mxPolyline = mxgraph.mxPolyline;
+    // this._mxEvent = mxgraph.mxEvent;
+    // this._mxRubberband = mxgraph.mxRubberband;
+    // this._mxCellState = mxgraph.mxCellState;
     this.init();
   }
 
   init() {
-    this._mxGraph.prototype.getAllConnectionConstraints = function(terminal, source) {
+    mxGraph.prototype.getAllConnectionConstraints = function(terminal, source) {
       if (terminal != null && terminal.shape != null) {
         if (terminal.shape.stencil != null) {
           if (terminal.shape.stencil != null) {
@@ -37,38 +83,12 @@ class Mx {
   }
   draw() {
     console.log("Mx.draw");
-    var container = this._container ;
-    this._mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0), true),
-      new mxConnectionConstraint(new mxPoint(0.5, 0), true),
-      new mxConnectionConstraint(new mxPoint(0.75, 0), true),
-      new mxConnectionConstraint(new mxPoint(0, 0.25), true),
-      new mxConnectionConstraint(new mxPoint(0, 0.5), true),
-      new mxConnectionConstraint(new mxPoint(0, 0.75), true),
-      new mxConnectionConstraint(new mxPoint(1, 0.25), true),
-      new mxConnectionConstraint(new mxPoint(1, 0.5), true),
-      new mxConnectionConstraint(new mxPoint(1, 0.75), true),
-      new mxConnectionConstraint(new mxPoint(0.25, 1), true),
-      new mxConnectionConstraint(new mxPoint(0.5, 1), true),
-      new mxConnectionConstraint(new mxPoint(0.75, 1), true)
-    ];
-    // Edges have no connection points
-    this._mxPolyline.prototype.constraints = null;
+    var container = this._container;
     // Disables the built-in context menu
-    this._mxEvent.disableContextMenu(container);
+    //mxEvent.disableContextMenu(container);
 
     // Creates the graph inside the given container
     var graph = new mxGraph(container);
-    graph.setConnectable(true);
-
-    // Enables connect preview for the default edge style
-    graph.connectionHandler.createEdgeState = function(me) {
-      var edge = graph.createEdge(null, null, null, null, null);
-
-      return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
-    };
-
-    // Specifies the default edge style
-    graph.getStylesheet().getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
 
     // Enables rubberband selection
     new mxRubberband(graph);
@@ -87,6 +107,7 @@ class Mx {
       // Updates the display
       graph.getModel().endUpdate();
     }
+
   }
 }
 

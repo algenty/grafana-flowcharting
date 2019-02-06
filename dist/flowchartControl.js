@@ -117,7 +117,10 @@ function (_MetricsPanelCtrl) {
   _createClass(FlowchartCtrl, [{
     key: "getFlowchartContainer",
     value: function getFlowchartContainer() {
-      return $(document.getElementById(this.containerDivId));
+      // console.log($(document.getElementById(this.containerDivId)));
+      //return $(document.getElementById(this.containerDivId));
+      console.log(document.getElementById(this.containerDivId));
+      return document.getElementById(this.containerDivId);
     }
   }, {
     key: "onInitEditMode",
@@ -129,12 +132,13 @@ function (_MetricsPanelCtrl) {
     }
   }, {
     key: "onRender",
-    value: function onRender() {}
+    value: function onRender() {
+      var t = new _mxgraphinterface.default(this.getFlowchartContainer());
+      t.draw();
+    }
   }, {
     key: "onDataReceived",
-    value: function onDataReceived() {
-      var t = new _mxgraphinterface.default(this.getFlowchartContainer());
-    }
+    value: function onDataReceived() {}
   }, {
     key: "onDataError",
     value: function onDataError() {// TODO:

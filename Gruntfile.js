@@ -33,8 +33,14 @@ module.exports = (grunt) => {
       libs_to_dist: {
         cwd: 'node_modules',
         expand: true,
-        src: ['mxgraph/javascript/dist/**/*', 'mxgraph/javascript/src/**/*'],
+        src: ['mxgraph/javascript/dist/**/*'],
         dest: 'dist/libs'
+      },
+      res_to_dist: {
+        cwd: 'node_modules/mxgraph/javascript/src',
+        expand: true,
+        src: ['**/*'],
+        dest: 'dist/libs/mxgraph/javascript/dist'
       },
       readme: {
         expand: true,
@@ -112,5 +118,5 @@ module.exports = (grunt) => {
 
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:libs_to_dist', ]);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:libs_to_dist', 'copy:res_to_dist' ]);
 };
