@@ -6,19 +6,21 @@ var mxgraph = require("mxgraph")({
 
 
 class Mx extends BaseObject {
-  constructor(bidon) {
+  constructor(container) {
     if (options === undefined) {
       throw new TypeError("Options not defined in Hero.");
     }
     super(bidon);
-    this._mxGraph = mxgraph.mxGraph,
-      this._mxShape = mxgraph.mxShape,
-      this._mxConnectionConstraint = mxgraph.mxConnectionConstraint,
-      this._mxPoint = mxgraph.mxPoint,
-      this._mxPolyline = mxgraph.mxPolyline,
-      this._mxEvent = mxgraph.mxEvent,
-      this._mxRubberband = mxgraph.mxRubberband,
-      this._mxCellState = mxgraph.mxCellState;
+    this._container = container;
+    this._mxGraph = mxgraph.mxGraph;
+    this._mxShape = mxgraph.mxShape;
+    this._mxConnectionConstraint = mxgraph.mxConnectionConstraint;
+    this._mxPoint = mxgraph.mxPoint;
+    this._mxPolyline = mxgraph.mxPolyline;
+    this._mxEvent = mxgraph.mxEvent;
+    this._mxRubberband = mxgraph.mxRubberband;
+    this._mxCellState = mxgraph.mxCellState;
+    this.init();
   }
 
   init() {
@@ -37,7 +39,7 @@ class Mx extends BaseObject {
     };
   }
   draw() {
-    var container = document.getElementById("this.containerDivId");
+    var container = this._container ;
     this._mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0), true),
       new mxConnectionConstraint(new mxPoint(0.5, 0), true),
       new mxConnectionConstraint(new mxPoint(0.75, 0), true),

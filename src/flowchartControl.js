@@ -11,9 +11,7 @@ import {
   currentPath
 } from './properties';
 import _ from 'lodash';
-import mx from './mxgraph';
-//import './series_ovmxClient, mxGrapherrides_flowchart_ctrl';
-//import mx from './mxgraph';
+import mx from './mxgraphinterface';
 
 const defaults = {
   currentPath: currentPath,
@@ -84,7 +82,7 @@ const defaults = {
 class FlowchartCtrl extends MetricsPanelCtrl {
 
   constructor($scope, $injector, $sce, $http) {
-    console.log("constructor");
+    console.log("FlowchartCtrl.constructor");
     super($scope, $injector);
     _.defaults(this.panel, defaults);
     this.$http = $http;
@@ -121,7 +119,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived() {
-    var t = mx();
+    let t = new mx(this.getFlowchartContainer());
   }
 
   onDataError() {

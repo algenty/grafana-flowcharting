@@ -69,7 +69,7 @@ module.exports = (grunt) => {
       },
       dist: {
         files: {
-          'dist/css/diagram.css': 'src/css/diagram.scss'
+          'dist/css/diagram.css': 'src/css/flowchart.scss'
         }
       }
     },
@@ -79,7 +79,7 @@ module.exports = (grunt) => {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js', "!mxgraph.js"],
+          src: ['*.js', "!mxgraphinterface.js"],
           dest: 'dist',
           ext: '.js'
         }]
@@ -88,7 +88,7 @@ module.exports = (grunt) => {
 
     webpack: {
       mxgraph: {
-        entry: "./src/mxgraph.js",
+        entry: "./src/mxgraphinterface.js",
         mode: "development",
         module: {
           rules: [
@@ -97,21 +97,18 @@ module.exports = (grunt) => {
                 exclude: /(node_modules|bower_components|externals)/,
                 use: {
                   loader: 'babel-loader',
-                  options: {
-                    presets: ['@babel/preset-env']
-                  }
                 }
               }
             ]
         },
         output: {
           path: path.resolve(process.cwd(), "./dist"),
-          filename: "mxgraph.js"
+          filename: "mxgraphinterface.js"
         }
       }
     },
 
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:libs_to_dist', ]);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack','copy:libs_to_dist', ]);
 };

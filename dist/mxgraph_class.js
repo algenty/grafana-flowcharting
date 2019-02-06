@@ -33,7 +33,7 @@ var Mx =
 function (_BaseObject) {
   _inherits(Mx, _BaseObject);
 
-  function Mx(bidon) {
+  function Mx(container) {
     var _this;
 
     _classCallCheck(this, Mx);
@@ -43,7 +43,18 @@ function (_BaseObject) {
     }
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Mx).call(this, bidon));
-    _this._mxGraph = mxgraph.mxGraph, _this._mxShape = mxgraph.mxShape, _this._mxConnectionConstraint = mxgraph.mxConnectionConstraint, _this._mxPoint = mxgraph.mxPoint, _this._mxPolyline = mxgraph.mxPolyline, _this._mxEvent = mxgraph.mxEvent, _this._mxRubberband = mxgraph.mxRubberband, _this._mxCellState = mxgraph.mxCellState;
+    _this._container = container;
+    _this._mxGraph = mxgraph.mxGraph;
+    _this._mxShape = mxgraph.mxShape;
+    _this._mxConnectionConstraint = mxgraph.mxConnectionConstraint;
+    _this._mxPoint = mxgraph.mxPoint;
+    _this._mxPolyline = mxgraph.mxPolyline;
+    _this._mxEvent = mxgraph.mxEvent;
+    _this._mxRubberband = mxgraph.mxRubberband;
+    _this._mxCellState = mxgraph.mxCellState;
+
+    _this.init();
+
     return _this;
   }
 
@@ -67,7 +78,7 @@ function (_BaseObject) {
   }, {
     key: "draw",
     value: function draw() {
-      var container = document.getElementById("this.containerDivId");
+      var container = this._container;
       this._mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0), true), new mxConnectionConstraint(new mxPoint(0.5, 0), true), new mxConnectionConstraint(new mxPoint(0.75, 0), true), new mxConnectionConstraint(new mxPoint(0, 0.25), true), new mxConnectionConstraint(new mxPoint(0, 0.5), true), new mxConnectionConstraint(new mxPoint(0, 0.75), true), new mxConnectionConstraint(new mxPoint(1, 0.25), true), new mxConnectionConstraint(new mxPoint(1, 0.5), true), new mxConnectionConstraint(new mxPoint(1, 0.75), true), new mxConnectionConstraint(new mxPoint(0.25, 1), true), new mxConnectionConstraint(new mxPoint(0.5, 1), true), new mxConnectionConstraint(new mxPoint(0.75, 1), true)]; // Edges have no connection points
 
       this._mxPolyline.prototype.constraints = null; // Disables the built-in context menu
