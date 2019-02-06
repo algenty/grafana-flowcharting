@@ -5,12 +5,8 @@ var mxgraph = require("mxgraph")({
 });
 
 
-class Mx extends BaseObject {
+export default class Mx {
   constructor(container) {
-    if (options === undefined) {
-      throw new TypeError("Options not defined in Hero.");
-    }
-    super(bidon);
     this._container = container;
     this._mxGraph = mxgraph.mxGraph;
     this._mxShape = mxgraph.mxShape;
@@ -39,6 +35,7 @@ class Mx extends BaseObject {
     };
   }
   draw() {
+    console.log("Mx.draw");
     var container = this._container ;
     this._mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0), true),
       new mxConnectionConstraint(new mxPoint(0.5, 0), true),
@@ -91,4 +88,3 @@ class Mx extends BaseObject {
     }
   }
 }
-export default Mx;

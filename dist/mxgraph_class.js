@@ -5,23 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 var mxgraph = require("mxgraph")({
   mxImageBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images",
@@ -30,32 +18,20 @@ var mxgraph = require("mxgraph")({
 
 var Mx =
 /*#__PURE__*/
-function (_BaseObject) {
-  _inherits(Mx, _BaseObject);
-
+function () {
   function Mx(container) {
-    var _this;
-
     _classCallCheck(this, Mx);
 
-    if (options === undefined) {
-      throw new TypeError("Options not defined in Hero.");
-    }
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Mx).call(this, bidon));
-    _this._container = container;
-    _this._mxGraph = mxgraph.mxGraph;
-    _this._mxShape = mxgraph.mxShape;
-    _this._mxConnectionConstraint = mxgraph.mxConnectionConstraint;
-    _this._mxPoint = mxgraph.mxPoint;
-    _this._mxPolyline = mxgraph.mxPolyline;
-    _this._mxEvent = mxgraph.mxEvent;
-    _this._mxRubberband = mxgraph.mxRubberband;
-    _this._mxCellState = mxgraph.mxCellState;
-
-    _this.init();
-
-    return _this;
+    this._container = container;
+    this._mxGraph = mxgraph.mxGraph;
+    this._mxShape = mxgraph.mxShape;
+    this._mxConnectionConstraint = mxgraph.mxConnectionConstraint;
+    this._mxPoint = mxgraph.mxPoint;
+    this._mxPolyline = mxgraph.mxPolyline;
+    this._mxEvent = mxgraph.mxEvent;
+    this._mxRubberband = mxgraph.mxRubberband;
+    this._mxCellState = mxgraph.mxCellState;
+    this.init();
   }
 
   _createClass(Mx, [{
@@ -78,6 +54,7 @@ function (_BaseObject) {
   }, {
     key: "draw",
     value: function draw() {
+      console.log("Mx.draw");
       var container = this._container;
       this._mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0), true), new mxConnectionConstraint(new mxPoint(0.5, 0), true), new mxConnectionConstraint(new mxPoint(0.75, 0), true), new mxConnectionConstraint(new mxPoint(0, 0.25), true), new mxConnectionConstraint(new mxPoint(0, 0.5), true), new mxConnectionConstraint(new mxPoint(0, 0.75), true), new mxConnectionConstraint(new mxPoint(1, 0.25), true), new mxConnectionConstraint(new mxPoint(1, 0.5), true), new mxConnectionConstraint(new mxPoint(1, 0.75), true), new mxConnectionConstraint(new mxPoint(0.25, 1), true), new mxConnectionConstraint(new mxPoint(0.5, 1), true), new mxConnectionConstraint(new mxPoint(0.75, 1), true)]; // Edges have no connection points
 
@@ -116,7 +93,6 @@ function (_BaseObject) {
   }]);
 
   return Mx;
-}(BaseObject);
+}();
 
-var _default = Mx;
-exports.default = _default;
+exports.default = Mx;

@@ -79,7 +79,7 @@ module.exports = (grunt) => {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js', "!mxgraphinterface.js"],
+          src: ['*.js'],
           dest: 'dist',
           ext: '.js'
         }]
@@ -103,12 +103,14 @@ module.exports = (grunt) => {
         },
         output: {
           path: path.resolve(process.cwd(), "./dist"),
-          filename: "mxgraphinterface.js"
+          filename: "mxgraphinterface.js",
+          library: "mxLibrary",
+          libraryTarget: "umd"
         }
       }
     },
 
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack','copy:libs_to_dist', ]);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:libs_to_dist', ]);
 };
