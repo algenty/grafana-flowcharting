@@ -112,17 +112,12 @@ function (_MetricsPanelCtrl) {
     _this.onRender();
 
     return _this;
-  }
+  } //
+  // EVENTS
+  //
+
 
   _createClass(FlowchartCtrl, [{
-    key: "getFlowchartContainer",
-    value: function getFlowchartContainer() {
-      // console.log($(document.getElementById(this.containerDivId)));
-      //return $(document.getElementById(this.containerDivId));
-      console.log(document.getElementById(this.containerDivId));
-      return document.getElementById(this.containerDivId);
-    }
-  }, {
     key: "onInitEditMode",
     value: function onInitEditMode() {
       this.addEditorTab('Flowchart', _properties.flowchartEditor, 2);
@@ -138,10 +133,20 @@ function (_MetricsPanelCtrl) {
     }
   }, {
     key: "onDataReceived",
-    value: function onDataReceived() {}
+    value: function onDataReceived() {// TODO:
+    }
   }, {
     key: "onDataError",
-    value: function onDataError() {// TODO:
+    value: function onDataError() {} // TODO:
+    //
+    // FUNCTIONS
+    //
+
+  }, {
+    key: "getFlowchartContainer",
+    value: function getFlowchartContainer() {
+      console.log($(document.getElementById(this.containerDivId)));
+      return $(document.getElementById(this.containerDivId));
     }
   }]);
 

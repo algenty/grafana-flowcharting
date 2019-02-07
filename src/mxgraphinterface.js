@@ -54,7 +54,7 @@ window.mxPrintPreview = mxgraph.mxPrintPreview
 class Mx {
   constructor(container) {
     console.log("Mx.constructor");
-    // this._container = container;
+    this._container = container;
     // this._mxGraph = mxgraph.mxGraph;
     // this._mxShape = mxgraph.mxShape;
     // this._mxConnectionConstraint = mxgraph.mxConnectionConstraint;
@@ -64,6 +64,18 @@ class Mx {
     // this._mxRubberband = mxgraph.mxRubberband;
     // this._mxCellState = mxgraph.mxCellState;
     this.init();
+  }
+
+  createContainer() {
+    let container = document.createElement('div');
+				container.style.position = 'absolute';
+				container.style.overflow = 'hidden';
+				container.style.left = '0px';
+				container.style.top = '0px';
+				container.style.right = '0px';
+				container.style.bottom = '0px';
+				//container.style.background = 'url("editors/images/grid.gif")';
+        return container;
   }
 
   init() {
@@ -83,26 +95,28 @@ class Mx {
   }
   draw() {
     console.log("Mx.draw");
-    var container = this._container;
+    let container = this._container;
+    let newContainer = this.createContainer();
     // Disables the built-in context menu
-    //mxEvent.disableContextMenu(container);
+    mxEvent.disableContextMenu(newContainer);
 
+    $(container).append(newContainer);
     // Creates the graph inside the given container
-    var graph = new mxGraph(container);
+    let graph = new mxGraph(newContainer);
 
     // Enables rubberband selection
     new mxRubberband(graph);
 
     // Gets the default parent for inserting new cells. This
     // is normally the first child of the root (ie. layer 0).
-    var parent = graph.getDefaultParent();
+    let parent = graph.getDefaultParent();
 
     // Adds cells to the model in a single step
     graph.getModel().beginUpdate();
     try {
-      var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-      var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-      var e1 = graph.insertEdge(parent, null, '', v1, v2);
+      let v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
+      let v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
+      let e1 = graph.insertEdge(parent, null, '', v1, v2);
     } finally {
       // Updates the display
       graph.getModel().endUpdate();
