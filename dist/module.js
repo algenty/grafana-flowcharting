@@ -6,10 +6,15 @@ Object.defineProperty(exports, "__esModule", {
 Object.defineProperty(exports, "PanelCtrl", {
   enumerable: true,
   get: function get() {
-    return _flowchartControl.FlowchartCtrl;
+    return _flowchart_ctrl.FlowchartCtrl;
   }
 });
 
-var _properties = require("./properties");
+var _flowchart_ctrl = require("./flowchart_ctrl");
 
-var _flowchartControl = require("./flowchartControl");
+var _sdk = require("app/plugins/sdk");
+
+(0, _sdk.loadPluginCss)({
+  dark: 'plugins/agenty-flowcharting-panel/css/flowchart.dark.css',
+  light: 'plugins/agenty-flowcharting-panel/css/flowchart.light.css'
+});

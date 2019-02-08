@@ -12,7 +12,7 @@
     "contributors": [
       "Jeremy Branham (https://www.linkedin.com/in/jeremybranham/)"
     ],
-    "keywords": ["flowchart", "panel"],
+    "keywords": ["flowchart", "panel", "diagram", "mxgraph"],
     "links": [
       {"name": "Project site", "url": "https://github.com/algenty/grafana-flowcharting"},
       {"name": "Apache License", "url": "https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE"}

@@ -75,7 +75,8 @@ module.exports = (grunt) => {
       },
       dist: {
         files: {
-          'dist/css/diagram.css': 'src/css/flowchart.scss'
+          'dist/css/flowchart.dark.css': 'src/css/flowchart.dark.scss',
+          'dist/css/flowchart.dark.css': 'src/css/flowchart.light.scss',
         }
       }
     },
@@ -85,7 +86,7 @@ module.exports = (grunt) => {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js'],
+          src: ['*.js', "!mxgraph.js"],
           dest: 'dist',
           ext: '.js'
         }]
@@ -94,7 +95,7 @@ module.exports = (grunt) => {
 
     webpack: {
       mxgraph: {
-        entry: "./src/mxgraphinterface.js",
+        entry: "./src/mxgraph.js",
         mode: "development",
         module: {
           rules: [
@@ -119,5 +120,5 @@ module.exports = (grunt) => {
   });
 
   grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:libs_to_dist', 'copy:res_to_dist' ]);
-  grunt.registerTask('dev', ['clean', 'copy:src_to_dist', 'sass', 'babel', 'webpack', 'watch']);
+  grunt.registerTask('dev', ['default', 'watch']);
 };

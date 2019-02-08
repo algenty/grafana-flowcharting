@@ -1,6 +1,9 @@
-import {pluginName} from './properties';
-import {FlowchartCtrl} from './flowchartControl';
+import { FlowchartCtrl } from './flowchart_ctrl';
+import { loadPluginCss } from 'app/plugins/sdk';
 
-export {
-	FlowchartCtrl as PanelCtrl
-};
+loadPluginCss({
+  dark: 'plugins/agenty-flowcharting-panel/css/flowchart.dark.css',
+  light: 'plugins/agenty-flowcharting-panel/css/flowchart.light.css',
+});
+
+export { FlowchartCtrl as PanelCtrl };
