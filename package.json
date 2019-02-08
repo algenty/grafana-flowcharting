@@ -38,6 +38,7 @@
     "lodash": "^4.17.11",
     "mxgraph": "^3.9.12",
     "mxgraph-js": "^1.0.1",
+    "node": "^11.9.0",
     "node-sass": "^4.11.0",
     "sass": "^1.0.0-beta.3",
     "webpack": "^4.29.1"

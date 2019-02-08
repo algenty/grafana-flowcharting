@@ -119,4 +119,5 @@ module.exports = (grunt) => {
   });
 
   grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:libs_to_dist', 'copy:res_to_dist' ]);
+  grunt.registerTask('dev', ['clean', 'copy:src_to_dist', 'sass', 'babel', 'webpack', 'watch']);
 };
