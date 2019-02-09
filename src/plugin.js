@@ -3,7 +3,7 @@
 // console.log(plugin)
 // debugger
 // export {plugin};
-const plugin= {
+const plugin = {
   "type": "panel",
   "name": "FlowCharting",
   "id": "agenty-flowcharting-panel",
@@ -36,4 +36,6 @@ const plugin= {
   }
 }
 
-export default {plugin};
+module.exports = {  
+  plugin : plugin
+}

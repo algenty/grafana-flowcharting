@@ -1,9 +1,5 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
 // var plugin
 // $.getJSON("public/plugins/" + "agenty-flowcharting-panel" + "/plugin.json","json", function(data) {plugin=data})
 // console.log(plugin)
@@ -40,7 +36,6 @@ var plugin = {
     "plugins": []
   }
 };
-var _default = {
+module.exports = {
   plugin: plugin
 };
-exports.default = _default;

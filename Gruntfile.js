@@ -1,5 +1,6 @@
 var path = require("path"),
   fs = require("fs");
+const sass = require('node-sass');
 
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);
@@ -71,16 +72,15 @@ module.exports = (grunt) => {
     sass: {
       options: {
         sourceMap: true,
-        implementation: sass,
+        implementation: sass
       },
       dist: {
         files: {
           'dist/css/flowchart.dark.css': 'src/css/flowchart.dark.scss',
-          'dist/css/flowchart.dark.css': 'src/css/flowchart.light.scss',
+          'dist/css/flowchart.light.css': 'src/css/flowchart.light.scss'
         }
       }
     },
-
     babel: {
       dist: {
         files: [{
@@ -110,8 +110,8 @@ module.exports = (grunt) => {
         },
         output: {
           path: path.resolve(process.cwd(), "./dist"),
-          filename: "mxgraphinterface.js",
-          library: "mxLibrary",
+          filename: "mxgraph.js",
+          library: "mxgraph",
           libraryTarget: "umd"
         }
       }

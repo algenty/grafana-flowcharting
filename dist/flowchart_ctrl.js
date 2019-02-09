@@ -13,6 +13,10 @@ var _kbn = _interopRequireDefault(require("app/core/utils/kbn"));
 
 var _lodash = _interopRequireDefault(require("lodash"));
 
+var _plugin = require("./plugin");
+
+var _mxgraph = _interopRequireDefault(require("./mxgraph"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -32,11 +36,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-var plugin = require('./plugin'); //import mxgraph from './mxgraph';
-
-
-console.log(plugin);
 
 var FlowchartCtrl =
 /*#__PURE__*/
@@ -100,10 +99,10 @@ function (_MetricsPanelCtrl) {
   _createClass(FlowchartCtrl, [{
     key: "onInitEditMode",
     value: function onInitEditMode() {
-      this.addEditorTab('Flowcharting', 'public/plugins/' + plugin.id + '/partials/flowchartEditor.html', 2);
-      this.addEditorTab('Display', 'public/plugins/' + plugin.id + '/partials/displayEditor.html', 3);
-      this.addEditorTab('Shapes', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 4);
-      this.addEditorTab('Values', 'public/plugins/' + plugin.id + '/partials/valueEditor.html', 5);
+      this.addEditorTab('Flowcharting', 'public/plugins/' + _plugin.plugin.id + '/partials/flowchartEditor.html', 2);
+      this.addEditorTab('Display', 'public/plugins/' + _plugin.plugin.id + '/partials/displayEditor.html', 3);
+      this.addEditorTab('Shapes', 'public/plugins/' + _plugin.plugin.id + '/partials/shapeEditor.html', 4);
+      this.addEditorTab('Values', 'public/plugins/' + _plugin.plugin.id + '/partials/valueEditor.html', 5);
       this.unitFormats = _kbn.default.getUnitFormats();
     }
   }, {

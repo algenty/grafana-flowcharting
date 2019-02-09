@@ -1,17 +1,14 @@
-import {
-  MetricsPanelCtrl
-} from 'app/plugins/sdk';
+import { MetricsPanelCtrl } from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
 import _ from 'lodash';
-const plugin = require('./plugin');
-//import mxgraph from './mxgraph';
+import { plugin } from './plugin';
+import mxgraph from './mxgraph';
 
-console.log(plugin)
 
 class FlowchartCtrl extends MetricsPanelCtrl {
 
-  constructor($scope, $injector,$rootScope) {
+  constructor($scope, $injector, $rootScope) {
     super($scope, $injector);
     this.$rootScope = $rootScope;
     this.hiddenSeries = {};

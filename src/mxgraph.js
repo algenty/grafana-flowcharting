@@ -1,18 +1,13 @@
+// import _ from 'lodash';
+// import $ from 'jquery';
+
 var mxgraph = require("mxgraph")({
   mxImageBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images",
   mxBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist",
 
 });
 
-// for global calls
-// mxGraph = mxgraph.mxGraph;
-// mxShape = mxgraph.mxShape;
-// mxConnectionConstraint = mxgraph.mxConnectionConstraint;
-// mxPoint = mxgraph.mxPoint;
-// mxPolyline = mxgraph.mxPolyline;
-// mxEvent = mxgraph.mxEvent;
-// mxRubberband = mxgraph.mxRubberband;
-// mxCellState = mxgraph.mxCellState;
+
 window.mxGraph = mxgraph.mxGraph
 window.mxShape = mxgraph.mxShape
 window.mxConnectionConstraint = mxgraph.mxConnectionConstraint
@@ -50,79 +45,155 @@ window.mxCellOverlay = mxgraph.mxCellOverlay
 window.mxImage = mxgraph.mxImage
 window.mxPrintPreview = mxgraph.mxPrintPreview
 
+export default function link(scope, elem, attrs, ctrl) {
+  var data;
+  var panel = ctrl.panel;
+  elem = elem.find('.flowchart-panel__chart');
+  var $tooltip = $('<div id="tooltip">');
+  console.log(scope)
+  console.log(elem)
+  console.log(attrs)
+  debugger
+  // debugger
+  // ctrl.events.on('render', function () {
+  //   if (panel.legendType === 'Right side') {
+  //     render(false);
+  //     setTimeout(function () { render(true); }, 50);
+  //   } else {
+  //     render(true);
+  //   }
+  // });
 
-class Mx {
-  constructor(container) {
-    console.log("Mx.constructor");
-    this._container = container;
-    // this._mxGraph = mxgraph.mxGraph;
-    // this._mxShape = mxgraph.mxShape;
-    // this._mxConnectionConstraint = mxgraph.mxConnectionConstraint;
-    // this._mxPoint = mxgraph.mxPoint;
-    // this._mxPolyline = mxgraph.mxPolyline;
-    // this._mxEvent = mxgraph.mxEvent;
-    // this._mxRubberband = mxgraph.mxRubberband;
-    // this._mxCellState = mxgraph.mxCellState;
-    this.init();
+  // function getLegendHeight(panelHeight) {
+  //   if (!ctrl.panel.legend.show || ctrl.panel.legendType === 'Right side' || ctrl.panel.legendType === 'On graph') {
+  //     return 20;
+  //   }
+
+  //   if (ctrl.panel.legendType == 'Under graph' && ctrl.panel.legend.percentage || ctrl.panel.legend.values) {
+  //     let breakPoint = parseInt(ctrl.panel.breakPoint) / 100;
+  //     var total = 23 + 20 * data.length;
+  //     return Math.min(total, Math.floor(panelHeight * breakPoint));
+  //   }
+  // }
+
+  // function formatter(label, slice) {
+  //   var slice_data = slice.data[0][slice.data[0].length - 1];
+  //   var decimal = 2;
+  //   var start = "<div style='font-size:" + ctrl.panel.fontSize + ";text-align:center;padding:2px;color:" + slice.color + ";'>" + label + "<br/>";
+
+  //   if (ctrl.panel.legend.percentageDecimals) {
+  //     decimal = ctrl.panel.legend.percentageDecimals;
+  //   }
+  //   if (ctrl.panel.legend.values && ctrl.panel.legend.percentage) {
+  //     return start + ctrl.formatValue(slice_data) + "<br/>" + slice.percent.toFixed(decimal) + "%</div>";
+  //   } else if (ctrl.panel.legend.values) {
+  //     return start + ctrl.formatValue(slice_data) + "</div>";
+  //   } else if (ctrl.panel.legend.percentage) {
+  //     return start + slice.percent.toFixed(decimal) + "%</div>";
+  //   } else {
+  //     return start + '</div>';
+  //   }
+  // }
+
+  function noDataPoints() {
+    var html = '<div class="datapoints-warning"><span class="small">No data points</span></div>';
+    elem.html(html);
   }
 
-  createContainer() {
-    let container = document.createElement('div');
-				container.style.position = 'absolute';
-				container.style.overflow = 'hidden';
-				container.style.left = '0px';
-				container.style.top = '0px';
-				container.style.right = '0px';
-				container.style.bottom = '0px';
-				//container.style.background = 'url("editors/images/grid.gif")';
-        return container;
-  }
+  function addFlowchart() {
+    var width = elem.width();
+    var height = ctrl.height - getLegendHeight(ctrl.height);
 
-  init() {
-    mxGraph.prototype.getAllConnectionConstraints = function(terminal, source) {
-      if (terminal != null && terminal.shape != null) {
-        if (terminal.shape.stencil != null) {
-          if (terminal.shape.stencil != null) {
-            return terminal.shape.stencil.constraints;
-          }
-        } else if (terminal.shape.constraints != null) {
-          return terminal.shape.constraints;
-        }
-      }
+    var size = Math.min(width, height);
 
-      return null;
+    var plotCanvas = $('<div></div>');
+    var plotCss = {
+      margin: 'auto',
+      position: 'relative',
+      paddingBottom: 20 + 'px',
+      height: size + 'px'
     };
-  }
-  draw() {
-    console.log("Mx.draw");
-    let container = this._container;
-    let newContainer = this.createContainer();
-    // Disables the built-in context menu
-    mxEvent.disableContextMenu(newContainer);
 
-    $(container).append(newContainer);
-    // Creates the graph inside the given container
-    let graph = new mxGraph(newContainer);
+    plotCanvas.css(plotCss);
 
-    // Enables rubberband selection
-    new mxRubberband(graph);
+    var backgroundColor = $('body').css('background-color')
 
-    // Gets the default parent for inserting new cells. This
-    // is normally the first child of the root (ie. layer 0).
-    let parent = graph.getDefaultParent();
+    var options = {
+      legend: {
+        show: false
+      },
+      series: {
+        pie: {
+          show: true,
+          stroke: {
+            color: backgroundColor,
+            width: parseFloat(ctrl.panel.strokeWidth).toFixed(1)
+          },
+          label: {
+            show: ctrl.panel.legend.show && ctrl.panel.legendType === 'On graph',
+            formatter: formatter
+          },
+          highlight: {
+            opacity: 0.0
+          },
+          combine: {
+            threshold: ctrl.panel.combine.threshold,
+            label: ctrl.panel.combine.label
+          }
+        }
+      },
+      grid: {
+        hoverable: true,
+        clickable: false
+      }
+    };
 
-    // Adds cells to the model in a single step
-    graph.getModel().beginUpdate();
-    try {
-      let v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-      let v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-      let e1 = graph.insertEdge(parent, null, '', v1, v2);
-    } finally {
-      // Updates the display
-      graph.getModel().endUpdate();
+    data = ctrl.data;
+
+    for (let i = 0; i < data.length; i++) {
+      let series = data[i];
+
+      // if hidden remove points
+      if (ctrl.hiddenSeries[series.label]) {
+        series.data = {};
+      }
     }
 
+
+    elem.html(plotCanvas);
+
+    plotCanvas.bind("plothover", function (event, pos, item) {
+      if (!item) {
+        $tooltip.detach();
+        return;
+      }
+
+      var body;
+      var percent = parseFloat(item.series.percent).toFixed(2);
+      var formatted = ctrl.formatValue(item.series.data[0][1]);
+
+      body = '<div class="piechart-tooltip-small"><div class="piechart-tooltip-time">';
+      body += '<div class="piechart-tooltip-value">' + item.series.label + ': ' + formatted;
+      body += " (" + percent + "%)" + '</div>';
+      body += "</div></div>";
+
+      $tooltip.html(body).place_tt(pos.pageX + 20, pos.pageY);
+    });
+  }
+
+  function render(incrementRenderCounter) {
+    if (!ctrl.data) { return; }
+
+    data = ctrl.data;
+
+      if (0 == ctrl.data.length) {
+        noDataPoints();
+      } else {
+        addFlowchart();
+      }
+
+    if (incrementRenderCounter) {
+      ctrl.renderingCompleted();
+    }
   }
 }
-
-export default Mx;

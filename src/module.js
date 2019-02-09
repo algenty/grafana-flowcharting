@@ -1,3 +1,4 @@
+debugger
 import { FlowchartCtrl } from './flowchart_ctrl';
 import { loadPluginCss } from 'app/plugins/sdk';
 
