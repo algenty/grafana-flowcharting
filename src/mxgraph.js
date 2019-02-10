@@ -215,19 +215,12 @@ export default function link(scope, elem, attrs, ctrl) {
     mxEvent.disableContextMenu(container);
     let graph = new mxGraph(container);
 
-    // Enables rubberband selection
-    new mxRubberband(graph);
-
-    // Gets the default parent for inserting new cells. This
-    // is normally the first child of the root (ie. layer 0).
-    let parent = graph.getDefaultParent();
-
-    // Adds cells to the model in a single step
     graph.getModel().beginUpdate();
     try {
-      let v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-      let v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-      let e1 = graph.insertEdge(parent, null, '', v1, v2);
+      console.log(ctrl.panel.content);
+			var xmlDoc = mxUtils.parseXml(ctrl.panel.content);
+			var codec = new mxCodec(xmlDoc);
+			codec.decode(xmlDoc.documentElement, graph.getModel());
     } finally {
       // Updates the display
       graph.getModel().endUpdate();
