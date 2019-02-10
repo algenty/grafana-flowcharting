@@ -12,9 +12,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
     this.$rootScope = $rootScope;
     this.hiddenSeries = {};
-
+    console.log(this.data)
     var panelDefaults = {
-      pieType: 'pie',
       legend: {
         show: true, // disable/enable legend
         values: true
@@ -65,12 +64,15 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.data = this.parseSeries(this.series);
   }
 
-  onDataReceived() {
-    // TODO:
+  onDataReceived(dataList) {
+    this.series = dataList.map(this.seriesHandler.bind(this));
+    this.data = this.parseSeries(this.series);
+    this.render(this.data);
   }
 
   onDataError() {
-    // TODO:
+    this.series = [];
+    this.render();
   }
 
   //
@@ -78,6 +80,69 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     mxgraph(scope, elem, attrs, ctrl);
+  }
+
+  setUnitFormat(subItem) {
+    this.panel.format = subItem.value;
+    this.render();
+  }
+
+  seriesHandler(seriesData) {
+    var series = new TimeSeries({
+      datapoints: seriesData.datapoints,
+      alias: seriesData.target
+    });
+
+    series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
+    return series;
+  }
+
+  getDecimalsForValue(value) {
+    if (_.isNumber(this.panel.decimals)) {
+      return { decimals: this.panel.decimals, scaledDecimals: null };
+    }
+
+    var delta = value / 2;
+    var dec = -Math.floor(Math.log(delta) / Math.LN10);
+
+    var magn = Math.pow(10, -dec);
+    var norm = delta / magn; // norm is between 1.0 and 10.0
+    var size;
+
+    if (norm < 1.5) {
+      size = 1;
+    } else if (norm < 3) {
+      size = 2;
+      // special case for 2.5, requires an extra decimal
+      if (norm > 2.25) {
+        size = 2.5;
+        ++dec;
+      }
+    } else if (norm < 7.5) {
+      size = 5;
+    } else {
+      size = 10;
+    }
+
+    size *= magn;
+
+    // reduce starting decimals if not needed
+    if (Math.floor(value) === value) { dec = 0; }
+
+    var result = {};
+    result.decimals = Math.max(0, dec);
+    result.scaledDecimals = result.decimals - Math.floor(Math.log(size) / Math.LN10) + 2;
+
+    return result;
+  }
+
+  toggleSeries(serie) {
+    if (this.hiddenSeries[serie.label]) {
+      delete this.hiddenSeries[serie.label];
+    } else {
+      this.hiddenSeries[serie.label] = true;
+    }
+    this.render();
   }
 
   parseSeries(series) {
@@ -89,6 +154,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         legendData: serie.stats[this.panel.valueName],
       };
     });
+  }
+
+  setLegendWidthForLegacyBrowser() {
+    var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+    if (isIE11 && this.panel.legendType === 'Right side' && !this.panel.legend.sideWidth) {
+      this.panel.legend.sideWidth = 150;
+    }
   }
 }
 

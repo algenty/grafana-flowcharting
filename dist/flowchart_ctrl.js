@@ -50,8 +50,8 @@ function (_MetricsPanelCtrl) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(FlowchartCtrl).call(this, $scope, $injector));
     _this.$rootScope = $rootScope;
     _this.hiddenSeries = {};
+    console.log(_this.data);
     var panelDefaults = {
-      pieType: 'pie',
       legend: {
         show: true,
         // disable/enable legend
@@ -113,12 +113,17 @@ function (_MetricsPanelCtrl) {
     }
   }, {
     key: "onDataReceived",
-    value: function onDataReceived() {// TODO:
+    value: function onDataReceived(dataList) {
+      this.series = dataList.map(this.seriesHandler.bind(this));
+      this.data = this.parseSeries(this.series);
+      this.render(this.data);
     }
   }, {
     key: "onDataError",
-    value: function onDataError() {} // TODO:
-    //
+    value: function onDataError() {
+      this.series = [];
+      this.render();
+    } //
     // FUNCTIONS
     //
 
@@ -126,6 +131,76 @@ function (_MetricsPanelCtrl) {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
       (0, _mxgraph.default)(scope, elem, attrs, ctrl);
+    }
+  }, {
+    key: "setUnitFormat",
+    value: function setUnitFormat(subItem) {
+      this.panel.format = subItem.value;
+      this.render();
+    }
+  }, {
+    key: "seriesHandler",
+    value: function seriesHandler(seriesData) {
+      var series = new _time_series.default({
+        datapoints: seriesData.datapoints,
+        alias: seriesData.target
+      });
+      series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
+      return series;
+    }
+  }, {
+    key: "getDecimalsForValue",
+    value: function getDecimalsForValue(value) {
+      if (_lodash.default.isNumber(this.panel.decimals)) {
+        return {
+          decimals: this.panel.decimals,
+          scaledDecimals: null
+        };
+      }
+
+      var delta = value / 2;
+      var dec = -Math.floor(Math.log(delta) / Math.LN10);
+      var magn = Math.pow(10, -dec);
+      var norm = delta / magn; // norm is between 1.0 and 10.0
+
+      var size;
+
+      if (norm < 1.5) {
+        size = 1;
+      } else if (norm < 3) {
+        size = 2; // special case for 2.5, requires an extra decimal
+
+        if (norm > 2.25) {
+          size = 2.5;
+          ++dec;
+        }
+      } else if (norm < 7.5) {
+        size = 5;
+      } else {
+        size = 10;
+      }
+
+      size *= magn; // reduce starting decimals if not needed
+
+      if (Math.floor(value) === value) {
+        dec = 0;
+      }
+
+      var result = {};
+      result.decimals = Math.max(0, dec);
+      result.scaledDecimals = result.decimals - Math.floor(Math.log(size) / Math.LN10) + 2;
+      return result;
+    }
+  }, {
+    key: "toggleSeries",
+    value: function toggleSeries(serie) {
+      if (this.hiddenSeries[serie.label]) {
+        delete this.hiddenSeries[serie.label];
+      } else {
+        this.hiddenSeries[serie.label] = true;
+      }
+
+      this.render();
     }
   }, {
     key: "parseSeries",
@@ -140,6 +215,15 @@ function (_MetricsPanelCtrl) {
           legendData: serie.stats[_this2.panel.valueName]
         };
       });
+    }
+  }, {
+    key: "setLegendWidthForLegacyBrowser",
+    value: function setLegendWidthForLegacyBrowser() {
+      var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+
+      if (isIE11 && this.panel.legendType === 'Right side' && !this.panel.legend.sideWidth) {
+        this.panel.legend.sideWidth = 150;
+      }
     }
   }]);
 

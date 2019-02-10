@@ -1,3 +1,5 @@
+import { debug } from "util";
+
 var mxgraph = require("mxgraph")({
   mxImageBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images",
   mxBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist",
@@ -168,12 +170,11 @@ export default function link(scope, elem, attrs, ctrl) {
       }
     }
 
+
     elem.html(plotCanvas);
-    console.log(plotCanvas)
-    debugger
-
     //TODO : add draw mxgraph
-
+ 
+    draw(plotCanvas[0])
     plotCanvas.bind("plothover", function (event, pos, item) {
       if (!item) {
         $tooltip.detach();
@@ -194,20 +195,59 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function render(incrementRenderCounter) {
-    debugger
     if (!ctrl.data) { return; }
 
     data = ctrl.data;
 
-      if (0 == ctrl.data.length) {
-        noDataPoints();
-      } else {
-        addFlowChart();
-      }
+    if (0 == ctrl.data.length) {
+      noDataPoints();
+    } else {
+      addFlowChart();
+    }
 
     if (incrementRenderCounter) {
       ctrl.renderingCompleted();
     }
+  }
+
+  function draw(container) {
+    initDraw();
+    mxEvent.disableContextMenu(container);
+    let graph = new mxGraph(container);
+
+    // Enables rubberband selection
+    new mxRubberband(graph);
+
+    // Gets the default parent for inserting new cells. This
+    // is normally the first child of the root (ie. layer 0).
+    let parent = graph.getDefaultParent();
+
+    // Adds cells to the model in a single step
+    graph.getModel().beginUpdate();
+    try {
+      let v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
+      let v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
+      let e1 = graph.insertEdge(parent, null, '', v1, v2);
+    } finally {
+      // Updates the display
+      graph.getModel().endUpdate();
+    }
+  }
+
+  function initDraw() {
+    mxGraph.prototype.getAllConnectionConstraints = function(terminal, source) {
+      if (terminal != null && terminal.shape != null) {
+        if (terminal.shape.stencil != null) {
+          if (terminal.shape.stencil != null) {
+            return terminal.shape.stencil.constraints;
+          }
+        } else if (terminal.shape.constraints != null) {
+          return terminal.shape.constraints;
+        }
+      }
+
+      return null;
+    };
   }
 }
 
