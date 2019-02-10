@@ -107,7 +107,9 @@ function (_MetricsPanelCtrl) {
     }
   }, {
     key: "onRender",
-    value: function onRender() {// TODO:
+    value: function onRender() {
+      // TODO:
+      this.data = this.parseSeries(this.series);
     }
   }, {
     key: "onDataReceived",
@@ -122,7 +124,22 @@ function (_MetricsPanelCtrl) {
 
   }, {
     key: "link",
-    value: function link(scope, elem, attrs, ctrl) {//mxgraph(scope, elem, attrs, ctrl);
+    value: function link(scope, elem, attrs, ctrl) {
+      (0, _mxgraph.default)(scope, elem, attrs, ctrl);
+    }
+  }, {
+    key: "parseSeries",
+    value: function parseSeries(series) {
+      var _this2 = this;
+
+      return _lodash.default.map(this.series, function (serie, i) {
+        return {
+          label: serie.alias,
+          data: serie.stats[_this2.panel.valueName],
+          color: _this2.panel.aliasColors[serie.alias] || _this2.$rootScope.colors[i],
+          legendData: serie.stats[_this2.panel.valueName]
+        };
+      });
     }
   }]);
 

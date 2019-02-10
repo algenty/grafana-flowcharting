@@ -47,7 +47,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-
   }
 
   //
@@ -63,6 +62,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onRender() {
     // TODO:
+    this.data = this.parseSeries(this.series);
   }
 
   onDataReceived() {
@@ -77,7 +77,18 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
-    //mxgraph(scope, elem, attrs, ctrl);
+    mxgraph(scope, elem, attrs, ctrl);
+  }
+
+  parseSeries(series) {
+    return _.map(this.series, (serie, i) => {
+      return {
+        label: serie.alias,
+        data: serie.stats[this.panel.valueName],
+        color: this.panel.aliasColors[serie.alias] || this.$rootScope.colors[i],
+        legendData: serie.stats[this.panel.valueName],
+      };
+    });
   }
 }
 
