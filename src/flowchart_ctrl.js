@@ -82,7 +82,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   onInitEditMode() {
     this.addEditorTab('Flowcharting', 'public/plugins/' + plugin.id + '/partials/flowchartEditor.html', 2);
-    this.addEditorTab('Display', 'public/plugins/' + plugin.id + '/partials/displayEditor.html', 3);
+    this.addEditorTab('Options', 'public/plugins/' + plugin.id + '/partials/displayEditor.html', 3);
     this.addEditorTab('Shapes', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 4);
     this.addEditorTab('Values', 'public/plugins/' + plugin.id + '/partials/valueEditor.html', 5);
     this.unitFormats = kbn.getUnitFormats();

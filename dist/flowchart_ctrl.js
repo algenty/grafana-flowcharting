@@ -101,7 +101,7 @@ function (_MetricsPanelCtrl) {
     key: "onInitEditMode",
     value: function onInitEditMode() {
       this.addEditorTab('Flowcharting', 'public/plugins/' + _plugin.plugin.id + '/partials/flowchartEditor.html', 2);
-      this.addEditorTab('Display', 'public/plugins/' + _plugin.plugin.id + '/partials/displayEditor.html', 3);
+      this.addEditorTab('Options', 'public/plugins/' + _plugin.plugin.id + '/partials/displayEditor.html', 3);
       this.addEditorTab('Shapes', 'public/plugins/' + _plugin.plugin.id + '/partials/shapeEditor.html', 4);
       this.addEditorTab('Values', 'public/plugins/' + _plugin.plugin.id + '/partials/valueEditor.html', 5);
       this.unitFormats = _kbn.default.getUnitFormats();
