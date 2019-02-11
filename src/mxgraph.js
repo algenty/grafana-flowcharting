@@ -50,6 +50,8 @@ export default function link(scope, elem, attrs, ctrl) {
   elem = elem.find('.flowchart-panel__chart');
   var $tooltip = $('<div id="tooltip">');
 
+  initDraw();
+  
   ctrl.events.on('render', function () {
     if (panel.legendType === 'Right side') {
       render(false);
@@ -211,7 +213,6 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function draw(container) {
-    initDraw();
     mxEvent.disableContextMenu(container);
     let graph = new mxGraph(container);
 
@@ -221,7 +222,7 @@ export default function link(scope, elem, attrs, ctrl) {
 			var codec = new mxCodec(xmlDoc);
 			codec.decode(xmlDoc.documentElement, graph.getModel());
     } finally {
-      // Updates the display
+      // Updates the display 
       graph.getModel().endUpdate();
     }
   }

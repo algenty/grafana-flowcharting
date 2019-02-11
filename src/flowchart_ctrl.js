@@ -20,6 +20,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         show: true, // disable/enable legend
         values: true
       },
+      init: {
+        logLevel: 3, //1:debug, 2:info, 3:warn, 4:error, 5:fatal
+      },
       links: [],
       datasource: null,
       maxDataPoints: 3,
@@ -41,6 +44,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       sourceType: 'XML Content',
       url: "http://<source>:<port>/<pathToXml>",
       javascript: "Not yet",
+      editorContent : "",
       content : '<mxGraphModel dx="2066" dy="1171" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169">\n'+
       '  <root>\n'+
       '    <mxCell id="0"/>\n'+
@@ -94,6 +98,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onRender() {
     // TODO:
+    console.log("onRender")
     this.data = this.parseSeries(this.series);
   }
 
@@ -121,6 +126,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     mxgraph(scope, elem, attrs, ctrl);
+  }
+
+  openEditor() {
+    console.log("openEditor")
   }
 
   setUnitFormat(subItem) {

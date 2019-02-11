@@ -8,41 +8,40 @@
 				javascript)
 			</info-popover>
 		</span>
-      <div class="gf-form-select-wrapper width-9">
+      <div class="gf-form-select-wrapper width-12">
         <select class="gf-form-input" ng-model="ctrl.panel.sourceType" ng-options="t for t in ctrl.sourceTypeOptions"
           ng-change="ctrl.onSourceTypeChanged()"></select>
       </div>
 	</div>
-	<div class="gf-form" name="url_input" ng-if="ctrl.panel.sourceType == 'Url'">
-		<div class="gf-form" id="source_url" ng-if="measurement.valueHandler != 'Disable Criteria'">
+	<div class="gf-form" name="url_form" ng-if="ctrl.panel.sourceType == 'Url'">
+		<div class="gf-form" id="source_url">
 			<span class="gf-form-label width-12">
 				URL
 				<info-popover mode="right-normal">
 					This service should respond with a xml/plain response containing mxgraph syntax
 				</info-popover>
 			</span>
-			<input type="text" name="url" ng-model="ctrl.panel.url"
+			<input type="text" name="url_input" ng-model="ctrl.panel.url"
 				class="gf-form-input ng-pristine ng-untouched ng-valid ng-empty" style="width: 300px"
-				ng-change="ctrl.onRender()" ng-model-onblur>
+				ng-change="ctrl.render()" ng-model-onblur>
 		</div>
 	</div>
-	<div class="gf-form gf-form--v-stretch" name="xml_input" ng-if="ctrl.panel.sourceType == 'XML Content'">
+	<div class="gf-form gf-form--v-stretch" name="xml_form" ng-if="ctrl.panel.sourceType == 'XML Content'">
 		<span class="gf-form-label width-7">XML Content</span>
-		<textarea name="xml" class="gf-form-input width-25 ng-pristine ng-valid ng-empty ng-touched" rows="3"
+		<textarea name="xml_input" class="gf-form-input width-25 ng-pristine ng-valid ng-empty ng-touched" rows="3"
 			placeholder="This text should respect xml/plain mxgraph syntax"
-			style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;" ng-change="ctrl.onRender()" ng-model="ctrl.panel.content" ng-model-onblur></textarea>
+			style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;" ng-change="ctrl.render()" ng-model="ctrl.panel.content" ng-model-onblur></textarea>
 	</div>
+	<div class="gf-form" name="editor_form" ng-if="ctrl.panel.sourceType == 'Editor'">
+			<span class="gf-form-label width-12">
+					MxGraph
+					<info-popover mode="right-normal">
+						Open mxGraph Editor like draw.io
+					</info-popover>
+				</span>
+		<div class="gf-form" id="source_url">
+			<button class="btn btn-secondary gf-form-btn width-12" name="editor_input" ng-click="ctrl.openEditor();">
+				<i class="fa"></i>
+				Edit
+			</button>
 </div>
-
-
-<!-- 
-<span> (This service should respond with a xml/plain response containing mxgraph syntax <a target="_blank"
-		href="https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html">MxGraph Editor</a>.)
-</span>
-<input type="text" style="width: 95%" ng-model="ctrl.panel.mxgraphServiceUrl" ng-change="ctrl.refresh()"
-	ng-model-onblur />
-<span> (This area uses <a target="_blank"
-		href="https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html">mxgraph editor</a>.)
-</span>
-<textarea class="gf-form-input" ng-model="ctrl.panel.content" rows="20" style="width: 95%" ng-change="ctrl.refresh()"
-	ng-model-onblur></textarea> -->
