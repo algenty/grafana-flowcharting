@@ -1,9 +1,11 @@
-import { debug } from "util";
-
+// window.mxImageBasePath = "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images";
+// window.mxBasePath = "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist";
 var mxgraph = require("mxgraph")({
   mxImageBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images",
   mxBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist",
-
+  mxLoadStylesheets: false,
+  mxLanguage: 'en',
+  mxLoadResources: true
 });
 
 // Put to global vars to work
@@ -51,7 +53,7 @@ export default function link(scope, elem, attrs, ctrl) {
   var $tooltip = $('<div id="tooltip">');
 
   initDraw();
-  
+
   ctrl.events.on('render', function () {
     if (panel.legendType === 'Right side') {
       render(false);
@@ -175,8 +177,8 @@ export default function link(scope, elem, attrs, ctrl) {
 
     elem.html(plotCanvas);
     //TODO : add draw mxgraph
- 
     draw(plotCanvas[0])
+
     plotCanvas.bind("plothover", function (event, pos, item) {
       if (!item) {
         $tooltip.detach();
@@ -215,12 +217,13 @@ export default function link(scope, elem, attrs, ctrl) {
   function draw(container) {
     mxEvent.disableContextMenu(container);
     let graph = new mxGraph(container);
+    graph.resizeContainer = true;
 
     graph.getModel().beginUpdate();
     try {
-			var xmlDoc = mxUtils.parseXml(ctrl.panel.content);
-			var codec = new mxCodec(xmlDoc);
-			codec.decode(xmlDoc.documentElement, graph.getModel());
+      var xmlDoc = mxUtils.parseXml(ctrl.panel.content);
+      var codec = new mxCodec(xmlDoc);
+      codec.decode(xmlDoc.documentElement, graph.getModel());
     } finally {
       // Updates the display 
       graph.getModel().endUpdate();
@@ -228,7 +231,7 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function initDraw() {
-    mxGraph.prototype.getAllConnectionConstraints = function(terminal, source) {
+    mxGraph.prototype.getAllConnectionConstraints = function (terminal, source) {
       if (terminal != null && terminal.shape != null) {
         if (terminal.shape.stencil != null) {
           if (terminal.shape.stencil != null) {

@@ -1,4 +1,4 @@
-<div class="section gf-form-group" style="margin-top: 0px; margin-bottom: 0px; width: 95%;">
+<div class="section gf-form-group" style="margin-top: 0px; margin-bottom: 0px; width:95%;">
 	<h5 class="section-heading">Definition</h5>
 	<div class="gf-form">
 		<span class="gf-form-label width-12">
@@ -27,8 +27,13 @@
 		</div>
 	</div>
 	<div class="gf-form gf-form--v-stretch" name="xml_form" ng-if="ctrl.panel.sourceType == 'XML Content'">
-		<span class="gf-form-label width-7">XML Content</span>
-		<textarea name="xml_input" class="gf-form-input width-25 ng-pristine ng-valid ng-empty ng-touched" rows="3"
+		<span class="gf-form-label width-12">
+			XML Content
+			<info-popover mode="right-normal">
+					XML mxgraph style, edit on draw.io and select Extra menu > Edit Diagram ...
+				</info-popover>
+		</span>
+		<textarea name="xml_input" class="gf-form-input width:95% ng-pristine ng-valid ng-empty ng-touched" rows="10"
 			placeholder="This text should respect xml/plain mxgraph syntax"
 			style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;" ng-change="ctrl.render()" ng-model="ctrl.panel.content" ng-model-onblur></textarea>
 	</div>
