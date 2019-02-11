@@ -7,4 +7,11 @@ Test editor on https://www.draw.io/
 ![Diagram](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/mxgraph_network.png?raw=true)  
 
 # How to use
-still doesnt work
+Download it and install it in data/plugin
+Restart Grafana
+
+# Version
+0.1 Display Graph
+      Dont change color of shape
+      Editor not work
+      Only display graph for now with xml Content in flowcharting tab
