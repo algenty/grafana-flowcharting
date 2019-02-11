@@ -217,7 +217,6 @@ export default function link(scope, elem, attrs, ctrl) {
 
     graph.getModel().beginUpdate();
     try {
-      console.log(ctrl.panel.content);
 			var xmlDoc = mxUtils.parseXml(ctrl.panel.content);
 			var codec = new mxCodec(xmlDoc);
 			codec.decode(xmlDoc.documentElement, graph.getModel());

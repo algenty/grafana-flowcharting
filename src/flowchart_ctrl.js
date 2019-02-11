@@ -11,7 +11,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, $rootScope) {
     super($scope, $injector);
     this.$rootScope = $rootScope;
-    this.hiddenSeries = {};
+    this.$scope = $scope;
+    this.hiddenSeries = {}; 
+    this.sourceTypeOptions = [ 'Url', 'XML Content', 'Editor', 'Javascript' ];
 
     var panelDefaults = {
       legend: {
@@ -36,7 +38,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         threshold: 0.0,
         label: 'Others'
       },
-      mode: 'content',
+      sourceType: 'XML Content',
+      url: "http://<source>:<port>/<pathToXml>",
+      javascript: "Not yet",
       content : '<mxGraphModel dx="2066" dy="1171" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169">\n'+
       '  <root>\n'+
       '    <mxCell id="0"/>\n'+
@@ -101,6 +105,14 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onDataError() {
     this.series = [];
+    this.render();
+  }
+
+  // 
+  // EVENTS OF EDITORS
+  //
+  onSourceTypeChanged() {
+    console.log(this.$scope)
     this.render();
   }
 
