@@ -1,6 +1,7 @@
 import { MetricsPanelCtrl } from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
+import coreModule from "app/core/core_module";
 import _ from 'lodash';
 import { plugin } from './plugin';
 import mxgraph from './mxgraph';
@@ -12,8 +13,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     super($scope, $injector);
     this.$rootScope = $rootScope;
     this.$scope = $scope;
-    this.hiddenSeries = {}; 
-    this.sourceTypeOptions = [ 'Url', 'XML Content', 'Editor', 'Javascript' ];
+    this.hiddenSeries = {};
+    //this.sourceTypeOptions = [ 'Url', 'XML Content', 'JSON ', 'Editor', 'Javascript' ];
+    //this.sourceTypeOptions = ['XML Content'];
 
     var panelDefaults = {
       legend: {
@@ -29,7 +31,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       interval: null,
       targets: [{}],
       cacheTimeout: null,
-      nullPointMode: 'connected',
       legendType: 'Under graph',
       breakPoint: '50%',
       aliasColors: {},
@@ -41,21 +42,77 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         threshold: 0.0,
         label: 'Others'
       },
-      sourceType: 'XML Content',
-      url: "http://<source>:<port>/<pathToXml>",
-      javascript: "Not yet",
-      editorContent : "",
-      content : '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>',
+      shapes: {
+        threshold: {
+          colors: {
+            crit: 'rgba(245, 54, 54, 0.9)',
+            warn: 'rgba(237, 129, 40, 0.9)',
+            ok: 'rgba(50, 128, 45, 0.9)',
+            disable: 'rgba(128, 128, 128, 0.9)'
+          },
+        },
+        aggregation: {
+          typeOptions: ['Last', 'First', 'Max', 'Min', 'Sum', 'Avg', 'Delta'],
+          content: 'Last',
+        },
+        handler: {
+          typeOptions: ['Number Threshold', 'String Threshold', 'Date Threshold', 'Disable Criteria', 'Text Only'],
+          content: 'Number Threshold',
+        },
+        shape: {
+          typeOptions: ['Warning / Critical', 'Always'],
+          content: undefined,
+        },
+        value: {
+          typeOptions: ['Never', 'When Alias Displayed', 'Warning / Critical', 'Critical Only'],
+          content: undefined,
+        },
+        units: {
+          typeOptions : kbn.getUnitFormats(),
+          content: undefined,
+          decimals: 2,
+          dateFormat : undefined,
+        },
+      },
+      flowchart: {
+        source: {
+          type: 'XML Content',
+          typeOptions: ['Url', 'XML Content', 'JSON ', 'Editor', 'Javascript'],
+          //typeOptions : ['XML Content'],
+          xml: {
+            content: '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>',
+          },
+          url: {
+            content: "http://<source>:<port>/<pathToXml>",
+          },
+          editor: {
+            content: "http://<source>:<port>/<pathToXml>",
+          }
+        },
+        center: false,
+        layout: false,
+        scale: false
+      }
     };
 
     _.defaults(this.panel, panelDefaults);
+    // Dates get stored as strings and will need to be converted back to a Date objects
+    _.each(this.panel.targets, (t) => {
+      if (t.valueHandler === "Date Threshold") {
+        if (typeof t.crit != "undefined") t.crit = new Date(t.crit);
+        if (typeof t.warn != "undefined") t.warn = new Date(t.warn);
+      }
+    });
 
     // events
     this.events.on('render', this.onRender.bind(this));
+    this.events.on('refresh', this.onRefresh.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+
+    this.addFilters()
   }
 
   //
@@ -63,11 +120,36 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   onInitEditMode() {
     this.addEditorTab('Flowcharting', 'public/plugins/' + plugin.id + '/partials/flowchartEditor.html', 2);
-    //this.addEditorTab('Options', 'public/plugins/' + plugin.id + '/partials/displayEditor.html', 3);
-    //this.addEditorTab('Shapes', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 4);
+    this.addEditorTab('Shapes Mapping', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 3);
     //this.addEditorTab('Values', 'public/plugins/' + plugin.id + '/partials/valueEditor.html', 5);
-    this.unitFormats = kbn.getUnitFormats();
   }
+
+  onRefresh() {
+
+    if (this.panel.fixedSpan) {
+      this.panel.span = this.panel.fixedSpan;
+    }
+
+    this.measurements = this.panel.targets;
+
+    /** Duplicate alias validation **/
+    this.duplicates = false;
+
+    this.measurements = _.filter(this.measurements, (measurement) => {
+      return !measurement.hide;
+    });
+
+    _.each(this.measurements, (m) => {
+      let res = _.filter(this.measurements, (measurement) => {
+        return (m.alias == measurement.alias || (m.target == measurement.target && m.target)) && !m.hide;
+      });
+
+      if (res.length > 1) {
+        this.duplicates = true;
+      }
+    });
+  }
+
 
   onRender() {
     // TODO:
@@ -92,6 +174,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onSourceTypeChanged() {
     console.log(this.$scope)
     this.render();
+  }
+
+  onColorChange(alarmLevel) {
+
   }
 
   //
@@ -120,54 +206,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     return series;
   }
 
-  getDecimalsForValue(value) {
-    if (_.isNumber(this.panel.decimals)) {
-      return { decimals: this.panel.decimals, scaledDecimals: null };
-    }
-
-    var delta = value / 2;
-    var dec = -Math.floor(Math.log(delta) / Math.LN10);
-
-    var magn = Math.pow(10, -dec);
-    var norm = delta / magn; // norm is between 1.0 and 10.0
-    var size;
-
-    if (norm < 1.5) {
-      size = 1;
-    } else if (norm < 3) {
-      size = 2;
-      // special case for 2.5, requires an extra decimal
-      if (norm > 2.25) {
-        size = 2.5;
-        ++dec;
-      }
-    } else if (norm < 7.5) {
-      size = 5;
-    } else {
-      size = 10;
-    }
-
-    size *= magn;
-
-    // reduce starting decimals if not needed
-    if (Math.floor(value) === value) { dec = 0; }
-
-    var result = {};
-    result.decimals = Math.max(0, dec);
-    result.scaledDecimals = result.decimals - Math.floor(Math.log(size) / Math.LN10) + 2;
-
-    return result;
-  }
-
-  toggleSeries(serie) {
-    if (this.hiddenSeries[serie.label]) {
-      delete this.hiddenSeries[serie.label];
-    } else {
-      this.hiddenSeries[serie.label] = true;
-    }
-    this.render();
-  }
-
   parseSeries(series) {
     return _.map(this.series, (serie, i) => {
       return {
@@ -184,6 +222,68 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (isIE11 && this.panel.legendType === 'Right side' && !this.panel.legend.sideWidth) {
       this.panel.legend.sideWidth = 150;
     }
+  }
+
+  validateRegex(textRegex) {
+    if (textRegex == null || textRegex.length == 0) {
+      return true
+    }
+    try {
+      let regex = new RegExp(textRegex);
+      return true
+    } catch (e) {
+      return false
+    }
+  }
+
+
+  addFilters() {
+    coreModule.filter('numberOrText', () => {
+      let numberOrTextFilter = (input) => {
+        if (angular.isNumber(input)) {
+          return this.filter('number')(input);
+        } else {
+          return input;
+        }
+      };
+
+      numberOrTextFilter.$stateful = true;
+      return numberOrTextFilter;
+    });
+
+    coreModule.filter('numberOrTextWithRegex', () => {
+      let numberOrTextFilter = (input, textRegex) => {
+        if (angular.isNumber(input)) {
+          return this.filter('number')(input);
+        } else {
+          if (textRegex == null || textRegex.length == 0) {
+            return input;
+          } else {
+            let regex;
+
+            try {
+              regex = new RegExp(textRegex);
+            } catch (e) {
+              return input;
+            }
+
+            if (!input) {
+              return input;
+            }
+
+            let matchResults = input.match(regex);
+            if (matchResults == null) {
+              return input;
+            } else {
+              return matchResults[0];
+            }
+          }
+        }
+      };
+
+      numberOrTextFilter.$stateful = true;
+      return numberOrTextFilter;
+    });
   }
 }
 

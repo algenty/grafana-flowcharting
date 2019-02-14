@@ -2,49 +2,49 @@
 	<h5 class="section-heading">Definition</h5>
 	<div class="gf-form">
 		<span class="gf-form-label width-12">
-			Source
+			Flowchart Definition
 			<info-popover mode="right-normal">
 				Source of mxgraph definition (Internal Editor, Xml definition, Json definition, Url with xml result or
 				javascript)
 			</info-popover>
 		</span>
       <div class="gf-form-select-wrapper width-12">
-        <select class="gf-form-input" ng-model="ctrl.panel.sourceType" ng-options="t for t in ctrl.sourceTypeOptions"
+        <select class="gf-form-input" ng-model="ctrl.panel.flowchart.source.type" ng-options="t for t in ctrl.panel.flowchart.source.typeOptions"
           ng-change="ctrl.onSourceTypeChanged()"></select>
       </div>
 	</div>
-	<div class="gf-form" name="url_form" ng-if="ctrl.panel.sourceType == 'Url'">
-		<div class="gf-form" id="source_url">
+	<div class="gf-form" name="options.source.url.form" ng-if="ctrl.panel.flowchart.source.type == 'Url'">
+		<div class="gf-form" id="ctrl.panel.source.type.url">
 			<span class="gf-form-label width-12">
 				URL
 				<info-popover mode="right-normal">
 					This service should respond with a xml/plain response containing mxgraph syntax
 				</info-popover>
 			</span>
-			<input type="text" name="url_input" ng-model="ctrl.panel.url"
+			<input type="text" name="options.source.url.input" ng-model="ctrl.panel.source.url.content"
 				class="gf-form-input ng-pristine ng-untouched ng-valid ng-empty" style="width: 300px"
 				ng-change="ctrl.render()" ng-model-onblur>
 		</div>
 	</div>
-	<div class="gf-form gf-form--v-stretch" name="xml_form" ng-if="ctrl.panel.sourceType == 'XML Content'">
+	<div class="gf-form gf-form--v-stretch" name="options.source.xml.form" ng-if="ctrl.panel.flowchart.source.type == 'XML Content'">
 		<span class="gf-form-label width-12">
 			XML Content
 			<info-popover mode="right-normal">
-					XML mxgraph style, edit on draw.io and select Extra menu > Edit Diagram ...
+					XML mxgraph model, edit on draw.io and select Extra menu > Edit Diagram ...
 				</info-popover>
 		</span>
-		<textarea name="xml_input" class="gf-form-input width:95% ng-pristine ng-valid ng-empty ng-touched" rows="10"
+		<textarea name="options.source.xml.input" class="gf-form-input width:95% ng-pristine ng-valid ng-empty ng-touched" rows="10"
 			placeholder="This text should respect xml/plain mxgraph syntax"
-			style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;" ng-change="ctrl.render()" ng-model="ctrl.panel.content" ng-model-onblur></textarea>
+			style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;" ng-change="ctrl.render()" ng-model="ctrl.panel.flowchart.source.xml.content" ng-model-onBlur></textarea>
 	</div>
-	<div class="gf-form" name="editor_form" ng-if="ctrl.panel.sourceType == 'Editor'">
+	<div class="gf-form" name="options.source.editor.form" ng-if="ctrl.panel.flowchart.source.type == 'Editor'">
 			<span class="gf-form-label width-12">
 					MxGraph
 					<info-popover mode="right-normal">
 						Open mxGraph Editor like draw.io
 					</info-popover>
 				</span>
-		<div class="gf-form" id="source_url">
+		<div class="gf-form" name="options.source.editor.input">
 			<button class="btn btn-secondary gf-form-btn width-12" name="editor_input" ng-click="ctrl.openEditor();">
 				<i class="fa"></i>
 				Edit

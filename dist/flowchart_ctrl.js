@@ -11,6 +11,8 @@ var _time_series = _interopRequireDefault(require("app/core/time_series2"));
 
 var _kbn = _interopRequireDefault(require("app/core/utils/kbn"));
 
+var _core_module = _interopRequireDefault(require("app/core/core_module"));
+
 var _lodash = _interopRequireDefault(require("lodash"));
 
 var _plugin = require("./plugin");
@@ -50,8 +52,9 @@ function (_MetricsPanelCtrl) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(FlowchartCtrl).call(this, $scope, $injector));
     _this.$rootScope = $rootScope;
     _this.$scope = $scope;
-    _this.hiddenSeries = {};
-    _this.sourceTypeOptions = ['Url', 'XML Content', 'Editor', 'Javascript'];
+    _this.hiddenSeries = {}; //this.sourceTypeOptions = [ 'Url', 'XML Content', 'JSON ', 'Editor', 'Javascript' ];
+    //this.sourceTypeOptions = ['XML Content'];
+
     var panelDefaults = {
       legend: {
         show: true,
@@ -68,7 +71,6 @@ function (_MetricsPanelCtrl) {
       interval: null,
       targets: [{}],
       cacheTimeout: null,
-      nullPointMode: 'connected',
       legendType: 'Under graph',
       breakPoint: '50%',
       aliasColors: {},
@@ -80,17 +82,73 @@ function (_MetricsPanelCtrl) {
         threshold: 0.0,
         label: 'Others'
       },
-      sourceType: 'XML Content',
-      url: "http://<source>:<port>/<pathToXml>",
-      javascript: "Not yet",
-      editorContent: "",
-      content: '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>'
+      shapes: {
+        threshold: {
+          colors: {
+            crit: 'rgba(245, 54, 54, 0.9)',
+            warn: 'rgba(237, 129, 40, 0.9)',
+            ok: 'rgba(50, 128, 45, 0.9)',
+            disable: 'rgba(128, 128, 128, 0.9)'
+          }
+        },
+        aggregation: {
+          typeOptions: ['Last', 'First', 'Max', 'Min', 'Sum', 'Avg', 'Delta'],
+          content: 'Last'
+        },
+        handler: {
+          typeOptions: ['Number Threshold', 'String Threshold', 'Date Threshold', 'Disable Criteria', 'Text Only'],
+          content: 'Number Threshold'
+        },
+        shape: {
+          typeOptions: ['Warning / Critical', 'Always'],
+          content: undefined
+        },
+        value: {
+          typeOptions: ['Never', 'When Alias Displayed', 'Warning / Critical', 'Critical Only'],
+          content: undefined
+        },
+        units: {
+          typeOptions: _kbn.default.getUnitFormats(),
+          content: undefined,
+          decimals: 2,
+          dateFormat: undefined
+        }
+      },
+      flowchart: {
+        source: {
+          type: 'XML Content',
+          typeOptions: ['Url', 'XML Content', 'JSON ', 'Editor', 'Javascript'],
+          //typeOptions : ['XML Content'],
+          xml: {
+            content: '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>'
+          },
+          url: {
+            content: "http://<source>:<port>/<pathToXml>"
+          },
+          editor: {
+            content: "http://<source>:<port>/<pathToXml>"
+          }
+        },
+        center: false,
+        layout: false,
+        scale: false
+      }
     };
 
-    _lodash.default.defaults(_this.panel, panelDefaults); // events
+    _lodash.default.defaults(_this.panel, panelDefaults); // Dates get stored as strings and will need to be converted back to a Date objects
+
+
+    _lodash.default.each(_this.panel.targets, function (t) {
+      if (t.valueHandler === "Date Threshold") {
+        if (typeof t.crit != "undefined") t.crit = new Date(t.crit);
+        if (typeof t.warn != "undefined") t.warn = new Date(t.warn);
+      }
+    }); // events
 
 
     _this.events.on('render', _this.onRender.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+
+    _this.events.on('refresh', _this.onRefresh.bind(_assertThisInitialized(_assertThisInitialized(_this))));
 
     _this.events.on('data-received', _this.onDataReceived.bind(_assertThisInitialized(_assertThisInitialized(_this))));
 
@@ -99,6 +157,8 @@ function (_MetricsPanelCtrl) {
     _this.events.on('data-snapshot-load', _this.onDataReceived.bind(_assertThisInitialized(_assertThisInitialized(_this))));
 
     _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+
+    _this.addFilters();
 
     return _this;
   } //
@@ -109,11 +169,35 @@ function (_MetricsPanelCtrl) {
   _createClass(FlowchartCtrl, [{
     key: "onInitEditMode",
     value: function onInitEditMode() {
-      this.addEditorTab('Flowcharting', 'public/plugins/' + _plugin.plugin.id + '/partials/flowchartEditor.html', 2); //this.addEditorTab('Options', 'public/plugins/' + plugin.id + '/partials/displayEditor.html', 3);
-      //this.addEditorTab('Shapes', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 4);
-      //this.addEditorTab('Values', 'public/plugins/' + plugin.id + '/partials/valueEditor.html', 5);
+      this.addEditorTab('Flowcharting', 'public/plugins/' + _plugin.plugin.id + '/partials/flowchartEditor.html', 2);
+      this.addEditorTab('Shapes Mapping', 'public/plugins/' + _plugin.plugin.id + '/partials/shapeEditor.html', 3); //this.addEditorTab('Values', 'public/plugins/' + plugin.id + '/partials/valueEditor.html', 5);
+    }
+  }, {
+    key: "onRefresh",
+    value: function onRefresh() {
+      var _this2 = this;
 
-      this.unitFormats = _kbn.default.getUnitFormats();
+      if (this.panel.fixedSpan) {
+        this.panel.span = this.panel.fixedSpan;
+      }
+
+      this.measurements = this.panel.targets;
+      /** Duplicate alias validation **/
+
+      this.duplicates = false;
+      this.measurements = _lodash.default.filter(this.measurements, function (measurement) {
+        return !measurement.hide;
+      });
+
+      _lodash.default.each(this.measurements, function (m) {
+        var res = _lodash.default.filter(_this2.measurements, function (measurement) {
+          return (m.alias == measurement.alias || m.target == measurement.target && m.target) && !m.hide;
+        });
+
+        if (res.length > 1) {
+          _this2.duplicates = true;
+        }
+      });
     }
   }, {
     key: "onRender",
@@ -143,7 +227,10 @@ function (_MetricsPanelCtrl) {
     value: function onSourceTypeChanged() {
       console.log(this.$scope);
       this.render();
-    } //
+    }
+  }, {
+    key: "onColorChange",
+    value: function onColorChange(alarmLevel) {} //
     // FUNCTIONS 
     //
 
@@ -174,70 +261,16 @@ function (_MetricsPanelCtrl) {
       return series;
     }
   }, {
-    key: "getDecimalsForValue",
-    value: function getDecimalsForValue(value) {
-      if (_lodash.default.isNumber(this.panel.decimals)) {
-        return {
-          decimals: this.panel.decimals,
-          scaledDecimals: null
-        };
-      }
-
-      var delta = value / 2;
-      var dec = -Math.floor(Math.log(delta) / Math.LN10);
-      var magn = Math.pow(10, -dec);
-      var norm = delta / magn; // norm is between 1.0 and 10.0
-
-      var size;
-
-      if (norm < 1.5) {
-        size = 1;
-      } else if (norm < 3) {
-        size = 2; // special case for 2.5, requires an extra decimal
-
-        if (norm > 2.25) {
-          size = 2.5;
-          ++dec;
-        }
-      } else if (norm < 7.5) {
-        size = 5;
-      } else {
-        size = 10;
-      }
-
-      size *= magn; // reduce starting decimals if not needed
-
-      if (Math.floor(value) === value) {
-        dec = 0;
-      }
-
-      var result = {};
-      result.decimals = Math.max(0, dec);
-      result.scaledDecimals = result.decimals - Math.floor(Math.log(size) / Math.LN10) + 2;
-      return result;
-    }
-  }, {
-    key: "toggleSeries",
-    value: function toggleSeries(serie) {
-      if (this.hiddenSeries[serie.label]) {
-        delete this.hiddenSeries[serie.label];
-      } else {
-        this.hiddenSeries[serie.label] = true;
-      }
-
-      this.render();
-    }
-  }, {
     key: "parseSeries",
     value: function parseSeries(series) {
-      var _this2 = this;
+      var _this3 = this;
 
       return _lodash.default.map(this.series, function (serie, i) {
         return {
           label: serie.alias,
-          data: serie.stats[_this2.panel.valueName],
-          color: _this2.panel.aliasColors[serie.alias] || _this2.$rootScope.colors[i],
-          legendData: serie.stats[_this2.panel.valueName]
+          data: serie.stats[_this3.panel.valueName],
+          color: _this3.panel.aliasColors[serie.alias] || _this3.$rootScope.colors[i],
+          legendData: serie.stats[_this3.panel.valueName]
         };
       });
     }
@@ -249,6 +282,73 @@ function (_MetricsPanelCtrl) {
       if (isIE11 && this.panel.legendType === 'Right side' && !this.panel.legend.sideWidth) {
         this.panel.legend.sideWidth = 150;
       }
+    }
+  }, {
+    key: "validateRegex",
+    value: function validateRegex(textRegex) {
+      if (textRegex == null || textRegex.length == 0) {
+        return true;
+      }
+
+      try {
+        var regex = new RegExp(textRegex);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+  }, {
+    key: "addFilters",
+    value: function addFilters() {
+      var _this4 = this;
+
+      _core_module.default.filter('numberOrText', function () {
+        var numberOrTextFilter = function numberOrTextFilter(input) {
+          if (angular.isNumber(input)) {
+            return _this4.filter('number')(input);
+          } else {
+            return input;
+          }
+        };
+
+        numberOrTextFilter.$stateful = true;
+        return numberOrTextFilter;
+      });
+
+      _core_module.default.filter('numberOrTextWithRegex', function () {
+        var numberOrTextFilter = function numberOrTextFilter(input, textRegex) {
+          if (angular.isNumber(input)) {
+            return _this4.filter('number')(input);
+          } else {
+            if (textRegex == null || textRegex.length == 0) {
+              return input;
+            } else {
+              var regex;
+
+              try {
+                regex = new RegExp(textRegex);
+              } catch (e) {
+                return input;
+              }
+
+              if (!input) {
+                return input;
+              }
+
+              var matchResults = input.match(regex);
+
+              if (matchResults == null) {
+                return input;
+              } else {
+                return matchResults[0];
+              }
+            }
+          }
+        };
+
+        numberOrTextFilter.$stateful = true;
+        return numberOrTextFilter;
+      });
     }
   }]);
 

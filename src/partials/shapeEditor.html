@@ -1,47 +1,183 @@
+<!-- GENERAL -->
+<div class="editor-row">
+  <div class="section gf-form-group">
+    <h3 class="section-heading">General</h3></br>
+    <div class="section gf-form-group">
+      <!--Threshold Preferences-->
+      <div class="section gf-form-group">
+        <h5 class="section-heading">Threshold Preferences</h5>
+        <div class="gf-form">
+          <label class="gf-form-label width-9">Colors</label>
+          <span class="gf-form-label">
+            <color-picker color="ctrl.panel.shapes.threshold.colors.crit" bs-tooltip="'Critical'"
+              onChange="ctrl.onColorChange('crit')">
+            </color-picker>
+          </span>
+          <span class="gf-form-label">
+            <color-picker color="ctrl.panel.shapes.threshold.colors.warn" bs-tooltip="'Warning'"
+              onChange="ctrl.onColorChange('warn')">
+            </color-picker>
+          </span>
+          <span class="gf-form-label">
+            <color-picker color="ctrl.panel.shapes.threshold.colors.ok" bs-tooltip="'OK'"
+              onChange="ctrl.onColorChange('ok')">
+            </color-picker>
+          </span>
+          <span class="gf-form-label">
+            <color-picker color="ctrl.panel.shapes.threshold.colors.disable" bs-tooltip="'Disabled'"
+              onChange="ctrl.onColorChange('disable')"></color-picker>
+          </span>
+        </div>
+        <gf-form-switch class="gf-form" label-class="width-15" label="Use 'Disable' color if no data"
+          checked="ctrl.panel.isGrayOnNoData" on-change="ctrl.onRender()"></gf-form-switch>
+        <gf-form-switch class="gf-form" label-class="width-15" label="Ignore color in OK state"
+          checked="ctrl.panel.isIgnoreOKColors" on-change="ctrl.onRender()"></gf-form-switch>
+      </div>
+    </div>
+  </div>
+</div>
 
-<div class="gf-form-group">
-	<div class="edit-tab-content">
-		<div class="gf-form-group">
-			<h5>Shapes <tip>Combines multiple metrics into a new name</tip></h5>
-			<div class="gf-form" ng-repeat="shape in ctrl.panel.shapes">
+<!-- BY METRICS -->
 
-				<div class="gf-form">
-					<label class="gf-form-label">
-						<i class="fa fa-trash pointer" ng-click="ctrl.removeShape(shape)"></i>
-					</label>
-				</div>
-				<div class="gf-form">
-					<label class="gf-form-label">Shape Name</label>
-				</div>
-				<div class="gf-form width-15">
-					<input type="text" ng-model="shape.name" ng-blur="ctrl.render()" class="gf-form-input width-15">
-				</div>
+<div>
+  <h3 class="section-heading">By metric</h3></br>
+  <!--METRIC SETTINGS-->
+  <div class="editor-row" ng-repeat="measurement in ctrl.measurements">
+    <h5 class="section-heading" ng-if="measurement.alias">{{ measurement.alias }}</h5>
+    <div ng-if="!measurement.alias">
+      <h5 class="section-heading">Metric: {{ measurement.refId }}</h5>
+    </div>
+    <!-- Display Setting -->
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Display Settings</h5>
+      <!--Aggregation-->
+      <div class="gf-form">
+        <span class="gf-form-label width-12">
+          Aggregation
+          <info-popover mode="right-normal">
+            What to do if the query returns multiple data points.
+          </info-popover>
+        </span>
+        <div class="gf-form-select-wrapper max-width-12">
+          <select class="gf-form-input"
+            ng-init="measurement.aggregation = (measurement.aggregation ? measurement.aggregation : ctrl.panel.shapes.aggregation.content[0])"
+            ng-model="measurement.aggregation" ng-options="t for t in ctrl.panel.shapes.aggregation.typeOptions"
+            ng-change="ctrl.onRender()" required></select>
+        </div>
+      </div>
 
-				<!-- Metrics that comprise the shape-->
+      <!--Metric Display Regex-->
+      <div class="gf-form">
+        <span class="gf-form-label width-12">
+          Value Regex
+          <info-popover mode="right-normal">
+            A regex which will decide the part of the value to be displayed. <br />
+            In case the regex is empty or it doesn't match any part of the metrics value, all the metric value will be
+            displayed.
+          </info-popover>
+        </span>
+        <input type="text" name="valueDisplayRegex" ng-model="measurement.valueDisplayRegex"
+          class="gf-form-input max-width-12" ng-change="ctrl.onRender()" />
+        <div ng-if="!ctrl.validateRegex(measurement.valueDisplayRegex)" style="color: red; padding-left: 5px">
+          Invalid Regex
+        </div>
+      </div>
+
+      <!--Metric URL-->
+      <div class="gf-form">
+        <span class="gf-form-label width-12">
+          Metric URL
+          <info-popover mode="right-normal">
+            Make the name of the metric clickable, and send the user to a link (with explanations what to do when this
+            error occurs)
+          </info-popover>
+        </span>
+        <input type="text" name="url" ng-model="measurement.url" class="gf-form-input" style="width: 300px"
+          ng-change="ctrl.onRender()" />
+      </div>
+    </div>
+    <!-- Metric display type -->
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Metric display type</h5>
+
+      <!-- Handler -->
+      <div class="gf-form">
+        <span class="gf-form-label width-12">
+          Handler Type
+          <info-popover mode="right-normal">
+            The type of data to show to the panel<br />
+            <strong>Note:</strong> 'Threshold' will select the first value. <br /> <br />
+            <strong>Threshold</strong> - Change background color of the panel if got warning / error + show the alias of
+            the problematic metrics.
+            Choose Number, String or Date versions to provide formatting options. Note: Date Threshold assumes Unix
+            Timestamps (i.e. milliseconds since Unix Epoch)<br />
+            <strong>Disable Criteria</strong> - Change background color of the panel to grey if disabled. <br />
+            <strong>Text Only</strong> - Show the alias + the value on the panel without any condition.
+          </info-popover>
+        </span>
+        <div class="gf-form-select-wrapper max-width-14">
+          <select class="gf-form-input"
+            ng-init="ctrl.panel.shapes.handler.content = (ctrl.panel.shapes.handler.content ? ctrl.panel.shapes.handler.content : ctrl.panel.shapes.handler.content[0])"
+            ng-model="ctrl.panel.shapes.handler.content" ng-options="t for t in ctrl.panel.shapes.handler.typeOptions"
+            ng-change="ctrl.onHandlerChange(measurement)" required></select>
+        </div>
+      </div>
+
+      <!-- Number Threshold -->
+      <div ng-if="ctrl.panel.shapes.handler.content == 'Number Threshold'">
+        <!--Units-->
+        <div class="gf-form">
+          <span class="gf-form-label width-12">
+            Units
+            <info-popover mode="right-normal">
+              Format the Number Threshold with units of measure<br />
+            </info-popover>
+          </span>
+          <div class="gf-form-dropdown-typeahead max-width-14"
+            ng-init="ctrl.panel.shapes.units.content = (ctrl.panel.shapes.units.content ? ctrl.panel.shapes.units.content : 'none')" ng-model="ctrl.panel.shapes.units.content"
+            dropdown-typeahead2="ctrl.panel.shapes.units.typeOptions"
+            dropdown-typeahead-on-select="ctrl.setUnitFormat(measurement, $subItem)">
+          </div>
+        </div>
+
+        <!--Decimals-->
+        <div class="gf-form">
+          <span class="gf-form-label width-12">
+            Decimals
+            <info-popover mode="right-normal">
+              Override automatic decimal precision for numbers<br />
+            </info-popover>
+          </span>
+          <input type="number" name="decimals" ng-model="ctrl.panel.shapes.units.decimals"
+            ng-init="ctrl.panel.shapes.units.decimals = (ctrl.panel.shapes.units.decimals!=undefined ? ctrl.panel.shapes.units.decimals : 2)"
+            placeholder="auto" class="gf-form-input max-width-14" ng-change="ctrl.onRender()" />
+        </div>
+      </div>
+
+      <!-- Date Threshold -->
+      <div ng-if="ctrl.panel.shapes.handler.content == 'Date Threshold'">
+				<!--Date Format-->
 				<div class="gf-form">
-					<label class="gf-form-label">Metrics<tip>Select Metrics members for shape</tip></label>
-				</div>
-				<div class="gf-form-inline" ng-repeat="metric in shape.metrics">
-					<div class="gf-form">
-						<label class="gf-form-label">
-							<i class="fa fa-trash pointer" ng-click="ctrl.removeMetricFromShape(shape, metric)"></i>
-						</label>
-					</div>
-					<div class="gf-form">
-						<select ng-options="f for f in ctrl.getSeriesNamesForShapes()" ng-model="metric.seriesName" ng-change="ctrl.refresh()"></select>
-					</div>
-				</div>
-				<div class="gf-form">
-					<label class="gf-form-label">
-						<i class="fa fa-plus pointer" ng-click="ctrl.addMetricToShape(shape)"></i>
-					</label>
+					<span class="gf-form-label width-12">
+					    Format
+						<info-popover mode="right-normal">
+							Specify the Date/Time format (Use 'lll' for local date/time format)<br />
+						</info-popover>
+					</span>
+					<input class="input-medium gf-form-input max-width-14" type="text"
+						   ng-init="ctrl.panel.shapes.units.dateFormat = (ctrl.panel.shapes.units.dateFormat ? ctrl.panel.shapes.units.dateFormat : 'YYYY-MM-DD HH:mm:ss')"
+						   ng-model="ctrl.panel.shapes.units.dateFormat"
+						   ng-change="ctrl.onRender()"
+						   ng-model-onblur>
 				</div>
 			</div>
-		</div>
-	</div>
 
-		<button class="btn btn-inverse" ng-click="ctrl.addShape()">
-			<i class="fa fa-plus"></i>&nbsp;Add Shape
-		</button>
-	</div>
+    </div>
+
+
+
+
+
+
+  </div>
 </div>

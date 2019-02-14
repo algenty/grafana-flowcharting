@@ -221,7 +221,7 @@ export default function link(scope, elem, attrs, ctrl) {
 
     graph.getModel().beginUpdate();
     try {
-      var xmlDoc = mxUtils.parseXml(ctrl.panel.content);
+      var xmlDoc = mxUtils.parseXml(ctrl.panel.flowchart.source.xml.content);
       var codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, graph.getModel());
     } finally {
