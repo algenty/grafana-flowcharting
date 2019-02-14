@@ -52,14 +52,36 @@ function (_MetricsPanelCtrl) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(FlowchartCtrl).call(this, $scope, $injector));
     _this.$rootScope = $rootScope;
     _this.$scope = $scope;
-    _this.hiddenSeries = {}; //this.sourceTypeOptions = [ 'Url', 'XML Content', 'JSON ', 'Editor', 'Javascript' ];
-    //this.sourceTypeOptions = ['XML Content'];
-
+    _this.hiddenSeries = {};
+    _this.options = {
+      flowchart: {
+        source: {
+          types: ['Url', 'XML Content', 'JSON ', 'Editor', 'Javascript']
+        }
+      },
+      measurements: {
+        aggregation: {
+          types: ['Last', 'First', 'Max', 'Min', 'Sum', 'Avg', 'Delta']
+        },
+        handler: {
+          types: ['Number Threshold', 'String Threshold', 'Date Threshold', 'Disable Criteria', 'Text Only']
+        },
+        shape: {
+          types: ['Warning / Critical', 'Always']
+        },
+        value: {
+          types: ['Never', 'When Alias Displayed', 'Warning / Critical', 'Critical Only']
+        },
+        unit: {
+          types: _kbn.default.getUnitFormats()
+        }
+      }
+    };
     var panelDefaults = {
       legend: {
-        show: true,
+        show: false,
         // disable/enable legend
-        values: true
+        values: false
       },
       init: {
         logLevel: 3 //1:debug, 2:info, 3:warn, 4:error, 5:fatal
@@ -82,56 +104,61 @@ function (_MetricsPanelCtrl) {
         threshold: 0.0,
         label: 'Others'
       },
-      shapes: {
-        threshold: {
-          colors: {
-            crit: 'rgba(245, 54, 54, 0.9)',
-            warn: 'rgba(237, 129, 40, 0.9)',
-            ok: 'rgba(50, 128, 45, 0.9)',
-            disable: 'rgba(128, 128, 128, 0.9)'
+      measurements: {
+        global: {
+          threshold: {
+            colors: {
+              crit: 'rgba(245, 54, 54, 0.9)',
+              warn: 'rgba(237, 129, 40, 0.9)',
+              ok: 'rgba(50, 128, 45, 0.9)',
+              disable: 'rgba(128, 128, 128, 0.9)'
+            }
+          },
+          checks: {
+            isGrayOnNoData: false,
+            isIgnoreOKColors: false
           }
         },
-        aggregation: {
-          typeOptions: ['Last', 'First', 'Max', 'Min', 'Sum', 'Avg', 'Delta'],
-          content: 'Last'
-        },
-        handler: {
-          typeOptions: ['Number Threshold', 'String Threshold', 'Date Threshold', 'Disable Criteria', 'Text Only'],
-          content: 'Number Threshold'
-        },
-        shape: {
-          typeOptions: ['Warning / Critical', 'Always'],
-          content: undefined
-        },
-        value: {
-          typeOptions: ['Never', 'When Alias Displayed', 'Warning / Critical', 'Critical Only'],
-          content: undefined
-        },
-        units: {
-          typeOptions: _kbn.default.getUnitFormats(),
-          content: undefined,
-          decimals: 2,
-          dateFormat: undefined
+        measurement: {
+          aggregation: {
+            type: 'Last'
+          },
+          handler: {
+            type: 'Number Threshold'
+          },
+          shape: {
+            type: undefined
+          },
+          value: {
+            type: undefined,
+            regEx: undefined
+          },
+          units: {
+            type: undefined,
+            decimals: 2,
+            dateFormat: undefined
+          }
         }
       },
       flowchart: {
         source: {
           type: 'XML Content',
-          typeOptions: ['Url', 'XML Content', 'JSON ', 'Editor', 'Javascript'],
           //typeOptions : ['XML Content'],
           xml: {
-            content: '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>'
+            value: '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>'
           },
           url: {
-            content: "http://<source>:<port>/<pathToXml>"
+            value: "http://<source>:<port>/<pathToXml>"
           },
           editor: {
-            content: "http://<source>:<port>/<pathToXml>"
+            value: "http://<source>:<port>/<pathToXml>"
           }
         },
-        center: false,
-        layout: false,
-        scale: false
+        checks: {
+          center: false,
+          scale: false,
+          lock: true
+        }
       }
     };
 

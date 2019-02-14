@@ -217,11 +217,14 @@ export default function link(scope, elem, attrs, ctrl) {
   function draw(container) {
     mxEvent.disableContextMenu(container);
     let graph = new mxGraph(container);
-    graph.resizeContainer = true;
+    if(ctrl.panel.flowchart.checks.lock)
+    {
+      graph.resizeContainer = true;
+    }
 
     graph.getModel().beginUpdate();
     try {
-      var xmlDoc = mxUtils.parseXml(ctrl.panel.flowchart.source.xml.content);
+      var xmlDoc = mxUtils.parseXml(ctrl.panel.flowchart.source.xml.value);
       var codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, graph.getModel());
     } finally {
