@@ -14,26 +14,37 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.hiddenSeries = {};
+    this.unitFormats = kbn.getUnitFormats();
     this.options = {
       flowchart: {
         source: {
           types: ['Url', 'XML Content', 'JSON ', 'Editor', 'Javascript'],
+          default: 'XML Content',
         }
       },
-      measurements: {
+      metrics: {
+        colorsMode: {
+          types: ['Fill', 'Stroke', 'Text'],
+          default: 'Fill',
+        },
         aggregation: {
           types: ['Last', 'First', 'Max', 'Min', 'Sum', 'Avg', 'Delta'],
+          default: 'Last',
         },
         handler: {
           types: ['Number Threshold', 'String Threshold', 'Date Threshold', 'Disable Criteria', 'Text Only'],
+          default: 'Number Threshold',
+
         },
         shape: {
           types: ['Warning / Critical', 'Always'],
+          default: 'Warning / Critical',
         },
         value: {
-          types: ['Never', 'When Alias Displayed', 'Warning / Critical', 'Critical Only'],
+          types: ['Never', 'When Metric Displayed', 'Warning / Critical', 'Critical Only'],
+          default: 'When Alias Displayed'
         },
-        unit: {
+        format: {
           types: kbn.getUnitFormats(),
         }
       },
@@ -64,46 +75,32 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         threshold: 0.0,
         label: 'Others'
       },
-      measurements: {
-        global: {
-          threshold: {
-            colors: {
-              crit: 'rgba(245, 54, 54, 0.9)',
-              warn: 'rgba(237, 129, 40, 0.9)',
-              ok: 'rgba(50, 128, 45, 0.9)',
-              disable: 'rgba(128, 128, 128, 0.9)'
-            },
+      metrics: {
+        threshold: {
+          colors: {
+            crit: 'rgba(245, 54, 54, 0.9)',
+            warn: 'rgba(237, 129, 40, 0.9)',
+            ok: 'rgba(50, 128, 45, 0.9)',
+            disable: 'rgba(128, 128, 128, 0.9)',
           },
-          checks : {
+          colorsModes: {
+            type: 'Fill',
+          },
+          checks: {
             isGrayOnNoData: false,
             isIgnoreOKColors: false
-          }
-        },
-        measurement: {
-          aggregation: {
-            type: 'Last',
           },
           handler: {
-            type: 'Number Threshold',
-          },
-          shape: {
-            type: undefined,
-          },
-          value: {
-            type: undefined,
-            regEx: undefined,
-          },
-          units: {
-            type: undefined,
-            decimals: 2,
-            dateFormat: undefined,
-          },
+            type : 'Number Threshold',
+            decimals : 2,
+            format : 'none',
+            display : 'When Metric Displayed',
+          }
         },
       },
       flowchart: {
         source: {
           type: 'XML Content',
-          //typeOptions : ['XML Content'],
           xml: {
             value: '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>',
           },
@@ -111,28 +108,29 @@ class FlowchartCtrl extends MetricsPanelCtrl {
             value: "http://<source>:<port>/<pathToXml>",
           },
           editor: {
-            value: "http://<source>:<port>/<pathToXml>",
+            value: "Not yet",
           }
         },
-        checks : {
+        checks: {
           center: false,
           scale: false,
           lock: true,
         },
-        
+
       }
     };
 
     _.defaults(this.panel, panelDefaults);
 
-    
+
     // Dates get stored as strings and will need to be converted back to a Date objects
-    _.each(this.panel.targets, (t) => {
-      if (t.valueHandler === "Date Threshold") {
-        if (typeof t.crit != "undefined") t.crit = new Date(t.crit);
-        if (typeof t.warn != "undefined") t.warn = new Date(t.warn);
-      }
-    });
+    // _.each(this.panel.targets, (t) => {
+    //   if (t.valueHandler === "Date Threshold") {
+    //     if (typeof t.crit != "undefined") t.crit = new Date(t.crit);
+    //     if (typeof t.warn != "undefined") t.warn = new Date(t.warn);
+    //   }
+    // });
+
 
     // events
     this.events.on('render', this.onRender.bind(this));
@@ -160,17 +158,15 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.panel.span = this.panel.fixedSpan;
     }
 
-    this.measurements = this.panel.targets;
+    // this.panel.measurements.measurement = this.panel.targets;
 
-    /** Duplicate alias validation **/
-    this.duplicates = false;
 
-    this.measurements = _.filter(this.measurements, (measurement) => {
+    this.panel.measurements = _.filter(this.panel.measurements, (measurement) => {
       return !measurement.hide;
     });
 
-    _.each(this.measurements, (m) => {
-      let res = _.filter(this.measurements, (measurement) => {
+    _.each(this.panel.measurements, (m) => {
+      let res = _.filter(this.panel.measurements, (measurement) => {
         return (m.alias == measurement.alias || (m.target == measurement.target && m.target)) && !m.hide;
       });
 
@@ -183,7 +179,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onRender() {
     // TODO:
-    console.log("onRender")
     this.data = this.parseSeries(this.series);
   }
 
@@ -223,8 +218,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   setUnitFormat(subItem) {
     this.panel.format = subItem.value;
-    this.render();
+    this.refresh();
   }
+
 
   seriesHandler(seriesData) {
     var series = new TimeSeries({

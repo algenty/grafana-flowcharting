@@ -1,275 +1,232 @@
-<!-- GENERAL -->
 <div class="editor-row">
+  <h5 class="section-heading">Globals Options</h5>
+  <!--Threshold Section -->
   <div class="section gf-form-group">
-    <h3 class="section-heading">General</h3></br>
-    <div class="section gf-form-group">
-      <!--Threshold Preferences-->
-      <div class="section gf-form-group">
-        <h5 class="section-heading">Threshold Preferences</h5>
-        <div class="gf-form">
-          <label class="gf-form-label width-9">Colors</label>
-          <span class="gf-form-label">
-            <color-picker color="ctrl.panel.measurements.global.threshold.colors.crit" bs-tooltip="'Critical'"
-              onChange="ctrl.onColorChange('crit')">
-            </color-picker>
-          </span>
-          <span class="gf-form-label">
-            <color-picker color="ctrl.panel.measurements.global.threshold.colors.warn" bs-tooltip="'Warning'"
-              onChange="ctrl.onColorChange('warn')">
-            </color-picker>
-          </span>
-          <span class="gf-form-label">
-            <color-picker color="ctrl.panel.measurements.global.threshold.colors.ok" bs-tooltip="'OK'"
-              onChange="ctrl.onColorChange('ok')">
-            </color-picker>
-          </span>
-          <span class="gf-form-label">
-            <color-picker color="ctrl.panel.measurements.global.threshold.colors.disable" bs-tooltip="'Disabled'"
-              onChange="ctrl.onColorChange('disable')"></color-picker>
-          </span>
-        </div>
-        <div class="gf-form">
-          <gf-form-switch class="gf-form" label-class="width-15" label="Use 'Disable' color if no data"
-            checked="ctrl.panel.measurements.global.checks.isGrayOnNoData" on-change="ctrl.onRender()"></gf-form-switch>
-          <gf-form-switch class="gf-form" label-class="width-15" label="Ignore color in OK state"
-            checked="ctrl.panel.measurements.global.checks.isIgnoreOKColors" on-change="ctrl.onRender()">
-          </gf-form-switch>
-        </div>
+    <h5 class="section-heading">Threshold Preferences</h5>
+    <!--Coloring-->
+    <div class="gf-form">
+      <span class="gf-form-label width-10">
+        Coloring
+        <info-popover mode="right-normal">
+            <strong>Fill </strong> - Apply color into the shape<br />
+            <strong>Stoke</strong> - Apply color around the shape<br />
+            <strong>Text </strong> - Apply color on text<br />
+        </info-popover>
+      </span>
+      <div class="gf-form-select-wrapper max-width-15">
+        <select class="gf-form-input" ng-model="ctrl.panel.metrics.colorsMode.type"
+          ng-init="ctrl.panel.metrics.colorsMode.type = (ctrl.panel.metrics.colorsMode.type ? ctrl.panel.metrics.colorsMode.type : ctrl.options.metrics.colorsMode.default)"
+          ng-options="t for t in ctrl.options.metrics.colorsMode.types" ng-change="ctrl.onRender()"
+          required></select>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- BY METRICS -->
-
-<div>
-  <h3 class="section-heading">By metric</h3></br>
-  <!--METRIC SETTINGS-->
-  <div class="editor-row" ng-repeat="measurement in ctrl.measurements">
-    <h5 class="section-heading" ng-if="measurement.alias">{{ measurement.alias }}</h5>
-    <div ng-if="!measurement.alias">
-      <h5 class="section-heading">Metric: {{ measurement.refId }}</h5>
+    <!-- Thresholds Colors -->
+    <div class="gf-form">
+      <span class="gf-form-label width-10">
+        Thresholds
+        <info-popover mode="right-normal">
+          Define threshold values to map the colors
+        </info-popover>
+      </span>
+      <input type="text" class="input-small gf-form-input width-15" ng-model="ctrl.panel.thresholds"
+        ng-change="ctrl.updateThresholds()" placeholder="0,10" ng-model-onblur />
     </div>
-    <!-- Display Setting -->
-    <div class="section gf-form-group">
-      <h5 class="section-heading">Display Settings</h5>
-      <!--Aggregation-->
-      <div class="gf-form">
-        <span class="gf-form-label width-12">
-          Aggregation
-          <info-popover mode="right-normal">
-            What to do if the query returns multiple data points.
-          </info-popover>
-        </span>
-        <div class="gf-form-select-wrapper max-width-12">
-          <select class="gf-form-input"
-            ng-init="ctrl.panel.measurement.aggregation.type = (ctrl.panel.measurement.aggregation.type ? ctrl.panel.measurement.aggregation.type : ctrl.panel.measurement[0].aggregation.type)"
-            ng-model="ctrl.panel.measurement.aggregation.type"
-            ng-options="t for t in ctrl.options.shapes.aggregation.types" ng-change="ctrl.onRender()" required></select>
-        </div>
-      </div>
-
-      <!--Metric Display Regex-->
-      <div class="gf-form">
-        <span class="gf-form-label width-12">
-          Value Regex
-          <info-popover mode="right-normal">
-            A regex which will decide the part of the value to be displayed. <br />
-            In case the regex is empty or it doesn't match any part of the metrics value, all the metric value will be
-            displayed.
-          </info-popover>
-        </span>
-        <input type="text" name="valueDisplayRegex" ng-model="ctrl.panel.measurement.value.regEx"
-          class="gf-form-input max-width-12" ng-change="ctrl.onRender()" />
-        <div ng-if="!ctrl.validateRegex(ctrl.panel.measurement.value.regEx)" style="color: red; padding-left: 5px">
-          Invalid Regex
-        </div>
-      </div>
-
-      <!--Metric URL-->
-      <div class="gf-form">
-        <span class="gf-form-label width-12">
-          Metric URL
-          <info-popover mode="right-normal">
-            Make the name of the metric clickable, and send the user to a link (with explanations what to do when this
-            error occurs)
-          </info-popover>
-        </span>
-        <input type="text" name="url" ng-model="measurement.url" class="gf-form-input" style="width: 300px"
-          ng-change="ctrl.onRender()" />
-      </div>
+    <!-- Colors Mapping -->
+    <div class="gf-form">
+      <label class="gf-form-label width-10">Colors</label>
+      <span class="gf-form-label">
+        <color-picker 
+          ng-model="ctrl.panel.metrics.threshold.colors.crit" 
+          color="ctrl.panel.metrics.threshold.colors.crit" bs-tooltip="'Critical'" onChange="ctrl.onColorChange('crit')">
+        </color-picker>
+      </span>
+      <span class="gf-form-label">
+        <color-picker ng-model="ctrl.panel.metrics.threshold.colors.warn" color="ctrl.panel.metrics.threshold.colors.warn" bs-tooltip="'Warning'" onChange="ctrl.onColorChange('warn')">
+        </color-picker>
+      </span>
+      <span class="gf-form-label">
+        <color-picker ng-model="ctrl.panel.metrics.threshold.colors.ok" color="ctrl.panel.metrics.threshold.colors.ok" bs-tooltip="'OK'" onChange="ctrl.onColorChange('ok')"></color-picker>
+      </span>
+      <span class="gf-form-label">
+        <color-picker ng-model="ctrl.panel.metrics.threshold.colors.disable" color="ctrl.panel.metrics.threshold.colors.disable" bs-tooltip="'Disabled'"
+          onChange="ctrl.onColorChange('disable')"></color-picker>
+      </span>
+      <!-- Invert button -->
+      <!-- <span class="gf-form-label">
+        <a ng-click="ctrl.invertColorOrder()">
+          Invert
+        </a>
+      </span> -->
     </div>
-    <!-- Metric display type -->
-    <div class="section gf-form-group">
-      <h5 class="section-heading">Metric display type</h5>
-
-      <!-- Handler -->
-      <div class="gf-form">
-        <span class="gf-form-label width-12">
-          Handler Type
-          <info-popover mode="right-normal">
-            The type of data to show to the panel<br />
-            <strong>Note:</strong> 'Threshold' will select the first value. <br /> <br />
-            <strong>Threshold</strong> - Change background color of the panel if got warning / error + show the alias of
-            the problematic metrics.
-            Choose Number, String or Date versions to provide formatting options. Note: Date Threshold assumes Unix
-            Timestamps (i.e. milliseconds since Unix Epoch)<br />
-            <strong>Disable Criteria</strong> - Change background color of the panel to grey if disabled. <br />
-            <strong>Text Only</strong> - Show the alias + the value on the panel without any condition.
-          </info-popover>
-        </span>
-        <div class="gf-form-select-wrapper max-width-14">
-          <select class="gf-form-input"
-            ng-init="ctrl.panel.measurements.measurement.handler.type = (ctrl.panel.measurements.measurement.handler.type ? ctrl.panel.measurements.measurement.handler.type : ctrl.panel.measurements.measurement[0].handler.type)"
-            ng-model="ctrl.panel.measurements.measurement.handler.type"
-            ng-options="t for t in ctrl.options.shapes.handler.types" ng-change="ctrl.onHandlerChange(measurement)"
-            required></select>
-        </div>
-      </div>
-
-      <!-- Number Threshold -->
-      <div ng-if="ctrl.panel.shapes.handler.content == 'Number Threshold'">
-        <!--Units-->
+        <!--Coloring-->
         <div class="gf-form">
-          <span class="gf-form-label width-12">
-            Units
-            <info-popover mode="right-normal">
-              Format the Number Threshold with units of measure<br />
-            </info-popover>
-          </span>
-          <div class="gf-form-dropdown-typeahead max-width-14"
-            ng-init="ctrl.panel.shapes.units.type = (ctrl.panel.shapes.units.type ? ctrl.panel.shapes.units.type : 'none')"
-            ng-model="ctrl.panel.shapes.units.type" dropdown-typeahead2="ctrl.options.shapes.units.types"
-            dropdown-typeahead-on-select="ctrl.setUnitFormat(measurement, $subItem)">
-          </div>
-        </div>
-
-        <!--Decimals-->
-        <div class="gf-form">
-          <span class="gf-form-label width-12">
-            Decimals
-            <info-popover mode="right-normal">
-              Override automatic decimal precision for numbers<br />
-            </info-popover>
-          </span>
-          <input type="number" name="decimals" ng-model="ctrl.panel.shapes.units.decimals"
-            ng-init="ctrl.panel.shapes.units.decimals = (ctrl.panel.shapes.units.decimals!=undefined ? ctrl.panel.shapes.units.decimals : 2)"
-            placeholder="auto" class="gf-form-input max-width-14" ng-change="ctrl.onRender()" />
-        </div>
-      </div>
-
-      <!-- Date Threshold -->
-      <div ng-if="ctrl.panel.shapes.handler.type == 'Date Threshold'">
-        <!--Date Format-->
-        <div class="gf-form">
-          <span class="gf-form-label width-12">
-            Format
-            <info-popover mode="right-normal">
-              Specify the Date/Time format (Use 'lll' for local date/time format)<br />
-            </info-popover>
-          </span>
-          <input class="input-medium gf-form-input max-width-14" type="text"
-            ng-init="ctrl.panel.shapes.units.dateFormat = (ctrl.panel.shapes.units.dateFormat ? ctrl.panel.shapes.units.dateFormat : 'YYYY-MM-DD HH:mm:ss')"
-            ng-model="ctrl.panel.shapes.units.dateFormat" ng-change="ctrl.onRender()" ng-model-onblur>
-        </div>
-      </div>
-
-
-
-    </div>
-
-    <div class="section gf-form-group">
-      <!--Threshold Section-->
-      <div
-        ng-if="ctrl.panel.shapes.handler.content == 'Number Threshold' || ctrl.panel.shapes.handler.content == 'String Threshold' || ctrl.panel.shapes.handler.content == 'Date Threshold'">
-        <h5 class="section-heading">Threshold
-          <info-popover mode="normal">
-            The Warning and Critical fields get numbers, strings or dates. <br />
-            In case both of them are numbers or dates, the thresholds will be used as ranges, and metric value will be
-            checked if it is in the warning/critical ranges.<br />
-            In case one of them is string, the thresholds will check equality to the value.
-          </info-popover>
-        </h5>
-
-        <!--Warning threshold-->
-        <div class="gf-form">
-          <span class="gf-form-label width-12">
-            Warning
-          </span>
-          <input type="number" ng-if="ctrl.panel.shapes.handler.content == 'Number Threshold'" name="warn"
-            ng-model="measurement.warn" class="gf-form-input max-width-14" ng-change="ctrl.onRender()" required />
-          <input type="text" ng-if="ctrl.panel.shapes.handler.content == 'String Threshold'" name="warn"
-            ng-model="measurement.warn" class="gf-form-input max-width-14" ng-change="ctrl.onRender()" required />
-          <input type="datetime-local" ng-if="ctrl.panel.shapes.handler.content == 'Date Threshold'" name="warn"
-            ng-model="measurement.warn" class="gf-form-input max-width-14" ng-change="ctrl.onRender()" required />
-        </div>
-
-        <!--Critical threshold-->
-        <div class="gf-form">
-          <span class="gf-form-label width-12">
-            Critical
-          </span>
-          <input type="number" ng-if="ctrl.panel.shapes.handler.content == 'Number Threshold'" name="crit"
-            ng-model="measurement.crit" class="gf-form-input max-width-14" ng-change="ctrl.onRender()" required />
-          <input type="text" ng-if="ctrl.panel.shapes.handler.content == 'String Threshold'" name="crit"
-            ng-model="measurement.crit" class="gf-form-input max-width-14" ng-change="ctrl.onRender()" required />
-          <input type="datetime-local" ng-if="ctrl.panel.shapes.handler.content == 'Date Threshold'" name="crit"
-            ng-model="measurement.crit" class="gf-form-input max-width-14" ng-change="ctrl.onRender()" required />
-        </div>
-
-        <!--Display Value Type-->
-        <div class="gf-form">
-          <span class="gf-form-label width-12">
-            Display Alias
-            <info-popover mode="right-normal">
-              When to display the alias<br />
-              <strong>Warning / Critical</strong> - The alias will be displayed in warning or critical state<br />
-              <strong>Always</strong> - The alias will always be displayed, regardless critical and warning state<br />
-            </info-popover>
-          </span>
-          <div class="gf-form-select-wrapper max-width-14">
-            <select class="gf-form-input"
-              ng-init="measurement.displayAliasType = (measurement.displayAliasType ? measurement.displayAliasType : ctrl.displayAliasTypes[0])"
-              ng-model="measurement.displayAliasType" ng-options="t for t in ctrl.options.shape.types"
-              ng-change="ctrl.onRender()" required></select>
-          </div>
-        </div>
-        <div class="gf-form">
-          <span class="gf-form-label width-12">
+          <span class="gf-form-label width-10">
             Display Value
             <info-popover mode="right-normal">
-              When to display the value along with the alias<br />
-              <strong>Never</strong> - The value will never be displayed<br />
-              <strong>When Alias Displayed</strong> - The value will be displayed always when alias is displayed<br />
-              <strong>Warning / Critical</strong> - The value will be displayed in warning or critical state<br />
-              <strong>Critical Only</strong> - The value will be displayed in critical only
+                <strong>Never</strong> - Dont display value of metrics/alias<br />
+                <strong>When Metric Displayed</strong> - Display value if metrics/alias is not null<br />
+                <strong>Warning / Critical</strong> - Display value if warning or critical<br />
+                <strong>Critical Only</strong> - Display value only in critical<br />
             </info-popover>
           </span>
-          <div class="gf-form-select-wrapper max-width-14">
-            <select class="gf-form-input"
-              ng-init="measurement.displayValueWithAlias = (measurement.displayValueWithAlias ? measurement.displayValueWithAlias : ctrl.displayValueTypes[0])"
-              ng-model="measurement.displayValueWithAlias" ng-options="t for t in ctrl.displayValueTypes"
-              ng-change="ctrl.onRender()" required></select>
+          <div class="gf-form-select-wrapper max-width-15">
+            <select class="gf-form-input" ng-model="ctrl.panel.metrics.handler.display"
+              ng-init="ctrl.panel.metrics.handler.display = (ctrl.panel.metrics.handler.display ? ctrl.panel.metrics.handler.display : ctrl.options.metrics.value.default)"
+              ng-options="t for t in ctrl.options.metrics.value.types" ng-change="ctrl.onRender()"
+              required></select>
+          </div>
+        </div>
+  </div>
+
+  <!-- Metric Sections -->
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Metric Otions</h5>
+    <!-- Aggregation -->
+    <div class="gf-form">
+      <span class="gf-form-label width-10">
+        Aggregation
+        <info-popover mode="right-normal">
+          What to do if the query returns multiple data points.
+        </info-popover>
+      </span>
+      <div class="gf-form-select-wrapper max-width-15">
+        <select class="gf-form-input"
+          ng-init="ctrl.panel.metrics.aggregation.type = (ctrl.panel.metrics.aggregation.type ? ctrl.panel.metrics.aggregation.type : ctrl.options.metrics.aggregation.default)"
+          ng-model="ctrl.panel.metrics.aggregation.type" ng-options="t for t in ctrl.options.metrics.aggregation.types" ng-change="ctrl.onRender()"
+          required></select>
+      </div>
+    </div>
+
+    <!--Regex-->
+    <div class="gf-form">
+      <span class="gf-form-label width-10">
+        Value Regex
+        <info-popover mode="right-normal">
+          A regex which will decide the part of the value to be displayed. <br />
+          In case the regex is empty or it doesn't match any part of the metrics value, all the metric value will be
+          displayed.
+        </info-popover>
+      </span>
+      <input type="text" name="valueDisplayRegex" ng-model="ctrl.panel.metrics.regex.value"
+        class="gf-form-input max-width-15" ng-change="ctrl.onRender()" />
+      <div ng-if="!ctrl.validateRegex(ctrl.panel.metrics.regex.value)" style="color: red; padding-left: 5px">
+        Invalid Regex
+      </div>
+    </div>
+
+    <!--Handler Type-->
+    <!-- <div class="gf-form">
+      <span class="gf-form-label width-10">
+        Handler Type
+        <info-popover mode="right-normal">
+          The type of data to show to the panel<br />
+          <strong>Note:</strong> 'Threshold' will select the first value. <br /> <br />
+          <strong>Threshold</strong> - Change background color of the panel if got warning / error + show the alias of
+          the problematic metrics.
+          Choose Number, String or Date versions to provide formatting options. Note: Date Threshold assumes Unix
+          Timestamps (i.e. milliseconds since Unix Epoch)<br />
+          <strong>Disable Criteria</strong> - Change background color of the panel to grey if disabled. <br />
+          <strong>Text Only</strong> - Show the alias + the value on the panel without any condition.
+        </info-popover>
+      </span>
+      <div class="gf-form-select-wrapper max-width-10">
+        <select class="gf-form-input"
+          ng-init="ctrl.panel.metrics.handler.type = (ctrl.panel.metrics.handler.type ? ctrl.panel.metrics.handler.type : ctrl.options.metrics.handler.default)"
+          ng-model="ctrl.panel.metrics.handler.type" ng-options="t for t in ctrl.options.metrics.handler.types"
+          ng-change="ctrl.onHandlerChange(measurement)" required></select>
+      </div>
+    </div> -->
+
+    <!--Units-->
+    <div class="gf-form">
+      <span class="gf-form-label width-10">
+        Units
+        <info-popover mode="right-normal">
+          Format the Number Threshold with units of measure<br />
+        </info-popover>
+      </span>
+      <div class="gf-form-dropdown-typeahead max-width-15" ng-model="ctrl.panel.format" dropdown-typeahead2="ctrl.unitFormats" dropdown-typeahead-on-select="ctrl.setUnitFormat($subItem)"></div>
+    </div>
+
+    <!--Decimals-->
+    <div class="gf-form">
+      <span class="gf-form-label width-10">
+        Decimals
+        <info-popover mode="right-normal">
+          Override automatic decimal precision for numbers<br />
+        </info-popover>
+      </span>
+      <input type="number" name="decimals" ng-model="ctrl.panel.metrics.handler.decimals"
+        ng-init="ctrl.panel.metrics.handler.decimals = (ctrl.panel.metrics.handler.decimals !=undefined ? ctrl.panel.metrics.handler.decimals : 2)" placeholder="auto"
+        class="gf-form-input max-width-15" ng-change="ctrl.onRender()" />
+    </div>
+
+
+  </div>
+
+  <!--Other Option-->
+  <div class="section gf-form-group">
+    <h5 class="section-heading">Other Options</h5>
+    <gf-form-switch class="gf-form" label-class="width-15" label="Use 'Disable' color if no data"
+      checked="ctrl.panel.isGrayOnNoData" on-change="ctrl.onRender()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-15" label="Ignore color in OK state"
+      checked="ctrl.panel.isIgnoreOKColors" on-change="ctrl.onRender()"></gf-form-switch>
+    <gf-form-switch class="gf-form" label-class="width-15" label="Hide alerts in Disabled state"
+      checked="ctrl.panel.isHideAlertsOnDisable" on-change="ctrl.onRender()"></gf-form-switch>
+  </div>
+
+</div>
+
+<hr>
+
+<!-- Color Mapping -->
+<div class="editor-row">
+
+  <div class="gf-form-group">
+    <div class="edit-tab-content">
+      <div class="gf-form-group">
+        <h5>Coloring Mapping<tip>Coloring multiple shape from model with rules in Threshold options</tip></h5>
+        <div class="gf-form" ng-repeat="composite in ctrl.panel.composites">
+  
+          <div class="gf-form">
+            <label class="gf-form-label">
+              <i class="fa fa-trash pointer" ng-click="ctrl.removeComposite(composite)"></i>
+            </label>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label">Composite Name</label>
+          </div>
+          <div class="gf-form width-15">
+            <input type="text" ng-model="composite.name" ng-blur="ctrl.render()" class="gf-form-input width-15">
+          </div>
+  
+          <!-- Metrics that comprise the composite-->
+          <div class="gf-form">
+            <label class="gf-form-label">Metrics<tip>Select Metrics members for composite</tip></label>
+          </div>
+          <div class="gf-form-inline" ng-repeat="metric in composite.metrics">
+            <div class="gf-form">
+              <label class="gf-form-label">
+                <i class="fa fa-trash pointer" ng-click="ctrl.removeMetricFromComposite(composite, metric)"></i>
+              </label>
+            </div>
+            <div class="gf-form">
+              <select ng-options="f for f in ctrl.getSeriesNamesForComposites()" ng-model="metric.seriesName" ng-change="ctrl.refresh()"></select>
+            </div>
+          </div>
+          <div class="gf-form">
+            <label class="gf-form-label">
+              <i class="fa fa-plus pointer" ng-click="ctrl.addMetricToComposite(composite)"></i>
+            </label>
           </div>
         </div>
       </div>
-
-      <!--Disable Section-->
-      <div ng-if="ctrl.panel.shapes.handler.content == 'Disable Criteria'">
-        <h5 class="section-heading">Disable Criteria</h5>
-
-        <!--Disable Criteria-->
-        <div class="gf-form">
-          <span class="gf-form-label width-12">
-            Disable Value
-            <info-popover mode="right-normal">
-              The exact value which will make this panel to be displayed as disabled <br />
-            </info-popover>
-          </span>
-          <input type="text" name="disabledValue" ng-model="measurement.disabledValue"
-            class="gf-form-input max-width-12" ng-change="ctrl.onRender()" required />
-        </div>
-      </div>
+    </div>
+  
+      <button class="btn btn-inverse" ng-click="ctrl.addComposite()">
+        <i class="fa fa-plus"></i>&nbsp;Add Composite
+      </button>
     </div>
   </div>
+  
 </div>
