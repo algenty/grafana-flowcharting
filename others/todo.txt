@@ -16,3 +16,17 @@ https://git-pub.intecracy.com/unitybase/ubjs/tree/master/packages/adminui-pub/_s
 Angular solution
 https://github.com/jgraph/mxgraph/issues/88
 https://github.com/Cadmus/epicupsdraw
+
+View xml code
+codec.decode(doc.documentElement, graph.getModel());
+var textarea = document.createElement('textarea');
+textarea.style.width = '400px';
+textarea.style.height = '400px';
+var enc = new mxCodec(mxUtils.createXmlDocument());
+var node = enc.encode(graph.getModel());
+textarea.value = mxUtils.getPrettyXml(node);
+wnd = new mxWindow('Scrollable, resizable, fixed content', textarea, 520, 50, 220, 200, true, true);
+wnd.setMaximizable(true);
+wnd.setScrollable(true);
+wnd.setResizable(true);
+wnd.setVisible(true);

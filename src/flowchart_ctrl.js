@@ -15,6 +15,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.$scope = $scope;
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
+ 
     this.options = {
       flowchart: {
         source: {

@@ -1,12 +1,16 @@
-// window.mxImageBasePath = "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images";
-// window.mxBasePath = "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist";
+// window.mxImageBasePath = "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images";
+// window.mxBasePath = "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist";
 var mxgraph = require("mxgraph")({
-  mxImageBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images",
-  mxBasePath: "/public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist",
+  mxImageBasePath: "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images",
+  mxBasePath: "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist",
   mxLoadStylesheets: false,
   mxLanguage: 'en',
   mxLoadResources: true
 });
+
+var STENCIL_PATH = 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/stencils';
+var IMAGE_PATH = 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/images';
+var STYLE_PATH = 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/styles';
 
 // Put to global vars to work
 window.mxGraph = mxgraph.mxGraph
@@ -51,8 +55,9 @@ export default function link(scope, elem, attrs, ctrl) {
   var panel = ctrl.panel;
   elem = elem.find('.flowchart-panel__chart');
   var $tooltip = $('<div id="tooltip">');
+  var themes;
 
-  initDraw();
+  init();
 
   ctrl.events.on('render', function () {
     if (panel.legendType === 'Right side') {
@@ -176,7 +181,6 @@ export default function link(scope, elem, attrs, ctrl) {
 
 
     elem.html(plotCanvas);
-    //TODO : add draw mxgraph
     draw(plotCanvas[0])
 
     plotCanvas.bind("plothover", function (event, pos, item) {
@@ -217,8 +221,8 @@ export default function link(scope, elem, attrs, ctrl) {
   function draw(container) {
     mxEvent.disableContextMenu(container);
     let graph = new mxGraph(container);
-    if(ctrl.panel.flowchart.checks.lock)
-    {
+    loadStyle(graph)
+    if (ctrl.panel.flowchart.checks.lock) {
       graph.resizeContainer = true;
     }
 
@@ -233,7 +237,9 @@ export default function link(scope, elem, attrs, ctrl) {
     }
   }
 
-  function initDraw() {
+  function init() {
+
+    // Overridden to define per-shape connection points
     mxGraph.prototype.getAllConnectionConstraints = function (terminal, source) {
       if (terminal != null && terminal.shape != null) {
         if (terminal.shape.stencil != null) {
@@ -244,9 +250,27 @@ export default function link(scope, elem, attrs, ctrl) {
           return terminal.shape.constraints;
         }
       }
-
       return null;
     };
+
+    /**
+     * Sets global constants.
+     */
+    // Changes default colors
+    mxConstants.SHADOW_OPACITY = 0.25;
+    mxConstants.SHADOWCOLOR = '#000000';
+    mxConstants.VML_SHADOWCOLOR = '#d0d0d0';
+    mxGraph.prototype.pageBreakColor = '#c0c0c0';
+    mxGraph.prototype.pageScale = 1;
+
+  }
+
+  function loadStyle(graph) {
+    var node = mxUtils.load(STYLE_PATH + '/default.xml').getDocumentElement();
+    if (node != null) {
+      var dec = new mxCodec(node.ownerDocument);
+      dec.decode(node, graph.getStylesheet());
+    }
   }
 }
 

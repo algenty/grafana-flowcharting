@@ -33,24 +33,25 @@ module.exports = (grunt) => {
         src: ['**/*', '!**/*.js', '!**/*.scss', '!img/**/*', '.*'],
         dest: 'dist'
       },
-      externals_to_dist: {
-        cwd: 'src',
-        expand: true,
-        src: ['externals/**/*'],
-        dest: 'dist'
-      },
       libs_to_dist: {
         cwd: 'node_modules',
         expand: true,
-        src: ['mxgraph/javascript/dist/**/*'],
+        src: ['mxgraph/javascript/dist/**/*','!**/*.js'],
         dest: 'dist/libs'
       },
       res_to_dist: {
         cwd: 'node_modules/mxgraph/javascript/src',
         expand: true,
-        src: ['**/*'],
+        src: ['**/*','!**/*.js'],
         dest: 'dist/libs/mxgraph/javascript/dist'
       },
+      bower_to_dist : {
+        cwd: 'bower_components/mxgraph/javascript/examples/grapheditor/www',
+        expand: true,
+        src: ['**/*','!**/*.js'],
+        dest: 'dist/libs/mxgraph/javascript/dist'
+      },
+
       readme: {
         expand: true,
         src: ['README.md'],
@@ -63,8 +64,6 @@ module.exports = (grunt) => {
         dest: 'dist/'
       },
     },
-
-
 
     watch: {
       rebuild_all: {
@@ -126,6 +125,6 @@ module.exports = (grunt) => {
     },
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:libs_to_dist', 'copy:res_to_dist']);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:libs_to_dist', 'copy:res_to_dist', 'copy:bower_to_dist']);
   grunt.registerTask('dev', ['default', 'watch']);
 };
