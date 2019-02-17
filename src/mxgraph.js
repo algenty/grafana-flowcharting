@@ -170,8 +170,18 @@ export default function link(scope, elem, attrs, ctrl) {
     loadStyle(graph);
     loadSpencils();
 
-    // ne fonctionne pas : chercher dans API la fonction
+
     if (ctrl.panel.flowchart.checks.lock) {
+      // Disables folding
+      graph.setEnabled(false);
+      // graph.isCellFoldable = function(cell, collapse)
+      // {
+      //   return false;
+      // };
+    }
+
+    // ne fonctionne pas : chercher dans API la fonction
+    if (ctrl.panel.flowchart.checks.scale) {
       graph.resizeContainer = true;
     }
 
@@ -264,7 +274,7 @@ export default function link(scope, elem, attrs, ctrl) {
   }
 
   function loadSpencils() {
-    var stencils = ['basic','arrows','flowchart','bpmn'];
+    var stencils = ['basic', 'arrows', 'flowchart', 'bpmn'];
     stencils.forEach(element => {
       var node = mxUtils.load(STENCIL_PATH + element + '.xml').getDocumentElement();
       var shape = node.firstChild;
@@ -274,7 +284,7 @@ export default function link(scope, elem, attrs, ctrl) {
         }
         shape = shape.nextSibling;
       }
-      
+
     });
 
   }
