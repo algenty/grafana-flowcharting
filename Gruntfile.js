@@ -112,6 +112,10 @@ module.exports = (grunt) => {
               use: {
                 loader: 'babel-loader',
               }
+            },
+            {
+              test: /\.xml$/,
+              loader: 'raw-loader'
             }
           ]
         },

@@ -1,5 +1,8 @@
-// window.mxImageBasePath = "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images";
-// window.mxBasePath = "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist";
+// window.mxBasePath = window.mxBasePath || "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist";
+// window.mxImageBasePath = mxImageBasePath || "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist";
+// window.mxLanguage = window.mxLanguage || urlParams['lang'];
+// window.mxLanguages = window.mxLanguages || ['en'];
+
 var mxgraph = require("mxgraph")({
   mxImageBasePath: "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images",
   mxBasePath: "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist",
@@ -8,47 +11,53 @@ var mxgraph = require("mxgraph")({
   mxLoadResources: true
 });
 
+// import BASIC from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils/basic.xml';
+// import BPMN from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//bpmn.xml';
+// import ARROWS from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//arrows.xml';
+// import FLOWCHART from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//flowchart.xml';
+// import GENERAL from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//general.xml';
+
 var STENCIL_PATH = 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/stencils';
 var IMAGE_PATH = 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/images';
 var STYLE_PATH = 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/styles';
 
 // Put to global vars to work
-window.mxGraph = mxgraph.mxGraph
-window.mxShape = mxgraph.mxShape
-window.mxConnectionConstraint = mxgraph.mxConnectionConstraint
-window.mxPoint = mxgraph.mxPoint
-window.mxPolyline = mxgraph.mxPolyline
-window.mxEvent = mxgraph.mxEvent
-window.mxRubberband = mxgraph.mxRubberband
-window.mxCellState = mxgraph.mxCellState
-window.mxClient = mxgraph.mxClient
-window.mxUtils = mxgraph.mxUtils
-window.mxConstants = mxgraph.mxConstants
-window.mxPopupMenu = mxgraph.mxPopupMenu
-window.mxDefaultPopupMenu = mxgraph.mxDefaultPopupMenu
-window.mxEditor = mxgraph.mxEditor
-window.mxGraphModel = mxgraph.mxGraphModel
-window.mxGraphView = mxgraph.mxGraphView
-window.mxToolbar = mxgraph.mxToolbar
-window.mxDefaultToolbar = mxgraph.mxDefaultToolbar
-window.mxGeometry = mxgraph.mxGeometry
-window.mxKeyHandler = mxgraph.mxKeyHandler
-window.mxDefaultKeyHandler = mxgraph.mxDefaultKeyHandler
-window.mxVertexHandler = mxgraph.mxVertexHandler
-window.mxStylesheet = mxgraph.mxStylesheet
-window.mxCellRenderer = mxgraph.mxCellRenderer
-window.mxCell = mxgraph.mxCell
-window.mxCodec = mxgraph.mxCodec
-window.mxDivResizer = mxgraph.mxDivResizer
-window.mxOutline = mxgraph.mxOutline
-window.mxUndoManager = mxgraph.mxUndoManager
-window.mxEdgeStyle = mxgraph.mxEdgeStyle
-window.mxCompactTreeLayout = mxgraph.mxCompactTreeLayout
-window.mxLabel = mxgraph.mxLabel
-window.mxRectangle = mxgraph.mxRectangle
-window.mxCellOverlay = mxgraph.mxCellOverlay
-window.mxImage = mxgraph.mxImage
-window.mxPrintPreview = mxgraph.mxPrintPreview
+window.mxCell = window.mxCell || mxgraph.mxCell
+window.mxCellOverlay = window.mxCellOverlay || mxgraph.mxCellOverlay
+window.mxCellRenderer = window.mxCellRenderer || mxgraph.mxCellRenderer
+window.mxCellState = window.mxCellState || mxgraph.mxCellState
+window.mxClient = window.mxClient || mxgraph.mxClient
+window.mxCodec = window.mxCodec || mxgraph.mxCodec
+window.mxCompactTreeLayout = window.mxCompactTreeLayout || mxgraph.mxCompactTreeLayout
+window.mxConnectionConstraint = window.mxConnectionConstraint || mxgraph.mxConnectionConstraint
+window.mxConstants = window.mxConstants || mxgraph.mxConstants
+window.mxDefaultKeyHandler = window.mxDefaultKeyHandler || mxgraph.mxDefaultKeyHandler
+window.mxDefaultPopupMenu = window.mxDefaultPopupMenu || mxgraph.mxDefaultPopupMenu
+window.mxDefaultToolbar = window.mxDefaultToolbar || mxgraph.mxDefaultToolbar
+window.mxDivResizer = window.mxDivResizer || mxgraph.mxDivResizer
+window.mxEdgeStyle = window.mxEdgeStyle || mxgraph.mxEdgeStyle
+window.mxEditor = window.mxEditor || mxgraph.mxEditor
+window.mxEvent = window.mxEvent || mxgraph.mxEvent
+window.mxGeometry = window.mxGeometry || mxgraph.mxGeometry
+window.mxGraph = window.mxGraph || mxgraph.mxGraph
+window.mxGraphModel = window.mxGraphModel || mxgraph.mxGraphModel
+window.mxGraphView = window.mxGraphView || mxgraph.mxGraphView
+window.mxImage = window.mxImage || mxgraph.mxImage
+window.mxKeyHandler = window.mxKeyHandler || mxgraph.mxKeyHandler
+window.mxLabel = window.mxLabel || mxgraph.mxLabel
+window.mxOutline = window.mxOutline || mxgraph.mxOutline
+window.mxPoint = window.mxPoint || mxgraph.mxPoint
+window.mxPolyline = window.mxPolyline || mxgraph.mxPolyline
+window.mxPopupMenu = window.mxPopupMenu || mxgraph.mxPopupMenu
+window.mxPrintPreview = window.mxPrintPreview || mxgraph.mxPrintPreview
+window.mxRectangle = window.mxRectangle || mxgraph.mxRectangle
+window.mxRubberband = window.mxRubberband || mxgraph.mxRubberband
+window.mxShape = window.mxShape || mxgraph.mxShape
+window.mxStylesheet = window.mxStylesheet || mxgraph.mxStylesheet
+window.mxToolbar = window.mxToolbar || mxgraph.mxToolbar
+window.mxUndoManager = window.mxUndoManager || mxgraph.mxUndoManager
+window.mxUtils = window.mxUtils || mxgraph.mxUtils
+window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler
 
 export default function link(scope, elem, attrs, ctrl) {
   var data;
@@ -68,37 +77,6 @@ export default function link(scope, elem, attrs, ctrl) {
     }
   });
 
-  function getLegendHeight(panelHeight) {
-    if (!ctrl.panel.legend.show || ctrl.panel.legendType === 'Right side' || ctrl.panel.legendType === 'On graph') {
-      return 20;
-    }
-
-    if (ctrl.panel.legendType == 'Under graph' && ctrl.panel.legend.percentage || ctrl.panel.legend.values) {
-      let breakPoint = parseInt(ctrl.panel.breakPoint) / 100;
-      var total = 23 + 20 * data.length;
-      return Math.min(total, Math.floor(panelHeight * breakPoint));
-    }
-  }
-
-  function formatter(label, slice) {
-    var slice_data = slice.data[0][slice.data[0].length - 1];
-    var decimal = 2;
-    var start = "<div style='font-size:" + ctrl.panel.fontSize + ";text-align:center;padding:2px;color:" + slice.color + ";'>" + label + "<br/>";
-
-    if (ctrl.panel.legend.percentageDecimals) {
-      decimal = ctrl.panel.legend.percentageDecimals;
-    }
-    if (ctrl.panel.legend.values && ctrl.panel.legend.percentage) {
-      return start + ctrl.formatValue(slice_data) + "<br/>" + slice.percent.toFixed(decimal) + "%</div>";
-    } else if (ctrl.panel.legend.values) {
-      return start + ctrl.formatValue(slice_data) + "</div>";
-    } else if (ctrl.panel.legend.percentage) {
-      return start + slice.percent.toFixed(decimal) + "%</div>";
-    } else {
-      return start + '</div>';
-    }
-  }
-
   function noDataPoints() {
     var html = '<div class="datapoints-warning"><span class="small">No data points</span></div>';
     elem.html(html);
@@ -106,36 +84,31 @@ export default function link(scope, elem, attrs, ctrl) {
 
   function addFlowChart() {
     var width = elem.width();
-    var height = ctrl.height - getLegendHeight(ctrl.height);
+    var height = ctrl.height; // - getLegendHeight(ctrl.height);
 
     var size = Math.min(width, height);
 
-    var plotCanvas = $('<div></div>');
-    var plotCss = {
+    var $graphCanvas = $('<div></div>');
+
+    // Center Graph
+    var graphCss = {
       margin: 'auto',
       position: 'relative',
       paddingBottom: 20 + 'px',
       height: size + 'px'
     };
 
-    plotCanvas.css(plotCss);
+    $graphCanvas.css(graphCss);
 
     var backgroundColor = $('body').css('background-color')
 
     var options = {
-      legend: {
-        show: false
-      },
       series: {
         chart: {
           show: true,
           stroke: {
             color: backgroundColor,
             width: parseFloat(ctrl.panel.strokeWidth).toFixed(1)
-          },
-          label: {
-            show: ctrl.panel.legend.show && ctrl.panel.legendType === 'On graph',
-            formatter: formatter
           },
           highlight: {
             opacity: 0.0
@@ -146,10 +119,6 @@ export default function link(scope, elem, attrs, ctrl) {
           }
         }
       },
-      grid: {
-        hoverable: true,
-        clickable: false
-      }
     };
 
     data = ctrl.data;
@@ -163,46 +132,18 @@ export default function link(scope, elem, attrs, ctrl) {
       }
     }
 
-
-    if (panel.legend.sort) {
-      if (ctrl.panel.valueName !== panel.legend.sort) {
-        panel.legend.sort = ctrl.panel.valueName;
-      }
-      if (panel.legend.sortDesc === true) {
-        data.sort(function (a, b) {
-          return b.legendData - a.legendData;
-        });
-      } else {
-        data.sort(function (a, b) {
-          return a.legendData - b.legendData;
-        });
-      }
-    }
-
-
-    elem.html(plotCanvas);
-    draw(plotCanvas[0])
-
-    plotCanvas.bind("plothover", function (event, pos, item) {
+    elem.html($graphCanvas);
+    draw($graphCanvas[0])
+    $graphCanvas.bind("plothover", function (event, pos, item) {
       if (!item) {
         $tooltip.detach();
         return;
       }
 
-      var body;
-      var percent = parseFloat(item.series.percent).toFixed(2);
-      var formatted = ctrl.formatValue(item.series.data[0][1]);
-
-      body = '<div class="flowchart-tooltip-small"><div class="flowchart-tooltip-time">';
-      body += '<div class="flowchart-tooltip-value">' + item.series.label + ': ' + formatted;
-      body += " (" + percent + "%)" + '</div>';
-      body += "</div></div>";
-
-      $tooltip.html(body).place_tt(pos.pageX + 20, pos.pageY);
     });
   }
 
-  function render(incrementRenderCounter) {
+  function render() {
     if (!ctrl.data) { return; }
 
     data = ctrl.data;
@@ -213,15 +154,14 @@ export default function link(scope, elem, attrs, ctrl) {
       addFlowChart();
     }
 
-    if (incrementRenderCounter) {
-      ctrl.renderingCompleted();
-    }
   }
 
   function draw(container) {
+
     mxEvent.disableContextMenu(container);
     let graph = new mxGraph(container);
     loadStyle(graph)
+    // ne fonctionne pas : chercher dans API la fonction
     if (ctrl.panel.flowchart.checks.lock) {
       graph.resizeContainer = true;
     }
@@ -263,6 +203,25 @@ export default function link(scope, elem, attrs, ctrl) {
     mxGraph.prototype.pageBreakColor = '#c0c0c0';
     mxGraph.prototype.pageScale = 1;
 
+    // Keeps edges between relative child cells inside parent
+    mxGraphModel.prototype.ignoreRelativeEdgeParent = false;
+
+    // Defines grid properties
+    mxGraphView.prototype.gridImage = (mxClient.IS_SVG) ? 'data:image/gif;base64,R0lGODlhCgAKAJEAAAAAAP///8zMzP///yH5BAEAAAMALAAAAAAKAAoAAAIJ1I6py+0Po2wFADs=' :
+      IMAGE_PATH + '/grid.gif';
+    mxGraphView.prototype.gridSteps = 4;
+    mxGraphView.prototype.minGridSize = 4;
+
+    // UrlParams is null in embed mode
+    mxGraphView.prototype.gridColor = '#e0e0e0';
+
+    // Hook for custom constraints
+    mxShape.prototype.getConstraints = function (style) {
+      return null;
+    };
+
+    
+
   }
 
   function loadStyle(graph) {
@@ -271,6 +230,10 @@ export default function link(scope, elem, attrs, ctrl) {
       var dec = new mxCodec(node.ownerDocument);
       dec.decode(node, graph.getStylesheet());
     }
+  }
+
+  function loadSpencils() {
+
   }
 }
 
