@@ -113,10 +113,10 @@ module.exports = (grunt) => {
                 loader: 'babel-loader',
               }
             },
-            {
-              test: /\.xml$/,
-              loader: 'raw-loader'
-            }
+            // {
+            //   test: /\.xml$/,
+            //   loader: 'raw-loader'
+            // }
           ]
         },
         output: {

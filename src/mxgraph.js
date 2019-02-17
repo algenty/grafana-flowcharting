@@ -1,7 +1,7 @@
 // window.mxBasePath = window.mxBasePath || "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist";
 // window.mxImageBasePath = mxImageBasePath || "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist";
 // window.mxLanguage = window.mxLanguage || urlParams['lang'];
-// window.mxLanguages = window.mxLanguages || ['en'];
+window.mxLanguages = window.mxLanguages || ['en'];
 
 var mxgraph = require("mxgraph")({
   mxImageBasePath: "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images",
@@ -17,9 +17,14 @@ var mxgraph = require("mxgraph")({
 // import FLOWCHART from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//flowchart.xml';
 // import GENERAL from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//general.xml';
 
-var STENCIL_PATH = 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/stencils';
-var IMAGE_PATH = 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/images';
-var STYLE_PATH = 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/styles';
+window.BASE_PATH = window.BASE_PATH || 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/';
+window.RESOURCES_PATH = window.RESOURCES_PATH || window.BASE_PATH + 'resources/';
+window.RESOURCE_BASE = window.RESOURCE_BASE || window.RESOURCES_PATH + 'grapheditor';
+window.STENCIL_PATH = window.STENCIL_PATH || window.BASE_PATH + 'stencils/';
+window.IMAGE_PATH = window.IMAGE_PATH || window.BASE_PATH + 'images/';
+window.STYLE_PATH = window.STYLE_PATH || window.BASE_PATH + 'styles/';
+window.CSS_PATH = window.CSS_PATH || window.BASE_PATH + 'styles/';
+window.mxLanguages = window.mxLanguages || ['en'];
 
 // Put to global vars to work
 window.mxCell = window.mxCell || mxgraph.mxCell
@@ -51,8 +56,11 @@ window.mxPolyline = window.mxPolyline || mxgraph.mxPolyline
 window.mxPopupMenu = window.mxPopupMenu || mxgraph.mxPopupMenu
 window.mxPrintPreview = window.mxPrintPreview || mxgraph.mxPrintPreview
 window.mxRectangle = window.mxRectangle || mxgraph.mxRectangle
+window.mxResources = window.mxResources || mxgraph.mxResources
 window.mxRubberband = window.mxRubberband || mxgraph.mxRubberband
 window.mxShape = window.mxShape || mxgraph.mxShape
+window.mxStencil = window.mxStencil || mxgraph.mxStencil
+window.mxStencilRegistry = window.mxStencilRegistry || mxgraph.mxStencilRegistry
 window.mxStylesheet = window.mxStylesheet || mxgraph.mxStylesheet
 window.mxToolbar = window.mxToolbar || mxgraph.mxToolbar
 window.mxUndoManager = window.mxUndoManager || mxgraph.mxUndoManager
@@ -63,7 +71,6 @@ export default function link(scope, elem, attrs, ctrl) {
   var data;
   var panel = ctrl.panel;
   elem = elem.find('.flowchart-panel__chart');
-  var $tooltip = $('<div id="tooltip">');
   var themes;
 
   init();
@@ -160,7 +167,9 @@ export default function link(scope, elem, attrs, ctrl) {
 
     mxEvent.disableContextMenu(container);
     let graph = new mxGraph(container);
-    loadStyle(graph)
+    loadStyle(graph);
+    loadSpencils();
+
     // ne fonctionne pas : chercher dans API la fonction
     if (ctrl.panel.flowchart.checks.lock) {
       graph.resizeContainer = true;
@@ -220,7 +229,28 @@ export default function link(scope, elem, attrs, ctrl) {
       return null;
     };
 
-    
+    // Adds required resources (disables loading of fallback properties, this can only
+    // be used if we know that all keys are defined in the language specific file)
+
+    // mxResources.loadDefaultBundle = false;
+    // // var bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) || mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
+    // var bundle = RESOURCE_BASE + '.txt'
+
+    // // Fixes possible asynchronous requests
+    // mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function (xhr) {
+    //   // Adds bundle text to resources
+    //   mxResources.parse(xhr[0].getText());
+
+    //   // Configures the default graph theme
+    //   var themes = new Object();
+    //   themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement();
+
+    //   // Main
+    //   new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
+    // }, function () {
+    //   document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
+    // });
+
 
   }
 
@@ -228,12 +258,26 @@ export default function link(scope, elem, attrs, ctrl) {
     var node = mxUtils.load(STYLE_PATH + '/default.xml').getDocumentElement();
     if (node != null) {
       var dec = new mxCodec(node.ownerDocument);
+      console.log(graph.getStylesheet())
       dec.decode(node, graph.getStylesheet());
     }
   }
 
   function loadSpencils() {
+    var stencils = ['basic','arrows','flowchart','bpmn'];
+    stencils.forEach(element => {
+      var node = mxUtils.load(STENCIL_PATH + element + '.xml').getDocumentElement();
+      var shape = node.firstChild;
+      while (shape != null) {
+        if (shape.nodeType == mxConstants.NODETYPE_ELEMENT) {
+          mxStencilRegistry.addStencil(shape.getAttribute('name'), new mxStencil(shape));
+        }
+        shape = shape.nextSibling;
+      }
+      
+    });
 
   }
 }
+
 

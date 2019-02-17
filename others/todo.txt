@@ -17,6 +17,10 @@ Angular solution
 https://github.com/jgraph/mxgraph/issues/88
 https://github.com/Cadmus/epicupsdraw
 
+Example of import in react
+https://codesandbox.io/s/zwqr6zpmpx
+https://codesandbox.io/s/r52m86019m
+
 View xml code
 codec.decode(doc.documentElement, graph.getModel());
 var textarea = document.createElement('textarea');
