@@ -114,11 +114,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         },
         options: {
           zoom: '100%',
-        },
-        checks: {
           center: true,
           scale: false,
           lock: false,
+          grid: false,
         },
 
       }
@@ -272,7 +271,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (percentText == null || percentText.length == 0) {
       return true
     }
-    let regexPattern = new RegExp(/^\d+(\.\d+)?%/);
+    let regexPattern = new RegExp(/^\d+(\.\d+)?%{0,1}/);
     let result = regexPattern.test(percentText);
     if (!result) {
       return false;

@@ -21,6 +21,9 @@ Example of import in react
 https://codesandbox.io/s/zwqr6zpmpx
 https://codesandbox.io/s/r52m86019m
 
+Export SVG
+https://github.com/jgraph/mxgraph/blob/master/java/examples/com/mxgraph/examples/web/resources/export.html
+
 View xml code
 codec.decode(doc.documentElement, graph.getModel());
 var textarea = document.createElement('textarea');
@@ -42,3 +45,6 @@ document.body.appendChild(mxUtils.button('View XML', function()
   var node = encoder.encode(graph.getModel());
   mxUtils.popup(mxUtils.getXml(node), true);
 }));
+
+Graph panel
+https://github.com/grafana/grafana/tree/master/public/app/plugins/panel/graph

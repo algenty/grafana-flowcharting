@@ -163,6 +163,9 @@ export default function link(scope, elem, attrs, ctrl) {
 
   }
 
+  //
+  // DRAW
+  //
   function draw(container) {
 
     mxEvent.disableContextMenu(container);
@@ -179,28 +182,21 @@ export default function link(scope, elem, attrs, ctrl) {
     var parent = graph.getDefaultParent();
 
 
-    if (ctrl.panel.flowchart.checks.lock) {
+    if (ctrl.panel.flowchart.options.lock) {
       // Disables folding
       graph.setEnabled(false);
       graph.isCellFoldable = function (cell, collapse) {
         return false;
       };
     }
+
+
+    // grid
+    if (ctrl.panel.flowchart.options.grid) {
+      container.style.backgroundImage = "url('"+ IMAGE_PATH +"/grid.gif')";
+    }
     else {
-      // Enables rubberband selection
-      // new mxRubberband(graph);
-    }
-
-    // ne fonctionne pas : chercher dans API la fonction
-    // https://jgraph.github.io/mxgraph/docs/js-api/files/view/mxGraph-js.html#mxGraph.fit
-    if (ctrl.panel.flowchart.checks.center) {
-      graph.resizeContainer = true;
-    }
-
-
-    // Scale Graph to div
-    if (ctrl.panel.flowchart.checks.scale) {
-      //TODO:
+      container.style.backgroundImage = '';
     }
 
     graph.getModel().beginUpdate();
@@ -208,15 +204,45 @@ export default function link(scope, elem, attrs, ctrl) {
       var xmlDoc = mxUtils.parseXml(ctrl.panel.flowchart.source.xml.value);
       var codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, graph.getModel());
+
+
+    }
+    catch {
+      console.error("Error Graph")
+      //TODO:
     } finally {
       // Updates the display 
       graph.getModel().endUpdate();
+
+
       // Zoom
-      if (ctrl.panel.flowchart.options.zoom || ctrl.panel.flowchart.options.zoom.length > 0 || ctrl.panel.flowchart.options.zoom != '100%' || ctrl.panel.flowchart.options.zoom != '0%') {
+      if (ctrl.panel.flowchart.options.zoom || ctrl.panel.flowchart.options.zoom.length > 0 || ctrl.panel.flowchart.options.zoom != '100%' || ctrl.panel.flowchart.options.zoom != '0%' || ctrl.validatePercent(ctrl.panel.flowchart.options.zoom)) {
         let scale = _.replace(ctrl.panel.flowchart.options.zoom, '%', '') / 100;
         console.log(scale)
         graph.zoomTo(scale, true)
       }
+      else {
+        if (!ctrl.panel.flowchart.options.scale) graph.zoomActual();
+      }
+
+      // Fit/scale
+      // https://jgraph.github.io/mxgraph/docs/js-api/files/view/mxGraph-js.html#mxGraph.mxGraph
+      if (ctrl.panel.flowchart.options.scale) {
+        graph.fit();
+        graph.view.rendering = true;
+        graph.refresh();
+      }
+
+      // ne fonctionne pas : chercher dans API la fonction
+      // https://jgraph.github.io/mxgraph/docs/js-api/files/view/mxGraph-js.html#mxGraph.fit
+      if (ctrl.panel.flowchart.options.center) {
+        //graph.resizeContainer = true;
+        graph.center(true, true);
+      }
+      else {
+        graph.center(false, false);
+      }
+
     }
 
 

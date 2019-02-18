@@ -151,12 +151,11 @@ function (_MetricsPanelCtrl) {
           }
         },
         options: {
-          zoom: '100%'
-        },
-        checks: {
+          zoom: '100%',
           center: true,
           scale: false,
-          lock: false
+          lock: false,
+          grid: false
         }
       }
     };
@@ -330,7 +329,7 @@ function (_MetricsPanelCtrl) {
         return true;
       }
 
-      var regexPattern = new RegExp(/^\d+(\.\d+)?%/);
+      var regexPattern = new RegExp(/^\d+(\.\d+)?%{0,1}/);
       var result = regexPattern.test(percentText);
 
       if (!result) {
