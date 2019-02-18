@@ -15,7 +15,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.$scope = $scope;
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
- 
+
     this.options = {
       flowchart: {
         source: {
@@ -92,10 +92,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
             isIgnoreOKColors: false
           },
           handler: {
-            type : 'Number Threshold',
-            decimals : 2,
-            format : 'none',
-            display : 'When Metric Displayed',
+            type: 'Number Threshold',
+            decimals: 2,
+            format: 'none',
+            display: 'When Metric Displayed',
           }
         },
       },
@@ -112,10 +112,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
             value: "Not yet",
           }
         },
+        options: {
+          zoom: '100%',
+        },
         checks: {
-          center: false,
+          center: true,
           scale: false,
-          lock: true,
+          lock: false,
         },
 
       }
@@ -148,19 +151,19 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // EVENTS FCT
   //
   onInitEditMode() {
+    console.debug("ctrl.onInitEditMode")
     this.addEditorTab('Flowcharting', 'public/plugins/' + plugin.id + '/partials/flowchartEditor.html', 2);
     this.addEditorTab('Shapes Mapping', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 3);
     //this.addEditorTab('Values', 'public/plugins/' + plugin.id + '/partials/valueEditor.html', 5);
   }
 
   onRefresh() {
-
+    console.debug("ctrl.onRefresh")
     if (this.panel.fixedSpan) {
       this.panel.span = this.panel.fixedSpan;
     }
 
     // this.panel.measurements.measurement = this.panel.targets;
-
 
     this.panel.measurements = _.filter(this.panel.measurements, (measurement) => {
       return !measurement.hide;
@@ -179,7 +182,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
 
   onRender() {
-    // TODO:
+    console.debug("ctrl.onRender")
     this.data = this.parseSeries(this.series);
   }
 
@@ -198,8 +201,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // EVENTS OF EDITORS
   //
   onSourceTypeChanged() {
-    console.log(this.$scope)
-    this.render();
+    console.debug("ctrl.setUnitFormat")
+    this.onRender();
   }
 
   onColorChange(alarmLevel) {
@@ -210,14 +213,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS 
   //
   link(scope, elem, attrs, ctrl) {
+    console.debug("ctrl.link")
     mxgraph(scope, elem, attrs, ctrl);
   }
 
   openEditor() {
-    console.log("openEditor")
+    console.debug("ctrl.openEditor")
   }
 
   setUnitFormat(subItem) {
+    console.debug("ctrl.setUnitFormat")
     this.panel.format = subItem.value;
     this.refresh();
   }
@@ -263,6 +268,17 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
+  validatePercent(percentText) {
+    if (percentText == null || percentText.length == 0) {
+      return true
+    }
+    let regexPattern = new RegExp(/^\d+(\.\d+)?%/);
+    let result = regexPattern.test(percentText);
+    if (!result) {
+      return false;
+    }
+    return true;
+  }
 
   addFilters() {
     coreModule.filter('numberOrText', () => {

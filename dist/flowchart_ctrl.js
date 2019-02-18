@@ -150,10 +150,13 @@ function (_MetricsPanelCtrl) {
             value: "Not yet"
           }
         },
+        options: {
+          zoom: '100%'
+        },
         checks: {
-          center: false,
+          center: true,
           scale: false,
-          lock: true
+          lock: false
         }
       }
     };
@@ -191,6 +194,7 @@ function (_MetricsPanelCtrl) {
   _createClass(FlowchartCtrl, [{
     key: "onInitEditMode",
     value: function onInitEditMode() {
+      console.debug("ctrl.onInitEditMode");
       this.addEditorTab('Flowcharting', 'public/plugins/' + _plugin.plugin.id + '/partials/flowchartEditor.html', 2);
       this.addEditorTab('Shapes Mapping', 'public/plugins/' + _plugin.plugin.id + '/partials/shapeEditor.html', 3); //this.addEditorTab('Values', 'public/plugins/' + plugin.id + '/partials/valueEditor.html', 5);
     }
@@ -198,6 +202,8 @@ function (_MetricsPanelCtrl) {
     key: "onRefresh",
     value: function onRefresh() {
       var _this2 = this;
+
+      console.debug("ctrl.onRefresh");
 
       if (this.panel.fixedSpan) {
         this.panel.span = this.panel.fixedSpan;
@@ -221,7 +227,7 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onRender",
     value: function onRender() {
-      // TODO:
+      console.debug("ctrl.onRender");
       this.data = this.parseSeries(this.series);
     }
   }, {
@@ -243,8 +249,8 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onSourceTypeChanged",
     value: function onSourceTypeChanged() {
-      console.log(this.$scope);
-      this.render();
+      console.debug("ctrl.setUnitFormat");
+      this.onRender();
     }
   }, {
     key: "onColorChange",
@@ -255,16 +261,18 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
+      console.debug("ctrl.link");
       (0, _mxgraph.default)(scope, elem, attrs, ctrl);
     }
   }, {
     key: "openEditor",
     value: function openEditor() {
-      console.log("openEditor");
+      console.debug("ctrl.openEditor");
     }
   }, {
     key: "setUnitFormat",
     value: function setUnitFormat(subItem) {
+      console.debug("ctrl.setUnitFormat");
       this.panel.format = subItem.value;
       this.refresh();
     }
@@ -314,6 +322,22 @@ function (_MetricsPanelCtrl) {
       } catch (e) {
         return false;
       }
+    }
+  }, {
+    key: "validatePercent",
+    value: function validatePercent(percentText) {
+      if (percentText == null || percentText.length == 0) {
+        return true;
+      }
+
+      var regexPattern = new RegExp(/^\d+(\.\d+)?%/);
+      var result = regexPattern.test(percentText);
+
+      if (!result) {
+        return false;
+      }
+
+      return true;
     }
   }, {
     key: "addFilters",

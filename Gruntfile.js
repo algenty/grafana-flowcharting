@@ -13,8 +13,8 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-execute');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-sass');
-  grunt.loadNpmTasks('grunt-external-daemon');
-  grunt.loadNpmTasks('grunt-service');
+  // grunt.loadNpmTasks('grunt-external-daemon');
+  // grunt.loadNpmTasks('grunt-service');
 
   const sass = require('node-sass');
   grunt.initConfig({

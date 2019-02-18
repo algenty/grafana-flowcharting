@@ -14,16 +14,16 @@ var mxgraph = require("mxgraph")({
 // import BASIC from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils/basic.xml';
 // import BPMN from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//bpmn.xml';
 // import ARROWS from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//arrows.xml';
-// import FLOWCHART from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//flowchart.xml';
-// import GENERAL from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//general.xml';
+// import FLOWCHART from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils/flowchart.xml';
+// import GENERAL from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils/general.xml';
 
 window.BASE_PATH = window.BASE_PATH || 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/';
-window.RESOURCES_PATH = window.RESOURCES_PATH || window.BASE_PATH + 'resources/';
-window.RESOURCE_BASE = window.RESOURCE_BASE || window.RESOURCES_PATH + 'grapheditor';
-window.STENCIL_PATH = window.STENCIL_PATH || window.BASE_PATH + 'stencils/';
-window.IMAGE_PATH = window.IMAGE_PATH || window.BASE_PATH + 'images/';
-window.STYLE_PATH = window.STYLE_PATH || window.BASE_PATH + 'styles/';
-window.CSS_PATH = window.CSS_PATH || window.BASE_PATH + 'styles/';
+window.RESOURCES_PATH = window.BASE_PATH || window.BASE_PATH + 'resources';
+window.RESOURCE_BASE = window.RESOURCE_BASE || window.RESOURCES_PATH + '/grapheditor';
+window.STENCIL_PATH = window.STENCIL_PATH || window.BASE_PATH + 'stencils';
+window.IMAGE_PATH = window.IMAGE_PATH || window.BASE_PATH + 'images';
+window.STYLE_PATH = window.STYLE_PATH || window.BASE_PATH + 'styles';
+window.CSS_PATH = window.CSS_PATH || window.BASE_PATH + 'styles';
 window.mxLanguages = window.mxLanguages || ['en'];
 
 // Put to global vars to work
@@ -167,22 +167,40 @@ export default function link(scope, elem, attrs, ctrl) {
 
     mxEvent.disableContextMenu(container);
     let graph = new mxGraph(container);
+
+    //
+    // LOAD STYLES ET STENCIL
+    //
     loadStyle(graph);
-    loadSpencils();
+    // loadSpencils();
+
+    // Gets the default parent for inserting new cells. This
+    // is normally the first child of the root (ie. layer 0).
+    var parent = graph.getDefaultParent();
 
 
     if (ctrl.panel.flowchart.checks.lock) {
       // Disables folding
       graph.setEnabled(false);
-      // graph.isCellFoldable = function(cell, collapse)
-      // {
-      //   return false;
-      // };
+      graph.isCellFoldable = function (cell, collapse) {
+        return false;
+      };
+    }
+    else {
+      // Enables rubberband selection
+      // new mxRubberband(graph);
     }
 
     // ne fonctionne pas : chercher dans API la fonction
-    if (ctrl.panel.flowchart.checks.scale) {
+    // https://jgraph.github.io/mxgraph/docs/js-api/files/view/mxGraph-js.html#mxGraph.fit
+    if (ctrl.panel.flowchart.checks.center) {
       graph.resizeContainer = true;
+    }
+
+
+    // Scale Graph to div
+    if (ctrl.panel.flowchart.checks.scale) {
+      //TODO:
     }
 
     graph.getModel().beginUpdate();
@@ -193,9 +211,21 @@ export default function link(scope, elem, attrs, ctrl) {
     } finally {
       // Updates the display 
       graph.getModel().endUpdate();
+      // Zoom
+      if (ctrl.panel.flowchart.options.zoom || ctrl.panel.flowchart.options.zoom.length > 0 || ctrl.panel.flowchart.options.zoom != '100%' || ctrl.panel.flowchart.options.zoom != '0%') {
+        let scale = _.replace(ctrl.panel.flowchart.options.zoom, '%', '') / 100;
+        console.log(scale)
+        graph.zoomTo(scale, true)
+      }
     }
+
+
   }
 
+
+  //
+  // INIT
+  //
   function init() {
 
     // Overridden to define per-shape connection points
@@ -268,7 +298,6 @@ export default function link(scope, elem, attrs, ctrl) {
     var node = mxUtils.load(STYLE_PATH + '/default.xml').getDocumentElement();
     if (node != null) {
       var dec = new mxCodec(node.ownerDocument);
-      console.log(graph.getStylesheet())
       dec.decode(node, graph.getStylesheet());
     }
   }
@@ -276,7 +305,7 @@ export default function link(scope, elem, attrs, ctrl) {
   function loadSpencils() {
     var stencils = ['basic', 'arrows', 'flowchart', 'bpmn'];
     stencils.forEach(element => {
-      var node = mxUtils.load(STENCIL_PATH + element + '.xml').getDocumentElement();
+      var node = mxUtils.load(STENCIL_PATH + "/" + element + '.xml').getDocumentElement();
       var shape = node.firstChild;
       while (shape != null) {
         if (shape.nodeType == mxConstants.NODETYPE_ELEMENT) {

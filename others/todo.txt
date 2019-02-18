@@ -34,3 +34,11 @@ wnd.setMaximizable(true);
 wnd.setScrollable(true);
 wnd.setResizable(true);
 wnd.setVisible(true);
+
+// Adds an option to view the XML of the graph
+document.body.appendChild(mxUtils.button('View XML', function()
+{
+  var encoder = new mxCodec();
+  var node = encoder.encode(graph.getModel());
+  mxUtils.popup(mxUtils.getXml(node), true);
+}));
