@@ -158,25 +158,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onRefresh() {
     console.debug("ctrl.onRefresh")
-    if (this.panel.fixedSpan) {
-      this.panel.span = this.panel.fixedSpan;
-    }
 
-    // this.panel.measurements.measurement = this.panel.targets;
-
-    this.panel.measurements = _.filter(this.panel.measurements, (measurement) => {
-      return !measurement.hide;
-    });
-
-    _.each(this.panel.measurements, (m) => {
-      let res = _.filter(this.panel.measurements, (measurement) => {
-        return (m.alias == measurement.alias || (m.target == measurement.target && m.target)) && !m.hide;
-      });
-
-      if (res.length > 1) {
-        this.duplicates = true;
-      }
-    });
   }
 
 
@@ -186,9 +168,14 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
+    console.debug("ctrl.onDataReceived")
+    console.debug('received data');
+    console.debug(dataList);
     this.series = dataList.map(this.seriesHandler.bind(this));
-    this.data = this.parseSeries(this.series);
-    this.render(this.data);
+    console.debug('mapped dataList to series');
+    console.debug(this.series);
+    this.render();
+
   }
 
   onDataError() {
@@ -230,10 +217,20 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   seriesHandler(seriesData) {
     var series = new TimeSeries({
       datapoints: seriesData.datapoints,
-      alias: seriesData.target
+      alias: seriesData.target,
+      unit: seriesData.unit
     });
 
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
+    var datapoints = seriesData.datapoints || [];
+    if (datapoints && datapoints.length > 0) {
+      var last = datapoints[datapoints.length - 1][1];
+      var from = this.range.from;
+      if (last - from < -10000) {
+        series.isOutsideRange = true;
+      }
+    }
+    
     return series;
   }
 

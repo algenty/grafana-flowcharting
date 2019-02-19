@@ -200,28 +200,7 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onRefresh",
     value: function onRefresh() {
-      var _this2 = this;
-
       console.debug("ctrl.onRefresh");
-
-      if (this.panel.fixedSpan) {
-        this.panel.span = this.panel.fixedSpan;
-      } // this.panel.measurements.measurement = this.panel.targets;
-
-
-      this.panel.measurements = _lodash.default.filter(this.panel.measurements, function (measurement) {
-        return !measurement.hide;
-      });
-
-      _lodash.default.each(this.panel.measurements, function (m) {
-        var res = _lodash.default.filter(_this2.panel.measurements, function (measurement) {
-          return (m.alias == measurement.alias || m.target == measurement.target && m.target) && !m.hide;
-        });
-
-        if (res.length > 1) {
-          _this2.duplicates = true;
-        }
-      });
     }
   }, {
     key: "onRender",
@@ -232,9 +211,13 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
+      console.debug("ctrl.onDataReceived");
+      console.debug('received data');
+      console.debug(dataList);
       this.series = dataList.map(this.seriesHandler.bind(this));
-      this.data = this.parseSeries(this.series);
-      this.render(this.data);
+      console.debug('mapped dataList to series');
+      console.debug(this.series);
+      this.render();
     }
   }, {
     key: "onDataError",
@@ -280,22 +263,34 @@ function (_MetricsPanelCtrl) {
     value: function seriesHandler(seriesData) {
       var series = new _time_series.default({
         datapoints: seriesData.datapoints,
-        alias: seriesData.target
+        alias: seriesData.target,
+        unit: seriesData.unit
       });
       series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
+      var datapoints = seriesData.datapoints || [];
+
+      if (datapoints && datapoints.length > 0) {
+        var last = datapoints[datapoints.length - 1][1];
+        var from = this.range.from;
+
+        if (last - from < -10000) {
+          series.isOutsideRange = true;
+        }
+      }
+
       return series;
     }
   }, {
     key: "parseSeries",
     value: function parseSeries(series) {
-      var _this3 = this;
+      var _this2 = this;
 
       return _lodash.default.map(this.series, function (serie, i) {
         return {
           label: serie.alias,
-          data: serie.stats[_this3.panel.valueName],
-          color: _this3.panel.aliasColors[serie.alias] || _this3.$rootScope.colors[i],
-          legendData: serie.stats[_this3.panel.valueName]
+          data: serie.stats[_this2.panel.valueName],
+          color: _this2.panel.aliasColors[serie.alias] || _this2.$rootScope.colors[i],
+          legendData: serie.stats[_this2.panel.valueName]
         };
       });
     }
@@ -341,12 +336,12 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "addFilters",
     value: function addFilters() {
-      var _this4 = this;
+      var _this3 = this;
 
       _core_module.default.filter('numberOrText', function () {
         var numberOrTextFilter = function numberOrTextFilter(input) {
           if (angular.isNumber(input)) {
-            return _this4.filter('number')(input);
+            return _this3.filter('number')(input);
           } else {
             return input;
           }
@@ -359,7 +354,7 @@ function (_MetricsPanelCtrl) {
       _core_module.default.filter('numberOrTextWithRegex', function () {
         var numberOrTextFilter = function numberOrTextFilter(input, textRegex) {
           if (angular.isNumber(input)) {
-            return _this4.filter('number')(input);
+            return _this3.filter('number')(input);
           } else {
             if (textRegex == null || textRegex.length == 0) {
               return input;

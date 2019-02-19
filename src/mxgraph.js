@@ -218,7 +218,6 @@ export default function link(scope, elem, attrs, ctrl) {
       // Zoom
       if (ctrl.panel.flowchart.options.zoom || ctrl.panel.flowchart.options.zoom.length > 0 || ctrl.panel.flowchart.options.zoom != '100%' || ctrl.panel.flowchart.options.zoom != '0%' || ctrl.validatePercent(ctrl.panel.flowchart.options.zoom)) {
         let scale = _.replace(ctrl.panel.flowchart.options.zoom, '%', '') / 100;
-        console.log(scale)
         graph.zoomTo(scale, true)
       }
       else {
@@ -275,20 +274,14 @@ export default function link(scope, elem, attrs, ctrl) {
     mxConstants.SHADOW_OPACITY = 0.25;
     mxConstants.SHADOWCOLOR = '#000000';
     mxConstants.VML_SHADOWCOLOR = '#d0d0d0';
-    mxGraph.prototype.pageBreakColor = '#c0c0c0';
-    mxGraph.prototype.pageScale = 1;
+    mxGraph.pageBreakColor = '#c0c0c0';
+    mxGraph.pageScale = 1;
 
     // Keeps edges between relative child cells inside parent
-    mxGraphModel.prototype.ignoreRelativeEdgeParent = false;
-
-    // Defines grid properties
-    mxGraphView.prototype.gridImage = (mxClient.IS_SVG) ? 'data:image/gif;base64,R0lGODlhCgAKAJEAAAAAAP///8zMzP///yH5BAEAAAMALAAAAAAKAAoAAAIJ1I6py+0Po2wFADs=' :
-      IMAGE_PATH + '/grid.gif';
-    mxGraphView.prototype.gridSteps = 4;
-    mxGraphView.prototype.minGridSize = 4;
+    mxGraphModel.ignoreRelativeEdgeParent = false;
 
     // UrlParams is null in embed mode
-    mxGraphView.prototype.gridColor = '#e0e0e0';
+    mxGraphView.gridColor = '#e0e0e0';
 
     // Hook for custom constraints
     mxShape.prototype.getConstraints = function (style) {
