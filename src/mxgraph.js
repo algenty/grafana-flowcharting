@@ -126,13 +126,29 @@ export default function link(scope, elem, attrs, ctrl) {
   //
   function addFlowchart() {
     console.debug("mxgraph.addFlowChart");
+    var width = elem.width();
+    var height = ctrl.height;
+    var size = Math.min(width, height);
 
     $graphCanvas = $('<div></div>');
+    // Relative DIV
+    var graphCss = {
+      margin: 'auto',
+      position: 'relative',
+      paddingBottom: 20 + 'px',
+      height: size + 'px'
+    };
+    $graphCanvas.css(graphCss);
+
+
     elem.html($graphCanvas);
-
     $graphCanvas.bind("plothover", function (event, pos, item) {
+      if (!item) {
+        $tooltip.detach();
+        return;
+      }
     });
-
+    
     let container = $graphCanvas[0]
     mxEvent.disableContextMenu(container);
     graph = new mxGraph(container);
