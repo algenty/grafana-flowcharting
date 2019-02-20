@@ -1,36 +1,36 @@
-.piechart-panel {
+.flowchart-panel {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.piechart-panel--legend-right {
+.flowchart-panel--legend-right {
   flex-direction: row;
 }
 
-.piechart-panel--legend-right .piechart-legend {
+.flowchart-panel--legend-right .flowchart-legend {
   flex: 0 1 10px;
   height: 100%;
 }
 
-_:-ms-fullscreen, :root .piechart-panel--legend-right .piechart-legend {
+_:-ms-fullscreen, :root .flowchart-panel--legend-right .flowchart-legend {
   flex: 0 1 200px;
 }
 
-.piechart-panel--legend-right .piechart-legend-series {
+.flowchart-panel--legend-right .flowchart-legend-series {
   display: block;
   padding-left: 0px;
 }
 
-.piechart-panel--legend-right .piechart-legend-table .piechart-legend-series {
+.flowchart-panel--legend-right .flowchart-legend-table .flowchart-legend-series {
   display: table-row;
 }
 
-.piechart-legend__container {
+.flowchart-legend__container {
   height: 100%;
 }
 
-.piechart-panel__chart {
+.flowchart-panel__chart {
   position: relative;
   cursor: crosshair;
   flex-grow: 1;
@@ -51,7 +51,7 @@ _:-ms-fullscreen, :root .piechart-panel--legend-right .piechart-legend {
   padding: 10px;
 }
 
-.piechart-legend {
+.flowchart-legend {
   flex: 0 1 auto;
   margin: 0 1rem;
   text-align: center;
@@ -59,19 +59,19 @@ _:-ms-fullscreen, :root .piechart-panel--legend-right .piechart-legend {
   position: relative;
 }
 
-.piechart-legend .popover-content {
+.flowchart-legend .popover-content {
   padding: 0;
 }
 
-.piechart-legend-icon {
+.flowchart-legend-icon {
   position: relative;
   padding-right: 4px;
   top: 1px;
 }
 
-.piechart-legend-icon,
-.piechart-legend-alias,
-.piechart-legend-value {
+.flowchart-legend-icon,
+.flowchart-legend-alias,
+.flowchart-legend-value {
   cursor: pointer;
   float: left;
   white-space: nowrap;
@@ -80,87 +80,87 @@ _:-ms-fullscreen, :root .piechart-panel--legend-right .piechart-legend {
   color: 52545c;
 }
 
-.piechart-legend-icon.current::before {
+.flowchart-legend-icon.current::before {
   content: "Current: ";
 }
 
-.piechart-legend-icon.max::before {
+.flowchart-legend-icon.max::before {
   content: "Max: ";
 }
 
-.piechart-legend-icon.min::before {
+.flowchart-legend-icon.min::before {
   content: "Min: ";
 }
 
-.piechart-legend-icon.total::before {
+.flowchart-legend-icon.total::before {
   content: "Total: ";
 }
 
-.piechart-legend-icon.avg::before {
+.flowchart-legend-icon.avg::before {
   content: "Avg: ";
 }
 
-.piechart-legend-alias.current::before {
+.flowchart-legend-alias.current::before {
   content: "Current: ";
 }
 
-.piechart-legend-alias.max::before {
+.flowchart-legend-alias.max::before {
   content: "Max: ";
 }
 
-.piechart-legend-alias.min::before {
+.flowchart-legend-alias.min::before {
   content: "Min: ";
 }
 
-.piechart-legend-alias.total::before {
+.flowchart-legend-alias.total::before {
   content: "Total: ";
 }
 
-.piechart-legend-alias.avg::before {
+.flowchart-legend-alias.avg::before {
   content: "Avg: ";
 }
 
-.piechart-legend-value.current::before {
+.flowchart-legend-value.current::before {
   content: "Current: ";
 }
 
-.piechart-legend-value.max::before {
+.flowchart-legend-value.max::before {
   content: "Max: ";
 }
 
-.piechart-legend-value.min::before {
+.flowchart-legend-value.min::before {
   content: "Min: ";
 }
 
-.piechart-legend-value.total::before {
+.flowchart-legend-value.total::before {
   content: "Total: ";
 }
 
-.piechart-legend-value.avg::before {
+.flowchart-legend-value.avg::before {
   content: "Avg: ";
 }
 
-.piechart-legend-icon .fa {
+.flowchart-legend-icon .fa {
   font-size: 135%;
   position: relative;
   top: 1px;
 }
 
-.piechart-legend-series {
+.flowchart-legend-series {
   float: left;
   white-space: nowrap;
   padding-left: 10px;
 }
 
-.piechart-legend-series--right-y {
+.flowchart-legend-series--right-y {
   float: right;
 }
 
-.piechart-legend-value {
+.flowchart-legend-value {
   padding-left: 6px;
 }
 
-.piechart-legend-table tbody {
+.flowchart-legend-table tbody {
   display: block;
   overflow-y: auto;
   overflow-x: hidden;
@@ -169,26 +169,26 @@ _:-ms-fullscreen, :root .piechart-panel--legend-right .piechart-legend {
   padding-right: 5px;
 }
 
-.piechart-legend-table .piechart-legend-series {
+.flowchart-legend-table .flowchart-legend-series {
   display: table-row;
   float: none;
   padding-left: 0;
 }
 
-.piechart-legend-table .piechart-legend-series--right-y {
+.flowchart-legend-table .flowchart-legend-series--right-y {
   float: none;
 }
 
-.piechart-legend-table .piechart-legend-series--right-y .piechart-legend-alias::after {
+.flowchart-legend-table .flowchart-legend-series--right-y .flowchart-legend-alias::after {
   content: "(right-y)";
   padding: 0 5px;
   color: #767980;
 }
 
-.piechart-legend-table td,
-.piechart-legend-alias,
-.piechart-legend-icon,
-.piechart-legend-value {
+.flowchart-legend-table td,
+.flowchart-legend-alias,
+.flowchart-legend-icon,
+.flowchart-legend-value {
   float: none;
   display: table-cell;
   white-space: nowrap;
@@ -196,21 +196,21 @@ _:-ms-fullscreen, :root .piechart-panel--legend-right .piechart-legend {
   text-align: right;
 }
 
-.piechart-legend-table .piechart-legend-icon {
+.flowchart-legend-table .flowchart-legend-icon {
   width: 5px;
   padding: 0;
   top: 0;
 }
 
-.piechart-legend-table .piechart-legend-icon .fa {
+.flowchart-legend-table .flowchart-legend-icon .fa {
   top: 4px;
 }
 
-.piechart-legend-table .piechart-legend-value {
+.flowchart-legend-table .flowchart-legend-value {
   padding-left: 15px;
 }
 
-.piechart-legend-table .piechart-legend-alias {
+.flowchart-legend-table .flowchart-legend-alias {
   padding-left: 7px;
   text-align: left;
   width: 95%;
@@ -219,31 +219,31 @@ _:-ms-fullscreen, :root .piechart-panel--legend-right .piechart-legend {
   overflow: hidden;
 }
 
-.piechart-legend-table .piechart-legend-series:nth-child(odd) {
+.flowchart-legend-table .flowchart-legend-series:nth-child(odd) {
   background: #dde4ed;
 }
 
-.piechart-legend-table .piechart-legend-value.current::before {
+.flowchart-legend-table .flowchart-legend-value.current::before {
   content: "";
 }
 
-.piechart-legend-table .piechart-legend-value.max::before {
+.flowchart-legend-table .flowchart-legend-value.max::before {
   content: "";
 }
 
-.piechart-legend-table .piechart-legend-value.min::before {
+.flowchart-legend-table .flowchart-legend-value.min::before {
   content: "";
 }
 
-.piechart-legend-table .piechart-legend-value.total::before {
+.flowchart-legend-table .flowchart-legend-value.total::before {
   content: "";
 }
 
-.piechart-legend-table .piechart-legend-value.avg::before {
+.flowchart-legend-table .flowchart-legend-value.avg::before {
   content: "";
 }
 
-.piechart-legend-table th {
+.flowchart-legend-table th {
   text-align: right;
   padding: 0px 10px 1px 0;
   font-weight: bold;
@@ -252,19 +252,19 @@ _:-ms-fullscreen, :root .piechart-panel--legend-right .piechart-legend {
   white-space: nowrap;
 }
 
-.piechart-legend-series-hidden .piechart-legend-value,
-.piechart-legend-series-hidden .piechart-legend-alias {
+.flowchart-legend-series-hidden .flowchart-legend-value,
+.flowchart-legend-series-hidden .flowchart-legend-alias {
   color: #acb6bf;
 }
 
-.piechart-tooltip {
+.flowchart-tooltip {
   white-space: nowrap;
   font-size: 12px;
   background-color: #dde4ed;
   color: #35373f;
 }
 
-.piechart-tooltip .piechart-tooltip-time {
+.flowchart-tooltip .flowchart-tooltip-time {
   text-align: center;
   position: relative;
   top: -3px;
@@ -273,7 +273,7 @@ _:-ms-fullscreen, :root .piechart-panel--legend-right .piechart-legend {
   color: #35373f;
 }
 
-.piechart-tooltip .piechart-tooltip-value {
+.flowchart-tooltip .flowchart-tooltip-value {
   display: table-cell;
   font-weight: bold;
   padding-left: 15px;

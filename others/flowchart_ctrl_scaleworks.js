@@ -15,6 +15,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.$scope = $scope;
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
+
     this.options = {
       flowchart: {
         source: {
@@ -64,6 +65,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       interval: null,
       targets: [{}],
       cacheTimeout: null,
+      legendType: 'Under graph',
+      breakPoint: '50%',
       aliasColors: {},
       format: 'short',
       valueName: 'current',
@@ -121,9 +124,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     };
 
     _.defaults(this.panel, panelDefaults);
-    this.panel.graphId = 'flowchart_' + this.panel.id;
-    this.containerDivId = 'container_' + this.panel.graphId;
-    this.changedSource = true;
+
+
+    // Dates get stored as strings and will need to be converted back to a Date objects
+    // _.each(this.panel.targets, (t) => {
+    //   if (t.valueHandler === "Date Threshold") {
+    //     if (typeof t.crit != "undefined") t.crit = new Date(t.crit);
+    //     if (typeof t.warn != "undefined") t.warn = new Date(t.warn);
+    //   }
+    // });
+
 
     // events
     this.events.on('render', this.onRender.bind(this));
@@ -159,11 +169,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onDataReceived(dataList) {
     console.debug("ctrl.onDataReceived")
-    // console.debug('received data');
-    // console.debug(dataList);
+    console.debug('received data');
+    console.debug(dataList);
     this.series = dataList.map(this.seriesHandler.bind(this));
-    // console.debug('mapped dataList to series');
-    // console.debug(this.series);
+    console.debug('mapped dataList to series');
+    console.debug(this.series);
     this.render();
 
   }
@@ -176,14 +186,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // 
   // EVENTS OF EDITORS
   //
-  onSourceChanged() {
-    console.debug("ctrl.onSourceChanged")
-    this.changedSource = true;
+  onSourceTypeChanged() {
+    console.debug("ctrl.setUnitFormat")
     this.onRender();
   }
 
   onColorChange(alarmLevel) {
-    console.debug("ctrl.onColorChange")
+
   }
 
   //
@@ -234,6 +243,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         legendData: serie.stats[this.panel.valueName],
       };
     });
+  }
+
+  setLegendWidthForLegacyBrowser() {
+    var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+    if (isIE11 && this.panel.legendType === 'Right side' && !this.panel.legend.sideWidth) {
+      this.panel.legend.sideWidth = 150;
+    }
   }
 
   validateRegex(textRegex) {

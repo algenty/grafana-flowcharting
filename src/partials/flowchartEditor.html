@@ -13,7 +13,7 @@
 			</span>
 			<div class="gf-form-select-wrapper width-12">
 				<select class="gf-form-input" ng-model="ctrl.panel.flowchart.source.type"
-					ng-options="t for t in ctrl.options.flowchart.source.types" ng-change="ctrl.onSourceTypeChanged()"></select>
+					ng-options="t for t in ctrl.options.flowchart.source.types" ng-change="ctrl.onSourceChanged()"></select>
 			</div>
 		</div>
 		<div class="gf-form" name="options.source.url.form" ng-if="ctrl.panel.flowchart.source.type == 'Url'">
@@ -26,7 +26,7 @@
 				</span>
 				<input type="text" name="options.source.url.input" ng-model="ctrl.panel.flowchart.source.url.value"
 					class="gf-form-input ng-pristine ng-untouched ng-valid ng-empty" style="width: 300px"
-					ng-change="ctrl.render()" ng-model-onblur>
+					ng-change="ctrl.onSourceChanged()" ng-model-onblur>
 			</div>
 		</div>
 		<div class="gf-form gf-form--v-stretch" name="options.source.xml.form"
@@ -39,7 +39,7 @@
 			</span>
 			<textarea name="options.source.xml.input" class="gf-form-input width:95% ng-pristine ng-valid ng-empty ng-touched"
 				rows="10" placeholder="This text should respect xml/plain mxgraph syntax"
-				style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;" ng-change="ctrl.render()"
+				style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;" ng-change="ctrl.onSourceChanged()"
 				ng-model="ctrl.panel.flowchart.source.xml.value" ng-model-onBlur></textarea>
 		</div>
 		<div class="gf-form" name="options.source.editor.form" ng-if="ctrl.panel.flowchart.source.type == 'Editor'">

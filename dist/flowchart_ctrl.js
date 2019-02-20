@@ -103,8 +103,6 @@ function (_MetricsPanelCtrl) {
       interval: null,
       targets: [{}],
       cacheTimeout: null,
-      legendType: 'Under graph',
-      breakPoint: '50%',
       aliasColors: {},
       format: 'short',
       valueName: 'current',
@@ -160,15 +158,11 @@ function (_MetricsPanelCtrl) {
       }
     };
 
-    _lodash.default.defaults(_this.panel, panelDefaults); // Dates get stored as strings and will need to be converted back to a Date objects
-    // _.each(this.panel.targets, (t) => {
-    //   if (t.valueHandler === "Date Threshold") {
-    //     if (typeof t.crit != "undefined") t.crit = new Date(t.crit);
-    //     if (typeof t.warn != "undefined") t.warn = new Date(t.warn);
-    //   }
-    // });
-    // events
+    _lodash.default.defaults(_this.panel, panelDefaults);
 
+    _this.panel.graphId = 'flowchart_' + _this.panel.id;
+    _this.containerDivId = 'container_' + _this.panel.graphId;
+    _this.changedSource = true; // events
 
     _this.events.on('render', _this.onRender.bind(_assertThisInitialized(_assertThisInitialized(_this))));
 
@@ -211,12 +205,12 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
-      console.debug("ctrl.onDataReceived");
-      console.debug('received data');
-      console.debug(dataList);
-      this.series = dataList.map(this.seriesHandler.bind(this));
-      console.debug('mapped dataList to series');
-      console.debug(this.series);
+      console.debug("ctrl.onDataReceived"); // console.debug('received data');
+      // console.debug(dataList);
+
+      this.series = dataList.map(this.seriesHandler.bind(this)); // console.debug('mapped dataList to series');
+      // console.debug(this.series);
+
       this.render();
     }
   }, {
@@ -229,14 +223,17 @@ function (_MetricsPanelCtrl) {
     //
 
   }, {
-    key: "onSourceTypeChanged",
-    value: function onSourceTypeChanged() {
-      console.debug("ctrl.setUnitFormat");
+    key: "onSourceChanged",
+    value: function onSourceChanged() {
+      console.debug("ctrl.onSourceChanged");
+      this.changedSource = true;
       this.onRender();
     }
   }, {
     key: "onColorChange",
-    value: function onColorChange(alarmLevel) {} //
+    value: function onColorChange(alarmLevel) {
+      console.debug("ctrl.onColorChange");
+    } //
     // FUNCTIONS 
     //
 
@@ -293,15 +290,6 @@ function (_MetricsPanelCtrl) {
           legendData: serie.stats[_this2.panel.valueName]
         };
       });
-    }
-  }, {
-    key: "setLegendWidthForLegacyBrowser",
-    value: function setLegendWidthForLegacyBrowser() {
-      var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
-
-      if (isIE11 && this.panel.legendType === 'Right side' && !this.panel.legend.sideWidth) {
-        this.panel.legend.sideWidth = 150;
-      }
     }
   }, {
     key: "validateRegex",

@@ -11,12 +11,6 @@ var mxgraph = require("mxgraph")({
   mxLoadResources: true
 });
 
-// import BASIC from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils/basic.xml';
-// import BPMN from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//bpmn.xml';
-// import ARROWS from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils//arrows.xml';
-// import FLOWCHART from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils/flowchart.xml';
-// import GENERAL from '/bower_components/mxgraph/javascript/examples/grapheditor/www/stencils/general.xml';
-
 window.BASE_PATH = window.BASE_PATH || 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/';
 window.RESOURCES_PATH = window.BASE_PATH || window.BASE_PATH + 'resources';
 window.RESOURCE_BASE = window.RESOURCE_BASE || window.RESOURCES_PATH + '/grapheditor';
@@ -70,189 +64,26 @@ window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler
 export default function link(scope, elem, attrs, ctrl) {
   var data;
   var panel = ctrl.panel;
-  elem = elem.find('.flowchart-panel__chart');
+  var elem = elem.find('.flowchart-panel__chart');
+  var graph;
+  var $graphCanvas;
   var themes;
 
-  init();
+  // ########################################  MAIN  ###############################################
+  initFlowchart();
 
+  // Events Render
   ctrl.events.on('render', function () {
-    if (panel.legendType === 'Right side') {
-      render(false);
-      setTimeout(function () { render(true); }, 50);
-    } else {
-      render(true);
-    }
+    render();
   });
 
-  function noDataPoints() {
-    var html = '<div class="datapoints-warning"><span class="small">No data points</span></div>';
-    elem.html(html);
-  }
-
-  function addFlowChart() {
-    var width = elem.width();
-    var height = ctrl.height; // - getLegendHeight(ctrl.height);
-
-    var size = Math.min(width, height);
-
-    var $graphCanvas = $('<div></div>');
-
-    // Center Graph
-    var graphCss = {
-      margin: 'auto',
-      position: 'relative',
-      paddingBottom: 20 + 'px',
-      height: size + 'px'
-    };
-
-    $graphCanvas.css(graphCss);
-
-    var backgroundColor = $('body').css('background-color')
-
-    var options = {
-      series: {
-        chart: {
-          show: true,
-          stroke: {
-            color: backgroundColor,
-            width: parseFloat(ctrl.panel.strokeWidth).toFixed(1)
-          },
-          highlight: {
-            opacity: 0.0
-          },
-          combine: {
-            threshold: ctrl.panel.combine.threshold,
-            label: ctrl.panel.combine.label
-          }
-        }
-      },
-    };
-
-    data = ctrl.data;
-
-    for (let i = 0; i < data.length; i++) {
-      let series = data[i];
-
-      // if hidden remove points
-      if (ctrl.hiddenSeries[series.label]) {
-        series.data = {};
-      }
-    }
-
-    elem.html($graphCanvas);
-    draw($graphCanvas[0])
-    $graphCanvas.bind("plothover", function (event, pos, item) {
-      if (!item) {
-        $tooltip.detach();
-        return;
-      }
-
-    });
-  }
-
-  function render() {
-    if (!ctrl.data) { return; }
-
-    data = ctrl.data;
-
-    if (0 == ctrl.data.length) {
-      noDataPoints();
-    } else {
-      addFlowChart();
-    }
-
-  }
-
-  //
-  // DRAW
-  //
-  function draw(container) {
-
-    mxEvent.disableContextMenu(container);
-    let graph = new mxGraph(container);
-
-    //
-    // LOAD STYLES ET STENCIL
-    //
-    loadStyle(graph);
-    // loadSpencils();
-
-    // Gets the default parent for inserting new cells. This
-    // is normally the first child of the root (ie. layer 0).
-    var parent = graph.getDefaultParent();
-
-
-    if (ctrl.panel.flowchart.options.lock) {
-      // Disables folding
-      graph.setEnabled(false);
-      graph.isCellFoldable = function (cell, collapse) {
-        return false;
-      };
-    }
-
-
-    // grid
-    if (ctrl.panel.flowchart.options.grid) {
-      container.style.backgroundImage = "url('"+ IMAGE_PATH +"/grid.gif')";
-    }
-    else {
-      container.style.backgroundImage = '';
-    }
-
-    graph.getModel().beginUpdate();
-    try {
-      var xmlDoc = mxUtils.parseXml(ctrl.panel.flowchart.source.xml.value);
-      var codec = new mxCodec(xmlDoc);
-      codec.decode(xmlDoc.documentElement, graph.getModel());
-
-
-    }
-    catch {
-      console.error("Error Graph")
-      //TODO:
-    } finally {
-      // Updates the display 
-      graph.getModel().endUpdate();
-
-
-      // Zoom
-      if (ctrl.panel.flowchart.options.zoom || ctrl.panel.flowchart.options.zoom.length > 0 || ctrl.panel.flowchart.options.zoom != '100%' || ctrl.panel.flowchart.options.zoom != '0%' || ctrl.validatePercent(ctrl.panel.flowchart.options.zoom)) {
-        let scale = _.replace(ctrl.panel.flowchart.options.zoom, '%', '') / 100;
-        graph.zoomTo(scale, true)
-      }
-      else {
-        if (!ctrl.panel.flowchart.options.scale) graph.zoomActual();
-      }
-
-      // Fit/scale
-      // https://jgraph.github.io/mxgraph/docs/js-api/files/view/mxGraph-js.html#mxGraph.mxGraph
-      if (ctrl.panel.flowchart.options.scale) {
-        graph.fit();
-        graph.view.rendering = true;
-        graph.refresh();
-      }
-
-      // ne fonctionne pas : chercher dans API la fonction
-      // https://jgraph.github.io/mxgraph/docs/js-api/files/view/mxGraph-js.html#mxGraph.fit
-      if (ctrl.panel.flowchart.options.center) {
-        //graph.resizeContainer = true;
-        graph.center(true, true);
-      }
-      else {
-        graph.center(false, false);
-      }
-
-    }
-
-
-  }
-
+  // ####################################### FLOWCHART #############################################
 
   //
   // INIT
   //
-  function init() {
-
+  function initFlowchart() {
+    console.debug("mxgraph.initFlowChart");
     // Overridden to define per-shape connection points
     mxGraph.prototype.getAllConnectionConstraints = function (terminal, source) {
       if (terminal != null && terminal.shape != null) {
@@ -288,32 +119,145 @@ export default function link(scope, elem, attrs, ctrl) {
       return null;
     };
 
-    // Adds required resources (disables loading of fallback properties, this can only
-    // be used if we know that all keys are defined in the language specific file)
+  }
 
-    // mxResources.loadDefaultBundle = false;
-    // // var bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) || mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
-    // var bundle = RESOURCE_BASE + '.txt'
+  //
+  // ADD OR REPLACE GRAPH
+  //
+  function addFlowchart() {
+    console.debug("mxgraph.addFlowChart");
 
-    // // Fixes possible asynchronous requests
-    // mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function (xhr) {
-    //   // Adds bundle text to resources
-    //   mxResources.parse(xhr[0].getText());
+    $graphCanvas = $('<div></div>');
+    elem.html($graphCanvas);
 
-    //   // Configures the default graph theme
-    //   var themes = new Object();
-    //   themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement();
+    $graphCanvas.bind("plothover", function (event, pos, item) {
+    });
 
-    //   // Main
-    //   new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
-    // }, function () {
-    //   document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
-    // });
+    let container = $graphCanvas[0]
+    mxEvent.disableContextMenu(container);
+    graph = new mxGraph(container);
 
+    // styles and stencils
+    loadStyle(graph);
+    // loadSpencils();
+
+    graph.getModel().beginUpdate();
+    try {
+      var xmlDoc = mxUtils.parseXml(ctrl.panel.flowchart.source.xml.value);
+      var codec = new mxCodec(xmlDoc);
+      codec.decode(xmlDoc.documentElement, graph.getModel());
+    }
+    catch {
+      console.error("Error Graph")
+
+    } finally {
+      // Updates the display
+      graph.getModel().endUpdate();
+      // Fit/scale
+      if (panel.flowchart.options.scale) {
+        graph.fit();
+        graph.view.rendering = true;
+      }
+    }
 
   }
 
-  function loadStyle(graph) {
+
+  //
+  // REFRESH GRAPH
+  //
+  function refreshFlowChart() {
+    console.debug("mxgraph.refreshFlowChart");
+    let container = $graphCanvas[0]
+
+    // Center Graph
+    // var graphCss = {
+    //   margin: 'auto',
+    //   position: 'relative',
+    //   paddingBottom: 20 + 'px',
+    //   height: size + 'px'
+    // };
+    // $graphCanvas.css(graphCss);
+
+    // LOCK
+    if (ctrl.panel.flowchart.options.lock) {
+      // Disables folding
+      graph.setEnabled(false);
+      graph.isCellFoldable = function (cell, collapse) {
+        return false;
+      };
+    }
+
+    // GRID
+    if (ctrl.panel.flowchart.options.grid) {
+      container.style.backgroundImage = "url('" + IMAGE_PATH + "/grid.gif')";
+    }
+    else {
+      container.style.backgroundImage = '';
+    }
+
+    // Zoom
+    if (ctrl.panel.flowchart.options.zoom || ctrl.panel.flowchart.options.zoom.length > 0 || ctrl.panel.flowchart.options.zoom != '100%' || ctrl.panel.flowchart.options.zoom != '0%' || ctrl.validatePercent(ctrl.panel.flowchart.options.zoom)) {
+      let scale = _.replace(ctrl.panel.flowchart.options.zoom, '%', '') / 100;
+      graph.zoomTo(scale, true)
+    }
+    else {
+      if (!ctrl.panel.flowchart.options.scale) graph.zoomActual();
+    }
+
+    // Fit/scale
+    // if (ctrl.panel.flowchart.options.scale) {
+    //   debugger
+    //   graph.fit();
+    //   graph.view.rendering = true;
+    // }
+
+    // CENTER
+    if (ctrl.panel.flowchart.options.center) {
+      graph.center(true, true);
+    }
+    else {
+      graph.center(false, false);
+    }
+
+    // REFRESH GRAPH
+    graph.refresh();
+
+    // DATAS
+    // var options = {
+    //   series: {
+    //     chart: {
+    //       show: true,
+    //       stroke: {
+    //         color: backgroundColor,
+    //         width: parseFloat(ctrl.panel.strokeWidth).toFixed(1)
+    //       },
+    //       highlight: {
+    //         opacity: 0.0
+    //       },
+    //       combine: {
+    //         threshold: ctrl.panel.combine.threshold,
+    //         label: ctrl.panel.combine.label
+    //       }
+    //     }
+    //   },
+    // };
+
+    // data = ctrl.data;
+
+    // for (let i = 0; i < data.length; i++) {
+    //   let series = data[i];
+
+    //   // if hidden remove points
+    //   if (ctrl.hiddenSeries[series.label]) {
+    //     series.data = {};
+    //   }
+    // }
+
+  }
+
+
+  function loadStyle() {
     var node = mxUtils.load(STYLE_PATH + '/default.xml').getDocumentElement();
     if (node != null) {
       var dec = new mxCodec(node.ownerDocument);
@@ -336,6 +280,26 @@ export default function link(scope, elem, attrs, ctrl) {
     });
 
   }
+
+  // ###################################################################################################
+
+  //
+  // RENDER
+  //
+
+  function render() {
+    if (!ctrl.data) { return; }
+    data = ctrl.data;
+
+    addFlowchart();
+    refreshFlowChart();
+  }
+
+  function noDataPoints() {
+    var html = '<div class="datapoints-warning"><span class="small">No data points</span></div>';
+    elem.html(html);
+  }
+
 }
 
 
