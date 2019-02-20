@@ -115,6 +115,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           scale: false,
           lock: false,
           grid: false,
+          bgColor: undefined,
         },
 
       }

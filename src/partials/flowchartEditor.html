@@ -67,10 +67,20 @@
 		<gf-form-switch class="gf-form" label="Scale" label-class="width-12" checked="ctrl.panel.flowchart.options.scale"
 			on-change="ctrl.render()">
 		</gf-form-switch>
-	</gf-form-switch>
+		</gf-form-switch>
 		<gf-form-switch class="gf-form" label="Center" label-class="width-12" checked="ctrl.panel.flowchart.options.center"
 			on-change="ctrl.render()">
 		</gf-form-switch>
+		<gf-form-switch class="gf-form" label="Grid" label-class="width-12" checked="ctrl.panel.flowchart.options.grid"
+			on-change="ctrl.render()">
+		</gf-form-switch>
+		<div class="gf-form">
+			<label class="gf-form-label width-12">Bg Color</label>
+			<span class="width-10">
+				<spectrum-picker class="gf-form-input" ng-model="ctrl.panel.flowchart.options.bgColor" ng-change="ctrl.render()">
+				</spectrum-picker>
+			</span>
+		</div>
 		<!--zoom-->
 		<div class="gf-form" ng-if="!ctrl.panel.flowchart.options.scale">
 			<span class="gf-form-label width-12">
@@ -81,8 +91,8 @@
 					&gt; 100% : increase graph dimension<br />
 				</info-popover>
 			</span>
-			<input type="text" name="valueDisplayRegex" ng-model="ctrl.panel.flowchart.options.zoom" style="text-align: right" placeholder="100%"
-				class="gf-form-input max-width-12" ng-blur="ctrl.render()" />
+			<input type="text" name="valueDisplayRegex" ng-model="ctrl.panel.flowchart.options.zoom" style="text-align: right"
+				placeholder="100%" class="gf-form-input max-width-10" ng-blur="ctrl.render()" />
 			<div ng-if="!ctrl.validatePercent(ctrl.panel.flowchart.options.zoom)" style="color: red; padding-left: 5px">
 				Invalid percent
 			</div>
@@ -94,8 +104,5 @@
 		<gf-form-switch class="gf-form" label="Lock" label-class="width-12" checked="ctrl.panel.flowchart.options.lock"
 			on-change="ctrl.render()">
 		</gf-form-switch>
-		<gf-form-switch class="gf-form" label="Grid" label-class="width-12" checked="ctrl.panel.flowchart.options.grid"
-		on-change="ctrl.render()">
-	</gf-form-switch>
 	</div>
 </div>

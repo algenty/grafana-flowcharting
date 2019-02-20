@@ -64,10 +64,12 @@ window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler
 export default function link(scope, elem, attrs, ctrl) {
   var data;
   var panel = ctrl.panel;
-  var elem = elem.find('.flowchart-panel__chart');
+  var $root = elem;
+  var $elem = elem.find('.flowchart-panel__chart');
   var graph;
   var $graphCanvas;
   var themes;
+  var $parent;
 
   // ########################################  MAIN  ###############################################
   initFlowchart();
@@ -126,23 +128,10 @@ export default function link(scope, elem, attrs, ctrl) {
   //
   function addFlowchart() {
     console.debug("mxgraph.addFlowChart");
-    // var width = elem.width();
-    // var height = ctrl.height;
-    // var size = Math.min(width, height);
+
 
     $graphCanvas = $('<div></div>');
-
-    // Relative DIV
-    // var graphCss = {
-    //   margin: 'auto',
-    //   position: 'relative',
-    //   paddingBottom: 20 + 'px',
-    //   height: size + 'px'
-    // };
-    // $graphCanvas.css(graphCss);
-
-
-    elem.html($graphCanvas);
+    $elem.html($graphCanvas);
     $graphCanvas.bind("plothover", function (event, pos, item) {
       if (!item) {
         $tooltip.detach();
@@ -180,7 +169,7 @@ export default function link(scope, elem, attrs, ctrl) {
   function refreshFlowChart() {
     console.debug("mxgraph.refreshFlowChart");
     let container = $graphCanvas[0]
-    var width = elem.width();
+    var width = $elem.width();
     var height = ctrl.height;
     var size = Math.min(width, height);
 
@@ -232,6 +221,13 @@ export default function link(scope, elem, attrs, ctrl) {
     }
     else {
       graph.center(false, false);
+    }
+
+    // BG Color
+    if (ctrl.panel.flowchart.options.bgColor) {
+      $elem.css('background-color', ctrl.panel.flowchart.options.bgColor);
+    } else {
+      $elem.css('background-color', '');
     }
 
     // REFRESH GRAPH
@@ -311,7 +307,7 @@ export default function link(scope, elem, attrs, ctrl) {
 
   function noDataPoints() {
     var html = '<div class="datapoints-warning"><span class="small">No data points</span></div>';
-    elem.html(html);
+    $elem.html(html);
   }
 
 }
