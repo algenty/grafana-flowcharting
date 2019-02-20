@@ -204,8 +204,6 @@ export default function link(scope, elem, attrs, ctrl) {
       var xmlDoc = mxUtils.parseXml(ctrl.panel.flowchart.source.xml.value);
       var codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, graph.getModel());
-
-
     }
     catch {
       console.error("Error Graph")

@@ -126,19 +126,20 @@ export default function link(scope, elem, attrs, ctrl) {
   //
   function addFlowchart() {
     console.debug("mxgraph.addFlowChart");
-    var width = elem.width();
-    var height = ctrl.height;
-    var size = Math.min(width, height);
+    // var width = elem.width();
+    // var height = ctrl.height;
+    // var size = Math.min(width, height);
 
     $graphCanvas = $('<div></div>');
+
     // Relative DIV
-    var graphCss = {
-      margin: 'auto',
-      position: 'relative',
-      paddingBottom: 20 + 'px',
-      height: size + 'px'
-    };
-    $graphCanvas.css(graphCss);
+    // var graphCss = {
+    //   margin: 'auto',
+    //   position: 'relative',
+    //   paddingBottom: 20 + 'px',
+    //   height: size + 'px'
+    // };
+    // $graphCanvas.css(graphCss);
 
 
     elem.html($graphCanvas);
@@ -169,15 +170,9 @@ export default function link(scope, elem, attrs, ctrl) {
     } finally {
       // Updates the display
       graph.getModel().endUpdate();
-      // Fit/scale
-      if (panel.flowchart.options.scale) {
-        graph.fit();
-        graph.view.rendering = true;
-      }
     }
 
   }
-
 
   //
   // REFRESH GRAPH
@@ -185,15 +180,19 @@ export default function link(scope, elem, attrs, ctrl) {
   function refreshFlowChart() {
     console.debug("mxgraph.refreshFlowChart");
     let container = $graphCanvas[0]
+    var width = elem.width();
+    var height = ctrl.height;
+    var size = Math.min(width, height);
 
+    
     // Center Graph
-    // var graphCss = {
-    //   margin: 'auto',
-    //   position: 'relative',
-    //   paddingBottom: 20 + 'px',
-    //   height: size + 'px'
-    // };
-    // $graphCanvas.css(graphCss);
+    var graphCss = {
+      margin: 'auto',
+      position: 'relative',
+      paddingBottom: 20 + 'px',
+      height: size + 'px'
+    };
+    $graphCanvas.css(graphCss);
 
     // LOCK
     if (ctrl.panel.flowchart.options.lock) {
@@ -222,11 +221,10 @@ export default function link(scope, elem, attrs, ctrl) {
     }
 
     // Fit/scale
-    // if (ctrl.panel.flowchart.options.scale) {
-    //   debugger
-    //   graph.fit();
-    //   graph.view.rendering = true;
-    // }
+    if (ctrl.panel.flowchart.options.scale) {
+      graph.fit();
+      graph.view.rendering = true;
+    }
 
     // CENTER
     if (ctrl.panel.flowchart.options.center) {
