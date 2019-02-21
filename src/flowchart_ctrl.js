@@ -180,7 +180,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onSourceChanged() {
     console.debug("ctrl.onSourceChanged")
     this.changedSource = true;
-    this.onRender();
+    this.render();
   }
 
   onColorChange(alarmLevel) {
