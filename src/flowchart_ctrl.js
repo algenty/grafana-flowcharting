@@ -15,6 +15,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.$scope = $scope;
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
+    this.cells = [];
     this.options = {
       flowchart: {
         source: {
@@ -51,6 +52,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
 
     var panelDefaults = {
+      sort: { col: 0, desc: true },
       legend: {
         show: false, // disable/enable legend
         values: false
@@ -144,7 +146,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     console.debug("ctrl.onInitEditMode")
     this.addEditorTab('Flowcharting', 'public/plugins/' + plugin.id + '/partials/flowchartEditor.html', 2);
     this.addEditorTab('Shapes Mapping', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 3);
-    //this.addEditorTab('Values', 'public/plugins/' + plugin.id + '/partials/valueEditor.html', 5);
+    this.addEditorTab('Inspect', 'public/plugins/' + plugin.id + '/partials/inspectFlowchart.html', 4)
   }
 
   onRefresh() {
@@ -205,6 +207,23 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.refresh();
   }
 
+  toggleColumnSort(col, colIndex) {
+    // remove sort flag from current column
+    if (this.cells.columns[this.panel.sort.col]) {
+      this.cells.columns[this.panel.sort.col].sort = false;
+    }
+
+    if (this.cells.sort.col === colIndex) {
+      if (this.cells.sort.desc) {
+        this.cells.sort.desc = false;
+      } else {
+        this.cells.sort.col = null;
+      }
+    } else {
+      this.cells.sort.col = colIndex;
+      this.cells.sort.desc = true;
+    }
+  }
 
   seriesHandler(seriesData) {
     var series = new TimeSeries({
@@ -222,7 +241,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         series.isOutsideRange = true;
       }
     }
-    
+
     return series;
   }
 

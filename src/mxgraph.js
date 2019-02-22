@@ -266,6 +266,52 @@ export default function link(scope, elem, attrs, ctrl) {
 
   }
 
+  //
+  // inspect Flowchart
+  // 
+  function inspectFlowchart() {
+    let model = graph.getModel()
+    let cells = model.cells;
+    ctrl.cells.columns = [
+      {
+        title: "Id",
+        desc: "Id of the cell",
+      },
+      {
+        title: "value",
+        desc: "Value of the cell",
+      },
+      {
+        title: "Geometry",
+        desc: "Represent the geometry of a cell",
+      },
+      {
+        title: "IsEdge",
+        desc: "true if the cell is an edge",
+      },
+      {
+        title: "isConnectable",
+        desc: "true if the cell is connectable"
+      }
+    ];
+    
+    ctrl.cells.rows = [];
+
+    _.forEach(cells, function (element) {
+      let row = {
+        id: element.getId(),
+        value: element.getValue(),
+        geometry: element.getGeometry(),
+        isedge: element.isEdge(),
+        isConnectable: element.isConnectable()
+      }
+      ctrl.cells.rows.push(row);
+    })
+
+    console.log(ctrl.cells.rows);
+    
+
+  }
 
   function loadStyle() {
     var node = mxUtils.load(STYLE_PATH + '/default.xml').getDocumentElement();
@@ -303,6 +349,8 @@ export default function link(scope, elem, attrs, ctrl) {
 
     addFlowchart();
     refreshFlowChart();
+    inspectFlowchart();
+
   }
 
   function noDataPoints() {
