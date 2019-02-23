@@ -275,3 +275,62 @@
   padding-left: 15px;
   text-align: right;
 }
+
+.flowchartTable-editor-scroll {
+  overflow: auto;
+}
+
+.flowchartTable-editor-container {
+  padding-top: 2.2em;
+  position: relative;
+}
+
+.datapoints-warning {
+  pointer: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+  margin-top: -50px;
+  margin-left: -100px;
+  width: 200px;
+  text-align: center;
+  cursor: auto;
+  padding: 10px;
+}
+
+table.flowchartTable-editor {
+  font-family: Arial, Helvetica, sans-serif;
+  border: 2px solid #161719;
+  background-color: #212124;
+  width: 90%;
+  height: 200px;
+  text-align: left;
+  border-collapse: collapse;
+}
+table.flowchartTable-editor td, table.flowchartTable-editor th {
+  border: 2px solid #161719;
+  padding: 2px 2px;
+}
+table.flowchartTable-editor tbody td {
+  font-size: 11px;
+  color: #E6E6E6;
+}
+table.flowchartTable-editor thead {
+  background: #2F2F32;
+  border-bottom: 2px solid #000000;
+}
+table.flowchartTable-editor thead th {
+  font-size: 12px;
+  font-weight: bold;
+  color: #33B5E5;
+  text-align: center;
+  border-left: 2px solid #171819;
+}
+table.flowchartTable-editor thead th:first-child {
+  border-left: none;
+}
+
+table.flowchartTable-editor tfoot td {
+  font-size: 12px;
+}

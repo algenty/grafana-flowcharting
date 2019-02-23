@@ -135,6 +135,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('data-error', this.onDataError.bind(this));
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+    this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
+
 
     this.addFilters()
   }
@@ -176,6 +178,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
+  onInitPanelActions(actions) {
+    actions.push({ text: 'Export SVG', click: 'ctrl.exportSVG()' });
+  }
+
   // 
   // EVENTS OF EDITORS
   //
@@ -196,6 +202,18 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     console.debug("ctrl.link")
     mxgraph(scope, elem, attrs, ctrl);
   }
+
+  exportSVG() {
+    const scope = this.$scope.$new(true);
+    //scope.tableData = this.renderer.render_values();
+    scope.panel = 'table';
+    this.publishAppEvent('show-modal', {
+      templateHtml: '<export-data-modal panel="panel" data="tableData"></export-data-modal>',
+      scope,
+      modalClass: 'modal--narrow',
+    });
+  }
+
 
   openEditor() {
     console.debug("ctrl.openEditor")

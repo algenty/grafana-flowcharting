@@ -1,35 +1,30 @@
-<div>{{ctrl.cells.columns}}</div>
-<div>{{ctrl.cells.rows}}</div>
-
-<div class="table-panel-container">
-		<div class="table-panel-header-bg" ng-show="ctrl.cells.rows.length"></div>
-		<div class="table-panel-scroll" ng-show="ctrl.cells.rows.length">
-			<table class="table-panel-table">
-				<thead>
-					<tr>
-						<th ng-repeat="col in ctrl.cells.columns">
-							<div class="table-panel-table-header-inner pointer" ng-click="ctrl.toggleColumnSort(col, $index)">
-								{{col.title}}
-								<span class="table-panel-table-header-controls" >
-									<i class="fa fa-caret-down" ng-show="col.desc"></i>
-									<i class="fa fa-caret-up" ng-hide="col.desc"></i>
-								</span>
-							</div>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="row in ctrl.cells.rows">
-						<td>{{row.id}}</td><td>{{row.value}}</td><td>{{row.geometry}}</td><td>{{row.isedge}}</td><td>{{row.isConnectable}}</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+<div class="flowchart-editor-container">
+	<table class="flowchartTable-editor">
+		<thead>
+			<tr >
+				<th>Id</th>
+				<th>Value</th>
+				<th>Style</th>
+				<th>Edged</th>
+				<th>Connectable</th>
+				<th>Vertex</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="row in ctrl.cells.rows" ng-mouseleave="count = count + 1" ng-mouseover="count = count + 1" ng-init="count=0">
+				<td>{{row.id}}</td>
+				<td>{{row.value}}</td>
+				<td>{{row.style}}</td>
+				<td>{{row.isedge}}</td>
+				<td>{{row.isConnectable}}</td>
+				<td>{{row.isVertex}}</td>
+			</tr>
+		</tbody>
+		</tr>
+	</table>
+	count: {{count}}
 	<div class="datapoints-warning" ng-show="ctrl.cells.rows.length===0">
-		<span class="small" >
+		<span class="small">
 			No data to show <tip>Nothing returned by data query</tip>
 		</span>
-	</div>
-	<div class="table-panel-footer">
 	</div>

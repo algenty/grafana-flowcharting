@@ -97,7 +97,8 @@ export default function link(scope, elem, attrs, ctrl) {
           return terminal.shape.constraints;
         }
       }
-      return null;
+    graph = new mxgraph($graphCanvas[0])
+
     };
 
     /**
@@ -141,7 +142,15 @@ export default function link(scope, elem, attrs, ctrl) {
     
     let container = $graphCanvas[0]
     mxEvent.disableContextMenu(container);
-    graph = new mxGraph(container);
+    if(isNaN(graph)) {
+      graph = new mxGraph(container);
+    }
+    else {
+      console.debug("New mxgraph")
+      graph.getModel().clear();
+    }
+    
+    
 
     // styles and stencils
     loadStyle(graph);
@@ -272,6 +281,7 @@ export default function link(scope, elem, attrs, ctrl) {
   function inspectFlowchart() {
     let model = graph.getModel()
     let cells = model.cells;
+    console.log(cells);
     ctrl.cells.columns = [
       {
         title: "Id",
@@ -301,9 +311,10 @@ export default function link(scope, elem, attrs, ctrl) {
       let row = {
         id: element.getId(),
         value: element.getValue(),
-        geometry: element.getGeometry(),
+        style: element.getStyle(),
         isedge: element.isEdge(),
-        isConnectable: element.isConnectable()
+        isConnectable: element.isConnectable(),
+        isVertex : element.isVertex(),
       }
       ctrl.cells.rows.push(row);
     })

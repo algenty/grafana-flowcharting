@@ -25,26 +25,12 @@ Export SVG
 https://github.com/jgraph/mxgraph/blob/master/java/examples/com/mxgraph/examples/web/resources/export.html
 
 View xml code
-codec.decode(doc.documentElement, graph.getModel());
-var textarea = document.createElement('textarea');
-textarea.style.width = '400px';
-textarea.style.height = '400px';
-var enc = new mxCodec(mxUtils.createXmlDocument());
-var node = enc.encode(graph.getModel());
-textarea.value = mxUtils.getPrettyXml(node);
-wnd = new mxWindow('Scrollable, resizable, fixed content', textarea, 520, 50, 220, 200, true, true);
-wnd.setMaximizable(true);
-wnd.setScrollable(true);
-wnd.setResizable(true);
-wnd.setVisible(true);
-
-// Adds an option to view the XML of the graph
-document.body.appendChild(mxUtils.button('View XML', function()
-{
-  var encoder = new mxCodec();
-  var node = encoder.encode(graph.getModel());
-  mxUtils.popup(mxUtils.getXml(node), true);
-}));
+				// Adds an option to view the XML of the graph
+				document.body.appendChild(mxUtils.button('View XML', function () {
+					var encoder = new mxCodec();
+					var node = encoder.encode(graph.getModel());
+					mxUtils.popup(mxUtils.getPrettyXml(node), true);
+				}));
 
 Graph panel
 https://github.com/grafana/grafana/tree/master/public/app/plugins/panel/graph
