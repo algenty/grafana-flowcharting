@@ -97,8 +97,24 @@ export default function link(scope, elem, attrs, ctrl) {
           return terminal.shape.constraints;
         }
       }
-    graph = new mxgraph($graphCanvas[0])
+      graph = new mxgraph($graphCanvas[0])
+      graph.convertValueToString = function (cell) {
+        if (mxUtils.isNode(cell.value)) {
+          return cell.getAttribute('label', '')
+        }
+      };
 
+      var cellLabelChanged = graph.cellLabelChanged;
+      graph.cellLabelChanged = function (cell, newValue, autoSize) {
+        if (mxUtils.isNode(cell.value)) {
+          // Clones the value for correct undo/redo
+          var elt = cell.value.cloneNode(true);
+          elt.setAttribute('label', newValue);
+          newValue = elt;
+        }
+
+        cellLabelChanged.apply(this, arguments);
+      };
     };
 
     /**
@@ -139,18 +155,18 @@ export default function link(scope, elem, attrs, ctrl) {
         return;
       }
     });
-    
+
     let container = $graphCanvas[0]
     mxEvent.disableContextMenu(container);
-    if(isNaN(graph)) {
+    if (isNaN(graph)) {
       graph = new mxGraph(container);
     }
     else {
       console.debug("New mxgraph")
       graph.getModel().clear();
     }
-    
-    
+
+
 
     // styles and stencils
     loadStyle(graph);
@@ -182,7 +198,7 @@ export default function link(scope, elem, attrs, ctrl) {
     var height = ctrl.height;
     var size = Math.min(width, height);
 
-    
+
     // Center Graph
     var graphCss = {
       margin: 'auto',
@@ -304,7 +320,7 @@ export default function link(scope, elem, attrs, ctrl) {
         desc: "true if the cell is connectable"
       }
     ];
-    
+
     ctrl.cells.rows = [];
 
     _.forEach(cells, function (element) {
@@ -314,15 +330,29 @@ export default function link(scope, elem, attrs, ctrl) {
         style: element.getStyle(),
         isedge: element.isEdge(),
         isConnectable: element.isConnectable(),
-        isVertex : element.isVertex(),
+        isVertex: element.isVertex(),
       }
       ctrl.cells.rows.push(row);
     })
 
     console.log(ctrl.cells.rows);
-    
+
 
   }
+
+  function selectCell(id) {
+    let model = graph.getModel()
+    let cell = model.getCell(id)
+    if (cell.isVertex()) {
+      graph.setTooltips(true);
+      graph.setSelectionCell(cell);
+    }
+  }
+
+  function unselectCell(id) {
+    graph.setTooltips(false);
+  }
+
 
   function loadStyle() {
     var node = mxUtils.load(STYLE_PATH + '/default.xml').getDocumentElement();
@@ -371,4 +401,11 @@ export default function link(scope, elem, attrs, ctrl) {
 
 }
 
+export function selectCell(id) {
+  link.selectCell(id)
+}
+
+export function unselectCell(id) {
+  link.unselectCell(id)
+}
 

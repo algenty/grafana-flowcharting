@@ -11,8 +11,8 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="row in ctrl.cells.rows" ng-mouseleave="count = count + 1" ng-mouseover="count = count + 1" ng-init="count=0">
-				<td>{{row.id}}</td>
+			<tr ng-repeat="row in ctrl.cells.rows" ng-mouseleave="ctrl.onMouseLeave(row.id)" ng-mouseover="ctrl.onMouseOver(row.id)">
+				<td >{{row.id}}</td>
 				<td>{{row.value}}</td>
 				<td>{{row.style}}</td>
 				<td>{{row.isedge}}</td>
