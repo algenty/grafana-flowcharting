@@ -118,7 +118,7 @@ export default function link(scope, elem, attrs, ctrl) {
     // loadSpencils();
 
     // overrite function to compatibility with draw.io
-
+    //TODO:
 
     /**
      * Sets global constants.
@@ -361,9 +361,16 @@ export default function link(scope, elem, attrs, ctrl) {
     if (!ctrl.data) { return; }
     data = ctrl.data;
 
-    addFlowchart();
-    refreshFlowChart();
-    inspectFlowchart();
+    if(ctrl.changedSource == true) {
+      ctrl.changedSource = false;
+      addFlowchart();
+      inspectFlowchart();
+      refreshFlowChart();
+    }
+    else {
+      refreshFlowChart();
+    }
+
 
   }
 
