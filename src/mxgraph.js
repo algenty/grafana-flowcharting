@@ -159,10 +159,11 @@ export default function link(scope, elem, attrs, ctrl) {
     let container = $graphCanvas[0]
     mxEvent.disableContextMenu(container);
     if (isNaN(graph)) {
+      console.debug("New mxgraph")
       graph = new mxGraph(container);
     }
     else {
-      console.debug("New mxgraph")
+      console.debug("clear mxgraph")
       graph.getModel().clear();
     }
 
@@ -297,7 +298,6 @@ export default function link(scope, elem, attrs, ctrl) {
   function inspectFlowchart() {
     let model = graph.getModel()
     let cells = model.cells;
-    console.log(cells);
     ctrl.cells.columns = [
       {
         title: "Id",
@@ -334,10 +334,6 @@ export default function link(scope, elem, attrs, ctrl) {
       }
       ctrl.cells.rows.push(row);
     })
-
-    console.log(ctrl.cells.rows);
-
-
   }
 
   function selectCell(id) {
@@ -401,6 +397,7 @@ export default function link(scope, elem, attrs, ctrl) {
 
 }
 
+ 
 export function selectCell(id) {
   link.selectCell(id)
 }

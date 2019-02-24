@@ -197,13 +197,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onMouseOver(id) {
-    console.debug("$scope.onMouseOver : " + id);
-    mxgraph.selectCell(id);
+    console.debug("ctrl.onMouseOver",id);
+    this.selectCell(id);
   }
 
   onMouseLeave(id) {
-    console.debug("$scope.onMouseLeave : " + id)
-    mxgraph.unselectCell(id);
+    console.debug("ctrl.onMouseLeave", id)
+    this.unselectCell(id);
   }
 
   //
