@@ -80,6 +80,9 @@ export default function link(scope, elem, attrs, ctrl) {
     render();
   });
 
+  // ########################################  OVERRITE MXGRAPH ####################################
+  
+
   // ####################################### FLOWCHART #############################################
 
   //
@@ -155,8 +158,7 @@ export default function link(scope, elem, attrs, ctrl) {
       var xmlDoc = mxUtils.parseXml(ctrl.panel.flowchart.source.xml.value);
       var codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, graph.getModel());
-    }
-    catch {
+    } catch {
       console.error("Error Graph")
 
     } finally {
@@ -198,8 +200,7 @@ export default function link(scope, elem, attrs, ctrl) {
     // GRID
     if (ctrl.panel.flowchart.options.grid) {
       container.style.backgroundImage = "url('" + IMAGE_PATH + "/grid.gif')";
-    }
-    else {
+    } else {
       container.style.backgroundImage = '';
     }
 
@@ -207,8 +208,7 @@ export default function link(scope, elem, attrs, ctrl) {
     if (ctrl.panel.flowchart.options.zoom || ctrl.panel.flowchart.options.zoom.length > 0 || ctrl.panel.flowchart.options.zoom != '100%' || ctrl.panel.flowchart.options.zoom != '0%' || ctrl.validatePercent(ctrl.panel.flowchart.options.zoom)) {
       let scale = _.replace(ctrl.panel.flowchart.options.zoom, '%', '') / 100;
       graph.zoomTo(scale, true)
-    }
-    else {
+    } else {
       if (!ctrl.panel.flowchart.options.scale) graph.zoomActual();
     }
 
@@ -221,8 +221,7 @@ export default function link(scope, elem, attrs, ctrl) {
     // CENTER
     if (ctrl.panel.flowchart.options.center) {
       graph.center(true, true);
-    }
-    else {
+    } else {
       graph.center(false, false);
     }
 
@@ -275,8 +274,8 @@ export default function link(scope, elem, attrs, ctrl) {
   function inspectFlowchart() {
     let model = graph.getModel()
     let cells = model.cells;
-    ctrl.cells.columns = [
-      {
+    ctrl.graph = graph;
+    ctrl.cells.columns = [{
         title: "Id",
         desc: "Id of the cell",
       },
@@ -313,7 +312,7 @@ export default function link(scope, elem, attrs, ctrl) {
     })
   }
 
-  function selectCell(id) {
+  var selectCell =  function(id) {
     let model = graph.getModel()
     let cell = model.getCell(id)
     if (cell.isVertex()) {
@@ -322,7 +321,7 @@ export default function link(scope, elem, attrs, ctrl) {
     }
   }
 
-  function unselectCell(id) {
+  var unselectCell = function(id) {
     graph.setTooltips(false);
   }
 
@@ -358,16 +357,17 @@ export default function link(scope, elem, attrs, ctrl) {
   //
 
   function render() {
-    if (!ctrl.data) { return; }
+    if (!ctrl.data) {
+      return;
+    }
     data = ctrl.data;
 
-    if(ctrl.changedSource == true) {
+    if (ctrl.changedSource == true) {
       ctrl.changedSource = false;
       addFlowchart();
       inspectFlowchart();
       refreshFlowChart();
-    }
-    else {
+    } else {
       refreshFlowChart();
     }
 
@@ -378,15 +378,4 @@ export default function link(scope, elem, attrs, ctrl) {
     var html = '<div class="datapoints-warning"><span class="small">No data points</span></div>';
     $elem.html(html);
   }
-
 }
-
-
-export function selectCell(id) {
-  link.selectCell(id)
-}
-
-export function unselectCell(id) {
-  link.unselectCell(id)
-}
-
