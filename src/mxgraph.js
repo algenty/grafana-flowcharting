@@ -68,6 +68,7 @@ export default function link(scope, elem, attrs, ctrl) {
   var $elem = elem.find('.flowchart-panel__chart');
   var graph;
   var $graphCanvas;
+  var container;
   var themes;
   var $parent;
 
@@ -97,25 +98,27 @@ export default function link(scope, elem, attrs, ctrl) {
           return terminal.shape.constraints;
         }
       }
-      graph = new mxgraph($graphCanvas[0])
-      graph.convertValueToString = function (cell) {
-        if (mxUtils.isNode(cell.value)) {
-          return cell.getAttribute('label', '')
-        }
-      };
+      return null;
+    }
 
-      var cellLabelChanged = graph.cellLabelChanged;
-      graph.cellLabelChanged = function (cell, newValue, autoSize) {
-        if (mxUtils.isNode(cell.value)) {
-          // Clones the value for correct undo/redo
-          var elt = cell.value.cloneNode(true);
-          elt.setAttribute('label', newValue);
-          newValue = elt;
-        }
+    // definie object graph
+    $graphCanvas = $('<div></div>');
+    $elem.html($graphCanvas);
+    $graphCanvas.bind("plothover", function (event, pos, item) {
+      if (!item) {
+        $tooltip.detach();
+        return;
+      }
+    });
+    container = $graphCanvas[0];
+    graph = new mxGraph(container);
 
-        cellLabelChanged.apply(this, arguments);
-      };
-    };
+    // styles and stencils
+    loadStyle(graph);
+    // loadSpencils();
+
+    // overrite function to compatibility with draw.io
+
 
     /**
      * Sets global constants.
@@ -146,34 +149,8 @@ export default function link(scope, elem, attrs, ctrl) {
   function addFlowchart() {
     console.debug("mxgraph.addFlowChart");
 
-
-    $graphCanvas = $('<div></div>');
-    $elem.html($graphCanvas);
-    $graphCanvas.bind("plothover", function (event, pos, item) {
-      if (!item) {
-        $tooltip.detach();
-        return;
-      }
-    });
-
-    let container = $graphCanvas[0]
-    mxEvent.disableContextMenu(container);
-    if (isNaN(graph)) {
-      console.debug("New mxgraph")
-      graph = new mxGraph(container);
-    }
-    else {
-      console.debug("clear mxgraph")
-      graph.getModel().clear();
-    }
-
-
-
-    // styles and stencils
-    loadStyle(graph);
-    // loadSpencils();
-
     graph.getModel().beginUpdate();
+    graph.getModel().clear();
     try {
       var xmlDoc = mxUtils.parseXml(ctrl.panel.flowchart.source.xml.value);
       var codec = new mxCodec(xmlDoc);
@@ -200,7 +177,7 @@ export default function link(scope, elem, attrs, ctrl) {
     var size = Math.min(width, height);
 
 
-    // Center Graph
+    // For center Graph
     var graphCss = {
       margin: 'auto',
       position: 'relative',
@@ -397,7 +374,7 @@ export default function link(scope, elem, attrs, ctrl) {
 
 }
 
- 
+
 export function selectCell(id) {
   link.selectCell(id)
 }
