@@ -904,13 +904,12 @@ Graph = function(container, model, renderHint, stylesheet, themes)
  * Specifies if the touch UI should be used (cannot detect touch in FF so always on for Windows/Linux)
  */
 Graph.touchStyle = mxClient.IS_TOUCH || (mxClient.IS_FF && mxClient.IS_WIN) || navigator.maxTouchPoints > 0 ||
-	navigator.msMaxTouchPoints > 0 || window.urlParams == null || urlParams['touch'] == '1';
+	navigator.msMaxTouchPoints > 0;
 
 /**
  * Shortcut for capability check.
  */
-Graph.fileSupport = window.File != null && window.FileReader != null && window.FileList != null &&
-	(window.urlParams == null || urlParams['filesupport'] != '0');
+Graph.fileSupport = window.File != null && window.FileReader != null && window.FileList != null;
 
 /**
  * Default size for line jumps.
@@ -954,12 +953,12 @@ Graph.prototype.maxFitScale = null;
  * Sets the policy for links. Possible values are "self" to replace any framesets,
  * "blank" to load the URL in <linkTarget> and "auto" (default).
  */
-Graph.prototype.linkPolicy = (urlParams['target'] == 'frame') ? 'blank' : (urlParams['target'] || 'auto');
+Graph.prototype.linkPolicy = 'auto';
 
 /**
  * Target for links that open in a new window. Default is _blank.
  */
-Graph.prototype.linkTarget = (urlParams['target'] == 'frame') ? '_self' : '_blank';
+Graph.prototype.linkTarget = '_blank';
 
 /**
  * Value to the rel attribute of links. Default is 'nofollow noopener noreferrer'.
@@ -1047,9 +1046,7 @@ Graph.prototype.defaultThemes = {};
 /**
  * Base URL for relative links.
  */
-Graph.prototype.baseUrl = (urlParams['base'] != null) ?
-	decodeURIComponent(urlParams['base']) :
-	(((window != window.top) ? document.referrer :
+Graph.prototype.baseUrl = (((window != window.top) ? document.referrer :
 	document.location.toString()).split('#')[0]);
 
 /**

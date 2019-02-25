@@ -22,6 +22,8 @@ window.mxLanguages = window.mxLanguages || ['en'];
 
 // Put to global vars to work
 window.mxCell = window.mxCell || mxgraph.mxCell
+window.mxCellEditor = window.mxCellEditor || mxgraph.mxCellEditor
+window.mxCellHighlight = window.mxCellHighlight || mxgraph.mxCellHighlight
 window.mxCellOverlay = window.mxCellOverlay || mxgraph.mxCellOverlay
 window.mxCellRenderer = window.mxCellRenderer || mxgraph.mxCellRenderer
 window.mxCellState = window.mxCellState || mxgraph.mxCellState
@@ -29,22 +31,29 @@ window.mxClient = window.mxClient || mxgraph.mxClient
 window.mxCodec = window.mxCodec || mxgraph.mxCodec
 window.mxCompactTreeLayout = window.mxCompactTreeLayout || mxgraph.mxCompactTreeLayout
 window.mxConnectionConstraint = window.mxConnectionConstraint || mxgraph.mxConnectionConstraint
+window.mxConnectionHandler = window.mxConnectionHandler || mxgraph.mxConnectionHandler
+window.mxConnector = window.mxConnector || mxgraph.mxConnector
 window.mxConstants = window.mxConstants || mxgraph.mxConstants
+window.mxConstraintHandler = window.mxConstraintHandler || mxgraph.mxConstraintHandler
 window.mxDefaultKeyHandler = window.mxDefaultKeyHandler || mxgraph.mxDefaultKeyHandler
 window.mxDefaultPopupMenu = window.mxDefaultPopupMenu || mxgraph.mxDefaultPopupMenu
 window.mxDefaultToolbar = window.mxDefaultToolbar || mxgraph.mxDefaultToolbar
 window.mxDivResizer = window.mxDivResizer || mxgraph.mxDivResizer
 window.mxEdgeStyle = window.mxEdgeStyle || mxgraph.mxEdgeStyle
+window.mxEdgeHandler = window.mxEdgeHandler || mxgraph.mxEdgeHandler 
 window.mxEditor = window.mxEditor || mxgraph.mxEditor
 window.mxEvent = window.mxEvent || mxgraph.mxEvent
 window.mxGeometry = window.mxGeometry || mxgraph.mxGeometry
 window.mxGraph = window.mxGraph || mxgraph.mxGraph
+window.mxGraphHandler = window.mxGraphHandler || mxgraph.mxGraphHandler
 window.mxGraphModel = window.mxGraphModel || mxgraph.mxGraphModel
 window.mxGraphView = window.mxGraphView || mxgraph.mxGraphView
+window.mxGuide = window.mxGuide || mxgraph.mxGuide
 window.mxImage = window.mxImage || mxgraph.mxImage
 window.mxKeyHandler = window.mxKeyHandler || mxgraph.mxKeyHandler
 window.mxLabel = window.mxLabel || mxgraph.mxLabel
 window.mxOutline = window.mxOutline || mxgraph.mxOutline
+window.mxPanningHandler = window.mxPanningHandler || mxgraph.mxPanningHandler
 window.mxPoint = window.mxPoint || mxgraph.mxPoint
 window.mxPolyline = window.mxPolyline || mxgraph.mxPolyline
 window.mxPopupMenu = window.mxPopupMenu || mxgraph.mxPopupMenu
@@ -56,6 +65,8 @@ window.mxShape = window.mxShape || mxgraph.mxShape
 window.mxStencil = window.mxStencil || mxgraph.mxStencil
 window.mxStencilRegistry = window.mxStencilRegistry || mxgraph.mxStencilRegistry
 window.mxStylesheet = window.mxStylesheet || mxgraph.mxStylesheet
+window.mxSvgCanvas2D = window.mxSvgCanvas2D || mxgraph.mxSvgCanvas2D
+window.mxText = window.mxText || mxgraph.mxText
 window.mxToolbar = window.mxToolbar || mxgraph.mxToolbar
 window.mxUndoManager = window.mxUndoManager || mxgraph.mxUndoManager
 window.mxUtils = window.mxUtils || mxgraph.mxUtils
@@ -81,7 +92,7 @@ export default function link(scope, elem, attrs, ctrl) {
   });
 
   // ########################################  OVERRITE MXGRAPH ####################################
-  
+
 
   // ####################################### FLOWCHART #############################################
 
@@ -104,7 +115,10 @@ export default function link(scope, elem, attrs, ctrl) {
       return null;
     }
 
+    var Graph = require("./Graph")
+
     // definie object graph
+
     $graphCanvas = $('<div></div>');
     $elem.html($graphCanvas);
     $graphCanvas.bind("plothover", function (event, pos, item) {
@@ -113,36 +127,16 @@ export default function link(scope, elem, attrs, ctrl) {
         return;
       }
     });
+
     container = $graphCanvas[0];
     graph = new mxGraph(container);
 
     // styles and stencils
-    loadStyle(graph);
+    //loadStyle(graph);
     // loadSpencils();
 
     // overrite function to compatibility with draw.io
     //TODO:
-
-    /**
-     * Sets global constants.
-     */
-    // Changes default colors
-    mxConstants.SHADOW_OPACITY = 0.25;
-    mxConstants.SHADOWCOLOR = '#000000';
-    mxConstants.VML_SHADOWCOLOR = '#d0d0d0';
-    mxGraph.pageBreakColor = '#c0c0c0';
-    mxGraph.pageScale = 1;
-
-    // Keeps edges between relative child cells inside parent
-    mxGraphModel.ignoreRelativeEdgeParent = false;
-
-    // UrlParams is null in embed mode
-    mxGraphView.gridColor = '#e0e0e0';
-
-    // Hook for custom constraints
-    mxShape.prototype.getConstraints = function (style) {
-      return null;
-    };
 
   }
 
@@ -312,7 +306,7 @@ export default function link(scope, elem, attrs, ctrl) {
     })
   }
 
-  var selectCell =  function(id) {
+  var selectCell = function (id) {
     let model = graph.getModel()
     let cell = model.getCell(id)
     if (cell.isVertex()) {
@@ -321,7 +315,7 @@ export default function link(scope, elem, attrs, ctrl) {
     }
   }
 
-  var unselectCell = function(id) {
+  var unselectCell = function (id) {
     graph.setTooltips(false);
   }
 
