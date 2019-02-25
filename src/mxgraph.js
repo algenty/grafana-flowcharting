@@ -10,6 +10,7 @@ var mxgraph = require("mxgraph")({
   mxLanguage: 'en',
   mxLoadResources: true
 });
+var sanitizer = require("sanitizer");
 
 window.BASE_PATH = window.BASE_PATH || 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/';
 window.RESOURCES_PATH = window.BASE_PATH || window.BASE_PATH + 'resources';
@@ -115,7 +116,7 @@ export default function link(scope, elem, attrs, ctrl) {
       return null;
     }
 
-    var Graph = require("./Graph")
+
 
     // definie object graph
 
@@ -127,6 +128,8 @@ export default function link(scope, elem, attrs, ctrl) {
         return;
       }
     });
+
+    var Graph = require("./Graph")
 
     container = $graphCanvas[0];
     graph = new mxGraph(container);
