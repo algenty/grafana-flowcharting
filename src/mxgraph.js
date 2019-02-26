@@ -22,6 +22,9 @@ window.CSS_PATH = window.CSS_PATH || window.BASE_PATH + 'styles';
 window.mxLanguages = window.mxLanguages || ['en'];
 
 // Put to global vars to work
+window.mxActor = window.mxActor || mxgraph.mxActor
+window.mxArrow = window.mxArrow || mxgraph.mxArrow
+window.mxArrowConnector = window.mxArrowConnector || mxgraph.mxArrowConnector
 window.mxCell = window.mxCell || mxgraph.mxCell
 window.mxCellEditor = window.mxCellEditor || mxgraph.mxCellEditor
 window.mxCellHighlight = window.mxCellHighlight || mxgraph.mxCellHighlight
@@ -29,6 +32,7 @@ window.mxCellOverlay = window.mxCellOverlay || mxgraph.mxCellOverlay
 window.mxCellRenderer = window.mxCellRenderer || mxgraph.mxCellRenderer
 window.mxCellState = window.mxCellState || mxgraph.mxCellState
 window.mxClient = window.mxClient || mxgraph.mxClient
+window.mxCloud = window.mxCloud || mxgraph.mxCloud
 window.mxCodec = window.mxCodec || mxgraph.mxCodec
 window.mxCompactTreeLayout = window.mxCompactTreeLayout || mxgraph.mxCompactTreeLayout
 window.mxConnectionConstraint = window.mxConnectionConstraint || mxgraph.mxConnectionConstraint
@@ -36,13 +40,16 @@ window.mxConnectionHandler = window.mxConnectionHandler || mxgraph.mxConnectionH
 window.mxConnector = window.mxConnector || mxgraph.mxConnector
 window.mxConstants = window.mxConstants || mxgraph.mxConstants
 window.mxConstraintHandler = window.mxConstraintHandler || mxgraph.mxConstraintHandler
+window.mxCylinder = window.mxCylinder || mxgraph.mxCylinder
 window.mxDefaultKeyHandler = window.mxDefaultKeyHandler || mxgraph.mxDefaultKeyHandler
 window.mxDefaultPopupMenu = window.mxDefaultPopupMenu || mxgraph.mxDefaultPopupMenu
 window.mxDefaultToolbar = window.mxDefaultToolbar || mxgraph.mxDefaultToolbar
 window.mxDivResizer = window.mxDivResizer || mxgraph.mxDivResizer
+window.mxDoubleEllipse = window.mxDoubleEllipse || mxgraph.mxDoubleEllipse
 window.mxEdgeStyle = window.mxEdgeStyle || mxgraph.mxEdgeStyle
 window.mxEdgeHandler = window.mxEdgeHandler || mxgraph.mxEdgeHandler 
 window.mxEditor = window.mxEditor || mxgraph.mxEditor
+window.mxEllipse = window.mxEllipse || mxgraph.mxEllipse
 window.mxEvent = window.mxEvent || mxgraph.mxEvent
 window.mxGeometry = window.mxGeometry || mxgraph.mxGeometry
 window.mxGraph = window.mxGraph || mxgraph.mxGraph
@@ -50,25 +57,35 @@ window.mxGraphHandler = window.mxGraphHandler || mxgraph.mxGraphHandler
 window.mxGraphModel = window.mxGraphModel || mxgraph.mxGraphModel
 window.mxGraphView = window.mxGraphView || mxgraph.mxGraphView
 window.mxGuide = window.mxGuide || mxgraph.mxGuide
+window.mxHexagon = window.mxHexagon || mxgraph.mxHexagon
 window.mxImage = window.mxImage || mxgraph.mxImage
+window.mxImageShape = window.mxImageShape || mxgraph.mxImageShape
 window.mxKeyHandler = window.mxKeyHandler || mxgraph.mxKeyHandler
 window.mxLabel = window.mxLabel || mxgraph.mxLabel
+window.mxLine = window.mxLine || mxgraph.mxLine
+window.mxMarker = window.mxMarker || mxgraph.mxMarker
 window.mxOutline = window.mxOutline || mxgraph.mxOutline
 window.mxPanningHandler = window.mxPanningHandler || mxgraph.mxPanningHandler
+window.mxPerimeter = window.mxPerimeter || mxgraph.mxPerimeter
 window.mxPoint = window.mxPoint || mxgraph.mxPoint
 window.mxPolyline = window.mxPolyline || mxgraph.mxPolyline
 window.mxPopupMenu = window.mxPopupMenu || mxgraph.mxPopupMenu
 window.mxPrintPreview = window.mxPrintPreview || mxgraph.mxPrintPreview
 window.mxRectangle = window.mxRectangle || mxgraph.mxRectangle
+window.mxRectangleShape = window.mxRectangleShape || mxgraph.mxRectangleShape
 window.mxResources = window.mxResources || mxgraph.mxResources
+window.mxRhombus = window.mxRhombus || mxgraph.mxRhombus
 window.mxRubberband = window.mxRubberband || mxgraph.mxRubberband
 window.mxShape = window.mxShape || mxgraph.mxShape
 window.mxStencil = window.mxStencil || mxgraph.mxStencil
 window.mxStencilRegistry = window.mxStencilRegistry || mxgraph.mxStencilRegistry
 window.mxStylesheet = window.mxStylesheet || mxgraph.mxStylesheet
+window.mxStyleRegistry = window.mxStyleRegistry || mxgraph.mxStyleRegistry
 window.mxSvgCanvas2D = window.mxSvgCanvas2D || mxgraph.mxSvgCanvas2D
+window.mxSwimlane = window.mxSwimlane || mxgraph.mxSwimlane
 window.mxText = window.mxText || mxgraph.mxText
 window.mxToolbar = window.mxToolbar || mxgraph.mxToolbar
+window.mxTriangle = window.mxTriangle || mxgraph.mxTriangle
 window.mxUndoManager = window.mxUndoManager || mxgraph.mxUndoManager
 window.mxUtils = window.mxUtils || mxgraph.mxUtils
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler
@@ -130,9 +147,11 @@ export default function link(scope, elem, attrs, ctrl) {
     });
 
     var Graph = require("./Graph")
+    var Shapes = require("./Shapes")
 
     container = $graphCanvas[0];
     graph = new mxGraph(container);
+    graph.initOverrite();
 
     // styles and stencils
     //loadStyle(graph);

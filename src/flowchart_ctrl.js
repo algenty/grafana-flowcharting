@@ -20,7 +20,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
     this.cells = [];
-    console.log(mxgraph);
 
     this.options = {
       flowchart: {
