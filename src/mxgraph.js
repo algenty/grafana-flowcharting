@@ -8,7 +8,7 @@ var mxgraph = require("mxgraph")({
   mxBasePath: "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist",
   mxLoadStylesheets: false,
   mxLanguage: 'en',
-  mxLoadResources: true
+  mxLoadResources: false
 });
 var sanitizer = require("sanitizer");
 
@@ -32,6 +32,11 @@ window.mxCellOverlay = window.mxCellOverlay || mxgraph.mxCellOverlay
 window.mxCellRenderer = window.mxCellRenderer || mxgraph.mxCellRenderer
 window.mxCellState = window.mxCellState || mxgraph.mxCellState
 window.mxClient = window.mxClient || mxgraph.mxClient
+mxClient.mxBasePath = "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist"
+mxClient.mxImageBasePath = "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images"
+mxClient.mxLoadResources = true
+mxClient.mxLanguage = 'en'
+mxClient.mxLoadStylesheets = true
 window.mxCloud = window.mxCloud || mxgraph.mxCloud
 window.mxCodec = window.mxCodec || mxgraph.mxCodec
 window.mxCompactTreeLayout = window.mxCompactTreeLayout || mxgraph.mxCompactTreeLayout
@@ -46,6 +51,7 @@ window.mxDefaultPopupMenu = window.mxDefaultPopupMenu || mxgraph.mxDefaultPopupM
 window.mxDefaultToolbar = window.mxDefaultToolbar || mxgraph.mxDefaultToolbar
 window.mxDivResizer = window.mxDivResizer || mxgraph.mxDivResizer
 window.mxDoubleEllipse = window.mxDoubleEllipse || mxgraph.mxDoubleEllipse
+window.mxDragSource = window.mxDragSource || mxgraph.mxDragSource
 window.mxEdgeStyle = window.mxEdgeStyle || mxgraph.mxEdgeStyle
 window.mxEdgeHandler = window.mxEdgeHandler || mxgraph.mxEdgeHandler 
 window.mxEditor = window.mxEditor || mxgraph.mxEditor
@@ -58,10 +64,12 @@ window.mxGraphModel = window.mxGraphModel || mxgraph.mxGraphModel
 window.mxGraphView = window.mxGraphView || mxgraph.mxGraphView
 window.mxGuide = window.mxGuide || mxgraph.mxGuide
 window.mxHexagon = window.mxHexagon || mxgraph.mxHexagon
+window.mxHandle = window.mxHandle || mxgraph.mxHandle
 window.mxImage = window.mxImage || mxgraph.mxImage
 window.mxImageShape = window.mxImageShape || mxgraph.mxImageShape
 window.mxKeyHandler = window.mxKeyHandler || mxgraph.mxKeyHandler
 window.mxLabel = window.mxLabel || mxgraph.mxLabel
+window.mxLayoutManager  = window.mxLayoutManager  || mxgraph.mxLayoutManager 
 window.mxLine = window.mxLine || mxgraph.mxLine
 window.mxMarker = window.mxMarker || mxgraph.mxMarker
 window.mxOutline = window.mxOutline || mxgraph.mxOutline
@@ -70,6 +78,7 @@ window.mxPerimeter = window.mxPerimeter || mxgraph.mxPerimeter
 window.mxPoint = window.mxPoint || mxgraph.mxPoint
 window.mxPolyline = window.mxPolyline || mxgraph.mxPolyline
 window.mxPopupMenu = window.mxPopupMenu || mxgraph.mxPopupMenu
+window.mxPopupMenuHandler = window.mxPopupMenuHandler || mxgraph.mxPopupMenuHandler
 window.mxPrintPreview = window.mxPrintPreview || mxgraph.mxPrintPreview
 window.mxRectangle = window.mxRectangle || mxgraph.mxRectangle
 window.mxRectangleShape = window.mxRectangleShape || mxgraph.mxRectangleShape
@@ -88,6 +97,7 @@ window.mxToolbar = window.mxToolbar || mxgraph.mxToolbar
 window.mxTriangle = window.mxTriangle || mxgraph.mxTriangle
 window.mxUndoManager = window.mxUndoManager || mxgraph.mxUndoManager
 window.mxUtils = window.mxUtils || mxgraph.mxUtils
+window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler
 
 export default function link(scope, elem, attrs, ctrl) {
@@ -120,18 +130,18 @@ export default function link(scope, elem, attrs, ctrl) {
   function initFlowchart() {
     console.debug("mxgraph.initFlowChart");
     // Overridden to define per-shape connection points
-    mxGraph.prototype.getAllConnectionConstraints = function (terminal, source) {
-      if (terminal != null && terminal.shape != null) {
-        if (terminal.shape.stencil != null) {
-          if (terminal.shape.stencil != null) {
-            return terminal.shape.stencil.constraints;
-          }
-        } else if (terminal.shape.constraints != null) {
-          return terminal.shape.constraints;
-        }
-      }
-      return null;
-    }
+    // mxGraph.prototype.getAllConnectionConstraints = function (terminal, source) {
+    //   if (terminal != null && terminal.shape != null) {
+    //     if (terminal.shape.stencil != null) {
+    //       if (terminal.shape.stencil != null) {
+    //         return terminal.shape.stencil.constraints;
+    //       }
+    //     } else if (terminal.shape.constraints != null) {
+    //       return terminal.shape.constraints;
+    //     }
+    //   }
+    //   return null;
+    // }
 
 
 
@@ -146,19 +156,14 @@ export default function link(scope, elem, attrs, ctrl) {
       }
     });
 
-    var Graph = require("./Graph")
+    var Graph = require("./Graph")({
+      // touch : '1',
+      libs : 'arrows;basic;bpmn;flowchart',
+    })
     var Shapes = require("./Shapes")
-
+    
     container = $graphCanvas[0];
-    graph = new mxGraph(container);
-    graph.initOverrite();
-
-    // styles and stencils
-    //loadStyle(graph);
-    // loadSpencils();
-
-    // overrite function to compatibility with draw.io
-    //TODO:
+    graph = new Graph(container);
 
   }
 
@@ -202,6 +207,7 @@ export default function link(scope, elem, attrs, ctrl) {
       paddingBottom: 20 + 'px',
       height: size + 'px'
     };
+    
     $graphCanvas.css(graphCss);
 
     // LOCK

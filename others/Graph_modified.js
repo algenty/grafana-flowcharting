@@ -4281,7 +4281,6 @@ HoverIcons.prototype.setCurrentState = function(state)
 	 * Adds support for placeholders in text elements of shapes.
 	 */
 	var mxStencilEvaluateTextAttribute = mxStencil.prototype.evaluateTextAttribute;
-	
 	mxStencil.prototype.evaluateTextAttribute = function(node, attribute, shape)
 	{
 		var result = mxStencilEvaluateTextAttribute.apply(this, arguments);

@@ -123,8 +123,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         options: {
           zoom: '100%',
           center: true,
-          scale: false,
-          lock: false,
+          scale: true,
+          lock: true,
           grid: false,
           bgColor: undefined,
         },
