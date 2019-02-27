@@ -57,10 +57,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
 
     var panelDefaults = {
-      sort: {
-        col: 0,
-        desc: true
-      },
       legend: {
         show: false, // disable/enable legend
         values: false
@@ -173,11 +169,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onDataReceived(dataList) {
     console.debug("ctrl.onDataReceived")
-    // console.debug('received data');
-    // console.debug(dataList);
+    console.debug('received data');
+    console.debug(dataList);
     this.series = dataList.map(this.seriesHandler.bind(this));
-    // console.debug('mapped dataList to series');
-    // console.debug(this.series);
+    console.debug('mapped dataList to series');
+    console.debug(this.series);
     this.render();
 
   }
@@ -209,8 +205,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onMouseOver(id) {
     console.debug("ctrl.onMouseOver", id);
-    // this.selectCell(id);
-
     let model = this.graph.getModel()
     let cell = model.getCell(id)
     this.graph.setSelectionCell(cell);
@@ -231,7 +225,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   exportSVG() {
     const scope = this.$scope.$new(true);
-    //scope.tableData = this.renderer.render_values();
     scope.panel = 'table';
     this.publishAppEvent('show-modal', {
       templateHtml: '<export-data-modal panel="panel" data="tableData"></export-data-modal>',
@@ -248,24 +241,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     console.debug("ctrl.setUnitFormat")
     this.panel.format = subItem.value;
     this.refresh();
-  }
-
-  toggleColumnSort(col, colIndex) {
-    // remove sort flag from current column
-    if (this.cells.columns[this.panel.sort.col]) {
-      this.cells.columns[this.panel.sort.col].sort = false;
-    }
-
-    if (this.cells.sort.col === colIndex) {
-      if (this.cells.sort.desc) {
-        this.cells.sort.desc = false;
-      } else {
-        this.cells.sort.col = null;
-      }
-    } else {
-      this.cells.sort.col = colIndex;
-      this.cells.sort.desc = true;
-    }
   }
 
   seriesHandler(seriesData) {
