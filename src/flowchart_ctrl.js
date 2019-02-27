@@ -74,34 +74,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       format: 'short',
       valueName: 'current',
       strokeWidth: 1,
-      fontSize: '80%',
-      combine: {
-        threshold: 0.0,
-        label: 'Others'
-      },
-      metrics: {
-        threshold: {
-          colors: {
-            crit: 'rgba(245, 54, 54, 0.9)',
-            warn: 'rgba(237, 129, 40, 0.9)',
-            ok: 'rgba(50, 128, 45, 0.9)',
-            disable: 'rgba(128, 128, 128, 0.9)',
-          },
-          colorsModes: {
-            type: 'Fill',
-          },
-          checks: {
-            isGrayOnNoData: false,
-            isIgnoreOKColors: false
-          },
-          handler: {
-            type: 'Number Threshold',
-            decimals: 2,
-            format: 'none',
-            display: 'When Metric Displayed',
-          }
-        },
-      },
       flowchart: {
         source: {
           type: 'XML Content',
