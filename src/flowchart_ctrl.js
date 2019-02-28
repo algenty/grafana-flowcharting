@@ -3,13 +3,11 @@ import {
 } from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
-import coreModule from "app/core/core_module";
 import _ from 'lodash';
 import {
   plugin
 } from './plugin';
 import mxgraph from './mxgraph';
-
 
 class FlowchartCtrl extends MetricsPanelCtrl {
 
@@ -20,7 +18,29 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
     this.cells = [];
-
+    // NEW OPTIONS
+    this.colorModes = [
+      { text: 'Disabled', value: null },
+      { text: 'Stroke', value: 'stroke' },
+      { text: 'Fill', value: 'fill' },
+      { text: 'Text', value: 'text' },
+    ];
+    this.metricTypes = [
+      { text: 'Number', value: 'number' },
+      { text: 'String', value: 'string' },
+      { text: 'Date', value: 'date' },
+      { text: 'Hidden', value: 'hidden' },
+    ];
+    this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
+    this.dateFormats = [
+      { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
+      { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
+      { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
+      { text: 'MMMM D, YYYY LT', value: 'MMMM D, YYYY LT' },
+      { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
+    ];
+    this.mappingTypes = [{ text: 'Value to text', value: 1 }, { text: 'Range to text', value: 2 }];
+    // OLD OPTIONS
     this.options = {
       flowchart: {
         source: {
@@ -57,23 +77,31 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
 
     var panelDefaults = {
-      legend: {
-        show: false, // disable/enable legend
-        values: false
-      },
       init: {
         logLevel: 3, //1:debug, 2:info, 3:warn, 4:error, 5:fatal
       },
-      links: [],
       datasource: null,
-      maxDataPoints: 3,
       interval: null,
       targets: [{}],
-      cacheTimeout: null,
       aliasColors: {},
       format: 'short',
       valueName: 'current',
       strokeWidth: 1,
+      // NEW PANEL
+      metrics: [],
+      styles: [
+        {
+          unit: 'short',
+          type: 'number',
+          alias: '',
+          decimals: 2,
+          colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
+          colorMode: null,
+          pattern: '/.*/',
+          thresholds: [],
+        },
+      ],
+      // OLD PANEL
       flowchart: {
         source: {
           type: 'XML Content',
@@ -96,7 +124,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           grid: false,
           bgColor: undefined,
         },
-
       }
     };
 
@@ -114,8 +141,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
 
-
-    this.addFilters()
   }
 
   //
@@ -130,7 +155,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onRefresh() {
     console.debug("ctrl.onRefresh")
-
   }
 
 
@@ -171,8 +195,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
-  onColorChange(alarmLevel) {
-    console.debug("ctrl.onColorChange")
+  onOptionsChange() {
+    console.debug("ctrl.onSourceChanged")
+    this.changedSource = true;
+    this.render();
   }
 
   onMouseOver(id) {
@@ -270,54 +296,82 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     return true;
   }
 
-  addFilters() {
-    coreModule.filter('numberOrText', () => {
-      let numberOrTextFilter = (input) => {
-        if (angular.isNumber(input)) {
-          return this.filter('number')(input);
-        } else {
-          return input;
-        }
-      };
+  // NEW OPTIONS
+  addMetricStyle() {
+    const newStyleRule = {
+      unit: 'short',
+      type: 'number',
+      alias: '',
+      decimals: 2,
+      colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
+      colorMode: null,
+      pattern: '',
+      dateFormat: 'YYYY-MM-DD HH:mm:ss',
+      thresholds: [],
+      mappingType: 1,
+    };
 
-      numberOrTextFilter.$stateful = true;
-      return numberOrTextFilter;
-    });
+    const styles = this.panel.styles;
+    const stylesCount = styles.length;
+    let indexToInsert = stylesCount;
 
-    coreModule.filter('numberOrTextWithRegex', () => {
-      let numberOrTextFilter = (input, textRegex) => {
-        if (angular.isNumber(input)) {
-          return this.filter('number')(input);
-        } else {
-          if (textRegex == null || textRegex.length == 0) {
-            return input;
-          } else {
-            let regex;
+    // check if last is a catch all rule, then add it before that one
+    if (stylesCount > 0) {
+      const last = styles[stylesCount - 1];
+      if (last.pattern === '/.*/') {
+        indexToInsert = stylesCount - 1;
+      }
+    }
 
-            try {
-              regex = new RegExp(textRegex);
-            } catch (e) {
-              return input;
-            }
-
-            if (!input) {
-              return input;
-            }
-
-            let matchResults = input.match(regex);
-            if (matchResults == null) {
-              return input;
-            } else {
-              return matchResults[0];
-            }
-          }
-        }
-      };
-
-      numberOrTextFilter.$stateful = true;
-      return numberOrTextFilter;
-    });
+    styles.splice(indexToInsert, 0, newStyleRule);
+    this.activeStyleIndex = indexToInsert;
   }
+
+  removeMetricStyle(style) {
+    this.panel.styles = _.without(this.panel.styles, style);
+  }
+
+  invertColorOrder(index) {
+    const ref = this.panel.styles[index].colors;
+    const copy = ref[0];
+    ref[0] = ref[2];
+    ref[2] = copy;
+    this.panelCtrl.render();
+  }
+
+  onColorChange(styleIndex, colorIndex) {
+    return newColor => {
+      this.panel.styles[styleIndex].colors[colorIndex] = newColor;
+      this.render();
+    };
+  }
+
+  addValueMap(style) {
+    if (!style.valueMaps) {
+      style.valueMaps = [];
+    }
+    style.valueMaps.push({ value: '', text: '' });
+    this.panelCtrl.render();
+  }
+
+  removeValueMap(style, index) {
+    style.valueMaps.splice(index, 1);
+    this.panelCtrl.render();
+  }
+
+  addRangeMap(style) {
+    if (!style.rangeMaps) {
+      style.rangeMaps = [];
+    }
+    style.rangeMaps.push({ from: '', to: '', text: '' });
+    this.panelCtrl.render();
+  }
+
+  removeRangeMap(style, index) {
+    style.rangeMaps.splice(index, 1);
+    this.panelCtrl.render();
+  }
+
 }
 
 export {

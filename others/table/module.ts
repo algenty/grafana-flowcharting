@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import $ from 'jquery';
 import { MetricsPanelCtrl } from 'app/plugins/sdk';
-import config from 'app/core/config';
 import { transformDataToTable } from './transformers';
 import { tablePanelEditor } from './editor';
 import { columnOptionsTab } from './column_options';
@@ -79,6 +78,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
     this.pageIndex = 0;
 
     if (this.panel.transform === 'annotations') {
+      this.setTimeQueryStart();
       return this.annotationsSrv
         .getAnnotations({
           dashboard: this.dashboard,
@@ -129,8 +129,7 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       this.table,
       this.dashboard.isTimezoneUtc(),
       this.$sanitize,
-      this.templateSrv,
-      config.theme.type
+      this.templateSrv
     );
 
     return super.render(this.table);
@@ -153,6 +152,11 @@ class TablePanelCtrl extends MetricsPanelCtrl {
       this.panel.sort.desc = true;
     }
     this.render();
+  }
+
+  moveQuery(target, direction) {
+    super.moveQuery(target, direction);
+    super.refresh();
   }
 
   exportCsv() {
