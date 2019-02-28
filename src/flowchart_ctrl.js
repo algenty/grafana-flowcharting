@@ -167,6 +167,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Flowcharting', 'public/plugins/' + plugin.id + '/partials/flowchartEditor.html', 2);
     this.addEditorTab('Shapes Mapping', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 3);
     this.addEditorTab('Inspect', 'public/plugins/' + plugin.id + '/partials/inspectFlowchart.html', 4)
+    this.addEditorTab('Debug', 'public/plugins/' + plugin.id + '/partials/debug.html', 5)
   }
 
   onRefresh() {
@@ -413,6 +414,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   removeRangeMap(style, index) {
     style.rangeMaps.splice(index, 1);
     this.panelCtrl.render();
+  }
+
+  getMetricNames() {
+    return _.map(this.$scope.ctrl.series, "alias")
   }
 
 }
