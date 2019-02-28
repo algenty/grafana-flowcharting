@@ -40,6 +40,18 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
     ];
     this.mappingTypes = [{ text: 'Value to text', value: 1 }, { text: 'Range to text', value: 2 }];
+    this.aggregationTypes = [
+      { text: 'First', value: 'first'},
+      { text: 'Last', value: 'current'},
+      { text: 'Min', value: 'min'},
+      { text: 'Max', value: 'max'},
+      { text: 'Sum', value: 'total'},
+      { text: 'Avg', value: 'avg'},
+      { text: 'Count', value: 'count'},
+      { text: 'Delta', value: 'delta'},
+      { text: 'Range', value: 'range'},
+      { text: 'Diff', value: 'diff'},
+    ];
     // OLD OPTIONS
     this.options = {
       flowchart: {
@@ -88,9 +100,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       valueName: 'current',
       strokeWidth: 1,
       // NEW PANEL
+      maxId : 1,
       metrics: [],
       styles: [
         {
+          id : 1,
           unit: 'short',
           type: 'number',
           alias: '',
@@ -99,6 +113,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           colorMode: null,
           pattern: '/.*/',
           thresholds: [],
+          shapesMapping: [],
+          valuesMapping: [],
         },
       ],
       // OLD PANEL
@@ -241,6 +257,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.refresh();
   }
 
+  //
+  // Series
+  //
   seriesHandler(seriesData) {
     var series = new TimeSeries({
       datapoints: seriesData.datapoints,
@@ -272,6 +291,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     });
   }
 
+  //
+  // Validate
+  //
   validateRegex(textRegex) {
     if (textRegex == null || textRegex.length == 0) {
       return true
@@ -296,18 +318,39 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     return true;
   }
 
+  //
+  // Shape Mapping
+  //
+  getCellNames(prop) {
+    return _.map(ctrl.cells.rows,prop)
+  }
+
+  addShapeToStyle(style,shape) {
+    let node = _.find(this.panel.styles,{ id : style.id })
+    node.shapesMapping.push(shape)
+  }
+
+  removeShapeFromStyle(style,shape) {
+    let node = _.find(this.panel.styles,{ id : style.id })
+    node.shapesMapping = _without(style.shapesMapping,shape)
+  }
+
+
   // NEW OPTIONS
   addMetricStyle() {
     const newStyleRule = {
+      id : ++this.panel.maxId,
       unit: 'short',
       type: 'number',
       alias: '',
       decimals: 2,
       colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
       colorMode: null,
-      pattern: '',
+      pattern: '/.*/',
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
       thresholds: [],
+      shapesMapping: [],
+      valuesMapping: [],
       mappingType: 1,
     };
 
