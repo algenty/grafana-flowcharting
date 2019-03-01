@@ -3,6 +3,7 @@ import {
 } from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
+import { mappingOptionsTab } from './mapping_options';
 import _ from 'lodash';
 import {
   plugin
@@ -165,7 +166,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onInitEditMode() {
     console.debug("ctrl.onInitEditMode")
     this.addEditorTab('Flowcharting', 'public/plugins/' + plugin.id + '/partials/flowchartEditor.html', 2);
-    this.addEditorTab('Shapes Mapping', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 3);
+    // this.addEditorTab('Mapping', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 3);
+    this.addEditorTab('Mapping', mappingOptionsTab, 3);
     this.addEditorTab('Inspect', 'public/plugins/' + plugin.id + '/partials/inspectFlowchart.html', 4)
     this.addEditorTab('Debug', 'public/plugins/' + plugin.id + '/partials/debug.html', 5)
   }
@@ -417,7 +419,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   getMetricNames() {
-    return _.map(this.$scope.ctrl.series, "alias")
+    return ["A-series","B-series","C-series"];
+    // return _.map(this.$scope.ctrl.series, "alias")
   }
 
 }

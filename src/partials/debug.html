@@ -1,6 +1,10 @@
 <div>
-
-Mertric name : {{ctrl.getMetricNames()}}</br>
-Styles : {{ctrl.panel.styles}}
-
+    <div>
+            <input type="text" placeholder="commande" class="gf-form-input width-50" ng-model="cmd" 
+            data-min-length=0 data-items=100 >
+    </div>
+    <hr>
+    <div>
+        {{$eval(cmd)}}
+    </div>
 </div>
