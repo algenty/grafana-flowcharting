@@ -4,6 +4,8 @@ import {
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
 import { mappingOptionsTab } from './mapping_options';
+import { flowchartOptionsTab } from './flowchart_options';
+import { inspectOptionsTab } from './inspect_options';
 import _ from 'lodash';
 import {
   plugin
@@ -19,40 +21,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
     this.cells = [];
-    // NEW OPTIONS
-    this.colorModes = [
-      { text: 'Disabled', value: null },
-      { text: 'Stroke', value: 'stroke' },
-      { text: 'Fill', value: 'fill' },
-      { text: 'Text', value: 'text' },
-    ];
-    this.metricTypes = [
-      { text: 'Number', value: 'number' },
-      { text: 'String', value: 'string' },
-      { text: 'Date', value: 'date' },
-      { text: 'Hidden', value: 'hidden' },
-    ];
-    this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
-    this.dateFormats = [
-      { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
-      { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
-      { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
-      { text: 'MMMM D, YYYY LT', value: 'MMMM D, YYYY LT' },
-      { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
-    ];
-    this.mappingTypes = [{ text: 'Value to text', value: 1 }, { text: 'Range to text', value: 2 }];
-    this.aggregationTypes = [
-      { text: 'First', value: 'first'},
-      { text: 'Last', value: 'current'},
-      { text: 'Min', value: 'min'},
-      { text: 'Max', value: 'max'},
-      { text: 'Sum', value: 'total'},
-      { text: 'Avg', value: 'avg'},
-      { text: 'Count', value: 'count'},
-      { text: 'Delta', value: 'delta'},
-      { text: 'Range', value: 'range'},
-      { text: 'Diff', value: 'diff'},
-    ];
     // OLD OPTIONS
     this.options = {
       flowchart: {
@@ -121,7 +89,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       // OLD PANEL
       flowchart: {
         source: {
-          type: 'XML Content',
+          type: 'xml',
           xml: {
             //value: '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>',
             value: '<mxGraphModel dx="1426" dy="810" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="GLtmsq4S9DwVswmQGahX-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="GLtmsq4S9DwVswmQGahX-1" target="GLtmsq4S9DwVswmQGahX-2" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="GLtmsq4S9DwVswmQGahX-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;shadow=1;" parent="1" vertex="1"><mxGeometry x="10" y="10" width="120" height="60" as="geometry"/></mxCell><mxCell id="GLtmsq4S9DwVswmQGahX-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="GLtmsq4S9DwVswmQGahX-2" target="GLtmsq4S9DwVswmQGahX-4" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="GLtmsq4S9DwVswmQGahX-2" value="love" style="triangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;shadow=1;" parent="1" vertex="1"><mxGeometry x="210" width="60" height="80" as="geometry"/></mxCell><mxCell id="GLtmsq4S9DwVswmQGahX-4" value="mxGraph" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" parent="1" vertex="1"><mxGeometry x="340" width="120" height="80" as="geometry"/></mxCell></root></mxGraphModel>'
@@ -130,6 +98,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
             value: "http://<source>:<port>/<pathToXml>",
           },
           editor: {
+            value: "Not yet",
+          },
+          json: {
+            value: "Not yet",
+          },
+          javascript: {
             value: "Not yet",
           }
         },
@@ -165,10 +139,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   onInitEditMode() {
     console.debug("ctrl.onInitEditMode")
-    this.addEditorTab('Flowcharting', 'public/plugins/' + plugin.id + '/partials/flowchartEditor.html', 2);
+    // this.addEditorTab('Flowcharting', 'public/plugins/' + plugin.id + '/partials/flowchartEditor.html', 2);
     // this.addEditorTab('Mapping', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 3);
+        // this.addEditorTab('Inspect', 'public/plugins/' + plugin.id + '/partials/inspectFlowchart.html', 4)
+    this.addEditorTab('Flowchart', flowchartOptionsTab, 2);
     this.addEditorTab('Mapping', mappingOptionsTab, 3);
-    this.addEditorTab('Inspect', 'public/plugins/' + plugin.id + '/partials/inspectFlowchart.html', 4)
+    this.addEditorTab('Inspect', inspectOptionsTab, 4);
     this.addEditorTab('Debug', 'public/plugins/' + plugin.id + '/partials/debug.html', 5)
   }
 
@@ -203,33 +179,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       text: 'Export SVG',
       click: 'ctrl.exportSVG()'
     });
-  }
-
-  // 
-  // EVENTS OF EDITORS
-  //
-  onSourceChanged() {
-    console.debug("ctrl.onSourceChanged")
-    this.changedSource = true;
-    this.render();
-  }
-
-  onOptionsChange() {
-    console.debug("ctrl.onSourceChanged")
-    this.changedSource = true;
-    this.render();
-  }
-
-  onMouseOver(id) {
-    console.debug("ctrl.onMouseOver", id);
-    let model = this.graph.getModel()
-    let cell = model.getCell(id)
-    this.graph.setSelectionCell(cell);
-  }
-
-  onMouseLeave(id) {
-    console.debug("ctrl.onMouseLeave", id)
-    this.graph.clearSelection();
   }
 
   //
@@ -307,18 +256,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     } catch (e) {
       return false
     }
-  }
-
-  validatePercent(percentText) {
-    if (percentText == null || percentText.length == 0) {
-      return true
-    }
-    let regexPattern = new RegExp(/^\d+(\.\d+)?%{0,1}/);
-    let result = regexPattern.test(percentText);
-    if (!result) {
-      return false;
-    }
-    return true;
   }
 
   //

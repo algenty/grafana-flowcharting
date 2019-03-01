@@ -11,7 +11,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="row in ctrl.cells.rows" ng-mouseleave="ctrl.onMouseLeave(row.id)" ng-mouseover="ctrl.onMouseOver(row.id)">
+			<tr ng-repeat="row in editor.panelCtrl.cells.rows" ng-mouseleave="ctrl.onMouseLeave(row.id)" ng-mouseover="editor.onMouseOver(row.id)">
 				<td >{{row.id}}</td>
 				<td>{{row.value}}</td>
 				<td>{{row.style}}</td>
@@ -22,7 +22,7 @@
 		</tbody>
 		</tr>
 	</table>
-	<div class="datapoints-warning" ng-show="ctrl.cells.rows.length===0">
+	<div class="datapoints-warning" ng-show="editor.cells.rows.length===0">
 		<span class="small">
 			No data to show <tip>Nothing returned by data query</tip>
 		</span>

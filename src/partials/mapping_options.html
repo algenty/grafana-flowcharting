@@ -5,7 +5,7 @@
       <div class="gf-form">
         <label class="gf-form-label width-12">Apply to metrics named</label>
         <input type="text" placeholder="Name or regex of metric" class="gf-form-input width-13" ng-model="style.pattern"
-          bs-tooltip="'Specify regex using /my.*regex/ syntax'" bs-typeahead="['toto','titi','tata']"
+          bs-tooltip="'Specify regex using /my.*regex/ syntax'" bs-typeahead="editor.getMetricNames"
           ng-blur="editor.onOptionsChange()" data-min-length=0 data-items=100 ng-model-onblur data-placement="right">
       </div>
     </div>
