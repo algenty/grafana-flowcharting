@@ -118,6 +118,10 @@ export class MappingOptionsCtrl {
         };
     }
 
+    onOptionsChange() {
+        
+    }
+
     addValueMap(style) {
         if (!style.valueMaps) {
             style.valueMaps = [];
