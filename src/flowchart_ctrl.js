@@ -69,7 +69,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       valueName: 'current',
       strokeWidth: 1,
       // NEW PANEL
-      maxId : 1,
+      styleSeq : 1,
       metrics: [],
       styles: [
         {
@@ -82,8 +82,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           colorMode: null,
           pattern: '/.*/',
           thresholds: [],
-          shapesMapping: [],
-          valuesMapping: [],
+          shapeSeq: 1,
+          textSeq: 1,
         },
       ],
       // OLD PANEL
@@ -258,107 +258,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-  //
-  // Shape Mapping
-  //
-  getCellNames(prop) {
-    return _.map(ctrl.cells.rows,prop)
-  }
-
-  addShapeToStyle(style,shape) {
-    let node = _.find(this.panel.styles,{ id : style.id })
-    node.shapesMapping.push(shape)
-  }
-
-  removeShapeFromStyle(style,shape) {
-    let node = _.find(this.panel.styles,{ id : style.id })
-    node.shapesMapping = _without(style.shapesMapping,shape)
-  }
-
-
-  // NEW OPTIONS
-  addMetricStyle() {
-    const newStyleRule = {
-      id : ++this.panel.maxId,
-      unit: 'short',
-      type: 'number',
-      alias: '',
-      decimals: 2,
-      colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
-      colorMode: null,
-      pattern: '/.*/',
-      dateFormat: 'YYYY-MM-DD HH:mm:ss',
-      thresholds: [],
-      shapesMapping: [],
-      valuesMapping: [],
-      mappingType: 1,
-    };
-
-    const styles = this.panel.styles;
-    const stylesCount = styles.length;
-    let indexToInsert = stylesCount;
-
-    // check if last is a catch all rule, then add it before that one
-    if (stylesCount > 0) {
-      const last = styles[stylesCount - 1];
-      if (last.pattern === '/.*/') {
-        indexToInsert = stylesCount - 1;
-      }
-    }
-
-    styles.splice(indexToInsert, 0, newStyleRule);
-    this.activeStyleIndex = indexToInsert;
-  }
-
-  removeMetricStyle(style) {
-    this.panel.styles = _.without(this.panel.styles, style);
-  }
-
-  invertColorOrder(index) {
-    const ref = this.panel.styles[index].colors;
-    const copy = ref[0];
-    ref[0] = ref[2];
-    ref[2] = copy;
-    this.panelCtrl.render();
-  }
-
-  onColorChange(styleIndex, colorIndex) {
-    return newColor => {
-      this.panel.styles[styleIndex].colors[colorIndex] = newColor;
-      this.render();
-    };
-  }
-
-  addValueMap(style) {
-    if (!style.valueMaps) {
-      style.valueMaps = [];
-    }
-    style.valueMaps.push({ value: '', text: '' });
-    this.panelCtrl.render();
-  }
-
-  removeValueMap(style, index) {
-    style.valueMaps.splice(index, 1);
-    this.panelCtrl.render();
-  }
-
-  addRangeMap(style) {
-    if (!style.rangeMaps) {
-      style.rangeMaps = [];
-    }
-    style.rangeMaps.push({ from: '', to: '', text: '' });
-    this.panelCtrl.render();
-  }
-
-  removeRangeMap(style, index) {
-    style.rangeMaps.splice(index, 1);
-    this.panelCtrl.render();
-  }
-
-  getMetricNames() {
-    return ["A-series","B-series","C-series"];
-    // return _.map(this.$scope.ctrl.series, "alias")
-  }
 
 }
 

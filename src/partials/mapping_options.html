@@ -126,8 +126,8 @@
     <div class="gf-form">
       <label class="gf-form-label width-8">Color Mode</label>
       <div class="gf-form-select-wrapper width-10">
-        <select class="gf-form-input" ng-model="style.colorMode" ng-options="c.value as c.text for c in editor.colorModes"
-          ng-change="editor.onOptionsChange()"></select>
+        <select class="gf-form-input" ng-model="style.colorMode"
+          ng-options="c.value as c.text for c in editor.colorModes" ng-change="editor.onOptionsChange()"></select>
       </div>
     </div>
     <div class="gf-form">
@@ -193,20 +193,22 @@
     <div class="gf-form">
       <label class="gf-form-label">Metrics<tip>Select Shape members for Metrics</tip></label>
     </div>
-    <div class="gf-form-inline" ng-repeat="shape in style.shapeMapping">
+    <div class="gf-form-inline" ng-repeat="shape in style.shapeMaps">
       <div class="gf-form">
         <label class="gf-form-label">
-          <i class="fa fa-trash pointer" ng-click="editor.removeShapeFromStyle(style, shape)"></i>
+          <i class="fa fa-remove pointer" ng-click="editor.removeShapeFromStyle(style, shape)"></i>
         </label>
       </div>
       <div class="gf-form">
-        <select ng-options="f for f in editor.getCellNames('id')" ng-model="shape" ng-change="editor.onOptionsChange()">
-        </select>
+        <input type="text" placeholder="id or regex of shape" class="gf-form-input width-13" ng-model="shape.pattern"
+          bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+          bs-typeahead="editor.getCellNames" ng-blur="editor.onOptionsChange()" data-min-length=0 data-items=100
+          ng-model-onblur data-placement="right" ng-mouseleave="editor.onMouseLeave()" ng-mouseover="editor.onMouseOver(shape.pattern)">
       </div>
     </div>
     <div class="gf-form">
       <label class="gf-form-label">
-        <i class="fa fa-plus pointer" ng-click="editor.addShapeToStyle(style, shape)"></i>
+        <i class="fa fa-plus pointer" ng-click="editor.addShapeToStyle(style, '/.*/')"></i>
       </label>
     </div>
   </div>

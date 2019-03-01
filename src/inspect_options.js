@@ -20,11 +20,11 @@ export class InspectOptionsCtrl {
         let model = this.panelCtrl.graph.getModel()
         let cell = model.getCell(id)
         this.panelCtrl.graph.setSelectionCell(cell);
-      }
-    
-      onMouseLeave(id) {
+    }
+
+    onMouseLeave() {
         this.panelCtrl.graph.clearSelection();
-      }
+    }
 
 }
 

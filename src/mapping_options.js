@@ -49,10 +49,19 @@ export class MappingOptionsCtrl {
             if (!this.panelCtrl.series) {
                 return [];
             }
-            return _.map(this.panelCtrl.series, (col) => {
-                return col.alias;
+            return _.map(this.panelCtrl.series, (t) => {
+                return t.alias;
             });
         };
+
+        this.getCellNames = () => {
+            if (!this.panelCtrl.cells) {
+                return [];
+            }
+            return _.map(this.panelCtrl.cells.rows, (t) => {
+                return t.id;
+            });
+        }
 
         this.onColorChange = this.onColorChange.bind(this);
     }
@@ -68,7 +77,7 @@ export class MappingOptionsCtrl {
 
     addMetricStyle() {
         const newStyleRule = {
-            id : ++this.panel.maxId,
+            id: ++this.panel.styleSeq,
             unit: 'short',
             type: 'number',
             alias: '',
@@ -78,8 +87,8 @@ export class MappingOptionsCtrl {
             pattern: '',
             dateFormat: 'YYYY-MM-DD HH:mm:ss',
             thresholds: [],
-            shapesMapping: [],
-            valuesMapping: [],
+            shapeSeq: 1,
+            textSeq: 1,
             mappingType: 1,
         };
 
@@ -119,7 +128,18 @@ export class MappingOptionsCtrl {
     }
 
     onOptionsChange() {
-        
+
+    }
+
+    onMouseOver(id) {
+        let model = this.panelCtrl.graph.getModel()
+        let cell = model.getCell(id)
+        this.panelCtrl.graph.setSelectionCell(cell);
+
+    }
+
+    onMouseLeave() {
+        this.panelCtrl.graph.clearSelection();
     }
 
     addValueMap(style) {
@@ -146,6 +166,23 @@ export class MappingOptionsCtrl {
     removeRangeMap(style, index) {
         style.rangeMaps.splice(index, 1);
         this.panelCtrl.render();
+    }
+
+    addShapeToStyle(style) {
+        console.debug("mapping.addShapeToStyle")
+        if (!style.shapeMaps) {
+            style.shapeMaps = [];
+        }
+        style.shapeMaps.push({ pattern : '/.*/', prop : 'id', id : style.shapeSeq++ })
+        this.panelCtrl.render();
+        console.debug(this.panel.styles)
+    }
+
+    removeShapeFromStyle(style, shape) {
+        console.debug("mapping.removeShapeFromStyle")
+        style.shapeMaps = _.without(style.shapeMaps, shape)
+        this.panelCtrl.render();
+        console.debug(this.panel.styles)
     }
 }
 
