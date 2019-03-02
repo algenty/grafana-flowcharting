@@ -85,7 +85,7 @@ module.exports = (grunt) => {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js', "!mxgraph.js"],
+          src: ['*.js', "!mxgraph.js", "!mxHandler.js"],
           dest: 'dist',
           ext: '.js'
         }]
@@ -94,7 +94,8 @@ module.exports = (grunt) => {
 
     webpack: {
       mxgraph: {
-        entry: "./src/mxgraph.js",
+        // entry: "./src/mxgraph.js",
+        entry: "./src/mxHandler.js",
         mode: "development",
         module: {
           rules: [
@@ -113,9 +114,14 @@ module.exports = (grunt) => {
         },
         output: {
           path: path.resolve(process.cwd(), "./dist"),
-          filename: "mxgraph.js",
-          library: "mxgraph",
+          // filename: "mxgraph.js",
+          filename: "mxHandler.js",
+          library: "mxHandler",
           libraryTarget: "umd"
+        },
+        externals: {
+          "jquery": "jquery",
+          "lodash": "lodash"
         }
       }
     },

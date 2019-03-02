@@ -1,6 +1,5 @@
-// window.mxBasePath = window.mxBasePath || "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist";
-// window.mxImageBasePath = mxImageBasePath || "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist";
-// window.mxLanguage = window.mxLanguage || urlParams['lang'];
+import _ from 'lodash';
+
 window.mxLanguages = window.mxLanguages || ['en'];
 
 var mxgraph = require("mxgraph")({
@@ -53,8 +52,9 @@ window.mxDivResizer = window.mxDivResizer || mxgraph.mxDivResizer
 window.mxDoubleEllipse = window.mxDoubleEllipse || mxgraph.mxDoubleEllipse
 window.mxDragSource = window.mxDragSource || mxgraph.mxDragSource
 window.mxEdgeStyle = window.mxEdgeStyle || mxgraph.mxEdgeStyle
-window.mxEdgeHandler = window.mxEdgeHandler || mxgraph.mxEdgeHandler 
+window.mxEdgeHandler = window.mxEdgeHandler || mxgraph.mxEdgeHandler
 window.mxEditor = window.mxEditor || mxgraph.mxEditor
+window.mxElbowEdgeHandler = window.mxElbowEdgeHandler || mxgraph.mxElbowEdgeHandler
 window.mxEllipse = window.mxEllipse || mxgraph.mxEllipse
 window.mxEvent = window.mxEvent || mxgraph.mxEvent
 window.mxGeometry = window.mxGeometry || mxgraph.mxGeometry
@@ -69,7 +69,7 @@ window.mxImage = window.mxImage || mxgraph.mxImage
 window.mxImageShape = window.mxImageShape || mxgraph.mxImageShape
 window.mxKeyHandler = window.mxKeyHandler || mxgraph.mxKeyHandler
 window.mxLabel = window.mxLabel || mxgraph.mxLabel
-window.mxLayoutManager  = window.mxLayoutManager  || mxgraph.mxLayoutManager 
+window.mxLayoutManager = window.mxLayoutManager || mxgraph.mxLayoutManager
 window.mxLine = window.mxLine || mxgraph.mxLine
 window.mxMarker = window.mxMarker || mxgraph.mxMarker
 window.mxOutline = window.mxOutline || mxgraph.mxOutline
@@ -100,27 +100,27 @@ window.mxUtils = window.mxUtils || mxgraph.mxUtils
 window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler
 
-export default function link(scope, elem, attrs, ctrl) {
-  var data;
-  var panel = ctrl.panel;
-  var $root = elem;
-  var $elem = elem.find('.flowchart-panel__chart');
-  var graph;
-  var $graphCanvas;
-  var container;
-  var themes;
-  var $parent;
+export default class MxPluginCtrl {
 
-  // ########################################  MAIN  ###############################################
-  initFlowchart();
+  /** @ngInject */
+  constructor($scope, elem, attrs, ctrl) {
+    $scope.editor = this;
+    this.panelCtrl = $scope.ctrl;
+    this.panel = this.panelCtrl.panel;
+    this.$graphCanvas;
+    this.container;
+    this.$elem = elem.find('.flowchart-panel__chart');
+    this.graph;
 
-  // Events Render
-  this.render = this.render
-  ctrl.events.on('render', function () {
-    render();
-  });
+    this.initFlowchart();
 
-  // ########################################  OVERRITE MXGRAPH ####################################
+    // Events Render
+    // this.render = self.render.bind(this);
+    ctrl.events.on('render',  () => {
+      this.render();
+    });
+
+  }
 
 
   // ####################################### FLOWCHART #############################################
@@ -128,29 +128,13 @@ export default function link(scope, elem, attrs, ctrl) {
   //
   // INIT
   //
-  function initFlowchart() {
+  initFlowchart() {
     console.debug("mxgraph.initFlowChart");
-    // Overridden to define per-shape connection points
-    // mxGraph.prototype.getAllConnectionConstraints = function (terminal, source) {
-    //   if (terminal != null && terminal.shape != null) {
-    //     if (terminal.shape.stencil != null) {
-    //       if (terminal.shape.stencil != null) {
-    //         return terminal.shape.stencil.constraints;
-    //       }
-    //     } else if (terminal.shape.constraints != null) {
-    //       return terminal.shape.constraints;
-    //     }
-    //   }
-    //   return null;
-    // }
-
-
 
     // definie object graph
-
-    $graphCanvas = $('<div></div>');
-    $elem.html($graphCanvas);
-    $graphCanvas.bind("plothover", function (event, pos, item) {
+    this.$graphCanvas = $('<div></div>');
+    this.$elem.html(this.$graphCanvas);
+    this.$graphCanvas.bind("plothover", function (event, pos, item) {
       if (!item) {
         $tooltip.detach();
         return;
@@ -158,34 +142,34 @@ export default function link(scope, elem, attrs, ctrl) {
     });
 
     var Graph = require("./Graph")({
-      // touch : '1',
-      libs : 'arrows;basic;bpmn;flowchart',
+      touch: '1',
+      libs: 'arrows;basic;bpmn;flowchart',
     })
     var Shapes = require("./Shapes")
-    
-    container = $graphCanvas[0];
-    graph = new Graph(container);
+
+    this.container = this.$graphCanvas[0];
+    this.graph = new Graph(this.container);
 
   }
 
   //
   // ADD OR REPLACE GRAPH
   //
-  function addFlowchart() {
+  addFlowchart() {
     console.debug("mxgraph.addFlowChart");
 
-    graph.getModel().beginUpdate();
-    graph.getModel().clear();
+    this.graph.getModel().beginUpdate();
+    this.graph.getModel().clear();
     try {
-      var xmlDoc = mxUtils.parseXml(ctrl.panel.flowchart.source.xml.value);
+      var xmlDoc = mxUtils.parseXml(this.panel.flowchart.source.xml.value);
       var codec = new mxCodec(xmlDoc);
-      codec.decode(xmlDoc.documentElement, graph.getModel());
+      codec.decode(xmlDoc.documentElement, this.graph.getModel());
     } catch {
-      console.error("Error Graph")
+      //TODO:
 
     } finally {
       // Updates the display
-      graph.getModel().endUpdate();
+      this.graph.getModel().endUpdate();
     }
 
   }
@@ -193,11 +177,11 @@ export default function link(scope, elem, attrs, ctrl) {
   //
   // REFRESH GRAPH
   //
-  function refreshFlowChart() {
+  refreshFlowChart() {
     console.debug("mxgraph.refreshFlowChart");
-    let container = $graphCanvas[0]
-    var width = $elem.width();
-    var height = ctrl.height;
+    let container = this.$graphCanvas[0]
+    var width = this.$elem.width();
+    var height = this.panelCtrl.height;
     var size = Math.min(width, height);
 
 
@@ -208,97 +192,66 @@ export default function link(scope, elem, attrs, ctrl) {
       paddingBottom: 20 + 'px',
       height: size + 'px'
     };
-    
-    $graphCanvas.css(graphCss);
+
+    this.$graphCanvas.css(graphCss);
 
     // LOCK
-    if (ctrl.panel.flowchart.options.lock) {
+    if (this.panel.flowchart.options.lock) {
       // Disables folding
-      graph.setEnabled(false);
-      graph.isCellFoldable = function (cell, collapse) {
+      this.graph.setEnabled(false);
+      this.graph.isCellFoldable = function (cell, collapse) {
         return false;
       };
     }
 
     // GRID
-    if (ctrl.panel.flowchart.options.grid) {
-      container.style.backgroundImage = "url('" + IMAGE_PATH + "/grid.gif')";
+    if (this.panel.flowchart.options.grid) {
+      this.container.style.backgroundImage = "url('" + IMAGE_PATH + "/grid.gif')";
     } else {
-      container.style.backgroundImage = '';
+      this.container.style.backgroundImage = '';
     }
 
     // Zoom
-    if (ctrl.panel.flowchart.options.zoom || ctrl.panel.flowchart.options.zoom.length > 0 || ctrl.panel.flowchart.options.zoom != '100%' || ctrl.panel.flowchart.options.zoom != '0%' || ctrl.validatePercent(ctrl.panel.flowchart.options.zoom)) {
-      let scale = _.replace(ctrl.panel.flowchart.options.zoom, '%', '') / 100;
-      graph.zoomTo(scale, true)
+    if (this.panel.flowchart.options.zoom || this.panel.flowchart.options.zoom.length > 0 || this.panel.flowchart.options.zoom != '100%' || this.panel.flowchart.options.zoom != '0%') {
+      let scale = _.replace(this.panel.flowchart.options.zoom, '%', '') / 100;
+      this.graph.zoomTo(scale, true)
     } else {
-      if (!ctrl.panel.flowchart.options.scale) graph.zoomActual();
+      if (!this.panel.flowchart.options.scale) graph.zoomActual();
     }
 
     // Fit/scale
-    if (ctrl.panel.flowchart.options.scale) {
-      graph.fit();
-      graph.view.rendering = true;
+    if (this.panel.flowchart.options.scale) {
+      this.graph.fit();
+      this.graph.view.rendering = true;
     }
 
     // CENTER
-    if (ctrl.panel.flowchart.options.center) {
-      graph.center(true, true);
+    if (this.panel.flowchart.options.center) {
+      this.graph.center(true, true);
     } else {
-      graph.center(false, false);
+      this.graph.center(false, false);
     }
 
     // BG Color
-    if (ctrl.panel.flowchart.options.bgColor) {
-      $elem.css('background-color', ctrl.panel.flowchart.options.bgColor);
+    if (this.panel.flowchart.options.bgColor) {
+      this.$elem.css('background-color', this.panel.flowchart.options.bgColor);
     } else {
-      $elem.css('background-color', '');
+      this.$elem.css('background-color', '');
     }
 
     // REFRESH GRAPH
-    graph.refresh();
-
-    // DATAS
-    // var options = {
-    //   series: {
-    //     chart: {
-    //       show: true,
-    //       stroke: {
-    //         color: backgroundColor,
-    //         width: parseFloat(ctrl.panel.strokeWidth).toFixed(1)
-    //       },
-    //       highlight: {
-    //         opacity: 0.0
-    //       },
-    //       combine: {
-    //         threshold: ctrl.panel.combine.threshold,
-    //         label: ctrl.panel.combine.label
-    //       }
-    //     }
-    //   },
-    // };
-
-    // data = ctrl.data;
-
-    // for (let i = 0; i < data.length; i++) {
-    //   let series = data[i];
-
-    //   // if hidden remove points
-    //   if (ctrl.hiddenSeries[series.label]) {
-    //     series.data = {};
-    //   }
-    // }
+    this.graph.refresh();
 
   }
 
   //
   // inspect Flowchart
   // 
-  function inspectFlowchart() {
-    let model = graph.getModel()
-    let cells = model.cells;
-    ctrl.graph = graph;
-    ctrl.cells.columns = [{
+  inspectFlowchart() {
+    var model = this.graph.getModel()
+    var cells = model.cells;
+    this.panelCtrl.graph = this.graph;
+    this.panelCtrl.cells.columns = [{
         title: "Id",
         desc: "Id of the cell",
       },
@@ -320,9 +273,11 @@ export default function link(scope, elem, attrs, ctrl) {
       }
     ];
 
-    ctrl.cells.rows = [];
+    this.panelCtrl.cells.rows = [];
+    console.log(cells)
 
-    _.forEach(cells, function (element) {
+
+    _.forEach(cells, (element) => {
       let row = {
         id: element.getId(),
         value: element.getValue(),
@@ -331,46 +286,20 @@ export default function link(scope, elem, attrs, ctrl) {
         isConnectable: element.isConnectable(),
         isVertex: element.isVertex(),
       }
-      ctrl.cells.rows.push(row);
+      this.panelCtrl.cells.rows.push(row);
     })
   }
-
-  var selectCell = function (id) {
-    let model = graph.getModel()
+  //
+  // EVENTS
+  //
+  onMouseOver(id) {
+    let model = this.graph.getModel()
     let cell = model.getCell(id)
-    if (cell.isVertex()) {
-      graph.setTooltips(true);
-      graph.setSelectionCell(cell);
-    }
+    this.graph.setSelectionCell(cell);
   }
 
-  var unselectCell = function (id) {
-    graph.setTooltips(false);
-  }
-
-
-  function loadStyle() {
-    var node = mxUtils.load(STYLE_PATH + '/default.xml').getDocumentElement();
-    if (node != null) {
-      var dec = new mxCodec(node.ownerDocument);
-      dec.decode(node, graph.getStylesheet());
-    }
-  }
-
-  function loadSpencils() {
-    var stencils = ['basic', 'arrows', 'flowchart', 'bpmn'];
-    stencils.forEach(element => {
-      var node = mxUtils.load(STENCIL_PATH + "/" + element + '.xml').getDocumentElement();
-      var shape = node.firstChild;
-      while (shape != null) {
-        if (shape.nodeType == mxConstants.NODETYPE_ELEMENT) {
-          mxStencilRegistry.addStencil(shape.getAttribute('name'), new mxStencil(shape));
-        }
-        shape = shape.nextSibling;
-      }
-
-    });
-
+  onMouseLeave() {
+    this.graph.clearSelection();
   }
 
   // ###################################################################################################
@@ -379,26 +308,24 @@ export default function link(scope, elem, attrs, ctrl) {
   // RENDER
   //
 
-  function render() {
-    if (!ctrl.data) {
+  render() {
+    if (!this.panelCtrl.data) {
       return;
     }
-    data = ctrl.data;
+    let data = this.panelCtrl.data;
 
-    if (ctrl.changedSource == true) {
-      ctrl.changedSource = false;
-      addFlowchart();
-      inspectFlowchart();
-      refreshFlowChart();
+    if (this.panelCtrl.changedSource == true) {
+      this.panelCtrl.changedSource = false;
+      this.addFlowchart();
+      this.inspectFlowchart();
+      this.refreshFlowChart();
     } else {
-      refreshFlowChart();
+      this.refreshFlowChart();
     }
-
-
   }
 
-  function noDataPoints() {
+  noDataPoints() {
     var html = '<div class="datapoints-warning"><span class="small">No data points</span></div>';
-    $elem.html(html);
+    this.$elem.html(html);
   }
 }

@@ -11,7 +11,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="row in editor.panelCtrl.cells.rows" ng-mouseleave="editor.onMouseLeave()" ng-mouseover="editor.onMouseOver(row.id)">
+			<tr ng-repeat="row in editor.panelCtrl.cells.rows" ng-mouseleave="mx.onMouseLeave()" ng-mouseover="mx.onMouseOver(row.id)">
 				<td >{{row.id}}</td>
 				<td>{{row.value}}</td>
 				<td>{{row.style}}</td>

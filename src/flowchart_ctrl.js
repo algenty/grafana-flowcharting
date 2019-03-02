@@ -10,7 +10,8 @@ import _ from 'lodash';
 import {
   plugin
 } from './plugin';
-import mxgraph from './mxgraph';
+// import mxgraph from './mxgraph';
+import mxHandler from './mxHandler'
 
 class FlowchartCtrl extends MetricsPanelCtrl {
 
@@ -21,6 +22,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
     this.cells = [];
+    this.graph;
+    this.mx;
+
     // OLD OPTIONS
     this.options = {
       flowchart: {
@@ -186,7 +190,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     console.debug("ctrl.link")
-    mxgraph(scope, elem, attrs, ctrl);
+    this.mx = new mxHandler(scope, elem, attrs, ctrl);
   }
 
   exportSVG() {

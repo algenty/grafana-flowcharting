@@ -10,6 +10,7 @@ export class MappingOptionsCtrl {
         this.activeStyleIndex = 0;
         this.panelCtrl = $scope.ctrl;
         this.panel = this.panelCtrl.panel;
+        $scope.mx = this.panelCtrl.mx;
         this.unitFormats = kbn.getUnitFormats();
         this.colorModes = [
             { text: 'Disabled', value: null },
@@ -131,16 +132,16 @@ export class MappingOptionsCtrl {
 
     }
 
-    onMouseOver(id) {
-        let model = this.panelCtrl.graph.getModel()
-        let cell = model.getCell(id)
-        this.panelCtrl.graph.setSelectionCell(cell);
+    // onMouseOver(id) {
+    //     let model = this.panelCtrl.graph.getModel()
+    //     let cell = model.getCell(id)
+    //     this.panelCtrl.graph.setSelectionCell(cell);
 
-    }
+    // }
 
-    onMouseLeave() {
-        this.panelCtrl.graph.clearSelection();
-    }
+    // onMouseLeave() {
+    //     this.panelCtrl.graph.clearSelection();
+    // }
 
     addValueMap(style) {
         if (!style.valueMaps) {

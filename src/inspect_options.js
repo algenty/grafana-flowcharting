@@ -8,23 +8,24 @@ export class InspectOptionsCtrl {
         $scope.editor = this;
         this.panelCtrl = $scope.ctrl;
         this.panel = this.panelCtrl.panel;
+        $scope.mx = this.panelCtrl.mx;
         this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
+        console.log($scope)
     }
 
     render() {
         this.panelCtrl.render();
-
     }
 
-    onMouseOver(id) {
-        let model = this.panelCtrl.graph.getModel()
-        let cell = model.getCell(id)
-        this.panelCtrl.graph.setSelectionCell(cell);
-    }
+    // onMouseOver(id) {
+    //     let model = this.panelCtrl.graph.getModel()
+    //     let cell = model.getCell(id)
+    //     this.panelCtrl.graph.setSelectionCell(cell);
+    // }
 
-    onMouseLeave() {
-        this.panelCtrl.graph.clearSelection();
-    }
+    // onMouseLeave() {
+    //     this.panelCtrl.graph.clearSelection();
+    // }
 
 }
 

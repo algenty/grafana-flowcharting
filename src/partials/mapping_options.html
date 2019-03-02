@@ -203,7 +203,7 @@
         <input type="text" placeholder="id or regex of shape" class="gf-form-input width-13" ng-model="shape.pattern"
           bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
           bs-typeahead="editor.getCellNames" ng-blur="editor.onOptionsChange()" data-min-length=0 data-items=100
-          ng-model-onblur data-placement="right" ng-mouseleave="editor.onMouseLeave()" ng-mouseover="editor.onMouseOver(shape.pattern)">
+          ng-model-onblur data-placement="right" ng-mouseleave="mx.onMouseLeave()" ng-mouseover="mx.onMouseOver(shape.pattern)">
       </div>
     </div>
     <div class="gf-form">
