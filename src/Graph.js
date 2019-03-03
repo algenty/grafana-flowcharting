@@ -5,7 +5,6 @@
 // see https://code.google.com/p/google-caja/issues/detail?can=2&q=&colspec=ID%20Type%20Status%20Priority%20Owner%20Summary&groupby=&sort=&id=1296
 
 module.exports = function (urlParams) {
-	console.log(urlParams)
 	if (typeof html4 !== 'undefined') {
 		html4.ATTRIBS["a::target"] = 0;
 		html4.ATTRIBS["source::src"] = 0;

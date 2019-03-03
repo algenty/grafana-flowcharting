@@ -111,6 +111,7 @@ export default class MxPluginCtrl {
     this.container;
     this.$elem = elem.find('.flowchart-panel__chart');
     this.graph;
+    this.style=[];
 
     this.initFlowchart();
 
@@ -248,8 +249,9 @@ export default class MxPluginCtrl {
   // inspect Flowchart
   // 
   inspectFlowchart() {
-    var model = this.graph.getModel()
-    var cells = model.cells;
+    let model = this.graph.getModel()
+    let view = this.graph.view;
+    let cells = model.cells;
     this.panelCtrl.graph = this.graph;
     this.panelCtrl.cells.columns = [{
         title: "Id",
@@ -270,36 +272,66 @@ export default class MxPluginCtrl {
       {
         title: "isConnectable",
         desc: "true if the cell is connectable"
+      },
+      {
+        title: "state",
+        desc: "State of cell"
       }
     ];
 
     this.panelCtrl.cells.rows = [];
-    console.log(cells)
 
 
-    _.forEach(cells, (element) => {
+    _.forEach(cells, (cell) => {
       let row = {
-        id: element.getId(),
-        value: element.getValue(),
-        style: element.getStyle(),
-        isedge: element.isEdge(),
-        isConnectable: element.isConnectable(),
-        isVertex: element.isVertex(),
+        id: cell.getId(),
+        cell : cell,
+        value: cell.getValue(),
+        text: (view.getState(cell).text!=null?view.getState(cell).text.lastValue:""),
+        shape: view.getState(cell).style[mxConstants.STYLE_SHAPE],
+        // mxShape : view.getState(cell).shape,
+        fontColor: view.getState(cell).style[mxConstants.STYLE_FONTCOLOR],
+        fillColor: view.getState(cell).style[mxConstants.STYLE_FILLCOLOR],
+        strokeColor: view.getState(cell).style[mxConstants.STYLE_STROKECOLOR],
+        // state : view.getState(cell),
+        // style: cell.getStyle(),
+        isEdge: cell.isEdge(),
+        isVertex: cell.isVertex(),
       }
       this.panelCtrl.cells.rows.push(row);
+      // console.log("cell "+cell.getId() ,row)
     })
   }
   //
   // EVENTS
   //
-  onMouseOver(id) {
+  selectCell(id) {
     let model = this.graph.getModel()
     let cell = model.getCell(id)
     this.graph.setSelectionCell(cell);
   }
 
-  onMouseLeave() {
+  unselectCell() {
     this.graph.clearSelection();
+  }
+
+  //
+  // Functions
+  //
+
+  changeState(id,color) {
+    let cell = this.graph.getModel().getCell(id)
+    if (cell)  {
+      this.graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, color, [cell]);
+    }
+  }
+
+  restoreState(id) {
+    let cell = this.graph.getModel().getCell(id)
+    let old = _.find(this.panelCtrl.cells, { 'id' : id})
+    if (cell) {
+      this.graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, old.fillColor , [cell]);
+    }
   }
 
   // ###################################################################################################

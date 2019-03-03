@@ -1,29 +1,98 @@
 <div class="flowchart-editor-container">
-	<table class="flowchartTable-editor">
-		<thead>
-			<tr >
-				<th>Id</th>
-				<th>Value</th>
-				<th>Style</th>
-				<th>Edged</th>
-				<th>Connectable</th>
-				<th>Vertex</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="row in editor.panelCtrl.cells.rows" ng-mouseleave="mx.onMouseLeave()" ng-mouseover="mx.onMouseOver(row.id)">
-				<td >{{row.id}}</td>
-				<td>{{row.value}}</td>
-				<td>{{row.style}}</td>
-				<td>{{row.isedge}}</td>
-				<td>{{row.isConnectable}}</td>
-				<td>{{row.isVertex}}</td>
-			</tr>
-		</tbody>
-		</tr>
-	</table>
-	<div class="datapoints-warning" ng-show="editor.cells.rows.length===0">
-		<span class="small">
-			No data to show <tip>Nothing returned by data query</tip>
-		</span>
+	<div class="editor-row">
+		<div class="section gf-form-group">
+			<h5 class="section-heading">Inspector</h5>
+			<div class="gf-form">
+				<div class="gf-form">
+					<label class="gf-form-label width-8">Coloring
+						<info-popover mode="right-normal">
+							Test color on shape by move mouse on color in table
+						</info-popover>
+					</label>
+					<span class="gf-form-label">
+						<color-picker color="editor.colors[0]" onChange="editor.onColorChange($index, 0)"></color-picker>
+					</span>
+					<span class="gf-form-label">
+						<color-picker color="editor.colors[1]" onChange="editor.onColorChange($index, 1)"></color-picker>
+					</span>
+					<span class="gf-form-label">
+						<color-picker color="editor.colors[2]" onChange="editor.onColorChange($index, 2)"></color-picker>
+					</span>
+				</div>
+			</div>
+		</div>
 	</div>
+	<div class="editor-row">
+		<table class="flowchartTable-editor">
+			<thead>
+				<tr>
+					<th>Id
+						<info-popover mode="right-normal">
+							Show shape by move mouse in column
+						</info-popover>
+					</th>
+					<th>Text</th>
+					<th>Shape</th>
+					<th>Font Col.</th>
+					<th>Fill Col.</th>
+					<th>Stoke Col.</th>
+					<th>Edge</th>
+					<th>Vertex</th>
+					<th>Colorize</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="row in editor.panelCtrl.cells.rows">
+					<td ng-mouseleave="mx.unselectCell()" ng-mouseover="mx.selectCell(row.id)">{{row.id}}</td>
+					<td>{{row.text}}</td>
+					<td>{{row.shape}}</td>
+					<td>
+						<div ng-if="!isNaN(row.fontColor) && row.fontColor.length >0">
+							<div class="sp-preview">
+								<div class="sp-preview-inner" style="background-color: {{row.fontColor}};border: 1px solid rgb(228, 228, 228);"></div>
+							</div>{{row.fontColor}}
+						</div>
+					</td>
+					<td>
+						<div ng-if="!isNaN(row.fillColor)  && row.fillColor.length >0">
+							<div class="sp-preview">
+								<div class="sp-preview-inner" style="background-color: {{row.fillColor}};border: 1px solid rgb(228, 228, 228);"></div>
+							</div>{{row.fillColor}}
+						</div>
+					</td>
+					<td>
+						<div ng-if="!isNaN(row.strokeColor) && row.strokeColor.length >0">
+							<div class="sp-preview">
+								<div class="sp-preview-inner" style="background-color: {{row.strokeColor}};border: 1px solid rgb(228, 228, 228);"></div>
+							</div>{{row.strokeColor}}
+						</div>
+					</td>
+					<td align="center">{{row.isEdge}}</td>
+					<td align="center">{{row.isVertex}}</td>
+					<td>
+						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[0])" ng-mouseleave="mx.changeState(row.id)">
+							<div class="sp-preview-inner" style="background-color: {{editor.colors[0]}};border: 1px solid rgb(228, 228, 228);">
+							</div>
+						</div>
+						&nbsp;
+						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[1])" ng-mouseleave="mx.changeState(row.id)">
+							<div class="sp-preview-inner" style="background-color: {{editor.colors[1]}};border: 1px solid rgb(228, 228, 228);">
+							</div>
+						</div>
+						&nbsp;
+						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[2])" ng-mouseleave="mx.changeState(row.id)">
+							<div class="sp-preview-inner" style="background-color: {{editor.colors[2]}};border: 1px solid rgb(228, 228, 228);">
+							</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+			</tr>
+		</table>
+		<div class="datapoints-warning" ng-show="editor.cells.rows.length===0">
+			<span class="small">
+				No data to show <tip>Nothing returned by data query</tip>
+			</span>
+		</div>
+	</div>
+</div>
