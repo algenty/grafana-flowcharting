@@ -5,17 +5,24 @@
       <div class="gf-form">
         <label class="gf-form-label width-12">Apply to metrics named</label>
         <input type="text" placeholder="Name or regex of metric" class="gf-form-input width-13" ng-model="style.pattern"
-          bs-tooltip="'Specify regex using /my.*regex/ syntax'" bs-typeahead="editor.getMetricNames"
-          ng-blur="editor.onOptionsChange()" data-min-length=0 data-items=100 ng-model-onblur data-placement="right">
+          bs-tooltip="'Specify regex using /my.*regex/ syntax'" bs-typeahead="editor.getMetricNames" ng-blur="editor.onOptionsChange()"
+          data-min-length=0 data-items=100 ng-model-onblur data-placement="right">
       </div>
     </div>
     <div class="gf-form" ng-if="style.type !== 'hidden'">
-      <label class="gf-form-label width-12">Metric Header</label>
+      <label class="gf-form-label width-12">Alias name</label>
       <input type="text" class="gf-form-input width-12" ng-model="style.alias" ng-change="editor.onOptionsChange()"
         ng-model-onblur placeholder="Override header label">
     </div>
-    <gf-form-switch class="gf-form" label-class="width-12" label="Render value as link" checked="style.link"
-      change="editor.onOptionsChange()"></gf-form-switch>
+    <div class="gf-form" ng-if="style.type !== 'hidden'">
+      <label class="gf-form-label width-12">Aggregation</label>
+      <div class="gf-form-select-wrapper width-12">
+        <select class="gf-form-input" ng-model="style.aggregation" ng-options="c.value as c.text for c in editor.aggregationTypes"
+          ng-change="editor.onOptionsChange()"></select>
+      </div>
+    </div>
+
+    <gf-form-switch class="gf-form" label-class="width-12" label="Render value as link" checked="style.link" change="editor.onOptionsChange()"></gf-form-switch>
   </div>
 
   <div class="section gf-form-group">
@@ -30,8 +37,8 @@
     </div>
     <div class="gf-form" ng-if="style.type === 'date'">
       <label class="gf-form-label width-10">Date Format</label>
-      <gf-form-dropdown model="style.dateFormat" css-class="gf-form-input width-16" lookup-text="true"
-        get-options="editor.dateFormats" on-change="editor.onOptionsChange()" allow-custom="true">
+      <gf-form-dropdown model="style.dateFormat" css-class="gf-form-input width-16" lookup-text="true" get-options="editor.dateFormats"
+        on-change="editor.onOptionsChange()" allow-custom="true">
       </gf-form-dropdown>
     </div>
 
@@ -52,8 +59,8 @@
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-10">Decimals</label>
-        <input type="number" class="gf-form-input width-4" data-placement="right" ng-model="style.decimals"
-          ng-change="editor.onOptionsChange()" ng-model-onblur>
+        <input type="number" class="gf-form-input width-4" data-placement="right" ng-model="style.decimals" ng-change="editor.onOptionsChange()"
+          ng-model-onblur>
       </div>
     </div>
   </div>
@@ -67,8 +74,8 @@
             Type
           </span>
           <div class="gf-form-select-wrapper">
-            <select class="gf-form-input" ng-model="style.mappingType"
-              ng-options="c.value as c.text for c in editor.mappingTypes" ng-change="editor.onOptionsChange()"></select>
+            <select class="gf-form-input" ng-model="style.mappingType" ng-options="c.value as c.text for c in editor.mappingTypes"
+              ng-change="editor.onOptionsChange()"></select>
           </div>
         </div>
         <div class="gf-form-group" ng-if="style.mappingType==1">
@@ -76,13 +83,11 @@
             <span class="gf-form-label">
               <i class="fa fa-remove pointer" ng-click="editor.removeValueMap(style, $index)"></i>
             </span>
-            <input type="text" class="gf-form-input max-width-6" ng-model="map.value" placeholder="Value"
-              ng-blur="editor.onOptionsChange()">
+            <input type="text" class="gf-form-input max-width-6" ng-model="map.value" placeholder="Value" ng-blur="editor.onOptionsChange()">
             <label class="gf-form-label">
               <i class="fa fa-arrow-right"></i>
             </label>
-            <input type="text" class="gf-form-input max-width-8" ng-model="map.text" placeholder="Text"
-              ng-blur="editor.onOptionsChange()">
+            <input type="text" class="gf-form-input max-width-8" ng-model="map.text" placeholder="Text" ng-blur="editor.onOptionsChange()">
           </div>
           <div class="gf-form">
             <label class="gf-form-label">
@@ -96,14 +101,11 @@
               <i class="fa fa-remove pointer" ng-click="editor.removeRangeMap(style, $index)"></i>
             </span>
             <span class="gf-form-label">From</span>
-            <input type="text" ng-model="rangeMap.from" class="gf-form-input max-width-6"
-              ng-blur="editor.onOptionsChange()">
+            <input type="text" ng-model="rangeMap.from" class="gf-form-input max-width-6" ng-blur="editor.onOptionsChange()">
             <span class="gf-form-label">To</span>
-            <input type="text" ng-model="rangeMap.to" class="gf-form-input max-width-6"
-              ng-blur="editor.onOptionsChange()">
+            <input type="text" ng-model="rangeMap.to" class="gf-form-input max-width-6" ng-blur="editor.onOptionsChange()">
             <span class="gf-form-label">Text</span>
-            <input type="text" ng-model="rangeMap.text" class="gf-form-input max-width-8"
-              ng-blur="editor.onOptionsChange()">
+            <input type="text" ng-model="rangeMap.text" class="gf-form-input max-width-8" ng-blur="editor.onOptionsChange()">
           </div>
           <div class="gf-form">
             <label class="gf-form-label">
@@ -120,14 +122,14 @@
       <label class="gf-form-label width-8">Thresholds
         <tip>Comma separated values</tip>
       </label>
-      <input type="text" class="gf-form-input width-10" ng-model="style.thresholds" placeholder="50,80"
-        ng-blur="editor.onOptionsChange()" array-join>
+      <input type="text" class="gf-form-input width-10" ng-model="style.thresholds" placeholder="50,80" ng-blur="editor.onOptionsChange()"
+        array-join>
     </div>
     <div class="gf-form">
       <label class="gf-form-label width-8">Color Mode</label>
       <div class="gf-form-select-wrapper width-10">
-        <select class="gf-form-input" ng-model="style.colorMode"
-          ng-options="c.value as c.text for c in editor.colorModes" ng-change="editor.onOptionsChange()"></select>
+        <select class="gf-form-input" ng-model="style.colorMode" ng-options="c.value as c.text for c in editor.colorModes"
+          ng-change="editor.onOptionsChange()"></select>
       </div>
     </div>
     <div class="gf-form">
@@ -191,7 +193,7 @@
   <div class="gf-form-group">
     <!-- Shape Mapping -->
     <div class="gf-form">
-      <label class="gf-form-label">Metrics<tip>Select Shape members for Metrics</tip></label>
+      <label class="gf-form-label">Shapes mapping<tip>Select Shape members for this metric</tip></label>
     </div>
     <div class="gf-form-inline" ng-repeat="shape in style.shapeMaps">
       <div class="gf-form">
@@ -201,9 +203,9 @@
       </div>
       <div class="gf-form">
         <input type="text" placeholder="id or regex of shape" class="gf-form-input width-13" ng-model="shape.pattern"
-          bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-          bs-typeahead="editor.getCellNames" ng-blur="editor.onOptionsChange()" data-min-length=0 data-items=100
-          ng-model-onblur data-placement="right" ng-mouseleave="mx.unselectCell()" ng-mouseover="mx.selectCell(shape.pattern)">
+          bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'" bs-typeahead="editor.getCellNames"
+          ng-blur="editor.onOptionsChange()" data-min-length=0 data-items=100 ng-model-onblur data-placement="right"
+          ng-mouseleave="mx.unselectCell()" ng-mouseover="mx.selectCell(shape.pattern)">
       </div>
     </div>
     <div class="gf-form">
@@ -213,18 +215,17 @@
     </div>
   </div>
 
-  <div class="gf-form-group">
-    <!-- Value Mapping -->
-  </div>
+  <div class="clearfix">
 
-  <div class="clearfix"></div>
+  </div>
   <div class="gf-form-group">
     <button class="btn btn-danger btn-small" ng-click="editor.removeMetricStyle(style)">
       <i class="fa fa-trash"></i> Remove Rule
     </button>
   </div>
+  <hr>
 </div>
-<hr>
+
 <div class="gf-form-button-row">
   <button class="btn btn-inverse" ng-click="editor.addMetricStyle()">
     <i class="fa fa-plus"></i>&nbsp;Add metric style

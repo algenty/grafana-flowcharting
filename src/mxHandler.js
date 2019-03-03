@@ -304,6 +304,7 @@ export default class MxPluginCtrl {
         // style: cell.getStyle(),
         isEdge: cell.isEdge(),
         isVertex: cell.isVertex(),
+        thresholdLevel:0,
       }
       this.panelCtrl.cells.rows.push(row);
       // console.log("cell "+cell.getId() ,row)

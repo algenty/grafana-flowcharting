@@ -3,9 +3,15 @@ import {
 } from 'app/plugins/sdk';
 import TimeSeries from 'app/core/time_series2';
 import kbn from 'app/core/utils/kbn';
-import { mappingOptionsTab } from './mapping_options';
-import { flowchartOptionsTab } from './flowchart_options';
-import { inspectOptionsTab } from './inspect_options';
+import {
+  mappingOptionsTab
+} from './mapping_options';
+import {
+  flowchartOptionsTab
+} from './flowchart_options';
+import {
+  inspectOptionsTab
+} from './inspect_options';
 import _ from 'lodash';
 import {
   plugin
@@ -22,6 +28,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
     this.cells = [];
+    this.shapeState = [];
     this.graph;
     this.mx;
 
@@ -73,23 +80,27 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       valueName: 'current',
       strokeWidth: 1,
       // NEW PANEL
-      styleSeq : 1,
+      styleSeq: 1,
       metrics: [],
-      styles: [
-        {
-          id : 1,
-          unit: 'short',
-          type: 'number',
-          alias: '',
-          decimals: 2,
-          colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
-          colorMode: null,
-          pattern: '/.*/',
-          thresholds: [],
-          shapeSeq: 1,
-          textSeq: 1,
-        },
-      ],
+      styles: [{
+        id: 1,
+        unit: 'short',
+        type: 'number',
+        alias: '',
+        aggregation: 'current',
+        decimals: 2,
+        colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
+        colorMode: null,
+        pattern: '/.*/',
+        dateFormat: 'YYYY-MM-DD HH:mm:ss',
+        thresholds: [],
+        invert: false,
+        shapeSeq: 1,
+        shapeMaps: [],
+        textSeq: 1,
+        textMaps: [],
+        mappingType: 1,
+      }, ],
       // OLD PANEL
       flowchart: {
         source: {
@@ -145,7 +156,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     console.debug("ctrl.onInitEditMode")
     // this.addEditorTab('Flowcharting', 'public/plugins/' + plugin.id + '/partials/flowchartEditor.html', 2);
     // this.addEditorTab('Mapping', 'public/plugins/' + plugin.id + '/partials/shapeEditor.html', 3);
-        // this.addEditorTab('Inspect', 'public/plugins/' + plugin.id + '/partials/inspectFlowchart.html', 4)
+    // this.addEditorTab('Inspect', 'public/plugins/' + plugin.id + '/partials/inspectFlowchart.html', 4)
     this.addEditorTab('Flowchart', flowchartOptionsTab, 2);
     this.addEditorTab('Mapping', mappingOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
@@ -165,12 +176,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onDataReceived(dataList) {
     console.debug("ctrl.onDataReceived")
     console.debug('received data');
-    console.debug(dataList);
+    // console.debug(dataList);
     this.series = dataList.map(this.seriesHandler.bind(this));
     console.debug('mapped dataList to series');
-    console.debug(this.series);
+    // console.debug(this.series);
+    this.analyzeData()
     this.render();
-
   }
 
   onDataError() {
@@ -248,19 +259,115 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   //
+  // Data
+  //
+  analyzeData() {
+    this.shapeState = [];
+    // Begin For Each Series
+    console.log("this.panel.styles", this.panel.styles)
+    _.each(this.series, (serie) => {
+      console.log("serie", serie)
+      if (serie.datapoints.length === 0) {
+        return;
+      }
+      // Begin For Each Styles
+      _.each(this.panel.styles, (style) => {
+        const regex = kbn.stringToJsRegex(style.pattern);
+        let matching = serie.alias.toString().match(regex);
+        if (style.pattern == serie.alias || matching) {
+          console.log("style matched", style)
+          let value = _.get(serie.stats,style.aggregation)
+          if( value === undefined || value === null) {
+            value = serie.datapoints[serie.datapoints.length - 1][0];
+          }
+          // Begin For Each Shape
+          _.each(style.shapeMaps, (shape) => {
+            let level = getThresholdLevel(value,style);
+          });
+          // End For Each Shape
+          console.log("value " + style.aggregation, value)
+        }
+      });
+      // End For Each Styles
+    });
+    // End For Each Series
+  }
+
+  getColorForValue(value, style) {
+    if (!style.thresholds) {
+      return null;
+    }
+    for (let i = style.thresholds.length; i > 0; i--) {
+      if (value >= style.thresholds[i - 1]) {
+        return style.colors[i];
+      }
+    }
+    return _.first(style.colors);
+  }
+
+  setColorState(value, style) {
+    if (!style.colorMode) {
+      return;
+    }
+
+    if (value === null || value === void 0 || _.isArray(value)) {
+      return;
+    }
+
+    const numericValue = Number(value);
+    if (isNaN(numericValue)) {
+      return;
+    }
+
+    this.colorState[style.colorMode] = this.getColorForValue(numericValue, style);
+  }
+
+  // returns level of threshold, 0 = ok, 1 = warnimg, 2 = critical
+  getThresholdLevel(value, style) {
+    // default to ok
+    var thresholdLevel = 0;
+
+    var thresholds = style.thresholds;
+    // if no thresholds are defined, return 0
+    if (thresholds === undefined) {
+      return thresholdLevel;
+    }
+
+    // make sure thresholds is an array of size 2
+    if (thresholds.length !== 2) {
+      return thresholdLevel;
+    }
+
+    if (!style.invert) {
+      if (value >= thresholds[0]) {
+        // value is equal or greater than first threshold
+        thresholdLevel = 1;
+      }
+      if (value >= thresholds[1]) {
+        // value is equal or greater than second threshold
+        thresholdLevel = 2;
+      }
+    } else {
+      if (value <= thresholds[0]) {
+        // value is equal or greater than first threshold
+        thresholdLevel = 1;
+      }
+      if (value <= thresholds[1]) {
+        // value is equal or greater than second threshold
+        thresholdLevel = 2;
+      }
+    }
+    return thresholdLevel;
+  }
+
+  //
   // Validate
   //
+
   validateRegex(textRegex) {
-    if (textRegex == null || textRegex.length == 0) {
-      return true
-    }
-    try {
-      let regex = new RegExp(textRegex);
-      return true
-    } catch (e) {
-      return false
-    }
+    return _.isRegExp(textRegex)
   }
+
 
 
 }
@@ -269,5 +376,6 @@ export {
   FlowchartCtrl,
   FlowchartCtrl as MetricsPanelCtrl
 }
+
 
 FlowchartCtrl.templateUrl = 'module.html';

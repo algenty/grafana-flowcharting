@@ -60,8 +60,8 @@ function () {
       text: 'Date',
       value: 'date'
     }, {
-      text: 'Hidden',
-      value: 'hidden'
+      text: 'Disabled',
+      value: 'disabled'
     }];
     this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
     this.dateFormats = [{
@@ -161,14 +161,18 @@ function () {
         unit: 'short',
         type: 'number',
         alias: '',
+        aggregation: 'current',
         decimals: 2,
         colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
         colorMode: null,
-        pattern: '',
+        pattern: '/.*/',
         dateFormat: 'YYYY-MM-DD HH:mm:ss',
         thresholds: [],
+        invert: false,
         shapeSeq: 1,
+        shapeMaps: [],
         textSeq: 1,
+        textMaps: [],
         mappingType: 1
       };
       var styles = this.panel.styles;
@@ -198,6 +202,7 @@ function () {
       var copy = ref[0];
       ref[0] = ref[2];
       ref[2] = copy;
+      this.panel.styles[index].invert = !this.panel.styles[index].invert;
       this.panelCtrl.render();
     }
   }, {
@@ -213,15 +218,24 @@ function () {
     }
   }, {
     key: "onOptionsChange",
-    value: function onOptionsChange() {} // onMouseOver(id) {
-    //     let model = this.panelCtrl.graph.getModel()
-    //     let cell = model.getCell(id)
-    //     this.panelCtrl.graph.setSelectionCell(cell);
-    // }
-    // onMouseLeave() {
-    //     this.panelCtrl.graph.clearSelection();
-    // }
+    value: function onOptionsChange() {} //
+    // Validate
+    //
 
+  }, {
+    key: "validateRegex",
+    value: function validateRegex(textRegex) {
+      if (textRegex == null || textRegex.length == 0) {
+        return true;
+      }
+
+      try {
+        var regex = new RegExp(textRegex);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
   }, {
     key: "addValueMap",
     value: function addValueMap(style) {

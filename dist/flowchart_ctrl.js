@@ -59,6 +59,7 @@ function (_MetricsPanelCtrl) {
     _this.hiddenSeries = {};
     _this.unitFormats = _kbn.default.getUnitFormats();
     _this.cells = [];
+    _this.shapeState = [];
     _this.graph;
     _this.mx; // OLD OPTIONS
 
@@ -115,13 +116,19 @@ function (_MetricsPanelCtrl) {
         unit: 'short',
         type: 'number',
         alias: '',
+        aggregation: 'current',
         decimals: 2,
         colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
         colorMode: null,
         pattern: '/.*/',
+        dateFormat: 'YYYY-MM-DD HH:mm:ss',
         thresholds: [],
+        invert: false,
         shapeSeq: 1,
-        textSeq: 1
+        shapeMaps: [],
+        textSeq: 1,
+        textMaps: [],
+        mappingType: 1
       }],
       // OLD PANEL
       flowchart: {
@@ -207,11 +214,12 @@ function (_MetricsPanelCtrl) {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
       console.debug("ctrl.onDataReceived");
-      console.debug('received data');
-      console.debug(dataList);
+      console.debug('received data'); // console.debug(dataList);
+
       this.series = dataList.map(this.seriesHandler.bind(this));
-      console.debug('mapped dataList to series');
-      console.debug(this.series);
+      console.debug('mapped dataList to series'); // console.debug(this.series);
+
+      this.analyzeData();
       this.render();
     }
   }, {
@@ -299,22 +307,135 @@ function (_MetricsPanelCtrl) {
         };
       });
     } //
+    // Data
+    //
+
+  }, {
+    key: "analyzeData",
+    value: function analyzeData() {
+      var _this3 = this;
+
+      this.shapeState = []; // Begin For Each Series
+
+      console.log("this.panel.styles", this.panel.styles);
+
+      _lodash.default.each(this.series, function (serie) {
+        console.log("serie", serie);
+
+        if (serie.datapoints.length === 0) {
+          return;
+        } // Begin For Each Styles
+
+
+        _lodash.default.each(_this3.panel.styles, function (style) {
+          var regex = _kbn.default.stringToJsRegex(style.pattern);
+
+          var matching = serie.alias.toString().match(regex);
+
+          if (style.pattern == serie.alias || matching) {
+            console.log("style matched", style);
+
+            var value = _lodash.default.get(serie.stats, style.aggregation);
+
+            if (value === undefined || value === null) {
+              value = serie.datapoints[serie.datapoints.length - 1][0];
+            } // Begin For Each Shape
+
+
+            _lodash.default.each(style.shapeMaps, function (shape) {
+              var level = getThresholdLevel(value, style);
+            }); // End For Each Shape
+
+
+            console.log("value " + style.aggregation, value);
+          }
+        }); // End For Each Styles
+
+      }); // End For Each Series
+
+    }
+  }, {
+    key: "getColorForValue",
+    value: function getColorForValue(value, style) {
+      if (!style.thresholds) {
+        return null;
+      }
+
+      for (var i = style.thresholds.length; i > 0; i--) {
+        if (value >= style.thresholds[i - 1]) {
+          return style.colors[i];
+        }
+      }
+
+      return _lodash.default.first(style.colors);
+    }
+  }, {
+    key: "setColorState",
+    value: function setColorState(value, style) {
+      if (!style.colorMode) {
+        return;
+      }
+
+      if (value === null || value === void 0 || _lodash.default.isArray(value)) {
+        return;
+      }
+
+      var numericValue = Number(value);
+
+      if (isNaN(numericValue)) {
+        return;
+      }
+
+      this.colorState[style.colorMode] = this.getColorForValue(numericValue, style);
+    } // returns level of threshold, 0 = ok, 1 = warnimg, 2 = critical
+
+  }, {
+    key: "getThresholdLevel",
+    value: function getThresholdLevel(value, style) {
+      // default to ok
+      var thresholdLevel = 0;
+      var thresholds = style.thresholds; // if no thresholds are defined, return 0
+
+      if (thresholds === undefined) {
+        return thresholdLevel;
+      } // make sure thresholds is an array of size 2
+
+
+      if (thresholds.length !== 2) {
+        return thresholdLevel;
+      }
+
+      if (!style.invert) {
+        if (value >= thresholds[0]) {
+          // value is equal or greater than first threshold
+          thresholdLevel = 1;
+        }
+
+        if (value >= thresholds[1]) {
+          // value is equal or greater than second threshold
+          thresholdLevel = 2;
+        }
+      } else {
+        if (value <= thresholds[0]) {
+          // value is equal or greater than first threshold
+          thresholdLevel = 1;
+        }
+
+        if (value <= thresholds[1]) {
+          // value is equal or greater than second threshold
+          thresholdLevel = 2;
+        }
+      }
+
+      return thresholdLevel;
+    } //
     // Validate
     //
 
   }, {
     key: "validateRegex",
     value: function validateRegex(textRegex) {
-      if (textRegex == null || textRegex.length == 0) {
-        return true;
-      }
-
-      try {
-        var regex = new RegExp(textRegex);
-        return true;
-      } catch (e) {
-        return false;
-      }
+      return _lodash.default.isRegExp(textRegex);
     }
   }]);
 

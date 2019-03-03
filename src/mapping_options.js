@@ -24,7 +24,7 @@ export class MappingOptionsCtrl {
             { text: 'Number', value: 'number' },
             { text: 'String', value: 'string' },
             { text: 'Date', value: 'date' },
-            { text: 'Hidden', value: 'hidden' },
+            { text: 'Disabled', value: 'disabled' },
         ];
         this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
         this.dateFormats = [
@@ -84,14 +84,18 @@ export class MappingOptionsCtrl {
             unit: 'short',
             type: 'number',
             alias: '',
+            aggregation: 'current',
             decimals: 2,
             colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
             colorMode: null,
-            pattern: '',
+            pattern: '/.*/',
             dateFormat: 'YYYY-MM-DD HH:mm:ss',
             thresholds: [],
+            invert: false,
             shapeSeq: 1,
+            shapeMaps: [],
             textSeq: 1,
+            textMaps: [],
             mappingType: 1,
         };
 
@@ -120,6 +124,7 @@ export class MappingOptionsCtrl {
         const copy = ref[0];
         ref[0] = ref[2];
         ref[2] = copy;
+        this.panel.styles[index].invert = !this.panel.styles[index].invert;
         this.panelCtrl.render();
     }
 
@@ -134,16 +139,21 @@ export class MappingOptionsCtrl {
 
     }
 
-    // onMouseOver(id) {
-    //     let model = this.panelCtrl.graph.getModel()
-    //     let cell = model.getCell(id)
-    //     this.panelCtrl.graph.setSelectionCell(cell);
+    //
+    // Validate
+    //
 
-    // }
-
-    // onMouseLeave() {
-    //     this.panelCtrl.graph.clearSelection();
-    // }
+    validateRegex(textRegex) {
+        if (textRegex == null || textRegex.length == 0) {
+          return true
+        }
+        try {
+          let regex = new RegExp(textRegex);
+          return true
+        } catch (e) {
+          return false
+        }
+      }
 
     addValueMap(style) {
         if (!style.valueMaps) {
