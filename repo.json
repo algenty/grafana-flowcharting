@@ -1,0 +1,16 @@
+{
+  "plugins": [
+    {
+      "id": "btplc-trend-box-panel",
+      "type": "panel",
+      "url": "https://github.com/algenty/grafana-flowcharting",
+      "versions": [
+        {
+          "version": "0.0.1",
+          "commit": "f29268339fc55d7fcdbcc246de9455766d6215d8",
+          "url": "https://github.com/algenty/grafana-flowcharting"
+        }
+      ]
+    }
+  ]
+}
