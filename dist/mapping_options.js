@@ -30,9 +30,11 @@ function () {
     _classCallCheck(this, MappingOptionsCtrl);
 
     $scope.editor = this;
+    $scope.mapping = this;
     this.activeStyleIndex = 0;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
+    this.mx = this.panelCtrl.mx;
     $scope.mx = this.panelCtrl.mx;
     this.unitFormats = _kbn.default.getUnitFormats();
     this.colorModes = [{
@@ -40,13 +42,13 @@ function () {
       value: null
     }, {
       text: 'Stroke',
-      value: 'stroke'
+      value: this.mx.STYLE_STROKECOLOR
     }, {
       text: 'Fill',
-      value: 'fill'
+      value: this.mx.STYLE_FILLCOLOR
     }, {
       text: 'Text',
-      value: 'text'
+      value: this.mx.STYLE_FONTCOLOR
     }];
     this.metricTypes = [{
       text: 'Number',

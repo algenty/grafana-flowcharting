@@ -100,6 +100,8 @@ window.mxUtils = window.mxUtils || mxgraph.mxUtils
 window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler
 
+
+
 export default class MxPluginCtrl {
 
   /** @ngInject */
@@ -111,13 +113,18 @@ export default class MxPluginCtrl {
     this.container;
     this.$elem = elem.find('.flowchart-panel__chart');
     this.graph;
-    this.style=[];
+    this.style = [];
+
+    // Static
+    this.STYLE_FILLCOLOR = mxConstants.STYLE_FILLCOLOR;
+    this.STYLE_FONTCOLOR = mxConstants.STYLE_FONTCOLOR;
+    this.STYLE_STROKECOLOR = mxConstants.STYLE_STROKECOLOR;
 
     this.initFlowchart();
 
     // Events Render
     // this.render = self.render.bind(this);
-    ctrl.events.on('render',  () => {
+    ctrl.events.on('render', () => {
       this.render();
     });
 
@@ -285,9 +292,9 @@ export default class MxPluginCtrl {
     _.forEach(cells, (cell) => {
       let row = {
         id: cell.getId(),
-        cell : cell,
+        cell: cell,
         value: cell.getValue(),
-        text: (view.getState(cell).text!=null?view.getState(cell).text.lastValue:""),
+        text: (view.getState(cell).text != null ? view.getState(cell).text.lastValue : ""),
         shape: view.getState(cell).style[mxConstants.STYLE_SHAPE],
         // mxShape : view.getState(cell).shape,
         fontColor: view.getState(cell).style[mxConstants.STYLE_FONTCOLOR],
@@ -319,18 +326,24 @@ export default class MxPluginCtrl {
   // Functions
   //
 
-  changeState(id,color) {
-    let cell = this.graph.getModel().getCell(id)
-    if (cell)  {
-      this.graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, color, [cell]);
+  changeState(id, color, style) {
+    if (style) {
+      let cell = this.graph.getModel().getCell(id)
+      if (cell) {
+        this.graph.setCellStyles(style, color, [cell]);
+      }
     }
   }
 
   restoreState(id) {
     let cell = this.graph.getModel().getCell(id)
-    let old = _.find(this.panelCtrl.cells, { 'id' : id})
-    if (cell) {
-      this.graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, old.fillColor , [cell]);
+    let old = _.find(this.panelCtrl.cells.rows, {
+      'id': id
+    })
+    if (old) {
+      this.graph.setCellStyles(this.STYLE_FILLCOLOR, old.fillColor, [cell]);
+      this.graph.setCellStyles(this.STYLE_FONTCOLOR, old.fontColor, [cell]);
+      this.graph.setCellStyles(this.STYLE_STROKECOLOR, old.strokeColor, [cell]);
     }
   }
 

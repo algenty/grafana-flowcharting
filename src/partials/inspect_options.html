@@ -20,6 +20,17 @@
 					</span>
 				</div>
 			</div>
+			<div class="gf-form">
+				<label class="gf-form-label width-8">Color Mode
+					<info-popover mode="right-normal">
+						Select style for apply coloring
+					</info-popover>
+				</label>
+				<div class="gf-form-select-wrapper width-10">
+					<select class="gf-form-input" ng-model="editor.colorMode" ng-options="c.value as c.text for c in editor.colorModes"
+					 ng-change="editor.onOptionsChange()"></select>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="editor-row">
@@ -70,20 +81,21 @@
 					<td align="center">{{row.isEdge}}</td>
 					<td align="center">{{row.isVertex}}</td>
 					<td>
-						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[0])" ng-mouseleave="mx.changeState(row.id)">
+						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[0],editor.colorMode)">
 							<div class="sp-preview-inner" style="background-color: {{editor.colors[0]}};border: 1px solid rgb(228, 228, 228);">
 							</div>
 						</div>
 						&nbsp;
-						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[1])" ng-mouseleave="mx.changeState(row.id)">
+						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[1],editor.colorMode)">
 							<div class="sp-preview-inner" style="background-color: {{editor.colors[1]}};border: 1px solid rgb(228, 228, 228);">
 							</div>
 						</div>
 						&nbsp;
-						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[2])" ng-mouseleave="mx.changeState(row.id)">
+						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[2],editor.colorMode)">
 							<div class="sp-preview-inner" style="background-color: {{editor.colors[2]}};border: 1px solid rgb(228, 228, 228);">
 							</div>
 						</div>
+						<span ng-mouseover="mx.restoreState(row.id)">Restore</span>
 					</td>
 				</tr>
 			</tbody>

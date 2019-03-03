@@ -7,16 +7,18 @@ export class MappingOptionsCtrl {
     /** @ngInject */
     constructor($scope) {
         $scope.editor = this;
+        $scope.mapping = this;
         this.activeStyleIndex = 0;
         this.panelCtrl = $scope.ctrl;
         this.panel = this.panelCtrl.panel;
+        this.mx = this.panelCtrl.mx;
         $scope.mx = this.panelCtrl.mx;
         this.unitFormats = kbn.getUnitFormats();
         this.colorModes = [
             { text: 'Disabled', value: null },
-            { text: 'Stroke', value: 'stroke' },
-            { text: 'Fill', value: 'fill' },
-            { text: 'Text', value: 'text' },
+            { text: 'Stroke', value: this.mx.STYLE_STROKECOLOR },
+            { text: 'Fill', value: this.mx.STYLE_FILLCOLOR },
+            { text: 'Text', value: this.mx.STYLE_FONTCOLOR },
         ];
         this.metricTypes = [
             { text: 'Number', value: 'number' },
