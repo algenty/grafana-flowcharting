@@ -8,6 +8,14 @@ Complexe Diagram and flowchart for grafana based on mxGraph librairies, see draw
   - Maps
   -  ...
  
+ ## example
+ ![Diagram](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/example.png?raw=true)
+ 
+ ## in grafana :
+ ![editor](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/editor_example.png?raw=true)
+ ![tab2](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/editor_tab2.png?raw=true)
+ ![tab2](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/editor_tab3.png?raw=true)
+ 
 Be carefull, it is an alpha version, mapping and chaging state not implemented
 
 # Features
@@ -32,7 +40,6 @@ Grafan flowcharting use libs :
 * [jquery] - Markdown parser done right. Fast and easy to extend.
 * [mxGraph] - great UI boilerplate for modern web apps
 
-![Diagram](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/example.png?raw=true)
 
 And of course Flowcharting plugin itself is open source with a [public repository][algenty]
  on GitHub.
