@@ -59,7 +59,7 @@ function (_MetricsPanelCtrl) {
     _this.hiddenSeries = {};
     _this.unitFormats = _kbn.default.getUnitFormats();
     _this.cells = [];
-    _this.shapeState = [];
+    _this.shapeStates = [];
     _this.graph;
     _this.mx; // OLD OPTIONS
 
@@ -315,7 +315,7 @@ function (_MetricsPanelCtrl) {
     value: function analyzeData() {
       var _this3 = this;
 
-      this.shapeState = []; // Begin For Each Series
+      this.shapeStates = []; // Begin For Each Series
 
       console.log("this.panel.styles", this.panel.styles);
 
@@ -343,7 +343,22 @@ function (_MetricsPanelCtrl) {
 
 
             _lodash.default.each(style.shapeMaps, function (shape) {
+              // Structure shapeMaps
+              // shape : {pattern : text, level : number, <colorMode> : text, color : text, value : number }
               var level = getThresholdLevel(value, style);
+              shapeState = _lodash.default.find(_this3.shapeStates, function (state) {
+                return state.pattern == shape.pattern;
+              });
+
+              if (shapeState != null && shapeState != undefined) {
+                if (level > shapeState.level) {
+                  shapeState.level = level;
+                  shapeState.colorMode = style.colorMode;
+                  shapeState.value = value;
+                  shapeState.aggregation = style.aggregation;
+                  shapeState.serie = serie.alias;
+                }
+              }
             }); // End For Each Shape
 
 

@@ -28,7 +28,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
     this.cells = [];
-    this.shapeState = [];
+    this.shapeStates = [];
     this.graph;
     this.mx;
 
@@ -262,7 +262,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // Data
   //
   analyzeData() {
-    this.shapeState = [];
+    this.shapeStates = [];
     // Begin For Each Series
     console.log("this.panel.styles", this.panel.styles)
     _.each(this.series, (serie) => {
@@ -282,7 +282,21 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           }
           // Begin For Each Shape
           _.each(style.shapeMaps, (shape) => {
+            // Structure shapeMaps
+            // shape : {pattern : text, level : number, <colorMode> : text, color : text, value : number }
             let level = getThresholdLevel(value,style);
+            shapeState = _.find(this.shapeStates,(state) => {
+              return state.pattern == shape.pattern;
+            });
+            if (shapeState !=null && shapeState !=undefined) {
+              if ( level > shapeState.level ) {
+                shapeState.level = level;
+                shapeState.colorMode = style.colorMode;
+                shapeState.value = value;
+                shapeState.aggregation = style.aggregation;
+                shapeState.serie = serie.alias;
+              }
+            }
           });
           // End For Each Shape
           console.log("value " + style.aggregation, value)
