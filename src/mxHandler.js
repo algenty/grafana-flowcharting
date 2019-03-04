@@ -113,7 +113,7 @@ export default class MxPluginCtrl {
     this.container;
     this.$elem = elem.find('.flowchart-panel__chart');
     this.graph;
-    this.style = [];
+    this.cells = [];
 
     // Static
     this.STYLE_FILLCOLOR = mxConstants.STYLE_FILLCOLOR;
@@ -253,63 +253,44 @@ export default class MxPluginCtrl {
   }
 
   //
-  // inspect Flowchart
+  // getAllsCells : return cells and status
   // 
-  inspectFlowchart() {
-    let model = this.graph.getModel()
-    let view = this.graph.view;
+  getAllCells(graph) {
+    let model = graph.getModel()
+    let view = graph.view;
+    allCells = [];
     let cells = model.cells;
-    this.panelCtrl.graph = this.graph;
-    this.panelCtrl.cells.columns = [{
-        title: "Id",
-        desc: "Id of the cell",
-      },
-      {
-        title: "value",
-        desc: "Value of the cell",
-      },
-      {
-        title: "Geometry",
-        desc: "Represent the geometry of a cell",
-      },
-      {
-        title: "IsEdge",
-        desc: "true if the cell is an edge",
-      },
-      {
-        title: "isConnectable",
-        desc: "true if the cell is connectable"
-      },
-      {
-        title: "state",
-        desc: "State of cell"
-      }
-    ];
-
-    this.panelCtrl.cells.rows = [];
-
-
-    _.forEach(cells, (cell) => {
-      let row = {
-        id: cell.getId(),
-        cell: cell,
-        value: cell.getValue(),
-        text: (view.getState(cell).text != null ? view.getState(cell).text.lastValue : ""),
-        shape: view.getState(cell).style[mxConstants.STYLE_SHAPE],
+    _.forEach(cells, (_cell) => {
+      let cell = {
+        'id': _cell.getId(),
+        'cell': _cell,
+        'value': _cell.getValue(),
+        'text': (view.getState(_cell).text != null ? view.getState(_cell).text.lastValue : ""),
+        'shape': view.getState(_cell).style[mxConstants.STYLE_SHAPE],
         // mxShape : view.getState(cell).shape,
-        fontColor: view.getState(cell).style[mxConstants.STYLE_FONTCOLOR],
-        fillColor: view.getState(cell).style[mxConstants.STYLE_FILLCOLOR],
-        strokeColor: view.getState(cell).style[mxConstants.STYLE_STROKECOLOR],
-        // state : view.getState(cell),
-        // style: cell.getStyle(),
-        isEdge: cell.isEdge(),
-        isVertex: cell.isVertex(),
-        thresholdLevel:0,
+        'fontColor': view.getState(_cell).style[mxConstants.STYLE_FONTCOLOR],
+        'fillColor': view.getState(_cell).style[mxConstants.STYLE_FILLCOLOR],
+        'strokeColor': view.getState(_cell).style[mxConstants.STYLE_STROKECOLOR],
+        // 'state' : view.getState(cell),
+        // 'style': cell.getStyle(),
+        'isEdge': _cell.isEdge(),
+        'isVertex': _cell.isVertex(),
+        'level': -1,
       }
-      this.panelCtrl.cells.rows.push(row);
-      // console.log("cell "+cell.getId() ,row)
+      allCells.push(cell)
     })
+    return allCells;
   }
+
+  getCellNames(){
+    if (!this.cells) {
+        return [];
+    }
+    return _.map(this.panelCtrl.cells, (t) => {
+        return t.id;
+    });
+}
+
   //
   // EVENTS
   //
@@ -327,6 +308,29 @@ export default class MxPluginCtrl {
   // Functions
   //
 
+  updateState(shapeStates, cells) {
+    _.each(cells, (_cell) => {
+      console.log("updateState|cell", _cell)
+      var found = false;
+      _.each(shapeStates, (_shape) => {
+        console.log("updateState|shape", _shape)
+        const regex = this.stringToJsRegex(_shape.pattern);
+        let matching = _cell.id.toString().match(regex);
+        if (_shape.pattern == _cell.id || matching) {
+          console.log("updateState|matching", matching)
+          found = true;
+          _cell.level = _shape.level;
+          this.changeState(_cell.id, _shape.color, _shape.colorMode)
+        }
+      });
+      if (!found) {
+        restoreState(_cell.id);
+        _cell.level = -1;
+      }
+    });
+  }
+
+
   changeState(id, color, style) {
     if (style) {
       let cell = this.graph.getModel().getCell(id)
@@ -338,7 +342,7 @@ export default class MxPluginCtrl {
 
   restoreState(id) {
     let cell = this.graph.getModel().getCell(id)
-    let old = _.find(this.panelCtrl.cells.rows, {
+    let old = _.find(this.cells, {
       'id': id
     })
     if (old) {
@@ -355,23 +359,32 @@ export default class MxPluginCtrl {
   //
 
   render() {
-    if (!this.panelCtrl.data) {
-      return;
-    }
-    let data = this.panelCtrl.data;
-
+    // Source Changed
     if (this.panelCtrl.changedSource == true) {
       this.panelCtrl.changedSource = false;
       this.addFlowchart();
-      this.inspectFlowchart();
-      this.refreshFlowChart();
-    } else {
-      this.refreshFlowChart();
+      this.cells = this.getAllCells();
     }
+    if(this.panelCtrl.changedData == true) {
+      this.panelCtrl.changedData = true;
+      updateState(this.panelCtrl.shapeStates,this.cells)
+    }
+    this.refreshFlowChart();
   }
 
   noDataPoints() {
     var html = '<div class="datapoints-warning"><span class="small">No data points</span></div>';
     this.$elem.html(html);
   }
+
+  //
+  // Utils
+  //
+  stringToJsRegex(str) {
+    if (str[0] !== '/') {
+      return new RegExp('^' + str + '$');
+    }
+    const match = str.match(new RegExp('^/(.*?)/(g?i?m?y?)$'));
+    return new RegExp(match[1], match[2]);
+  };
 }

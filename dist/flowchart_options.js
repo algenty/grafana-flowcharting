@@ -34,12 +34,6 @@ function () {
     }, {
       text: 'XML Content',
       value: 'xml'
-    }, {
-      text: 'JSON',
-      value: 'json'
-    }, {
-      text: 'Editor',
-      value: 'editor'
     }];
     this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
   }

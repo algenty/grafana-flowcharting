@@ -27,28 +27,17 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.$scope = $scope;
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
-    this.cells = [];
+    this.changedSource
     this.shapeStates = [];
     this.graph;
     this.mx;
+    this.changedSource = true;
+    this.changedData   = true;
+
 
     // OLD OPTIONS
     this.options = {
-      flowchart: {
-        source: {
-          types: ['Url', 'XML Content', 'JSON ', 'Editor', 'Javascript'],
-          default: 'XML Content',
-        }
-      },
       metrics: {
-        colorsMode: {
-          types: ['Fill', 'Stroke', 'Text'],
-          default: 'Fill',
-        },
-        aggregation: {
-          types: ['Last', 'First', 'Max', 'Min', 'Sum', 'Avg', 'Delta'],
-          default: 'Last',
-        },
         handler: {
           types: ['Number Threshold', 'String Threshold', 'Date Threshold', 'Disable Criteria', 'Text Only'],
           default: 'Number Threshold',
@@ -100,7 +89,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         textSeq: 1,
         textMaps: [],
         mappingType: 1,
-      }, ],
+      },],
       // OLD PANEL
       flowchart: {
         source: {
@@ -136,7 +125,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     _.defaults(this.panel, panelDefaults);
     this.panel.graphId = 'flowchart_' + this.panel.id;
     this.containerDivId = 'container_' + this.panel.graphId;
-    this.changedSource = true;
 
     // events
     this.events.on('render', this.onRender.bind(this));
@@ -170,10 +158,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onRender() {
     console.debug("ctrl.onRender")
-    this.data = this.parseSeries(this.series);
+    // this.data = this.parseSeries(this.series);
   }
 
   onDataReceived(dataList) {
+    this.changedData = true;
     console.debug("ctrl.onDataReceived")
     console.debug('received data');
     // console.debug(dataList);
@@ -247,16 +236,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     return series;
   }
 
-  parseSeries(series) {
-    return _.map(this.series, (serie, i) => {
-      return {
-        label: serie.alias,
-        data: serie.stats[this.panel.valueName],
-        color: this.panel.aliasColors[serie.alias] || this.$rootScope.colors[i],
-        legendData: serie.stats[this.panel.valueName],
-      };
-    });
-  }
+  // parseSeries(series) {
+  //   return _.map(this.series, (serie, i) => {
+  //     return {
+  //       label: serie.alias,
+  //       data: serie.stats[this.panel.valueName],
+  //       color: this.panel.aliasColors[serie.alias] || this.$rootScope.colors[i],
+  //       legendData: serie.stats[this.panel.valueName],
+  //     };
+  //   });
+  // }
 
   //
   // Data
@@ -265,46 +254,66 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.shapeStates = [];
     // Begin For Each Series
     console.log("this.panel.styles", this.panel.styles)
-    _.each(this.series, (serie) => {
-      console.log("serie", serie)
-      if (serie.datapoints.length === 0) {
+    _.each(this.series, (_serie) => {
+      console.log("serie", _serie)
+      if (_serie.datapoints.length === 0) {
         return;
       }
       // Begin For Each Styles
-      _.each(this.panel.styles, (style) => {
-        const regex = kbn.stringToJsRegex(style.pattern);
-        let matching = serie.alias.toString().match(regex);
-        if (style.pattern == serie.alias || matching) {
-          console.log("style matched", style)
-          let value = _.get(serie.stats,style.aggregation)
-          if( value === undefined || value === null) {
-            value = serie.datapoints[serie.datapoints.length - 1][0];
+      _.each(this.panel.styles, (_style) => {
+        const regex = kbn.stringToJsRegex(_style.pattern);
+        let matching = _serie.alias.toString().match(regex);
+        if (_style.pattern == _serie.alias || matching) {
+          console.log("style matched", _style)
+          let value = _.get(_serie.stats, _style.aggregation)
+          if (value === undefined || value === null) {
+            value = _serie.datapoints[_serie.datapoints.length - 1][0];
           }
           // Begin For Each Shape
-          _.each(style.shapeMaps, (shape) => {
+          _.each(_style.shapeMaps, (_shape) => {
             // Structure shapeMaps
-            // shape : {pattern : text, level : number, <colorMode> : text, color : text, value : number }
-            let level = getThresholdLevel(value,style);
-            shapeState = _.find(this.shapeStates,(state) => {
-              return state.pattern == shape.pattern;
+            // shape : 
+            // {
+            //   pattern : text, /.*/
+            //   level : number, 0,1 or 2
+            //   colorMode : text, (fill, font or stoke)
+            //   color : text,  (#color)
+            //   value : number (value of aggregation)
+            //   aggregation : text (min, max ...)
+            // }
+            let level = this.getThresholdLevel(value, _style);
+            let color = this.getColorForValue(value,_style)
+            let _state = _.find(this.shapeStates, (_state) => {
+              return _state.pattern == _shape.pattern;
             });
-            if (shapeState !=null && shapeState !=undefined) {
-              if ( level > shapeState.level ) {
-                shapeState.level = level;
-                shapeState.colorMode = style.colorMode;
-                shapeState.value = value;
-                shapeState.aggregation = style.aggregation;
-                shapeState.serie = serie.alias;
+            let new_state = {
+              'pattern': _shape.pattern,
+              'level': level,
+              'colorMode': _style.colorMode,
+              'color': color,
+              'value': value,
+              'aggregation' : _style.aggregation,
+              'serie' : _serie.alias
+            }
+            if (_state != null && _state != undefined) {
+              if (level > _state.level) {
+                _.pull(this.shapeStates, _state)
+                this.shapeStates.push(new_state)
               }
+              // else nothing todo, keep old
+            }
+            else {
+              this.shapeStates.push(new_state)
             }
           });
           // End For Each Shape
-          console.log("value " + style.aggregation, value)
+          console.log("value " + _style.aggregation, value)
         }
       });
       // End For Each Styles
     });
     // End For Each Series
+    console.log(this.shapeStates)
   }
 
   getColorForValue(value, style) {
@@ -317,23 +326,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       }
     }
     return _.first(style.colors);
-  }
-
-  setColorState(value, style) {
-    if (!style.colorMode) {
-      return;
-    }
-
-    if (value === null || value === void 0 || _.isArray(value)) {
-      return;
-    }
-
-    const numericValue = Number(value);
-    if (isNaN(numericValue)) {
-      return;
-    }
-
-    this.colorState[style.colorMode] = this.getColorForValue(numericValue, style);
   }
 
   // returns level of threshold, 0 = ok, 1 = warnimg, 2 = critical

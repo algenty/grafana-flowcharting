@@ -22,9 +22,9 @@ export class MappingOptionsCtrl {
         ];
         this.metricTypes = [
             { text: 'Number', value: 'number' },
-            { text: 'String', value: 'string' },
-            { text: 'Date', value: 'date' },
-            { text: 'Disabled', value: 'disabled' },
+            // { text: 'String', value: 'string' },
+            // { text: 'Date', value: 'date' },
+            // { text: 'Disabled', value: 'disabled' },
         ];
         this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
         this.dateFormats = [
@@ -56,15 +56,6 @@ export class MappingOptionsCtrl {
                 return t.alias;
             });
         };
-
-        this.getCellNames = () => {
-            if (!this.panelCtrl.cells) {
-                return [];
-            }
-            return _.map(this.panelCtrl.cells.rows, (t) => {
-                return t.id;
-            });
-        }
 
         this.onColorChange = this.onColorChange.bind(this);
     }

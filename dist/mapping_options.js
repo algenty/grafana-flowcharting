@@ -53,15 +53,6 @@ function () {
     this.metricTypes = [{
       text: 'Number',
       value: 'number'
-    }, {
-      text: 'String',
-      value: 'string'
-    }, {
-      text: 'Date',
-      value: 'date'
-    }, {
-      text: 'Disabled',
-      value: 'disabled'
     }];
     this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
     this.dateFormats = [{
@@ -129,16 +120,6 @@ function () {
       });
     };
 
-    this.getCellNames = function () {
-      if (!_this.panelCtrl.cells) {
-        return [];
-      }
-
-      return _lodash.default.map(_this.panelCtrl.cells.rows, function (t) {
-        return t.id;
-      });
-    };
-
     this.onColorChange = this.onColorChange.bind(this);
   }
 
@@ -164,7 +145,7 @@ function () {
         aggregation: 'current',
         decimals: 2,
         colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
-        colorMode: null,
+        colorMode: this.mx.STYLE_FILLCOLOR,
         pattern: '/.*/',
         dateFormat: 'YYYY-MM-DD HH:mm:ss',
         thresholds: [],
