@@ -187,17 +187,26 @@ export class MappingOptionsCtrl {
         if (!style.shapeMaps) {
             style.shapeMaps = [];
         }
-        style.shapeMaps.push({ pattern : '/.*/', prop : 'id', id : style.shapeSeq++ })
+        style.shapeMaps.push({ pattern : '', prop : 'id', id : style.shapeSeq++ })
         this.onOptionsChange();
-        console.debug(this.panel.styles)
     }
 
     removeShapeFromStyle(style, shape) {
-        console.debug("mapping.removeShapeFromStyle")
         style.shapeMaps = _.without(style.shapeMaps, shape)
         this.onOptionsChange();
-        console.debug(this.panel.styles)
     }
+
+    hideShapeFromStyle(shape) {
+        shape.hidden = true;
+        this.onOptionsChange();
+    }
+
+    showShapeFromStyle(shape) {
+        shape.hidden = false;
+        this.onOptionsChange();
+    }
+
+
 }
 
 /** @ngInject */

@@ -32,7 +32,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.graph;
     this.mx;
     this.changedSource = true;
-    this.changedData   = true;
+    this.changedData = true;
 
 
     // OLD OPTIONS
@@ -96,7 +96,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           type: 'xml',
           xml: {
             //value: '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>',
-            value: '<mxGraphModel dx="1426" dy="810" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="GLtmsq4S9DwVswmQGahX-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="GLtmsq4S9DwVswmQGahX-1" target="GLtmsq4S9DwVswmQGahX-2" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="GLtmsq4S9DwVswmQGahX-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;shadow=1;" parent="1" vertex="1"><mxGeometry x="10" y="10" width="120" height="60" as="geometry"/></mxCell><mxCell id="GLtmsq4S9DwVswmQGahX-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="GLtmsq4S9DwVswmQGahX-2" target="GLtmsq4S9DwVswmQGahX-4" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="GLtmsq4S9DwVswmQGahX-2" value="love" style="triangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;shadow=1;" parent="1" vertex="1"><mxGeometry x="210" width="60" height="80" as="geometry"/></mxCell><mxCell id="GLtmsq4S9DwVswmQGahX-4" value="mxGraph" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" parent="1" vertex="1"><mxGeometry x="340" width="120" height="80" as="geometry"/></mxCell></root></mxGraphModel>'
+            value: '<mxGraphModel dx="1426" dy="810" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="arrow-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-grafana" target="shape-love" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-grafana" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;shadow=1;" parent="1" vertex="1"><mxGeometry x="10" y="10" width="120" height="60" as="geometry"/></mxCell><mxCell id="arrow-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-love" target="shape-mxgraph" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-love" value="love" style="triangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;shadow=1;" parent="1" vertex="1"><mxGeometry x="210" width="60" height="80" as="geometry"/></mxCell><mxCell id="shape-mxgraph" value="mxGraph" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" parent="1" vertex="1"><mxGeometry x="340" width="120" height="80" as="geometry"/></mxCell></root></mxGraphModel>',
+
           },
           url: {
             value: "http://<source>:<port>/<pathToXml>",
@@ -269,49 +270,51 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           }
           // Begin For Each Shape
           _.each(_style.shapeMaps, (_shape) => {
-            // Structure shapeMaps
-            // shape : 
-            // {
-            //   pattern : text, /.*/
-            //   level : number, 0,1 or 2
-            //   colorMode : text, (fill, font or stoke)
-            //   color : text,  (#color)
-            //   value : number (value of aggregation)
-            //   aggregation : text (min, max ...)
-            // }
-            let level = this.getThresholdLevel(value, _style);
-            let color = this.getColorForValue(value,_style)
-            let _state = _.find(this.shapeStates, (_state) => {
-              return _state.pattern == _shape.pattern;
-            });
-            let new_state = {
-              'pattern': _shape.pattern,
-              'level': level,
-              'colorMode': _style.colorMode,
-              'color': color,
-              'value': value,
-              'aggregation' : _style.aggregation,
-              'serie' : _serie.alias
-            }
-            if (_state != null && _state != undefined) {
-              if (level > _state.level) {
-                _.pull(this.shapeStates, _state)
+            if (_shape.hidden != true) {
+              // Structure shapeMaps
+              // shape : 
+              // {
+              //   pattern : text, /.*/
+              //   level : number, 0,1 or 2
+              //   colorMode : text, (fill, font or stoke)
+              //   color : text,  (#color)
+              //   value : number (value of aggregation)
+              //   aggregation : text (min, max ...)
+              // }
+              let level = this.getThresholdLevel(value, _style);
+              let color = this.getColorForValue(value, _style)
+              let _state = _.find(this.shapeStates, (_state) => {
+                return _state.pattern == _shape.pattern;
+              });
+              let new_state = {
+                'pattern': _shape.pattern,
+                'level': level,
+                'colorMode': _style.colorMode,
+                'color': color,
+                'value': value,
+                'aggregation': _style.aggregation,
+                'serie': _serie.alias
+              }
+              if (_state != null && _state != undefined) {
+                if (level > _state.level) {
+                  _.pull(this.shapeStates, _state)
+                  this.shapeStates.push(new_state)
+                }
+                // else nothing todo, keep old
+              }
+              else {
                 this.shapeStates.push(new_state)
               }
-              // else nothing todo, keep old
-            }
-            else {
-              this.shapeStates.push(new_state)
             }
           });
           // End For Each Shape
-          console.debug("analyzeData|"+ _style.aggregation +  " = " + value + " for "+ _serie.alias )
+          console.debug("analyzeData|" + _style.aggregation + " = " + value + " for " + _serie.alias)
         }
       });
       // End For Each Styles
     });
     // End For Each Series
-    console.debug("analyzeData| result of shape mapping",this.shapeStates)
+    console.debug("analyzeData| result of shape mapping", this.shapeStates)
   }
 
   getColorForValue(value, style) {
@@ -333,7 +336,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
     var thresholds = style.thresholds;
     // if no thresholds are defined, return 0
-    if (thresholds === undefined || thresholds.length == 0 ) {
+    if (thresholds === undefined || thresholds.length == 0) {
       return -1;
     }
 

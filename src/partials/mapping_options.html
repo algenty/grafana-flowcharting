@@ -196,18 +196,19 @@
       <label class="gf-form-label">Shapes mapping<tip>Select Shape members for this metric</tip></label>
     </div>
     <div class="gf-form-inline" ng-repeat="shape in style.shapeMaps">
-      <div class="gf-form">
+      <div class="gf-form" ng-class="{'gf-form-disabled': shape.hidden}">
         <label class="gf-form-label">
-          <i class="fa fa-remove pointer" ng-click="editor.removeShapeFromStyle(style, shape)"></i>
+          <i class="fa fa-w fa-remove pointer" ng-click="editor.removeShapeFromStyle(style, shape)"></i>
+        </label>
+        <label class="gf-form-label" ng-if="!shape.hidden">
+          <i class="fa fa-w fa-eye pointer" ng-click="editor.hideShapeFromStyle(shape)"></i>
+        </label>
+        <label class="gf-form-label" ng-if="shape.hidden">
+          <i class="fa fa-w fa-eye-slash pointer" ng-click="editor.showShapeFromStyle(shape)"></i>
         </label>
         <label class="gf-form-label">
-          <i class="fa fa-eye pointer" ng-click="editor.hideShape(style, $index)"></i>
+          <i class="fa fa-mouse-pointer pointer" ng-click="editor.findShapeInPanel(style, $index)"></i>
         </label>
-        <label class="gf-form-label">
-          <i class="fa fa-mouse-pointer pointer" ng-click="editor.findShape(style, $index)"></i>
-        </label>
-      </div>
-      <div class="gf-form">
         <input type="text" placeholder="id or regex of shape" class="gf-form-input width-13" ng-model="shape.pattern"
           bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'" bs-typeahead="editor.getCellNames"
           ng-blur="editor.onOptionsChange()" data-min-length=0 data-items=100 ng-model-onblur data-placement="right"

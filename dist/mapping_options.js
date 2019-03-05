@@ -279,20 +279,29 @@ function () {
       }
 
       style.shapeMaps.push({
-        pattern: '/.*/',
+        pattern: '',
         prop: 'id',
         id: style.shapeSeq++
       });
       this.onOptionsChange();
-      console.debug(this.panel.styles);
     }
   }, {
     key: "removeShapeFromStyle",
     value: function removeShapeFromStyle(style, shape) {
-      console.debug("mapping.removeShapeFromStyle");
       style.shapeMaps = _lodash.default.without(style.shapeMaps, shape);
       this.onOptionsChange();
-      console.debug(this.panel.styles);
+    }
+  }, {
+    key: "hideShapeFromStyle",
+    value: function hideShapeFromStyle(shape) {
+      shape.hidden = true;
+      this.onOptionsChange();
+    }
+  }, {
+    key: "showShapeFromStyle",
+    value: function showShapeFromStyle(shape) {
+      shape.hidden = false;
+      this.onOptionsChange();
     }
   }]);
 
