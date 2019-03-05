@@ -34,74 +34,144 @@
 		</div>
 	</div>
 	<div class="editor-row">
-		<table class="flowchartTable-editor">
-			<thead>
-				<tr>
-					<th>Id
-						<info-popover mode="right-normal">
-							Show shape by move mouse in column
-						</info-popover>
-					</th>
-					<th>Text</th>
-					<th>Shape</th>
-					<th>Font Col.</th>
-					<th>Fill Col.</th>
-					<th>Stoke Col.</th>
-					<th>Edge</th>
-					<th>Vertex</th>
-					<th>Colorize</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="row in editor.panelCtrl.cells.rows">
-					<td ng-mouseleave="mx.unselectCell()" ng-mouseover="mx.selectCell(row.id)">{{row.id}}</td>
-					<td>{{row.text}}</td>
-					<td>{{row.shape}}</td>
-					<td>
-						<div ng-if="!isNaN(row.fontColor) && row.fontColor.length >0">
-							<div class="sp-preview">
-								<div class="sp-preview-inner" style="background-color: {{row.fontColor}};border: 1px solid rgb(228, 228, 228);"></div>
-							</div>{{row.fontColor}}
-						</div>
-					</td>
-					<td>
-						<div ng-if="!isNaN(row.fillColor)  && row.fillColor.length >0">
-							<div class="sp-preview">
-								<div class="sp-preview-inner" style="background-color: {{row.fillColor}};border: 1px solid rgb(228, 228, 228);"></div>
-							</div>{{row.fillColor}}
-						</div>
-					</td>
-					<td>
-						<div ng-if="!isNaN(row.strokeColor) && row.strokeColor.length >0">
-							<div class="sp-preview">
-								<div class="sp-preview-inner" style="background-color: {{row.strokeColor}};border: 1px solid rgb(228, 228, 228);"></div>
-							</div>{{row.strokeColor}}
-						</div>
-					</td>
-					<td align="center">{{row.isEdge}}</td>
-					<td align="center">{{row.isVertex}}</td>
-					<td>
-						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[0],editor.colorMode)">
-							<div class="sp-preview-inner" style="background-color: {{editor.colors[0]}};border: 1px solid rgb(228, 228, 228);">
-							</div>
-						</div>
-						&nbsp;
-						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[1],editor.colorMode)">
-							<div class="sp-preview-inner" style="background-color: {{editor.colors[1]}};border: 1px solid rgb(228, 228, 228);">
-							</div>
-						</div>
-						&nbsp;
-						<div class="sp-preview" ng-mouseover="mx.changeState(row.id,editor.colors[2],editor.colorMode)">
-							<div class="sp-preview-inner" style="background-color: {{editor.colors[2]}};border: 1px solid rgb(228, 228, 228);">
-							</div>
-						</div>
-						<span ng-mouseover="mx.restoreState(row.id)">Restore</span>
-					</td>
-				</tr>
-			</tbody>
-			</tr>
-		</table>
-		<div class="datapoints-warning" ng-show="editor.cells.rows.length===0">
+		<!-- <div class="table-panel-scroll" style="max-height: 300px;"> -->
+		<!-- <table class="flowchartTable-editor"> -->
+		<div class="table-panel-container">
+			<div class="table-panel-header-bg"></div>
+			<div class="table-panel-scroll" style="max-height: 300px;">
+				<table class="table-panel-table">
+					<thead>
+						<tr>
+							<th>
+								<div class="table-panel-table-header-inner pointer">
+									Id
+									<info-popover mode="right-normal">
+										Show shape by move mouse in column
+									</info-popover>
+								</div>
+							</th>
+							<th>
+								<div class="table-panel-table-header-inner pointer">
+									Text</div>
+							</th>
+							<th>
+								<div class="table-panel-table-header-inner pointer">
+									Shape
+								</div>
+							</th>
+							<th>
+								<div class="table-panel-table-header-inner pointer">
+									Font Col.
+								</div>
+							</th>
+							<th>
+								<div class="table-panel-table-header-inner pointer">
+									Fill Col.
+								</div>
+							</th>
+							<th>
+								<div class="table-panel-table-header-inner pointer">
+									Stoke Col.
+								</div>
+							</th>
+							<th>
+								<div class="table-panel-table-header-inner pointer">
+									Edge
+								</div>
+							</th>
+							<th>
+								<div class="table-panel-table-header-inner pointer">
+									Vertex
+								</div>
+							</th>
+							<th>
+								<div class="table-panel-table-header-inner pointer">
+									Colorize
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="cell in editor.cells">
+							<td ng-mouseleave="mx.unselectCell()" ng-mouseover="mx.selectCell(cell.id)">
+								<div class="flowchartTable-editor">
+									{{cell.id}}
+								</div>
+							</td>
+							<td>
+								<div class="flowchartTable-editor">
+									{{cell.text}}
+								</div>
+							</td>
+							<td>
+								<div class="flowchartTable-editor">
+									{{cell.shape}}
+								</div>
+							</td>
+							<td>
+								<div class="flowchartTable-editor">
+									<div ng-if="!isNaN(cell.fontColor) && cell.fontColor.length >0">
+										<div class="sp-preview">
+											<div class="sp-preview-inner" style="background-color: {{cell.fontColor}};border: 1px solid rgb(228, 228, 228);"></div>
+										</div>{{cell.fontColor}}
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="flowchartTable-editor">
+									<div ng-if="!isNaN(cell.fillColor)  && cell.fillColor.length >0">
+										<div class="sp-preview">
+											<div class="sp-preview-inner" style="background-color: {{cell.fillColor}};border: 1px solid rgb(228, 228, 228);"></div>
+										</div>{{cell.fillColor}}
+									</div>
+								</div>
+							</td>
+							<td>
+								<div class="flowchartTable-editor">
+									<div ng-if="!isNaN(cell.strokeColor) && cell.strokeColor.length >0">
+										<div class="sp-preview">
+											<div class="sp-preview-inner" style="background-color: {{cell.strokeColor}};border: 1px solid rgb(228, 228, 228);"></div>
+										</div>{{cell.strokeColor}}
+									</div>
+								</div>
+							</td>
+							<td align="center">
+								<div class="flowchartTable-editor">
+									{{cell.isEdge}}
+								</div>
+							</td>
+							<td align="center">
+								<div class="flowchartTable-editor">
+									{{cell.isVertex}}
+								</div>
+							</td>
+							<td>
+								<div class="flowchartTable-editor">
+									<div class="sp-preview" ng-mouseover="mx.changeState(cell.id,editor.colors[0],editor.colorMode)">
+										<div class="sp-preview-inner" style="background-color: {{editor.colors[0]}};border: 1px solid rgb(228, 228, 228);">
+										</div>
+									</div>
+									&nbsp;
+									<div class="sp-preview" ng-mouseover="mx.changeState(cell.id,editor.colors[1],editor.colorMode)">
+										<div class="sp-preview-inner" style="background-color: {{editor.colors[1]}};border: 1px solid rgb(228, 228, 228);">
+										</div>
+									</div>
+									&nbsp;
+									<div class="sp-preview" ng-mouseover="mx.changeState(cell.id,editor.colors[2],editor.colorMode)">
+										<div class="sp-preview-inner" style="background-color: {{editor.colors[2]}};border: 1px solid rgb(228, 228, 228);">
+										</div>
+									</div>
+									<span ng-mouseover="mx.restoreState(cell.id)">Restore</span>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<!-- </div> -->
+		<div class="datapoints-warning" ng-show="editor.cells.length===0">
 			<span class="small">
 				No data to show <tip>Nothing returned by data query</tip>
 			</span>

@@ -79,7 +79,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         aggregation: 'current',
         decimals: 2,
         colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
-        colorMode: null,
+        colorMode: 'fillColor',
         pattern: '/.*/',
         dateFormat: 'YYYY-MM-DD HH:mm:ss',
         thresholds: [],
@@ -158,6 +158,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onRender() {
     console.debug("ctrl.onRender")
+    this.analyzeData();
     // this.data = this.parseSeries(this.series);
   }
 
@@ -169,7 +170,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.series = dataList.map(this.seriesHandler.bind(this));
     console.debug('mapped dataList to series');
     // console.debug(this.series);
-    this.analyzeData()
+    // this.analyzeData()
     this.render();
   }
 
@@ -253,9 +254,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   analyzeData() {
     this.shapeStates = [];
     // Begin For Each Series
-    console.log("this.panel.styles", this.panel.styles)
     _.each(this.series, (_serie) => {
-      console.log("serie", _serie)
       if (_serie.datapoints.length === 0) {
         return;
       }
@@ -264,7 +263,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         const regex = kbn.stringToJsRegex(_style.pattern);
         let matching = _serie.alias.toString().match(regex);
         if (_style.pattern == _serie.alias || matching) {
-          console.log("style matched", _style)
           let value = _.get(_serie.stats, _style.aggregation)
           if (value === undefined || value === null) {
             value = _serie.datapoints[_serie.datapoints.length - 1][0];
@@ -307,17 +305,17 @@ class FlowchartCtrl extends MetricsPanelCtrl {
             }
           });
           // End For Each Shape
-          console.log("value " + _style.aggregation, value)
+          console.debug("analyzeData|"+ _style.aggregation +  " = " + value + " for "+ _serie.alias )
         }
       });
       // End For Each Styles
     });
     // End For Each Series
-    console.log(this.shapeStates)
+    console.debug("analyzeData| result of shape mapping",this.shapeStates)
   }
 
   getColorForValue(value, style) {
-    if (!style.thresholds) {
+    if (!style.thresholds || style.thresholds.length == 0) {
       return null;
     }
     for (let i = style.thresholds.length; i > 0; i--) {
@@ -328,20 +326,20 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     return _.first(style.colors);
   }
 
-  // returns level of threshold, 0 = ok, 1 = warnimg, 2 = critical
+  // returns level of threshold, -1 = disable, 0 = ok, 1 = warnimg, 2 = critical
   getThresholdLevel(value, style) {
     // default to ok
     var thresholdLevel = 0;
 
     var thresholds = style.thresholds;
     // if no thresholds are defined, return 0
-    if (thresholds === undefined) {
-      return thresholdLevel;
+    if (thresholds === undefined || thresholds.length == 0 ) {
+      return -1;
     }
 
     // make sure thresholds is an array of size 2
     if (thresholds.length !== 2) {
-      return thresholdLevel;
+      return -1;
     }
 
     if (!style.invert) {

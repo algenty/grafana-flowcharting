@@ -57,6 +57,15 @@ export class MappingOptionsCtrl {
             });
         };
 
+        this.getCellNames = () => {
+            if (!this.mx.cells) {
+                return [];
+            }
+            return _.map(this.mx.cells, (t) => {
+                return t.id;
+            });
+        }
+
         this.onColorChange = this.onColorChange.bind(this);
     }
 
@@ -66,7 +75,7 @@ export class MappingOptionsCtrl {
 
     setUnitFormat(column, subItem) {
         column.unit = subItem.value;
-        this.panelCtrl.render();
+        this.onOptionsChange();
     }
 
     addMetricStyle() {
@@ -116,18 +125,19 @@ export class MappingOptionsCtrl {
         ref[0] = ref[2];
         ref[2] = copy;
         this.panel.styles[index].invert = !this.panel.styles[index].invert;
-        this.panelCtrl.render();
+        this.onOptionsChange();
     }
 
     onColorChange(styleIndex, colorIndex) {
         return newColor => {
             this.panel.styles[styleIndex].colors[colorIndex] = newColor;
-            this.render();
+            this.onOptionsChange();
         };
     }
 
     onOptionsChange() {
-
+        this.panelCtrl.changedData = true;
+        this.render();
     }
 
     //
@@ -151,12 +161,12 @@ export class MappingOptionsCtrl {
             style.valueMaps = [];
         }
         style.valueMaps.push({ value: '', text: '' });
-        this.panelCtrl.render();
+        this.onOptionsChange();
     }
 
     removeValueMap(style, index) {
         style.valueMaps.splice(index, 1);
-        this.panelCtrl.render();
+        this.onOptionsChange();
     }
 
     addRangeMap(style) {
@@ -164,12 +174,12 @@ export class MappingOptionsCtrl {
             style.rangeMaps = [];
         }
         style.rangeMaps.push({ from: '', to: '', text: '' });
-        this.panelCtrl.render();
+        this.onOptionsChange();
     }
 
     removeRangeMap(style, index) {
         style.rangeMaps.splice(index, 1);
-        this.panelCtrl.render();
+        this.onOptionsChange();
     }
 
     addShapeToStyle(style) {
@@ -178,14 +188,14 @@ export class MappingOptionsCtrl {
             style.shapeMaps = [];
         }
         style.shapeMaps.push({ pattern : '/.*/', prop : 'id', id : style.shapeSeq++ })
-        this.panelCtrl.render();
+        this.onOptionsChange();
         console.debug(this.panel.styles)
     }
 
     removeShapeFromStyle(style, shape) {
         console.debug("mapping.removeShapeFromStyle")
         style.shapeMaps = _.without(style.shapeMaps, shape)
-        this.panelCtrl.render();
+        this.onOptionsChange();
         console.debug(this.panel.styles)
     }
 }

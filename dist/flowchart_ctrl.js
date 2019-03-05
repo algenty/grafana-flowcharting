@@ -107,7 +107,7 @@ function (_MetricsPanelCtrl) {
         aggregation: 'current',
         decimals: 2,
         colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
-        colorMode: null,
+        colorMode: 'fillColor',
         pattern: '/.*/',
         dateFormat: 'YYYY-MM-DD HH:mm:ss',
         thresholds: [],
@@ -194,7 +194,8 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onRender",
     value: function onRender() {
-      console.debug("ctrl.onRender"); // this.data = this.parseSeries(this.series);
+      console.debug("ctrl.onRender");
+      this.analyzeData(); // this.data = this.parseSeries(this.series);
     }
   }, {
     key: "onDataReceived",
@@ -205,8 +206,8 @@ function (_MetricsPanelCtrl) {
 
       this.series = dataList.map(this.seriesHandler.bind(this));
       console.debug('mapped dataList to series'); // console.debug(this.series);
+      // this.analyzeData()
 
-      this.analyzeData();
       this.render();
     }
   }, {
@@ -300,11 +301,7 @@ function (_MetricsPanelCtrl) {
 
       this.shapeStates = []; // Begin For Each Series
 
-      console.log("this.panel.styles", this.panel.styles);
-
       _lodash.default.each(this.series, function (_serie) {
-        console.log("serie", _serie);
-
         if (_serie.datapoints.length === 0) {
           return;
         } // Begin For Each Styles
@@ -316,8 +313,6 @@ function (_MetricsPanelCtrl) {
           var matching = _serie.alias.toString().match(regex);
 
           if (_style.pattern == _serie.alias || matching) {
-            console.log("style matched", _style);
-
             var value = _lodash.default.get(_serie.stats, _style.aggregation);
 
             if (value === undefined || value === null) {
@@ -367,19 +362,19 @@ function (_MetricsPanelCtrl) {
             }); // End For Each Shape
 
 
-            console.log("value " + _style.aggregation, value);
+            console.debug("analyzeData|" + _style.aggregation + " = " + value + " for " + _serie.alias);
           }
         }); // End For Each Styles
 
       }); // End For Each Series
 
 
-      console.log(this.shapeStates);
+      console.debug("analyzeData| result of shape mapping", this.shapeStates);
     }
   }, {
     key: "getColorForValue",
     value: function getColorForValue(value, style) {
-      if (!style.thresholds) {
+      if (!style.thresholds || style.thresholds.length == 0) {
         return null;
       }
 
@@ -390,7 +385,7 @@ function (_MetricsPanelCtrl) {
       }
 
       return _lodash.default.first(style.colors);
-    } // returns level of threshold, 0 = ok, 1 = warnimg, 2 = critical
+    } // returns level of threshold, -1 = disable, 0 = ok, 1 = warnimg, 2 = critical
 
   }, {
     key: "getThresholdLevel",
@@ -399,13 +394,13 @@ function (_MetricsPanelCtrl) {
       var thresholdLevel = 0;
       var thresholds = style.thresholds; // if no thresholds are defined, return 0
 
-      if (thresholds === undefined) {
-        return thresholdLevel;
+      if (thresholds === undefined || thresholds.length == 0) {
+        return -1;
       } // make sure thresholds is an array of size 2
 
 
       if (thresholds.length !== 2) {
-        return thresholdLevel;
+        return -1;
       }
 
       if (!style.invert) {

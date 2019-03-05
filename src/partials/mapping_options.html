@@ -12,7 +12,7 @@
     <div class="gf-form" ng-if="style.type !== 'hidden'">
       <label class="gf-form-label width-12">Alias name</label>
       <input type="text" class="gf-form-input width-12" ng-model="style.alias" ng-change="editor.onOptionsChange()"
-        ng-model-onblur placeholder="Override header label">
+        ng-model-onblur placeholder="name for tooltip">
     </div>
     <div class="gf-form" ng-if="style.type !== 'hidden'">
       <label class="gf-form-label width-12">Aggregation</label>
@@ -200,10 +200,16 @@
         <label class="gf-form-label">
           <i class="fa fa-remove pointer" ng-click="editor.removeShapeFromStyle(style, shape)"></i>
         </label>
+        <label class="gf-form-label">
+          <i class="fa fa-eye pointer" ng-click="editor.hideShape(style, $index)"></i>
+        </label>
+        <label class="gf-form-label">
+          <i class="fa fa-mouse-pointer pointer" ng-click="editor.findShape(style, $index)"></i>
+        </label>
       </div>
       <div class="gf-form">
         <input type="text" placeholder="id or regex of shape" class="gf-form-input width-13" ng-model="shape.pattern"
-          bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'" bs-typeahead="mx.getCellNames"
+          bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'" bs-typeahead="editor.getCellNames"
           ng-blur="editor.onOptionsChange()" data-min-length=0 data-items=100 ng-model-onblur data-placement="right"
           ng-mouseleave="mx.unselectCell()" ng-mouseover="mx.selectCell(shape.pattern)">
       </div>

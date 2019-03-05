@@ -165,7 +165,6 @@ export default class MxPluginCtrl {
   //
   addFlowchart() {
     console.debug("mxgraph.addFlowChart");
-
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
@@ -179,7 +178,6 @@ export default class MxPluginCtrl {
       // Updates the display
       this.graph.getModel().endUpdate();
     }
-
   }
 
   //
@@ -253,17 +251,31 @@ export default class MxPluginCtrl {
   }
 
   //
+  // INSPECT
+  //
+  inspectFlowChart() {
+    this.cells = this.getAllCells(this.graph)
+  }
+
+  //
+  // UPDATE for data
+  //
+  updateFlowChart() {
+    this.updateState(this.panelCtrl.shapeStates, this.cells)
+  }
+
+  //
   // getAllsCells : return cells and status
   // 
   getAllCells(graph) {
     let model = graph.getModel()
     let view = graph.view;
-    allCells = [];
+    let allCells = [];
     let cells = model.cells;
     _.forEach(cells, (_cell) => {
       let cell = {
         'id': _cell.getId(),
-        'cell': _cell,
+        // 'cell': _cell,
         'value': _cell.getValue(),
         'text': (view.getState(_cell).text != null ? view.getState(_cell).text.lastValue : ""),
         'shape': view.getState(_cell).style[mxConstants.STYLE_SHAPE],
@@ -282,21 +294,13 @@ export default class MxPluginCtrl {
     return allCells;
   }
 
-  getCellNames(){
-    if (!this.cells) {
-        return [];
-    }
-    return _.map(this.panelCtrl.cells, (t) => {
-        return t.id;
-    });
-}
 
   //
   // EVENTS
   //
   selectCell(id) {
-    let model = this.graph.getModel()
-    let cell = model.getCell(id)
+    const model = this.graph.getModel()
+    const cell = model.getCell(id)
     this.graph.setSelectionCell(cell);
   }
 
@@ -310,22 +314,27 @@ export default class MxPluginCtrl {
 
   updateState(shapeStates, cells) {
     _.each(cells, (_cell) => {
-      console.log("updateState|cell", _cell)
-      var found = false;
+      let found = false;
       _.each(shapeStates, (_shape) => {
-        console.log("updateState|shape", _shape)
         const regex = this.stringToJsRegex(_shape.pattern);
-        let matching = _cell.id.toString().match(regex);
+        const matching = _cell.id.toString().match(regex);
         if (_shape.pattern == _cell.id || matching) {
-          console.log("updateState|matching", matching)
+          console.debug("updateState|matching : ", _shape, _cell)
           found = true;
+          if ( _shape.level != -1 ) {
+            this.changeState(_cell.id, _shape.color, _shape.colorMode)
+           }
+          else if (_cell.level != -1) {
+            this.restoreState(_cell.id);
+          }
           _cell.level = _shape.level;
-          this.changeState(_cell.id, _shape.color, _shape.colorMode)
         }
       });
       if (!found) {
-        restoreState(_cell.id);
-        _cell.level = -1;
+        if (_cell.level != -1) {
+          this.restoreState(_cell.id);
+          _cell.level = -1;
+        }
       }
     });
   }
@@ -342,7 +351,7 @@ export default class MxPluginCtrl {
 
   restoreState(id) {
     let cell = this.graph.getModel().getCell(id)
-    let old = _.find(this.cells, {
+    const old = _.find(this.cells, {
       'id': id
     })
     if (old) {
@@ -363,12 +372,14 @@ export default class MxPluginCtrl {
     if (this.panelCtrl.changedSource == true) {
       this.panelCtrl.changedSource = false;
       this.addFlowchart();
-      this.cells = this.getAllCells();
+      this.inspectFlowChart();
     }
-    if(this.panelCtrl.changedData == true) {
-      this.panelCtrl.changedData = true;
-      updateState(this.panelCtrl.shapeStates,this.cells)
+    // Data Changed or mapping changed
+    if (this.panelCtrl.changedData == true) {
+      this.panelCtrl.changedData = false;
+      this.updateFlowChart();
     }
+    // Option (scale, center, ..) changed
     this.refreshFlowChart();
   }
 

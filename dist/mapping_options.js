@@ -120,6 +120,16 @@ function () {
       });
     };
 
+    this.getCellNames = function () {
+      if (!_this.mx.cells) {
+        return [];
+      }
+
+      return _lodash.default.map(_this.mx.cells, function (t) {
+        return t.id;
+      });
+    };
+
     this.onColorChange = this.onColorChange.bind(this);
   }
 
@@ -132,7 +142,7 @@ function () {
     key: "setUnitFormat",
     value: function setUnitFormat(column, subItem) {
       column.unit = subItem.value;
-      this.panelCtrl.render();
+      this.onOptionsChange();
     }
   }, {
     key: "addMetricStyle",
@@ -184,7 +194,7 @@ function () {
       ref[0] = ref[2];
       ref[2] = copy;
       this.panel.styles[index].invert = !this.panel.styles[index].invert;
-      this.panelCtrl.render();
+      this.onOptionsChange();
     }
   }, {
     key: "onColorChange",
@@ -194,12 +204,15 @@ function () {
       return function (newColor) {
         _this2.panel.styles[styleIndex].colors[colorIndex] = newColor;
 
-        _this2.render();
+        _this2.onOptionsChange();
       };
     }
   }, {
     key: "onOptionsChange",
-    value: function onOptionsChange() {} //
+    value: function onOptionsChange() {
+      this.panelCtrl.changedData = true;
+      this.render();
+    } //
     // Validate
     //
 
@@ -228,13 +241,13 @@ function () {
         value: '',
         text: ''
       });
-      this.panelCtrl.render();
+      this.onOptionsChange();
     }
   }, {
     key: "removeValueMap",
     value: function removeValueMap(style, index) {
       style.valueMaps.splice(index, 1);
-      this.panelCtrl.render();
+      this.onOptionsChange();
     }
   }, {
     key: "addRangeMap",
@@ -248,13 +261,13 @@ function () {
         to: '',
         text: ''
       });
-      this.panelCtrl.render();
+      this.onOptionsChange();
     }
   }, {
     key: "removeRangeMap",
     value: function removeRangeMap(style, index) {
       style.rangeMaps.splice(index, 1);
-      this.panelCtrl.render();
+      this.onOptionsChange();
     }
   }, {
     key: "addShapeToStyle",
@@ -270,7 +283,7 @@ function () {
         prop: 'id',
         id: style.shapeSeq++
       });
-      this.panelCtrl.render();
+      this.onOptionsChange();
       console.debug(this.panel.styles);
     }
   }, {
@@ -278,7 +291,7 @@ function () {
     value: function removeShapeFromStyle(style, shape) {
       console.debug("mapping.removeShapeFromStyle");
       style.shapeMaps = _lodash.default.without(style.shapeMaps, shape);
-      this.panelCtrl.render();
+      this.onOptionsChange();
       console.debug(this.panel.styles);
     }
   }]);
