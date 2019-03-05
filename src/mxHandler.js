@@ -374,13 +374,17 @@ export default class MxPluginCtrl {
       this.addFlowchart();
       this.inspectFlowChart();
     }
+
     // Data Changed or mapping changed
-    if (this.panelCtrl.changedData == true) {
+    if (this.panelCtrl.changedData == true || this.panelCtrl.changedOptions == true ) {
       this.panelCtrl.changedData = false;
+      this.panelCtrl.changedOptions = false;
       this.updateFlowChart();
     }
+
     // Option (scale, center, ..) changed
     this.refreshFlowChart();
+
   }
 
   noDataPoints() {

@@ -136,7 +136,7 @@ export class MappingOptionsCtrl {
     }
 
     onOptionsChange() {
-        this.panelCtrl.changedData = true;
+        this.panelCtrl.changedOptions = true;
         this.render();
     }
 

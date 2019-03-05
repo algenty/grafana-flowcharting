@@ -210,7 +210,7 @@ function () {
   }, {
     key: "onOptionsChange",
     value: function onOptionsChange() {
-      this.panelCtrl.changedData = true;
+      this.panelCtrl.changedOptions = true;
       this.render();
     } //
     // Validate
