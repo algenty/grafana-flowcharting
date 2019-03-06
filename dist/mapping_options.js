@@ -38,75 +38,105 @@ function () {
     $scope.mx = this.panelCtrl.mx;
     this.unitFormats = _kbn.default.getUnitFormats();
     this.colorModes = [{
-      text: 'Disabled',
+      text: "Disabled",
       value: null
     }, {
-      text: 'Stroke',
+      text: "Stroke",
       value: this.mx.STYLE_STROKECOLOR
     }, {
-      text: 'Fill',
+      text: "Fill",
       value: this.mx.STYLE_FILLCOLOR
     }, {
-      text: 'Text',
+      text: "Text",
       value: this.mx.STYLE_FONTCOLOR
     }];
-    this.metricTypes = [{
-      text: 'Number',
-      value: 'number'
+    this.colorOn = [{
+      text: "Warning / Critical",
+      value: "wc"
+    }, {
+      text: "Always",
+      value: "a"
     }];
-    this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
+    this.textOn = [{
+      text: "Never",
+      value: "n"
+    }, {
+      text: "When Metric Displayed",
+      value: "wmd"
+    }, {
+      text: "Warning / Critical",
+      value: "wc"
+    }, {
+      text: "Critical Only",
+      value: "co"
+    }];
+    this.textReplace = [{
+      text: "All content",
+      value: "content"
+    }, {
+      text: "Regular expression",
+      value: "pattern"
+    }];
+    this.textPattern = "/.*/";
+    this.metricTypes = [{
+      text: "Number",
+      value: "number" // { text: 'String', value: 'string' },
+      // { text: 'Date', value: 'date' },
+      // { text: 'Disabled', value: 'disabled' },
+
+    }];
     this.dateFormats = [{
-      text: 'YYYY-MM-DD HH:mm:ss',
-      value: 'YYYY-MM-DD HH:mm:ss'
+      text: "YYYY-MM-DD HH:mm:ss",
+      value: "YYYY-MM-DD HH:mm:ss"
     }, {
-      text: 'YYYY-MM-DD HH:mm:ss.SSS',
-      value: 'YYYY-MM-DD HH:mm:ss.SSS'
+      text: "YYYY-MM-DD HH:mm:ss.SSS",
+      value: "YYYY-MM-DD HH:mm:ss.SSS"
     }, {
-      text: 'MM/DD/YY h:mm:ss a',
-      value: 'MM/DD/YY h:mm:ss a'
+      text: "MM/DD/YY h:mm:ss a",
+      value: "MM/DD/YY h:mm:ss a"
     }, {
-      text: 'MMMM D, YYYY LT',
-      value: 'MMMM D, YYYY LT'
+      text: "MMMM D, YYYY LT",
+      value: "MMMM D, YYYY LT"
     }, {
-      text: 'YYYY-MM-DD',
-      value: 'YYYY-MM-DD'
+      text: "YYYY-MM-DD",
+      value: "YYYY-MM-DD"
     }];
     this.aggregationTypes = [{
-      text: 'First',
-      value: 'first'
+      text: "First",
+      value: "first"
     }, {
-      text: 'Last',
-      value: 'current'
+      text: "Last",
+      value: "current"
     }, {
-      text: 'Min',
-      value: 'min'
+      text: "Min",
+      value: "min"
     }, {
-      text: 'Max',
-      value: 'max'
+      text: "Max",
+      value: "max"
     }, {
-      text: 'Sum',
-      value: 'total'
+      text: "Sum",
+      value: "total"
     }, {
-      text: 'Avg',
-      value: 'avg'
+      text: "Avg",
+      value: "avg"
     }, {
-      text: 'Count',
-      value: 'count'
+      text: "Count",
+      value: "count"
     }, {
-      text: 'Delta',
-      value: 'delta'
+      text: "Delta",
+      value: "delta"
     }, {
-      text: 'Range',
-      value: 'range'
+      text: "Range",
+      value: "range"
     }, {
-      text: 'Diff',
-      value: 'diff'
+      text: "Diff",
+      value: "diff"
     }];
     this.mappingTypes = [{
-      text: 'Value to text',
+      text: "Value to text",
       value: 1
     }, {
-      text: 'Range to text',
+      text: "Range to text",
       value: 2
     }];
 
@@ -145,19 +175,43 @@ function () {
       this.onOptionsChange();
     }
   }, {
+    key: "cloneMetricStyle",
+    value: function cloneMetricStyle(style) {
+      var newStyleRule = angular.copy(style);
+      newStyleRule.id = ++this.panel.styleSeq;
+      var styles = this.panel.styles;
+      var stylesCount = styles.length;
+      var indexToInsert = stylesCount; // check if last is a catch all rule, then add it before that one
+
+      if (stylesCount > 0) {
+        var last = styles[stylesCount - 1];
+
+        if (last.pattern === "/.*/") {
+          indexToInsert = stylesCount - 1;
+        }
+      }
+
+      styles.splice(indexToInsert, 0, newStyleRule);
+      this.activeStyleIndex = indexToInsert;
+    }
+  }, {
     key: "addMetricStyle",
     value: function addMetricStyle() {
       var newStyleRule = {
         id: ++this.panel.styleSeq,
-        unit: 'short',
-        type: 'number',
-        alias: '',
-        aggregation: 'current',
+        unit: "short",
+        type: "number",
+        alias: "",
+        aggregation: "current",
         decimals: 2,
-        colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
+        colors: ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
         colorMode: this.mx.STYLE_FILLCOLOR,
-        pattern: '/.*/',
-        dateFormat: 'YYYY-MM-DD HH:mm:ss',
+        colorOn: "a",
+        textOn: "wmd",
+        textReplace: 'content',
+        textPattern: '/.*/',
+        pattern: "/.*/",
+        dateFormat: "YYYY-MM-DD HH:mm:ss",
         thresholds: [],
         invert: false,
         shapeSeq: 1,
@@ -173,7 +227,7 @@ function () {
       if (stylesCount > 0) {
         var last = styles[stylesCount - 1];
 
-        if (last.pattern === '/.*/') {
+        if (last.pattern === "/.*/") {
           indexToInsert = stylesCount - 1;
         }
       }
@@ -238,8 +292,8 @@ function () {
       }
 
       style.valueMaps.push({
-        value: '',
-        text: ''
+        value: "",
+        text: ""
       });
       this.onOptionsChange();
     }
@@ -257,9 +311,9 @@ function () {
       }
 
       style.rangeMaps.push({
-        from: '',
-        to: '',
-        text: ''
+        from: "",
+        to: "",
+        text: ""
       });
       this.onOptionsChange();
     }
@@ -279,8 +333,8 @@ function () {
       }
 
       style.shapeMaps.push({
-        pattern: '',
-        prop: 'id',
+        pattern: "",
+        prop: "id",
         id: style.shapeSeq++
       });
       this.onOptionsChange();
@@ -313,12 +367,12 @@ function () {
 exports.MappingOptionsCtrl = MappingOptionsCtrl;
 
 function mappingOptionsTab($q, uiSegmentSrv) {
-  'use strict';
+  "use strict";
 
   return {
-    restrict: 'E',
+    restrict: "E",
     scope: true,
-    templateUrl: 'public/plugins/' + _plugin.plugin.id + '/partials/mapping_options.html',
+    templateUrl: "public/plugins/" + _plugin.plugin.id + "/partials/mapping_options.html",
     controller: MappingOptionsCtrl
   };
 }
