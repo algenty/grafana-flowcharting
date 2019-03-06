@@ -18,6 +18,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.unitFormats = kbn.getUnitFormats();
     this.changedSource;
     this.shapeStates = [];
+    this.textStates = [];
     this.graph;
     this.mx;
     this.changedSource = true;
@@ -70,12 +71,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
             "rgba(237, 129, 40, 0.89)",
             "rgba(50, 172, 45, 0.97)"
           ],
-          colorMode: 'fillColor',
-          colorOn: 'a',
-          textOn: 'wmd',
-          textReplace: 'content',
-          textPattern: '/.*/',
-          pattern: '/.*/',
+          colorMode: "fillColor",
+          colorOn: "a",
+          textOn: "wmd",
+          textReplace: "content",
+          textPattern: "/.*/",
+          pattern: "/.*/",
           dateFormat: "YYYY-MM-DD HH:mm:ss",
           thresholds: [],
           invert: false,
@@ -227,6 +228,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // Data
   //
   analyzeData() {
+    this.analyzeDataForShape();
+    this.analyzeDataForText();
+  }
+
+  analyzeDataForShape() {
     this.shapeStates = [];
     // Begin For Each Series
     _.each(this.series, _serie => {
@@ -239,6 +245,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         let matching = _serie.alias.toString().match(regex);
         if (_style.pattern == _serie.alias || matching) {
           let value = _.get(_serie.stats, _style.aggregation);
+          let level = this.getThresholdLevel(value, _style);
+          let color = this.getColorForValue(value, _style);
           if (value === undefined || value === null) {
             value = _serie.datapoints[_serie.datapoints.length - 1][0];
           }
@@ -257,8 +265,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
               //   value : number (value of aggregation)
               //   aggregation : text (min, max ...)
               // }
-              let level = this.getThresholdLevel(value, _style);
-              let color = this.getColorForValue(value, _style);
               let _state = _.find(this.shapeStates, _state => {
                 return _state.pattern == _shape.pattern;
               });
@@ -284,19 +290,126 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           });
           // End For Each Shape
           console.debug(
-            "analyzeData|" +
+            "analyzeDataForShape|" +
               _style.aggregation +
               " = " +
               value +
               " for " +
-              _serie.alias
+              _serie.alias +
+              "Level = " +
+              level
           );
         }
       });
       // End For Each Styles
     });
     // End For Each Series
-    console.debug("analyzeData| result of shape mapping : ", this.shapeStates);
+    console.debug(
+      "analyzeDataForShape| result of shape mapping : ",
+      this.shapeStates
+    );
+  }
+
+  analyzeDataForText() {
+    this.textStates = [];
+    // Begin For Each Series
+    _.each(this.series, _serie => {
+      if (_serie.datapoints.length === 0) {
+        return;
+      }
+      // Begin For Each Styles
+      _.each(this.panel.styles, _style => {
+        this.formatter = this.createTextFormatter(_style);
+        console.log(formatter);
+        const regex = kbn.stringToJsRegex(_style.pattern);
+        let matching = _serie.alias.toString().match(regex);
+        if (_style.pattern == _serie.alias || matching) {
+          let value = _.get(_serie.stats, _style.aggregation);
+          let level = this.getThresholdLevel(value, _style);
+          if (value === undefined || value === null) {
+            value = _serie.datapoints[_serie.datapoints.length - 1][0];
+          }
+          // Begin For Each Text
+          _.each(_style.textMaps, _text => {
+            // not hidden or not never
+            if (
+              _text === undefined ||
+              _text === null ||
+              _text.pattern.length == 0 ||
+              _text.hidden != true
+            ) {
+              // Structure textMaps
+              // text :
+              // {
+              //   pattern : text, /.*/
+              //   level : number, 0,1 or 2
+              //   hidden : true|false,
+              //   color : text,  (#color)
+              //   value : number (value of aggregation)
+              //   aggregation : text (min, max ...)
+              // }
+              let _state = _.find(this.textStates, _state => {
+                return _state.pattern == _text.pattern;
+              });
+
+              // Adapte value
+              let textValue = formatter(value);
+              if (_style.textOn == "n") textValue = "";
+              if (_style.textOn == "wc" && level < 1) textValue = "";
+              if (_style.textOn == "co" && level != 3) textValue = "";
+              //TODO : "When Metric Displayed"
+
+              let isPattern = true;
+              let textPattern = "";
+              if (_style.textReplace == "content") {
+                isPattern = false;
+              } else {
+                textPattern = _style.textPattern;
+              }
+
+              let new_state = {
+                pattern: _text.pattern,
+                level: level,
+                value: value,
+                textValue: textValue,
+                isPattern: isPattern,
+                textPattern: textPattern,
+                aggregation: _style.aggregation,
+                serie: _serie.alias,
+                alias: _style.alias
+              };
+
+              if (_state != null && _state != undefined) {
+                if (level > _state.level) {
+                  _.pull(this.textStates, _state);
+                  this.textStates.push(new_state);
+                }
+                // else nothing todo, keep old
+              } else {
+                this.textStates.push(new_state);
+              }
+            }
+          });
+          // End For Each text
+          console.debug(
+            "analyzeDataForText|" +
+              _style.aggregation +
+              " = " +
+              value +
+              " for " +
+              _serie.alias +
+              " Level = " +
+              level
+          );
+        }
+      });
+      // End For Each Styles
+    });
+    // End For Each Series
+    console.debug(
+      "analyzeDataForText| result of Text mapping : ",
+      this.textStates
+    );
   }
 
   getColorForValue(value, style) {
@@ -310,6 +423,131 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       }
     }
     return _.first(style.colors);
+  }
+
+  // FormatValue
+  createTextFormatter(style) {
+    if (!style.style) {
+      return this.defaultCellFormatter;
+    }
+
+    if (style.type === "hidden") {
+      return v => {
+        return undefined;
+      };
+    }
+
+    if (style.type === "date") {
+      return v => {
+        if (v === undefined || v === null) {
+          return "-";
+        }
+
+        if (_.isArray(v)) {
+          v = v[0];
+        }
+        let date = moment(v);
+        if (this.isUtc) {
+          date = date.utc();
+        }
+        return date.format(style.dateFormat);
+      };
+    }
+
+    if (style.type === "string") {
+      return v => {
+        if (_.isArray(v)) {
+          v = v.join(", ");
+        }
+
+        const mappingType = style.mappingType || 0;
+
+        if (mappingType === 1 && style.valueMaps) {
+          for (let i = 0; i < style.valueMaps.length; i++) {
+            const map = style.valueMaps[i];
+
+            if (v === null) {
+              if (map.value === "null") {
+                return map.text;
+              }
+              continue;
+            }
+
+            // Allow both numeric and string values to be mapped
+            if (
+              (!_.isString(v) && Number(map.value) === Number(v)) ||
+              map.value === v
+            ) {
+              this.setColorState(v, style);
+              return this.defaultCellFormatter(map.text, style);
+            }
+          }
+        }
+
+        if (mappingType === 2 && style.rangeMaps) {
+          for (let i = 0; i < style.rangeMaps.length; i++) {
+            const map = style.rangeMaps[i];
+
+            if (v === null) {
+              if (map.from === "null" && map.to === "null") {
+                return map.text;
+              }
+              continue;
+            }
+
+            if (Number(map.from) <= Number(v) && Number(map.to) >= Number(v)) {
+              this.setColorState(v, style);
+              return this.defaultCellFormatter(map.text, style);
+            }
+          }
+        }
+
+        if (v === null || v === void 0) {
+          return "-";
+        }
+
+        this.setColorState(v, style);
+        return this.defaultCellFormatter(v, style);
+      };
+    }
+
+    if (style.type === "number") {
+      const valueFormatter = kbn.valueFormats[style.unit || style.unit];
+
+      return v => {
+        if (v === null || v === void 0) {
+          return "-";
+        }
+
+        if (_.isString(v) || _.isArray(v)) {
+          return this.defaultCellFormatter(v, style);
+        }
+
+        this.setColorState(v, style);
+        return valueFormatter(v, style.decimals, null);
+      };
+    }
+
+    return value => {
+      return this.defaultCellFormatter(value, style);
+    };
+  }
+
+  // Default value formatter
+  defaultValueFormatter(v, style) {
+    if (v === null || v === void 0 || v === undefined) {
+      return "";
+    }
+
+    if (_.isArray(v)) {
+      v = v.join(", ");
+    }
+
+    if (style && style.sanitize) {
+      return this.sanitize(v);
+    } else {
+      return _.escape(v);
+    }
   }
 
   // returns level of threshold, -1 = disable, 0 = ok, 1 = warnimg, 2 = critical
@@ -329,18 +567,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
     // non invert
     if (!style.invert) {
-      if (value >= thresholds[0]) {
-        // value is equal or greater than first threshold
-        thresholdLevel = 1;
-      }
-      if (value >= thresholds[1]) {
-        // value is equal or greater than second threshold
-        thresholdLevel = 2;
-      }
-    }
-    // invert mode
-    else {
-      var thresholdLevel = 2;
+      thresholdLevel = 3;
       if (value >= thresholds[0]) {
         // value is equal or greater than first threshold
         thresholdLevel = 1;
@@ -348,6 +575,18 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       if (value >= thresholds[1]) {
         // value is equal or greater than second threshold
         thresholdLevel = 0;
+      }
+    }
+    // invert mode
+    else {
+      thresholdLevel = 0;
+      if (value >= thresholds[0]) {
+        // value is equal or greater than first threshold
+        thresholdLevel = 1;
+      }
+      if (value >= thresholds[1]) {
+        // value is equal or greater than second threshold
+        thresholdLevel = 2;
       }
     }
     return thresholdLevel;

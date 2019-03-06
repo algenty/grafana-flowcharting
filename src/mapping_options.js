@@ -31,7 +31,7 @@ export class MappingOptionsCtrl {
     ];
     this.textReplace = [
       { text: "All content", value: "content" },
-      { text: "Regular expression", value: "pattern" }
+      { text: "Substring", value: "pattern" }
     ];
     this.textPattern = "/.*/"
     this.metricTypes = [
@@ -223,6 +223,9 @@ export class MappingOptionsCtrl {
     this.onOptionsChange();
   }
 
+  //
+  // ON SHAPE
+  //
   addShapeToStyle(style) {
     console.debug("mapping.addShapeToStyle");
     if (!style.shapeMaps) {
@@ -246,6 +249,34 @@ export class MappingOptionsCtrl {
     shape.hidden = false;
     this.onOptionsChange();
   }
+
+  //
+  // ON TEXT
+  //
+  addTextToStyle(style) {
+    if (!style.textMaps) {
+      style.textMaps = [];
+    }
+    style.textMaps.push({ pattern: "", prop: "id", id: style.textSeq++ });
+    this.onOptionsChange();
+  }
+
+  removeTextFromStyle(style, text) {
+    style.textMaps = _.without(style.textMaps, text);
+    this.onOptionsChange();
+  }
+
+  hideTextFromStyle(text) {
+    text.hidden = true;
+    this.onOptionsChange();
+  }
+
+  showTextFromStyle(text) {
+    text.hidden = false;
+    this.onOptionsChange();
+  }
+
+
 }
 
 /** @ngInject */

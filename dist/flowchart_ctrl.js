@@ -60,6 +60,7 @@ function (_MetricsPanelCtrl) {
     _this.unitFormats = _kbn.default.getUnitFormats();
     _this.changedSource;
     _this.shapeStates = [];
+    _this.textStates = [];
     _this.graph;
     _this.mx;
     _this.changedSource = true;
@@ -100,12 +101,12 @@ function (_MetricsPanelCtrl) {
         aggregation: "current",
         decimals: 2,
         colors: ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
-        colorMode: 'fillColor',
-        colorOn: 'a',
-        textOn: 'wmd',
-        textReplace: 'content',
-        textPattern: '/.*/',
-        pattern: '/.*/',
+        colorMode: "fillColor",
+        colorOn: "a",
+        textOn: "wmd",
+        textReplace: "content",
+        textPattern: "/.*/",
+        pattern: "/.*/",
         dateFormat: "YYYY-MM-DD HH:mm:ss",
         thresholds: [],
         invert: false,
@@ -278,6 +279,12 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "analyzeData",
     value: function analyzeData() {
+      this.analyzeDataForShape();
+      this.analyzeDataForText();
+    }
+  }, {
+    key: "analyzeDataForShape",
+    value: function analyzeDataForShape() {
       var _this2 = this;
 
       this.shapeStates = []; // Begin For Each Series
@@ -295,6 +302,10 @@ function (_MetricsPanelCtrl) {
 
           if (_style.pattern == _serie.alias || matching) {
             var value = _lodash.default.get(_serie.stats, _style.aggregation);
+
+            var level = _this2.getThresholdLevel(value, _style);
+
+            var color = _this2.getColorForValue(value, _style);
 
             if (value === undefined || value === null) {
               value = _serie.datapoints[_serie.datapoints.length - 1][0];
@@ -315,10 +326,6 @@ function (_MetricsPanelCtrl) {
                 //   value : number (value of aggregation)
                 //   aggregation : text (min, max ...)
                 // }
-                var level = _this2.getThresholdLevel(value, _style);
-
-                var color = _this2.getColorForValue(value, _style);
-
                 var _state = _lodash.default.find(_this2.shapeStates, function (_state) {
                   return _state.pattern == _shape.pattern;
                 });
@@ -347,14 +354,112 @@ function (_MetricsPanelCtrl) {
             }); // End For Each Shape
 
 
-            console.debug("analyzeData|" + _style.aggregation + " = " + value + " for " + _serie.alias);
+            console.debug("analyzeDataForShape|" + _style.aggregation + " = " + value + " for " + _serie.alias + "Level = " + level);
           }
         }); // End For Each Styles
 
       }); // End For Each Series
 
 
-      console.debug("analyzeData| result of shape mapping : ", this.shapeStates);
+      console.debug("analyzeDataForShape| result of shape mapping : ", this.shapeStates);
+    }
+  }, {
+    key: "analyzeDataForText",
+    value: function analyzeDataForText() {
+      var _this3 = this;
+
+      this.textStates = []; // Begin For Each Series
+
+      _lodash.default.each(this.series, function (_serie) {
+        if (_serie.datapoints.length === 0) {
+          return;
+        } // Begin For Each Styles
+
+
+        _lodash.default.each(_this3.panel.styles, function (_style) {
+          _this3.formatter = _this3.createTextFormatter(_style);
+          console.log(formatter);
+
+          var regex = _kbn.default.stringToJsRegex(_style.pattern);
+
+          var matching = _serie.alias.toString().match(regex);
+
+          if (_style.pattern == _serie.alias || matching) {
+            var value = _lodash.default.get(_serie.stats, _style.aggregation);
+
+            var level = _this3.getThresholdLevel(value, _style);
+
+            if (value === undefined || value === null) {
+              value = _serie.datapoints[_serie.datapoints.length - 1][0];
+            } // Begin For Each Text
+
+
+            _lodash.default.each(_style.textMaps, function (_text) {
+              // not hidden or not never
+              if (_text === undefined || _text === null || _text.pattern.length == 0 || _text.hidden != true) {
+                // Structure textMaps
+                // text :
+                // {
+                //   pattern : text, /.*/
+                //   level : number, 0,1 or 2
+                //   hidden : true|false,
+                //   color : text,  (#color)
+                //   value : number (value of aggregation)
+                //   aggregation : text (min, max ...)
+                // }
+                var _state = _lodash.default.find(_this3.textStates, function (_state) {
+                  return _state.pattern == _text.pattern;
+                }); // Adapte value
+
+
+                var textValue = formatter(value);
+                if (_style.textOn == "n") textValue = "";
+                if (_style.textOn == "wc" && level < 1) textValue = "";
+                if (_style.textOn == "co" && level != 3) textValue = ""; //TODO : "When Metric Displayed"
+
+                var isPattern = true;
+                var textPattern = "";
+
+                if (_style.textReplace == "content") {
+                  isPattern = false;
+                } else {
+                  textPattern = _style.textPattern;
+                }
+
+                var new_state = {
+                  pattern: _text.pattern,
+                  level: level,
+                  value: value,
+                  textValue: textValue,
+                  isPattern: isPattern,
+                  textPattern: textPattern,
+                  aggregation: _style.aggregation,
+                  serie: _serie.alias,
+                  alias: _style.alias
+                };
+
+                if (_state != null && _state != undefined) {
+                  if (level > _state.level) {
+                    _lodash.default.pull(_this3.textStates, _state);
+
+                    _this3.textStates.push(new_state);
+                  } // else nothing todo, keep old
+
+                } else {
+                  _this3.textStates.push(new_state);
+                }
+              }
+            }); // End For Each text
+
+
+            console.debug("analyzeDataForText|" + _style.aggregation + " = " + value + " for " + _serie.alias + " Level = " + level);
+          }
+        }); // End For Each Styles
+
+      }); // End For Each Series
+
+
+      console.debug("analyzeDataForText| result of Text mapping : ", this.textStates);
     }
   }, {
     key: "getColorForValue",
@@ -370,6 +475,140 @@ function (_MetricsPanelCtrl) {
       }
 
       return _lodash.default.first(style.colors);
+    } // FormatValue
+
+  }, {
+    key: "createTextFormatter",
+    value: function createTextFormatter(style) {
+      var _this4 = this;
+
+      if (!style.style) {
+        return this.defaultCellFormatter;
+      }
+
+      if (style.type === "hidden") {
+        return function (v) {
+          return undefined;
+        };
+      }
+
+      if (style.type === "date") {
+        return function (v) {
+          if (v === undefined || v === null) {
+            return "-";
+          }
+
+          if (_lodash.default.isArray(v)) {
+            v = v[0];
+          }
+
+          var date = moment(v);
+
+          if (_this4.isUtc) {
+            date = date.utc();
+          }
+
+          return date.format(style.dateFormat);
+        };
+      }
+
+      if (style.type === "string") {
+        return function (v) {
+          if (_lodash.default.isArray(v)) {
+            v = v.join(", ");
+          }
+
+          var mappingType = style.mappingType || 0;
+
+          if (mappingType === 1 && style.valueMaps) {
+            for (var i = 0; i < style.valueMaps.length; i++) {
+              var map = style.valueMaps[i];
+
+              if (v === null) {
+                if (map.value === "null") {
+                  return map.text;
+                }
+
+                continue;
+              } // Allow both numeric and string values to be mapped
+
+
+              if (!_lodash.default.isString(v) && Number(map.value) === Number(v) || map.value === v) {
+                _this4.setColorState(v, style);
+
+                return _this4.defaultCellFormatter(map.text, style);
+              }
+            }
+          }
+
+          if (mappingType === 2 && style.rangeMaps) {
+            for (var _i = 0; _i < style.rangeMaps.length; _i++) {
+              var _map = style.rangeMaps[_i];
+
+              if (v === null) {
+                if (_map.from === "null" && _map.to === "null") {
+                  return _map.text;
+                }
+
+                continue;
+              }
+
+              if (Number(_map.from) <= Number(v) && Number(_map.to) >= Number(v)) {
+                _this4.setColorState(v, style);
+
+                return _this4.defaultCellFormatter(_map.text, style);
+              }
+            }
+          }
+
+          if (v === null || v === void 0) {
+            return "-";
+          }
+
+          _this4.setColorState(v, style);
+
+          return _this4.defaultCellFormatter(v, style);
+        };
+      }
+
+      if (style.type === "number") {
+        var valueFormatter = _kbn.default.valueFormats[style.unit || style.unit];
+        return function (v) {
+          if (v === null || v === void 0) {
+            return "-";
+          }
+
+          if (_lodash.default.isString(v) || _lodash.default.isArray(v)) {
+            return _this4.defaultCellFormatter(v, style);
+          }
+
+          _this4.setColorState(v, style);
+
+          return valueFormatter(v, style.decimals, null);
+        };
+      }
+
+      return function (value) {
+        return _this4.defaultCellFormatter(value, style);
+      };
+    } // Default value formatter
+
+  }, {
+    key: "defaultValueFormatter",
+    value: function defaultValueFormatter(v, style) {
+      if (v === null || v === void 0 || v === undefined) {
+        return "";
+      }
+
+      if (_lodash.default.isArray(v)) {
+        v = v.join(", ");
+      }
+
+      if (style && style.sanitize) {
+        return this.sanitize(v);
+      } else {
+        return _lodash.default.escape(v);
+      }
     } // returns level of threshold, -1 = disable, 0 = ok, 1 = warnimg, 2 = critical
 
   }, {
@@ -389,6 +628,8 @@ function (_MetricsPanelCtrl) {
 
 
       if (!style.invert) {
+        thresholdLevel = 3;
+
         if (value >= thresholds[0]) {
           // value is equal or greater than first threshold
           thresholdLevel = 1;
@@ -396,11 +637,11 @@ function (_MetricsPanelCtrl) {
 
         if (value >= thresholds[1]) {
           // value is equal or greater than second threshold
-          thresholdLevel = 2;
+          thresholdLevel = 0;
         }
       } // invert mode
       else {
-          var thresholdLevel = 2;
+          thresholdLevel = 0;
 
           if (value >= thresholds[0]) {
             // value is equal or greater than first threshold
@@ -409,7 +650,7 @@ function (_MetricsPanelCtrl) {
 
           if (value >= thresholds[1]) {
             // value is equal or greater than second threshold
-            thresholdLevel = 0;
+            thresholdLevel = 2;
           }
         }
 

@@ -74,7 +74,7 @@ function () {
       text: "All content",
       value: "content"
     }, {
-      text: "Regular expression",
+      text: "Substring",
       value: "pattern"
     }];
     this.textPattern = "/.*/";
@@ -322,7 +322,10 @@ function () {
     value: function removeRangeMap(style, index) {
       style.rangeMaps.splice(index, 1);
       this.onOptionsChange();
-    }
+    } //
+    // ON SHAPE
+    //
+
   }, {
     key: "addShapeToStyle",
     value: function addShapeToStyle(style) {
@@ -355,6 +358,41 @@ function () {
     key: "showShapeFromStyle",
     value: function showShapeFromStyle(shape) {
       shape.hidden = false;
+      this.onOptionsChange();
+    } //
+    // ON TEXT
+    //
+
+  }, {
+    key: "addTextToStyle",
+    value: function addTextToStyle(style) {
+      if (!style.textMaps) {
+        style.textMaps = [];
+      }
+
+      style.textMaps.push({
+        pattern: "",
+        prop: "id",
+        id: style.textSeq++
+      });
+      this.onOptionsChange();
+    }
+  }, {
+    key: "removeTextFromStyle",
+    value: function removeTextFromStyle(style, text) {
+      style.textMaps = _lodash.default.without(style.textMaps, text);
+      this.onOptionsChange();
+    }
+  }, {
+    key: "hideTextFromStyle",
+    value: function hideTextFromStyle(text) {
+      text.hidden = true;
+      this.onOptionsChange();
+    }
+  }, {
+    key: "showTextFromStyle",
+    value: function showTextFromStyle(text) {
+      text.hidden = false;
       this.onOptionsChange();
     }
   }]);
