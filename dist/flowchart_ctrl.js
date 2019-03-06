@@ -122,7 +122,7 @@ function (_MetricsPanelCtrl) {
           type: "xml",
           xml: {
             //value: '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>',
-            value: '<mxGraphModel dx="840" dy="453" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="arrow-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-grafana" target="shape-love" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-grafana" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;shadow=1;" parent="1" vertex="1"><mxGeometry x="10" y="10" width="120" height="60" as="geometry"/></mxCell><mxCell id="arrow-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-love" target="shape-mxgraph" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-love" value="love" style="triangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;shadow=1;" parent="1" vertex="1"><mxGeometry x="210" width="60" height="80" as="geometry"/></mxCell><mxCell id="shape-mxgraph" value="mxGraph" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" parent="1" vertex="1"><mxGeometry x="340" width="120" height="80" as="geometry"/></mxCell><mxCell id="text-grafana" value="Text 1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1"><mxGeometry x="50" y="50" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-arrow1" value="Text 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1"><mxGeometry x="150" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-arrow2" value="Text 3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1"><mxGeometry x="280" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-mxgraph" value="Text 4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1"><mxGeometry x="380" y="50" width="40" height="20" as="geometry"/></mxCell></root></mxGraphModel>'
+            value: '<mxGraphModel dx="1394" dy="796" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="arrow-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-grafana" target="shape-love" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-grafana" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;shadow=1;" parent="1" vertex="1"><mxGeometry x="10" y="10" width="120" height="60" as="geometry"/></mxCell><mxCell id="arrow-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-love" target="shape-mxgraph" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-love" value="love" style="triangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;shadow=1;" parent="1" vertex="1"><mxGeometry x="210" width="60" height="80" as="geometry"/></mxCell><mxCell id="shape-mxgraph" value="mxGraph" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" parent="1" vertex="1"><mxGeometry x="340" width="120" height="80" as="geometry"/></mxCell><mxCell id="text-grafana" value="Le text : TextVal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="9" y="50" width="120" height="20" as="geometry"/></mxCell><mxCell id="text-arrow1" value="Text 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="150" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-arrow2" value="Text 3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="280" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-mxgraph" value="Text 4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="380" y="50" width="40" height="20" as="geometry"/></mxCell></root></mxGraphModel>'
           },
           url: {
             value: "http://<source>:<port>/<pathToXml>"
@@ -377,9 +377,6 @@ function (_MetricsPanelCtrl) {
 
 
         _lodash.default.each(_this3.panel.styles, function (_style) {
-          _this3.formatter = _this3.createTextFormatter(_style);
-          console.log(formatter);
-
           var regex = _kbn.default.stringToJsRegex(_style.pattern);
 
           var matching = _serie.alias.toString().match(regex);
@@ -412,7 +409,8 @@ function (_MetricsPanelCtrl) {
                 }); // Adapte value
 
 
-                var textValue = formatter(value);
+                var textValue = _this3.getFormattedValue(value, _style);
+
                 if (_style.textOn == "n") textValue = "";
                 if (_style.textOn == "wc" && level < 1) textValue = "";
                 if (_style.textOn == "co" && level != 3) textValue = ""; //TODO : "When Metric Displayed"
@@ -475,139 +473,50 @@ function (_MetricsPanelCtrl) {
       }
 
       return _lodash.default.first(style.colors);
-    } // FormatValue
-
+    }
   }, {
-    key: "createTextFormatter",
-    value: function createTextFormatter(style) {
-      var _this4 = this;
+    key: "getFormattedValue",
+    value: function getFormattedValue(value, style) {
+      if (style.type === 'number') {
+        if (!_lodash.default.isFinite(value)) return "Invalid Number";
 
-      if (!style.style) {
-        return this.defaultCellFormatter;
+        if (value === null || value === void 0) {
+          return '-';
+        }
+
+        var decimals = this.decimalPlaces(value);
+        decimals = typeof style.decimals === "number" ? Math.min(style.decimals, decimals) : decimals;
+        return _kbn.default.valueFormats[style.unit](value, decimals, null);
       }
-
-      if (style.type === "hidden") {
-        return function (v) {
-          return undefined;
-        };
-      }
-
-      if (style.type === "date") {
-        return function (v) {
-          if (v === undefined || v === null) {
-            return "-";
-          }
-
-          if (_lodash.default.isArray(v)) {
-            v = v[0];
-          }
-
-          var date = moment(v);
-
-          if (_this4.isUtc) {
-            date = date.utc();
-          }
-
-          return date.format(style.dateFormat);
-        };
-      }
-
-      if (style.type === "string") {
-        return function (v) {
-          if (_lodash.default.isArray(v)) {
-            v = v.join(", ");
-          }
-
-          var mappingType = style.mappingType || 0;
-
-          if (mappingType === 1 && style.valueMaps) {
-            for (var i = 0; i < style.valueMaps.length; i++) {
-              var map = style.valueMaps[i];
-
-              if (v === null) {
-                if (map.value === "null") {
-                  return map.text;
-                }
-
-                continue;
-              } // Allow both numeric and string values to be mapped
-
-
-              if (!_lodash.default.isString(v) && Number(map.value) === Number(v) || map.value === v) {
-                _this4.setColorState(v, style);
-
-                return _this4.defaultCellFormatter(map.text, style);
-              }
-            }
-          }
-
-          if (mappingType === 2 && style.rangeMaps) {
-            for (var _i = 0; _i < style.rangeMaps.length; _i++) {
-              var _map = style.rangeMaps[_i];
-
-              if (v === null) {
-                if (_map.from === "null" && _map.to === "null") {
-                  return _map.text;
-                }
-
-                continue;
-              }
-
-              if (Number(_map.from) <= Number(v) && Number(_map.to) >= Number(v)) {
-                _this4.setColorState(v, style);
-
-                return _this4.defaultCellFormatter(_map.text, style);
-              }
-            }
-          }
-
-          if (v === null || v === void 0) {
-            return "-";
-          }
-
-          _this4.setColorState(v, style);
-
-          return _this4.defaultCellFormatter(v, style);
-        };
-      }
-
-      if (style.type === "number") {
-        var valueFormatter = _kbn.default.valueFormats[style.unit || style.unit];
-        return function (v) {
-          if (v === null || v === void 0) {
-            return "-";
-          }
-
-          if (_lodash.default.isString(v) || _lodash.default.isArray(v)) {
-            return _this4.defaultCellFormatter(v, style);
-          }
-
-          _this4.setColorState(v, style);
-
-          return valueFormatter(v, style.decimals, null);
-        };
-      }
-
-      return function (value) {
-        return _this4.defaultCellFormatter(value, style);
-      };
-    } // Default value formatter
-
+    }
   }, {
-    key: "defaultValueFormatter",
-    value: function defaultValueFormatter(v, style) {
-      if (v === null || v === void 0 || v === undefined) {
-        return "";
+    key: "decimalPlaces",
+    value: function decimalPlaces(num) {
+      var match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+
+      if (!match) {
+        return 0;
       }
 
-      if (_lodash.default.isArray(v)) {
-        v = v.join(", ");
+      return Math.max(0, // Number of digits right of decimal point.
+      (match[1] ? match[1].length : 0) - ( // Adjust for scientific notation.
+      match[2] ? +match[2] : 0));
+    }
+  }, {
+    key: "defaultCellFormatter",
+    value: function defaultCellFormatter(value, style) {
+      if (value === null || value === void 0 || value === undefined) {
+        return '';
+      }
+
+      if (_lodash.default.isArray(value)) {
+        value = value.join(', ');
       }
 
       if (style && style.sanitize) {
-        return this.sanitize(v);
+        return this.sanitize(value);
       } else {
-        return _lodash.default.escape(v);
+        return _lodash.default.escape(value);
       }
     } // returns level of threshold, -1 = disable, 0 = ok, 1 = warnimg, 2 = critical
 

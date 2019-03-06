@@ -338,16 +338,16 @@ export default class MxPluginCtrl {
           console.debug("updateStateForShape|matching : ", _shape, _cell);
           found = true;
           if (_shape.level != -1) {
-            this.changeState(_cell.id, _shape.color, _shape.colorMode);
+            this.changeShape(_cell.id, _shape.color, _shape.colorMode);
           } else if (_cell.level != -1) {
-            this.restoreState(_cell.id);
+            this.restoreShape(_cell.id);
           }
           _cell.level = _shape.level;
         }
       });
       if (!found) {
         if (_cell.level != -1) {
-          this.restoreState(_cell.id);
+          this.restoreShape(_cell.id);
           _cell.level = -1;
         }
       }
@@ -358,12 +358,19 @@ export default class MxPluginCtrl {
     _.each(cells, _cell => {
       let found = false;
       _.each(textStates, _text => {
-        const regex = this.stringToJsRegex(_text.pattern);
-        const matching = _cell.id.toString().match(regex);
+        let textValue = _text.textValue.toString();
+        const regexText = this.stringToJsRegex(_text.pattern);
+        const matching = _cell.id.toString().match(regexText);
         if (_text.pattern == _cell.id || matching) {
           console.debug("updateStateForText|matching : ", _text, _cell);
           found = true;
-          this.changeText(_cell.id,_text.textValue)
+          if(_text.isPattern) {
+            const regexVal = this.stringToJsRegex(_text.textPattern);
+            if (_cell.value.toString().match(regexVal)) {
+              textValue = _cell.value.toString().replace(regexVal,textValue)
+            }
+          }
+          this.changeText(_cell.id,textValue)
         }
       });
       if (!found) {
@@ -380,7 +387,7 @@ export default class MxPluginCtrl {
     }
   }
 
-  changeState(id, color, style) {
+  changeShape(id, color, style) {
     if (style) {
       let cell = this.graph.getModel().getCell(id);
       if (cell) {
@@ -389,7 +396,7 @@ export default class MxPluginCtrl {
     }
   }
 
-  restoreState(id) {
+  restoreShape(id) {
     let cell = this.graph.getModel().getCell(id);
     const old = _.find(this.cells, {
       id: id
