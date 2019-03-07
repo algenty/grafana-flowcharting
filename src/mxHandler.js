@@ -153,7 +153,7 @@ export default class MxPluginCtrl {
     // definie object graph
     this.$graphCanvas = $("<div></div>");
     this.$elem.html(this.$graphCanvas);
-    this.$graphCanvas.bind("plothover", function(event, pos, item) {
+    this.$graphCanvas.bind("plothover", function (event, pos, item) {
       if (!item) {
         $tooltip.detach();
         return;
@@ -210,13 +210,8 @@ export default class MxPluginCtrl {
     this.$graphCanvas.css(graphCss);
 
     // LOCK
-    if (this.panel.flowchart.options.lock) {
-      // Disables folding
-      this.graph.setEnabled(false);
-      this.graph.isCellFoldable = function(cell, collapse) {
-        return false;
-      };
-    }
+    if (this.panel.flowchart.options.lock) this.lockGraph();
+    else this.unlockGraph();
 
     // GRID
     if (this.panel.flowchart.options.grid) {
@@ -276,6 +271,29 @@ export default class MxPluginCtrl {
   updateFlowChart() {
     this.updateStateForShape(this.panelCtrl.shapeStates, this.cells);
     this.updateStateForText(this.panelCtrl.textStates, this.cells);
+  }
+
+
+  //
+  //GRAPH HANDLER
+  // 
+
+  lockGraph() {
+    // LOCK
+    // Disables folding
+    this.graph.setEnabled(false);
+    this.graph.isCellFoldable = function (cell, collapse) {
+      return false;
+    };
+  }
+
+  unlockGraph() {
+    // LOCK
+    // Disables folding
+    this.graph.setEnabled(true);
+    this.graph.isCellFoldable = function (cell, collapse) {
+      return true;
+    };
   }
 
   //
@@ -364,17 +382,17 @@ export default class MxPluginCtrl {
         if (_text.pattern == _cell.id || matching) {
           console.debug("updateStateForText|matching : ", _text, _cell);
           found = true;
-          if(_text.isPattern) {
+          if (_text.isPattern) {
             const regexVal = this.stringToJsRegex(_text.textPattern);
             if (_cell.value.toString().match(regexVal)) {
-              textValue = _cell.value.toString().replace(regexVal,textValue)
+              textValue = _cell.value.toString().replace(regexVal, textValue)
             }
           }
-          this.changeText(_cell.id,textValue)
+          this.changeText(_cell.id, textValue)
         }
       });
       if (!found) {
-        this.changeText(_cell.id,_cell.value);
+        this.changeText(_cell.id, _cell.value);
       }
     });
   }
@@ -383,7 +401,7 @@ export default class MxPluginCtrl {
     let model = this.graph.getModel();
     let cell = model.getCell(id);
     if (cell) {
-      model.setValue(cell,value);
+      model.setValue(cell, value);
     }
   }
 

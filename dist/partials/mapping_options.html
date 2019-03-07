@@ -6,51 +6,28 @@
       <div class="gf-form-inline">
         <div class="gf-form">
           <label class="gf-form-label width-12">Apply to metrics named</label>
-          <input
-            type="text"
-            placeholder="Name or regex of metric"
-            class="gf-form-input width-13"
-            ng-model="style.pattern"
-            bs-tooltip="'Specify regex using /my.*regex/ syntax'"
-            bs-typeahead="editor.getMetricNames"
-            ng-blur="editor.onOptionsChange()"
-            data-min-length="0"
-            data-items="100"
-            ng-model-onblur
-            data-placement="right"
-          />
+          <input type="text" placeholder="Name or regex of metric" class="gf-form-input width-13"
+            ng-model="style.pattern" bs-tooltip="'Specify regex using /my.*regex/ syntax'"
+            bs-typeahead="editor.getMetricNames" ng-blur="editor.onOptionsChange()" data-min-length="0" data-items="100"
+            ng-model-onblur data-placement="right" />
         </div>
       </div>
       <div class="gf-form" ng-if="style.type !== 'hidden'">
         <label class="gf-form-label width-12">Alias name</label>
-        <input
-          type="text"
-          class="gf-form-input width-12"
-          ng-model="style.alias"
-          ng-change="editor.onOptionsChange()"
-          ng-model-onblur
-          placeholder="name for tooltip"
-        />
+        <input type="text" class="gf-form-input width-12" ng-model="style.alias" ng-change="editor.onOptionsChange()"
+          ng-model-onblur placeholder="name for tooltip" />
       </div>
       <div class="gf-form" ng-if="style.type !== 'hidden'">
         <label class="gf-form-label width-12">Aggregation</label>
         <div class="gf-form-select-wrapper width-12">
-          <select
-            class="gf-form-input"
-            ng-model="style.aggregation"
+          <select class="gf-form-input" ng-model="style.aggregation"
             ng-options="c.value as c.text for c in editor.aggregationTypes"
-            ng-change="editor.onOptionsChange()"
-          ></select>
+            ng-change="editor.onOptionsChange()"></select>
         </div>
       </div>
 
-      <gf-form-switch
-        class="gf-form"
-        label-class="width-12"
-        label="Render value as link"
-        checked="style.link"
-        change="editor.onOptionsChange()"
-      ></gf-form-switch>
+      <gf-form-switch class="gf-form" label-class="width-12" label="Render value as link" checked="style.link"
+        change="editor.onOptionsChange()"></gf-form-switch>
     </div>
 
     <!-- TYPE -->
@@ -60,68 +37,37 @@
       <div class="gf-form">
         <label class="gf-form-label width-10">Type</label>
         <div class="gf-form-select-wrapper width-16">
-          <select
-            class="gf-form-input"
-            ng-model="style.type"
-            ng-options="c.value as c.text for c in editor.metricTypes"
-            ng-change="editor.onOptionsChange()"
-          ></select>
+          <select class="gf-form-input" ng-model="style.type" ng-options="c.value as c.text for c in editor.metricTypes"
+            ng-change="editor.onOptionsChange()"></select>
         </div>
       </div>
       <div class="gf-form" ng-if="style.type === 'date'">
         <label class="gf-form-label width-10">Date Format</label>
-        <gf-form-dropdown
-          model="style.dateFormat"
-          css-class="gf-form-input width-16"
-          lookup-text="true"
-          get-options="editor.dateFormats"
-          on-change="editor.onOptionsChange()"
-          allow-custom="true"
-        >
+        <gf-form-dropdown model="style.dateFormat" css-class="gf-form-input width-16" lookup-text="true"
+          get-options="editor.dateFormats" on-change="editor.onOptionsChange()" allow-custom="true">
         </gf-form-dropdown>
       </div>
 
       <div ng-if="style.type === 'string'">
-        <gf-form-switch
-          class="gf-form"
-          label-class="width-10"
-          ng-if="style.type === 'string'"
-          label="Sanitize HTML"
-          checked="style.sanitize"
-          change="editor.onOptionsChange()"
-        ></gf-form-switch>
+        <gf-form-switch class="gf-form" label-class="width-10" ng-if="style.type === 'string'" label="Sanitize HTML"
+          checked="style.sanitize" change="editor.onOptionsChange()"></gf-form-switch>
       </div>
       <div ng-if="style.type === 'string'">
-        <gf-form-switch
-          class="gf-form"
-          label-class="width-10"
-          ng-if="style.type === 'string'"
-          label="Preserve Formatting"
-          checked="style.preserveFormat"
-          change="editor.onOptionsChange()"
-        ></gf-form-switch>
+        <gf-form-switch class="gf-form" label-class="width-10" ng-if="style.type === 'string'"
+          label="Preserve Formatting" checked="style.preserveFormat" change="editor.onOptionsChange()"></gf-form-switch>
       </div>
 
       <div ng-if="style.type === 'number'">
         <div class="gf-form">
           <label class="gf-form-label width-10">Unit</label>
-          <div
-            class="gf-form-dropdown-typeahead width-16"
-            ng-model="style.unit"
+          <div class="gf-form-dropdown-typeahead width-16" ng-model="style.unit"
             dropdown-typeahead2="editor.unitFormats"
-            dropdown-typeahead-on-select="editor.setUnitFormat(style, $subItem)"
-          ></div>
+            dropdown-typeahead-on-select="editor.setUnitFormat(style, $subItem)"></div>
         </div>
         <div class="gf-form">
           <label class="gf-form-label width-10">Decimals</label>
-          <input
-            type="number"
-            class="gf-form-input width-4"
-            data-placement="right"
-            ng-model="style.decimals"
-            ng-change="editor.onOptionsChange()"
-            ng-model-onblur
-          />
+          <input type="number" class="gf-form-input width-4" data-placement="right" ng-model="style.decimals"
+            ng-change="editor.onOptionsChange()" ng-model-onblur />
         </div>
       </div>
     </div>
@@ -136,83 +82,48 @@
               Type
             </span>
             <div class="gf-form-select-wrapper">
-              <select
-                class="gf-form-input"
-                ng-model="style.mappingType"
+              <select class="gf-form-input" ng-model="style.mappingType"
                 ng-options="c.value as c.text for c in editor.mappingTypes"
-                ng-change="editor.onOptionsChange()"
-              ></select>
+                ng-change="editor.onOptionsChange()"></select>
             </div>
           </div>
           <div class="gf-form-group" ng-if="style.mappingType==1">
             <div class="gf-form" ng-repeat="map in style.valueMaps">
               <span class="gf-form-label">
-                <i
-                  class="fa fa-remove pointer"
-                  ng-click="editor.removeValueMap(style, $index)"
-                ></i>
+                <i class="fa fa-remove pointer" ng-click="editor.removeValueMap(style, $index)"></i>
               </span>
-              <input
-                type="text"
-                class="gf-form-input max-width-6"
-                ng-model="map.value"
-                placeholder="Value"
-                ng-blur="editor.onOptionsChange()"
-              />
+              <input type="text" class="gf-form-input max-width-6" ng-model="map.value" placeholder="Value"
+                ng-blur="editor.onOptionsChange()" />
               <label class="gf-form-label">
                 <i class="fa fa-arrow-right"></i>
               </label>
-              <input
-                type="text"
-                class="gf-form-input max-width-8"
-                ng-model="map.text"
-                placeholder="Text"
-                ng-blur="editor.onOptionsChange()"
-              />
+              <input type="text" class="gf-form-input max-width-8" ng-model="map.text" placeholder="Text"
+                ng-blur="editor.onOptionsChange()" />
             </div>
             <div class="gf-form">
               <label class="gf-form-label">
-                <a class="pointer" ng-click="editor.addValueMap(style)"
-                  ><i class="fa fa-plus"></i
-                ></a>
+                <a class="pointer" ng-click="editor.addValueMap(style)"><i class="fa fa-plus"></i></a>
               </label>
             </div>
           </div>
           <div class="gf-form-group" ng-if="style.mappingType==2">
             <div class="gf-form" ng-repeat="rangeMap in style.rangeMaps">
               <span class="gf-form-label">
-                <i
-                  class="fa fa-remove pointer"
-                  ng-click="editor.removeRangeMap(style, $index)"
-                ></i>
+                <i class="fa fa-remove pointer" ng-click="editor.removeRangeMap(style, $index)"></i>
               </span>
               <span class="gf-form-label">From</span>
-              <input
-                type="text"
-                ng-model="rangeMap.from"
-                class="gf-form-input max-width-6"
-                ng-blur="editor.onOptionsChange()"
-              />
+              <input type="text" ng-model="rangeMap.from" class="gf-form-input max-width-6"
+                ng-blur="editor.onOptionsChange()" />
               <span class="gf-form-label">To</span>
-              <input
-                type="text"
-                ng-model="rangeMap.to"
-                class="gf-form-input max-width-6"
-                ng-blur="editor.onOptionsChange()"
-              />
+              <input type="text" ng-model="rangeMap.to" class="gf-form-input max-width-6"
+                ng-blur="editor.onOptionsChange()" />
               <span class="gf-form-label">Text</span>
-              <input
-                type="text"
-                ng-model="rangeMap.text"
-                class="gf-form-input max-width-8"
-                ng-blur="editor.onOptionsChange()"
-              />
+              <input type="text" ng-model="rangeMap.text" class="gf-form-input max-width-8"
+                ng-blur="editor.onOptionsChange()" />
             </div>
             <div class="gf-form">
               <label class="gf-form-label">
-                <a class="pointer" ng-click="editor.addRangeMap(style)"
-                  ><i class="fa fa-plus"></i
-                ></a>
+                <a class="pointer" ng-click="editor.addRangeMap(style)"><i class="fa fa-plus"></i></a>
               </label>
             </div>
           </div>
@@ -221,121 +132,72 @@
     </div>
 
     <!-- Thresholds -->
-    <div
-      class="section gf-form-group"
-      ng-if="['number', 'string'].indexOf(style.type) !== -1"
-    >
+    <div class="section gf-form-group" ng-if="['number', 'string'].indexOf(style.type) !== -1">
       <h5 class="section-heading" ng-if="style.invert">
-        Thresholds (ok > Warn > Error)
+        Thresholds (Ok > Warn > Error)
       </h5>
       <h5 class="section-heading" ng-if="!style.invert">
         Thresholds (Error > Warn > Ok)
       </h5>
       <div class="gf-form">
-        <label class="gf-form-label width-8"
-          >Thresholds
+        <label class="gf-form-label width-8">Thresholds
           <tip>Comma separated values</tip>
         </label>
-        <input
-          type="text"
-          class="gf-form-input width-10"
-          ng-model="style.thresholds"
-          placeholder="50,80"
-          ng-blur="editor.onOptionsChange()"
-          array-join
-        />
+        <input type="text" class="gf-form-input width-10" ng-model="style.thresholds" placeholder="50,80"
+          ng-blur="editor.onOptionsChange()" array-join />
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">Color Mode</label>
         <div class="gf-form-select-wrapper width-10">
-          <select
-            class="gf-form-input"
-            ng-model="style.colorMode"
-            ng-options="c.value as c.text for c in editor.colorModes"
-            ng-change="editor.onOptionsChange()"
-          ></select>
+          <select class="gf-form-input" ng-model="style.colorMode"
+            ng-options="c.value as c.text for c in editor.colorModes" ng-change="editor.onOptionsChange()"></select>
         </div>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-8">Colors</label>
         <span class="gf-form-label">
-          <color-picker
-            color="style.colors[0]"
-            onChange="editor.onColorChange($index, 0)"
-          ></color-picker>
+          <color-picker color="style.colors[0]" onChange="editor.onColorChange($index, 0)"></color-picker>
         </span>
         <span class="gf-form-label">
-          <color-picker
-            color="style.colors[1]"
-            onChange="editor.onColorChange($index, 1)"
-          ></color-picker>
+          <color-picker color="style.colors[1]" onChange="editor.onColorChange($index, 1)"></color-picker>
         </span>
         <span class="gf-form-label">
-          <color-picker
-            color="style.colors[2]"
-            onChange="editor.onColorChange($index, 2)"
-          ></color-picker>
+          <color-picker color="style.colors[2]" onChange="editor.onColorChange($index, 2)"></color-picker>
         </span>
         <div class="gf-form-label">
-          <a class="pointer" ng-click="editor.invertColorOrder($index)"
-            >Invert</a
-          >
+          <a class="pointer" ng-click="editor.invertColorOrder($index)">Invert</a>
         </div>
       </div>
     </div>
 
     <!-- Display -->
-    <div
-      class="section gf-form-group"
-      ng-if="['number', 'string'].indexOf(style.type) !== -1"
-    >
+    <div class="section gf-form-group" ng-if="['number', 'string'].indexOf(style.type) !== -1">
       <h5 class="section-heading">Display</h5>
       <div class="gf-form">
         <label class="gf-form-label width-12">Color on</label>
         <div class="gf-form-select-wrapper width-12">
-          <select
-            class="gf-form-input"
-            ng-model="style.colorOn"
-            ng-options="c.value as c.text for c in editor.colorOn"
-            ng-change="editor.onOptionsChange()"
-          ></select>
+          <select class="gf-form-input" ng-model="style.colorOn" ng-options="c.value as c.text for c in editor.colorOn"
+            ng-change="editor.onOptionsChange()"></select>
         </div>
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-12">Value on</label>
         <div class="gf-form-select-wrapper width-12">
-          <select
-            class="gf-form-input"
-            ng-model="style.textOn"
-            ng-options="c.value as c.text for c in editor.textOn"
-            ng-change="editor.onOptionsChange()"
-          ></select>
+          <select class="gf-form-input" ng-model="style.textOn" ng-options="c.value as c.text for c in editor.textOn"
+            ng-change="editor.onOptionsChange()"></select>
         </div>
       </div>
       <div class="gf-form" ng-if="style.textOn != 'n'">
         <label class="gf-form-label width-12">Update text value</label>
         <div class="gf-form-select-wrapper width-12">
-          <select
-            class="gf-form-input"
-            ng-model="style.textReplace"
-            ng-options="c.value as c.text for c in editor.textReplace"
-            ng-change="editor.onOptionsChange()"
-          ></select>
+          <select class="gf-form-input" ng-model="style.textReplace"
+            ng-options="c.value as c.text for c in editor.textReplace" ng-change="editor.onOptionsChange()"></select>
         </div>
       </div>
-      <div
-        class="gf-form"
-        ng-if="style.textReplace == 'pattern' && style.textOn != 'n'"
-      >
+      <div class="gf-form" ng-if="style.textReplace == 'pattern' && style.textOn != 'n'">
         <label class="gf-form-label width-12">Text pattern</label>
-        <input
-          type="text"
-          class="gf-form-input width-12"
-          ng-model="style.textPattern"
-          ng-change="editor.onOptionsChange()"
-          ng-model-onblur
-          placeholder="name for tooltip"
-        />
+        <input type="text" class="gf-form-input width-12" ng-model="style.textPattern"
+          ng-change="editor.onOptionsChange()" ng-model-onblur placeholder="name for tooltip" />
       </div>
     </div>
 
@@ -361,14 +223,8 @@
             </span>
           </info-popover>
         </label>
-        <input
-          type="text"
-          class="gf-form-input width-29"
-          ng-model="style.linkUrl"
-          ng-blur="editor.onOptionsChange()"
-          ng-model-onblur
-          data-placement="right"
-        />
+        <input type="text" class="gf-form-input width-29" ng-model="style.linkUrl" ng-blur="editor.onOptionsChange()"
+          ng-model-onblur data-placement="right" />
       </div>
       <div class="gf-form">
         <label class="gf-form-label width-9">
@@ -381,179 +237,88 @@
             </span>
           </info-popover>
         </label>
-        <input
-          type="text"
-          class="gf-form-input width-29"
-          ng-model="style.linkTooltip"
-          ng-blur="editor.onOptionsChange()"
-          ng-model-onblur
-          data-placement="right"
-        />
+        <input type="text" class="gf-form-input width-29" ng-model="style.linkTooltip"
+          ng-blur="editor.onOptionsChange()" ng-model-onblur data-placement="right" />
       </div>
-      <gf-form-switch
-        class="gf-form"
-        label-class="width-9"
-        label="Open in new tab"
-        checked="style.linkTargetBlank"
-      >
+      <gf-form-switch class="gf-form" label-class="width-9" label="Open in new tab" checked="style.linkTargetBlank">
       </gf-form-switch>
     </div>
 
     <!-- SHAPE MAPPING -->
     <div class="section gf-form-group">
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label width-12" style="margin-right: 2px;">
-            Shapes mapping
-            <tip>
-              Select Shape members for this metric
-            </tip>
-          </label>
-        </div>
-
-        <div
-          class="gf-form"
-          ng-class="{'gf-form-disabled': shape.hidden}"
-          ng-repeat="shape in style.shapeMaps"
-        >
-          <label class="gf-form-label" style="margin-right: 2px;">
-            <i
-              class="fa fa-w fa-remove pointer"
-              ng-click="editor.removeShapeFromStyle(style, shape)"
-            ></i>
-          </label>
-          <label
-            class="gf-form-label"
-            ng-if="!shape.hidden"
-            style="margin-right: 2px;"
-          >
-            <i
-              class="fa fa-w fa-eye pointer"
-              ng-click="editor.hideShapeFromStyle(shape)"
-            ></i>
-          </label>
-          <label
-            class="gf-form-label"
-            ng-if="shape.hidden"
-            style="margin-right: 2px;"
-          >
-            <i
-              class="fa fa-w fa-eye-slash pointer"
-              ng-click="editor.showShapeFromStyle(shape)"
-            ></i>
-          </label>
-          <label class="gf-form-label" style="margin-right: 2px;">
-            <i
-              class="fa fa-mouse-pointer pointer"
-              ng-click="editor.findShapeInPanel(style, $index)"
-            ></i>
-          </label>
-          <input
-            type="text"
-            placeholder="id or regex of shape"
-            class="gf-form-input width-13"
-            ng-model="shape.pattern"
-            bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-            bs-typeahead="editor.getCellNames"
-            ng-blur="editor.onOptionsChange()"
-            data-min-length="0"
-            data-items="100"
-            ng-model-onblur
-            data-placement="right"
-            ng-mouseleave="mx.unselectCell()"
-            ng-mouseover="mx.selectCell(shape.pattern)"
-          />
-        </div>
-
-        <div class="gf-form">
-          <label class="gf-form-label">
-            <i
-              class="fa fa-plus pointer"
-              ng-click="editor.addShapeToStyle(style, '/.*/')"
-              style="margin-right: 2px;"
-            ></i>
-          </label>
-        </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-12" style="margin-right: 2px;">
+          Shapes mapping
+          <tip>
+            Select Shape members for this metric
+          </tip>
+        </label>
       </div>
-    </div>
 
-    <br />
+      <div class="gf-form" ng-class="{'gf-form-disabled': shape.hidden}" ng-repeat="shape in style.shapeMaps">
+        <label class="gf-form-label" style="margin-right: 2px;">
+          <i class="fa fa-w fa-remove pointer" ng-click="editor.removeShapeFromStyle(style, shape)"></i>
+        </label>
+        <label class="gf-form-label" ng-if="!shape.hidden" style="margin-right: 2px;">
+          <i class="fa fa-w fa-eye pointer" ng-click="editor.hideShapeFromStyle(shape)"></i>
+        </label>
+        <label class="gf-form-label" ng-if="shape.hidden" style="margin-right: 2px;">
+          <i class="fa fa-w fa-eye-slash pointer" ng-click="editor.showShapeFromStyle(shape)"></i>
+        </label>
+        <label class="gf-form-label" style="margin-right: 2px;">
+          <i class="fa fa-mouse-pointer pointer" ng-click="editor.findShapeInPanel(style)"></i>
+        </label>
+        <input type="text" placeholder="id or regex of shape" class="gf-form-input width-13" ng-model="shape.pattern"
+          bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+          bs-typeahead="editor.getCellNames" ng-blur="editor.onOptionsChange()" data-min-length="0" data-items="100"
+          ng-model-onblur data-placement="right" ng-mouseleave="mx.unselectCell()"
+          ng-mouseover="mx.selectCell(shape.pattern)" />
+      </div>
+
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <i class="fa fa-plus pointer" ng-click="editor.addShapeToStyle(style, '/.*/')" style="margin-right: 2px;"></i>
+        </label>
+      </div>
+
+    </div>
 
     <!-- TEXT MAPPING -->
     <div class="section gf-form-group">
-      <div class="gf-form-inline">
-        <div class="gf-form">
-          <label class="gf-form-label width-12" style="margin-right: 2px;">
-            Text mapping
-            <tip>
-              Select Shape/text members for the value of metrics
-            </tip>
-          </label>
-        </div>
+      <div class="gf-form">
+        <label class="gf-form-label width-12" style="margin-right: 2px;">
+          Text mapping
+          <tip>
+            Select Shape/text members for the value of metrics
+          </tip>
+        </label>
+      </div>
 
-        <div
-          class="gf-form"
-          ng-class="{'gf-form-disabled': text.hidden}"
-          ng-repeat="text in style.textMaps"
-        >
-          <label class="gf-form-label" style="margin-right: 1px;">
-            <i
-              class="fa fa-w fa-remove pointer"
-              ng-click="editor.removeTextFromStyle(style, text)"
-            ></i>
-          </label>
-          <label
-            class="gf-form-label"
-            ng-if="!text.hidden"
-            style="margin-right: 2px;"
-          >
-            <i
-              class="fa fa-w fa-eye pointer"
-              ng-click="editor.hideTextFromStyle(text)"
-            ></i>
-          </label>
-          <label
-            class="gf-form-label"
-            ng-if="text.hidden"
-            style="margin-right: 2px;"
-          >
-            <i
-              class="fa fa-w fa-eye-slash pointer"
-              ng-click="editor.showTextFromStyle(text)"
-            ></i>
-          </label>
-          <label class="gf-form-label" style="margin-right: 2px;">
-            <i
-              class="fa fa-mouse-pointer pointer"
-              ng-click="editor.findTextInPanel(style, $index)"
-            ></i>
-          </label>
-          <input
-            type="text"
-            placeholder="id or regex of shape/text name"
-            class="gf-form-input width-13"
-            ng-model="text.pattern"
-            bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/text (see inspect tab)'"
-            bs-typeahead="editor.getCellNames"
-            ng-blur="editor.onOptionsChange()"
-            data-min-length="0"
-            data-items="100"
-            ng-model-onblur
-            data-placement="right"
-            ng-mouseleave="mx.unselectCell()"
-            ng-mouseover="mx.selectCell(text.pattern)"
-          />
-        </div>
+      <div class="gf-form" ng-class="{'gf-form-disabled': text.hidden}" ng-repeat="text in style.textMaps">
+        <label class="gf-form-label" style="margin-right: 1px;">
+          <i class="fa fa-w fa-remove pointer" ng-click="editor.removeTextFromStyle(style, text)"></i>
+        </label>
+        <label class="gf-form-label" ng-if="!text.hidden" style="margin-right: 2px;">
+          <i class="fa fa-w fa-eye pointer" ng-click="editor.hideTextFromStyle(text)"></i>
+        </label>
+        <label class="gf-form-label" ng-if="text.hidden" style="margin-right: 2px;">
+          <i class="fa fa-w fa-eye-slash pointer" ng-click="editor.showTextFromStyle(text)"></i>
+        </label>
+        <!-- <label class="gf-form-label" style="margin-right: 2px;">
+          <i class="fa fa-mouse-pointer pointer" ng-click="editor.findTextInPanel(style, $index)"></i>
+        </label> -->
+        <input type="text" placeholder="id or regex of shape/text name" class="gf-form-input width-13"
+          ng-model="text.pattern"
+          bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/text (see inspect tab)'"
+          bs-typeahead="editor.getCellNames" ng-blur="editor.onOptionsChange()" data-min-length="0" data-items="100"
+          ng-model-onblur data-placement="right" ng-mouseleave="mx.unselectCell()"
+          ng-mouseover="mx.selectCell(text.pattern)" />
+      </div>
 
-        <div class="gf-form">
-          <label class="gf-form-label">
-            <i
-              class="fa fa-plus pointer"
-              ng-click="editor.addTextToStyle(style, '/.*/')"
-              style="margin-right: 2px;"
-            ></i>
-          </label>
-        </div>
+      <div class="gf-form">
+        <label class="gf-form-label">
+          <i class="fa fa-plus pointer" ng-click="editor.addTextToStyle(style, '/.*/')" style="margin-right: 2px;"></i>
+        </label>
       </div>
     </div>
 
@@ -562,24 +327,19 @@
     <!-- BUTTONS RULES -->
     <div class="gf-form-inline">
       <div class="gf-form" style="margin-right: 5px;">
-        <button
-          class="btn btn-danger btn-small"
-          ng-click="editor.removeMetricStyle(style)"
-        >
+        <button class="btn btn-danger btn-small" ng-click="editor.removeMetricStyle(style)">
           <i class="fa fa-trash"></i> Remove Rule
         </button>
       </div>
       <div class="gf-form">
-        <button
-          class="btn btn-secondary btn-small"
-          ng-click="editor.cloneMetricStyle(style)"
-        >
+        <button class="btn btn-secondary btn-small" ng-click="editor.cloneMetricStyle(style)">
           <i class="fa fa-copy"></i> Copy Rule
         </button>
       </div>
     </div>
     <hr />
   </div>
+
   <div class="editor-row">
     <div class="gf-form-button-row">
       <button class="btn btn-inverse" ng-click="editor.addMetricStyle()">

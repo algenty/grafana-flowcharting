@@ -135,6 +135,9 @@ function (_MetricsPanelCtrl) {
           },
           javascript: {
             value: "Not yet"
+          },
+          csv: {
+            value: "Not yet"
           }
         },
         options: {

@@ -80,10 +80,16 @@ function () {
     this.textPattern = "/.*/";
     this.metricTypes = [{
       text: "Number",
-      value: "number" // { text: 'String', value: 'string' },
-      // { text: 'Date', value: 'date' },
-      // { text: 'Disabled', value: 'disabled' },
-
+      value: "number"
+    }, {
+      text: 'String',
+      value: 'string'
+    }, {
+      text: 'Date',
+      value: 'date'
+    }, {
+      text: 'Hidden',
+      value: 'hidden'
     }];
     this.dateFormats = [{
       text: "YYYY-MM-DD HH:mm:ss",
@@ -394,6 +400,19 @@ function () {
     value: function showTextFromStyle(text) {
       text.hidden = false;
       this.onOptionsChange();
+    }
+  }, {
+    key: "findShapeInPanel",
+    value: function findShapeInPanel(style) {
+      this.scrollToAnchor("agenty-grafana-flowcharting");
+    }
+  }, {
+    key: "scrollToAnchor",
+    value: function scrollToAnchor(anchor_id) {
+      var tag = $("#" + anchor_id + "");
+      $('html,body').animate({
+        scrollTop: tag.offset().top
+      }, 'slow');
     }
   }]);
 

@@ -35,7 +35,7 @@ export class MappingOptionsCtrl {
     ];
     this.textPattern = "/.*/"
     this.metricTypes = [
-      { text: "Number", value: "number" }
+      { text: "Number", value: "number" },
       { text: 'String', value: 'string' },
       { text: 'Date', value: 'date' },
       { text: 'Hidden', value: 'hidden' },
@@ -276,6 +276,14 @@ export class MappingOptionsCtrl {
     this.onOptionsChange();
   }
 
+  findShapeInPanel(style) {
+    this.scrollToAnchor("agenty-grafana-flowcharting");
+  }
+
+  scrollToAnchor(anchor_id){
+    var tag = $("#"+anchor_id+"");
+    $('html,body').animate({scrollTop: tag.offset().top},'slow');
+}
 
 }
 

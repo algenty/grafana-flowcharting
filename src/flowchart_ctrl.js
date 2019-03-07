@@ -512,6 +512,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   validateRegex(textRegex) {
     return _.isRegExp(textRegex);
   }
+
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };
