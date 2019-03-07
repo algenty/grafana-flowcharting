@@ -36,9 +36,9 @@ export class MappingOptionsCtrl {
     this.textPattern = "/.*/"
     this.metricTypes = [
       { text: "Number", value: "number" }
-      // { text: 'String', value: 'string' },
-      // { text: 'Date', value: 'date' },
-      // { text: 'Disabled', value: 'disabled' },
+      { text: 'String', value: 'string' },
+      { text: 'Date', value: 'date' },
+      { text: 'Hidden', value: 'hidden' },
     ];
     this.dateFormats = [
       { text: "YYYY-MM-DD HH:mm:ss", value: "YYYY-MM-DD HH:mm:ss" },

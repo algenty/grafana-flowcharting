@@ -106,6 +106,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           },
           javascript: {
             value: "Not yet"
+          },
+          csv: {
+            value: "Not yet"
           }
         },
         options: {
