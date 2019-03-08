@@ -25,7 +25,7 @@ export class MappingOptionsCtrl {
     ];
     this.textOn = [
       { text: "Never", value: "n" },
-      { text: "When Metric Displayed", value: "wmd" },
+      // { text: "When Metric Displayed", value: "wmd" },
       { text: "Warning / Critical", value: "wc" },
       { text: "Critical Only", value: "co" }
     ];
@@ -36,9 +36,9 @@ export class MappingOptionsCtrl {
     this.textPattern = "/.*/"
     this.metricTypes = [
       { text: "Number", value: "number" },
-      { text: 'String', value: 'string' },
-      { text: 'Date', value: 'date' },
-      { text: 'Hidden', value: 'hidden' },
+      // { text: 'String', value: 'string' },
+      // { text: 'Date', value: 'date' },
+      // { text: 'Hidden', value: 'hidden' },
     ];
     this.dateFormats = [
       { text: "YYYY-MM-DD HH:mm:ss", value: "YYYY-MM-DD HH:mm:ss" },
@@ -298,3 +298,5 @@ export function mappingOptionsTab($q, uiSegmentSrv) {
     controller: MappingOptionsCtrl
   };
 }
+
+

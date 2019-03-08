@@ -60,10 +60,8 @@ function () {
     this.textOn = [{
       text: "Never",
       value: "n"
-    }, {
-      text: "When Metric Displayed",
-      value: "wmd"
-    }, {
+    }, // { text: "When Metric Displayed", value: "wmd" },
+    {
       text: "Warning / Critical",
       value: "wc"
     }, {
@@ -81,15 +79,6 @@ function () {
     this.metricTypes = [{
       text: "Number",
       value: "number"
-    }, {
-      text: 'String',
-      value: 'string'
-    }, {
-      text: 'Date',
-      value: 'date'
-    }, {
-      text: 'Hidden',
-      value: 'hidden'
     }];
     this.dateFormats = [{
       text: "YYYY-MM-DD HH:mm:ss",

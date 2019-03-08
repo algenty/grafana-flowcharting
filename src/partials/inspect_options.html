@@ -147,21 +147,21 @@
 							</td>
 							<td>
 								<div class="flowchartTable-editor">
-									<div class="sp-preview" ng-mouseover="mx.changeState(cell.id,editor.colors[0],editor.colorMode)">
+									<div class="sp-preview" ng-mouseover="mx.changeShape(cell.id,editor.colors[0],editor.colorMode)">
 										<div class="sp-preview-inner" style="background-color: {{editor.colors[0]}};border: 1px solid rgb(228, 228, 228);">
 										</div>
 									</div>
 									&nbsp;
-									<div class="sp-preview" ng-mouseover="mx.changeState(cell.id,editor.colors[1],editor.colorMode)">
+									<div class="sp-preview" ng-mouseover="mx.changeShape(cell.id,editor.colors[1],editor.colorMode)">
 										<div class="sp-preview-inner" style="background-color: {{editor.colors[1]}};border: 1px solid rgb(228, 228, 228);">
 										</div>
 									</div>
 									&nbsp;
-									<div class="sp-preview" ng-mouseover="mx.changeState(cell.id,editor.colors[2],editor.colorMode)">
+									<div class="sp-preview" ng-mouseover="mx.changeShape(cell.id,editor.colors[2],editor.colorMode)">
 										<div class="sp-preview-inner" style="background-color: {{editor.colors[2]}};border: 1px solid rgb(228, 228, 228);">
 										</div>
 									</div>
-									<span ng-mouseover="mx.restoreState(cell.id)">Restore</span>
+									<span ng-mouseover="mx.restoreShape(cell.id)">Restore</span>
 								</div>
 							</td>
 						</tr>
@@ -170,6 +170,12 @@
 				</table>
 			</div>
 		</div>
+		<hr>
+		<div class="gf-form">
+			<button class="btn btn-danger btn-small" ng-click="mx.reset()">
+			  <i class="fa fa-power-off"></i> Reinit graph and color
+			</button>
+		  </div>
 		<!-- </div> -->
 		<div class="datapoints-warning" ng-show="editor.cells.length===0">
 			<span class="small">

@@ -144,6 +144,13 @@ export default class MxPluginCtrl {
 
   // ####################################### FLOWCHART #############################################
 
+  reset() {
+    this.addFlowchart();
+    this.inspectFlowChart();
+    this.updateFlowChart();
+    this.refreshFlowChart();
+  }
+
   //
   // INIT
   //
