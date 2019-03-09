@@ -160,7 +160,7 @@ export default class MxPluginCtrl {
     // definie object graph
     this.$graphCanvas = $("<div></div>");
     this.$elem.html(this.$graphCanvas);
-    this.$graphCanvas.bind("plothover", function (event, pos, item) {
+    this.$graphCanvas.bind("plothover", function(event, pos, item) {
       if (!item) {
         $tooltip.detach();
         return;
@@ -269,7 +269,7 @@ export default class MxPluginCtrl {
   // INSPECT
   //
   inspectFlowChart() {
-    this.cells = this.getAllCells(this.graph);
+    this.cells = this.getCellsFromOriginal(this.graph);
   }
 
   //
@@ -280,16 +280,15 @@ export default class MxPluginCtrl {
     this.updateStateForText(this.panelCtrl.textStates, this.cells);
   }
 
-
   //
   //GRAPH HANDLER
-  // 
+  //
 
   lockGraph() {
     // LOCK
     // Disables folding
     this.graph.setEnabled(false);
-    this.graph.isCellFoldable = function (cell, collapse) {
+    this.graph.isCellFoldable = function(cell, collapse) {
       return false;
     };
   }
@@ -298,15 +297,18 @@ export default class MxPluginCtrl {
     // LOCK
     // Disables folding
     this.graph.setEnabled(true);
-    this.graph.isCellFoldable = function (cell, collapse) {
+    this.graph.isCellFoldable = function(cell, collapse) {
       return true;
     };
   }
 
-  //
-  // getAllsCells : return cells and status
-  //
-  getAllCells(graph) {
+  getCurrentCell(reg_name, prop_name) {
+    //TODO:
+  }
+
+  // getAllsCells : return cells and status of current graph
+  // only for stock original states and colors when source changed
+  getCellsFromOriginal(graph) {
     let model = graph.getModel();
     let view = graph.view;
     let allCells = [];
@@ -353,16 +355,20 @@ export default class MxPluginCtrl {
   // Functions
   //
 
+  // Update Color of Graph
   updateStateForShape(shapeStates, cells) {
     _.each(cells, _cell => {
+      // define found for each color
       let found = false;
       _.each(shapeStates, _shape => {
         const regex = this.stringToJsRegex(_shape.pattern);
         const matching = _cell.id.toString().match(regex);
+        // if prop or id
         if (_shape.pattern == _cell.id || matching) {
           console.debug("updateStateForShape|matching : ", _shape, _cell);
           found = true;
           if (_shape.level != -1) {
+            this.restoreShape(_cell.id);
             this.changeShape(_cell.id, _shape.color, _shape.colorMode);
           } else if (_cell.level != -1) {
             this.restoreShape(_cell.id);
@@ -379,6 +385,7 @@ export default class MxPluginCtrl {
     });
   }
 
+  // Update text of Graph
   updateStateForText(textStates, cells) {
     _.each(cells, _cell => {
       let found = false;
@@ -392,10 +399,10 @@ export default class MxPluginCtrl {
           if (_text.isPattern) {
             const regexVal = this.stringToJsRegex(_text.textPattern);
             if (_cell.value.toString().match(regexVal)) {
-              textValue = _cell.value.toString().replace(regexVal, textValue)
+              textValue = _cell.value.toString().replace(regexVal, textValue);
             }
           }
-          this.changeText(_cell.id, textValue)
+          this.changeText(_cell.id, textValue);
         }
       });
       if (!found) {
@@ -404,6 +411,7 @@ export default class MxPluginCtrl {
     });
   }
 
+  // Change text of shape
   changeText(id, value) {
     let model = this.graph.getModel();
     let cell = model.getCell(id);
@@ -412,6 +420,7 @@ export default class MxPluginCtrl {
     }
   }
 
+  // Change color of shape
   changeShape(id, color, style) {
     if (style) {
       let cell = this.graph.getModel().getCell(id);
@@ -421,6 +430,7 @@ export default class MxPluginCtrl {
     }
   }
 
+  // Restore color of shape
   restoreShape(id) {
     let cell = this.graph.getModel().getCell(id);
     const old = _.find(this.cells, {
@@ -431,6 +441,17 @@ export default class MxPluginCtrl {
       this.graph.setCellStyles(this.STYLE_FONTCOLOR, old.fontColor, [cell]);
       this.graph.setCellStyles(this.STYLE_STROKECOLOR, old.strokeColor, [cell]);
     }
+  }
+
+  // Return array of cell id by regex
+  getCellNamesByRegEx(regexString) {
+    const regexText = this.stringToJsRegex(regexString);
+    if (!this.cells) {
+      return [];
+    }
+    return _.find(this.cells, c => {
+      return c.id.toString().match(regexText);
+    });
   }
 
   // ###################################################################################################

@@ -236,15 +236,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   analyzeDataForShape() {
     this.shapeStates = [];
-    // Begin For Each Series
-    _.each(this.series, _serie => {
-      if (_serie.datapoints.length === 0) {
-        return;
-      }
-      // Begin For Each Styles
-      _.each(this.panel.styles, _style => {
+    // Begin For Each style
+    _.each(this.panel.styles, _style => {
+      // Begin For Each Series
+      _.each(this.series, _serie => {
+        if (_serie.datapoints.length === 0) {
+          return;
+        }
         const regex = kbn.stringToJsRegex(_style.pattern);
         let matching = _serie.alias.toString().match(regex);
+        // if pattern of style = serie.alias
         if (_style.pattern == _serie.alias || matching) {
           let value = _.get(_serie.stats, _style.aggregation);
           let level = this.getThresholdLevel(value, _style);
@@ -280,13 +281,20 @@ class FlowchartCtrl extends MetricsPanelCtrl {
                 serie: _serie.alias
               };
               if (_state != null && _state != undefined) {
+                // if level is upper of older level : change state
                 if (level > _state.level) {
-                  _.pull(this.shapeStates, _state);
-                  this.shapeStates.push(new_state);
+                  // if always or display when warn/err
+                  if(_style.colorOn == "a"||(_style.colorOn == "wc" && level > 0)) {
+                    _.pull(this.shapeStates, _state);
+                    this.shapeStates.push(new_state);
+                  }
                 }
                 // else nothing todo, keep old
               } else {
-                this.shapeStates.push(new_state);
+                // if always or display when warn/err
+                if(_style.colorOn == "a"||(_style.colorOn == "wc" && level > 0)) {
+                  this.shapeStates.push(new_state);
+                }
               }
             }
           });

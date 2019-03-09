@@ -25,7 +25,7 @@ export class MappingOptionsCtrl {
     ];
     this.textOn = [
       { text: "Never", value: "n" },
-      // { text: "When Metric Displayed", value: "wmd" },
+      { text: "When Metric Displayed", value: "wmd" },
       { text: "Warning / Critical", value: "wc" },
       { text: "Critical Only", value: "co" }
     ];
@@ -93,6 +93,7 @@ export class MappingOptionsCtrl {
     column.unit = subItem.value;
     this.onOptionsChange();
   }
+
   cloneMetricStyle(style) {
     let newStyleRule = angular.copy(style);
     newStyleRule.id = ++this.panel.styleSeq;

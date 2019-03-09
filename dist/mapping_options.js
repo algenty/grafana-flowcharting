@@ -60,8 +60,10 @@ function () {
     this.textOn = [{
       text: "Never",
       value: "n"
-    }, // { text: "When Metric Displayed", value: "wmd" },
-    {
+    }, {
+      text: "When Metric Displayed",
+      value: "wmd"
+    }, {
       text: "Warning / Critical",
       value: "wc"
     }, {

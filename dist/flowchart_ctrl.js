@@ -290,18 +290,19 @@ function (_MetricsPanelCtrl) {
     value: function analyzeDataForShape() {
       var _this2 = this;
 
-      this.shapeStates = []; // Begin For Each Series
+      this.shapeStates = []; // Begin For Each style
 
-      _lodash.default.each(this.series, function (_serie) {
-        if (_serie.datapoints.length === 0) {
-          return;
-        } // Begin For Each Styles
+      _lodash.default.each(this.panel.styles, function (_style) {
+        // Begin For Each Series
+        _lodash.default.each(_this2.series, function (_serie) {
+          if (_serie.datapoints.length === 0) {
+            return;
+          }
 
-
-        _lodash.default.each(_this2.panel.styles, function (_style) {
           var regex = _kbn.default.stringToJsRegex(_style.pattern);
 
-          var matching = _serie.alias.toString().match(regex);
+          var matching = _serie.alias.toString().match(regex); // if pattern of style = serie.alias
+
 
           if (_style.pattern == _serie.alias || matching) {
             var value = _lodash.default.get(_serie.stats, _style.aggregation);
@@ -344,14 +345,21 @@ function (_MetricsPanelCtrl) {
                 };
 
                 if (_state != null && _state != undefined) {
+                  // if level is upper of older level : change state
                   if (level > _state.level) {
-                    _lodash.default.pull(_this2.shapeStates, _state);
+                    // if always or display when warn/err
+                    if (_style.colorOn == "a" || _style.colorOn == "wc" && level > 0) {
+                      _lodash.default.pull(_this2.shapeStates, _state);
 
-                    _this2.shapeStates.push(new_state);
+                      _this2.shapeStates.push(new_state);
+                    }
                   } // else nothing todo, keep old
 
                 } else {
-                  _this2.shapeStates.push(new_state);
+                  // if always or display when warn/err
+                  if (_style.colorOn == "a" || _style.colorOn == "wc" && level > 0) {
+                    _this2.shapeStates.push(new_state);
+                  }
                 }
               }
             }); // End For Each Shape
