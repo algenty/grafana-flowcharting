@@ -320,6 +320,35 @@ function () {
       style.rangeMaps.splice(index, 1);
       this.onOptionsChange();
     } //
+    // ON STYLE
+    // 
+
+  }, {
+    key: "moveStyleToUp",
+    value: function moveStyleToUp(index) {
+      var first = 0;
+      var last = this.panel.styles.length - 1;
+
+      if (index != first && last != first) {
+        var curr = this.panel.styles[index];
+        var before = this.panel.styles[index - 1];
+        this.panel.styles[index - 1] = curr;
+        this.panel.styles[index] = before;
+      }
+    }
+  }, {
+    key: "moveStyleToDown",
+    value: function moveStyleToDown(index) {
+      var first = 0;
+      var last = this.panel.styles.length - 1;
+
+      if (index != last && last != first) {
+        var curr = this.panel.styles[index];
+        var after = this.panel.styles[index + 1];
+        this.panel.styles[index + 1] = curr;
+        this.panel.styles[index] = after;
+      }
+    } //
     // ON SHAPE
     //
 

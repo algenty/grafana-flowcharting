@@ -225,6 +225,32 @@ export class MappingOptionsCtrl {
   }
 
   //
+  // ON STYLE
+  // 
+  moveStyleToUp(index) {
+    const first = 0;
+    const last = this.panel.styles.length - 1;
+    if ( index != first && last != first ) {
+      let curr = this.panel.styles[index];
+      let before = this.panel.styles[index - 1];
+      this.panel.styles[index - 1] = curr;
+      this.panel.styles[index] = before;
+    }
+  }
+
+  moveStyleToDown(index) {
+    const first = 0;
+    const last = this.panel.styles.length - 1;
+    if ( index != last && last != first ) {
+      let curr = this.panel.styles[index];
+      let after = this.panel.styles[index + 1];
+      this.panel.styles[index + 1] = curr;
+      this.panel.styles[index] = after;
+    }
+  }
+
+
+  //
   // ON SHAPE
   //
   addShapeToStyle(style) {
