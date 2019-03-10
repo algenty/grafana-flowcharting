@@ -1,4 +1,5 @@
 import _ from "lodash";
+// var u = require("./utils");
 
 window.mxLanguages = window.mxLanguages || ["en"];
 
@@ -189,7 +190,7 @@ export default class MxPluginCtrl {
       var xmlDoc = mxUtils.parseXml(this.panel.flowchart.source.xml.value);
       var codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, this.graph.getModel());
-    } catch (error){
+    } catch (error) {
       console.error("Error in draw ", error);
     } finally {
       // Updates the display
@@ -507,5 +508,10 @@ export default class MxPluginCtrl {
     }
     const match = str.match(new RegExp("^/(.*?)/(g?i?m?y?)$"));
     return new RegExp(match[1], match[2]);
+  }
+
+  decodeXml(data) {
+    // console.log("U",u);
+    // return u.decode(data,true,true,true);
   }
 }

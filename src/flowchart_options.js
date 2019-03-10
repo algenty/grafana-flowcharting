@@ -7,25 +7,13 @@ export class FlowchartOptionsCtrl {
     $scope.editor = this;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
+    this.mx = this.panelCtrl.mx;
     this.sourceTypes = [
       { text: "Url", value: "url" },
       { text: "XML Content", value: "xml" }
       // { text: 'CSV', value: 'csv' },
     ];
-    this.fontSizes = [
-      "80%",
-      "90%",
-      "100%",
-      "110%",
-      "120%",
-      "130%",
-      "150%",
-      "160%",
-      "180%",
-      "200%",
-      "220%",
-      "250%"
-    ];
+
   }
 
   render() {
@@ -38,6 +26,9 @@ export class FlowchartOptionsCtrl {
   }
 
   openDrawEditor() {
+    // source : 
+    // https://desk.draw.io/support/solutions/articles/16000042542-how-to-embed-html-
+    // https://support.draw.io/display/DOB/2016/05/09/Simple+draw.io+embedding+walk-through
     let myWindow = window.open(
       "https://draw.io?embed=1",
       "MxGraph Editor",
@@ -58,7 +49,7 @@ export class FlowchartOptionsCtrl {
         );
         opened = false;
       } else {
-        this.panel.flowchart.source.xml.value= event.data;
+        this.panel.flowchart.source.xml.value= this.mx.decodeXml(event.data);
         this.panelCtrl.changedSource=true;
         this.render()
       }
