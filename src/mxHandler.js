@@ -71,6 +71,7 @@ window.mxElbowEdgeHandler =
   window.mxElbowEdgeHandler || mxgraph.mxElbowEdgeHandler;
 window.mxEllipse = window.mxEllipse || mxgraph.mxEllipse;
 window.mxEvent = window.mxEvent || mxgraph.mxEvent;
+window.mxFile = window.mxFile || mxgraph.mxFile;
 window.mxGeometry = window.mxGeometry || mxgraph.mxGeometry;
 window.mxGraph = window.mxGraph || mxgraph.mxGraph;
 window.mxGraphHandler = window.mxGraphHandler || mxgraph.mxGraphHandler;
@@ -188,8 +189,8 @@ export default class MxPluginCtrl {
       var xmlDoc = mxUtils.parseXml(this.panel.flowchart.source.xml.value);
       var codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, this.graph.getModel());
-    } catch {
-      //TODO:
+    } catch (error){
+      console.error("Error in draw ", error);
     } finally {
       // Updates the display
       this.graph.getModel().endUpdate();
@@ -351,6 +352,15 @@ export default class MxPluginCtrl {
     this.graph.clearSelection();
   }
 
+  prettify() {
+    var enc = new mxCodec();
+    var node = enc.encode(this.graph.getModel());
+    let text = mxUtils.getPrettyXml(node);
+    this.panel.flowchart.source.xml.value = text;
+  }
+
+  minify() {}
+
   //
   // Functions
   //
@@ -390,7 +400,7 @@ export default class MxPluginCtrl {
     _.each(cells, _cell => {
       let found = false;
       _.each(textStates, _text => {
-        let textValue = _text.textValue.toString();
+        let textValue = _text.textValue;
         const regexText = this.stringToJsRegex(_text.pattern);
         const matching = _cell.id.toString().match(regexText);
         if (_text.pattern == _cell.id || matching) {

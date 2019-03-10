@@ -17,6 +17,8 @@ var _flowchart_options = require("./flowchart_options");
 
 var _inspect_options = require("./inspect_options");
 
+var _moment = _interopRequireDefault(require("moment"));
+
 var _lodash = _interopRequireDefault(require("lodash"));
 
 var _plugin = require("./plugin");
@@ -111,8 +113,10 @@ function (_MetricsPanelCtrl) {
         thresholds: [],
         invert: false,
         shapeSeq: 1,
+        shapeProp: 'id',
         shapeMaps: [],
         textSeq: 1,
+        textProp: 'id',
         textMaps: [],
         mappingType: 1
       }],
@@ -488,6 +492,8 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "getFormattedValue",
     value: function getFormattedValue(value, style) {
+      console.log("getFormattedValue style", style);
+
       if (style.type === 'number') {
         if (!_lodash.default.isFinite(value)) return "Invalid Number";
 
@@ -497,7 +503,76 @@ function (_MetricsPanelCtrl) {
 
         var decimals = this.decimalPlaces(value);
         decimals = typeof style.decimals === "number" ? Math.min(style.decimals, decimals) : decimals;
-        return _kbn.default.valueFormats[style.unit](value, decimals, null);
+        return _kbn.default.valueFormats[style.unit](value, decimals, null).toString();
+      }
+
+      if (style.type === 'string') {
+        if (_lodash.default.isArray(value)) {
+          value = value.join(', ');
+        }
+
+        var mappingType = style.mappingType || 0;
+
+        if (mappingType === 1 && style.valueMaps) {
+          for (var i = 0; i < style.valueMaps.length; i++) {
+            var map = style.valueMaps[i];
+
+            if (value === null) {
+              if (map.value === 'null') {
+                return map.text;
+              }
+
+              continue;
+            } // Allow both numeric and string values to be mapped
+
+
+            if (!_lodash.default.isString(value) && Number(map.value) === Number(value) || map.value === value) {
+              return this.defaultValueFormatter(map.text, style);
+            }
+          }
+        }
+
+        if (mappingType === 2 && style.rangeMaps) {
+          for (var _i = 0; _i < style.rangeMaps.length; _i++) {
+            var _map = style.rangeMaps[_i];
+
+            if (value === null) {
+              if (_map.from === 'null' && _map.to === 'null') {
+                return _map.text;
+              }
+
+              continue;
+            }
+
+            if (Number(_map.from) <= Number(value) && Number(_map.to) >= Number(value)) {
+              return this.defaultValueFormatter(_map.text, style);
+            }
+          }
+        }
+
+        if (value === null || value === void 0) {
+          return '-';
+        }
+
+        return this.defaultValueFormatter(value, style);
+      }
+
+      if (style.type === 'date') {
+        if (value === undefined || value === null) {
+          return '-';
+        }
+
+        if (_lodash.default.isArray(value)) {
+          value = value[0];
+        }
+
+        var date = (0, _moment.default)(value);
+
+        if (this.dashboard.isTimezoneUtc()) {
+          date = date.utc();
+        }
+
+        return date.format(style.dateFormat);
       }
     }
   }, {
@@ -514,8 +589,8 @@ function (_MetricsPanelCtrl) {
       match[2] ? +match[2] : 0));
     }
   }, {
-    key: "defaultCellFormatter",
-    value: function defaultCellFormatter(value, style) {
+    key: "defaultValueFormatter",
+    value: function defaultValueFormatter(value, style) {
       if (value === null || value === void 0 || value === undefined) {
         return '';
       }
@@ -525,7 +600,7 @@ function (_MetricsPanelCtrl) {
       }
 
       if (style && style.sanitize) {
-        return this.sanitize(value);
+        return this.$sanitize(value);
       } else {
         return _lodash.default.escape(value);
       }

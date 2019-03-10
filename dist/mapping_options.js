@@ -77,10 +77,20 @@ function () {
       text: "Substring",
       value: "pattern"
     }];
+    this.propTypes = [{
+      text: "Id",
+      value: "id"
+    }];
     this.textPattern = "/.*/";
     this.metricTypes = [{
       text: "Number",
       value: "number"
+    }, {
+      text: 'String',
+      value: 'string'
+    }, {
+      text: 'Date',
+      value: 'date'
     }];
     this.dateFormats = [{
       text: "YYYY-MM-DD HH:mm:ss",
@@ -212,8 +222,10 @@ function () {
         thresholds: [],
         invert: false,
         shapeSeq: 1,
+        shapeProp: 'id',
         shapeMaps: [],
         textSeq: 1,
+        textProp: 'id',
         textMaps: [],
         mappingType: 1
       };

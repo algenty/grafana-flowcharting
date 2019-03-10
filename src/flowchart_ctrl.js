@@ -4,6 +4,7 @@ import kbn from "app/core/utils/kbn";
 import { mappingOptionsTab } from "./mapping_options";
 import { flowchartOptionsTab } from "./flowchart_options";
 import { inspectOptionsTab } from "./inspect_options";
+import moment from 'moment';
 import _ from "lodash";
 import { plugin } from "./plugin";
 // import mxgraph from './mxgraph';
@@ -81,8 +82,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           thresholds: [],
           invert: false,
           shapeSeq: 1,
+          shapeProp: 'id',
           shapeMaps: [],
           textSeq: 1,
+          textProp: 'id',
           textMaps: [],
           mappingType: 1
         }
@@ -432,6 +435,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   getFormattedValue(value,style) {
+    console.log("getFormattedValue style", style)
     if(style.type === 'number') {
       if(!_.isFinite(value)) return "Invalid Number";
       if (value === null || value === void 0) {
@@ -439,7 +443,69 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       }
       let decimals = this.decimalPlaces(value);
       decimals = (typeof style.decimals === "number") ? Math.min(style.decimals, decimals) : decimals;
-      return kbn.valueFormats[style.unit](value, decimals, null);
+      return kbn.valueFormats[style.unit](value, decimals, null).toString();
+    }
+
+    if (style.type === 'string') {
+      if (_.isArray(value)) {
+        value = value.join(', ');
+      }
+      const mappingType = style.mappingType || 0
+      if (mappingType === 1 && style.valueMaps) {
+        for (let i = 0; i < style.valueMaps.length; i++) {
+          const map = style.valueMaps[i];
+
+          if (value === null) {
+            if (map.value === 'null') {
+              return map.text;
+            }
+            continue;
+          }
+
+          // Allow both numeric and string values to be mapped
+          if ((!_.isString(value) && Number(map.value) === Number(value)) || map.value === value) {
+            return this.defaultValueFormatter(map.text, style);
+          }
+        }
+      }
+
+      if (mappingType === 2 && style.rangeMaps) {
+        for (let i = 0; i < style.rangeMaps.length; i++) {
+          const map = style.rangeMaps[i];
+
+          if (value === null) {
+            if (map.from === 'null' && map.to === 'null') {
+              return map.text;
+            }
+            continue;
+          }
+
+          if (Number(map.from) <= Number(value) && Number(map.to) >= Number(value)) {
+            return this.defaultValueFormatter(map.text, style);
+          }
+        }
+      }
+
+      if (value === null || value === void 0) {
+        return '-';
+      }
+
+      return this.defaultValueFormatter(value, style);
+    }
+
+    if (style.type === 'date') {
+        if (value === undefined || value === null) {
+          return '-';
+        }
+
+        if (_.isArray(value)) {
+          value = value[0];
+        }
+        let date = moment(value);
+        if (this.dashboard.isTimezoneUtc()) {
+          date = date.utc();
+        }
+        return date.format(style.dateFormat);
     }
   }
 
@@ -454,7 +520,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 			- (match[2] ? +match[2] : 0));
 	}
 
-  defaultCellFormatter(value, style) {
+  defaultValueFormatter(value, style) {
     if (value === null || value === void 0 || value === undefined) {
       return '';
     }
@@ -464,7 +530,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
 
     if (style && style.sanitize) {
-      return this.sanitize(value);
+      return this.$sanitize(value);
     } else {
       return _.escape(value);
     }

@@ -33,12 +33,15 @@ export class MappingOptionsCtrl {
       { text: "All content", value: "content" },
       { text: "Substring", value: "pattern" }
     ];
+    this.propTypes = [
+      { text: "Id", value: "id" },
+      // { text: "Substring", value: "pattern" }
+    ];
     this.textPattern = "/.*/"
     this.metricTypes = [
       { text: "Number", value: "number" },
-      // { text: 'String', value: 'string' },
-      // { text: 'Date', value: 'date' },
-      // { text: 'Hidden', value: 'hidden' },
+      { text: 'String', value: 'string' },
+      { text: 'Date', value: 'date' },
     ];
     this.dateFormats = [
       { text: "YYYY-MM-DD HH:mm:ss", value: "YYYY-MM-DD HH:mm:ss" },
@@ -135,8 +138,10 @@ export class MappingOptionsCtrl {
       thresholds: [],
       invert: false,
       shapeSeq: 1,
+      shapeProp: 'id',
       shapeMaps: [],
       textSeq: 1,
+      textProp: 'id',
       textMaps: [],
       mappingType: 1
     };

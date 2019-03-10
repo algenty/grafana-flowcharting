@@ -2,7 +2,7 @@
 	<div class="editor-row">
 		<h5 class="section-heading">mxGraph Edition</h5>
 		<!-- Definition -->
-		<div class="section gf-form-group" style="margin-top: 0px; margin-bottom: 0px; width:95%;">
+		<div class="section gf-form-group" style="width:100%;">
 			<h5 class="section-heading">Definition</h5>
 			<div class="gf-form">
 				<span class="gf-form-label width-12">
@@ -17,6 +17,7 @@
 						ng-options="c.value as c.text for c in editor.sourceTypes" ng-change="editor.onSourceChange()"></select>
 				</div>
 			</div>
+			<!-- URL -->
 			<div class="gf-form" name="options.source.url.form" ng-if="editor.panel.flowchart.source.type == 'url'">
 				<div class="gf-form" id="editor.panel.source.type.url">
 					<span class="gf-form-label width-12">
@@ -30,6 +31,7 @@
 						ng-change="editor.onSourceChange()" ng-model-onblur>
 				</div>
 			</div>
+			<!-- XML -->
 			<div class="gf-form gf-form--v-stretch" name="options.source.xml.form"
 				ng-if="editor.panel.flowchart.source.type == 'xml'">
 				<span class="gf-form-label width-12">
@@ -43,23 +45,38 @@
 					style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;" ng-change="editor.onSourceChange()"
 					ng-model="editor.panel.flowchart.source.xml.value" ng-model-onBlur></textarea>
 			</div>
-			<div class="gf-form" name="options.source.editor.form" ng-if="editor.panel.flowchart.source.type == 'editor'">
-				<span class="gf-form-label width-12">
-					MxGraph
-					<info-popover mode="right-normal">
-						Open mxGraph Editor like draw.io
-					</info-popover>
-				</span>
-				<div class="gf-form" name="options.source.editor.input">
-					<button class="btn btn-secondary gf-form-btn width-12" name="editor_input" ng-click="editor.openEditor();">
-						<i class="fa"></i>
-						Edit
+			<div class="gf-form">
+					<a href="https://draw.io?client=1" target="_blank">Open mxGraph Editor like draw.io and copy/paste model via menu in Extra > Edit diagram...</a>
+			</div>
+			<!-- BUTTONS RULES -->
+			<div class="gf-form-inline">
+				<div class="gf-form" style="margin-right: 5px;">
+					<button
+					class="btn btn-secondary btn-small"
+					ng-click="editor.openDrawEditor()"
+					>
+					<i class="fa fa-edit pointer"></i> Edit Draw
+					</button>
+				</div>
+				<div class="gf-form" style="margin-right: 5px;">
+					<button
+					class="btn btn-secondary btn-small"
+					ng-click="mx.prettify()"
+					>
+					<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAxklEQVQokZWQMUpDURREzzw+kiKIlaWksnIPWttaCkFXkDWI63AFVtmApXswiFjY2IpIIOEdi7xC0PfBud29M3OZiUgXMgH21JpkTdiWEfIA3KhLYAmctf3I6Lm6cYcrm8vfD6oz5DrJC3AAVKAvAG6THAEX6n6SD4D8Ci3HwLQ5fhKef56HRjpRp0m+1LskK8JlpwxR5+q7+qTe11pnvSIGALUkOWzhFil57QUrAEne1AfgUT0day8iVkuSSTPYEtajgv/gG3TbgAtdLpuZAAAAAElFTkSuQmCC"> Prettify
+					</button>
+				</div>
+				<div class="gf-form" style="margin-right: 5px;">
+					<button
+					class="btn btn-secondary btn-small"
+					ng-click="editor.minify()"
+					>
+					<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAzElEQVQokYWSvUoDYRREzywfS9jCInYWeTILSytRH0CwshUtbHwD38xCQSGIP/dYZINBN2Zu8RV3+Dgz3Ij8K2nAnPAI0O0wd8AhcIUcALRJX3mSZB94Bc7U+yQv4ycToxdV9aE+q7fqsN5NIqkkacAesATe1ru2EewUGEYzwPWY8XN86wdJO/VO/XKlS7Wvqr6q+k3cdeimPiVZAgMA4T3kD25DZsAxcKTeJJmP7WypWhfqg3qu9iNem2wPVxmqaqHOtpk2JztP45e+AdC7pvsVKoFjAAAAAElFTkSuQmCC"> Minify
 					</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	<br />
 	<!-- Option Section -->
 	<div class="editor-row">
 		<h5 class="section-heading">Advanced</h5>
