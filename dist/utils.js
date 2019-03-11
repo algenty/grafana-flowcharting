@@ -29,7 +29,7 @@ module.exports = {
         data = encodeURIComponent(data);
         return data;
       } catch (e) {
-        console.log(e);
+        console.error(e);
         return;
       }
     }
@@ -38,7 +38,7 @@ module.exports = {
       try {
         data = bytesToString(pako.deflateRaw(data));
       } catch (e) {
-        console.log(e);
+        console.error(e);
         return;
       }
     }
@@ -47,7 +47,7 @@ module.exports = {
       try {
         data = btoa(data);
       } catch (e) {
-        console.log(e);
+        console.error(e);
         return;
       }
     }
@@ -92,7 +92,7 @@ module.exports = {
       try {
         data = atob(data);
       } catch (e) {
-        console.log(e);
+        console.error(e);
         return;
       }
     }
@@ -101,7 +101,7 @@ module.exports = {
       try {
         data = this.bytesToString(pako.inflateRaw(data));
       } catch (e) {
-        console.log(e);
+        console.error(e);
         return;
       }
     }
@@ -110,7 +110,7 @@ module.exports = {
       try {
         data = decodeURIComponent(data);
       } catch (e) {
-        console.log(e);
+        console.error(e);
         return;
       }
     }
@@ -143,7 +143,7 @@ module.exports = {
     try {
       data = decodeURIComponent(data);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       return;
     }
 

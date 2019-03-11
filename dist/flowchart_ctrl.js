@@ -204,12 +204,12 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
-      this.changedData = true;
-      console.debug("received data");
-      console.debug(dataList);
-      this.series = dataList.map(this.seriesHandler.bind(this));
-      console.debug("mapped dataList to series");
-      console.debug(this.series);
+      this.changedData = true; // console.debug("received data");
+      // console.debug(dataList);
+
+      this.series = dataList.map(this.seriesHandler.bind(this)); // console.debug("mapped dataList to series");
+      // console.debug(this.series);
+
       this.render();
     }
   }, {
@@ -367,16 +367,26 @@ function (_MetricsPanelCtrl) {
                 }
               }
             }); // End For Each Shape
+            //   console.debug(
+            //     "analyzeDataForShape|" +
+            //       _style.aggregation +
+            //       " = " +
+            //       value +
+            //       " for " +
+            //       _serie.alias +
+            //       "Level = " +
+            //       level
+            //   );
 
-
-            console.debug("analyzeDataForShape|" + _style.aggregation + " = " + value + " for " + _serie.alias + "Level = " + level);
           }
         }); // End For Each Styles
 
       }); // End For Each Series
+      // console.debug(
+      //   "analyzeDataForShape| result of shape mapping : ",
+      //   this.shapeStates
+      // );
 
-
-      console.debug("analyzeDataForShape| result of shape mapping : ", this.shapeStates);
     }
   }, {
     key: "analyzeDataForText",
@@ -463,16 +473,26 @@ function (_MetricsPanelCtrl) {
                 }
               }
             }); // End For Each text
+            // console.debug(
+            //   "analyzeDataForText|" +
+            //     _style.aggregation +
+            //     " = " +
+            //     value +
+            //     " for " +
+            //     _serie.alias +
+            //     " Level = " +
+            //     level
+            // );
 
-
-            console.debug("analyzeDataForText|" + _style.aggregation + " = " + value + " for " + _serie.alias + " Level = " + level);
           }
         }); // End For Each Styles
 
       }); // End For Each Series
+      // console.debug(
+      //   "analyzeDataForText| result of Text mapping : ",
+      //   this.textStates
+      // );
 
-
-      console.debug("analyzeDataForText| result of Text mapping : ", this.textStates);
     }
   }, {
     key: "getColorForValue",
@@ -492,8 +512,7 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "getFormattedValue",
     value: function getFormattedValue(value, style) {
-      console.log("getFormattedValue style", style);
-
+      // console.log("getFormattedValue style", style)
       if (style.type === 'number') {
         if (!_lodash.default.isFinite(value)) return "Invalid Number";
 

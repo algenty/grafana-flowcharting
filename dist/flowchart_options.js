@@ -61,11 +61,6 @@ function () {
       var myWindow = window.open("https://draw.io?embed=1", "MxGraph Editor", "width=1280, height=720");
       var opened = false;
       window.addEventListener("message", function (event) {
-        console.log("Draw is open :" + event);
-        console.log("event.origin : ", event.origin);
-        console.log("event.lastEventId : ", event.lastEventId);
-        console.log("event.data :", event.data);
-        console.log("event.ports :", event.ports);
         if (event.origin !== "https://www.draw.io") return;
 
         if (event.data == "ready") {

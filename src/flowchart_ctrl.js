@@ -312,7 +312,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         //       "Level = " +
         //       level
         //   );
-        // }
+        }
       });
       // End For Each Styles
     });
