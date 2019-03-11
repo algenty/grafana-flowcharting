@@ -7,8 +7,10 @@ module.exports = (grunt) => {
   grunt.loadNpmTasks('grunt-execute');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-sass');
+  grunt.loadNpmTasks('grunt-contrib-compress');
 
   const sass = require('node-sass');
+
   grunt.initConfig({
 
     clean: {
@@ -94,7 +96,6 @@ module.exports = (grunt) => {
 
     webpack: {
       mxgraph: {
-        // entry: "./src/mxgraph.js",
         entry: "./src/mxHandler.js",
         mode: "development",
         module: {
@@ -106,27 +107,38 @@ module.exports = (grunt) => {
                 loader: 'babel-loader',
               }
             },
-            // {
-            //   test: /\.xml$/,
-            //   loader: 'raw-loader'
-            // }
           ]
         },
         output: {
           path: path.resolve(process.cwd(), "./dist"),
-          // filename: "mxgraph.js",
           filename: "mxHandler.js",
           library: "mxHandler",
           libraryTarget: "umd"
         },
         externals: {
           "jquery": "jquery",
-          "lodash": "lodash"
+          "lodash": "lodash",
         }
       }
     },
+
+    compress: {
+      main: {
+        options: {
+          archive: 'archives/agenty-flowcharting-panel.zip'
+        },
+        expand: true,
+        cwd: '.',
+        src: ['**/*', '!node_modules/**', '!bower_components/**','!others/**', '!.git/**','!archives/**' ],
+        dest: 'grafana-flowcharting'
+      }
+    }
+
+    
   });
 
   grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:bower_to_dist']);
   grunt.registerTask('dev', ['default', 'watch']);
+  grunt.registerTask('archive', ['default', 'compress:main']);
+
 };

@@ -50,9 +50,14 @@ export class FlowchartOptionsCtrl {
         );
         opened = false;
       } else {
-        this.panel.flowchart.source.xml.value= this.mx.decodeXml(event.data);
-        this.panelCtrl.changedSource=true;
-        this.render()
+        if (event.data != undefined && event.data.length > 0) {
+          this.panel.flowchart.source.xml.value = this.mx.decodeXml(event.data);
+          this.panelCtrl.changedSource = true;
+          this.render()
+        }
+        if (event.data != undefined || event.data.length == 0) {
+          myWindow.close();
+        }
       }
     });
   }

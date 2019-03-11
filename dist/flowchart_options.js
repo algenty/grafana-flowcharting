@@ -72,10 +72,16 @@ function () {
           event.source.postMessage(_this.panel.flowchart.source.xml.value, event.origin);
           opened = false;
         } else {
-          _this.panel.flowchart.source.xml.value = _this.mx.decodeXml(event.data);
-          _this.panelCtrl.changedSource = true;
+          if (event.data != undefined && event.data.length > 0) {
+            _this.panel.flowchart.source.xml.value = _this.mx.decodeXml(event.data);
+            _this.panelCtrl.changedSource = true;
 
-          _this.render();
+            _this.render();
+          }
+
+          if (event.data != undefined || event.data.length == 0) {
+            myWindow.close();
+          }
         }
       });
     }

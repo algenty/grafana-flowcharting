@@ -1,5 +1,8 @@
 const pako = require("pako");
 
+// sources :
+// https://jgraph.github.io/drawio-tools/tools/convert.html
+
 module.exports = {
   stringToBytes(str) {
     var arr = new Array(str.length);
@@ -72,13 +75,13 @@ module.exports = {
 
   decode(data, encode, deflate, base64) {
     try {
-      var node = parseXml(data).documentElement;
+      var node = this.parseXml(data).documentElement;
 
       if (node != null && node.nodeName == "mxfile") {
         var diagrams = node.getElementsByTagName("diagram");
 
         if (diagrams.length > 0) {
-          data = getTextContent(diagrams[0]);
+          data = this.getTextContent(diagrams[0]);
         }
       }
     } catch (e) {
@@ -96,7 +99,7 @@ module.exports = {
 
     if (deflate && data.length > 0) {
       try {
-        data = bytesToString(pako.inflateRaw(data));
+        data = this.bytesToString(pako.inflateRaw(data));
       } catch (e) {
         console.log(e);
         return;
