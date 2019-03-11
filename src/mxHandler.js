@@ -1,5 +1,5 @@
 import _ from "lodash";
-// var u = require("./utils");
+var u = require("./utils");
 
 window.mxLanguages = window.mxLanguages || ["en"];
 
@@ -511,7 +511,6 @@ export default class MxPluginCtrl {
   }
 
   decodeXml(data) {
-    // console.log("U",u);
-    // return u.decode(data,true,true,true);
+    return u.decode(data,true,true,true);
   }
 }
