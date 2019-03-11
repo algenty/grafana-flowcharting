@@ -3,6 +3,7 @@ var u = require("./utils");
 
 window.mxLanguages = window.mxLanguages || ["en"];
 
+var sanitizer = require("sanitizer");
 var mxgraph = require("mxgraph")({
   mxImageBasePath:
     "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images",
@@ -12,7 +13,7 @@ var mxgraph = require("mxgraph")({
   mxLanguage: "en",
   mxLoadResources: false
 });
-var sanitizer = require("sanitizer");
+
 
 window.BASE_PATH =
   window.BASE_PATH ||
