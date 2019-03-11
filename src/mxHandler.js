@@ -158,7 +158,6 @@ export default class MxPluginCtrl {
   // INIT
   //
   initFlowchart() {
-    console.debug("mxgraph.initFlowChart");
 
     // definie object graph
     this.$graphCanvas = $("<div></div>");
@@ -184,7 +183,7 @@ export default class MxPluginCtrl {
   // ADD OR REPLACE GRAPH
   //
   addFlowchart() {
-    console.debug("mxgraph.addFlowChart");
+    // console.debug("mxgraph.addFlowChart");
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
@@ -377,7 +376,7 @@ export default class MxPluginCtrl {
         const matching = _cell.id.toString().match(regex);
         // if prop or id
         if (_shape.pattern == _cell.id || matching) {
-          console.debug("updateStateForShape|matching : ", _shape, _cell);
+          // console.debug("updateStateForShape|matching : ", _shape, _cell);
           found = true;
           if (_shape.level != -1) {
             this.restoreShape(_cell.id);
@@ -406,7 +405,7 @@ export default class MxPluginCtrl {
         const regexText = this.stringToJsRegex(_text.pattern);
         const matching = _cell.id.toString().match(regexText);
         if (_text.pattern == _cell.id || matching) {
-          console.debug("updateStateForText|matching : ", _text, _cell);
+          // console.debug("updateStateForText|matching : ", _text, _cell);
           found = true;
           if (_text.isPattern) {
             const regexVal = this.stringToJsRegex(_text.textPattern);

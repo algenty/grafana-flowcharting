@@ -161,11 +161,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onDataReceived(dataList) {
     this.changedData = true;
-    console.debug("received data");
-    console.debug(dataList);
+    // console.debug("received data");
+    // console.debug(dataList);
     this.series = dataList.map(this.seriesHandler.bind(this));
-    console.debug("mapped dataList to series");
-    console.debug(this.series);
+    // console.debug("mapped dataList to series");
+    // console.debug(this.series);
     this.render();
   }
 
@@ -302,25 +302,25 @@ class FlowchartCtrl extends MetricsPanelCtrl {
             }
           });
           // End For Each Shape
-          console.debug(
-            "analyzeDataForShape|" +
-              _style.aggregation +
-              " = " +
-              value +
-              " for " +
-              _serie.alias +
-              "Level = " +
-              level
-          );
-        }
+        //   console.debug(
+        //     "analyzeDataForShape|" +
+        //       _style.aggregation +
+        //       " = " +
+        //       value +
+        //       " for " +
+        //       _serie.alias +
+        //       "Level = " +
+        //       level
+        //   );
+        // }
       });
       // End For Each Styles
     });
     // End For Each Series
-    console.debug(
-      "analyzeDataForShape| result of shape mapping : ",
-      this.shapeStates
-    );
+    // console.debug(
+    //   "analyzeDataForShape| result of shape mapping : ",
+    //   this.shapeStates
+    // );
   }
 
   analyzeDataForText() {
@@ -400,25 +400,25 @@ class FlowchartCtrl extends MetricsPanelCtrl {
             }
           });
           // End For Each text
-          console.debug(
-            "analyzeDataForText|" +
-              _style.aggregation +
-              " = " +
-              value +
-              " for " +
-              _serie.alias +
-              " Level = " +
-              level
-          );
+          // console.debug(
+          //   "analyzeDataForText|" +
+          //     _style.aggregation +
+          //     " = " +
+          //     value +
+          //     " for " +
+          //     _serie.alias +
+          //     " Level = " +
+          //     level
+          // );
         }
       });
       // End For Each Styles
     });
     // End For Each Series
-    console.debug(
-      "analyzeDataForText| result of Text mapping : ",
-      this.textStates
-    );
+    // console.debug(
+    //   "analyzeDataForText| result of Text mapping : ",
+    //   this.textStates
+    // );
   }
 
   getColorForValue(value, style) {
@@ -435,7 +435,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   getFormattedValue(value,style) {
-    console.log("getFormattedValue style", style)
+    // console.log("getFormattedValue style", style)
     if(style.type === 'number') {
       if(!_.isFinite(value)) return "Invalid Number";
       if (value === null || value === void 0) {
