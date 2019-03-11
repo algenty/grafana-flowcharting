@@ -6,7 +6,7 @@ Complexe Diagram and flowchart for grafana based on mxGraph librairies, see draw
   - Diagram ( Uml, gant ..)
   - Plan
   - Maps
-  -  ...
+  - Edit through draw.io
  
  ## example
  ![Diagram](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/example.png?raw=true)
@@ -16,20 +16,14 @@ Complexe Diagram and flowchart for grafana based on mxGraph librairies, see draw
  ![tab2](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/editor_tab2.png?raw=true)
  ![tab2](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/editor_tab3.png?raw=true)
  
-Be carefull, it is an alpha version, mapping and chaging state not implemented
 
 # Features
 
   - Display graph throw xml definition
   - Calibrate display
   - inspect graph to test state
+  - Mapping values and colors
 
-# Not work now
-
-  - Mapping shape with threshold
-  - many functions
-
-its an alpha
 
 ## Tech
 
