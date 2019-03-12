@@ -14,7 +14,6 @@ var mxgraph = require("mxgraph")({
   mxLoadResources: false
 });
 
-
 window.BASE_PATH =
   window.BASE_PATH ||
   "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/";
@@ -104,6 +103,7 @@ window.mxResources = window.mxResources || mxgraph.mxResources;
 window.mxRhombus = window.mxRhombus || mxgraph.mxRhombus;
 window.mxRubberband = window.mxRubberband || mxgraph.mxRubberband;
 window.mxShape = window.mxShape || mxgraph.mxShape;
+window.mxStackLayout = window.mxStackLayout || mxgraph.mxStackLayout;
 window.mxStencil = window.mxStencil || mxgraph.mxStencil;
 window.mxStencilRegistry =
   window.mxStencilRegistry || mxgraph.mxStencilRegistry;
@@ -158,7 +158,6 @@ export default class MxPluginCtrl {
   // INIT
   //
   initFlowchart() {
-
     // definie object graph
     this.$graphCanvas = $("<div></div>");
     this.$elem.html(this.$graphCanvas);
@@ -187,11 +186,13 @@ export default class MxPluginCtrl {
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
-      var xmlDoc = mxUtils.parseXml(this.panel.flowchart.source.xml.value);
-      var codec = new mxCodec(xmlDoc);
+      let text = this.panel.flowchart.source.xml.value;
+      if (this.isencodedXml()) text = u.decode(text, true, true, true);
+      let xmlDoc = mxUtils.parseXml(text);
+      let codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, this.graph.getModel());
     } catch (error) {
-      console.error("Error in draw ", error);
+      console.error("Error in draw :", error);
     } finally {
       // Updates the display
       this.graph.getModel().endUpdate();
@@ -353,14 +354,31 @@ export default class MxPluginCtrl {
     this.graph.clearSelection();
   }
 
-  prettify() {
-    var enc = new mxCodec();
-    var node = enc.encode(this.graph.getModel());
-    let text = mxUtils.getPrettyXml(node);
-    this.panel.flowchart.source.xml.value = text;
+  encodeXml() {
+    if (!this.isencodedXml()) {
+      this.panel.flowchart.source.xml.value = u.encode(
+        this.panel.flowchart.source.xml.value,
+        true,
+        true,
+        true
+      );
+    }
   }
 
-  minify() {}
+  decodeXml() {
+    if (this.isencodedXml()) {
+      this.panel.flowchart.source.xml.value = u.decode(
+        this.panel.flowchart.source.xml.value,
+        true,
+        true,
+        true
+      );
+    }
+  }
+
+  isencodedXml() {
+    return u.isencoded(this.panel.flowchart.source.xml.value);
+  }
 
   //
   // Functions
@@ -510,7 +528,7 @@ export default class MxPluginCtrl {
     return new RegExp(match[1], match[2]);
   }
 
-  decodeXml(data) {
-    return u.decode(data,true,true,true);
-  }
+  // decodeXml(data) {
+  //   return u.decode(data,true,true,true);
+  // }
 }

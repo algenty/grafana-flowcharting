@@ -91,13 +91,13 @@
             </div>
           </div>
 
-          <!-- <gf-form-switch
+          <gf-form-switch
             class="gf-form"
             label-class="width-12"
             label="Render value as link"
             checked="style.link"
             change="editor.onOptionsChange()"
-          ></gf-form-switch> -->
+          ></gf-form-switch>
         </div>
 
         <!-- TYPE -->
@@ -276,7 +276,7 @@
               ></select>
             </div>
           </div>
-          <div
+          <!-- <div
             class="gf-form"
             ng-if="style.textReplace == 'pattern' && style.textOn != 'n'"
           >
@@ -289,7 +289,7 @@
               ng-model-onblur
               placeholder="name for tooltip"
             />
-          </div>
+          </div> -->
         </div>
 
         <!-- LINK -->
@@ -300,7 +300,7 @@
               Url
               <info-popover mode="right-normal">
                 <p>Specify an URL (relative or absolute)</p>
-                <span>
+                <!-- <span>
                   Use special variables to specify cell values:
                   <br />
                   <em>${__cell}</em> refers to current cell value
@@ -312,7 +312,7 @@
                   <em>${__cell:raw}</em> syntax. By default values are URI
                   encoded. If the value is a complete URL you can disable all
                   encoding using
-                </span>
+                </span> -->
               </info-popover>
             </label>
             <input
@@ -324,7 +324,7 @@
               data-placement="right"
             />
           </div>
-          <div class="gf-form">
+          <!-- <div class="gf-form">
             <label class="gf-form-label width-9">
               Tooltip
               <info-popover mode="right-normal">
@@ -343,7 +343,7 @@
               ng-model-onblur
               data-placement="right"
             />
-          </div>
+          </div> -->
           <gf-form-switch
             class="gf-form"
             label-class="width-9"

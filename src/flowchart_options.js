@@ -1,13 +1,16 @@
 import _ from "lodash";
 import { plugin } from "./plugin";
+import vkbeautify from "./libs/vkbeautify/index";
 
 export class FlowchartOptionsCtrl {
   /** @ngInject */
   constructor($scope) {
     $scope.editor = this;
+    this.$scope = $scope;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     this.mx = this.panelCtrl.mx;
+    $scope.mx = this.panelCtrl.mx;
     this.sourceTypes = [
       { text: "Url", value: "url" },
       { text: "XML Content", value: "xml" }
@@ -46,8 +49,10 @@ export class FlowchartOptionsCtrl {
         opened = false;
       } else {
         if (event.data != undefined && event.data.length > 0) {
-          this.panel.flowchart.source.xml.value = this.mx.decodeXml(event.data);
+          // this.panel.flowchart.source.xml.value = this.mx.decodeXml(event.data);
+          this.panel.flowchart.source.xml.value = event.data;
           this.panelCtrl.changedSource = true;
+          this.$scope.$apply();
           this.render()
         }
         if (event.data != undefined || event.data.length == 0) {
@@ -68,6 +73,25 @@ export class FlowchartOptionsCtrl {
     }
     return true;
   }
+
+  prettify() {
+    try {
+      let text = this.panel.flowchart.source.xml.value;
+      this.panel.flowchart.source.xml.value = vkbeautify.xml(text);
+    } catch (error) {
+      console.error("Error in prettify : ",error)
+    }
+  }
+
+  minify() {
+    try {
+      let text = this.panel.flowchart.source.xml.value;
+      this.panel.flowchart.source.xml.value = vkbeautify.xmlmin(text,false);
+    } catch (error) {
+      console.error("Error in minify : ",error)
+    }
+  }
+
 }
 
 /** @ngInject */

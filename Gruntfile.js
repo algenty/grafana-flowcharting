@@ -27,6 +27,12 @@ module.exports = (grunt) => {
         src: ['**/*', '!**/*.js', '!**/*.scss', '!img/**/*', '.*'],
         dest: 'dist'
       },
+      vkbeautify_to_dist : {
+        cwd: 'node_modules',
+        expand: true,
+        src: ['vkbeautify/index.js'],
+        dest: 'dist/libs'
+      },
       libs_to_dist: {
         cwd: 'node_modules',
         expand: true,
@@ -137,7 +143,7 @@ module.exports = (grunt) => {
     
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:bower_to_dist']);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:bower_to_dist', 'copy:vkbeautify_to_dist']);
   grunt.registerTask('dev', ['default', 'watch']);
   grunt.registerTask('archive', ['default', 'compress:main']);
 
