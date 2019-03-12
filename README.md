@@ -39,16 +39,16 @@ See more example at draw.io
 
 # Cooming soon
 
-###0.3
+####0.3
   - Clean code and optimize display
 
-##1.0 TODO
+###1.0 TODO
   - Link on shape/text
   - Tooltips on error
   - Mapping on variables/templates
   - Best manuals/docs when i would find contributors better than me in english
 
-##2.0 :
+####Pull request for version 2.0
   -multi graph with auto link when errors
 
 # issues
@@ -73,19 +73,19 @@ And of course Flowcharting plugin itself is open source with a [public repositor
 Flowcharting requires [Grafana](https://www.grafana.com/) v5+ to run (not tested lower version)
 Download and install it 
 
-### Manualy
+#### Manualy
 ```sh
 $ cd $grafana_home/data/plugin
 $ wget --no-check-certificate https://github.com/algenty/grafana-flowcharting/archive/master.zip
 $ unzip master.zip
 ```
 
-### grafana-cli
+#### grafana-cli
 
 ```sh
 $ TODO
 ```
-### Build
+#### Build
 
 ```sh
 $ git clone https://github.com/algenty/grafana-flowcharting
