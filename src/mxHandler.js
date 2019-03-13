@@ -161,7 +161,7 @@ export default class MxPluginCtrl {
     // definie object graph
     this.$graphCanvas = $("<div></div>");
     this.$elem.html(this.$graphCanvas);
-    this.$graphCanvas.bind("plothover", function(event, pos, item) {
+    this.$graphCanvas.bind("plothover", function (event, pos, item) {
       if (!item) {
         $tooltip.detach();
         return;
@@ -176,6 +176,16 @@ export default class MxPluginCtrl {
 
     this.container = this.$graphCanvas[0];
     this.graph = new Graph(this.container);
+    // Test link
+    this.graph.addListener(mxEvent.CLICK, function (sender, evt) {
+      var cell = evt.getProperty('cell');
+      console.log('evt', evt)
+      if (cell != null) {
+        console.log('cell', cell);
+        let attr = cell.getAttribute('href');
+        console.log('attr', attr);
+      }
+    });
   }
 
   //
@@ -291,18 +301,18 @@ export default class MxPluginCtrl {
     // LOCK
     // Disables folding
     this.graph.setEnabled(false);
-    this.graph.isCellFoldable = function(cell, collapse) {
-      return false;
-    };
+    // this.graph.isCellFoldable = function (cell, collapse) {
+    //   return false;
+    // };
   }
 
   unlockGraph() {
     // LOCK
     // Disables folding
     this.graph.setEnabled(true);
-    this.graph.isCellFoldable = function(cell, collapse) {
-      return true;
-    };
+    // this.graph.isCellFoldable = function (cell, collapse) {
+    //   return true;
+    // };
   }
 
   getCurrentCell(reg_name, prop_name) {
@@ -452,11 +462,16 @@ export default class MxPluginCtrl {
   // Change color of shape
   changeShape(id, color, style) {
     if (style) {
-      let cell = this.graph.getModel().getCell(id);
+      let model = this.graph.getModel();
+      let cell = model.getCell(id);
       if (cell) {
         this.graph.setCellStyles(style, color, [cell]);
+        // text Link
+        // this.graph.setCellStyles(mxConstants.NS_XLINK, "https://www.google.fr", [cell]);
+        cell.setAttribute("href", "https://www.google.fr")
       }
     }
+
   }
 
   // Restore color of shape

@@ -684,4 +684,4 @@ function (_MetricsPanelCtrl) {
 }(_sdk.MetricsPanelCtrl);
 
 exports.MetricsPanelCtrl = exports.FlowchartCtrl = FlowchartCtrl;
-FlowchartCtrl.templateUrl = "module.html";
+FlowchartCtrl.templateUrl = "./partials/module.html";

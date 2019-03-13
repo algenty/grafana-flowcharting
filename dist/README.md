@@ -9,7 +9,7 @@ Complexe Diagram and flowchart for grafana based on mxGraph librairies, see draw
   - Organigrams
   - And more ... (Edit through draw.io)
  
- ## example
+ ## examples
  ![Diagram](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/example.png?raw=true)
  
 See more example at draw.io
@@ -27,24 +27,32 @@ See more example at draw.io
   - inspect tab
 
 ## 0.2
+### Works
   - Display graph through xml definition
   - Calibrate display (scale, center,background)
-  - inspect graph to test states and shape
+  - Inspect tab to test states and shape from graph.
   - Mapping values and colors (use stroke in color options for arrows instead fill)
   - String type added with range or value mapping.
   - Date type added
-  - multi rules with expand/collapes for better displa, possibility to reorg rules
+  - multi rules with expand/collapes for better display, possibility to reorg rules
 
-  /!\ Only dark theme is supported at this time
+### Not works
+  - Only dark theme is supported at this time
+  - Url source not implemented
+  - SVG export not implemented
 
 # Cooming soon
 
 ## 0.3
-  - Clean code and optimize display
+  - Clean code and optimize display.
+  - Compress and uncompress button under xml source to optimize space in db
+  - Prettyfier and minifier of xml source
 
-## 1.0 TODO
+## 1.0 Pull request
   - Link on shape/text
-  - Tooltips on error
+  - Inverse stroke color for connector/edge to see it according theme.
+  - Export SVG options.
+  - Tooltips on error.
   - Mapping on variables/templates
   - Best manuals/docs when i would find contributors better than me in english
 
@@ -53,7 +61,7 @@ See more example at draw.io
 
 # issues
 
-Pull bugs and issues on https://github.com/algenty/grafana-flowcharting/issues
+Bugs and issues on https://github.com/algenty/grafana-flowcharting/issues
 
 # Tech
 

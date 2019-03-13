@@ -591,4 +591,4 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };
 
-FlowchartCtrl.templateUrl = "module.html";
+FlowchartCtrl.templateUrl = "./partials/module.html";
