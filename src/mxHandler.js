@@ -72,6 +72,7 @@ window.mxElbowEdgeHandler =
   window.mxElbowEdgeHandler || mxgraph.mxElbowEdgeHandler;
 window.mxEllipse = window.mxEllipse || mxgraph.mxEllipse;
 window.mxEvent = window.mxEvent || mxgraph.mxEvent;
+window.mxEventObject = window.mxEventObject || mxgraph.mxEventObject;
 window.mxFile = window.mxFile || mxgraph.mxFile;
 window.mxGeometry = window.mxGeometry || mxgraph.mxGeometry;
 window.mxGraph = window.mxGraph || mxgraph.mxGraph;
@@ -169,7 +170,7 @@ export default class MxPluginCtrl {
     });
 
     var Graph = require("./Graph")({
-      touch: "1",
+      // touch: "1",
       libs: "arrows;basic;bpmn;flowchart"
     });
     var Shapes = require("./Shapes");

@@ -29,18 +29,21 @@ export class FlowchartOptionsCtrl {
   }
 
   openDrawEditor() {
+    let urlEditor="https://draw.io?embed=1";
+    // let urlEditor="https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html?embed=1";
+
     // source : 
     // https://desk.draw.io/support/solutions/articles/16000042542-how-to-embed-html-
     // https://support.draw.io/display/DOB/2016/05/09/Simple+draw.io+embedding+walk-through
     let myWindow = window.open(
-      "https://draw.io?embed=1",
+      urlEditor,
       "MxGraph Editor",
       "width=1280, height=720"
     );
     let opened = false;
     window.addEventListener("message", event => {
 
-      if (event.origin !== "https://www.draw.io") return;
+      // if (event.origin !== "https://www.draw.io") return;
       if (event.data == "ready") {
         event.source.postMessage(
           this.panel.flowchart.source.xml.value,

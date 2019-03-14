@@ -53,8 +53,10 @@ See more example at draw.io
   - Inverse stroke color for connector/edge to see it according theme.
   - Export SVG options.
   - Tooltips on error.
-  - Mapping on variables/templates
-  - Best manuals/docs when i would find contributors better than me in english
+  - Mapping on variables/templates.
+  - Add custom stencils
+  - Best manuals/docs when i would find contributors better than me in english.
+  - Set visible or not according to state.
 
 ## Pull request for version 2.0
   - multi graph with auto link when errors

@@ -59,14 +59,15 @@ function () {
     value: function openDrawEditor() {
       var _this = this;
 
+      var urlEditor = "https://draw.io?embed=1"; // let urlEditor="https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html?embed=1";
       // source : 
       // https://desk.draw.io/support/solutions/articles/16000042542-how-to-embed-html-
       // https://support.draw.io/display/DOB/2016/05/09/Simple+draw.io+embedding+walk-through
-      var myWindow = window.open("https://draw.io?embed=1", "MxGraph Editor", "width=1280, height=720");
+
+      var myWindow = window.open(urlEditor, "MxGraph Editor", "width=1280, height=720");
       var opened = false;
       window.addEventListener("message", function (event) {
-        if (event.origin !== "https://www.draw.io") return;
-
+        // if (event.origin !== "https://www.draw.io") return;
         if (event.data == "ready") {
           event.source.postMessage(_this.panel.flowchart.source.xml.value, event.origin);
           opened = false;
