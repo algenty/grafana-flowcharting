@@ -308,8 +308,14 @@ export class MappingOptionsCtrl {
     this.onOptionsChange();
   }
 
-  findShapeInPanel(style) {
-    this.scrollToAnchor("agenty-grafana-flowcharting");
+  mapCell(map,id) {
+    // init mapping event
+    this.panelCtrl.onMapping.active = true;
+    this.panelCtrl.onMapping.object = map;
+    this.panelCtrl.onMapping.idFocus = id;
+    // focus to graph
+    // setTimeout(function() { $("#agenty-grafana-flowcharting").focus(); }, 3000);
+    document.getElementById('agenty-grafana-flowcharting').scrollIntoView();
   }
 
   scrollToAnchor(anchor_id){

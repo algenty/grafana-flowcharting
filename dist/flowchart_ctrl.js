@@ -67,8 +67,17 @@ function (_MetricsPanelCtrl) {
     _this.mx;
     _this.changedSource = true;
     _this.changedData = true;
-    _this.changedOptions = true; // OLD OPTIONS
+    _this.changedOptions = true; // For Mapping with pointer
 
+    _this.onMapping = {
+      active: false,
+      // boolean if pointer mapping is active
+      object: undefined,
+      // ojb to return id of mapping
+      idFocus: undefined // id of dom
+      // OLD OPTIONS
+
+    };
     _this.options = {
       metrics: {
         handler: {

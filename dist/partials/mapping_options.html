@@ -402,14 +402,15 @@
                   ng-click="editor.showShapeFromStyle(shape)"
                 ></i>
               </label>
-              <!-- <label class="gf-form-label" style="margin-right: 2px;">
+              <label class="gf-form-label" style="margin-right: 2px;">
                 <i
                   class="fa fa-mouse-pointer pointer"
-                  ng-click="editor.findShapeInPanel(style)"
+                  ng-click="editor.mapCell(shape,'shape_' + $index)"
                 ></i>
-              </label> -->
+              </label>
               <input
                 type="text"
+                id="shape_{{$index}}"
                 placeholder="id or regex of shape"
                 class="gf-form-input width-13"
                 ng-model="shape.pattern"
@@ -421,10 +422,9 @@
                 ng-model-onblur
                 data-placement="right"
                 ng-mouseleave="mx.unselectCell()"
-                ng-mouseover="mx.selectCell(shape.pattern)"
+                ng-mouseover="mx.selectCell(text.pattern)"
               />
             </div>
-
             <div class="gf-form">
               <label class="gf-form-label">
                 <i

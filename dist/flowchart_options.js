@@ -67,13 +67,14 @@ function () {
       var myWindow = window.open(urlEditor, "MxGraph Editor", "width=1280, height=720");
       var opened = false;
       window.addEventListener("message", function (event) {
-        // if (event.origin !== "https://www.draw.io") return;
+        if (event.origin !== "https://www.draw.io") return; // when editor is open
+
         if (event.data == "ready") {
+          // send xml
           event.source.postMessage(_this.panel.flowchart.source.xml.value, event.origin);
-          opened = false;
+          opened = true;
         } else {
           if (event.data != undefined && event.data.length > 0) {
-            // this.panel.flowchart.source.xml.value = this.mx.decodeXml(event.data);
             _this.panel.flowchart.source.xml.value = event.data;
             _this.panelCtrl.changedSource = true;
 

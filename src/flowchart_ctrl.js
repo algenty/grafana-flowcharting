@@ -25,6 +25,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.changedSource = true;
     this.changedData = true;
     this.changedOptions = true;
+    // For Mapping with pointer
+    this.onMapping= {
+      active : false, // boolean if pointer mapping is active
+      object : undefined, // ojb to return id of mapping
+      idFocus: undefined, // id of dom
+    }
 
     // OLD OPTIONS
     this.options = {

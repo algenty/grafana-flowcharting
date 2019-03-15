@@ -43,16 +43,17 @@ export class FlowchartOptionsCtrl {
     let opened = false;
     window.addEventListener("message", event => {
 
-      // if (event.origin !== "https://www.draw.io") return;
-      if (event.data == "ready") {
+      if (event.origin !== "https://www.draw.io") return;
+      // when editor is open
+      if (event.data == "ready" ) {
+        // send xml
         event.source.postMessage(
           this.panel.flowchart.source.xml.value,
           event.origin
         );
-        opened = false;
+        opened = true;
       } else {
         if (event.data != undefined && event.data.length > 0) {
-          // this.panel.flowchart.source.xml.value = this.mx.decodeXml(event.data);
           this.panel.flowchart.source.xml.value = event.data;
           this.panelCtrl.changedSource = true;
           this.$scope.$apply();

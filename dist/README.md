@@ -26,6 +26,14 @@ See more example at draw.io
   - Display Graph
   - inspect tab
 
+## 0.3
+  - Clean code and optimize display.
+  - Compress and uncompress button under xml source to optimize space in db
+  - Prettyfier and minifier of xml source
+  - Url Source for graph definition
+  - Invert stroke color of arrow options
+
+
 ## 0.2
 ### Works
   - Display graph through xml definition
@@ -43,23 +51,19 @@ See more example at draw.io
 
 # Cooming soon
 
-## 0.3
-  - Clean code and optimize display.
-  - Compress and uncompress button under xml source to optimize space in db
-  - Prettyfier and minifier of xml source
-
 ## 1.0 Pull request
   - Link on shape/text
   - Inverse stroke color for connector/edge to see it according theme.
   - Export SVG options.
   - Tooltips on error.
   - Mapping on variables/templates.
-  - Add custom stencils
+  - Add custom stencils.
   - Best manuals/docs when i would find contributors better than me in english.
   - Set visible or not according to state.
 
 ## Pull request for version 2.0
-  - multi graph with auto link when errors
+  - Multi graph with auto link when errors
+  - Gradien Mode for color
 
 # issues
 

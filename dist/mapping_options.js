@@ -434,9 +434,15 @@ function () {
       this.onOptionsChange();
     }
   }, {
-    key: "findShapeInPanel",
-    value: function findShapeInPanel(style) {
-      this.scrollToAnchor("agenty-grafana-flowcharting");
+    key: "mapCell",
+    value: function mapCell(map, id) {
+      // init mapping event
+      this.panelCtrl.onMapping.active = true;
+      this.panelCtrl.onMapping.object = map;
+      this.panelCtrl.onMapping.idFocus = id; // focus to graph
+      // setTimeout(function() { $("#agenty-grafana-flowcharting").focus(); }, 3000);
+
+      document.getElementById('agenty-grafana-flowcharting').scrollIntoView();
     }
   }, {
     key: "scrollToAnchor",
