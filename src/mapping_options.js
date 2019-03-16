@@ -6,12 +6,12 @@ export class MappingOptionsCtrl {
   /** @ngInject */
   constructor($scope) {
     $scope.editor = this;
-    $scope.mapping = this;
     this.activeStyleIndex = 0;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     this.mx = this.panelCtrl.mx;
     $scope.mx = this.panelCtrl.mx;
+    $scope.onMapping = this.panelCtrl.onMapping;
     this.unitFormats = kbn.getUnitFormats();
     this.colorModes = [
       { text: "Disabled", value: null },
@@ -143,6 +143,9 @@ export class MappingOptionsCtrl {
       textSeq: 1,
       textProp: 'id',
       textMaps: [],
+      linkSeq: 1,
+      linkProp: 'id',
+      linkMaps: [],
       mappingType: 1
     };
 
@@ -182,7 +185,7 @@ export class MappingOptionsCtrl {
     };
   }
 
-  onOptionsChange() {
+  onOptionsChange(fieldName,style) {
     this.panelCtrl.changedOptions = true;
     this.render();
   }
@@ -308,14 +311,48 @@ export class MappingOptionsCtrl {
     this.onOptionsChange();
   }
 
+  //
+  // ON LINK
+  //
+  addLinkToStyle(style) {
+    if (!style.linkMaps) {
+      style.linkMaps = [];
+    }
+    style.linkMaps.push({ pattern: "", prop: "id", id: style.linkSeq++ });
+    this.onOptionsChange();
+  }
+
+  removeLinkFromStyle(style, link) {
+    style.linkMaps = _.without(style.linkMaps, link);
+    this.onOptionsChange();
+  }
+
+  hideLinkFromStyle(link) {
+    link.hidden = true;
+    this.onOptionsChange();
+  }
+
+  showLinkFromStyle(link) {
+    link.hidden = false;
+    this.onOptionsChange();
+  }
+
   mapCell(map,id) {
     // init mapping event
-    this.panelCtrl.onMapping.active = true;
-    this.panelCtrl.onMapping.object = map;
-    this.panelCtrl.onMapping.idFocus = id;
-    // focus to graph
-    // setTimeout(function() { $("#agenty-grafana-flowcharting").focus(); }, 3000);
-    document.getElementById('agenty-grafana-flowcharting').scrollIntoView();
+    if (this.panelCtrl.onMapping.active && map == this.panelCtrl.onMapping.object ) { 
+      this.panelCtrl.onMapping.active = false;
+    }
+    else {
+      this.panelCtrl.onMapping.active = true;
+      this.panelCtrl.onMapping.object = map;
+      this.panelCtrl.onMapping.idFocus = id;
+      // focus to graph
+      // setTimeout(function() { $("#agenty-grafana-flowcharting").focus(); }, 3000);
+      let elt = document.getElementById('agenty-grafana-flowcharting')
+      elt.scrollIntoView();
+      elt.focus();
+    }
+
   }
 
   scrollToAnchor(anchor_id){

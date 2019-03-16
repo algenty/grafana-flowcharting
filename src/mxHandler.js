@@ -123,7 +123,7 @@ window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 export default class MxPluginCtrl {
   /** @ngInject */
   constructor($scope, elem, attrs, ctrl) {
-    this.$scope=$scope;
+    this.$scope = $scope;
     $scope.editor = this;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
@@ -209,7 +209,6 @@ export default class MxPluginCtrl {
   //
   refreshFlowChart() {
     console.debug("mxgraph.refreshFlowChart");
-    let container = this.$graphCanvas[0];
     var width = this.$elem.width();
     var height = this.panelCtrl.height;
     var size = Math.min(width, height);
@@ -218,8 +217,8 @@ export default class MxPluginCtrl {
     var graphCss = {
       margin: "auto",
       position: "relative",
-      paddingBottom: 20 + "px",
-      height: size + "px"
+      // paddingBottom: 20 + "px",
+      height: size - 30 + "px"
     };
 
     this.$graphCanvas.css(graphCss);
@@ -268,22 +267,43 @@ export default class MxPluginCtrl {
 
   eventGraph(me) {
     var self = this;
-    console.log("mouseEvent",me);
-    console.log("self.panelCtrl.onMapping",self.panelCtrl.onMapping)
-    // if mapping activate
-    if(self.panelCtrl.onMapping.active) {
-      self.panelCtrl.onMapping.active = false;
-      let state = me.getState();
-      // if is cell
-      if(me.state != undefined && me.state != null) {
-        console.log("state",state)
-        console.log("self.panelCtrl.onMapping",self.panelCtrl.onMapping)
-        console.log("self.panelCtrl.onMapping.objMap",self.panelCtrl.onMapping.objMap);
-       
-        self.panelCtrl.onMapping.object.pattern = state.cell.id;
+    console.log("mouseEvent", me);
+    console.log("self.panelCtrl.onMapping", self.panelCtrl.onMapping);
+    let id = null;
+    let state = me.getState();
+    // if on Cell
+    if (me.state != undefined && me.state != null) {
+      id = state.cell.id;
+      console.log("state", state);
+      console.log("self.panelCtrl.onMapping", self.panelCtrl.onMapping);
+      console.log(
+        "self.panelCtrl.onMapping.object",
+        self.panelCtrl.onMapping.object
+      );
+      // if mapping activate
+      if (self.panelCtrl.onMapping.active) {
+        self.panelCtrl.onMapping.active = false;
+        self.panelCtrl.onMapping.object.pattern = id;
         self.$scope.$apply();
-        // return to input
-        setTimeout(function() { $("#" + self.panelCtrl.onMapping.idFocus).focus(); }, 100);
+        setTimeout(function() {
+          $("#" + self.panelCtrl.onMapping.idFocus).focus();
+        }, 100);
+      } else {
+        // search link
+        _.each(self.panelCtrl.linkStates, _link => {
+          const regex = this.stringToJsRegex(_link.pattern);
+          let matching = id.toString().match(regex);
+          if (_link.pattern == id || matching) {
+            if(_link.linkTargetBlank) {
+              var win = window.open(_link.linkUrl, '_blank');
+              win.focus();
+            }
+            else {
+              var win = window.open(_link.linkUrl, '_blank_self');
+              win.focus();
+            }
+          }
+        });
       }
     }
   }

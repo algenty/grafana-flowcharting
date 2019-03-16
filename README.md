@@ -22,16 +22,14 @@ See more example at draw.io
 
 # Features
 
-## 0.1
-  - Display Graph
-  - inspect tab
-
 ## 0.3
   - Clean code and optimize display.
   - Compress and uncompress button under xml source to optimize space in db
   - Prettyfier and minifier of xml source
   - Url Source for graph definition
   - Invert stroke color of arrow options
+  - Mapping Helper
+  - Only dark theme suported
 
 
 ## 0.2
@@ -44,10 +42,9 @@ See more example at draw.io
   - Date type added
   - multi rules with expand/collapes for better display, possibility to reorg rules
 
-### Not works
-  - Only dark theme is supported at this time
-  - Url source not implemented
-  - SVG export not implemented
+## 0.1
+  - Display Graph
+  - inspect tab
 
 # Cooming soon
 
@@ -60,6 +57,9 @@ See more example at draw.io
   - Add custom stencils.
   - Best manuals/docs when i would find contributors better than me in english.
   - Set visible or not according to state.
+  - Only dark theme is supported at this time
+  - Url source not implemented
+  - SVG export not implemented
 
 ## Pull request for version 2.0
   - Multi graph with auto link when errors
