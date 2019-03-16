@@ -513,6 +513,7 @@ function (_MetricsPanelCtrl) {
     value: function updateLink() {
       var _this4 = this;
 
+      console.debug("flowchart_ctrl.updateLink");
       this.linkStates = []; // Begin For Each Styles
 
       _lodash.default.each(this.panel.styles, function (_style) {

@@ -141,7 +141,6 @@ export default class MxPluginCtrl {
     this.initFlowchart();
 
     // Events Render
-    // this.render = self.render.bind(this);
     ctrl.events.on("render", () => {
       this.render();
     });
@@ -274,12 +273,6 @@ export default class MxPluginCtrl {
     // if on Cell
     if (me.state != undefined && me.state != null) {
       id = state.cell.id;
-      console.log("state", state);
-      console.log("self.panelCtrl.onMapping", self.panelCtrl.onMapping);
-      console.log(
-        "self.panelCtrl.onMapping.object",
-        self.panelCtrl.onMapping.object
-      );
       // if mapping activate
       if (self.panelCtrl.onMapping.active) {
         self.panelCtrl.onMapping.active = false;
@@ -295,11 +288,11 @@ export default class MxPluginCtrl {
           let matching = id.toString().match(regex);
           if (_link.pattern == id || matching) {
             if(_link.linkTargetBlank) {
-              var win = window.open(_link.linkUrl, '_blank');
+              let win = window.open(_link.linkUrl, '_blank');
               win.focus();
             }
             else {
-              var win = window.open(_link.linkUrl, '_blank_self');
+              let win = window.open(_link.linkUrl, '_self');
               win.focus();
             }
           }
@@ -401,13 +394,14 @@ export default class MxPluginCtrl {
         fontColor: view.getState(_cell).style[mxConstants.STYLE_FONTCOLOR],
         fillColor: view.getState(_cell).style[mxConstants.STYLE_FILLCOLOR],
         strokeColor: view.getState(_cell).style[mxConstants.STYLE_STROKECOLOR],
-        // 'state' : view.getState(cell),
-        // 'style': cell.getStyle(),
+        gradient: view.getState(_cell).style[mxConstants.STYLE_GRADIENTCOLOR],
         isEdge: _cell.isEdge(),
         isVertex: _cell.isVertex(),
         level: -1
       };
+      console.log("cell",cell)
       allCells.push(cell);
+      console.log("Style",view.getState(_cell).style);
     });
     return allCells;
   }
@@ -468,17 +462,17 @@ export default class MxPluginCtrl {
           // console.debug("updateStateForShape|matching : ", _shape, _cell);
           found = true;
           if (_shape.level != -1) {
-            this.restoreShape(_cell.id);
-            this.changeShape(_cell.id, _shape.color, _shape.colorMode);
+            this.restoreColor(_cell.id);
+            this.changeColor(_cell.id, _shape.color, _shape.colorMode);
           } else if (_cell.level != -1) {
-            this.restoreShape(_cell.id);
+            this.restoreColor(_cell.id);
           }
           _cell.level = _shape.level;
         }
       });
       if (!found) {
         if (_cell.level != -1) {
-          this.restoreShape(_cell.id);
+          this.restoreColor(_cell.id);
           _cell.level = -1;
         }
       }
@@ -521,21 +515,19 @@ export default class MxPluginCtrl {
   }
 
   // Change color of shape
-  changeShape(id, color, style) {
+  changeColor(id, color, style) {
     if (style) {
       let model = this.graph.getModel();
       let cell = model.getCell(id);
       if (cell) {
         this.graph.setCellStyles(style, color, [cell]);
-        // text Link
-        // this.graph.setCellStyles(mxConstants.NS_XLINK, "https://www.google.fr", [cell]);
-        cell.setAttribute("href", "https://www.google.fr");
+        this.graph.setCellStyles(mxConstant.STYLE_GRADIENTCOLOR,  'none', [cell]);
       }
     }
   }
 
   // Restore color of shape
-  restoreShape(id) {
+  restoreColor(id) {
     let cell = this.graph.getModel().getCell(id);
     const old = _.find(this.cells, {
       id: id
@@ -544,6 +536,7 @@ export default class MxPluginCtrl {
       this.graph.setCellStyles(this.STYLE_FILLCOLOR, old.fillColor, [cell]);
       this.graph.setCellStyles(this.STYLE_FONTCOLOR, old.fontColor, [cell]);
       this.graph.setCellStyles(this.STYLE_STROKECOLOR, old.strokeColor, [cell]);
+      this.graph.setCellStyles(this.STYLE_GRADIENTCOLOR, old.gradient, [cell]);
     }
   }
 

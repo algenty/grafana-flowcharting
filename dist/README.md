@@ -15,9 +15,9 @@ Complexe Diagram and flowchart for grafana based on mxGraph librairies, see draw
 See more example at draw.io
 
  ## in grafana
- ![editor](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/editor_example.png?raw=true)
- ![tab2](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/editor_tab2.png?raw=true)
- ![tab2](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/editor_tab3.png?raw=true)
+ ![editor](dist/img/editor_example.png?raw=true)
+ ![tab2](dist/img/editor_tab2.png?raw=true)
+ ![tab2](dist/img/editor_tab3.png?raw=true)
  
 
 # Features
@@ -26,16 +26,19 @@ See more example at draw.io
   - Clean code and optimize display.
   - Compress and uncompress button under xml source to optimize space in db
   - Prettyfier and minifier of xml source
+  - Mapping Helper
+### Not work
+  - Only dark theme suported
   - Url Source for graph definition
   - Invert stroke color of arrow options
-  - Mapping Helper
-  - Only dark theme suported
+  - Coloring Gradient is used on shape
+
 
 
 ## 0.2
 ### Works
   - Display graph through xml definition
-  - Calibrate display (scale, center,background)
+  - Calibrate display (scale, center, background)
   - Inspect tab to test states and shape from graph.
   - Mapping values and colors (use stroke in color options for arrows instead fill)
   - String type added with range or value mapping.

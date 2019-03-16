@@ -440,6 +440,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   updateLink() {
+    console.debug("flowchart_ctrl.updateLink")
     this.linkStates = [];
     // Begin For Each Styles
     _.each(this.panel.styles, _style => {
