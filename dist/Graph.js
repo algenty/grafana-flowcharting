@@ -3539,7 +3539,7 @@ module.exports = function (urlParams) {
             return new mxShape(new mxStencil(doc.documentElement));
           } catch (e) {
             if (window.console != null) {
-              console.log('Error in shape: ' + e);
+              console.error('Error in shape: ' + e);
             }
           }
         }
@@ -3608,7 +3608,7 @@ module.exports = function (urlParams) {
                   }
                 } catch (e) {
                   if (window.console != null) {
-                    console.log('error in getStencil:', fname, e);
+                    console.error('error in getStencil:', fname, e);
                   }
                 }
               } else {// FIXME: This does not yet work as the loading is triggered after
@@ -3680,7 +3680,7 @@ module.exports = function (urlParams) {
           }
         } catch (e) {
           if (window.console != null) {
-            console.log('error in loadStencilSet:', stencilFile, e);
+            console.error('error in loadStencilSet:', stencilFile, e);
           }
         }
       }

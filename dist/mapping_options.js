@@ -30,7 +30,7 @@ function () {
     _classCallCheck(this, MappingOptionsCtrl);
 
     $scope.editor = this;
-    this.activeStyleIndex = 0;
+    this.activeRuleIndex = 0;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     this.mx = this.panelCtrl.mx;
@@ -182,93 +182,63 @@ function () {
       this.onOptionsChange();
     }
   }, {
-    key: "cloneMetricStyle",
-    value: function cloneMetricStyle(style) {
-      var newStyleRule = angular.copy(style);
-      newStyleRule.id = ++this.panel.styleSeq;
-      var styles = this.panel.styles;
-      var stylesCount = styles.length;
-      var indexToInsert = stylesCount; // check if last is a catch all rule, then add it before that one
+    key: "cloneRule",
+    value: function cloneRule(rule) {
+      var newRule = angular.copy(rule);
+      newRule.id = ++this.panel.ruleSeq;
+      var rules = this.panel.rules;
+      var rulesCount = rules.length;
+      var indexToInsert = rulesCount; // check if last is a catch all rule, then add it before that one
 
-      if (stylesCount > 0) {
-        var last = styles[stylesCount - 1];
+      if (rulesCount > 0) {
+        var last = rules[rulesCount - 1];
 
         if (last.pattern === "/.*/") {
-          indexToInsert = stylesCount - 1;
+          indexToInsert = rulesCount - 1;
         }
       }
 
-      styles.splice(indexToInsert, 0, newStyleRule);
-      this.activeStyleIndex = indexToInsert;
+      rules.splice(indexToInsert, 0, newRule);
+      this.activeRuleIndex = indexToInsert;
     }
   }, {
-    key: "addMetricStyle",
-    value: function addMetricStyle() {
-      var newStyleRule = {
-        id: ++this.panel.styleSeq,
-        unit: "short",
-        type: "number",
-        alias: "",
-        aggregation: "current",
-        decimals: 2,
-        colors: ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
-        colorMode: this.mx.STYLE_FILLCOLOR,
-        colorOn: "a",
-        textOn: "wmd",
-        textReplace: 'content',
-        textPattern: '/.*/',
-        pattern: "/.*/",
-        dateFormat: "YYYY-MM-DD HH:mm:ss",
-        thresholds: [],
-        invert: false,
-        shapeSeq: 1,
-        shapeProp: 'id',
-        shapeMaps: [],
-        textSeq: 1,
-        textProp: 'id',
-        textMaps: [],
-        linkSeq: 1,
-        linkProp: 'id',
-        linkMaps: [],
-        mappingType: 1
-      };
-      var styles = this.panel.styles;
-      var stylesCount = styles.length;
-      var indexToInsert = stylesCount; // check if last is a catch all rule, then add it before that one
+    key: "addRule",
+    value: function addRule() {
+      var newRule = new rule(++this.panel.ruleSeq);
+      var rules = this.panel.rules;
+      var rulesCount = rules.length;
+      var indexToInsert = rulesCount; // check if last is a catch all rule, then add it before that one
 
-      if (stylesCount > 0) {
-        var last = styles[stylesCount - 1];
+      if (rulesCount > 0) {
+        var last = rules[rulesCount - 1];
 
         if (last.pattern === "/.*/") {
-          indexToInsert = stylesCount - 1;
+          indexToInsert = rulesCount - 1;
         }
       }
 
-      styles.splice(indexToInsert, 0, newStyleRule);
-      this.activeStyleIndex = indexToInsert;
+      rules.splice(indexToInsert, 0, newRule);
+      this.activeRulesIndex = indexToInsert;
     }
   }, {
-    key: "removeMetricStyle",
-    value: function removeMetricStyle(style) {
-      this.panel.styles = _lodash.default.without(this.panel.styles, style);
+    key: "removeRule",
+    value: function removeRule(rule) {
+      this.panel.rules = _lodash.default.without(this.panel.rules, rule);
     }
   }, {
     key: "invertColorOrder",
     value: function invertColorOrder(index) {
-      var ref = this.panel.styles[index].colors;
-      var copy = ref[0];
-      ref[0] = ref[2];
-      ref[2] = copy;
-      this.panel.styles[index].invert = !this.panel.styles[index].invert;
+      var rules = this.panel.rules;
+      rules[index].invertColorOrder();
       this.onOptionsChange();
     }
   }, {
     key: "onColorChange",
-    value: function onColorChange(styleIndex, colorIndex) {
+    value: function onColorChange(ruleIndex, colorIndex) {
       var _this2 = this;
 
       return function (newColor) {
-        _this2.panel.styles[styleIndex].colors[colorIndex] = newColor;
+        _this2.panel.rules[ruleIndex].colors[colorIndex] = newColor;
 
         _this2.onOptionsChange();
       };
@@ -278,90 +248,57 @@ function () {
     value: function onOptionsChange(fieldName, style) {
       this.panelCtrl.changedOptions = true;
       this.render();
-    } //
-    // Validate
-    //
-
-  }, {
-    key: "validateRegex",
-    value: function validateRegex(textRegex) {
-      if (textRegex == null || textRegex.length == 0) {
-        return true;
-      }
-
-      try {
-        var regex = new RegExp(textRegex);
-        return true;
-      } catch (e) {
-        return false;
-      }
     }
   }, {
     key: "addValueMap",
-    value: function addValueMap(style) {
-      if (!style.valueMaps) {
-        style.valueMaps = [];
-      }
-
-      style.valueMaps.push({
-        value: "",
-        text: ""
-      });
+    value: function addValueMap(rule) {
+      rule.addValueMap("", "");
       this.onOptionsChange();
     }
   }, {
     key: "removeValueMap",
-    value: function removeValueMap(style, index) {
-      style.valueMaps.splice(index, 1);
-      this.onOptionsChange();
+    value: function removeValueMap(rule, index) {
+      rule.removeValueMap(index);
     }
   }, {
     key: "addRangeMap",
-    value: function addRangeMap(style) {
-      if (!style.rangeMaps) {
-        style.rangeMaps = [];
-      }
-
-      style.rangeMaps.push({
-        from: "",
-        to: "",
-        text: ""
-      });
+    value: function addRangeMap(rule) {
+      rule.addRangeMap("", "", "");
       this.onOptionsChange();
     }
   }, {
     key: "removeRangeMap",
-    value: function removeRangeMap(style, index) {
-      style.rangeMaps.splice(index, 1);
+    value: function removeRangeMap(rule, index) {
+      rule.removeRangeMap(index);
       this.onOptionsChange();
     } //
-    // ON STYLE
+    // ON RULE
     // 
 
   }, {
-    key: "moveStyleToUp",
-    value: function moveStyleToUp(index) {
+    key: "moveRuleToUp",
+    value: function moveRuleToUp(index) {
       var first = 0;
-      var last = this.panel.styles.length - 1;
+      var last = this.panel.rules.length - 1;
 
       if (index != first && last != first) {
-        var curr = this.panel.styles[index];
-        var before = this.panel.styles[index - 1];
-        this.panel.styles[index - 1] = curr;
-        this.panel.styles[index] = before;
+        var curr = this.panel.rules[index];
+        var before = this.panel.rules[index - 1];
+        this.panel.rules[index - 1] = curr;
+        this.panel.rules[index] = before;
       }
     }
   }, {
-    key: "moveStyleToDown",
-    value: function moveStyleToDown(index) {
+    key: "moveRuleToDown",
+    value: function moveRuleToDown(index) {
       var first = 0;
-      var last = this.panel.styles.length - 1;
+      var last = this.panel.rules.length - 1;
 
       if (index != last && last != first) {
-        var curr = this.panel.styles[index];
-        var after = this.panel.styles[index + 1];
-        this.panel.styles[index + 1] = curr;
-        this.panel.styles[index] = after;
+        var curr = this.panel.rules[index];
+        var after = this.panel.rules[index + 1];
+        this.panel.rules[index + 1] = curr;
+        this.panel.rules[index] = after;
       }
     } //
     // ON SHAPE
@@ -480,21 +417,11 @@ function () {
       } else {
         this.panelCtrl.onMapping.active = true;
         this.panelCtrl.onMapping.object = map;
-        this.panelCtrl.onMapping.idFocus = id; // focus to graph
-        // setTimeout(function() { $("#agenty-grafana-flowcharting").focus(); }, 3000);
-
+        this.panelCtrl.onMapping.idFocus = id;
         var elt = document.getElementById('agenty-grafana-flowcharting');
         elt.scrollIntoView();
         elt.focus();
       }
-    }
-  }, {
-    key: "scrollToAnchor",
-    value: function scrollToAnchor(anchor_id) {
-      var tag = $("#" + anchor_id + "");
-      $('html,body').animate({
-        scrollTop: tag.offset().top
-      }, 'slow');
     }
   }]);
 

@@ -266,8 +266,6 @@ export default class MxPluginCtrl {
 
   eventGraph(me) {
     var self = this;
-    console.log("mouseEvent", me);
-    console.log("self.panelCtrl.onMapping", self.panelCtrl.onMapping);
     let id = null;
     let state = me.getState();
     // if on Cell
@@ -399,9 +397,7 @@ export default class MxPluginCtrl {
         isVertex: _cell.isVertex(),
         level: -1
       };
-      console.log("cell",cell)
       allCells.push(cell);
-      console.log("Style",view.getState(_cell).style);
     });
     return allCells;
   }

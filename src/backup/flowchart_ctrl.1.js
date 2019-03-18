@@ -9,12 +9,10 @@ import _ from "lodash";
 import { plugin } from "./plugin";
 // import mxgraph from './mxgraph';
 import mxHandler from "./mxHandler";
-import rule from "./rule_class";
 
 class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, $rootScope) {
     super($scope, $injector);
-    this.version = "0.2.0";
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.hiddenSeries = {};
@@ -55,7 +53,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     };
 
     var panelDefaults = {
-      version : "0.2.0",
       init: {
         logLevel: 3 //1:debug, 2:info, 3:warn, 4:error, 5:fatal
       },
@@ -68,9 +65,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       strokeWidth: 1,
       // NEW PANEL
       styleSeq: 1,
-      ruleSeq: 1,
       metrics: [],
-      rules: [new rule(1)],
       styles: [
         {
           id: 1,

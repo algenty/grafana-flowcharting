@@ -6,7 +6,7 @@ export class MappingOptionsCtrl {
   /** @ngInject */
   constructor($scope) {
     $scope.editor = this;
-    this.activeRuleIndex = 0;
+    this.activeStyleIndex = 0;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     this.mx = this.panelCtrl.mx;
@@ -97,54 +97,92 @@ export class MappingOptionsCtrl {
     this.onOptionsChange();
   }
 
-  cloneRule(rule) {
-    let newRule = angular.copy(rule);
-    newRule.id = ++this.panel.ruleSeq;
-    const rules = this.panel.rules;
-    const rulesCount = rules.length;
-    let indexToInsert = rulesCount;
+  cloneMetricStyle(style) {
+    let newStyleRule = angular.copy(style);
+    newStyleRule.id = ++this.panel.styleSeq;
+    const styles = this.panel.styles;
+    const stylesCount = styles.length;
+    let indexToInsert = stylesCount;
 
     // check if last is a catch all rule, then add it before that one
-    if (rulesCount > 0) {
-      const last = rules[rulesCount - 1];
+    if (stylesCount > 0) {
+      const last = styles[stylesCount - 1];
       if (last.pattern === "/.*/") {
-        indexToInsert = rulesCount - 1;
+        indexToInsert = stylesCount - 1;
       }
     }
-    rules.splice(indexToInsert, 0, newRule);
-    this.activeRuleIndex = indexToInsert;
+    styles.splice(indexToInsert, 0, newStyleRule);
+    this.activeStyleIndex = indexToInsert;
   }
 
-  addRule() {
-    const newRule = new rule(++this.panel.ruleSeq)
-    const rules = this.panel.rules;
-    const rulesCount = rules.length;
-    let indexToInsert = rulesCount;
+  addMetricStyle() {
+    const newStyleRule = {
+      id: ++this.panel.styleSeq,
+      unit: "short",
+      type: "number",
+      alias: "",
+      aggregation: "current",
+      decimals: 2,
+      colors: [
+        "rgba(245, 54, 54, 0.9)",
+        "rgba(237, 129, 40, 0.89)",
+        "rgba(50, 172, 45, 0.97)"
+      ],
+      colorMode: this.mx.STYLE_FILLCOLOR,
+      colorOn: "a",
+      textOn: "wmd",
+      textReplace: 'content',
+      textPattern: '/.*/',
+      pattern: "/.*/",
+      dateFormat: "YYYY-MM-DD HH:mm:ss",
+      thresholds: [],
+      invert: false,
+      shapeSeq: 1,
+      shapeProp: 'id',
+      shapeMaps: [],
+      textSeq: 1,
+      textProp: 'id',
+      textMaps: [],
+      linkSeq: 1,
+      linkProp: 'id',
+      linkMaps: [],
+      mappingType: 1
+    };
+
+    const styles = this.panel.styles;
+    const stylesCount = styles.length;
+    let indexToInsert = stylesCount;
 
     // check if last is a catch all rule, then add it before that one
-    if (rulesCount > 0) {
-      const last = rules[rulesCount - 1];
+    if (stylesCount > 0) {
+      const last = styles[stylesCount - 1];
       if (last.pattern === "/.*/") {
-        indexToInsert = rulesCount - 1;
+        indexToInsert = stylesCount - 1;
       }
     }
-    rules.splice(indexToInsert, 0, newRule);
-    this.activeRulesIndex = indexToInsert;
+
+    styles.splice(indexToInsert, 0, newStyleRule);
+    this.activeStyleIndex = indexToInsert;
   }
 
-  removeRule(rule) {
-    this.panel.rules = _.without(this.panel.rules, rule);
+  removeMetricStyle(style) {
+    this.panel.styles = _.without(this.panel.styles, style);
   }
 
   invertColorOrder(index) {
-    let rules = this.panel.rules;
-    rules[index].invertColorOrder();
+    const ref = this.panel.styles[index].colors;
+    const copy = ref[0];
+    ref[0] = ref[2];
+    ref[2] = copy;
+    this.panel.styles[index].invert = !this.panel.styles[index].invert;
+    // /!\ under
     this.onOptionsChange();
   }
 
-  onColorChange(ruleIndex, colorIndex) {
+  onColorChange(styleIndex, colorIndex) {
     return newColor => {
-      this.panel.rules[ruleIndex].colors[colorIndex] = newColor;
+      this.panel.styles[styleIndex].colors[colorIndex] = newColor;
+      // /!\ under
       this.onOptionsChange();
     };
   }
@@ -154,47 +192,70 @@ export class MappingOptionsCtrl {
     this.render();
   }
 
-  addValueMap(rule) {
-    rule.addValueMap("","");
+  //
+  // Validate
+  //
+
+  validateRegex(textRegex) {
+    if (textRegex == null || textRegex.length == 0) {
+      return true;
+    }
+    try {
+      let regex = new RegExp(textRegex);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  addValueMap(style) {
+    if (!style.valueMaps) {
+      style.valueMaps = [];
+    }
+    style.valueMaps.push({ value: "", text: "" });
     this.onOptionsChange();
   }
 
-  removeValueMap(rule, index) {
-    rule.removeValueMap(index);
-  }
-
-  addRangeMap(rule) {
-    rule.addRangeMap("","","");
+  removeValueMap(style, index) {
+    style.valueMaps.splice(index, 1);
     this.onOptionsChange();
   }
 
-  removeRangeMap(rule, index) {
-    rule.removeRangeMap(index)
+  addRangeMap(style) {
+    if (!style.rangeMaps) {
+      style.rangeMaps = [];
+    }
+    style.rangeMaps.push({ from: "", to: "", text: "" });
+    this.onOptionsChange();
+  }
+
+  removeRangeMap(style, index) {
+    style.rangeMaps.splice(index, 1);
     this.onOptionsChange();
   }
 
   //
-  // ON RULE
+  // ON STYLE
   // 
-  moveRuleToUp(index) {
+  moveStyleToUp(index) {
     const first = 0;
-    const last = this.panel.rules.length - 1;
+    const last = this.panel.styles.length - 1;
     if ( index != first && last != first ) {
-      let curr = this.panel.rules[index];
-      let before = this.panel.rules[index - 1];
-      this.panel.rules[index - 1] = curr;
-      this.panel.rules[index] = before;
+      let curr = this.panel.styles[index];
+      let before = this.panel.styles[index - 1];
+      this.panel.styles[index - 1] = curr;
+      this.panel.styles[index] = before;
     }
   }
 
-  moveRuleToDown(index) {
+  moveStyleToDown(index) {
     const first = 0;
-    const last = this.panel.rules.length - 1;
+    const last = this.panel.styles.length - 1;
     if ( index != last && last != first ) {
-      let curr = this.panel.rules[index];
-      let after = this.panel.rules[index + 1];
-      this.panel.rules[index + 1] = curr;
-      this.panel.rules[index] = after;
+      let curr = this.panel.styles[index];
+      let after = this.panel.styles[index + 1];
+      this.panel.styles[index + 1] = curr;
+      this.panel.styles[index] = after;
     }
   }
 
