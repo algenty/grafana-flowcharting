@@ -5,11 +5,9 @@ import { mappingOptionsTab } from "./mapping_options";
 import { flowchartOptionsTab } from "./flowchart_options";
 import { inspectOptionsTab } from "./inspect_options";
 import moment from "moment";
-import _ from "lodash";
 import { plugin } from "./plugin";
-// import mxgraph from './mxgraph';
 import mxHandler from "./mxHandler";
-import rule from "./rule_class";
+import RulesHandler from "./rulesHandler";
 
 class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, $rootScope) {
@@ -28,6 +26,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.changedSource = true;
     this.changedData = true;
     this.changedOptions = true;
+    this.rulesHandler;
     // For Mapping with pointer
     this.onMapping = {
       active: false, // boolean if pointer mapping is active
@@ -67,43 +66,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       valueName: "current",
       strokeWidth: 1,
       // NEW PANEL
-      styleSeq: 1,
-      ruleSeq: 1,
       metrics: [],
-      rules: [new rule(1)],
-      styles: [
-        {
-          id: 1,
-          unit: "short",
-          type: "number",
-          alias: "",
-          aggregation: "current",
-          decimals: 2,
-          colors: [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-          ],
-          colorMode: "fillColor",
-          colorOn: "a",
-          textOn: "wmd",
-          textReplace: "content",
-          textPattern: "/.*/",
-          pattern: "/.*/",
-          dateFormat: "YYYY-MM-DD HH:mm:ss",
-          thresholds: [],
-          invert: false,
-          shapeSeq: 1,
-          shapeProp: "id",
-          shapeMaps: [],
-          textSeq: 1,
-          textProp: "id",
-          textMaps: [],
-          linkProp: "id",
-          linkMaps: [],
-          mappingType: 1
-        }
-      ],
+      rules: [],
       // OLD PANEL
       flowchart: {
         source: {
@@ -171,8 +135,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onRender() {
     console.debug("ctrl.onRender");
     if (this.changedData == true || this.changedOptions == true) {
-      this.analyzeData();
-      if (this.changedOptions == true) this.updateLink();
+      // this.analyzeData();
+      // if (this.changedOptions == true) this.updateLink();
     }
   }
 
@@ -203,6 +167,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     console.debug("ctrl.link");
+    this.rulesHandler = new RulesHandler(scope);
     this.mx = new mxHandler(scope, elem, attrs, ctrl);
   }
 

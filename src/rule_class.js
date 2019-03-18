@@ -80,8 +80,6 @@ export default class Rule {
     removeShapeMap(index) { this.shapeMaps.splice(index, 1); }
     getShapeMap(index) { return this.shapeMaps[index]; }
     getShapeMaps() { return shapeMaps; }
-    hideShapeMap(index) { this.shapeMaps[index].hide(); }
-    showShapeMap(index) { this.shapeMaps[index].show(); }
 
     //
     // TEXT MAPS
@@ -90,8 +88,14 @@ export default class Rule {
     removeTextMap(index) { let m = this.textMaps[index]; this.textMaps = _.without(this.textMaps, m) };
     getTextMap(index) { return this.textMaps[index]; };
     getTextMaps() { return textMaps; }
-    hideTextMap(index) { this.textMaps[index].hide() };
-    showTextMap(index) { this.textMaps[index].show() };
+
+    //
+    // LINK MAPS
+    //
+    addLinkMap(pattern) { let m = new LinkMap(this,pattern); linkMaps.push(m); };
+    removeLinkMap(index) { let m = this.textMaps[index]; this.linkMaps = _.without(this.linkMaps, m) };
+    getLinkMap(index) { return this.linkMaps[index]; };
+    getLinkMaps() { return textMaps; }
 
     //
     // STRING VALUE MAPS
@@ -100,8 +104,6 @@ export default class Rule {
     removeValueMap(index) { this.valueMaps.splice(index, 1); }
     getValueMap(index) { return this.valueMaps[index]; }
     getValueMaps() { return valueMaps; }
-    hideValueMap(index) { this.valueMaps[index].hide(); }
-    showValueMap(index) { this.valueMaps[index].show(); }
 
     //
     // STRING RANGE VALUE MAPS

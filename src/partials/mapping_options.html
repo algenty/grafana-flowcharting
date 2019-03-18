@@ -1,5 +1,5 @@
 <div class="edit-tab-content">
-  <div class="editor-row" ng-repeat="style in editor.panel.styles">
+  <div class="editor-row" ng-repeat="rule in rulesHandler.getRules()">
     <div>
       <!-- HEADER of style -->
       <div
@@ -9,22 +9,21 @@
         <div style="text-align: left;float: left;vertical-align: middle">
           <span class="section-heading">
             <i
-              ng-show="style.reduce == undefined || style.reduce==false"
+              ng-show="rule.reduce == undefined || rule.reduce==false"
               class="fa fa-chevron-down fa-lg pointer"
-              ng-click="style.reduce=true"
+              ng-click="rule.reduce=true"
             ></i>
             <i
-              ng-show="style.reduce==true"
+              ng-show="rule.reduce==true"
               class="fa fa-chevron-right fa-lg pointer"
-              ng-click="style.reduce=false"
+              ng-click="rule.reduce=false"
             ></i>
             Rule
-            <!-- <span class="section-hading"> id : {{ style.id }}</span> -->
             <span
               class="section-heading"
-              ng-show="style.alias != undefined && style.alias.length >0"
+              ng-show="rule.alias != undefined && rule.alias.length >0"
             >
-              [{{ style.alias }}]</span
+              [{{ rule.alias }}]</span
             >
           </span>
         </div>
@@ -33,18 +32,18 @@
           <div>
             <i
               class="fa fa-arrow-up fa-lg pointer"
-              ng-click="editor.moveStyleToUp($index)"
+              ng-click="rulesHandler.moveRuleToUp($index)"
             ></i>
             <i
               class="fa fa-arrow-down fa-lg pointer"
-              ng-click="editor.moveStyleToDown($index)"
+              ng-click="rulesHandler.moveRuleToDown($index)"
             ></i>
           </div>
         </div>
       </div>
 
       <!-- CORPS -->
-      <div style="padding:30px" ng-hide="style.reduce==true">
+      <div style="padding:30px" ng-hide="rule.reduce==true">
         <!-- OPTIONS -->
         <div class="section gf-form-group">
           <h5 class="section-heading">Options</h5>
@@ -57,7 +56,7 @@
                 type="text"
                 placeholder="Name or regex of metric"
                 class="gf-form-input width-13"
-                ng-model="style.pattern"
+                ng-model="rule.pattern"
                 bs-tooltip="'Specify regex using /my.*regex/ syntax'"
                 bs-typeahead="editor.getMetricNames"
                 ng-blur="editor.onOptionsChange()"
@@ -68,23 +67,23 @@
               />
             </div>
           </div>
-          <div class="gf-form" ng-if="style.type !== 'hidden'">
+          <div class="gf-form" ng-if="rule.type !== 'hidden'">
             <label class="gf-form-label width-12">Alias name</label>
             <input
               type="text"
               class="gf-form-input width-12"
-              ng-model="style.alias"
+              ng-model="rule.alias"
               ng-change="editor.onOptionsChange()"
               ng-model-onblur
               placeholder="name for tooltip"
             />
           </div>
-          <div class="gf-form" ng-if="style.type !== 'hidden'">
+          <div class="gf-form" ng-if="rule.type !== 'hidden'">
             <label class="gf-form-label width-12">Aggregation</label>
             <div class="gf-form-select-wrapper width-12">
               <select
                 class="gf-form-input"
-                ng-model="style.aggregation"
+                ng-model="rule.aggregation"
                 ng-options="c.value as c.text for c in editor.aggregationTypes"
                 ng-change="editor.onOptionsChange()"
               ></select>
@@ -95,7 +94,7 @@
             class="gf-form"
             label-class="width-12"
             label="Object as link"
-            checked="style.link"
+            checked="rule.link"
             change="editor.onOptionsChange()"
           ></gf-form-switch>
         </div>
@@ -109,16 +108,16 @@
             <div class="gf-form-select-wrapper width-16">
               <select
                 class="gf-form-input"
-                ng-model="style.type"
+                ng-model="rule.type"
                 ng-options="c.value as c.text for c in editor.metricTypes"
                 ng-change="editor.onOptionsChange()"
               ></select>
             </div>
           </div>
-          <div class="gf-form" ng-if="style.type === 'date'">
+          <div class="gf-form" ng-if="rule.type === 'date'">
             <label class="gf-form-label width-10">Date Format</label>
             <gf-form-dropdown
-              model="style.dateFormat"
+              model="rule.dateFormat"
               css-class="gf-form-input width-16"
               lookup-text="true"
               get-options="editor.dateFormats"
@@ -128,35 +127,35 @@
             </gf-form-dropdown>
           </div>
 
-          <div ng-if="style.type === 'string'">
+          <div ng-if="rule.type === 'string'">
             <gf-form-switch
               class="gf-form"
               label-class="width-10"
-              ng-if="style.type === 'string'"
+              ng-if="rule.type === 'string'"
               label="Sanitize HTML"
-              checked="style.sanitize"
+              checked="rule.sanitize"
               change="editor.onOptionsChange()"
             ></gf-form-switch>
           </div>
-          <div ng-if="style.type === 'string'">
+          <div ng-if="rule.type === 'string'">
             <gf-form-switch
               class="gf-form"
               label-class="width-10"
-              ng-if="style.type === 'string'"
+              ng-if="rule.type === 'string'"
               label="Preserve Formatting"
-              checked="style.preserveFormat"
+              checked="rule.preserveFormat"
               change="editor.onOptionsChange()"
             ></gf-form-switch>
           </div>
 
-          <div ng-if="style.type === 'number'">
+          <div ng-if="rule.type === 'number'">
             <div class="gf-form">
               <label class="gf-form-label width-10">Unit</label>
               <div
                 class="gf-form-dropdown-typeahead width-16"
-                ng-model="style.unit"
+                ng-model="rule.unit"
                 dropdown-typeahead2="editor.unitFormats"
-                dropdown-typeahead-on-select="editor.setUnitFormat(style, $subItem)"
+                dropdown-typeahead-on-select="editor.setUnitFormat(rule, $subItem)"
               ></div>
             </div>
             <div class="gf-form">
@@ -165,7 +164,7 @@
                 type="number"
                 class="gf-form-input width-4"
                 data-placement="right"
-                ng-model="style.decimals"
+                ng-model="rule.decimals"
                 ng-change="editor.onOptionsChange()"
                 ng-model-onblur
               />
@@ -176,12 +175,12 @@
         <!-- Thresholds -->
         <div
           class="section gf-form-group"
-          ng-if="['number', 'string'].indexOf(style.type) !== -1"
+          ng-if="['number', 'string'].indexOf(rule.type) !== -1"
         >
-          <h5 class="section-heading" ng-if="style.invert">
+          <h5 class="section-heading" ng-if="rule.invert">
             Thresholds (Ok > Warn > Error)
           </h5>
-          <h5 class="section-heading" ng-if="!style.invert">
+          <h5 class="section-heading" ng-if="!rule.invert">
             Thresholds (Error > Warn > Ok)
           </h5>
           <div class="gf-form">
@@ -192,7 +191,7 @@
             <input
               type="text"
               class="gf-form-input width-10"
-              ng-model="style.thresholds"
+              ng-model="rule.thresholds"
               placeholder="50,80"
               ng-blur="editor.onOptionsChange()"
               array-join
@@ -203,7 +202,7 @@
             <div class="gf-form-select-wrapper width-10">
               <select
                 class="gf-form-input"
-                ng-model="style.colorMode"
+                ng-model="rule.colorMode"
                 ng-options="c.value as c.text for c in editor.colorModes"
                 ng-change="editor.onOptionsChange()"
               ></select>
@@ -213,19 +212,19 @@
             <label class="gf-form-label width-8">Colors</label>
             <span class="gf-form-label">
               <color-picker
-                color="style.colors[0]"
+                color="rule.colors[0]"
                 onChange="editor.onColorChange($index, 0)"
               ></color-picker>
             </span>
             <span class="gf-form-label">
               <color-picker
-                color="style.colors[1]"
+                color="rule.colors[1]"
                 onChange="editor.onColorChange($index, 1)"
               ></color-picker>
             </span>
             <span class="gf-form-label">
               <color-picker
-                color="style.colors[2]"
+                color="rule.colors[2]"
                 onChange="editor.onColorChange($index, 2)"
               ></color-picker>
             </span>
@@ -240,7 +239,7 @@
         <!-- Display -->
         <div
           class="section gf-form-group"
-          ng-if="['number', 'string'].indexOf(style.type) !== -1"
+          ng-if="['number', 'string'].indexOf(rule.type) !== -1"
         >
           <h5 class="section-heading">Display</h5>
           <div class="gf-form">
@@ -248,7 +247,7 @@
             <div class="gf-form-select-wrapper width-12">
               <select
                 class="gf-form-input"
-                ng-model="style.colorOn"
+                ng-model="rule.colorOn"
                 ng-options="c.value as c.text for c in editor.colorOn"
                 ng-change="editor.onOptionsChange()"
               ></select>
@@ -259,18 +258,18 @@
             <div class="gf-form-select-wrapper width-12">
               <select
                 class="gf-form-input"
-                ng-model="style.textOn"
+                ng-model="rule.textOn"
                 ng-options="c.value as c.text for c in editor.textOn"
                 ng-change="editor.onOptionsChange()"
               ></select>
             </div>
           </div>
-          <div class="gf-form" ng-if="style.textOn != 'n'">
+          <div class="gf-form" ng-if="rule.textOn != 'n'">
             <label class="gf-form-label width-12">Update text value</label>
             <div class="gf-form-select-wrapper width-12">
               <select
                 class="gf-form-input"
-                ng-model="style.textReplace"
+                ng-model="rule.textReplace"
                 ng-options="c.value as c.text for c in editor.textReplace"
                 ng-change="editor.onOptionsChange()"
               ></select>
@@ -293,7 +292,7 @@
         </div>
 
         <!-- LINK -->
-        <div class="section gf-form-group" ng-if="style.link">
+        <div class="section gf-form-group" ng-if="rule.link">
           <h5 class="section-heading">Link</h5>
           <div class="gf-form">
             <label class="gf-form-label width-9">
@@ -318,7 +317,7 @@
             <input
               type="text"
               class="gf-form-input width-29"
-              ng-model="style.linkUrl"
+              ng-model="rule.linkUrl"
               ng-blur="editor.onOptionsChange()"
               ng-model-onblur
               data-placement="right"
@@ -348,7 +347,7 @@
             class="gf-form"
             label-class="width-9"
             label="Open in new tab"
-            checked="style.linkTargetBlank"
+            checked="rule.linkTargetBlank"
           >
           </gf-form-switch>
         </div>
@@ -365,7 +364,7 @@
               <div class="gf-form-select-wrapper">
                 <select
                   class="gf-form-input width-10"
-                  ng-model="style.shapeProp"
+                  ng-model="rule.shapeProp"
                   ng-options="c.value as c.text for c in editor.propTypes"
                   ng-change="editor.onOptionsChange()"
                 ></select>
@@ -374,35 +373,35 @@
             <div
               class="gf-form"
               ng-class="{'gf-form-disabled': shape.hidden}"
-              ng-repeat="shape in style.shapeMaps"
+              ng-repeat="shape in rule.getShapeMaps()"
             >
               <label class="gf-form-label" style="margin-right: 2px;">
                 <i
                   class="fa fa-w fa-remove pointer"
                   bs-tooltip="'Delete this mapping object'"
-                  ng-click="editor.removeShapeFromStyle(style, shape)"
+                  ng-click="rule.removeShapeMap($index)"
                 ></i>
               </label>
               <label
                 class="gf-form-label"
-                ng-if="!shape.hidden"
+                ng-if="!shape.isHidden()"
                 style="margin-right: 2px;"
               >
                 <i
                   class="fa fa-w fa-eye pointer"
                   bs-tooltip="'Hide selected object graph in rule'"
-                  ng-click="editor.hideShapeFromStyle(shape)"
+                  ng-click="shape.hide()"
                 ></i>
               </label>
               <label
                 class="gf-form-label"
-                ng-if="shape.hidden"
+                ng-if="shape.isHidden()"
                 style="margin-right: 2px;"
               >
                 <i
                   class="fa fa-w fa-eye-slash pointer"
                   bs-tooltip="'show selected object graph in rule'"
-                  ng-click="editor.showShapeFromStyle(shape)"
+                  ng-click="shape.show()"
                 ></i>
               </label>
               <label
@@ -412,7 +411,7 @@
               >
                 <i
                   class="fa fa-link pointer"
-                  ng-click="editor.mapCell(shape,'shape_' + style.id  + '_' + shape.id)"
+                  ng-click="editor.mapCell(shape,'shape_' + rule.id  + '_' + shape.id)"
                   bs-tooltip="'Link it on object graph'"
                 ></i>
               </label>
@@ -424,12 +423,12 @@
                 <i
                   class="fa fa-unlink pointer"
                   bs-tooltip="'Cancel link object graph selection'"
-                  ng-click="editor.mapCell(shape,'shape_' + style.id  + '_' + shape.id)"
+                  ng-click="editor.mapCell(shape,'shape_' + rule.id  + '_' + shape.id)"
                 ></i>
               </label>
               <input
                 type="text"
-                id="shape_{{ style.id }}_{{shape.id}}"
+                id="shape_{{ rule.id }}_{{shape.id}}"
                 placeholder="id or regex of shape"
                 class="gf-form-input width-13"
                 ng-model="shape.pattern"
@@ -448,7 +447,7 @@
               <label class="gf-form-label">
                 <i
                   class="fa fa-plus pointer"
-                  ng-click="editor.addShapeToStyle(style, '/.*/')"
+                  ng-click="rule.addShapeMap('/.*/')"
                   style="margin-right: 2px;"
                 ></i>
               </label>
@@ -465,7 +464,7 @@
               <div class="gf-form-select-wrapper">
                 <select
                   class="gf-form-input width-10"
-                  ng-model="style.textProp"
+                  ng-model="rule.textProp"
                   ng-options="c.value as c.text for c in editor.propTypes"
                   ng-change="editor.onOptionsChange()"
                 ></select>
@@ -474,35 +473,35 @@
             <div
               class="gf-form"
               ng-class="{'gf-form-disabled': text.hidden}"
-              ng-repeat="text in style.textMaps"
+              ng-repeat="text in rule.getTextMaps()"
             >
               <label class="gf-form-label" style="margin-right: 2px;">
                 <i
                   class="fa fa-w fa-remove pointer"
                   bs-tooltip="'Delete this mapping object'"
-                  ng-click="editor.removeTextFromStyle(style, text)"
+                  ng-click="rule.removeTextMap($index)"
                 ></i>
               </label>
               <label
                 class="gf-form-label"
-                ng-if="!text.hidden"
+                ng-if="!text.isHidden()"
                 style="margin-right: 2px;"
               >
                 <i
                   class="fa fa-w fa-eye pointer"
                   bs-tooltip="'Hide selected object graph in rule'"
-                  ng-click="editor.hideTextFromStyle(text)"
+                  ng-click="text.hide()"
                 ></i>
               </label>
               <label
                 class="gf-form-label"
-                ng-if="text.hidden"
+                ng-if="text.isHidden()"
                 style="margin-right: 2px;"
               >
                 <i
                   class="fa fa-w fa-eye-slash pointer"
                   bs-tooltip="'show selected object graph in rule'"
-                  ng-click="editor.showTextFromStyle(text)"
+                  ng-click="text.show()"
                 ></i>
               </label>
               <label
@@ -512,7 +511,7 @@
               >
                 <i
                   class="fa fa-link pointer"
-                  ng-click="editor.mapCell(text,'text_' + style.id + '_' + text.id)"
+                  ng-click="editor.mapCell(text,'text_' + rule.id + '_' + text.id)"
                   bs-tooltip="'Link it on object graph'"
                 ></i>
               </label>
@@ -524,13 +523,13 @@
                 <i
                   class="fa fa-unlink pointer"
                   bs-tooltip="'Cancel link object graph selection'"
-                  ng-click="editor.mapCell(text,'text_' + style.id + '_' + text.id)"
+                  ng-click="editor.mapCell(text,'text_' + rule.id + '_' + text.id)"
                 ></i>
               </label>
 
               <input
                 type="text"
-                id="text_{{ style.id }}_{{text.id}}"
+                id="text_{{ rule.id }}_{{text.id}}"
                 placeholder="id or regex of shape/text name"
                 class="gf-form-input width-13"
                 ng-model="text.pattern"
@@ -550,7 +549,7 @@
               <label class="gf-form-label">
                 <i
                   class="fa fa-plus pointer"
-                  ng-click="editor.addTextToStyle(style, '/.*/')"
+                  ng-click="rule.addTextMap('/.*/')"
                   style="margin-right: 2px;"
                 ></i>
               </label>
@@ -558,7 +557,7 @@
           </div>
 
           <!-- LINK MAPPING -->
-          <div class="section gf-form-group" ng-if="style.link">
+          <div class="section gf-form-group" ng-if="rule.link">
             <h5 class="section-heading">Link Mappings</h5>
             <div class="gf-form">
               <span class="gf-form-label width-8">
@@ -567,7 +566,7 @@
               <div class="gf-form-select-wrapper">
                 <select
                   class="gf-form-input width-10"
-                  ng-model="style.linkProp"
+                  ng-model="rule.linkProp"
                   ng-options="c.value as c.text for c in editor.propTypes"
                   ng-change="editor.onOptionsChange()"
                 ></select>
@@ -582,7 +581,7 @@
                 <i
                   class="fa fa-w fa-remove pointer"
                   bs-tooltip="'Delete this mapping object'"
-                  ng-click="editor.removeLinkFromStyle(style, link)"
+                  ng-click="rule.removeLinkMap($index)"
                 ></i>
               </label>
               <label
@@ -593,7 +592,7 @@
                 <i
                   class="fa fa-w fa-eye pointer"
                   bs-tooltip="'Hide selected object graph in rule'"
-                  ng-click="editor.hideLinkFromStyle(link)"
+                  ng-click="link.hide()"
                 ></i>
               </label>
               <label
@@ -604,7 +603,7 @@
                 <i
                   class="fa fa-w fa-eye-slash pointer"
                   bs-tooltip="'show selected object graph in rule'"
-                  ng-click="editor.showLinkFromStyle(link)"
+                  ng-click="link.show()"
                 ></i>
               </label>
               <label
@@ -614,7 +613,7 @@
               >
                 <i
                   class="fa fa-link pointer"
-                  ng-click="editor.mapCell(link,'link_' + style.id  + '_' + link.id)"
+                  ng-click="editor.mapCell(link,'link_' + rule.id  + '_' + link.id)"
                   bs-tooltip="'Link it on object graph'"
                 ></i>
               </label>
@@ -626,13 +625,13 @@
                 <i
                   class="fa fa-unlink pointer"
                   bs-tooltip="'Cancel link object graph selection'"
-                  ng-click="editor.mapCell(link,'link_' + style.id  + '_' + link.id )"
+                  ng-click="editor.mapCell(link,'link_' + rule.id  + '_' + link.id )"
                 ></i>
               </label>
 
               <input
                 type="text"
-                id="link_{{ style.id }}_{{link.id}}"
+                id="link_{{ rule.id }}_{{link.id}}"
                 placeholder="id or regex of shape/text name"
                 class="gf-form-input width-13"
                 ng-model="link.pattern"
@@ -652,7 +651,7 @@
               <label class="gf-form-label">
                 <i
                   class="fa fa-plus pointer"
-                  ng-click="editor.addLinkToStyle(style, '/.*/')"
+                  ng-click="rule.addLinkMap('/.*/')"
                   style="margin-right: 2px;"
                 ></i>
               </label>
@@ -670,18 +669,19 @@
                 <div class="gf-form-select-wrapper">
                   <select
                     class="gf-form-input width-10"
-                    ng-model="style.mappingType"
+                    ng-model="rule.mappingType"
                     ng-options="c.value as c.text for c in editor.mappingTypes"
                     ng-change="editor.onOptionsChange()"
                   ></select>
                 </div>
               </div>
-              <div class="gf-form-group" ng-if="style.mappingType==1">
-                <div class="gf-form" ng-repeat="map in style.valueMaps">
+              <!-- MAP TYPE -->
+              <div class="gf-form-group" ng-if="rule.mappingType==1">
+                <div class="gf-form" ng-repeat="map in rule.getValueMaps()">
                   <span class="gf-form-label">
                     <i
                       class="fa fa-remove pointer"
-                      ng-click="editor.removeValueMap(style, $index)"
+                      ng-click="rule.removeValueMap($index)"
                     ></i>
                   </span>
                   <input
@@ -704,18 +704,19 @@
                 </div>
                 <div class="gf-form">
                   <label class="gf-form-label">
-                    <a class="pointer" ng-click="editor.addValueMap(style)"
+                    <a class="pointer" ng-click="editor.addValueMap('','')"
                       ><i class="fa fa-plus"></i
                     ></a>
                   </label>
                 </div>
               </div>
+              <!-- RANGE TYPE -->
               <div class="gf-form-group" ng-if="style.mappingType==2">
-                <div class="gf-form" ng-repeat="rangeMap in style.rangeMaps">
+                <div class="gf-form" ng-repeat="rangeMap in rule.getRangeMaps()">
                   <span class="gf-form-label">
                     <i
                       class="fa fa-remove pointer"
-                      ng-click="editor.removeRangeMap(style, $index)"
+                      ng-click="rule.removeRangeMap($index)"
                     ></i>
                   </span>
                   <span class="gf-form-label">From</span>
@@ -742,7 +743,7 @@
                 </div>
                 <div class="gf-form">
                   <label class="gf-form-label">
-                    <a class="pointer" ng-click="editor.addRangeMap(style)"
+                    <a class="pointer" ng-click="rule.addRangeMap('','','')"
                       ><i class="fa fa-plus"></i
                     ></a>
                   </label>
@@ -760,7 +761,7 @@
           <div class="gf-form" style="margin-right: 5px;">
             <button
               class="btn btn-danger btn-small"
-              ng-click="editor.removeMetricStyle(style)"
+              ng-click="rulesHandler.removeRule(rule)"
             >
               <i class="fa fa-trash"></i> Remove Rule
             </button>
@@ -768,7 +769,7 @@
           <div class="gf-form">
             <button
               class="btn btn-secondary btn-small"
-              ng-click="editor.cloneMetricStyle(style)"
+              ng-click="rulesHandler.cloneRule(rule)"
             >
               <i class="fa fa-copy"></i> Copy Rule
             </button>
@@ -780,8 +781,8 @@
 
   <div class="editor-row">
     <div class="gf-form-button-row">
-      <button class="btn btn-inverse" ng-click="editor.addMetricStyle()">
-        <i class="fa fa-plus"></i>&nbsp;Add metric style
+      <button class="btn btn-inverse" ng-click="rulesHandler.addRule()">
+        <i class="fa fa-plus"></i>&nbsp;Add Rule
       </button>
     </div>
   </div>

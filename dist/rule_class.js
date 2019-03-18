@@ -118,16 +118,6 @@ function () {
     key: "getShapeMaps",
     value: function getShapeMaps() {
       return shapeMaps;
-    }
-  }, {
-    key: "hideShapeMap",
-    value: function hideShapeMap(index) {
-      this.shapeMaps[index].hide();
-    }
-  }, {
-    key: "showShapeMap",
-    value: function showShapeMap(index) {
-      this.shapeMaps[index].show();
     } //
     // TEXT MAPS
     //
@@ -153,22 +143,37 @@ function () {
     key: "getTextMaps",
     value: function getTextMaps() {
       return textMaps;
-    }
-  }, {
-    key: "hideTextMap",
-    value: function hideTextMap(index) {
-      this.textMaps[index].hide();
-    }
-  }, {
-    key: "showTextMap",
-    value: function showTextMap(index) {
-      this.textMaps[index].show();
-    }
-  }, {
-    key: "addValueMap",
+    } //
+    // LINK MAPS
     //
+
+  }, {
+    key: "addLinkMap",
+    value: function addLinkMap(pattern) {
+      var m = new LinkMap(this, pattern);
+      linkMaps.push(m);
+    }
+  }, {
+    key: "removeLinkMap",
+    value: function removeLinkMap(index) {
+      var m = this.textMaps[index];
+      this.linkMaps = _lodash.default.without(this.linkMaps, m);
+    }
+  }, {
+    key: "getLinkMap",
+    value: function getLinkMap(index) {
+      return this.linkMaps[index];
+    }
+  }, {
+    key: "getLinkMaps",
+    value: function getLinkMaps() {
+      return textMaps;
+    } //
     // STRING VALUE MAPS
     //
+
+  }, {
+    key: "addValueMap",
     value: function addValueMap(value, text) {
       var m = new ValueMap(this, value, text);
       valueMaps.push(m);
@@ -187,16 +192,6 @@ function () {
     key: "getValueMaps",
     value: function getValueMaps() {
       return valueMaps;
-    }
-  }, {
-    key: "hideValueMap",
-    value: function hideValueMap(index) {
-      this.valueMaps[index].hide();
-    }
-  }, {
-    key: "showValueMap",
-    value: function showValueMap(index) {
-      this.valueMaps[index].show();
     } //
     // STRING RANGE VALUE MAPS
     //

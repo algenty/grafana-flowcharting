@@ -19,13 +19,11 @@ var _inspect_options = require("./inspect_options");
 
 var _moment = _interopRequireDefault(require("moment"));
 
-var _lodash = _interopRequireDefault(require("lodash"));
-
 var _plugin = require("./plugin");
 
 var _mxHandler = _interopRequireDefault(require("./mxHandler"));
 
-var _rule_class = _interopRequireDefault(require("./rule_class"));
+var _rulesHandler = _interopRequireDefault(require("./rulesHandler"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -71,7 +69,8 @@ function (_MetricsPanelCtrl) {
     _this.mx;
     _this.changedSource = true;
     _this.changedData = true;
-    _this.changedOptions = true; // For Mapping with pointer
+    _this.changedOptions = true;
+    _this.rulesHandler; // For Mapping with pointer
 
     _this.onMapping = {
       active: false,
@@ -107,37 +106,8 @@ function (_MetricsPanelCtrl) {
       valueName: "current",
       strokeWidth: 1,
       // NEW PANEL
-      styleSeq: 1,
-      ruleSeq: 1,
       metrics: [],
-      rules: [new _rule_class.default(1)],
-      styles: [{
-        id: 1,
-        unit: "short",
-        type: "number",
-        alias: "",
-        aggregation: "current",
-        decimals: 2,
-        colors: ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"],
-        colorMode: "fillColor",
-        colorOn: "a",
-        textOn: "wmd",
-        textReplace: "content",
-        textPattern: "/.*/",
-        pattern: "/.*/",
-        dateFormat: "YYYY-MM-DD HH:mm:ss",
-        thresholds: [],
-        invert: false,
-        shapeSeq: 1,
-        shapeProp: "id",
-        shapeMaps: [],
-        textSeq: 1,
-        textProp: "id",
-        textMaps: [],
-        linkProp: "id",
-        linkMaps: [],
-        mappingType: 1
-      }],
+      rules: [],
       // OLD PANEL
       flowchart: {
         source: {
@@ -174,7 +144,7 @@ function (_MetricsPanelCtrl) {
       }
     };
 
-    _lodash.default.defaults(_this.panel, panelDefaults);
+    _.defaults(_this.panel, panelDefaults);
 
     _this.panel.graphId = "flowchart_" + _this.panel.id;
     _this.containerDivId = "container_" + _this.panel.graphId; // events
@@ -216,9 +186,8 @@ function (_MetricsPanelCtrl) {
     value: function onRender() {
       console.debug("ctrl.onRender");
 
-      if (this.changedData == true || this.changedOptions == true) {
-        this.analyzeData();
-        if (this.changedOptions == true) this.updateLink();
+      if (this.changedData == true || this.changedOptions == true) {// this.analyzeData();
+        // if (this.changedOptions == true) this.updateLink();
       }
     }
   }, {
@@ -253,6 +222,7 @@ function (_MetricsPanelCtrl) {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
       console.debug("ctrl.link");
+      this.rulesHandler = new _rulesHandler.default(scope);
       this.mx = new _mxHandler.default(scope, elem, attrs, ctrl);
     }
   }, {
@@ -328,17 +298,17 @@ function (_MetricsPanelCtrl) {
       // }
       var states = []; // Begin For Each rule
 
-      _lodash.default.each(this.panel.styles, function (_rule) {
+      _.each(this.panel.styles, function (_rule) {
         var state = undefined;
         var serieFound = false; // Begin each series
 
-        _lodash.default.each(_this2.series, function (_serie) {
+        _.each(_this2.series, function (_serie) {
           var regex = _kbn.default.stringToJsRegex(_rule.pattern);
 
           var matching = _serie.alias.toString().match(regex);
 
           if (_rule.pattern == _serie.alias || matching) {
-            var value = _lodash.default.get(_serie.stats, _rule.aggregation);
+            var value = _.get(_serie.stats, _rule.aggregation);
 
             if (value === undefined || value === null) {
               value = _serie.datapoints[_serie.datapoints.length - 1][0];
@@ -351,8 +321,8 @@ function (_MetricsPanelCtrl) {
             var pattern = undefined;
             var _state2 = undefined; // Begin For Each Shape 
 
-            _lodash.default.each(_rule.shapeMaps, function (_shape) {
-              found_state = _lodash.default.find(states, function (_state) {
+            _.each(_rule.shapeMaps, function (_shape) {
+              found_state = _.find(states, function (_state) {
                 return _shape.pattern === _state.pattern;
               });
               var new_shape = {
@@ -388,9 +358,9 @@ function (_MetricsPanelCtrl) {
 
       this.shapeStates = []; // Begin For Each style
 
-      _lodash.default.each(this.panel.styles, function (_style) {
+      _.each(this.panel.styles, function (_style) {
         // Begin For Each Series
-        _lodash.default.each(_this3.series, function (_serie) {
+        _.each(_this3.series, function (_serie) {
           if (_serie.datapoints.length === 0) {
             return;
           }
@@ -401,7 +371,7 @@ function (_MetricsPanelCtrl) {
 
 
           if (_style.pattern == _serie.alias || matching) {
-            var value = _lodash.default.get(_serie.stats, _style.aggregation);
+            var value = _.get(_serie.stats, _style.aggregation);
 
             var level = _this3.getThresholdLevel(value, _style);
 
@@ -412,7 +382,7 @@ function (_MetricsPanelCtrl) {
             } // Begin For Each Shape
 
 
-            _lodash.default.each(_style.shapeMaps, function (_shape) {
+            _.each(_style.shapeMaps, function (_shape) {
               // not hidden
               if (_shape.hidden != true) {
                 // Structure shapeMaps
@@ -426,7 +396,7 @@ function (_MetricsPanelCtrl) {
                 //   value : number (value of aggregation)
                 //   aggregation : text (min, max ...)
                 // }
-                var _state = _lodash.default.find(_this3.shapeStates, function (_state) {
+                var _state = _.find(_this3.shapeStates, function (_state) {
                   return _state.pattern == _shape.pattern;
                 });
 
@@ -445,7 +415,7 @@ function (_MetricsPanelCtrl) {
                   if (level > _state.level) {
                     // if always or display when warn/err
                     if (_style.colorOn == "a" || _style.colorOn == "wc" && level > 0) {
-                      _lodash.default.pull(_this3.shapeStates, _state);
+                      _.pull(_this3.shapeStates, _state);
 
                       _this3.shapeStates.push(new_state);
                     }
@@ -487,19 +457,19 @@ function (_MetricsPanelCtrl) {
 
       this.textStates = []; // Begin For Each Series
 
-      _lodash.default.each(this.series, function (_serie) {
+      _.each(this.series, function (_serie) {
         if (_serie.datapoints.length === 0) {
           return;
         } // Begin For Each Styles
 
 
-        _lodash.default.each(_this4.panel.styles, function (_style) {
+        _.each(_this4.panel.styles, function (_style) {
           var regex = _kbn.default.stringToJsRegex(_style.pattern);
 
           var matching = _serie.alias.toString().match(regex);
 
           if (_style.pattern == _serie.alias || matching) {
-            var value = _lodash.default.get(_serie.stats, _style.aggregation);
+            var value = _.get(_serie.stats, _style.aggregation);
 
             var level = _this4.getThresholdLevel(value, _style);
 
@@ -508,7 +478,7 @@ function (_MetricsPanelCtrl) {
             } // Begin For Each Text
 
 
-            _lodash.default.each(_style.textMaps, function (_text) {
+            _.each(_style.textMaps, function (_text) {
               // not hidden or not never
               if (_text === undefined || _text === null || _text.pattern.length == 0 || _text.hidden != true) {
                 // Structure textMaps
@@ -521,7 +491,7 @@ function (_MetricsPanelCtrl) {
                 //   value : number (value of aggregation)
                 //   aggregation : text (min, max ...)
                 // }
-                var _state = _lodash.default.find(_this4.textStates, function (_state) {
+                var _state = _.find(_this4.textStates, function (_state) {
                   return _state.pattern == _text.pattern;
                 }); // Adapte value
 
@@ -555,7 +525,7 @@ function (_MetricsPanelCtrl) {
 
                 if (_state != null && _state != undefined) {
                   if (level > _state.level) {
-                    _lodash.default.pull(_this4.textStates, _state);
+                    _.pull(_this4.textStates, _state);
 
                     _this4.textStates.push(new_state);
                   } // else nothing todo, keep old
@@ -594,12 +564,12 @@ function (_MetricsPanelCtrl) {
       console.debug("flowchart_ctrl.updateLink");
       this.linkStates = []; // Begin For Each Styles
 
-      _lodash.default.each(this.panel.styles, function (_style) {
+      _.each(this.panel.styles, function (_style) {
         // Begin For Each Link
-        _lodash.default.each(_style.linkMaps, function (_link) {
+        _.each(_style.linkMaps, function (_link) {
           // not hidden or not never
           if (_link === undefined || _link === null || _link.pattern.length == 0 || _link.hidden != true) {
-            var _state = _lodash.default.find(_this5.linkStates, function (_state) {
+            var _state = _.find(_this5.linkStates, function (_state) {
               return _state.pattern == _link.pattern;
             });
 
@@ -612,7 +582,7 @@ function (_MetricsPanelCtrl) {
             };
 
             if (_state != null && _state != undefined) {
-              _lodash.default.pull(_this5.linkStates, _state);
+              _.pull(_this5.linkStates, _state);
 
               _this5.linkStates.push(new_state);
             } else {
@@ -637,14 +607,14 @@ function (_MetricsPanelCtrl) {
         }
       }
 
-      return _lodash.default.first(style.colors);
+      return _.first(style.colors);
     }
   }, {
     key: "getFormattedValue",
     value: function getFormattedValue(value, style) {
       // console.log("getFormattedValue style", style)
       if (style.type === "number") {
-        if (!_lodash.default.isFinite(value)) return "Invalid Number";
+        if (!_.isFinite(value)) return "Invalid Number";
 
         if (value === null || value === void 0) {
           return "-";
@@ -656,7 +626,7 @@ function (_MetricsPanelCtrl) {
       }
 
       if (style.type === "string") {
-        if (_lodash.default.isArray(value)) {
+        if (_.isArray(value)) {
           value = value.join(", ");
         }
 
@@ -675,7 +645,7 @@ function (_MetricsPanelCtrl) {
             } // Allow both numeric and string values to be mapped
 
 
-            if (!_lodash.default.isString(value) && Number(map.value) === Number(value) || map.value === value) {
+            if (!_.isString(value) && Number(map.value) === Number(value) || map.value === value) {
               return this.defaultValueFormatter(map.text, style);
             }
           }
@@ -711,7 +681,7 @@ function (_MetricsPanelCtrl) {
           return "-";
         }
 
-        if (_lodash.default.isArray(value)) {
+        if (_.isArray(value)) {
           value = value[0];
         }
 
@@ -744,14 +714,14 @@ function (_MetricsPanelCtrl) {
         return "";
       }
 
-      if (_lodash.default.isArray(value)) {
+      if (_.isArray(value)) {
         value = value.join(", ");
       }
 
       if (style && style.sanitize) {
         return this.$sanitize(value);
       } else {
-        return _lodash.default.escape(value);
+        return _.escape(value);
       }
     } // returns level of threshold, -1 = disable, 0 = ok, 1 = warnimg, 2 = critical
 
@@ -806,7 +776,7 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "validateRegex",
     value: function validateRegex(textRegex) {
-      return _lodash.default.isRegExp(textRegex);
+      return _.isRegExp(textRegex);
     }
   }]);
 

@@ -12,6 +12,7 @@ export class MappingOptionsCtrl {
     this.mx = this.panelCtrl.mx;
     $scope.mx = this.panelCtrl.mx;
     $scope.onMapping = this.panelCtrl.onMapping;
+    $scope.rulesHandler = this.panelCtrl.rulesHandler;
     this.unitFormats = kbn.getUnitFormats();
     this.colorModes = [
       { text: "Disabled", value: null },
@@ -97,45 +98,6 @@ export class MappingOptionsCtrl {
     this.onOptionsChange();
   }
 
-  cloneRule(rule) {
-    let newRule = angular.copy(rule);
-    newRule.id = ++this.panel.ruleSeq;
-    const rules = this.panel.rules;
-    const rulesCount = rules.length;
-    let indexToInsert = rulesCount;
-
-    // check if last is a catch all rule, then add it before that one
-    if (rulesCount > 0) {
-      const last = rules[rulesCount - 1];
-      if (last.pattern === "/.*/") {
-        indexToInsert = rulesCount - 1;
-      }
-    }
-    rules.splice(indexToInsert, 0, newRule);
-    this.activeRuleIndex = indexToInsert;
-  }
-
-  addRule() {
-    const newRule = new rule(++this.panel.ruleSeq)
-    const rules = this.panel.rules;
-    const rulesCount = rules.length;
-    let indexToInsert = rulesCount;
-
-    // check if last is a catch all rule, then add it before that one
-    if (rulesCount > 0) {
-      const last = rules[rulesCount - 1];
-      if (last.pattern === "/.*/") {
-        indexToInsert = rulesCount - 1;
-      }
-    }
-    rules.splice(indexToInsert, 0, newRule);
-    this.activeRulesIndex = indexToInsert;
-  }
-
-  removeRule(rule) {
-    this.panel.rules = _.without(this.panel.rules, rule);
-  }
-
   invertColorOrder(index) {
     let rules = this.panel.rules;
     rules[index].invertColorOrder();
@@ -154,129 +116,6 @@ export class MappingOptionsCtrl {
     this.render();
   }
 
-  addValueMap(rule) {
-    rule.addValueMap("","");
-    this.onOptionsChange();
-  }
-
-  removeValueMap(rule, index) {
-    rule.removeValueMap(index);
-  }
-
-  addRangeMap(rule) {
-    rule.addRangeMap("","","");
-    this.onOptionsChange();
-  }
-
-  removeRangeMap(rule, index) {
-    rule.removeRangeMap(index)
-    this.onOptionsChange();
-  }
-
-  //
-  // ON RULE
-  // 
-  moveRuleToUp(index) {
-    const first = 0;
-    const last = this.panel.rules.length - 1;
-    if ( index != first && last != first ) {
-      let curr = this.panel.rules[index];
-      let before = this.panel.rules[index - 1];
-      this.panel.rules[index - 1] = curr;
-      this.panel.rules[index] = before;
-    }
-  }
-
-  moveRuleToDown(index) {
-    const first = 0;
-    const last = this.panel.rules.length - 1;
-    if ( index != last && last != first ) {
-      let curr = this.panel.rules[index];
-      let after = this.panel.rules[index + 1];
-      this.panel.rules[index + 1] = curr;
-      this.panel.rules[index] = after;
-    }
-  }
-
-
-  //
-  // ON SHAPE
-  //
-  addShapeToStyle(style) {
-    console.debug("mapping.addShapeToStyle");
-    if (!style.shapeMaps) {
-      style.shapeMaps = [];
-    }
-    style.shapeMaps.push({ pattern: "", prop: "id", id: style.shapeSeq++ });
-    this.onOptionsChange();
-  }
-
-  removeShapeFromStyle(style, shape) {
-    style.shapeMaps = _.without(style.shapeMaps, shape);
-    this.onOptionsChange();
-  }
-
-  hideShapeFromStyle(shape) {
-    shape.hidden = true;
-    this.onOptionsChange();
-  }
-
-  showShapeFromStyle(shape) {
-    shape.hidden = false;
-    this.onOptionsChange();
-  }
-
-  //
-  // ON TEXT
-  //
-  addTextToStyle(style) {
-    if (!style.textMaps) {
-      style.textMaps = [];
-    }
-    style.textMaps.push({ pattern: "", prop: "id", id: style.textSeq++ });
-    this.onOptionsChange();
-  }
-
-  removeTextFromStyle(style, text) {
-    style.textMaps = _.without(style.textMaps, text);
-    this.onOptionsChange();
-  }
-
-  hideTextFromStyle(text) {
-    text.hidden = true;
-    this.onOptionsChange();
-  }
-
-  showTextFromStyle(text) {
-    text.hidden = false;
-    this.onOptionsChange();
-  }
-
-  //
-  // ON LINK
-  //
-  addLinkToStyle(style) {
-    if (!style.linkMaps) {
-      style.linkMaps = [];
-    }
-    style.linkMaps.push({ pattern: "", prop: "id", id: style.linkSeq++ });
-    this.onOptionsChange();
-  }
-
-  removeLinkFromStyle(style, link) {
-    style.linkMaps = _.without(style.linkMaps, link);
-    this.onOptionsChange();
-  }
-
-  hideLinkFromStyle(link) {
-    link.hidden = true;
-    this.onOptionsChange();
-  }
-
-  showLinkFromStyle(link) {
-    link.hidden = false;
-    this.onOptionsChange();
-  }
 
   mapCell(map,id) {
     // init mapping event
