@@ -13,7 +13,7 @@
       {"name": "Project site", "url": "https://github.com/algenty/grafana-flowcharting"},
       {"name": "Apache License", "url": "https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE"}
     ],
-    "version": "0.0.1",
+    "version": "0.2.0",
     "updated": "2019-01-26",
     "logos": {
         "small": "img/agenty-flowcharting.svg",
