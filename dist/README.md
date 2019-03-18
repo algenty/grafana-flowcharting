@@ -27,12 +27,14 @@ See more example at draw.io
   - Compress and uncompress button under xml source to optimize space in db
   - Prettyfier and minifier of xml source
   - Mapping Helper
+
+![Mapping](dist/img/mapping.gif?raw=true)
+
 ### Not work
   - Only dark theme suported
   - Url Source for graph definition
   - Invert stroke color of arrow options
   - Coloring Gradient is used on shape
-
 
 
 ## 0.2
