@@ -1,4 +1,4 @@
-//import kbn from "app/core/utils/kbn";
+import kbn from "app/core/utils/kbn";
 import _ from "lodash";
 import u from "./utils";
 import moment from "moment";
@@ -135,7 +135,7 @@ export default class Rule {
     matchSerie(serie) {
         if (this.pattern === null || this.pattern === undefined) return false;
         const regex = u.stringToJsRegex(this.pattern);
-        let matching = _serie.alias.match(regex);
+        let matching = serie.alias.match(regex);
         if (this.pattern == this.alias || matching) return true
     }
 
@@ -241,7 +241,7 @@ export default class Rule {
     }
 
     getValue(serie) {
-        if (this.match(serie)) {
+        if (this.matchSerie(serie)) {
             let value = _.get(serie.stats, this.aggregation);
             if (value === undefined || value === null) {
                 value = serie.datapoints[serie.datapoints.length - 1][0];
@@ -252,7 +252,7 @@ export default class Rule {
     }
 
     getFormattedValue(serie) {
-        value = this.getValue(serie);
+        let value = this.getValue(serie);
         // Number
         if (this.type === "number") {
             if (!_.isFinite(value)) return "Invalid Number";

@@ -4,5 +4,6 @@
     "moduleDirectories": [
         "node_modules",
         "../../../grafana-5.4.3/public"
-    ]
+    ],
+    "transformIgnorePatterns" : ["/node_modules/", "/kbn/"]
 }

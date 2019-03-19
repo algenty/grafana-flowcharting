@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _kbn = _interopRequireDefault(require("app/core/utils/kbn"));
+
 var _lodash = _interopRequireDefault(require("lodash"));
 
 var _utils = _interopRequireDefault(require("./utils"));
@@ -172,8 +174,7 @@ function () {
 
       var regex = _utils.default.stringToJsRegex(this.pattern);
 
-      var matching = _serie.alias.match(regex);
-
+      var matching = serie.alias.match(regex);
       if (this.pattern == this.alias || matching) return true;
     } //
     // SHAPE MAPS
@@ -376,14 +377,14 @@ function () {
   }, {
     key: "getValue",
     value: function getValue(serie) {
-      if (this.match(serie)) {
-        var _value = _lodash.default.get(serie.stats, this.aggregation);
+      if (this.matchSerie(serie)) {
+        var value = _lodash.default.get(serie.stats, this.aggregation);
 
-        if (_value === undefined || _value === null) {
-          _value = serie.datapoints[serie.datapoints.length - 1][0];
+        if (value === undefined || value === null) {
+          value = serie.datapoints[serie.datapoints.length - 1][0];
         }
 
-        return _value;
+        return value;
       }
 
       return '-';
@@ -391,7 +392,7 @@ function () {
   }, {
     key: "getFormattedValue",
     value: function getFormattedValue(serie) {
-      value = this.getValue(serie); // Number
+      var value = this.getValue(serie); // Number
 
       if (this.type === "number") {
         if (!_lodash.default.isFinite(value)) return "Invalid Number";
@@ -402,7 +403,7 @@ function () {
 
         var decimals = this.decimalPlaces(value);
         decimals = typeof this.decimals === "number" ? Math.min(this.decimals, decimals) : decimals;
-        return kbn.valueFormats[this.unit](value, decimals, null).toString();
+        return _kbn.default.valueFormats[this.unit](value, decimals, null).toString();
       }
 
       if (this.type === "string") {
