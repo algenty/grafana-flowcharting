@@ -50,7 +50,7 @@ function () {
     value: function _import(obj) {
       var _this = this;
 
-      this.getRules().forEach(function (rule) {
+      obj.forEach(function (rule) {
         var newRule = new _rule_class.default('');
         newRule.import(rule);
 
@@ -62,7 +62,7 @@ function () {
     value: function migrate(obj) {
       var _this2 = this;
 
-      this.getRules().forEach(function (rule) {
+      obj.forEach(function (rule) {
         var newRule = new _rule_class.default('');
         newRule.migrate(rule);
 

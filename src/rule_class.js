@@ -1,4 +1,4 @@
-import kbn from "app/core/utils/kbn";
+//import kbn from "app/core/utils/kbn";
 import _ from "lodash";
 import u from "./utils";
 import moment from "moment";
@@ -6,7 +6,6 @@ import moment from "moment";
 export default class Rule {
     /** @ngInject */
     constructor(pattern) {
-        this.id = u.uniqueID();
         this.unit = "short";
         this.type = "number";
         this.alias = "";
@@ -135,7 +134,7 @@ export default class Rule {
     //
     matchSerie(serie) {
         if (this.pattern === null || this.pattern === undefined) return false;
-        const regex = kbn.stringToJsRegex(this.pattern);
+        const regex = u.stringToJsRegex(this.pattern);
         let matching = _serie.alias.match(regex);
         if (this.pattern == this.alias || matching) return true
     }
@@ -146,12 +145,12 @@ export default class Rule {
     addShapeMap(pattern) { let m = new ShapeMap(this, pattern); this.shapeMaps.push(m); }
     removeShapeMap(index) { this.shapeMaps.splice(index, 1); }
     getShapeMap(index) { return this.shapeMaps[index]; }
-    getShapeMaps() { return shapeMaps; }
+    getShapeMaps() { return this.shapeMaps; }
     matchShape(pattern) {
         this.shapeMaps.forEach(element => {
             if (element.match(pattern)) return true;
-            return false;
         });
+        return false;
     }
     //
     // TEXT MAPS
@@ -163,8 +162,8 @@ export default class Rule {
     matchText(pattern) {
         this.textMaps.forEach(element => {
             if (element.match(pattern)) return true;
-            return false;
         });
+        return false;
     }
 
 
@@ -178,8 +177,8 @@ export default class Rule {
     matchLink(pattern) {
         this.linkMaps.forEach(element => {
             if (element.match(pattern)) return true;
-            return false;
         });
+        return false;
     }
 
     //
@@ -349,10 +348,14 @@ class ShapeMap {
     }
 
     match(text) {
+        console.log("text",text);
+        console.log("pattern",this.pattern);
+        
         if (text === undefined || text === null || text.length === 0) return false;
-        const regex = kbn.stringToJsRegex(this.pattern);
-        let matching = text.match(regex);
-        if (this.pattern == text || matching) return true;
+        const regex = u.stringToJsRegex(this.pattern);
+        console.log("regex ", regex);
+        let matching = regex.match(text);
+        if (this.pattern === text || matching) return true;
         return false;
     }
 
@@ -388,7 +391,7 @@ class TextMap {
 
     match(text) {
         if (text === undefined || text === null || text.length === 0) return false;
-        const regex = kbn.stringToJsRegex(this.pattern);
+        const regex = u.stringToJsRegex(this.pattern);
         let matching = text.match(regex);
         if (this.pattern == text || matching) return true;
         return false;
@@ -435,7 +438,7 @@ class LinkMap {
 
     match(text) {
         if (text === undefined || text === null || text.length === 0) return false;
-        const regex = kbn.stringToJsRegex(this.pattern);
+        const regex = u.stringToJsRegex(this.pattern);
         let matching = text.match(regex);
         if (this.pattern == text || matching) return true;
         return false;
@@ -547,7 +550,7 @@ class ValueMap {
         if (!_.isString(value) && Number(this.value) === Number(value)) {
             return true;
         }
-        const regex = kbn.stringToJsRegex(this.value);
+        const regex = u.stringToJsRegex(this.value);
         let matching = text.match(regex);
         if (this.pattern == text || matching) return true;
         else return false;
@@ -586,5 +589,4 @@ class ValueMap {
             'hidden': this.hidden
         }
     }
-
 }

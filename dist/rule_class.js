@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _kbn = _interopRequireDefault(require("app/core/utils/kbn"));
-
 var _lodash = _interopRequireDefault(require("lodash"));
 
 var _utils = _interopRequireDefault(require("./utils"));
@@ -28,7 +26,6 @@ function () {
   function Rule(pattern) {
     _classCallCheck(this, Rule);
 
-    this.id = _utils.default.uniqueID();
     this.unit = "short";
     this.type = "number";
     this.alias = "";
@@ -173,7 +170,7 @@ function () {
     value: function matchSerie(serie) {
       if (this.pattern === null || this.pattern === undefined) return false;
 
-      var regex = _kbn.default.stringToJsRegex(this.pattern);
+      var regex = _utils.default.stringToJsRegex(this.pattern);
 
       var matching = _serie.alias.match(regex);
 
@@ -201,15 +198,15 @@ function () {
   }, {
     key: "getShapeMaps",
     value: function getShapeMaps() {
-      return shapeMaps;
+      return this.shapeMaps;
     }
   }, {
     key: "matchShape",
     value: function matchShape(pattern) {
       this.shapeMaps.forEach(function (element) {
         if (element.match(pattern)) return true;
-        return false;
       });
+      return false;
     } //
     // TEXT MAPS
     //
@@ -241,8 +238,8 @@ function () {
     value: function matchText(pattern) {
       this.textMaps.forEach(function (element) {
         if (element.match(pattern)) return true;
-        return false;
       });
+      return false;
     } //
     // LINK MAPS
     //
@@ -274,8 +271,8 @@ function () {
     value: function matchLink(pattern) {
       this.linkMaps.forEach(function (element) {
         if (element.match(pattern)) return true;
-        return false;
       });
+      return false;
     } //
     // STRING VALUE MAPS
     //
@@ -402,7 +399,7 @@ function () {
 
         var decimals = this.decimalPlaces(value);
         decimals = typeof this.decimals === "number" ? Math.min(this.decimals, decimals) : decimals;
-        return _kbn.default.valueFormats[this.unit](value, decimals, null).toString();
+        return kbn.valueFormats[this.unit](value, decimals, null).toString();
       }
 
       if (this.type === "string") {
@@ -506,12 +503,15 @@ function () {
   _createClass(ShapeMap, [{
     key: "match",
     value: function match(text) {
+      console.log("text", text);
+      console.log("pattern", this.pattern);
       if (text === undefined || text === null || text.length === 0) return false;
 
-      var regex = _kbn.default.stringToJsRegex(this.pattern);
+      var regex = _utils.default.stringToJsRegex(this.pattern);
 
-      var matching = text.match(regex);
-      if (this.pattern == text || matching) return true;
+      console.log("regex ", regex);
+      var matching = regex.match(text);
+      if (this.pattern === text || matching) return true;
       return false;
     }
   }, {
@@ -574,7 +574,7 @@ function () {
     value: function match(text) {
       if (text === undefined || text === null || text.length === 0) return false;
 
-      var regex = _kbn.default.stringToJsRegex(this.pattern);
+      var regex = _utils.default.stringToJsRegex(this.pattern);
 
       var matching = text.match(regex);
       if (this.pattern == text || matching) return true;
@@ -650,7 +650,7 @@ function () {
     value: function match(text) {
       if (text === undefined || text === null || text.length === 0) return false;
 
-      var regex = _kbn.default.stringToJsRegex(this.pattern);
+      var regex = _utils.default.stringToJsRegex(this.pattern);
 
       var matching = text.match(regex);
       if (this.pattern == text || matching) return true;
@@ -816,7 +816,7 @@ function () {
         return true;
       }
 
-      var regex = _kbn.default.stringToJsRegex(this.value);
+      var regex = _utils.default.stringToJsRegex(this.value);
 
       var matching = text.match(regex);
       if (this.pattern == text || matching) return true;else return false;

@@ -169,5 +169,13 @@ module.exports = {
     }
 
     return chr4() + chr4() + '-' + chr4() + '-' + chr4() + '-' + chr4() + '-' + chr4() + chr4() + chr4();
+  },
+  stringToJsRegex: function stringToJsRegex(str) {
+    if (str[0] !== "/") {
+      return new RegExp("^" + str + "$");
+    }
+
+    var match = str.match(new RegExp("^/(.*?)/(g?i?m?y?)$"));
+    return new RegExp(match[1], match[2]);
   }
 };

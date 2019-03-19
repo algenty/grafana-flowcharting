@@ -179,5 +179,13 @@ module.exports = {
       '-' + chr4() +
       '-' + chr4() +
       '-' + chr4() + chr4() + chr4();
+  },
+
+  stringToJsRegex(str) {
+    if (str[0] !== "/") {
+      return new RegExp("^" + str + "$");
+    }
+    const match = str.match(new RegExp("^/(.*?)/(g?i?m?y?)$"));
+    return new RegExp(match[1], match[2]);
   }
 };
