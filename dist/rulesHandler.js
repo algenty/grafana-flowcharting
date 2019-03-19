@@ -15,10 +15,12 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+// var u = require("./utils");
 var RulesHandler =
 /*#__PURE__*/
 function () {
-  function RulesHandler($scope) {
+  /** @ngInject */
+  function RulesHandler($scope, elem, attrs, ctrl) {
     _classCallCheck(this, RulesHandler);
 
     this.$scope = $scope;
@@ -26,7 +28,6 @@ function () {
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     this.rules = [];
-    this.seq = 1;
     if (this.panelCtrl.version != this.panel.version) this.migrate(this.rules);else this.import(this.rules);
   }
 
@@ -39,32 +40,33 @@ function () {
     key: "export",
     value: function _export() {
       var rules = [];
-
-      _each(this.getRules(), function (rule) {
+      this.getRules().forEach(function (rule) {
         rules.push(rule.export());
       });
-
       return rules;
     }
   }, {
     key: "import",
     value: function _import(obj) {
-      _each(this.getRules(), function (rule) {
-        var newRule = new _rule_class.default(this.seq++);
+      var _this = this;
+
+      this.getRules().forEach(function (rule) {
+        var newRule = new _rule_class.default('');
         newRule.import(rule);
-        this.rules.push(newRule);
+
+        _this.rules.push(newRule);
       });
     }
   }, {
     key: "migrate",
     value: function migrate(obj) {
-      var _this = this;
+      var _this2 = this;
 
-      _each(this.getRules(), function (rule) {
-        var newRule = new _rule_class.default(_this.seq++);
+      this.getRules().forEach(function (rule) {
+        var newRule = new _rule_class.default('');
         newRule.migrate(rule);
 
-        _this.rules.push(newRule);
+        _this2.rules.push(newRule);
       });
     }
   }, {
@@ -80,7 +82,7 @@ function () {
   }, {
     key: "addRule",
     value: function addRule() {
-      var newRule = new _rule_class.default(this.seq++);
+      var newRule = new _rule_class.default("/.*/");
       rules.push(newRule);
     }
   }, {
@@ -92,7 +94,7 @@ function () {
     key: "cloneRule",
     value: function cloneRule(rule) {
       var newRule = angular.copy(rule);
-      newRule.seq = this.seq++;
+      newRule.id = u.uniqueID();
       var rules = this.rules;
       var rulesCount = rules.length;
       var indexToInsert = rulesCount; // check if last is a catch all rule, then add it before that one

@@ -23,10 +23,10 @@ module.exports = {
     return str;
   },
   encode(data, encode, deflate, base64) {
-     if (encode) {
+    if (encode) {
       try {
         data = encodeURIComponent(data);
-       } catch (e) {
+      } catch (e) {
         console.error(e);
         return;
       }
@@ -168,5 +168,16 @@ module.exports = {
     } catch (e) {
       return;
     }
+  },
+
+  uniqueID() {
+    function chr4() {
+      return Math.random().toString(16).slice(-4);
+    }
+    return chr4() + chr4() +
+      '-' + chr4() +
+      '-' + chr4() +
+      '-' + chr4() +
+      '-' + chr4() + chr4() + chr4();
   }
 };

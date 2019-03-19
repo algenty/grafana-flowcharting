@@ -161,8 +161,10 @@ function (_MetricsPanelCtrl) {
 
     _this.events.on("init-edit-mode", _this.onInitEditMode.bind(_assertThisInitialized(_assertThisInitialized(_this))));
 
-    _this.events.on("init-panel-actions", _this.onInitPanelActions.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+    _this.events.on("init-panel-actions", _this.onInitPanelActions.bind(_assertThisInitialized(_assertThisInitialized(_this)))); // Handlers
 
+
+    _this.rulesHandler = new _rulesHandler.default($scope);
     return _this;
   } //
   // EVENTS FCT
@@ -222,7 +224,6 @@ function (_MetricsPanelCtrl) {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
       console.debug("ctrl.link");
-      this.rulesHandler = new _rulesHandler.default(scope);
       this.mx = new _mxHandler.default(scope, elem, attrs, ctrl);
     }
   }, {

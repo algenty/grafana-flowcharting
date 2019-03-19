@@ -9,6 +9,8 @@ var _kbn = _interopRequireDefault(require("app/core/utils/kbn"));
 
 var _lodash = _interopRequireDefault(require("lodash"));
 
+var _utils = _interopRequireDefault(require("./utils"));
+
 var _moment = _interopRequireDefault(require("moment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -22,47 +24,129 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Rule =
 /*#__PURE__*/
 function () {
-  function Rule(seq) {
+  /** @ngInject */
+  function Rule(pattern) {
     _classCallCheck(this, Rule);
 
-    this.id = seq;
+    this.id = _utils.default.uniqueID();
     this.unit = "short";
     this.type = "number";
     this.alias = "";
     this.aggregation = "current";
     this.decimals = 2;
     this.colors = ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"];
-    this.colorMode = 'fillColor';
+    this.style = 'fillColor';
     this.colorOn = "a";
     this.textOn = "wmd";
     this.textReplace = "content";
     this.textPattern = "/.*/";
-    this.pattern = "/.*/";
+    this.pattern = pattern;
     this.dateFormat = "YYYY-MM-DD HH:mm:ss";
     this.thresholds = [];
     this.invert = false;
-    this.shapeSeq = 1;
     this.shapeProp = "id";
     this.shapeMaps = [];
-    this.textSeq = 1;
     this.textProp = "id";
     this.textMaps = [];
-    this.linkSeq = 1;
     this.linkProp = "id";
     this.linkMaps = [];
     this.mappingType = 1;
+    this.valueMaps = [];
+    this.rangeMaps = [];
     this.sanitize = false;
   }
 
   _createClass(Rule, [{
     key: "export",
-    value: function _export() {}
+    value: function _export() {
+      var sm = [];
+      var tm = [];
+      var lm = [];
+      var vm = [];
+      var rm = [];
+      this.shapeMaps.forEach(function (element) {
+        sm.push(element.export());
+      });
+      this.textMaps.forEach(function (element) {
+        tm.push(element.export());
+      });
+      this.linkMaps.forEach(function (element) {
+        lm.push(element.export());
+      });
+      this.valueMaps.forEach(function (element) {
+        vm.push(element.export());
+      });
+      this.rangeMaps.forEach(function (element) {
+        rm.push(element.export());
+      });
+      return {
+        unit: this.unit,
+        type: this.type,
+        alias: this.alias,
+        aggregation: this,
+        decimals: this.decimals,
+        colors: this.colors,
+        style: this.style,
+        colorOn: this.colorOn,
+        textOn: this.textOn,
+        textReplace: this.textReplace,
+        textPattern: this.textPattern,
+        pattern: this.pattern,
+        dateFormat: this.dateFormat,
+        thresholds: this.thresholds,
+        invert: this.invert,
+        shapeProp: this.shapeProp,
+        shapeMaps: sm,
+        textProp: this.textProp,
+        textMaps: tm,
+        linkProp: this.linkProp,
+        linkMaps: lm,
+        mappingType: this.mappingType,
+        valueMaps: vm,
+        rangeMaps: rm,
+        sanitize: this.sanitize
+      };
+    }
   }, {
     key: "import",
-    value: function _import(obj) {}
+    value: function _import(obj) {
+      var _this = this;
+
+      this.unit = obj.unit;
+      this.type = obj.type;
+      this.alias = obj.alias;
+      this.aggregation = obj.aggregation;
+      this.decimals = obj.decimals;
+      this.colors = obj.colors;
+      this.style = obj.style;
+      this.colorOn = obj.colorOn;
+      this.textOn = obj.textOn;
+      this.textReplace = obj.textReplace;
+      this.textPattern = obj.textPattern;
+      this.pattern = obj.pattern;
+      this.dateFormat = obj.dateFormat;
+      this.thresholds = obj.thresholds;
+      this.invert = obj.invert;
+      this.shapeProp = obj.shapeProp;
+      this.shapeMaps = [];
+      obj.shapeMaps.forEach(function (element) {
+        var sm = new ShapeMap(_this, "");
+        sm.import();
+
+        _this.shapeMaps.push();
+      });
+      this.textProp = "id";
+      this.textMaps = [];
+      this.linkProp = "id";
+      this.linkMaps = [];
+      this.mappingType = 1;
+      this.valueMaps = [];
+      this.rangeMaps = [];
+      this.sanitize = false;
+    }
   }, {
     key: "migrate",
-    value: function migrate(obj) {}
+    value: function migrate(obj, version) {}
   }, {
     key: "invertColorOrder",
     value: function invertColorOrder() {
@@ -75,10 +159,10 @@ function () {
   }, {
     key: "newColor",
     value: function newColor(index, color) {
-      var _this = this;
+      var _this2 = this;
 
       return function (newColor) {
-        _this.colors[index] = color;
+        _this2.colors[index] = color;
       };
     } //
     // Series
@@ -102,7 +186,7 @@ function () {
     key: "addShapeMap",
     value: function addShapeMap(pattern) {
       var m = new ShapeMap(this, pattern);
-      shapeMaps.push(m);
+      this.shapeMaps.push(m);
     }
   }, {
     key: "removeShapeMap",
@@ -118,6 +202,14 @@ function () {
     key: "getShapeMaps",
     value: function getShapeMaps() {
       return shapeMaps;
+    }
+  }, {
+    key: "matchShape",
+    value: function matchShape(pattern) {
+      this.shapeMaps.forEach(function (element) {
+        if (element.match(pattern)) return true;
+        return false;
+      });
     } //
     // TEXT MAPS
     //
@@ -126,7 +218,7 @@ function () {
     key: "addTextMap",
     value: function addTextMap(pattern) {
       var m = new TextMap(this, pattern);
-      textMaps.push(m);
+      this.textMaps.push(m);
     }
   }, {
     key: "removeTextMap",
@@ -143,6 +235,14 @@ function () {
     key: "getTextMaps",
     value: function getTextMaps() {
       return textMaps;
+    }
+  }, {
+    key: "matchText",
+    value: function matchText(pattern) {
+      this.textMaps.forEach(function (element) {
+        if (element.match(pattern)) return true;
+        return false;
+      });
     } //
     // LINK MAPS
     //
@@ -151,7 +251,7 @@ function () {
     key: "addLinkMap",
     value: function addLinkMap(pattern) {
       var m = new LinkMap(this, pattern);
-      linkMaps.push(m);
+      this.linkMaps.push(m);
     }
   }, {
     key: "removeLinkMap",
@@ -168,6 +268,14 @@ function () {
     key: "getLinkMaps",
     value: function getLinkMaps() {
       return textMaps;
+    }
+  }, {
+    key: "matchLink",
+    value: function matchLink(pattern) {
+      this.linkMaps.forEach(function (element) {
+        if (element.match(pattern)) return true;
+        return false;
+      });
     } //
     // STRING VALUE MAPS
     //
@@ -176,7 +284,7 @@ function () {
     key: "addValueMap",
     value: function addValueMap(value, text) {
       var m = new ValueMap(this, value, text);
-      valueMaps.push(m);
+      this.valueMaps.push(m);
     }
   }, {
     key: "removeValueMap",
@@ -200,7 +308,7 @@ function () {
     key: "addRangeMap",
     value: function addRangeMap(from, to, text) {
       var m = new ValueMap(this, from, to, text);
-      valueMaps.push(m);
+      this.rangeMaps.push(m);
     }
   }, {
     key: "removeRangeMap",
@@ -215,7 +323,7 @@ function () {
   }, {
     key: "getRangeMaps",
     value: function getRangeMaps() {
-      return rangeMaps;
+      return this.rangeMaps;
     }
   }, {
     key: "hideRangeMap",
@@ -389,6 +497,7 @@ function () {
   function ShapeMap(rule, pattern) {
     _classCallCheck(this, ShapeMap);
 
+    this.id = _utils.default.uniqueID();
     this.rule = rule;
     this.pattern = pattern;
     this.hidden = false;
@@ -422,13 +531,24 @@ function () {
     }
   }, {
     key: "migrate",
-    value: function migrate(obj) {}
+    value: function migrate(obj, version) {
+      this.pattern = obj.pattern != null && obj.pattern != undefined ? obj.pattern : "/.*/";
+      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
+    }
   }, {
     key: "import",
-    value: function _import(obj) {}
+    value: function _import(obj) {
+      this.pattern = obj.pattern;
+      this.hidden = obj.hidden;
+    }
   }, {
     key: "export",
-    value: function _export() {}
+    value: function _export() {
+      return {
+        'pattern': this.pattern,
+        'hidden': this.hidden
+      };
+    }
   }]);
 
   return ShapeMap;
@@ -443,6 +563,7 @@ function () {
   function TextMap(rule, pattern) {
     _classCallCheck(this, TextMap);
 
+    this.id = _utils.default.uniqueID();
     this.rule = rule;
     this.pattern = pattern;
     this.hidden = false;
@@ -484,6 +605,26 @@ function () {
     value: function isHidden() {
       return this.hidden;
     }
+  }, {
+    key: "migrate",
+    value: function migrate(obj, version) {
+      this.pattern = obj.pattern != null && obj.pattern != undefined ? obj.pattern : "/.*/";
+      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
+    }
+  }, {
+    key: "import",
+    value: function _import(obj) {
+      this.pattern = obj.pattern;
+      this.hidden = obj.hidden;
+    }
+  }, {
+    key: "export",
+    value: function _export() {
+      return {
+        'pattern': this.pattern,
+        'hidden': this.hidden
+      };
+    }
   }]);
 
   return TextMap;
@@ -498,6 +639,7 @@ function () {
   function LinkMap(rule, pattern) {
     _classCallCheck(this, LinkMap);
 
+    this.id = _utils.default.uniqueID();
     this.rule = rule;
     this.pattern = pattern;
     this.hidden = false;
@@ -529,6 +671,26 @@ function () {
     value: function isHidden() {
       return this.hidden;
     }
+  }, {
+    key: "migrate",
+    value: function migrate(obj, version) {
+      this.pattern = obj.pattern != null && obj.pattern != undefined ? obj.pattern : "/.*/";
+      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
+    }
+  }, {
+    key: "import",
+    value: function _import(obj) {
+      this.pattern = obj.pattern;
+      this.hidden = obj.hidden;
+    }
+  }, {
+    key: "export",
+    value: function _export() {
+      return {
+        'pattern': this.pattern,
+        'hidden': this.hidden
+      };
+    }
   }]);
 
   return LinkMap;
@@ -543,6 +705,7 @@ function () {
   function RangeMap(from, to, text) {
     _classCallCheck(this, RangeMap);
 
+    this.id = _utils.default.uniqueID();
     this.from = from;
     this.to = to;
     this.text = text;
@@ -593,6 +756,32 @@ function () {
     value: function isHidden() {
       return this.hidden;
     }
+  }, {
+    key: "migrate",
+    value: function migrate(obj, version) {
+      this.from = obj.from != null && obj.from != undefined ? obj.from : "";
+      this.to = obj.to != null && obj.to != undefined ? obj.to : "";
+      this.text = obj.text != null && obj.text != undefined ? obj.text : "";
+      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
+    }
+  }, {
+    key: "import",
+    value: function _import(obj) {
+      this.from = obj.from != null && obj.from != undefined ? obj.from : "";
+      this.to = obj.to != null && obj.to != undefined ? obj.to : "";
+      this.text = obj.text != null && obj.text != undefined ? obj.text : "";
+      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
+    }
+  }, {
+    key: "export",
+    value: function _export() {
+      return {
+        'from': this.from,
+        'to': this.to,
+        'text': this.text,
+        'hidden': this.hidden
+      };
+    }
   }]);
 
   return RangeMap;
@@ -607,6 +796,7 @@ function () {
   function ValueMap(rule, value, text) {
     _classCallCheck(this, ValueMap);
 
+    this.id = _utils.default.uniqueID();
     this.rule = rule;
     this.value = value;
     this.text = text;
@@ -660,6 +850,29 @@ function () {
     key: "isHidden",
     value: function isHidden() {
       return this.hidden;
+    }
+  }, {
+    key: "migrate",
+    value: function migrate(obj, version) {
+      this.value = obj.value != null && obj.value != undefined ? obj.value : "/.*/";
+      this.text = obj.text != null && obj.text != undefined ? obj.text : "/.*/";
+      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
+    }
+  }, {
+    key: "import",
+    value: function _import(obj) {
+      this.value = obj.value;
+      this.text = obj.text;
+      this.hidden = obj.hidden;
+    }
+  }, {
+    key: "export",
+    value: function _export() {
+      return {
+        'value': this.value,
+        'text': this.text,
+        'hidden': this.hidden
+      };
     }
   }]);
 

@@ -117,6 +117,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on("data-snapshot-load", this.onDataReceived.bind(this));
     this.events.on("init-edit-mode", this.onInitEditMode.bind(this));
     this.events.on("init-panel-actions", this.onInitPanelActions.bind(this));
+
+    // Handlers
+    this.rulesHandler = new RulesHandler($scope);
   }
 
   //
@@ -167,7 +170,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     console.debug("ctrl.link");
-    this.rulesHandler = new RulesHandler(scope);
     this.mx = new mxHandler(scope, elem, attrs, ctrl);
   }
 
