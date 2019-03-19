@@ -1,0 +1,8 @@
+{
+    "verbose": true,
+    "rootDir": "spec",
+    "moduleDirectories": [
+        "node_modules",
+        "../../../grafana-5.4.3/public"
+    ]
+}

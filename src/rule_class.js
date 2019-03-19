@@ -120,7 +120,7 @@ export default class Rule {
         const copy = ref[0];
         ref[0] = ref[2];
         ref[2] = copy;
-        this.invert = this.ref;
+        this.invert = true;
     }
 
     newColor(index, color) {
@@ -147,10 +147,11 @@ export default class Rule {
     getShapeMap(index) { return this.shapeMaps[index]; }
     getShapeMaps() { return this.shapeMaps; }
     matchShape(pattern) {
+        let found = false;
         this.shapeMaps.forEach(element => {
-            if (element.match(pattern)) return true;
+            if (element.match(pattern)) found = true;
         });
-        return false;
+        return found;
     }
     //
     // TEXT MAPS
@@ -160,10 +161,11 @@ export default class Rule {
     getTextMap(index) { return this.textMaps[index]; };
     getTextMaps() { return textMaps; }
     matchText(pattern) {
+        let found = false;
         this.textMaps.forEach(element => {
-            if (element.match(pattern)) return true;
+            if (element.match(pattern)) found = true;
         });
-        return false;
+        return found;
     }
 
 
@@ -175,10 +177,11 @@ export default class Rule {
     getLinkMap(index) { return this.linkMaps[index]; };
     getLinkMaps() { return textMaps; }
     matchLink(pattern) {
+        let found = false;
         this.linkMaps.forEach(element => {
-            if (element.match(pattern)) return true;
+            if (element.match(pattern)) found = true;
         });
-        return false;
+        return found;
     }
 
     //
@@ -209,7 +212,7 @@ export default class Rule {
         }
 
         for (let i = this.thresholds.length; i > 0; i--) {
-            if (value >= style.thresholds[i - 1]) {
+            if (value >= this.thresholds[i - 1]) {
                 return this.colors[i];
             }
         }
@@ -225,7 +228,7 @@ export default class Rule {
 
         // non invert
         if (!this.invert) {
-            thresholdLevel = 3;
+            thresholdLevel = 2;
             if (value >= thresholds[0]) thresholdLevel = 1;
             if (value >= thresholds[1]) thresholdLevel = 0;
         }
@@ -348,13 +351,9 @@ class ShapeMap {
     }
 
     match(text) {
-        console.log("text",text);
-        console.log("pattern",this.pattern);
-        
         if (text === undefined || text === null || text.length === 0) return false;
         const regex = u.stringToJsRegex(this.pattern);
-        console.log("regex ", regex);
-        let matching = regex.match(text);
+        let matching = text.toString().match(regex);
         if (this.pattern === text || matching) return true;
         return false;
     }
@@ -402,7 +401,7 @@ class TextMap {
         let formattedText = rule.getFormattedText(value);
         if (rule.textOn == "n") formattedText = "";
         if (rule.textOn == "wc" && rule.getThresholdLevel(value) < 1) formattedText = "";
-        if (_style.textOn == "co" && level != 3) formattedText = "";
+        if (rule.textOn == "co" && level != 3) formattedText = "";
         return formattedText;
     }
 

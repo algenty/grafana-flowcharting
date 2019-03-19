@@ -151,7 +151,7 @@ function () {
       var copy = ref[0];
       ref[0] = ref[2];
       ref[2] = copy;
-      this.invert = this.ref;
+      this.invert = true;
     }
   }, {
     key: "newColor",
@@ -203,10 +203,11 @@ function () {
   }, {
     key: "matchShape",
     value: function matchShape(pattern) {
+      var found = false;
       this.shapeMaps.forEach(function (element) {
-        if (element.match(pattern)) return true;
+        if (element.match(pattern)) found = true;
       });
-      return false;
+      return found;
     } //
     // TEXT MAPS
     //
@@ -236,10 +237,11 @@ function () {
   }, {
     key: "matchText",
     value: function matchText(pattern) {
+      var found = false;
       this.textMaps.forEach(function (element) {
-        if (element.match(pattern)) return true;
+        if (element.match(pattern)) found = true;
       });
-      return false;
+      return found;
     } //
     // LINK MAPS
     //
@@ -269,10 +271,11 @@ function () {
   }, {
     key: "matchLink",
     value: function matchLink(pattern) {
+      var found = false;
       this.linkMaps.forEach(function (element) {
-        if (element.match(pattern)) return true;
+        if (element.match(pattern)) found = true;
       });
-      return false;
+      return found;
     } //
     // STRING VALUE MAPS
     //
@@ -343,7 +346,7 @@ function () {
       }
 
       for (var i = this.thresholds.length; i > 0; i--) {
-        if (value >= style.thresholds[i - 1]) {
+        if (value >= this.thresholds[i - 1]) {
           return this.colors[i];
         }
       }
@@ -359,7 +362,7 @@ function () {
       if (thresholds.length !== 2) return -1; // non invert
 
       if (!this.invert) {
-        thresholdLevel = 3;
+        thresholdLevel = 2;
         if (value >= thresholds[0]) thresholdLevel = 1;
         if (value >= thresholds[1]) thresholdLevel = 0;
       } else {
@@ -503,14 +506,11 @@ function () {
   _createClass(ShapeMap, [{
     key: "match",
     value: function match(text) {
-      console.log("text", text);
-      console.log("pattern", this.pattern);
       if (text === undefined || text === null || text.length === 0) return false;
 
       var regex = _utils.default.stringToJsRegex(this.pattern);
 
-      console.log("regex ", regex);
-      var matching = regex.match(text);
+      var matching = text.toString().match(regex);
       if (this.pattern === text || matching) return true;
       return false;
     }
@@ -587,7 +587,7 @@ function () {
       var formattedText = rule.getFormattedText(value);
       if (rule.textOn == "n") formattedText = "";
       if (rule.textOn == "wc" && rule.getThresholdLevel(value) < 1) formattedText = "";
-      if (_style.textOn == "co" && level != 3) formattedText = "";
+      if (rule.textOn == "co" && level != 3) formattedText = "";
       return formattedText;
     }
   }, {
