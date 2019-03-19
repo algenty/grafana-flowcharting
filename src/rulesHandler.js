@@ -26,15 +26,15 @@ export default class RulesHandler {
     }
 
     import(obj) {
-        this.getRules().forEach(rule => {
+        obj.forEach(rule => {
             let newRule = new Rule('');
-            newRule.import(rule)
+            newRule.import(rule);
             this.rules.push(newRule);
         });
     }
 
     migrate(obj) {
-        this.getRules().forEach(rule => {
+        obj.forEach(rule => {
             let newRule = new Rule('');
             newRule.migrate(rule);
             this.rules.push(newRule);
