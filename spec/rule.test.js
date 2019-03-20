@@ -114,5 +114,3 @@ test('Rule : Values', () => {
     expect(rule.getValue(series[0])).toBe(79.17554249669148);
     expect(rule.getFormattedValue(series[0])).toBe(79.17554249669148);
 });
-
-

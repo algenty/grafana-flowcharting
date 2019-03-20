@@ -1,9 +1,21 @@
 {
-    "verbose": true,
-    "rootDir": "spec",
-    "moduleDirectories": [
-        "node_modules",
-        "../../../grafana-5.4.3/public"
+    "verbose" : true,
+    "rootDir" : ".",
+    "roots" : ["<rootDir>/spec"],
+    "moduleFileExtensions" : [ "js", "jsx", "ts"],
+    "transform": {
+        ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
+        "^.+\\.js$" : "babel-jest"
+    },
+    "moduleDirectories" : [
+        "<rootDir>/src",
+        "<rootDir>/node_modules",
+        "<rootDir>/bower_components",
+        "<rootDir>/../../../grafana-5.4.3/public",
+        "<rootDir>/../../../../grafana-5.4.3/public"
     ],
-    "transformIgnorePatterns" : ["/node_modules/", "/kbn/"]
+    "moduleNameMapper" : {
+        "^(app.*)$" : "<rootDir>/../../../../grafana-5.4.3/public/$1"
+    }, 
+    "transformIgnorePatterns" : [ "/node_modules/", "/.*app\/core.*/", "<rootDir>/bower_components/"]
 }
