@@ -1,10 +1,30 @@
-{ 
-    "verbose": false,
-    "roots" : ["./spec"],
+{
+    "verbose": true,
+    "roots": [
+        "./spec"
+    ],
     "moduleDirectories": [
         "node_modules",
         "public",
         "src"
+    ],
+    "module.exports": {
+        "setupFiles": [
+            "./setup-jest.js"
+        ]
+    },
+    "transform": {
+        "^.+\\.jsx?$": "babel-jest",
+        "^.+\\.tsx?$": "ts-jest"
+    },
+    "moduleNameMapper": {
+        "^app/(.*)$": "<rootDir>/public/app/$1",
+        "underscore$": "lodash"
+    },
+    "transformIgnorePatterns": [
+        "<rootDir>/public/",
+        "<rootDir>/node_modules/",
+        "<rootDir>/dist/"
     ],
     "testRegex": "(\\.|/)(test)\\.(jsx?|tsx?)$",
     "moduleFileExtensions": [
