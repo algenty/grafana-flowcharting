@@ -93,7 +93,7 @@ module.exports = (grunt) => {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js', '!mxHandler.js', "!Graph.js", "!init.js"],
+          src: ['*.js', '!mxHandler.js', "!Graph.js", "!init.js", "!utils.js"],
           dest: 'dist',
           ext: '.js'
         }]
@@ -119,6 +119,31 @@ module.exports = (grunt) => {
           path: path.resolve(process.cwd(), "./dist"),
           filename: "mxHandler.js",
           library: "mxHandler",
+          libraryTarget: "umd"
+        },
+        externals: {
+          "jquery": "jquery",
+          "lodash": "lodash",
+        }
+      },
+      utils: {
+        entry: "./src/utils.js",
+        mode: "development",
+        module: {
+          rules: [
+            {
+              test: /\.m?js$/,
+              exclude: /(node_modules|bower_components|externals)/,
+              use: {
+                loader: 'babel-loader',
+              }
+            },
+          ]
+        },
+        output: {
+          path: path.resolve(process.cwd(), "./dist"),
+          filename: "utils.js",
+          library: "utils",
           libraryTarget: "umd"
         },
         externals: {

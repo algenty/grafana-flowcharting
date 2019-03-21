@@ -19,11 +19,11 @@ var _inspect_options = require("./inspect_options");
 
 var _moment = _interopRequireDefault(require("moment"));
 
-var _plugin = require("./plugin");
-
 var _mxHandler = _interopRequireDefault(require("./mxHandler"));
 
-var _utils = _interopRequireDefault(require("./utils"));
+var _rulesHandler = _interopRequireDefault(require("./rulesHandler"));
+
+var _plugin = require("./plugin");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -45,7 +45,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-window.u = _utils.default;
+var u = require("./utils");
+
+window.u = window.u || u;
 
 var FlowchartCtrl =
 /*#__PURE__*/
@@ -163,9 +165,7 @@ function (_MetricsPanelCtrl) {
 
     _this.events.on("init-edit-mode", _this.onInitEditMode.bind(_assertThisInitialized(_assertThisInitialized(_this))));
 
-    _this.events.on("init-panel-actions", _this.onInitPanelActions.bind(_assertThisInitialized(_assertThisInitialized(_this)))); // Handlers
-    // this.rulesHandler = new RulesHandler($scope);
-
+    _this.events.on("init-panel-actions", _this.onInitPanelActions.bind(_assertThisInitialized(_assertThisInitialized(_this))));
 
     return _this;
   } //
@@ -226,6 +226,7 @@ function (_MetricsPanelCtrl) {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
       console.debug("ctrl.link");
+      this.rulesHandler = new _rulesHandler.default(scope);
       this.mx = new _mxHandler.default(scope, elem, attrs, ctrl);
     }
   }, {

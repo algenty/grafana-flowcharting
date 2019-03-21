@@ -1,5 +1,3 @@
-import _ from "lodash";
-// import u from "./utils";
 
 window.mxLanguages = window.mxLanguages || ["en"];
 
@@ -137,7 +135,6 @@ export default class MxPluginCtrl {
     this.STYLE_FILLCOLOR = mxConstants.STYLE_FILLCOLOR;
     this.STYLE_FONTCOLOR = mxConstants.STYLE_FONTCOLOR;
     this.STYLE_STROKECOLOR = mxConstants.STYLE_STROKECOLOR;
-
     this.initFlowchart();
 
     // Events Render

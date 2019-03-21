@@ -1,12 +1,10 @@
 { 
     "verbose": false,
     "roots" : ["./spec"],
-    "transform": {
-        "^.+\\.(ts|tsx)$": "ts-jest"
-    },
     "moduleDirectories": [
         "node_modules",
-        "public"
+        "public",
+        "src"
     ],
     "testRegex": "(\\.|/)(test)\\.(jsx?|tsx?)$",
     "moduleFileExtensions": [
@@ -15,10 +13,6 @@
         "js",
         "jsx",
         "json"
-    ],
-    "setupFiles": [
-        "./public/test/jest-shim.ts",
-        "./public/test/jest-setup.ts"
     ],
     "snapshotSerializers": [
         "enzyme-to-json/serializer"

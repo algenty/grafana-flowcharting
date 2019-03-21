@@ -5,11 +5,16 @@ import { mappingOptionsTab } from "./mapping_options";
 import { flowchartOptionsTab } from "./flowchart_options";
 import { inspectOptionsTab } from "./inspect_options";
 import moment from "moment";
+
+var u = require("./utils");
+window.u = window.u || u;
+
+import MxHandler from "./mxHandler";
+import RulesHandler from "./rulesHandler";
 import { plugin } from "./plugin";
-import mxHandler from "./mxHandler";
-// import RulesHandler from "./rulesHandler";
-import u from "./utils";
-window.u = u;
+
+
+
 
 class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, $rootScope) {
@@ -120,8 +125,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on("init-edit-mode", this.onInitEditMode.bind(this));
     this.events.on("init-panel-actions", this.onInitPanelActions.bind(this));
 
-    // Handlers
-    // this.rulesHandler = new RulesHandler($scope);
   }
 
   //
@@ -172,7 +175,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     console.debug("ctrl.link");
-    this.mx = new mxHandler(scope, elem, attrs, ctrl);
+    this.rulesHandler = new RulesHandler(scope);
+    this.mx = new MxHandler(scope, elem, attrs, ctrl);
   }
 
   exportSVG() {
