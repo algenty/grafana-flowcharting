@@ -1,5 +1,5 @@
 import Rule from "./rule_class";
-// var u = require("./utils");
+// var u  = require("./utils");
 
 export default class RulesHandler {
     /** @ngInject */

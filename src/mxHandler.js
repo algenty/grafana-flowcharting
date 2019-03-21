@@ -1,5 +1,5 @@
 import _ from "lodash";
-var u = require("./utils");
+// import u from "./utils";
 
 window.mxLanguages = window.mxLanguages || ["en"];
 

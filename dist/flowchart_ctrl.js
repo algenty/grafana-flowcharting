@@ -23,7 +23,7 @@ var _plugin = require("./plugin");
 
 var _mxHandler = _interopRequireDefault(require("./mxHandler"));
 
-var _rulesHandler = _interopRequireDefault(require("./rulesHandler"));
+var _utils = _interopRequireDefault(require("./utils"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -44,6 +44,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+window.u = _utils.default;
 
 var FlowchartCtrl =
 /*#__PURE__*/
@@ -162,9 +164,9 @@ function (_MetricsPanelCtrl) {
     _this.events.on("init-edit-mode", _this.onInitEditMode.bind(_assertThisInitialized(_assertThisInitialized(_this))));
 
     _this.events.on("init-panel-actions", _this.onInitPanelActions.bind(_assertThisInitialized(_assertThisInitialized(_this)))); // Handlers
+    // this.rulesHandler = new RulesHandler($scope);
 
 
-    _this.rulesHandler = new _rulesHandler.default($scope);
     return _this;
   } //
   // EVENTS FCT

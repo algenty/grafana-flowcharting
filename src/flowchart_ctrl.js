@@ -7,7 +7,9 @@ import { inspectOptionsTab } from "./inspect_options";
 import moment from "moment";
 import { plugin } from "./plugin";
 import mxHandler from "./mxHandler";
-import RulesHandler from "./rulesHandler";
+// import RulesHandler from "./rulesHandler";
+import u from "./utils";
+window.u = u;
 
 class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, $rootScope) {
@@ -119,7 +121,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on("init-panel-actions", this.onInitPanelActions.bind(this));
 
     // Handlers
-    this.rulesHandler = new RulesHandler($scope);
+    // this.rulesHandler = new RulesHandler($scope);
   }
 
   //

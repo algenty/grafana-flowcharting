@@ -1,21 +1,26 @@
-{
-    "verbose" : true,
-    "rootDir" : ".",
-    "roots" : ["<rootDir>/spec"],
-    "moduleFileExtensions" : [ "js", "jsx", "ts"],
+{ 
+    "verbose": false,
+    "roots" : ["./spec"],
     "transform": {
-        ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
-        "^.+\\.js$" : "babel-jest"
+        "^.+\\.(ts|tsx)$": "ts-jest"
     },
-    "moduleDirectories" : [
-        "<rootDir>/src",
-        "<rootDir>/node_modules",
-        "<rootDir>/bower_components",
-        "<rootDir>/../../../grafana-5.4.3/public",
-        "<rootDir>/../../../../grafana-5.4.3/public"
+    "moduleDirectories": [
+        "node_modules",
+        "public"
     ],
-    "moduleNameMapper" : {
-        "^(app.*)$" : "<rootDir>/../../../../grafana-5.4.3/public/$1"
-    }, 
-    "transformIgnorePatterns" : [ "/node_modules/", "/.*app\/core.*/", "<rootDir>/bower_components/"]
+    "testRegex": "(\\.|/)(test)\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "json"
+    ],
+    "setupFiles": [
+        "./public/test/jest-shim.ts",
+        "./public/test/jest-setup.ts"
+    ],
+    "snapshotSerializers": [
+        "enzyme-to-json/serializer"
+    ]
 }

@@ -1,0 +1,10 @@
+import RuleHandler from "../src/rulesHandler";
+
+var rh = new RuleHandler();
+ console.log("rh ", rh);
+
+
+// test('Rule : addshape', () => {
+//     rule.addShapeMap('myshape');
+//     expect(rule.getShapeMaps().length).toBe(1);
+// });
