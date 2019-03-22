@@ -31,8 +31,5 @@
         "js",
         "jsx",
         "json"
-    ],
-    "snapshotSerializers": [
-        "enzyme-to-json/serializer"
     ]
 }

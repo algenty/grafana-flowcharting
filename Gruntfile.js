@@ -93,7 +93,7 @@ module.exports = (grunt) => {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js', '!mxHandler.js', "!Graph.js", "!init.js", "!utils.js"],
+          src: ['*.js', '!mxHandler.js', "!Graph.js", "!init.js", "!utils.js", "!backup/**/*"],
           dest: 'dist',
           ext: '.js'
         }]

@@ -98,12 +98,6 @@ export class MappingOptionsCtrl {
     this.onOptionsChange();
   }
 
-  invertColorOrder(index) {
-    let rules = this.panel.rules;
-    rules[index].invertColorOrder();
-    this.onOptionsChange();
-  }
-
   onColorChange(ruleIndex, colorIndex) {
     return newColor => {
       this.panel.rules[ruleIndex].colors[colorIndex] = newColor;
@@ -111,8 +105,9 @@ export class MappingOptionsCtrl {
     };
   }
 
-  onOptionsChange(fieldName,style) {
+  onOptionsChange() {
     this.panelCtrl.changedOptions = true;
+    console.log(this.panelCtrl.rulesHandler);
     this.render();
   }
 

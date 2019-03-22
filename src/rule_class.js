@@ -119,7 +119,8 @@ export default class Rule {
         const copy = ref[0];
         ref[0] = ref[2];
         ref[2] = copy;
-        this.invert = true;
+        if(this.invert) this.invert = false;
+        else this.invert = true;
     }
 
     newColor(index, color) {
@@ -141,8 +142,8 @@ export default class Rule {
     //
     // SHAPE MAPS
     //
-    addShapeMap(pattern) { let m = new ShapeMap(this, pattern); this.shapeMaps.push(m); }
-    removeShapeMap(index) { this.shapeMaps.splice(index, 1); }
+    addShapeMap(pattern) { let m = new ShapeMap(this, pattern); this.shapeMaps.push(m);}
+    removeShapeMap(index) { this.shapeMaps.splice(index, 1);}
     getShapeMap(index) { return this.shapeMaps[index]; }
     getShapeMaps() { return this.shapeMaps; }
     matchShape(pattern) {
@@ -159,7 +160,7 @@ export default class Rule {
     addTextMap(pattern) { let m = new TextMap(this, pattern); this.textMaps.push(m); };
     removeTextMap(index) { let m = this.textMaps[index]; this.textMaps = _.without(this.textMaps, m) };
     getTextMap(index) { return this.textMaps[index]; };
-    getTextMaps() { return textMaps; }
+    getTextMaps() { return this.textMaps; }
     matchText(pattern) {
         let found = false;
         this.textMaps.forEach(element => {
@@ -173,9 +174,9 @@ export default class Rule {
     // LINK MAPS
     //
     addLinkMap(pattern) { let m = new LinkMap(this, pattern); this.linkMaps.push(m); };
-    removeLinkMap(index) { let m = this.textMaps[index]; this.linkMaps = _.without(this.linkMaps, m) };
+    removeLinkMap(index) { let m = this.linkMaps[index]; this.linkMaps = _.without(this.linkMaps, m) };
     getLinkMap(index) { return this.linkMaps[index]; };
-    getLinkMaps() { return textMaps; }
+    getLinkMaps() { return this.linkMaps; }
     matchLink(pattern) {
         let found = false;
         this.linkMaps.forEach(element => {
@@ -190,7 +191,7 @@ export default class Rule {
     addValueMap(value, text) { let m = new ValueMap(this, value, text); this.valueMaps.push(m); }
     removeValueMap(index) { this.valueMaps.splice(index, 1); }
     getValueMap(index) { return this.valueMaps[index]; }
-    getValueMaps() { return valueMaps; }
+    getValueMaps() { return this.valueMaps; }
 
     //
     // STRING RANGE VALUE MAPS
@@ -205,7 +206,6 @@ export default class Rule {
     //
     // Format value
     //
-
     getColorForValue(value) {
         if (!this.thresholds || this.thresholds.length == 0) {
             return null;
@@ -358,6 +358,7 @@ class ShapeMap {
         return false;
     }
 
+    getId() { return this.id;}
     show() { this.hidden = false }
     hide() { this.hidden = true }
     isHidden() { return this.hidden }
@@ -396,6 +397,7 @@ class TextMap {
         return false;
     }
 
+    getId() { return this.id;}
     getFormattedText(value) {
         let rule = this.rule;
         let formattedText = rule.getFormattedText(value);
@@ -443,6 +445,7 @@ class LinkMap {
         return false;
     }
 
+    getId() { return this.id;}
     show() { this.hidden = false };
     hide() { this.hidden = true };
     isHidden() { return this.hidden };
@@ -488,7 +491,7 @@ class RangeMap {
         ) return true;
         return false;
     }
-
+    getId() { return this.id;}
     getFormattedText(value, rule) {
         if (value === null) {
             if (this.from === "null" && this.to === "null") {
@@ -554,6 +557,8 @@ class ValueMap {
         if (this.pattern == text || matching) return true;
         else return false;
     }
+
+    getId() { return this.id;}
 
     getFormattedText(value) {
         let rule = this.rule;

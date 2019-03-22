@@ -1,9 +1,8 @@
 import RuleHandler from "../src/rulesHandler";
 
-var rh = new RuleHandler();
-console.log("rh ", rh);
 
-describe("RuleHandler", () => {
+describe("RuleHandler", function () {
+    let rh = new RuleHandler();
     test('addRule', () => {
         rh.addRule("/.*/")
         expect(rule.getShapeMaps().length).toBe(1);

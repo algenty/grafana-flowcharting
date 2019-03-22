@@ -229,7 +229,7 @@
               ></color-picker>
             </span>
             <div class="gf-form-label">
-              <a class="pointer" ng-click="editor.invertColorOrder($index)"
+              <a class="pointer" ng-click="rule.invertColorOrder()"
                 >Invert</a
               >
             </div>
@@ -275,20 +275,20 @@
               ></select>
             </div>
           </div>
-          <!-- <div
+          <div
             class="gf-form"
-            ng-if="style.textReplace == 'pattern' && style.textOn != 'n'"
+            ng-if="rule.textReplace == 'pattern' && rule.textOn != 'n'"
           >
             <label class="gf-form-label width-12">Text pattern</label>
             <input
               type="text"
               class="gf-form-input width-12"
-              ng-model="style.textPattern"
+              ng-model="rule.textPattern"
               ng-change="editor.onOptionsChange()"
               ng-model-onblur
               placeholder="name for tooltip"
             />
-          </div> -->
+          </div>
         </div>
 
         <!-- LINK -->
@@ -337,7 +337,7 @@
             <input
               type="text"
               class="gf-form-input width-29"
-              ng-model="style.linkTooltip"
+              ng-model="rule.linkTooltip"
               ng-blur="editor.onOptionsChange()"
               ng-model-onblur
               data-placement="right"
@@ -411,7 +411,7 @@
               >
                 <i
                   class="fa fa-link pointer"
-                  ng-click="editor.mapCell(shape,'shape_' + rule.id  + '_' + shape.id)"
+                  ng-click="editor.mapCell(shape,shape.getId())"
                   bs-tooltip="'Link it on object graph'"
                 ></i>
               </label>
@@ -423,12 +423,12 @@
                 <i
                   class="fa fa-unlink pointer"
                   bs-tooltip="'Cancel link object graph selection'"
-                  ng-click="editor.mapCell(shape,'shape_' + rule.id  + '_' + shape.id)"
+                  ng-click="editor.mapCell(shape,shape.getId())"
                 ></i>
               </label>
               <input
                 type="text"
-                id="shape_{{ rule.id }}_{{shape.id}}"
+                id="{{shape.getId()}}"
                 placeholder="id or regex of shape"
                 class="gf-form-input width-13"
                 ng-model="shape.pattern"
@@ -511,7 +511,7 @@
               >
                 <i
                   class="fa fa-link pointer"
-                  ng-click="editor.mapCell(text,'text_' + rule.id + '_' + text.id)"
+                  ng-click="editor.mapCell(text,text.getId())"
                   bs-tooltip="'Link it on object graph'"
                 ></i>
               </label>
@@ -523,13 +523,13 @@
                 <i
                   class="fa fa-unlink pointer"
                   bs-tooltip="'Cancel link object graph selection'"
-                  ng-click="editor.mapCell(text,'text_' + rule.id + '_' + text.id)"
+                  ng-click="editor.mapCell(text,text.getId())"
                 ></i>
               </label>
 
               <input
                 type="text"
-                id="text_{{ rule.id }}_{{text.id}}"
+                id="{{text.getId()}}"
                 placeholder="id or regex of shape/text name"
                 class="gf-form-input width-13"
                 ng-model="text.pattern"
@@ -613,7 +613,7 @@
               >
                 <i
                   class="fa fa-link pointer"
-                  ng-click="editor.mapCell(link,'link_' + rule.id  + '_' + link.id)"
+                  ng-click="editor.mapCell(link,link.getId())"
                   bs-tooltip="'Link it on object graph'"
                 ></i>
               </label>
@@ -625,13 +625,13 @@
                 <i
                   class="fa fa-unlink pointer"
                   bs-tooltip="'Cancel link object graph selection'"
-                  ng-click="editor.mapCell(link,'link_' + rule.id  + '_' + link.id )"
+                  ng-click="editor.mapCell(link,link.getId())"
                 ></i>
               </label>
 
               <input
                 type="text"
-                id="link_{{ rule.id }}_{{link.id}}"
+                id="{{link.getId()}}"
                 placeholder="id or regex of shape/text name"
                 class="gf-form-input width-13"
                 ng-model="link.pattern"
@@ -781,7 +781,7 @@
 
   <div class="editor-row">
     <div class="gf-form-button-row">
-      <button class="btn btn-inverse" ng-click="rulesHandler.addRule()">
+      <button class="btn btn-inverse" ng-click="rulesHandler.addRule('/.*/')">
         <i class="fa fa-plus"></i>&nbsp;Add Rule
       </button>
     </div>

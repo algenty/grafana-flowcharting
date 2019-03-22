@@ -47,7 +47,6 @@
     "jest": "^24.5.0",
     "jest-cli": "^24.5.0",
     "jest-mock": "^24.5.0",
-    "jest-tobetype": "^1.2.2",
     "jest-transform-stub": "^2.0.0",
     "jquery": "^3.3.1",
     "load-grunt-tasks": "~4.0.0",
@@ -68,8 +67,5 @@
     "webpack": "^4.29.1"
   },
   "dependencies": {
-    "@types/angular": "^1.6.54",
-    "@types/enzyme-adapter-react-16": "^1.0.5",
-    "@types/jest": "^24.0.11"
   }
 }

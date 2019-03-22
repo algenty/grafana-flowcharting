@@ -175,7 +175,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     console.debug("ctrl.link");
-    this.rulesHandler = new RulesHandler(scope);
+    this.rulesHandler = new RulesHandler(scope, elem, attrs, ctrl);
+    this.rulesHandler.addRule("/.*/");
+    console.log("rules ", this.rulesHandler);
+    
     this.mx = new MxHandler(scope, elem, attrs, ctrl);
   }
 

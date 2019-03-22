@@ -1,5 +1,4 @@
 import Rule from "./rule_class";
-// var u  = require("./utils");
 
 export default class RulesHandler {
     /** @ngInject */
@@ -51,7 +50,7 @@ export default class RulesHandler {
 
     addRule(pattern) {
         const newRule = new Rule(pattern);
-        rules.push(newRule);
+        this.rules.push(newRule);
     }
 
     countRules() {
@@ -66,7 +65,6 @@ export default class RulesHandler {
 
     cloneRule(rule) {
         let newRule = angular.copy(rule);
-        newRule.id = u.uniqueID();
         const rules = this.rules;
         const rulesCount = rules.length;
         let indexToInsert = rulesCount;
@@ -83,7 +81,7 @@ export default class RulesHandler {
 
     moveRuleToUp(index) {
         const first = 0;
-        const rules = this.rules
+        const rules = this.rules;
         const last = rules.length - 1;
         if (index != first && last != first) {
             let curr = rules[index];
