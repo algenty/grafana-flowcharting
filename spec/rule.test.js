@@ -27,8 +27,10 @@ describe("Level", () => {
         expect(rule.getThresholdLevel(25)).toBe(0);
         expect(rule.getThresholdLevel(60)).toBe(1);
         expect(rule.getThresholdLevel(90)).toBe(2);
-        rule.invertColorOrder();
     });
+
+    rule.invertColorOrder();
+    
 });
 
 describe("Colors", () => {
@@ -61,15 +63,16 @@ describe("Shape", () => {
         expect(rule.getShapeMaps().length).toBe(0);
     });
 
-    test('match of this shape', () => {
-        rule.addShapeMap(shapePattern);
-        let sm = rule.getShapeMap(0);
-        expect(rule.matchShape('ShapeToto')).toBe(true);
-        expect(rule.matchShape('TextToto')).toBe(false);
-    });
+    rule.addShapeMap(shapePattern);
+    let sm = rule.getShapeMap(0);
 
     test('find match of all Shape', () => {
         expect(sm.match('Shape')).toBe(true);
+    });
+    
+    test('match of this shape', () => {
+        expect(rule.matchShape('ShapeToto')).toBe(true);
+        expect(rule.matchShape('TextToto')).toBe(false);
     });
 
 });

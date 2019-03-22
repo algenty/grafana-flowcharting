@@ -49,13 +49,19 @@ export default class RulesHandler {
         return this.rules[index];
     }
 
-    addRule() {
-        const newRule = new Rule("/.*/")
+    addRule(pattern) {
+        const newRule = new Rule(pattern);
         rules.push(newRule);
     }
 
-    removeRule(rule) {
-        this.rules = _.without(this.rules, rule);
+    countRules() {
+        if (this.rules != undefined && Array.isArray(this.rules))return this.rules.length;
+        else return 0;
+    }
+
+    removeRule(index) {
+        // this.rules = _.without(this.rules, rule);
+        this.rules.splice(index, 1);
     }
 
     cloneRule(rule) {

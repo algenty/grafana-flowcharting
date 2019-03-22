@@ -8,11 +8,9 @@
         "public",
         "src"
     ],
-    "module.exports": {
-        "setupFiles": [
-            "./setup-jest.js"
-        ]
-    },
+    "setupFiles": [
+        "<rootDir>/spec/setup-jest.js"
+    ],
     "transform": {
         "^.+\\.jsx?$": "babel-jest",
         "^.+\\.tsx?$": "ts-jest"

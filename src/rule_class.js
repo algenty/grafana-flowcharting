@@ -152,6 +152,7 @@ export default class Rule {
         });
         return found;
     }
+    
     //
     // TEXT MAPS
     //
