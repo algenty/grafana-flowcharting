@@ -133,14 +133,16 @@ export default class MxGraph {
         this.center = true;
         this.zoom = false;
         this.zoomPercent = "1";
+
+        this.initGraph();
     }
 
     initGraph() {
-        this.$elem.html(this.$graphCanvas);
+        // this.$elem.html(this.$graphCanvas);
         let Graph = require("./Graph")({
             "libs": "arrows;basic;bpmn;flowchart"
         });
-        let Shapes = requires("./Shapes");
+        let Shapes = require("./Shapes");
         this.graph = new Graph(this.container);
     };
 

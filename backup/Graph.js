@@ -71,7 +71,7 @@ module.exports = function (urlParams) {
 	/**
 	 * Defines graph class.
 	 */
-	var Graph = function (container, model, renderHint, stylesheet, themes) {
+	Graph = function (container, model, renderHint, stylesheet, themes) {
 		mxGraph.call(this, container, model, renderHint, stylesheet);
 
 		this.themes = themes || this.defaultThemes;
@@ -2627,7 +2627,7 @@ module.exports = function (urlParams) {
 	/**
 	 * Hover icons are used for hover, vertex handler and drag from sidebar.
 	 */
-	var HoverIcons = function (graph) {
+	HoverIcons = function (graph) {
 		this.graph = graph;
 		this.init();
 	};
@@ -6282,7 +6282,7 @@ module.exports = function (urlParams) {
 				}
 			};
 
-			var mxCellEditorGetInitialValue = mxCellEditor.prototype.getInitialValue;
+			mxCellEditorGetInitialValue = mxCellEditor.prototype.getInitialValue;
 			mxCellEditor.prototype.getInitialValue = function (state, trigger) {
 				if (mxUtils.getValue(state.style, 'html', '0') == '0') {
 					return mxCellEditorGetInitialValue.apply(this, arguments);
@@ -6300,7 +6300,7 @@ module.exports = function (urlParams) {
 				}
 			};
 
-			var mxCellEditorGetCurrentValue = mxCellEditor.prototype.getCurrentValue;
+			mxCellEditorGetCurrentValue = mxCellEditor.prototype.getCurrentValue;
 			mxCellEditor.prototype.getCurrentValue = function (state) {
 				if (mxUtils.getValue(state.style, 'html', '0') == '0') {
 					return mxCellEditorGetCurrentValue.apply(this, arguments);
