@@ -1,6 +1,7 @@
-// import kbn from "app/core/utils/kbn";
 import _ from "lodash";
+import { truncateSync } from "fs";
 var u = require("./utils");
+import kbn from "app/core/utils/kbn";
 
 export default class Rule {
     /** @ngInject */
@@ -130,6 +131,15 @@ export default class Rule {
     }
 
     //
+    // Conditions
+    //
+    toColorize(value) {
+        if( this.colorOn === "a" ) return true;
+        if( this.colorOn === "wc" && this.getThresholdLevel(value) >=1 ) return true;
+        return false
+    }
+
+    //
     // Series
     //
     matchSerie(serie) {
@@ -240,7 +250,7 @@ export default class Rule {
         return thresholdLevel;
     }
 
-    getValue(serie) {
+    getValueForSerie(serie) {
         if (this.matchSerie(serie)) {
             let value = _.get(serie.stats, this.aggregation);
             if (value === undefined || value === null) {
@@ -251,9 +261,13 @@ export default class Rule {
         return '-';
     }
 
-    getFormattedValue(serie) {
-        let value = this.getValue(serie);
-        // Number
+    getFormattedValueForSerie(serie) {
+        let formattedValue = this.getValueForSerie(serie)
+        return this.getFormattedValue(formattedValue);
+    }
+
+    getFormattedValue(value) {
+          // Number
         if (this.type === "number") {
             if (!_.isFinite(value)) return "Invalid Number";
             if (value === null || value === void 0) { return "-"; }
@@ -262,7 +276,7 @@ export default class Rule {
                 typeof this.decimals === "number"
                     ? Math.min(this.decimals, decimals)
                     : decimals;
-            return kbn.valueFormats[this.unit](value, decimals, null).toString();
+            return formatValue(value,this.unit,this.decimals);
         }
 
         if (this.type === "string") {
@@ -305,6 +319,16 @@ export default class Rule {
             // }
             return date.format(this.dateFormat);
         }
+    }
+
+    getReplaceText(text,FormattedValue) {
+        if( this.textReplace === 'content') return FormattedValue;
+        else {
+            const regexVal = u.stringToJsRegex(this.textPattern);
+            if ( text.toString().match(regexVal) )
+            return text.toString().replace(regexVal,FormattedValue) 
+        }
+        return text;
     }
 
     defaultValueFormatter(value, rule) {
@@ -376,6 +400,14 @@ class ShapeMap {
             'hidden': this.hidden
         }
     }
+    toColorize(value) {
+        if(this.hidden) return false;
+        return this.rule.toColorize(value);
+    }
+    toVisible() {
+        if(this.hidden) return false;
+        return true;
+    }
 }
 
 //
@@ -398,15 +430,6 @@ class TextMap {
     }
 
     getId() { return this.id;}
-    getFormattedText(value) {
-        let rule = this.rule;
-        let formattedText = rule.getFormattedText(value);
-        if (rule.textOn == "n") formattedText = "";
-        if (rule.textOn == "wc" && rule.getThresholdLevel(value) < 1) formattedText = "";
-        if (rule.textOn == "co" && level != 3) formattedText = "";
-        return formattedText;
-    }
-
     show() { this.hidden = false };
     hide() { this.hidden = true };
     isHidden() { return this.hidden };
@@ -424,6 +447,7 @@ class TextMap {
             'hidden': this.hidden
         }
     }
+
 }
 
 //
@@ -492,6 +516,7 @@ class RangeMap {
         return false;
     }
     getId() { return this.id;}
+
     getFormattedText(value, rule) {
         if (value === null) {
             if (this.from === "null" && this.to === "null") {
@@ -593,4 +618,8 @@ class ValueMap {
             'hidden': this.hidden
         }
     }
+}
+
+function formatValue(value,unit,decimals) {
+    return kbn.valueFormats[unit](value, decimals, null).toString();
 }

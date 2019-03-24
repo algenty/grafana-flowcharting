@@ -8,6 +8,11 @@
         "public",
         "src"
     ],
+    "modulePaths": [
+        "./node_modules",
+        "./public",
+        "./src"
+    ],
     "setupFiles": [
         "<rootDir>/spec/setup-jest.js"
     ],
@@ -16,15 +21,17 @@
         "^.+\\.tsx?$": "ts-jest"
     },
     "moduleNameMapper": {
-        "^app/(.*)$": "<rootDir>/public/app/$1",
         "underscore$": "lodash"
     },
     "transformIgnorePatterns": [
-        "<rootDir>/public/",
-        "<rootDir>/node_modules/",
-        "<rootDir>/dist/"
+        "./public/.*",
+        "./node_modules/.*",
+        "./dist/.*"
     ],
     "testRegex": "(\\.|/)(test)\\.(jsx?|tsx?)$",
+    "transformIgnorePatterns": [
+        "/node_modules/(?!vue-awesome)"
+    ],
     "moduleFileExtensions": [
         "ts",
         "tsx",

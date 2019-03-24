@@ -1,0 +1,288 @@
+.flowchart-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%; }
+
+.flowchart-panel--legend-right {
+  flex-direction: row; }
+
+.flowchart-panel--legend-right .flowchart-legend {
+  flex: 0 1 10px;
+  height: 100%; }
+
+.flowchart-panel--legend-right .flowchart-legend-series {
+  display: block;
+  padding-left: 0px; }
+
+.flowchart-panel--legend-right .flowchart-legend-table .flowchart-legend-series {
+  display: table-row; }
+
+.flowchart-legend__container {
+  height: 100%; }
+
+.flowchart-panel__chart {
+  position: relative;
+  cursor: crosshair;
+  flex-grow: 1;
+  top: 10px; }
+
+.datapoints-warning {
+  pointer: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+  margin-top: -50px;
+  margin-left: -100px;
+  width: 200px;
+  text-align: center;
+  cursor: auto;
+  padding: 10px; }
+
+.flowchart-legend {
+  flex: 0 1 auto;
+  margin: 0 1rem;
+  text-align: center;
+  padding-top: 6px;
+  position: relative; }
+
+.flowchart-legend .popover-content {
+  padding: 0; }
+
+.flowchart-legend-icon {
+  position: relative;
+  padding-right: 4px;
+  top: 1px; }
+
+.flowchart-legend-icon,
+.flowchart-legend-alias,
+.flowchart-legend-value {
+  cursor: pointer;
+  float: left;
+  white-space: nowrap;
+  font-size: 85%;
+  text-align: left;
+  color: #d8d9da; }
+
+.flowchart-legend-icon.current::before {
+  content: "Current: "; }
+
+.flowchart-legend-icon.max::before {
+  content: "Max: "; }
+
+.flowchart-legend-icon.min::before {
+  content: "Min: "; }
+
+.flowchart-legend-icon.total::before {
+  content: "Total: "; }
+
+.flowchart-legend-icon.avg::before {
+  content: "Avg: "; }
+
+.flowchart-legend-alias.current::before {
+  content: "Current: "; }
+
+.flowchart-legend-alias.max::before {
+  content: "Max: "; }
+
+.flowchart-legend-alias.min::before {
+  content: "Min: "; }
+
+.flowchart-legend-alias.total::before {
+  content: "Total: "; }
+
+.flowchart-legend-alias.avg::before {
+  content: "Avg: "; }
+
+.flowchart-legend-value.current::before {
+  content: "Current: "; }
+
+.flowchart-legend-value.max::before {
+  content: "Max: "; }
+
+.flowchart-legend-value.min::before {
+  content: "Min: "; }
+
+.flowchart-legend-value.total::before {
+  content: "Total: "; }
+
+.flowchart-legend-value.avg::before {
+  content: "Avg: "; }
+
+.flowchart-legend-icon .fa {
+  font-size: 135%;
+  position: relative;
+  top: 1px; }
+
+.flowchart-legend-series {
+  float: left;
+  white-space: nowrap;
+  padding-left: 10px; }
+
+.flowchart-legend-series--right-y {
+  float: right; }
+
+.flowchart-legend-value {
+  padding-left: 6px; }
+
+.flowchart-legend-table tbody {
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  padding-bottom: 1px;
+  padding-right: 5px; }
+
+.flowchart-legend-table .flowchart-legend-series {
+  display: table-row;
+  float: none;
+  padding-left: 0; }
+
+.flowchart-legend-table .flowchart-legend-series--right-y {
+  float: none; }
+
+.flowchart-legend-table .flowchart-legend-series--right-y .flowchart-legend-alias::after {
+  content: "(right-y)";
+  padding: 0 5px;
+  color: #8e8e8e; }
+
+.flowchart-legend-table td,
+.flowchart-legend-alias,
+.flowchart-legend-icon,
+.flowchart-legend-value {
+  float: none;
+  display: table-cell;
+  white-space: nowrap;
+  padding: 2px 10px;
+  text-align: right; }
+
+.flowchart-legend-table .flowchart-legend-icon {
+  width: 5px;
+  padding: 0;
+  top: 0; }
+
+.flowchart-legend-table .flowchart-legend-icon .fa {
+  top: 4px; }
+
+.flowchart-legend-table .flowchart-legend-value {
+  padding-left: 15px; }
+
+.flowchart-legend-table .flowchart-legend-alias {
+  padding-left: 7px;
+  text-align: left;
+  width: 95%;
+  max-width: 650px;
+  text-overflow: ellipsis;
+  overflow: hidden; }
+
+.flowchart-legend-table .flowchart-legend-series:nth-child(odd) {
+  background: #262628; }
+
+.flowchart-legend-table .flowchart-legend-value.current::before {
+  content: ""; }
+
+.flowchart-legend-table .flowchart-legend-value.max::before {
+  content: ""; }
+
+.flowchart-legend-table .flowchart-legend-value.min::before {
+  content: ""; }
+
+.flowchart-legend-table .flowchart-legend-value.total::before {
+  content: ""; }
+
+.flowchart-legend-table .flowchart-legend-value.avg::before {
+  content: ""; }
+
+.flowchart-legend-table th {
+  text-align: right;
+  padding: 0px 10px 1px 0;
+  font-weight: bold;
+  color: #33b5e5;
+  font-size: 85%;
+  white-space: nowrap; }
+
+.flowchart-legend-series-hidden .flowchart-legend-value,
+.flowchart-legend-series-hidden .flowchart-legend-alias {
+  color: #8e8e8e; }
+
+.flowchart-tooltip {
+  white-space: nowrap;
+  font-size: 12px;
+  background-color: #141414;
+  color: #d8d9da; }
+
+.flowchart-tooltip .flowchart-tooltip-time {
+  text-align: center;
+  position: relative;
+  top: -3px;
+  padding: 0.2rem;
+  font-weight: bold;
+  color: #d8d9da; }
+
+.flowchart-tooltip .flowchart-tooltip-value {
+  display: table-cell;
+  font-weight: bold;
+  padding-left: 15px;
+  text-align: right; }
+
+.flowchartTable-editor-scroll {
+  overflow: auto; }
+
+.flowchartTable-editor-container {
+  padding-top: 2.2em;
+  position: relative; }
+
+.datapoints-warning {
+  pointer: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+  margin-top: -50px;
+  margin-left: -100px;
+  width: 200px;
+  text-align: center;
+  cursor: auto;
+  padding: 10px; }
+
+table.flowchartTable-editor {
+  font-family: Arial, Helvetica, sans-serif;
+  border: 2px solid #161719;
+  background-color: #212124;
+  width: 90%;
+  height: 200px;
+  text-align: left;
+  border-collapse: collapse; }
+
+table.flowchartTable-editor td, table.flowchartTable-editor th {
+  border: 2px solid #161719;
+  padding: 2px 2px; }
+
+table.flowchartTable-editor tbody td {
+  font-size: 11px;
+  color: #E6E6E6; }
+
+table.flowchartTable-editor thead {
+  background: #2F2F32;
+  border-bottom: 2px solid #000000; }
+
+table.flowchartTable-editor thead th {
+  font-size: 12px;
+  font-weight: bold;
+  color: #33B5E5;
+  text-align: center;
+  border-left: 2px solid #171819; }
+
+table.flowchartTable-editor thead th:first-child {
+  border-left: none; }
+
+table.flowchartTable-editor tfoot td {
+  font-size: 12px; }
+
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid #333; }
+
+/*# sourceMappingURL=flowchart.dark.css.map */

@@ -43,34 +43,116 @@ describe("Colors", function () {
     });
 });
 
-describe("Shape", function () {
-    debugger
+describe("Colorize", function () { 
     var rule = new Rule("/.*/");
-    var shapePattern = '/Shape.*/';
+    rule.thresholds = [50, 80];
 
-    test('addshape count tobe 1', () => {
-        rule.addShapeMap(shapePattern);
-        expect(rule.getShapeMaps().length).toBe(1);
+    test('toColorize always ERR should be true', () => {
+        rule.colorOn = 'a';
+        expect(rule.toColorize(25)).toBeTruthy();
     });
+    test('toColorize always WARN should be true', () => {
+        rule.colorOn = 'a';
+        expect(rule.toColorize(60)).toBeTruthy();
+    });
+    test('toColorize always OK should be true', () => {
+        rule.colorOn = 'a';
+        expect(rule.toColorize(90)).toBeTruthy();
+    });
+
+    test('toColorize Warn/err ERR should be true', () => {
+        rule.colorOn = 'wc';
+        expect(rule.toColorize(25)).toBeTruthy();
+    });
+    test('toColorize Warn/err WARN should be true', () => {
+        rule.colorOn = 'wc';
+        expect(rule.toColorize(60)).toBeTruthy();
+    });
+    test('toColorize Warn/err OK should be false', () => {
+        rule.colorOn = 'wc';
+        expect(rule.toColorize(90)).toBeFalsy();
+    });
+
+});
+
+describe("Shape", function () {
+    var pattern = '/.*Toto.*/';
     
-    test('removeShape count tobe 0', () => {
-        rule.removeShapeMap(0);
+    test('addshape & remove', () => {
+        var rule = new Rule("/.*/");
+        rule.addShapeMap(pattern);
+        expect(rule.getShapeMaps().length).toBe(1);
         rule.removeShapeMap(0);
         expect(rule.getShapeMaps().length).toBe(0);
     });
-
-    rule.addShapeMap(shapePattern);
-    var sm = rule.getShapeMap(0);
-
-    test('match of this shape', () => {
-        expect(rule.matchShape('ShapeToto')).toBeTruthy();
-        expect(rule.matchShape('TextToto')).toBeFalsy();
+    
+    test('Match on one', () => {
+        let rule = new Rule("/.*/");
+        rule.addShapeMap(pattern);
+        let sm = rule.getShapeMap(0);
+        expect(sm.match('Toto')).toBeTruthy();
     });
 
-    test('find match of all Shape', () => {
-        expect(sm.match('Shape')).toBeTruthy();
+    test('Match on all', () => {
+        let rule = new Rule("/.*/");
+        rule.addShapeMap(pattern);
+        expect(rule.matchShape('Toto')).toBeTruthy();
+        expect(rule.matchShape('Tata')).toBeFalsy();
     });
 
+});
+
+describe("Text", function () {
+    var pattern = '/.*Toto.*/';
+    
+    test('addshape & remove', () => {
+        var rule = new Rule("/.*/");
+        rule.addTextMap(pattern);
+        expect(rule.getTextMaps().length).toBe(1);
+        rule.removeTextMap(0);
+        expect(rule.getTextMaps().length).toBe(0);
+    });
+    
+    test('Match on one', () => {
+        let rule = new Rule("/.*/");
+        rule.addTextMap(pattern);
+        let sm = rule.getTextMap(0);
+        expect(sm.match('Toto')).toBeTruthy();
+    });
+
+    test('Match on all', () => {
+        let rule = new Rule("/.*/");
+        rule.addTextMap(pattern);
+        expect(rule.matchText('Toto')).toBeTruthy();
+        expect(rule.matchText('Tata')).toBeFalsy();
+    });
+
+});
+
+describe("Link", function () {
+    var pattern = '/.*Toto.*/';
+    
+    test('addshape & remove', () => {
+        var rule = new Rule("/.*/");
+        rule.addLinkMap(pattern);
+        expect(rule.getLinkMaps().length).toBe(1);
+        rule.removeLinkMap(0);
+        expect(rule.getLinkMaps().length).toBe(0);
+    });
+    
+    test('Match on one', () => {
+        let rule = new Rule("/.*/");
+        rule.addLinkMap(pattern);
+        let sm = rule.getLinkMap(0);
+        expect(sm.match('Toto')).toBeTruthy();
+    });
+
+    test('Match on all', () => {
+        let rule = new Rule("/.*/");
+        rule.addLinkMap(pattern);
+        expect(rule.matchLink('Toto')).toBeTruthy();
+        expect(rule.matchLink('Tata')).toBeFalsy();
+    });
 
 });
 
@@ -81,11 +163,27 @@ describe("Series", () => {
     });
 
     test('Values', () => {
-        expect(rule.getValue(series[0])).toBe(79.17554249669148);
+        expect(rule.getValueForSerie(series[0])).toBe(79.17554249669148);
     });
 
-    // test('Formatted Values', () => {
-    //     expect(rule.getFormattedValue(series[0])).toBe(79.17554249669148);
-    // });
+    test('Formatted Values', () => {
+        let value = rule.getValueForSerie(series[0]);
+        expect(rule.getFormattedValue(value)).toBe("79.18");
+    });
+});
+
+describe("Text replace", () => {
+    var rule = new Rule("/.*/");
+    var text = "This is my value";
+    var patternText = "/value/"
+    let formattedValue = rule.getFormattedValue(12.34)
+    test('All content', () => {
+        expect(rule.getReplaceText("This is my value",formattedValue)).toBe("12.34")
+    });
+    test('pattern', () => {
+        rule.textReplace = "textReplace";
+        rule.textPattern = patternText;
+        expect(rule.getReplaceText("This is my value",formattedValue)).toBe("This is my 12.34")
+    });
 });
 

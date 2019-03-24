@@ -4,7 +4,6 @@ const sass = require('node-sass');
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);
 
-  grunt.loadNpmTasks('grunt-execute');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-compress');
@@ -24,7 +23,7 @@ module.exports = (grunt) => {
       src_to_dist: {
         cwd: 'src',
         expand: true,
-        src: ['**/*', '!**/*.js', '!**/*.scss', '!img/**/*', '.*'],
+        src: ['**/*', '!**/*.js', '!**/*.scss', '!img/**/*', '.*', '!__mocks__'],
         dest: 'dist'
       },
       vkbeautify_to_dist : {
@@ -93,7 +92,7 @@ module.exports = (grunt) => {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js', '!mxHandler.js', "!Graph.js", "!init.js", "!utils.js", "!backup/**/*"],
+          src: ['*.js', '!mxHandler.js', "!Graph.js", "!init.js", "!utils.js", "!backup/**/*", "!__mocks__"],
           dest: 'dist',
           ext: '.js'
         }]
@@ -119,6 +118,31 @@ module.exports = (grunt) => {
           path: path.resolve(process.cwd(), "./dist"),
           filename: "mxHandler.js",
           library: "mxHandler",
+          libraryTarget: "umd"
+        },
+        externals: {
+          "jquery": "jquery",
+          "lodash": "lodash",
+        }
+      },
+      mxgraph: {
+        entry: "./src/graph_class.js",
+        mode: "development",
+        module: {
+          rules: [
+            {
+              test: /\.m?js$/,
+              exclude: /(node_modules|bower_components|externals)/,
+              use: {
+                loader: 'babel-loader',
+              }
+            },
+          ]
+        },
+        output: {
+          path: path.resolve(process.cwd(), "./dist"),
+          filename: "graph_class.js",
+          library: "graph_class",
           libraryTarget: "umd"
         },
         externals: {
