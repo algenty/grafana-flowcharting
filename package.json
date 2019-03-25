@@ -18,6 +18,9 @@
     "url": "https://github.com/algenty/grafana-flowcharting/issues"
   },
   "homepage": "https://github.com/algenty/grafana-flowcharting",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",

@@ -124,6 +124,7 @@ export default class MxGraph {
         this.$scope = $scope;
         this.container = container;
         this.xmlGraph;
+        this.$elem = elem;
         if (u.isencoded(xmlGraph)) this.xmlGraph = u.decode(xmlGraph, true, true, true);
         else this.xmlGraph = xmlGraph;
         this.xmlGraph = xmlGraph;
@@ -154,7 +155,7 @@ export default class MxGraph {
         this.graph.getModel().beginUpdate();
         this.graph.getModel().clear();
         try {
-            let xmlDoc = mxUtils.parseXml(text);
+            let xmlDoc = mxUtils.parseXml(this.xmlGraph);
             let codec = new mxCodec(xmlDoc);
             codec.decode(xmlDoc.documentElement, this.graph.getModel());
         } catch (error) {
@@ -167,10 +168,11 @@ export default class MxGraph {
     }
 
     refreshGraph() {
-        var width = this.container.width()
-        var heigth = this.container.heigth();
-        var size = Match.min(width, heigth);
-        var cssGraph = {
+        let $div = $(this.container);
+        let width = $div.width()
+        let heigth = $div.height();
+        let size = Math.min(width, heigth);
+        const cssGraph = {
             margin: "auto",
             position: "relative",
             height: size - 30 + "px"
@@ -247,18 +249,18 @@ export default class MxGraph {
     };
 
     getCurrentCells(prop) {
-        cellIds = []; 
+        let cellIds = []; 
         let model = this.graph.getModel();
         let cells = model.cells;
         if (prop === "id") {
-            cells.forEach(cell => {
+            _.each(cells, (cell) => {
                  cellIds.push(cell.getId())
             });
 
         }
         else if (prop === "value") {
-            cells.forEach(cell => {
-                cellIds.getValue(cell.getId())
+            _.each(cells, (cell) => {
+                cellIds.push(cell.getValue())
            });
         }
         return cellIds;
