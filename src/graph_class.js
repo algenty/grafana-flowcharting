@@ -133,6 +133,10 @@ export default class MxGraph {
         this.center = true;
         this.zoom = false;
         this.zoomPercent = "1";
+        this.cells = {};
+        this.cells.id = [];
+        this.cells.value = [];
+        this.cells.attributs = {};
 
         this.initGraph();
     }
@@ -157,6 +161,8 @@ export default class MxGraph {
             console.error(error);
         } finally {
             this.graph.getModel().endUpdate();
+            this.cells["id"] = this.getCurrentCells("id");
+            this.cells["value"] = this.getCurrentCells("value");
         }
     }
 
@@ -239,5 +245,29 @@ export default class MxGraph {
     updateCells(states) { 
 
     };
+
+    getCurrentCells(prop) {
+        cellIds = []; 
+        let model = this.graph.getModel();
+        let cells = model.cells;
+        if (prop === "id") {
+            cells.forEach(cell => {
+                 cellIds.push(cell.getId())
+            });
+
+        }
+        else if (prop === "value") {
+            cells.forEach(cell => {
+                cellIds.getValue(cell.getId())
+           });
+        }
+        return cellIds;
+    }
+
+    getOrignalCells(prop) {
+        if (prop === "id" || prop === "value") return this.cells[prop];
+        //TODO: attributs
+        return [];
+    }
 
 }
