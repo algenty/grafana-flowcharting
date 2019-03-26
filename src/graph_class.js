@@ -120,11 +120,9 @@ window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 
 export default class MxGraph {
     /** @ngInject */
-    constructor($scope, elem, container, xmlGraph) {
-        this.$scope = $scope;
+    constructor(container, xmlGraph) {
         this.container = container;
         this.xmlGraph;
-        this.$elem = elem;
         if (u.isencoded(xmlGraph)) this.xmlGraph = u.decode(xmlGraph, true, true, true);
         else this.xmlGraph = xmlGraph;
         this.xmlGraph = xmlGraph;
@@ -133,6 +131,7 @@ export default class MxGraph {
         this.lock = true;
         this.center = true;
         this.zoom = false;
+        this.grid = false;
         this.zoomPercent = "1";
         this.cells = {};
         this.cells.id = [];
@@ -177,55 +176,55 @@ export default class MxGraph {
             position: "relative",
             height: size - 30 + "px"
         }
-        this.$graphCanvas.css(cssGraph);
+        $div.css(cssGraph);
 
-        if(this.lock) this.lockGraph();
-        else this.unlock();
+        this.lockGraph(this.lock);
 
-        if (this.center) this.centerGraph();
-        else this.uncenterGraph();
+        this.centerGraph(this.center);
 
-        if (this.scale) this.scaleGraph();
-        else this.unscaleGraph();
+        this.scaleGraph(this.scale);
 
-        if(this.zoom) this.zoomGraph(this.zoom);
+        if (this.zoom) this.zoomGraph(this.zoom);
         else this.unzoomGraph();
+
+        this.gridGraph(this.grid);
     }
 
-    lockGraph() {
-        this.graph.setEnabled(false);
-        this.lock = true;
+    lockGraph(bool) {
+        if ( bool ) this.graph.setEnabled(false);
+        else this.graph.setEnabled(true);
+        this.lock = bool;
     }
 
-    unlockGraph() {
-        this.graph.setEnabled(false);
-        this.lock = false;
+
+    centerGraph(bool) {
+        if (bool) this.graph.center(true, true);
+        else this.graph.center(false, false);
+        this.center = bool;
     }
 
-    centerGraph() {
-        this.graph.center(true, true);
-        this.center = true;
+    scaleGraph(bool) {
+        if (bool) {
+            this.graph.fit();
+            this.graph.view.rendering = true;
+        }
+        this.scale = bool;
     }
 
-    uncenterGraph() {
-        this.graph.center(false, false);
-        this.center = false
-    }
-
-    scaleGraph() {
-        this.graph.fit();
-        this.graph.view.rendering = true;
-        this.scale = true;
-    }
-
-    unscaleGraph() {
-        this.scale = false;
+    gridGraph(bool) {
+        if (bool) {
+            this.container.style.backgroundImage =
+                "url('" + IMAGE_PATH + "/grid.gif')";
+        } else {
+            this.container.style.backgroundImage = "";
+        }
+        this.grid = bool;
     }
 
     zoomGraph(percent) {
-        if( percent && percent.legth > 0 &&  percent != "100%" && percent != "0%") {
-            let ratio = percent.replace("%","") / 100;
-            this.graph.zoomTo(ration,true);
+        if (percent && percent.legth > 0 && percent != "100%" && percent != "0%") {
+            let ratio = percent.replace("%", "") / 100;
+            this.graph.zoomTo(ration, true);
             this.zoomPercent = percent;
         }
         this.zoom = true;
@@ -244,24 +243,24 @@ export default class MxGraph {
         this.drawGraph();
     }
 
-    updateCells(states) { 
+    updateCells(states) {
 
     };
 
     getCurrentCells(prop) {
-        let cellIds = []; 
+        let cellIds = [];
         let model = this.graph.getModel();
         let cells = model.cells;
         if (prop === "id") {
             _.each(cells, (cell) => {
-                 cellIds.push(cell.getId())
+                cellIds.push(cell.getId())
             });
 
         }
         else if (prop === "value") {
             _.each(cells, (cell) => {
                 cellIds.push(cell.getValue())
-           });
+            });
         }
         return cellIds;
     }
