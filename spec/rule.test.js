@@ -77,7 +77,6 @@ describe("Colorize", function () {
 
 describe("Shape", function () {
     var pattern = '/.*Toto.*/';
-    
     test('addshape & remove', () => {
         var rule = new Rule("/.*/");
         rule.addShapeMap(pattern);
@@ -90,6 +89,7 @@ describe("Shape", function () {
         let rule = new Rule("/.*/");
         rule.addShapeMap(pattern);
         let sm = rule.getShapeMap(0);
+        sm.match('Toto')
         expect(sm.match('Toto')).toBeTruthy();
     });
 

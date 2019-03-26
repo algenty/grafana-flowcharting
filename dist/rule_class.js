@@ -181,9 +181,7 @@ function () {
     key: "matchSerie",
     value: function matchSerie(serie) {
       if (this.pattern === null || this.pattern === undefined) return false;
-      var regex = u.stringToJsRegex(this.pattern);
-      var matching = serie.alias.match(regex);
-      if (this.pattern == this.alias || matching) return true;
+      return u.matchString(serie.alias, this.pattern);
     } //
     // SHAPE MAPS
     //
@@ -530,10 +528,7 @@ function () {
     key: "match",
     value: function match(text) {
       if (text === undefined || text === null || text.length === 0) return false;
-      var regex = u.stringToJsRegex(this.pattern);
-      var matching = text.toString().match(regex);
-      if (this.pattern === text || matching) return true;
-      return false;
+      return u.matchString(text, this.pattern);
     }
   }, {
     key: "getId",
@@ -611,10 +606,7 @@ function () {
     key: "match",
     value: function match(text) {
       if (text === undefined || text === null || text.length === 0) return false;
-      var regex = u.stringToJsRegex(this.pattern);
-      var matching = text.match(regex);
-      if (this.pattern == text || matching) return true;
-      return false;
+      return u.matchString(text, this.pattern);
     }
   }, {
     key: "getId",
@@ -680,10 +672,7 @@ function () {
     key: "match",
     value: function match(text) {
       if (text === undefined || text === null || text.length === 0) return false;
-      var regex = u.stringToJsRegex(this.pattern);
-      var matching = text.match(regex);
-      if (this.pattern == text || matching) return true;
-      return false;
+      return u.matchString(text, this.pattern);
     }
   }, {
     key: "getId",

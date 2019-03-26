@@ -9,6 +9,41 @@ describe("Id", () => {
     });
 });
 
+describe("matchString", () => {
+    test('Matching pattern', () => {
+        let pattern = "/.*toto.*/"
+        expect(u.matchString("My name is toto Dupont",pattern)).toBeTruthy();
+    });
+
+    test('Non matching pattern', () => {
+        let pattern = "/.*toto.*/"
+        expect(u.matchString("My name is tata Dupont",pattern)).toBeFalsy();
+    });
+
+    test('Matching value', () => {
+        let pattern = "toto"
+        expect(u.matchString("toto",pattern)).toBeTruthy();
+    });
+
+    test('Non matching value', () => {
+        let pattern = "toto"
+        expect(u.matchString("My name is toto Dupont",pattern)).toBeFalsy();
+    });
+
+    test('Matching value with .*', () => {
+        let pattern = ".*toto.*"
+        expect(u.matchString("My name is toto Dupont",pattern)).toBeTruthy();
+    });
+
+    test('Matching value with /.*/', () => {
+        let pattern = "/.*Toto.*/"
+        expect(u.matchString("Toto",pattern)).toBeTruthy();
+    });
+
+
+});
+
+
 describe("Encode/decode", () => {
     test('Encode return compress', () => {
         expect(u.encode(xmlGraph, true, true, true)).toBe(compGraph);
@@ -17,5 +52,4 @@ describe("Encode/decode", () => {
     test('Decode return xml', () => {
         expect(u.decode(compGraph, true, true, true)).toBe(xmlGraph);
     });
-
 });

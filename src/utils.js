@@ -187,5 +187,11 @@ module.exports = {
     }
     const match = str.match(new RegExp("^/(.*?)/(g?i?m?y?)$"));
     return new RegExp(match[1], match[2]);
+  }, 
+
+  matchString(str,pattern) {
+    const regex = this.stringToJsRegex(pattern);
+    let matching = str.toString().match(regex);
+    return (str === pattern || matching);
   }
 };

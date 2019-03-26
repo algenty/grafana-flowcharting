@@ -61,6 +61,18 @@ describe("Cells", function () {
         expect(mx.getOrignalCells("value")).toContain("mxGraph");
         expect(mx.getOrignalCells("value")).toContain("Text 4");
     });
+
+
+    test('Find shape-grafana', () => {
+        var cell = mx.findCurrentMxCells("id", "shape-grafana");
+        expect(cell.length).toBe(1);
+    });
+
+    test('Find all cell with id begins by shape', () => {
+        var cell = mx.findCurrentMxCells("id", "shape.*");
+        expect(cell.length).toBe(3);
+    });
+
 });
 
 describe("Options", function () {

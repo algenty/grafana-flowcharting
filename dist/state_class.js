@@ -15,12 +15,12 @@ var State =
 /*#__PURE__*/
 function () {
   /** @ngInject */
-  function State(cell, graph) {
+  function State(mxcell, graph) {
     _classCallCheck(this, State);
 
-    this.cell = cell;
+    this.cell = mxcell;
+    this.cellId = mxcell.id;
     this.graph = graph;
-    this.cellId = cell.id;
     this.matched = false;
     this.matchedShape = false;
     this.matchedText = false;
@@ -33,19 +33,19 @@ function () {
       fontColor: -1
     };
     this.currentColors = {
-      fillColor: cell.style["fillColor"],
-      strokeColor: cell.style["strokeColor"],
-      fontColor: cell.style["fontColor"]
+      fillColor: mxcell.getStyle()["fillColor"],
+      strokeColor: mxcell.getStyle()["strokeColor"],
+      fontColor: mxcell.getStyle()["fontColor"]
     };
     this.originalColors = {
-      fillColor: cell.style["fillColor"],
-      strokeColor: cell.style["strokeColor"],
-      fontColor: cell.style["fontColor"]
+      fillColor: mxcell.style["fillColor"],
+      strokeColor: mxcell.style["strokeColor"],
+      fontColor: mxcell.style["fontColor"]
     };
-    this.originalValue = cell.getValue();
-    this.currentValue = cell.getValue();
-    this.originalLink = cell.getAttribute("link");
-    this.currentLink = cell.getAttribute("link");
+    this.originalValue = mxcell.getValue();
+    this.currentValue = mxcell.getValue();
+    this.originalLink = mxcell.getAttribute("link");
+    this.currentLink = mxcell.getAttribute("link");
   }
 
   _createClass(State, [{

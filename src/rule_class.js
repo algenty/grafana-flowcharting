@@ -120,7 +120,7 @@ export default class Rule {
         const copy = ref[0];
         ref[0] = ref[2];
         ref[2] = copy;
-        if(this.invert) this.invert = false;
+        if (this.invert) this.invert = false;
         else this.invert = true;
     }
 
@@ -134,8 +134,8 @@ export default class Rule {
     // Conditions
     //
     toColorize(value) {
-        if( this.colorOn === "a" ) return true;
-        if( this.colorOn === "wc" && this.getThresholdLevel(value) >=1 ) return true;
+        if (this.colorOn === "a") return true;
+        if (this.colorOn === "wc" && this.getThresholdLevel(value) >= 1) return true;
         return false
     }
 
@@ -144,16 +144,14 @@ export default class Rule {
     //
     matchSerie(serie) {
         if (this.pattern === null || this.pattern === undefined) return false;
-        const regex = u.stringToJsRegex(this.pattern);
-        let matching = serie.alias.match(regex);
-        if (this.pattern == this.alias || matching) return true
+        return u.matchString(serie.alias, this.pattern);
     }
 
     //
     // SHAPE MAPS
     //
-    addShapeMap(pattern) { let m = new ShapeMap(this, pattern); this.shapeMaps.push(m);}
-    removeShapeMap(index) { this.shapeMaps.splice(index, 1);}
+    addShapeMap(pattern) { let m = new ShapeMap(this, pattern); this.shapeMaps.push(m); }
+    removeShapeMap(index) { this.shapeMaps.splice(index, 1); }
     getShapeMap(index) { return this.shapeMaps[index]; }
     getShapeMaps() { return this.shapeMaps; }
     matchShape(pattern) {
@@ -163,7 +161,7 @@ export default class Rule {
         });
         return found;
     }
-    
+
     //
     // TEXT MAPS
     //
@@ -267,7 +265,7 @@ export default class Rule {
     }
 
     getFormattedValue(value) {
-          // Number
+        // Number
         if (this.type === "number") {
             if (!_.isFinite(value)) return "Invalid Number";
             if (value === null || value === void 0) { return "-"; }
@@ -276,7 +274,7 @@ export default class Rule {
                 typeof this.decimals === "number"
                     ? Math.min(this.decimals, decimals)
                     : decimals;
-            return formatValue(value,this.unit,this.decimals);
+            return formatValue(value, this.unit, this.decimals);
         }
 
         if (this.type === "string") {
@@ -321,12 +319,12 @@ export default class Rule {
         }
     }
 
-    getReplaceText(text,FormattedValue) {
-        if( this.textReplace === 'content') return FormattedValue;
+    getReplaceText(text, FormattedValue) {
+        if (this.textReplace === 'content') return FormattedValue;
         else {
             const regexVal = u.stringToJsRegex(this.textPattern);
-            if ( text.toString().match(regexVal) )
-            return text.toString().replace(regexVal,FormattedValue) 
+            if (text.toString().match(regexVal))
+                return text.toString().replace(regexVal, FormattedValue)
         }
         return text;
     }
@@ -376,13 +374,10 @@ class ShapeMap {
 
     match(text) {
         if (text === undefined || text === null || text.length === 0) return false;
-        const regex = u.stringToJsRegex(this.pattern);
-        let matching = text.toString().match(regex);
-        if (this.pattern === text || matching) return true;
-        return false;
+        return u.matchString(text, this.pattern);
     }
 
-    getId() { return this.id;}
+    getId() { return this.id; }
     show() { this.hidden = false }
     hide() { this.hidden = true }
     isHidden() { return this.hidden }
@@ -401,11 +396,11 @@ class ShapeMap {
         }
     }
     toColorize(value) {
-        if(this.hidden) return false;
+        if (this.hidden) return false;
         return this.rule.toColorize(value);
     }
     toVisible() {
-        if(this.hidden) return false;
+        if (this.hidden) return false;
         return true;
     }
 }
@@ -423,13 +418,10 @@ class TextMap {
 
     match(text) {
         if (text === undefined || text === null || text.length === 0) return false;
-        const regex = u.stringToJsRegex(this.pattern);
-        let matching = text.match(regex);
-        if (this.pattern == text || matching) return true;
-        return false;
+        return u.matchString(text, this.pattern);
     }
 
-    getId() { return this.id;}
+    getId() { return this.id; }
     show() { this.hidden = false };
     hide() { this.hidden = true };
     isHidden() { return this.hidden };
@@ -463,13 +455,10 @@ class LinkMap {
 
     match(text) {
         if (text === undefined || text === null || text.length === 0) return false;
-        const regex = u.stringToJsRegex(this.pattern);
-        let matching = text.match(regex);
-        if (this.pattern == text || matching) return true;
-        return false;
+        return u.matchString(text, this.pattern);
     }
 
-    getId() { return this.id;}
+    getId() { return this.id; }
     show() { this.hidden = false };
     hide() { this.hidden = true };
     isHidden() { return this.hidden };
@@ -515,7 +504,7 @@ class RangeMap {
         ) return true;
         return false;
     }
-    getId() { return this.id;}
+    getId() { return this.id; }
 
     getFormattedText(value, rule) {
         if (value === null) {
@@ -583,7 +572,7 @@ class ValueMap {
         else return false;
     }
 
-    getId() { return this.id;}
+    getId() { return this.id; }
 
     getFormattedText(value) {
         let rule = this.rule;
@@ -620,6 +609,6 @@ class ValueMap {
     }
 }
 
-function formatValue(value,unit,decimals) {
+function formatValue(value, unit, decimals) {
     return kbn.valueFormats[unit](value, decimals, null).toString();
 }

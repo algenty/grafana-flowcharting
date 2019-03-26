@@ -271,4 +271,39 @@ export default class MxGraph {
         return [];
     }
 
+    findCurrentCells(prop, pattern) {
+        let cells = this.getCurrentCells(prop)
+        let result = _.find(cells, (cell) =>{
+            return u.matchString(cell,pattern);
+        });
+        return result;
+    }
+
+    findOriginalCells(prop, pattern) {
+        let cells = this.getOrignalCells(prop)
+        let result = _.find(cells, (cell) =>{
+            return u.matchString(cell,pattern);
+        });
+        return result;
+    }
+
+    getCurrentMxCells() {
+        return this.graph.getModel().cells
+    }
+
+    findCurrentMxCells(prop, pattern) {
+        let cells = [];
+        _.each(this.getCurrentMxCells(), (cell) =>{
+            if (prop === "id") {
+                let id = cell.getId();
+                if (u.matchString(id,pattern)) cells.push(cell);
+            }
+            else if (prop === "value") {
+                let value = cell.getValue();
+                if (u.matchString(value,pattern)) cells.push(cell);
+            }
+        });
+        return cells;
+    }
+
 }
