@@ -15,20 +15,19 @@ export default class State  {
         strokeColor : -1,
         fontColor : -1
       }
-      this.currentColors = {
-        fillColor : mxcell.getStyle()["fillColor"],
-        strokeColor : mxcell.getStyle()["strokeColor"],
-        fontColor : mxcell.getStyle()["fontColor"]
-      }
-      this.originalColors = {
-        fillColor : mxcell.style["fillColor"],
-        strokeColor : mxcell.style["strokeColor"],
-        fontColor : mxcell.style["fontColor"]
-      }
+      this.currentColors = {}
+      this.originalColors = {}
       this.originalValue = mxcell.getValue();
       this.currentValue = mxcell.getValue();
       this.originalLink = mxcell.getAttribute("link");
       this.currentLink = mxcell.getAttribute("link");
+
+      this.styles.forEach(style => {
+        let color = graph.view.getState(mxcell).style["fillColor"];
+        this.currentColors[style] = color;
+        this.originalColors[style] = colors;
+      });
+
     }
 
     setState(rule,serie) {
