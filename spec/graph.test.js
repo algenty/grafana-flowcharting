@@ -73,6 +73,23 @@ describe("Cells", function () {
         expect(cell.length).toBe(3);
     });
 
+    test('get colors', () => {
+        var cell = mx.findCurrentMxCells("id", "shape-grafana");
+        expect(mx.getStyleCell("fillColor",cell[0])).toBe("#ffe6cc");
+        expect(mx.getStyleCell("strokeColor",cell[0])).toBe("#d79b00");
+        expect(mx.getStyleCell("fontColor",cell[0])).toBe("#774400");
+    });
+
+    test('set colors', () => {
+        var cell = mx.findCurrentMxCells("id", "shape-grafana");
+        mx.setStyleCell("fillColor",cell,"#112233");
+        mx.setStyleCell("strokeColor",cell,"#334455");
+        mx.setStyleCell("fontColor",cell,"#556677");
+        expect(mx.getStyleCell("fillColor",cell[0])).toBe("#112233");
+        expect(mx.getStyleCell("strokeColor",cell[0])).toBe("#334455");
+        expect(mx.getStyleCell("fontColor",cell[0])).toBe("#556677");
+    });
+
 });
 
 describe("Options", function () {

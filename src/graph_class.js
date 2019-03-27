@@ -306,4 +306,21 @@ export default class MxGraph {
         return cells;
     }
 
+    getStyleCell(style,mxcell) {
+        let state = this.graph.view.getState(mxcell)
+        return state.style[style];
+    }
+
+    setStyleCell(style,mxcell,color) {
+        this.graph.setCellStyles(style, color, [mxcell]);
+    }
+
+    getValueCell(mxcell) {
+        return mxcell.getValue();
+    }
+
+    getValueCell(mxcell,text) {
+        return mxcell.setValue(text);
+    }
+
 }

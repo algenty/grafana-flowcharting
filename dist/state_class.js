@@ -16,6 +16,8 @@ var State =
 function () {
   /** @ngInject */
   function State(mxcell, graph) {
+    var _this = this;
+
     _classCallCheck(this, State);
 
     this.cell = mxcell;
@@ -32,26 +34,24 @@ function () {
       strokeColor: -1,
       fontColor: -1
     };
-    this.currentColors = {
-      fillColor: mxcell.getStyle()["fillColor"],
-      strokeColor: mxcell.getStyle()["strokeColor"],
-      fontColor: mxcell.getStyle()["fontColor"]
-    };
-    this.originalColors = {
-      fillColor: mxcell.style["fillColor"],
-      strokeColor: mxcell.style["strokeColor"],
-      fontColor: mxcell.style["fontColor"]
-    };
+    this.currentColors = {};
+    this.originalColors = {};
     this.originalValue = mxcell.getValue();
     this.currentValue = mxcell.getValue();
     this.originalLink = mxcell.getAttribute("link");
     this.currentLink = mxcell.getAttribute("link");
+    this.styles.forEach(function (style) {
+      var color = _this.graph.getStyleCell(style, mxcell);
+
+      _this.currentColors[style] = color;
+      _this.originalColors[style] = color;
+    });
   }
 
   _createClass(State, [{
     key: "setState",
     value: function setState(rule, serie) {
-      var _this = this;
+      var _this2 = this;
 
       if (rule.matchSerie(serie)) {
         var shapeMaps = rule.getShapeMaps();
@@ -64,14 +64,14 @@ function () {
         var cellProp = this.getCellProp(rule.shapeProp);
         shapeMaps.forEach(function (shape) {
           if (!shape.isHidden() && shape.match(cellProp)) {
-            _this.matchedShape = true;
-            _this.matched = true;
+            _this2.matchedShape = true;
+            _this2.matched = true;
 
-            if (_this.globalLevel <= level) {
-              _this.setLevelStyle(rule.style, level);
+            if (_this2.globalLevel <= level) {
+              _this2.setLevelStyle(rule.style, level);
 
               if (rule.toColorize()) {
-                _this.setColorStyle(rule.style, rule.getColorForValue(value));
+                _this2.setColorStyle(rule.style, rule.getColorForValue(value));
               }
             }
           }
@@ -80,11 +80,11 @@ function () {
         cellProp = this.getCellProp(rule.textProp);
         textMaps.forEach(function (text) {
           if (!text.isHidden() && text.match(cellProp)) {
-            _this.matchedText = true;
-            _this.matched = true;
+            _this2.matchedText = true;
+            _this2.matched = true;
 
-            if (_this.globalLevel <= level) {
-              _this.setText(rule.getReplaceText(_this.originalValue, FormattedValue));
+            if (_this2.globalLevel <= level) {
+              _this2.setText(rule.getReplaceText(_this2.originalValue, FormattedValue));
             }
           }
         }); // LINK
@@ -92,8 +92,8 @@ function () {
         cellProp = this.getCellProp(rule.linkProp);
         linkMaps.forEach(function (link) {
           if (!link.isHidden() && link.match(cellProp)) {
-            _this.matchedLink = true;
-            _this.matched = true;
+            _this2.matchedLink = true;
+            _this2.matched = true;
           }
         });
       }
@@ -130,10 +130,10 @@ function () {
   }, {
     key: "unsetColor",
     value: function unsetColor() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.styles.forEach(function (style) {
-        _this2.unsetColorStyle(style);
+        _this3.unsetColorStyle(style);
       });
     }
   }, {
@@ -149,10 +149,10 @@ function () {
   }, {
     key: "unsetLevel",
     value: function unsetLevel() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.styles.forEach(function (style) {
-        _this3.unsetLevelStyle(style);
+        _this4.unsetLevelStyle(style);
       });
     }
   }, {
@@ -218,30 +218,44 @@ function () {
   }, {
     key: "updateCell",
     value: function updateCell() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this.matchedShape) {
         this.styles.forEach(function (style) {
-          _this4.graph.setCellStyles(style, _this4.getCurrentColorStyle(style), [_this4.cell]);
+          _this5.graph.setStyleCell(style, _this5.mxcell, _this5.getCurrentColorStyle(style));
         });
       }
 
       if (this.matchedText) {
-        this.cell.setValue(this.getCurrentText());
+        this.graph.getValueCell(this.getCurrentText(), text);
       } //TODO:LINK
 
     }
   }, {
     key: "restoreCell",
     value: function restoreCell() {
-      var _this5 = this;
+      var _this6 = this;
 
       this.unsetState();
       this.styles.forEach(function (style) {
-        _this5.graph.setCellStyles(style, _this5.getCurrentColorStyle(style), [_this5.cell]);
+        _this6.graph.setCellStyles(style, _this6.getCurrentColorStyle(style), [_this6.cell]);
       });
       this.cell.setValue(this.getCurrentText());
       this.cell.setAttribut("link", this.getCurrentLink());
+    }
+  }, {
+    key: "reinit",
+    value: function reinit() {
+      var _this7 = this;
+
+      this.cell.matched = false;
+      this.matchedShape = false;
+      this.matchedText = false;
+      this.matchedLink = false;
+      this.styles.forEach(function (style) {
+        _this7.level[style] = -1;
+      });
+      this.globalLevel = -1;
     }
   }]);
 

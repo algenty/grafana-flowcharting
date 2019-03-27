@@ -53,7 +53,7 @@ describe("State", () => {
         expect(state.getLevel()).toBe(-1);
         expect(state.getCurrentColorStyle("fillColor")).toBe("#e1d5e7");
         expect(state.getCurrentColorStyle("strokeColor")).toBe("#9673a6");
-        expect(state.getCurrentColorStyle("fontColor")).toBe("#000000");
+        expect(state.getCurrentColorStyle("fontColor")).toBe("#774400");
     });
 
 });

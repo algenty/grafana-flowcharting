@@ -23,9 +23,9 @@ export default class State  {
       this.currentLink = mxcell.getAttribute("link");
 
       this.styles.forEach(style => {
-        let color = graph.view.getState(mxcell).style["fillColor"];
+        let color = this.graph.getStyleCell(style,mxcell);
         this.currentColors[style] = color;
-        this.originalColors[style] = colors;
+        this.originalColors[style] = color;
       });
 
     }
@@ -177,11 +177,11 @@ export default class State  {
     updateCell() {
       if (this.matchedShape) {
         this.styles.forEach(style => {
-          this.graph.setCellStyles(style, this.getCurrentColorStyle(style), [this.cell]);  
+          this.graph.setStyleCell(style,this.mxcell,this.getCurrentColorStyle(style))
         });
       }
       if(this.matchedText) {
-        this.cell.setValue(this.getCurrentText());
+        this.graph.getValueCell(this.getCurrentText(),text);
       }
       //TODO:LINK
     }
@@ -194,4 +194,16 @@ export default class State  {
       this.cell.setValue(this.getCurrentText());
       this.cell.setAttribut("link",this.getCurrentLink());
     }
+
+    reinit() {
+      this.cell.matched = false;
+      this.matchedShape = false;
+      this.matchedText = false;
+      this.matchedLink = false;
+      this.styles.forEach(style => {
+        this.level[style] = -1;  
+      });
+      this.globalLevel = -1;
+    }
+
   }
