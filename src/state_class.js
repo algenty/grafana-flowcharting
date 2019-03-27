@@ -23,7 +23,7 @@ export default class State  {
       this.currentLink = mxcell.getAttribute("link");
 
       this.styles.forEach(style => {
-        let color = this.graph.getStyleCell(style,mxcell);
+        let color = this.graph.getStyleCell(mxcell,style);
         this.currentColors[style] = color;
         this.originalColors[style] = color;
       });
@@ -177,7 +177,7 @@ export default class State  {
     updateCell() {
       if (this.matchedShape) {
         this.styles.forEach(style => {
-          this.graph.setStyleCell(style,this.mxcell,this.getCurrentColorStyle(style))
+          this.graph.setStyleCell(this.mxcell,style,this.getCurrentColorStyle(style))
         });
       }
       if(this.matchedText) {

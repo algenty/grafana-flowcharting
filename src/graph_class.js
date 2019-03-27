@@ -118,7 +118,7 @@ window.mxUtils = window.mxUtils || mxgraph.mxUtils;
 window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange;
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 
-export default class MxGraph {
+export default class XGraph {
     /** @ngInject */
     constructor(container, xmlGraph) {
         this.container = container;
@@ -306,12 +306,12 @@ export default class MxGraph {
         return cells;
     }
 
-    getStyleCell(style,mxcell) {
+    getStyleCell(mxcell,style) {
         let state = this.graph.view.getState(mxcell)
         return state.style[style];
     }
 
-    setStyleCell(style,mxcell,color) {
+    setStyleCell(mxcell,style,color) {
         this.graph.setCellStyles(style, color, [mxcell]);
     }
 
@@ -322,5 +322,32 @@ export default class MxGraph {
     getValueCell(mxcell,text) {
         return mxcell.setValue(text);
     }
+
+}
+
+class XCell {
+    constructor(mxcell,mxgraph) {
+        this.mxcell = mxcell;
+        this.mxgraph = mxgraph;
+    }
+
+    getValueCell(mxcell) {
+        return this.mxcell.getValue();
+    }
+
+    getValueCell(mxcell,text) {
+        return this.mxcell.setValue(text);
+    }
+
+    getStyleCell(style) {
+        let state = this.graph.view.getState(this.mxcell)
+        return state.style[style];
+    }
+
+    setStyleCell(style,color) {
+        this.graph.setCellStyles(style, color, [this.mxcell]);
+    }
+
+
 
 }

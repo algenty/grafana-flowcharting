@@ -41,7 +41,7 @@ function () {
     this.originalLink = mxcell.getAttribute("link");
     this.currentLink = mxcell.getAttribute("link");
     this.styles.forEach(function (style) {
-      var color = _this.graph.getStyleCell(style, mxcell);
+      var color = _this.graph.getStyleCell(mxcell, style);
 
       _this.currentColors[style] = color;
       _this.originalColors[style] = color;
@@ -222,7 +222,7 @@ function () {
 
       if (this.matchedShape) {
         this.styles.forEach(function (style) {
-          _this5.graph.setStyleCell(style, _this5.mxcell, _this5.getCurrentColorStyle(style));
+          _this5.graph.setStyleCell(_this5.mxcell, style, _this5.getCurrentColorStyle(style));
         });
       }
 

@@ -7,12 +7,12 @@ var xmlGraph = '<mxGraphModel dx="1073" dy="521" grid="1" gridSize="10" guides="
 document.body.innerHTML = '<div id="MyContainer">Beer</div>';
 var series = [{ "datapoints": [[87.2288864455515, 1553029068638], [87.3044867732176, 1553029069138], [87.41570847045853, 1553029069638]], "label": "A-series", "id": "A-series", "alias": "A-series", "aliasEscaped": "A-series", "bars": {}, "stats": { "total": 50819.34737192067, "max": 90.15954449591173, "min": 78.19373234740918, "logmin": 78.19373234740918, "avg": 84.69891228653445, "current": 79.17554249669148, "first": 87.2288864455515, "delta": 12316.4939445703, "diff": -8.053343948860018, "range": 11.96581214850255, "timeStep": 500, "count": 600 }, "legend": true, "hasMsResolution": true, "allIsNull": false, "allIsZero": false, "flotpairs": [[1553029068638, 87.2288864455515], [1553029069138, 87.3044867732176], [1553029069638, 87.41570847045853]] }];
 var container = document.getElementById("MyContainer");
-var mx = new MxGraph(container,xmlGraph);
+var mx = new MxGraph(container, xmlGraph);
 mx.drawGraph();
 
 
 describe("MxGraph", () => {
-    
+
     test('with properties', () => {
         expect(mx).toMatchObject({ "lock": true, "xmlGraph": xmlGraph, "container": container });
     });
@@ -31,22 +31,22 @@ describe("MxGraph", () => {
 
 });
 
-describe("State", () => {
+describe("Create State", () => {
     var cellId = "shape-love";
     var cellValue = "loves"
-    var cell = mx.findCurrentMxCells("id",cellId);
-    test('Cell not null', () => { 
+    var cell = mx.findCurrentMxCells("id", cellId);
+    test('Cell not null', () => {
         expect(cell.length).toBeGreaterThan(0);
     });
 
     test('Create State of cell', () => {
-        let state = new State(cell[0],mx);
-        expect(state).toMatchObject({"cellId" : cell[0].id, "matched" : false})
+        let state = new State(cell[0], mx);
+        expect(state).toMatchObject({ "cellId": cell[0].id, "matched": false })
     });
 
     test('test small methods', () => {
-        let state = new State(cell[0],mx);
-        
+        let state = new State(cell[0], mx);
+
         expect(state.isShape()).toBeTruthy();
         expect(state.getCellProp("id")).toBe(cellId);
         expect(state.getCurrentText()).toBe(cellValue);
@@ -55,9 +55,21 @@ describe("State", () => {
         expect(state.getCurrentColorStyle("strokeColor")).toBe("#9673a6");
         expect(state.getCurrentColorStyle("fontColor")).toBe("#774400");
     });
-
 });
 
+describe("State", () => {
+    var cellId = "shape-love";
+    var cell = mx.findCurrentMxCells("id", cellId)[0];
+    var rule = new Rule("/.*/");
+    rule.thresholds = [50, 80];
+    var state = new State(cell, mx);
+    var serie = series[0];
+    test('test requirements', () => {
+        expect(state.getCurrentColorStyle("fillColor")).toBe("#e1d5e7");
+        expect(rule.getValueForSerie(serie)).toBe(79.17554249669148);
+        expect(rule.matchSerie(serie)).toBeTruthy();
+    });
+});
 
 //TODO : When object Cell Value not work : Backup Graph.js ?
 
