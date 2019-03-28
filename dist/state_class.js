@@ -14,15 +14,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var State =
 /*#__PURE__*/
 function () {
-  /** @ngInject */
-  function State(mxcell, graph) {
+  function State(mxcell, xgraph) {
     var _this = this;
 
     _classCallCheck(this, State);
 
-    this.cell = mxcell;
+    this.mxcell = mxcell;
     this.cellId = mxcell.id;
-    this.graph = graph;
+    this.xgraph = xgraph;
     this.matched = false;
     this.matchedShape = false;
     this.matchedText = false;
@@ -36,12 +35,12 @@ function () {
     };
     this.currentColors = {};
     this.originalColors = {};
-    this.originalValue = mxcell.getValue();
-    this.currentValue = mxcell.getValue();
+    this.originalValue = this.xgraph.getValueCell(mxcell);
+    this.currentValue = this.originalValue;
     this.originalLink = mxcell.getAttribute("link");
     this.currentLink = mxcell.getAttribute("link");
     this.styles.forEach(function (style) {
-      var color = _this.graph.getStyleCell(mxcell, style);
+      var color = _this.xgraph.getStyleCell(mxcell, style);
 
       _this.currentColors[style] = color;
       _this.originalColors[style] = color;
@@ -119,13 +118,13 @@ function () {
   }, {
     key: "setColorStyle",
     value: function setColorStyle(style, color) {
-      this.currentColors[style] = color; // this.graph.setCellStyles(style, color, [this.cell]);
+      this.currentColors[style] = color;
     }
   }, {
     key: "unsetColorStyle",
     value: function unsetColorStyle(style) {
-      var color = this.originalColors[style];
-      this.currentColors[style] = color; // this.graph.setCellStyles(style, color, [this.cell]);
+      this.currentColors[style] = this.originalColors[style];
+      this.currentColors[style];
     }
   }, {
     key: "unsetColor",
@@ -154,6 +153,7 @@ function () {
       this.styles.forEach(function (style) {
         _this4.unsetLevelStyle(style);
       });
+      this.globalLevel = -1;
     }
   }, {
     key: "setLevelStyle",
@@ -208,28 +208,30 @@ function () {
   }, {
     key: "isShape",
     value: function isShape() {
-      return this.cell.isVertex();
+      return this.mxcell.isVertex();
     }
   }, {
     key: "isConnector",
     value: function isConnector() {
-      return this.cell.isEdge();
+      return this.mxcell.isEdge();
     }
   }, {
-    key: "updateCell",
-    value: function updateCell() {
+    key: "updateState",
+    value: function updateState() {
       var _this5 = this;
 
-      if (this.matchedShape) {
-        this.styles.forEach(function (style) {
-          _this5.graph.setStyleCell(_this5.mxcell, style, _this5.getCurrentColorStyle(style));
-        });
-      }
+      if (this.matched) {
+        if (this.matchedShape) {
+          this.styles.forEach(function (style) {
+            _this5.xgraph.setStyleCell(_this5.mxcell, style, _this5.getCurrentColorStyle(style));
+          });
+        }
 
-      if (this.matchedText) {
-        this.graph.setValueCell(this.mxcell, this.getCurrentText());
-      } //TODO:LINK
+        if (this.matchedText) {
+          this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
+        } //TODO:LINK
 
+      } else this.restoreCell();
     }
   }, {
     key: "restoreCell",
@@ -238,24 +240,15 @@ function () {
 
       this.unsetState();
       this.styles.forEach(function (style) {
-        _this6.graph.setCellStyles(style, _this6.getCurrentColorStyle(style), [_this6.cell]);
+        _this6.xgraph.setStyleCell(_this6.mxcell, style, _this6.getCurrentColorStyle(style));
       });
-      this.cell.setValue(this.getCurrentText());
-      this.cell.setAttribut("link", this.getCurrentLink());
+      this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
+      this.mxcell.setAttribute("link", this.getCurrentLink());
     }
   }, {
-    key: "reinit",
-    value: function reinit() {
-      var _this7 = this;
-
-      this.cell.matched = false;
-      this.matchedShape = false;
-      this.matchedText = false;
-      this.matchedLink = false;
-      this.styles.forEach(function (style) {
-        _this7.level[style] = -1;
-      });
-      this.globalLevel = -1;
+    key: "prepare",
+    value: function prepare() {
+      this.unsetState();
     }
   }]);
 

@@ -7,6 +7,8 @@ exports.default = void 0;
 
 var _state_class = _interopRequireDefault(require("./state_class"));
 
+var _graph_class = _interopRequireDefault(require("./graph_class"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -19,12 +21,12 @@ var StateHandler =
 /*#__PURE__*/
 function () {
   /** @ngInject */
-  function StateHandler($scope, graph) {
+  function StateHandler(xgraph) {
     _classCallCheck(this, StateHandler);
 
     this.states = [];
-    this.$scope = $scope;
-    this.graph = graph;
+    this.xgraph = xgraph;
+    this.initStates();
   }
 
   _createClass(StateHandler, [{
@@ -33,8 +35,8 @@ function () {
       return this.states;
     }
   }, {
-    key: "getStates",
-    value: function getStates(cellId) {
+    key: "getState",
+    value: function getState(cellId) {
       var foundState = null;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
@@ -65,14 +67,66 @@ function () {
     }
   }, {
     key: "addState",
-    value: function addState(cell) {
-      var state = new _state_class.default(cell, graph);
+    value: function addState(mxcell) {
+      var state = new _state_class.default(mxcell, this.xgraph);
       this.states.push(state);
     }
   }, {
     key: "removeState",
-    value: function removeState(cell) {
-      this.states = _.without(this.states, cell);
+    value: function removeState(mxcell) {
+      this.states = _.without(this.states, mxcell);
+    }
+  }, {
+    key: "initStates",
+    value: function initStates() {
+      var _this = this;
+
+      this.states = [];
+      var cells = this.xgraph.getAllMxCells();
+
+      _.each(cells, function (cell) {
+        _this.addState(cell);
+      });
+    }
+  }, {
+    key: "countStates",
+    value: function countStates() {
+      return this.states.length;
+    }
+  }, {
+    key: "countStatesWithLevel",
+    value: function countStatesWithLevel(level) {
+      var count = 0;
+      this.states.forEach(function (state) {
+        if (state.getLevel() == level) count++;
+      });
+      return count;
+    }
+  }, {
+    key: "prepare",
+    value: function prepare() {
+      this.states.forEach(function (state) {
+        state.prepapre();
+      });
+    }
+  }, {
+    key: "setStates",
+    value: function setStates(rules, series) {
+      this.prepare();
+      this.states.forEach(function (state) {
+        rules.forEach(function (rule) {
+          series.forEach(function (serie) {
+            state.setState(rule, serie);
+          });
+        });
+      });
+    }
+  }, {
+    key: "updateStates",
+    value: function updateStates() {
+      this.states.forEach(function (state) {
+        state.updateState();
+      });
     }
   }]);
 

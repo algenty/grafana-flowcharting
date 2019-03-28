@@ -119,7 +119,6 @@ window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange;
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 
 export default class XGraph {
-    /** @ngInject */
     constructor(container, xmlGraph) {
         this.container = container;
         this.xmlGraph;
@@ -287,13 +286,13 @@ export default class XGraph {
         return result;
     }
 
-    getCurrentMxCells() {
+    getAllMxCells() {
         return this.graph.getModel().cells
     }
 
     findCurrentMxCells(prop, pattern) {
         let cells = [];
-        _.each(this.getCurrentMxCells(), (cell) =>{
+        _.each(this.getAllMxCells(), (cell) =>{
             if (prop === "id") {
                 let id = cell.getId();
                 if (u.matchString(id,pattern)) cells.push(cell);
