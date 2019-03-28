@@ -319,7 +319,7 @@ export default class XGraph {
         return mxcell.getValue();
     }
 
-    getValueCell(mxcell,text) {
+    setValueCell(mxcell,text) {
         return mxcell.setValue(text);
     }
 
@@ -335,7 +335,7 @@ class XCell {
         return this.mxcell.getValue();
     }
 
-    getValueCell(mxcell,text) {
+    setValueCell(mxcell,text) {
         return this.mxcell.setValue(text);
     }
 

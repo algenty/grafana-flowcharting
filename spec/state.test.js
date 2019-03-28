@@ -108,6 +108,18 @@ describe("State", () => {
         state.updateCell();
     });
 
+
+    test('Replace value state after serie ERROR on fillColor', () => {
+        var state = new State(cell, mx);
+        rule.aggregation = 'min';
+        rule.addTextMap(cellId);
+        state.setState(rule, serie);
+        expect(rule.getValueForSerie(serie)).toBe(18.19373234740918);
+        expect(state.getLevel()).toBe(2);
+        state.updateCell();
+        expect(state.getCurrentText()).toBe("18.19");
+    });
+
     test('Reinit', () => {
         var state = new State(cell, mx);
         rule.aggregation = 'min';

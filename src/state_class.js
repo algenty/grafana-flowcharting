@@ -181,7 +181,7 @@ export default class State  {
         });
       }
       if(this.matchedText) {
-        this.graph.getValueCell(this.getCurrentText(),text);
+        this.graph.setValueCell(this.mxcell,this.getCurrentText());
       }
       //TODO:LINK
     }
