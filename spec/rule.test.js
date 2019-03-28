@@ -158,17 +158,23 @@ describe("Link", function () {
 
 describe("Series", () => {
     var rule = new Rule("/.*/");
+    var serie = series[0];
     test('matchSerie', () => {
-        expect(rule.matchSerie(series[0])).toBeTruthy();
+        expect(rule.matchSerie(serie)).toBeTruthy();
     });
 
     test('Values', () => {
-        expect(rule.getValueForSerie(series[0])).toBe(79.17554249669148);
+        expect(rule.getValueForSerie(serie)).toBe(79.17554249669148);
     });
 
     test('Formatted Values', () => {
-        let value = rule.getValueForSerie(series[0]);
+        let value = rule.getValueForSerie(serie);
         expect(rule.getFormattedValue(value)).toBe("79.18");
+    });
+
+    test('Change aggregation to max', () => {
+        rule.aggregation = "max"
+        expect(rule.getValueForSerie(serie)).toBe(90.15954449591173);
     });
 });
 
