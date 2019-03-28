@@ -394,7 +394,7 @@ export default class MxPluginCtrl {
         fontColor: view.getState(_cell).style[mxConstants.STYLE_FONTCOLOR],
         fillColor: view.getState(_cell).style[mxConstants.STYLE_FILLCOLOR],
         strokeColor: view.getState(_cell).style[mxConstants.STYLE_STROKECOLOR],
-        gradient: view.getState(_cell).style[mxConstants.STYLE_GRADIENTCOLOR],
+        // gradient: view.getState(_cell).style[mxConstants.STYLE_GRADIENTCOLOR],
         isEdge: _cell.isEdge(),
         isVertex: _cell.isVertex(),
         level: -1
@@ -521,7 +521,7 @@ export default class MxPluginCtrl {
       let cell = model.getCell(id);
       if (cell) {
         this.graph.setCellStyles(style, color, [cell]);
-        this.graph.setCellStyles(mxConstant.STYLE_GRADIENTCOLOR,  'none', [cell]);
+        // this.graph.setCellStyles(mxConstant.STYLE_GRADIENTCOLOR,  'none', [cell]);
       }
     }
   }

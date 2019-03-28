@@ -36,7 +36,6 @@ See more example at draw.io
   - Invert stroke color of arrow options
   - Coloring Gradient is used on shape
 
-
 ## 0.2
 ### Works
   - Display graph through xml definition

@@ -1,0 +1,25 @@
+.dashlist-section-header {
+  margin-bottom: $spacer;
+  color: $text-color-weak;
+}
+
+.dashlist-section {
+  margin-bottom: $spacer;
+  padding-top: 3px;
+}
+
+.dashlist-link {
+  @include list-item();
+
+  .fa {
+    padding-top: 3px;
+  }
+
+  .dashlist-star {
+    float: right;
+  }
+
+  .fa-star {
+    color: $orange;
+  }
+}

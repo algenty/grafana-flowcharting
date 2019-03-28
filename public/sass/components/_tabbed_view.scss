@@ -1,0 +1,61 @@
+.tabbed-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &.tabbed-view--new {
+    padding: 25px 0 0 0;
+    height: 100%;
+  }
+}
+
+.tabbed-view-header {
+  box-shadow: $page-header-shadow;
+  border-bottom: 1px solid $page-header-border-color;
+  @include clearfix();
+}
+
+.tabbed-view-title {
+  float: left;
+  padding-top: 0.5rem;
+  margin: 0 $spacer*3 0 $spacer*1;
+}
+
+.tabbed-view-panel-title {
+  float: left;
+  padding-top: 9px;
+  margin: 0 2rem 0 0;
+}
+
+.tabbed-view-close-btn {
+  float: right;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  border: none;
+  padding: $tabs-padding;
+  color: $text-color;
+  i {
+    font-size: 120%;
+  }
+  &:hover {
+    color: $text-color-strong;
+  }
+}
+
+.tabbed-view-body {
+  padding: $spacer*2 $spacer $spacer $spacer;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  &--small {
+    min-height: 0px;
+    padding-bottom: 0px;
+  }
+}
+
+.section-heading {
+  font-size: 1.1rem;
+  margin-bottom: 0.6rem;
+}
