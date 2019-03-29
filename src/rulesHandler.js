@@ -2,15 +2,11 @@ import Rule from "./rule_class";
 
 export default class RulesHandler {
     /** @ngInject */
-    constructor($scope,data,version) {
+    constructor($scope,rules) {
         this.$scope = $scope || null;
-        $scope.editor = this || null;
-        this.panelCtrl = $scope.ctrl|| null;
-        this.panel = this.panelCtrl.panel|| null;
-        //TODO : date to rules and reverso
-        this.rules = [];
-        if (version != this.panel.version) this.migrate(this.rules)
-        else this.import(this.rules);
+        this.rules = rules ;
+        // if (version != this.panel.version) this.migrate(this.rules)
+        // else this.import(this.rules);
     }
 
     backup() {

@@ -21,9 +21,10 @@ var StateHandler =
 /*#__PURE__*/
 function () {
   /** @ngInject */
-  function StateHandler(xgraph) {
+  function StateHandler($scope, xgraph) {
     _classCallCheck(this, StateHandler);
 
+    this.$scope = $scope;
     this.states = [];
     this.xgraph = xgraph;
     this.initStates();
@@ -106,7 +107,7 @@ function () {
     key: "prepare",
     value: function prepare() {
       this.states.forEach(function (state) {
-        state.prepapre();
+        state.prepare();
       });
     }
   }, {

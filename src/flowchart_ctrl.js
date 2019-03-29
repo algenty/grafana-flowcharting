@@ -9,7 +9,6 @@ import moment from "moment";
 var u = require("./utils");
 window.u = window.u || u;
 
-import MxHandler from "./mxHandler";
 import RulesHandler from "./rulesHandler";
 import { plugin } from "./plugin";
 
@@ -25,15 +24,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
     this.changedSource;
-    this.shapeStates = [];
-    this.textStates = [];
-    this.linkStates = [];
-    this.graph;
-    this.mx;
     this.changedSource = true;
     this.changedData = true;
     this.changedOptions = true;
     this.rulesHandler;
+    this.flowchartHandler;
+    this.statesHandler;
+
     // For Mapping with pointer
     this.onMapping = {
       active: false, // boolean if pointer mapping is active
@@ -41,37 +38,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       idFocus: undefined // id of dom
     };
 
-    // OLD OPTIONS
-    this.options = {
-      metrics: {
-        handler: {
-          types: [
-            "Number Threshold",
-            "String Threshold",
-            "Date Threshold",
-            "Disable Criteria",
-            "Text Only"
-          ],
-          default: "Number Threshold"
-        },
-        format: {
-          types: kbn.getUnitFormats()
-        }
-      }
-    };
-
     var panelDefaults = {
       version : "0.2.0",
-      init: {
-        logLevel: 3 //1:debug, 2:info, 3:warn, 4:error, 5:fatal
-      },
       datasource: null,
       interval: null,
-      targets: [{}],
-      aliasColors: {},
       format: "short",
       valueName: "current",
-      strokeWidth: 1,
       // NEW PANEL
       metrics: [],
       rules: [],
@@ -174,12 +146,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
-    console.debug("ctrl.link");
-    this.rulesHandler = new RulesHandler(scope, elem, attrs, ctrl);
-    this.rulesHandler.addRule("/.*/");
-    console.log("rules ", this.rulesHandler);
-    
-    this.mx = new MxHandler(scope, elem, attrs, ctrl);
+    this.rulesHandler = new RulesHandler(scope, this.panel.rules);
+    // this.mx = new MxHandler(scope, elem, attrs, ctrl);
   }
 
   exportSVG() {
@@ -192,8 +160,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       modalClass: "modal--narrow"
     });
   }
-
-  openEditor() {}
 
   setUnitFormat(subItem) {
     this.panel.format = subItem.value;
@@ -230,478 +196,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.analyzeDataForText();
   }
 
-  makeStates()  { // return states array
-    // Structure of state
-    // state = {
-    //   pattern : regex,
-    //   value :
-    //   formattedValue :
-    //   level :  -1 -> nostate | 0 -> ok | 1 -> warn | 2 -> ko 
-    //   hidden : boolean
-    //   shapeColors : [ {style, color, level } ]
-    //   textValues : [ { formattedValue, isPattern, textPattern, level } ]
-    //   linkUrls : [ { isPattern, level } ]
-    // }
-    let states = [];
-
-
-    // Begin For Each rule
-    _.each(this.panel.styles,   (_rule) =>{
-      let state = undefined;
-      let serieFound = false;
-      // Begin each series
-      _.each(this.series, (_serie) => {
-        const regex = kbn.stringToJsRegex(_rule.pattern);
-        let matching = _serie.alias.toString().match(regex);
-        if (_rule.pattern == _serie.alias || matching) {
-          let value = _.get(_serie.stats, _rule.aggregation);
-          if (value === undefined || value === null) {
-            value = _serie.datapoints[_serie.datapoints.length - 1][0];
-          }
-          let level = this.getThresholdLevel(value, _rule);
-          let color = this.getColorForValue(value, _rule);
-          let pattern = undefined;
-          let state = undefined;
-          // Begin For Each Shape 
-          _.each(_rule.shapeMaps, (_shape) => {
-            found_state = _.find(states, (_state) =>{
-              return _shape.pattern === _state.pattern;
-            });
-            let new_shape = {
-              'style' : _rule.colorMode,
-              'color' : this.getColorForValue(value, _rule),
-              'level' : level
-            }
-
-            if ( found_state != null && found_state != undefined) { 
-              if (found_state.level <= level ) {
-                found_state.level = level;
-                replaceColorShape(found_state.shape, _rule.colorMode, color, level);
-              }
-              else {
-                replaceColorShape(found_state.shape, _rule.colorMode, color, level);
-              }
-            }
-            else {
-              replaceColorShape(found_state.shape, _rule.colorMode, color, level);
-            }
-  
-          });
-          // End For Each Shape
-        }
-      });
-      // End each series
-    });
-    // End Each style
-    return states;
-  }
-
-
-  analyzeDataForShape() {
-    this.shapeStates = [];
-    // Begin For Each style
-    _.each(this.panel.styles, _style => {
-      // Begin For Each Series
-      _.each(this.series, _serie => {
-        if (_serie.datapoints.length === 0) {
-          return;
-        }
-        const regex = kbn.stringToJsRegex(_style.pattern);
-        let matching = _serie.alias.toString().match(regex);
-        // if pattern of style = serie.alias
-        if (_style.pattern == _serie.alias || matching) {
-          let value = _.get(_serie.stats, _style.aggregation);
-          let level = this.getThresholdLevel(value, _style);
-          let color = this.getColorForValue(value, _style);
-          if (value === undefined || value === null) {
-            value = _serie.datapoints[_serie.datapoints.length - 1][0];
-          }
-          // Begin For Each Shape
-          _.each(_style.shapeMaps, _shape => {
-            // not hidden
-            if (_shape.hidden != true) {
-              // Structure shapeMaps
-              // shape :
-              // {
-              //   pattern : text, /.*/
-              //   level : number, 0,1 or 2
-              //   hidden : true|false,
-              //   colorMode : text, (fill, font or stoke)
-              //   color : text,  (#color)
-              //   value : number (value of aggregation)
-              //   aggregation : text (min, max ...)
-              // }
-              let _state = _.find(this.shapeStates, _state => {
-                return _state.pattern == _shape.pattern;
-              });
-              let new_state = {
-                pattern: _shape.pattern,
-                level: level,
-                colorMode: _style.colorMode,
-                color: color,
-                value: value,
-                aggregation: _style.aggregation,
-                serie: _serie.alias
-              };
-              if (_state != null && _state != undefined) {
-                // if level is upper of older level : change state
-                if (level > _state.level) {
-                  // if always or display when warn/err
-                  if (
-                    _style.colorOn == "a" ||
-                    (_style.colorOn == "wc" && level > 0)
-                  ) {
-                    _.pull(this.shapeStates, _state);
-                    this.shapeStates.push(new_state);
-                  }
-                }
-                // else nothing todo, keep old
-              } else {
-                // if always or display when warn/err
-                if (
-                  _style.colorOn == "a" ||
-                  (_style.colorOn == "wc" && level > 0)
-                ) {
-                  this.shapeStates.push(new_state);
-                }
-              }
-            }
-          });
-          // End For Each Shape
-          //   console.debug(
-          //     "analyzeDataForShape|" +
-          //       _style.aggregation +
-          //       " = " +
-          //       value +
-          //       " for " +
-          //       _serie.alias +
-          //       "Level = " +
-          //       level
-          //   );
-        }
-      });
-      // End For Each Styles
-    });
-    // End For Each Series
-    // console.debug(
-    //   "analyzeDataForShape| result of shape mapping : ",
-    //   this.shapeStates
-    // );
-  }
-
-  analyzeDataForText() {
-    this.textStates = [];
-    // Begin For Each Series
-    _.each(this.series, _serie => {
-      if (_serie.datapoints.length === 0) {
-        return;
-      }
-      // Begin For Each Styles
-      _.each(this.panel.styles, _style => {
-        const regex = kbn.stringToJsRegex(_style.pattern);
-        let matching = _serie.alias.toString().match(regex);
-        if (_style.pattern == _serie.alias || matching) {
-          let value = _.get(_serie.stats, _style.aggregation);
-          let level = this.getThresholdLevel(value, _style);
-          if (value === undefined || value === null) {
-            value = _serie.datapoints[_serie.datapoints.length - 1][0];
-          }
-          // Begin For Each Text
-          _.each(_style.textMaps, _text => {
-            // not hidden or not never
-            if (
-              _text === undefined ||
-              _text === null ||
-              _text.pattern.length == 0 ||
-              _text.hidden != true
-            ) {
-              // Structure textMaps
-              // text :
-              // {
-              //   pattern : text, /.*/
-              //   level : number, 0,1 or 2
-              //   hidden : true|false,
-              //   color : text,  (#color)
-              //   value : number (value of aggregation)
-              //   aggregation : text (min, max ...)
-              // }
-              let _state = _.find(this.textStates, _state => {
-                return _state.pattern == _text.pattern;
-              });
-
-              // Adapte value
-              let textValue = this.getFormattedValue(value, _style);
-              if (_style.textOn == "n") textValue = "";
-              if (_style.textOn == "wc" && level < 1) textValue = "";
-              if (_style.textOn == "co" && level != 3) textValue = "";
-              //TODO : "When Metric Displayed"
-              let isPattern = true;
-              let textPattern = "";
-              if (_style.textReplace == "content") {
-                isPattern = false;
-              } else {
-                textPattern = _style.textPattern;
-              }
-              let new_state = {
-                pattern: _text.pattern,
-                level: level,
-                value: value,
-                textValue: textValue,
-                isPattern: isPattern,
-                textPattern: textPattern,
-                aggregation: _style.aggregation,
-                serie: _serie.alias,
-                alias: _style.alias
-              };
-
-              if (_state != null && _state != undefined) {
-                if (level > _state.level) {
-                  _.pull(this.textStates, _state);
-                  this.textStates.push(new_state);
-                }
-                // else nothing todo, keep old
-              } else {
-                this.textStates.push(new_state);
-              }
-            }
-          });
-          // End For Each text
-          // console.debug(
-          //   "analyzeDataForText|" +
-          //     _style.aggregation +
-          //     " = " +
-          //     value +
-          //     " for " +
-          //     _serie.alias +
-          //     " Level = " +
-          //     level
-          // );
-        }
-      });
-      // End For Each Styles
-    });
-    // End For Each Series
-    // console.debug(
-    //   "analyzeDataForText| result of Text mapping : ",
-    //   this.textStates
-    // );
-  }
-
-  updateLink() {
-    console.debug("flowchart_ctrl.updateLink")
-    this.linkStates = [];
-    // Begin For Each Styles
-    _.each(this.panel.styles, _style => {
-      // Begin For Each Link
-      _.each(_style.linkMaps, _link => {
-        // not hidden or not never
-        if (
-          _link === undefined ||
-          _link === null ||
-          _link.pattern.length == 0 ||
-          _link.hidden != true
-        ) {
-            let _state = _.find(this.linkStates, _state => {
-              return _state.pattern == _link.pattern;
-            });
-            let linkTargetBlank = _style.linkTargetBlank;
-            let linkUrl = _style.linkUrl;
-            let new_state = {
-              pattern: _link.pattern,
-              linkTargetBlank: linkTargetBlank,
-              linkUrl: linkUrl
-            };
-
-            if (_state != null && _state != undefined) {
-              _.pull(this.linkStates, _state);
-              this.linkStates.push(new_state);
-            }
-            else {
-            this.linkStates.push(new_state);
-            }
-          }
-      });
-      // End For Each link
-    });
-    // End For Each Styles
-  }
-
-  getColorForValue(value, style) {
-    if (!style.thresholds || style.thresholds.length == 0) {
-      return null;
-    }
-
-    for (let i = style.thresholds.length; i > 0; i--) {
-      if (value >= style.thresholds[i - 1]) {
-        return style.colors[i];
-      }
-    }
-    return _.first(style.colors);
-  }
-
-  getFormattedValue(value, style) {
-    // console.log("getFormattedValue style", style)
-    if (style.type === "number") {
-      if (!_.isFinite(value)) return "Invalid Number";
-      if (value === null || value === void 0) {
-        return "-";
-      }
-      let decimals = this.decimalPlaces(value);
-      decimals =
-        typeof style.decimals === "number"
-          ? Math.min(style.decimals, decimals)
-          : decimals;
-      return kbn.valueFormats[style.unit](value, decimals, null).toString();
-    }
-
-    if (style.type === "string") {
-      if (_.isArray(value)) {
-        value = value.join(", ");
-      }
-      const mappingType = style.mappingType || 0;
-      if (mappingType === 1 && style.valueMaps) {
-        for (let i = 0; i < style.valueMaps.length; i++) {
-          const map = style.valueMaps[i];
-
-          if (value === null) {
-            if (map.value === "null") {
-              return map.text;
-            }
-            continue;
-          }
-
-          // Allow both numeric and string values to be mapped
-          if (
-            (!_.isString(value) && Number(map.value) === Number(value)) ||
-            map.value === value
-          ) {
-            return this.defaultValueFormatter(map.text, style);
-          }
-        }
-      }
-
-      if (mappingType === 2 && style.rangeMaps) {
-        for (let i = 0; i < style.rangeMaps.length; i++) {
-          const map = style.rangeMaps[i];
-
-          if (value === null) {
-            if (map.from === "null" && map.to === "null") {
-              return map.text;
-            }
-            continue;
-          }
-
-          if (
-            Number(map.from) <= Number(value) &&
-            Number(map.to) >= Number(value)
-          ) {
-            return this.defaultValueFormatter(map.text, style);
-          }
-        }
-      }
-
-      if (value === null || value === void 0) {
-        return "-";
-      }
-
-      return this.defaultValueFormatter(value, style);
-    }
-
-    if (style.type === "date") {
-      if (value === undefined || value === null) {
-        return "-";
-      }
-
-      if (_.isArray(value)) {
-        value = value[0];
-      }
-      let date = moment(value);
-      if (this.dashboard.isTimezoneUtc()) {
-        date = date.utc();
-      }
-      return date.format(style.dateFormat);
-    }
-  }
-
-  decimalPlaces(num) {
-    var match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-    if (!match) {
-      return 0;
-    }
-    return Math.max(
-      0,
-      // Number of digits right of decimal point.
-      (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
-    );
-  }
-
-  defaultValueFormatter(value, style) {
-    if (value === null || value === void 0 || value === undefined) {
-      return "";
-    }
-
-    if (_.isArray(value)) {
-      value = value.join(", ");
-    }
-
-    if (style && style.sanitize) {
-      return this.$sanitize(value);
-    } else {
-      return _.escape(value);
-    }
-  }
-
-  // returns level of threshold, -1 = disable, 0 = ok, 1 = warnimg, 2 = critical
-  getThresholdLevel(value, style) {
-    var thresholdLevel = 0;
-
-    var thresholds = style.thresholds;
-    // if no thresholds are defined, return 0
-    if (thresholds === undefined || thresholds.length == 0) {
-      return -1;
-    }
-
-    // make sure thresholds is an array of size 2
-    if (thresholds.length !== 2) {
-      return -1;
-    }
-
-    // non invert
-    if (!style.invert) {
-      thresholdLevel = 3;
-      if (value >= thresholds[0]) {
-        // value is equal or greater than first threshold
-        thresholdLevel = 1;
-      }
-      if (value >= thresholds[1]) {
-        // value is equal or greater than second threshold
-        thresholdLevel = 0;
-      }
-    }
-    // invert mode
-    else {
-      thresholdLevel = 0;
-      if (value >= thresholds[0]) {
-        // value is equal or greater than first threshold
-        thresholdLevel = 1;
-      }
-      if (value >= thresholds[1]) {
-        // value is equal or greater than second threshold
-        thresholdLevel = 2;
-      }
-    }
-    return thresholdLevel;
-  }
-
-  //
-  // Validate
-  //
-
-  validateRegex(textRegex) {
-    return _.isRegExp(textRegex);
-  }
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };

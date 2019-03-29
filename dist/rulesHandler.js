@@ -19,16 +19,12 @@ var RulesHandler =
 /*#__PURE__*/
 function () {
   /** @ngInject */
-  function RulesHandler($scope, data, version) {
+  function RulesHandler($scope, rules) {
     _classCallCheck(this, RulesHandler);
 
     this.$scope = $scope || null;
-    $scope.editor = this || null;
-    this.panelCtrl = $scope.ctrl || null;
-    this.panel = this.panelCtrl.panel || null; //TODO : date to rules and reverso
-
-    this.rules = [];
-    if (version != this.panel.version) this.migrate(this.rules);else this.import(this.rules);
+    this.rules = rules; // if (version != this.panel.version) this.migrate(this.rules)
+    // else this.import(this.rules);
   }
 
   _createClass(RulesHandler, [{

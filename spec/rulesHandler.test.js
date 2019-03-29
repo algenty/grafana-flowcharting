@@ -9,10 +9,10 @@ var scope = {
         }
     }
 }
-var data = scope.ctrl.panel.rules;
+var rules = scope.ctrl.panel.rules;
 
 describe("RuleHandler", function () {
-    let rh = new RuleHandler(scope,data,scope.ctrl.version);
+    let rh = new RuleHandler(scope,rules);
     test('Add & Remove', () => {
         rh.addRule("RULE1")
         expect(rh.getRules().length).toBe(1);
