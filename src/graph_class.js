@@ -168,8 +168,11 @@ export default class XGraph {
     refreshGraph() {
         let $div = $(this.container);
         let width = $div.width()
-        let heigth = $div.height();
-        let size = Math.min(width, heigth);
+ console.log("width ", width);
+        let height = $div.height();
+ console.log("height ", height);
+        let size = Math.min(width, height);
+ console.log("size ", size);
         const cssGraph = {
             margin: "auto",
             position: "relative",
@@ -197,12 +200,14 @@ export default class XGraph {
 
 
     centerGraph(bool) {
+ console.log("centerGraph bool ", bool);
         if (bool) this.graph.center(true, true);
         else this.graph.center(false, false);
         this.center = bool;
     }
 
     scaleGraph(bool) {
+ console.log("scaleGraph bool ", bool);
         if (bool) {
             this.graph.fit();
             this.graph.view.rendering = true;

@@ -19,6 +19,8 @@ var _inspect_options = require("./inspect_options");
 
 var _rulesHandler = _interopRequireDefault(require("./rulesHandler"));
 
+var _flowchartHandler = _interopRequireDefault(require("./flowchartHandler"));
+
 var _plugin = require("./plugin");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -199,7 +201,8 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
-      this.rulesHandler = new _rulesHandler.default(scope, this.panel.rules); // this.mx = new MxHandler(scope, elem, attrs, ctrl);
+      this.rulesHandler = new _rulesHandler.default(scope, this.panel.rules);
+      this.flowchartHandler = new _flowchartHandler.default(scope, elem, ctrl, this.panel.flowchart); // this.mx = new MxHandler(scope, elem, attrs, ctrl);
     }
   }, {
     key: "exportSVG",

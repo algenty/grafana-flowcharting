@@ -7,6 +7,9 @@ export default class RulesHandler {
         this.rules = rules ;
         // if (version != this.panel.version) this.migrate(this.rules)
         // else this.import(this.rules);
+        if ( this.rules === undefined || this.rules === null || this.rules.length === 0) {
+            this.addRule("/.*/")
+        }
     }
 
     backup() {

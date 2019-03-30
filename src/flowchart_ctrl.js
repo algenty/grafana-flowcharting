@@ -9,9 +9,8 @@ var u = require("./utils");
 window.u = window.u || u;
 
 import RulesHandler from "./rulesHandler";
+import FlowchartHandler from "./flowchartHandler"
 import { plugin } from "./plugin";
-
-
 
 
 class FlowchartCtrl extends MetricsPanelCtrl {
@@ -146,6 +145,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     this.rulesHandler = new RulesHandler(scope, this.panel.rules);
+    this.flowchartHandler = new FlowchartHandler(scope,elem, ctrl, this.panel.flowchart)
     // this.mx = new MxHandler(scope, elem, attrs, ctrl);
   }
 
