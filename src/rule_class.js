@@ -1,7 +1,4 @@
-import _ from "lodash";
-import { truncateSync } from "fs";
-var u = require("./utils");
-import kbn from "app/core/utils/kbn";
+// import kbn from "app/core/utils/kbn";
 
 export default class Rule {
     /** @ngInject */

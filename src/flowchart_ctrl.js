@@ -4,7 +4,6 @@ import kbn from "app/core/utils/kbn";
 import { mappingOptionsTab } from "./mapping_options";
 import { flowchartOptionsTab } from "./flowchart_options";
 import { inspectOptionsTab } from "./inspect_options";
-import moment from "moment";
 
 var u = require("./utils");
 window.u = window.u || u;
@@ -186,14 +185,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       }
     }
     return series;
-  }
-
-  //
-  // Data
-  //
-  analyzeData() {
-    this.analyzeDataForShape();
-    this.analyzeDataForText();
   }
 
 }

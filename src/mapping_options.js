@@ -16,9 +16,9 @@ export class MappingOptionsCtrl {
     this.unitFormats = kbn.getUnitFormats();
     this.colorModes = [
       { text: "Disabled", value: null },
-      { text: "Stroke", value: this.mx.STYLE_STROKECOLOR },
-      { text: "Fill", value: this.mx.STYLE_FILLCOLOR },
-      { text: "Text", value: this.mx.STYLE_FONTCOLOR }
+      { text: "Stroke", value: 'strokeColor' },
+      { text: "Fill", value: 'fillColor' },
+      { text: "Text", value: 'fontColor' }
     ];
     this.colorOn = [
       { text: "Warning / Critical", value: "wc" },

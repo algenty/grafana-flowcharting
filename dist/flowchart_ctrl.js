@@ -17,8 +17,6 @@ var _flowchart_options = require("./flowchart_options");
 
 var _inspect_options = require("./inspect_options");
 
-var _moment = _interopRequireDefault(require("moment"));
-
 var _rulesHandler = _interopRequireDefault(require("./rulesHandler"));
 
 var _plugin = require("./plugin");
@@ -244,15 +242,6 @@ function (_MetricsPanelCtrl) {
       }
 
       return series;
-    } //
-    // Data
-    //
-
-  }, {
-    key: "analyzeData",
-    value: function analyzeData() {
-      this.analyzeDataForShape();
-      this.analyzeDataForText();
     }
   }]);
 

@@ -5,22 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _lodash = _interopRequireDefault(require("lodash"));
-
-var _fs = require("fs");
-
-var _kbn = _interopRequireDefault(require("app/core/utils/kbn"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var u = require("./utils");
-
+// import kbn from "app/core/utils/kbn";
 var Rule =
 /*#__PURE__*/
 function () {
@@ -229,7 +220,7 @@ function () {
     key: "removeTextMap",
     value: function removeTextMap(index) {
       var m = this.textMaps[index];
-      this.textMaps = _lodash.default.without(this.textMaps, m);
+      this.textMaps = _.without(this.textMaps, m);
     }
   }, {
     key: "getTextMap",
@@ -263,7 +254,7 @@ function () {
     key: "removeLinkMap",
     value: function removeLinkMap(index) {
       var m = this.linkMaps[index];
-      this.linkMaps = _lodash.default.without(this.linkMaps, m);
+      this.linkMaps = _.without(this.linkMaps, m);
     }
   }, {
     key: "getLinkMap",
@@ -358,7 +349,7 @@ function () {
         }
       }
 
-      return _lodash.default.first(this.colors);
+      return _.first(this.colors);
     }
   }, {
     key: "getThresholdLevel",
@@ -384,7 +375,7 @@ function () {
     key: "getValueForSerie",
     value: function getValueForSerie(serie) {
       if (this.matchSerie(serie)) {
-        var value = _lodash.default.get(serie.stats, this.aggregation);
+        var value = _.get(serie.stats, this.aggregation);
 
         if (value === undefined || value === null) {
           value = serie.datapoints[serie.datapoints.length - 1][0];
@@ -406,7 +397,7 @@ function () {
     value: function getFormattedValue(value) {
       // Number
       if (this.type === "number") {
-        if (!_lodash.default.isFinite(value)) return "Invalid Number";
+        if (!_.isFinite(value)) return "Invalid Number";
 
         if (value === null || value === void 0) {
           return "-";
@@ -418,7 +409,7 @@ function () {
       }
 
       if (this.type === "string") {
-        if (_lodash.default.isArray(value)) {
+        if (_.isArray(value)) {
           value = value.join(", ");
         }
 
@@ -452,7 +443,7 @@ function () {
           return "-";
         }
 
-        if (_lodash.default.isArray(value)) {
+        if (_.isArray(value)) {
           value = value[0];
         }
 
@@ -479,14 +470,14 @@ function () {
         return "";
       }
 
-      if (_lodash.default.isArray(value)) {
+      if (_.isArray(value)) {
         value = value.join(", ");
       }
 
       if (this.sanitize) {
         return this.$sanitize(value);
       } else {
-        return _lodash.default.escape(value);
+        return _.escape(value);
       }
     }
   }, {
@@ -840,7 +831,7 @@ function () {
         }
       }
 
-      if (!_lodash.default.isString(value) && Number(this.value) === Number(value)) {
+      if (!_.isString(value) && Number(this.value) === Number(value)) {
         return true;
       }
 
@@ -912,5 +903,5 @@ function () {
 }();
 
 function formatValue(value, unit, decimals) {
-  return _kbn.default.valueFormats[unit](value, decimals, null).toString();
+  return kbn.valueFormats[unit](value, decimals, null).toString();
 }

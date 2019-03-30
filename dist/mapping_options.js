@@ -43,13 +43,13 @@ function () {
       value: null
     }, {
       text: "Stroke",
-      value: this.mx.STYLE_STROKECOLOR
+      value: 'strokeColor'
     }, {
       text: "Fill",
-      value: this.mx.STYLE_FILLCOLOR
+      value: 'fillColor'
     }, {
       text: "Text",
-      value: this.mx.STYLE_FONTCOLOR
+      value: 'fontColor'
     }];
     this.colorOn = [{
       text: "Warning / Critical",
