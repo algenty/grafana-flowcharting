@@ -6,13 +6,11 @@ export class MappingOptionsCtrl {
   /** @ngInject */
   constructor($scope) {
     $scope.editor = this;
-    this.activeRuleIndex = 0;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
-    this.mx = this.panelCtrl.mx;
-    $scope.mx = this.panelCtrl.mx;
     $scope.onMapping = this.panelCtrl.onMapping;
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
+    this.flowchartHandler = $scope.ctrl.flowchartHandler;
     this.unitFormats = kbn.getUnitFormats();
     this.colorModes = [
       { text: "Disabled", value: null },
@@ -77,16 +75,27 @@ export class MappingOptionsCtrl {
       });
     };
 
-    this.getCellNames = () => {
-      if (!this.mx.cells) {
-        return [];
-      }
-      return _.map(this.mx.cells, t => {
-        return t.id;
+    this.getCellNamesForShape = () => {
+      let cells = this.flowchartHandler.getNamesByProp("id")
+      return _.map(cells, t => {
+        return t;
       });
     };
 
-    this.onColorChange = this.onColorChange.bind(this);
+    this.getCellNamesForText = () => {
+      let cells = this.flowchartHandler.getNamesByProp("id")
+      return _.map(cells, t => {
+        return t;
+      });
+    };
+
+    this.getCellNamesForLink = () => {
+      let cells = this.flowchartHandler.getNamesByProp("id")
+      return _.map(cells, t => {
+        return t;
+      });
+    };
+
   }
 
   render() {
@@ -107,14 +116,13 @@ export class MappingOptionsCtrl {
 
   onOptionsChange() {
     this.panelCtrl.changedOptions = true;
-    console.log(this.panelCtrl.rulesHandler);
     this.render();
   }
 
 
-  mapCell(map,id) {
+  mapCell(map, id) {
     // init mapping event
-    if (this.panelCtrl.onMapping.active && map == this.panelCtrl.onMapping.object ) { 
+    if (this.panelCtrl.onMapping.active && map == this.panelCtrl.onMapping.object) {
       this.panelCtrl.onMapping.active = false;
     }
     else {

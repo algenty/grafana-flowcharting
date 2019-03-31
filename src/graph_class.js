@@ -165,49 +165,49 @@ export default class XGraph {
         }
     }
 
-    refreshGraph() {
+    refreshGraph(width, height) {
+        // console.log("height ", height);
+        // console.log("width ", width);
         let $div = $(this.container);
-        let width = $div.width()
- console.log("width ", width);
-        let height = $div.height();
- console.log("height ", height);
-        let size = Math.min(width, height);
- console.log("size ", size);
-        const cssGraph = {
-            margin: "auto",
-            position: "relative",
-            height: size - 30 + "px"
-        }
-        $div.css(cssGraph);
+        var size = Math.min(width, height);
 
-        this.lockGraph(this.lock);
+        var css = {
+            "margin": "auto",
+            "position": "relative",
+            "width": width ,
+            "height": size - 30 + "px"
+        };
 
-        this.centerGraph(this.center);
-
-        this.scaleGraph(this.scale);
-
+        $div.css(css);
+        
         if (this.zoom) this.zoomGraph(this.zoom);
         else this.unzoomGraph();
 
+        this.lockGraph(this.lock);
+
+        this.scaleGraph(this.scale);
+
+        this.centerGraph(this.center);
+
         this.gridGraph(this.grid);
+
+        this.graph.refresh();
     }
 
     lockGraph(bool) {
-        if ( bool ) this.graph.setEnabled(false);
+        if (bool) this.graph.setEnabled(false);
         else this.graph.setEnabled(true);
         this.lock = bool;
     }
 
 
     centerGraph(bool) {
- console.log("centerGraph bool ", bool);
         if (bool) this.graph.center(true, true);
         else this.graph.center(false, false);
         this.center = bool;
     }
 
     scaleGraph(bool) {
- console.log("scaleGraph bool ", bool);
         if (bool) {
             this.graph.fit();
             this.graph.view.rendering = true;
@@ -277,16 +277,16 @@ export default class XGraph {
 
     findCurrentCells(prop, pattern) {
         let cells = this.getCurrentCells(prop)
-        let result = _.find(cells, (cell) =>{
-            return u.matchString(cell,pattern);
+        let result = _.find(cells, (cell) => {
+            return u.matchString(cell, pattern);
         });
         return result;
     }
 
     findOriginalCells(prop, pattern) {
         let cells = this.getOrignalCells(prop)
-        let result = _.find(cells, (cell) =>{
-            return u.matchString(cell,pattern);
+        let result = _.find(cells, (cell) => {
+            return u.matchString(cell, pattern);
         });
         return result;
     }
@@ -297,25 +297,25 @@ export default class XGraph {
 
     findCurrentMxCells(prop, pattern) {
         let cells = [];
-        _.each(this.getAllMxCells(), (cell) =>{
+        _.each(this.getAllMxCells(), (cell) => {
             if (prop === "id") {
                 let id = cell.getId();
-                if (u.matchString(id,pattern)) cells.push(cell);
+                if (u.matchString(id, pattern)) cells.push(cell);
             }
             else if (prop === "value") {
                 let value = cell.getValue();
-                if (u.matchString(value,pattern)) cells.push(cell);
+                if (u.matchString(value, pattern)) cells.push(cell);
             }
         });
         return cells;
     }
 
-    getStyleCell(mxcell,style) {
+    getStyleCell(mxcell, style) {
         let state = this.graph.view.getState(mxcell)
         return state.style[style];
     }
 
-    setStyleCell(mxcell,style,color) {
+    setStyleCell(mxcell, style, color) {
         this.graph.setCellStyles(style, color, [mxcell]);
     }
 
@@ -323,14 +323,14 @@ export default class XGraph {
         return mxcell.getValue();
     }
 
-    setValueCell(mxcell,text) {
+    setValueCell(mxcell, text) {
         return mxcell.setValue(text);
     }
 
 }
 
 class XCell {
-    constructor(mxcell,mxgraph) {
+    constructor(mxcell, mxgraph) {
         this.mxcell = mxcell;
         this.mxgraph = mxgraph;
     }
@@ -339,7 +339,7 @@ class XCell {
         return this.mxcell.getValue();
     }
 
-    setValueCell(mxcell,text) {
+    setValueCell(mxcell, text) {
         return this.mxcell.setValue(text);
     }
 
@@ -348,7 +348,7 @@ class XCell {
         return state.style[style];
     }
 
-    setStyleCell(style,color) {
+    setStyleCell(style, color) {
         this.graph.setCellStyles(style, color, [this.mxcell]);
     }
 

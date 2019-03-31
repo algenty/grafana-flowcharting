@@ -18,3 +18,5 @@ var _sdk = require("app/plugins/sdk");
   dark: 'plugins/agenty-flowcharting-panel/css/flowchart.dark.css',
   light: 'plugins/agenty-flowcharting-panel/css/flowchart.light.css'
 });
+window.logLevel = 0;
+window.logDisplay = false;

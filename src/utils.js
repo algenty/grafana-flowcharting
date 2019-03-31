@@ -190,8 +190,30 @@ module.exports = {
   }, 
 
   matchString(str,pattern) {
+    if(str === undefined || pattern === undefined || str.length === 0 || pattern.length === 0) {
+      u.log(0,"Match str="+str+" pattern="+pattern+ " FALSE");
+      return false;
+    }
     const regex = this.stringToJsRegex(pattern);
     let matching = str.toString().match(regex);
-    return (str === pattern || matching);
+    if (str === pattern || matching) {
+      u.log(0,"Match str="+str+" pattern="+pattern+ " TRUE");
+      return true;
+    }
+  },
+
+  log(level,title,obj) {
+    // 0 : DEBUG
+    // 1 : INFO
+    // 2 : WARN
+    // 3 : ERROR
+    if(logDisplay != undefined && logDisplay === true) {
+      if(logLevel != undefined && level >= logLevel) {
+        if(level == 0) console.debug("DEBUG : "+title,obj)
+        if(level == 1)  console.info(" INFO : "+title,obj)
+        if(level == 2)  console.warn(" WARN : "+title,obj)
+        if(level == 3) console.error("ERROR : "+title,obj)
+      }
+    }
   }
 };

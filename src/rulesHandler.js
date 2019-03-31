@@ -3,6 +3,7 @@ import Rule from "./rule_class";
 export default class RulesHandler {
     /** @ngInject */
     constructor($scope,rules) {
+        u.log(0,"RulesHandler.constructor");
         this.$scope = $scope || null;
         this.rules = rules ;
         // if (version != this.panel.version) this.migrate(this.rules)

@@ -61,15 +61,14 @@ function (_MetricsPanelCtrl) {
     _this.version = "0.2.0";
     _this.$rootScope = $rootScope;
     _this.$scope = $scope;
-    _this.hiddenSeries = {};
     _this.unitFormats = _kbn.default.getUnitFormats();
-    _this.changedSource;
     _this.changedSource = true;
     _this.changedData = true;
     _this.changedOptions = true;
     _this.rulesHandler;
     _this.flowchartHandler;
-    _this.statesHandler; // For Mapping with pointer
+    _this.statesHandler;
+    _this.series = []; // For Mapping with pointer
 
     _this.onMapping = {
       active: false,
@@ -86,9 +85,7 @@ function (_MetricsPanelCtrl) {
       format: "short",
       valueName: "current",
       // NEW PANEL
-      metrics: [],
       rules: [],
-      // OLD PANEL
       flowchart: {
         source: {
           type: "xml",
@@ -164,21 +161,23 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onRender",
     value: function onRender() {
-      console.debug("ctrl.onRender");
-
-      if (this.changedData == true || this.changedOptions == true) {// this.analyzeData();
-        // if (this.changedOptions == true) this.updateLink();
+      if (this.changedData == true || this.changedOptions == true) {
+        this.flowchartHandler.SetUpdateStates(this.panel.rules, this.series);
+        this.changedOptions == false;
+        this.changedData == false;
       }
     }
   }, {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
+      u.log(0, "ctrl.onDataReceived");
       this.changedData = true; // console.debug("received data");
       // console.debug(dataList);
 
       this.series = dataList.map(this.seriesHandler.bind(this)); // console.debug("mapped dataList to series");
       // console.debug(this.series);
 
+      this.flowchartHandler.SetUpdateStates(this.panel.rules, this.series);
       this.render();
     }
   }, {
@@ -201,8 +200,9 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
+      u.log(0, "flowchart.link");
       this.rulesHandler = new _rulesHandler.default(scope, this.panel.rules);
-      this.flowchartHandler = new _flowchartHandler.default(scope, elem, ctrl, this.panel.flowchart); // this.mx = new MxHandler(scope, elem, attrs, ctrl);
+      this.flowchartHandler = new _flowchartHandler.default(scope, elem, ctrl, this.panel.flowchart);
     }
   }, {
     key: "exportSVG",

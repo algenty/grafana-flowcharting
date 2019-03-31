@@ -204,7 +204,7 @@ export default class MxPluginCtrl {
   // REFRESH GRAPH
   //
   refreshFlowChart() {
-    console.debug("mxgraph.refreshFlowChart");
+    u.log(0,"mxgraph.refreshFlowChart");
     var width = this.$elem.width();
     var height = this.panelCtrl.height;
     var size = Math.min(width, height);

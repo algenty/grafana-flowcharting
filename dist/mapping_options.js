@@ -30,13 +30,11 @@ function () {
     _classCallCheck(this, MappingOptionsCtrl);
 
     $scope.editor = this;
-    this.activeRuleIndex = 0;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
-    this.mx = this.panelCtrl.mx;
-    $scope.mx = this.panelCtrl.mx;
     $scope.onMapping = this.panelCtrl.onMapping;
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
+    this.flowchartHandler = $scope.ctrl.flowchartHandler;
     this.unitFormats = _kbn.default.getUnitFormats();
     this.colorModes = [{
       text: "Disabled",
@@ -158,17 +156,29 @@ function () {
       });
     };
 
-    this.getCellNames = function () {
-      if (!_this.mx.cells) {
-        return [];
-      }
+    this.getCellNamesForShape = function () {
+      var cells = _this.flowchartHandler.getNamesByProp("id");
 
-      return _lodash.default.map(_this.mx.cells, function (t) {
-        return t.id;
+      return _lodash.default.map(cells, function (t) {
+        return t;
       });
     };
 
-    this.onColorChange = this.onColorChange.bind(this);
+    this.getCellNamesForText = function () {
+      var cells = _this.flowchartHandler.getNamesByProp("id");
+
+      return _lodash.default.map(cells, function (t) {
+        return t;
+      });
+    };
+
+    this.getCellNamesForLink = function () {
+      var cells = _this.flowchartHandler.getNamesByProp("id");
+
+      return _lodash.default.map(cells, function (t) {
+        return t;
+      });
+    };
   }
 
   _createClass(MappingOptionsCtrl, [{
@@ -197,7 +207,6 @@ function () {
     key: "onOptionsChange",
     value: function onOptionsChange() {
       this.panelCtrl.changedOptions = true;
-      console.log(this.panelCtrl.rulesHandler);
       this.render();
     }
   }, {

@@ -361,6 +361,7 @@
               <span class="gf-form-label width-8">
                 Props
               </span>
+              <!-- ID INPUT -->
               <div class="gf-form-select-wrapper">
                 <select
                   class="gf-form-input width-10"
@@ -379,7 +380,7 @@
                 <i
                   class="fa fa-w fa-remove pointer"
                   bs-tooltip="'Delete this mapping object'"
-                  ng-click="rule.removeShapeMap($index)"
+                  ng-click="rule.removeShapeMap($index);editor.onOptionsChange()"
                 ></i>
               </label>
               <label
@@ -390,7 +391,7 @@
                 <i
                   class="fa fa-w fa-eye pointer"
                   bs-tooltip="'Hide selected object graph in rule'"
-                  ng-click="shape.hide()"
+                  ng-click="shape.hide();editor.onOptionsChange()"
                 ></i>
               </label>
               <label
@@ -401,7 +402,7 @@
                 <i
                   class="fa fa-w fa-eye-slash pointer"
                   bs-tooltip="'show selected object graph in rule'"
-                  ng-click="shape.show()"
+                  ng-click="shape.show();editor.onOptionsChange()"
                 ></i>
               </label>
               <label
@@ -433,7 +434,7 @@
                 class="gf-form-input width-13"
                 ng-model="shape.pattern"
                 bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-                bs-typeahead="editor.getCellNames"
+                bs-typeahead="editor.getCellNamesForShape"
                 ng-blur="editor.onOptionsChange()"
                 data-min-length="0"
                 data-items="100"
@@ -447,7 +448,7 @@
               <label class="gf-form-label">
                 <i
                   class="fa fa-plus pointer"
-                  ng-click="rule.addShapeMap('/.*/')"
+                  ng-click="rule.addShapeMap('.*');editor.onOptionsChange()"
                   style="margin-right: 2px;"
                 ></i>
               </label>
@@ -534,7 +535,7 @@
                 class="gf-form-input width-13"
                 ng-model="text.pattern"
                 bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/text (see inspect tab)'"
-                bs-typeahead="editor.getCellNames"
+                bs-typeahead="editor.getCellNamesForText"
                 ng-blur="editor.onOptionsChange()"
                 data-min-length="0"
                 data-items="100"
@@ -636,7 +637,7 @@
                 class="gf-form-input width-13"
                 ng-model="link.pattern"
                 bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/text (see inspect tab)'"
-                bs-typeahead="editor.getCellNames"
+                bs-typeahead="editor.getCellNamesForLink"
                 ng-blur="editor.onOptionsChange()"
                 data-min-length="0"
                 data-items="100"

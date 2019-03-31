@@ -1,16 +1,24 @@
 import XGraph from "./graph_class";
+import StateHandler from "./statesHandler";
 
 export default class FlowchartHandler {
     /** @ngInject */
     constructor($scope, elem, ctrl, flowchart) {
+        u.log(0,"FlowchartHandler.constructor");
         this.$scope = $scope || null;
         this.$elem = elem.find(".flowchart-panel__chart");
-        this.flowchart = flowchart ;
+        this.flowchart = flowchart;
         this.ctrl = ctrl;
         this.xgraph;
+        this.stateHandler;
+
         // if (version != this.panel.version) this.migrate(this.rules)
         // else this.import(this.rules);
+
         this.initGraph();
+
+        this.stateHandler = new StateHandler(this.$scope, this.xgraph);
+
 
         // Events Render
         ctrl.events.on("render", () => {
@@ -19,18 +27,34 @@ export default class FlowchartHandler {
     }
 
     initGraph() {
-        let $container = $("<div></div>")
-        this.$elem.html($container)
-        this.xgraph = new XGraph($container[0],this.flowchart.source.xml.value);
+        let $container = $('<div id="flowchart_' + u.uniqueID + '" style="margin:auto;position:relative,width:100%;height:100%"></div>')
+        this.$elem.html($container);
+        this.xgraph = new XGraph($container[0], this.flowchart.source.xml.value);
         this.xgraph.drawGraph();
         if (this.flowchart.options.scale) this.xgraph.scaleGraph(true);
         if (this.flowchart.options.center) this.xgraph.centerGraph(true);
         if (this.flowchart.options.center) this.xgraph.lockGraph(true);
-        this.xgraph.refreshGraph();
+        let width = this.$elem.width;
+        let height = this.ctrl.height;
+        this.xgraph.refreshGraph(width, height);
+    }
+
+    SetUpdateStates(rules, series) {
+        // console.log("series ", series);
+        // console.log("rules ", rules);
+        this.stateHandler.setStates(rules, series);
+        this.stateHandler.updateStates();
+        u.log(0,"states",this.stateHandler.getStates());
     }
 
     render() {
-        console.log("flowchartHandler.render()");
-        this.xgraph.refreshGraph();
+        u.log(0,"flowchartHandler.render()");
+        let width = this.$elem.width();
+        let height = this.ctrl.height;
+        this.xgraph.refreshGraph(width, height)
+    }
+
+    getNamesByProp(prop) {
+        return this.xgraph.getOrignalCells(prop);
     }
 }

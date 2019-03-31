@@ -22,6 +22,7 @@ function () {
   function RulesHandler($scope, rules) {
     _classCallCheck(this, RulesHandler);
 
+    u.log(0, "RulesHandler.constructor");
     this.$scope = $scope || null;
     this.rules = rules; // if (version != this.panel.version) this.migrate(this.rules)
     // else this.import(this.rules);

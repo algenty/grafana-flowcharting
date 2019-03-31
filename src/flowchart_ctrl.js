@@ -19,15 +19,14 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.version = "0.2.0";
     this.$rootScope = $rootScope;
     this.$scope = $scope;
-    this.hiddenSeries = {};
     this.unitFormats = kbn.getUnitFormats();
-    this.changedSource;
     this.changedSource = true;
     this.changedData = true;
     this.changedOptions = true;
     this.rulesHandler;
     this.flowchartHandler;
     this.statesHandler;
+    this.series = [];
 
     // For Mapping with pointer
     this.onMapping = {
@@ -43,9 +42,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       format: "short",
       valueName: "current",
       // NEW PANEL
-      metrics: [],
       rules: [],
-      // OLD PANEL
       flowchart: {
         source: {
           type: "xml",
@@ -111,20 +108,22 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    console.debug("ctrl.onRender");
     if (this.changedData == true || this.changedOptions == true) {
-      // this.analyzeData();
-      // if (this.changedOptions == true) this.updateLink();
+      this.flowchartHandler.SetUpdateStates(this.panel.rules,this.series);
+      this.changedOptions == false;
+      this.changedData == false;
     }
   }
 
   onDataReceived(dataList) {
+    u.log(0,"ctrl.onDataReceived");
     this.changedData = true;
     // console.debug("received data");
     // console.debug(dataList);
     this.series = dataList.map(this.seriesHandler.bind(this));
     // console.debug("mapped dataList to series");
     // console.debug(this.series);
+    this.flowchartHandler.SetUpdateStates(this.panel.rules,this.series);
     this.render();
   }
 
@@ -144,9 +143,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
+    u.log(0,"flowchart.link")
     this.rulesHandler = new RulesHandler(scope, this.panel.rules);
     this.flowchartHandler = new FlowchartHandler(scope,elem, ctrl, this.panel.flowchart)
-    // this.mx = new MxHandler(scope, elem, attrs, ctrl);
   }
 
   exportSVG() {
