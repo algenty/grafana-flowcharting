@@ -1,4 +1,3 @@
-import * as angular from 'angular';
 import RuleHandler from "../src/rulesHandler";
 var scope = {
     ctrl : {
@@ -12,19 +11,18 @@ var scope = {
 var rules = scope.ctrl.panel.rules;
 
 describe("RuleHandler", function () {
-
+    let rh = new RuleHandler(scope,rules);
     test('Add & Remove', function () {
-        let rh = new RuleHandler(scope,rules);
-        rh.addRule("RULE1")
+        
+        rh.addRule("RULE1");
         expect(rh.getRules().length).toBe(1);
         expect(rh.countRules()).toBe(1);
-        rh.removeRule(0)
+        rh.removeRule(0);
         expect(rh.getRules().length).toBe(0);
         expect(rh.countRules()).toBe(0);
     });
 
     test('Up and Down', function () {
-        let rh = new RuleHandler(scope,rules);
         rh.addRule("RULE1");
         expect(rh.getRule(0).pattern).toBe('RULE1');
         rh.addRule("RULE2");
@@ -35,7 +33,6 @@ describe("RuleHandler", function () {
     });
 
     test('Clone', () => {
-        let rh = new RuleHandler(scope,rules);
         rh.addRule("RULE1");
         expect(rh.getRules().length).toBe(1);
         rh.cloneRule(rh.getRule(0));
