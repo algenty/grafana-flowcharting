@@ -135,7 +135,7 @@ module.exports = (grunt) => {
         },
         expand: true,
         cwd: '.',
-        src: ['**/*', '!node_modules/**', '!bower_components/**','!others/**', '!.git/**','!archives/**' ],
+        src: ['**/*', '!node_modules/**', '!bower_components/**','!others/**', '!.git/**','!archives/**', "!public/**" ],
         dest: 'grafana-flowcharting'
       }
     }

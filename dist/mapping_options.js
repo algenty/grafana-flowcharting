@@ -370,8 +370,6 @@ function () {
   }, {
     key: "addShapeToStyle",
     value: function addShapeToStyle(style) {
-      console.debug("mapping.addShapeToStyle");
-
       if (!style.shapeMaps) {
         style.shapeMaps = [];
       }

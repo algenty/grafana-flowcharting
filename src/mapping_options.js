@@ -262,7 +262,6 @@ export class MappingOptionsCtrl {
   // ON SHAPE
   //
   addShapeToStyle(style) {
-    console.debug("mapping.addShapeToStyle");
     if (!style.shapeMaps) {
       style.shapeMaps = [];
     }

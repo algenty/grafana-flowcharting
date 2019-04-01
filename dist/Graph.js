@@ -3580,12 +3580,10 @@ module.exports = function (urlParams) {
   mxStencilRegistry.packages = []; // Extends the default stencil registry to add dynamic loading
 
   mxStencilRegistry.getStencil = function (name) {
-    // console.debug("mxStencilRegistry.getStencil name", name)
     var result = mxStencilRegistry.stencils[name];
 
     if (result == null && mxCellRenderer.defaultShapes[name] == null && mxStencilRegistry.dynamicLoading) {
-      var basename = mxStencilRegistry.getBasenameForStencil(name); // console.debug("mxStencilRegistry.getStencil basename", basename)
-      // Loads stencil files and tries again
+      var basename = mxStencilRegistry.getBasenameForStencil(name); // Loads stencil files and tries again
 
       if (basename != null) {
         var libs = mxStencilRegistry.libraries[basename];

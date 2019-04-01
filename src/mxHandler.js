@@ -266,8 +266,6 @@ export default class MxPluginCtrl {
 
   eventGraph(me) {
     var self = this;
-    console.log("mouseEvent", me);
-    console.log("self.panelCtrl.onMapping", self.panelCtrl.onMapping);
     let id = null;
     let state = me.getState();
     // if on Cell
@@ -347,7 +345,7 @@ export default class MxPluginCtrl {
       let scale = _.replace(this.panel.flowchart.options.zoom, "%", "") / 100;
       this.graph.zoomTo(scale, true);
     } else {
-      if (!this.panel.flowchart.options.scale) graph.zoomActual();
+      if (!this.panel.flowchart.options.scale) this.graph.zoomActual();
     }
   }
 
@@ -390,18 +388,14 @@ export default class MxPluginCtrl {
             ? view.getState(_cell).text.lastValue
             : "",
         shape: view.getState(_cell).style[mxConstants.STYLE_SHAPE],
-        // mxShape : view.getState(cell).shape,
         fontColor: view.getState(_cell).style[mxConstants.STYLE_FONTCOLOR],
         fillColor: view.getState(_cell).style[mxConstants.STYLE_FILLCOLOR],
         strokeColor: view.getState(_cell).style[mxConstants.STYLE_STROKECOLOR],
-        // gradient: view.getState(_cell).style[mxConstants.STYLE_GRADIENTCOLOR],
         isEdge: _cell.isEdge(),
         isVertex: _cell.isVertex(),
         level: -1
       };
-      console.log("cell",cell)
       allCells.push(cell);
-      console.log("Style",view.getState(_cell).style);
     });
     return allCells;
   }
@@ -521,7 +515,6 @@ export default class MxPluginCtrl {
       let cell = model.getCell(id);
       if (cell) {
         this.graph.setCellStyles(style, color, [cell]);
-        // this.graph.setCellStyles(mxConstant.STYLE_GRADIENTCOLOR,  'none', [cell]);
       }
     }
   }
@@ -536,7 +529,6 @@ export default class MxPluginCtrl {
       this.graph.setCellStyles(this.STYLE_FILLCOLOR, old.fillColor, [cell]);
       this.graph.setCellStyles(this.STYLE_FONTCOLOR, old.fontColor, [cell]);
       this.graph.setCellStyles(this.STYLE_STROKECOLOR, old.strokeColor, [cell]);
-      this.graph.setCellStyles(this.STYLE_GRADIENTCOLOR, old.gradient, [cell]);
     }
   }
 

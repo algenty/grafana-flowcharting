@@ -208,8 +208,6 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onRender",
     value: function onRender() {
-      console.debug("ctrl.onRender");
-
       if (this.changedData == true || this.changedOptions == true) {
         this.analyzeData();
         if (this.changedOptions == true) this.updateLink();
