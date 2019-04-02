@@ -26,7 +26,7 @@ function () {
 
     _classCallCheck(this, FlowchartHandler);
 
-    u.log(0, "FlowchartHandler.constructor");
+    u.log(1, "FlowchartHandler.constructor()");
     this.$scope = $scope || null;
     this.$elem = elem.find(".flowchart-panel__chart");
     this.flowchart = flowchart;
@@ -60,16 +60,15 @@ function () {
   }, {
     key: "SetUpdateStates",
     value: function SetUpdateStates(rules, series) {
-      // console.log("series ", series);
-      // console.log("rules ", rules);
+      u.log(1, "flowchartHandler.SetUpdateStates()");
       this.stateHandler.setStates(rules, series);
       this.stateHandler.updateStates();
-      u.log(0, "states", this.stateHandler.getStates());
+      u.log(0, "flowchartHandler.SetUpdateStates() States", this.stateHandler.getStates());
     }
   }, {
     key: "render",
     value: function render() {
-      u.log(0, "flowchartHandler.render()");
+      u.log(1, "flowchartHandler.render()");
       var width = this.$elem.width();
       var height = this.ctrl.height;
       this.xgraph.refreshGraph(width, height);

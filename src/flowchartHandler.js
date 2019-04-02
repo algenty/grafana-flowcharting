@@ -4,7 +4,7 @@ import StateHandler from "./statesHandler";
 export default class FlowchartHandler {
     /** @ngInject */
     constructor($scope, elem, ctrl, flowchart) {
-        u.log(0,"FlowchartHandler.constructor");
+        u.log(1,"FlowchartHandler.constructor()");
         this.$scope = $scope || null;
         this.$elem = elem.find(".flowchart-panel__chart");
         this.flowchart = flowchart;
@@ -40,15 +40,14 @@ export default class FlowchartHandler {
     }
 
     SetUpdateStates(rules, series) {
-        // console.log("series ", series);
-        // console.log("rules ", rules);
+        u.log(1,"flowchartHandler.SetUpdateStates()");
         this.stateHandler.setStates(rules, series);
         this.stateHandler.updateStates();
-        u.log(0,"states",this.stateHandler.getStates());
+        u.log(0,"flowchartHandler.SetUpdateStates() States",this.stateHandler.getStates());
     }
 
     render() {
-        u.log(0,"flowchartHandler.render()");
+        u.log(1,"flowchartHandler.render()");
         let width = this.$elem.width();
         let height = this.ctrl.height;
         this.xgraph.refreshGraph(width, height)

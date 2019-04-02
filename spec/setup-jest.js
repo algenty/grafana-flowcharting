@@ -12,5 +12,8 @@ global.$ = $;
 import * as moment from "moment";
 global.moment = moment;
 
+import angular from "angular";
+global.angular = angular;
+
 global.logDisplay = false;
-global.logLevel = 2;
+global.logLevel = 0;

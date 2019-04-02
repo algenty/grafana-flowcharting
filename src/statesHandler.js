@@ -4,7 +4,7 @@ import XGraph from "./graph_class"
 export default class StateHandler {
     /** @ngInject */
     constructor($scope, xgraph) {
-        u.log(0,"StateHandler.constructor");
+        u.log(1,"StateHandler.constructor()");
         this.$scope = $scope;
         this.states = [];
         this.xgraph = xgraph;
@@ -61,7 +61,9 @@ export default class StateHandler {
     }
 
     setStates(rules, series) {
-        u.log(0,"statesHandler.setStates")
+        u.log(1,"statesHandler.setStates()");
+        u.log(0,"statesHandler.setStates() Rules",rules);
+        u.log(0,"statesHandler.setStates() Series",series);
         this.prepare();
         this.states.forEach(state => {
             rules.forEach(rule => {

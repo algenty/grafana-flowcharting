@@ -35,43 +35,44 @@ export default class Rule {
     }
 
     export() {
-        let sm = [];
-        let tm = [];
-        let lm = [];
-        let vm = [];
-        let rm = [];
-        this.shapeMaps.forEach(element => { sm.push(element.export()); });
-        this.textMaps.forEach(element => { tm.push(element.export()); });
-        this.linkMaps.forEach(element => { lm.push(element.export()); });
-        this.valueMaps.forEach(element => { vm.push(element.export()); });
-        this.rangeMaps.forEach(element => { rm.push(element.export()); });
-        return {
-            unit: this.unit,
-            type: this.type,
-            alias: this.alias,
-            aggregation: this,
-            decimals: this.decimals,
-            colors: this.colors,
-            style: this.style,
-            colorOn: this.colorOn,
-            textOn: this.textOn,
-            textReplace: this.textReplace,
-            textPattern: this.textPattern,
-            pattern: this.pattern,
-            dateFormat: this.dateFormat,
-            thresholds: this.thresholds,
-            invert: this.invert,
-            shapeProp: this.shapeProp,
-            shapeMaps: sm,
-            textProp: this.textProp,
-            textMaps: tm,
-            linkProp: this.linkProp,
-            linkMaps: lm,
-            mappingType: this.mappingType,
-            valueMaps: vm,
-            rangeMaps: rm,
-            sanitize: this.sanitize
-        }
+        // let sm = [];
+        // let tm = [];
+        // let lm = [];
+        // let vm = [];
+        // let rm = [];
+        // this.shapeMaps.forEach(element => { sm.push(element.export()); });
+        // this.textMaps.forEach(element => { tm.push(element.export()); });
+        // this.linkMaps.forEach(element => { lm.push(element.export()); });
+        // this.valueMaps.forEach(element => { vm.push(element.export()); });
+        // this.rangeMaps.forEach(element => { rm.push(element.export()); });
+        // return {
+        //     unit: this.unit,
+        //     type: this.type,
+        //     alias: this.alias,
+        //     aggregation: this,
+        //     decimals: this.decimals,
+        //     colors: this.colors,
+        //     style: this.style,
+        //     colorOn: this.colorOn,
+        //     textOn: this.textOn,
+        //     textReplace: this.textReplace,
+        //     textPattern: this.textPattern,
+        //     pattern: this.pattern,
+        //     dateFormat: this.dateFormat,
+        //     thresholds: this.thresholds,
+        //     invert: this.invert,
+        //     shapeProp: this.shapeProp,
+        //     shapeMaps: sm,
+        //     textProp: this.textProp,
+        //     textMaps: tm,
+        //     linkProp: this.linkProp,
+        //     linkMaps: lm,
+        //     mappingType: this.mappingType,
+        //     valueMaps: vm,
+        //     rangeMaps: rm,
+        //     sanitize: this.sanitize
+        // }
+        return JSON.stringify(this);
     }
 
     import(obj) {
@@ -92,18 +93,38 @@ export default class Rule {
         this.invert = obj.invert;
         this.shapeProp = obj.shapeProp;
         this.shapeMaps = [];
-        obj.shapeMaps.forEach(element => {
-            let sm = new ShapeMap(this, "");
-            sm.import()
+        obj.shapeMaps.forEach(map => {
+            let sm = new ShapeMap("");
+            sm.import(map)
             this.shapeMaps.push()
         });
         this.textProp = "id";
         this.textMaps = [];
+        obj.textMaps.forEach(map => {
+            let sm = new TextMap("");
+            sm.import(map)
+            this.textMaps.push()
+        });
         this.linkProp = "id";
         this.linkMaps = [];
+        obj.linkMaps.forEach(map => {
+            let sm = new LinkMap("");
+            sm.import(map)
+            this.linkMaps.push()
+        });
         this.mappingType = 1;
         this.valueMaps = [];
+        obj.valueMaps.forEach(map => {
+            let sm = new ValueMap("");
+            sm.import(map)
+            this.valueMaps.push()
+        });
         this.rangeMaps = [];
+        obj.rangeMaps.forEach(map => {
+            let sm = new ValueMap("");
+            sm.import(map)
+            this.rangeMaps.push()
+        });
         this.sanitize = false;
 
     }
@@ -147,7 +168,7 @@ export default class Rule {
     //
     // SHAPE MAPS
     //
-    addShapeMap(pattern) { let m = new ShapeMap(this, pattern); this.shapeMaps.push(m); }
+    addShapeMap(pattern) { let m = new ShapeMap(pattern); this.shapeMaps.push(m); }
     removeShapeMap(index) { this.shapeMaps.splice(index, 1); }
     getShapeMap(index) { return this.shapeMaps[index]; }
     getShapeMaps() { return this.shapeMaps; }
@@ -162,7 +183,7 @@ export default class Rule {
     //
     // TEXT MAPS
     //
-    addTextMap(pattern) { let m = new TextMap(this, pattern); this.textMaps.push(m); };
+    addTextMap(pattern) { let m = new TextMap(pattern); this.textMaps.push(m); };
     removeTextMap(index) { let m = this.textMaps[index]; this.textMaps = _.without(this.textMaps, m) };
     getTextMap(index) { return this.textMaps[index]; };
     getTextMaps() { return this.textMaps; }
@@ -178,7 +199,7 @@ export default class Rule {
     //
     // LINK MAPS
     //
-    addLinkMap(pattern) { let m = new LinkMap(this, pattern); this.linkMaps.push(m); };
+    addLinkMap(pattern) { let m = new LinkMap(pattern); this.linkMaps.push(m); };
     removeLinkMap(index) { let m = this.linkMaps[index]; this.linkMaps = _.without(this.linkMaps, m) };
     getLinkMap(index) { return this.linkMaps[index]; };
     getLinkMaps() { return this.linkMaps; }
@@ -193,7 +214,7 @@ export default class Rule {
     //
     // STRING VALUE MAPS
     //
-    addValueMap(value, text) { let m = new ValueMap(this, value, text); this.valueMaps.push(m); }
+    addValueMap(value, text) { let m = new ValueMap(value, text); this.valueMaps.push(m); }
     removeValueMap(index) { this.valueMaps.splice(index, 1); }
     getValueMap(index) { return this.valueMaps[index]; }
     getValueMaps() { return this.valueMaps; }
@@ -201,7 +222,7 @@ export default class Rule {
     //
     // STRING RANGE VALUE MAPS
     //
-    addRangeMap(from, to, text) { let m = new ValueMap(this, from, to, text); this.rangeMaps.push(m); }
+    addRangeMap(from, to, text) { let m = new ValueMap(from, to, text); this.rangeMaps.push(m); }
     removeRangeMap(index) { this.rangeMaps.splice(index, 1); }
     getRangeMap(index) { return this.rangeMaps[index]; }
     getRangeMaps() { return this.rangeMaps; }
@@ -362,9 +383,8 @@ export default class Rule {
 // ShapeMap Class
 //
 class ShapeMap {
-    constructor(rule, pattern) {
+    constructor(pattern) {
         this.id = u.uniqueID();
-        this.rule = rule;
         this.pattern = pattern;
         this.hidden = false;
     }
@@ -406,9 +426,8 @@ class ShapeMap {
 // TextMap Class
 //
 class TextMap {
-    constructor(rule, pattern) {
+    constructor(pattern) {
         this.id = u.uniqueID();
-        this.rule = rule;
         this.pattern = pattern;
         this.hidden = false;
     }
@@ -443,9 +462,8 @@ class TextMap {
 // LinkMap Class
 //
 class LinkMap {
-    constructor(rule, pattern) {
+    constructor(pattern) {
         this.id = u.uniqueID();
-        this.rule = rule;
         this.pattern = pattern;
         this.hidden = false;
     }

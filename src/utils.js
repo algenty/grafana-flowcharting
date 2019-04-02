@@ -191,13 +191,13 @@ module.exports = {
 
   matchString(str,pattern) {
     if(str === undefined || pattern === undefined || str.length === 0 || pattern.length === 0) {
-      u.log(0,"Match str="+str+" pattern="+pattern+ " FALSE");
+      u.log(0,"Match str="+str+" pattern="+pattern, false);
       return false;
     }
     const regex = this.stringToJsRegex(pattern);
     let matching = str.toString().match(regex);
     if (str === pattern || matching) {
-      u.log(0,"Match str="+str+" pattern="+pattern+ " TRUE");
+      u.log(0,"Match str="+str+" pattern="+pattern, true);
       return true;
     }
   },

@@ -13,7 +13,6 @@ var rules = scope.ctrl.panel.rules;
 describe("RuleHandler", function () {
     let rh = new RuleHandler(scope,rules);
     test('Add & Remove', function () {
-        
         rh.addRule("RULE1");
         expect(rh.getRules().length).toBe(1);
         expect(rh.countRules()).toBe(1);

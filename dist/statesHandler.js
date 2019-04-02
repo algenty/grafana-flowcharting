@@ -24,7 +24,7 @@ function () {
   function StateHandler($scope, xgraph) {
     _classCallCheck(this, StateHandler);
 
-    u.log(0, "StateHandler.constructor");
+    u.log(1, "StateHandler.constructor()");
     this.$scope = $scope;
     this.states = [];
     this.xgraph = xgraph;
@@ -114,7 +114,9 @@ function () {
   }, {
     key: "setStates",
     value: function setStates(rules, series) {
-      u.log(0, "statesHandler.setStates");
+      u.log(1, "statesHandler.setStates()");
+      u.log(0, "statesHandler.setStates() Rules", rules);
+      u.log(0, "statesHandler.setStates() Series", series);
       this.prepare();
       this.states.forEach(function (state) {
         rules.forEach(function (rule) {

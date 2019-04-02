@@ -12,7 +12,7 @@ export class MappingOptionsCtrl {
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
     this.flowchartHandler = $scope.ctrl.flowchartHandler;
     this.unitFormats = kbn.getUnitFormats();
-    this.colorModes = [
+    this.style = [
       { text: "Disabled", value: null },
       { text: "Stroke", value: 'strokeColor' },
       { text: "Fill", value: 'fillColor' },

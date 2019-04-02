@@ -52,6 +52,10 @@ function () {
     value: function setState(rule, serie) {
       var _this2 = this;
 
+      u.log(1, "state_class.setState()");
+      u.log(0, "state_class.setState() Rule", rule);
+      u.log(0, "state_class.setState() Serie", serie);
+
       if (rule.matchSerie(serie)) {
         var shapeMaps = rule.getShapeMaps();
         var textMaps = rule.getTextMaps();

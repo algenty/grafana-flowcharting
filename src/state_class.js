@@ -30,6 +30,9 @@ export default class State {
   }
 
   setState(rule, serie) {
+    u.log(1,"state_class.setState()");
+    u.log(0,"state_class.setState() Rule",rule);
+    u.log(0,"state_class.setState() Serie",serie);
     if (rule.matchSerie(serie)) {
       let shapeMaps = rule.getShapeMaps();
       let textMaps = rule.getTextMaps();

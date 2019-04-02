@@ -170,7 +170,8 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
-      u.log(0, "ctrl.onDataReceived");
+      u.log(1, "ctrl.onDataReceived()");
+      u.log(0, "ctrl.onDataReceived()", dataList);
       this.changedData = true; // console.debug("received data");
       // console.debug(dataList);
 
@@ -200,7 +201,7 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
-      u.log(0, "flowchart.link");
+      u.log(1, "flowchart.link()");
       this.rulesHandler = new _rulesHandler.default(scope, this.panel.rules);
       this.flowchartHandler = new _flowchartHandler.default(scope, elem, ctrl, this.panel.flowchart);
     }

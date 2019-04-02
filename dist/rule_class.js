@@ -52,53 +52,44 @@ function () {
   _createClass(Rule, [{
     key: "export",
     value: function _export() {
-      var sm = [];
-      var tm = [];
-      var lm = [];
-      var vm = [];
-      var rm = [];
-      this.shapeMaps.forEach(function (element) {
-        sm.push(element.export());
-      });
-      this.textMaps.forEach(function (element) {
-        tm.push(element.export());
-      });
-      this.linkMaps.forEach(function (element) {
-        lm.push(element.export());
-      });
-      this.valueMaps.forEach(function (element) {
-        vm.push(element.export());
-      });
-      this.rangeMaps.forEach(function (element) {
-        rm.push(element.export());
-      });
-      return {
-        unit: this.unit,
-        type: this.type,
-        alias: this.alias,
-        aggregation: this,
-        decimals: this.decimals,
-        colors: this.colors,
-        style: this.style,
-        colorOn: this.colorOn,
-        textOn: this.textOn,
-        textReplace: this.textReplace,
-        textPattern: this.textPattern,
-        pattern: this.pattern,
-        dateFormat: this.dateFormat,
-        thresholds: this.thresholds,
-        invert: this.invert,
-        shapeProp: this.shapeProp,
-        shapeMaps: sm,
-        textProp: this.textProp,
-        textMaps: tm,
-        linkProp: this.linkProp,
-        linkMaps: lm,
-        mappingType: this.mappingType,
-        valueMaps: vm,
-        rangeMaps: rm,
-        sanitize: this.sanitize
-      };
+      // let sm = [];
+      // let tm = [];
+      // let lm = [];
+      // let vm = [];
+      // let rm = [];
+      // this.shapeMaps.forEach(element => { sm.push(element.export()); });
+      // this.textMaps.forEach(element => { tm.push(element.export()); });
+      // this.linkMaps.forEach(element => { lm.push(element.export()); });
+      // this.valueMaps.forEach(element => { vm.push(element.export()); });
+      // this.rangeMaps.forEach(element => { rm.push(element.export()); });
+      // return {
+      //     unit: this.unit,
+      //     type: this.type,
+      //     alias: this.alias,
+      //     aggregation: this,
+      //     decimals: this.decimals,
+      //     colors: this.colors,
+      //     style: this.style,
+      //     colorOn: this.colorOn,
+      //     textOn: this.textOn,
+      //     textReplace: this.textReplace,
+      //     textPattern: this.textPattern,
+      //     pattern: this.pattern,
+      //     dateFormat: this.dateFormat,
+      //     thresholds: this.thresholds,
+      //     invert: this.invert,
+      //     shapeProp: this.shapeProp,
+      //     shapeMaps: sm,
+      //     textProp: this.textProp,
+      //     textMaps: tm,
+      //     linkProp: this.linkProp,
+      //     linkMaps: lm,
+      //     mappingType: this.mappingType,
+      //     valueMaps: vm,
+      //     rangeMaps: rm,
+      //     sanitize: this.sanitize
+      // }
+      return JSON.stringify(this);
     }
   }, {
     key: "import",
@@ -122,19 +113,43 @@ function () {
       this.invert = obj.invert;
       this.shapeProp = obj.shapeProp;
       this.shapeMaps = [];
-      obj.shapeMaps.forEach(function (element) {
-        var sm = new ShapeMap(_this, "");
-        sm.import();
+      obj.shapeMaps.forEach(function (map) {
+        var sm = new ShapeMap("");
+        sm.import(map);
 
         _this.shapeMaps.push();
       });
       this.textProp = "id";
       this.textMaps = [];
+      obj.textMaps.forEach(function (map) {
+        var sm = new TextMap("");
+        sm.import(map);
+
+        _this.textMaps.push();
+      });
       this.linkProp = "id";
       this.linkMaps = [];
+      obj.linkMaps.forEach(function (map) {
+        var sm = new LinkMap("");
+        sm.import(map);
+
+        _this.linkMaps.push();
+      });
       this.mappingType = 1;
       this.valueMaps = [];
+      obj.valueMaps.forEach(function (map) {
+        var sm = new ValueMap("");
+        sm.import(map);
+
+        _this.valueMaps.push();
+      });
       this.rangeMaps = [];
+      obj.rangeMaps.forEach(function (map) {
+        var sm = new ValueMap("");
+        sm.import(map);
+
+        _this.rangeMaps.push();
+      });
       this.sanitize = false;
     }
   }, {
@@ -183,7 +198,7 @@ function () {
   }, {
     key: "addShapeMap",
     value: function addShapeMap(pattern) {
-      var m = new ShapeMap(this, pattern);
+      var m = new ShapeMap(pattern);
       this.shapeMaps.push(m);
     }
   }, {
@@ -216,7 +231,7 @@ function () {
   }, {
     key: "addTextMap",
     value: function addTextMap(pattern) {
-      var m = new TextMap(this, pattern);
+      var m = new TextMap(pattern);
       this.textMaps.push(m);
     }
   }, {
@@ -250,7 +265,7 @@ function () {
   }, {
     key: "addLinkMap",
     value: function addLinkMap(pattern) {
-      var m = new LinkMap(this, pattern);
+      var m = new LinkMap(pattern);
       this.linkMaps.push(m);
     }
   }, {
@@ -284,7 +299,7 @@ function () {
   }, {
     key: "addValueMap",
     value: function addValueMap(value, text) {
-      var m = new ValueMap(this, value, text);
+      var m = new ValueMap(value, text);
       this.valueMaps.push(m);
     }
   }, {
@@ -308,7 +323,7 @@ function () {
   }, {
     key: "addRangeMap",
     value: function addRangeMap(from, to, text) {
-      var m = new ValueMap(this, from, to, text);
+      var m = new ValueMap(from, to, text);
       this.rangeMaps.push(m);
     }
   }, {
@@ -509,11 +524,10 @@ exports.default = Rule;
 var ShapeMap =
 /*#__PURE__*/
 function () {
-  function ShapeMap(rule, pattern) {
+  function ShapeMap(pattern) {
     _classCallCheck(this, ShapeMap);
 
     this.id = u.uniqueID();
-    this.rule = rule;
     this.pattern = pattern;
     this.hidden = false;
   }
@@ -587,11 +601,10 @@ function () {
 var TextMap =
 /*#__PURE__*/
 function () {
-  function TextMap(rule, pattern) {
+  function TextMap(pattern) {
     _classCallCheck(this, TextMap);
 
     this.id = u.uniqueID();
-    this.rule = rule;
     this.pattern = pattern;
     this.hidden = false;
   }
@@ -653,11 +666,10 @@ function () {
 var LinkMap =
 /*#__PURE__*/
 function () {
-  function LinkMap(rule, pattern) {
+  function LinkMap(pattern) {
     _classCallCheck(this, LinkMap);
 
     this.id = u.uniqueID();
-    this.rule = rule;
     this.pattern = pattern;
     this.hidden = false;
   }

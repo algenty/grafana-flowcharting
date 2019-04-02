@@ -202,8 +202,8 @@
             <div class="gf-form-select-wrapper width-10">
               <select
                 class="gf-form-input"
-                ng-model="rule.colorMode"
-                ng-options="c.value as c.text for c in editor.colorModes"
+                ng-model="rule.style"
+                ng-options="c.value as c.text for c in editor.style"
                 ng-change="editor.onOptionsChange()"
               ></select>
             </div>

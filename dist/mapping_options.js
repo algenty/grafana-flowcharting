@@ -36,7 +36,7 @@ function () {
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
     this.flowchartHandler = $scope.ctrl.flowchartHandler;
     this.unitFormats = _kbn.default.getUnitFormats();
-    this.colorModes = [{
+    this.style = [{
       text: "Disabled",
       value: null
     }, {

@@ -7,6 +7,6 @@ loadPluginCss({
 });
 
 window.logLevel = 0;
-window.logDisplay = false;
+window.logDisplay = true;
 
 export { FlowchartCtrl as PanelCtrl };

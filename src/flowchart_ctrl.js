@@ -116,7 +116,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-    u.log(0,"ctrl.onDataReceived");
+    u.log(1,"ctrl.onDataReceived()");
+    u.log(0,"ctrl.onDataReceived()",dataList);
     this.changedData = true;
     // console.debug("received data");
     // console.debug(dataList);
@@ -143,7 +144,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
-    u.log(0,"flowchart.link")
+    u.log(1,"flowchart.link()")
     this.rulesHandler = new RulesHandler(scope, this.panel.rules);
     this.flowchartHandler = new FlowchartHandler(scope,elem, ctrl, this.panel.flowchart)
   }
