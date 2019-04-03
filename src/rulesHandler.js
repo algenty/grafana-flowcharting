@@ -2,13 +2,17 @@ import Rule from "./rule_class";
 
 export default class RulesHandler {
     /** @ngInject */
-    constructor($scope,rules) {
+    constructor($scope,data) {
         u.log(1,"RulesHandler.constructor()");
         u.log(0,"RulesHandler.constructor() Rules",rules);
         this.$scope = $scope || null;
         this.rules = rules ;
+        this.data = data;
         // if (version != this.panel.version) this.migrate(this.rules)
         // else this.import(this.rules);
+        if( this.data != undefined && this.data != null && this.data.length >0 ) {
+            this.import(this.data);
+        }
         
     }
 
@@ -17,26 +21,23 @@ export default class RulesHandler {
     }
 
     export() {
-        let rules = [];
-        this.getRules().forEach(rule => {
-            rules.push(rule.export());
-        });
-        return rules;
     }
 
     import(obj) {
         obj.forEach(rule => {
-            let newRule = new Rule('');
-            newRule.import(rule);
+            let data = {}
+            let newRule = new Rule('', data);
             this.rules.push(newRule);
+            this.data.push(data);
         });
     }
 
     migrate(obj) {
         obj.forEach(rule => {
-            let newRule = new Rule('');
-            newRule.migrate(rule);
+            let data = {}
+            let newRule = new Rule('' , data);
             this.rules.push(newRule);
+            this.data.push(data);
         });
     }
 
@@ -49,8 +50,10 @@ export default class RulesHandler {
     }
 
     addRule(pattern) {
-        const newRule = new Rule(pattern);
+        let data = {}
+        const newRule = new Rule(pattern,data);
         this.rules.push(newRule);
+        this.data.push(data);
     }
 
     countRules() {
@@ -61,10 +64,13 @@ export default class RulesHandler {
     removeRule(index) {
         // this.rules = _.without(this.rules, rule);
         this.rules.splice(index, 1);
+        this.data.splice(index, 1);
     }
 
     cloneRule(rule) {
-        let newRule = angular.copy(rule);
+        let data = rule.getData();
+        let newData = angular.copy(data);
+        let 
         const rules = this.rules;
         const rulesCount = rules.length;
         let indexToInsert = rulesCount;

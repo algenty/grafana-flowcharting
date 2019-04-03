@@ -2,7 +2,7 @@ import kbn from "app/core/utils/kbn";
 
 export default class Rule {
     /** @ngInject */
-    constructor(pattern) {
+    constructor(pattern,data) {
         this.unit = "short";
         this.type = "number";
         this.alias = "";
@@ -34,50 +34,17 @@ export default class Rule {
         this.sanitize = false;
     }
 
+    getData() {
+        return this.data;
+    }
+
     export() {
-        // let sm = [];
-        // let tm = [];
-        // let lm = [];
-        // let vm = [];
-        // let rm = [];
-        // this.shapeMaps.forEach(element => { sm.push(element.export()); });
-        // this.textMaps.forEach(element => { tm.push(element.export()); });
-        // this.linkMaps.forEach(element => { lm.push(element.export()); });
-        // this.valueMaps.forEach(element => { vm.push(element.export()); });
-        // this.rangeMaps.forEach(element => { rm.push(element.export()); });
-        // return {
-        //     unit: this.unit,
-        //     type: this.type,
-        //     alias: this.alias,
-        //     aggregation: this,
-        //     decimals: this.decimals,
-        //     colors: this.colors,
-        //     style: this.style,
-        //     colorOn: this.colorOn,
-        //     textOn: this.textOn,
-        //     textReplace: this.textReplace,
-        //     textPattern: this.textPattern,
-        //     pattern: this.pattern,
-        //     dateFormat: this.dateFormat,
-        //     thresholds: this.thresholds,
-        //     invert: this.invert,
-        //     shapeProp: this.shapeProp,
-        //     shapeMaps: sm,
-        //     textProp: this.textProp,
-        //     textMaps: tm,
-        //     linkProp: this.linkProp,
-        //     linkMaps: lm,
-        //     mappingType: this.mappingType,
-        //     valueMaps: vm,
-        //     rangeMaps: rm,
-        //     sanitize: this.sanitize
-        // }
         return JSON.stringify(this);
     }
 
     import(obj) {
-        this.unit = obj.unit;
-        this.type = obj.type;
+        this.data.unit = obj.unit;
+        this.data.type = obj.type;
         this.alias = obj.alias;
         this.aggregation = obj.aggregation;
         this.decimals = obj.decimals;

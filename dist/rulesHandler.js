@@ -19,14 +19,19 @@ var RulesHandler =
 /*#__PURE__*/
 function () {
   /** @ngInject */
-  function RulesHandler($scope, rules) {
+  function RulesHandler($scope, data) {
     _classCallCheck(this, RulesHandler);
 
     u.log(1, "RulesHandler.constructor()");
     u.log(0, "RulesHandler.constructor() Rules", rules);
     this.$scope = $scope || null;
-    this.rules = rules; // if (version != this.panel.version) this.migrate(this.rules)
+    this.rules = rules;
+    this.data = data; // if (version != this.panel.version) this.migrate(this.rules)
     // else this.import(this.rules);
+
+    if (this.data != undefined && this.data != null && this.data.length > 0) {
+      this.import(this.data);
+    }
   }
 
   _createClass(RulesHandler, [{
@@ -36,23 +41,19 @@ function () {
     }
   }, {
     key: "export",
-    value: function _export() {
-      var rules = [];
-      this.getRules().forEach(function (rule) {
-        rules.push(rule.export());
-      });
-      return rules;
-    }
+    value: function _export() {}
   }, {
     key: "import",
     value: function _import(obj) {
       var _this = this;
 
       obj.forEach(function (rule) {
-        var newRule = new _rule_class.default('');
-        newRule.import(rule);
+        var data = {};
+        var newRule = new _rule_class.default('', data);
 
         _this.rules.push(newRule);
+
+        _this.data.push(data);
       });
     }
   }, {
@@ -61,10 +62,12 @@ function () {
       var _this2 = this;
 
       obj.forEach(function (rule) {
-        var newRule = new _rule_class.default('');
-        newRule.migrate(rule);
+        var data = {};
+        var newRule = new _rule_class.default('', data);
 
         _this2.rules.push(newRule);
+
+        _this2.data.push(data);
       });
     }
   }, {
@@ -80,8 +83,10 @@ function () {
   }, {
     key: "addRule",
     value: function addRule(pattern) {
-      var newRule = new _rule_class.default(pattern);
+      var data = {};
+      var newRule = new _rule_class.default(pattern, data);
       this.rules.push(newRule);
+      this.data.push(data);
     }
   }, {
     key: "countRules",
@@ -93,6 +98,7 @@ function () {
     value: function removeRule(index) {
       // this.rules = _.without(this.rules, rule);
       this.rules.splice(index, 1);
+      this.data.splice(index, 1);
     }
   }, {
     key: "cloneRule",

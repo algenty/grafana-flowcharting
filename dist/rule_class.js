@@ -19,7 +19,7 @@ var Rule =
 /*#__PURE__*/
 function () {
   /** @ngInject */
-  function Rule(pattern) {
+  function Rule(pattern, data) {
     _classCallCheck(this, Rule);
 
     this.unit = "short";
@@ -50,45 +50,13 @@ function () {
   }
 
   _createClass(Rule, [{
+    key: "getData",
+    value: function getData() {
+      return this.data;
+    }
+  }, {
     key: "export",
     value: function _export() {
-      // let sm = [];
-      // let tm = [];
-      // let lm = [];
-      // let vm = [];
-      // let rm = [];
-      // this.shapeMaps.forEach(element => { sm.push(element.export()); });
-      // this.textMaps.forEach(element => { tm.push(element.export()); });
-      // this.linkMaps.forEach(element => { lm.push(element.export()); });
-      // this.valueMaps.forEach(element => { vm.push(element.export()); });
-      // this.rangeMaps.forEach(element => { rm.push(element.export()); });
-      // return {
-      //     unit: this.unit,
-      //     type: this.type,
-      //     alias: this.alias,
-      //     aggregation: this,
-      //     decimals: this.decimals,
-      //     colors: this.colors,
-      //     style: this.style,
-      //     colorOn: this.colorOn,
-      //     textOn: this.textOn,
-      //     textReplace: this.textReplace,
-      //     textPattern: this.textPattern,
-      //     pattern: this.pattern,
-      //     dateFormat: this.dateFormat,
-      //     thresholds: this.thresholds,
-      //     invert: this.invert,
-      //     shapeProp: this.shapeProp,
-      //     shapeMaps: sm,
-      //     textProp: this.textProp,
-      //     textMaps: tm,
-      //     linkProp: this.linkProp,
-      //     linkMaps: lm,
-      //     mappingType: this.mappingType,
-      //     valueMaps: vm,
-      //     rangeMaps: rm,
-      //     sanitize: this.sanitize
-      // }
       return JSON.stringify(this);
     }
   }, {
@@ -96,8 +64,8 @@ function () {
     value: function _import(obj) {
       var _this = this;
 
-      this.unit = obj.unit;
-      this.type = obj.type;
+      this.data.unit = obj.unit;
+      this.data.type = obj.type;
       this.alias = obj.alias;
       this.aggregation = obj.aggregation;
       this.decimals = obj.decimals;
