@@ -10,20 +10,18 @@ Complexe Diagram and flowchart for grafana based on mxGraph librairies, see draw
   - And more ... (Edit through draw.io)
  
  ## examples
- ![Diagram](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/example.png?raw=true)
+ - Technical schema example
+ <img src="src/img/archi_example.png?raw=true" width="800">
+ - workflows or subways example
+ <img src="src/img/subway_example.png?raw=true" width="800">
  
 See more example at draw.io
 
- ## in grafana
- ![editor](dist/img/editor_example.png?raw=true)
- ![tab2](dist/img/editor_tab2.png?raw=true)
- ![tab2](dist/img/editor_tab3.png?raw=true)
- 
-
 # Features
 
-## 0.3
-  - Clean code and optimize display.
+
+## 0.2.5 (03/04/19)
+  - Bugs fix.
   - Compress and uncompress button under xml source to optimize space in db
   - Prettyfier and minifier of xml source
   - Mapping Helper
@@ -36,7 +34,7 @@ See more example at draw.io
   - Invert stroke color of arrow options
   - Coloring Gradient is used on shape
 
-## 0.2
+## 0.2 (18/03/19)
 ### Works
   - Display graph through xml definition
   - Calibrate display (scale, center, background)
@@ -54,6 +52,7 @@ See more example at draw.io
 
 ## 1.0 Pull request
   - Link on shape/text
+  - Import Libs shapes from draw.io or custom libs. 
   - Inverse stroke color for connector/edge to see it according theme.
   - Export SVG options.
   - Tooltips on error.
