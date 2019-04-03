@@ -27,7 +27,6 @@ module.exports = {
     if (_encode) {
       try {
         data = encodeURIComponent(data);
-        return data;
       } catch (e) {
         console.error(e);
         return;
@@ -36,7 +35,7 @@ module.exports = {
 
     if (deflate && data.length > 0) {
       try {
-        data = bytesToString(pako.deflateRaw(data));
+        data = this.bytesToString(pako.deflateRaw(data));
       } catch (e) {
         console.error(e);
         return;
@@ -59,7 +58,7 @@ module.exports = {
   },
   isencoded: function isencoded(data) {
     try {
-      var node = parseXml(data).documentElement;
+      var node = this.parseXml(data).documentElement;
 
       if (node != null && node.nodeName == "mxfile") {
         var diagrams = node.getElementsByTagName("diagram");
@@ -67,9 +66,9 @@ module.exports = {
         if (diagrams.length > 0) {
           return true;
         }
-      } else return false;
+      } else return data.indexOf('mxGraphModel') == -1;
     } catch (error) {
-      return false;
+      return true;
     }
 
     return false;

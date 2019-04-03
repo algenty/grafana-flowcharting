@@ -3357,8 +3357,8 @@ module.exports = function (urlParams) {
       } else {
         var arcSize = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.LINE_ARCSIZE) / 2;
         var size = (parseInt(mxUtils.getValue(this.style, 'jumpSize', Graph.defaultJumpSize)) - 2) / 2 + this.strokewidth;
-        var style = mxUtils.getValue(this.style, 'jumpStyle', 'none');
-        var f = Editor.jumpSizeRatio;
+        var style = mxUtils.getValue(this.style, 'jumpStyle', 'none'); // var f = Editor.jumpSizeRatio;
+
         var moveTo = true;
         var last = null;
         var len = null;
@@ -3580,12 +3580,10 @@ module.exports = function (urlParams) {
   mxStencilRegistry.packages = []; // Extends the default stencil registry to add dynamic loading
 
   mxStencilRegistry.getStencil = function (name) {
-    // console.debug("mxStencilRegistry.getStencil name", name)
     var result = mxStencilRegistry.stencils[name];
 
     if (result == null && mxCellRenderer.defaultShapes[name] == null && mxStencilRegistry.dynamicLoading) {
-      var basename = mxStencilRegistry.getBasenameForStencil(name); // console.debug("mxStencilRegistry.getStencil basename", basename)
-      // Loads stencil files and tries again
+      var basename = mxStencilRegistry.getBasenameForStencil(name); // Loads stencil files and tries again
 
       if (basename != null) {
         var libs = mxStencilRegistry.libraries[basename];

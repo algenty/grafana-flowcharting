@@ -4,7 +4,7 @@ import kbn from "app/core/utils/kbn";
 import { mappingOptionsTab } from "./mapping_options";
 import { flowchartOptionsTab } from "./flowchart_options";
 import { inspectOptionsTab } from "./inspect_options";
-import moment from 'moment';
+import moment from "moment";
 import _ from "lodash";
 import { plugin } from "./plugin";
 // import mxgraph from './mxgraph';
@@ -20,11 +20,18 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.changedSource;
     this.shapeStates = [];
     this.textStates = [];
+    this.linkStates = [];
     this.graph;
     this.mx;
     this.changedSource = true;
     this.changedData = true;
     this.changedOptions = true;
+    // For Mapping with pointer
+    this.onMapping = {
+      active: false, // boolean if pointer mapping is active
+      object: undefined, // ojb to return id of mapping
+      idFocus: undefined // id of dom
+    };
 
     // OLD OPTIONS
     this.options = {
@@ -82,11 +89,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           thresholds: [],
           invert: false,
           shapeSeq: 1,
-          shapeProp: 'id',
+          shapeProp: "id",
           shapeMaps: [],
           textSeq: 1,
-          textProp: 'id',
+          textProp: "id",
           textMaps: [],
+          linkProp: "id",
+          linkMaps: [],
           mappingType: 1
         }
       ],
@@ -96,7 +105,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           type: "xml",
           xml: {
             //value: '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>',
-            value: '<mxGraphModel dx="1394" dy="796" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="arrow-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-grafana" target="shape-love" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-grafana" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;shadow=1;" parent="1" vertex="1"><mxGeometry x="10" y="10" width="120" height="60" as="geometry"/></mxCell><mxCell id="arrow-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-love" target="shape-mxgraph" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-love" value="love" style="triangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;shadow=1;" parent="1" vertex="1"><mxGeometry x="210" width="60" height="80" as="geometry"/></mxCell><mxCell id="shape-mxgraph" value="mxGraph" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" parent="1" vertex="1"><mxGeometry x="340" width="120" height="80" as="geometry"/></mxCell><mxCell id="text-grafana" value="Le text : TextVal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="9" y="50" width="120" height="20" as="geometry"/></mxCell><mxCell id="text-arrow1" value="Text 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="150" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-arrow2" value="Text 3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="280" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-mxgraph" value="Text 4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="380" y="50" width="40" height="20" as="geometry"/></mxCell></root></mxGraphModel>',
+            // value: '<mxGraphModel dx="1394" dy="796" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="arrow-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-grafana" target="shape-love" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-grafana" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;shadow=1;" parent="1" vertex="1"><mxGeometry x="10" y="10" width="120" height="60" as="geometry"/></mxCell><mxCell id="arrow-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-love" target="shape-mxgraph" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-love" value="love" style="triangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;shadow=1;" parent="1" vertex="1"><mxGeometry x="210" width="60" height="80" as="geometry"/></mxCell><mxCell id="shape-mxgraph" value="mxGraph" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" parent="1" vertex="1"><mxGeometry x="340" width="120" height="80" as="geometry"/></mxCell><mxCell id="text-grafana" value="Le text : TextVal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="9" y="50" width="120" height="20" as="geometry"/></mxCell><mxCell id="text-arrow1" value="Text 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="150" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-arrow2" value="Text 3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="280" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-mxgraph" value="Text 4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="380" y="50" width="40" height="20" as="geometry"/></mxCell></root></mxGraphModel>',
+            value:
+              '<mxGraphModel dx="1073" dy="521" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="arrow-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-grafana" target="shape-love" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><object label="Grafana" href="www.google.fr" id="shape-grafana"><mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;shadow=1;" parent="1" vertex="1"><mxGeometry x="10" y="10" width="120" height="60" as="geometry"/></mxCell></object><mxCell id="arrow-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-love" target="shape-mxgraph" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-love" value="loves" style="triangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;shadow=1;" parent="1" vertex="1"><mxGeometry x="210" width="60" height="80" as="geometry"/></mxCell><mxCell id="shape-mxgraph" value="mxGraph" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" parent="1" vertex="1"><mxGeometry x="340" width="120" height="80" as="geometry"/></mxCell><mxCell id="text-grafana" value="MyText : TextVal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="9" y="50" width="120" height="20" as="geometry"/></mxCell><mxCell id="text-arrow1" value="Text 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="150" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-arrow2" value="Text 3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="280" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-mxgraph" value="Text 4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="380" y="50" width="40" height="20" as="geometry"/></mxCell></root></mxGraphModel>'
           },
           url: {
             value: "http://<source>:<port>/<pathToXml>"
@@ -153,9 +164,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    console.debug("ctrl.onRender");
     if (this.changedData == true || this.changedOptions == true) {
       this.analyzeData();
+      if (this.changedOptions == true) this.updateLink();
     }
   }
 
@@ -287,7 +298,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
                 // if level is upper of older level : change state
                 if (level > _state.level) {
                   // if always or display when warn/err
-                  if(_style.colorOn == "a"||(_style.colorOn == "wc" && level > 0)) {
+                  if (
+                    _style.colorOn == "a" ||
+                    (_style.colorOn == "wc" && level > 0)
+                  ) {
                     _.pull(this.shapeStates, _state);
                     this.shapeStates.push(new_state);
                   }
@@ -295,23 +309,26 @@ class FlowchartCtrl extends MetricsPanelCtrl {
                 // else nothing todo, keep old
               } else {
                 // if always or display when warn/err
-                if(_style.colorOn == "a"||(_style.colorOn == "wc" && level > 0)) {
+                if (
+                  _style.colorOn == "a" ||
+                  (_style.colorOn == "wc" && level > 0)
+                ) {
                   this.shapeStates.push(new_state);
                 }
               }
             }
           });
           // End For Each Shape
-        //   console.debug(
-        //     "analyzeDataForShape|" +
-        //       _style.aggregation +
-        //       " = " +
-        //       value +
-        //       " for " +
-        //       _serie.alias +
-        //       "Level = " +
-        //       level
-        //   );
+          //   console.debug(
+          //     "analyzeDataForShape|" +
+          //       _style.aggregation +
+          //       " = " +
+          //       value +
+          //       " for " +
+          //       _serie.alias +
+          //       "Level = " +
+          //       level
+          //   );
         }
       });
       // End For Each Styles
@@ -364,7 +381,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
               });
 
               // Adapte value
-              let textValue = this.getFormattedValue(value,_style);
+              let textValue = this.getFormattedValue(value, _style);
               if (_style.textOn == "n") textValue = "";
               if (_style.textOn == "wc" && level < 1) textValue = "";
               if (_style.textOn == "co" && level != 3) textValue = "";
@@ -421,6 +438,45 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // );
   }
 
+  updateLink() {
+    console.debug("flowchart_ctrl.updateLink")
+    this.linkStates = [];
+    // Begin For Each Styles
+    _.each(this.panel.styles, _style => {
+      // Begin For Each Link
+      _.each(_style.linkMaps, _link => {
+        // not hidden or not never
+        if (
+          _link === undefined ||
+          _link === null ||
+          _link.pattern.length == 0 ||
+          _link.hidden != true
+        ) {
+            let _state = _.find(this.linkStates, _state => {
+              return _state.pattern == _link.pattern;
+            });
+            let linkTargetBlank = _style.linkTargetBlank;
+            let linkUrl = _style.linkUrl;
+            let new_state = {
+              pattern: _link.pattern,
+              linkTargetBlank: linkTargetBlank,
+              linkUrl: linkUrl
+            };
+
+            if (_state != null && _state != undefined) {
+              _.pull(this.linkStates, _state);
+              this.linkStates.push(new_state);
+            }
+            else {
+            this.linkStates.push(new_state);
+            }
+          }
+      });
+      // End For Each link
+    });
+    // End For Each Styles
+  }
+
   getColorForValue(value, style) {
     if (!style.thresholds || style.thresholds.length == 0) {
       return null;
@@ -434,36 +490,42 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     return _.first(style.colors);
   }
 
-  getFormattedValue(value,style) {
+  getFormattedValue(value, style) {
     // console.log("getFormattedValue style", style)
-    if(style.type === 'number') {
-      if(!_.isFinite(value)) return "Invalid Number";
+    if (style.type === "number") {
+      if (!_.isFinite(value)) return "Invalid Number";
       if (value === null || value === void 0) {
-        return '-';
+        return "-";
       }
       let decimals = this.decimalPlaces(value);
-      decimals = (typeof style.decimals === "number") ? Math.min(style.decimals, decimals) : decimals;
+      decimals =
+        typeof style.decimals === "number"
+          ? Math.min(style.decimals, decimals)
+          : decimals;
       return kbn.valueFormats[style.unit](value, decimals, null).toString();
     }
 
-    if (style.type === 'string') {
+    if (style.type === "string") {
       if (_.isArray(value)) {
-        value = value.join(', ');
+        value = value.join(", ");
       }
-      const mappingType = style.mappingType || 0
+      const mappingType = style.mappingType || 0;
       if (mappingType === 1 && style.valueMaps) {
         for (let i = 0; i < style.valueMaps.length; i++) {
           const map = style.valueMaps[i];
 
           if (value === null) {
-            if (map.value === 'null') {
+            if (map.value === "null") {
               return map.text;
             }
             continue;
           }
 
           // Allow both numeric and string values to be mapped
-          if ((!_.isString(value) && Number(map.value) === Number(value)) || map.value === value) {
+          if (
+            (!_.isString(value) && Number(map.value) === Number(value)) ||
+            map.value === value
+          ) {
             return this.defaultValueFormatter(map.text, style);
           }
         }
@@ -474,59 +536,65 @@ class FlowchartCtrl extends MetricsPanelCtrl {
           const map = style.rangeMaps[i];
 
           if (value === null) {
-            if (map.from === 'null' && map.to === 'null') {
+            if (map.from === "null" && map.to === "null") {
               return map.text;
             }
             continue;
           }
 
-          if (Number(map.from) <= Number(value) && Number(map.to) >= Number(value)) {
+          if (
+            Number(map.from) <= Number(value) &&
+            Number(map.to) >= Number(value)
+          ) {
             return this.defaultValueFormatter(map.text, style);
           }
         }
       }
 
       if (value === null || value === void 0) {
-        return '-';
+        return "-";
       }
 
       return this.defaultValueFormatter(value, style);
     }
 
-    if (style.type === 'date') {
-        if (value === undefined || value === null) {
-          return '-';
-        }
+    if (style.type === "date") {
+      if (value === undefined || value === null) {
+        return "-";
+      }
 
-        if (_.isArray(value)) {
-          value = value[0];
-        }
-        let date = moment(value);
-        if (this.dashboard.isTimezoneUtc()) {
-          date = date.utc();
-        }
-        return date.format(style.dateFormat);
+      if (_.isArray(value)) {
+        value = value[0];
+      }
+      let date = moment(value);
+      if (this.dashboard.isTimezoneUtc()) {
+        date = date.utc();
+      }
+      return date.format(style.dateFormat);
     }
   }
 
   decimalPlaces(num) {
-		var match = (''+num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
-		if (!match) { return 0; }
-		return Math.max(
-			0,
-			// Number of digits right of decimal point.
-			(match[1] ? match[1].length : 0)
-			// Adjust for scientific notation.
-			- (match[2] ? +match[2] : 0));
-	}
+    var match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+    if (!match) {
+      return 0;
+    }
+    return Math.max(
+      0,
+      // Number of digits right of decimal point.
+      (match[1] ? match[1].length : 0) -
+        // Adjust for scientific notation.
+        (match[2] ? +match[2] : 0)
+    );
+  }
 
   defaultValueFormatter(value, style) {
     if (value === null || value === void 0 || value === undefined) {
-      return '';
+      return "";
     }
 
     if (_.isArray(value)) {
-      value = value.join(', ');
+      value = value.join(", ");
     }
 
     if (style && style.sanitize) {
@@ -535,7 +603,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       return _.escape(value);
     }
   }
-
 
   // returns level of threshold, -1 = disable, 0 = ok, 1 = warnimg, 2 = critical
   getThresholdLevel(value, style) {
@@ -586,9 +653,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   validateRegex(textRegex) {
     return _.isRegExp(textRegex);
   }
-
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };
 
-FlowchartCtrl.templateUrl = "module.html";
+FlowchartCtrl.templateUrl = "./partials/module.html";

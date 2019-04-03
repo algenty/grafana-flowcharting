@@ -39,11 +39,11 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 var FlowchartCtrl =
 /*#__PURE__*/
@@ -63,11 +63,21 @@ function (_MetricsPanelCtrl) {
     _this.changedSource;
     _this.shapeStates = [];
     _this.textStates = [];
+    _this.linkStates = [];
     _this.graph;
     _this.mx;
     _this.changedSource = true;
     _this.changedData = true;
-    _this.changedOptions = true; // OLD OPTIONS
+    _this.changedOptions = true; // For Mapping with pointer
+
+    _this.onMapping = {
+      active: false,
+      // boolean if pointer mapping is active
+      object: undefined,
+      // ojb to return id of mapping
+      idFocus: undefined // id of dom
+
+    }; // OLD OPTIONS
 
     _this.options = {
       metrics: {
@@ -113,11 +123,13 @@ function (_MetricsPanelCtrl) {
         thresholds: [],
         invert: false,
         shapeSeq: 1,
-        shapeProp: 'id',
+        shapeProp: "id",
         shapeMaps: [],
         textSeq: 1,
-        textProp: 'id',
+        textProp: "id",
         textMaps: [],
+        linkProp: "id",
+        linkMaps: [],
         mappingType: 1
       }],
       // OLD PANEL
@@ -126,7 +138,8 @@ function (_MetricsPanelCtrl) {
           type: "xml",
           xml: {
             //value: '<mxGraphModel  grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1"  math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="hPZ40pGzY2HQIh7cGHQj-1" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;gradientColor=#ffffff;fillColor=#FF8000;" vertex="1" parent="1"><mxGeometry x="20" y="20" width="120" height="60" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-2" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-1" target="hPZ40pGzY2HQIh7cGHQj-3"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="150" as="sourcePoint"/><mxPoint x="80" y="150" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-3" value="Loves" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1"><mxGeometry x="20" y="134" width="120" height="80" as="geometry"/></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-4" value="" style="shape=flexArrow;endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="hPZ40pGzY2HQIh7cGHQj-3" target="hPZ40pGzY2HQIh7cGHQj-5"><mxGeometry width="50" height="50" relative="1" as="geometry"><mxPoint x="20" y="281" as="sourcePoint"/><mxPoint x="160" y="261" as="targetPoint"/></mxGeometry></mxCell><mxCell id="hPZ40pGzY2HQIh7cGHQj-5" value="MxGraph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#ffffff;" vertex="1" parent="1"><mxGeometry x="20" y="261" width="120" height="60" as="geometry"/></mxCell></root></mxGraphModel>',
-            value: '<mxGraphModel dx="1394" dy="796" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="arrow-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-grafana" target="shape-love" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-grafana" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;shadow=1;" parent="1" vertex="1"><mxGeometry x="10" y="10" width="120" height="60" as="geometry"/></mxCell><mxCell id="arrow-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-love" target="shape-mxgraph" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-love" value="love" style="triangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;shadow=1;" parent="1" vertex="1"><mxGeometry x="210" width="60" height="80" as="geometry"/></mxCell><mxCell id="shape-mxgraph" value="mxGraph" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" parent="1" vertex="1"><mxGeometry x="340" width="120" height="80" as="geometry"/></mxCell><mxCell id="text-grafana" value="Le text : TextVal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="9" y="50" width="120" height="20" as="geometry"/></mxCell><mxCell id="text-arrow1" value="Text 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="150" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-arrow2" value="Text 3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="280" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-mxgraph" value="Text 4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="380" y="50" width="40" height="20" as="geometry"/></mxCell></root></mxGraphModel>'
+            // value: '<mxGraphModel dx="1394" dy="796" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="arrow-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-grafana" target="shape-love" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-grafana" value="Grafana" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;shadow=1;" parent="1" vertex="1"><mxGeometry x="10" y="10" width="120" height="60" as="geometry"/></mxCell><mxCell id="arrow-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-love" target="shape-mxgraph" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-love" value="love" style="triangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;shadow=1;" parent="1" vertex="1"><mxGeometry x="210" width="60" height="80" as="geometry"/></mxCell><mxCell id="shape-mxgraph" value="mxGraph" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" parent="1" vertex="1"><mxGeometry x="340" width="120" height="80" as="geometry"/></mxCell><mxCell id="text-grafana" value="Le text : TextVal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="9" y="50" width="120" height="20" as="geometry"/></mxCell><mxCell id="text-arrow1" value="Text 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="150" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-arrow2" value="Text 3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="280" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-mxgraph" value="Text 4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="380" y="50" width="40" height="20" as="geometry"/></mxCell></root></mxGraphModel>',
+            value: '<mxGraphModel dx="1073" dy="521" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="arrow-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-grafana" target="shape-love" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><object label="Grafana" href="www.google.fr" id="shape-grafana"><mxCell style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;shadow=1;" parent="1" vertex="1"><mxGeometry x="10" y="10" width="120" height="60" as="geometry"/></mxCell></object><mxCell id="arrow-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;jettySize=auto;orthogonalLoop=1;strokeWidth=4;shadow=1;" parent="1" source="shape-love" target="shape-mxgraph" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="shape-love" value="loves" style="triangle;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;shadow=1;" parent="1" vertex="1"><mxGeometry x="210" width="60" height="80" as="geometry"/></mxCell><mxCell id="shape-mxgraph" value="mxGraph" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;shadow=1;" parent="1" vertex="1"><mxGeometry x="340" width="120" height="80" as="geometry"/></mxCell><mxCell id="text-grafana" value="MyText : TextVal" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="9" y="50" width="120" height="20" as="geometry"/></mxCell><mxCell id="text-arrow1" value="Text 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="150" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-arrow2" value="Text 3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="280" y="20" width="40" height="20" as="geometry"/></mxCell><mxCell id="text-mxgraph" value="Text 4" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1"><mxGeometry x="380" y="50" width="40" height="20" as="geometry"/></mxCell></root></mxGraphModel>'
           },
           url: {
             value: "http://<source>:<port>/<pathToXml>"
@@ -160,19 +173,19 @@ function (_MetricsPanelCtrl) {
     _this.panel.graphId = "flowchart_" + _this.panel.id;
     _this.containerDivId = "container_" + _this.panel.graphId; // events
 
-    _this.events.on("render", _this.onRender.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+    _this.events.on("render", _this.onRender.bind(_assertThisInitialized(_this)));
 
-    _this.events.on("refresh", _this.onRefresh.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+    _this.events.on("refresh", _this.onRefresh.bind(_assertThisInitialized(_this)));
 
-    _this.events.on("data-received", _this.onDataReceived.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+    _this.events.on("data-received", _this.onDataReceived.bind(_assertThisInitialized(_this)));
 
-    _this.events.on("data-error", _this.onDataError.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+    _this.events.on("data-error", _this.onDataError.bind(_assertThisInitialized(_this)));
 
-    _this.events.on("data-snapshot-load", _this.onDataReceived.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+    _this.events.on("data-snapshot-load", _this.onDataReceived.bind(_assertThisInitialized(_this)));
 
-    _this.events.on("init-edit-mode", _this.onInitEditMode.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+    _this.events.on("init-edit-mode", _this.onInitEditMode.bind(_assertThisInitialized(_this)));
 
-    _this.events.on("init-panel-actions", _this.onInitPanelActions.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+    _this.events.on("init-panel-actions", _this.onInitPanelActions.bind(_assertThisInitialized(_this)));
 
     return _this;
   } //
@@ -195,10 +208,9 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onRender",
     value: function onRender() {
-      console.debug("ctrl.onRender");
-
       if (this.changedData == true || this.changedOptions == true) {
         this.analyzeData();
+        if (this.changedOptions == true) this.updateLink();
       }
     }
   }, {
@@ -495,6 +507,44 @@ function (_MetricsPanelCtrl) {
 
     }
   }, {
+    key: "updateLink",
+    value: function updateLink() {
+      var _this4 = this;
+
+      console.debug("flowchart_ctrl.updateLink");
+      this.linkStates = []; // Begin For Each Styles
+
+      _lodash.default.each(this.panel.styles, function (_style) {
+        // Begin For Each Link
+        _lodash.default.each(_style.linkMaps, function (_link) {
+          // not hidden or not never
+          if (_link === undefined || _link === null || _link.pattern.length == 0 || _link.hidden != true) {
+            var _state = _lodash.default.find(_this4.linkStates, function (_state) {
+              return _state.pattern == _link.pattern;
+            });
+
+            var linkTargetBlank = _style.linkTargetBlank;
+            var linkUrl = _style.linkUrl;
+            var new_state = {
+              pattern: _link.pattern,
+              linkTargetBlank: linkTargetBlank,
+              linkUrl: linkUrl
+            };
+
+            if (_state != null && _state != undefined) {
+              _lodash.default.pull(_this4.linkStates, _state);
+
+              _this4.linkStates.push(new_state);
+            } else {
+              _this4.linkStates.push(new_state);
+            }
+          }
+        }); // End For Each link
+
+      }); // End For Each Styles
+
+    }
+  }, {
     key: "getColorForValue",
     value: function getColorForValue(value, style) {
       if (!style.thresholds || style.thresholds.length == 0) {
@@ -513,11 +563,11 @@ function (_MetricsPanelCtrl) {
     key: "getFormattedValue",
     value: function getFormattedValue(value, style) {
       // console.log("getFormattedValue style", style)
-      if (style.type === 'number') {
+      if (style.type === "number") {
         if (!_lodash.default.isFinite(value)) return "Invalid Number";
 
         if (value === null || value === void 0) {
-          return '-';
+          return "-";
         }
 
         var decimals = this.decimalPlaces(value);
@@ -525,9 +575,9 @@ function (_MetricsPanelCtrl) {
         return _kbn.default.valueFormats[style.unit](value, decimals, null).toString();
       }
 
-      if (style.type === 'string') {
+      if (style.type === "string") {
         if (_lodash.default.isArray(value)) {
-          value = value.join(', ');
+          value = value.join(", ");
         }
 
         var mappingType = style.mappingType || 0;
@@ -537,7 +587,7 @@ function (_MetricsPanelCtrl) {
             var map = style.valueMaps[i];
 
             if (value === null) {
-              if (map.value === 'null') {
+              if (map.value === "null") {
                 return map.text;
               }
 
@@ -556,7 +606,7 @@ function (_MetricsPanelCtrl) {
             var _map = style.rangeMaps[_i];
 
             if (value === null) {
-              if (_map.from === 'null' && _map.to === 'null') {
+              if (_map.from === "null" && _map.to === "null") {
                 return _map.text;
               }
 
@@ -570,15 +620,15 @@ function (_MetricsPanelCtrl) {
         }
 
         if (value === null || value === void 0) {
-          return '-';
+          return "-";
         }
 
         return this.defaultValueFormatter(value, style);
       }
 
-      if (style.type === 'date') {
+      if (style.type === "date") {
         if (value === undefined || value === null) {
-          return '-';
+          return "-";
         }
 
         if (_lodash.default.isArray(value)) {
@@ -597,7 +647,7 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "decimalPlaces",
     value: function decimalPlaces(num) {
-      var match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+      var match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
 
       if (!match) {
         return 0;
@@ -611,11 +661,11 @@ function (_MetricsPanelCtrl) {
     key: "defaultValueFormatter",
     value: function defaultValueFormatter(value, style) {
       if (value === null || value === void 0 || value === undefined) {
-        return '';
+        return "";
       }
 
       if (_lodash.default.isArray(value)) {
-        value = value.join(', ');
+        value = value.join(", ");
       }
 
       if (style && style.sanitize) {
@@ -684,4 +734,4 @@ function (_MetricsPanelCtrl) {
 }(_sdk.MetricsPanelCtrl);
 
 exports.MetricsPanelCtrl = exports.FlowchartCtrl = FlowchartCtrl;
-FlowchartCtrl.templateUrl = "module.html";
+FlowchartCtrl.templateUrl = "./partials/module.html";

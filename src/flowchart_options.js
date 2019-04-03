@@ -1,13 +1,16 @@
 import _ from "lodash";
 import { plugin } from "./plugin";
+import vkbeautify from "./libs/vkbeautify/index";
 
 export class FlowchartOptionsCtrl {
   /** @ngInject */
   constructor($scope) {
     $scope.editor = this;
+    this.$scope = $scope;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     this.mx = this.panelCtrl.mx;
+    $scope.mx = this.panelCtrl.mx;
     this.sourceTypes = [
       { text: "Url", value: "url" },
       { text: "XML Content", value: "xml" }
@@ -26,11 +29,14 @@ export class FlowchartOptionsCtrl {
   }
 
   openDrawEditor() {
+    let urlEditor="https://draw.io?embed=1";
+    // let urlEditor="https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html?embed=1";
+
     // source : 
     // https://desk.draw.io/support/solutions/articles/16000042542-how-to-embed-html-
     // https://support.draw.io/display/DOB/2016/05/09/Simple+draw.io+embedding+walk-through
     let myWindow = window.open(
-      "https://draw.io?embed=1",
+      urlEditor,
       "MxGraph Editor",
       "width=1280, height=720"
     );
@@ -38,16 +44,19 @@ export class FlowchartOptionsCtrl {
     window.addEventListener("message", event => {
 
       if (event.origin !== "https://www.draw.io") return;
-      if (event.data == "ready") {
+      // when editor is open
+      if (event.data == "ready" ) {
+        // send xml
         event.source.postMessage(
           this.panel.flowchart.source.xml.value,
           event.origin
         );
-        opened = false;
+        opened = true;
       } else {
         if (event.data != undefined && event.data.length > 0) {
-          this.panel.flowchart.source.xml.value = this.mx.decodeXml(event.data);
+          this.panel.flowchart.source.xml.value = event.data;
           this.panelCtrl.changedSource = true;
+          this.$scope.$apply();
           this.render()
         }
         if (event.data != undefined || event.data.length == 0) {
@@ -68,6 +77,25 @@ export class FlowchartOptionsCtrl {
     }
     return true;
   }
+
+  prettify() {
+    try {
+      let text = this.panel.flowchart.source.xml.value;
+      this.panel.flowchart.source.xml.value = vkbeautify.xml(text);
+    } catch (error) {
+      console.error("Error in prettify : ",error)
+    }
+  }
+
+  minify() {
+    try {
+      let text = this.panel.flowchart.source.xml.value;
+      this.panel.flowchart.source.xml.value = vkbeautify.xmlmin(text,false);
+    } catch (error) {
+      console.error("Error in minify : ",error)
+    }
+  }
+
 }
 
 /** @ngInject */

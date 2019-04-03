@@ -91,13 +91,13 @@
             </div>
           </div>
 
-          <!-- <gf-form-switch
+          <gf-form-switch
             class="gf-form"
             label-class="width-12"
-            label="Render value as link"
+            label="Object as link"
             checked="style.link"
             change="editor.onOptionsChange()"
-          ></gf-form-switch> -->
+          ></gf-form-switch>
         </div>
 
         <!-- TYPE -->
@@ -276,7 +276,7 @@
               ></select>
             </div>
           </div>
-          <div
+          <!-- <div
             class="gf-form"
             ng-if="style.textReplace == 'pattern' && style.textOn != 'n'"
           >
@@ -289,7 +289,7 @@
               ng-model-onblur
               placeholder="name for tooltip"
             />
-          </div>
+          </div> -->
         </div>
 
         <!-- LINK -->
@@ -300,7 +300,7 @@
               Url
               <info-popover mode="right-normal">
                 <p>Specify an URL (relative or absolute)</p>
-                <span>
+                <!-- <span>
                   Use special variables to specify cell values:
                   <br />
                   <em>${__cell}</em> refers to current cell value
@@ -312,7 +312,7 @@
                   <em>${__cell:raw}</em> syntax. By default values are URI
                   encoded. If the value is a complete URL you can disable all
                   encoding using
-                </span>
+                </span> -->
               </info-popover>
             </label>
             <input
@@ -324,7 +324,7 @@
               data-placement="right"
             />
           </div>
-          <div class="gf-form">
+          <!-- <div class="gf-form">
             <label class="gf-form-label width-9">
               Tooltip
               <info-popover mode="right-normal">
@@ -343,7 +343,7 @@
               ng-model-onblur
               data-placement="right"
             />
-          </div>
+          </div> -->
           <gf-form-switch
             class="gf-form"
             label-class="width-9"
@@ -359,18 +359,18 @@
           <div class="section gf-form-group">
             <h5 class="section-heading">Color Mappings</h5>
             <div class="gf-form">
-                <span class="gf-form-label width-8">
-                  Props
-                </span>
-                <div class="gf-form-select-wrapper">
-                  <select
-                    class="gf-form-input width-10"
-                    ng-model="style.shapeProp"
-                    ng-options="c.value as c.text for c in editor.propTypes"
-                    ng-change="editor.onOptionsChange()"
-                  ></select>
-                </div>
-            </div>            
+              <span class="gf-form-label width-8">
+                Props
+              </span>
+              <div class="gf-form-select-wrapper">
+                <select
+                  class="gf-form-input width-10"
+                  ng-model="style.shapeProp"
+                  ng-options="c.value as c.text for c in editor.propTypes"
+                  ng-change="editor.onOptionsChange()"
+                ></select>
+              </div>
+            </div>
             <div
               class="gf-form"
               ng-class="{'gf-form-disabled': shape.hidden}"
@@ -379,6 +379,7 @@
               <label class="gf-form-label" style="margin-right: 2px;">
                 <i
                   class="fa fa-w fa-remove pointer"
+                  bs-tooltip="'Delete this mapping object'"
                   ng-click="editor.removeShapeFromStyle(style, shape)"
                 ></i>
               </label>
@@ -389,6 +390,7 @@
               >
                 <i
                   class="fa fa-w fa-eye pointer"
+                  bs-tooltip="'Hide selected object graph in rule'"
                   ng-click="editor.hideShapeFromStyle(shape)"
                 ></i>
               </label>
@@ -399,17 +401,35 @@
               >
                 <i
                   class="fa fa-w fa-eye-slash pointer"
+                  bs-tooltip="'show selected object graph in rule'"
                   ng-click="editor.showShapeFromStyle(shape)"
                 ></i>
               </label>
-              <!-- <label class="gf-form-label" style="margin-right: 2px;">
+              <label
+                class="gf-form-label"
+                style="margin-right: 2px;"
+                ng-show="onMapping.active==false||onMapping.object!=shape"
+              >
                 <i
-                  class="fa fa-mouse-pointer pointer"
-                  ng-click="editor.findShapeInPanel(style)"
+                  class="fa fa-link pointer"
+                  ng-click="editor.mapCell(shape,'shape_' + style.id  + '_' + shape.id)"
+                  bs-tooltip="'Link it on object graph'"
                 ></i>
-              </label> -->
+              </label>
+              <label
+                class="gf-form-label"
+                style="margin-right: 2px;color:orange"
+                ng-show="onMapping.active==true&&onMapping.object==shape"
+              >
+                <i
+                  class="fa fa-unlink pointer"
+                  bs-tooltip="'Cancel link object graph selection'"
+                  ng-click="editor.mapCell(shape,'shape_' + style.id  + '_' + shape.id)"
+                ></i>
+              </label>
               <input
                 type="text"
+                id="shape_{{ style.id }}_{{shape.id}}"
                 placeholder="id or regex of shape"
                 class="gf-form-input width-13"
                 ng-model="shape.pattern"
@@ -424,7 +444,6 @@
                 ng-mouseover="mx.selectCell(shape.pattern)"
               />
             </div>
-
             <div class="gf-form">
               <label class="gf-form-label">
                 <i
@@ -440,26 +459,27 @@
           <div class="section gf-form-group">
             <h5 class="section-heading">Text Mappings</h5>
             <div class="gf-form">
-                <span class="gf-form-label width-8">
-                  Props
-                </span>
-                <div class="gf-form-select-wrapper">
-                  <select
-                    class="gf-form-input width-10"
-                    ng-model="style.textProp"
-                    ng-options="c.value as c.text for c in editor.propTypes"
-                    ng-change="editor.onOptionsChange()"
-                  ></select>
-                </div>
-            </div>     
+              <span class="gf-form-label width-8">
+                Props
+              </span>
+              <div class="gf-form-select-wrapper">
+                <select
+                  class="gf-form-input width-10"
+                  ng-model="style.textProp"
+                  ng-options="c.value as c.text for c in editor.propTypes"
+                  ng-change="editor.onOptionsChange()"
+                ></select>
+              </div>
+            </div>
             <div
               class="gf-form"
               ng-class="{'gf-form-disabled': text.hidden}"
               ng-repeat="text in style.textMaps"
             >
-              <label class="gf-form-label" style="margin-right: 1px;">
+              <label class="gf-form-label" style="margin-right: 2px;">
                 <i
                   class="fa fa-w fa-remove pointer"
+                  bs-tooltip="'Delete this mapping object'"
                   ng-click="editor.removeTextFromStyle(style, text)"
                 ></i>
               </label>
@@ -470,6 +490,7 @@
               >
                 <i
                   class="fa fa-w fa-eye pointer"
+                  bs-tooltip="'Hide selected object graph in rule'"
                   ng-click="editor.hideTextFromStyle(text)"
                 ></i>
               </label>
@@ -480,14 +501,36 @@
               >
                 <i
                   class="fa fa-w fa-eye-slash pointer"
+                  bs-tooltip="'show selected object graph in rule'"
                   ng-click="editor.showTextFromStyle(text)"
                 ></i>
               </label>
-              <!-- <label class="gf-form-label" style="margin-right: 2px;">
-          <i class="fa fa-mouse-pointer pointer" ng-click="editor.findTextInPanel(style, $index)"></i>
-        </label> -->
+              <label
+                class="gf-form-label"
+                style="margin-right: 2px;"
+                ng-show="onMapping.active==false||onMapping.object!=text"
+              >
+                <i
+                  class="fa fa-link pointer"
+                  ng-click="editor.mapCell(text,'text_' + style.id + '_' + text.id)"
+                  bs-tooltip="'Link it on object graph'"
+                ></i>
+              </label>
+              <label
+                class="gf-form-label"
+                style="margin-right: 2px;color:orange"
+                ng-show="onMapping.active==true&&onMapping.object==text"
+              >
+                <i
+                  class="fa fa-unlink pointer"
+                  bs-tooltip="'Cancel link object graph selection'"
+                  ng-click="editor.mapCell(text,'text_' + style.id + '_' + text.id)"
+                ></i>
+              </label>
+
               <input
                 type="text"
+                id="text_{{ style.id }}_{{text.id}}"
                 placeholder="id or regex of shape/text name"
                 class="gf-form-input width-13"
                 ng-model="text.pattern"
@@ -508,6 +551,108 @@
                 <i
                   class="fa fa-plus pointer"
                   ng-click="editor.addTextToStyle(style, '/.*/')"
+                  style="margin-right: 2px;"
+                ></i>
+              </label>
+            </div>
+          </div>
+
+          <!-- LINK MAPPING -->
+          <div class="section gf-form-group" ng-if="style.link">
+            <h5 class="section-heading">Link Mappings</h5>
+            <div class="gf-form">
+              <span class="gf-form-label width-8">
+                Props
+              </span>
+              <div class="gf-form-select-wrapper">
+                <select
+                  class="gf-form-input width-10"
+                  ng-model="style.linkProp"
+                  ng-options="c.value as c.text for c in editor.propTypes"
+                  ng-change="editor.onOptionsChange()"
+                ></select>
+              </div>
+            </div>
+            <div
+              class="gf-form"
+              ng-class="{'gf-form-disabled': link.hidden}"
+              ng-repeat="link in style.linkMaps"
+            >
+              <label class="gf-form-label" style="margin-right: 2px;">
+                <i
+                  class="fa fa-w fa-remove pointer"
+                  bs-tooltip="'Delete this mapping object'"
+                  ng-click="editor.removeLinkFromStyle(style, link)"
+                ></i>
+              </label>
+              <label
+                class="gf-form-label"
+                ng-if="!link.hidden"
+                style="margin-right: 2px;"
+              >
+                <i
+                  class="fa fa-w fa-eye pointer"
+                  bs-tooltip="'Hide selected object graph in rule'"
+                  ng-click="editor.hideLinkFromStyle(link)"
+                ></i>
+              </label>
+              <label
+                class="gf-form-label"
+                ng-if="link.hidden"
+                style="margin-right: 2px;"
+              >
+                <i
+                  class="fa fa-w fa-eye-slash pointer"
+                  bs-tooltip="'show selected object graph in rule'"
+                  ng-click="editor.showLinkFromStyle(link)"
+                ></i>
+              </label>
+              <label
+                class="gf-form-label"
+                style="margin-right: 2px;"
+                ng-show="onMapping.active==false||onMapping.object!=link"
+              >
+                <i
+                  class="fa fa-link pointer"
+                  ng-click="editor.mapCell(link,'link_' + style.id  + '_' + link.id)"
+                  bs-tooltip="'Link it on object graph'"
+                ></i>
+              </label>
+              <label
+                class="gf-form-label"
+                style="margin-right: 2px;color:orange"
+                ng-show="onMapping.active==true&&onMapping.object==link"
+              >
+                <i
+                  class="fa fa-unlink pointer"
+                  bs-tooltip="'Cancel link object graph selection'"
+                  ng-click="editor.mapCell(link,'link_' + style.id  + '_' + link.id )"
+                ></i>
+              </label>
+
+              <input
+                type="text"
+                id="link_{{ style.id }}_{{link.id}}"
+                placeholder="id or regex of shape/text name"
+                class="gf-form-input width-13"
+                ng-model="link.pattern"
+                bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/text (see inspect tab)'"
+                bs-typeahead="editor.getCellNames"
+                ng-blur="editor.onOptionsChange()"
+                data-min-length="0"
+                data-items="100"
+                ng-model-onblur
+                data-placement="right"
+                ng-mouseleave="mx.unselectCell()"
+                ng-mouseover="mx.selectCell(link.pattern)"
+              />
+            </div>
+
+            <div class="gf-form">
+              <label class="gf-form-label">
+                <i
+                  class="fa fa-plus pointer"
+                  ng-click="editor.addLinkToStyle(style, '/.*/')"
                   style="margin-right: 2px;"
                 ></i>
               </label>
@@ -605,11 +750,10 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="clearfix">
 
         </div>
+
+        <div class="clearfix"></div>
 
         <!-- BUTTONS RULES -->
         <div class="gf-form-inline">

@@ -1,0 +1,22 @@
+{
+  "type": "datasource",
+  "name": "CloudWatch",
+  "id": "cloudwatch",
+
+  "metrics": true,
+  "alerting": true,
+  "annotations": true,
+
+  "info": {
+    "description": "Cloudwatch Data Source for Grafana",
+    "author": {
+      "name": "Grafana Project",
+      "url": "https://grafana.com"
+    },
+    "logos": {
+      "small": "img/amazon-web-services.png",
+      "large": "img/amazon-web-services.png"
+    },
+    "version": "5.0.0"
+  }
+}

@@ -10,6 +10,8 @@ var _lodash = _interopRequireDefault(require("lodash"));
 
 var _plugin = require("./plugin");
 
+var _index = _interopRequireDefault(require("./libs/vkbeautify/index"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26,9 +28,11 @@ function () {
     _classCallCheck(this, FlowchartOptionsCtrl);
 
     $scope.editor = this;
+    this.$scope = $scope;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     this.mx = this.panelCtrl.mx;
+    $scope.mx = this.panelCtrl.mx;
     this.sourceTypes = [{
       text: "Url",
       value: "url"
@@ -55,21 +59,26 @@ function () {
     value: function openDrawEditor() {
       var _this = this;
 
+      var urlEditor = "https://draw.io?embed=1"; // let urlEditor="https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html?embed=1";
       // source : 
       // https://desk.draw.io/support/solutions/articles/16000042542-how-to-embed-html-
       // https://support.draw.io/display/DOB/2016/05/09/Simple+draw.io+embedding+walk-through
-      var myWindow = window.open("https://draw.io?embed=1", "MxGraph Editor", "width=1280, height=720");
+
+      var myWindow = window.open(urlEditor, "MxGraph Editor", "width=1280, height=720");
       var opened = false;
       window.addEventListener("message", function (event) {
-        if (event.origin !== "https://www.draw.io") return;
+        if (event.origin !== "https://www.draw.io") return; // when editor is open
 
         if (event.data == "ready") {
+          // send xml
           event.source.postMessage(_this.panel.flowchart.source.xml.value, event.origin);
-          opened = false;
+          opened = true;
         } else {
           if (event.data != undefined && event.data.length > 0) {
-            _this.panel.flowchart.source.xml.value = _this.mx.decodeXml(event.data);
+            _this.panel.flowchart.source.xml.value = event.data;
             _this.panelCtrl.changedSource = true;
+
+            _this.$scope.$apply();
 
             _this.render();
           }
@@ -95,6 +104,26 @@ function () {
       }
 
       return true;
+    }
+  }, {
+    key: "prettify",
+    value: function prettify() {
+      try {
+        var text = this.panel.flowchart.source.xml.value;
+        this.panel.flowchart.source.xml.value = _index.default.xml(text);
+      } catch (error) {
+        console.error("Error in prettify : ", error);
+      }
+    }
+  }, {
+    key: "minify",
+    value: function minify() {
+      try {
+        var text = this.panel.flowchart.source.xml.value;
+        this.panel.flowchart.source.xml.value = _index.default.xmlmin(text, false);
+      } catch (error) {
+        console.error("Error in minify : ", error);
+      }
     }
   }]);
 

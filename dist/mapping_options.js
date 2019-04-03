@@ -30,12 +30,12 @@ function () {
     _classCallCheck(this, MappingOptionsCtrl);
 
     $scope.editor = this;
-    $scope.mapping = this;
     this.activeStyleIndex = 0;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     this.mx = this.panelCtrl.mx;
     $scope.mx = this.panelCtrl.mx;
+    $scope.onMapping = this.panelCtrl.onMapping;
     this.unitFormats = _kbn.default.getUnitFormats();
     this.colorModes = [{
       text: "Disabled",
@@ -227,6 +227,9 @@ function () {
         textSeq: 1,
         textProp: 'id',
         textMaps: [],
+        linkSeq: 1,
+        linkProp: 'id',
+        linkMaps: [],
         mappingType: 1
       };
       var styles = this.panel.styles;
@@ -272,7 +275,7 @@ function () {
     }
   }, {
     key: "onOptionsChange",
-    value: function onOptionsChange() {
+    value: function onOptionsChange(fieldName, style) {
       this.panelCtrl.changedOptions = true;
       this.render();
     } //
@@ -367,8 +370,6 @@ function () {
   }, {
     key: "addShapeToStyle",
     value: function addShapeToStyle(style) {
-      console.debug("mapping.addShapeToStyle");
-
       if (!style.shapeMaps) {
         style.shapeMaps = [];
       }
@@ -432,11 +433,58 @@ function () {
     value: function showTextFromStyle(text) {
       text.hidden = false;
       this.onOptionsChange();
+    } //
+    // ON LINK
+    //
+
+  }, {
+    key: "addLinkToStyle",
+    value: function addLinkToStyle(style) {
+      if (!style.linkMaps) {
+        style.linkMaps = [];
+      }
+
+      style.linkMaps.push({
+        pattern: "",
+        prop: "id",
+        id: style.linkSeq++
+      });
+      this.onOptionsChange();
     }
   }, {
-    key: "findShapeInPanel",
-    value: function findShapeInPanel(style) {
-      this.scrollToAnchor("agenty-grafana-flowcharting");
+    key: "removeLinkFromStyle",
+    value: function removeLinkFromStyle(style, link) {
+      style.linkMaps = _lodash.default.without(style.linkMaps, link);
+      this.onOptionsChange();
+    }
+  }, {
+    key: "hideLinkFromStyle",
+    value: function hideLinkFromStyle(link) {
+      link.hidden = true;
+      this.onOptionsChange();
+    }
+  }, {
+    key: "showLinkFromStyle",
+    value: function showLinkFromStyle(link) {
+      link.hidden = false;
+      this.onOptionsChange();
+    }
+  }, {
+    key: "mapCell",
+    value: function mapCell(map, id) {
+      // init mapping event
+      if (this.panelCtrl.onMapping.active && map == this.panelCtrl.onMapping.object) {
+        this.panelCtrl.onMapping.active = false;
+      } else {
+        this.panelCtrl.onMapping.active = true;
+        this.panelCtrl.onMapping.object = map;
+        this.panelCtrl.onMapping.idFocus = id; // focus to graph
+        // setTimeout(function() { $("#agenty-grafana-flowcharting").focus(); }, 3000);
+
+        var elt = document.getElementById('agenty-grafana-flowcharting');
+        elt.scrollIntoView();
+        elt.focus();
+      }
     }
   }, {
     key: "scrollToAnchor",

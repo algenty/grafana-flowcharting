@@ -14,7 +14,6 @@ var mxgraph = require("mxgraph")({
   mxLoadResources: false
 });
 
-
 window.BASE_PATH =
   window.BASE_PATH ||
   "public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/";
@@ -73,6 +72,7 @@ window.mxElbowEdgeHandler =
   window.mxElbowEdgeHandler || mxgraph.mxElbowEdgeHandler;
 window.mxEllipse = window.mxEllipse || mxgraph.mxEllipse;
 window.mxEvent = window.mxEvent || mxgraph.mxEvent;
+window.mxEventObject = window.mxEventObject || mxgraph.mxEventObject;
 window.mxFile = window.mxFile || mxgraph.mxFile;
 window.mxGeometry = window.mxGeometry || mxgraph.mxGeometry;
 window.mxGraph = window.mxGraph || mxgraph.mxGraph;
@@ -104,6 +104,7 @@ window.mxResources = window.mxResources || mxgraph.mxResources;
 window.mxRhombus = window.mxRhombus || mxgraph.mxRhombus;
 window.mxRubberband = window.mxRubberband || mxgraph.mxRubberband;
 window.mxShape = window.mxShape || mxgraph.mxShape;
+window.mxStackLayout = window.mxStackLayout || mxgraph.mxStackLayout;
 window.mxStencil = window.mxStencil || mxgraph.mxStencil;
 window.mxStencilRegistry =
   window.mxStencilRegistry || mxgraph.mxStencilRegistry;
@@ -122,6 +123,7 @@ window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 export default class MxPluginCtrl {
   /** @ngInject */
   constructor($scope, elem, attrs, ctrl) {
+    this.$scope = $scope;
     $scope.editor = this;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
@@ -139,7 +141,6 @@ export default class MxPluginCtrl {
     this.initFlowchart();
 
     // Events Render
-    // this.render = self.render.bind(this);
     ctrl.events.on("render", () => {
       this.render();
     });
@@ -158,7 +159,6 @@ export default class MxPluginCtrl {
   // INIT
   //
   initFlowchart() {
-
     // definie object graph
     this.$graphCanvas = $("<div></div>");
     this.$elem.html(this.$graphCanvas);
@@ -170,13 +170,16 @@ export default class MxPluginCtrl {
     });
 
     var Graph = require("./Graph")({
-      touch: "1",
+      // touch: "1",
       libs: "arrows;basic;bpmn;flowchart"
     });
     var Shapes = require("./Shapes");
 
     this.container = this.$graphCanvas[0];
     this.graph = new Graph(this.container);
+
+    // Test Event
+    this.graph.click = this.eventGraph.bind(this);
   }
 
   //
@@ -187,11 +190,13 @@ export default class MxPluginCtrl {
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
-      var xmlDoc = mxUtils.parseXml(this.panel.flowchart.source.xml.value);
-      var codec = new mxCodec(xmlDoc);
+      let text = this.panel.flowchart.source.xml.value;
+      if (this.isencodedXml()) text = u.decode(text, true, true, true);
+      let xmlDoc = mxUtils.parseXml(text);
+      let codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, this.graph.getModel());
     } catch (error) {
-      console.error("Error in draw ", error);
+      console.error("Error in draw :", error);
     } finally {
       // Updates the display
       this.graph.getModel().endUpdate();
@@ -203,7 +208,6 @@ export default class MxPluginCtrl {
   //
   refreshFlowChart() {
     console.debug("mxgraph.refreshFlowChart");
-    let container = this.$graphCanvas[0];
     var width = this.$elem.width();
     var height = this.panelCtrl.height;
     var size = Math.min(width, height);
@@ -212,8 +216,8 @@ export default class MxPluginCtrl {
     var graphCss = {
       margin: "auto",
       position: "relative",
-      paddingBottom: 20 + "px",
-      height: size + "px"
+      // paddingBottom: 20 + "px",
+      height: size - 30 + "px"
     };
 
     this.$graphCanvas.css(graphCss);
@@ -223,45 +227,19 @@ export default class MxPluginCtrl {
     else this.unlockGraph();
 
     // GRID
-    if (this.panel.flowchart.options.grid) {
-      this.container.style.backgroundImage =
-        "url('" + IMAGE_PATH + "/grid.gif')";
-    } else {
-      this.container.style.backgroundImage = "";
-    }
+    this.gridGraph();
 
     // Zoom
-    if (
-      this.panel.flowchart.options.zoom ||
-      this.panel.flowchart.options.zoom.length > 0 ||
-      this.panel.flowchart.options.zoom != "100%" ||
-      this.panel.flowchart.options.zoom != "0%"
-    ) {
-      let scale = _.replace(this.panel.flowchart.options.zoom, "%", "") / 100;
-      this.graph.zoomTo(scale, true);
-    } else {
-      if (!this.panel.flowchart.options.scale) graph.zoomActual();
-    }
+    this.zoomGraph();
 
     // Fit/scale
-    if (this.panel.flowchart.options.scale) {
-      this.graph.fit();
-      this.graph.view.rendering = true;
-    }
+    this.scaleGraph();
 
     // CENTER
-    if (this.panel.flowchart.options.center) {
-      this.graph.center(true, true);
-    } else {
-      this.graph.center(false, false);
-    }
+    this.centerGraph();
 
     // BG Color
-    if (this.panel.flowchart.options.bgColor) {
-      this.$elem.css("background-color", this.panel.flowchart.options.bgColor);
-    } else {
-      this.$elem.css("background-color", "");
-    }
+    this.bgGraph();
 
     // REFRESH GRAPH
     this.graph.refresh();
@@ -286,22 +264,107 @@ export default class MxPluginCtrl {
   //GRAPH HANDLER
   //
 
+  eventGraph(me) {
+    var self = this;
+    let id = null;
+    let state = me.getState();
+    // if on Cell
+    if (me.state != undefined && me.state != null) {
+      id = state.cell.id;
+      // if mapping activate
+      if (self.panelCtrl.onMapping.active) {
+        self.panelCtrl.onMapping.active = false;
+        self.panelCtrl.onMapping.object.pattern = id;
+        self.$scope.$apply();
+        setTimeout(function() {
+          $("#" + self.panelCtrl.onMapping.idFocus).focus();
+        }, 100);
+      } else {
+        // search link
+        _.each(self.panelCtrl.linkStates, _link => {
+          const regex = this.stringToJsRegex(_link.pattern);
+          let matching = id.toString().match(regex);
+          if (_link.pattern == id || matching) {
+            if(_link.linkTargetBlank) {
+              let win = window.open(_link.linkUrl, '_blank');
+              win.focus();
+            }
+            else {
+              let win = window.open(_link.linkUrl, '_self');
+              win.focus();
+            }
+          }
+        });
+      }
+    }
+  }
+
+  focusContainer() {
+    this.container.focus();
+  }
+
+  gridGraph() {
+    if (this.panel.flowchart.options.grid) {
+      this.container.style.backgroundImage =
+        "url('" + IMAGE_PATH + "/grid.gif')";
+    } else {
+      this.container.style.backgroundImage = "";
+    }
+  }
+
+  bgGraph() {
+    if (this.panel.flowchart.options.bgColor) {
+      this.$elem.css("background-color", this.panel.flowchart.options.bgColor);
+    } else {
+      this.$elem.css("background-color", "");
+    }
+  }
+
+  centerGraph() {
+    if (this.panel.flowchart.options.center) {
+      this.graph.center(true, true);
+    } else {
+      this.graph.center(false, false);
+    }
+  }
+
+  scaleGraph() {
+    if (this.panel.flowchart.options.scale) {
+      this.graph.fit();
+      this.graph.view.rendering = true;
+    }
+  }
+
+  zoomGraph() {
+    if (
+      this.panel.flowchart.options.zoom ||
+      this.panel.flowchart.options.zoom.length > 0 ||
+      this.panel.flowchart.options.zoom != "100%" ||
+      this.panel.flowchart.options.zoom != "0%"
+    ) {
+      let scale = _.replace(this.panel.flowchart.options.zoom, "%", "") / 100;
+      this.graph.zoomTo(scale, true);
+    } else {
+      if (!this.panel.flowchart.options.scale) this.graph.zoomActual();
+    }
+  }
+
   lockGraph() {
     // LOCK
     // Disables folding
     this.graph.setEnabled(false);
-    this.graph.isCellFoldable = function(cell, collapse) {
-      return false;
-    };
+    // this.graph.isCellFoldable = function (cell, collapse) {
+    //   return false;
+    // };
   }
 
   unlockGraph() {
     // LOCK
     // Disables folding
     this.graph.setEnabled(true);
-    this.graph.isCellFoldable = function(cell, collapse) {
-      return true;
-    };
+    // this.graph.isCellFoldable = function (cell, collapse) {
+    //   return true;
+    // };
   }
 
   getCurrentCell(reg_name, prop_name) {
@@ -325,12 +388,9 @@ export default class MxPluginCtrl {
             ? view.getState(_cell).text.lastValue
             : "",
         shape: view.getState(_cell).style[mxConstants.STYLE_SHAPE],
-        // mxShape : view.getState(cell).shape,
         fontColor: view.getState(_cell).style[mxConstants.STYLE_FONTCOLOR],
         fillColor: view.getState(_cell).style[mxConstants.STYLE_FILLCOLOR],
         strokeColor: view.getState(_cell).style[mxConstants.STYLE_STROKECOLOR],
-        // 'state' : view.getState(cell),
-        // 'style': cell.getStyle(),
         isEdge: _cell.isEdge(),
         isVertex: _cell.isVertex(),
         level: -1
@@ -353,14 +413,31 @@ export default class MxPluginCtrl {
     this.graph.clearSelection();
   }
 
-  prettify() {
-    var enc = new mxCodec();
-    var node = enc.encode(this.graph.getModel());
-    let text = mxUtils.getPrettyXml(node);
-    this.panel.flowchart.source.xml.value = text;
+  encodeXml() {
+    if (!this.isencodedXml()) {
+      this.panel.flowchart.source.xml.value = u.encode(
+        this.panel.flowchart.source.xml.value,
+        true,
+        true,
+        true
+      );
+    }
   }
 
-  minify() {}
+  decodeXml() {
+    if (this.isencodedXml()) {
+      this.panel.flowchart.source.xml.value = u.decode(
+        this.panel.flowchart.source.xml.value,
+        true,
+        true,
+        true
+      );
+    }
+  }
+
+  isencodedXml() {
+    return u.isencoded(this.panel.flowchart.source.xml.value);
+  }
 
   //
   // Functions
@@ -379,17 +456,17 @@ export default class MxPluginCtrl {
           // console.debug("updateStateForShape|matching : ", _shape, _cell);
           found = true;
           if (_shape.level != -1) {
-            this.restoreShape(_cell.id);
-            this.changeShape(_cell.id, _shape.color, _shape.colorMode);
+            this.restoreColor(_cell.id);
+            this.changeColor(_cell.id, _shape.color, _shape.colorMode);
           } else if (_cell.level != -1) {
-            this.restoreShape(_cell.id);
+            this.restoreColor(_cell.id);
           }
           _cell.level = _shape.level;
         }
       });
       if (!found) {
         if (_cell.level != -1) {
-          this.restoreShape(_cell.id);
+          this.restoreColor(_cell.id);
           _cell.level = -1;
         }
       }
@@ -432,9 +509,10 @@ export default class MxPluginCtrl {
   }
 
   // Change color of shape
-  changeShape(id, color, style) {
+  changeColor(id, color, style) {
     if (style) {
-      let cell = this.graph.getModel().getCell(id);
+      let model = this.graph.getModel();
+      let cell = model.getCell(id);
       if (cell) {
         this.graph.setCellStyles(style, color, [cell]);
       }
@@ -442,7 +520,7 @@ export default class MxPluginCtrl {
   }
 
   // Restore color of shape
-  restoreShape(id) {
+  restoreColor(id) {
     let cell = this.graph.getModel().getCell(id);
     const old = _.find(this.cells, {
       id: id
@@ -510,7 +588,7 @@ export default class MxPluginCtrl {
     return new RegExp(match[1], match[2]);
   }
 
-  decodeXml(data) {
-    return u.decode(data,true,true,true);
-  }
+  // decodeXml(data) {
+  //   return u.decode(data,true,true,true);
+  // }
 }

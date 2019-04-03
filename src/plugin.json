@@ -3,18 +3,18 @@
   "name": "FlowCharting",
   "id": "agenty-flowcharting-panel",
   "info": {
-    "description": "Complexe FlowCharting panel for grafana",
+    "description": "Enhanced and complexe diagrams,flowchart, floorplans, ... for grafana based on draw.io editor",
     "author": {
       "name": "Arnaud GENTY",
       "url": "https://github.com/algenty/grafana-flowcharting"
     },
-    "keywords": ["flowchart", "panel", "diagram", "mxgraph"],
+    "keywords": ["flowchart", "panel", "diagram", "workflow", "floorplan", "map", "organigram", "draw.io", "visio", "mxgraph"],
     "links": [
       {"name": "Project site", "url": "https://github.com/algenty/grafana-flowcharting"},
       {"name": "Apache License", "url": "https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE"}
     ],
-    "version": "0.2.0",
-    "updated": "2019-03-15",
+    "version": "0.2.5",
+    "updated": "2019-04-03",
     "logos": {
         "small": "img/agenty-flowcharting.svg",
         "large": "img/agenty-flowcharting.svg"
@@ -23,6 +23,7 @@
 
   "dependencies": {
     "grafanaVersion": "4.x.x",
+    "grafanaVersion": "5.x.x",
     "plugins": [ ]
   }
 }

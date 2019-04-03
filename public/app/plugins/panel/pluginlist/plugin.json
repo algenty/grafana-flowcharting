@@ -1,0 +1,18 @@
+{
+  "type": "panel",
+  "name": "Plugin list",
+  "id": "pluginlist",
+
+  "info": {
+    "description": "Plugin List for Grafana",
+    "author": {
+      "name": "Grafana Project",
+      "url": "https://grafana.com"
+    },
+    "logos": {
+      "small": "img/icn-dashlist-panel.svg",
+      "large": "img/icn-dashlist-panel.svg"
+    },
+    "version": "5.0.0"
+  }
+}

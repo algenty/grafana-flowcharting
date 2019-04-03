@@ -9,51 +9,67 @@ Complexe Diagram and flowchart for grafana based on mxGraph librairies, see draw
   - Organigrams
   - And more ... (Edit through draw.io)
  
- ## example
- ![Diagram](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/example.png?raw=true)
+ ## examples
+ - Technical schema example
+ <img src="src/img/archi_example.png?raw=true" width="800">
+ - workflows or subways example
+ <img src="src/img/subway_example.png?raw=true" width="800">
  
 See more example at draw.io
 
- ## in grafana
- ![editor](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/editor_example.png?raw=true)
- ![tab2](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/editor_tab2.png?raw=true)
- ![tab2](https://raw.githubusercontent.com/algenty/grafana-flowcharting/master/src/img/editor_tab3.png?raw=true)
- 
-
 # Features
+
+
+## 0.2.5 (03/04/19)
+  - Bugs fix.
+  - Compress and uncompress button under xml source to optimize space in db
+  - Prettyfier and minifier of xml source
+  - Mapping Helper (chain icon)
+
+
+### Not work
+  - Only dark theme suported
+  - Url Source for graph definition
+  - Invert stroke color of arrow options
+  - Coloring Gradient is used on shape
+
+## 0.2 (18/03/19)
+### Works
+  - Display graph through xml definition
+  - Calibrate display (scale, center, background)
+  - Inspect tab to test states and shape from graph.
+  - Mapping values and colors (use stroke in color options for arrows instead fill)
+  - String type added with range or value mapping.
+  - Date type added
+  - multi rules with expand/collapes for better display, possibility to reorg rules
 
 ## 0.1
   - Display Graph
   - inspect tab
 
-## 0.2
-  - Display graph through xml definition
-  - Calibrate display (scale, center,background)
-  - inspect graph to test states and shape
-  - Mapping values and colors (use stroke in color options for arrows instead fill)
-  - String type added with range or value mapping.
-  - Date type added
-  - multi rules with expand/collapes for better displa, possibility to reorg rules
-
-  /!\ Only dark theme is supported at this time
-
 # Cooming soon
 
-## 0.3
-  - Clean code and optimize display
-
-## 1.0 TODO
+## 1.0 Pull request
   - Link on shape/text
-  - Tooltips on error
-  - Mapping on variables/templates
-  - Best manuals/docs when i would find contributors better than me in english
+  - Import Libs shapes from draw.io or custom libs. 
+  - Inverse stroke color for connector/edge to see it according theme.
+  - Export SVG options.
+  - Tooltips on error.
+  - Mapping on variables/templates.
+  - Add custom stencils.
+  - Best manuals/docs when i would find contributors better than me in english.
+  - Set visible or not according to state.
+  - Only dark theme is supported at this time
+  - Url source not implemented
+  - SVG export not implemented
 
 ## Pull request for version 2.0
-  - multi graph with auto link when errors
+  - Multi graph with auto link when errors
+  - Gradien Mode for color
 
 # issues
 
-Pull bugs and issues on https://github.com/algenty/grafana-flowcharting/issues
+Bugs and issues on https://github.com/algenty/grafana-flowcharting/issues
 
 # Tech
 
