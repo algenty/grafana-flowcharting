@@ -1,37 +1,17 @@
 import kbn from "app/core/utils/kbn";
+import { thisTypeAnnotation } from "@babel/types";
 
 export default class Rule {
     /** @ngInject */
     constructor(pattern,data) {
-        this.unit = "short";
-        this.type = "number";
-        this.alias = "";
-        this.aggregation = "current";
-        this.decimals = 2;
-        this.colors = [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
-        ];
-        this.style = 'fillColor';
-        this.colorOn = "a";
-        this.textOn = "wmd";
-        this.textReplace = "content";
-        this.textPattern = "/.*/";
-        this.pattern = pattern;
-        this.dateFormat = "YYYY-MM-DD HH:mm:ss";
-        this.thresholds = [];
-        this.invert = false;
-        this.shapeProp = "id";
+        this.data = data;
+        this.data.pattern = pattern;
         this.shapeMaps = [];
-        this.textProp = "id";
         this.textMaps = [];
-        this.linkProp = "id";
         this.linkMaps = [];
-        this.mappingType = 1;
         this.valueMaps = [];
         this.rangeMaps = [];
-        this.sanitize = false;
+        this.import(data)
     }
 
     getData() {
@@ -43,56 +23,70 @@ export default class Rule {
     }
 
     import(obj) {
-        this.data.unit = obj.unit;
-        this.data.type = obj.type;
-        this.alias = obj.alias;
-        this.aggregation = obj.aggregation;
-        this.decimals = obj.decimals;
-        this.colors = obj.colors;
-        this.style = obj.style;
-        this.colorOn = obj.colorOn;
-        this.textOn = obj.textOn;
-        this.textReplace = obj.textReplace;
-        this.textPattern = obj.textPattern;
-        this.pattern = obj.pattern;
-        this.dateFormat = obj.dateFormat;
-        this.thresholds = obj.thresholds;
-        this.invert = obj.invert;
-        this.shapeProp = obj.shapeProp;
-        this.shapeMaps = [];
-        obj.shapeMaps.forEach(map => {
-            let sm = new ShapeMap("");
+        this.data.unit = obj.unit || "short";
+        this.data.type = obj.type || "nember";
+        this.data.alias = obj.alias || "";
+        this.data.aggregation = obj.aggregation || "current"
+        this.data.decimals = obj.decimals || 2;
+        this.data.colors = obj.colors || [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+        ];
+        this.data.style = obj.style || 'fillColor'; 
+        this.data.colorOn = obj.colorOn || "a";
+        this.data.textOn = obj.textOn || "wmd";
+        this.data.textReplace = obj.textReplace || "content";
+        this.data.textPattern = obj.textPattern || "/.*";
+        this.data.pattern = obj.pattern || this.data.pattern;
+        this.data.dateFormat = obj.dateFormat || "YYYY-MM-DD HH:mm:ss";
+        this.data.thresholds = obj.thresholds || [];
+        this.data.invert = obj.invert || false;
+        this.data.shapeProp = obj.shapeProp || "id"
+        this.data.shapeData = [];
+        obj.shapeData.forEach(map => {
+            let data = {};
+            let sm = new ShapeMap("",data);
             sm.import(map)
-            this.shapeMaps.push()
+            this.shapeMaps.push(sm)
+            this.data.shapeData.push(data);
         });
-        this.textProp = "id";
-        this.textMaps = [];
-        obj.textMaps.forEach(map => {
-            let sm = new TextMap("");
-            sm.import(map)
-            this.textMaps.push()
+        this.data.textProp = obj.textProp || "id";
+        this.data.textData = [];
+        obj.textData.forEach(map => {
+            let data = {};
+            let tm = new TextMap("",data);
+            tm.import(map)
+            this.textMaps.push(tm);
+            this.data.textData(data);
         });
-        this.linkProp = "id";
-        this.linkMaps = [];
-        obj.linkMaps.forEach(map => {
-            let sm = new LinkMap("");
-            sm.import(map)
-            this.linkMaps.push()
+        this.data.linkProp = obj.linkProp || "id";
+        this.data.linkData = [];
+        obj.linkData.forEach(map => {
+            let data = {};
+            let lm = new LinkMap("",data);
+            lm.import(map);
+            this.linkMaps.push(lm);
+            this.data.linkData.push(data);
         });
-        this.mappingType = 1;
-        this.valueMaps = [];
-        obj.valueMaps.forEach(map => {
-            let sm = new ValueMap("");
-            sm.import(map)
-            this.valueMaps.push()
+        this.data.mappingType = obj.mappingType || 1;
+        this.data.valueData = [];
+        obj.valueData.forEach(map => {
+            let data = {};
+            let vm = new ValueMap("",data);
+            vm.import(map);
+            this.valueMaps.push(vm);
+            this.data.valueData.push(data);
         });
-        this.rangeMaps = [];
-        obj.rangeMaps.forEach(map => {
-            let sm = new ValueMap("");
-            sm.import(map)
-            this.rangeMaps.push()
+        this.data.rangeData = [];
+        obj.rangeData.forEach(map => {
+            let data = {};
+            let rm = new RangeMap("",data);
+            rm.import(map)
+            this.rangeMaps.push(rm)
+            this.data.rangeData.push(data);
         });
-        this.sanitize = false;
+        this.data.sanitize = obj.sanitize || false;
 
     }
 
@@ -101,17 +95,17 @@ export default class Rule {
     }
 
     invertColorOrder() {
-        const ref = this.colors;
+        const ref = this.data.colors;
         const copy = ref[0];
         ref[0] = ref[2];
         ref[2] = copy;
-        if (this.invert) this.invert = false;
-        else this.invert = true;
+        if (this.data.invert) this.data.invert = false;
+        else this.data.invert = true;
     }
 
     newColor(index, color) {
         return newColor => {
-            this.colors[index] = color;
+            this.data.colors[index] = color;
         };
     }
 
@@ -119,8 +113,8 @@ export default class Rule {
     // Conditions
     //
     toColorize(value) {
-        if (this.colorOn === "a") return true;
-        if (this.colorOn === "wc" && this.getThresholdLevel(value) >= 1) return true;
+        if (this.data.colorOn === "a") return true;
+        if (this.data.colorOn === "wc" && this.getThresholdLevel(value) >= 1) return true;
         return false
     }
 
@@ -128,15 +122,21 @@ export default class Rule {
     // Series
     //
     matchSerie(serie) {
-        if (this.pattern === null || this.pattern === undefined) return false;
-        return u.matchString(serie.alias, this.pattern);
+        if (this.data.pattern === null || this.data.pattern === undefined) return false;
+        return u.matchString(serie.alias, this.data.pattern);
     }
 
     //
     // SHAPE MAPS
     //
-    addShapeMap(pattern) { let m = new ShapeMap(pattern); this.shapeMaps.push(m); }
-    removeShapeMap(index) { this.shapeMaps.splice(index, 1); }
+    addShapeMap(pattern) { 
+        let data = {};
+        let m = new ShapeMap(pattern,data);
+        this.shapeMaps.push(m);
+        this.data.shapeData.push(data);
+     }
+
+    removeShapeMap(index) { this.data.shapeData.splice(index, 1); this.shapeMaps.splice(index, 1); }
     getShapeMap(index) { return this.shapeMaps[index]; }
     getShapeMaps() { return this.shapeMaps; }
     matchShape(pattern) {
@@ -150,8 +150,13 @@ export default class Rule {
     //
     // TEXT MAPS
     //
-    addTextMap(pattern) { let m = new TextMap(pattern); this.textMaps.push(m); };
-    removeTextMap(index) { let m = this.textMaps[index]; this.textMaps = _.without(this.textMaps, m) };
+    addTextMap(pattern) { 
+        let data = {};
+        let m = new TextMap(pattern,data); 
+        this.textMaps.push(m);
+        this.data.textData(data); 
+    };
+    removeTextMap(index) { this.data.textData.splice(index, 1); this.textMaps.splice(index, 1); };
     getTextMap(index) { return this.textMaps[index]; };
     getTextMaps() { return this.textMaps; }
     matchText(pattern) {
@@ -166,8 +171,16 @@ export default class Rule {
     //
     // LINK MAPS
     //
-    addLinkMap(pattern) { let m = new LinkMap(pattern); this.linkMaps.push(m); };
-    removeLinkMap(index) { let m = this.linkMaps[index]; this.linkMaps = _.without(this.linkMaps, m) };
+    addLinkMap(pattern) { 
+        let data = {};
+        let m = new LinkMap(pattern); 
+        this.linkMaps.push(m); 
+        this.data.linkdata.push(data);
+    };
+    removeLinkMap(index) { 
+        this.linkData.splice(index, 1); 
+        this.linkMaps.splice(index, 1); 
+    };
     getLinkMap(index) { return this.linkMaps[index]; };
     getLinkMaps() { return this.linkMaps; }
     matchLink(pattern) {
@@ -181,16 +194,26 @@ export default class Rule {
     //
     // STRING VALUE MAPS
     //
-    addValueMap(value, text) { let m = new ValueMap(value, text); this.valueMaps.push(m); }
-    removeValueMap(index) { this.valueMaps.splice(index, 1); }
+    addValueMap(value, text) {
+        let data = {}; 
+        let m = new ValueMap(value, text, data); 
+        this.valueMaps.push(m);
+        this.data.valueData.push(data); 
+    }
+    removeValueMap(index) { this.data.valueData.splice(index, 1); this.valueMaps.splice(index, 1); }
     getValueMap(index) { return this.valueMaps[index]; }
     getValueMaps() { return this.valueMaps; }
 
     //
     // STRING RANGE VALUE MAPS
     //
-    addRangeMap(from, to, text) { let m = new ValueMap(from, to, text); this.rangeMaps.push(m); }
-    removeRangeMap(index) { this.rangeMaps.splice(index, 1); }
+    addRangeMap(from, to, text) { 
+        let data = {};
+        let m = new ValueMap(from, to, text); 
+        this.rangeMaps.push(m); 
+        this.data.rangeData.push(data);
+    }
+    removeRangeMap(index) { this.data.rangeData.splice(index, 1); this.rangeMaps.splice(index, 1); }
     getRangeMap(index) { return this.rangeMaps[index]; }
     getRangeMaps() { return this.rangeMaps; }
     hideRangeMap(index) { this.rangeMaps[index].hide(); }
@@ -200,27 +223,27 @@ export default class Rule {
     // Format value
     //
     getColorForValue(value) {
-        if (!this.thresholds || this.thresholds.length == 0) {
+        if (!this.data.thresholds || this.data.thresholds.length == 0) {
             return null;
         }
 
-        for (let i = this.thresholds.length; i > 0; i--) {
-            if (value >= this.thresholds[i - 1]) {
-                return this.colors[i];
+        for (let i = this.data.thresholds.length; i > 0; i--) {
+            if (value >= this.data.thresholds[i - 1]) {
+                return this.data.colors[i];
             }
         }
-        return _.first(this.colors);
+        return _.first(this.data.colors);
     }
 
     getThresholdLevel(value) {
         var thresholdLevel = 0;
 
-        var thresholds = this.thresholds;
+        var thresholds = this.data.thresholds;
         if (thresholds === undefined || thresholds.length == 0) return -1;
         if (thresholds.length !== 2) return -1;
 
         // non invert
-        if (!this.invert) {
+        if (!this.data.invert) {
             thresholdLevel = 2;
             if (value >= thresholds[0]) thresholdLevel = 1;
             if (value >= thresholds[1]) thresholdLevel = 0;
@@ -235,7 +258,7 @@ export default class Rule {
 
     getValueForSerie(serie) {
         if (this.matchSerie(serie)) {
-            let value = _.get(serie.stats, this.aggregation);
+            let value = _.get(serie.stats, this.data.aggregation);
             if (value === undefined || value === null) {
                 value = serie.datapoints[serie.datapoints.length - 1][0];
             }
@@ -256,10 +279,10 @@ export default class Rule {
             if (value === null || value === void 0) { return "-"; }
             let decimals = this.decimalPlaces(value);
             decimals =
-                typeof this.decimals === "number"
-                    ? Math.min(this.decimals, decimals)
+                typeof this.data.decimals === "number"
+                    ? Math.min(this.data.decimals, decimals)
                     : decimals;
-            return formatValue(value, this.unit, this.decimals);
+            return formatValue(value, this.unit, this.data.decimals);
         }
 
         if (this.type === "string") {
@@ -300,14 +323,14 @@ export default class Rule {
             // if (this.dashboard.isTimezoneUtc()) {
             //     date = date.utc();
             // }
-            return date.format(this.dateFormat);
+            return date.format(this.data.dateFormat);
         }
     }
 
     getReplaceText(text, FormattedValue) {
-        if (this.textReplace === 'content') return FormattedValue;
+        if (this.data.textReplace === 'content') return FormattedValue;
         else {
-            const regexVal = u.stringToJsRegex(this.textPattern);
+            const regexVal = u.stringToJsRegex(this.data.textPattern);
             if (text.toString().match(regexVal))
                 return text.toString().replace(regexVal, FormattedValue)
         }
@@ -350,41 +373,44 @@ export default class Rule {
 // ShapeMap Class
 //
 class ShapeMap {
-    constructor(pattern) {
+    constructor(pattern,data) {
+        this.data = data
         this.id = u.uniqueID();
-        this.pattern = pattern;
-        this.hidden = false;
+        this.data.pattern;
+        this.data.pattern = pattern;
+        this.import(data);
+    }
+
+    import(obj) {
+        this.data.pattern = obj.pattern || "";
+        this.data.hidden = obj.hidden || false;
+    }
+
+    migrate(obj, version) {
+
     }
 
     match(text) {
         if (text === undefined || text === null || text.length === 0) return false;
-        return u.matchString(text, this.pattern);
+        return u.matchString(text, this.data.pattern);
     }
 
     getId() { return this.id; }
-    show() { this.hidden = false }
-    hide() { this.hidden = true }
-    isHidden() { return this.hidden }
-    migrate(obj, version) {
-        this.pattern = (obj.pattern != null && obj.pattern != undefined) ? obj.pattern : "/.*/";
-        this.hidden = (obj.hidden != null && obj.hidden != undefined) ? obj.hidden : false;
-    }
-    import(obj) {
-        this.pattern = obj.pattern;
-        this.hidden = obj.hidden;
-    }
+    show() { this.data.hidden = false }
+    hide() { this.data.hidden = true }
+    isHidden() { return this.data.hidden }
     export() {
         return {
-            'pattern': this.pattern,
-            'hidden': this.hidden
+            'pattern': this.data.pattern,
+            'hidden': this.data.hidden
         }
     }
     toColorize(value) {
-        if (this.hidden) return false;
+        if (this.data.hidden) return false;
         return this.rule.toColorize(value);
     }
     toVisible() {
-        if (this.hidden) return false;
+        if (this.data.hidden) return false;
         return true;
     }
 }
@@ -393,69 +419,72 @@ class ShapeMap {
 // TextMap Class
 //
 class TextMap {
-    constructor(pattern) {
+    constructor(pattern,data) {
+        this.data = data;
         this.id = u.uniqueID();
-        this.pattern = pattern;
-        this.hidden = false;
+        this.data.pattern = pattern;
+        this.import(data);
+    }
+
+    migrate(obj, version) {
+
+    }
+
+    import(obj) {
+        this.data.pattern = obj.pattern || data.pattern;
+        this.data.hidden = obj.hidden || false;
     }
 
     match(text) {
         if (text === undefined || text === null || text.length === 0) return false;
-        return u.matchString(text, this.pattern);
+        return u.matchString(text, this.data.pattern);
     }
 
     getId() { return this.id; }
-    show() { this.hidden = false };
-    hide() { this.hidden = true };
-    isHidden() { return this.hidden };
-    migrate(obj, version) {
-        this.pattern = (obj.pattern != null && obj.pattern != undefined) ? obj.pattern : "/.*/";
-        this.hidden = (obj.hidden != null && obj.hidden != undefined) ? obj.hidden : false;
-    }
-    import(obj) {
-        this.pattern = obj.pattern;
-        this.hidden = obj.hidden;
-    }
+    show() { this.data.hidden = false };
+    hide() { this.data.hidden = true };
+    isHidden() { return this.data.hidden };
     export() {
         return {
-            'pattern': this.pattern,
-            'hidden': this.hidden
+            'pattern': this.data.pattern,
+            'hidden': this.data.hidden
         }
     }
-
 }
 
 //
 // LinkMap Class
 //
 class LinkMap {
-    constructor(pattern) {
+    constructor(pattern,data) {
+        this.data = data;
         this.id = u.uniqueID();
-        this.pattern = pattern;
-        this.hidden = false;
+        this.data.pattern = pattern;
+        this.import(data);
+    }
+    
+    migrate(obj, version) {
+
+    }
+
+    import(obj) {
+        this.data.pattern = obj.pattern || this.data.pattern || ""
+        this.data.hidden = obj.hidden || false;
     }
 
     match(text) {
         if (text === undefined || text === null || text.length === 0) return false;
-        return u.matchString(text, this.pattern);
+        return u.matchString(text, this.data.pattern);
     }
 
     getId() { return this.id; }
-    show() { this.hidden = false };
-    hide() { this.hidden = true };
-    isHidden() { return this.hidden };
-    migrate(obj, version) {
-        this.pattern = (obj.pattern != null && obj.pattern != undefined) ? obj.pattern : "/.*/";
-        this.hidden = (obj.hidden != null && obj.hidden != undefined) ? obj.hidden : false;
-    }
-    import(obj) {
-        this.pattern = obj.pattern;
-        this.hidden = obj.hidden;
-    }
+    show() { this.data.hidden = false };
+    hide() { this.data.hidden = true };
+    isHidden() { return this.data.hidden };
     export() {
         return {
-            'pattern': this.pattern,
-            'hidden': this.hidden
+            'pattern': this.data.pattern,
+            'hidden': this.data.hidden
         }
     }
 }
@@ -464,20 +493,32 @@ class LinkMap {
 // RangeMap Class
 //
 class RangeMap {
-    constructor(from, to, text) {
+    constructor(from, to, text, data) {
+        this.data = data;
         this.id = u.uniqueID();
-        this.from = from;
-        this.to = to;
-        this.text = text;
-        this.hidden = false;
+        this.data.from = from;
+        this.data.to = to;
+        this.data.text = text;
+        this.data.hidden = false;
+        this.import(obj);
+    }
+
+    migrate(obj, version) {
+
+    }
+    import(obj) {
+        this.data.from = obj.from || this.data.from || "";
+        this.data.to = obj.to || this.data.to || "";
+        this.data.text = obj.text || this.data.text || "";
+        this.data.hidden = obj.hidden || this.data.hidden || false;
     }
 
     match(value) {
-        if (this.from === "null" && this.to === "null") {
+        if (this.data.from === "null" && this.data.to === "null") {
             return true;
         }
         if (value === null) {
-            if (this.from === "null" && this.to === "null") {
+            if (this.data.from === "null" && this.data.to === "null") {
                 true;
             }
         }
@@ -490,37 +531,25 @@ class RangeMap {
 
     getFormattedText(value, rule) {
         if (value === null) {
-            if (this.from === "null" && this.to === "null") {
-                return this.text;
+            if (this.data.from === "null" && this.data.to === "null") {
+                return this.data.text;
             }
         }
         if (this.match(value)) {
-            return this.defaultValueFormatter(this.text, rule);
+            return this.defaultValueFormatter(this.data.text, rule);
         }
         else return '-';
     }
 
-    show() { this.hidden = false };
-    hide() { this.hidden = true };
-    isHidden() { return this.hidden };
-    migrate(obj, version) {
-        this.from = (obj.from != null && obj.from != undefined) ? obj.from : "";
-        this.to = (obj.to != null && obj.to != undefined) ? obj.to : "";
-        this.text = (obj.text != null && obj.text != undefined) ? obj.text : "";
-        this.hidden = (obj.hidden != null && obj.hidden != undefined) ? obj.hidden : false;
-    }
-    import(obj) {
-        this.from = (obj.from != null && obj.from != undefined) ? obj.from : "";
-        this.to = (obj.to != null && obj.to != undefined) ? obj.to : "";
-        this.text = (obj.text != null && obj.text != undefined) ? obj.text : "";
-        this.hidden = (obj.hidden != null && obj.hidden != undefined) ? obj.hidden : false;
-    }
+    show() { this.data.hidden = false };
+    hide() { this.data.hidden = true };
+    isHidden() { return this.data.hidden };
     export() {
         return {
-            'from': this.from,
-            'to': this.to,
-            'text': this.text,
-            'hidden': this.hidden
+            'from': this.data.from,
+            'to': this.data.to,
+            'text': this.data.text,
+            'hidden': this.data.hidden
         }
     }
 }
@@ -529,64 +558,61 @@ class RangeMap {
 // ValueMap Class
 //
 class ValueMap {
-    constructor(rule, value, text) {
+    constructor(rule, value, text,data) {
         this.id = u.uniqueID();
-        this.rule = rule;
-        this.value = value;
-        this.text = text;
-        this.hidden = false;
+        this.data.rule = rule;
+        this.data.value = value;
+        this.data.text = text;
+        this.data.hidden = false;
+        this.import(data)
     }
 
+    import(obj) {
+        this.data.value = obj.value || this.data.value || "";
+        this.data.text = obj.text || this.data.text || "";
+        this.data.hidden = obj.hidden || this.data.hidden || false;
+    }
+    
     match(value) {
-
+        
         if (value === null || value === undefined) {
-            if (this.value === "null") {
+            if (this.data.value === "null") {
                 return true;
             }
         }
 
-        if (!_.isString(value) && Number(this.value) === Number(value)) {
+        if (!_.isString(value) && Number(this.data.value) === Number(value)) {
             return true;
         }
-        const regex = u.stringToJsRegex(this.value);
+        const regex = u.stringToJsRegex(this.data.value);
         let matching = text.match(regex);
         if (this.pattern == text || matching) return true;
         else return false;
     }
-
+    
     getId() { return this.id; }
 
     getFormattedText(value) {
-        let rule = this.rule;
+        let rule = this.data.rule;
         if (value === null) {
-            if (this.value === "null") {
-                return this.text;
+            if (this.data.value === "null") {
+                return this.data.text;
             }
         }
         if (this.match(value)) {
-            return this.defaultValueFormatter(this.text, rule);
+            return this.defaultValueFormatter(this.data.text, rule);
         }
         else return '-';
     }
 
-    show() { this.hidden = false };
-    hide() { this.hidden = true };
-    isHidden() { return this.hidden };
-    migrate(obj, version) {
-        this.value = (obj.value != null && obj.value != undefined) ? obj.value : "/.*/";
-        this.text = (obj.text != null && obj.text != undefined) ? obj.text : "/.*/";
-        this.hidden = (obj.hidden != null && obj.hidden != undefined) ? obj.hidden : false;
-    }
-    import(obj) {
-        this.value = obj.value;
-        this.text = obj.text;
-        this.hidden = obj.hidden;
-    }
+    show() { this.data.hidden = false };
+    hide() { this.data.hidden = true };
+    isHidden() { return this.data.hidden };
     export() {
         return {
-            'value': this.value,
-            'text': this.text,
-            'hidden': this.hidden
+            'value': this.data.value,
+            'text': this.data.text,
+            'hidden': this.data.hidden
         }
     }
 }
