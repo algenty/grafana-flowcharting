@@ -56,7 +56,7 @@
                 type="text"
                 placeholder="Name or regex of metric"
                 class="gf-form-input width-13"
-                ng-model="rule.pattern"
+                ng-model="rule.data.pattern"
                 bs-tooltip="'Specify regex using /my.*regex/ syntax'"
                 bs-typeahead="editor.getMetricNames"
                 ng-blur="editor.onOptionsChange()"
@@ -72,7 +72,7 @@
             <input
               type="text"
               class="gf-form-input width-12"
-              ng-model="rule.alias"
+              ng-model="rule.data.alias"
               ng-change="editor.onOptionsChange()"
               ng-model-onblur
               placeholder="name for tooltip"
@@ -83,7 +83,7 @@
             <div class="gf-form-select-wrapper width-12">
               <select
                 class="gf-form-input"
-                ng-model="rule.aggregation"
+                ng-model="rule.data.aggregation"
                 ng-options="c.value as c.text for c in editor.aggregationTypes"
                 ng-change="editor.onOptionsChange()"
               ></select>
@@ -108,7 +108,7 @@
             <div class="gf-form-select-wrapper width-16">
               <select
                 class="gf-form-input"
-                ng-model="rule.type"
+                ng-model="rule.data.type"
                 ng-options="c.value as c.text for c in editor.metricTypes"
                 ng-change="editor.onOptionsChange()"
               ></select>
@@ -153,7 +153,7 @@
               <label class="gf-form-label width-10">Unit</label>
               <div
                 class="gf-form-dropdown-typeahead width-16"
-                ng-model="rule.unit"
+                ng-model="rule.data.unit"
                 dropdown-typeahead2="editor.unitFormats"
                 dropdown-typeahead-on-select="editor.setUnitFormat(rule, $subItem)"
               ></div>
@@ -164,7 +164,7 @@
                 type="number"
                 class="gf-form-input width-4"
                 data-placement="right"
-                ng-model="rule.decimals"
+                ng-model="rule.data.decimals"
                 ng-change="editor.onOptionsChange()"
                 ng-model-onblur
               />
@@ -191,7 +191,7 @@
             <input
               type="text"
               class="gf-form-input width-10"
-              ng-model="rule.thresholds"
+              ng-model="rule.data.thresholds"
               placeholder="50,80"
               ng-blur="editor.onOptionsChange()"
               array-join
@@ -202,7 +202,7 @@
             <div class="gf-form-select-wrapper width-10">
               <select
                 class="gf-form-input"
-                ng-model="rule.style"
+                ng-model="rule.data.style"
                 ng-options="c.value as c.text for c in editor.style"
                 ng-change="editor.onOptionsChange()"
               ></select>
@@ -247,7 +247,7 @@
             <div class="gf-form-select-wrapper width-12">
               <select
                 class="gf-form-input"
-                ng-model="rule.colorOn"
+                ng-model="rule.data.colorOn"
                 ng-options="c.value as c.text for c in editor.colorOn"
                 ng-change="editor.onOptionsChange()"
               ></select>
@@ -258,7 +258,7 @@
             <div class="gf-form-select-wrapper width-12">
               <select
                 class="gf-form-input"
-                ng-model="rule.textOn"
+                ng-model="rule.data.textOn"
                 ng-options="c.value as c.text for c in editor.textOn"
                 ng-change="editor.onOptionsChange()"
               ></select>
@@ -269,7 +269,7 @@
             <div class="gf-form-select-wrapper width-12">
               <select
                 class="gf-form-input"
-                ng-model="rule.textReplace"
+                ng-model="rule.data.textReplace"
                 ng-options="c.value as c.text for c in editor.textReplace"
                 ng-change="editor.onOptionsChange()"
               ></select>
@@ -283,7 +283,7 @@
             <input
               type="text"
               class="gf-form-input width-12"
-              ng-model="rule.textPattern"
+              ng-model="rule.data.textPattern"
               ng-change="editor.onOptionsChange()"
               ng-model-onblur
               placeholder="name for tooltip"
@@ -317,7 +317,7 @@
             <input
               type="text"
               class="gf-form-input width-29"
-              ng-model="rule.linkUrl"
+              ng-model="rule.data.linkUrl"
               ng-blur="editor.onOptionsChange()"
               ng-model-onblur
               data-placement="right"
@@ -347,7 +347,7 @@
             class="gf-form"
             label-class="width-9"
             label="Open in new tab"
-            checked="rule.linkTargetBlank"
+            checked="rule.data.linkTargetBlank"
           >
           </gf-form-switch>
         </div>
@@ -365,7 +365,7 @@
               <div class="gf-form-select-wrapper">
                 <select
                   class="gf-form-input width-10"
-                  ng-model="rule.shapeProp"
+                  ng-model="rule.data.shapeProp"
                   ng-options="c.value as c.text for c in editor.propTypes"
                   ng-change="editor.onOptionsChange()"
                 ></select>
@@ -465,7 +465,7 @@
               <div class="gf-form-select-wrapper">
                 <select
                   class="gf-form-input width-10"
-                  ng-model="rule.textProp"
+                  ng-model="rule.data.textProp"
                   ng-options="c.value as c.text for c in editor.propTypes"
                   ng-change="editor.onOptionsChange()"
                 ></select>
@@ -567,7 +567,7 @@
               <div class="gf-form-select-wrapper">
                 <select
                   class="gf-form-input width-10"
-                  ng-model="rule.linkProp"
+                  ng-model="rule.data.linkProp"
                   ng-options="c.value as c.text for c in editor.propTypes"
                   ng-change="editor.onOptionsChange()"
                 ></select>
@@ -670,7 +670,7 @@
                 <div class="gf-form-select-wrapper">
                   <select
                     class="gf-form-input width-10"
-                    ng-model="rule.mappingType"
+                    ng-model="rule.data.mappingType"
                     ng-options="c.value as c.text for c in editor.mappingTypes"
                     ng-change="editor.onOptionsChange()"
                   ></select>
