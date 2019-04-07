@@ -64,23 +64,23 @@ function () {
         var FormattedValue = rule.getFormattedValue(value);
         var level = rule.getThresholdLevel(value); //SHAPE
 
-        var cellProp = this.getCellProp(rule.shapeProp);
+        var cellProp = this.getCellProp(rule.data.shapeProp);
         shapeMaps.forEach(function (shape) {
           if (!shape.isHidden() && shape.match(cellProp)) {
             _this2.matchedShape = true;
             _this2.matched = true;
 
             if (_this2.globalLevel <= level) {
-              _this2.setLevelStyle(rule.style, level);
+              _this2.setLevelStyle(rule.data.style, level);
 
               if (rule.toColorize()) {
-                _this2.setColorStyle(rule.style, rule.getColorForValue(value));
+                _this2.setColorStyle(rule.data.style, rule.getColorForValue(value));
               }
             }
           }
         }); //TEXT
 
-        cellProp = this.getCellProp(rule.textProp);
+        cellProp = this.getCellProp(rule.data.textProp);
         textMaps.forEach(function (text) {
           if (!text.isHidden() && text.match(cellProp)) {
             _this2.matchedText = true;
@@ -92,7 +92,7 @@ function () {
           }
         }); // LINK
 
-        cellProp = this.getCellProp(rule.linkProp);
+        cellProp = this.getCellProp(rule.data.linkProp);
         linkMaps.forEach(function (link) {
           if (!link.isHidden() && link.match(cellProp)) {
             _this2.matchedLink = true;

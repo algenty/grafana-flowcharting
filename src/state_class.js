@@ -41,21 +41,21 @@ export default class State {
       let FormattedValue = rule.getFormattedValue(value);
       let level = rule.getThresholdLevel(value);
       //SHAPE
-      let cellProp = this.getCellProp(rule.shapeProp);
+      let cellProp = this.getCellProp(rule.data.shapeProp);
       shapeMaps.forEach(shape => {
         if (!shape.isHidden() && shape.match(cellProp)) {
           this.matchedShape = true;
           this.matched = true;
           if (this.globalLevel <= level) {
-            this.setLevelStyle(rule.style, level);
+            this.setLevelStyle(rule.data.style, level);
             if (rule.toColorize()) {
-              this.setColorStyle(rule.style, rule.getColorForValue(value));
+              this.setColorStyle(rule.data.style, rule.getColorForValue(value));
             }
           }
         }
       });
       //TEXT
-      cellProp = this.getCellProp(rule.textProp);
+      cellProp = this.getCellProp(rule.data.textProp);
       textMaps.forEach(text => {
         if (!text.isHidden() && text.match(cellProp)) {
           this.matchedText = true;
@@ -66,7 +66,7 @@ export default class State {
         }
       });
       // LINK
-      cellProp = this.getCellProp(rule.linkProp);
+      cellProp = this.getCellProp(rule.data.linkProp);
       linkMaps.forEach(link => {
         if (!link.isHidden() && link.match(cellProp)) {
           this.matchedLink = true;

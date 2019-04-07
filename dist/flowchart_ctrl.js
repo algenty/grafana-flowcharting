@@ -97,12 +97,6 @@ function (_MetricsPanelCtrl) {
           url: {
             value: "http://<source>:<port>/<pathToXml>"
           },
-          editor: {
-            value: "Not yet"
-          },
-          json: {
-            value: "Not yet"
-          },
           javascript: {
             value: "Not yet"
           },

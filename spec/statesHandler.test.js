@@ -35,13 +35,13 @@ describe("Object", () => {
 
 describe("With rules", () => {
     var sh = new StatesHandler(scope,mx);
-    let rule = new Rule("/.*/");
-    rule.thresholds = [50, 80];
+    let data = {};
+    let rule = new Rule("/.*/",data);
+    rule.data.thresholds = [50, 80];
     rule.addShapeMap("shape-mxgraph");
     test('setStates', () => {
         sh.setStates([rule],series)
         expect(sh.countStatesWithLevel(-1)).toBe(10);
         expect(sh.countStatesWithLevel(1)).toBe(1);
     })
-
 });

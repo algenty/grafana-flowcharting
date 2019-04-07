@@ -22,31 +22,14 @@ function () {
   function Rule(pattern, data) {
     _classCallCheck(this, Rule);
 
-    this.unit = "short";
-    this.type = "number";
-    this.alias = "";
-    this.aggregation = "current";
-    this.decimals = 2;
-    this.colors = ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"];
-    this.style = 'fillColor';
-    this.colorOn = "a";
-    this.textOn = "wmd";
-    this.textReplace = "content";
-    this.textPattern = "/.*/";
-    this.pattern = pattern;
-    this.dateFormat = "YYYY-MM-DD HH:mm:ss";
-    this.thresholds = [];
-    this.invert = false;
-    this.shapeProp = "id";
+    this.data = data;
+    this.data.pattern = pattern;
     this.shapeMaps = [];
-    this.textProp = "id";
     this.textMaps = [];
-    this.linkProp = "id";
     this.linkMaps = [];
-    this.mappingType = 1;
     this.valueMaps = [];
     this.rangeMaps = [];
-    this.sanitize = false;
+    this.import(data);
   }
 
   _createClass(Rule, [{
@@ -64,61 +47,96 @@ function () {
     value: function _import(obj) {
       var _this = this;
 
-      this.data.unit = obj.unit;
-      this.data.type = obj.type;
-      this.alias = obj.alias;
-      this.aggregation = obj.aggregation;
-      this.decimals = obj.decimals;
-      this.colors = obj.colors;
-      this.style = obj.style;
-      this.colorOn = obj.colorOn;
-      this.textOn = obj.textOn;
-      this.textReplace = obj.textReplace;
-      this.textPattern = obj.textPattern;
-      this.pattern = obj.pattern;
-      this.dateFormat = obj.dateFormat;
-      this.thresholds = obj.thresholds;
-      this.invert = obj.invert;
-      this.shapeProp = obj.shapeProp;
-      this.shapeMaps = [];
-      obj.shapeMaps.forEach(function (map) {
-        var sm = new ShapeMap("");
-        sm.import(map);
+      this.data.unit = obj.unit || "short";
+      this.data.type = obj.type || "number";
+      this.data.alias = obj.alias || "";
+      this.data.aggregation = obj.aggregation || "current";
+      this.data.decimals = obj.decimals || 2;
+      this.data.colors = obj.colors || ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"];
+      this.data.style = obj.style || 'fillColor';
+      this.data.colorOn = obj.colorOn || "a";
+      this.data.textOn = obj.textOn || "wmd";
+      this.data.textReplace = obj.textReplace || "content";
+      this.data.textPattern = obj.textPattern || "/.*/";
+      this.data.pattern = obj.pattern || this.data.pattern;
+      this.data.dateFormat = obj.dateFormat || "YYYY-MM-DD HH:mm:ss";
+      this.data.thresholds = obj.thresholds || [];
+      this.data.invert = obj.invert || false;
+      this.data.shapeProp = obj.shapeProp || "id";
+      this.data.shapeData = [];
 
-        _this.shapeMaps.push();
-      });
-      this.textProp = "id";
-      this.textMaps = [];
-      obj.textMaps.forEach(function (map) {
-        var sm = new TextMap("");
-        sm.import(map);
+      if (obj.shapeData != undefined && obj.shapeData != null && obj.shapeData.length > 0) {
+        obj.shapeData.forEach(function (map) {
+          var data = {};
+          var sm = new ShapeMap("", data);
+          sm.import(map);
 
-        _this.textMaps.push();
-      });
-      this.linkProp = "id";
-      this.linkMaps = [];
-      obj.linkMaps.forEach(function (map) {
-        var sm = new LinkMap("");
-        sm.import(map);
+          _this.shapeMaps.push(sm);
 
-        _this.linkMaps.push();
-      });
-      this.mappingType = 1;
-      this.valueMaps = [];
-      obj.valueMaps.forEach(function (map) {
-        var sm = new ValueMap("");
-        sm.import(map);
+          _this.data.shapeData.push(data);
+        });
+      }
 
-        _this.valueMaps.push();
-      });
-      this.rangeMaps = [];
-      obj.rangeMaps.forEach(function (map) {
-        var sm = new ValueMap("");
-        sm.import(map);
+      this.data.textProp = obj.textProp || "id";
+      this.data.textData = [];
 
-        _this.rangeMaps.push();
-      });
-      this.sanitize = false;
+      if (obj.textData != undefined && obj.textData != null && obj.textData.length > 0) {
+        obj.textData.forEach(function (map) {
+          var data = {};
+          var tm = new TextMap("", data);
+          tm.import(map);
+
+          _this.textMaps.push(tm);
+
+          _this.data.textData.push(data);
+        });
+      }
+
+      this.data.linkProp = obj.linkProp || "id";
+      this.data.linkData = [];
+
+      if (obj.linkData != undefined && obj.linkData != null && obj.linkData.length > 0) {
+        obj.linkData.forEach(function (map) {
+          var data = {};
+          var lm = new LinkMap("", data);
+          lm.import(map);
+
+          _this.linkMaps.push(lm);
+
+          _this.data.linkData.push(data);
+        });
+      }
+
+      this.data.mappingType = obj.mappingType || 1;
+      this.data.valueData = [];
+
+      if (obj.valueData != undefined && obj.valueData != null && obj.valueData.length > 0) {
+        obj.valueData.forEach(function (map) {
+          var data = {};
+          var vm = new ValueMap("", data);
+          vm.import(map);
+
+          _this.valueMaps.push(vm);
+
+          _this.data.valueData.push(data);
+        });
+      }
+
+      this.data.rangeData = [];
+
+      if (obj.rangeData != undefined && obj.rangeData != null && obj.rangeData.length > 0) {
+        obj.rangeData.forEach(function (map) {
+          var data = {};
+          var rm = new RangeMap("", data);
+          rm.import(map);
+
+          _this.rangeMaps.push(rm);
+
+          _this.data.rangeData.push(data);
+        });
+      }
+
+      this.data.sanitize = obj.sanitize || false;
     }
   }, {
     key: "migrate",
@@ -126,11 +144,11 @@ function () {
   }, {
     key: "invertColorOrder",
     value: function invertColorOrder() {
-      var ref = this.colors;
+      var ref = this.data.colors;
       var copy = ref[0];
       ref[0] = ref[2];
       ref[2] = copy;
-      if (this.invert) this.invert = false;else this.invert = true;
+      if (this.data.invert) this.data.invert = false;else this.data.invert = true;
     }
   }, {
     key: "newColor",
@@ -138,7 +156,7 @@ function () {
       var _this2 = this;
 
       return function (newColor) {
-        _this2.colors[index] = color;
+        _this2.data.colors[index] = color;
       };
     } //
     // Conditions
@@ -147,8 +165,8 @@ function () {
   }, {
     key: "toColorize",
     value: function toColorize(value) {
-      if (this.colorOn === "a") return true;
-      if (this.colorOn === "wc" && this.getThresholdLevel(value) >= 1) return true;
+      if (this.data.colorOn === "a") return true;
+      if (this.data.colorOn === "wc" && this.getThresholdLevel(value) >= 1) return true;
       return false;
     } //
     // Series
@@ -157,8 +175,8 @@ function () {
   }, {
     key: "matchSerie",
     value: function matchSerie(serie) {
-      if (this.pattern === null || this.pattern === undefined) return false;
-      return u.matchString(serie.alias, this.pattern);
+      if (this.data.pattern === null || this.data.pattern === undefined) return false;
+      return u.matchString(serie.alias, this.data.pattern);
     } //
     // SHAPE MAPS
     //
@@ -166,12 +184,17 @@ function () {
   }, {
     key: "addShapeMap",
     value: function addShapeMap(pattern) {
-      var m = new ShapeMap(pattern);
+      debugger;
+      var data = {};
+      var m = new ShapeMap(pattern, data);
+      m.import(data);
       this.shapeMaps.push(m);
+      this.data.shapeData.push(data);
     }
   }, {
     key: "removeShapeMap",
     value: function removeShapeMap(index) {
+      this.data.shapeData.splice(index, 1);
       this.shapeMaps.splice(index, 1);
     }
   }, {
@@ -199,14 +222,17 @@ function () {
   }, {
     key: "addTextMap",
     value: function addTextMap(pattern) {
-      var m = new TextMap(pattern);
+      var data = {};
+      var m = new TextMap(pattern, data);
+      m.import(data);
       this.textMaps.push(m);
+      this.data.textData.push(data);
     }
   }, {
     key: "removeTextMap",
     value: function removeTextMap(index) {
-      var m = this.textMaps[index];
-      this.textMaps = _.without(this.textMaps, m);
+      this.data.textData.splice(index, 1);
+      this.textMaps.splice(index, 1);
     }
   }, {
     key: "getTextMap",
@@ -233,14 +259,17 @@ function () {
   }, {
     key: "addLinkMap",
     value: function addLinkMap(pattern) {
-      var m = new LinkMap(pattern);
+      var data = {};
+      var m = new LinkMap(pattern, data);
+      m.import(data);
       this.linkMaps.push(m);
+      this.data.linkData.push(data);
     }
   }, {
     key: "removeLinkMap",
     value: function removeLinkMap(index) {
-      var m = this.linkMaps[index];
-      this.linkMaps = _.without(this.linkMaps, m);
+      this.data.linkData.splice(index, 1);
+      this.linkMaps.splice(index, 1);
     }
   }, {
     key: "getLinkMap",
@@ -267,12 +296,16 @@ function () {
   }, {
     key: "addValueMap",
     value: function addValueMap(value, text) {
-      var m = new ValueMap(value, text);
+      var data = {};
+      var m = new ValueMap(value, text, data);
+      m.import(data);
       this.valueMaps.push(m);
+      this.data.valueData.push(data);
     }
   }, {
     key: "removeValueMap",
     value: function removeValueMap(index) {
+      this.data.valueData.splice(index, 1);
       this.valueMaps.splice(index, 1);
     }
   }, {
@@ -291,12 +324,15 @@ function () {
   }, {
     key: "addRangeMap",
     value: function addRangeMap(from, to, text) {
-      var m = new ValueMap(from, to, text);
+      var data = {};
+      var m = new RangeMap(from, to, text, data);
       this.rangeMaps.push(m);
+      this.data.rangeData.push(data);
     }
   }, {
     key: "removeRangeMap",
     value: function removeRangeMap(index) {
+      this.data.rangeData.splice(index, 1);
       this.rangeMaps.splice(index, 1);
     }
   }, {
@@ -325,27 +361,27 @@ function () {
   }, {
     key: "getColorForValue",
     value: function getColorForValue(value) {
-      if (!this.thresholds || this.thresholds.length == 0) {
+      if (!this.data.thresholds || this.data.thresholds.length == 0) {
         return null;
       }
 
-      for (var i = this.thresholds.length; i > 0; i--) {
-        if (value >= this.thresholds[i - 1]) {
-          return this.colors[i];
+      for (var i = this.data.thresholds.length; i > 0; i--) {
+        if (value >= this.data.thresholds[i - 1]) {
+          return this.data.colors[i];
         }
       }
 
-      return _.first(this.colors);
+      return _.first(this.data.colors);
     }
   }, {
     key: "getThresholdLevel",
     value: function getThresholdLevel(value) {
       var thresholdLevel = 0;
-      var thresholds = this.thresholds;
+      var thresholds = this.data.thresholds;
       if (thresholds === undefined || thresholds.length == 0) return -1;
       if (thresholds.length !== 2) return -1; // non invert
 
-      if (!this.invert) {
+      if (!this.data.invert) {
         thresholdLevel = 2;
         if (value >= thresholds[0]) thresholdLevel = 1;
         if (value >= thresholds[1]) thresholdLevel = 0;
@@ -361,7 +397,7 @@ function () {
     key: "getValueForSerie",
     value: function getValueForSerie(serie) {
       if (this.matchSerie(serie)) {
-        var value = _.get(serie.stats, this.aggregation);
+        var value = _.get(serie.stats, this.data.aggregation);
 
         if (value === undefined || value === null) {
           value = serie.datapoints[serie.datapoints.length - 1][0];
@@ -382,7 +418,7 @@ function () {
     key: "getFormattedValue",
     value: function getFormattedValue(value) {
       // Number
-      if (this.type === "number") {
+      if (this.data.type === "number") {
         if (!_.isFinite(value)) return "Invalid Number";
 
         if (value === null || value === void 0) {
@@ -390,33 +426,33 @@ function () {
         }
 
         var decimals = this.decimalPlaces(value);
-        decimals = typeof this.decimals === "number" ? Math.min(this.decimals, decimals) : decimals;
-        return formatValue(value, this.unit, this.decimals);
+        decimals = typeof this.data.decimals === "number" ? Math.min(this.data.decimals, decimals) : decimals;
+        return formatValue(value, this.data.unit, this.data.decimals);
       }
 
-      if (this.type === "string") {
+      if (this.data.type === "string") {
         if (_.isArray(value)) {
           value = value.join(", ");
         }
 
-        var mappingType = this.mappingType || 0;
+        var mappingType = this.data.mappingType || 0;
 
         if (mappingType === 1 && this.valueMaps) {
           for (var i = 0; i < this.valueMaps.length; i++) {
-            var _map = this.valueMaps[i];
-            if (_map.match(value)) return _map.getFormattedText(value);
+            var map = this.valueMaps[i];
+            if (map.match(value)) return map.getFormattedText(value);
           }
 
-          return '-';
+          return value.toString();
         }
 
         if (mappingType === 2 && this.rangeMaps) {
           for (var _i = 0; _i < this.rangeMaps.length; _i++) {
-            var _map2 = this.rangeMaps[_i];
-            if (_map2.match(value)) return _map2.getFormattedText(value);
+            var _map = this.rangeMaps[_i];
+            if (_map.match(value)) return _map.getFormattedText(value);
           }
 
-          return '-';
+          return value.toString();
         }
 
         if (value === null || value === void 0) {
@@ -424,7 +460,7 @@ function () {
         }
       }
 
-      if (this.type === "date") {
+      if (this.data.type === "date") {
         if (value === undefined || value === null) {
           return "-";
         }
@@ -437,14 +473,14 @@ function () {
         //     date = date.utc();
         // }
 
-        return date.format(this.dateFormat);
+        return date.format(this.data.dateFormat);
       }
     }
   }, {
     key: "getReplaceText",
     value: function getReplaceText(text, FormattedValue) {
-      if (this.textReplace === 'content') return FormattedValue;else {
-        var regexVal = u.stringToJsRegex(this.textPattern);
+      if (this.data.textReplace === 'content') return FormattedValue;else {
+        var regexVal = u.stringToJsRegex(this.data.textPattern);
         if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
       }
       return text;
@@ -492,19 +528,30 @@ exports.default = Rule;
 var ShapeMap =
 /*#__PURE__*/
 function () {
-  function ShapeMap(pattern) {
+  function ShapeMap(pattern, data) {
     _classCallCheck(this, ShapeMap);
 
+    this.data = data;
     this.id = u.uniqueID();
-    this.pattern = pattern;
-    this.hidden = false;
+    this.data.pattern;
+    this.data.pattern = pattern;
+    this.import(data);
   }
 
   _createClass(ShapeMap, [{
+    key: "import",
+    value: function _import(obj) {
+      this.data.pattern = obj.pattern || "";
+      this.data.hidden = obj.hidden || false;
+    }
+  }, {
+    key: "migrate",
+    value: function migrate(obj, version) {}
+  }, {
     key: "match",
     value: function match(text) {
       if (text === undefined || text === null || text.length === 0) return false;
-      return u.matchString(text, this.pattern);
+      return u.matchString(text, this.data.pattern);
     }
   }, {
     key: "getId",
@@ -514,48 +561,36 @@ function () {
   }, {
     key: "show",
     value: function show() {
-      this.hidden = false;
+      this.data.hidden = false;
     }
   }, {
     key: "hide",
     value: function hide() {
-      this.hidden = true;
+      this.data.hidden = true;
     }
   }, {
     key: "isHidden",
     value: function isHidden() {
-      return this.hidden;
-    }
-  }, {
-    key: "migrate",
-    value: function migrate(obj, version) {
-      this.pattern = obj.pattern != null && obj.pattern != undefined ? obj.pattern : "/.*/";
-      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
-    }
-  }, {
-    key: "import",
-    value: function _import(obj) {
-      this.pattern = obj.pattern;
-      this.hidden = obj.hidden;
+      return this.data.hidden;
     }
   }, {
     key: "export",
     value: function _export() {
       return {
-        'pattern': this.pattern,
-        'hidden': this.hidden
+        'pattern': this.data.pattern,
+        'hidden': this.data.hidden
       };
     }
   }, {
     key: "toColorize",
     value: function toColorize(value) {
-      if (this.hidden) return false;
+      if (this.data.hidden) return false;
       return this.rule.toColorize(value);
     }
   }, {
     key: "toVisible",
     value: function toVisible() {
-      if (this.hidden) return false;
+      if (this.data.hidden) return false;
       return true;
     }
   }]);
@@ -569,19 +604,29 @@ function () {
 var TextMap =
 /*#__PURE__*/
 function () {
-  function TextMap(pattern) {
+  function TextMap(pattern, data) {
     _classCallCheck(this, TextMap);
 
+    this.data = data;
     this.id = u.uniqueID();
-    this.pattern = pattern;
-    this.hidden = false;
+    this.data.pattern = pattern;
+    this.import(data);
   }
 
   _createClass(TextMap, [{
+    key: "migrate",
+    value: function migrate(obj, version) {}
+  }, {
+    key: "import",
+    value: function _import(obj) {
+      this.data.pattern = obj.pattern || data.pattern;
+      this.data.hidden = obj.hidden || false;
+    }
+  }, {
     key: "match",
     value: function match(text) {
       if (text === undefined || text === null || text.length === 0) return false;
-      return u.matchString(text, this.pattern);
+      return u.matchString(text, this.data.pattern);
     }
   }, {
     key: "getId",
@@ -591,36 +636,24 @@ function () {
   }, {
     key: "show",
     value: function show() {
-      this.hidden = false;
+      this.data.hidden = false;
     }
   }, {
     key: "hide",
     value: function hide() {
-      this.hidden = true;
+      this.data.hidden = true;
     }
   }, {
     key: "isHidden",
     value: function isHidden() {
-      return this.hidden;
-    }
-  }, {
-    key: "migrate",
-    value: function migrate(obj, version) {
-      this.pattern = obj.pattern != null && obj.pattern != undefined ? obj.pattern : "/.*/";
-      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
-    }
-  }, {
-    key: "import",
-    value: function _import(obj) {
-      this.pattern = obj.pattern;
-      this.hidden = obj.hidden;
+      return this.data.hidden;
     }
   }, {
     key: "export",
     value: function _export() {
       return {
-        'pattern': this.pattern,
-        'hidden': this.hidden
+        'pattern': this.data.pattern,
+        'hidden': this.data.hidden
       };
     }
   }]);
@@ -634,19 +667,29 @@ function () {
 var LinkMap =
 /*#__PURE__*/
 function () {
-  function LinkMap(pattern) {
+  function LinkMap(pattern, data) {
     _classCallCheck(this, LinkMap);
 
+    this.data = data;
     this.id = u.uniqueID();
-    this.pattern = pattern;
-    this.hidden = false;
+    this.data.pattern = pattern;
+    this.import(data);
   }
 
   _createClass(LinkMap, [{
+    key: "migrate",
+    value: function migrate(obj, version) {}
+  }, {
+    key: "import",
+    value: function _import(obj) {
+      this.data.pattern = obj.pattern || this.data.pattern || "";
+      this.data.hidden = obj.hidden || false;
+    }
+  }, {
     key: "match",
     value: function match(text) {
       if (text === undefined || text === null || text.length === 0) return false;
-      return u.matchString(text, this.pattern);
+      return u.matchString(text, this.data.pattern);
     }
   }, {
     key: "getId",
@@ -656,36 +699,24 @@ function () {
   }, {
     key: "show",
     value: function show() {
-      this.hidden = false;
+      this.data.hidden = false;
     }
   }, {
     key: "hide",
     value: function hide() {
-      this.hidden = true;
+      this.data.hidden = true;
     }
   }, {
     key: "isHidden",
     value: function isHidden() {
-      return this.hidden;
-    }
-  }, {
-    key: "migrate",
-    value: function migrate(obj, version) {
-      this.pattern = obj.pattern != null && obj.pattern != undefined ? obj.pattern : "/.*/";
-      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
-    }
-  }, {
-    key: "import",
-    value: function _import(obj) {
-      this.pattern = obj.pattern;
-      this.hidden = obj.hidden;
+      return this.data.hidden;
     }
   }, {
     key: "export",
     value: function _export() {
       return {
-        'pattern': this.pattern,
-        'hidden': this.hidden
+        'pattern': this.data.pattern,
+        'hidden': this.data.hidden
       };
     }
   }]);
@@ -699,30 +730,43 @@ function () {
 var RangeMap =
 /*#__PURE__*/
 function () {
-  function RangeMap(from, to, text) {
+  function RangeMap(from, to, text, data) {
     _classCallCheck(this, RangeMap);
 
+    this.data = data;
     this.id = u.uniqueID();
-    this.from = from;
-    this.to = to;
-    this.text = text;
-    this.hidden = false;
+    this.data.from = from;
+    this.data.to = to;
+    this.data.text = text;
+    this.data.hidden = false;
+    this.import(data);
   }
 
   _createClass(RangeMap, [{
+    key: "migrate",
+    value: function migrate(obj, version) {}
+  }, {
+    key: "import",
+    value: function _import(obj) {
+      this.data.from = obj.from || this.data.from || "";
+      this.data.to = obj.to || this.data.to || "";
+      this.data.text = obj.text || this.data.text || "";
+      this.data.hidden = obj.hidden || this.data.hidden || false;
+    }
+  }, {
     key: "match",
     value: function match(value) {
-      if (this.from === "null" && this.to === "null") {
+      if (this.data.from === "null" && this.data.to === "null") {
         return true;
       }
 
       if (value === null) {
-        if (this.from === "null" && this.to === "null") {
+        if (this.data.from === "null" && this.data.to === "null") {
           true;
         }
       }
 
-      if (Number(map.from) <= Number(value) && Number(map.to) >= Number(value)) return true;
+      if (Number(this.data.from) <= Number(value) && Number(this.data.to) >= Number(value)) return true;
       return false;
     }
   }, {
@@ -732,56 +776,40 @@ function () {
     }
   }, {
     key: "getFormattedText",
-    value: function getFormattedText(value, rule) {
+    value: function getFormattedText(value) {
       if (value === null) {
-        if (this.from === "null" && this.to === "null") {
-          return this.text;
+        if (this.data.from === "null" && this.data.to === "null") {
+          return this.data.text;
         }
       }
 
       if (this.match(value)) {
-        return this.defaultValueFormatter(this.text, rule);
-      } else return '-';
+        return this.data.text;
+      } else return value;
     }
   }, {
     key: "show",
     value: function show() {
-      this.hidden = false;
+      this.data.hidden = false;
     }
   }, {
     key: "hide",
     value: function hide() {
-      this.hidden = true;
+      this.data.hidden = true;
     }
   }, {
     key: "isHidden",
     value: function isHidden() {
-      return this.hidden;
-    }
-  }, {
-    key: "migrate",
-    value: function migrate(obj, version) {
-      this.from = obj.from != null && obj.from != undefined ? obj.from : "";
-      this.to = obj.to != null && obj.to != undefined ? obj.to : "";
-      this.text = obj.text != null && obj.text != undefined ? obj.text : "";
-      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
-    }
-  }, {
-    key: "import",
-    value: function _import(obj) {
-      this.from = obj.from != null && obj.from != undefined ? obj.from : "";
-      this.to = obj.to != null && obj.to != undefined ? obj.to : "";
-      this.text = obj.text != null && obj.text != undefined ? obj.text : "";
-      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
+      return this.data.hidden;
     }
   }, {
     key: "export",
     value: function _export() {
       return {
-        'from': this.from,
-        'to': this.to,
-        'text': this.text,
-        'hidden': this.hidden
+        'from': this.data.from,
+        'to': this.data.to,
+        'text': this.data.text,
+        'hidden': this.data.hidden
       };
     }
   }]);
@@ -795,32 +823,38 @@ function () {
 var ValueMap =
 /*#__PURE__*/
 function () {
-  function ValueMap(rule, value, text) {
+  function ValueMap(value, text, data) {
     _classCallCheck(this, ValueMap);
 
+    this.data = data;
     this.id = u.uniqueID();
-    this.rule = rule;
-    this.value = value;
-    this.text = text;
-    this.hidden = false;
+    this.data.value = value;
+    this.data.text = text;
+    this.data.hidden = false;
+    this.import(data);
   }
 
   _createClass(ValueMap, [{
+    key: "import",
+    value: function _import(obj) {
+      this.data.value = obj.value || this.data.value || "";
+      this.data.text = obj.text || this.data.text || "";
+      this.data.hidden = obj.hidden || this.data.hidden || false;
+    }
+  }, {
     key: "match",
     value: function match(value) {
       if (value === null || value === undefined) {
-        if (this.value === "null") {
+        if (this.data.value === "null") {
           return true;
         }
       }
 
-      if (!_.isString(value) && Number(this.value) === Number(value)) {
+      if (!_.isString(value) && Number(this.data.value) === Number(value)) {
         return true;
       }
 
-      var regex = u.stringToJsRegex(this.value);
-      var matching = text.match(regex);
-      if (this.pattern == text || matching) return true;else return false;
+      u.matchString(value.toString(), this.data.value);
     }
   }, {
     key: "getId",
@@ -830,54 +864,40 @@ function () {
   }, {
     key: "getFormattedText",
     value: function getFormattedText(value) {
-      var rule = this.rule;
+      var rule = this.data.rule;
 
       if (value === null) {
-        if (this.value === "null") {
-          return this.text;
+        if (this.data.value === "null") {
+          return this.data.text;
         }
       }
 
       if (this.match(value)) {
-        return this.defaultValueFormatter(this.text, rule);
-      } else return '-';
+        return this.data.text;
+      } else return value;
     }
   }, {
     key: "show",
     value: function show() {
-      this.hidden = false;
+      this.data.hidden = false;
     }
   }, {
     key: "hide",
     value: function hide() {
-      this.hidden = true;
+      this.data.hidden = true;
     }
   }, {
     key: "isHidden",
     value: function isHidden() {
-      return this.hidden;
-    }
-  }, {
-    key: "migrate",
-    value: function migrate(obj, version) {
-      this.value = obj.value != null && obj.value != undefined ? obj.value : "/.*/";
-      this.text = obj.text != null && obj.text != undefined ? obj.text : "/.*/";
-      this.hidden = obj.hidden != null && obj.hidden != undefined ? obj.hidden : false;
-    }
-  }, {
-    key: "import",
-    value: function _import(obj) {
-      this.value = obj.value;
-      this.text = obj.text;
-      this.hidden = obj.hidden;
+      return this.data.hidden;
     }
   }, {
     key: "export",
     value: function _export() {
       return {
-        'value': this.value,
-        'text': this.text,
-        'hidden': this.hidden
+        'value': this.data.value,
+        'text': this.data.text,
+        'hidden': this.data.hidden
       };
     }
   }]);

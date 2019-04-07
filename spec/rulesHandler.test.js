@@ -11,7 +11,9 @@ var scope = {
 var rules = scope.ctrl.panel.rules;
 
 describe("RuleHandler", function () {
+
     let rh = new RuleHandler(scope,rules);
+
     test('Add & Remove', function () {
         rh.addRule("RULE1");
         expect(rh.getRules().length).toBe(1);
@@ -23,11 +25,12 @@ describe("RuleHandler", function () {
 
     test('Up and Down', function () {
         rh.addRule("RULE1");
-        expect(rh.getRule(0).pattern).toBe('RULE1');
+        let rule = rh.getRule(0);
+        expect(rh.getRule(0).data.pattern).toBe('RULE1');
         rh.addRule("RULE2");
-        expect(rh.getRule(1).pattern).toBe('RULE2');
+        expect(rh.getRule(1).data.pattern).toBe('RULE2');
         rh.moveRuleToUp(1);
-        expect(rh.getRule(0).pattern).toBe('RULE2');
+        expect(rh.getRule(0).data.pattern).toBe('RULE2');
         rh.rules = [];
     });
 

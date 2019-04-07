@@ -58,10 +58,11 @@ describe("Create State", () => {
 });
 
 describe("State", () => {
-    var cellId = "shape-love";
-    var cell = mx.findCurrentMxCells("id", cellId)[0];
-    var rule = new Rule("/.*/");
-    rule.thresholds = [50, 80];
+    let cellId = "shape-love";
+    let cell = mx.findCurrentMxCells("id", cellId)[0];
+    let data = {};
+    let rule = new Rule("/.*/", data);
+    rule.data.thresholds = [50, 80];
     var serie = series[0];
     rule.addShapeMap(cellId);
     test('test requirements', () => {
@@ -83,7 +84,7 @@ describe("State", () => {
 
     test('Test state after serie OK on fillColor', () => {
         var state = new State(cell, mx);
-        rule.aggregation = 'max';
+        rule.data.aggregation = 'max';
         state.setState(rule, serie);
         expect(rule.getValueForSerie(serie)).toBe(90.15954449591173);
         expect(state.getLevel()).toBe(0);
@@ -96,7 +97,7 @@ describe("State", () => {
 
     test('Replace value state after serie ERROR', () => {
         var state = new State(cell, mx);
-        rule.aggregation = 'min';
+        rule.data.aggregation = 'min';
         rule.addTextMap(cellId);
         state.setState(rule, serie);
         expect(rule.getValueForSerie(serie)).toBe(18.19373234740918);

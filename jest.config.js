@@ -1,4 +1,4 @@
-{
+module.exports = {
     "verbose": true,
     "roots": [
         "./spec"

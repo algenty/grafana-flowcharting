@@ -23,9 +23,8 @@ function () {
     _classCallCheck(this, RulesHandler);
 
     u.log(1, "RulesHandler.constructor()");
-    u.log(0, "RulesHandler.constructor() Rules", rules);
     this.$scope = $scope || null;
-    this.rules = rules;
+    this.rules = [];
     this.data = data; // if (version != this.panel.version) this.migrate(this.rules)
     // else this.import(this.rules);
 
@@ -35,14 +34,6 @@ function () {
   }
 
   _createClass(RulesHandler, [{
-    key: "backup",
-    value: function backup() {
-      this.panel.rules = this.export();
-    }
-  }, {
-    key: "export",
-    value: function _export() {}
-  }, {
     key: "import",
     value: function _import(obj) {
       var _this = this;
@@ -54,20 +45,6 @@ function () {
         _this.rules.push(newRule);
 
         _this.data.push(data);
-      });
-    }
-  }, {
-    key: "migrate",
-    value: function migrate(obj) {
-      var _this2 = this;
-
-      obj.forEach(function (rule) {
-        var data = {};
-        var newRule = new _rule_class.default('', data);
-
-        _this2.rules.push(newRule);
-
-        _this2.data.push(data);
       });
     }
   }, {
@@ -103,7 +80,9 @@ function () {
   }, {
     key: "cloneRule",
     value: function cloneRule(rule) {
-      var newRule = angular.copy(rule);
+      var data = rule.getData();
+      var newData = angular.copy(data);
+      var newRule = new _rule_class.default(rule.data.pattern, newData);
       var rules = this.rules;
       var rulesCount = rules.length;
       var indexToInsert = rulesCount; // check if last is a catch all rule, then add it before that one

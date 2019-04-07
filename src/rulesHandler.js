@@ -4,38 +4,20 @@ export default class RulesHandler {
     /** @ngInject */
     constructor($scope,data) {
         u.log(1,"RulesHandler.constructor()");
-        u.log(0,"RulesHandler.constructor() Rules",rules);
         this.$scope = $scope || null;
-        this.rules = rules ;
+        this.rules = [];
         this.data = data;
         // if (version != this.panel.version) this.migrate(this.rules)
         // else this.import(this.rules);
         if( this.data != undefined && this.data != null && this.data.length >0 ) {
             this.import(this.data);
         }
-        
-    }
-
-    backup() {
-        this.panel.rules = this.export();
-    }
-
-    export() {
     }
 
     import(obj) {
         obj.forEach(rule => {
             let data = {}
             let newRule = new Rule('', data);
-            this.rules.push(newRule);
-            this.data.push(data);
-        });
-    }
-
-    migrate(obj) {
-        obj.forEach(rule => {
-            let data = {}
-            let newRule = new Rule('' , data);
             this.rules.push(newRule);
             this.data.push(data);
         });
@@ -70,7 +52,7 @@ export default class RulesHandler {
     cloneRule(rule) {
         let data = rule.getData();
         let newData = angular.copy(data);
-        let 
+        let newRule = new Rule(rule.data.pattern,newData);
         const rules = this.rules;
         const rulesCount = rules.length;
         let indexToInsert = rulesCount;

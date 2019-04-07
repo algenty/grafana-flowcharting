@@ -1,9 +1,8 @@
 import kbn from "app/core/utils/kbn";
-import { thisTypeAnnotation } from "@babel/types";
 
 export default class Rule {
     /** @ngInject */
-    constructor(pattern,data) {
+    constructor(pattern, data) {
         this.data = data;
         this.data.pattern = pattern;
         this.shapeMaps = [];
@@ -24,7 +23,7 @@ export default class Rule {
 
     import(obj) {
         this.data.unit = obj.unit || "short";
-        this.data.type = obj.type || "nember";
+        this.data.type = obj.type || "number";
         this.data.alias = obj.alias || "";
         this.data.aggregation = obj.aggregation || "current"
         this.data.decimals = obj.decimals || 2;
@@ -33,59 +32,70 @@ export default class Rule {
             "rgba(237, 129, 40, 0.89)",
             "rgba(50, 172, 45, 0.97)"
         ];
-        this.data.style = obj.style || 'fillColor'; 
+        this.data.style = obj.style || 'fillColor';
         this.data.colorOn = obj.colorOn || "a";
         this.data.textOn = obj.textOn || "wmd";
         this.data.textReplace = obj.textReplace || "content";
-        this.data.textPattern = obj.textPattern || "/.*";
+        this.data.textPattern = obj.textPattern || "/.*/";
         this.data.pattern = obj.pattern || this.data.pattern;
         this.data.dateFormat = obj.dateFormat || "YYYY-MM-DD HH:mm:ss";
         this.data.thresholds = obj.thresholds || [];
         this.data.invert = obj.invert || false;
         this.data.shapeProp = obj.shapeProp || "id"
         this.data.shapeData = [];
-        obj.shapeData.forEach(map => {
-            let data = {};
-            let sm = new ShapeMap("",data);
-            sm.import(map)
-            this.shapeMaps.push(sm)
-            this.data.shapeData.push(data);
-        });
+        if (obj.shapeData != undefined && obj.shapeData != null && obj.shapeData.length > 0) {
+            obj.shapeData.forEach(map => {
+                let data = {};
+                let sm = new ShapeMap("", data);
+                sm.import(map)
+                this.shapeMaps.push(sm)
+                this.data.shapeData.push(data);
+            });
+        }
         this.data.textProp = obj.textProp || "id";
         this.data.textData = [];
-        obj.textData.forEach(map => {
-            let data = {};
-            let tm = new TextMap("",data);
-            tm.import(map)
-            this.textMaps.push(tm);
-            this.data.textData(data);
-        });
+        if (obj.textData != undefined && obj.textData != null && obj.textData.length > 0) {
+            obj.textData.forEach(map => {
+                let data = {};
+                let tm = new TextMap("", data);
+                tm.import(map)
+                this.textMaps.push(tm);
+                this.data.textData.push(data);
+            });
+        }
         this.data.linkProp = obj.linkProp || "id";
         this.data.linkData = [];
-        obj.linkData.forEach(map => {
-            let data = {};
-            let lm = new LinkMap("",data);
-            lm.import(map);
-            this.linkMaps.push(lm);
-            this.data.linkData.push(data);
-        });
+        if (obj.linkData != undefined && obj.linkData != null && obj.linkData.length > 0) {
+            obj.linkData.forEach(map => {
+                let data = {};
+                let lm = new LinkMap("", data);
+                lm.import(map);
+                this.linkMaps.push(lm);
+                this.data.linkData.push(data);
+            });
+        }
         this.data.mappingType = obj.mappingType || 1;
         this.data.valueData = [];
-        obj.valueData.forEach(map => {
-            let data = {};
-            let vm = new ValueMap("",data);
-            vm.import(map);
-            this.valueMaps.push(vm);
-            this.data.valueData.push(data);
-        });
+        if (obj.valueData != undefined && obj.valueData != null && obj.valueData.length > 0) {
+            obj.valueData.forEach(map => {
+                let data = {};
+                let vm = new ValueMap("", data);
+                vm.import(map);
+                this.valueMaps.push(vm);
+                this.data.valueData.push(data);
+            });
+        }
         this.data.rangeData = [];
-        obj.rangeData.forEach(map => {
-            let data = {};
-            let rm = new RangeMap("",data);
-            rm.import(map)
-            this.rangeMaps.push(rm)
-            this.data.rangeData.push(data);
-        });
+        if (obj.rangeData != undefined && obj.rangeData != null && obj.rangeData.length > 0) {
+            obj.rangeData.forEach(map => {
+                let data = {};
+                let rm = new RangeMap("", data);
+                rm.import(map)
+                this.rangeMaps.push(rm)
+                this.data.rangeData.push(data);
+            });
+        }
+
         this.data.sanitize = obj.sanitize || false;
 
     }
@@ -129,12 +139,14 @@ export default class Rule {
     //
     // SHAPE MAPS
     //
-    addShapeMap(pattern) { 
+    addShapeMap(pattern) {
+        debugger
         let data = {};
-        let m = new ShapeMap(pattern,data);
+        let m = new ShapeMap(pattern, data);
+        m.import(data);
         this.shapeMaps.push(m);
         this.data.shapeData.push(data);
-     }
+    }
 
     removeShapeMap(index) { this.data.shapeData.splice(index, 1); this.shapeMaps.splice(index, 1); }
     getShapeMap(index) { return this.shapeMaps[index]; }
@@ -150,11 +162,12 @@ export default class Rule {
     //
     // TEXT MAPS
     //
-    addTextMap(pattern) { 
+    addTextMap(pattern) {
         let data = {};
-        let m = new TextMap(pattern,data); 
+        let m = new TextMap(pattern, data);
+        m.import(data);
         this.textMaps.push(m);
-        this.data.textData(data); 
+        this.data.textData.push(data);
     };
     removeTextMap(index) { this.data.textData.splice(index, 1); this.textMaps.splice(index, 1); };
     getTextMap(index) { return this.textMaps[index]; };
@@ -171,15 +184,16 @@ export default class Rule {
     //
     // LINK MAPS
     //
-    addLinkMap(pattern) { 
+    addLinkMap(pattern) {
         let data = {};
-        let m = new LinkMap(pattern); 
-        this.linkMaps.push(m); 
-        this.data.linkdata.push(data);
+        let m = new LinkMap(pattern,data);
+        m.import(data);
+        this.linkMaps.push(m);
+        this.data.linkData.push(data);
     };
-    removeLinkMap(index) { 
-        this.linkData.splice(index, 1); 
-        this.linkMaps.splice(index, 1); 
+    removeLinkMap(index) {
+        this.data.linkData.splice(index, 1);
+        this.linkMaps.splice(index, 1);
     };
     getLinkMap(index) { return this.linkMaps[index]; };
     getLinkMaps() { return this.linkMaps; }
@@ -195,22 +209,26 @@ export default class Rule {
     // STRING VALUE MAPS
     //
     addValueMap(value, text) {
-        let data = {}; 
-        let m = new ValueMap(value, text, data); 
+        let data = {};
+        let m = new ValueMap(value, text, data);
+        m.import(data);
         this.valueMaps.push(m);
-        this.data.valueData.push(data); 
+        this.data.valueData.push(data);
     }
-    removeValueMap(index) { this.data.valueData.splice(index, 1); this.valueMaps.splice(index, 1); }
+    removeValueMap(index) { 
+        this.data.valueData.splice(index, 1); 
+        this.valueMaps.splice(index, 1); 
+    }
     getValueMap(index) { return this.valueMaps[index]; }
     getValueMaps() { return this.valueMaps; }
 
     //
     // STRING RANGE VALUE MAPS
     //
-    addRangeMap(from, to, text) { 
+    addRangeMap(from, to, text) {
         let data = {};
-        let m = new ValueMap(from, to, text); 
-        this.rangeMaps.push(m); 
+        let m = new RangeMap(from, to, text,data);
+        this.rangeMaps.push(m);
         this.data.rangeData.push(data);
     }
     removeRangeMap(index) { this.data.rangeData.splice(index, 1); this.rangeMaps.splice(index, 1); }
@@ -274,7 +292,7 @@ export default class Rule {
 
     getFormattedValue(value) {
         // Number
-        if (this.type === "number") {
+        if (this.data.type === "number") {
             if (!_.isFinite(value)) return "Invalid Number";
             if (value === null || value === void 0) { return "-"; }
             let decimals = this.decimalPlaces(value);
@@ -282,20 +300,20 @@ export default class Rule {
                 typeof this.data.decimals === "number"
                     ? Math.min(this.data.decimals, decimals)
                     : decimals;
-            return formatValue(value, this.unit, this.data.decimals);
+            return formatValue(value, this.data.unit, this.data.decimals);
         }
 
-        if (this.type === "string") {
+        if (this.data.type === "string") {
             if (_.isArray(value)) {
                 value = value.join(", ");
             }
-            const mappingType = this.mappingType || 0;
+            const mappingType = this.data.mappingType || 0;
             if (mappingType === 1 && this.valueMaps) {
                 for (let i = 0; i < this.valueMaps.length; i++) {
                     const map = this.valueMaps[i];
                     if (map.match(value)) return map.getFormattedText(value);
                 }
-                return '-';
+                return value.toString();
             }
 
             if (mappingType === 2 && this.rangeMaps) {
@@ -303,7 +321,7 @@ export default class Rule {
                     const map = this.rangeMaps[i];
                     if (map.match(value)) return map.getFormattedText(value);
                 }
-                return '-';
+                return value.toString();
             }
 
             if (value === null || value === void 0) {
@@ -311,7 +329,7 @@ export default class Rule {
             }
         }
 
-        if (this.type === "date") {
+        if (this.data.type === "date") {
             if (value === undefined || value === null) {
                 return "-";
             }
@@ -373,7 +391,7 @@ export default class Rule {
 // ShapeMap Class
 //
 class ShapeMap {
-    constructor(pattern,data) {
+    constructor(pattern, data) {
         this.data = data
         this.id = u.uniqueID();
         this.data.pattern;
@@ -419,7 +437,7 @@ class ShapeMap {
 // TextMap Class
 //
 class TextMap {
-    constructor(pattern,data) {
+    constructor(pattern, data) {
         this.data = data;
         this.id = u.uniqueID();
         this.data.pattern = pattern;
@@ -456,19 +474,19 @@ class TextMap {
 // LinkMap Class
 //
 class LinkMap {
-    constructor(pattern,data) {
+    constructor(pattern, data) {
         this.data = data;
         this.id = u.uniqueID();
         this.data.pattern = pattern;
         this.import(data);
     }
-    
+
     migrate(obj, version) {
 
     }
 
     import(obj) {
-        this.data.pattern = obj.pattern || this.data.pattern || ""
+        this.data.pattern = obj.pattern || this.data.pattern || "";
         this.data.hidden = obj.hidden || false;
     }
 
@@ -500,7 +518,7 @@ class RangeMap {
         this.data.to = to;
         this.data.text = text;
         this.data.hidden = false;
-        this.import(obj);
+        this.import(data);
     }
 
     migrate(obj, version) {
@@ -522,23 +540,23 @@ class RangeMap {
                 true;
             }
         }
-        if (Number(map.from) <= Number(value) &&
-            Number(map.to) >= Number(value)
+        if (Number(this.data.from) <= Number(value) &&
+            Number(this.data.to) >= Number(value)
         ) return true;
         return false;
     }
     getId() { return this.id; }
 
-    getFormattedText(value, rule) {
+    getFormattedText(value) {
         if (value === null) {
             if (this.data.from === "null" && this.data.to === "null") {
                 return this.data.text;
             }
         }
         if (this.match(value)) {
-            return this.defaultValueFormatter(this.data.text, rule);
+            return this.data.text;
         }
-        else return '-';
+        else return value;
     }
 
     show() { this.data.hidden = false };
@@ -558,9 +576,9 @@ class RangeMap {
 // ValueMap Class
 //
 class ValueMap {
-    constructor(rule, value, text,data) {
+    constructor(value, text, data) {
+        this.data = data;
         this.id = u.uniqueID();
-        this.data.rule = rule;
         this.data.value = value;
         this.data.text = text;
         this.data.hidden = false;
@@ -572,9 +590,9 @@ class ValueMap {
         this.data.text = obj.text || this.data.text || "";
         this.data.hidden = obj.hidden || this.data.hidden || false;
     }
-    
+
     match(value) {
-        
+
         if (value === null || value === undefined) {
             if (this.data.value === "null") {
                 return true;
@@ -584,12 +602,9 @@ class ValueMap {
         if (!_.isString(value) && Number(this.data.value) === Number(value)) {
             return true;
         }
-        const regex = u.stringToJsRegex(this.data.value);
-        let matching = text.match(regex);
-        if (this.pattern == text || matching) return true;
-        else return false;
+        u.matchString(value.toString(),this.data.value)
     }
-    
+
     getId() { return this.id; }
 
     getFormattedText(value) {
@@ -600,9 +615,9 @@ class ValueMap {
             }
         }
         if (this.match(value)) {
-            return this.defaultValueFormatter(this.data.text, rule);
+            return this.data.text;
         }
-        else return '-';
+        else return value;
     }
 
     show() { this.data.hidden = false };
