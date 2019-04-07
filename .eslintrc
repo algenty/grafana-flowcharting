@@ -1,5 +1,14 @@
 {
     "extends": [
-        "wesbos"
-    ]
-}
+      "airbnb",
+      "prettier"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error"
+      ]
+    }
+  }

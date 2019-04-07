@@ -38,13 +38,13 @@ function () {
     value: function _import(obj) {
       var _this = this;
 
-      obj.forEach(function (rule) {
-        var data = {};
-        var newRule = new _rule_class.default('', data);
+      var i = 0;
+      obj.forEach(function (map) {
+        var rule = new _rule_class.default(map.pattern, map);
 
-        _this.rules.push(newRule);
+        _this.rules.push(rule);
 
-        _this.data.push(data);
+        _this.data[i++] = map;
       });
     }
   }, {
@@ -73,30 +73,19 @@ function () {
   }, {
     key: "removeRule",
     value: function removeRule(index) {
-      // this.rules = _.without(this.rules, rule);
       this.rules.splice(index, 1);
       this.data.splice(index, 1);
     }
   }, {
     key: "cloneRule",
-    value: function cloneRule(rule) {
+    value: function cloneRule(index) {
+      var rule = this.getRule(index);
       var data = rule.getData();
-      var newData = angular.copy(data);
-      var newRule = new _rule_class.default(rule.data.pattern, newData);
-      var rules = this.rules;
-      var rulesCount = rules.length;
-      var indexToInsert = rulesCount; // check if last is a catch all rule, then add it before that one
-
-      if (rulesCount > 0) {
-        var last = rules[rulesCount - 1];
-
-        if (last.pattern === "/.*/") {
-          indexToInsert = rulesCount - 1;
-        }
-      }
-
-      rules.splice(indexToInsert, 0, newRule);
-      this.activeRuleIndex = indexToInsert;
+      var newData = JSON.parse(JSON.stringify(data));
+      var newRule = new _rule_class.default(newData.pattern, newData);
+      this.rules.splice(index, 0, newRule);
+      this.data.splice(index, 0, newData);
+      this.activeRuleIndex = index;
     }
   }, {
     key: "moveRuleToUp",

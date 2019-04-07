@@ -42,7 +42,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       format: "short",
       valueName: "current",
       // NEW PANEL
-      rules: [],
+      rulesData: [],
       flowchart: {
         source: {
           type: "xml",
@@ -104,7 +104,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onRender() {
     if (this.changedData == true || this.changedOptions == true) {
-      this.flowchartHandler.SetUpdateStates(this.panel.rules,this.series);
+      this.flowchartHandler.SetUpdateStates(this.rulesHandler.getRules(),this.series);
       this.changedOptions == false;
       this.changedData == false;
     }
@@ -119,7 +119,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.series = dataList.map(this.seriesHandler.bind(this));
     // console.debug("mapped dataList to series");
     // console.debug(this.series);
-    this.flowchartHandler.SetUpdateStates(this.panel.rules,this.series);
+    this.flowchartHandler.SetUpdateStates(this.rulesHandler.getRules(),this.series);
     this.render();
   }
 
@@ -140,7 +140,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     u.log(1,"flowchart.link()")
-    this.rulesHandler = new RulesHandler(scope, this.panel.rules);
+    this.rulesHandler = new RulesHandler(scope, this.panel.rulesData);
     this.flowchartHandler = new FlowchartHandler(scope,elem, ctrl, this.panel.flowchart)
   }
 

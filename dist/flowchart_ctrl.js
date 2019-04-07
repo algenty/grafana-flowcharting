@@ -85,7 +85,7 @@ function (_MetricsPanelCtrl) {
       format: "short",
       valueName: "current",
       // NEW PANEL
-      rules: [],
+      rulesData: [],
       flowchart: {
         source: {
           type: "xml",
@@ -156,7 +156,7 @@ function (_MetricsPanelCtrl) {
     key: "onRender",
     value: function onRender() {
       if (this.changedData == true || this.changedOptions == true) {
-        this.flowchartHandler.SetUpdateStates(this.panel.rules, this.series);
+        this.flowchartHandler.SetUpdateStates(this.rulesHandler.getRules(), this.series);
         this.changedOptions == false;
         this.changedData == false;
       }
@@ -172,7 +172,7 @@ function (_MetricsPanelCtrl) {
       this.series = dataList.map(this.seriesHandler.bind(this)); // console.debug("mapped dataList to series");
       // console.debug(this.series);
 
-      this.flowchartHandler.SetUpdateStates(this.panel.rules, this.series);
+      this.flowchartHandler.SetUpdateStates(this.rulesHandler.getRules(), this.series);
       this.render();
     }
   }, {
@@ -196,7 +196,7 @@ function (_MetricsPanelCtrl) {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
       u.log(1, "flowchart.link()");
-      this.rulesHandler = new _rulesHandler.default(scope, this.panel.rules);
+      this.rulesHandler = new _rulesHandler.default(scope, this.panel.rulesData);
       this.flowchartHandler = new _flowchartHandler.default(scope, elem, ctrl, this.panel.flowchart);
     }
   }, {

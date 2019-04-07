@@ -63,76 +63,71 @@ function () {
       this.data.thresholds = obj.thresholds || [];
       this.data.invert = obj.invert || false;
       this.data.shapeProp = obj.shapeProp || "id";
-      this.data.shapeData = [];
+      this.data.shapeData = obj.shapeData || [];
 
       if (obj.shapeData != undefined && obj.shapeData != null && obj.shapeData.length > 0) {
+        var i = 0;
         obj.shapeData.forEach(function (map) {
-          var data = {};
-          var sm = new ShapeMap("", data);
-          sm.import(map);
+          var sm = new ShapeMap(map.pattern, map);
 
           _this.shapeMaps.push(sm);
 
-          _this.data.shapeData.push(data);
+          _this.data.shapeData[i++] = map;
         });
       }
 
       this.data.textProp = obj.textProp || "id";
-      this.data.textData = [];
+      this.data.textData = obj.textData || [];
 
       if (obj.textData != undefined && obj.textData != null && obj.textData.length > 0) {
+        var _i = 0;
         obj.textData.forEach(function (map) {
-          var data = {};
-          var tm = new TextMap("", data);
-          tm.import(map);
+          var tm = new TextMap(map.pattern, map);
 
           _this.textMaps.push(tm);
 
-          _this.data.textData.push(data);
+          _this.data.textData[_i++] = map;
         });
       }
 
       this.data.linkProp = obj.linkProp || "id";
-      this.data.linkData = [];
+      this.data.linkData = obj.linkData || [];
 
       if (obj.linkData != undefined && obj.linkData != null && obj.linkData.length > 0) {
+        var _i2 = 0;
         obj.linkData.forEach(function (map) {
-          var data = {};
-          var lm = new LinkMap("", data);
-          lm.import(map);
+          var lm = new LinkMap(map.pattern, map);
 
           _this.linkMaps.push(lm);
 
-          _this.data.linkData.push(data);
+          _this.data.linkData[_i2++] = map;
         });
       }
 
       this.data.mappingType = obj.mappingType || 1;
-      this.data.valueData = [];
+      this.data.valueData = obj.valueData || [];
 
       if (obj.valueData != undefined && obj.valueData != null && obj.valueData.length > 0) {
+        var _i3 = 0;
         obj.valueData.forEach(function (map) {
-          var data = {};
-          var vm = new ValueMap("", data);
-          vm.import(map);
+          var vm = new ValueMap(map.value, map.text, map);
 
           _this.valueMaps.push(vm);
 
-          _this.data.valueData.push(data);
+          _this.data.valueData[_i3++] = map;
         });
       }
 
-      this.data.rangeData = [];
+      this.data.rangeData = obj.rangeData || [];
 
       if (obj.rangeData != undefined && obj.rangeData != null && obj.rangeData.length > 0) {
+        var _i4 = 0;
         obj.rangeData.forEach(function (map) {
-          var data = {};
-          var rm = new RangeMap("", data);
-          rm.import(map);
+          var rm = new RangeMap(map.from, map.to, map.text, map);
 
           _this.rangeMaps.push(rm);
 
-          _this.data.rangeData.push(data);
+          _this.data.rangeData[_i4++] = map;
         });
       }
 
@@ -184,7 +179,6 @@ function () {
   }, {
     key: "addShapeMap",
     value: function addShapeMap(pattern) {
-      debugger;
       var data = {};
       var m = new ShapeMap(pattern, data);
       m.import(data);
@@ -447,8 +441,8 @@ function () {
         }
 
         if (mappingType === 2 && this.rangeMaps) {
-          for (var _i = 0; _i < this.rangeMaps.length; _i++) {
-            var _map = this.rangeMaps[_i];
+          for (var _i5 = 0; _i5 < this.rangeMaps.length; _i5++) {
+            var _map = this.rangeMaps[_i5];
             if (_map.match(value)) return _map.getFormattedText(value);
           }
 

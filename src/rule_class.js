@@ -41,58 +41,53 @@ export default class Rule {
         this.data.dateFormat = obj.dateFormat || "YYYY-MM-DD HH:mm:ss";
         this.data.thresholds = obj.thresholds || [];
         this.data.invert = obj.invert || false;
-        this.data.shapeProp = obj.shapeProp || "id"
-        this.data.shapeData = [];
+        this.data.shapeProp = obj.shapeProp || "id";
+        this.data.shapeData = obj.shapeData || [];
         if (obj.shapeData != undefined && obj.shapeData != null && obj.shapeData.length > 0) {
+            let i = 0;
             obj.shapeData.forEach(map => {
-                let data = {};
-                let sm = new ShapeMap("", data);
-                sm.import(map)
+                let sm = new ShapeMap(map.pattern, map);
                 this.shapeMaps.push(sm)
-                this.data.shapeData.push(data);
+                this.data.shapeData[i++] = map;
             });
         }
         this.data.textProp = obj.textProp || "id";
-        this.data.textData = [];
+        this.data.textData = obj.textData || [];
         if (obj.textData != undefined && obj.textData != null && obj.textData.length > 0) {
+            let i = 0;
             obj.textData.forEach(map => {
-                let data = {};
-                let tm = new TextMap("", data);
-                tm.import(map)
+                let tm = new TextMap(map.pattern, map);
                 this.textMaps.push(tm);
-                this.data.textData.push(data);
+                this.data.textData[i++] = map;
             });
         }
         this.data.linkProp = obj.linkProp || "id";
-        this.data.linkData = [];
+        this.data.linkData = obj.linkData || [];
         if (obj.linkData != undefined && obj.linkData != null && obj.linkData.length > 0) {
+            let i = 0;
             obj.linkData.forEach(map => {
-                let data = {};
-                let lm = new LinkMap("", data);
-                lm.import(map);
+                let lm = new LinkMap(map.pattern, map);
                 this.linkMaps.push(lm);
-                this.data.linkData.push(data);
+                this.data.linkData[i++] = map;
             });
         }
         this.data.mappingType = obj.mappingType || 1;
-        this.data.valueData = [];
+        this.data.valueData = obj.valueData || [];
         if (obj.valueData != undefined && obj.valueData != null && obj.valueData.length > 0) {
+            let i = 0;
             obj.valueData.forEach(map => {
-                let data = {};
-                let vm = new ValueMap("", data);
-                vm.import(map);
+                let vm = new ValueMap(map.value, map.text, map);
                 this.valueMaps.push(vm);
-                this.data.valueData.push(data);
+                this.data.valueData[i++] = map;
             });
         }
-        this.data.rangeData = [];
+        this.data.rangeData = obj.rangeData || [];
         if (obj.rangeData != undefined && obj.rangeData != null && obj.rangeData.length > 0) {
+            let i = 0;
             obj.rangeData.forEach(map => {
-                let data = {};
-                let rm = new RangeMap("", data);
-                rm.import(map)
-                this.rangeMaps.push(rm)
-                this.data.rangeData.push(data);
+                let rm = new RangeMap(map.from,map.to,map.text,map);
+                this.rangeMaps.push(rm);
+                this.data.rangeData[i++] = map;
             });
         }
 
@@ -140,7 +135,6 @@ export default class Rule {
     // SHAPE MAPS
     //
     addShapeMap(pattern) {
-        debugger
         let data = {};
         let m = new ShapeMap(pattern, data);
         m.import(data);

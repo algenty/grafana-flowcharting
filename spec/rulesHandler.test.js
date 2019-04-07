@@ -37,7 +37,7 @@ describe("RuleHandler", function () {
     test('Clone', () => {
         rh.addRule("RULE1");
         expect(rh.getRules().length).toBe(1);
-        rh.cloneRule(rh.getRule(0));
+        rh.cloneRule(0);
         expect(rh.getRules().length).toBe(2);
         expect(rh.getRule(0)).toEqual(rh.getRule(1));
         rh.rules = [];

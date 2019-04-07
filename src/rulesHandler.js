@@ -15,11 +15,11 @@ export default class RulesHandler {
     }
 
     import(obj) {
-        obj.forEach(rule => {
-            let data = {}
-            let newRule = new Rule('', data);
-            this.rules.push(newRule);
-            this.data.push(data);
+        let i = 0;
+        obj.forEach(map => {
+            let rule = new Rule(map.pattern, map);
+            this.rules.push(rule);
+            this.data[i++] = map;
         });
     }
 
@@ -44,27 +44,18 @@ export default class RulesHandler {
     }
 
     removeRule(index) {
-        // this.rules = _.without(this.rules, rule);
         this.rules.splice(index, 1);
         this.data.splice(index, 1);
     }
 
-    cloneRule(rule) {
+    cloneRule(index) {
+        let rule = this.getRule(index);
         let data = rule.getData();
-        let newData = angular.copy(data);
-        let newRule = new Rule(rule.data.pattern,newData);
-        const rules = this.rules;
-        const rulesCount = rules.length;
-        let indexToInsert = rulesCount;
-        // check if last is a catch all rule, then add it before that one
-        if (rulesCount > 0) {
-            const last = rules[rulesCount - 1];
-            if (last.pattern === "/.*/") {
-                indexToInsert = rulesCount - 1;
-            }
-        }
-        rules.splice(indexToInsert, 0, newRule);
-        this.activeRuleIndex = indexToInsert;
+        let newData = JSON.parse(JSON.stringify(data));
+        let newRule = new Rule(newData.pattern,newData);
+        this.rules.splice(index, 0, newRule);
+        this.data.splice(index, 0, newData);
+        this.activeRuleIndex = index;
     }
 
     moveRuleToUp(index) {
