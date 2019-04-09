@@ -32,8 +32,8 @@ function () {
     $scope.editor = this;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
-    $scope.onMapping = this.panelCtrl.onMapping;
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
+    $scope.flowchartHandler = this.panelCtrl.flowchartHandler;
     this.flowchartHandler = $scope.ctrl.flowchartHandler;
     this.unitFormats = _kbn.default.getUnitFormats();
     this.style = [{
@@ -193,36 +193,10 @@ function () {
       this.onOptionsChange();
     }
   }, {
-    key: "onColorChange",
-    value: function onColorChange(ruleIndex, colorIndex) {
-      var _this2 = this;
-
-      return function (newColor) {
-        _this2.panel.rules[ruleIndex].colors[colorIndex] = newColor;
-
-        _this2.onOptionsChange();
-      };
-    }
-  }, {
     key: "onOptionsChange",
     value: function onOptionsChange() {
       this.panelCtrl.changedOptions = true;
       this.render();
-    }
-  }, {
-    key: "mapCell",
-    value: function mapCell(map, id) {
-      // init mapping event
-      if (this.panelCtrl.onMapping.active && map == this.panelCtrl.onMapping.object) {
-        this.panelCtrl.onMapping.active = false;
-      } else {
-        this.panelCtrl.onMapping.active = true;
-        this.panelCtrl.onMapping.object = map;
-        this.panelCtrl.onMapping.idFocus = id;
-        var elt = document.getElementById('agenty-grafana-flowcharting');
-        elt.scrollIntoView();
-        elt.focus();
-      }
     }
   }]);
 

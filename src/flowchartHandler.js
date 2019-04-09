@@ -78,7 +78,9 @@ export default class FlowchartHandler {
   }
 
   isMapping(objToMap) {
+    if(objToMap == undefined || objToMap == null) return this.onMapping.active;
     if (this.onMapping.active === true && objToMap == this.onMapping.object) return true;
     return false;
   }
+
 }

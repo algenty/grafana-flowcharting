@@ -8,8 +8,8 @@ export class MappingOptionsCtrl {
     $scope.editor = this;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
-    $scope.onMapping = this.panelCtrl.onMapping;
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
+    $scope.flowchartHandler = this.panelCtrl.flowchartHandler;
     this.flowchartHandler = $scope.ctrl.flowchartHandler;
     this.unitFormats = kbn.getUnitFormats();
     this.style = [
@@ -107,33 +107,9 @@ export class MappingOptionsCtrl {
     this.onOptionsChange();
   }
 
-  onColorChange(ruleIndex, colorIndex) {
-    return newColor => {
-      this.panel.rules[ruleIndex].colors[colorIndex] = newColor;
-      this.onOptionsChange();
-    };
-  }
-
   onOptionsChange() {
     this.panelCtrl.changedOptions = true;
     this.render();
-  }
-
-
-  mapCell(map, id) {
-    // init mapping event
-    if (this.panelCtrl.onMapping.active && map == this.panelCtrl.onMapping.object) {
-      this.panelCtrl.onMapping.active = false;
-    }
-    else {
-      this.panelCtrl.onMapping.active = true;
-      this.panelCtrl.onMapping.object = map;
-      this.panelCtrl.onMapping.idFocus = id;
-      let elt = document.getElementById('agenty-grafana-flowcharting')
-      elt.scrollIntoView();
-      elt.focus();
-    }
-
   }
 
 }

@@ -398,23 +398,23 @@
               <label
                 class="gf-form-label"
                 style="margin-right: 2px;"
-                ng-show="onMapping.active==false||onMapping.object!=shape"
+                ng-hide="flowchartHandler.isMapping(shape)"
               >
                 <i
                   class="fa fa-link pointer"
-                  ng-click="editor.mapCell(shape,shape.getId())"
+                  ng-click="flowchartHandler.setMap(shape)"
                   bs-tooltip="'Link it on object graph'"
                 ></i>
               </label>
               <label
                 class="gf-form-label"
                 style="margin-right: 2px;color:orange"
-                ng-show="onMapping.active==true&&onMapping.object==shape"
+                ng-show="flowchartHandler.isMapping(shape)"
               >
                 <i
                   class="fa fa-unlink pointer"
                   bs-tooltip="'Cancel link object graph selection'"
-                  ng-click="editor.mapCell(shape,shape.getId())"
+                  ng-click="flowchartHandler.unsetMap()"
                 ></i>
               </label>
               <input
@@ -490,23 +490,23 @@
               <label
                 class="gf-form-label"
                 style="margin-right: 2px;"
-                ng-show="onMapping.active==false||onMapping.object!=text"
+                ng-hide="flowchartHandler.isMapping(text)"
               >
                 <i
                   class="fa fa-link pointer"
-                  ng-click="editor.mapCell(text,text.getId())"
+                  ng-click="flowchartHandler.setMap(text)"
                   bs-tooltip="'Link it on object graph'"
                 ></i>
               </label>
               <label
                 class="gf-form-label"
                 style="margin-right: 2px;color:orange"
-                ng-show="onMapping.active==true&&onMapping.object==text"
+                ng-show="flowchartHandler.isMapping(text)"
               >
                 <i
                   class="fa fa-unlink pointer"
                   bs-tooltip="'Cancel link object graph selection'"
-                  ng-click="editor.mapCell(text,text.getId())"
+                  ng-click="flowchartHandler.unsetMap()"
                 ></i>
               </label>
 
