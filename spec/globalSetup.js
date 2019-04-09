@@ -3,7 +3,7 @@ import 'babel-polyfill';
 
 var urlReplace = '/public/plugins/agenty-flowcharting-panel';
 var options = {
-  root: __dirname ,
+  root: __dirname + "/.." ,
   dotfiles: 'deny',
   headers: {
     'x-timestamp': Date.now(),
