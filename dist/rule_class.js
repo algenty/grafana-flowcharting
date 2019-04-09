@@ -47,22 +47,22 @@ function () {
     value: function _import(obj) {
       var _this = this;
 
-      this.data.unit = obj.unit || "short";
-      this.data.type = obj.type || "number";
-      this.data.alias = obj.alias || "";
-      this.data.aggregation = obj.aggregation || "current";
+      this.data.unit = obj.unit || 'short';
+      this.data.type = obj.type || 'number';
+      this.data.alias = obj.alias || '';
+      this.data.aggregation = obj.aggregation || 'current';
       this.data.decimals = obj.decimals || 2;
-      this.data.colors = obj.colors || ["rgba(245, 54, 54, 0.9)", "rgba(237, 129, 40, 0.89)", "rgba(50, 172, 45, 0.97)"];
+      this.data.colors = obj.colors || ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
       this.data.style = obj.style || 'fillColor';
-      this.data.colorOn = obj.colorOn || "a";
-      this.data.textOn = obj.textOn || "wmd";
-      this.data.textReplace = obj.textReplace || "content";
-      this.data.textPattern = obj.textPattern || "/.*/";
+      this.data.colorOn = obj.colorOn || 'a';
+      this.data.textOn = obj.textOn || 'wmd';
+      this.data.textReplace = obj.textReplace || 'content';
+      this.data.textPattern = obj.textPattern || '/.*/';
       this.data.pattern = obj.pattern || this.data.pattern;
-      this.data.dateFormat = obj.dateFormat || "YYYY-MM-DD HH:mm:ss";
+      this.data.dateFormat = obj.dateFormat || 'YYYY-MM-DD HH:mm:ss';
       this.data.thresholds = obj.thresholds || [];
       this.data.invert = obj.invert || false;
-      this.data.shapeProp = obj.shapeProp || "id";
+      this.data.shapeProp = obj.shapeProp || 'id';
       this.data.shapeData = obj.shapeData || [];
 
       if (obj.shapeData != undefined && obj.shapeData != null && obj.shapeData.length > 0) {
@@ -76,7 +76,7 @@ function () {
         });
       }
 
-      this.data.textProp = obj.textProp || "id";
+      this.data.textProp = obj.textProp || 'id';
       this.data.textData = obj.textData || [];
 
       if (obj.textData != undefined && obj.textData != null && obj.textData.length > 0) {
@@ -90,7 +90,7 @@ function () {
         });
       }
 
-      this.data.linkProp = obj.linkProp || "id";
+      this.data.linkProp = obj.linkProp || 'id';
       this.data.linkData = obj.linkData || [];
 
       if (obj.linkData != undefined && obj.linkData != null && obj.linkData.length > 0) {
@@ -160,8 +160,8 @@ function () {
   }, {
     key: "toColorize",
     value: function toColorize(value) {
-      if (this.data.colorOn === "a") return true;
-      if (this.data.colorOn === "wc" && this.getThresholdLevel(value) >= 1) return true;
+      if (this.data.colorOn === 'a') return true;
+      if (this.data.colorOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
       return false;
     } //
     // Series
@@ -412,21 +412,21 @@ function () {
     key: "getFormattedValue",
     value: function getFormattedValue(value) {
       // Number
-      if (this.data.type === "number") {
-        if (!_.isFinite(value)) return "Invalid Number";
+      if (this.data.type === 'number') {
+        if (!_.isFinite(value)) return 'Invalid Number';
 
         if (value === null || value === void 0) {
-          return "-";
+          return '-';
         }
 
         var decimals = this.decimalPlaces(value);
-        decimals = typeof this.data.decimals === "number" ? Math.min(this.data.decimals, decimals) : decimals;
+        decimals = typeof this.data.decimals === 'number' ? Math.min(this.data.decimals, decimals) : decimals;
         return formatValue(value, this.data.unit, this.data.decimals);
       }
 
-      if (this.data.type === "string") {
+      if (this.data.type === 'string') {
         if (_.isArray(value)) {
-          value = value.join(", ");
+          value = value.join(', ');
         }
 
         var mappingType = this.data.mappingType || 0;
@@ -450,13 +450,13 @@ function () {
         }
 
         if (value === null || value === void 0) {
-          return "-";
+          return '-';
         }
       }
 
-      if (this.data.type === "date") {
+      if (this.data.type === 'date') {
         if (value === undefined || value === null) {
-          return "-";
+          return '-';
         }
 
         if (_.isArray(value)) {
@@ -483,11 +483,11 @@ function () {
     key: "defaultValueFormatter",
     value: function defaultValueFormatter(value, rule) {
       if (value === null || value === void 0 || value === undefined) {
-        return "";
+        return '';
       }
 
       if (_.isArray(value)) {
-        value = value.join(", ");
+        value = value.join(', ');
       }
 
       if (this.sanitize) {
@@ -499,7 +499,7 @@ function () {
   }, {
     key: "decimalPlaces",
     value: function decimalPlaces(num) {
-      var match = ("" + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+      var match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
 
       if (!match) {
         return 0;
@@ -535,7 +535,7 @@ function () {
   _createClass(ShapeMap, [{
     key: "import",
     value: function _import(obj) {
-      this.data.pattern = obj.pattern || "";
+      this.data.pattern = obj.pattern || '';
       this.data.hidden = obj.hidden || false;
     }
   }, {
@@ -571,8 +571,8 @@ function () {
     key: "export",
     value: function _export() {
       return {
-        'pattern': this.data.pattern,
-        'hidden': this.data.hidden
+        pattern: this.data.pattern,
+        hidden: this.data.hidden
       };
     }
   }, {
@@ -613,7 +613,7 @@ function () {
   }, {
     key: "import",
     value: function _import(obj) {
-      this.data.pattern = obj.pattern || data.pattern;
+      this.data.pattern = obj.pattern || this.data.pattern;
       this.data.hidden = obj.hidden || false;
     }
   }, {
@@ -646,8 +646,8 @@ function () {
     key: "export",
     value: function _export() {
       return {
-        'pattern': this.data.pattern,
-        'hidden': this.data.hidden
+        pattern: this.data.pattern,
+        hidden: this.data.hidden
       };
     }
   }]);
@@ -676,7 +676,7 @@ function () {
   }, {
     key: "import",
     value: function _import(obj) {
-      this.data.pattern = obj.pattern || this.data.pattern || "";
+      this.data.pattern = obj.pattern || this.data.pattern || '';
       this.data.hidden = obj.hidden || false;
     }
   }, {
@@ -709,8 +709,8 @@ function () {
     key: "export",
     value: function _export() {
       return {
-        'pattern': this.data.pattern,
-        'hidden': this.data.hidden
+        pattern: this.data.pattern,
+        hidden: this.data.hidden
       };
     }
   }]);
@@ -742,20 +742,20 @@ function () {
   }, {
     key: "import",
     value: function _import(obj) {
-      this.data.from = obj.from || this.data.from || "";
-      this.data.to = obj.to || this.data.to || "";
-      this.data.text = obj.text || this.data.text || "";
+      this.data.from = obj.from || this.data.from || '';
+      this.data.to = obj.to || this.data.to || '';
+      this.data.text = obj.text || this.data.text || '';
       this.data.hidden = obj.hidden || this.data.hidden || false;
     }
   }, {
     key: "match",
     value: function match(value) {
-      if (this.data.from === "null" && this.data.to === "null") {
+      if (this.data.from === 'null' && this.data.to === 'null') {
         return true;
       }
 
       if (value === null) {
-        if (this.data.from === "null" && this.data.to === "null") {
+        if (this.data.from === 'null' && this.data.to === 'null') {
           true;
         }
       }
@@ -772,7 +772,7 @@ function () {
     key: "getFormattedText",
     value: function getFormattedText(value) {
       if (value === null) {
-        if (this.data.from === "null" && this.data.to === "null") {
+        if (this.data.from === 'null' && this.data.to === 'null') {
           return this.data.text;
         }
       }
@@ -800,10 +800,10 @@ function () {
     key: "export",
     value: function _export() {
       return {
-        'from': this.data.from,
-        'to': this.data.to,
-        'text': this.data.text,
-        'hidden': this.data.hidden
+        from: this.data.from,
+        to: this.data.to,
+        text: this.data.text,
+        hidden: this.data.hidden
       };
     }
   }]);
@@ -831,15 +831,15 @@ function () {
   _createClass(ValueMap, [{
     key: "import",
     value: function _import(obj) {
-      this.data.value = obj.value || this.data.value || "";
-      this.data.text = obj.text || this.data.text || "";
+      this.data.value = obj.value || this.data.value || '';
+      this.data.text = obj.text || this.data.text || '';
       this.data.hidden = obj.hidden || this.data.hidden || false;
     }
   }, {
     key: "match",
     value: function match(value) {
       if (value === null || value === undefined) {
-        if (this.data.value === "null") {
+        if (this.data.value === 'null') {
           return true;
         }
       }
@@ -861,7 +861,7 @@ function () {
       var rule = this.data.rule;
 
       if (value === null) {
-        if (this.data.value === "null") {
+        if (this.data.value === 'null') {
           return this.data.text;
         }
       }
@@ -889,9 +889,9 @@ function () {
     key: "export",
     value: function _export() {
       return {
-        'value': this.data.value,
-        'text': this.data.text,
-        'hidden': this.data.hidden
+        value: this.data.value,
+        text: this.data.text,
+        hidden: this.data.hidden
       };
     }
   }]);
