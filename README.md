@@ -10,9 +10,10 @@ Complexe Diagram and flowchart for grafana based on mxGraph librairies, see draw
   - And more ... (Edit through draw.io)
  
  ## examples
- - Technical schema example
+  - Technical schema example
  <img src="src/img/archi_example.png?raw=true" width="800">
- - workflows or subways example
+ 
+  - workflows or subways example
  <img src="src/img/subway_example.png?raw=true" width="800">
  
 See more example at draw.io
@@ -99,7 +100,7 @@ $ unzip master.zip
 ## grafana-cli
 
 ```sh
-$ TODO
+grafana-cli plugins install agenty-flowcharting-panel
 ```
 ## Build
 
