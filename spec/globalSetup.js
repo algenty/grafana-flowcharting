@@ -13,7 +13,7 @@ var options = {
 
 var app = express();
 app.get('*', (req, res) => {
-  console.log('globalSetup : app.get req.path ', req.path);
+  // console.log('globalSetup : app.get req.path ', req.path);
   let filePath = req.path.replace(urlReplace, './dist');
   res.sendFile(filePath, options, function(err) {
     if (err) {
@@ -24,6 +24,6 @@ app.get('*', (req, res) => {
 
 module.exports = () => {
   global.__express__ = app.listen(80, 'localhost', () => {
-    console.log('Open at port 80');
+    console.log('Express open at port 80');
   });
 };
