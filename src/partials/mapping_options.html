@@ -276,20 +276,25 @@
               ></select>
             </div>
           </div>
-          <!-- <div
+          <div
             class="gf-form"
             ng-if="style.textReplace == 'pattern' && style.textOn != 'n'"
           >
-            <label class="gf-form-label width-12">Text pattern</label>
+            <label class="gf-form-label width-12">
+              Substring pattern
+              <info-popover mode="right-normal">
+                Regular expression of text to replace
+              </info-popover>
+            </label>
             <input
               type="text"
               class="gf-form-input width-12"
               ng-model="style.textPattern"
               ng-change="editor.onOptionsChange()"
               ng-model-onblur
-              placeholder="name for tooltip"
+              placeholder="Pattern of text replace"
             />
-          </div> -->
+          </div>
         </div>
 
         <!-- LINK -->
@@ -429,7 +434,7 @@
               </label>
               <input
                 type="text"
-                id="shape_{{ style.id }}_{{shape.id}}"
+                id="shape_{{ style.id }}_{{ shape.id }}"
                 placeholder="id or regex of shape"
                 class="gf-form-input width-13"
                 ng-model="shape.pattern"
@@ -530,7 +535,7 @@
 
               <input
                 type="text"
-                id="text_{{ style.id }}_{{text.id}}"
+                id="text_{{ style.id }}_{{ text.id }}"
                 placeholder="id or regex of shape/text name"
                 class="gf-form-input width-13"
                 ng-model="text.pattern"
@@ -632,7 +637,7 @@
 
               <input
                 type="text"
-                id="link_{{ style.id }}_{{link.id}}"
+                id="link_{{ style.id }}_{{ link.id }}"
                 placeholder="id or regex of shape/text name"
                 class="gf-form-input width-13"
                 ng-model="link.pattern"
@@ -750,7 +755,6 @@
               </div>
             </div>
           </div>
-
         </div>
 
         <div class="clearfix"></div>

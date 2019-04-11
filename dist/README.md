@@ -24,9 +24,8 @@ See more example at draw.io
   - Bugs fix.
   - Compress and uncompress button under xml source to optimize space in db
   - Prettyfier and minifier of xml source
-  - Mapping Helper
+  - Mapping Helper (chain icon)
 
-![Mapping](dist/img/mapping.gif?raw=true)
 
 ### Not work
   - Only dark theme suported
