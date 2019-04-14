@@ -49,6 +49,7 @@ describe("Rule", function () {
     var rule = new Rule("/.*/", data);
     test('Should be equals', () => {
         expect(rule).toEqual(modeleRule);
+        expect(rule.getData()).toMatchSnapshot();
     });
 });
 

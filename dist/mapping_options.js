@@ -196,7 +196,7 @@ function () {
   }, {
     key: "onOptionsChange",
     value: function onOptionsChange() {
-      this.panelCtrl.changedOptions = true;
+      this.flowchartHandler.changedGraphFlag = true;
       this.render();
     }
   }]);
@@ -218,3 +218,4 @@ function mappingOptionsTab($q, uiSegmentSrv) {
     controller: MappingOptionsCtrl
   };
 }
+//# sourceMappingURL=mapping_options.js.map

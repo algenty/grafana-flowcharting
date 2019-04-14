@@ -101,7 +101,7 @@ export class MappingOptionsCtrl {
   }
 
   onOptionsChange() {
-    this.panelCtrl.changedOptions = true;
+    this.flowchartHandler.changedGraphFlag = true;
     this.render();
   }
 }

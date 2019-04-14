@@ -16,7 +16,7 @@ import { plugin } from "./plugin";
 class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, $rootScope) {
     super($scope, $injector);
-    this.version = "0.2.0";
+    this.version = "0.3.0";
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.unitFormats = kbn.getUnitFormats();
@@ -36,13 +36,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     };
 
     var panelDefaults = {
-      version : "0.2.0",
-      datasource: null,
-      interval: null,
+      version : this.version,
+      newFlag : true,
       format: "short",
       valueName: "current",
-      // NEW PANEL
       rulesData: [],
+      flowchartsData : [], 
       flowchart: {
         source: {
           type: "xml",
@@ -103,11 +102,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    if (this.changedData == true || this.changedOptions == true) {
-      this.flowchartHandler.SetUpdateStates(this.rulesHandler.getRules(),this.series);
-      this.changedOptions == false;
-      this.changedData == false;
-    }
+    // if (this.changedData == true || this.changedOptions == true) {
+    //   this.flowchartHandler.setStates(this.rulesHandler.getRules(),this.series);
+    //   this.changedOptions == false;
+    //   this.changedData == false;
+    // }
   }
 
   onDataReceived(dataList) {
@@ -141,7 +140,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   link(scope, elem, attrs, ctrl) {
     u.log(1,"flowchart.link()")
     this.rulesHandler = new RulesHandler(scope, this.panel.rulesData);
-    this.flowchartHandler = new FlowchartHandler(scope,elem, ctrl, this.panel.flowchart)
+    this.flowchartHandler = new FlowchartHandler(scope,elem, ctrl, this.panel.flowcharts)
+    if ( this.panel.version == undefined ) this.flowchartHandler.import(this.panel.flowchartsData);
+    if ( this.panel.version != this.version ) this.flowchartHandler.import(this.panel.flowchartsData);
   }
 
   exportSVG() {

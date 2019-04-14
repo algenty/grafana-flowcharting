@@ -19,6 +19,7 @@ function () {
 
     _classCallCheck(this, State);
 
+    u.log(1, "State.constructor()");
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
@@ -104,6 +105,7 @@ function () {
   }, {
     key: "unsetState",
     value: function unsetState() {
+      u.log(1, "State.unsetState()");
       this.unsetLevel();
       this.unsetColor();
       this.unsetText();
@@ -122,6 +124,7 @@ function () {
   }, {
     key: "setColorStyle",
     value: function setColorStyle(style, color) {
+      u.log(1, "State.setColorStyle()");
       this.currentColors[style] = color;
     }
   }, {
@@ -162,6 +165,7 @@ function () {
   }, {
     key: "setLevelStyle",
     value: function setLevelStyle(style, level) {
+      u.log(1, "State.setLevelStyle()");
       this.level[style] = level;
       if (this.globalLevel < level) this.globalLevel = level;
     }
@@ -220,9 +224,11 @@ function () {
       return this.mxcell.isEdge();
     }
   }, {
-    key: "updateState",
-    value: function updateState() {
+    key: "applyState",
+    value: function applyState() {
       var _this5 = this;
+
+      u.log(1, "State.applyState()");
 
       if (this.matched) {
         if (this.matchedShape) {
@@ -260,3 +266,4 @@ function () {
 }();
 
 exports.default = State;
+//# sourceMappingURL=state_class.js.map

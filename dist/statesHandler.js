@@ -7,8 +7,6 @@ exports.default = void 0;
 
 var _state_class = _interopRequireDefault(require("./state_class"));
 
-var _graph_class = _interopRequireDefault(require("./graph_class"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21,14 +19,13 @@ var StateHandler =
 /*#__PURE__*/
 function () {
   /** @ngInject */
-  function StateHandler($scope, xgraph) {
+  function StateHandler(xgraph) {
     _classCallCheck(this, StateHandler);
 
-    u.log(1, "StateHandler.constructor()");
-    this.$scope = $scope;
+    u.log(1, 'StateHandler.constructor()');
     this.states = [];
     this.xgraph = xgraph;
-    this.initStates();
+    this.initStates(this.xgraph);
   }
 
   _createClass(StateHandler, [{
@@ -80,9 +77,10 @@ function () {
     }
   }, {
     key: "initStates",
-    value: function initStates() {
+    value: function initStates(xgraph) {
       var _this = this;
 
+      this.xgraph = xgraph;
       this.states = [];
       var cells = this.xgraph.getAllMxCells();
 
@@ -114,9 +112,9 @@ function () {
   }, {
     key: "setStates",
     value: function setStates(rules, series) {
-      u.log(1, "statesHandler.setStates()");
-      u.log(0, "statesHandler.setStates() Rules", rules);
-      u.log(0, "statesHandler.setStates() Series", series);
+      u.log(1, 'StateHandler.setStates()');
+      u.log(0, 'StatesHandler.setStates() Rules', rules);
+      u.log(0, 'StatesHandler.setStates() Series', series);
       this.prepare();
       this.states.forEach(function (state) {
         rules.forEach(function (rule) {
@@ -127,10 +125,11 @@ function () {
       });
     }
   }, {
-    key: "updateStates",
-    value: function updateStates() {
+    key: "applyStates",
+    value: function applyStates() {
+      u.log(1, 'StateHandler.applyStates()');
       this.states.forEach(function (state) {
-        state.updateState();
+        state.applyState();
       });
     }
   }]);
@@ -139,3 +138,4 @@ function () {
 }();
 
 exports.default = StateHandler;
+//# sourceMappingURL=statesHandler.js.map

@@ -1,4 +1,6 @@
-const pako = require("pako");
+const pako = require('pako');
+const vkbeautify = require('vkbeautify');
+
 
 // sources :
 // https://jgraph.github.io/drawio-tools/tools/convert.html
@@ -199,6 +201,24 @@ module.exports = {
     if (str === pattern || matching) {
       u.log(0,"Match str="+str+" pattern="+pattern, true);
       return true;
+    }
+  },
+
+  minify(text) {
+    try {
+      return vkbeautify.xmlmin(text,false);
+    } catch (error) {
+      this.log(3,"Error in minify",error);
+      return text;
+    }
+  },
+
+  prettify(text) {
+    try {
+      return vkbeautify.xml(text);
+    } catch (error) {
+      this.log(3,"Error in prettify",error);
+      return text;
     }
   },
 

@@ -58,7 +58,7 @@ function (_MetricsPanelCtrl) {
     _classCallCheck(this, FlowchartCtrl);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(FlowchartCtrl).call(this, $scope, $injector));
-    _this.version = "0.2.0";
+    _this.version = "0.3.0";
     _this.$rootScope = $rootScope;
     _this.$scope = $scope;
     _this.unitFormats = _kbn.default.getUnitFormats();
@@ -79,13 +79,12 @@ function (_MetricsPanelCtrl) {
 
     };
     var panelDefaults = {
-      version: "0.2.0",
-      datasource: null,
-      interval: null,
+      version: _this.version,
+      newFlag: true,
       format: "short",
       valueName: "current",
-      // NEW PANEL
       rulesData: [],
+      flowchartsData: [],
       flowchart: {
         source: {
           type: "xml",
@@ -154,12 +153,11 @@ function (_MetricsPanelCtrl) {
     }
   }, {
     key: "onRender",
-    value: function onRender() {
-      if (this.changedData == true || this.changedOptions == true) {
-        this.flowchartHandler.SetUpdateStates(this.rulesHandler.getRules(), this.series);
-        this.changedOptions == false;
-        this.changedData == false;
-      }
+    value: function onRender() {// if (this.changedData == true || this.changedOptions == true) {
+      //   this.flowchartHandler.setStates(this.rulesHandler.getRules(),this.series);
+      //   this.changedOptions == false;
+      //   this.changedData == false;
+      // }
     }
   }, {
     key: "onDataReceived",
@@ -197,7 +195,9 @@ function (_MetricsPanelCtrl) {
     value: function link(scope, elem, attrs, ctrl) {
       u.log(1, "flowchart.link()");
       this.rulesHandler = new _rulesHandler.default(scope, this.panel.rulesData);
-      this.flowchartHandler = new _flowchartHandler.default(scope, elem, ctrl, this.panel.flowchart);
+      this.flowchartHandler = new _flowchartHandler.default(scope, elem, ctrl, this.panel.flowcharts);
+      if (this.panel.version == undefined) this.flowchartHandler.import(this.panel.flowchartsData);
+      if (this.panel.version != this.version) this.flowchartHandler.import(this.panel.flowchartsData);
     }
   }, {
     key: "exportSVG",
@@ -248,3 +248,4 @@ function (_MetricsPanelCtrl) {
 
 exports.MetricsPanelCtrl = exports.FlowchartCtrl = FlowchartCtrl;
 FlowchartCtrl.templateUrl = "./partials/module.html";
+//# sourceMappingURL=flowchart_ctrl.js.map

@@ -39,3 +39,4 @@ var plugin = {
 module.exports = {
   plugin: plugin
 };
+//# sourceMappingURL=plugin.js.map

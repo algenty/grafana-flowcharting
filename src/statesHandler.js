@@ -1,83 +1,82 @@
-import State from "./state_class";
-import XGraph from "./graph_class"
+/* global u */
+import State from './state_class';
 
 export default class StateHandler {
-    /** @ngInject */
-    constructor($scope, xgraph) {
-        u.log(1,"StateHandler.constructor()");
-        this.$scope = $scope;
-        this.states = [];
-        this.xgraph = xgraph;
+  /** @ngInject */
+  constructor(xgraph) {
+    u.log(1, 'StateHandler.constructor()');
+    this.states = [];
+    this.xgraph = xgraph;
+    this.initStates(this.xgraph);
+  }
 
-        this.initStates();
+  getStates() {
+    return this.states;
+  }
+
+  getState(cellId) {
+    let foundState = null;
+    for (let state of this.states) {
+      if (cellId == state.cellId) foundState = state;
+      break;
     }
+    return foundState;
+  }
 
-    getStates() {
-        return this.states
-    }
+  addState(mxcell) {
+    let state = new State(mxcell, this.xgraph);
+    this.states.push(state);
+  }
 
-    getState(cellId) {
-        let foundState = null;
-        for (let state of this.states) {
-            if (cellId == state.cellId) foundState = state;
-            break;
-        }
-        return foundState;
-    }
+  removeState(mxcell) {
+    this.states = _.without(this.states, mxcell);
+  }
 
-    addState(mxcell) {
-        let state = new State(mxcell, this.xgraph);
-        this.states.push(state);
-    }
+  initStates(xgraph) {
+    this.xgraph = xgraph;
+    this.states = [];
+    let cells = this.xgraph.getAllMxCells();
+    _.each(cells, cell => {
+      this.addState(cell);
+    });
+  }
 
-    removeState(mxcell) {
-        this.states = _.without(this.states, mxcell)
-    }
+  countStates() {
+    return this.states.length;
+  }
 
-    initStates() {
-        this.states = [];
-        let cells = this.xgraph.getAllMxCells();
-        _.each(cells, (cell) => {
-            this.addState(cell);
+  countStatesWithLevel(level) {
+    let count = 0;
+    this.states.forEach(state => {
+      if (state.getLevel() == level) count++;
+    });
+    return count;
+  }
+
+  prepare() {
+    this.states.forEach(state => {
+      state.prepare();
+    });
+  }
+
+  setStates(rules, series) {
+    u.log(1, 'StateHandler.setStates()');
+    u.log(0, 'StatesHandler.setStates() Rules', rules);
+    u.log(0, 'StatesHandler.setStates() Series', series);
+    this.prepare();
+    this.states.forEach(state => {
+      rules.forEach(rule => {
+        series.forEach(serie => {
+          state.setState(rule, serie);
         });
-    }
+      });
+    });
+  }
 
-    countStates() {
-        return this.states.length;
-    }
-
-    countStatesWithLevel(level) {
-        let count = 0;
-        this.states.forEach(state => {
-            if (state.getLevel() == level) count++;
-        });
-        return count;
-    }
-
-    prepare() {
-        this.states.forEach(state => {
-            state.prepare();
-        });
-    }
-
-    setStates(rules, series) {
-        u.log(1,"statesHandler.setStates()");
-        u.log(0,"statesHandler.setStates() Rules",rules);
-        u.log(0,"statesHandler.setStates() Series",series);
-        this.prepare();
-        this.states.forEach(state => {
-            rules.forEach(rule => {
-                series.forEach(serie => {
-                    state.setState(rule, serie);
-                });
-            });
-        });
-    }
-
-    updateStates() {
-        this.states.forEach(state => {
-            state.updateState();
-        });
-    }
-
+  applyStates() {
+    u.log(1, 'StateHandler.applyStates()');
+    this.states.forEach(state => {
+      state.applyState();
+    });
+  }
 }

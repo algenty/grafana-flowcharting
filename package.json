@@ -81,7 +81,7 @@
     "node": "^11.9.0",
     "node-sass": "^4.11.0",
     "pako": "^1.0.10",
-    "prettier": "^1.16.4",
+    "prettier": "^1.17.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "rxjs": "^6.4.0",
@@ -93,5 +93,7 @@
     "webpack": "^4.29.1",
     "zone.js": "^0.9.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "eslint-plugin-lodash": "^5.1.0"
+  }
 }

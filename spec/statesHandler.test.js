@@ -1,5 +1,4 @@
 import XGraph from "../src/graph_class";
-import State from "../src/state_class";
 import Rule from "../src/rule_class";
 import StatesHandler from "../src/statesHandler";
 
@@ -23,18 +22,18 @@ mx.drawGraph();
 
 describe("Object", () => {
     test('create', () => {
-        var sh = new StatesHandler(scope,mx);
+        var sh = new StatesHandler(mx);
         expect(sh).toBeInstanceOf(Object);
     })
 
     test('Count', () => {
-        var sh = new StatesHandler(scope,mx);
+        var sh = new StatesHandler(mx);
         expect(sh.countStates()).toBe(11);
     })
 });
 
 describe("With rules", () => {
-    var sh = new StatesHandler(scope,mx);
+    var sh = new StatesHandler(mx);
     let data = {};
     let rule = new Rule("/.*/",data);
     rule.data.thresholds = [50, 80];

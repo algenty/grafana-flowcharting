@@ -88,6 +88,9 @@ module.exports = (grunt) => {
       }
     },
     babel: {
+      options : {
+        sourceMap: true
+      },
       dist: {
         files: [{
           cwd: 'src',

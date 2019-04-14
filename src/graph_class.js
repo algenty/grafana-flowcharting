@@ -105,6 +105,7 @@ window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 
 export default class XGraph {
   constructor(container, xmlGraph) {
+    u.log(1,"XGraph.constructor()");
     this.container = container;
     this.xmlGraph;
     if (u.isencoded(xmlGraph)) this.xmlGraph = u.decode(xmlGraph, true, true, true);
@@ -144,7 +145,7 @@ export default class XGraph {
       let codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, this.graph.getModel());
     } catch (error) {
-      console.error(error);
+      u.log(3,"Error in draw",error);
     } finally {
       this.graph.getModel().endUpdate();
       this.cells['id'] = this.getCurrentCells('id');

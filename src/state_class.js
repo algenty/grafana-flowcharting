@@ -1,5 +1,6 @@
 export default class State {
   constructor(mxcell, xgraph) {
+    u.log(1,"State.constructor()");
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
@@ -78,6 +79,7 @@ export default class State {
   }
 
   unsetState() {
+    u.log(1,"State.unsetState()");
     this.unsetLevel();
     this.unsetColor();
     this.unsetText();
@@ -94,6 +96,7 @@ export default class State {
   }
 
   setColorStyle(style, color) {
+    u.log(1,"State.setColorStyle()");
     this.currentColors[style] = color;
   }
 
@@ -124,6 +127,7 @@ export default class State {
   }
 
   setLevelStyle(style, level) {
+    u.log(1,"State.setLevelStyle()");
     this.level[style] = level;
     if (this.globalLevel < level) this.globalLevel = level;
   }
@@ -173,7 +177,8 @@ export default class State {
     return this.mxcell.isEdge();
   }
 
-  updateState() {
+  applyState() {
+    u.log(1,"State.applyState()");
     if (this.matched) {
       if (this.matchedShape) {
         this.styles.forEach(style => {
