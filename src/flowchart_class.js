@@ -4,6 +4,7 @@ import StateHandler from './statesHandler';
 export default class Flowchart {
   /** @ngInject */
   constructor(name, xmlGraph, container, data) {
+    u.log(1, `flowchart[${name}].constructor()`);
     this.data = data;
     this.data.name = name;
     this.data.xml = xmlGraph;
@@ -15,6 +16,8 @@ export default class Flowchart {
   }
 
   import(obj) {
+    u.log(1, `flowchart[${this.data.name}].import()`);
+    u.log(0, `flowchart[${this.data.name}].import() obj`, obj);
     if (obj.source) this.data.type = obj.source.type;
     else this.data.type = obj.type || this.data.type || 'xml';
     if (obj.source) this.data.xml = obj.source.xml.value;
@@ -40,7 +43,7 @@ export default class Flowchart {
   }
 
   init() {
-    u.log(1, 'flowchart.init()');
+    u.log(1, `flowchart[${this.data.name}].init()`);
     this.xgraph = new XGraph(this.container, this.data.xml);
     if (this.data.xml !== undefined && this.data.xml !== null) {
       this.xgraph.drawGraph();
@@ -54,18 +57,21 @@ export default class Flowchart {
   }
 
   setStates(rules, series) {
-    u.log(1, 'flowchart.setStates()');
-    // u.log(0,"flowchart.setStates() rules",rules);
-    // u.log(0,"flowchart.setStates() series",series);
+    u.log(1, `flowchart[${this.data.name}].setStates()`);
+    u.log(0, `flowchart[${this.data.name}].setStates() rules`, rules);
+    u.log(0, `flowchart[${this.data.name}].setStates() series`, series);
+    if (rules === undefined) u.log(3, "Rules shoudn't be null");
+    if (series === undefined) u.log(3, "Series shoudn't be null");
     this.stateHandler.setStates(rules, series);
   }
 
   applyStates() {
-    u.log(1, 'flowchart.applyStates()');
+    u.log(1, `flowchart[${this.data.name}].applyStates()`);
     this.stateHandler.applyStates();
   }
 
   refresh(width, height) {
+    u.log(1, `flowchart[${this.data.name}].refresh()`);
     if (width !== undefined && width != null) this.setWidth(width);
     if (height !== undefined && height != null) this.setHeight(height);
     this.xgraph.refreshGraph(this.width, this.height);
@@ -79,11 +85,12 @@ export default class Flowchart {
     }
   }
 
-  redraw() {
+  redraw(xmlGraph) {
+    u.log(1, `flowchart[${this.data.name}].redraw()`);
+    if (xmlGraph !== undefined) this.data.xml = xmlGraph;
     this.init();
     this.reflesh();
   }
-
 
   setWidth(width) {
     this.width = width;

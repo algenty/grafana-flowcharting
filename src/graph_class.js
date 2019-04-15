@@ -1,8 +1,9 @@
+/* eslint-disable dot-notation */
 /* eslint-disable object-shorthand */
 window.mxLanguages = window.mxLanguages || ['en'];
 
-var sanitizer = require('sanitizer');
-var mxgraph = require('mxgraph')({
+const sanitizer = require('sanitizer');
+const mxgraph = require('mxgraph')({
   mxImageBasePath: 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images',
   mxBasePath: 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist',
   mxLoadStylesheets: false,
@@ -10,14 +11,13 @@ var mxgraph = require('mxgraph')({
   mxLoadResources: false
 });
 
-window.BASE_PATH =
-  window.BASE_PATH || 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/';
-window.RESOURCES_PATH = window.BASE_PATH || window.BASE_PATH + 'resources';
-window.RESOURCE_BASE = window.RESOURCE_BASE || window.RESOURCES_PATH + '/grapheditor';
-window.STENCIL_PATH = window.STENCIL_PATH || window.BASE_PATH + 'stencils';
-window.IMAGE_PATH = window.IMAGE_PATH || window.BASE_PATH + 'images';
-window.STYLE_PATH = window.STYLE_PATH || window.BASE_PATH + 'styles';
-window.CSS_PATH = window.CSS_PATH || window.BASE_PATH + 'styles';
+window.BASE_PATH = window.BASE_PATH || 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/';
+window.RESOURCES_PATH = window.BASE_PATH || `${window.BASE_PATH}resources`;
+window.RESOURCE_BASE = window.RESOURCE_BASE || `${window.RESOURCES_PATH}/grapheditor`;
+window.STENCIL_PATH = window.STENCIL_PATH || `${window.BASE_PATH}stencils`;
+window.IMAGE_PATH = window.IMAGE_PATH || `${window.BASE_PATH}images`;
+window.STYLE_PATH = window.STYLE_PATH || `${window.BASE_PATH}styles`;
+window.CSS_PATH = window.CSS_PATH || `${window.BASE_PATH}styles`;
 window.mxLanguages = window.mxLanguages || ['en'];
 
 // Put to global vars to work
@@ -106,13 +106,13 @@ window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 
 export default class XGraph {
   constructor(container, xmlGraph) {
-    u.log(1,'XGraph.constructor()');
+    u.log(1, 'XGraph.constructor()');
     this.container = container;
-    this.xmlGraph;
+    this.xmlGraph = undefined;
     if (u.isencoded(xmlGraph)) this.xmlGraph = u.decode(xmlGraph, true, true, true);
     else this.xmlGraph = xmlGraph;
     this.xmlGraph = xmlGraph;
-    this.graph;
+    this.graph = undefined;
     this.scale = true;
     this.lock = true;
     this.center = true;
@@ -123,7 +123,7 @@ export default class XGraph {
     this.cells.id = [];
     this.cells.value = [];
     this.cells.attributs = {};
-    this.clickBackup;
+    this.clickBackup = undefined;
 
     this.initGraph();
   }
@@ -131,7 +131,7 @@ export default class XGraph {
   initGraph() {
     // this.$elem.html(this.$graphCanvas);
     const Graph = require('./Graph')({
-      libs: 'arrows;basic;bpmn;flowchart'
+      libs: 'arrows;basic;bpmn;flowchart',
     });
     const Shapes = require('./Shapes');
     this.graph = new Graph(this.container);
@@ -205,7 +205,7 @@ export default class XGraph {
 
   gridGraph(bool) {
     if (bool) {
-      this.container.style.backgroundImage = "url('" + IMAGE_PATH + "/grid.gif')";
+      this.container.style.backgroundImage = `url('${IMAGE_PATH}/grid.gif')`;
     } else {
       this.container.style.backgroundImage = '';
     }
@@ -213,9 +213,9 @@ export default class XGraph {
   }
 
   zoomGraph(percent) {
-    if (percent && percent.legth > 0 && percent != '100%' && percent != '0%') {
+    if (percent && percent.legth > 0 && percent !== '100%' && percent !== '0%') {
       const ratio = percent.replace('%', '') / 100;
-      this.graph.zoomTo(ration, true);
+      this.graph.zoomTo(ratio, true);
       this.zoomPercent = percent;
     }
     this.zoom = true;
@@ -229,27 +229,27 @@ export default class XGraph {
   getMxGraph() {
     return this.graph;
   }
+
   getxmlGraph() {
     return this.xmlGraph;
   }
+
   setXmlGraph(xmlGraph) {
     if (u.isencoded(xmlGraph)) this.xmlGraph = u.decode(xmlGraph, true, true, true);
     else this.xmlGraph = xmlGraph;
     this.drawGraph();
   }
 
-  updateCells(states) {}
-
   getCurrentCells(prop) {
     const cellIds = [];
     const model = this.graph.getModel();
     const cells = model.cells;
     if (prop === 'id') {
-      _.each(cells, cell => {
+      _.each(cells, (cell) => {
         cellIds.push(cell.getId());
       });
     } else if (prop === 'value') {
-      _.each(cells, cell => {
+      _.each(cells, (cell) => {
         cellIds.push(cell.getValue());
       });
     }
@@ -258,13 +258,13 @@ export default class XGraph {
 
   getOrignalCells(prop) {
     if (prop === 'id' || prop === 'value') return this.cells[prop];
-    //TODO: attributs
+    // TODO: attributs
     return [];
   }
 
   findCurrentCells(prop, pattern) {
     const cells = this.getCurrentCells(prop);
-    const result = _.find(cells, cell => {
+    const result = _.find(cells, (cell) => {
       return u.matchString(cell, pattern);
     });
     return result;
@@ -272,7 +272,7 @@ export default class XGraph {
 
   findOriginalCells(prop, pattern) {
     const cells = this.getOrignalCells(prop);
-    const result = _.find(cells, cell => {
+    const result = _.find(cells, (cell) => {
       return u.matchString(cell, pattern);
     });
     return result;
@@ -284,7 +284,7 @@ export default class XGraph {
 
   findCurrentMxCells(prop, pattern) {
     const cells = [];
-    _.each(this.getAllMxCells(), cell => {
+    _.each(this.getAllMxCells(), (cell) => {
       if (prop === 'id') {
         const id = cell.getId();
         if (u.matchString(id, pattern)) cells.push(cell);
@@ -329,7 +329,7 @@ export default class XGraph {
   }
 
   //
-  //GRAPH HANDLER
+  // GRAPH HANDLER
   //
 
   eventGraph(me) {
@@ -344,29 +344,5 @@ export default class XGraph {
       this.onMapping.object.pattern = id;
       this.unsetMapping();
     }
-  }
-}
-
-class XCell {
-  constructor(mxcell, mxgraph) {
-    this.mxcell = mxcell;
-    this.mxgraph = mxgraph;
-  }
-
-  getValueCell(mxcell) {
-    return this.mxcell.getValue();
-  }
-
-  setValueCell(mxcell, text) {
-    return this.mxcell.setValue(text);
-  }
-
-  getStyleCell(style) {
-    const state = this.graph.view.getState(this.mxcell);
-    return state.style[style];
-  }
-
-  setStyleCell(style, color) {
-    this.graph.setCellStyles(style, color, [this.mxcell]);
   }
 }

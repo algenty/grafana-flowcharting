@@ -6,12 +6,16 @@
         "amd": true,
         "jest": true
     },
-    "plugins": ["lodash"],
-    "extends": ["airbnb-base"],
+    "plugins": [
+        "lodash"
+    ],
+    "extends": [
+        "airbnb-base"
+    ],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly",
-        "u" : false,
+        "u": false,
         "_": false
     },
     "parserOptions": {
@@ -19,6 +23,8 @@
         "sourceType": "module"
     },
     "rules": {
-        "lodash/prefer-lodash-method" : "off"
+        "lodash/prefer-lodash-method": "off",
+        "prefer-destructuring": 0,
+        "global-require": 0
     }
 }
