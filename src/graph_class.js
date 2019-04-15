@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 window.mxLanguages = window.mxLanguages || ['en'];
 
 var sanitizer = require('sanitizer');
@@ -105,7 +106,7 @@ window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 
 export default class XGraph {
   constructor(container, xmlGraph) {
-    u.log(1,"XGraph.constructor()");
+    u.log(1,'XGraph.constructor()');
     this.container = container;
     this.xmlGraph;
     if (u.isencoded(xmlGraph)) this.xmlGraph = u.decode(xmlGraph, true, true, true);
@@ -129,10 +130,10 @@ export default class XGraph {
 
   initGraph() {
     // this.$elem.html(this.$graphCanvas);
-    let Graph = require('./Graph')({
+    const Graph = require('./Graph')({
       libs: 'arrows;basic;bpmn;flowchart'
     });
-    let Shapes = require('./Shapes');
+    const Shapes = require('./Shapes');
     this.graph = new Graph(this.container);
     this.clickBackup = this.graph.click;
   }
@@ -141,29 +142,29 @@ export default class XGraph {
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
-      let xmlDoc = mxUtils.parseXml(this.xmlGraph);
-      let codec = new mxCodec(xmlDoc);
+      const xmlDoc = mxUtils.parseXml(this.xmlGraph);
+      const codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, this.graph.getModel());
     } catch (error) {
-      u.log(3,"Error in draw",error);
+      u.log(3, 'Error in draw', error);
     } finally {
       this.graph.getModel().endUpdate();
-      this.cells['id'] = this.getCurrentCells('id');
-      this.cells['value'] = this.getCurrentCells('value');
+      this.cells["id"] = this.getCurrentCells('id');
+      this.cells["value"] = this.getCurrentCells('value');
     }
   }
 
   refreshGraph(width, height) {
     // console.log("height ", height);
     // console.log("width ", width);
-    let $div = $(this.container);
-    var size = Math.min(width, height);
+    const $div = $(this.container);
+    const size = Math.min(width, height);
 
-    var css = {
+    const css = {
       margin: 'auto',
       position: 'relative',
       width: width,
-      height: size - 30 + 'px'
+      height: `${size - 30}px`,
     };
 
     $div.css(css);
@@ -213,7 +214,7 @@ export default class XGraph {
 
   zoomGraph(percent) {
     if (percent && percent.legth > 0 && percent != '100%' && percent != '0%') {
-      let ratio = percent.replace('%', '') / 100;
+      const ratio = percent.replace('%', '') / 100;
       this.graph.zoomTo(ration, true);
       this.zoomPercent = percent;
     }
@@ -240,9 +241,9 @@ export default class XGraph {
   updateCells(states) {}
 
   getCurrentCells(prop) {
-    let cellIds = [];
-    let model = this.graph.getModel();
-    let cells = model.cells;
+    const cellIds = [];
+    const model = this.graph.getModel();
+    const cells = model.cells;
     if (prop === 'id') {
       _.each(cells, cell => {
         cellIds.push(cell.getId());
@@ -262,16 +263,16 @@ export default class XGraph {
   }
 
   findCurrentCells(prop, pattern) {
-    let cells = this.getCurrentCells(prop);
-    let result = _.find(cells, cell => {
+    const cells = this.getCurrentCells(prop);
+    const result = _.find(cells, cell => {
       return u.matchString(cell, pattern);
     });
     return result;
   }
 
   findOriginalCells(prop, pattern) {
-    let cells = this.getOrignalCells(prop);
-    let result = _.find(cells, cell => {
+    const cells = this.getOrignalCells(prop);
+    const result = _.find(cells, cell => {
       return u.matchString(cell, pattern);
     });
     return result;
@@ -282,13 +283,13 @@ export default class XGraph {
   }
 
   findCurrentMxCells(prop, pattern) {
-    let cells = [];
+    const cells = [];
     _.each(this.getAllMxCells(), cell => {
       if (prop === 'id') {
-        let id = cell.getId();
+        const id = cell.getId();
         if (u.matchString(id, pattern)) cells.push(cell);
       } else if (prop === 'value') {
-        let value = cell.getValue();
+        const value = cell.getValue();
         if (u.matchString(value, pattern)) cells.push(cell);
       }
     });
@@ -296,7 +297,7 @@ export default class XGraph {
   }
 
   getStyleCell(mxcell, style) {
-    let state = this.graph.view.getState(mxcell);
+    const state = this.graph.view.getState(mxcell);
     return state.style[style];
   }
 
@@ -335,11 +336,11 @@ export default class XGraph {
     u.log(1, 'XGraph.eventGraph()');
     u.log(0, 'XGraph.eventGraph() me : ', me);
     u.log(0, 'XGraph.eventGraph() onMapping : ', this.onMapping);
-    let self = this;
+    const self = this;
 
     if (this.onMapping.active) {
-      let state = me.getState();
-      let id = state.cell.id;
+      const state = me.getState();
+      const id = state.cell.id;
       this.onMapping.object.pattern = id;
       this.unsetMapping();
     }
@@ -361,7 +362,7 @@ class XCell {
   }
 
   getStyleCell(style) {
-    let state = this.graph.view.getState(this.mxcell);
+    const state = this.graph.view.getState(this.mxcell);
     return state.style[style];
   }
 

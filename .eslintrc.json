@@ -3,10 +3,11 @@
         "browser": true,
         "es6": true,
         "jquery": true,
-        "amd": true
+        "amd": true,
+        "jest": true
     },
     "plugins": ["lodash"],
-    "extends": ["eslint:recommended"],
+    "extends": ["airbnb-base"],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly",
