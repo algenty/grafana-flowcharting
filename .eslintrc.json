@@ -25,6 +25,9 @@
     "rules": {
         "lodash/prefer-lodash-method": "off",
         "prefer-destructuring": 0,
-        "global-require": 0
+        "global-require": 0,
+        "quotes": 0,
+        "max-len": 0,
+        "object-shorthand": 0
     }
 }

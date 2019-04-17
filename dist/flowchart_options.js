@@ -6,13 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.flowchartOptionsTab = flowchartOptionsTab;
 exports.FlowchartOptionsCtrl = void 0;
 
-var _lodash = _interopRequireDefault(require("lodash"));
-
 var _plugin = require("./plugin");
-
-var _index = _interopRequireDefault(require("./libs/vkbeautify/index"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -29,101 +23,39 @@ function () {
 
     $scope.editor = this;
     this.$scope = $scope;
-    this.panelCtrl = $scope.ctrl;
-    this.panel = this.panelCtrl.panel;
-    this.mx = this.panelCtrl.mx;
-    $scope.mx = this.panelCtrl.mx;
+    this.ctrl = $scope.ctrl;
+    $scope.u = window.u;
+    this.flowchartHandler = this.ctrl.flowchartHandler;
+    this.panel = this.ctrl.panel;
     this.sourceTypes = [{
-      text: "Url",
-      value: "url"
+      text: 'Url',
+      value: 'url'
     }, {
-      text: "XML Content",
-      value: "xml" // { text: 'CSV', value: 'csv' },
-
+      text: 'XML Content',
+      value: 'xml'
     }];
   }
 
   _createClass(FlowchartOptionsCtrl, [{
     key: "render",
     value: function render() {
-      this.panelCtrl.render();
+      this.flowchartHandler.render();
     }
   }, {
     key: "onSourceChange",
     value: function onSourceChange() {
-      this.panelCtrl.changedSource = true;
+      this.flowchartHandler.sourcesChanged();
       this.render();
     }
   }, {
-    key: "openDrawEditor",
-    value: function openDrawEditor() {
-      var _this = this;
-
-      var urlEditor = "https://draw.io?embed=1"; // let urlEditor="https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html?embed=1";
-      // source : 
-      // https://desk.draw.io/support/solutions/articles/16000042542-how-to-embed-html-
-      // https://support.draw.io/display/DOB/2016/05/09/Simple+draw.io+embedding+walk-through
-
-      var myWindow = window.open(urlEditor, "MxGraph Editor", "width=1280, height=720");
-      var opened = false;
-      window.addEventListener("message", function (event) {
-        if (event.origin !== "https://www.draw.io") return; // when editor is open
-
-        if (event.data == "ready") {
-          // send xml
-          event.source.postMessage(_this.panel.flowchart.source.xml.value, event.origin);
-          opened = true;
-        } else {
-          if (event.data != undefined && event.data.length > 0) {
-            _this.panel.flowchart.source.xml.value = event.data;
-            _this.panelCtrl.changedSource = true;
-
-            _this.$scope.$apply();
-
-            _this.render();
-          }
-
-          if (event.data != undefined || event.data.length == 0) {
-            myWindow.close();
-          }
-        }
-      });
+    key: "edit",
+    value: function edit(index) {
+      this.flowchartHandler.openDrawEditor(index);
     }
   }, {
-    key: "validatePercent",
-    value: function validatePercent(percentText) {
-      if (percentText == null || percentText.length == 0) {
-        return true;
-      }
-
-      var regexPattern = new RegExp(/^\d+(\.\d+)?%{0,1}/);
-      var result = regexPattern.test(percentText);
-
-      if (!result) {
-        return false;
-      }
-
-      return true;
-    }
-  }, {
-    key: "prettify",
-    value: function prettify() {
-      try {
-        var text = this.panel.flowchart.source.xml.value;
-        this.panel.flowchart.source.xml.value = _index.default.xml(text);
-      } catch (error) {
-        console.error("Error in prettify : ", error);
-      }
-    }
-  }, {
-    key: "minify",
-    value: function minify() {
-      try {
-        var text = this.panel.flowchart.source.xml.value;
-        this.panel.flowchart.source.xml.value = _index.default.xmlmin(text, false);
-      } catch (error) {
-        console.error("Error in minify : ", error);
-      }
+    key: "getFlowcharts",
+    value: function getFlowcharts() {
+      return this.flowchartHandler.getFlowcharts();
     }
   }]);
 
@@ -134,13 +66,11 @@ function () {
 
 exports.FlowchartOptionsCtrl = FlowchartOptionsCtrl;
 
-function flowchartOptionsTab($q, uiSegmentSrv) {
-  "use strict";
-
+function flowchartOptionsTab($q, $sce, uiSegmentSrv) {
   return {
-    restrict: "E",
+    restrict: 'E',
     scope: true,
-    templateUrl: "public/plugins/" + _plugin.plugin.id + "/partials/flowchart_options.html",
+    templateUrl: "public/plugins/".concat(_plugin.plugin.id, "/partials/flowchart_options.html"),
     controller: FlowchartOptionsCtrl
   };
 }

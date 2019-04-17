@@ -19,7 +19,7 @@ function () {
 
     _classCallCheck(this, State);
 
-    u.log(1, "State.constructor()");
+    u.log(1, 'State.constructor()');
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
@@ -28,7 +28,7 @@ function () {
     this.matchedText = false;
     this.matchedLink = false;
     this.globalLevel = -1;
-    this.styles = ["fillColor", "strokeColor", "fontColor"];
+    this.styles = ['fillColor', 'strokeColor', 'fontColor'];
     this.level = {
       fillColor: -1,
       strokeColor: -1,
@@ -38,8 +38,8 @@ function () {
     this.originalColors = {};
     this.originalValue = this.xgraph.getValueCell(mxcell);
     this.currentValue = this.originalValue;
-    this.originalLink = mxcell.getAttribute("link");
-    this.currentLink = mxcell.getAttribute("link");
+    this.originalLink = mxcell.getAttribute('link');
+    this.currentLink = mxcell.getAttribute('link');
     this.styles.forEach(function (style) {
       var color = _this.xgraph.getStyleCell(mxcell, style);
 
@@ -53,9 +53,9 @@ function () {
     value: function setState(rule, serie) {
       var _this2 = this;
 
-      u.log(1, "state_class.setState()");
-      u.log(0, "state_class.setState() Rule", rule);
-      u.log(0, "state_class.setState() Serie", serie);
+      u.log(1, 'state_class.setState()');
+      u.log(0, 'state_class.setState() Rule', rule);
+      u.log(0, 'state_class.setState() Serie', serie);
 
       if (rule.matchSerie(serie)) {
         var shapeMaps = rule.getShapeMaps();
@@ -63,7 +63,7 @@ function () {
         var linkMaps = rule.getTextMaps();
         var value = rule.getValueForSerie(serie);
         var FormattedValue = rule.getFormattedValue(value);
-        var level = rule.getThresholdLevel(value); //SHAPE
+        var level = rule.getThresholdLevel(value); // SHAPE
 
         var cellProp = this.getCellProp(rule.data.shapeProp);
         shapeMaps.forEach(function (shape) {
@@ -79,7 +79,7 @@ function () {
               }
             }
           }
-        }); //TEXT
+        }); // TEXT
 
         cellProp = this.getCellProp(rule.data.textProp);
         textMaps.forEach(function (text) {
@@ -105,7 +105,7 @@ function () {
   }, {
     key: "unsetState",
     value: function unsetState() {
-      u.log(1, "State.unsetState()");
+      u.log(1, 'State.unsetState()');
       this.unsetLevel();
       this.unsetColor();
       this.unsetText();
@@ -118,20 +118,20 @@ function () {
   }, {
     key: "getCellProp",
     value: function getCellProp(prop) {
-      if (prop === "id") return this.cellId;
-      if (prop === "value") return this.originalValue;
+      if (prop === 'id') return this.cellId;
+      if (prop === 'value') return this.originalValue;
+      return '/!\\ Not found';
     }
   }, {
     key: "setColorStyle",
     value: function setColorStyle(style, color) {
-      u.log(1, "State.setColorStyle()");
+      u.log(1, 'State.setColorStyle()');
       this.currentColors[style] = color;
     }
   }, {
     key: "unsetColorStyle",
     value: function unsetColorStyle(style) {
       this.currentColors[style] = this.originalColors[style];
-      this.currentColors[style];
     }
   }, {
     key: "unsetColor",
@@ -165,7 +165,7 @@ function () {
   }, {
     key: "setLevelStyle",
     value: function setLevelStyle(style, level) {
-      u.log(1, "State.setLevelStyle()");
+      u.log(1, 'State.setLevelStyle()');
       this.level[style] = level;
       if (this.globalLevel < level) this.globalLevel = level;
     }
@@ -208,10 +208,11 @@ function () {
     key: "getCurrentLink",
     value: function getCurrentLink() {
       return this.currentLink;
-    }
+    } // eslint-disable-next-line class-methods-use-this
+
   }, {
     key: "isGradient",
-    value: function isGradient() {//TODO:
+    value: function isGradient() {// TODO:
     }
   }, {
     key: "isShape",
@@ -228,7 +229,7 @@ function () {
     value: function applyState() {
       var _this5 = this;
 
-      u.log(1, "State.applyState()");
+      u.log(1, 'State.applyState()');
 
       if (this.matched) {
         if (this.matchedShape) {
@@ -239,7 +240,7 @@ function () {
 
         if (this.matchedText) {
           this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
-        } //TODO:LINK
+        } // TODO:LINK
 
       } else this.restoreCell();
     }
@@ -253,7 +254,7 @@ function () {
         _this6.xgraph.setStyleCell(_this6.mxcell, style, _this6.getCurrentColorStyle(style));
       });
       this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
-      this.mxcell.setAttribute("link", this.getCurrentLink());
+      this.mxcell.setAttribute('link', this.getCurrentLink());
     }
   }, {
     key: "prepare",

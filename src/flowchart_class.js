@@ -8,7 +8,7 @@ export default class Flowchart {
     this.data = data;
     this.data.name = name;
     this.data.xml = xmlGraph;
-    this.container = undefined;
+    this.container = container;
     this.xgraph = undefined;
     this.stateHandler = undefined;
     this.import(data);
@@ -52,7 +52,7 @@ export default class Flowchart {
       if (this.data.lock) this.xgraph.lockGraph(true);
       this.stateHandler = new StateHandler(this.xgraph);
     } else {
-      u.log(2, 'XML Graph not defined');
+      u.log(3, 'XML Graph not defined');
     }
   }
 
@@ -77,9 +77,9 @@ export default class Flowchart {
     this.xgraph.refreshGraph(this.width, this.height);
     if (this.data.scale) {
       this.xgraph.unzoomGraph();
-      this.xgraph.scale(this.data.scale);
+      this.xgraph.scaleGraph(this.data.scale);
     } else {
-      this.xgraph.zoom(this.data.zoom);
+      this.xgraph.zoomGraph(this.data.zoom);
       this.xgraph.lockGraph(this.data.lock);
       this.xgraph.centerGraph(this.data.center);
     }

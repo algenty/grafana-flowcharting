@@ -35,6 +35,8 @@ export default class FlowchartHandler {
   }
 
   import(obj) {
+    u.log(1, 'FlowchartHandler.import()');
+    u.log(0, 'FlowchartHandler.import() obj', obj);
     let i = 0;
     obj.forEach((map) => {
       const container = this.createContainer();
@@ -53,6 +55,11 @@ export default class FlowchartHandler {
     return this.flowcharts;
   }
 
+  countFlowcharts() {
+    if (this.flowcharts !== undefined && Array.isArray(this.flowcharts)) return this.flowcharts.length;
+    return 0;
+  }
+
   createContainer() {
     const $container = $(`<div id="flowchart_${u.uniqueID}" style="margin:auto;position:relative,width:100%;height:100%"></div>`);
     this.$elem.html($container);
@@ -60,6 +67,7 @@ export default class FlowchartHandler {
   }
 
   addFlowchart(name) {
+    u.log(1, 'FlowchartHandler.addFlowchart()');
     const container = this.createContainer();
     const data = {};
     const flowchart = new Flowchart(name, this.defaultXml, container, data);
@@ -76,6 +84,18 @@ export default class FlowchartHandler {
     const width = this.$elem.width();
     const height = this.ctrl.height;
     this.refresh(width, height);
+  }
+
+  sourcesChanged() {
+    this.sourcesChanged = true;
+  }
+
+  rulesChanged() {
+    this.rulesChanged = true;
+  }
+
+  datasChanged() {
+    this.datasChanged = true;
   }
 
   refresh(width, height) {
@@ -107,5 +127,35 @@ export default class FlowchartHandler {
     if (objToMap === undefined || objToMap == null) return this.onMapping.active;
     if (this.onMapping.active === true && objToMap === this.onMapping.object) return true;
     return false;
+  }
+
+  openDrawEditor(index) {
+    const urlEditor = "https://draw.io?embed=1";
+    const myWindow = window.open(
+      urlEditor,
+      "MxGraph Editor",
+      "width=1280, height=720",
+    );
+    window.addEventListener("message", (event) => {
+      if (event.origin !== "https://www.draw.io") return;
+      // when editor is open
+      if (event.data === "ready") {
+        // send xml
+        event.source.postMessage(
+          this.flowcharts[index].data.xml,
+          event.origin,
+        );
+      } else {
+        if (event.data !== undefined && event.data.length > 0) {
+          this.flowcharts[index].setXml(event.data);
+          this.panelCtrl.changedSource = true;
+          this.$scope.$apply();
+          this.render();
+        }
+        if (event.data !== undefined || event.data.length === 0) {
+          myWindow.close();
+        }
+      }
+    });
   }
 }

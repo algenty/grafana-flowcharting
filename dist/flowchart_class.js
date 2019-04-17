@@ -21,14 +21,16 @@ var Flowchart =
 /*#__PURE__*/
 function () {
   /** @ngInject */
-  function Flowchart(name, container, data) {
+  function Flowchart(name, xmlGraph, container, data) {
     _classCallCheck(this, Flowchart);
 
+    u.log(1, "flowchart[".concat(name, "].constructor()"));
     this.data = data;
     this.data.name = name;
-    this.container;
-    this.xgraph;
-    this.stateHandler;
+    this.data.xml = xmlGraph;
+    this.container = container;
+    this.xgraph = undefined;
+    this.stateHandler = undefined;
     this.import(data);
     this.init();
   }
@@ -36,8 +38,10 @@ function () {
   _createClass(Flowchart, [{
     key: "import",
     value: function _import(obj) {
+      u.log(1, "flowchart[".concat(this.data.name, "].import()"));
+      u.log(0, "flowchart[".concat(this.data.name, "].import() obj"), obj);
       if (obj.source) this.data.type = obj.source.type;else this.data.type = obj.type || this.data.type || 'xml';
-      if (obj.source) this.data.xml = obj.source.xml.value;else this.data.xml = obj.xml || this.data.xml || "";
+      if (obj.source) this.data.xml = obj.source.xml.value;else this.data.xml = obj.xml || this.data.xml || '';
       if (obj.source) this.data.url = obj.source.url.value;else this.data.url = 'http://<source>:<port>/<pathToXml>';
       if (obj.options) this.data.zoom = obj.options.zoom;else this.data.zoom = obj.zoom || '100%';
       if (obj.options) this.data.center = obj.options.center;else this.data.center = obj.center || true;
@@ -54,39 +58,59 @@ function () {
   }, {
     key: "init",
     value: function init() {
-      u.log(1, "flowchart.init()");
+      u.log(1, "flowchart[".concat(this.data.name, "].init()"));
       this.xgraph = new _graph_class.default(this.container, this.data.xml);
-      this.xgraph.drawGraph();
-      if (this.data.scale) this.xgraph.scaleGraph(true);
-      if (this.data.center) this.xgraph.centerGraph(true);
-      if (this.data.lock) this.xgraph.lockGraph(true);
-      this.stateHandler = new _statesHandler.default(this.xgraph);
+
+      if (this.data.xml !== undefined && this.data.xml !== null) {
+        this.xgraph.drawGraph();
+        if (this.data.scale) this.xgraph.scaleGraph(true);
+        if (this.data.center) this.xgraph.centerGraph(true);
+        if (this.data.lock) this.xgraph.lockGraph(true);
+        this.stateHandler = new _statesHandler.default(this.xgraph);
+      } else {
+        u.log(3, 'XML Graph not defined');
+      }
     }
   }, {
     key: "setStates",
     value: function setStates(rules, series) {
-      u.log(1, "flowchart.setStates()"); // u.log(0,"flowchart.setStates() rules",rules);
-      // u.log(0,"flowchart.setStates() series",series);
-
-      this.stateHandler.setStates(rule, series);
+      u.log(1, "flowchart[".concat(this.data.name, "].setStates()"));
+      u.log(0, "flowchart[".concat(this.data.name, "].setStates() rules"), rules);
+      u.log(0, "flowchart[".concat(this.data.name, "].setStates() series"), series);
+      if (rules === undefined) u.log(3, "Rules shoudn't be null");
+      if (series === undefined) u.log(3, "Series shoudn't be null");
+      this.stateHandler.setStates(rules, series);
     }
   }, {
     key: "applyStates",
     value: function applyStates() {
-      u.log(1, "flowchart.applyStates()");
+      u.log(1, "flowchart[".concat(this.data.name, "].applyStates()"));
       this.stateHandler.applyStates();
     }
   }, {
     key: "refresh",
-    value: function refresh() {
-      this.data.xgraph.refreshGraph(this.width, this.height);
+    value: function refresh(width, height) {
+      u.log(1, "flowchart[".concat(this.data.name, "].refresh()"));
+      if (width !== undefined && width != null) this.setWidth(width);
+      if (height !== undefined && height != null) this.setHeight(height);
+      this.xgraph.refreshGraph(this.width, this.height);
+
+      if (this.data.scale) {
+        this.xgraph.unzoomGraph();
+        this.xgraph.scaleGraph(this.data.scale);
+      } else {
+        this.xgraph.zoomGraph(this.data.zoom);
+        this.xgraph.lockGraph(this.data.lock);
+        this.xgraph.centerGraph(this.data.center);
+      }
     }
   }, {
-    key: "refresh",
-    value: function refresh(width, height) {
-      if (width != undefined && width != null) this.setWidth(width);
-      if (height != undefined && height != null) this.setHeight(height);
-      this.refresh();
+    key: "redraw",
+    value: function redraw(xmlGraph) {
+      u.log(1, "flowchart[".concat(this.data.name, "].redraw()"));
+      if (xmlGraph !== undefined) this.data.xml = xmlGraph;
+      this.init();
+      this.reflesh();
     }
   }, {
     key: "setWidth",

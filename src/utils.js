@@ -7,36 +7,36 @@ const vkbeautify = require('vkbeautify');
 
 module.exports = {
   stringToBytes(str) {
-    var arr = new Array(str.length);
+    const arr = new Array(str.length);
 
-    for (var i = 0; i < str.length; i++) {
+    for (let i = 0; i < str.length; i += 1) {
       arr[i] = str.charCodeAt(i);
     }
 
     return arr;
   },
   bytesToString(arr) {
-    var str = "";
+    let str = "";
 
-    for (var i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i += 1) {
       str += String.fromCharCode(arr[i]);
     }
-
     return str;
   },
   encode(data, encode, deflate, base64) {
+    let result = data;
     if (encode) {
       try {
-        data = encodeURIComponent(data);
+        result = encodeURIComponent(result);
       } catch (e) {
         console.error(e);
         return;
       }
     }
 
-    if (deflate && data.length > 0) {
+    if (deflate && result.length > 0) {
       try {
-        data = this.bytesToString(pako.deflateRaw(data));
+        result = this.bytesToString(pako.deflateRaw(result));
       } catch (e) {
         console.error(e);
         return;
@@ -45,13 +45,13 @@ module.exports = {
 
     if (base64) {
       try {
-        data = btoa(data);
+        result = btoa(result);
       } catch (e) {
         console.error(e);
         return;
       }
     }
-    return data;
+    return result;
   },
 
   removeLinebreaks(data) {
@@ -60,9 +60,9 @@ module.exports = {
 
   isencoded(data) {
     try {
-      var node = this.parseXml(data).documentElement;
+      const node = this.parseXml(data).documentElement;
       if (node != null && node.nodeName == "mxfile") {
-        var diagrams = node.getElementsByTagName("diagram");
+        const diagrams = node.getElementsByTagName("diagram");
         if (diagrams.length > 0) {
           return true;
         }
@@ -75,10 +75,10 @@ module.exports = {
 
   decode(data, encode, deflate, base64) {
     try {
-      var node = this.parseXml(data).documentElement;
+      const node = this.parseXml(data).documentElement;
 
       if (node != null && node.nodeName == "mxfile") {
-        var diagrams = node.getElementsByTagName("diagram");
+        const diagrams = node.getElementsByTagName("diagram");
 
         if (diagrams.length > 0) {
           data = this.getTextContent(diagrams[0]);
@@ -120,11 +120,11 @@ module.exports = {
 
   parseXml(xml) {
     if (window.DOMParser) {
-      var parser = new DOMParser();
+      const parser = new DOMParser();
 
       return parser.parseFromString(xml, "text/xml");
     } else {
-      var result = createXmlDocument();
+      const result = createXmlDocument();
 
       result.async = "false";
       result.loadXML(xml);
@@ -134,7 +134,7 @@ module.exports = {
   },
 
   createXmlDocument() {
-    var doc = null;
+    let doc = null;
 
     if (document.implementation && document.implementation.createDocument) {
       doc = document.implementation.createDocument("", "", null);
@@ -163,7 +163,7 @@ module.exports = {
 
   normalizeXml(data) {
     try {
-      var str = data;
+      let str = data;
       str = str.replace(/>\s*/g, ">"); // Replace "> " with ">"
       str = str.replace(/\s*</g, "<"); // Replace "< " with "<"
       return data;
@@ -192,12 +192,12 @@ module.exports = {
   }, 
 
   matchString(str,pattern) {
-    if(str === undefined || pattern === undefined || str.length === 0 || pattern.length === 0) {
+    if (str === undefined || pattern === undefined || str.length === 0 || pattern.length === 0) {
       u.log(0,"Match str="+str+" pattern="+pattern, false);
       return false;
     }
     const regex = this.stringToJsRegex(pattern);
-    let matching = str.toString().match(regex);
+    const matching = str.toString().match(regex);
     if (str === pattern || matching) {
       u.log(0,"Match str="+str+" pattern="+pattern, true);
       return true;
@@ -222,18 +222,28 @@ module.exports = {
     }
   },
 
-  log(level,title,obj) {
+  log(level, title, obj) {
     // 0 : DEBUG
     // 1 : INFO
     // 2 : WARN
     // 3 : ERROR
-    if(logDisplay != undefined && logDisplay === true) {
-      if(logLevel != undefined && level >= logLevel) {
-        if(level == 0) console.debug("DEBUG : "+title,obj)
-        if(level == 1)  console.info(" INFO : "+title,obj)
-        if(level == 2)  console.warn(" WARN : "+title,obj)
-        if(level == 3) console.error("ERROR : "+title,obj)
+    if (logDisplay !== undefined && logDisplay === true) {
+      if (logLevel !== undefined && level >= logLevel) {
+        if (level === 0) console.debug("DEBUG : "+title,obj);
+        if (level === 1) console.info(" INFO : "+title,obj);
+        if (level === 2) console.warn(" WARN : "+title,obj);
+        if (level === 3) console.error("ERROR : "+title,obj);
       }
     }
-  }
+  },
+
+  popover(text, tagBook, tagImage) {
+    const url = 'https://algenty.github.io/flowcharting-repository/';
+    const images = `${url}images/`; 
+    const textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    let result = `${textEncoded}<br /><br />`;
+    if (tagBook) result = `${result}<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
+    if (tagImage) result = `${result}<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
+    return result;
+  },
 };
