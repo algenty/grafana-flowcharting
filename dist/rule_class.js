@@ -7,6 +7,8 @@ exports.default = void 0;
 
 var _kbn = _interopRequireDefault(require("app/core/utils/kbn"));
 
+var _moment = _interopRequireDefault(require("moment"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -49,12 +51,13 @@ function () {
 
       this.data.unit = obj.unit || 'short';
       this.data.type = obj.type || 'number';
-      this.data.alias = obj.alias || '';
+      this.data.alias = obj.alias || 'No name';
       this.data.aggregation = obj.aggregation || 'current';
       this.data.decimals = obj.decimals || 2;
       this.data.colors = obj.colors || ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
       this.data.style = obj.style || 'fillColor';
       this.data.colorOn = obj.colorOn || 'a';
+      this.data.linkOn = obj.colorOn || 'a';
       this.data.textOn = obj.textOn || 'wmd';
       this.data.textReplace = obj.textReplace || 'content';
       this.data.textPattern = obj.textPattern || '/.*/';
@@ -65,77 +68,79 @@ function () {
       this.data.shapeProp = obj.shapeProp || 'id';
       this.data.shapeData = obj.shapeData || [];
 
-      if (obj.shapeData != undefined && obj.shapeData != null && obj.shapeData.length > 0) {
+      if (obj.shapeData !== undefined && obj.shapeData !== null && obj.shapeData.length > 0) {
         var i = 0;
         obj.shapeData.forEach(function (map) {
           var sm = new ShapeMap(map.pattern, map);
 
           _this.shapeMaps.push(sm);
 
-          _this.data.shapeData[i++] = map;
+          _this.data.shapeData[i] = map;
+          i += 1;
         });
       }
 
       this.data.textProp = obj.textProp || 'id';
       this.data.textData = obj.textData || [];
 
-      if (obj.textData != undefined && obj.textData != null && obj.textData.length > 0) {
+      if (obj.textData !== undefined && obj.textData != null && obj.textData.length > 0) {
         var _i = 0;
         obj.textData.forEach(function (map) {
           var tm = new TextMap(map.pattern, map);
 
           _this.textMaps.push(tm);
 
-          _this.data.textData[_i++] = map;
+          _this.data.textData[_i] = map;
+          _i += 1;
         });
       }
 
       this.data.linkProp = obj.linkProp || 'id';
       this.data.linkData = obj.linkData || [];
 
-      if (obj.linkData != undefined && obj.linkData != null && obj.linkData.length > 0) {
+      if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
         var _i2 = 0;
         obj.linkData.forEach(function (map) {
           var lm = new LinkMap(map.pattern, map);
 
           _this.linkMaps.push(lm);
 
-          _this.data.linkData[_i2++] = map;
+          _this.data.linkData[_i2] = map;
+          _i2 += 1;
         });
       }
 
       this.data.mappingType = obj.mappingType || 1;
       this.data.valueData = obj.valueData || [];
 
-      if (obj.valueData != undefined && obj.valueData != null && obj.valueData.length > 0) {
+      if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
         var _i3 = 0;
         obj.valueData.forEach(function (map) {
           var vm = new ValueMap(map.value, map.text, map);
 
           _this.valueMaps.push(vm);
 
-          _this.data.valueData[_i3++] = map;
+          _this.data.valueData[_i3] = map;
+          _i3 += 1;
         });
       }
 
       this.data.rangeData = obj.rangeData || [];
 
-      if (obj.rangeData != undefined && obj.rangeData != null && obj.rangeData.length > 0) {
+      if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
         var _i4 = 0;
         obj.rangeData.forEach(function (map) {
           var rm = new RangeMap(map.from, map.to, map.text, map);
 
           _this.rangeMaps.push(rm);
 
-          _this.data.rangeData[_i4++] = map;
+          _this.data.rangeData[_i4] = map;
+          _i4 += 1;
         });
       }
 
       this.data.sanitize = obj.sanitize || false;
     }
-  }, {
-    key: "migrate",
-    value: function migrate(obj, version) {}
   }, {
     key: "invertColorOrder",
     value: function invertColorOrder() {
@@ -144,15 +149,6 @@ function () {
       ref[0] = ref[2];
       ref[2] = copy;
       if (this.data.invert) this.data.invert = false;else this.data.invert = true;
-    }
-  }, {
-    key: "newColor",
-    value: function newColor(index, color) {
-      var _this2 = this;
-
-      return function (newColor) {
-        _this2.data.colors[index] = color;
-      };
     } //
     // Conditions
     //
@@ -253,6 +249,7 @@ function () {
   }, {
     key: "addLinkMap",
     value: function addLinkMap(pattern) {
+      u.log(1, "Rule.addLinkMap()");
       var data = {};
       var m = new LinkMap(pattern, data);
       m.import(data);
@@ -355,11 +352,11 @@ function () {
   }, {
     key: "getColorForValue",
     value: function getColorForValue(value) {
-      if (!this.data.thresholds || this.data.thresholds.length == 0) {
+      if (!this.data.thresholds || this.data.thresholds.length === 0) {
         return null;
       }
 
-      for (var i = this.data.thresholds.length; i > 0; i--) {
+      for (var i = this.data.thresholds.length; i > 0; i -= 1) {
         if (value >= this.data.thresholds[i - 1]) {
           return this.data.colors[i];
         }
@@ -372,7 +369,7 @@ function () {
     value: function getThresholdLevel(value) {
       var thresholdLevel = 0;
       var thresholds = this.data.thresholds;
-      if (thresholds === undefined || thresholds.length == 0) return -1;
+      if (thresholds === undefined || thresholds.length === 0) return -1;
       if (thresholds.length !== 2) return -1; // non invert
 
       if (!this.data.invert) {
@@ -432,7 +429,7 @@ function () {
         var mappingType = this.data.mappingType || 0;
 
         if (mappingType === 1 && this.valueMaps) {
-          for (var i = 0; i < this.valueMaps.length; i++) {
+          for (var i = 0; i < this.valueMaps.length; i += 1) {
             var map = this.valueMaps[i];
             if (map.match(value)) return map.getFormattedText(value);
           }
@@ -441,7 +438,7 @@ function () {
         }
 
         if (mappingType === 2 && this.rangeMaps) {
-          for (var _i5 = 0; _i5 < this.rangeMaps.length; _i5++) {
+          for (var _i5 = 0; _i5 < this.rangeMaps.length; _i5 += 1) {
             var _map = this.rangeMaps[_i5];
             if (_map.match(value)) return _map.getFormattedText(value);
           }
@@ -463,25 +460,26 @@ function () {
           value = value[0];
         }
 
-        var date = moment(value); // if (this.dashboard.isTimezoneUtc()) {
+        var date = (0, _moment.default)(value); // if (this.dashboard.isTimezoneUtc()) {
         //     date = date.utc();
         // }
 
         return date.format(this.data.dateFormat);
       }
+
+      return value;
     }
   }, {
     key: "getReplaceText",
     value: function getReplaceText(text, FormattedValue) {
-      if (this.data.textReplace === 'content') return FormattedValue;else {
-        var regexVal = u.stringToJsRegex(this.data.textPattern);
-        if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
-      }
+      if (this.data.textReplace === 'content') return FormattedValue;
+      var regexVal = u.stringToJsRegex(this.data.textPattern);
+      if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
       return text;
     }
   }, {
     key: "defaultValueFormatter",
-    value: function defaultValueFormatter(value, rule) {
+    value: function defaultValueFormatter(value) {
       if (value === null || value === void 0 || value === undefined) {
         return '';
       }
@@ -492,9 +490,9 @@ function () {
 
       if (this.sanitize) {
         return this.$sanitize(value);
-      } else {
-        return _.escape(value);
       }
+
+      return _.escape(value);
     }
   }, {
     key: "decimalPlaces",
@@ -527,7 +525,7 @@ function () {
 
     this.data = data;
     this.id = u.uniqueID();
-    this.data.pattern;
+    this.data.pattern = undefined;
     this.data.pattern = pattern;
     this.import(data);
   }
@@ -538,9 +536,6 @@ function () {
       this.data.pattern = obj.pattern || '';
       this.data.hidden = obj.hidden || false;
     }
-  }, {
-    key: "migrate",
-    value: function migrate(obj, version) {}
   }, {
     key: "match",
     value: function match(text) {
@@ -608,9 +603,6 @@ function () {
   }
 
   _createClass(TextMap, [{
-    key: "migrate",
-    value: function migrate(obj, version) {}
-  }, {
     key: "import",
     value: function _import(obj) {
       this.data.pattern = obj.pattern || this.data.pattern;
@@ -671,9 +663,6 @@ function () {
   }
 
   _createClass(LinkMap, [{
-    key: "migrate",
-    value: function migrate(obj, version) {}
-  }, {
     key: "import",
     value: function _import(obj) {
       this.data.pattern = obj.pattern || this.data.pattern || '';
@@ -737,9 +726,6 @@ function () {
   }
 
   _createClass(RangeMap, [{
-    key: "migrate",
-    value: function migrate(obj, version) {}
-  }, {
     key: "import",
     value: function _import(obj) {
       this.data.from = obj.from || this.data.from || '';
@@ -756,11 +742,14 @@ function () {
 
       if (value === null) {
         if (this.data.from === 'null' && this.data.to === 'null') {
-          true;
+          return true;
         }
       }
 
-      if (Number(this.data.from) <= Number(value) && Number(this.data.to) >= Number(value)) return true;
+      if (Number(this.data.from) <= Number(value) && Number(this.data.to) >= Number(value)) {
+        return true;
+      }
+
       return false;
     }
   }, {
@@ -779,7 +768,9 @@ function () {
 
       if (this.match(value)) {
         return this.data.text;
-      } else return value;
+      }
+
+      return value;
     }
   }, {
     key: "show",
@@ -842,13 +833,15 @@ function () {
         if (this.data.value === 'null') {
           return true;
         }
+
+        return false;
       }
 
       if (!_.isString(value) && Number(this.data.value) === Number(value)) {
         return true;
       }
 
-      u.matchString(value.toString(), this.data.value);
+      return u.matchString(value.toString(), this.data.value);
     }
   }, {
     key: "getId",
@@ -858,8 +851,6 @@ function () {
   }, {
     key: "getFormattedText",
     value: function getFormattedText(value) {
-      var rule = this.data.rule;
-
       if (value === null) {
         if (this.data.value === 'null') {
           return this.data.text;
@@ -868,7 +859,9 @@ function () {
 
       if (this.match(value)) {
         return this.data.text;
-      } else return value;
+      }
+
+      return value;
     }
   }, {
     key: "show",

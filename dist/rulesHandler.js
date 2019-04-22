@@ -22,13 +22,13 @@ function () {
   function RulesHandler($scope, data) {
     _classCallCheck(this, RulesHandler);
 
-    u.log(1, "RulesHandler.constructor()");
+    u.log(1, 'RulesHandler.constructor()');
     this.$scope = $scope || null;
     this.rules = [];
     this.data = data; // if (version != this.panel.version) this.migrate(this.rules)
     // else this.import(this.rules);
 
-    if (this.data != undefined && this.data != null && this.data.length > 0) {
+    if (this.data !== undefined && this.data !== null && this.data.length > 0) {
       this.import(this.data);
     }
   }
@@ -38,13 +38,16 @@ function () {
     value: function _import(obj) {
       var _this = this;
 
+      u.log(1, 'RuleHandler.import()');
+      u.log(0, 'RuleHandler.import() obj', obj);
       var i = 0;
       obj.forEach(function (map) {
         var rule = new _rule_class.default(map.pattern, map);
 
         _this.rules.push(rule);
 
-        _this.data[i++] = map;
+        _this.data[i] = map;
+        i += 1;
       });
     }
   }, {
@@ -68,7 +71,8 @@ function () {
   }, {
     key: "countRules",
     value: function countRules() {
-      if (this.rules != undefined && Array.isArray(this.rules)) return this.rules.length;else return 0;
+      if (this.rules !== undefined && Array.isArray(this.rules)) return this.rules.length;
+      return 0;
     }
   }, {
     key: "removeRule",
@@ -94,7 +98,7 @@ function () {
       var rules = this.rules;
       var last = rules.length - 1;
 
-      if (index != first && last != first) {
+      if (index !== first && last !== first) {
         var curr = rules[index];
         var before = rules[index - 1];
         rules[index - 1] = curr;
@@ -108,7 +112,7 @@ function () {
       var rules = this.rules;
       var last = rules.length - 1;
 
-      if (index != last && last != first) {
+      if (index !== last && last !== first) {
         var curr = rules[index];
         var after = rules[index + 1];
         rules[index + 1] = curr;

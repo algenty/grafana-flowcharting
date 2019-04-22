@@ -129,7 +129,7 @@ export default class XGraph {
   }
 
   initGraph() {
-    // this.$elem.html(this.$graphCanvas);
+    u.log(1, "XGraph.initGraph()");
     const Graph = require('./Graph')({
       libs: 'arrows;basic;bpmn;flowchart',
     });
@@ -139,6 +139,7 @@ export default class XGraph {
   }
 
   drawGraph() {
+    u.log(1, "XGraph.drawGraph()");
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
@@ -155,8 +156,7 @@ export default class XGraph {
   }
 
   refreshGraph(width, height) {
-    // console.log("height ", height);
-    // console.log("width ", width);
+    u.log(1, "XGraph.refreshGraph()");
     const $div = $(this.container);
     const size = Math.min(width, height);
 
@@ -168,18 +168,13 @@ export default class XGraph {
     };
 
     $div.css(css);
-
-    if (this.zoom) this.zoomGraph(this.zoom);
+    if (!this.scale) this.zoomGraph(this.zoomPercent);
     else this.unzoomGraph();
 
     this.lockGraph(this.lock);
-
     this.scaleGraph(this.scale);
-
-    this.centerGraph(this.center);
-
     this.gridGraph(this.grid);
-
+    this.centerGraph(this.center);
     this.graph.refresh();
   }
 
@@ -197,6 +192,7 @@ export default class XGraph {
 
   scaleGraph(bool) {
     if (bool) {
+      this.unzoomGraph();
       this.graph.fit();
       this.graph.view.rendering = true;
     }
@@ -213,10 +209,13 @@ export default class XGraph {
   }
 
   zoomGraph(percent) {
-    if (percent && percent.legth > 0 && percent !== '100%' && percent !== '0%') {
+    u.log(1, "XGraph.zoomGraph()");
+    if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
       const ratio = percent.replace('%', '') / 100;
       this.graph.zoomTo(ratio, true);
       this.zoomPercent = percent;
+    } else {
+      this.unzoomGraph();
     }
     this.zoom = true;
   }
@@ -235,6 +234,7 @@ export default class XGraph {
   }
 
   setXmlGraph(xmlGraph) {
+    u.log(1, "XGraph.setXmlGraph()");
     if (u.isencoded(xmlGraph)) this.xmlGraph = u.decode(xmlGraph, true, true, true);
     else this.xmlGraph = xmlGraph;
     this.drawGraph();
@@ -256,16 +256,48 @@ export default class XGraph {
     return cellIds;
   }
 
+  findMxCells(prop, pattern) {
+    const mxcells = this.getMxCells()
+    let result = [];
+    if (prop === 'id') {
+      _.each(mxcells, (mxcell) => {
+        if (u.matchString(mxcell.id,pattern)) result.push(mxcell);
+      });
+    } else if (prop === 'value') {
+      _.each(mxcells, (mxcell) => {
+        if (u.matchString(mxcell.getValue(), pattern)) result.push(mxcell);
+      });
+    }
+    return result;
+  }
+
   getOrignalCells(prop) {
     if (prop === 'id' || prop === 'value') return this.cells[prop];
     // TODO: attributs
     return [];
   }
 
+  renameId(oldId, newId) {
+    const cells = this.findMxCells("id", oldId);
+    if (cells !== undefined && cells.length > 0) {
+      cells.forEach((cell) => {
+        cell.id = newId;
+      });
+    } else {
+      u.log(2, `Cell ${oldId} not found`);
+    }
+  }
+
+  getXmlModel() {
+    const encoder = new mxCodec();
+    const node = encoder.encode(this.graph.getModel());
+    return mxUtils.getXml(node);
+  }
+
   findCurrentCells(prop, pattern) {
     const cells = this.getCurrentCells(prop);
     const result = _.find(cells, (cell) => {
-      return u.matchString(cell, pattern);
+      u.matchString(cell, pattern);
     });
     return result;
   }
@@ -273,18 +305,18 @@ export default class XGraph {
   findOriginalCells(prop, pattern) {
     const cells = this.getOrignalCells(prop);
     const result = _.find(cells, (cell) => {
-      return u.matchString(cell, pattern);
+      u.matchString(cell, pattern);
     });
     return result;
   }
 
-  getAllMxCells() {
+  getMxCells() {
     return this.graph.getModel().cells;
   }
 
   findCurrentMxCells(prop, pattern) {
     const cells = [];
-    _.each(this.getAllMxCells(), (cell) => {
+    _.each(this.getMxCells(), (cell) => {
       if (prop === 'id') {
         const id = cell.getId();
         if (u.matchString(id, pattern)) cells.push(cell);
@@ -305,27 +337,33 @@ export default class XGraph {
     this.graph.setCellStyles(style, color, [mxcell]);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   getValueCell(mxcell) {
+    const view = this.graph.view;
+    if (view.getState(mxcell).text != null) return view.getState(mxcell).text.lastValue;
     return mxcell.getValue();
   }
 
+  // eslint-disable-next-line class-methods-use-this
   setValueCell(mxcell, text) {
     return mxcell.setValue(text);
   }
 
-  setMapping(onMappingObject) {
+  setMap(onMappingObj) {
     u.log(1, 'XGraph.setMapping()');
-    u.log(0, 'XGraph.setMapping() onMappingObject : ', onMappingObject);
-    this.onMapping = onMappingObject;
+    u.log(0, 'XGraph.setMapping() onMappingObject : ', onMappingObj);
+    this.onMapping = onMappingObj;
     if (this.onMapping.active === true) {
       this.graph.click = this.eventGraph.bind(this);
     }
   }
 
-  unsetMapping() {
+  unsetMap() {
     u.log(1, 'XGraph.unsetMapping()');
+    u.log(0, 'XGraph.unsetMapping() onMapping', this.onMapping);
     this.onMapping.active = false;
     this.graph.click = this.clickBackup;
+    this.onMapping.$scope.$apply();
   }
 
   //
@@ -340,9 +378,13 @@ export default class XGraph {
 
     if (this.onMapping.active) {
       const state = me.getState();
-      const id = state.cell.id;
-      this.onMapping.object.pattern = id;
-      this.unsetMapping();
+      if (state) {
+        const id = state.cell.id;
+        this.onMapping.object.data.pattern = id;
+        const elt = document.getElementById(this.onMapping.id);
+        if (elt) setTimeout(() => { elt.focus(); }, 100);
+        this.unsetMap();
+      }
     }
   }
 }

@@ -24,7 +24,7 @@ export default class StateHandler {
   }
 
   addState(mxcell) {
-    let state = new State(mxcell, this.xgraph);
+    const state = new State(mxcell, this.xgraph);
     this.states.push(state);
   }
 
@@ -35,8 +35,8 @@ export default class StateHandler {
   initStates(xgraph) {
     this.xgraph = xgraph;
     this.states = [];
-    let cells = this.xgraph.getAllMxCells();
-    _.each(cells, cell => {
+    const cells = this.xgraph.getMxCells();
+    _.each(cells, (cell) => {
       this.addState(cell);
     });
   }
@@ -47,14 +47,14 @@ export default class StateHandler {
 
   countStatesWithLevel(level) {
     let count = 0;
-    this.states.forEach(state => {
-      if (state.getLevel() == level) count++;
+    this.states.forEach((state) => {
+      if (state.getLevel() === level) count += 1;
     });
     return count;
   }
 
   prepare() {
-    this.states.forEach(state => {
+    this.states.forEach((state) => {
       state.prepare();
     });
   }
@@ -64,9 +64,9 @@ export default class StateHandler {
     u.log(0, 'StatesHandler.setStates() Rules', rules);
     u.log(0, 'StatesHandler.setStates() Series', series);
     this.prepare();
-    this.states.forEach(state => {
-      rules.forEach(rule => {
-        series.forEach(serie => {
+    this.states.forEach((state) => {
+      rules.forEach((rule) => {
+        series.forEach((serie) => {
           state.setState(rule, serie);
         });
       });
@@ -75,7 +75,7 @@ export default class StateHandler {
 
   applyStates() {
     u.log(1, 'StateHandler.applyStates()');
-    this.states.forEach(state => {
+    this.states.forEach((state) => {
       state.applyState();
     });
   }

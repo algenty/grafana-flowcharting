@@ -44,7 +44,14 @@ function () {
   }, {
     key: "onSourceChange",
     value: function onSourceChange() {
-      this.flowchartHandler.sourcesChanged();
+      this.flowchartHandler.sourceChanged();
+      this.render();
+    }
+  }, {
+    key: "onOptionChange",
+    value: function onOptionChange() {
+      u.log(1, "FlowchartOptionsCtrl.onOptionChange()");
+      this.flowchartHandler.optionChanged();
       this.render();
     }
   }, {

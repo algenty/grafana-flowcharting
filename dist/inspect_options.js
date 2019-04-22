@@ -6,11 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.inspectOptionsTab = inspectOptionsTab;
 exports.InspectOptionsCtrl = void 0;
 
-var _lodash = _interopRequireDefault(require("lodash"));
-
 var _plugin = require("./plugin");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -26,27 +22,48 @@ function () {
     _classCallCheck(this, InspectOptionsCtrl);
 
     $scope.editor = this;
-    this.panelCtrl = $scope.ctrl;
-    this.panel = this.panelCtrl.panel;
-    this.mx = this.panelCtrl.mx;
-    this.cells = this.mx.cells;
+    this.$scope = $scope;
+    this.ctrl = $scope.ctrl;
+    this.panel = this.ctrl.panel;
     this.colors = ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
-    this.colorModes = [{
+    this.style = [{
       text: 'Disabled',
       value: null
     }, {
       text: 'Stroke',
-      value: this.mx.STYLE_STROKECOLOR
+      value: 'strokeColor'
     }, {
       text: 'Fill',
-      value: this.mx.STYLE_FILLCOLOR
+      value: 'fillColor'
     }, {
       text: 'Text',
-      value: this.mx.STYLE_FONTCOLOR
+      value: 'fontColor'
     }];
-    this.colorMode = this.mx.STYLE_FILLCOLOR;
-    $scope.mx = this.panelCtrl.mx;
-    this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
+    this.colorMode = 'fillColor';
+    this.logDisplayOption = [{
+      text: 'True',
+      value: true
+    }, {
+      text: 'False',
+      value: false
+    }];
+    this.logDisplay = logDisplay;
+    this.logLevelOption = [{
+      text: 'DEBUG',
+      value: 0
+    }, {
+      text: 'INFO',
+      value: 1
+    }, {
+      text: 'WARNING',
+      value: 2
+    }, {
+      text: 'ERROR',
+      value: 3
+    }];
+    this.logLevel = logLevel;
+    this.flowchartHandler = this.ctrl.flowchartHandler;
+    $scope.flowchartHandler = this.ctrl.flowchartHandler;
   }
 
   _createClass(InspectOptionsCtrl, [{
@@ -63,6 +80,50 @@ function () {
         _this.colors[colorIndex] = newColor;
       };
     }
+  }, {
+    key: "onDebug",
+    value: function onDebug() {
+      window.logLevel = this.logLevel;
+      window.logDisplay = this.logDisplay;
+    }
+  }, {
+    key: "onChangeId",
+    value: function onChangeId(state) {
+      if (state.newcellId !== undefined && state.cellId !== state.newcellId) {
+        this.flowchartHandler.getFlowchart(0).getStateHandler().edited = true;
+        if (state.previousId === undefined) state.previousId = state.cellId;
+        state.cellId = state.newcellId;
+        state.edited = true;
+      }
+
+      state.edit = false;
+    }
+  }, {
+    key: "onEdit",
+    value: function onEdit(state) {
+      state.edit = true;
+      state.newcellId = state.cellId;
+      var elt = document.getElementById(state.cellId);
+      setTimeout(function () {
+        elt.focus();
+      }, 100);
+    }
+  }, {
+    key: "reset",
+    value: function reset() {
+      this.flowchartHandler.draw();
+      this.flowchartHandler.refresh(); // this.$scope.$apply();
+    }
+  }, {
+    key: "apply",
+    value: function apply() {
+      var flowchart = this.flowchartHandler.getFlowchart(0);
+      var states = flowchart.getStateHandler().getStates();
+      states.forEach(function (state) {
+        if (state.edited) flowchart.renameId(state.previousId, state.cellId);
+      });
+      flowchart.applyModel();
+    }
   }]);
 
   return InspectOptionsCtrl;
@@ -78,7 +139,7 @@ function inspectOptionsTab($q, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: 'public/plugins/' + _plugin.plugin.id + '/partials/inspect_options.html',
+    templateUrl: "public/plugins/".concat(_plugin.plugin.id, "/partials/inspect_options.html"),
     controller: InspectOptionsCtrl
   };
 }

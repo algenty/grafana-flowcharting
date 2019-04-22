@@ -4,11 +4,11 @@ var scope = {
         version : "0.2.0",
         panel : {
             version : "0.2.0",
-            rules : []
+            rulesData : []
         }
     }
 }
-var rules = scope.ctrl.panel.rules;
+var rules = scope.ctrl.panel.rulesData;
 
 describe("RuleHandler", function () {
 

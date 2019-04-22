@@ -82,7 +82,7 @@ function () {
 
       this.xgraph = xgraph;
       this.states = [];
-      var cells = this.xgraph.getAllMxCells();
+      var cells = this.xgraph.getMxCells();
 
       _.each(cells, function (cell) {
         _this.addState(cell);
@@ -98,7 +98,7 @@ function () {
     value: function countStatesWithLevel(level) {
       var count = 0;
       this.states.forEach(function (state) {
-        if (state.getLevel() == level) count++;
+        if (state.getLevel() === level) count += 1;
       });
       return count;
     }

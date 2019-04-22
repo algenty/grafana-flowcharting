@@ -18,7 +18,13 @@ export class FlowchartOptionsCtrl {
   }
 
   onSourceChange() {
-    this.flowchartHandler.sourcesChanged();
+    this.flowchartHandler.sourceChanged();
+    this.render();
+  }
+
+  onOptionChange() {
+    u.log(1, "FlowchartOptionsCtrl.onOptionChange()");
+    this.flowchartHandler.optionChanged();
     this.render();
   }
 

@@ -98,19 +98,19 @@
 			<div class="section gf-form-group">
 				<h5 class="section-heading">Display</h5>
 				<gf-form-switch class="gf-form" label="Scale" label-class="width-12" checked="flowchart.data.scale"
-					on-change="editor.render()">
+					on-change="editor.onOptionChange()">
 				</gf-form-switch>
 				</gf-form-switch>
 				<gf-form-switch class="gf-form" label="Center" label-class="width-12" checked="flowchart.data.center"
-					on-change="editor.render()">
+					on-change="editor.onOptionChange()">
 				</gf-form-switch>
 				<gf-form-switch class="gf-form" label="Grid" label-class="width-12" checked="flowchart.data.grid"
-					on-change="editor.render()">
+					on-change="editor.onOptionChange()">
 				</gf-form-switch>
 				<div class="gf-form">
 					<label class="gf-form-label width-12">Bg Color</label>
 					<span class="width-10">
-						<spectrum-picker class="gf-form-input" ng-model="flowchart.data.bgColor" ng-change="onSourceChange.render()">
+						<spectrum-picker class="gf-form-input" ng-model="flowchart.data.bgColor" ng-change="editor.onOptionChange()">
 						</spectrum-picker>
 					</span>
 				</div>
@@ -125,14 +125,13 @@
 						</info-popover>
 					</span>
 					<input type="text" name="valueDisplayRegex" ng-model="flowchart.data.zoom" style="text-align: right"
-						placeholder="100%" class="gf-form-input max-width-10" ng-blur="editor.render()" />
+						placeholder="100%" class="gf-form-input max-width-10" ng-blur="editor.onOptionChange()" />
 				</div>
 			</div>
 			<div class="section gf-form-group">
 				<h5 class="section-heading">Others options</h5>
-
 				<gf-form-switch class="gf-form" label="Lock" label-class="width-12" checked="flowchart.data.lock"
-					on-change="editor.render()">
+					on-change="editor.onOptionChange()">
 				</gf-form-switch>
 			</div>
 		</div>

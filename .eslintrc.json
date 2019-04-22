@@ -16,7 +16,10 @@
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly",
         "u": false,
-        "_": false
+        "_": false,
+        "moment": false,
+        "logLevel": false,
+        "logDisplay": false
     },
     "parserOptions": {
         "ecmaVersion": 2018,

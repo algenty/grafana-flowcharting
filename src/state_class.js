@@ -36,7 +36,7 @@ export default class State {
     if (rule.matchSerie(serie)) {
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
-      const linkMaps = rule.getTextMaps();
+      const linkMaps = rule.getLinkMaps();
       const value = rule.getValueForSerie(serie);
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
@@ -113,6 +113,10 @@ export default class State {
     return this.currentColors[style];
   }
 
+  getOriginalColorStyle(style) {
+    return this.originalColors[style];
+  }
+
   unsetLevelStyle(style) {
     this.level[style] = -1;
   }
@@ -136,6 +140,22 @@ export default class State {
 
   getLevel() {
     return this.globalLevel;
+  }
+
+  getTextLevel() {
+    const level = this.getLevel();
+    switch (level) {
+      case -1:
+        return 'NO DATA';
+      case 0:
+        return 'OK';
+      case 1:
+        return 'WARN';
+      case 2:
+        return 'ERROR';
+      default:
+        return 'NULL';
+    }
   }
 
   setText(text) {

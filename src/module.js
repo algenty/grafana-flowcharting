@@ -6,7 +6,7 @@ loadPluginCss({
   light: 'plugins/agenty-flowcharting-panel/css/flowchart.light.css'
 });
 
-window.logLevel = 1;
+window.logLevel = 0;
 window.logDisplay = true;
 
 export { FlowchartCtrl as PanelCtrl };

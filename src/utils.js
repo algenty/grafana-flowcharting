@@ -176,39 +176,40 @@ module.exports = {
     function chr4() {
       return Math.random().toString(16).slice(-4);
     }
-    return chr4() + chr4() +
-      '-' + chr4() +
-      '-' + chr4() +
-      '-' + chr4() +
-      '-' + chr4() + chr4() + chr4();
+    return `${chr4() + chr4()
+    }-${chr4()
+    }-${chr4()
+    }-${chr4()
+    }-${chr4()}${chr4()}${chr4()}`;
   },
 
   stringToJsRegex(str) {
     if (str[0] !== "/") {
-      return new RegExp("^" + str + "$");
+      return new RegExp(`^${str}$`);
     }
     const match = str.match(new RegExp("^/(.*?)/(g?i?m?y?)$"));
     return new RegExp(match[1], match[2]);
-  }, 
+  },
 
-  matchString(str,pattern) {
+  matchString(str, pattern) {
     if (str === undefined || pattern === undefined || str.length === 0 || pattern.length === 0) {
-      u.log(0,"Match str="+str+" pattern="+pattern, false);
+      u.log(0, `Match str=${str} pattern=${pattern}`, false);
       return false;
     }
     const regex = this.stringToJsRegex(pattern);
     const matching = str.toString().match(regex);
     if (str === pattern || matching) {
-      u.log(0,"Match str="+str+" pattern="+pattern, true);
+      u.log(0, `Match str=${str} pattern=${pattern}`, true);
       return true;
     }
+    return false;
   },
 
   minify(text) {
     try {
-      return vkbeautify.xmlmin(text,false);
+      return vkbeautify.xmlmin(text, false);
     } catch (error) {
-      this.log(3,"Error in minify",error);
+      this.log(3, "Error in minify", error);
       return text;
     }
   },
@@ -217,7 +218,7 @@ module.exports = {
     try {
       return vkbeautify.xml(text);
     } catch (error) {
-      this.log(3,"Error in prettify",error);
+      this.log(3, "Error in prettify", error);
       return text;
     }
   },
@@ -227,19 +228,21 @@ module.exports = {
     // 1 : INFO
     // 2 : WARN
     // 3 : ERROR
+    // eslint-disable-next-line no-undef
     if (logDisplay !== undefined && logDisplay === true) {
+      // eslint-disable-next-line no-undef
       if (logLevel !== undefined && level >= logLevel) {
-        if (level === 0) console.debug("DEBUG : "+title,obj);
-        if (level === 1) console.info(" INFO : "+title,obj);
-        if (level === 2) console.warn(" WARN : "+title,obj);
-        if (level === 3) console.error("ERROR : "+title,obj);
+        if (level === 0) { console.debug(`DEBUG : ${title}`, obj); return; }
+        if (level === 1) { console.info(` INFO : ${title}`, obj); return; }
+        if (level === 2) { console.warn(` WARN : ${title}`, obj); return; }
+        if (level === 3) { console.error(`ERROR : ${title}`, obj); }
       }
     }
   },
 
   popover(text, tagBook, tagImage) {
     const url = 'https://algenty.github.io/flowcharting-repository/';
-    const images = `${url}images/`; 
+    const images = `${url}images/`;
     const textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     let result = `${textEncoded}<br /><br />`;
     if (tagBook) result = `${result}<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;

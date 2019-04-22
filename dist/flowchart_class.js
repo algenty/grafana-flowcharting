@@ -25,6 +25,7 @@ function () {
     _classCallCheck(this, Flowchart);
 
     u.log(1, "flowchart[".concat(name, "].constructor()"));
+    u.log(0, "flowchart[".concat(name, "].constructor() data"), data);
     this.data = data;
     this.data.name = name;
     this.data.xml = xmlGraph;
@@ -44,11 +45,11 @@ function () {
       if (obj.source) this.data.xml = obj.source.xml.value;else this.data.xml = obj.xml || this.data.xml || '';
       if (obj.source) this.data.url = obj.source.url.value;else this.data.url = 'http://<source>:<port>/<pathToXml>';
       if (obj.options) this.data.zoom = obj.options.zoom;else this.data.zoom = obj.zoom || '100%';
-      if (obj.options) this.data.center = obj.options.center;else this.data.center = obj.center || true;
-      if (obj.options) this.data.scale = obj.options.scale;else this.data.scale = obj.scale || true;
-      if (obj.options) this.data.lock = obj.options.lock;else this.data.lock = obj.lock || true;
-      if (obj.options) this.data.grid = obj.options.grid;else this.data.grid = obj.grid || false;
-      if (obj.options) this.data.bgColor = obj.options.bgColor;else this.data.bgColor = obj.bgColor || undefined;
+      if (obj.options) this.data.center = obj.options.center;else this.data.center = obj.center !== undefined ? obj.center : true;
+      if (obj.options) this.data.scale = obj.options.scale;else this.data.scale = obj.scale !== undefined ? obj.scale : true;
+      if (obj.options) this.data.lock = obj.options.lock;else this.data.lock = obj.lock !== undefined ? obj.lock : true;
+      if (obj.options) this.data.grid = obj.options.grid;else this.data.grid = obj.grid !== undefined ? obj.grid : false;
+      if (obj.options) this.data.bgColor = obj.options.bgColor;else this.data.bgColor = obj.bgColor;
     }
   }, {
     key: "getData",
@@ -59,7 +60,7 @@ function () {
     key: "init",
     value: function init() {
       u.log(1, "flowchart[".concat(this.data.name, "].init()"));
-      this.xgraph = new _graph_class.default(this.container, this.data.xml);
+      if (this.xgraph === undefined) this.xgraph = new _graph_class.default(this.container, this.data.xml);
 
       if (this.data.xml !== undefined && this.data.xml !== null) {
         this.xgraph.drawGraph();
@@ -70,6 +71,16 @@ function () {
       } else {
         u.log(3, 'XML Graph not defined');
       }
+    }
+  }, {
+    key: "getStateHandler",
+    value: function getStateHandler() {
+      return this.stateHandler;
+    }
+  }, {
+    key: "getXGraph",
+    value: function getXGraph() {
+      return this.xgraph;
     }
   }, {
     key: "setStates",
@@ -91,26 +102,102 @@ function () {
     key: "refresh",
     value: function refresh(width, height) {
       u.log(1, "flowchart[".concat(this.data.name, "].refresh()"));
+      u.log(0, "flowchart[".concat(this.data.name, "].refresh() data"), this.data);
       if (width !== undefined && width != null) this.setWidth(width);
       if (height !== undefined && height != null) this.setHeight(height);
       this.xgraph.refreshGraph(this.width, this.height);
-
-      if (this.data.scale) {
-        this.xgraph.unzoomGraph();
-        this.xgraph.scaleGraph(this.data.scale);
-      } else {
-        this.xgraph.zoomGraph(this.data.zoom);
-        this.xgraph.lockGraph(this.data.lock);
-        this.xgraph.centerGraph(this.data.center);
-      }
     }
   }, {
     key: "redraw",
     value: function redraw(xmlGraph) {
       u.log(1, "flowchart[".concat(this.data.name, "].redraw()"));
-      if (xmlGraph !== undefined) this.data.xml = xmlGraph;
+
+      if (xmlGraph !== undefined) {
+        this.data.xml = xmlGraph;
+        this.xgraph.setXmlGraph(this.data.xml);
+      } else {
+        u.log(2, "XML Content not defined");
+        this.xgraph.setXmlGraph(this.data.xml);
+      }
+
       this.init();
-      this.reflesh();
+    }
+  }, {
+    key: "setLock",
+    value: function setLock(bool) {
+      this.data.lock = bool;
+      this.xgraph.lock = bool;
+    }
+  }, {
+    key: "lock",
+    value: function lock(bool) {
+      if (bool !== undefined) this.data.lock = bool;
+      this.xgraph.lockGraph(this.data.lock);
+    }
+  }, {
+    key: "setScale",
+    value: function setScale(bool) {
+      this.data.scale = bool;
+      this.xgraph.scale = bool;
+    }
+  }, {
+    key: "scale",
+    value: function scale(bool) {
+      // u.log(1, "Flowchart.scale()");
+      if (bool !== undefined) this.data.scale = bool;
+      this.xgraph.scaleGraph(this.data.scale);
+    }
+  }, {
+    key: "setCenter",
+    value: function setCenter(bool) {
+      this.data.center = bool;
+      this.xgraph.center = bool;
+    }
+  }, {
+    key: "getNamesByProp",
+    value: function getNamesByProp(prop) {
+      return this.xgraph.getOrignalCells(prop);
+    }
+  }, {
+    key: "renameId",
+    value: function renameId(oldId, newId) {
+      this.xgraph.renameId(oldId, newId);
+    }
+  }, {
+    key: "applyModel",
+    value: function applyModel() {
+      this.xmlGraph = this.xgraph.getXmlModel();
+      this.redraw(this.xmlGraph);
+    }
+  }, {
+    key: "center",
+    value: function center(bool) {
+      if (bool !== undefined) this.data.center = bool;
+      this.xgraph.centerGraph(this.data.center);
+    }
+  }, {
+    key: "setZoom",
+    value: function setZoom(percent) {
+      this.data.zoom = percent;
+      this.xgraph.zoomPercent = percent;
+    }
+  }, {
+    key: "zoom",
+    value: function zoom(percent) {
+      if (percent !== undefined) this.data.percent = percent;
+      this.xgraph.zoomGraph(this.data.percent);
+    }
+  }, {
+    key: "setGrid",
+    value: function setGrid(bool) {
+      this.data.grid = bool;
+      this.xgraph.grid = bool;
+    }
+  }, {
+    key: "grid",
+    value: function grid(bool) {
+      if (bool !== undefined) this.data.grid = bool;
+      this.xgraph.gridGraph(this.data.grid);
     }
   }, {
     key: "setWidth",
@@ -138,9 +225,35 @@ function () {
       this.data.xml = u.prettify(this.data.xml);
     }
   }, {
+    key: "decode",
+    value: function decode() {
+      if (u.isencoded(this.data.xml)) this.data.xml = u.decode(this.data.xml, true, true, true);
+    }
+  }, {
+    key: "encode",
+    value: function encode() {
+      if (!u.isencoded(this.data.xml)) this.data.xml = u.encode(this.data.xml, true, true, true);
+    }
+  }, {
     key: "getContainer",
     value: function getContainer() {
       return this.container;
+    }
+  }, {
+    key: "setMap",
+    value: function setMap(onMappingObj) {
+      u.log(1, "flowchart[".concat(this.data.name, "].setMap()"));
+      u.log(0, "flowchart[".concat(this.data.name, "].setMap() onMappingObj"), onMappingObj);
+      var container = this.getContainer();
+      this.xgraph.setMap(onMappingObj);
+      container.scrollIntoView();
+      container.focus();
+    }
+  }, {
+    key: "unsetMap",
+    value: function unsetMap() {
+      u.log(1, "flowchart[".concat(this.data.name, "].unsetMap()"));
+      this.xgraph.unsetMap();
     }
   }]);
 

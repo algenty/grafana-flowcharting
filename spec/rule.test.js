@@ -3,7 +3,7 @@ import Rule from '../src/rule_class';
 const modeleRule = {
   data: {
     aggregation: 'current',
-    alias: '',
+    alias: 'No name',
     colorOn: 'a',
     colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
     dateFormat: 'YYYY-MM-DD HH:mm:ss',
@@ -20,6 +20,7 @@ const modeleRule = {
     style: 'fillColor',
     textData: [],
     textOn: 'wmd',
+    linkOn: "a",
     textPattern: '/.*/',
     textProp: 'id',
     textReplace: 'content',

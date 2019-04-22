@@ -60,7 +60,7 @@ function () {
       if (rule.matchSerie(serie)) {
         var shapeMaps = rule.getShapeMaps();
         var textMaps = rule.getTextMaps();
-        var linkMaps = rule.getTextMaps();
+        var linkMaps = rule.getLinkMaps();
         var value = rule.getValueForSerie(serie);
         var FormattedValue = rule.getFormattedValue(value);
         var level = rule.getThresholdLevel(value); // SHAPE
@@ -148,6 +148,11 @@ function () {
       return this.currentColors[style];
     }
   }, {
+    key: "getOriginalColorStyle",
+    value: function getOriginalColorStyle(style) {
+      return this.originalColors[style];
+    }
+  }, {
     key: "unsetLevelStyle",
     value: function unsetLevelStyle(style) {
       this.level[style] = -1;
@@ -178,6 +183,28 @@ function () {
     key: "getLevel",
     value: function getLevel() {
       return this.globalLevel;
+    }
+  }, {
+    key: "getTextLevel",
+    value: function getTextLevel() {
+      var level = this.getLevel();
+
+      switch (level) {
+        case -1:
+          return 'NO DATA';
+
+        case 0:
+          return 'OK';
+
+        case 1:
+          return 'WARN';
+
+        case 2:
+          return 'ERROR';
+
+        default:
+          return 'NULL';
+      }
     }
   }, {
     key: "setText",

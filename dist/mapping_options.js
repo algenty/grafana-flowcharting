@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.mappingOptionsTab = mappingOptionsTab;
 exports.MappingOptionsCtrl = void 0;
 
-var _lodash = _interopRequireDefault(require("lodash"));
-
 var _kbn = _interopRequireDefault(require("app/core/utils/kbn"));
 
 var _plugin = require("./plugin");
@@ -34,6 +32,7 @@ function () {
     this.panel = this.panelCtrl.panel;
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
     $scope.flowchartHandler = this.panelCtrl.flowchartHandler;
+    $scope.u = window.u;
     this.flowchartHandler = $scope.ctrl.flowchartHandler;
     this.unitFormats = _kbn.default.getUnitFormats();
     this.style = [{
@@ -50,6 +49,13 @@ function () {
       value: 'fontColor'
     }];
     this.colorOn = [{
+      text: 'Warning / Critical',
+      value: 'wc'
+    }, {
+      text: 'Always',
+      value: 'a'
+    }];
+    this.linkOn = [{
       text: 'Warning / Critical',
       value: 'wc'
     }, {
@@ -78,8 +84,7 @@ function () {
     }];
     this.propTypes = [{
       text: 'Id',
-      value: 'id' // { text: "Substring", value: "pattern" }
-
+      value: 'id'
     }];
     this.textPattern = '/.*/';
     this.metricTypes = [{
@@ -152,31 +157,40 @@ function () {
         return [];
       }
 
-      return _lodash.default.map(_this.panelCtrl.series, function (t) {
+      return _.map(_this.panelCtrl.series, function (t) {
         return t.alias;
       });
     };
 
     this.getCellNamesForShape = function () {
-      var cells = _this.flowchartHandler.getNamesByProp('id');
+      u.log(1, "mapping_options.getCellNamesForShape()");
 
-      return _lodash.default.map(cells, function (t) {
+      var flowchart = _this.flowchartHandler.getFlowchart(0);
+
+      var cells = flowchart.getNamesByProp('id');
+      return _.map(cells, function (t) {
         return t;
       });
     };
 
     this.getCellNamesForText = function () {
-      var cells = _this.flowchartHandler.getNamesByProp('id');
+      u.log(1, "mapping_options.getCellNamesForText()");
 
-      return _lodash.default.map(cells, function (t) {
+      var flowchart = _this.flowchartHandler.getFlowchart(0);
+
+      var cells = flowchart.getNamesByProp('id');
+      return _.map(cells, function (t) {
         return t;
       });
     };
 
     this.getCellNamesForLink = function () {
-      var cells = _this.flowchartHandler.getNamesByProp('id');
+      u.log(1, "mapping_options.getCellNamesForLink()");
 
-      return _lodash.default.map(cells, function (t) {
+      var flowchart = _this.flowchartHandler.getFlowchart(0);
+
+      var cells = flowchart.getNamesByProp('id');
+      return _.map(cells, function (t) {
         return t;
       });
     };
@@ -191,12 +205,12 @@ function () {
     key: "setUnitFormat",
     value: function setUnitFormat(column, subItem) {
       column.unit = subItem.value;
-      this.onOptionsChange();
+      this.onRulesChange();
     }
   }, {
-    key: "onOptionsChange",
-    value: function onOptionsChange() {
-      this.flowchartHandler.changedGraphFlag = true;
+    key: "onRulesChange",
+    value: function onRulesChange() {
+      this.flowchartHandler.ruleChanged();
       this.render();
     }
   }]);
@@ -214,7 +228,7 @@ function mappingOptionsTab($q, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: 'public/plugins/' + _plugin.plugin.id + '/partials/mapping_options.html',
+    templateUrl: "public/plugins/".concat(_plugin.plugin.id, "/partials/mapping_options.html"),
     controller: MappingOptionsCtrl
   };
 }
