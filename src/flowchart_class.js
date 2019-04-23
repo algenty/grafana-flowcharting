@@ -28,13 +28,15 @@ export default class Flowchart {
     if (obj.options) this.data.zoom = obj.options.zoom;
     else this.data.zoom = obj.zoom || '100%';
     if (obj.options) this.data.center = obj.options.center;
-    else this.data.center = (obj.center !== undefined) ? obj.center : true;
+    else this.data.center = obj.center !== undefined ? obj.center : true;
     if (obj.options) this.data.scale = obj.options.scale;
-    else this.data.scale = (obj.scale !== undefined) ? obj.scale : true;
+    else this.data.scale = obj.scale !== undefined ? obj.scale : true;
     if (obj.options) this.data.lock = obj.options.lock;
-    else this.data.lock = (obj.lock !== undefined) ? obj.lock : true;
+    else this.data.lock = obj.lock !== undefined ? obj.lock : true;
+    if (obj.options) this.data.tooltip = obj.options.tooltip;
+    else this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : true;
     if (obj.options) this.data.grid = obj.options.grid;
-    else this.data.grid = (obj.grid !== undefined) ? obj.grid : false;
+    else this.data.grid = obj.grid !== undefined ? obj.grid : false;
     if (obj.options) this.data.bgColor = obj.options.bgColor;
     else this.data.bgColor = obj.bgColor;
   }
@@ -48,7 +50,9 @@ export default class Flowchart {
     if (this.xgraph === undefined) this.xgraph = new XGraph(this.container, this.data.xml);
     if (this.data.xml !== undefined && this.data.xml !== null) {
       this.xgraph.drawGraph();
+      if (this.data.tooltip) this.xgraph.tooltipGraph(true);
       if (this.data.scale) this.xgraph.scaleGraph(true);
+      else this.xgraph.zoomGraph(this.data.zoom);
       if (this.data.center) this.xgraph.centerGraph(true);
       if (this.data.lock) this.xgraph.lockGraph(true);
       this.stateHandler = new StateHandler(this.xgraph);
@@ -93,7 +97,7 @@ export default class Flowchart {
       this.data.xml = xmlGraph;
       this.xgraph.setXmlGraph(this.data.xml);
     } else {
-      u.log(2, "XML Content not defined");
+      u.log(2, 'XML Content not defined');
       this.xgraph.setXmlGraph(this.data.xml);
     }
     this.init();
@@ -107,6 +111,16 @@ export default class Flowchart {
   lock(bool) {
     if (bool !== undefined) this.data.lock = bool;
     this.xgraph.lockGraph(this.data.lock);
+  }
+
+  setTooltip(bool) {
+    this.data.tooltip = bool;
+    this.xgraph.tooltip = bool;
+  }
+
+  tooltip(bool) {
+    if (bool !== undefined) this.data.tooltip = bool;
+    this.xgraph.tooltipGraph(this.data.tooltip);
   }
 
   setScale(bool) {

@@ -11,7 +11,8 @@ const mxgraph = require('mxgraph')({
   mxLoadResources: false
 });
 
-window.BASE_PATH = window.BASE_PATH || 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/';
+window.BASE_PATH =
+  window.BASE_PATH || 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/';
 window.RESOURCES_PATH = window.BASE_PATH || `${window.BASE_PATH}resources`;
 window.RESOURCE_BASE = window.RESOURCE_BASE || `${window.RESOURCES_PATH}/grapheditor`;
 window.STENCIL_PATH = window.STENCIL_PATH || `${window.BASE_PATH}stencils`;
@@ -114,6 +115,7 @@ export default class XGraph {
     this.xmlGraph = xmlGraph;
     this.graph = undefined;
     this.scale = true;
+    this.tooltip = true;
     this.lock = true;
     this.center = true;
     this.zoom = false;
@@ -129,17 +131,19 @@ export default class XGraph {
   }
 
   initGraph() {
-    u.log(1, "XGraph.initGraph()");
+    u.log(1, 'XGraph.initGraph()');
     const Graph = require('./Graph')({
-      libs: 'arrows;basic;bpmn;flowchart',
+      libs: 'arrows;basic;bpmn;flowchart'
     });
     const Shapes = require('./Shapes');
     this.graph = new Graph(this.container);
+    // /!\ What is setPannig
+    // this.graph.setPanning(true);
     this.clickBackup = this.graph.click;
   }
 
   drawGraph() {
-    u.log(1, "XGraph.drawGraph()");
+    u.log(1, 'XGraph.drawGraph()');
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
@@ -150,13 +154,13 @@ export default class XGraph {
       u.log(3, 'Error in draw', error);
     } finally {
       this.graph.getModel().endUpdate();
-      this.cells["id"] = this.getCurrentCells('id');
-      this.cells["value"] = this.getCurrentCells('value');
+      this.cells['id'] = this.getCurrentCells('id');
+      this.cells['value'] = this.getCurrentCells('value');
     }
   }
 
   refreshGraph(width, height) {
-    u.log(1, "XGraph.refreshGraph()");
+    u.log(1, 'XGraph.refreshGraph()');
     const $div = $(this.container);
     const size = Math.min(width, height);
 
@@ -164,13 +168,14 @@ export default class XGraph {
       margin: 'auto',
       position: 'relative',
       width: width,
-      height: `${size - 30}px`,
+      height: `${size - 30}px`
     };
 
     $div.css(css);
     if (!this.scale) this.zoomGraph(this.zoomPercent);
     else this.unzoomGraph();
 
+    this.tooltipGraph(this.tooltip);
     this.lockGraph(this.lock);
     this.scaleGraph(this.scale);
     this.gridGraph(this.grid);
@@ -184,7 +189,15 @@ export default class XGraph {
     this.lock = bool;
   }
 
+  tooltipGraph(bool) {
+    console.log('tooltipGraph', bool);
+    if (bool) this.graph.setTooltips(true);
+    else this.graph.setTooltips(false);
+    this.tooltip = bool;
+  }
+
   centerGraph(bool) {
+    this.graph.centerZoom = false;
     if (bool) this.graph.center(true, true);
     else this.graph.center(false, false);
     this.center = bool;
@@ -209,7 +222,7 @@ export default class XGraph {
   }
 
   zoomGraph(percent) {
-    u.log(1, "XGraph.zoomGraph()");
+    u.log(1, 'XGraph.zoomGraph()');
     if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
       const ratio = percent.replace('%', '') / 100;
       this.graph.zoomTo(ratio, true);
@@ -234,7 +247,7 @@ export default class XGraph {
   }
 
   setXmlGraph(xmlGraph) {
-    u.log(1, "XGraph.setXmlGraph()");
+    u.log(1, 'XGraph.setXmlGraph()');
     if (u.isencoded(xmlGraph)) this.xmlGraph = u.decode(xmlGraph, true, true, true);
     else this.xmlGraph = xmlGraph;
     this.drawGraph();
@@ -245,11 +258,11 @@ export default class XGraph {
     const model = this.graph.getModel();
     const cells = model.cells;
     if (prop === 'id') {
-      _.each(cells, (cell) => {
+      _.each(cells, cell => {
         cellIds.push(cell.getId());
       });
     } else if (prop === 'value') {
-      _.each(cells, (cell) => {
+      _.each(cells, cell => {
         cellIds.push(cell.getValue());
       });
     }
@@ -257,14 +270,14 @@ export default class XGraph {
   }
 
   findMxCells(prop, pattern) {
-    const mxcells = this.getMxCells()
+    const mxcells = this.getMxCells();
     let result = [];
     if (prop === 'id') {
-      _.each(mxcells, (mxcell) => {
-        if (u.matchString(mxcell.id,pattern)) result.push(mxcell);
+      _.each(mxcells, mxcell => {
+        if (u.matchString(mxcell.id, pattern)) result.push(mxcell);
       });
     } else if (prop === 'value') {
-      _.each(mxcells, (mxcell) => {
+      _.each(mxcells, mxcell => {
         if (u.matchString(mxcell.getValue(), pattern)) result.push(mxcell);
       });
     }
@@ -278,9 +291,9 @@ export default class XGraph {
   }
 
   renameId(oldId, newId) {
-    const cells = this.findMxCells("id", oldId);
+    const cells = this.findMxCells('id', oldId);
     if (cells !== undefined && cells.length > 0) {
-      cells.forEach((cell) => {
+      cells.forEach(cell => {
         cell.id = newId;
       });
     } else {
@@ -296,7 +309,7 @@ export default class XGraph {
 
   findCurrentCells(prop, pattern) {
     const cells = this.getCurrentCells(prop);
-    const result = _.find(cells, (cell) => {
+    const result = _.find(cells, cell => {
       u.matchString(cell, pattern);
     });
     return result;
@@ -304,7 +317,7 @@ export default class XGraph {
 
   findOriginalCells(prop, pattern) {
     const cells = this.getOrignalCells(prop);
-    const result = _.find(cells, (cell) => {
+    const result = _.find(cells, cell => {
       u.matchString(cell, pattern);
     });
     return result;
@@ -316,7 +329,7 @@ export default class XGraph {
 
   findCurrentMxCells(prop, pattern) {
     const cells = [];
-    _.each(this.getMxCells(), (cell) => {
+    _.each(this.getMxCells(), cell => {
       if (prop === 'id') {
         const id = cell.getId();
         if (u.matchString(id, pattern)) cells.push(cell);
@@ -382,7 +395,10 @@ export default class XGraph {
         const id = state.cell.id;
         this.onMapping.object.data.pattern = id;
         const elt = document.getElementById(this.onMapping.id);
-        if (elt) setTimeout(() => { elt.focus(); }, 100);
+        if (elt)
+          setTimeout(() => {
+            elt.focus();
+          }, 100);
         this.unsetMap();
       }
     }

@@ -48,6 +48,7 @@ function () {
       if (obj.options) this.data.center = obj.options.center;else this.data.center = obj.center !== undefined ? obj.center : true;
       if (obj.options) this.data.scale = obj.options.scale;else this.data.scale = obj.scale !== undefined ? obj.scale : true;
       if (obj.options) this.data.lock = obj.options.lock;else this.data.lock = obj.lock !== undefined ? obj.lock : true;
+      if (obj.options) this.data.tooltip = obj.options.tooltip;else this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : true;
       if (obj.options) this.data.grid = obj.options.grid;else this.data.grid = obj.grid !== undefined ? obj.grid : false;
       if (obj.options) this.data.bgColor = obj.options.bgColor;else this.data.bgColor = obj.bgColor;
     }
@@ -64,7 +65,8 @@ function () {
 
       if (this.data.xml !== undefined && this.data.xml !== null) {
         this.xgraph.drawGraph();
-        if (this.data.scale) this.xgraph.scaleGraph(true);
+        if (this.data.tooltip) this.xgraph.tooltipGraph(true);
+        if (this.data.scale) this.xgraph.scaleGraph(true);else this.xgraph.zoomGraph(this.data.zoom);
         if (this.data.center) this.xgraph.centerGraph(true);
         if (this.data.lock) this.xgraph.lockGraph(true);
         this.stateHandler = new _statesHandler.default(this.xgraph);
@@ -116,7 +118,7 @@ function () {
         this.data.xml = xmlGraph;
         this.xgraph.setXmlGraph(this.data.xml);
       } else {
-        u.log(2, "XML Content not defined");
+        u.log(2, 'XML Content not defined');
         this.xgraph.setXmlGraph(this.data.xml);
       }
 
@@ -133,6 +135,18 @@ function () {
     value: function lock(bool) {
       if (bool !== undefined) this.data.lock = bool;
       this.xgraph.lockGraph(this.data.lock);
+    }
+  }, {
+    key: "setTooltip",
+    value: function setTooltip(bool) {
+      this.data.tooltip = bool;
+      this.xgraph.tooltip = bool;
+    }
+  }, {
+    key: "tooltip",
+    value: function tooltip(bool) {
+      if (bool !== undefined) this.data.tooltip = bool;
+      this.xgraph.tooltipGraph(this.data.tooltip);
     }
   }, {
     key: "setScale",

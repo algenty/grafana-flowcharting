@@ -187,6 +187,7 @@ function () {
         flowchart.setScale(flowchart.data.scale);
         flowchart.setCenter(flowchart.data.center);
         flowchart.setGrid(flowchart.data.grid);
+        flowchart.setTooltip(flowchart.data.tooltip);
         flowchart.setLock(flowchart.data.lock);
         flowchart.setZoom(flowchart.data.zoom);
       });
@@ -230,12 +231,12 @@ function () {
     value: function openDrawEditor(index) {
       var _this3 = this;
 
-      var urlEditor = "https://draw.io?embed=1";
-      var editorWindow = window.open(urlEditor, "MxGraph Editor", "width=1280, height=720");
-      window.addEventListener("message", function (event) {
-        if (event.origin !== "https://www.draw.io") return; // when editor is open
+      var urlEditor = 'https://draw.io?embed=1';
+      var editorWindow = window.open(urlEditor, 'MxGraph Editor', 'width=1280, height=720');
+      window.addEventListener('message', function (event) {
+        if (event.origin !== 'https://www.draw.io') return; // when editor is open
 
-        if (event.data === "ready") {
+        if (event.data === 'ready') {
           // send xml
           event.source.postMessage(_this3.flowcharts[index].data.xml, event.origin);
         } else {
