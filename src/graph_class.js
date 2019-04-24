@@ -99,6 +99,8 @@ window.mxSvgCanvas2D = window.mxSvgCanvas2D || mxgraph.mxSvgCanvas2D;
 window.mxSwimlane = window.mxSwimlane || mxgraph.mxSwimlane;
 window.mxText = window.mxText || mxgraph.mxText;
 window.mxToolbar = window.mxToolbar || mxgraph.mxToolbar;
+window.mxTooltip = window.mxTooltip || mxgraph.mxTooltip;
+window.mxTooltipHandler = window.mxTooltipHandler || mxgraph.mxTooltipHandler;
 window.mxTriangle = window.mxTriangle || mxgraph.mxTriangle;
 window.mxUndoManager = window.mxUndoManager || mxgraph.mxUndoManager;
 window.mxUtils = window.mxUtils || mxgraph.mxUtils;
@@ -149,7 +151,9 @@ export default class XGraph {
     try {
       const xmlDoc = mxUtils.parseXml(this.xmlGraph);
       const codec = new mxCodec(xmlDoc);
+      console.log('codec', codec);
       codec.decode(xmlDoc.documentElement, this.graph.getModel());
+      console.log('this.graph.getModel()', this.graph.getModel());
     } catch (error) {
       u.log(3, 'Error in draw', error);
     } finally {

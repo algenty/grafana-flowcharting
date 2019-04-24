@@ -19,5 +19,5 @@ var _sdk = require("app/plugins/sdk");
   light: 'plugins/agenty-flowcharting-panel/css/flowchart.light.css'
 });
 window.logLevel = 0;
-window.logDisplay = true;
+window.logDisplay = false;
 //# sourceMappingURL=module.js.map
