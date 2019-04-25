@@ -26,6 +26,12 @@ export class InspectOptionsCtrl {
     this.logLevel = logLevel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     $scope.flowchartHandler = this.ctrl.flowchartHandler;
+
+    $scope.doBlur = function ($event) {
+      console.log("$event", $event);
+      const target = $event.target;
+      target.blur();
+    };
   }
 
   render() {
@@ -33,7 +39,7 @@ export class InspectOptionsCtrl {
   }
 
   onColorChange(styleIndex, colorIndex) {
-    return newColor => {
+    return (newColor) => {
       this.colors[colorIndex] = newColor;
     };
   }
@@ -71,22 +77,23 @@ export class InspectOptionsCtrl {
   apply() {
     const flowchart = this.flowchartHandler.getFlowchart(0);
     const states = flowchart.getStateHandler().getStates();
-    states.forEach(state => {
+    states.forEach((state) => {
       if (state.edited) flowchart.renameId(state.previousId, state.cellId);
     });
     flowchart.applyModel();
   }
 
-  selectCell(id) {
+  selectCell(state) {
     const flowchart = this.flowchartHandler.getFlowchart(0);
     const xgraph = flowchart.getXGraph();
-    xgraph.selectMxCells('id', id);
+    if (state.edited) xgraph.selectMxCells('id', state.previousId);
+    else xgraph.selectMxCells('id', state.cellId);
   }
 
   unselectCell() {
     const flowchart = this.flowchartHandler.getFlowchart(0);
     const xgraph = flowchart.getXGraph();
-    xgraph.unselectMxCells('id', id);
+    xgraph.unselectMxCells();
   }
 }
 

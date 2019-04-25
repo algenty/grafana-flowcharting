@@ -64,6 +64,12 @@ function () {
     this.logLevel = logLevel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     $scope.flowchartHandler = this.ctrl.flowchartHandler;
+
+    $scope.doBlur = function ($event) {
+      console.log("$event", $event);
+      var target = $event.target;
+      target.blur();
+    };
   }
 
   _createClass(InspectOptionsCtrl, [{
@@ -126,17 +132,17 @@ function () {
     }
   }, {
     key: "selectCell",
-    value: function selectCell(id) {
+    value: function selectCell(state) {
       var flowchart = this.flowchartHandler.getFlowchart(0);
       var xgraph = flowchart.getXGraph();
-      xgraph.selectMxCells('id', id);
+      if (state.edited) xgraph.selectMxCells('id', state.previousId);else xgraph.selectMxCells('id', state.cellId);
     }
   }, {
     key: "unselectCell",
     value: function unselectCell() {
       var flowchart = this.flowchartHandler.getFlowchart(0);
       var xgraph = flowchart.getXGraph();
-      xgraph.unselectMxCells('id', id);
+      xgraph.unselectMxCells();
     }
   }]);
 
