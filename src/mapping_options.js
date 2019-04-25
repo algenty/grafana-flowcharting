@@ -17,7 +17,7 @@ export class MappingOptionsCtrl {
       { text: 'Disabled', value: null },
       { text: 'Stroke', value: 'strokeColor' },
       { text: 'Fill', value: 'fillColor' },
-      { text: 'Text', value: 'fontColor' },
+      { text: 'Text', value: 'fontColor' }
     ];
     this.colorOn = [{ text: 'Warning / Critical', value: 'wc' }, { text: 'Always', value: 'a' }];
     this.linkOn = [{ text: 'Warning / Critical', value: 'wc' }, { text: 'Always', value: 'a' }];
@@ -25,28 +25,28 @@ export class MappingOptionsCtrl {
       { text: 'Never', value: 'n' },
       { text: 'When Metric Displayed', value: 'wmd' },
       { text: 'Warning / Critical', value: 'wc' },
-      { text: 'Critical Only', value: 'co' },
+      { text: 'Critical Only', value: 'co' }
     ];
     this.textReplace = [
       { text: 'All content', value: 'content' },
-      { text: 'Substring', value: 'pattern' },
+      { text: 'Substring', value: 'pattern' }
     ];
     this.propTypes = [
-      { text: 'Id', value: 'id' },
+      { text: 'Id', value: 'id' }
       // { text: "Substring", value: "pattern" }
     ];
     this.textPattern = '/.*/';
     this.metricTypes = [
       { text: 'Number', value: 'number' },
       { text: 'String', value: 'string' },
-      { text: 'Date', value: 'date' },
+      { text: 'Date', value: 'date' }
     ];
     this.dateFormats = [
       { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
       { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
       { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
       { text: 'MMMM D, YYYY LT', value: 'MMMM D, YYYY LT' },
-      { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
+      { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' }
     ];
     this.aggregationTypes = [
       { text: 'First', value: 'first' },
@@ -58,7 +58,7 @@ export class MappingOptionsCtrl {
       { text: 'Count', value: 'count' },
       { text: 'Delta', value: 'delta' },
       { text: 'Range', value: 'range' },
-      { text: 'Diff', value: 'diff' },
+      { text: 'Diff', value: 'diff' }
     ];
     this.mappingTypes = [{ text: 'Value to text', value: 1 }, { text: 'Range to text', value: 2 }];
 
@@ -70,21 +70,21 @@ export class MappingOptionsCtrl {
     };
 
     this.getCellNamesForShape = () => {
-      u.log(1, "mapping_options.getCellNamesForShape()");
+      u.log(1, 'mapping_options.getCellNamesForShape()');
       const flowchart = this.flowchartHandler.getFlowchart(0);
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getCellNamesForText = () => {
-      u.log(1, "mapping_options.getCellNamesForText()");
+      u.log(1, 'mapping_options.getCellNamesForText()');
       const flowchart = this.flowchartHandler.getFlowchart(0);
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getCellNamesForLink = () => {
-      u.log(1, "mapping_options.getCellNamesForLink()");
+      u.log(1, 'mapping_options.getCellNamesForLink()');
       const flowchart = this.flowchartHandler.getFlowchart(0);
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
@@ -104,6 +104,18 @@ export class MappingOptionsCtrl {
     this.flowchartHandler.ruleChanged();
     this.render();
   }
+
+  selectCell(prop, value) {
+    const flowchart = this.flowchartHandler.getFlowchart(0);
+    const xgraph = flowchart.getXGraph();
+    xgraph.selectMxCells(prop, value);
+  }
+
+  unselectCell() {
+    const flowchart = this.flowchartHandler.getFlowchart(0);
+    const xgraph = flowchart.getXGraph();
+    xgraph.unselectMxCells('id', id);
+  }
 }
 
 /** @ngInject */
@@ -113,6 +125,6 @@ export function mappingOptionsTab($q, uiSegmentSrv) {
     restrict: 'E',
     scope: true,
     templateUrl: `public/plugins/${plugin.id}/partials/mapping_options.html`,
-    controller: MappingOptionsCtrl,
+    controller: MappingOptionsCtrl
   };
 }

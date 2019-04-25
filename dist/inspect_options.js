@@ -124,6 +124,20 @@ function () {
       });
       flowchart.applyModel();
     }
+  }, {
+    key: "selectCell",
+    value: function selectCell(id) {
+      var flowchart = this.flowchartHandler.getFlowchart(0);
+      var xgraph = flowchart.getXGraph();
+      xgraph.selectMxCells('id', id);
+    }
+  }, {
+    key: "unselectCell",
+    value: function unselectCell() {
+      var flowchart = this.flowchartHandler.getFlowchart(0);
+      var xgraph = flowchart.getXGraph();
+      xgraph.unselectMxCells('id', id);
+    }
   }]);
 
   return InspectOptionsCtrl;

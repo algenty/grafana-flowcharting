@@ -288,6 +288,17 @@ export default class XGraph {
     return result;
   }
 
+  selectMxCells(prop, pattern) {
+    let mxcells = this.findMxCells(prop, pattern);
+    if (mxcells) {
+      this.graph.setSelectionCells(mxcells);
+    }
+  }
+
+  unselectMxCells() {
+    this.graph.clearSelection();
+  }
+
   getOrignalCells(prop) {
     if (prop === 'id' || prop === 'value') return this.cells[prop];
     // TODO: attributs

@@ -12,12 +12,17 @@ export class InspectOptionsCtrl {
       { text: 'Disabled', value: null },
       { text: 'Stroke', value: 'strokeColor' },
       { text: 'Fill', value: 'fillColor' },
-      { text: 'Text', value: 'fontColor' },
+      { text: 'Text', value: 'fontColor' }
     ];
     this.colorMode = 'fillColor';
     this.logDisplayOption = [{ text: 'True', value: true }, { text: 'False', value: false }];
     this.logDisplay = logDisplay;
-    this.logLevelOption = [{ text: 'DEBUG', value: 0 }, { text: 'INFO', value: 1 }, { text: 'WARNING', value: 2 }, { text: 'ERROR', value: 3 }];
+    this.logLevelOption = [
+      { text: 'DEBUG', value: 0 },
+      { text: 'INFO', value: 1 },
+      { text: 'WARNING', value: 2 },
+      { text: 'ERROR', value: 3 }
+    ];
     this.logLevel = logLevel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     $scope.flowchartHandler = this.ctrl.flowchartHandler;
@@ -28,7 +33,7 @@ export class InspectOptionsCtrl {
   }
 
   onColorChange(styleIndex, colorIndex) {
-    return (newColor) => {
+    return newColor => {
       this.colors[colorIndex] = newColor;
     };
   }
@@ -41,7 +46,7 @@ export class InspectOptionsCtrl {
   onChangeId(state) {
     if (state.newcellId !== undefined && state.cellId !== state.newcellId) {
       this.flowchartHandler.getFlowchart(0).getStateHandler().edited = true;
-      if (state.previousId === undefined ) state.previousId = state.cellId;
+      if (state.previousId === undefined) state.previousId = state.cellId;
       state.cellId = state.newcellId;
       state.edited = true;
     }
@@ -52,7 +57,9 @@ export class InspectOptionsCtrl {
     state.edit = true;
     state.newcellId = state.cellId;
     let elt = document.getElementById(state.cellId);
-    setTimeout(function() { elt.focus() }, 100);
+    setTimeout(function() {
+      elt.focus();
+    }, 100);
   }
 
   reset() {
@@ -64,10 +71,22 @@ export class InspectOptionsCtrl {
   apply() {
     const flowchart = this.flowchartHandler.getFlowchart(0);
     const states = flowchart.getStateHandler().getStates();
-    states.forEach((state) => {
+    states.forEach(state => {
       if (state.edited) flowchart.renameId(state.previousId, state.cellId);
     });
     flowchart.applyModel();
+  }
+
+  selectCell(id) {
+    const flowchart = this.flowchartHandler.getFlowchart(0);
+    const xgraph = flowchart.getXGraph();
+    xgraph.selectMxCells('id', id);
+  }
+
+  unselectCell() {
+    const flowchart = this.flowchartHandler.getFlowchart(0);
+    const xgraph = flowchart.getXGraph();
+    xgraph.unselectMxCells('id', id);
   }
 }
 

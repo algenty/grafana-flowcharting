@@ -48,8 +48,13 @@
         <div class="section gf-form-group">
           <h5 class="section-heading">Options</h5>
           <div class="gf-form" ng-if="rule.data.type !== 'hidden'">
-            <label class="gf-form-label width-14">Rule name
-              <info-popover mode="right-normal"><span ng-bind-html="u.popover('Name of the rule, for information', 'MAPPING#Rule name')"></span></info-popover>
+            <label class="gf-form-label width-14"
+              >Rule name
+              <info-popover mode="right-normal"
+                ><span
+                  ng-bind-html="u.popover('Name of the rule, for information', 'MAPPING#Rule name')"
+                ></span
+              ></info-popover>
             </label>
             <input
               type="text"
@@ -60,8 +65,13 @@
             />
           </div>
           <div class="gf-form">
-            <label class="gf-form-label width-14">Apply to metrics named
-              <info-popover mode="right-normal"><span ng-bind-html="u.popover('Name of the rule, for information', 'MAPPING#Apply to metrics named','mp_metrics_name')"></span></info-popover>
+            <label class="gf-form-label width-14"
+              >Apply to metrics named
+              <info-popover mode="right-normal"
+                ><span
+                  ng-bind-html="u.popover('Name of the rule, for information', 'MAPPING#Apply to metrics named','mp_metrics_name')"
+                ></span
+              ></info-popover>
             </label>
             <input
               type="text"
@@ -286,7 +296,7 @@
         <!-- LINK -->
         <div class="section gf-form-group">
           <h5 class="section-heading">Link</h5>
-            <gf-form-switch
+          <gf-form-switch
             class="gf-form"
             label-class="width-12"
             label="Object as link"
@@ -424,8 +434,8 @@
                 data-items="100"
                 ng-model-onblur
                 data-placement="right"
-                ng-mouseleave="mx.unselectCell()"
-                ng-mouseover="mx.selectCell(shape.data.pattern)"
+                ng-mouseleave="editor.unselectCell()"
+                ng-mouseover="editor.selectCell(rule.data.shapeProp,shape.data.pattern)"
               />
             </div>
             <div class="gf-form">
@@ -717,9 +727,7 @@
                 </div>
                 <div class="gf-form">
                   <label class="gf-form-label">
-                    <a
-                      class="pointer"
-                      ng-click="rule.addRangeMap('','','');editor.onRulesChange()"
+                    <a class="pointer" ng-click="rule.addRangeMap('','','');editor.onRulesChange()"
                       ><i class="fa fa-plus"></i
                     ></a>
                   </label>

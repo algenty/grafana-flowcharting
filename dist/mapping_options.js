@@ -84,7 +84,8 @@ function () {
     }];
     this.propTypes = [{
       text: 'Id',
-      value: 'id'
+      value: 'id' // { text: "Substring", value: "pattern" }
+
     }];
     this.textPattern = '/.*/';
     this.metricTypes = [{
@@ -163,7 +164,7 @@ function () {
     };
 
     this.getCellNamesForShape = function () {
-      u.log(1, "mapping_options.getCellNamesForShape()");
+      u.log(1, 'mapping_options.getCellNamesForShape()');
 
       var flowchart = _this.flowchartHandler.getFlowchart(0);
 
@@ -174,7 +175,7 @@ function () {
     };
 
     this.getCellNamesForText = function () {
-      u.log(1, "mapping_options.getCellNamesForText()");
+      u.log(1, 'mapping_options.getCellNamesForText()');
 
       var flowchart = _this.flowchartHandler.getFlowchart(0);
 
@@ -185,7 +186,7 @@ function () {
     };
 
     this.getCellNamesForLink = function () {
-      u.log(1, "mapping_options.getCellNamesForLink()");
+      u.log(1, 'mapping_options.getCellNamesForLink()');
 
       var flowchart = _this.flowchartHandler.getFlowchart(0);
 
@@ -212,6 +213,20 @@ function () {
     value: function onRulesChange() {
       this.flowchartHandler.ruleChanged();
       this.render();
+    }
+  }, {
+    key: "selectCell",
+    value: function selectCell(prop, value) {
+      var flowchart = this.flowchartHandler.getFlowchart(0);
+      var xgraph = flowchart.getXGraph();
+      xgraph.selectMxCells(prop, value);
+    }
+  }, {
+    key: "unselectCell",
+    value: function unselectCell() {
+      var flowchart = this.flowchartHandler.getFlowchart(0);
+      var xgraph = flowchart.getXGraph();
+      xgraph.unselectMxCells('id', id);
     }
   }]);
 
