@@ -572,6 +572,7 @@ module.exports = function (urlParams) {
 
 			// Redirects tooltips for locked cells
 			this.tooltipHandler.getStateForEvent = function (me) {
+				// u.log(0, "Graph.tooltipHandler.getStateForEvent() me",me)
 				return me.sourceState;
 			};
 
@@ -1765,6 +1766,8 @@ module.exports = function (urlParams) {
 	 * Private helper method.
 	 */
 	Graph.prototype.replacePlaceholders = function (cell, str) {
+		u.log(1, "Graph.prototype.replacePlaceholders() cell", cell);
+		u.log(1, "Graph.prototype.replacePlaceholders() str", str);
 		var result = [];
 
 		if (str != null) {
@@ -2482,8 +2485,9 @@ module.exports = function (urlParams) {
 	 * Overrides tooltips to show custom tooltip or metadata.
 	 */
 	Graph.prototype.getTooltipForCell = function (cell) {
+		debugger
+		u.log(0, "Graph.prototype.getTooltipForCell()",cell)
 		var tip = '';
-
 		if (mxUtils.isNode(cell.value)) {
 			var tmp = cell.value.getAttribute('tooltip');
 
@@ -2539,6 +2543,7 @@ module.exports = function (urlParams) {
 				}
 			}
 		}
+
 		return tip;
 	};
 
@@ -3204,6 +3209,7 @@ module.exports = function (urlParams) {
 				}
 
 				if (this.graph.tooltipHandler.isEnabled()) {
+					u.log(1, "this.graph.tooltipHandler.isEnabled()");
 					this.arrowLeft.setAttribute('title', mxResources.get('plusTooltip'));
 					this.arrowRight.setAttribute('title', mxResources.get('plusTooltip'));
 					this.arrowUp.setAttribute('title', mxResources.get('plusTooltip'));
@@ -4502,6 +4508,7 @@ module.exports = function (urlParams) {
 			 * Updates the child cells with placeholders if metadata of a cell has changed.
 			 */
 			Graph.prototype.processChange = function (change) {
+				u.log(1, "Graph.prototype.processChange()");
 				mxGraph.prototype.processChange.apply(this, arguments);
 				if (!isNaN(mxValueChange) && change instanceof mxValueChange && change.cell != null &&
 					change.cell.value != null && typeof (change.cell.value) == 'object') {
@@ -4695,6 +4702,7 @@ module.exports = function (urlParams) {
 			 * Sets the link for the given cell.
 			 */
 			Graph.prototype.setTooltipForCell = function (cell, link) {
+				u.log(1, "Graph.prototype.setTooltipForCell()");
 				this.setAttributeForCell(cell, 'tooltip', link);
 			};
 
