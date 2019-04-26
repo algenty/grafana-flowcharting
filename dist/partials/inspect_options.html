@@ -73,7 +73,7 @@
 											ng-model="state.newcellId"
 											ng-blur="editor.onChangeId(state)"
 											placeholder="{{state.cellId}}"
-											(keydown.enter)=="doBlur($event)"
+											ng-keydown="$event.keyCode === 13 && editor.onChangeId(state)"
 										/>
 									</div>
 								</div>

@@ -28,6 +28,7 @@ function () {
     _classCallCheck(this, MappingOptionsCtrl);
 
     $scope.editor = this;
+    this.$scope = $scope;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
@@ -226,7 +227,7 @@ function () {
     value: function unselectCell() {
       var flowchart = this.flowchartHandler.getFlowchart(0);
       var xgraph = flowchart.getXGraph();
-      xgraph.unselectMxCells('id', id);
+      xgraph.unselectMxCells();
     }
   }]);
 

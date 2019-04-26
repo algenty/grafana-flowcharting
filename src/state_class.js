@@ -13,7 +13,7 @@ export default class State {
     this.level = {
       fillColor: -1,
       strokeColor: -1,
-      fontColor: -1,
+      fontColor: -1
     };
     this.currentColors = {};
     this.originalColors = {};
@@ -22,7 +22,7 @@ export default class State {
     this.originalLink = mxcell.getAttribute('link');
     this.currentLink = mxcell.getAttribute('link');
 
-    this.styles.forEach((style) => {
+    this.styles.forEach(style => {
       const color = this.xgraph.getStyleCell(mxcell, style);
       this.currentColors[style] = color;
       this.originalColors[style] = color;
@@ -42,13 +42,13 @@ export default class State {
       const level = rule.getThresholdLevel(value);
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
-      shapeMaps.forEach((shape) => {
+      shapeMaps.forEach(shape => {
         if (!shape.isHidden() && shape.match(cellProp)) {
           this.matchedShape = true;
           this.matched = true;
           if (this.globalLevel <= level) {
             this.setLevelStyle(rule.data.style, level);
-            if (rule.toColorize()) {
+            if (rule.toColorize(value)) {
               this.setColorStyle(rule.data.style, rule.getColorForValue(value));
             }
           }
@@ -56,7 +56,7 @@ export default class State {
       });
       // TEXT
       cellProp = this.getCellProp(rule.data.textProp);
-      textMaps.forEach((text) => {
+      textMaps.forEach(text => {
         if (!text.isHidden() && text.match(cellProp)) {
           this.matchedText = true;
           this.matched = true;
@@ -67,7 +67,7 @@ export default class State {
       });
       // LINK
       cellProp = this.getCellProp(rule.data.linkProp);
-      linkMaps.forEach((link) => {
+      linkMaps.forEach(link => {
         if (!link.isHidden() && link.match(cellProp)) {
           this.matchedLink = true;
           this.matched = true;
@@ -104,7 +104,7 @@ export default class State {
   }
 
   unsetColor() {
-    this.styles.forEach((style) => {
+    this.styles.forEach(style => {
       this.unsetColorStyle(style);
     });
   }
@@ -122,7 +122,7 @@ export default class State {
   }
 
   unsetLevel() {
-    this.styles.forEach((style) => {
+    this.styles.forEach(style => {
       this.unsetLevelStyle(style);
     });
     this.globalLevel = -1;
@@ -200,7 +200,7 @@ export default class State {
     u.log(1, 'State.applyState()');
     if (this.matched) {
       if (this.matchedShape) {
-        this.styles.forEach((style) => {
+        this.styles.forEach(style => {
           this.xgraph.setStyleCell(this.mxcell, style, this.getCurrentColorStyle(style));
         });
       }
@@ -213,7 +213,7 @@ export default class State {
 
   restoreCell() {
     this.unsetState();
-    this.styles.forEach((style) => {
+    this.styles.forEach(style => {
       this.xgraph.setStyleCell(this.mxcell, style, this.getCurrentColorStyle(style));
     });
     this.xgraph.setValueCell(this.mxcell, this.getCurrentText());

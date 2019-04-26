@@ -4,7 +4,8 @@ window.mxLanguages = window.mxLanguages || ['en'];
 
 const sanitizer = require('sanitizer');
 const mxgraph = require('mxgraph')({
-  mxImageBasePath: 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images',
+  mxImageBasePath:
+    '../public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/images',
   mxBasePath: 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist',
   mxLoadStylesheets: false,
   mxLanguage: 'en',
@@ -151,9 +152,7 @@ export default class XGraph {
     try {
       const xmlDoc = mxUtils.parseXml(this.xmlGraph);
       const codec = new mxCodec(xmlDoc);
-      console.log('codec', codec);
       codec.decode(xmlDoc.documentElement, this.graph.getModel());
-      console.log('this.graph.getModel()', this.graph.getModel());
     } catch (error) {
       u.log(3, 'Error in draw', error);
     } finally {
@@ -296,7 +295,28 @@ export default class XGraph {
   }
 
   unselectMxCells() {
+    // this.graph.removeCellOverlays(cell);
     this.graph.clearSelection();
+  }
+
+  createOverlay(image, tooltip) {
+    var overlay = new mxCellOverlay(image, tooltip);
+    // Installs a handler for clicks on the overlay
+    overlay.addListener(mxEvent.CLICK, function(sender, evt) {
+      mxUtils.alert(tooltip + '\nLast update: ' + new Date());
+    });
+    return overlay;
+  }
+
+  addOverlay(state, mxcell) {
+    this.graph.addCellOverlay(
+      mxcell,
+      this.createOverlay(this.graph.warningImage, 'State: ' + state)
+    );
+  }
+
+  removeOverlay(mxcell) {
+    this.graph.removeCellOverlays(mxcell);
   }
 
   getOrignalCells(prop) {

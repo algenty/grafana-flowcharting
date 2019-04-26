@@ -6,6 +6,7 @@ export class MappingOptionsCtrl {
   /** @ngInject */
   constructor($scope) {
     $scope.editor = this;
+    this.$scope = $scope;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
@@ -114,7 +115,7 @@ export class MappingOptionsCtrl {
   unselectCell() {
     const flowchart = this.flowchartHandler.getFlowchart(0);
     const xgraph = flowchart.getXGraph();
-    xgraph.unselectMxCells('id', id);
+    xgraph.unselectMxCells();
   }
 }
 

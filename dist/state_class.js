@@ -74,7 +74,7 @@ function () {
             if (_this2.globalLevel <= level) {
               _this2.setLevelStyle(rule.data.style, level);
 
-              if (rule.toColorize()) {
+              if (rule.toColorize(value)) {
                 _this2.setColorStyle(rule.data.style, rule.getColorForValue(value));
               }
             }

@@ -60,7 +60,6 @@
               type="text"
               class="gf-form-input width-12"
               ng-model="rule.data.alias"
-              ng-onblur="editor.onRulesChange()"
               placeholder="Name of this rule"
             />
           </div>
@@ -195,8 +194,8 @@
               class="gf-form-input width-10"
               ng-model="rule.data.thresholds"
               placeholder="50,80"
-              ng-blur="editor.onRulesChange()"
               ng-model-onblur
+              ng-blur="editor.onRulesChange()"
               array-join
             />
           </div>
@@ -287,8 +286,9 @@
               type="text"
               class="gf-form-input width-12"
               ng-model="rule.data.textPattern"
-              ng-model-onblur="editor.onRulesChange()"
-              placeholder="name for tooltip"
+              ng-model-onblur
+              ng-blur="editor.onRulesChange()"
+              placeholder="text or pattern to replace by value"
             />
           </div>
         </div>
@@ -527,8 +527,8 @@
                 data-min-length="0"
                 data-items="100"
                 data-placement="right"
-                ng-mouseleave="mx.unselectCell()"
-                ng-mouseover="mx.selectCell(text.data.pattern)"
+                ng-mouseleave="editor.unselectCell()"
+                ng-mouseover="editor.selectCell(rule.data.textProp,text.data.pattern)"
               />
             </div>
 
@@ -621,8 +621,8 @@
                 data-min-length="0"
                 data-items="100"
                 data-placement="right"
-                ng-mouseleave="mx.unselectCell()"
-                ng-mouseover="mx.selectCell(link.data.pattern)"
+                ng-mouseleave="editor.unselectCell()"
+                ng-mouseover="editor.selectCell(rule.data.linkProp,link.data.pattern)"
               />
             </div>
 
