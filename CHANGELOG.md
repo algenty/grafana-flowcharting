@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-    - Full review of code
+    - Full review of code (ES6 Class mode)
     - Unit test with jest to increase quality
     - Fill/text/stoke rules on the same object
     - Mapping selector helper
     - Icon overlay state
+    - Implemented Text on state
     - new inspect Tab with :
       - Renamer ID (double click on ID)
       - State status

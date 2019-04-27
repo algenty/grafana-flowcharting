@@ -82,10 +82,10 @@ function () {
 
       this.xgraph = xgraph;
       this.states = [];
-      var cells = this.xgraph.getMxCells();
+      var mxcells = this.xgraph.getMxCells();
 
-      _.each(cells, function (cell) {
-        _this.addState(cell);
+      _.each(mxcells, function (mxcell) {
+        _this.addState(mxcell);
       });
     }
   }, {

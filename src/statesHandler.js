@@ -35,9 +35,9 @@ export default class StateHandler {
   initStates(xgraph) {
     this.xgraph = xgraph;
     this.states = [];
-    const cells = this.xgraph.getMxCells();
-    _.each(cells, (cell) => {
-      this.addState(cell);
+    const mxcells = this.xgraph.getMxCells();
+    _.each(mxcells, (mxcell) => {
+      this.addState(mxcell);
     });
   }
 

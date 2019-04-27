@@ -193,7 +193,6 @@ export default class XGraph {
   }
 
   tooltipGraph(bool) {
-    console.log('tooltipGraph', bool);
     if (bool) this.graph.setTooltips(true);
     else this.graph.setTooltips(false);
     this.tooltip = bool;
@@ -217,6 +216,7 @@ export default class XGraph {
 
   gridGraph(bool) {
     if (bool) {
+      // eslint-disable-next-line no-undef
       this.container.style.backgroundImage = `url('${IMAGE_PATH}/grid.gif')`;
     } else {
       this.container.style.backgroundImage = '';
@@ -261,11 +261,11 @@ export default class XGraph {
     const model = this.graph.getModel();
     const cells = model.cells;
     if (prop === 'id') {
-      _.each(cells, cell => {
+      _.each(cells, (cell) => {
         cellIds.push(cell.getId());
       });
     } else if (prop === 'value') {
-      _.each(cells, cell => {
+      _.each(cells, (cell) => {
         cellIds.push(cell.getValue());
       });
     }
@@ -274,13 +274,13 @@ export default class XGraph {
 
   findMxCells(prop, pattern) {
     const mxcells = this.getMxCells();
-    let result = [];
+    const result = [];
     if (prop === 'id') {
-      _.each(mxcells, mxcell => {
+      _.each(mxcells, (mxcell) => {
         if (u.matchString(mxcell.id, pattern)) result.push(mxcell);
       });
     } else if (prop === 'value') {
-      _.each(mxcells, mxcell => {
+      _.each(mxcells, (mxcell) => {
         if (u.matchString(mxcell.getValue(), pattern)) result.push(mxcell);
       });
     }
@@ -288,7 +288,7 @@ export default class XGraph {
   }
 
   selectMxCells(prop, pattern) {
-    let mxcells = this.findMxCells(prop, pattern);
+    const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       this.graph.setSelectionCells(mxcells);
     }
@@ -300,10 +300,9 @@ export default class XGraph {
   }
 
   createOverlay(image, tooltip) {
-    var overlay = new mxCellOverlay(image, tooltip);
-    // Installs a handler for clicks on the overlay
-    overlay.addListener(mxEvent.CLICK, function(sender, evt) {
-      mxUtils.alert(tooltip + '\nLast update: ' + new Date());
+    const overlay = new mxCellOverlay(image, tooltip);
+    overlay.addListener(mxEvent.CLICK, (_sender, _evt) => {
+      mxUtils.alert(`${tooltip}\nLast update: ${new Date()}`);
     });
     return overlay;
   }
@@ -311,12 +310,26 @@ export default class XGraph {
   addOverlay(state, mxcell) {
     this.graph.addCellOverlay(
       mxcell,
-      this.createOverlay(this.graph.warningImage, 'State: ' + state)
+      this.createOverlay(this.graph.warningImage, `State: ${state}`),
     );
   }
 
   removeOverlay(mxcell) {
     this.graph.removeCellOverlays(mxcell);
+  }
+
+  addLink(mxcell, link) {
+    // console.log("mxcell",mxcell);
+    // console.log("link",link);
+    this.graph.setLinkForCell(mxcell, link);
+  }
+
+  getLink(mxcell) {
+    this.graph.getLinkForCell(mxcell);
+  }
+
+  removeLink(mxcell) {
+    this.graph.setLinkForCell(mxcell, null);
   }
 
   getOrignalCells(prop) {
@@ -328,7 +341,7 @@ export default class XGraph {
   renameId(oldId, newId) {
     const cells = this.findMxCells('id', oldId);
     if (cells !== undefined && cells.length > 0) {
-      cells.forEach(cell => {
+      cells.forEach((cell) => {
         cell.id = newId;
       });
     } else {
@@ -344,7 +357,7 @@ export default class XGraph {
 
   findCurrentCells(prop, pattern) {
     const cells = this.getCurrentCells(prop);
-    const result = _.find(cells, cell => {
+    const result = _.find(cells, (cell) => {
       u.matchString(cell, pattern);
     });
     return result;
@@ -352,7 +365,7 @@ export default class XGraph {
 
   findOriginalCells(prop, pattern) {
     const cells = this.getOrignalCells(prop);
-    const result = _.find(cells, cell => {
+    const result = _.find(cells, (cell) => {
       u.matchString(cell, pattern);
     });
     return result;
@@ -364,7 +377,7 @@ export default class XGraph {
 
   findCurrentMxCells(prop, pattern) {
     const cells = [];
-    _.each(this.getMxCells(), cell => {
+    _.each(this.getMxCells(), (cell) => {
       if (prop === 'id') {
         const id = cell.getId();
         if (u.matchString(id, pattern)) cells.push(cell);
@@ -430,10 +443,11 @@ export default class XGraph {
         const id = state.cell.id;
         this.onMapping.object.data.pattern = id;
         const elt = document.getElementById(this.onMapping.id);
-        if (elt)
+        if (elt) {
           setTimeout(() => {
             elt.focus();
           }, 100);
+        }
         this.unsetMap();
       }
     }

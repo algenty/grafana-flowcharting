@@ -17,6 +17,7 @@ Object {
   "linkOn": "a",
   "linkProp": "id",
   "mappingType": 1,
+  "overlayIcon": false,
   "pattern": "/.*/",
   "rangeData": Array [],
   "sanitize": false,

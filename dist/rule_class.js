@@ -57,14 +57,17 @@ function () {
       this.data.colors = obj.colors || ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
       this.data.style = obj.style || 'fillColor';
       this.data.colorOn = obj.colorOn || 'a';
+      this.data.link = obj.link !== undefined ? obj.link : false;
       this.data.linkOn = obj.colorOn || 'a';
+      this.data.linkUrl = obj.linkUrl || '';
       this.data.textOn = obj.textOn || 'wmd';
       this.data.textReplace = obj.textReplace || 'content';
       this.data.textPattern = obj.textPattern || '/.*/';
       this.data.pattern = obj.pattern || this.data.pattern;
       this.data.dateFormat = obj.dateFormat || 'YYYY-MM-DD HH:mm:ss';
       this.data.thresholds = obj.thresholds || [];
-      this.data.invert = obj.invert || false;
+      this.data.invert = obj.invert !== undefined ? obj.invert : false;
+      this.data.overlayIcon = obj.overlayIcon !== undefined ? obj.overlayIcon : false;
       this.data.shapeProp = obj.shapeProp || 'id';
       this.data.shapeData = obj.shapeData || [];
 
@@ -158,6 +161,31 @@ function () {
     value: function toColorize(value) {
       if (this.data.colorOn === 'a') return true;
       if (this.data.colorOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
+      return false;
+    }
+  }, {
+    key: "toValorize",
+    value: function toValorize(value) {
+      if (this.data.textOn === 'wmd' && value !== undefined) return true;
+      if (this.data.textOn === 'wmd' && value === undefined) return false;
+      if (this.data.textOn === 'n') return false;
+      if (this.data.textOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
+      if (this.data.textOn === 'co' && this.getThresholdLevel(value) >= 2) return true;
+      return false;
+    }
+  }, {
+    key: "toIconize",
+    value: function toIconize(value) {
+      if (this.data.overlayIcon === false) return false;
+      if (this.data.overlayIcon === true && this.getThresholdLevel(value) >= 1) return true;
+      return false;
+    }
+  }, {
+    key: "toLinkable",
+    value: function toLinkable(value) {
+      if (this.data.link === false) return false;
+      if (this.data.linkOn === 'a') return true;
+      if (this.data.linkOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
       return false;
     } //
     // Series
@@ -404,6 +432,11 @@ function () {
     value: function getFormattedValueForSerie(serie) {
       var formattedValue = this.getValueForSerie(serie);
       return this.getFormattedValue(formattedValue);
+    }
+  }, {
+    key: "getLink",
+    value: function getLink() {
+      return this.data.linkUrl;
     }
   }, {
     key: "getFormattedValue",

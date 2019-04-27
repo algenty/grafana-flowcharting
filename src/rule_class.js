@@ -37,14 +37,17 @@ export default class Rule {
     ];
     this.data.style = obj.style || 'fillColor';
     this.data.colorOn = obj.colorOn || 'a';
+    this.data.link = (obj.link !== undefined ? obj.link : false);
     this.data.linkOn = obj.colorOn || 'a';
+    this.data.linkUrl = obj.linkUrl || '';
     this.data.textOn = obj.textOn || 'wmd';
     this.data.textReplace = obj.textReplace || 'content';
     this.data.textPattern = obj.textPattern || '/.*/';
     this.data.pattern = obj.pattern || this.data.pattern;
     this.data.dateFormat = obj.dateFormat || 'YYYY-MM-DD HH:mm:ss';
     this.data.thresholds = obj.thresholds || [];
-    this.data.invert = obj.invert || false;
+    this.data.invert = (obj.invert !== undefined ? obj.invert : false);
+    this.data.overlayIcon = (obj.overlayIcon !== undefined ? obj.overlayIcon : false);
     this.data.shapeProp = obj.shapeProp || 'id';
     this.data.shapeData = obj.shapeData || [];
     if (obj.shapeData !== undefined && obj.shapeData !== null && obj.shapeData.length > 0) {
@@ -120,6 +123,29 @@ export default class Rule {
     if (this.data.colorOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
     return false;
   }
+
+  toValorize(value) {
+    if (this.data.textOn === 'wmd' && value !== undefined) return true;
+    if (this.data.textOn === 'wmd' && value === undefined) return false;
+    if (this.data.textOn === 'n') return false;
+    if (this.data.textOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
+    if (this.data.textOn === 'co' && this.getThresholdLevel(value) >= 2) return true;
+    return false;
+  }
+
+  toIconize(value) {
+    if (this.data.overlayIcon === false) return false;
+    if (this.data.overlayIcon === true && this.getThresholdLevel(value) >= 1) return true;
+    return false;
+  }
+
+  toLinkable(value) {
+    if (this.data.link === false) return false;
+    if (this.data.linkOn === 'a') return true;
+    if (this.data.linkOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
+    return false;
+  }
+
 
   //
   // Series
@@ -331,6 +357,10 @@ export default class Rule {
   getFormattedValueForSerie(serie) {
     const formattedValue = this.getValueForSerie(serie);
     return this.getFormattedValue(formattedValue);
+  }
+
+  getLink() {
+    return this.data.linkUrl;
   }
 
   getFormattedValue(value) {

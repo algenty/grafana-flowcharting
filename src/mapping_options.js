@@ -18,7 +18,7 @@ export class MappingOptionsCtrl {
       { text: 'Disabled', value: null },
       { text: 'Stroke', value: 'strokeColor' },
       { text: 'Fill', value: 'fillColor' },
-      { text: 'Text', value: 'fontColor' }
+      { text: 'Text', value: 'fontColor' },
     ];
     this.colorOn = [{ text: 'Warning / Critical', value: 'wc' }, { text: 'Always', value: 'a' }];
     this.linkOn = [{ text: 'Warning / Critical', value: 'wc' }, { text: 'Always', value: 'a' }];
@@ -26,28 +26,28 @@ export class MappingOptionsCtrl {
       { text: 'Never', value: 'n' },
       { text: 'When Metric Displayed', value: 'wmd' },
       { text: 'Warning / Critical', value: 'wc' },
-      { text: 'Critical Only', value: 'co' }
+      { text: 'Critical Only', value: 'co' },
     ];
     this.textReplace = [
       { text: 'All content', value: 'content' },
-      { text: 'Substring', value: 'pattern' }
+      { text: 'Substring', value: 'pattern' },
     ];
     this.propTypes = [
-      { text: 'Id', value: 'id' }
-      // { text: "Substring", value: "pattern" }
+      { text: 'Id', value: 'id' },
+      // { text: "Value", value: "value" }
     ];
     this.textPattern = '/.*/';
     this.metricTypes = [
       { text: 'Number', value: 'number' },
       { text: 'String', value: 'string' },
-      { text: 'Date', value: 'date' }
+      { text: 'Date', value: 'date' },
     ];
     this.dateFormats = [
       { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
       { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
       { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
       { text: 'MMMM D, YYYY LT', value: 'MMMM D, YYYY LT' },
-      { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' }
+      { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
     ];
     this.aggregationTypes = [
       { text: 'First', value: 'first' },
@@ -59,7 +59,7 @@ export class MappingOptionsCtrl {
       { text: 'Count', value: 'count' },
       { text: 'Delta', value: 'delta' },
       { text: 'Range', value: 'range' },
-      { text: 'Diff', value: 'diff' }
+      { text: 'Diff', value: 'diff' },
     ];
     this.mappingTypes = [{ text: 'Value to text', value: 1 }, { text: 'Range to text', value: 2 }];
 
@@ -102,6 +102,7 @@ export class MappingOptionsCtrl {
   }
 
   onRulesChange() {
+    u.log(1, "MappingOptionsCtrl.onRulesChange()");
     this.flowchartHandler.ruleChanged();
     this.render();
   }

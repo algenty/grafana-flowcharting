@@ -28,15 +28,15 @@ export default class Flowchart {
     if (obj.options) this.data.zoom = obj.options.zoom;
     else this.data.zoom = obj.zoom || '100%';
     if (obj.options) this.data.center = obj.options.center;
-    else this.data.center = obj.center !== undefined ? obj.center : true;
+    else this.data.center = (obj.center !== undefined ? obj.center : true);
     if (obj.options) this.data.scale = obj.options.scale;
-    else this.data.scale = obj.scale !== undefined ? obj.scale : true;
+    else this.data.scale = (obj.scale !== undefined ? obj.scale : true);
     if (obj.options) this.data.lock = obj.options.lock;
-    else this.data.lock = obj.lock !== undefined ? obj.lock : true;
+    else this.data.lock = (obj.lock !== undefined ? obj.lock : true);
     if (obj.options) this.data.tooltip = obj.options.tooltip;
-    else this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : true;
+    else this.data.tooltip = (obj.tooltip !== undefined ? obj.tooltip : true);
     if (obj.options) this.data.grid = obj.options.grid;
-    else this.data.grid = obj.grid !== undefined ? obj.grid : false;
+    else this.data.grid = (obj.grid !== undefined ? obj.grid : false);
     if (obj.options) this.data.bgColor = obj.options.bgColor;
     else this.data.bgColor = obj.bgColor;
   }

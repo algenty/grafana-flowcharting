@@ -83,7 +83,6 @@
               ng-model-onblur
               data-min-length="0"
               data-items="100"
-              ng-model-onblur
               data-placement="right"
             />
           </div>
@@ -135,7 +134,7 @@
               ng-if="rule.data.type === 'string'"
               label="Sanitize HTML"
               checked="rule.data.sanitize"
-              change="editor.onRulesChange()"
+              on-change="editor.onRulesChange()"
             ></gf-form-switch>
           </div>
           <div ng-if="rule.data.type === 'string'">
@@ -145,7 +144,7 @@
               ng-if="rule.data.type === 'string'"
               label="Preserve Formatting"
               checked="rule.data.preserveFormat"
-              change="editor.onRulesChange()"
+              on-change="editor.onRulesChange()"
             ></gf-form-switch>
           </div>
 
@@ -167,7 +166,6 @@
                 data-placement="right"
                 ng-model="rule.data.decimals"
                 ng-blur="editor.onRulesChange()"
-                ng-model-onblur
               />
             </div>
           </div>
@@ -194,7 +192,6 @@
               class="gf-form-input width-10"
               ng-model="rule.data.thresholds"
               placeholder="50,80"
-              ng-model-onblur
               ng-blur="editor.onRulesChange()"
               array-join
             />
@@ -236,6 +233,9 @@
               >
             </div>
           </div>
+          <gf-form-switch class="gf-form" label="Icon state" label-class="width-12" checked="rule.data.overlayIcon"
+					on-change="editor.onRulesChange()">
+				</gf-form-switch>
         </div>
 
         <!-- Display -->
@@ -286,7 +286,6 @@
               type="text"
               class="gf-form-input width-12"
               ng-model="rule.data.textPattern"
-              ng-model-onblur
               ng-blur="editor.onRulesChange()"
               placeholder="text or pattern to replace by value"
             />
@@ -301,7 +300,7 @@
             label-class="width-12"
             label="Object as link"
             checked="rule.data.link"
-            change="editor.onRulesChange()"
+            on-change="editor.onRulesChange()"
           ></gf-form-switch>
           <div class="gf-form" ng-if="rule.data.link">
             <label class="gf-form-label width-12">Overwrite link on</label>
@@ -339,7 +338,6 @@
               class="gf-form-input width-29"
               ng-model="rule.data.linkUrl"
               ng-blur="editor.onRulesChange()"
-              ng-model-onblur
               data-placement="right"
             />
           </div>

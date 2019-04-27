@@ -1,40 +1,40 @@
 import Rule from '../src/rule_class';
 
-const modeleRule = {
-  data: {
-    aggregation: 'current',
-    alias: 'No name',
-    colorOn: 'a',
-    colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
-    dateFormat: 'YYYY-MM-DD HH:mm:ss',
-    decimals: 2,
-    invert: false,
-    linkData: [],
-    linkProp: 'id',
-    mappingType: 1,
-    pattern: '/.*/',
-    rangeData: [],
-    sanitize: false,
-    shapeData: [],
-    shapeProp: 'id',
-    style: 'fillColor',
-    textData: [],
-    textOn: 'wmd',
-    linkOn: "a",
-    textPattern: '/.*/',
-    textProp: 'id',
-    textReplace: 'content',
-    thresholds: [],
-    type: 'number',
-    unit: 'short',
-    valueData: [],
-  },
-  linkMaps: [],
-  rangeMaps: [],
-  shapeMaps: [],
-  textMaps: [],
-  valueMaps: [],
-};
+// const modeleRule = {
+//   data: {
+//     aggregation: 'current',
+//     alias: 'No name',
+//     colorOn: 'a',
+//     colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
+//     dateFormat: 'YYYY-MM-DD HH:mm:ss',
+//     decimals: 2,
+//     invert: false,
+//     linkData: [],
+//     linkProp: 'id',
+//     mappingType: 1,
+//     pattern: '/.*/',
+//     rangeData: [],
+//     sanitize: false,
+//     shapeData: [],
+//     shapeProp: 'id',
+//     style: 'fillColor',
+//     textData: [],
+//     textOn: 'wmd',
+//     linkOn: "a",
+//     textPattern: '/.*/',
+//     textProp: 'id',
+//     textReplace: 'content',
+//     thresholds: [],
+//     type: 'number',
+//     unit: 'short',
+//     valueData: [],
+//   },
+//   linkMaps: [],
+//   rangeMaps: [],
+//   shapeMaps: [],
+//   textMaps: [],
+//   valueMaps: [],
+// };
 
 const series = [
   {
@@ -78,7 +78,7 @@ describe('Rule', () => {
   const data = {};
   const rule = new Rule('/.*/', data);
   test('Should be equals', () => {
-    expect(rule).toEqual(modeleRule);
+    // expect(rule).toEqual(modeleRule);
     expect(rule.getData()).toMatchSnapshot();
   });
 });

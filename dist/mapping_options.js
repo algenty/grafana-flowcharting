@@ -85,8 +85,7 @@ function () {
     }];
     this.propTypes = [{
       text: 'Id',
-      value: 'id' // { text: "Substring", value: "pattern" }
-
+      value: 'id'
     }];
     this.textPattern = '/.*/';
     this.metricTypes = [{
@@ -212,6 +211,7 @@ function () {
   }, {
     key: "onRulesChange",
     value: function onRulesChange() {
+      u.log(1, "MappingOptionsCtrl.onRulesChange()");
       this.flowchartHandler.ruleChanged();
       this.render();
     }

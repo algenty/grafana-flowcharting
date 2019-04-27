@@ -38,8 +38,10 @@ function () {
     this.originalColors = {};
     this.originalValue = this.xgraph.getValueCell(mxcell);
     this.currentValue = this.originalValue;
-    this.originalLink = mxcell.getAttribute('link');
-    this.currentLink = mxcell.getAttribute('link');
+    var link = this.xgraph.getLink(mxcell);
+    if (link === undefined) link = null;
+    this.originalLink = link;
+    this.currentLink = link;
     this.styles.forEach(function (style) {
       var color = _this.xgraph.getStyleCell(mxcell, style);
 
@@ -53,9 +55,9 @@ function () {
     value: function setState(rule, serie) {
       var _this2 = this;
 
-      u.log(1, 'state_class.setState()');
-      u.log(0, 'state_class.setState() Rule', rule);
-      u.log(0, 'state_class.setState() Serie', serie);
+      u.log(1, 'State.setState()');
+      u.log(0, 'State.setState() Rule', rule);
+      u.log(0, 'State.setState() Serie', serie);
 
       if (rule.matchSerie(serie)) {
         var shapeMaps = rule.getShapeMaps();
@@ -77,6 +79,8 @@ function () {
               if (rule.toColorize(value)) {
                 _this2.setColorStyle(rule.data.style, rule.getColorForValue(value));
               }
+
+              _this2.overlayIcon = rule.toIconize(value);
             }
           }
         }); // TEXT
@@ -88,7 +92,12 @@ function () {
             _this2.matched = true;
 
             if (_this2.globalLevel <= level) {
-              _this2.setText(rule.getReplaceText(_this2.originalValue, FormattedValue));
+              if (rule.toValorize(value)) {
+                _this2.setText(rule.getReplaceText(_this2.originalValue, FormattedValue));
+              } else {
+                // Hide text
+                _this2.setText(rule.getReplaceText(_this2.originalValue, ''));
+              }
             }
           }
         }); // LINK
@@ -98,9 +107,17 @@ function () {
           if (!link.isHidden() && link.match(cellProp)) {
             _this2.matchedLink = true;
             _this2.matched = true;
+
+            if (_this2.globalLevel <= level) {
+              if (rule.toLinkable(value)) {
+                _this2.currentLink = rule.getLink();
+              }
+            }
           }
         });
       }
+
+      u.log(0, 'State.setState() state', this);
     }
   }, {
     key: "unsetState",
@@ -114,6 +131,7 @@ function () {
       this.matchedShape = false;
       this.matchedText = false;
       this.matchedLink = false;
+      u.log(0, 'State.unsetState() state', this);
     }
   }, {
     key: "getCellProp",
@@ -261,14 +279,24 @@ function () {
       if (this.matched) {
         if (this.matchedShape) {
           this.styles.forEach(function (style) {
+            // Apply colors
             _this5.xgraph.setStyleCell(_this5.mxcell, style, _this5.getCurrentColorStyle(style));
-          });
+          }); // Apply icons
+
+          if (this.overlayIcon) {
+            this.xgraph.addOverlay(this.getTextLevel(), this.mxcell);
+          } else {
+            this.xgraph.removeOverlay(this.mxcell);
+          }
         }
 
         if (this.matchedText) {
           this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
-        } // TODO:LINK
+        }
 
+        if (this.matchedLink) {
+          this.xgraph.addLink(this.mxcell, this.currentLink);
+        }
       } else this.restoreCell();
     }
   }, {
@@ -280,8 +308,10 @@ function () {
       this.styles.forEach(function (style) {
         _this6.xgraph.setStyleCell(_this6.mxcell, style, _this6.getCurrentColorStyle(style));
       });
-      this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
-      this.mxcell.setAttribute('link', this.getCurrentLink());
+      this.xgraph.setValueCell(this.mxcell, this.getCurrentText()); // this.mxcell.setAttribute('link', this.getCurrentLink());
+
+      this.xgraph.removeOverlay(this.mxcell);
+      this.xgraph.addLink(this.mxcell, this.originalLink);
     }
   }, {
     key: "prepare",
