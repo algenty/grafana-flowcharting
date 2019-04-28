@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 // eslint-disable-next-line import/no-unresolved
 import kbn from 'app/core/utils/kbn';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import moment from 'moment';
 
 export default class Rule {
@@ -35,7 +36,7 @@ export default class Rule {
       'rgba(237, 129, 40, 0.89)',
       'rgba(50, 172, 45, 0.97)',
     ];
-    this.data.style = obj.style || 'fillColor';
+    this.data.style = obj.style || obj.colorMode || 'fillColor';
     this.data.colorOn = obj.colorOn || 'a';
     this.data.link = (obj.link !== undefined ? obj.link : false);
     this.data.linkOn = obj.colorOn || 'a';

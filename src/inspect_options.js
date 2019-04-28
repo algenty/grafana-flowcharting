@@ -7,21 +7,15 @@ export class InspectOptionsCtrl {
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
-    this.colors = ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
-    this.style = [
-      { text: 'Disabled', value: null },
-      { text: 'Stroke', value: 'strokeColor' },
-      { text: 'Fill', value: 'fillColor' },
-      { text: 'Text', value: 'fontColor' }
-    ];
-    this.colorMode = 'fillColor';
+    const text = u.stringify(this.panel);
+    this.json = u.prettifyJSON(text);
     this.logDisplayOption = [{ text: 'True', value: true }, { text: 'False', value: false }];
     this.logDisplay = logDisplay;
     this.logLevelOption = [
       { text: 'DEBUG', value: 0 },
       { text: 'INFO', value: 1 },
       { text: 'WARNING', value: 2 },
-      { text: 'ERROR', value: 3 }
+      { text: 'ERROR', value: 3 },
     ];
     this.logLevel = logLevel;
     this.flowchartHandler = this.ctrl.flowchartHandler;

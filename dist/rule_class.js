@@ -55,7 +55,7 @@ function () {
       this.data.aggregation = obj.aggregation || 'current';
       this.data.decimals = obj.decimals || 2;
       this.data.colors = obj.colors || ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
-      this.data.style = obj.style || 'fillColor';
+      this.data.style = obj.style || obj.colorMode || 'fillColor';
       this.data.colorOn = obj.colorOn || 'a';
       this.data.link = obj.link !== undefined ? obj.link : false;
       this.data.linkOn = obj.colorOn || 'a';

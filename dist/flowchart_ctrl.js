@@ -148,10 +148,14 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
-      u.log(1, 'ctrl.link()');
-      this.rulesHandler = new _rulesHandler.default(scope, this.panel.rulesData); // TODO: Migrate old version
+      u.log(1, 'ctrl.link()'); // RULES
 
-      if (this.panel.newFlag && this.rulesHandler.countRules() === 0) this.rulesHandler.addRule('.*');
+      this.rulesHandler = new _rulesHandler.default(scope, this.panel.rulesData);
+      if (this.panel.version === undefined) this.rulesHandler.import(this.panel.styles);else if (this.panel.version !== this.version) {
+        this.rulesHandler.import(this.panel.styles);
+      }
+      if (this.panel.newFlag && this.rulesHandler.countRules() === 0) this.rulesHandler.addRule('.*'); // FLOWCHART
+
       this.flowchartHandler = new _flowchartHandler.default(scope, elem, ctrl, this.panel.flowchartsData);
       if (this.panel.version === undefined) this.flowchartHandler.import(this.panel.flowchartsData);else if (this.panel.version !== this.version) {
         this.flowchartHandler.import(this.panel.flowchartsData);
@@ -162,6 +166,7 @@ function (_MetricsPanelCtrl) {
       }
 
       this.panel.newFlag = false;
+      this.panel.version = this.version;
     }
   }, {
     key: "exportSVG",

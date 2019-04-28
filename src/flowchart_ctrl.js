@@ -94,9 +94,15 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     u.log(1, 'ctrl.link()');
+    // RULES
     this.rulesHandler = new RulesHandler(scope, this.panel.rulesData);
-    // TODO: Migrate old version
+    if (this.panel.version === undefined) this.rulesHandler.import(this.panel.styles);
+    else if (this.panel.version !== this.version) {
+      this.rulesHandler.import(this.panel.styles);
+    }
     if (this.panel.newFlag && this.rulesHandler.countRules() === 0) this.rulesHandler.addRule('.*');
+
+    // FLOWCHART
     this.flowchartHandler = new FlowchartHandler(scope, elem, ctrl, this.panel.flowchartsData);
     if (this.panel.version === undefined) this.flowchartHandler.import(this.panel.flowchartsData);
     else if (this.panel.version !== this.version) {
@@ -106,6 +112,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.addFlowchart('Main');
     }
     this.panel.newFlag = false;
+    this.panel.version = this.version;
   }
 
   exportSVG() {
@@ -114,7 +121,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.publishAppEvent('show-modal', {
       templateHtml: '<export-data-modal panel="panel" data="tableData"></export-data-modal>',
       scope,
-      modalClass: 'modal--narrow'
+      modalClass: 'modal--narrow',
     });
   }
 
@@ -132,7 +139,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     const series = new TimeSeries({
       datapoints: seriesData.datapoints,
       alias: seriesData.target,
-      unit: seriesData.unit
+      unit: seriesData.unit,
     });
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
     const datapoints = seriesData.datapoints || [];

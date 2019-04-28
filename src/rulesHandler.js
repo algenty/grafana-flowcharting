@@ -18,6 +18,8 @@ export default class RulesHandler {
     u.log(1, 'RuleHandler.import()');
     u.log(0, 'RuleHandler.import() obj', obj);
     let i = 0;
+    if (this.data != obj) this.data = [];
+    this.rules = [];
     obj.forEach((map) => {
       const rule = new Rule(map.pattern, map);
       this.rules.push(rule);

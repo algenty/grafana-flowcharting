@@ -41,6 +41,8 @@ function () {
       u.log(1, 'RuleHandler.import()');
       u.log(0, 'RuleHandler.import() obj', obj);
       var i = 0;
+      if (this.data != obj) this.data = [];
+      this.rules = [];
       obj.forEach(function (map) {
         var rule = new _rule_class.default(map.pattern, map);
 

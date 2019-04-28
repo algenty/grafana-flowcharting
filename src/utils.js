@@ -1,5 +1,6 @@
 const pako = require('pako');
 const vkbeautify = require('vkbeautify');
+const CJSON = require('circular-json');
 
 
 // sources :
@@ -221,6 +222,19 @@ module.exports = {
       this.log(3, "Error in prettify", error);
       return text;
     }
+  },
+
+  prettifyJSON(text) {
+    try {
+      return vkbeautify.json(text);
+    } catch (error) {
+      this.log(3, "Error in prettify", error);
+      return text;
+    }
+  },
+
+  stringify(obj) {
+    return CJSON.stringify(obj);
   },
 
   log(level, title, obj) {
