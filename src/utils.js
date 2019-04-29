@@ -253,14 +253,4 @@ module.exports = {
       }
     }
   },
-
-  popover(text, tagBook, tagImage) {
-    const url = 'https://algenty.github.io/flowcharting-repository/';
-    const images = `${url}images/`;
-    const textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    let result = `${textEncoded}<br /><br />`;
-    if (tagBook) result = `${result}<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
-    if (tagImage) result = `${result}<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
-    return result;
-  },
 };

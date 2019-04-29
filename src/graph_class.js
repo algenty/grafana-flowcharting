@@ -1,19 +1,19 @@
+/* eslint-disable no-undef */
+/* eslint-disable new-cap */
 /* eslint-disable dot-notation */
 /* eslint-disable object-shorthand */
 window.mxLanguages = window.mxLanguages || ['en'];
 
 const sanitizer = require('sanitizer');
 const mxgraph = require('mxgraph')({
-  mxImageBasePath:
-    '../public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/images',
-  mxBasePath: 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist',
+  mxImageBasePath: GF_PLUGIN.getMxImagePath(),
+  mxBasePath: GF_PLUGIN.getMxBasePath(),
   mxLoadStylesheets: false,
   mxLanguage: 'en',
   mxLoadResources: false,
 });
 
-window.BASE_PATH =
-  window.BASE_PATH || 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist/';
+window.BASE_PATH = window.BASE_PATH || GF_PLUGIN.getMxBasePath();
 window.RESOURCES_PATH = window.BASE_PATH || `${window.BASE_PATH}resources`;
 window.RESOURCE_BASE = window.RESOURCE_BASE || `${window.RESOURCES_PATH}/grapheditor`;
 window.STENCIL_PATH = window.STENCIL_PATH || `${window.BASE_PATH}stencils`;
@@ -33,9 +33,8 @@ window.mxCellOverlay = window.mxCellOverlay || mxgraph.mxCellOverlay;
 window.mxCellRenderer = window.mxCellRenderer || mxgraph.mxCellRenderer;
 window.mxCellState = window.mxCellState || mxgraph.mxCellState;
 window.mxClient = window.mxClient || mxgraph.mxClient;
-mxClient.mxBasePath = 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist';
-mxClient.mxImageBasePath =
-  'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/src/images';
+mxClient.mxBasePath = GF_PLUGIN.getMxBasePath();
+mxClient.mxImageBasePath = GF_PLUGIN.getMxImagePath();
 mxClient.mxLoadResources = true;
 mxClient.mxLanguage = 'en';
 mxClient.mxLoadStylesheets = true;
@@ -70,6 +69,7 @@ window.mxGraphView = window.mxGraphView || mxgraph.mxGraphView;
 window.mxGuide = window.mxGuide || mxgraph.mxGuide;
 window.mxHexagon = window.mxHexagon || mxgraph.mxHexagon;
 window.mxHandle = window.mxHandle || mxgraph.mxHandle;
+window.mxHierarchicalLayout = window.mxHierarchicalLayout || mxgraph.mxHierarchicalLayout;
 window.mxImage = window.mxImage || mxgraph.mxImage;
 window.mxImageShape = window.mxImageShape || mxgraph.mxImageShape;
 window.mxKeyHandler = window.mxKeyHandler || mxgraph.mxKeyHandler;
@@ -136,7 +136,7 @@ export default class XGraph {
   initGraph() {
     u.log(1, 'XGraph.initGraph()');
     const Graph = require('./Graph')({
-      libs: 'arrows;basic;bpmn;flowchart'
+      libs: 'arrows;basic;bpmn;flowchart',
     });
     const Shapes = require('./Shapes');
     this.graph = new Graph(this.container);
@@ -171,7 +171,7 @@ export default class XGraph {
       margin: 'auto',
       position: 'relative',
       width: width,
-      height: `${size - 30}px`
+      height: `${size - 30}px`,
     };
 
     $div.css(css);
@@ -319,8 +319,6 @@ export default class XGraph {
   }
 
   addLink(mxcell, link) {
-    // console.log("mxcell",mxcell);
-    // console.log("link",link);
     this.graph.setLinkForCell(mxcell, link);
   }
 

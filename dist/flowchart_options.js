@@ -22,9 +22,9 @@ function () {
     _classCallCheck(this, FlowchartOptionsCtrl);
 
     $scope.editor = this;
+    $scope.GF_PLUGIN = window.GF_PLUGIN;
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
-    $scope.u = window.u;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.panel = this.ctrl.panel;
     this.sourceTypes = [{
@@ -77,7 +77,7 @@ function flowchartOptionsTab($q, $sce, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: "public/plugins/".concat(_plugin.plugin.id, "/partials/flowchart_options.html"),
+    templateUrl: "".concat(GF_PLUGIN.getPartialPath(), "/flowchart_options.html"),
     controller: FlowchartOptionsCtrl
   };
 }

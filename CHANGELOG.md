@@ -6,9 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.3.0] - 2019-05-01
-
 ### Added
-
     - Full review of code (ES6 Class mode)
     - Unit test with jest to increase quality
     - Fill/text/stoke rules on the same object
@@ -19,11 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
       - Renamer ID (double click on ID)
       - State status
       - Debug mode
-
-###
-
+    - Custom Link Mapping.
+### Fixed
     - Substring replace on text (Issue #8)
     - Editor object not found Exception (Issue #1)
+    - Original Link (Issues #9)
 
 ## [0.2.5] - 2019-05-10
 

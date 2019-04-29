@@ -6,12 +6,12 @@ export class MappingOptionsCtrl {
   /** @ngInject */
   constructor($scope) {
     $scope.editor = this;
+    $scope.GF_PLUGIN = window.GF_PLUGIN;
     this.$scope = $scope;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
     $scope.flowchartHandler = this.panelCtrl.flowchartHandler;
-    $scope.u = window.u;
     this.flowchartHandler = $scope.ctrl.flowchartHandler;
     this.unitFormats = kbn.getUnitFormats();
     this.style = [
@@ -126,7 +126,7 @@ export function mappingOptionsTab($q, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `public/plugins/${plugin.id}/partials/mapping_options.html`,
-    controller: MappingOptionsCtrl
+    templateUrl: `${GF_PLUGIN.getPartialPath()}/mapping_options.html`,
+    controller: MappingOptionsCtrl,
   };
 }

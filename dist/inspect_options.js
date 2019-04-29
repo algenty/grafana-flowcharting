@@ -22,6 +22,7 @@ function () {
     _classCallCheck(this, InspectOptionsCtrl);
 
     $scope.editor = this;
+    $scope.GF_PLUGIN = window.GF_PLUGIN;
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
@@ -51,12 +52,6 @@ function () {
     this.logLevel = logLevel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     $scope.flowchartHandler = this.ctrl.flowchartHandler;
-
-    $scope.doBlur = function ($event) {
-      console.log("$event", $event);
-      var target = $event.target;
-      target.blur();
-    };
   }
 
   _createClass(InspectOptionsCtrl, [{
@@ -146,7 +141,7 @@ function inspectOptionsTab($q, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: "public/plugins/".concat(_plugin.plugin.id, "/partials/inspect_options.html"),
+    templateUrl: "".concat(GF_PLUGIN.getPartialPath(), "/inspect_options.html"),
     controller: InspectOptionsCtrl
   };
 }

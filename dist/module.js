@@ -14,10 +14,12 @@ var _flowchart_ctrl = require("./flowchart_ctrl");
 
 var _sdk = require("app/plugins/sdk");
 
+var _plugin = require("./plugin.js");
+
 (0, _sdk.loadPluginCss)({
   dark: 'plugins/agenty-flowcharting-panel/css/flowchart.dark.css',
   light: 'plugins/agenty-flowcharting-panel/css/flowchart.light.css'
 });
-window.logLevel = 1;
+window.logLevel = 2;
 window.logDisplay = true;
 //# sourceMappingURL=module.js.map

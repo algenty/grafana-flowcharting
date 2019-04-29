@@ -17,6 +17,7 @@
         "SharedArrayBuffer": "readonly",
         "u": false,
         "_": false,
+        "GF_PLUGIN": false,
         "moment": false,
         "logLevel": false,
         "logDisplay": false

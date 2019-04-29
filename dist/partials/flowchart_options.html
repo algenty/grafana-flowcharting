@@ -9,7 +9,7 @@
 				<div class="gf-form">
 					<span class="gf-form-label width-12">
 						Flowchart Definition
-						<info-popover mode="right-normal"><span ng-bind-html="u.popover('Source of mxgraph definition (Xml definition, Url with xml result)', 'DEFINITION_XML#Type','DEFINITION_XML')"></span></info-popover>
+						<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Source of mxgraph definition (Xml definition, Url with xml result)', 'DEFINITION_XML#Type','DEFINITION_XML')"></span></info-popover>
 					</span>
 					<div class="gf-form-select-wrapper width-12">
 						<select class="gf-form-input" ng-model="flowchart.data.type"
@@ -35,7 +35,7 @@
 					ng-if="flowchart.data.type == 'xml'">
 					<span class="gf-form-label width-12">
 						XML Content
-						<info-popover mode="right-normal"><span ng-bind-html="u.popover('mxgraph model, edit on draw.io and select Extra menu > Edit Diagram', 'DEFINITION_XML#Type','DEFINITION_XML')"></span></info-popover>
+						<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('mxgraph model, edit on draw.io and select Extra menu > Edit Diagram', 'DEFINITION_XML#Type','DEFINITION_XML')"></span></info-popover>
 					</span>
 					<textarea name="options.source.xml.input" class="gf-form-input width:95% ng-pristine ng-valid ng-empty ng-touched"
 						rows="10" placeholder="This text should respect xml/plain mxgraph syntax"
@@ -86,7 +86,7 @@
 							ng-click="flowchart.decode()"
 							>
 							<i class="fas expand-arrows-alt pointer"></i> Extract/Decode
-							<info-popover mode="right-normal"><span ng-bind-html="u.popover('Extract xml from content', 'DEFINITION_XML#Buttons','DEFINITION_XML')"></span></info-popover>
+							<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Extract xml from content', 'DEFINITION_XML#Buttons','DEFINITION_XML')"></span></info-popover>
 							</button>
 						</div>
 					</div>

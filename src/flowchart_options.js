@@ -5,9 +5,9 @@ export class FlowchartOptionsCtrl {
   /** @ngInject */
   constructor($scope) {
     $scope.editor = this;
+    $scope.GF_PLUGIN = window.GF_PLUGIN;
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
-    $scope.u = window.u;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.panel = this.ctrl.panel;
     this.sourceTypes = [{ text: 'Url', value: 'url' }, { text: 'XML Content', value: 'xml' }];
@@ -42,7 +42,7 @@ export function flowchartOptionsTab($q, $sce, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `public/plugins/${plugin.id}/partials/flowchart_options.html`,
+    templateUrl: `${GF_PLUGIN.getPartialPath()}/flowchart_options.html`,
     controller: FlowchartOptionsCtrl,
   };
 }
