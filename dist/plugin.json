@@ -8,22 +8,38 @@
       "name": "Arnaud GENTY",
       "url": "https://github.com/algenty/grafana-flowcharting"
     },
-    "keywords": ["flowchart", "panel", "diagram", "workflow", "floorplan", "map", "organigram", "draw.io", "visio", "mxgraph"],
+    "keywords": [
+      "flowchart",
+      "panel",
+      "diagram",
+      "workflow",
+      "floorplan",
+      "map",
+      "organigram",
+      "draw.io",
+      "visio",
+      "mxgraph"
+    ],
     "links": [
-      {"name": "Project site", "url": "https://github.com/algenty/grafana-flowcharting"},
-      {"name": "Apache License", "url": "https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE"}
+      {
+        "name": "Project site",
+        "url": "https://github.com/algenty/grafana-flowcharting"
+      },
+      {
+        "name": "Apache License",
+        "url": "https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE"
+      }
     ],
     "version": "0.3.0",
     "updated": "2019-04-03",
     "logos": {
-        "small": "img/agenty-flowcharting.svg",
-        "large": "img/agenty-flowcharting.svg"
+      "small": "img/agenty-flowcharting.svg",
+      "large": "img/agenty-flowcharting.svg"
     }
   },
-
   "dependencies": {
     "grafanaVersion": "4.x.x",
     "grafanaVersion": "5.x.x",
-    "plugins": [ ]
+    "plugins": []
   }
 }

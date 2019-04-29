@@ -57,7 +57,7 @@ export class InspectOptionsCtrl {
     state.edit = true;
     state.newcellId = state.cellId;
     let elt = document.getElementById(state.cellId);
-    setTimeout(function() {
+    setTimeout(function () {
       elt.focus();
     }, 100);
   }

@@ -9,7 +9,7 @@ const mxgraph = require('mxgraph')({
   mxBasePath: 'public/plugins/agenty-flowcharting-panel/libs/mxgraph/javascript/dist',
   mxLoadStylesheets: false,
   mxLanguage: 'en',
-  mxLoadResources: false
+  mxLoadResources: false,
 });
 
 window.BASE_PATH =
