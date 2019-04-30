@@ -1,5 +1,7 @@
 const path = require("path");
 const sass = require('node-sass');
+// const plugin = require('./src/plugin.js');
+const version = "0.3.0";
 
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);
@@ -156,7 +158,7 @@ module.exports = (grunt) => {
     compress: {
       main: {
         options: {
-          archive: 'archives/agenty-flowcharting-panel.zip',
+          archive: "archives/agenty-flowcharting-panel-" + version + "-SNAPSHOT.zip",
         },
         expand: true,
         cwd: '.',

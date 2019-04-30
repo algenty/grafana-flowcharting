@@ -10,16 +10,12 @@ Object.defineProperty(exports, "PanelCtrl", {
   }
 });
 
-var _flowchart_ctrl = require("./flowchart_ctrl");
-
 var _sdk = require("app/plugins/sdk");
 
-var _plugin = require("./plugin.js");
+var _flowchart_ctrl = require("./flowchart_ctrl");
 
 (0, _sdk.loadPluginCss)({
   dark: 'plugins/agenty-flowcharting-panel/css/flowchart.dark.css',
   light: 'plugins/agenty-flowcharting-panel/css/flowchart.light.css'
 });
-window.logLevel = 2;
-window.logDisplay = true;
 //# sourceMappingURL=module.js.map

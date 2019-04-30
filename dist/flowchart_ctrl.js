@@ -67,7 +67,6 @@ function (_MetricsPanelCtrl) {
     _this.flowchartHandler = undefined;
     _this.series = [];
     _this.panelDefaults = {
-      version: _this.version,
       newFlag: true,
       format: 'short',
       valueName: 'current',
@@ -150,6 +149,7 @@ function (_MetricsPanelCtrl) {
     value: function link(scope, elem, attrs, ctrl) {
       u.log(1, 'ctrl.link()'); // RULES
 
+      debugger;
       this.rulesHandler = new _rulesHandler.default(scope, this.panel.rulesData);
       if (this.panel.version === undefined) this.rulesHandler.import(this.panel.styles);else if (this.panel.version !== this.version) {
         this.rulesHandler.import(this.panel.styles);

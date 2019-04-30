@@ -178,10 +178,10 @@ module.exports = {
       return Math.random().toString(16).slice(-4);
     }
     return `${chr4() + chr4()
-    }-${chr4()
-    }-${chr4()
-    }-${chr4()
-    }-${chr4()}${chr4()}${chr4()}`;
+      }-${chr4()
+      }-${chr4()
+      }-${chr4()
+      }-${chr4()}${chr4()}${chr4()}`;
   },
 
   stringToJsRegex(str) {
@@ -243,9 +243,9 @@ module.exports = {
     // 2 : WARN
     // 3 : ERROR
     // eslint-disable-next-line no-undef
-    if (logDisplay !== undefined && logDisplay === true) {
+    if (GF_PLUGIN.logDisplay !== undefined && GF_PLUGIN.logDisplay === true) {
       // eslint-disable-next-line no-undef
-      if (logLevel !== undefined && level >= logLevel) {
+      if (GF_PLUGIN.logLevel !== undefined && level >= GF_PLUGIN.logLevel) {
         if (level === 0) { console.debug(`DEBUG : ${title}`, obj); return; }
         if (level === 1) { console.info(` INFO : ${title}`, obj); return; }
         if (level === 2) { console.warn(` WARN : ${title}`, obj); return; }

@@ -11,7 +11,6 @@ import RulesHandler from './rulesHandler';
 import FlowchartHandler from './flowchartHandler';
 
 const u = require('./utils');
-
 window.u = window.u || u;
 
 class FlowchartCtrl extends MetricsPanelCtrl {
@@ -28,7 +27,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.flowchartHandler = undefined;
     this.series = [];
     this.panelDefaults = {
-      version: this.version,
       newFlag: true,
       format: 'short',
       valueName: 'current',
@@ -95,6 +93,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   link(scope, elem, attrs, ctrl) {
     u.log(1, 'ctrl.link()');
     // RULES
+    debugger
     this.rulesHandler = new RulesHandler(scope, this.panel.rulesData);
     if (this.panel.version === undefined) this.rulesHandler.import(this.panel.styles);
     else if (this.panel.version !== this.version) {

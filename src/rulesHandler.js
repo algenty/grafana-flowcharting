@@ -18,14 +18,23 @@ export default class RulesHandler {
     u.log(1, 'RuleHandler.import()');
     u.log(0, 'RuleHandler.import() obj', obj);
     let i = 0;
-    if (this.data != obj) this.data = [];
+    if (this.data != obj) {
+      this.data = [];
+      const newObj = true;
+    }
     this.rules = [];
     obj.forEach((map) => {
-      const rule = new Rule(map.pattern, map);
-      this.rules.push(rule);
-      this.data[i] = map;
-      i += 1;
-    });
+      if (newObj) {
+        let data = {}
+        const rule = new Rule(map.pattern, data);
+        rule.import(map);
+      else {
+          const rule = new Rule(map.pattern, map);
+        }
+        this.rules.push(rule);
+        this.data[i] = map;
+        i += 1;
+      });
   }
 
   getRules() {

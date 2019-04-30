@@ -1,5 +1,3 @@
-import { plugin } from './plugin';
-
 export class InspectOptionsCtrl {
   /** @ngInject */
   constructor($scope) {
@@ -11,14 +9,12 @@ export class InspectOptionsCtrl {
     const text = u.stringify(this.panel);
     this.json = u.prettifyJSON(text);
     this.logDisplayOption = [{ text: 'True', value: true }, { text: 'False', value: false }];
-    this.logDisplay = logDisplay;
     this.logLevelOption = [
       { text: 'DEBUG', value: 0 },
       { text: 'INFO', value: 1 },
       { text: 'WARNING', value: 2 },
       { text: 'ERROR', value: 3 },
     ];
-    this.logLevel = logLevel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     $scope.flowchartHandler = this.ctrl.flowchartHandler;
   }
@@ -34,8 +30,8 @@ export class InspectOptionsCtrl {
   }
 
   onDebug() {
-    window.logLevel = this.logLevel;
-    window.logDisplay = this.logDisplay;
+    GF_PLUGIN.logLevel = this.logLevel;
+    GF_PLUGIN.logDisplay = this.logDisplay;
   }
 
   onChangeId(state) {

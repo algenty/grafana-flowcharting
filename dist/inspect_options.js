@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.inspectOptionsTab = inspectOptionsTab;
 exports.InspectOptionsCtrl = void 0;
 
-var _plugin = require("./plugin");
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -35,7 +33,6 @@ function () {
       text: 'False',
       value: false
     }];
-    this.logDisplay = logDisplay;
     this.logLevelOption = [{
       text: 'DEBUG',
       value: 0
@@ -49,7 +46,6 @@ function () {
       text: 'ERROR',
       value: 3
     }];
-    this.logLevel = logLevel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     $scope.flowchartHandler = this.ctrl.flowchartHandler;
   }
@@ -71,8 +67,8 @@ function () {
   }, {
     key: "onDebug",
     value: function onDebug() {
-      window.logLevel = this.logLevel;
-      window.logDisplay = this.logDisplay;
+      GF_PLUGIN.logLevel = this.logLevel;
+      GF_PLUGIN.logDisplay = this.logDisplay;
     }
   }, {
     key: "onChangeId",
