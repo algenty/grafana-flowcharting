@@ -20,7 +20,10 @@ See more example at draw.io
 
 # Features
 
+# unstables versions for beta tester
+[REPO](https://github.com/algenty/flowcharting-repository/tree/master/archives)
 
+# Stable version
 ## 0.2.5 (03/04/19)
   - Bugs fix.
   - Compress and uncompress button under xml source to optimize space in db
