@@ -19,11 +19,10 @@ Complexe Diagram and flowchart for grafana based on mxGraph librairies, see draw
 See more example at draw.io
 
 # Features
-
-# unstables versions for beta tester
+unstables versions for beta tester here
 [REPO](https://github.com/algenty/flowcharting-repository/tree/master/archives)
 
-# Stable version
+# Stables versions
 ## 0.2.5 (03/04/19)
   - Bugs fix.
   - Compress and uncompress button under xml source to optimize space in db
