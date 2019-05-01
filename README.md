@@ -9,6 +9,8 @@ Complexe Diagram and flowchart for grafana based on mxGraph librairies, see draw
   - Organigrams
   - And more ... (Edit through draw.io)
  
+ Go to https://algenty.github.io/flowcharting-repository/ for documentation
+ 
  ## examples
   - Technical schema example
  <img src="src/img/archi_example.png?raw=true" width="800">
