@@ -125,6 +125,8 @@
 												class="fa fa-paragraph"></i><i class="fa fa-fw"></i></div>
 										<div style="display:inline-block" ng-show="state.matchedLink" bs-tooltip="'Mapping on Link'"><i
 												class="fa fa-chain"></i><i class="fa fa-fw"></i></div>
+											<div style="display:inline-block" ng-show="state.changed" bs-tooltip="'Colorized or Valorized or Linked'"><i
+												class="fa fa-check-circle"></i><i class="fa fa-fw"></i></div>
 									</div>
 								</div>
 							</td>
@@ -178,13 +180,13 @@
 		<div class="section gf-form-group">
 			<div class="gf-form">
 				<span class="gf-form-label width-12">Display</span>
-				<select class="gf-form-input" ng-model="GF_PLUGIN.logDisplay"
+				<select class="gf-form-input" ng-model="editor.logDisplay"
 					ng-options="c.value as c.text for c in editor.logDisplayOption" ng-change="editor.onDebug()">
 				</select>
 			</div>
 			<div class="gf-form">
 				<span class="gf-form-label width-12">Level</span>
-				<select class="gf-form-input" ng-model="GF_PLUGIN.logLevel"
+				<select class="gf-form-input" ng-model="editor.logLevel"
 					ng-options="c.value as c.text for c in editor.logLevelOption" ng-change="editor.onDebug()">
 				</select>
 			</div>

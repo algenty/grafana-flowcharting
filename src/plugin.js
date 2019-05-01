@@ -34,17 +34,34 @@ plugin.getPartialPath = function () {
   return this.partialPath;
 };
 
+// plugin.popover = function (text, tagBook, tagImage) {
+//   const url = this.repository;
+//   const images = `${this.repository}images/`;
+//   const textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+//   let result = `${textEncoded}<br /><br />`;
+//   if (tagBook) result = `${result}<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
+//   if (tagImage) result = `${result}<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
+//   return result;
+// };
+
 plugin.popover = function (text, tagBook, tagImage) {
   const url = this.repository;
   const images = `${this.repository}images/`;
   const textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  let result = `${textEncoded}<br /><br />`;
-  if (tagBook) result = `${result}<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
-  if (tagImage) result = `${result}<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
-  return result;
+  let desc = `${textEncoded}`;
+  let book = '';
+  let image = '';
+  if (tagBook) book = `<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
+  if (tagImage) image = `<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
+  return `
+  <div id="popover" style="display:flex;flex-wrap:wrap;width: 100%;">
+    <div style="flex:1;height:100px;margin-bottom: 20px;">${desc}</div>
+    <div style="flex:1;height:100px;margin-bottom: 20px;">${book}</div>
+    <div style="flex-basis: 100%;height:100px;margin-bottom:20px;">${image}</div>
+  </div>`;
 };
 
-plugin.logLevel = 2;
+plugin.logLevel = 1;
 plugin.logDisplay = true;
 
 window.GF_PLUGIN = window.GF_PLUGIN || plugin;

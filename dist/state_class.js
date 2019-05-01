@@ -23,6 +23,7 @@ function () {
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
+    this.changed = false;
     this.matched = false;
     this.matchedShape = false;
     this.matchedText = false;
@@ -132,6 +133,16 @@ function () {
       this.matchedText = false;
       this.matchedLink = false;
       u.log(0, 'State.unsetState() state', this);
+    }
+  }, {
+    key: "isMatched",
+    value: function isMatched() {
+      return this.matched;
+    }
+  }, {
+    key: "isChanged",
+    value: function isChanged() {
+      return this.changed;
     }
   }, {
     key: "getCellProp",
@@ -277,6 +288,8 @@ function () {
       u.log(1, 'State.applyState()');
 
       if (this.matched) {
+        this.changed = true;
+
         if (this.matchedShape) {
           this.styles.forEach(function (style) {
             // Apply colors
@@ -297,7 +310,7 @@ function () {
         if (this.matchedLink) {
           this.xgraph.addLink(this.mxcell, this.currentLink);
         }
-      } else this.restoreCell();
+      } else if (this.changed) this.restoreCell();
     }
   }, {
     key: "restoreCell",
@@ -312,6 +325,7 @@ function () {
 
       this.xgraph.removeOverlay(this.mxcell);
       this.xgraph.addLink(this.mxcell, this.originalLink);
+      this.changed = false;
     }
   }, {
     key: "prepare",

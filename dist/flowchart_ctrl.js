@@ -149,21 +149,27 @@ function (_MetricsPanelCtrl) {
     value: function link(scope, elem, attrs, ctrl) {
       u.log(1, 'ctrl.link()'); // RULES
 
-      debugger;
-      this.rulesHandler = new _rulesHandler.default(scope, this.panel.rulesData);
-      if (this.panel.version === undefined) this.rulesHandler.import(this.panel.styles);else if (this.panel.version !== this.version) {
+      var newRulesData = [];
+      this.rulesHandler = new _rulesHandler.default(scope, newRulesData);
+
+      if (this.panel.version === undefined && this.panel.styles !== undefined) {
         this.rulesHandler.import(this.panel.styles);
-      }
-      if (this.panel.newFlag && this.rulesHandler.countRules() === 0) this.rulesHandler.addRule('.*'); // FLOWCHART
+        delete this.panel.styles;
+      } else this.rulesHandler.import(this.panel.rulesData);
 
-      this.flowchartHandler = new _flowchartHandler.default(scope, elem, ctrl, this.panel.flowchartsData);
-      if (this.panel.version === undefined) this.flowchartHandler.import(this.panel.flowchartsData);else if (this.panel.version !== this.version) {
-        this.flowchartHandler.import(this.panel.flowchartsData);
-      }
+      if (this.panel.newFlag && this.rulesHandler.countRules() === 0) this.rulesHandler.addRule('.*');
+      this.panel.rulesData = newRulesData; // FLOWCHART
 
-      if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
-        this.flowchartHandler.addFlowchart('Main');
-      }
+      var newFlowchartsData = [];
+      this.flowchartHandler = new _flowchartHandler.default(scope, elem, ctrl, newFlowchartsData);
+
+      if (this.panel.version === undefined && this.panel.flowchart !== undefined) {
+        this.flowchartHandler.import([this.panel.flowchart]);
+        delete this.panel.flowchart;
+      } else this.flowchartHandler.import(this.panel.flowchartsData);
+
+      if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) this.flowchartHandler.addFlowchart('Main');
+      this.panel.flowchartsData = newFlowchartsData; // Versions
 
       this.panel.newFlag = false;
       this.panel.version = this.version;

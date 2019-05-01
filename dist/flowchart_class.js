@@ -33,7 +33,6 @@ function () {
     this.xgraph = undefined;
     this.stateHandler = undefined;
     this.import(data);
-    this.init();
   }
 
   _createClass(Flowchart, [{
@@ -51,6 +50,7 @@ function () {
       if (obj.options) this.data.tooltip = obj.options.tooltip;else this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : true;
       if (obj.options) this.data.grid = obj.options.grid;else this.data.grid = obj.grid !== undefined ? obj.grid : false;
       if (obj.options) this.data.bgColor = obj.options.bgColor;else this.data.bgColor = obj.bgColor;
+      this.init();
     }
   }, {
     key: "getData",

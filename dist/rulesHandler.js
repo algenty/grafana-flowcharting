@@ -25,12 +25,8 @@ function () {
     u.log(1, 'RulesHandler.constructor()');
     this.$scope = $scope || null;
     this.rules = [];
-    this.data = data; // if (version != this.panel.version) this.migrate(this.rules)
-    // else this.import(this.rules);
-
-    if (this.data !== undefined && this.data !== null && this.data.length > 0) {
-      this.import(this.data);
-    }
+    this.data = data;
+    this.import(this.data);
   }
 
   _createClass(RulesHandler, [{
@@ -40,17 +36,19 @@ function () {
 
       u.log(1, 'RuleHandler.import()');
       u.log(0, 'RuleHandler.import() obj', obj);
-      var i = 0;
-      if (this.data != obj) this.data = [];
       this.rules = [];
-      obj.forEach(function (map) {
-        var rule = new _rule_class.default(map.pattern, map);
 
-        _this.rules.push(rule);
+      if (obj !== undefined && obj !== null && obj.length > 0) {
+        obj.forEach(function (map) {
+          var newData = {};
+          var rule = new _rule_class.default(map.pattern, newData);
+          rule.import(map);
 
-        _this.data[i] = map;
-        i += 1;
-      });
+          _this.rules.push(rule);
+
+          _this.data.push(newData);
+        });
+      }
     }
   }, {
     key: "getRules",
@@ -87,8 +85,10 @@ function () {
     value: function cloneRule(index) {
       var rule = this.getRule(index);
       var data = rule.getData();
-      var newData = JSON.parse(JSON.stringify(data));
+      var newData = {};
       var newRule = new _rule_class.default(newData.pattern, newData);
+      newRule.import(data);
+      newData.alias = "Copy of ".concat(newData.alias);
       this.rules.splice(index, 0, newRule);
       this.data.splice(index, 0, newData);
       this.activeRuleIndex = index;

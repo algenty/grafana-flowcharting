@@ -49,58 +49,78 @@ export default class Rule {
     this.data.thresholds = obj.thresholds || [];
     this.data.invert = (obj.invert !== undefined ? obj.invert : false);
     this.data.overlayIcon = (obj.overlayIcon !== undefined ? obj.overlayIcon : false);
+    let maps = [];
+
+    // SHAPES
     this.data.shapeProp = obj.shapeProp || 'id';
-    this.data.shapeData = obj.shapeData || [];
-    if (obj.shapeData !== undefined && obj.shapeData !== null && obj.shapeData.length > 0) {
-      let i = 0;
-      obj.shapeData.forEach((map) => {
-        const sm = new ShapeMap(map.pattern, map);
+    this.data.shapeData = [];
+    // For 0.2.0
+    maps = [];
+    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) maps = obj.shapeMaps;
+    else maps = obj.shapeData;
+
+    if (maps !== undefined && maps !== null && maps.length > 0) {
+      maps.forEach((map) => {
+        const newData = {};
+        const sm = new ShapeMap(map.pattern, newData);
+        sm.import(map);
         this.shapeMaps.push(sm);
-        this.data.shapeData[i] = map;
-        i += 1;
+        this.data.shapeData.push(newData);
       });
     }
+
+    // TEXT
     this.data.textProp = obj.textProp || 'id';
-    this.data.textData = obj.textData || [];
-    if (obj.textData !== undefined && obj.textData != null && obj.textData.length > 0) {
-      let i = 0;
-      obj.textData.forEach((map) => {
-        const tm = new TextMap(map.pattern, map);
+    this.data.textData = [];
+    // For 0.2.0
+    maps = [];
+    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) maps = obj.textMaps;
+    else maps = obj.textData;
+    if (maps !== undefined && maps != null && maps.length > 0) {
+      maps.forEach((map) => {
+        const newData = {};
+        const tm = new TextMap(map.pattern, newData);
+        tm.import(map);
         this.textMaps.push(tm);
-        this.data.textData[i] = map;
-        i += 1;
+        this.data.textData.push(newData);
       });
     }
+
+    // LINK
     this.data.linkProp = obj.linkProp || 'id';
-    this.data.linkData = obj.linkData || [];
+    this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
-      let i = 0;
       obj.linkData.forEach((map) => {
-        const lm = new LinkMap(map.pattern, map);
+        const newData = {};
+        const lm = new LinkMap(map.pattern, newData);
+        lm.import(map);
         this.linkMaps.push(lm);
-        this.data.linkData[i] = map;
-        i += 1;
+        this.data.linkData.push(newData);
       });
     }
+
     this.data.mappingType = obj.mappingType || 1;
-    this.data.valueData = obj.valueData || [];
+
+    // VALUES
+    this.data.valueData = [];
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
-      let i = 0;
       obj.valueData.forEach((map) => {
-        const vm = new ValueMap(map.value, map.text, map);
+        const newData = {};
+        const vm = new ValueMap(map.value, map.text, newData);
+        vm.import(map);
         this.valueMaps.push(vm);
-        this.data.valueData[i] = map;
-        i += 1;
+        this.data.valueData.push(newData);
       });
     }
-    this.data.rangeData = obj.rangeData || [];
+
+    // RANGE
+    this.data.rangeData = [];
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
-      let i = 0;
       obj.rangeData.forEach((map) => {
-        const rm = new RangeMap(map.from, map.to, map.text, map);
+        const newData = {};
+        const rm = new RangeMap(map.from, map.to, map.text, newData);
         this.rangeMaps.push(rm);
-        this.data.rangeData[i] = map;
-        i += 1;
+        this.data.rangeData.push(newData);
       });
     }
 

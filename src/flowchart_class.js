@@ -13,7 +13,6 @@ export default class Flowchart {
     this.xgraph = undefined;
     this.stateHandler = undefined;
     this.import(data);
-    this.init();
   }
 
   import(obj) {
@@ -39,6 +38,7 @@ export default class Flowchart {
     else this.data.grid = (obj.grid !== undefined ? obj.grid : false);
     if (obj.options) this.data.bgColor = obj.options.bgColor;
     else this.data.bgColor = obj.bgColor;
+    this.init();
   }
 
   getData() {

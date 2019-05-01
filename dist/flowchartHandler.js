@@ -46,11 +46,7 @@ function () {
       id: undefined // id of dom
 
     };
-
-    if (this.data !== undefined && this.data != null && this.data.length > 0) {
-      this.import(this.data);
-    } // Events Render
-
+    this.import(this.data); // Events Render
 
     ctrl.events.on('render', function () {
       _this.render();
@@ -64,17 +60,21 @@ function () {
 
       u.log(1, 'FlowchartHandler.import()');
       u.log(0, 'FlowchartHandler.import() obj', obj);
-      var i = 0;
-      obj.forEach(function (map) {
-        var container = _this2.createContainer();
+      this.flowcharts = [];
 
-        var fc = new _flowchart_class.default(map.name, map.xml, container, map);
+      if (obj !== undefined && obj !== null && obj.length > 0) {
+        obj.forEach(function (map) {
+          var container = _this2.createContainer();
 
-        _this2.flowcharts.push(fc);
+          var newData = {};
+          var fc = new _flowchart_class.default(map.name, map.xml, container, newData);
+          fc.import(map);
 
-        _this2.data[i] = map;
-        i += 1;
-      });
+          _this2.flowcharts.push(fc);
+
+          _this2.data.push(newData);
+        });
+      }
     }
   }, {
     key: "getFlowchart",

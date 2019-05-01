@@ -46,6 +46,8 @@ function () {
       text: 'ERROR',
       value: 3
     }];
+    this.logLevel = GF_PLUGIN.logLevel;
+    this.logDisplay = GF_PLUGIN.logDisplay;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     $scope.flowchartHandler = this.ctrl.flowchartHandler;
   }

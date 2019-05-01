@@ -7,34 +7,22 @@ export default class RulesHandler {
     this.$scope = $scope || null;
     this.rules = [];
     this.data = data;
-    // if (version != this.panel.version) this.migrate(this.rules)
-    // else this.import(this.rules);
-    if (this.data !== undefined && this.data !== null && this.data.length > 0) {
-      this.import(this.data);
-    }
+    this.import(this.data);
   }
 
   import(obj) {
     u.log(1, 'RuleHandler.import()');
     u.log(0, 'RuleHandler.import() obj', obj);
-    let i = 0;
-    if (this.data != obj) {
-      this.data = [];
-      const newObj = true;
-    }
     this.rules = [];
-    obj.forEach((map) => {
-      if (newObj) {
-        let data = {}
-        const rule = new Rule(map.pattern, data);
+    if (obj !== undefined && obj !== null && obj.length > 0) {
+      obj.forEach((map) => {
+        const newData = {};
+        const rule = new Rule(map.pattern, newData);
         rule.import(map);
-      else {
-          const rule = new Rule(map.pattern, map);
-        }
         this.rules.push(rule);
-        this.data[i] = map;
-        i += 1;
+        this.data.push(newData);
       });
+    }
   }
 
   getRules() {
@@ -65,8 +53,10 @@ export default class RulesHandler {
   cloneRule(index) {
     const rule = this.getRule(index);
     const data = rule.getData();
-    const newData = JSON.parse(JSON.stringify(data));
+    const newData = {};
     const newRule = new Rule(newData.pattern, newData);
+    newRule.import(data);
+    newData.alias = `Copy of ${newData.alias}`;
     this.rules.splice(index, 0, newRule);
     this.data.splice(index, 0, newData);
     this.activeRuleIndex = index;

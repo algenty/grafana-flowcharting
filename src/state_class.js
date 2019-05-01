@@ -4,6 +4,7 @@ export default class State {
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
+    this.changed = false;
     this.matched = false;
     this.matchedShape = false;
     this.matchedText = false;
@@ -75,6 +76,7 @@ export default class State {
           }
         }
       });
+
       // LINK
       cellProp = this.getCellProp(rule.data.linkProp);
       linkMaps.forEach((link) => {
@@ -103,6 +105,14 @@ export default class State {
     this.matchedText = false;
     this.matchedLink = false;
     u.log(0, 'State.unsetState() state', this);
+  }
+
+  isMatched() {
+    return this.matched;
+  }
+
+  isChanged() {
+    return this.changed;
   }
 
   getCellProp(prop) {
@@ -216,6 +226,7 @@ export default class State {
   applyState() {
     u.log(1, 'State.applyState()');
     if (this.matched) {
+      this.changed = true;
       if (this.matchedShape) {
         this.styles.forEach((style) => {
           // Apply colors
@@ -234,7 +245,7 @@ export default class State {
       if (this.matchedLink) {
         this.xgraph.addLink(this.mxcell, this.currentLink);
       }
-    } else this.restoreCell();
+    } else if (this.changed) this.restoreCell();
   }
 
   restoreCell() {
@@ -246,6 +257,7 @@ export default class State {
     // this.mxcell.setAttribute('link', this.getCurrentLink());
     this.xgraph.removeOverlay(this.mxcell);
     this.xgraph.addLink(this.mxcell, this.originalLink);
+    this.changed = false;
   }
 
   prepare() {

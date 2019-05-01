@@ -36,19 +36,30 @@ plugin.getName = function () {
 
 plugin.getPartialPath = function () {
   return this.partialPath;
-};
+}; // plugin.popover = function (text, tagBook, tagImage) {
+//   const url = this.repository;
+//   const images = `${this.repository}images/`;
+//   const textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+//   let result = `${textEncoded}<br /><br />`;
+//   if (tagBook) result = `${result}<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
+//   if (tagImage) result = `${result}<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
+//   return result;
+// };
+
 
 plugin.popover = function (text, tagBook, tagImage) {
   var url = this.repository;
   var images = "".concat(this.repository, "images/");
   var textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  var result = "".concat(textEncoded, "<br /><br />");
-  if (tagBook) result = "".concat(result, "<a href=\"").concat(url).concat(tagBook, "\" target=\"_blank\"><i class=\"fa fa-book fa-fw\"></i>Help</a>");
-  if (tagImage) result = "".concat(result, "<a href=\"").concat(images).concat(tagImage, ".png\" target=\"_blank\"><i class=\"fa fa-image fa-fw\"></i>Example</a>");
-  return result;
+  var desc = "".concat(textEncoded);
+  var book = '';
+  var image = '';
+  if (tagBook) book = "<a href=\"".concat(url).concat(tagBook, "\" target=\"_blank\"><i class=\"fa fa-book fa-fw\"></i>Help</a>");
+  if (tagImage) image = "<a href=\"".concat(images).concat(tagImage, ".png\" target=\"_blank\"><i class=\"fa fa-image fa-fw\"></i>Example</a>");
+  return "\n  <div id=\"popover\" style=\"display:flex;flex-wrap:wrap;width: 100%;\">\n    <div style=\"flex:1;height:100px;margin-bottom: 20px;\">".concat(desc, "</div>\n    <div style=\"flex:1;height:100px;margin-bottom: 20px;\">").concat(book, "</div>\n    <div style=\"flex-basis: 100%;height:100px;margin-bottom:20px;\">").concat(image, "</div>\n  </div>");
 };
 
-plugin.logLevel = 2;
+plugin.logLevel = 1;
 plugin.logDisplay = true;
 window.GF_PLUGIN = window.GF_PLUGIN || plugin;
 var _default = {

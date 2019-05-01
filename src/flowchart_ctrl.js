@@ -93,23 +93,26 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   link(scope, elem, attrs, ctrl) {
     u.log(1, 'ctrl.link()');
     // RULES
-    debugger
-    this.rulesHandler = new RulesHandler(scope, this.panel.rulesData);
-    if (this.panel.version === undefined) this.rulesHandler.import(this.panel.styles);
-    else if (this.panel.version !== this.version) {
+    const newRulesData = [];
+    this.rulesHandler = new RulesHandler(scope, newRulesData);
+    if (this.panel.version === undefined && this.panel.styles !== undefined) {
       this.rulesHandler.import(this.panel.styles);
-    }
+      delete this.panel.styles;
+    } else this.rulesHandler.import(this.panel.rulesData);
     if (this.panel.newFlag && this.rulesHandler.countRules() === 0) this.rulesHandler.addRule('.*');
+    this.panel.rulesData = newRulesData;
 
     // FLOWCHART
-    this.flowchartHandler = new FlowchartHandler(scope, elem, ctrl, this.panel.flowchartsData);
-    if (this.panel.version === undefined) this.flowchartHandler.import(this.panel.flowchartsData);
-    else if (this.panel.version !== this.version) {
-      this.flowchartHandler.import(this.panel.flowchartsData);
-    }
-    if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
-      this.flowchartHandler.addFlowchart('Main');
-    }
+    const newFlowchartsData = [];
+    this.flowchartHandler = new FlowchartHandler(scope, elem, ctrl, newFlowchartsData);
+    if (this.panel.version === undefined && this.panel.flowchart !== undefined) {
+      this.flowchartHandler.import([this.panel.flowchart]);
+      delete this.panel.flowchart;
+    } else this.flowchartHandler.import(this.panel.flowchartsData);
+    if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) this.flowchartHandler.addFlowchart('Main');
+    this.panel.flowchartsData = newFlowchartsData;
+
+    // Versions
     this.panel.newFlag = false;
     this.panel.version = this.version;
   }

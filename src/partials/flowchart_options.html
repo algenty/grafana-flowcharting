@@ -4,7 +4,9 @@
 			<h5 class="section-heading">mxGraph Edition</h5>
 			<!-- Definition -->
 			<div class="section gf-form-group" style="width:100%;">
-				<h5 class="section-heading">Definition</h5>
+				<h5 class="section-heading">Definition
+						<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Definition of graph', 'DEFINITION_XML#Type')"></span></info-popover>
+				</h5>
 				<!-- Flowchart Definition -->
 				<div class="gf-form">
 					<span class="gf-form-label width-12">
@@ -54,6 +56,7 @@
 							ng-click="editor.edit($index)"
 							>
 							<i class="fa fa-edit pointer"></i> Edit Draw
+							<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Open Graph in draw.io', 'DEFINITION_XML#Buttons','EDIT_EXAMPLE')"></span></info-popover>
 							</button>
 						</div>
 						<div class="gf-form" style="margin-right: 5px;">
@@ -62,6 +65,7 @@
 							ng-click="flowchart.prettify()"
 							>
 							<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAxklEQVQokZWQMUpDURREzzw+kiKIlaWksnIPWttaCkFXkDWI63AFVtmApXswiFjY2IpIIOEdi7xC0PfBud29M3OZiUgXMgH21JpkTdiWEfIA3KhLYAmctf3I6Lm6cYcrm8vfD6oz5DrJC3AAVKAvAG6THAEX6n6SD4D8Ci3HwLQ5fhKef56HRjpRp0m+1LskK8JlpwxR5+q7+qTe11pnvSIGALUkOWzhFil57QUrAEne1AfgUT0day8iVkuSSTPYEtajgv/gG3TbgAtdLpuZAAAAAElFTkSuQmCC"> Prettify
+							<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Format XML code to display or modify', 'DEFINITION_XML#Buttons')"></span></info-popover>
 							</button>
 						</div>
 						<div class="gf-form" style="margin-right: 5px;">
@@ -78,6 +82,7 @@
 							ng-click="flowchart.encode()"
 							>
 							<i class="fas fa-compress-arrows-alt pointer"></i> Compress/Encode
+							<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Zip XML definition for big XML', 'DEFINITION_XML#Buttons')"></span></info-popover>
 							</button>
 						</div>
 						<div class="gf-form" style="margin-right: 5px;">
@@ -86,7 +91,7 @@
 							ng-click="flowchart.decode()"
 							>
 							<i class="fas expand-arrows-alt pointer"></i> Extract/Decode
-							<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Extract xml from content', 'DEFINITION_XML#Buttons','DEFINITION_XML')"></span></info-popover>
+							<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Extract xml from content when compressed', 'DEFINITION_XML#Buttons')"></span></info-popover>
 							</button>
 						</div>
 					</div>
@@ -94,11 +99,15 @@
 		</div>
 		<!-- Option Section -->
 		<div class="editor-row">
-			<h5 class="section-heading">Advanced</h5>
+			<h5 class="section-heading">Advanced
+			</h5>
 			<div class="section gf-form-group">
-				<h5 class="section-heading">Display</h5>
+				<h5 class="section-heading">Display
+				<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Change display graph options', 'ADVANCED_XML#Buttons','ADVANCED_XML2')"></span></info-popover>
+				</h5>
 				<gf-form-switch class="gf-form" label="Scale" label-class="width-12" checked="flowchart.data.scale"
-					on-change="editor.onOptionChange()">
+					on-change="editor.onOptionChange()" 
+					>
 				</gf-form-switch>
 				</gf-form-switch>
 				<gf-form-switch class="gf-form" label="Center" label-class="width-12" checked="flowchart.data.center"
@@ -118,18 +127,16 @@
 				<div class="gf-form" ng-if="!flowchart.data.scale">
 					<span class="gf-form-label width-12">
 						Zoom
-						<info-popover mode="right-normal">
-							Resize graph with value. <br />
-							&lt; 100% : Reduce graph dimension<br />
-							&gt; 100% : increase graph dimension<br />
-						</info-popover>
-					</span>
+						<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Zoom graph, if scale is unchecked. if < 100% : reduce graph, >100% increase graph', 'DEFINITION_XML#Buttons','ADVANCED_XML2')"></span></info-popover>
+					</span> 
 					<input type="text" name="valueDisplayRegex" ng-model="flowchart.data.zoom" style="text-align: right"
 						placeholder="100%" class="gf-form-input max-width-10" ng-blur="editor.onOptionChange()" />
 				</div>
 			</div>
 			<div class="section gf-form-group">
-				<h5 class="section-heading">Others options</h5>
+				<h5 class="section-heading">Others options
+				<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Change options in graph', 'ADVANCED_XML#Buttons','ADVANCED_XML2')"></span></info-popover>
+				</h5>
 				<gf-form-switch class="gf-form" label="Lock" label-class="width-12" checked="flowchart.data.lock"
 					on-change="editor.onOptionChange()">
 				</gf-form-switch>
