@@ -46,7 +46,9 @@
       <div style="padding:30px" ng-hide="rule.data.reduce==true">
         <!-- OPTIONS -->
         <div class="section gf-form-group">
-          <h5 class="section-heading">Options</h5>
+          <h5 class="section-heading">Options
+            <info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Options for mapping objects and metrics', 'MAPPING','fc_archi_example')"></span></info-popover>
+          </h5>
           <div class="gf-form" ng-if="rule.data.type !== 'hidden'">
             <label class="gf-form-label width-14"
               >Rule name

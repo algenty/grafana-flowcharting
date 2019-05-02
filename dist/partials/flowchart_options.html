@@ -1,7 +1,9 @@
 <div class="edit-tab-content">
 	<div class="editor-row" ng-repeat="flowchart in editor.getFlowcharts()">
 		<div class="editor-row">
-			<h5 class="section-heading">mxGraph Edition</h5>
+			<h5 class="section-heading">mxGraph Edition
+					<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Define you flowchart', 'README')"></span></info-popover>
+			</h5>
 			<!-- Definition -->
 			<div class="section gf-form-group" style="width:100%;">
 				<h5 class="section-heading">Definition
