@@ -338,4 +338,3 @@ function () {
 }();
 
 exports.default = State;
-//# sourceMappingURL=state_class.js.map

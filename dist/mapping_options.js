@@ -35,6 +35,7 @@ function () {
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
     $scope.flowchartHandler = this.panelCtrl.flowchartHandler;
     this.flowchartHandler = $scope.ctrl.flowchartHandler;
+    this.rulesHandler = this.panelCtrl.rulesHandler;
     this.unitFormats = _kbn.default.getUnitFormats();
     this.style = [{
       text: 'Disabled',
@@ -216,6 +217,19 @@ function () {
       this.render();
     }
   }, {
+    key: "onColorChange",
+    value: function onColorChange(ruleIndex, colorIndex) {
+      var _this2 = this;
+
+      return function (newColor) {
+        var rule = _this2.rulesHandler.getRule(ruleIndex);
+
+        rule.data.colors[colorIndex] = newColor;
+
+        _this2.onRulesChange();
+      };
+    }
+  }, {
     key: "selectCell",
     value: function selectCell(prop, value) {
       var flowchart = this.flowchartHandler.getFlowchart(0);
@@ -248,4 +262,3 @@ function mappingOptionsTab($q, uiSegmentSrv) {
     controller: MappingOptionsCtrl
   };
 }
-//# sourceMappingURL=mapping_options.js.map

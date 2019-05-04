@@ -939,4 +939,3 @@ function () {
 function formatValue(value, unit, decimals) {
   return _kbn.default.valueFormats[unit](value, decimals, null).toString();
 }
-//# sourceMappingURL=rule_class.js.map

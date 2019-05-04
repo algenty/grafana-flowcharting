@@ -18,4 +18,3 @@ var _flowchart_ctrl = require("./flowchart_ctrl");
   dark: 'plugins/agenty-flowcharting-panel/css/flowchart.dark.css',
   light: 'plugins/agenty-flowcharting-panel/css/flowchart.light.css'
 });
-//# sourceMappingURL=module.js.map

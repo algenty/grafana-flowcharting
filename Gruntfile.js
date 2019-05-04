@@ -89,7 +89,7 @@ module.exports = (grunt) => {
     },
     babel: {
       options: {
-        sourceMap: true,
+        sourceMap: false,
       },
       dist: {
         files: [{

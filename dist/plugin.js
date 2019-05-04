@@ -66,4 +66,3 @@ var _default = {
   plugin: plugin
 };
 exports.default = _default;
-//# sourceMappingURL=plugin.js.map

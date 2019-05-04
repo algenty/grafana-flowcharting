@@ -13,6 +13,7 @@ export class MappingOptionsCtrl {
     $scope.rulesHandler = this.panelCtrl.rulesHandler;
     $scope.flowchartHandler = this.panelCtrl.flowchartHandler;
     this.flowchartHandler = $scope.ctrl.flowchartHandler;
+    this.rulesHandler = this.panelCtrl.rulesHandler;
     this.unitFormats = kbn.getUnitFormats();
     this.style = [
       { text: 'Disabled', value: null },
@@ -105,6 +106,14 @@ export class MappingOptionsCtrl {
     u.log(1, "MappingOptionsCtrl.onRulesChange()");
     this.flowchartHandler.ruleChanged();
     this.render();
+  }
+
+  onColorChange(ruleIndex, colorIndex) {
+    return (newColor) => {
+      const rule = this.rulesHandler.getRule(ruleIndex);
+      rule.data.colors[colorIndex] = newColor;
+      this.onRulesChange();
+    };
   }
 
   selectCell(prop, value) {
