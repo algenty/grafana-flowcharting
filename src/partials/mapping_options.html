@@ -337,7 +337,13 @@
             </div>
           </div>
           <div class="gf-form">
-            <label class="gf-form-label width-12">Value on</label>
+            <label class="gf-form-label width-12">Value on
+              <info-popover mode="right-normal">
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Condition for value replace text.', 'MAPPING#Value on')">
+                </span>
+              </info-popover>
+            </label>
             <div class="gf-form-select-wrapper width-12">
               <select
                 class="gf-form-input"
@@ -348,7 +354,13 @@
             </div>
           </div>
           <div class="gf-form" ng-if="rule.data.textOn != 'n'">
-            <label class="gf-form-label width-12">Update text value</label>
+            <label class="gf-form-label width-12">Update text value
+              <info-popover mode="right-normal">
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Whitch part of text to replace', 'MAPPING','example_text_pattern')">
+                </span>
+              </info-popover>
+            </label>
             <div class="gf-form-select-wrapper width-12">
               <select
                 class="gf-form-input"
@@ -362,7 +374,13 @@
             class="gf-form"
             ng-if="rule.data.textReplace == 'pattern' && rule.data.textOn != 'n'"
           >
-            <label class="gf-form-label width-12">Text pattern</label>
+            <label class="gf-form-label width-12">Text pattern
+              <info-popover mode="right-normal">
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Pattern of text to replace by value of metric/aggregation', 'MAPPING','example_text_pattern')">
+                </span>
+              </info-popover>
+            </label>
             <input
               type="text"
               class="gf-form-input width-12"
