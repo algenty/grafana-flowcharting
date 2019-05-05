@@ -262,3 +262,4 @@ function mappingOptionsTab($q, uiSegmentSrv) {
     controller: MappingOptionsCtrl
   };
 }
+//# sourceMappingURL=mapping_options.js.map

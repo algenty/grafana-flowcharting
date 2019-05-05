@@ -16,6 +16,7 @@ Object {
   "link": false,
   "linkData": Array [],
   "linkOn": "a",
+  "linkParams": false,
   "linkProp": "id",
   "linkUrl": "",
   "mappingType": 1,

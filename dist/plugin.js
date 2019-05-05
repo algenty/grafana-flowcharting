@@ -4,6 +4,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _jquery = _interopRequireDefault(require("jquery"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var plugin = {};
 plugin.dirname = "".concat(__dirname, "/");
 plugin.repository = 'https://algenty.github.io/flowcharting-repository/';
@@ -11,10 +16,12 @@ plugin.mxBasePath = "".concat(plugin.dirname, "libs/mxgraph/javascript/dist/");
 plugin.mxImagePath = "".concat(plugin.mxBasePath, "images/");
 plugin.partialPath = "".concat(plugin.dirname, "/partials/");
 plugin.data = {};
-$.ajaxSetup({
+
+_jquery.default.ajaxSetup({
   async: false
 });
-$.getJSON("".concat(plugin.dirname, "/plugin.json"), function (data) {
+
+_jquery.default.getJSON("".concat(plugin.dirname, "/plugin.json"), function (data) {
   plugin.data = data;
 });
 
@@ -36,15 +43,7 @@ plugin.getName = function () {
 
 plugin.getPartialPath = function () {
   return this.partialPath;
-}; // plugin.popover = function (text, tagBook, tagImage) {
-//   const url = this.repository;
-//   const images = `${this.repository}images/`;
-//   const textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-//   let result = `${textEncoded}<br /><br />`;
-//   if (tagBook) result = `${result}<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
-//   if (tagImage) result = `${result}<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
-//   return result;
-// };
+}; // eslint-disable-next-line func-names
 
 
 plugin.popover = function (text, tagBook, tagImage) {
@@ -62,7 +61,6 @@ plugin.popover = function (text, tagBook, tagImage) {
 plugin.logLevel = 2;
 plugin.logDisplay = true;
 window.GF_PLUGIN = window.GF_PLUGIN || plugin;
-var _default = {
-  plugin: plugin
-};
+var _default = plugin;
 exports.default = _default;
+//# sourceMappingURL=plugin.js.map

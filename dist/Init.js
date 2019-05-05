@@ -26,3 +26,4 @@ window.OPEN_FORM = window.OPEN_FORM || 'open.html'; // Sets the base path, the U
 window.mxBasePath = window.mxBasePath || '../../../src';
 window.mxLanguage = window.mxLanguage || urlParams['lang'];
 window.mxLanguages = window.mxLanguages || ['de'];
+//# sourceMappingURL=Init.js.map

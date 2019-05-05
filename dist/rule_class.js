@@ -60,6 +60,7 @@ function () {
       this.data.link = obj.link !== undefined ? obj.link : false;
       this.data.linkOn = obj.colorOn || 'a';
       this.data.linkUrl = obj.linkUrl || '';
+      this.data.linkParams = obj.linkParams !== undefined ? obj.linkParams : false;
       this.data.textOn = obj.textOn || 'wmd';
       this.data.textReplace = obj.textReplace || 'content';
       this.data.textPattern = obj.textPattern || '/.*/';
@@ -447,6 +448,7 @@ function () {
   }, {
     key: "getLink",
     value: function getLink() {
+      if (this.data.linkParams) return this.data.linkUrl + window.location.search;
       return this.data.linkUrl;
     }
   }, {
@@ -939,3 +941,4 @@ function () {
 function formatValue(value, unit, decimals) {
   return _kbn.default.valueFormats[unit](value, decimals, null).toString();
 }
+//# sourceMappingURL=rule_class.js.map

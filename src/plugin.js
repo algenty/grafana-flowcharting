@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 const plugin = {};
 plugin.dirname = `${__dirname}/`;
 plugin.repository = 'https://algenty.github.io/flowcharting-repository/';
@@ -34,21 +36,12 @@ plugin.getPartialPath = function () {
   return this.partialPath;
 };
 
-// plugin.popover = function (text, tagBook, tagImage) {
-//   const url = this.repository;
-//   const images = `${this.repository}images/`;
-//   const textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-//   let result = `${textEncoded}<br /><br />`;
-//   if (tagBook) result = `${result}<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
-//   if (tagImage) result = `${result}<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
-//   return result;
-// };
-
+// eslint-disable-next-line func-names
 plugin.popover = function (text, tagBook, tagImage) {
   const url = this.repository;
   const images = `${this.repository}images/`;
   const textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  let desc = `${textEncoded}`;
+  const desc = `${textEncoded}`;
   let book = '';
   let image = '';
   if (tagBook) book = `<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
@@ -65,4 +58,5 @@ plugin.logLevel = 2;
 plugin.logDisplay = true;
 
 window.GF_PLUGIN = window.GF_PLUGIN || plugin;
-export default { plugin };
+
+export default plugin;

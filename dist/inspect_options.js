@@ -143,3 +143,4 @@ function inspectOptionsTab($q, uiSegmentSrv) {
     controller: InspectOptionsCtrl
   };
 }
+//# sourceMappingURL=inspect_options.js.map

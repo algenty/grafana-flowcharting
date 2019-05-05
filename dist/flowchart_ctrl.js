@@ -224,3 +224,4 @@ function (_MetricsPanelCtrl) {
 
 exports.MetricsPanelCtrl = exports.FlowchartCtrl = FlowchartCtrl;
 FlowchartCtrl.templateUrl = './partials/module.html';
+//# sourceMappingURL=flowchart_ctrl.js.map

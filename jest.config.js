@@ -8,13 +8,13 @@ module.exports = {
   setupFiles: ['<rootDir>/spec/setup-jest.js'],
   transform: {
     '^.+\\.jsx?$': 'babel-jest',
-    '^.+\\.tsx?$': 'ts-jest'
+    '^.+\\.tsx?$': 'ts-jest',
   },
   moduleNameMapper: {
-    underscore$: 'lodash'
+    underscore$: 'lodash',
   },
-  transformIgnorePatterns: ['./public/.*', './node_modules/.*', './dist/.*'],
+  // transformIgnorePatterns: ['./public/.*', './node_modules/.*', './dist/.*'],
   testRegex: '(\\.|/)(test)\\.(jsx?|tsx?)$',
   transformIgnorePatterns: ['/node_modules/(?!vue-awesome)'],
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json']
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 };

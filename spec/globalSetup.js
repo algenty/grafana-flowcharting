@@ -1,21 +1,21 @@
 import express from 'express';
 import 'babel-polyfill';
 
-var urlReplace = '/public/plugins/agenty-flowcharting-panel';
-var options = {
-  root: __dirname + '/..',
+const urlReplace = '/public/plugins/agenty-flowcharting-panel';
+const options = {
+  root: `${__dirname}/..`,
   dotfiles: 'deny',
   headers: {
     'x-timestamp': Date.now(),
-    'x-sent': true
-  }
+    'x-sent': true,
+  },
 };
 
-var app = express();
+const app = express();
 app.get('*', (req, res) => {
   // console.log('globalSetup : app.get req.path ', req.path);
-  let filePath = req.path.replace(urlReplace, './dist');
-  res.sendFile(filePath, options, function(err) {
+  const filePath = req.path.replace(urlReplace, './dist');
+  res.sendFile(filePath, options, (err) => {
     if (err) {
       console.error('Express error : ', err);
     }
@@ -23,7 +23,9 @@ app.get('*', (req, res) => {
 });
 
 module.exports = () => {
+  // eslint-disable-next-line no-underscore-dangle
   global.__express__ = app.listen(80, 'localhost', () => {
+    // eslint-disable-next-line no-console
     console.log('Express open at port 80');
   });
 };

@@ -72,7 +72,7 @@
     "jest-preset-angular": "^7.0.1",
     "jest-resolve": "^24.7.1",
     "jest-transform-stub": "^2.0.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.1",
     "load-grunt-tasks": "~4.0.0",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
