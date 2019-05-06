@@ -1,6 +1,6 @@
 # Grafana Plugin Flowcharting
 
-![Banner](https://github.com/algenty/flowcharting-repository/blob/master/images/banner_large.png?raw=true)
+![Banner](https://algenty.github.io/flowcharting-repository/images/banner_large.png)
 
 Flowcharting is a plugin for grafana. It aims to display complexe diagram draws with [draw.io](https://draw.io/). Few examples :
   * Technical architecture schema
@@ -10,7 +10,7 @@ Flowcharting is a plugin for grafana. It aims to display complexe diagram draws 
   * UML plan 
   * ...  
 
-Our philosophy, draw your artwork and monitor it.
+Draw your artwork and monitor it.
 
  ## examples
   - Technical schema example
@@ -77,12 +77,11 @@ https://github.com/algenty/grafana-flowcharting
 # Cooming soon/Roadmap
 
 ## 1.0 Pull request
-  - Import Libs shapes from draw.io or custom libs. 
   - Inverse stroke color for connector/edge to see it according theme.
   - Export SVG options.
   - Tooltips on error.
   - Use variables/templates in graph.
-  - Add custom stencils/libs from draw.io
+  - Add custom stencils/libs graph from draw.io
   - Only dark theme is supported at this time
   - Url source not implemented
   - SVG export not implemented
@@ -130,9 +129,11 @@ grafana-cli plugins install agenty-flowcharting-panel
 ```sh
 $ git clone https://github.com/algenty/grafana-flowcharting
 $ npm install --save-dev
-$ ./node_modules/.bin/grunt
+$ yarn build
 $ # Make zip file plugin in archives dir
-$ ./node_modules/.bin/grunt archive
+$ yarn build archive
 $ # for dev watching
-$ ./node_modules/.bin/grunt dev
+$ yarn build dev
+$ # Jest unit test
+$ yarn test
 ```
