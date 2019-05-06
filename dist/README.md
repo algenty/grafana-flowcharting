@@ -1,67 +1,88 @@
 # Grafana Plugin Flowcharting
 
-Complexe Diagram and flowchart for grafana based on mxGraph librairies, see draw.io to discover functionalities :
+![Banner](https://github.com/algenty/flowcharting-repository/blob/master/images/banner_large.png?raw=true)
 
-  - Flowcharts 
-  - Diagrams ( Uml, gant ..)
-  - Floorplans
-  - Maps
-  - Organigrams
-  - And more ... (Edit through draw.io)
- 
+Flowcharting is a plugin for grafana. It aims to display complexe diagram draws with [draw.io](https://draw.io/). Few examples :
+  * Technical architecture schema
+  * Diagrams
+  * Organic plans
+  * Floorplans
+  * UML plan 
+  * ...  
+
+Our philosophy, draw your artwork and monitor it.
+
  ## examples
   - Technical schema example
- <img src="src/img/archi_example.png?raw=true" width="800">
+ <img src="https://algenty.github.io/flowcharting-repository/images/fc_archi_example.png" width="800">  
  
   - workflows or subways example
- <img src="src/img/subway_example.png?raw=true" width="800">
+ <img src="https://algenty.github.io/flowcharting-repository/images/fc_subway_example.png" width="800">  
 See more example at draw.io
 
-# Documentation
+# Getting started
+https://algenty.github.io/flowcharting-repository/STARTED.html
 
+# Documentation
+https://algenty.github.io/flowcharting-repository/
+
+# Project site
+https://github.com/algenty/grafana-flowcharting
 
 # Features
 
+## 0.3.0 - 2019-05-07
+### Added
+    - Full review of code (ES6 Class mode)
+    - Dynamic documentation/Examples on popover (thx SCHKN)
+    - Params link option, add params of dashboard to link.
+    - 72 Unit tests with Jest to increase quality.
+    - Fill/text/stoke rules on the same object is possible.
+    - Mapping selector helper (chain in mapping)
+    - Icon overlay state (display icon warning when NOK)
+    - Implemented the conditions to display text according to the states.
+    - new inspect Tab with :
+      - Renamer ID (double click on ID)
+      - State status
+      - Debug mode
+    - Custom Link Mapping overrite.
+### Fixed
+    - Substring replace on text (Issue #8)
+    - Editor object not found Exception (Issue #1)
+    - Original Link (Issue #9)
+    - Change the colors (Issue #14)
 
-## 0.2.5 (03/04/19)
-  - Bugs fix.
-  - Compress and uncompress button under xml source to optimize space in db
-  - Prettyfier and minifier of xml source
-  - Mapping Helper (chain icon)
+## 0.2.5 - 2019-04-10
+### Added
+    - Mapping Helper for select object with mouse
+### Fixed
+    - Substring replace on text (Issue #8)
+    - Editor object not found Exception (Issue #1)
 
+## 0.2.0 - 2019-03-10
+### Added
+    - Display graph through xml definition
+    - Calibrate display (scale, center, background)
+    - Inspect tab to test states and shape from graph.
+    - Mapping values and colors (use stroke in color options for arrows instead fill)
+    - String type added with range or value mapping.
+    - Date type added
+    - multi rules with expand/collapes for better display, possibility to reorg rules
 
-### Not work
-  - Only dark theme suported
-  - Url Source for graph definition
-  - Invert stroke color of arrow options
-  - Coloring Gradient is used on shape
+## 0.1.0 - 2019-09-02
+### Added
+    - Display graph with mxgraph libs
+    - Inspect tab to explore object in graph and preview colors
 
-## 0.2 (18/03/19)
-### Works
-  - Display graph through xml definition
-  - Calibrate display (scale, center, background)
-  - Inspect tab to test states and shape from graph.
-  - Mapping values and colors (use stroke in color options for arrows instead fill)
-  - String type added with range or value mapping.
-  - Date type added
-  - multi rules with expand/collapes for better display, possibility to reorg rules
-
-## 0.1
-  - Display Graph
-  - inspect tab
-
-# Cooming soon
+# Cooming soon/Roadmap
 
 ## 1.0 Pull request
-  - Link on shape/text
   - Import Libs shapes from draw.io or custom libs. 
   - Inverse stroke color for connector/edge to see it according theme.
   - Export SVG options.
   - Tooltips on error.
-  - Mapping on variables/templates.
-  - Add custom stencils.
-  - Best manuals/docs when i would find contributors better than me in english.
-  - Set visible or not according to state.
+  - Use variables/templates in graph.
+  - Add custom stencils/libs from draw.io
   - Only dark theme is supported at this time
   - Url source not implemented
   - SVG export not implemented
@@ -70,9 +91,13 @@ See more example at draw.io
   - Multi graph with auto link when errors
   - Gradien Mode for color
 
-# issues
+# Support and contact
 
-Bugs and issues on https://github.com/algenty/grafana-flowcharting/issues
+# Support or Contact
+
+  - Having troubles with flowcharting ? Check out [issues](https://github.com/algenty/grafana-flowcharting/issues)
+  - Email : <grafana.flowcharting@gmail.com>
+  - Twitter : https://twitter.com/gf_flowcharting
 
 # Tech
 
@@ -82,10 +107,6 @@ Grafan flowcharting use libs :
 * [lodash] - awesome web-based text editor
 * [jquery] - Markdown parser done right. Fast and easy to extend.
 * [mxGraph] - great UI boilerplate for modern web apps
-
-
-And of course Flowcharting plugin itself is open source with a [public repository][algenty]
- on GitHub.
 
 # Installation
 

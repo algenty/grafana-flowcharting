@@ -31,14 +31,13 @@
       }
     ],
     "version": "0.3.0",
-    "updated": "2019-04-03",
+    "updated": "2019-05-07",
     "logos": {
       "small": "img/agenty-flowcharting.svg",
       "large": "img/agenty-flowcharting.svg"
     }
   },
   "dependencies": {
-    "grafanaVersion": "4.x.x",
     "grafanaVersion": "5.x.x",
     "plugins": []
   }
