@@ -14,7 +14,7 @@ Draw your artwork and monitor it.
 
  ## example
   - Technical schema example  
-![example 1](https://algenty.github.io/flowcharting-repository/images/fc_archi_example.png)
+![example 1](https://algenty.github.io/flowcharting-repository/images/fc_archi_example_small.png)
  
 See more example at draw.io  
 
