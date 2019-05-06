@@ -32,7 +32,10 @@ https://github.com/algenty/grafana-flowcharting
 # Features
 
 ## 0.3.0 - 2019-05-07
+    /!\ Possible breaking change with 0.2.0 and 0.2.5 but it will compatible with next release.
+
 ### Added
+    - Migration process for next release.
     - Full review of code (ES6 Class mode)
     - Dynamic documentation/Examples on popover (thx SCHKN)
     - Params link option, add params of dashboard to link.
