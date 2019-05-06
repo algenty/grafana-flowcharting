@@ -8,7 +8,7 @@
 	<div class="editor-row">
 		<h5 class="section-heading">Graph inspect</h5>
 		<div class="table-panel-container">
-			<div class="table-panel-header-bg" />
+			<div class="table-panel-header-bg"/>
 			<div class="table-panel-scroll" style="max-height: 300px;">
 				<table class="table-panel-table">
 					<thead>
@@ -16,6 +16,11 @@
 							<th>
 								<div class="table-panel-table-header-inner pointer">
 									Id
+									<info-popover mode="right-normal">
+										<span
+											ng-bind-html="GF_PLUGIN.popover('Id of object, double click on it to rename', 'INSPECT')">
+										</span>
+									</info-popover>
 								</div>
 							</th>
 							<th>

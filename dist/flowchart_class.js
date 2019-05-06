@@ -275,4 +275,3 @@ function () {
 }();
 
 exports.default = Flowchart;
-//# sourceMappingURL=flowchart_class.js.map

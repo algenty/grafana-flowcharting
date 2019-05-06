@@ -273,11 +273,11 @@
           </div>
           <div class="gf-form">
             <label class="gf-form-label width-8">Colors
-                <info-popover mode="right-normal">
-                    <span
-                      ng-bind-html="GF_PLUGIN.popover('Select a color and opacity for each state.', 'MAPPING#Thresholds')">
-                    </span>
-                  </info-popover>
+              <info-popover mode="right-normal">
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Select a color and opacity for each state.', 'MAPPING#Thresholds')">
+                </span>
+              </info-popover>
             </label>
             <span class="gf-form-label">
               <color-picker
@@ -318,7 +318,13 @@
           class="section gf-form-group"
           ng-if="['number', 'string'].indexOf(rule.data.type) !== -1"
         >
-          <h5 class="section-heading">Display</h5>
+          <h5 class="section-heading">Display
+            <info-popover mode="right-normal">
+              <span
+                ng-bind-html="GF_PLUGIN.popover('Select the condition to display the colors, values and link', 'MAPPING')">
+              </span>
+            </info-popover>
+          </h5>
           <div class="gf-form">
             <label class="gf-form-label width-12">Color on
                 <info-popover mode="right-normal">
@@ -393,7 +399,13 @@
 
         <!-- LINK -->
         <div class="section gf-form-group">
-          <h5 class="section-heading">Link</h5>
+          <h5 class="section-heading">Link
+            <info-popover mode="right-normal">
+              <span
+                ng-bind-html="GF_PLUGIN.popover('Overrite the link when state change', 'MAPPING')">
+              </span>
+            </info-popover>
+          </h5>
           <gf-form-switch
             class="gf-form"
             label-class="width-12"
@@ -402,7 +414,13 @@
             on-change="editor.onRulesChange()"
           ></gf-form-switch>
           <div class="gf-form" ng-if="rule.data.link">
-            <label class="gf-form-label width-12">Overwrite link on</label>
+            <label class="gf-form-label width-12">Overwrite link on
+              <info-popover mode="right-normal">
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Open link definition', 'MAPPING')">
+                </span>
+              </info-popover>
+            </label>
             <div class="gf-form-select-wrapper width-12">
               <select
                 class="gf-form-input"
@@ -416,20 +434,9 @@
             <label class="gf-form-label width-12">
               Url
               <info-popover mode="right-normal">
-                <p>Specify an URL (relative or absolute)</p>
-                <!-- <span>
-                  Use special variables to specify cell values:
-                  <br />
-                  <em>${__cell}</em> refers to current cell value
-                  <br />
-                  <em>${__cell_n}</em> refers to Nth metric value in current
-                  row. Metric indexes are started from 0. For instance,
-                  <em>${__cell_1}</em> refers to second metric's value.
-                  <br />
-                  <em>${__cell:raw}</em> syntax. By default values are URI
-                  encoded. If the value is a complete URL you can disable all
-                  encoding using
-                </span> -->
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Specify an URL (relative or absolute)', 'MAPPING')">
+                </span>
               </info-popover>
             </label>
             <input
@@ -455,7 +462,13 @@
         <div class="editor-row">
           <!-- SHAPE MAPPING -->
           <div class="section gf-form-group">
-            <h5 class="section-heading">Color Mappings</h5>
+            <h5 class="section-heading">Color Mappings
+              <info-popover mode="right-normal">
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Select the objects to colorize', 'MAPPING','fc_subway_example.png')">
+                </span>
+              </info-popover>
+            </h5>
             <div class="gf-form">
               <span class="gf-form-label width-8">
                 Props
@@ -548,7 +561,13 @@
 
           <!-- TEXT MAPPING -->
           <div class="section gf-form-group">
-            <h5 class="section-heading">Text Mappings</h5>
+            <h5 class="section-heading">Text Mappings
+              <info-popover mode="right-normal">
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Select the text object to replace by value', 'MAPPING','fc_subway_example.png')">
+                </span>
+              </info-popover>
+            </h5>
             <div class="gf-form">
               <span class="gf-form-label width-8">
                 Props

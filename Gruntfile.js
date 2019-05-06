@@ -89,7 +89,7 @@ module.exports = (grunt) => {
     },
     babel: {
       options: {
-        sourceMap: true,
+        sourceMap: false,
       },
       dist: {
         files: [{
@@ -162,7 +162,7 @@ module.exports = (grunt) => {
         },
         expand: true,
         cwd: '.',
-        src: ['**/*', '!node_modules/**', '!bower_components/**', '!others/**', '!.git/**', '!archives/**', '!public/**', '!spec/__snapshots__/**'],
+        src: ['**/*', '!node_modules/**', '!bower_components/**', '!others/**', '!.git/**', '!archives/**', '!public/**', '!backup/**', '!spec/__snapshots__/**'],
         dest: 'grafana-flowcharting',
       },
     },

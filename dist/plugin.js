@@ -63,4 +63,3 @@ plugin.logDisplay = true;
 window.GF_PLUGIN = window.GF_PLUGIN || plugin;
 var _default = plugin;
 exports.default = _default;
-//# sourceMappingURL=plugin.js.map
