@@ -10,7 +10,7 @@ Flowcharting is a plugin for grafana. It aims to display complexe diagram draws 
   * UML plan 
   * ...  
 
-Our philosophy, draw your artwork and monitor it.
+Draw your artwork and monitor it.
 
  ## examples
   - Technical schema example
