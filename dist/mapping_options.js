@@ -205,8 +205,8 @@ function () {
     }
   }, {
     key: "setUnitFormat",
-    value: function setUnitFormat(column, subItem) {
-      column.unit = subItem.value;
+    value: function setUnitFormat(rule, subItem) {
+      rule.unit = subItem.value;
       this.onRulesChange();
     }
   }, {

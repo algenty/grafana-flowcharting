@@ -10,15 +10,13 @@ Flowcharting is a plugin for grafana. It aims to display complexe diagram draws 
   * UML plan 
   * ...  
 
-Our philosophy, draw your artwork and monitor it.
+Draw your artwork and monitor it.
 
- ## examples
-  - Technical schema example
- <img src="https://algenty.github.io/flowcharting-repository/images/fc_archi_example.png" width="800">  
+ ## example
+  - Technical schema example  
+![example 1](https://github.com/algenty/flowcharting-repository/blob/master/images/fc_archi_example.png?raw=true)
  
-  - workflows or subways example
- <img src="https://algenty.github.io/flowcharting-repository/images/fc_subway_example.png" width="800">  
-See more example at draw.io
+See more example at draw.io  
 
 # Getting started
 https://algenty.github.io/flowcharting-repository/STARTED.html

@@ -97,8 +97,8 @@ export class MappingOptionsCtrl {
     this.panelCtrl.render();
   }
 
-  setUnitFormat(column, subItem) {
-    column.unit = subItem.value;
+  setUnitFormat(rule, subItem) {
+    rule.unit = subItem.value;
     this.onRulesChange();
   }
 
