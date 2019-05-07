@@ -123,6 +123,7 @@ export default class XGraph {
     this.center = true;
     this.zoom = false;
     this.grid = false;
+    this.bgColor = undefined;
     this.zoomPercent = '1';
     this.cells = {};
     this.cells.id = [];
@@ -138,7 +139,7 @@ export default class XGraph {
     const Graph = require('./Graph')({
       libs: 'arrows;basic;bpmn;flowchart',
     });
-    const Shapes = require('./Shapes');
+    require('./Shapes');
     this.graph = new Graph(this.container);
     // /!\ What is setPannig
     // this.graph.setPanning(true);
@@ -183,6 +184,7 @@ export default class XGraph {
     this.scaleGraph(this.scale);
     this.gridGraph(this.grid);
     this.centerGraph(this.center);
+    this.bgGraph(this.bgColor);
     this.graph.refresh();
   }
 
@@ -239,6 +241,16 @@ export default class XGraph {
   unzoomGraph() {
     this.zoom = false;
     this.graph.zoomActual();
+  }
+
+  bgGraph(bgColor) {
+    const $div = $(this.container);
+    if (bgColor) {
+      this.bgColor = bgColor;
+      $div.css("background-color", bgColor);
+    } else {
+      $div.css("background-color", "");
+    }
   }
 
   getMxGraph() {

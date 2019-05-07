@@ -150,6 +150,7 @@ export default class FlowchartHandler {
       flowchart.setTooltip(flowchart.data.tooltip);
       flowchart.setLock(flowchart.data.lock);
       flowchart.setZoom(flowchart.data.zoom);
+      flowchart.setBgColor(flowchart.data.bgColor);
     });
   }
 

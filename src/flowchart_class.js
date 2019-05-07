@@ -128,6 +128,17 @@ export default class Flowchart {
     this.xgraph.scale = bool;
   }
 
+  setBgColor(bgColor) {
+    this.data.bgColor = bgColor;
+    this.xgraph.bgColor = bgColor;
+  }
+
+  bgColor(bgColor) {
+    this.data.bgColor = bgColor;
+    if (bgColor) this.xgraph.bgGraph(bgColor);
+  }
+
+
   scale(bool) {
     // u.log(1, "Flowchart.scale()");
     if (bool !== undefined) this.data.scale = bool;

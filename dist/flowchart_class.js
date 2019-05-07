@@ -155,6 +155,18 @@ function () {
       this.xgraph.scale = bool;
     }
   }, {
+    key: "setBgColor",
+    value: function setBgColor(bgColor) {
+      this.data.bgColor = bgColor;
+      this.xgraph.bgColor = bgColor;
+    }
+  }, {
+    key: "bgColor",
+    value: function bgColor(_bgColor) {
+      this.data.bgColor = _bgColor;
+      if (_bgColor) this.xgraph.bgGraph(_bgColor);
+    }
+  }, {
     key: "scale",
     value: function scale(bool) {
       // u.log(1, "Flowchart.scale()");

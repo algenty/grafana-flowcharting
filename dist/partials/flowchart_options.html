@@ -139,9 +139,11 @@
 				<h5 class="section-heading">Others options
 				<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Change options in graph', 'ADVANCED_XML#Buttons','ADVANCED_XML2')"></span></info-popover>
 				</h5>
+				<!-- Lock -->
 				<gf-form-switch class="gf-form" label="Lock" label-class="width-12" checked="flowchart.data.lock"
 					on-change="editor.onOptionChange()">
 				</gf-form-switch>
+				<!-- Tooltip -->
 				<gf-form-switch class="gf-form" label="Tooltip" label-class="width-12" checked="flowchart.data.tooltip"
 				on-change="editor.onOptionChange()">
 				</gf-form-switch>
