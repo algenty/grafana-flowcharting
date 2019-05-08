@@ -29,7 +29,7 @@ https://github.com/algenty/grafana-flowcharting
 
 # Features
 
-## 0.3.0 - 2019-05-07
+## [0.3.0] - 2019-05-07
 ### Added
   /!\ Possible breaking change with 0.2.0 and 0.2.5 but it will compatible with next release.  
     
