@@ -28,10 +28,14 @@
       {
         "name": "Apache License",
         "url": "https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE"
+      },
+      {
+        "name": "Documentation",
+        "url": "https://algenty.github.io/flowcharting-repository/"
       }
     ],
     "version": "0.3.0",
-    "updated": "2019-05-07",
+    "updated": "2019-05-08",
     "logos": {
       "small": "img/agenty-flowcharting.svg",
       "large": "img/agenty-flowcharting.svg"
