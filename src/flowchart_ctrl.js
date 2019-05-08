@@ -34,6 +34,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       flowchartsData: [],
     };
 
+
     _.defaults(this.panel, this.panelDefaults);
     this.panel.graphId = `flowchart_${this.panel.id}`;
     this.containerDivId = `container_${this.panel.graphId}`;
@@ -91,8 +92,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
+    console.log("elem ", elem);
+    console.log("elem.parent ", elem.parent());
+    console.log("elem.parent.parent ", elem.parent().parent());
     u.log(1, 'ctrl.link()');
     // RULES
+
     const newRulesData = [];
     this.rulesHandler = new RulesHandler(scope, newRulesData);
     if (this.panel.version === undefined && this.panel.styles !== undefined) {

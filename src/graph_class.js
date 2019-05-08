@@ -140,6 +140,7 @@ export default class XGraph {
       libs: 'arrows;basic;bpmn;flowchart',
     });
     require('./Shapes');
+    require('./Graph_over');
     this.graph = new Graph(this.container);
     // /!\ What is setPannig
     // this.graph.setPanning(true);
