@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create State Create State of cell 1`] = `undefined`;
+
+exports[`MxGraph with properties 1`] = `"received is not a function"`;
