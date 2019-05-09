@@ -1,0 +1,26 @@
+{
+  "name": "flowcharting",
+  "description": "flow charting plugin for Grafana",
+  "main": "src/module.js",
+  "authors": [
+    "Arnaud GENTY"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "grafana",
+    "plugin",
+    "panel",
+    "flowchart"
+  ],
+  "homepage": "https://github.com/algenty/grafana-flowcharting",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "mxgraph": "^3.9.12"
+  }
+}
