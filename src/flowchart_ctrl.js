@@ -92,9 +92,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
-    console.log("elem ", elem);
-    console.log("elem.parent ", elem.parent());
-    console.log("elem.parent.parent ", elem.parent().parent());
     u.log(1, 'ctrl.link()');
     // RULES
 

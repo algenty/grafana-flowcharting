@@ -13,7 +13,8 @@ mxTooltipHandler.prototype.show = function (tip, x, y) {
     this.div.style.zIndex = this.zIndex; // this.div.style.zIndex = 1;
     // this.div.style.left = `${x + origin.x}px`;
 
-    this.div.style.left = "".concat(x - 20, "px"); // this.div.style.top = `${y + mxConstants.TOOLTIP_VERTICAL_OFFSET + origin.y}px`;
+    this.div.style.left = "".concat(x - 20, "px");
+    console.log("X : " + x, " Y : " + y); // this.div.style.top = `${y + mxConstants.TOOLTIP_VERTICAL_OFFSET + origin.y}px`;
 
     this.div.style.top = "".concat(y - 70, "px");
 
@@ -32,7 +33,6 @@ mxTooltipHandler.prototype.show = function (tip, x, y) {
 mxTooltipHandler.prototype.init = function () {
   if (this.div === null || this.div === undefined) {
     this.div = $(".mxTooltip")[0];
-    console.log("div ", this.div);
     this.div.style.visibility = 'hidden';
     mxEvent.addGestureListeners(this.div, mxUtils.bind(this, function (evt) {
       this.hideTooltip();
