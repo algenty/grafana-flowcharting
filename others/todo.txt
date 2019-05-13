@@ -1,0 +1,3 @@
+Template changed
+https://community.grafana.com/t/catch-event-on-template-variable-changing-in-custom-plugin-develop/8518
+https://community.grafana.com/t/whats-the-best-way-to-access-dashboard-variables-within-a-plugin/1937/7

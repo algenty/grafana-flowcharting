@@ -82,9 +82,10 @@ https://github.com/algenty/grafana-flowcharting
 
 ## 1.0 Pull request
   - Import Libs shapes from draw.io or custom libs. 
+  - Display tooltip
   - Inverse stroke color for connector/edge to see it according theme.
   - Export SVG options.
-  - Tooltips on error.
+  - Add data to tooltip (TooltipOn & mapping).
   - Use variables/templates in graph.
   - Add custom stencils/libs from draw.io
   - Only dark theme is supported at this time
@@ -94,8 +95,6 @@ https://github.com/algenty/grafana-flowcharting
 ## Pull request for version 2.0
   - Multi graph with auto link when errors
   - Gradien Mode for color
-
-# Support and contact
 
 # Support or Contact
 

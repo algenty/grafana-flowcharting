@@ -31,9 +31,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       format: 'short',
       valueName: 'current',
       rulesData: [],
-      flowchartsData: [],
+      flowchartsData: []
     };
-
 
     _.defaults(this.panel, this.panelDefaults);
     this.panel.graphId = `flowchart_${this.panel.id}`;
@@ -47,6 +46,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
+    // this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
+    $rootScope.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
   }
 
   //
@@ -59,19 +60,24 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRefresh() {
-    u.log(1, 'ctrl.onRefresh()');
+    u.log(1, 'FlowchartCtrl.onRefresh()');
     this.onRender();
   }
 
+  onVarChanged(variable) {
+    u.log(1, 'FlowchartCtrl.onVarChanged()');
+    console.log('variable ', variable);
+  }
+
   onRender() {
-    u.log(1, 'ctrl.onRender()');
+    u.log(1, 'FlowchartCtrl.onRender()');
   }
 
   onDataReceived(dataList) {
-    u.log(1, 'ctrl.onDataReceived()');
-    u.log(0, 'ctrl.onDataReceived() dataList', dataList);
+    u.log(1, 'FlowchartCtrl.onDataReceived()');
+    u.log(0, 'FlowchartCtrl.onDataReceived() dataList', dataList);
     this.series = dataList.map(this.seriesHandler.bind(this));
-    u.log(0, 'ctrl.onDataReceived() this.series', dataList);
+    u.log(0, 'FlowchartCtrl.onDataReceived() this.series', dataList);
     this.flowchartHandler.dataChanged();
     this.render();
   }
@@ -92,7 +98,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
-    u.log(1, 'ctrl.link()');
+    u.log(1, 'FlowchartCtrl.link()');
     // RULES
 
     const newRulesData = [];
@@ -111,7 +117,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.import([this.panel.flowchart]);
       delete this.panel.flowchart;
     } else this.flowchartHandler.import(this.panel.flowchartsData);
-    if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) this.flowchartHandler.addFlowchart('Main');
+    if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0)
+      this.flowchartHandler.addFlowchart('Main');
     this.panel.flowchartsData = newFlowchartsData;
 
     // Versions
@@ -125,7 +132,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.publishAppEvent('show-modal', {
       templateHtml: '<export-data-modal panel="panel" data="tableData"></export-data-modal>',
       scope,
-      modalClass: 'modal--narrow',
+      modalClass: 'modal--narrow'
     });
   }
 
@@ -139,11 +146,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
 
   seriesHandler(seriesData) {
-    u.log(1, 'ctrl.seriesHandler()');
+    u.log(1, 'FlowchartCtrl.seriesHandler()');
     const series = new TimeSeries({
       datapoints: seriesData.datapoints,
       alias: seriesData.target,
-      unit: seriesData.unit,
+      unit: seriesData.unit
     });
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
     const datapoints = seriesData.datapoints || [];

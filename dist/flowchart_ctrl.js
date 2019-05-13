@@ -91,8 +91,10 @@ function (_MetricsPanelCtrl) {
 
     _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_assertThisInitialized(_this)));
 
-    _this.events.on('init-panel-actions', _this.onInitPanelActions.bind(_assertThisInitialized(_this)));
+    _this.events.on('init-panel-actions', _this.onInitPanelActions.bind(_assertThisInitialized(_this))); // this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
 
+
+    $rootScope.onAppEvent('template-variable-value-updated', _this.onVarChanged.bind(_assertThisInitialized(_this)), $scope);
     return _this;
   } //
   // EVENTS FCT
@@ -109,21 +111,27 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onRefresh",
     value: function onRefresh() {
-      u.log(1, 'ctrl.onRefresh()');
+      u.log(1, 'FlowchartCtrl.onRefresh()');
       this.onRender();
+    }
+  }, {
+    key: "onVarChanged",
+    value: function onVarChanged(variable) {
+      u.log(1, 'FlowchartCtrl.onVarChanged()');
+      console.log('variable ', variable);
     }
   }, {
     key: "onRender",
     value: function onRender() {
-      u.log(1, 'ctrl.onRender()');
+      u.log(1, 'FlowchartCtrl.onRender()');
     }
   }, {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
-      u.log(1, 'ctrl.onDataReceived()');
-      u.log(0, 'ctrl.onDataReceived() dataList', dataList);
+      u.log(1, 'FlowchartCtrl.onDataReceived()');
+      u.log(0, 'FlowchartCtrl.onDataReceived() dataList', dataList);
       this.series = dataList.map(this.seriesHandler.bind(this));
-      u.log(0, 'ctrl.onDataReceived() this.series', dataList);
+      u.log(0, 'FlowchartCtrl.onDataReceived() this.series', dataList);
       this.flowchartHandler.dataChanged();
       this.render();
     }
@@ -147,7 +155,7 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
-      u.log(1, 'ctrl.link()'); // RULES
+      u.log(1, 'FlowchartCtrl.link()'); // RULES
 
       var newRulesData = [];
       this.rulesHandler = new _rulesHandler.default(scope, newRulesData);
@@ -197,7 +205,7 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "seriesHandler",
     value: function seriesHandler(seriesData) {
-      u.log(1, 'ctrl.seriesHandler()');
+      u.log(1, 'FlowchartCtrl.seriesHandler()');
       var series = new _time_series.default({
         datapoints: seriesData.datapoints,
         alias: seriesData.target,
