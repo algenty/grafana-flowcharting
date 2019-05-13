@@ -50,7 +50,7 @@ var FlowchartCtrl =
 function (_MetricsPanelCtrl) {
   _inherits(FlowchartCtrl, _MetricsPanelCtrl);
 
-  function FlowchartCtrl($scope, $injector, $rootScope) {
+  function FlowchartCtrl($scope, $injector, $rootScope, templateSrv) {
     var _this;
 
     _classCallCheck(this, FlowchartCtrl);
@@ -59,6 +59,7 @@ function (_MetricsPanelCtrl) {
     _this.version = '0.3.0';
     _this.$rootScope = $rootScope;
     _this.$scope = $scope;
+    _this.templateSrv = templateSrv;
     _this.unitFormats = _kbn.default.getUnitFormats();
     _this.changedSource = true;
     _this.changedData = true;
@@ -116,9 +117,10 @@ function (_MetricsPanelCtrl) {
     }
   }, {
     key: "onVarChanged",
-    value: function onVarChanged(variable) {
+    value: function onVarChanged(args) {
       u.log(1, 'FlowchartCtrl.onVarChanged()');
-      console.log('variable ', variable);
+      console.log('variable ', args);
+      console.log("this.templateSrv ", this.templateSrv);
     }
   }, {
     key: "onRender",
@@ -198,6 +200,15 @@ function (_MetricsPanelCtrl) {
     value: function setUnitFormat(subItem) {
       this.panel.format = subItem.value;
       this.refresh();
+    }
+  }, {
+    key: "getVariables",
+    value: function getVariables() {
+      if (this.templateSrv !== undefined && this.templateSrv !== null) {
+        return _.map(this.templateSrv.variables, function (variable) {
+          return "${".concat(variable.name, "}");
+        });
+      }
     } //
     // Series
     //

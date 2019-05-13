@@ -72,24 +72,29 @@ export class MappingOptionsCtrl {
     };
 
     this.getCellNamesForShape = () => {
-      u.log(1, 'mapping_options.getCellNamesForShape()');
+      u.log(1, 'MappingOptionsCtrl.getCellNamesForShape()');
       const flowchart = this.flowchartHandler.getFlowchart(0);
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getCellNamesForText = () => {
-      u.log(1, 'mapping_options.getCellNamesForText()');
+      u.log(1, 'MappingOptionsCtrl.getCellNamesForText()');
       const flowchart = this.flowchartHandler.getFlowchart(0);
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getCellNamesForLink = () => {
-      u.log(1, 'mapping_options.getCellNamesForLink()');
+      u.log(1, 'MappingOptionsCtrl.getCellNamesForLink()');
       const flowchart = this.flowchartHandler.getFlowchart(0);
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
+    };
+
+    this.getVariables = () => {
+      u.log("MappingOptionsCtrl.getVariables");
+      return this.panelCtrl.getVariables();
     };
   }
 

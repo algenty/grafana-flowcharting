@@ -4,10 +4,11 @@
 
 ### Added
   - Tooltip to display attributes, style problème of place
-  - draw.io Libs, style problem of size
-  - Variables/Templates type for text mapping
+  - TODO draw.io Libs, style problem of size
+  - TODO Variables/Templates type for text mapping
 
 ### Fixed
+  - TODO xmlgraph in inspect save without state
 
 ## [[0.3.0]](archives/agenty-flowcharting-panel-0.3.0.zip) - 2019-05-07
 ### Added

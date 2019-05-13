@@ -795,6 +795,11 @@
                     class="gf-form-input max-width-8"
                     ng-model="map.data.text"
                     placeholder="Text"
+                    bs-typeahead="editor.getVariables"
+                    bs-tooltip="'Specify string or variables to replace values'"
+                    data-min-length="0"
+                    data-items="100"
+                    data-placement="right"
                     ng-blur="editor.onRulesChange()"
                     ng-model-onblur
                   />

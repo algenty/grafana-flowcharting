@@ -165,7 +165,7 @@ function () {
     };
 
     this.getCellNamesForShape = function () {
-      u.log(1, 'mapping_options.getCellNamesForShape()');
+      u.log(1, 'MappingOptionsCtrl.getCellNamesForShape()');
 
       var flowchart = _this.flowchartHandler.getFlowchart(0);
 
@@ -176,7 +176,7 @@ function () {
     };
 
     this.getCellNamesForText = function () {
-      u.log(1, 'mapping_options.getCellNamesForText()');
+      u.log(1, 'MappingOptionsCtrl.getCellNamesForText()');
 
       var flowchart = _this.flowchartHandler.getFlowchart(0);
 
@@ -187,7 +187,7 @@ function () {
     };
 
     this.getCellNamesForLink = function () {
-      u.log(1, 'mapping_options.getCellNamesForLink()');
+      u.log(1, 'MappingOptionsCtrl.getCellNamesForLink()');
 
       var flowchart = _this.flowchartHandler.getFlowchart(0);
 
@@ -195,6 +195,11 @@ function () {
       return _.map(cells, function (t) {
         return t;
       });
+    };
+
+    this.getVariables = function () {
+      u.log("MappingOptionsCtrl.getVariables");
+      return _this.panelCtrl.getVariables();
     };
   }
 
