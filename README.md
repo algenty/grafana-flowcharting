@@ -95,8 +95,6 @@ https://github.com/algenty/grafana-flowcharting
   - Multi graph with auto link when errors
   - Gradien Mode for color
 
-# Support and contact
-
 # Support or Contact
 
   - Having troubles with flowcharting ? Check out [issues](https://github.com/algenty/grafana-flowcharting/issues)
