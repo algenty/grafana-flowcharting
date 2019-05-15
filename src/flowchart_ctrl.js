@@ -68,8 +68,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onVarChanged(args) {
     u.log(1, 'FlowchartCtrl.onVarChanged()');
-    console.log('variable ', args);
-    console.log("this.templateSrv ", this.templateSrv);
+    // console.log('variable ', args);
+    // console.log("this.templateSrv ", this.templateSrv);
   }
 
   onRender() {

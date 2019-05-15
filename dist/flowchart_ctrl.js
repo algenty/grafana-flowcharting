@@ -118,9 +118,8 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onVarChanged",
     value: function onVarChanged(args) {
-      u.log(1, 'FlowchartCtrl.onVarChanged()');
-      console.log('variable ', args);
-      console.log("this.templateSrv ", this.templateSrv);
+      u.log(1, 'FlowchartCtrl.onVarChanged()'); // console.log('variable ', args);
+      // console.log("this.templateSrv ", this.templateSrv);
     }
   }, {
     key: "onRender",
