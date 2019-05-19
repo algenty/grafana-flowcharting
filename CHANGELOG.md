@@ -1,7 +1,7 @@
 # Changelog
 
 ## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-05-19  
-/!\ NOT STABLE
+/!\ NOT STABLE  
 ### Added  
   - Tooltip support, little bug on display splitted when tooltip in border of panel
   - Variables/templates support, accept variable like ${} : 
@@ -9,6 +9,7 @@
     - In text mapping when type in sring for "Range to text" and "Value to text"
     - In link ovewrite
   - full libs from draw.io support  
+  
 ### Fixed  
   - Optimization when refresh/render [(issue #15)](https://github.com/algenty/grafana-flowcharting/issues/15)  
 
@@ -43,8 +44,8 @@
   - Mapping Helper for select object with mouse  
   
 ### Fixed
-  - Substring replace on text (Issue #8)
-  - Editor object not found Exception (Issue #1)
+  - Substring replace on text [(Issue #8)](https://github.com/algenty/grafana-flowcharting/issues/8)
+  - Editor object not found Exception [(Issue #1)](https://github.com/algenty/grafana-flowcharting/issues/1)
 
 ## [0.2.0] - 2019-03-18
 ### Added
