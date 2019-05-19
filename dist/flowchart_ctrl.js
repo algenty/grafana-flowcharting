@@ -92,8 +92,9 @@ function (_MetricsPanelCtrl) {
 
     _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_assertThisInitialized(_this)));
 
-    _this.events.on('init-panel-actions', _this.onInitPanelActions.bind(_assertThisInitialized(_this))); // this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
+    _this.events.on('init-panel-actions', _this.onInitPanelActions.bind(_assertThisInitialized(_this)));
 
+    _this.events.on('template-variable-value-updated', _this.onVarChanged.bind(_assertThisInitialized(_this)));
 
     $rootScope.onAppEvent('template-variable-value-updated', _this.onVarChanged.bind(_assertThisInitialized(_this)), $scope);
     return _this;
@@ -117,9 +118,9 @@ function (_MetricsPanelCtrl) {
     }
   }, {
     key: "onVarChanged",
-    value: function onVarChanged(args) {
-      u.log(1, 'FlowchartCtrl.onVarChanged()'); // console.log('variable ', args);
-      // console.log("this.templateSrv ", this.templateSrv);
+    value: function onVarChanged() {
+      u.log(1, 'FlowchartCtrl.onVarChanged()');
+      this.flowchartHandler.draw(); // this.flowchartHandler.sourceChanged();
     }
   }, {
     key: "onRender",
@@ -208,6 +209,8 @@ function (_MetricsPanelCtrl) {
           return "${".concat(variable.name, "}");
         });
       }
+
+      return null;
     } //
     // Series
     //

@@ -1,5 +1,11 @@
 import FlowchartHandler from '../src/flowchartHandler';
 
+const ctrl = {
+  templateSrv: {
+    replaceWithText: function (text) { return text },
+  },
+};
+
 const scope = {
   ctrl : {
       version : "0.2.0",

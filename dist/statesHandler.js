@@ -19,11 +19,13 @@ var StateHandler =
 /*#__PURE__*/
 function () {
   /** @ngInject */
-  function StateHandler(xgraph) {
+  function StateHandler(xgraph, ctrl) {
     _classCallCheck(this, StateHandler);
 
     u.log(1, 'StateHandler.constructor()');
     this.states = [];
+    this.ctrl = ctrl;
+    this.templateSrv = this.ctrl.templateSrv;
     this.xgraph = xgraph;
     this.initStates(this.xgraph);
   }
@@ -67,7 +69,7 @@ function () {
   }, {
     key: "addState",
     value: function addState(mxcell) {
-      var state = new _state_class.default(mxcell, this.xgraph);
+      var state = new _state_class.default(mxcell, this.xgraph, this.ctrl);
       this.states.push(state);
     }
   }, {

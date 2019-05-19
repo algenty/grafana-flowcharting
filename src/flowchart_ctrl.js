@@ -48,7 +48,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
-    // this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
+    this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
     $rootScope.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
   }
 
@@ -66,10 +66,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.onRender();
   }
 
-  onVarChanged(args) {
+  onVarChanged() {
     u.log(1, 'FlowchartCtrl.onVarChanged()');
-    // console.log('variable ', args);
-    // console.log("this.templateSrv ", this.templateSrv);
+    this.flowchartHandler.draw();
+    // this.flowchartHandler.sourceChanged();
   }
 
   onRender() {
@@ -147,6 +147,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (this.templateSrv !== undefined && this.templateSrv !== null) {
       return _.map(this.templateSrv.variables, variable => `\${${variable.name}}`);
     }
+    return null;
   }
 
   //

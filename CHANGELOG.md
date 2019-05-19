@@ -1,16 +1,18 @@
 # Changelog
 
-## [[0.4.0]](archives/agenty-flowcharting-panel-0.4.0-SNAPSHOT.zip) - 2019-05-11
+## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-05-19  
+/!\ NOT STABLE
+### Added  
+  - Tooltip support, little bug on display splitted when tooltip in border of panel
+  - Variables/templates support, accept variable like ${} : 
+    - In xml definition
+    - In text mapping when type in sring for "Range to text" and "Value to text"
+    - In link ovewrite
+  - full libs from draw.io support  
+### Fixed  
+  - Optimization when refresh/render [(issue #15)](https://github.com/algenty/grafana-flowcharting/issues/15)  
 
-### Added
-  - Tooltip to display attributes, style problème of place
-  - TODO draw.io Libs, style problem of size
-  - TODO Variables/Templates type for text mapping
-
-### Fixed
-  - TODO xmlgraph in inspect save without state
-
-## [[0.3.0]](archives/agenty-flowcharting-panel-0.3.0.zip) - 2019-05-07
+## [[0.3.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.3.0.zip) - 2019-05-07
 ### Added
   /!\ Possible breaking change with 0.2.0 and 0.2.5 but it will compatible with next release.  
     
@@ -30,13 +32,13 @@
   - Custom Link Mapping overrite.  
   
 ### Fixed
-  - Substring replace on text (Issue #8)
-  - Editor object not found Exception (Issue #1)
-  - Original Link (Issue #9)
-  - Fixed Change the colors (Issue #14)
-  - Fixed Unit (Issue #12)
+  - Substring replace on text [(Issue #8)](https://github.com/algenty/grafana-flowcharting/issues/8)
+  - Editor object not found Exception [(Issue #1)](https://github.com/algenty/grafana-flowcharting/issues/1)
+  - Original Link [(Issue #9)](https://github.com/algenty/grafana-flowcharting/issues/9)
+  - Fixed Change the colors [(Issue #14)](https://github.com/algenty/grafana-flowcharting/issues/14)
+  - Fixed Unit [(Issue #12)](https://github.com/algenty/grafana-flowcharting/issues/12)
 
-## [[0.2.5]](archives/agenty-flowcharting-panel-0.2.5.zip) - 2019-04-19
+## [[0.2.5]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.2.5.zip) - 2019-04-19
 ### Added
   - Mapping Helper for select object with mouse  
   

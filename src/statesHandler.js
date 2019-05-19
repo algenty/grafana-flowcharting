@@ -3,9 +3,11 @@ import State from './state_class';
 
 export default class StateHandler {
   /** @ngInject */
-  constructor(xgraph) {
+  constructor(xgraph, ctrl) {
     u.log(1, 'StateHandler.constructor()');
     this.states = [];
+    this.ctrl = ctrl;
+    this.templateSrv = this.ctrl.templateSrv;
     this.xgraph = xgraph;
     this.initStates(this.xgraph);
   }
@@ -16,7 +18,7 @@ export default class StateHandler {
 
   getState(cellId) {
     let foundState = null;
-    for (let state of this.states) {
+    for (const state of this.states) {
       if (cellId == state.cellId) foundState = state;
       break;
     }
@@ -24,7 +26,7 @@ export default class StateHandler {
   }
 
   addState(mxcell) {
-    const state = new State(mxcell, this.xgraph);
+    const state = new State(mxcell, this.xgraph, this.ctrl);
     this.states.push(state);
   }
 

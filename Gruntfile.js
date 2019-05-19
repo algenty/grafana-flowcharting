@@ -56,11 +56,19 @@ module.exports = (grunt) => {
         src: ['README.md'],
         dest: 'dist',
       },
+
       img_to_dist: {
         cwd: 'src',
         expand: true,
         src: ['img/**/*'],
         dest: 'dist/',
+      },
+
+      stencils_to_dist: {
+        cwd: 'bower_components/drawio/src/main/webapp/stencils',
+        expand: true,
+        src: ['**/*', '!**/*.js'],
+        dest: 'dist/libs/mxgraph/javascript/dist/stencils',
       },
     },
 
@@ -168,7 +176,7 @@ module.exports = (grunt) => {
     },
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:bower_to_dist', 'copy:vkbeautify_to_dist']);
+  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:bower_to_dist', 'copy:stencils_to_dist']);
   grunt.registerTask('dev', ['default', 'watch']);
   grunt.registerTask('archive', ['default', 'compress:main']);
 };

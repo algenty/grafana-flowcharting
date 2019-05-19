@@ -1,9 +1,11 @@
 export default class State {
-  constructor(mxcell, xgraph) {
+  constructor(mxcell, xgraph, ctrl) {
     u.log(1, 'State.constructor()');
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
+    this.ctrl = ctrl;
+    this.templateSrv = this.ctrl.templateSrv;
     this.changed = false;
     this.matched = false;
     this.matchedShape = false;
@@ -68,7 +70,8 @@ export default class State {
           this.matched = true;
           if (this.globalLevel <= level) {
             if (rule.toValorize(value)) {
-              this.setText(rule.getReplaceText(this.originalValue, FormattedValue));
+              const textScoped = this.templateSrv.replaceWithText(FormattedValue);
+              this.setText(rule.getReplaceText(this.originalValue, textScoped));
             } else {
               // Hide text
               this.setText(rule.getReplaceText(this.originalValue, ''));
@@ -85,7 +88,8 @@ export default class State {
           this.matched = true;
           if (this.globalLevel <= level) {
             if (rule.toLinkable(value)) {
-              this.currentLink = rule.getLink();
+              const linkScoped = this.templateSrv.replaceWithText(rule.getLink());
+              this.currentLink = linkScoped;
             }
           }
         }

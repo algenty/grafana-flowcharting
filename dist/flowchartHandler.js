@@ -52,6 +52,21 @@ function () {
     ctrl.events.on('render', function () {
       _this.render();
     });
+    this.mousedownTimeout = 0;
+    this.mousedown = 0;
+
+    document.body.onmousedown = function () {
+      _this.mousedown = 0;
+      window.clearInterval(_this.mousedownTimeout);
+      _this.mousedownTimeout = window.setInterval(function () {
+        _this.mousedown += 1;
+      }, 200);
+    };
+
+    document.body.onmouseup = function () {
+      _this.mousedown = 0;
+      window.clearInterval(_this.mousedownTimeout);
+    };
   }
 
   _createClass(FlowchartHandler, [{
@@ -68,7 +83,7 @@ function () {
           var container = _this2.createContainer();
 
           var newData = {};
-          var fc = new _flowchart_class.default(map.name, map.xml, container, newData);
+          var fc = new _flowchart_class.default(map.name, map.xml, container, _this2.ctrl, newData);
           fc.import(map);
 
           _this2.flowcharts.push(fc);
@@ -106,36 +121,38 @@ function () {
       u.log(1, 'FlowchartHandler.addFlowchart()');
       var container = this.createContainer();
       var data = {};
-      var flowchart = new _flowchart_class.default(name, this.defaultXml, container, data);
+      var flowchart = new _flowchart_class.default(name, this.defaultXml, container, this.ctrl, data);
       this.data.push(data);
       this.flowcharts.push(flowchart);
     }
   }, {
     key: "render",
     value: function render() {
-      u.log(1, 'flowchartHandler.render()');
+      u.log(1, 'flowchartHandler.render()'); // not repeat render is mouse down
 
-      if (this.changeSourceFlag) {
-        this.draw();
-        this.changeSourceFlag = false;
-        this.changeRuleFlag = true;
+      if (!this.mousedown) {
+        if (this.changeSourceFlag) {
+          this.draw();
+          this.changeSourceFlag = false;
+          this.changeRuleFlag = true;
+        }
+
+        if (this.changeOptionFlag) {
+          this.setOptions();
+          this.changeOptionFlag = false;
+        }
+
+        if (this.changeRuleFlag || this.changeDataFlag) {
+          this.setStates();
+          this.applyStates();
+          this.changeRuleFlag = false;
+          this.changeDataFlag = false;
+        }
+
+        var width = this.$elem.width();
+        var height = this.ctrl.height;
+        this.refresh(width, height);
       }
-
-      if (this.changeOptionFlag) {
-        this.setOptions();
-        this.changeOptionFlag = false;
-      }
-
-      if (this.changeRuleFlag || this.changeDataFlag) {
-        this.setStates();
-        this.applyStates();
-        this.changeRuleFlag = false;
-        this.changeDataFlag = false;
-      }
-
-      var width = this.$elem.width();
-      var height = this.ctrl.height;
-      this.refresh(width, height);
     }
   }, {
     key: "sourceChanged",

@@ -2,7 +2,6 @@ const pako = require('pako');
 const vkbeautify = require('vkbeautify');
 const CJSON = require('circular-json');
 
-
 // sources :
 // https://jgraph.github.io/drawio-tools/tools/convert.html
 
@@ -17,7 +16,7 @@ module.exports = {
     return arr;
   },
   bytesToString(arr) {
-    let str = "";
+    let str = '';
 
     for (let i = 0; i < arr.length; i += 1) {
       str += String.fromCharCode(arr[i]);
@@ -56,18 +55,18 @@ module.exports = {
   },
 
   removeLinebreaks(data) {
-    return data.replace(/(\r\n|\n|\r)/gm, "");
+    return data.replace(/(\r\n|\n|\r)/gm, '');
   },
 
   isencoded(data) {
     try {
       const node = this.parseXml(data).documentElement;
-      if (node != null && node.nodeName == "mxfile") {
-        const diagrams = node.getElementsByTagName("diagram");
+      if (node != null && node.nodeName == 'mxfile') {
+        const diagrams = node.getElementsByTagName('diagram');
         if (diagrams.length > 0) {
           return true;
         }
-      } else return (data.indexOf('mxGraphModel') == -1);
+      } else return data.indexOf('mxGraphModel') == -1;
     } catch (error) {
       return true;
     }
@@ -78,8 +77,8 @@ module.exports = {
     try {
       const node = this.parseXml(data).documentElement;
 
-      if (node != null && node.nodeName == "mxfile") {
-        const diagrams = node.getElementsByTagName("diagram");
+      if (node != null && node.nodeName == 'mxfile') {
+        const diagrams = node.getElementsByTagName('diagram');
 
         if (diagrams.length > 0) {
           data = this.getTextContent(diagrams[0]);
@@ -123,24 +122,21 @@ module.exports = {
     if (window.DOMParser) {
       const parser = new DOMParser();
 
-      return parser.parseFromString(xml, "text/xml");
-    } else {
-      const result = createXmlDocument();
-
-      result.async = "false";
-      result.loadXML(xml);
-
-      return result;
+      return parser.parseFromString(xml, 'text/xml');
     }
+    const result = this.createXmlDocument();
+    result.async = 'false';
+    result.loadXML(xml);
+    return result;
   },
 
   createXmlDocument() {
     let doc = null;
 
     if (document.implementation && document.implementation.createDocument) {
-      doc = document.implementation.createDocument("", "", null);
+      doc = document.implementation.createDocument('', '', null);
     } else if (window.ActiveXObject) {
-      doc = new ActiveXObject("Microsoft.XMLDOM");
+      doc = new ActiveXObject('Microsoft.XMLDOM');
     }
 
     return doc;
@@ -157,16 +153,14 @@ module.exports = {
   },
 
   getTextContent(node) {
-    return node != null
-      ? node[node.textContent === undefined ? "text" : "textContent"]
-      : "";
+    return node != null ? node[node.textContent === undefined ? 'text' : 'textContent'] : '';
   },
 
   normalizeXml(data) {
     try {
       let str = data;
-      str = str.replace(/>\s*/g, ">"); // Replace "> " with ">"
-      str = str.replace(/\s*</g, "<"); // Replace "< " with "<"
+      str = str.replace(/>\s*/g, '>'); // Replace "> " with ">"
+      str = str.replace(/\s*</g, '<'); // Replace "< " with "<"
       return data;
     } catch (e) {
       return;
@@ -175,32 +169,31 @@ module.exports = {
 
   uniqueID() {
     function chr4() {
-      return Math.random().toString(16).slice(-4);
+      return Math.random()
+        .toString(16)
+        .slice(-4);
     }
-    return `${chr4() + chr4()
-      }-${chr4()
-      }-${chr4()
-      }-${chr4()
-      }-${chr4()}${chr4()}${chr4()}`;
+    return `${chr4() + chr4()}-${chr4()}-${chr4()}-${chr4()}-${chr4()}${chr4()}${chr4()}`;
   },
 
   stringToJsRegex(str) {
-    if (str[0] !== "/") {
+    if (str[0] !== '/') {
       return new RegExp(`^${str}$`);
     }
-    const match = str.match(new RegExp("^/(.*?)/(g?i?m?y?)$"));
+    const match = str.match(new RegExp('^/(.*?)/(g?i?m?y?)$'));
     return new RegExp(match[1], match[2]);
   },
 
   matchString(str, pattern) {
     if (str === undefined || pattern === undefined || str.length === 0 || pattern.length === 0) {
-      u.log(0, `Match str=${str} pattern=${pattern}`, false);
+      // u.log(0, `Match str=${str} pattern=${pattern}`, false);
       return false;
     }
+    if (str === pattern) return true;
     const regex = this.stringToJsRegex(pattern);
     const matching = str.toString().match(regex);
-    if (str === pattern || matching) {
-      u.log(0, `Match str=${str} pattern=${pattern}`, true);
+    if (matching) {
+      // u.log(0, `Match str=${str} pattern=${pattern}`, true);
       return true;
     }
     return false;
@@ -210,7 +203,7 @@ module.exports = {
     try {
       return vkbeautify.xmlmin(text, false);
     } catch (error) {
-      this.log(3, "Error in minify", error);
+      this.log(3, 'Error in minify', error);
       return text;
     }
   },
@@ -219,7 +212,7 @@ module.exports = {
     try {
       return vkbeautify.xml(text);
     } catch (error) {
-      this.log(3, "Error in prettify", error);
+      this.log(3, 'Error in prettify', error);
       return text;
     }
   },
@@ -228,7 +221,7 @@ module.exports = {
     try {
       return vkbeautify.json(text);
     } catch (error) {
-      this.log(3, "Error in prettify", error);
+      this.log(3, 'Error in prettify', error);
       return text;
     }
   },
@@ -246,11 +239,22 @@ module.exports = {
     if (GF_PLUGIN.logDisplay !== undefined && GF_PLUGIN.logDisplay === true) {
       // eslint-disable-next-line no-undef
       if (GF_PLUGIN.logLevel !== undefined && level >= GF_PLUGIN.logLevel) {
-        if (level === 0) { console.debug(`DEBUG : ${title}`, obj); return; }
-        if (level === 1) { console.info(` INFO : ${title}`, obj); return; }
-        if (level === 2) { console.warn(` WARN : ${title}`, obj); return; }
-        if (level === 3) { console.error(`ERROR : ${title}`, obj); }
+        if (level === 0) {
+          console.debug(`DEBUG : ${title}`, obj);
+          return;
+        }
+        if (level === 1) {
+          console.info(` INFO : ${title}`, obj);
+          return;
+        }
+        if (level === 2) {
+          console.warn(` WARN : ${title}`, obj);
+          return;
+        }
+        if (level === 3) {
+          console.error(`ERROR : ${title}`, obj);
+        }
       }
     }
-  },
+  }
 };

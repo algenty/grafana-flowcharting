@@ -14,7 +14,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var State =
 /*#__PURE__*/
 function () {
-  function State(mxcell, xgraph) {
+  function State(mxcell, xgraph, ctrl) {
     var _this = this;
 
     _classCallCheck(this, State);
@@ -23,6 +23,8 @@ function () {
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
+    this.ctrl = ctrl;
+    this.templateSrv = this.ctrl.templateSrv;
     this.changed = false;
     this.matched = false;
     this.matchedShape = false;
@@ -94,7 +96,9 @@ function () {
 
             if (_this2.globalLevel <= level) {
               if (rule.toValorize(value)) {
-                _this2.setText(rule.getReplaceText(_this2.originalValue, FormattedValue));
+                var textScoped = _this2.templateSrv.replaceWithText(FormattedValue);
+
+                _this2.setText(rule.getReplaceText(_this2.originalValue, textScoped));
               } else {
                 // Hide text
                 _this2.setText(rule.getReplaceText(_this2.originalValue, ''));
@@ -111,7 +115,9 @@ function () {
 
             if (_this2.globalLevel <= level) {
               if (rule.toLinkable(value)) {
-                _this2.currentLink = rule.getLink();
+                var linkScoped = _this2.templateSrv.replaceWithText(rule.getLink());
+
+                _this2.currentLink = linkScoped;
               }
             }
           }

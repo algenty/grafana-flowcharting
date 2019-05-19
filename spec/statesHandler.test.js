@@ -43,25 +43,32 @@ const series = [
     ],
   },
 ];
+
+const ctrl = {
+  templateSrv: {
+    replaceWithText: function (text) { return text },
+  },
+};
+
 const container = document.getElementById('MyContainer');
 const mx = new XGraph(container, xmlGraph);
 mx.drawGraph();
 
 describe('Object', () => {
   test('create', () => {
-    const sh = new StatesHandler(mx);
+    const sh = new StatesHandler(mx, ctrl);
     expect(sh).toBeInstanceOf(Object);
     expect(sh).toMatchSnapshot();
   });
 
   test('Count', () => {
-    const sh = new StatesHandler(mx);
+    const sh = new StatesHandler(mx, ctrl);
     expect(sh.countStates()).toBe(11);
   });
 });
 
 describe('With rules', () => {
-  const sh = new StatesHandler(mx);
+  const sh = new StatesHandler(mx, ctrl);
   const data = {};
   const rule = new Rule('/.*/', data);
   rule.data.thresholds = [50, 80];

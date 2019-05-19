@@ -173,7 +173,6 @@ export default class Rule {
   // Series
   //
   matchSerie(serie) {
-    if (this.data.pattern === null || this.data.pattern === undefined) return false;
     return u.matchString(serie.alias, this.data.pattern);
   }
 

@@ -96,6 +96,7 @@
   "dependencies": {
     "circular-json": "^0.5.9",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-lodash": "^5.1.0"
+    "eslint-plugin-lodash": "^5.1.0",
+    "is-regex": "^1.0.4"
   }
 }

@@ -792,7 +792,7 @@
                   </label>
                   <input
                     type="text"
-                    class="gf-form-input max-width-8"
+                    class="gf-form-input max-width-14"
                     ng-model="map.data.text"
                     placeholder="Text"
                     bs-typeahead="editor.getVariables"
@@ -841,7 +841,12 @@
                   <input
                     type="text"
                     ng-model="rangeMap.data.text"
-                    class="gf-form-input max-width-8"
+                    class="gf-form-input max-width-14"
+                    bs-typeahead="editor.getVariables"
+                    bs-tooltip="'Specify string or variables to replace values'"
+                    data-min-length="0"
+                    data-items="100"
+                    data-placement="right"
                     ng-blur="editor.onRulesChange()"
                     ng-model-onblur
                   />

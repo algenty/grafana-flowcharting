@@ -3,7 +3,7 @@ import StateHandler from './statesHandler';
 
 export default class Flowchart {
   /** @ngInject */
-  constructor(name, xmlGraph, container, data) {
+  constructor(name, xmlGraph, container, ctrl, data) {
     u.log(1, `flowchart[${name}].constructor()`);
     u.log(0, `flowchart[${name}].constructor() data`, data);
     this.data = data;
@@ -12,6 +12,8 @@ export default class Flowchart {
     this.container = container;
     this.xgraph = undefined;
     this.stateHandler = undefined;
+    this.ctrl = ctrl;
+    this.templateSrv = ctrl.templateSrv;
     this.import(data);
   }
 
@@ -47,7 +49,7 @@ export default class Flowchart {
 
   init() {
     u.log(1, `flowchart[${this.data.name}].init()`);
-    if (this.xgraph === undefined) this.xgraph = new XGraph(this.container, this.data.xml);
+    if (this.xgraph === undefined) this.xgraph = new XGraph(this.container, this.getXml(true));
     if (this.data.xml !== undefined && this.data.xml !== null) {
       this.xgraph.drawGraph();
       if (this.data.tooltip) this.xgraph.tooltipGraph(true);
@@ -55,7 +57,7 @@ export default class Flowchart {
       else this.xgraph.zoomGraph(this.data.zoom);
       if (this.data.center) this.xgraph.centerGraph(true);
       if (this.data.lock) this.xgraph.lockGraph(true);
-      this.stateHandler = new StateHandler(this.xgraph);
+      this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
     } else {
       u.log(3, 'XML Graph not defined');
     }
@@ -95,10 +97,10 @@ export default class Flowchart {
     u.log(1, `flowchart[${this.data.name}].redraw()`);
     if (xmlGraph !== undefined) {
       this.data.xml = xmlGraph;
-      this.xgraph.setXmlGraph(this.data.xml);
+      this.xgraph.setXmlGraph(this.getXml(true));
     } else {
       u.log(2, 'XML Content not defined');
-      this.xgraph.setXmlGraph(this.data.xml);
+      this.xgraph.setXmlGraph(this.getXml(true));
     }
     this.init();
   }
@@ -140,7 +142,7 @@ export default class Flowchart {
 
 
   scale(bool) {
-    // u.log(1, "Flowchart.scale()");
+    u.log(1, "Flowchart.scale()");
     if (bool !== undefined) this.data.scale = bool;
     this.xgraph.scaleGraph(this.data.scale);
   }
@@ -152,6 +154,11 @@ export default class Flowchart {
 
   getNamesByProp(prop) {
     return this.xgraph.getOrignalCells(prop);
+  }
+
+  getXml(replaceVarBool) {
+    if (!replaceVarBool) return this.data.xml;
+    return this.templateSrv.replaceWithText(this.data.xml);
   }
 
   renameId(oldId, newId) {
