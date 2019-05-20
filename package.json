@@ -91,12 +91,11 @@
     "typescript": "^3.3.4000",
     "vkbeautify": "^0.99.3",
     "webpack": "^4.29.1",
-    "zone.js": "^0.9.0"
+    "zone.js": "^0.9.0",
+    "circular-json": "^0.5.9",
+    "is-regex": "^1.0.4"
   },
   "dependencies": {
-    "circular-json": "^0.5.9",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-lodash": "^5.1.0",
-    "is-regex": "^1.0.4"
+    "eslint-config-airbnb-base": "^13.1.0"
   }
 }
