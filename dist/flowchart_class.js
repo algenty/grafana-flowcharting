@@ -3,13 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _graph_class = _interopRequireDefault(require("./graph_class"));
 
 var _statesHandler = _interopRequireDefault(require("./statesHandler"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -34,7 +34,7 @@ function () {
     this.stateHandler = undefined;
     this.ctrl = ctrl;
     this.templateSrv = ctrl.templateSrv;
-    this.import(data);
+    this["import"](data);
   }
 
   _createClass(Flowchart, [{
@@ -63,7 +63,7 @@ function () {
     key: "init",
     value: function init() {
       u.log(1, "flowchart[".concat(this.data.name, "].init()"));
-      if (this.xgraph === undefined) this.xgraph = new _graph_class.default(this.container, this.getXml(true));
+      if (this.xgraph === undefined) this.xgraph = new _graph_class["default"](this.container, this.getXml(true));
 
       if (this.data.xml !== undefined && this.data.xml !== null) {
         this.xgraph.drawGraph();
@@ -71,7 +71,7 @@ function () {
         if (this.data.scale) this.xgraph.scaleGraph(true);else this.xgraph.zoomGraph(this.data.zoom);
         if (this.data.center) this.xgraph.centerGraph(true);
         if (this.data.lock) this.xgraph.lockGraph(true);
-        this.stateHandler = new _statesHandler.default(this.xgraph, this.ctrl);
+        this.stateHandler = new _statesHandler["default"](this.xgraph, this.ctrl);
       } else {
         u.log(3, 'XML Graph not defined');
       }
@@ -294,4 +294,4 @@ function () {
   return Flowchart;
 }();
 
-exports.default = Flowchart;
+exports["default"] = Flowchart;

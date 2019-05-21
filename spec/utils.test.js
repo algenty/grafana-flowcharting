@@ -39,6 +39,7 @@ describe("matchString", () => {
     const pattern = "/.*Toto.*/";
     expect(u.matchString("Toto", pattern)).toBeTruthy();
   });
+
 });
 
 
