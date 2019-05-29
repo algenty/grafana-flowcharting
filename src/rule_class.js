@@ -50,6 +50,9 @@ export default class Rule {
     this.data.thresholds = obj.thresholds || [];
     this.data.invert = (obj.invert !== undefined ? obj.invert : false);
     this.data.overlayIcon = (obj.overlayIcon !== undefined ? obj.overlayIcon : false);
+    this.data.tooltip = (obj.tooltip !== undefined ? obj.tooltip : false);
+    this.data.tooltipColors = (obj.tooltipColors !== undefined ? obj.tooltipColors : false);
+    this.data.tooltipOn = (obj.tooltipOn !== undefined ? obj.tooltipOn : 'a');
     let maps = [];
 
     // SHAPES

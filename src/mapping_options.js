@@ -23,6 +23,7 @@ export class MappingOptionsCtrl {
     ];
     this.colorOn = [{ text: 'Warning / Critical', value: 'wc' }, { text: 'Always', value: 'a' }];
     this.linkOn = [{ text: 'Warning / Critical', value: 'wc' }, { text: 'Always', value: 'a' }];
+    this.tooltipOn = [{ text: 'Warning / Critical', value: 'wc' }, { text: 'Always', value: 'a' }];
     this.textOn = [
       { text: 'Never', value: 'n' },
       { text: 'When Metric Displayed', value: 'wmd' },

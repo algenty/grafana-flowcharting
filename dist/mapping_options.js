@@ -64,6 +64,13 @@ function () {
       text: 'Always',
       value: 'a'
     }];
+    this.tooltipOn = [{
+      text: 'Warning / Critical',
+      value: 'wc'
+    }, {
+      text: 'Always',
+      value: 'a'
+    }];
     this.textOn = [{
       text: 'Never',
       value: 'n'
