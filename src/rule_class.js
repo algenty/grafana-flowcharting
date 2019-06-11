@@ -171,6 +171,12 @@ export default class Rule {
     return false;
   }
 
+  toTooltipize(value) {
+    if (this.data.tooltip === false) return false;
+    if (this.data.tooltipOn === 'a') return true;
+    if (this.data.tooltipOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
+    return false;
+  }
 
   //
   // Series

@@ -18,6 +18,7 @@ export default class State {
       strokeColor: -1,
       fontColor: -1,
     };
+    this.tooltips = [];
     this.currentColors = {};
     this.originalColors = {};
     this.originalValue = this.xgraph.getValueCell(mxcell);

@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _rule_class = _interopRequireDefault(require("./rule_class"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -26,7 +26,7 @@ function () {
     this.$scope = $scope || null;
     this.rules = [];
     this.data = data;
-    this["import"](this.data);
+    this.import(this.data);
   }
 
   _createClass(RulesHandler, [{
@@ -41,8 +41,8 @@ function () {
       if (obj !== undefined && obj !== null && obj.length > 0) {
         obj.forEach(function (map) {
           var newData = {};
-          var rule = new _rule_class["default"](map.pattern, newData);
-          rule["import"](map);
+          var rule = new _rule_class.default(map.pattern, newData);
+          rule.import(map);
 
           _this.rules.push(rule);
 
@@ -64,7 +64,7 @@ function () {
     key: "addRule",
     value: function addRule(pattern) {
       var data = {};
-      var newRule = new _rule_class["default"](pattern, data);
+      var newRule = new _rule_class.default(pattern, data);
       this.rules.push(newRule);
       this.data.push(data);
     }
@@ -86,8 +86,8 @@ function () {
       var rule = this.getRule(index);
       var data = rule.getData();
       var newData = {};
-      var newRule = new _rule_class["default"](newData.pattern, newData);
-      newRule["import"](data);
+      var newRule = new _rule_class.default(newData.pattern, newData);
+      newRule.import(data);
       newData.alias = "Copy of ".concat(newData.alias);
       this.rules.splice(index, 0, newRule);
       this.data.splice(index, 0, newData);
@@ -126,4 +126,4 @@ function () {
   return RulesHandler;
 }();
 
-exports["default"] = RulesHandler;
+exports.default = RulesHandler;

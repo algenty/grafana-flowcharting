@@ -21,7 +21,7 @@ var _rulesHandler = _interopRequireDefault(require("./rulesHandler"));
 
 var _flowchartHandler = _interopRequireDefault(require("./flowchartHandler"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -60,7 +60,7 @@ function (_MetricsPanelCtrl) {
     _this.$rootScope = $rootScope;
     _this.$scope = $scope;
     _this.templateSrv = templateSrv;
-    _this.unitFormats = _kbn["default"].getUnitFormats();
+    _this.unitFormats = _kbn.default.getUnitFormats();
     _this.changedSource = true;
     _this.changedData = true;
     _this.changedOptions = true;
@@ -160,23 +160,23 @@ function (_MetricsPanelCtrl) {
       u.log(1, 'FlowchartCtrl.link()'); // RULES
 
       var newRulesData = [];
-      this.rulesHandler = new _rulesHandler["default"](scope, newRulesData);
+      this.rulesHandler = new _rulesHandler.default(scope, newRulesData);
 
       if (this.panel.version === undefined && this.panel.styles !== undefined) {
-        this.rulesHandler["import"](this.panel.styles);
+        this.rulesHandler.import(this.panel.styles);
         delete this.panel.styles;
-      } else this.rulesHandler["import"](this.panel.rulesData);
+      } else this.rulesHandler.import(this.panel.rulesData);
 
       if (this.panel.newFlag && this.rulesHandler.countRules() === 0) this.rulesHandler.addRule('.*');
       this.panel.rulesData = newRulesData; // FLOWCHART
 
       var newFlowchartsData = [];
-      this.flowchartHandler = new _flowchartHandler["default"](scope, elem, ctrl, newFlowchartsData);
+      this.flowchartHandler = new _flowchartHandler.default(scope, elem, ctrl, newFlowchartsData);
 
       if (this.panel.version === undefined && this.panel.flowchart !== undefined) {
-        this.flowchartHandler["import"]([this.panel.flowchart]);
+        this.flowchartHandler.import([this.panel.flowchart]);
         delete this.panel.flowchart;
-      } else this.flowchartHandler["import"](this.panel.flowchartsData);
+      } else this.flowchartHandler.import(this.panel.flowchartsData);
 
       if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) this.flowchartHandler.addFlowchart('Main');
       this.panel.flowchartsData = newFlowchartsData; // Versions
@@ -219,7 +219,7 @@ function (_MetricsPanelCtrl) {
     key: "seriesHandler",
     value: function seriesHandler(seriesData) {
       u.log(1, 'FlowchartCtrl.seriesHandler()');
-      var series = new _time_series["default"]({
+      var series = new _time_series.default({
         datapoints: seriesData.datapoints,
         alias: seriesData.target,
         unit: seriesData.unit
