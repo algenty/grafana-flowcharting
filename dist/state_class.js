@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -69,19 +69,25 @@ function () {
         var linkMaps = rule.getLinkMaps();
         var value = rule.getValueForSerie(serie);
         var FormattedValue = rule.getFormattedValue(value);
-        var level = rule.getThresholdLevel(value); // SHAPE
+        var level = rule.getThresholdLevel(value);
+        var color = rule.getColorForValue(value); // SHAPE
 
         var cellProp = this.getCellProp(rule.data.shapeProp);
         shapeMaps.forEach(function (shape) {
           if (!shape.isHidden() && shape.match(cellProp)) {
             _this2.matchedShape = true;
-            _this2.matched = true;
+            _this2.matched = true; // tooltips
+
+            if (rule.toTooltipize(value)) {
+              if (rule.data.tooltipColors) _this2.addTooltipValue(rule.data.alias, FormattedValue, color);else _this2.addTooltipValue(rule.data.alias, FormattedValue, null);
+            } // Color Shape
+
 
             if (_this2.globalLevel <= level) {
               _this2.setLevelStyle(rule.data.style, level);
 
               if (rule.toColorize(value)) {
-                _this2.setColorStyle(rule.data.style, rule.getColorForValue(value));
+                _this2.setColorStyle(rule.data.style, color);
               }
 
               _this2.overlayIcon = rule.toIconize(value);
@@ -194,12 +200,22 @@ function () {
       this.level[style] = -1;
     }
   }, {
-    key: "unsetLevel",
-    value: function unsetLevel() {
+    key: "unsetTooltip",
+    value: function unsetTooltip() {
       var _this4 = this;
 
+      this.tooltips.forEach(function (element) {
+        _this4.xgraph.removeTooltip(element.name);
+      });
+      this.tooltips = [];
+    }
+  }, {
+    key: "unsetLevel",
+    value: function unsetLevel() {
+      var _this5 = this;
+
       this.styles.forEach(function (style) {
-        _this4.unsetLevelStyle(style);
+        _this5.unsetLevelStyle(style);
       });
       this.globalLevel = -1;
     }
@@ -245,7 +261,7 @@ function () {
   }, {
     key: "setText",
     value: function setText(text) {
-      this.currentValue = text; // this.cell.setValue(text);
+      this.currentValue = text;
     }
   }, {
     key: "getCurrentText",
@@ -271,6 +287,43 @@ function () {
     key: "getCurrentLink",
     value: function getCurrentLink() {
       return this.currentLink;
+    }
+  }, {
+    key: "addTooltipValue",
+    value: function addTooltipValue(name, value, color) {
+      var element = this.findTooltipValue(name);
+
+      if (element === null) {
+        element = {
+          "name": name,
+          "value": value,
+          "color": color
+        };
+        this.tooltips.push(element);
+      } else {
+        element.value = value;
+        element.color = color;
+      }
+    }
+  }, {
+    key: "removeTooltipValue",
+    value: function removeTooltipValue(name) {
+      for (var index = 0; index < this.tooltips.length; index++) {
+        var element = array[index];
+
+        if (element.name === name) {
+          this.tooltips.slice(index, 1);
+          return;
+        }
+      }
+    }
+  }, {
+    key: "findTooltipValue",
+    value: function findTooltipValue(name) {
+      this.tooltips.forEach(function (element) {
+        if (element.name === name) return element;
+      });
+      return null;
     } // eslint-disable-next-line class-methods-use-this
 
   }, {
@@ -290,29 +343,38 @@ function () {
   }, {
     key: "applyState",
     value: function applyState() {
-      var _this5 = this;
+      var _this6 = this;
 
       u.log(1, 'State.applyState()');
 
       if (this.matched) {
-        this.changed = true;
+        this.changed = true; // SHAPES
 
         if (this.matchedShape) {
+          // Apply colors
           this.styles.forEach(function (style) {
-            // Apply colors
-            _this5.xgraph.setStyleCell(_this5.mxcell, style, _this5.getCurrentColorStyle(style));
+            _this6.xgraph.setStyleCell(_this6.mxcell, style, _this6.getCurrentColorStyle(style));
           }); // Apply icons
 
           if (this.overlayIcon) {
             this.xgraph.addOverlay(this.getTextLevel(), this.mxcell);
           } else {
             this.xgraph.removeOverlay(this.mxcell);
+          } // Apply Tooltips
+
+
+          if (this.tooltips.length > 0) {
+            this.tooltips.forEach(function (element) {
+              _this6.xgraph.addTooltip(_this6.mxcell, element.name, element.value);
+            });
           }
-        }
+        } // TEXTS
+
 
         if (this.matchedText) {
           this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
-        }
+        } // LINKS
+
 
         if (this.matchedLink) {
           this.xgraph.addLink(this.mxcell, this.currentLink);
@@ -322,11 +384,11 @@ function () {
   }, {
     key: "restoreCell",
     value: function restoreCell() {
-      var _this6 = this;
+      var _this7 = this;
 
       this.unsetState();
       this.styles.forEach(function (style) {
-        _this6.xgraph.setStyleCell(_this6.mxcell, style, _this6.getCurrentColorStyle(style));
+        _this7.xgraph.setStyleCell(_this7.mxcell, style, _this7.getCurrentColorStyle(style));
       });
       this.xgraph.setValueCell(this.mxcell, this.getCurrentText()); // this.mxcell.setAttribute('link', this.getCurrentLink());
 
@@ -344,4 +406,4 @@ function () {
   return State;
 }();
 
-exports.default = State;
+exports["default"] = State;

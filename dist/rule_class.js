@@ -3,13 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 var _kbn = _interopRequireDefault(require("app/core/utils/kbn"));
 
 var _moment = _interopRequireDefault(require("moment"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -31,7 +31,7 @@ function () {
     this.linkMaps = [];
     this.valueMaps = [];
     this.rangeMaps = [];
-    this.import(data);
+    this["import"](data);
   }
 
   _createClass(Rule, [{
@@ -84,7 +84,7 @@ function () {
         maps.forEach(function (map) {
           var newData = {};
           var sm = new ShapeMap(map.pattern, newData);
-          sm.import(map);
+          sm["import"](map);
 
           _this.shapeMaps.push(sm);
 
@@ -103,7 +103,7 @@ function () {
         maps.forEach(function (map) {
           var newData = {};
           var tm = new TextMap(map.pattern, newData);
-          tm.import(map);
+          tm["import"](map);
 
           _this.textMaps.push(tm);
 
@@ -119,7 +119,7 @@ function () {
         obj.linkData.forEach(function (map) {
           var newData = {};
           var lm = new LinkMap(map.pattern, newData);
-          lm.import(map);
+          lm["import"](map);
 
           _this.linkMaps.push(lm);
 
@@ -135,7 +135,7 @@ function () {
         obj.valueData.forEach(function (map) {
           var newData = {};
           var vm = new ValueMap(map.value, map.text, newData);
-          vm.import(map);
+          vm["import"](map);
 
           _this.valueMaps.push(vm);
 
@@ -227,7 +227,7 @@ function () {
     value: function addShapeMap(pattern) {
       var data = {};
       var m = new ShapeMap(pattern, data);
-      m.import(data);
+      m["import"](data);
       this.shapeMaps.push(m);
       this.data.shapeData.push(data);
     }
@@ -264,7 +264,7 @@ function () {
     value: function addTextMap(pattern) {
       var data = {};
       var m = new TextMap(pattern, data);
-      m.import(data);
+      m["import"](data);
       this.textMaps.push(m);
       this.data.textData.push(data);
     }
@@ -302,7 +302,7 @@ function () {
       u.log(1, "Rule.addLinkMap()");
       var data = {};
       var m = new LinkMap(pattern, data);
-      m.import(data);
+      m["import"](data);
       this.linkMaps.push(m);
       this.data.linkData.push(data);
     }
@@ -339,7 +339,7 @@ function () {
     value: function addValueMap(value, text) {
       var data = {};
       var m = new ValueMap(value, text, data);
-      m.import(data);
+      m["import"](data);
       this.valueMaps.push(m);
       this.data.valueData.push(data);
     }
@@ -516,7 +516,7 @@ function () {
           value = value[0];
         }
 
-        var date = (0, _moment.default)(value); // if (this.dashboard.isTimezoneUtc()) {
+        var date = (0, _moment["default"])(value); // if (this.dashboard.isTimezoneUtc()) {
         //     date = date.utc();
         // }
 
@@ -571,7 +571,7 @@ function () {
 //
 
 
-exports.default = Rule;
+exports["default"] = Rule;
 
 var ShapeMap =
 /*#__PURE__*/
@@ -583,7 +583,7 @@ function () {
     this.id = u.uniqueID();
     this.data.pattern = undefined;
     this.data.pattern = pattern;
-    this.import(data);
+    this["import"](data);
   }
 
   _createClass(ShapeMap, [{
@@ -655,7 +655,7 @@ function () {
     this.data = data;
     this.id = u.uniqueID();
     this.data.pattern = pattern;
-    this.import(data);
+    this["import"](data);
   }
 
   _createClass(TextMap, [{
@@ -715,7 +715,7 @@ function () {
     this.data = data;
     this.id = u.uniqueID();
     this.data.pattern = pattern;
-    this.import(data);
+    this["import"](data);
   }
 
   _createClass(LinkMap, [{
@@ -778,7 +778,7 @@ function () {
     this.data.to = to;
     this.data.text = text;
     this.data.hidden = false;
-    this.import(data);
+    this["import"](data);
   }
 
   _createClass(RangeMap, [{
@@ -872,7 +872,7 @@ function () {
     this.data.value = value;
     this.data.text = text;
     this.data.hidden = false;
-    this.import(data);
+    this["import"](data);
   }
 
   _createClass(ValueMap, [{
@@ -949,5 +949,5 @@ function () {
 }();
 
 function formatValue(value, unit, decimals) {
-  return _kbn.default.valueFormats[unit](value, decimals, null).toString();
+  return _kbn["default"].valueFormats[unit](value, decimals, null).toString();
 }

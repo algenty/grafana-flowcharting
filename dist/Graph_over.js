@@ -10,18 +10,12 @@ mxTooltipHandler.prototype.show = function (tip, x, y) {
 
 
     var origin = mxUtils.getScrollOrigin();
-    this.div.style.zIndex = this.zIndex; // this.div.style.zIndex = 1;
-    // this.div.style.left = `${x + origin.x}px`;
-
+    this.div.style.zIndex = this.zIndex;
     var $parent = $(this.div.parentNode);
     var left = x - $parent.offset().left;
-    var top = y - $parent.offset().top + 30; // console.log('this.div.parentNode ', this.div.parentNode);
-    // console.log('$parent.offset()', $parent.offset());
-    // console.log('X : ' + x, ' Y : ' + y);
-    // console.log('Left : ' + left, ' Top : ' + top);
-
+    var top = y - $parent.offset().top + 30;
     this.div.style.left = "".concat(left, "px");
-    this.div.style.top = "".concat(top, "px"); // this.div.style.top = `${y + mxConstants.TOOLTIP_VERTICAL_OFFSET + origin.y}px`;
+    this.div.style.top = "".concat(top, "px");
 
     if (!mxUtils.isNode(tip)) {
       this.div.innerHTML = tip.replace(/\n/g, '<br>');
