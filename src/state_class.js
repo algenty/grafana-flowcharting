@@ -55,9 +55,9 @@ export default class State {
           this.matchedShape = true;
           this.matched = true;
           // tooltips
-          if(rule.toTooltipize(value)) {
-            if (rule.data.tooltipColors) this.addTooltipValue(rule.data.alias,FormattedValue,color);
-            else this.addTooltipValue(rule.data.alias,FormattedValue,null);
+          if (rule.toTooltipize(value)) {
+            if (rule.data.tooltipColors) this.addTooltipValue(rule.data.alias, FormattedValue, color);
+            else this.addTooltipValue(rule.data.alias, FormattedValue, null);
           }
 
           // Color Shape
@@ -113,6 +113,7 @@ export default class State {
     this.unsetColor();
     this.unsetText();
     this.unsetLink();
+    this.unsetTooltip();
     this.matched = false;
     this.matchedShape = false;
     this.matchedText = false;
@@ -162,8 +163,8 @@ export default class State {
   }
 
   unsetTooltip() {
-    this.tooltips.forEach(element => {
-      this.xgraph.removeTooltip(element.name);
+    this.tooltips.forEach((element) => {
+      this.xgraph.removeTooltip(this.mxcell, element.name);
     });
     this.tooltips = [];
   }
@@ -229,36 +230,41 @@ export default class State {
     return this.currentLink;
   }
 
-  addTooltipValue(name,value,color) {
+  addTooltipValue(name, value, color) {
+    u.log(1, 'State.addTooltipValue()');
+    u.log(0, 'State.addTooltipValue() name', name);
+    u.log(0, 'State.addTooltipValue() value', value);
     let element = this.findTooltipValue(name);
     if (element === null) {
       element = {
-        "name": name,
-        "value": value,
-        "color": color, 
-      }
+        name: name,
+        value: value,
+        color: color,
+      };
       this.tooltips.push(element);
-    }
-    else {
+    } else {
       element.value = value;
       element.color = color;
     }
   }
 
   removeTooltipValue(name) {
-    for (let index = 0; index < this.tooltips.length; index++) {
-      const element = array[index];
+    u.log(1, 'State.removeTooltipValue()');
+    u.log(0, 'State.removeTooltipValue() name', name);
+    for (let index = 0; index < this.tooltips.length; index += 1) {
+      const element = this.tooltips[index];
       if (element.name === name) {
-        this.tooltips.slice(index,1); 
+        this.tooltips.slice(index, 1);
         return;
       }
     }
   }
 
   findTooltipValue(name) {
-    this.tooltips.forEach(element => {
-      if(element.name === name) return element;
-    });
+    for (let index = 0; index < this.tooltips.length; index += 1) {
+      const element = this.tooltips[index];
+      if (element.name === name) return element;
+    }
     return null;
   }
 
@@ -293,7 +299,7 @@ export default class State {
         }
         // Apply Tooltips
         if (this.tooltips.length > 0) {
-          this.tooltips.forEach(element => {
+          this.tooltips.forEach((element) => {
             this.xgraph.addTooltip(this.mxcell, element.name, element.value);
           });
         }

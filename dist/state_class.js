@@ -141,6 +141,7 @@ function () {
       this.unsetColor();
       this.unsetText();
       this.unsetLink();
+      this.unsetTooltip();
       this.matched = false;
       this.matchedShape = false;
       this.matchedText = false;
@@ -205,7 +206,7 @@ function () {
       var _this4 = this;
 
       this.tooltips.forEach(function (element) {
-        _this4.xgraph.removeTooltip(element.name);
+        _this4.xgraph.removeTooltip(_this4.mxcell, element.name);
       });
       this.tooltips = [];
     }
@@ -291,13 +292,16 @@ function () {
   }, {
     key: "addTooltipValue",
     value: function addTooltipValue(name, value, color) {
+      u.log(1, 'State.addTooltipValue()');
+      u.log(0, 'State.addTooltipValue() name', name);
+      u.log(0, 'State.addTooltipValue() value', value);
       var element = this.findTooltipValue(name);
 
       if (element === null) {
         element = {
-          "name": name,
-          "value": value,
-          "color": color
+          name: name,
+          value: value,
+          color: color
         };
         this.tooltips.push(element);
       } else {
@@ -308,8 +312,11 @@ function () {
   }, {
     key: "removeTooltipValue",
     value: function removeTooltipValue(name) {
-      for (var index = 0; index < this.tooltips.length; index++) {
-        var element = array[index];
+      u.log(1, 'State.removeTooltipValue()');
+      u.log(0, 'State.removeTooltipValue() name', name);
+
+      for (var index = 0; index < this.tooltips.length; index += 1) {
+        var element = this.tooltips[index];
 
         if (element.name === name) {
           this.tooltips.slice(index, 1);
@@ -320,9 +327,11 @@ function () {
   }, {
     key: "findTooltipValue",
     value: function findTooltipValue(name) {
-      this.tooltips.forEach(function (element) {
+      for (var index = 0; index < this.tooltips.length; index += 1) {
+        var element = this.tooltips[index];
         if (element.name === name) return element;
-      });
+      }
+
       return null;
     } // eslint-disable-next-line class-methods-use-this
 

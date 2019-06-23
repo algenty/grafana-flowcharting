@@ -339,12 +339,12 @@ export default class XGraph {
     this.graph.getLinkForCell(mxcell);
   }
 
-  addTooltip(mxcell,name,value,color) {
-    this.graph.setAttributeForCell(mxcell,name,value);
+  addTooltip(mxcell, name, value, color) {
+    this.graph.setAttributeForCell(mxcell, name, value);
   }
 
-  removeTooltip(mxcell,name) {
-    this.graph.setAttributeForCell(mxcell,name,null);
+  removeTooltip(mxcell, name) {
+    this.graph.setAttributeForCell(mxcell, name, null);
   }
 
   removeLink(mxcell) {
