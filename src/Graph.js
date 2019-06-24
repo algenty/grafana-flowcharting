@@ -2483,7 +2483,7 @@ module.exports = function (urlParams) {
 	 */
 	Graph.prototype.getTooltipForCell = function (cell) {
 		var tip = '';
-
+		debugger
 		if (mxUtils.isNode(cell.value)) {
 			var tmp = cell.value.getAttribute('tooltip');
 
