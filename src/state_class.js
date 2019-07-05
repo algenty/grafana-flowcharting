@@ -62,6 +62,7 @@ export default class State {
 
           // Color Shape
           if (this.globalLevel <= level) {
+            this.lastChange = `${new Date()}`;
             this.setLevelStyle(rule.data.style, level);
             if (rule.toColorize(value)) {
               this.setColorStyle(rule.data.style, color);
@@ -109,6 +110,7 @@ export default class State {
 
   unsetState() {
     u.log(1, 'State.unsetState()');
+    this.lastChange = null;
     this.unsetLevel();
     this.unsetColor();
     this.unsetText();
@@ -299,9 +301,11 @@ export default class State {
         }
         // Apply Tooltips
         if (this.tooltips.length > 0) {
-          this.tooltips.forEach((element) => {
-            this.xgraph.addTooltip(this.mxcell, element.name, element.value);
-          });
+          this.mxcell.GF_lastChange = this.lastChange;
+          this.mxcell.GF_tooltips = this.tooltips;
+          // this.tooltips.forEach((element) => {
+          //   this.xgraph.addTooltip(this.mxcell, element.name, element.value);
+          // });
         }
       }
       // TEXTS

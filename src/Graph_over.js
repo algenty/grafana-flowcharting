@@ -1,7 +1,3 @@
-import * as d3 from 'd3';
-
-/* eslint-disable func-names */
-
 mxTooltipHandler.prototype.show = function(tip, x, y) {
   if (!this.destroyed && tip != null && tip.length > 0) {
     // Initializes the DOM nodes if required
@@ -25,7 +21,6 @@ mxTooltipHandler.prototype.init = function() {
   if (this.div === null || this.div === undefined) {
     this.$div = $('<div class="graph-tooltip">');
     this.div=this.$div[0];
-    //this.div.style.visibility = 'hidden';
     mxEvent.addGestureListeners(
       this.div,
       mxUtils.bind(this, function(evt) {
@@ -45,26 +40,34 @@ mxTooltipHandler.prototype.hideTooltip = function()
 };
 
 Graph.prototype.getTooltipForCell = function (cell) {
-  let tip = '';
   u.log(1,"Graph_other.getTooltipForCell()")
+  let tip = '';
+  
   if (mxUtils.isNode(cell.value)) {
     let tmp = cell.value.getAttribute('tooltip');
+    // Tooltip
     if (tmp != null) {
       if (tmp != null && this.isReplacePlaceholders(cell)) {
         tmp = this.replacePlaceholders(cell, tmp);
       }
       tip += '<div style="word-wrap:break-word;">' + this.sanitizeHtml(tmp) +'</div>';
     }
-
+    
     let ignored = this.builtInProperties;
     let attrs = cell.value.attributes;
     let temp = [];
-
+    
+    // Date : Last change
+    if (cell.GF_lastChange !== undefined && cell.GF_lastChange !== null) {
+      tip+=`<div class="graph-tooltip-time">${cell.GF_lastChange}</div>`;
+    }
+    
     // Hides links in edit mode
     if (this.isEnabled()) {
       ignored.push('link');
     }
 
+    // Attributes
     for (var i = 0; i < attrs.length; i++) {
       if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
         temp.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
@@ -101,5 +104,6 @@ Graph.prototype.getTooltipForCell = function (cell) {
     }
 
   }
+
   return tip;
 };

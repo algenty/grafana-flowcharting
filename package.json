@@ -95,7 +95,6 @@
     "zone.js": "^0.9.0"
   },
   "dependencies": {
-    "d3": "^5.9.7",
     "eslint-config-airbnb-base": "^13.1.0"
   }
 }
