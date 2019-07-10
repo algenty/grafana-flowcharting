@@ -30,7 +30,7 @@ export default class Rule {
     this.data.type = obj.type || 'number';
     this.data.alias = obj.alias || 'No name';
     this.data.aggregation = obj.aggregation || 'current';
-    this.data.decimals = obj.decimals || 2;
+    this.data.decimals = (obj.decimals !== undefined ? obj.decimals : 2);
     this.data.colors = obj.colors || [
       'rgba(245, 54, 54, 0.9)',
       'rgba(237, 129, 40, 0.89)',

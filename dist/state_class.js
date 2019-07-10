@@ -24,6 +24,7 @@ function () {
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
     this.ctrl = ctrl;
+    console.log("this.ctrl ", this.ctrl);
     this.templateSrv = this.ctrl.templateSrv;
     this.changed = false;
     this.matched = false;
@@ -70,7 +71,9 @@ function () {
         var value = rule.getValueForSerie(serie);
         var FormattedValue = rule.getFormattedValue(value);
         var level = rule.getThresholdLevel(value);
-        var color = rule.getColorForValue(value); // SHAPE
+        var color = rule.getColorForValue(value);
+        var tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
+        var time = this.ctrl.dashboard.formatDate(new Date(), tooltipTimeFormat); // SHAPE
 
         var cellProp = this.getCellProp(rule.data.shapeProp);
         shapeMaps.forEach(function (shape) {
@@ -84,7 +87,8 @@ function () {
 
 
             if (_this2.globalLevel <= level) {
-              _this2.lastChange = "".concat(new Date());
+              // this.lastChange = `${new Date()}`;
+              _this2.lastChange = time;
 
               _this2.setLevelStyle(rule.data.style, level);
 

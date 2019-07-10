@@ -5,6 +5,7 @@ export default class State {
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
     this.ctrl = ctrl;
+ console.log("this.ctrl ", this.ctrl);
     this.templateSrv = this.ctrl.templateSrv;
     this.changed = false;
     this.matched = false;
@@ -47,6 +48,8 @@ export default class State {
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
       const color = rule.getColorForValue(value);
+      const tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
+      const time = this.ctrl.dashboard.formatDate(new Date(), tooltipTimeFormat)
 
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
@@ -62,7 +65,8 @@ export default class State {
 
           // Color Shape
           if (this.globalLevel <= level) {
-            this.lastChange = `${new Date()}`;
+            // this.lastChange = `${new Date()}`;
+            this.lastChange = time;
             this.setLevelStyle(rule.data.style, level);
             if (rule.toColorize(value)) {
               this.setColorStyle(rule.data.style, color);

@@ -141,7 +141,7 @@ export default class XGraph {
     });
     require('./Shapes');
     window.Graph = window.Graph || Graph;
-    // require('./Graph_over');
+    require('./Graph_over');
     this.graph = new Graph(this.container);
     // /!\ What is setPannig
     // this.graph.setPanning(true);
