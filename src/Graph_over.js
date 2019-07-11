@@ -39,7 +39,6 @@ mxTooltipHandler.prototype.hideTooltip = function () {
 
 Graph.prototype.getTooltipForCell = function (cell) {
   u.log(1, "Graph_other.getTooltipForCell()")
-  debugger
   let tip = '';
   
   // Date : Last change
@@ -94,6 +93,9 @@ Graph.prototype.getTooltipForCell = function (cell) {
       }
     }
     tip += "</div>"
+
+    // Metrics
+    let metrics = cell.GF_tooltips;
 
     if (tip.length > 0) {
       tip = tip.substring(0, tip.length - 1);
