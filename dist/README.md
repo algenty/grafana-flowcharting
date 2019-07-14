@@ -31,8 +31,7 @@ https://github.com/algenty/grafana-flowcharting
 
 # Changelog
 
-## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-05-19  
-/!\ NOT STABLE  
+## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-07-14  
 ### Added  
   - Tooltip/legend support :
     - Grafana style css and date
