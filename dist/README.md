@@ -34,15 +34,18 @@ https://github.com/algenty/grafana-flowcharting
 ## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-05-19  
 /!\ NOT STABLE  
 ### Added  
-  - Tooltip support, little bug on display splitted when tooltip in border of panel
+  - Tooltip/legend support :
+    - Grafana style css and date
+    - Adding metrics with color according levels
   - Variables/templates support, accept variable like ${} : 
     - In xml definition
     - In text mapping when type in sring for "Range to text" and "Value to text"
     - In link ovewrite
-  - full libs from draw.io support  
+  - full libs from draw.io support
   
 ### Fixed  
   - Optimization when refresh/render [(issue #15)](https://github.com/algenty/grafana-flowcharting/issues/15)  
+  - No decimal fixed when 0 [(issue #23)](https://github.com/algenty/grafana-flowcharting/issues/23)
 
 ## [[0.3.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.3.0.zip) - 2019-05-07
 ### Added

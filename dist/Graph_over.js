@@ -38,12 +38,8 @@ mxTooltipHandler.prototype.hideTooltip = function () {
 };
 
 Graph.prototype.getTooltipForCell = function (cell) {
-  u.log(1, "Graph_other.getTooltipForCell()");
-  var tip = ''; // Date : Last change
-
-  if (cell.GF_lastChange !== undefined && cell.GF_lastChange !== null) {
-    tip += "<div class=\"graph-tooltip-time\">".concat(cell.GF_lastChange, "</div>");
-  }
+  u.log(1, 'Graph_other.getTooltipForCell()');
+  var tip = '';
 
   if (mxUtils.isNode(cell.value)) {
     var tmp = cell.value.getAttribute('tooltip'); // Tooltip
@@ -84,7 +80,7 @@ Graph.prototype.getTooltipForCell = function (cell) {
         return 0;
       }
     });
-    tip += "<div>";
+    tip += '<div>';
 
     for (var i = 0; i < temp.length; i++) {
       if (temp[i].name != 'link' || !this.isCustomLink(temp[i].value)) {
@@ -92,9 +88,7 @@ Graph.prototype.getTooltipForCell = function (cell) {
       }
     }
 
-    tip += "</div>"; // Metrics
-
-    var metrics = cell.GF_tooltips;
+    tip += '</div>';
 
     if (tip.length > 0) {
       tip = tip.substring(0, tip.length - 1);
@@ -103,7 +97,30 @@ Graph.prototype.getTooltipForCell = function (cell) {
         tip = '<div style="max-width:360px;">' + tip + '</div>';
       }
     }
+  } // Date : Last change
+
+
+  if (cell.GF_lastChange !== undefined && cell.GF_lastChange !== null) {
+    tip += "<div class=\"graph-tooltip-time\"></br>".concat(cell.GF_lastChange, "</div>");
+  } // Metrics
+
+
+  if (cell.GF_tooltips !== undefined && cell.GF_tooltips.length > 0) {
+    var metrics = cell.GF_tooltips;
+    tip += '<div></br>';
+
+    for (var i = 0; i < metrics.length; i++) {
+      var current = metrics[i];
+
+      if (current !== undefined) {
+        tip += "".concat(current.name, " : ");
+        tip += "<span style=\"color:".concat(current.color, "\"><b>").concat(current.value, "</b></span></br>");
+      }
+    }
+
+    tip += '</div>';
   }
 
+  u.log(1, 'tip', tip);
   return tip;
 };

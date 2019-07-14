@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -24,7 +24,6 @@ function () {
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
     this.ctrl = ctrl;
-    console.log("this.ctrl ", this.ctrl);
     this.templateSrv = this.ctrl.templateSrv;
     this.changed = false;
     this.matched = false;
@@ -381,9 +380,7 @@ function () {
 
           if (this.tooltips.length > 0) {
             this.mxcell.GF_lastChange = this.lastChange;
-            this.mxcell.GF_tooltips = this.tooltips; // this.tooltips.forEach((element) => {
-            //   this.xgraph.addTooltip(this.mxcell, element.name, element.value);
-            // });
+            this.mxcell.GF_tooltips = this.tooltips;
           }
         } // TEXTS
 
@@ -423,4 +420,4 @@ function () {
   return State;
 }();
 
-exports.default = State;
+exports["default"] = State;

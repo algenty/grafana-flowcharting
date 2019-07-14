@@ -5,7 +5,6 @@ export default class State {
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
     this.ctrl = ctrl;
- console.log("this.ctrl ", this.ctrl);
     this.templateSrv = this.ctrl.templateSrv;
     this.changed = false;
     this.matched = false;
@@ -307,9 +306,6 @@ export default class State {
         if (this.tooltips.length > 0) {
           this.mxcell.GF_lastChange = this.lastChange;
           this.mxcell.GF_tooltips = this.tooltips;
-          // this.tooltips.forEach((element) => {
-          //   this.xgraph.addTooltip(this.mxcell, element.name, element.value);
-          // });
         }
       }
       // TEXTS
