@@ -117,3 +117,30 @@ Graph.prototype.getTooltipForCell = function(cell) {
   u.log(1, 'tip', tip);
   return tip;
 };
+
+
+// EditorUi.js
+
+mxEvent.addMouseWheelListener(mxUtils.bind(this, function(evt, up)
+{
+  // Ctrl+wheel (or pinch on touchpad) is a native browser zoom event is OS X
+  // LATER: Add support for zoom via pinch on trackpad for Chrome in OS X
+  if ((this.dialogs == null || this.dialogs.length == 0) && Graph.prototype.isZoomWheelEvent(evt))
+  {
+    var source = mxEvent.getSource(evt);
+    
+    while (source != null)
+    {
+      if (source == Graph.container)
+      {
+        cursorPosition = new mxPoint(mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+        Graph.lazyZoom(up);
+        mxEvent.consume(evt);
+    
+        return;
+      }
+      
+      source = source.parentNode;
+    }
+  }
+}));
