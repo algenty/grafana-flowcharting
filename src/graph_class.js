@@ -420,14 +420,18 @@ export default class XGraph {
 
   // eslint-disable-next-line class-methods-use-this
   getValueCell(mxcell) {
-    const view = this.graph.view;
-    if (view.getState(mxcell).text != null) return view.getState(mxcell).text.lastValue;
-    return mxcell.getValue();
+    if (mxUtils.isNode(mxcell.value)) {
+      return mxcell.value.getAttribute('label');
+    }
+    return mxcell.getValue(mxcell);
   }
 
   // eslint-disable-next-line class-methods-use-this
   setValueCell(mxcell, text) {
-    return mxcell.setValue(text);
+    if (mxUtils.isNode(mxcell.value)) {
+      var label = mxcell.value.setAttribute('label',text);
+    }
+    else mxcell.setValue(text);
   }
 
   setMap(onMappingObj) {

@@ -60,12 +60,12 @@ export default class State {
           if (rule.toTooltipize(value)) {
             if (rule.data.tooltipColors) this.addTooltipValue(rule.data.alias, FormattedValue, color);
             else this.addTooltipValue(rule.data.alias, FormattedValue, null);
+            this.lastChange = time;
           }
 
           // Color Shape
           if (this.globalLevel <= level) {
             // this.lastChange = `${new Date()}`;
-            this.lastChange = time;
             this.setLevelStyle(rule.data.style, level);
             if (rule.toColorize(value)) {
               this.setColorStyle(rule.data.style, color);
@@ -81,14 +81,12 @@ export default class State {
         if (!text.isHidden() && text.match(cellProp)) {
           this.matchedText = true;
           this.matched = true;
-          if (this.globalLevel <= level) {
-            if (rule.toValorize(value)) {
-              const textScoped = this.templateSrv.replaceWithText(FormattedValue);
-              this.setText(rule.getReplaceText(this.originalValue, textScoped));
-            } else {
-              // Hide text
-              this.setText(rule.getReplaceText(this.originalValue, ''));
-            }
+          if (rule.toValorize(value)) {
+            const textScoped = this.templateSrv.replaceWithText(FormattedValue);
+            this.setText(rule.getReplaceText(this.originalValue, textScoped));
+          } else {
+            // Hide text
+            this.setText(rule.getReplaceText(this.originalValue, ''));
           }
         }
       });
@@ -290,6 +288,12 @@ export default class State {
     u.log(1, 'State.applyState()');
     if (this.matched) {
       this.changed = true;
+      // Tooltip
+      // Apply Tooltips
+      if (this.tooltips.length > 0) {
+        this.mxcell.GF_lastChange = this.lastChange;
+        this.mxcell.GF_tooltips = this.tooltips;
+      }
       // SHAPES
       if (this.matchedShape) {
         // Apply colors
@@ -301,11 +305,6 @@ export default class State {
           this.xgraph.addOverlay(this.getTextLevel(), this.mxcell);
         } else {
           this.xgraph.removeOverlay(this.mxcell);
-        }
-        // Apply Tooltips
-        if (this.tooltips.length > 0) {
-          this.mxcell.GF_lastChange = this.lastChange;
-          this.mxcell.GF_tooltips = this.tooltips;
         }
       }
       // TEXTS

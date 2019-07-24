@@ -36,6 +36,7 @@ export default class Rule {
       'rgba(237, 129, 40, 0.89)',
       'rgba(50, 172, 45, 0.97)',
     ];
+    this.data.reduce = true;
     this.data.style = obj.style || obj.colorMode || 'fillColor';
     this.data.colorOn = obj.colorOn || 'a';
     this.data.link = (obj.link !== undefined ? obj.link : false);

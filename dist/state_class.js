@@ -82,13 +82,12 @@ function () {
 
             if (rule.toTooltipize(value)) {
               if (rule.data.tooltipColors) _this2.addTooltipValue(rule.data.alias, FormattedValue, color);else _this2.addTooltipValue(rule.data.alias, FormattedValue, null);
+              _this2.lastChange = time;
             } // Color Shape
 
 
             if (_this2.globalLevel <= level) {
               // this.lastChange = `${new Date()}`;
-              _this2.lastChange = time;
-
               _this2.setLevelStyle(rule.data.style, level);
 
               if (rule.toColorize(value)) {
@@ -106,15 +105,13 @@ function () {
             _this2.matchedText = true;
             _this2.matched = true;
 
-            if (_this2.globalLevel <= level) {
-              if (rule.toValorize(value)) {
-                var textScoped = _this2.templateSrv.replaceWithText(FormattedValue);
+            if (rule.toValorize(value)) {
+              var textScoped = _this2.templateSrv.replaceWithText(FormattedValue);
 
-                _this2.setText(rule.getReplaceText(_this2.originalValue, textScoped));
-              } else {
-                // Hide text
-                _this2.setText(rule.getReplaceText(_this2.originalValue, ''));
-              }
+              _this2.setText(rule.getReplaceText(_this2.originalValue, textScoped));
+            } else {
+              // Hide text
+              _this2.setText(rule.getReplaceText(_this2.originalValue, ''));
             }
           }
         }); // LINK
@@ -363,7 +360,14 @@ function () {
       u.log(1, 'State.applyState()');
 
       if (this.matched) {
-        this.changed = true; // SHAPES
+        this.changed = true; // Tooltip
+        // Apply Tooltips
+
+        if (this.tooltips.length > 0) {
+          this.mxcell.GF_lastChange = this.lastChange;
+          this.mxcell.GF_tooltips = this.tooltips;
+        } // SHAPES
+
 
         if (this.matchedShape) {
           // Apply colors
@@ -375,12 +379,6 @@ function () {
             this.xgraph.addOverlay(this.getTextLevel(), this.mxcell);
           } else {
             this.xgraph.removeOverlay(this.mxcell);
-          } // Apply Tooltips
-
-
-          if (this.tooltips.length > 0) {
-            this.mxcell.GF_lastChange = this.lastChange;
-            this.mxcell.GF_tooltips = this.tooltips;
           }
         } // TEXTS
 
