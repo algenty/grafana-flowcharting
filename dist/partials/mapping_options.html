@@ -261,12 +261,21 @@
         <div class="section gf-form-group">
           <h5 class="section-heading">Tooltips
             <info-popover mode="right-normal">
-              <span ng-bind-html="GF_PLUGIN.popover('Add/change tooltip with aggregated values in shapes defined in color mapping', 'MAPPING')">
+              <span ng-bind-html="GF_PLUGIN.popover('Add/change tooltip/popup with aggregated values in shapes defined in color mapping', 'MAPPING')">
               </span>
             </info-popover>
           </h5>
           <gf-form-switch class="gf-form" label-class="width-12" label="Enable values in tooltip" checked="rule.data.tooltip"
             on-change="editor.onRulesChange()"></gf-form-switch>
+          <div class="gf-form" ng-if="rule.data.tooltip">
+            <label class="gf-form-label width-12">Label
+              <info-popover mode="right-normal"><span
+                  ng-bind-html="GF_PLUGIN.popover('Label of metric in popup', 'MAPPING#Tooltip')"></span>
+              </info-popover>
+            </label>
+            <input type="text" class="gf-form-input width-12" ng-model="rule.data.tooltipLabel" ng-blur="editor.onRulesChange()"
+              placeholder="Label of this metric" />
+          </div>
           <div class="gf-form" ng-if="rule.data.tooltip">
             <label class="gf-form-label width-12">Tooltip when state is
               <info-popover mode="right-normal">

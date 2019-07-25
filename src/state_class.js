@@ -58,8 +58,8 @@ export default class State {
           this.matched = true;
           // tooltips
           if (rule.toTooltipize(value)) {
-            if (rule.data.tooltipColors) this.addTooltipValue(rule.data.alias, FormattedValue, color);
-            else this.addTooltipValue(rule.data.alias, FormattedValue, null);
+            if (rule.data.tooltipColors) this.addTooltipValue(rule.data.tooltipLabel, FormattedValue, color);
+            else this.addTooltipValue(rule.data.tooltipLabel, FormattedValue, null);
             this.lastChange = time;
           }
 

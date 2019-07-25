@@ -71,6 +71,7 @@ function () {
       this.data.invert = obj.invert !== undefined ? obj.invert : false;
       this.data.overlayIcon = obj.overlayIcon !== undefined ? obj.overlayIcon : false;
       this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : false;
+      this.data.tooltipLabel = obj.tooltipLabel !== undefined ? obj.tooltipLabel : this.data.alias;
       this.data.tooltipColors = obj.tooltipColors !== undefined ? obj.tooltipColors : false;
       this.data.tooltipOn = obj.tooltipOn !== undefined ? obj.tooltipOn : 'a';
       var maps = []; // SHAPES

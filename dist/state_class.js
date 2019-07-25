@@ -81,7 +81,7 @@ function () {
             _this2.matched = true; // tooltips
 
             if (rule.toTooltipize(value)) {
-              if (rule.data.tooltipColors) _this2.addTooltipValue(rule.data.alias, FormattedValue, color);else _this2.addTooltipValue(rule.data.alias, FormattedValue, null);
+              if (rule.data.tooltipColors) _this2.addTooltipValue(rule.data.tooltipLabel, FormattedValue, color);else _this2.addTooltipValue(rule.data.tooltipLabel, FormattedValue, null);
               _this2.lastChange = time;
             } // Color Shape
 
