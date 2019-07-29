@@ -118,29 +118,97 @@ Graph.prototype.getTooltipForCell = function(cell) {
   return tip;
 };
 
+// In draw.io
+Graph.prototype.cumulativeZoomFactor = 1;
+Graph.prototype.lazyZoomDelay = 20;
+Graph.prototype.updateZoomTimeout = null;
+Graph.prototype.resize = null;
 
-// EditorUi.js
 
-// mxEvent.addMouseWheelListener(mxUtils.bind(this, function(evt, up)
-// {
-//   // Ctrl+wheel (or pinch on touchpad) is a native browser zoom event is OS X
-//   // LATER: Add support for zoom via pinch on trackpad for Chrome in OS X
-//   if ((this.dialogs == null || this.dialogs.length == 0) && Graph.prototype.isZoomWheelEvent(evt))
-//   {
-//     var source = mxEvent.getSource(evt);
-    
-//     while (source != null)
-//     {
-//       if (source == Graph.container)
-//       {
-//         cursorPosition = new mxPoint(mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-//         Graph.lazyZoom(up);
-//         mxEvent.consume(evt);
-    
-//         return;
-//       }
-      
-//       source = source.parentNode;
-//     }
-//   }
-// }));
+mxEvent.addMouseWheelListener =  function(func, container) {
+  if (null != func) {
+      var c = function(container) {
+          null == container && (container = window.event);
+          var c;
+          c = mxClient.IS_FF ? -container.detail / 2 : container.wheelDelta / 120;
+          0 != c && func(container, 0 < c)
+      };
+      mxClient.IS_NS && null == document.documentMode ? mxEvent.addListener(mxClient.IS_GC && null != container ? container : window, mxClient.IS_SF || mxClient.IS_GC ? "mousewheel" : "DOMMouseScroll", c) : mxEvent.addListener(document, "mousewheel", c)
+  }
+}
+
+Graph.prototype.lazyZoom = function(zoomIn)
+{
+  if (this.updateZoomTimeout != null)
+  {
+    window.clearTimeout(this.updateZoomTimeout);
+  }
+
+  // Switches to 1% zoom steps below 15%
+  // Lower bound depdends on rounding below
+  if (zoomIn)
+  {
+    if (this.view.scale * this.cumulativeZoomFactor < 0.15)
+    {
+      this.cumulativeZoomFactor = (this.view.scale + 0.01) / this.view.scale;
+    }
+    else
+    {
+      // Uses to 5% zoom steps for better grid rendering in webkit
+      // and to avoid rounding errors for zoom steps
+      this.cumulativeZoomFactor *= this.zoomFactor;
+      this.cumulativeZoomFactor = Math.round(this.view.scale * this.cumulativeZoomFactor * 20) / 20 / this.view.scale;
+    }
+  }
+  else
+  {
+    if (this.view.scale * this.cumulativeZoomFactor <= 0.15)
+    {
+      this.cumulativeZoomFactor = (this.view.scale - 0.01) / this.view.scale;
+    }
+    else
+    {
+      // Uses to 5% zoom steps for better grid rendering in webkit
+      // and to avoid rounding errors for zoom steps
+      this.cumulativeZoomFactor /= this.zoomFactor;
+      this.cumulativeZoomFactor = Math.round(this.view.scale * this.cumulativeZoomFactor * 20) / 20 / this.view.scale;
+    }
+  }
+  
+  this.cumulativeZoomFactor = Math.max(0.01, Math.min(this.view.scale * this.cumulativeZoomFactor, 160) / this.view.scale);
+  
+      this.updateZoomTimeout = window.setTimeout(mxUtils.bind(this, function()
+      {
+          var offset = mxUtils.getOffset(this.container);
+          var dx = 0;
+          var dy = 0;
+          
+          if (this.cursorPosition != null)
+          {
+              dx = this.container.offsetWidth / 2 - this.cursorPosition.x + offset.x;
+              dy = this.container.offsetHeight / 2 - this.cursorPosition.y + offset.y;
+          }
+
+          var prev = this.view.scale;
+          this.zoom(this.cumulativeZoomFactor,true);
+          var s = this.view.scale;
+          
+          if (s != prev)
+          {
+              if (this.resize != null)
+              {
+                  // TODO for support IE
+                  // ui.chromelessResize(false, null, dx * (this.cumulativeZoomFactor - 1), dy * (this.cumulativeZoomFactor - 1));
+              }
+              
+              if (mxUtils.hasScrollbars(this.container) && (dx != 0 || dy != 0))
+              {
+                this.container.scrollLeft -= dx * (this.cumulativeZoomFactor - 1);
+                this.container.scrollTop -= dy * (this.cumulativeZoomFactor - 1);
+              }
+          }
+          
+          this.cumulativeZoomFactor = 1;
+          this.updateZoomTimeout = null;
+      }), this.lazyZoomDelay);
+};

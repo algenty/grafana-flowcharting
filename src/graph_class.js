@@ -10,7 +10,7 @@ const mxgraph = require('mxgraph')({
   mxBasePath: GF_PLUGIN.getMxBasePath(),
   mxLoadStylesheets: false,
   mxLanguage: 'en',
-  mxLoadResources: false,
+  mxLoadResources: false
 });
 
 window.BASE_PATH = window.BASE_PATH || GF_PLUGIN.getMxBasePath();
@@ -137,7 +137,7 @@ export default class XGraph {
   initGraph() {
     u.log(1, 'XGraph.initGraph()');
     const Graph = require('./Graph')({
-      libs: 'arrows;basic;bpmn;flowchart',
+      libs: 'arrows;basic;bpmn;flowchart'
     });
     require('./Shapes');
     window.Graph = window.Graph || Graph;
@@ -146,6 +146,42 @@ export default class XGraph {
     // /!\ What is setPannig
     // this.graph.setPanning(true);
     this.clickBackup = this.graph.click;
+    // ZOOM
+    mxEvent.addMouseWheelListener(
+      mxUtils.bind(this.graph, function(evt, up) {
+        // console.log('this.isZoomWheelEvent(evt) ', this.isZoomWheelEvent(evt));
+        // console.log('evt ', evt);
+        // console.log('up ', up);
+        if (this.zoomScale === undefined || this.zoomScale === null ) this.zoomScale = 1
+        this.cursorPosition = new mxPoint(mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+        // console.log('this.cursorPosition ', this.cursorPosition);
+        if (this.isZoomWheelEvent(evt)) {
+          // this.lazyZoom(up);
+          if (up) {
+            this.zoomScale = this.zoomScale * 1.2; 
+          }
+          else {
+            this.zoomScale = this.zoomScale * 0.8;
+          }
+          this.zoomTo(this.zoomScale,true);
+          mxEvent.consume(evt);
+        }
+      }),
+      this.container
+    );
+
+    mxEvent.addListener(
+      document,
+      'keydown',
+      mxUtils.bind(this, function(evt) {
+        // console.log('evt ', evt);
+        if (!mxEvent.isConsumed(evt) && evt.keyCode == 27 /* Escape */) {
+          this.graph.zoomScale = 1;
+          this.refreshGraph(this.width, this.height);
+          // mxEvent.consume(evt);
+        }
+      })
+    );
   }
 
   drawGraph() {
@@ -169,12 +205,13 @@ export default class XGraph {
     u.log(1, 'XGraph.refreshGraph()');
     const $div = $(this.container);
     const size = Math.min(width, height);
-
+    this.width = width;
+    this.height = height;
     const css = {
       margin: 'auto',
       position: 'relative',
       width: width,
-      height: `${size - 30}px`,
+      height: `${size - 30}px`
     };
 
     $div.css(css);
@@ -249,9 +286,9 @@ export default class XGraph {
     const $div = $(this.container);
     if (bgColor) {
       this.bgColor = bgColor;
-      $div.css("background-color", bgColor);
+      $div.css('background-color', bgColor);
     } else {
-      $div.css("background-color", "");
+      $div.css('background-color', '');
     }
   }
 
@@ -275,11 +312,11 @@ export default class XGraph {
     const model = this.graph.getModel();
     const cells = model.cells;
     if (prop === 'id') {
-      _.each(cells, (cell) => {
+      _.each(cells, cell => {
         cellIds.push(cell.getId());
       });
     } else if (prop === 'value') {
-      _.each(cells, (cell) => {
+      _.each(cells, cell => {
         cellIds.push(cell.getValue());
       });
     }
@@ -290,11 +327,11 @@ export default class XGraph {
     const mxcells = this.getMxCells();
     const result = [];
     if (prop === 'id') {
-      _.each(mxcells, (mxcell) => {
+      _.each(mxcells, mxcell => {
         if (u.matchString(mxcell.id, pattern)) result.push(mxcell);
       });
     } else if (prop === 'value') {
-      _.each(mxcells, (mxcell) => {
+      _.each(mxcells, mxcell => {
         if (u.matchString(mxcell.getValue(), pattern)) result.push(mxcell);
       });
     }
@@ -324,7 +361,7 @@ export default class XGraph {
   addOverlay(state, mxcell) {
     this.graph.addCellOverlay(
       mxcell,
-      this.createOverlay(this.graph.warningImage, `State: ${state}`),
+      this.createOverlay(this.graph.warningImage, `State: ${state}`)
     );
   }
 
@@ -361,7 +398,7 @@ export default class XGraph {
   renameId(oldId, newId) {
     const cells = this.findMxCells('id', oldId);
     if (cells !== undefined && cells.length > 0) {
-      cells.forEach((cell) => {
+      cells.forEach(cell => {
         cell.id = newId;
       });
     } else {
@@ -377,7 +414,7 @@ export default class XGraph {
 
   findCurrentCells(prop, pattern) {
     const cells = this.getCurrentCells(prop);
-    const result = _.find(cells, (cell) => {
+    const result = _.find(cells, cell => {
       u.matchString(cell, pattern);
     });
     return result;
@@ -385,7 +422,7 @@ export default class XGraph {
 
   findOriginalCells(prop, pattern) {
     const cells = this.getOrignalCells(prop);
-    const result = _.find(cells, (cell) => {
+    const result = _.find(cells, cell => {
       u.matchString(cell, pattern);
     });
     return result;
@@ -397,7 +434,7 @@ export default class XGraph {
 
   findCurrentMxCells(prop, pattern) {
     const cells = [];
-    _.each(this.getMxCells(), (cell) => {
+    _.each(this.getMxCells(), cell => {
       if (prop === 'id') {
         const id = cell.getId();
         if (u.matchString(id, pattern)) cells.push(cell);
@@ -429,9 +466,8 @@ export default class XGraph {
   // eslint-disable-next-line class-methods-use-this
   setValueCell(mxcell, text) {
     if (mxUtils.isNode(mxcell.value)) {
-      var label = mxcell.value.setAttribute('label',text);
-    }
-    else mxcell.setValue(text);
+      var label = mxcell.value.setAttribute('label', text);
+    } else mxcell.setValue(text);
   }
 
   setMap(onMappingObj) {

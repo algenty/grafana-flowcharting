@@ -160,7 +160,6 @@ module.exports = function (urlParams) {
 					mouseMove: mxUtils.bind(this, function (sender, me) {
 						// Checks if any other handler is active
 						var handlerMap = this.selectionCellsHandler.handlers.map;
-
 						for (var key in handlerMap) {
 							if (handlerMap[key].index != null) {
 								return;
@@ -2483,7 +2482,6 @@ module.exports = function (urlParams) {
 	 */
 	Graph.prototype.getTooltipForCell = function (cell) {
 		var tip = '';
-		// debugger
 		if (mxUtils.isNode(cell.value)) {
 			var tmp = cell.value.getAttribute('tooltip');
 
@@ -6685,7 +6683,6 @@ module.exports = function (urlParams) {
 				var graphHandlerMouseDown = mxGraphHandler.prototype.mouseDown;
 				mxGraphHandler.prototype.mouseDown = function (sender, me) {
 					graphHandlerMouseDown.apply(this, arguments);
-
 					if (mxEvent.isTouchEvent(me.getEvent()) && this.graph.isCellSelected(me.getCell()) &&
 						this.graph.getSelectionCount() > 1) {
 						this.delayedSelection = false;
@@ -6696,7 +6693,6 @@ module.exports = function (urlParams) {
 				// Removes ctrl+shift as panning trigger for space splitting
 				mxPanningHandler.prototype.isPanningTrigger = function (me) {
 					var evt = me.getEvent();
-
 					return (mxEvent.isLeftMouseButton(evt) && ((this.useLeftButtonForPanning &&
 						me.getState() == null) || (mxEvent.isControlDown(evt) &&
 							!mxEvent.isShiftDown(evt)))) || (this.usePopupTrigger &&
