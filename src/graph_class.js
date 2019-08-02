@@ -133,7 +133,9 @@ export default class XGraph {
 
     this.initGraph();
   }
-
+  /**
+   * Graph initialization
+   */
   initGraph() {
     u.log(1, 'XGraph.initGraph()');
     const Graph = require('./Graph')({
@@ -142,6 +144,7 @@ export default class XGraph {
     require('./Shapes');
     window.Graph = window.Graph || Graph;
     require('./Graph_over');
+    mxEvent.disableContextMenu(this.container);
     this.graph = new Graph(this.container);
     // /!\ What is setPannig
     // this.graph.setPanning(true);
@@ -183,7 +186,9 @@ export default class XGraph {
       })
     );
   }
-
+  /**
+   * Draw graph
+   */
   drawGraph() {
     u.log(1, 'XGraph.drawGraph()');
     this.graph.getModel().beginUpdate();
@@ -200,7 +205,12 @@ export default class XGraph {
       this.cells['value'] = this.getCurrentCells('value');
     }
   }
-
+  /**
+   * refreshGraph
+   * @summary Refresh graph with new dimension
+   * @param  {Number} n - width width of container
+   * @param  {Number} n - height height of container
+   */
   refreshGraph(width, height) {
     u.log(1, 'XGraph.refreshGraph()');
     const $div = $(this.container);

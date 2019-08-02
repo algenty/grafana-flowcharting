@@ -241,6 +241,12 @@ function () {
         _this2.onRulesChange();
       };
     }
+    /**
+     * Display cell selection in graph
+     * @param  {} prop
+     * @param  {} value
+     */
+
   }, {
     key: "selectCell",
     value: function selectCell(prop, value) {

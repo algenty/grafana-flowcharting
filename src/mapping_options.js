@@ -121,7 +121,11 @@ export class MappingOptionsCtrl {
       this.onRulesChange();
     };
   }
-
+  /**
+   * Display cell selection in graph
+   * @param  {} prop
+   * @param  {} value
+   */
   selectCell(prop, value) {
     const flowchart = this.flowchartHandler.getFlowchart(0);
     const xgraph = flowchart.getXGraph();
