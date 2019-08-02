@@ -1,9 +1,10 @@
-/* eslint-disable no-undef */
-/* eslint-disable new-cap */
-/* eslint-disable dot-notation */
-/* eslint-disable object-shorthand */
-window.mxLanguages = window.mxLanguages || ['en'];
+/**
+ * Xgraph module.
+ * @module XGraph
+ */
 
+
+window.mxLanguages = window.mxLanguages || ['en'];
 const sanitizer = require('sanitizer');
 const mxgraph = require('mxgraph')({
   mxImageBasePath: GF_PLUGIN.getMxImagePath(),
@@ -109,6 +110,12 @@ window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange;
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 
 export default class XGraph {
+  /**
+   * Create new XGraph object, used to manipulate mxgraph objects
+   * @constructor
+   * @param  {DOM} container Div destination for graph
+   * @param  {string} xmlGraph Xml definition of graph
+   */
   constructor(container, xmlGraph) {
     u.log(1, 'XGraph.constructor()');
     this.container = container;
@@ -133,8 +140,10 @@ export default class XGraph {
 
     this.initGraph();
   }
+
   /**
    * Graph initialization
+   * 
    */
   initGraph() {
     u.log(1, 'XGraph.initGraph()');
@@ -316,7 +325,11 @@ export default class XGraph {
     else this.xmlGraph = xmlGraph;
     this.drawGraph();
   }
-
+  /**
+   * Return an array of labels or array of id from current graph
+   * @param  {string} prop - id|value
+   * @returns {Array}
+   */
   getCurrentCells(prop) {
     const cellIds = [];
     const model = this.graph.getModel();
@@ -332,7 +345,13 @@ export default class XGraph {
     }
     return cellIds;
   }
-
+  
+  /**
+   * Find list of mxCell by id or value
+   * @param  {string} prop - id|value
+   * @param  {string} pattern - Regex or name
+   * @returns {Array} Arrays of mxCell
+   */
   findMxCells(prop, pattern) {
     const mxcells = this.getMxCells();
     const result = [];
@@ -348,6 +367,11 @@ export default class XGraph {
     return result;
   }
 
+  /**
+   * Select in graph cells
+   * @param  {string} prop - id|value
+   * @param  {string} pattern - pattern to seach
+   */
   selectMxCells(prop, pattern) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
@@ -399,6 +423,10 @@ export default class XGraph {
     this.graph.setLinkForCell(mxcell, null);
   }
 
+  
+  /**
+   * @param  {string} prop - id|value
+   */
   getOrignalCells(prop) {
     if (prop === 'id' || prop === 'value') return this.cells[prop];
     // TODO: attributs
@@ -438,6 +466,10 @@ export default class XGraph {
     return result;
   }
 
+  /**
+   * Return array of mxcell in graph
+   * @returns {Array} Array of mxcells
+   */
   getMxCells() {
     return this.graph.getModel().cells;
   }
@@ -455,17 +487,33 @@ export default class XGraph {
     });
     return cells;
   }
-
+  
+  /**
+   * Return the value of style from mxcell
+   * @param  {mxCell} mxcell - mxCell object, see mxGraph API
+   * @param  {string} style - fillColor|strokeColor|fontColor, see mxGraph API
+   * @return {string} color of style, like RGB
+   */
   getStyleCell(mxcell, style) {
     const state = this.graph.view.getState(mxcell);
     return state.style[style];
   }
 
+  /**
+   * Set color to style of mxcell
+   * @param  {mxCell} mxcell - mxCell object, see mxGraph API
+   * @param  {string} style - fillColor|strokeColor|fontColor
+   * @param  {} color - new color html style
+   */
   setStyleCell(mxcell, style, color) {
     this.graph.setCellStyles(style, color, [mxcell]);
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  /**
+   * Return the label/value of cell
+   * @param  {mxCell} mxcell - mxCell object, see mxGraph API
+   * @return {string} Label of cell
+   */
   getValueCell(mxcell) {
     if (mxUtils.isNode(mxcell.value)) {
       return mxcell.value.getAttribute('label');
@@ -473,22 +521,33 @@ export default class XGraph {
     return mxcell.getValue(mxcell);
   }
 
-  // eslint-disable-next-line class-methods-use-this
+  
+  /**
+   * Set value/label for a cell
+   * @param  {mxCell} mxcell - mxCell object, see mxGraph API
+   * @param  {string} text - New label/value
+   */
   setValueCell(mxcell, text) {
     if (mxUtils.isNode(mxcell.value)) {
       var label = mxcell.value.setAttribute('label', text);
     } else mxcell.setValue(text);
   }
-
+  
+  /**
+   * Activate object listener for mapping when user click on link button to select cell in graph 
+   * @param  {object} onMappingObj
+   */
   setMap(onMappingObj) {
     u.log(1, 'XGraph.setMapping()');
     u.log(0, 'XGraph.setMapping() onMappingObject : ', onMappingObj);
     this.onMapping = onMappingObj;
     if (this.onMapping.active === true) {
-      this.graph.click = this.eventGraph.bind(this);
+      this.graph.click = this.eventClick.bind(this);
     }
   }
-
+  /**
+   * Desactivate object listener for mapping when user click on link button to select cell in graph 
+   */
   unsetMap() {
     u.log(1, 'XGraph.unsetMapping()');
     u.log(0, 'XGraph.unsetMapping() onMapping', this.onMapping);
@@ -500,11 +559,15 @@ export default class XGraph {
   //
   // GRAPH HANDLER
   //
-
-  eventGraph(me) {
-    u.log(1, 'XGraph.eventGraph()');
-    u.log(0, 'XGraph.eventGraph() me : ', me);
-    u.log(0, 'XGraph.eventGraph() onMapping : ', this.onMapping);
+  /**
+   * Actions for click on graph
+   * @private
+   * @param  {} me
+   */
+  eventClick(me) {
+    u.log(1, 'XGraph.eventClick()');
+    u.log(0, 'XGraph.eventClick() me : ', me);
+    u.log(0, 'XGraph.eventClick() onMapping : ', this.onMapping);
     const self = this;
 
     if (this.onMapping.active) {
