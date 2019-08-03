@@ -80,15 +80,18 @@ Graph.prototype.getTooltipForCell = function (cell) {
         return 0;
       }
     });
-    tip += '<div>';
 
-    for (var i = 0; i < temp.length; i++) {
-      if (temp[i].name != 'link' || !this.isCustomLink(temp[i].value)) {
-        tip += (temp[i].name != 'link' ? '<b>' + temp[i].name + ':</b> ' : '') + mxUtils.htmlEntities(temp[i].value) + '\n';
+    if (temp.length > 0) {
+      tip += '<div>';
+
+      for (var i = 0; i < temp.length; i++) {
+        if (temp[i].name != 'link' || !this.isCustomLink(temp[i].value)) {
+          tip += (temp[i].name != 'link' ? '<b>' + temp[i].name + ':</b> ' : '') + mxUtils.htmlEntities(temp[i].value) + '\n';
+        }
       }
-    }
 
-    tip += '</div>';
+      tip += '</div>';
+    }
 
     if (tip.length > 0) {
       tip = tip.substring(0, tip.length - 1);
@@ -140,7 +143,7 @@ mxEvent.addMouseWheelListener = function (func, container) {
       0 != c && func(container, 0 < c);
     };
 
-    mxClient.IS_NS && null == document.documentMode ? mxEvent.addListener(mxClient.IS_GC && null != container ? container : window, mxClient.IS_SF || mxClient.IS_GC ? "mousewheel" : "DOMMouseScroll", c) : mxEvent.addListener(document, "mousewheel", c);
+    mxClient.IS_NS && null == document.documentMode ? mxEvent.addListener(mxClient.IS_GC && null != container ? container : window, mxClient.IS_SF || mxClient.IS_GC ? 'mousewheel' : 'DOMMouseScroll', c) : mxEvent.addListener(document, 'mousewheel', c);
   }
 };
 

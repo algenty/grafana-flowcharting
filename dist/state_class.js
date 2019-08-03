@@ -206,20 +206,17 @@ function () {
   }, {
     key: "unsetTooltip",
     value: function unsetTooltip() {
-      var _this4 = this;
-
-      this.tooltips.forEach(function (element) {
-        _this4.xgraph.removeTooltip(_this4.mxcell, element.name);
-      });
       this.tooltips = [];
+      this.mxcell.GF_tooltips = undefined;
+      this.mxcell.GF_lastChange = undefined;
     }
   }, {
     key: "unsetLevel",
     value: function unsetLevel() {
-      var _this5 = this;
+      var _this4 = this;
 
       this.styles.forEach(function (style) {
-        _this5.unsetLevelStyle(style);
+        _this4.unsetLevelStyle(style);
       });
       this.globalLevel = -1;
     }
@@ -355,7 +352,7 @@ function () {
   }, {
     key: "applyState",
     value: function applyState() {
-      var _this6 = this;
+      var _this5 = this;
 
       u.log(1, 'State.applyState()');
 
@@ -372,7 +369,7 @@ function () {
         if (this.matchedShape) {
           // Apply colors
           this.styles.forEach(function (style) {
-            _this6.xgraph.setStyleCell(_this6.mxcell, style, _this6.getCurrentColorStyle(style));
+            _this5.xgraph.setStyleCell(_this5.mxcell, style, _this5.getCurrentColorStyle(style));
           }); // Apply icons
 
           if (this.overlayIcon) {
@@ -396,14 +393,14 @@ function () {
   }, {
     key: "restoreCell",
     value: function restoreCell() {
-      var _this7 = this;
+      var _this6 = this;
 
       this.unsetState();
       this.styles.forEach(function (style) {
-        _this7.xgraph.setStyleCell(_this7.mxcell, style, _this7.getCurrentColorStyle(style));
+        _this6.xgraph.setStyleCell(_this6.mxcell, style, _this6.getCurrentColorStyle(style));
       });
-      this.xgraph.setValueCell(this.mxcell, this.getCurrentText()); // this.mxcell.setAttribute('link', this.getCurrentLink());
-
+      this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
+      this.mxcell.setAttribute('link', this.getCurrentLink());
       this.xgraph.removeOverlay(this.mxcell);
       this.xgraph.addLink(this.mxcell, this.originalLink);
       this.changed = false;

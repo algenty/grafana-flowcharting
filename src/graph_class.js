@@ -1,9 +1,3 @@
-/**
- * Xgraph module.
- * @module XGraph
- */
-
-
 window.mxLanguages = window.mxLanguages || ['en'];
 const sanitizer = require('sanitizer');
 const mxgraph = require('mxgraph')({
@@ -110,11 +104,14 @@ window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange;
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 
 export default class XGraph {
+
   /**
-   * Create new XGraph object, used to manipulate mxgraph objects
+   * Creates an instance of XGraph.
    * @constructor
-   * @param  {DOM} container Div destination for graph
-   * @param  {string} xmlGraph Xml definition of graph
+   * @param {DOM DIV} container
+   * @param {string} xmlGraph
+   * @memberof XGraph
+   * @class XGraph
    */
   constructor(container, xmlGraph) {
     u.log(1, 'XGraph.constructor()');
@@ -143,7 +140,7 @@ export default class XGraph {
 
   /**
    * Graph initialization
-   * 
+   * @memberof XGraph
    */
   initGraph() {
     u.log(1, 'XGraph.initGraph()');
@@ -197,6 +194,7 @@ export default class XGraph {
   }
   /**
    * Draw graph
+   * @memberof XGraph
    */
   drawGraph() {
     u.log(1, 'XGraph.drawGraph()');
@@ -219,6 +217,7 @@ export default class XGraph {
    * @summary Refresh graph with new dimension
    * @param  {Number} n - width width of container
    * @param  {Number} n - height height of container
+   * @memberof XGraph
    */
   refreshGraph(width, height) {
     u.log(1, 'XGraph.refreshGraph()');
@@ -329,6 +328,7 @@ export default class XGraph {
    * Return an array of labels or array of id from current graph
    * @param  {string} prop - id|value
    * @returns {Array}
+   * @memberof XGraph
    */
   getCurrentCells(prop) {
     const cellIds = [];
@@ -351,6 +351,7 @@ export default class XGraph {
    * @param  {string} prop - id|value
    * @param  {string} pattern - Regex or name
    * @returns {Array} Arrays of mxCell
+   * @memberof XGraph
    */
   findMxCells(prop, pattern) {
     const mxcells = this.getMxCells();
@@ -371,6 +372,7 @@ export default class XGraph {
    * Select in graph cells
    * @param  {string} prop - id|value
    * @param  {string} pattern - pattern to seach
+   * @memberof XGraph
    */
   selectMxCells(prop, pattern) {
     const mxcells = this.findMxCells(prop, pattern);
@@ -425,7 +427,9 @@ export default class XGraph {
 
   
   /**
+   * return all values or id of graph
    * @param  {string} prop - id|value
+   * @memberof XGraph
    */
   getOrignalCells(prop) {
     if (prop === 'id' || prop === 'value') return this.cells[prop];

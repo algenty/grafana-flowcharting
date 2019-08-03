@@ -228,6 +228,14 @@ function () {
       this.flowchartHandler.ruleChanged();
       this.render();
     }
+    /**
+     * Add Color
+     *
+     * @param {Number} ruleIndex
+     * @param {Number} colorIndex
+     * @memberof MappingOptionsCtrl
+     */
+
   }, {
     key: "onColorChange",
     value: function onColorChange(ruleIndex, colorIndex) {
@@ -254,6 +262,12 @@ function () {
       var xgraph = flowchart.getXGraph();
       xgraph.selectMxCells(prop, value);
     }
+    /**
+     * Undisplay cell selection
+     *
+     * @memberof MappingOptionsCtrl
+     */
+
   }, {
     key: "unselectCell",
     value: function unselectCell() {

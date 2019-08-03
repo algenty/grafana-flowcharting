@@ -39,6 +39,7 @@ export default class State {
     u.log(1, 'State.setState()');
     u.log(0, 'State.setState() Rule', rule);
     u.log(0, 'State.setState() Serie', serie);
+    
     if (rule.matchSerie(serie)) {
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
@@ -166,10 +167,9 @@ export default class State {
   }
 
   unsetTooltip() {
-    this.tooltips.forEach((element) => {
-      this.xgraph.removeTooltip(this.mxcell, element.name);
-    });
     this.tooltips = [];
+    this.mxcell.GF_tooltips = undefined;
+    this.mxcell.GF_lastChange = undefined;
   }
 
   unsetLevel() {
@@ -294,6 +294,7 @@ export default class State {
         this.mxcell.GF_lastChange = this.lastChange;
         this.mxcell.GF_tooltips = this.tooltips;
       }
+
       // SHAPES
       if (this.matchedShape) {
         // Apply colors
@@ -307,10 +308,12 @@ export default class State {
           this.xgraph.removeOverlay(this.mxcell);
         }
       }
+
       // TEXTS
       if (this.matchedText) {
         this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
       }
+
       // LINKS
       if (this.matchedLink) {
         this.xgraph.addLink(this.mxcell, this.currentLink);
@@ -324,7 +327,7 @@ export default class State {
       this.xgraph.setStyleCell(this.mxcell, style, this.getCurrentColorStyle(style));
     });
     this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
-    // this.mxcell.setAttribute('link', this.getCurrentLink());
+    this.mxcell.setAttribute('link', this.getCurrentLink());
     this.xgraph.removeOverlay(this.mxcell);
     this.xgraph.addLink(this.mxcell, this.originalLink);
     this.changed = false;

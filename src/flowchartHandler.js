@@ -1,8 +1,20 @@
 /* eslint-disable prefer-destructuring */
 import Flowchart from './flowchart_class';
 
+/**
+ * Class FlowchartHandler
+ */
 export default class FlowchartHandler {
   /** @ngInject */
+
+  /**
+   *Creates an instance of FlowchartHandler to handle flowchart
+   * @param {*} $scope - angular scope 
+   * @param {*} elem - angular elem
+   * @param {*} ctrl - ctrlPanel
+   * @param {*} data - Empty data to store
+   * @memberof FlowchartHandler
+   */
   constructor($scope, elem, ctrl, data) {
     u.log(1, 'FlowchartHandler.constructor()');
     u.log(0, 'FlowchartHandler.constructor() data', data);
@@ -50,6 +62,12 @@ export default class FlowchartHandler {
     };
   }
 
+  /**
+   * import data into
+   * 
+   * @param {Object} obj
+   * @memberof FlowchartHandler
+   */
   import(obj) {
     u.log(1, 'FlowchartHandler.import()');
     u.log(0, 'FlowchartHandler.import() obj', obj);
@@ -66,10 +84,23 @@ export default class FlowchartHandler {
     }
   }
 
+  /**
+   * Get flowchart in index position
+   *
+   * @param {Number} index
+   * @returns {Flowchart}
+   * @memberof FlowchartHandler
+   */
   getFlowchart(index) {
     return this.flowcharts[index];
   }
 
+  /**
+   * Return array of flowchart
+   *
+   * @returns {Array} Array of flowchart
+   * @memberof FlowchartHandler
+   */
   getFlowcharts() {
     return this.flowcharts;
   }
@@ -113,6 +144,13 @@ export default class FlowchartHandler {
         this.changeOptionFlag = false;
       }
       if (this.changeRuleFlag || this.changeDataFlag) {
+        if (this.changeRuleFlag) {
+          const rules = this.ctrl.rulesHandler.getRules();
+          const series = this.ctrl.series;
+          this.flowcharts.forEach(flowchart => {
+            flowchart.updateStates(rules);
+          });
+        }
         this.setStates();
         this.applyStates();
         this.changeRuleFlag = false;
@@ -147,6 +185,11 @@ export default class FlowchartHandler {
     });
   }
 
+  /**
+   * Change states of cell according to rules and series 
+   *
+   * @memberof FlowchartHandler
+   */
   setStates() {
     const rules = this.ctrl.rulesHandler.getRules();
     const series = this.ctrl.series;
@@ -155,6 +198,11 @@ export default class FlowchartHandler {
     });
   }
 
+  /**
+   * Apply state of cell after setStates
+   *
+   * @memberof FlowchartHandler
+   */
   applyStates() {
     this.flowcharts.forEach(flowchart => {
       flowchart.applyStates();

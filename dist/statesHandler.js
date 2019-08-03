@@ -29,14 +29,37 @@ function () {
     this.xgraph = xgraph;
     this.initStates(this.xgraph, ctrl.rulesHandler.getRules());
   }
+  /**
+   * Init states
+   *
+   * @param {XGraph} xgraph
+   * @param {Array<Rule>} rules
+   * @memberof StateHandler
+   */
+
 
   _createClass(StateHandler, [{
     key: "initStates",
     value: function initStates(xgraph, rules) {
-      var _this = this;
-
+      u.log(1, 'StateHandler.initStates()');
       this.xgraph = xgraph;
       this.states = [];
+      this.updateStates(rules);
+    }
+    /**
+     * Update States : Add or remove state in states when rules changed
+     *
+     * @param {XGraph} xgraph
+     * @param {Array<Rule>} rules
+     * @memberof StateHandler
+     */
+
+  }, {
+    key: "updateStates",
+    value: function updateStates(rules) {
+      var _this = this;
+
+      u.log(1, 'StateHandler.updateStates()');
       var mxcells = this.xgraph.getMxCells(); // NEW
 
       _.each(mxcells, function (mxcell) {
@@ -54,106 +77,28 @@ function () {
               var rule = _step.value;
               var shapes = rule.getShapeMaps();
               var texts = rule.getTextMaps();
-              var links = rule.getLinkMaps(); // SHAPES
+              var links = rule.getLinkMaps();
+              var name = null; // SHAPES
 
-              var _iteratorNormalCompletion2 = true;
-              var _didIteratorError2 = false;
-              var _iteratorError2 = undefined;
+              if (rule.data.shapeProp === 'id') name = mxcell.id;else if (rule.data.shapeProp === 'value') name = xgraph.getValueCell(mxcell);else name = null;
 
-              try {
-                for (var _iterator2 = shapes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                  var shape = _step2.value;
-                  var name = null;
-                  if (rule.data.shapeProp === 'id') name = mxcell.id;else if (rule.data.shapeProp === 'value') name = xgraph.getValueCell(mxcell);else name = null;
+              if (rule.matchShape(name)) {
+                _this.addState(mxcell);
+              } // TEXTS
 
-                  if (rule.matchShape(name)) {
-                    _this.addState(mxcell);
 
-                    found = true;
-                    break;
-                  }
-                }
-              } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-              } finally {
-                try {
-                  if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-                    _iterator2["return"]();
-                  }
-                } finally {
-                  if (_didIteratorError2) {
-                    throw _iteratorError2;
-                  }
-                }
+              if (rule.data.textProp === 'id') name = mxcell.id;else if (rule.data.textProp === 'value') name = xgraph.getValueCell(mxcell);else name = null;
+
+              if (rule.matchText(name)) {
+                _this.addState(mxcell);
+              } // LINKS
+
+
+              if (rule.data.linkProp === 'id') name = mxcell.id;else if (rule.data.linkProp === 'value') name = xgraph.getValueCell(mxcell);else name = null;
+
+              if (rule.matchLink(name)) {
+                _this.addState(mxcell);
               }
-
-              if (found) break; // TEXTS
-
-              var _iteratorNormalCompletion3 = true;
-              var _didIteratorError3 = false;
-              var _iteratorError3 = undefined;
-
-              try {
-                for (var _iterator3 = texts[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                  var text = _step3.value;
-                  var _name = null;
-                  if (rule.data.textProp === 'id') _name = mxcell.id;else if (rule.data.textProp === 'value') _name = xgraph.getValueCell(mxcell);else _name = null;
-
-                  if (rule.matchText(_name) && !_this.isInclude(mxcell)) {
-                    _this.addState(mxcell);
-
-                    found = true;
-                  }
-                }
-              } catch (err) {
-                _didIteratorError3 = true;
-                _iteratorError3 = err;
-              } finally {
-                try {
-                  if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-                    _iterator3["return"]();
-                  }
-                } finally {
-                  if (_didIteratorError3) {
-                    throw _iteratorError3;
-                  }
-                }
-              }
-
-              if (found) break; // LINKS
-
-              var _iteratorNormalCompletion4 = true;
-              var _didIteratorError4 = false;
-              var _iteratorError4 = undefined;
-
-              try {
-                for (var _iterator4 = links[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                  var link = _step4.value;
-                  var _name2 = null;
-                  if (rule.data.textProp === 'id') _name2 = mxcell.id;else if (rule.data.textProp === 'value') _name2 = xgraph.getValueCell(mxcell);else _name2 = null;
-
-                  if (rule.matchLink(_name2) && !_this.isInclude(mxcell)) {
-                    _this.addState(mxcell);
-                  }
-                }
-              } catch (err) {
-                _didIteratorError4 = true;
-                _iteratorError4 = err;
-              } finally {
-                try {
-                  if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
-                    _iterator4["return"]();
-                  }
-                } finally {
-                  if (_didIteratorError4) {
-                    throw _iteratorError4;
-                  }
-                }
-              }
-
-              ;
-              if (found) break;
             }
           } catch (err) {
             _didIteratorError = true;
@@ -198,49 +143,70 @@ function () {
     key: "getState",
     value: function getState(cellId) {
       var foundState = null;
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
 
-      try {
-        for (var _iterator5 = this.states[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-          var state = _step5.value;
-          if (cellId == state.cellId) foundState = state;
+      for (var index = 0; index < this.states.length; index++) {
+        var state = this.states[index];
+
+        if (cellId == state.cellId) {
+          foundState = state;
           break;
-        }
-      } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
-            _iterator5["return"]();
-          }
-        } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
-          }
         }
       }
 
       return foundState;
     }
+    /**
+     * Add a state 
+     *
+     * @param {mxCell} mxcell
+     * @returns {State} created state
+     * @memberof StateHandler
+     */
+
   }, {
     key: "addState",
     value: function addState(mxcell) {
-      var state = new _state_class["default"](mxcell, this.xgraph, this.ctrl);
-      this.states.push(state);
+      var state = this.getState(mxcell.id);
+
+      if (state === null) {
+        state = new _state_class["default"](mxcell, this.xgraph, this.ctrl);
+        this.states.push(state);
+      }
+
+      return state;
     }
+    /**
+     * Remove state
+     *
+     * @param {mxCell} mxcell
+     * @memberof StateHandler
+     */
+
   }, {
     key: "removeState",
     value: function removeState(mxcell) {
       this.states = _.without(this.states, mxcell);
     }
+    /**
+     * Count number of state
+     *
+     * @returns {Number} 
+     * @memberof StateHandler
+     */
+
   }, {
     key: "countStates",
     value: function countStates() {
       return this.states.length;
     }
+    /**
+     * Count number of state with level
+     *
+     * @param {Number} level - 0 for OK | 1 for Warning | 2 for Error
+     * @returns {Number}
+     * @memberof StateHandler
+     */
+
   }, {
     key: "countStatesWithLevel",
     value: function countStatesWithLevel(level) {
@@ -263,8 +229,8 @@ function () {
     }
     /**
      * Change states according to rules and datas from grafana
-     * @param  {} rules
-     * @param  {} series
+     * @param  {Array<Rule>} rules - Array of Rule object
+     * @param  {Array<Serie>} series - Array of serie object
      */
 
   }, {
@@ -273,7 +239,7 @@ function () {
       u.log(1, 'StateHandler.setStates()');
       u.log(0, 'StatesHandler.setStates() Rules', rules);
       u.log(0, 'StatesHandler.setStates() Series', series);
-      u.log(0, 'StatesHandler.setStates() States', this.states);
+      u.log(1, 'StatesHandler.setStates() States', this.states);
       this.prepare();
       this.states.forEach(function (state) {
         rules.forEach(function (rule) {

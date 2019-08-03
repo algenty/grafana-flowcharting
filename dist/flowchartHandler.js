@@ -15,10 +15,22 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/**
+ * Class FlowchartHandler
+ */
 var FlowchartHandler =
 /*#__PURE__*/
 function () {
   /** @ngInject */
+
+  /**
+   *Creates an instance of FlowchartHandler to handle flowchart
+   * @param {*} $scope - angular scope 
+   * @param {*} elem - angular elem
+   * @param {*} ctrl - ctrlPanel
+   * @param {*} data - Empty data to store
+   * @memberof FlowchartHandler
+   */
   function FlowchartHandler($scope, elem, ctrl, data) {
     var _this = this;
 
@@ -67,6 +79,13 @@ function () {
       window.clearInterval(_this.mousedownTimeout);
     };
   }
+  /**
+   * import data into
+   * 
+   * @param {Object} obj
+   * @memberof FlowchartHandler
+   */
+
 
   _createClass(FlowchartHandler, [{
     key: "import",
@@ -91,11 +110,26 @@ function () {
         });
       }
     }
+    /**
+     * Get flowchart in index position
+     *
+     * @param {Number} index
+     * @returns {Flowchart}
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "getFlowchart",
     value: function getFlowchart(index) {
       return this.flowcharts[index];
     }
+    /**
+     * Return array of flowchart
+     *
+     * @returns {Array} Array of flowchart
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "getFlowcharts",
     value: function getFlowcharts() {
@@ -142,6 +176,14 @@ function () {
         }
 
         if (this.changeRuleFlag || this.changeDataFlag) {
+          if (this.changeRuleFlag) {
+            var rules = this.ctrl.rulesHandler.getRules();
+            var series = this.ctrl.series;
+            this.flowcharts.forEach(function (flowchart) {
+              flowchart.updateStates(rules);
+            });
+          }
+
           this.setStates();
           this.applyStates();
           this.changeRuleFlag = false;
@@ -181,6 +223,12 @@ function () {
         flowchart.refresh(width, height);
       });
     }
+    /**
+     * Change states of cell according to rules and series 
+     *
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "setStates",
     value: function setStates() {
@@ -190,6 +238,12 @@ function () {
         flowchart.setStates(rules, series);
       });
     }
+    /**
+     * Apply state of cell after setStates
+     *
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "applyStates",
     value: function applyStates() {

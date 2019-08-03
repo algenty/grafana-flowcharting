@@ -60,6 +60,11 @@ function () {
       return this.data;
     }
   }, {
+    key: "updateStates",
+    value: function updateStates(rules) {
+      if (this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
+    }
+  }, {
     key: "init",
     value: function init() {
       u.log(1, "flowchart[".concat(this.data.name, "].init()"));

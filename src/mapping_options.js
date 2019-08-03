@@ -114,6 +114,13 @@ export class MappingOptionsCtrl {
     this.render();
   }
 
+  /**
+   * Add Color
+   *
+   * @param {Number} ruleIndex
+   * @param {Number} colorIndex
+   * @memberof MappingOptionsCtrl
+   */
   onColorChange(ruleIndex, colorIndex) {
     return (newColor) => {
       const rule = this.rulesHandler.getRule(ruleIndex);
@@ -121,6 +128,7 @@ export class MappingOptionsCtrl {
       this.onRulesChange();
     };
   }
+
   /**
    * Display cell selection in graph
    * @param  {} prop
@@ -132,6 +140,11 @@ export class MappingOptionsCtrl {
     xgraph.selectMxCells(prop, value);
   }
 
+  /**
+   * Undisplay cell selection
+   *
+   * @memberof MappingOptionsCtrl
+   */
   unselectCell() {
     const flowchart = this.flowchartHandler.getFlowchart(0);
     const xgraph = flowchart.getXGraph();

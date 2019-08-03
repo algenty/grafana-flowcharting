@@ -35,18 +35,36 @@ function () {
       value: 'xml'
     }];
   }
+  /**
+   *Render
+   *
+   * @memberof FlowchartOptionsCtrl
+   */
+
 
   _createClass(FlowchartOptionsCtrl, [{
     key: "render",
     value: function render() {
       this.flowchartHandler.render();
     }
+    /**
+     * onSourceChange event when source changes
+     *
+     * @memberof FlowchartOptionsCtrl
+     */
+
   }, {
     key: "onSourceChange",
     value: function onSourceChange() {
       this.flowchartHandler.sourceChanged();
       this.render();
     }
+    /**
+     * onOptionChange event when options change
+     *
+     * @memberof FlowchartOptionsCtrl
+     */
+
   }, {
     key: "onOptionChange",
     value: function onOptionChange() {
@@ -54,6 +72,14 @@ function () {
       this.flowchartHandler.optionChanged();
       this.render();
     }
+    /**
+     * Open graph in index in draw.io
+     *
+     * @param {Number} index - index of graph
+     * @memberof FlowchartOptionsCtrl
+     * @see flowchartHandler:openDrawEditor
+     */
+
   }, {
     key: "edit",
     value: function edit(index) {

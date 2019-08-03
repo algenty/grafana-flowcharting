@@ -76,16 +76,18 @@ Graph.prototype.getTooltipForCell = function(cell) {
         return 0;
       }
     });
-    tip += '<div>';
-    for (var i = 0; i < temp.length; i++) {
-      if (temp[i].name != 'link' || !this.isCustomLink(temp[i].value)) {
-        tip +=
-          (temp[i].name != 'link' ? '<b>' + temp[i].name + ':</b> ' : '') +
-          mxUtils.htmlEntities(temp[i].value) +
-          '\n';
+    if (temp.length > 0) {
+      tip += '<div>';
+      for (var i = 0; i < temp.length; i++) {
+        if (temp[i].name != 'link' || !this.isCustomLink(temp[i].value)) {
+          tip +=
+            (temp[i].name != 'link' ? '<b>' + temp[i].name + ':</b> ' : '') +
+            mxUtils.htmlEntities(temp[i].value) +
+            '\n';
+        }
       }
+      tip += '</div>';
     }
-    tip += '</div>';
 
     if (tip.length > 0) {
       tip = tip.substring(0, tip.length - 1);
@@ -124,91 +126,88 @@ Graph.prototype.lazyZoomDelay = 20;
 Graph.prototype.updateZoomTimeout = null;
 Graph.prototype.resize = null;
 
-
-mxEvent.addMouseWheelListener =  function(func, container) {
+mxEvent.addMouseWheelListener = function(func, container) {
   if (null != func) {
-      var c = function(container) {
-          null == container && (container = window.event);
-          var c;
-          c = mxClient.IS_FF ? -container.detail / 2 : container.wheelDelta / 120;
-          0 != c && func(container, 0 < c)
-      };
-      mxClient.IS_NS && null == document.documentMode ? mxEvent.addListener(mxClient.IS_GC && null != container ? container : window, mxClient.IS_SF || mxClient.IS_GC ? "mousewheel" : "DOMMouseScroll", c) : mxEvent.addListener(document, "mousewheel", c)
+    var c = function(container) {
+      null == container && (container = window.event);
+      var c;
+      c = mxClient.IS_FF ? -container.detail / 2 : container.wheelDelta / 120;
+      0 != c && func(container, 0 < c);
+    };
+    mxClient.IS_NS && null == document.documentMode
+      ? mxEvent.addListener(
+          mxClient.IS_GC && null != container ? container : window,
+          mxClient.IS_SF || mxClient.IS_GC ? 'mousewheel' : 'DOMMouseScroll',
+          c
+        )
+      : mxEvent.addListener(document, 'mousewheel', c);
   }
-}
+};
 
-Graph.prototype.lazyZoom = function(zoomIn)
-{
-  if (this.updateZoomTimeout != null)
-  {
+Graph.prototype.lazyZoom = function(zoomIn) {
+  if (this.updateZoomTimeout != null) {
     window.clearTimeout(this.updateZoomTimeout);
   }
 
   // Switches to 1% zoom steps below 15%
   // Lower bound depdends on rounding below
-  if (zoomIn)
-  {
-    if (this.view.scale * this.cumulativeZoomFactor < 0.15)
-    {
+  if (zoomIn) {
+    if (this.view.scale * this.cumulativeZoomFactor < 0.15) {
       this.cumulativeZoomFactor = (this.view.scale + 0.01) / this.view.scale;
-    }
-    else
-    {
+    } else {
       // Uses to 5% zoom steps for better grid rendering in webkit
       // and to avoid rounding errors for zoom steps
       this.cumulativeZoomFactor *= this.zoomFactor;
-      this.cumulativeZoomFactor = Math.round(this.view.scale * this.cumulativeZoomFactor * 20) / 20 / this.view.scale;
+      this.cumulativeZoomFactor =
+        Math.round(this.view.scale * this.cumulativeZoomFactor * 20) / 20 / this.view.scale;
     }
-  }
-  else
-  {
-    if (this.view.scale * this.cumulativeZoomFactor <= 0.15)
-    {
+  } else {
+    if (this.view.scale * this.cumulativeZoomFactor <= 0.15) {
       this.cumulativeZoomFactor = (this.view.scale - 0.01) / this.view.scale;
-    }
-    else
-    {
+    } else {
       // Uses to 5% zoom steps for better grid rendering in webkit
       // and to avoid rounding errors for zoom steps
       this.cumulativeZoomFactor /= this.zoomFactor;
-      this.cumulativeZoomFactor = Math.round(this.view.scale * this.cumulativeZoomFactor * 20) / 20 / this.view.scale;
+      this.cumulativeZoomFactor =
+        Math.round(this.view.scale * this.cumulativeZoomFactor * 20) / 20 / this.view.scale;
     }
   }
-  
-  this.cumulativeZoomFactor = Math.max(0.01, Math.min(this.view.scale * this.cumulativeZoomFactor, 160) / this.view.scale);
-  
-      this.updateZoomTimeout = window.setTimeout(mxUtils.bind(this, function()
-      {
-          var offset = mxUtils.getOffset(this.container);
-          var dx = 0;
-          var dy = 0;
-          
-          if (this.cursorPosition != null)
-          {
-              dx = this.container.offsetWidth / 2 - this.cursorPosition.x + offset.x;
-              dy = this.container.offsetHeight / 2 - this.cursorPosition.y + offset.y;
-          }
 
-          var prev = this.view.scale;
-          this.zoom(this.cumulativeZoomFactor,true);
-          var s = this.view.scale;
-          
-          if (s != prev)
-          {
-              if (this.resize != null)
-              {
-                  // TODO for support IE
-                  // ui.chromelessResize(false, null, dx * (this.cumulativeZoomFactor - 1), dy * (this.cumulativeZoomFactor - 1));
-              }
-              
-              if (mxUtils.hasScrollbars(this.container) && (dx != 0 || dy != 0))
-              {
-                this.container.scrollLeft -= dx * (this.cumulativeZoomFactor - 1);
-                this.container.scrollTop -= dy * (this.cumulativeZoomFactor - 1);
-              }
-          }
-          
-          this.cumulativeZoomFactor = 1;
-          this.updateZoomTimeout = null;
-      }), this.lazyZoomDelay);
+  this.cumulativeZoomFactor = Math.max(
+    0.01,
+    Math.min(this.view.scale * this.cumulativeZoomFactor, 160) / this.view.scale
+  );
+
+  this.updateZoomTimeout = window.setTimeout(
+    mxUtils.bind(this, function() {
+      var offset = mxUtils.getOffset(this.container);
+      var dx = 0;
+      var dy = 0;
+
+      if (this.cursorPosition != null) {
+        dx = this.container.offsetWidth / 2 - this.cursorPosition.x + offset.x;
+        dy = this.container.offsetHeight / 2 - this.cursorPosition.y + offset.y;
+      }
+
+      var prev = this.view.scale;
+      this.zoom(this.cumulativeZoomFactor, true);
+      var s = this.view.scale;
+
+      if (s != prev) {
+        if (this.resize != null) {
+          // TODO for support IE
+          // ui.chromelessResize(false, null, dx * (this.cumulativeZoomFactor - 1), dy * (this.cumulativeZoomFactor - 1));
+        }
+
+        if (mxUtils.hasScrollbars(this.container) && (dx != 0 || dy != 0)) {
+          this.container.scrollLeft -= dx * (this.cumulativeZoomFactor - 1);
+          this.container.scrollTop -= dy * (this.cumulativeZoomFactor - 1);
+        }
+      }
+
+      this.cumulativeZoomFactor = 1;
+      this.updateZoomTimeout = null;
+    }),
+    this.lazyZoomDelay
+  );
 };

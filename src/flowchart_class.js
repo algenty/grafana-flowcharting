@@ -47,6 +47,10 @@ export default class Flowchart {
     return this.data;
   }
 
+  updateStates(rules) {
+    if ( this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
+  }
+
   init() {
     u.log(1, `flowchart[${this.data.name}].init()`);
     if (this.xgraph === undefined) this.xgraph = new XGraph(this.container, this.getXml(true));

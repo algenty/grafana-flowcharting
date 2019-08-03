@@ -13,21 +13,43 @@ export class FlowchartOptionsCtrl {
     this.sourceTypes = [{ text: 'Url', value: 'url' }, { text: 'XML Content', value: 'xml' }];
   }
 
+  /**
+   *Render
+   *
+   * @memberof FlowchartOptionsCtrl
+   */
   render() {
     this.flowchartHandler.render();
   }
 
+  /**
+   * onSourceChange event when source changes
+   *
+   * @memberof FlowchartOptionsCtrl
+   */
   onSourceChange() {
     this.flowchartHandler.sourceChanged();
     this.render();
   }
 
+  /**
+   * onOptionChange event when options change
+   *
+   * @memberof FlowchartOptionsCtrl
+   */
   onOptionChange() {
     u.log(1, "FlowchartOptionsCtrl.onOptionChange()");
     this.flowchartHandler.optionChanged();
     this.render();
   }
 
+  /**
+   * Open graph in index in draw.io
+   *
+   * @param {Number} index - index of graph
+   * @memberof FlowchartOptionsCtrl
+   * @see flowchartHandler:openDrawEditor
+   */
   edit(index) {
     this.flowchartHandler.openDrawEditor(index);
   }
