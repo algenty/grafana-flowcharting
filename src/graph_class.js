@@ -536,7 +536,8 @@ export default class XGraph {
 
     if (this.graph.isZoomWheelEvent(evt)) {
       this.cursorPosition = new mxPoint(mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-      this.lazyZoomBeta(up);
+      // this.lazyZoomBeta(up);
+      this.lazyZoomCenter(up);
       mxEvent.consume(evt);
     }
   }
@@ -545,8 +546,8 @@ export default class XGraph {
     // console.log('evt ', evt);
     if (!mxEvent.isConsumed(evt) && evt.keyCode == 27 /* Escape */) {
       this.graph.cumulativeZoomFactor = 1;
-      this.refreshGraph(this.width, this.height);
       this.graph.zoomActual();
+      this.refreshGraph(this.width, this.height);
       // mxEvent.consume(evt);
     }
   }
@@ -635,7 +636,14 @@ export default class XGraph {
   }
 
   lazyZoomCenter(zoomIn) {
-    
+    if (zoomIn) {
+      this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
+    }
+    else {
+      this.cumulativeZoomFactor = this.cumulativeZoomFactor * 0.8;
+    }
+    this.graph.zoomTo(this.cumulativeZoomFactor, true);
+
   }
 
   lazyZoomBeta(zoomIn) {
