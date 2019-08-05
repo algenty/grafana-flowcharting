@@ -1,6 +1,12 @@
 /* global u */
 import State from './state_class';
 
+/**
+ *States Handler class
+ *
+ * @export
+ * @class StateHandler
+ */
 export default class StateHandler {
   /** @ngInject */
   constructor(xgraph, ctrl) {

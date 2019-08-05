@@ -1,4 +1,17 @@
+/**
+ *Class for state of one cell
+ *
+ * @export
+ * @class State
+ */
 export default class State {
+  /**
+   *Creates an instance of State.
+   * @param {mxCell} mxcell
+   * @param {XGraph} xgraph
+   * @param {*} ctrl - ctrl panel
+   * @memberof State
+   */
   constructor(mxcell, xgraph, ctrl) {
     u.log(1, 'State.constructor()');
     this.mxcell = mxcell;
@@ -35,6 +48,13 @@ export default class State {
     });
   }
 
+  /**
+   *Define state according to 1 rule and 1 serie without apply display
+   *
+   * @param {Rule} rule
+   * @param {Serie} serie
+   * @memberof State
+   */
   setState(rule, serie) {
     u.log(1, 'State.setState()');
     u.log(0, 'State.setState() Rule', rule);
@@ -110,6 +130,12 @@ export default class State {
     u.log(0, 'State.setState() state', this);
   }
 
+  /**
+   *Restore initial status of state without apply display.
+   * Use applyState() to apply on graph (color, level and text)
+   *
+   * @memberof State
+   */
   unsetState() {
     u.log(1, 'State.unsetState()');
     this.lastChange = null;

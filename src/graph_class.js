@@ -525,19 +525,18 @@ export default class XGraph {
 
   eventMouseWheel(evt, up) {
     u.log(1, 'XGraph.eventMouseWheel()');
-    u.log(1, 'XGraph.eventMouseWheel() evt', evt);
-    u.log(1, 'XGraph.eventMouseWheel() up', up);
-    u.log(1, 'XGraph.eventMouseWheel() mxUtils.getOffset()', mxUtils.getOffset(this.container));
-    u.log(
-      1,
-      'XGraph.eventMouseWheel() container.getBoundingClientRect()',
-      this.container.getBoundingClientRect()
-    );
+    // u.log(1, 'XGraph.eventMouseWheel() evt', evt);
+    // u.log(1, 'XGraph.eventMouseWheel() up', up);
+    // u.log(1, 'XGraph.eventMouseWheel() mxUtils.getOffset()', mxUtils.getOffset(this.container));
+    // u.log(
+    //   1,
+    //   'XGraph.eventMouseWheel() container.getBoundingClientRect()',
+    //   this.container.getBoundingClientRect()
+    // );
 
     if (this.graph.isZoomWheelEvent(evt)) {
       this.cursorPosition = new mxPoint(mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-      this.lazyZoom(up);
-      u.log(1, 'XGraph.eventMouseWheel() graph', this.graph);
+      this.lazyZoomBeta(up);
       mxEvent.consume(evt);
     }
   }
@@ -545,8 +544,9 @@ export default class XGraph {
   eventKey(evt) {
     // console.log('evt ', evt);
     if (!mxEvent.isConsumed(evt) && evt.keyCode == 27 /* Escape */) {
-      this.graph.zoomScale = 1;
+      this.graph.cumulativeZoomFactor = 1;
       this.refreshGraph(this.width, this.height);
+      this.graph.zoomActual();
       // mxEvent.consume(evt);
     }
   }
@@ -591,7 +591,7 @@ export default class XGraph {
     );
 
     this.updateZoomTimeout = window.setTimeout(
-      mxUtils.bind(this, function() {
+      mxUtils.bind(this, function () {
         var offset = mxUtils.getOffset(this.graph.container);
         var dx = 0;
         var dy = 0;
@@ -634,68 +634,34 @@ export default class XGraph {
     );
   }
 
+  lazyZoomCenter(zoomIn) {
+    
+  }
+
   lazyZoomBeta(zoomIn) {
-    if (this.updateZoomTimeout != null) {
-      window.clearTimeout(this.updateZoomTimeout);
+    let dx = this.container.offsetWidth;
+    let dy = this.container.offsetHeight;
+    let x = this.cursorPosition.x;
+    let y = this.cursorPosition.x;
+  
+    if(zoomIn) this.cumulativeZoomFactor *= this.zoomFactor;
+    else this.cumulativeZoomFactor /= this.zoomFactor;
+
+    let scale = Math.round(this.graph.view.scale * this.cumulativeZoomFactor * 100) / 100;
+    let factor = scale / this.graph.view.scale;
+
+    if (factor > 1)
+    {
+      let f = (factor - 1) / (scale * 2);
+      dx *= -f;
+      dy *= -f;
     }
-    if (zoomIn) {
-      if (this.graph.view.scale * this.cumulativeZoomFactor < 0.15) {
-        this.cumulativeZoomFactor = (this.graph.view.scale + 0.01) / this.graph.view.scale;
-      } else {
-        this.cumulativeZoomFactor *= this.zoomFactor;
-        this.cumulativeZoomFactor =
-          Math.round(this.graph.view.scale * this.cumulativeZoomFactor * 20) /
-          20 /
-          this.graph.view.scale;
-      }
-    } else {
-      if (this.graph.view.scale * this.cumulativeZoomFactor <= 0.15) {
-        this.cumulativeZoomFactor = (this.graph.view.scale - 0.01) / this.graph.view.scale;
-      } else {
-        this.cumulativeZoomFactor /= this.zoomFactor;
-        this.cumulativeZoomFactor =
-          Math.round(this.graph.view.scale * this.cumulativeZoomFactor * 20) /
-          20 /
-          this.graph.view.scale;
-      }
+    else
+    {
+      let f = (1 / factor - 1) / (this.graph.view.scale * 2);
+      dx *= f;
+      dy *= f;
     }
-
-    this.cumulativeZoomFactor = Math.max(
-      0.01,
-      Math.min(this.graph.view.scale * this.cumulativeZoomFactor, 160) / this.graph.view.scale
-    );
-
-    this.updateZoomTimeout = window.setTimeout(
-      mxUtils.bind(this, function() {
-        var offset = mxUtils.getOffset(this.graph.container);
-        var dx = 0;
-        var dy = 0;
-        if (this.cursorPosition != null) {
-          let factor = this.cumulativeZoomFactor;
-          let scale = Math.round(this.graph.view.scale * factor * 100) / 100;
-          // A changer
-          let dx = this.container.offsetWidth;
-          let dy = this.container.offsetHeight;
-          if (factor > 1) {
-            var f = (factor - 1) / (scale * 2);
-            dx *= -f;
-            dy *= -f;
-          } else {
-            var f = (1 / factor - 1) / (this.graph.view.scale * 2);
-            dx *= f;
-            dy *= f;
-          }
-
-          this.graph.view.scaleAndTranslate(
-            scale,
-            this.view.translate.x + dx,
-            this.view.translate.y + dy
-          );
-        }
-        this.cumulativeZoomFactor = 1;
-        this.updateZoomTimeout = null;
-      }),
-      this.lazyZoomDelay
-    );
+    this.graph.view.scaleAndTranslate(scale, this.graph.view.translate.x + dx, this.graph.view.translate.y + dy);
   }
 }

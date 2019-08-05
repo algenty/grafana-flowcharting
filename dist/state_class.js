@@ -11,9 +11,22 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/**
+ *Class for state of one cell
+ *
+ * @export
+ * @class State
+ */
 var State =
 /*#__PURE__*/
 function () {
+  /**
+   *Creates an instance of State.
+   * @param {mxCell} mxcell
+   * @param {XGraph} xgraph
+   * @param {*} ctrl - ctrl panel
+   * @memberof State
+   */
   function State(mxcell, xgraph, ctrl) {
     var _this = this;
 
@@ -53,6 +66,14 @@ function () {
       _this.originalColors[style] = color;
     });
   }
+  /**
+   *Define state according to 1 rule and 1 serie without apply display
+   *
+   * @param {Rule} rule
+   * @param {Serie} serie
+   * @memberof State
+   */
+
 
   _createClass(State, [{
     key: "setState",
@@ -135,6 +156,13 @@ function () {
 
       u.log(0, 'State.setState() state', this);
     }
+    /**
+     *Restore initial status of state without apply display.
+     * Use applyState() to apply on graph (color, level and text)
+     *
+     * @memberof State
+     */
+
   }, {
     key: "unsetState",
     value: function unsetState() {
