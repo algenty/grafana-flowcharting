@@ -22,9 +22,9 @@
 
 .flowchart-panel__chart {
   position: relative;
-  cursor: crosshair;
   flex-grow: 1;
-  top: 10px; }
+  top: 10px;
+  overflow: auto; }
 
 .datapoints-warning {
   pointer: none;

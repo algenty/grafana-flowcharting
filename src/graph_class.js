@@ -1,4 +1,9 @@
+/* eslint-disable no-undef */
+/* eslint-disable new-cap */
+/* eslint-disable dot-notation */
+/* eslint-disable object-shorthand */
 window.mxLanguages = window.mxLanguages || ['en'];
+
 const sanitizer = require('sanitizer');
 const mxgraph = require('mxgraph')({
   mxImageBasePath: GF_PLUGIN.getMxImagePath(),
@@ -104,15 +109,6 @@ window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange;
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 
 export default class XGraph {
-
-  /**
-   * Creates an instance of XGraph.
-   * @constructor
-   * @param {DOM DIV} container
-   * @param {string} xmlGraph
-   * @memberof XGraph
-   * @class XGraph
-   */
   constructor(container, xmlGraph) {
     u.log(1, 'XGraph.constructor()');
     this.container = container;
@@ -126,6 +122,12 @@ export default class XGraph {
     this.lock = true;
     this.center = true;
     this.zoom = false;
+    // BEGIN ZOOM MouseWheele
+    this.zoomFactor = 1.2;
+    this.cumulativeZoomFactor = 1;
+    this.updateZoomTimeout = null;
+    this.resize = null;
+    // END ZOOM MouseWheele
     this.grid = false;
     this.bgColor = undefined;
     this.zoomPercent = '1';
@@ -138,10 +140,6 @@ export default class XGraph {
     this.initGraph();
   }
 
-  /**
-   * Graph initialization
-   * @memberof XGraph
-   */
   initGraph() {
     u.log(1, 'XGraph.initGraph()');
     const Graph = require('./Graph')({
@@ -150,52 +148,27 @@ export default class XGraph {
     require('./Shapes');
     window.Graph = window.Graph || Graph;
     require('./Graph_over');
-    mxEvent.disableContextMenu(this.container);
     this.graph = new Graph(this.container);
-    // /!\ What is setPannig
-    // this.graph.setPanning(true);
-    this.clickBackup = this.graph.click;
-    // ZOOM
-    mxEvent.addMouseWheelListener(
-      mxUtils.bind(this.graph, function(evt, up) {
-        // console.log('this.isZoomWheelEvent(evt) ', this.isZoomWheelEvent(evt));
-        // console.log('evt ', evt);
-        // console.log('up ', up);
-        if (this.zoomScale === undefined || this.zoomScale === null ) this.zoomScale = 1
-        this.cursorPosition = new mxPoint(mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-        // console.log('this.cursorPosition ', this.cursorPosition);
-        if (this.isZoomWheelEvent(evt)) {
-          // this.lazyZoom(up);
-          if (up) {
-            this.zoomScale = this.zoomScale * 1.2; 
-          }
-          else {
-            this.zoomScale = this.zoomScale * 0.8;
-          }
-          this.zoomTo(this.zoomScale,true);
-          mxEvent.consume(evt);
-        }
-      }),
-      this.container
-    );
 
-    mxEvent.addListener(
-      document,
-      'keydown',
-      mxUtils.bind(this, function(evt) {
-        // console.log('evt ', evt);
-        if (!mxEvent.isConsumed(evt) && evt.keyCode == 27 /* Escape */) {
-          this.graph.zoomScale = 1;
-          this.refreshGraph(this.width, this.height);
-          // mxEvent.consume(evt);
-        }
-      })
-    );
+    // /!\ What is setPannig
+    this.graph.setPanning(true);
+
+    // Backup funtions of clicks
+    this.clickBackup = this.graph.click;
+    this.dbclickBackup = this.graph.dblClick;
+
+    // EVENTS
+
+    // CTRL+MOUSEWHEEL
+    mxEvent.addMouseWheelListener(mxUtils.bind(this, this.eventMouseWheel), this.container);
+
+    // KEYS
+    mxEvent.addListener(document, 'keydown', mxUtils.bind(this, this.eventKey));
+
+    // DB CLICK
+    this.graph.dblClick = this.eventDbClick.bind(this);
   }
-  /**
-   * Draw graph
-   * @memberof XGraph
-   */
+
   drawGraph() {
     u.log(1, 'XGraph.drawGraph()');
     this.graph.getModel().beginUpdate();
@@ -212,13 +185,7 @@ export default class XGraph {
       this.cells['value'] = this.getCurrentCells('value');
     }
   }
-  /**
-   * refreshGraph
-   * @summary Refresh graph with new dimension
-   * @param  {Number} n - width width of container
-   * @param  {Number} n - height height of container
-   * @memberof XGraph
-   */
+
   refreshGraph(width, height) {
     u.log(1, 'XGraph.refreshGraph()');
     const $div = $(this.container);
@@ -324,12 +291,7 @@ export default class XGraph {
     else this.xmlGraph = xmlGraph;
     this.drawGraph();
   }
-  /**
-   * Return an array of labels or array of id from current graph
-   * @param  {string} prop - id|value
-   * @returns {Array}
-   * @memberof XGraph
-   */
+
   getCurrentCells(prop) {
     const cellIds = [];
     const model = this.graph.getModel();
@@ -345,14 +307,7 @@ export default class XGraph {
     }
     return cellIds;
   }
-  
-  /**
-   * Find list of mxCell by id or value
-   * @param  {string} prop - id|value
-   * @param  {string} pattern - Regex or name
-   * @returns {Array} Arrays of mxCell
-   * @memberof XGraph
-   */
+
   findMxCells(prop, pattern) {
     const mxcells = this.getMxCells();
     const result = [];
@@ -368,12 +323,6 @@ export default class XGraph {
     return result;
   }
 
-  /**
-   * Select in graph cells
-   * @param  {string} prop - id|value
-   * @param  {string} pattern - pattern to seach
-   * @memberof XGraph
-   */
   selectMxCells(prop, pattern) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
@@ -425,12 +374,6 @@ export default class XGraph {
     this.graph.setLinkForCell(mxcell, null);
   }
 
-  
-  /**
-   * return all values or id of graph
-   * @param  {string} prop - id|value
-   * @memberof XGraph
-   */
   getOrignalCells(prop) {
     if (prop === 'id' || prop === 'value') return this.cells[prop];
     // TODO: attributs
@@ -470,10 +413,6 @@ export default class XGraph {
     return result;
   }
 
-  /**
-   * Return array of mxcell in graph
-   * @returns {Array} Array of mxcells
-   */
   getMxCells() {
     return this.graph.getModel().cells;
   }
@@ -491,33 +430,17 @@ export default class XGraph {
     });
     return cells;
   }
-  
-  /**
-   * Return the value of style from mxcell
-   * @param  {mxCell} mxcell - mxCell object, see mxGraph API
-   * @param  {string} style - fillColor|strokeColor|fontColor, see mxGraph API
-   * @return {string} color of style, like RGB
-   */
+
   getStyleCell(mxcell, style) {
     const state = this.graph.view.getState(mxcell);
     return state.style[style];
   }
 
-  /**
-   * Set color to style of mxcell
-   * @param  {mxCell} mxcell - mxCell object, see mxGraph API
-   * @param  {string} style - fillColor|strokeColor|fontColor
-   * @param  {} color - new color html style
-   */
   setStyleCell(mxcell, style, color) {
     this.graph.setCellStyles(style, color, [mxcell]);
   }
 
-  /**
-   * Return the label/value of cell
-   * @param  {mxCell} mxcell - mxCell object, see mxGraph API
-   * @return {string} Label of cell
-   */
+  // eslint-disable-next-line class-methods-use-this
   getValueCell(mxcell) {
     if (mxUtils.isNode(mxcell.value)) {
       return mxcell.value.getAttribute('label');
@@ -525,37 +448,28 @@ export default class XGraph {
     return mxcell.getValue(mxcell);
   }
 
-  
-  /**
-   * Set value/label for a cell
-   * @param  {mxCell} mxcell - mxCell object, see mxGraph API
-   * @param  {string} text - New label/value
-   */
+  // eslint-disable-next-line class-methods-use-this
   setValueCell(mxcell, text) {
     if (mxUtils.isNode(mxcell.value)) {
       var label = mxcell.value.setAttribute('label', text);
     } else mxcell.setValue(text);
   }
-  
-  /**
-   * Activate object listener for mapping when user click on link button to select cell in graph 
-   * @param  {object} onMappingObj
-   */
+
   setMap(onMappingObj) {
     u.log(1, 'XGraph.setMapping()');
     u.log(0, 'XGraph.setMapping() onMappingObject : ', onMappingObj);
     this.onMapping = onMappingObj;
     if (this.onMapping.active === true) {
+      this.container.style.cursor = 'crosshair';
       this.graph.click = this.eventClick.bind(this);
     }
   }
-  /**
-   * Desactivate object listener for mapping when user click on link button to select cell in graph 
-   */
+
   unsetMap() {
     u.log(1, 'XGraph.unsetMapping()');
     u.log(0, 'XGraph.unsetMapping() onMapping', this.onMapping);
     this.onMapping.active = false;
+    this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
     this.onMapping.$scope.$apply();
   }
@@ -563,14 +477,10 @@ export default class XGraph {
   //
   // GRAPH HANDLER
   //
-  /**
-   * Actions for click on graph
-   * @private
-   * @param  {} me
-   */
+
   eventClick(me) {
     u.log(1, 'XGraph.eventClick()');
-    u.log(0, 'XGraph.eventClick() me : ', me);
+    u.log(1, 'XGraph.eventClick() me : ', me);
     u.log(0, 'XGraph.eventClick() onMapping : ', this.onMapping);
     const self = this;
 
@@ -588,5 +498,204 @@ export default class XGraph {
         this.unsetMap();
       }
     }
+  }
+
+  eventDbClick(evt, mxcell) {
+    u.log(1, 'XGraph.eventDbClick()');
+    u.log(1, 'XGraph.eventDbClick() evt', evt);
+    u.log(1, 'XGraph.eventDbClick() cell', mxcell);
+    u.log(
+      1,
+      'XGraph.eventDbClick() container.getBoundingClientRect()',
+      this.container.getBoundingClientRect()
+    );
+    if (mxcell !== undefined) {
+      const divRect = this.container.getBoundingClientRect();
+      const x = evt.offsetX;
+      const y = evt.offsetY;
+      console.log('X=' + x + ' Y=' + y);
+      if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
+        let rect = new mxRectangle(x, y, mxcell.geometry.width, mxcell.geometry.height);
+        this.graph.zoomToRect(rect);
+        this.cumulativeZoomFactor = this.graph.view.scale;
+        u.log(1, 'XGraph.eventDbClick() graph', this.graph);
+      }
+    }
+  }
+
+  eventMouseWheel(evt, up) {
+    u.log(1, 'XGraph.eventMouseWheel()');
+    u.log(1, 'XGraph.eventMouseWheel() evt', evt);
+    u.log(1, 'XGraph.eventMouseWheel() up', up);
+    u.log(1, 'XGraph.eventMouseWheel() mxUtils.getOffset()', mxUtils.getOffset(this.container));
+    u.log(
+      1,
+      'XGraph.eventMouseWheel() container.getBoundingClientRect()',
+      this.container.getBoundingClientRect()
+    );
+
+    if (this.graph.isZoomWheelEvent(evt)) {
+      this.cursorPosition = new mxPoint(mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+      this.lazyZoom(up);
+      u.log(1, 'XGraph.eventMouseWheel() graph', this.graph);
+      mxEvent.consume(evt);
+    }
+  }
+
+  eventKey(evt) {
+    // console.log('evt ', evt);
+    if (!mxEvent.isConsumed(evt) && evt.keyCode == 27 /* Escape */) {
+      this.graph.zoomScale = 1;
+      this.refreshGraph(this.width, this.height);
+      // mxEvent.consume(evt);
+    }
+  }
+
+  // EditorUi.js
+  lazyZoom(zoomIn) {
+    if (this.updateZoomTimeout != null) {
+      window.clearTimeout(this.updateZoomTimeout);
+    }
+
+    // Switches to 1% zoom steps below 15%
+    // Lower bound depdends on rounding below
+    if (zoomIn) {
+      if (this.graph.view.scale * this.cumulativeZoomFactor < 0.15) {
+        this.cumulativeZoomFactor = (this.graph.view.scale + 0.01) / this.graph.view.scale;
+      } else {
+        // Uses to 5% zoom steps for better grid rendering in webkit
+        // and to avoid rounding errors for zoom steps
+        this.cumulativeZoomFactor *= this.zoomFactor;
+        this.cumulativeZoomFactor =
+          Math.round(this.graph.view.scale * this.cumulativeZoomFactor * 20) /
+          20 /
+          this.graph.view.scale;
+      }
+    } else {
+      if (this.graph.view.scale * this.cumulativeZoomFactor <= 0.15) {
+        this.cumulativeZoomFactor = (this.graph.view.scale - 0.01) / this.graph.view.scale;
+      } else {
+        // Uses to 5% zoom steps for better grid rendering in webkit
+        // and to avoid rounding errors for zoom steps
+        this.cumulativeZoomFactor /= this.zoomFactor;
+        this.cumulativeZoomFactor =
+          Math.round(this.graph.view.scale * this.cumulativeZoomFactor * 20) /
+          20 /
+          this.graph.view.scale;
+      }
+    }
+
+    this.cumulativeZoomFactor = Math.max(
+      0.01,
+      Math.min(this.graph.view.scale * this.cumulativeZoomFactor, 160) / this.graph.view.scale
+    );
+
+    this.updateZoomTimeout = window.setTimeout(
+      mxUtils.bind(this, function() {
+        var offset = mxUtils.getOffset(this.graph.container);
+        var dx = 0;
+        var dy = 0;
+
+        if (this.cursorPosition != null) {
+          dx = this.graph.container.offsetWidth / 2 - this.cursorPosition.x + offset.x;
+          dy = this.graph.container.offsetHeight / 2 - this.cursorPosition.y + offset.y;
+        }
+
+        var prev = this.graph.view.scale;
+        debugger;
+        this.graph.zoom(this.cumulativeZoomFactor, true);
+        // this.graph.view.scaleAndTranslate(this.cumulativeZoomFactor, x , y );
+        var s = this.graph.view.scale;
+        if (s != prev) {
+          if (this.resize != null) {
+            // ui.chromelessResize(false, null, dx * (this.cumulativeZoomFactor - 1),	dy * (this.cumulativeZoomFactor - 1));
+            console.error('Zoom in IE not supported at this time');
+          }
+          // mxUtils.hasScrollbars(this.graph.container)
+          if (true & (dx != 0 || dy != 0)) {
+            console.log('this.graph.view ', this.graph.view);
+            // this.graph.view.translate.x -= dx * (this.cumulativeZoomFactor - 1);
+            console.log('before this.graph.view.translate.x ', this.graph.view.translate.x);
+            // this.graph.view.translate.y -= dy * (this.cumulativeZoomFactor - 1);
+            console.log('before this.graph.view.translate.y ', this.graph.view.translate.y);
+            // this.graph.container.style.transform = `translate(${dx}px,${dx}px)`;
+            const x = dx * (this.cumulativeZoomFactor - 1);
+            const y = dy * (this.cumulativeZoomFactor - 1);
+            this.graph.view.setTranslate(x, y);
+            console.log('after this.graph.view.translate.x ', this.graph.view.translate.x);
+            console.log('after this.graph.view.translate.y ', this.graph.view.translate.y);
+          }
+        }
+
+        this.cumulativeZoomFactor = 1;
+        this.updateZoomTimeout = null;
+      }),
+      this.lazyZoomDelay
+    );
+  }
+
+  lazyZoomBeta(zoomIn) {
+    if (this.updateZoomTimeout != null) {
+      window.clearTimeout(this.updateZoomTimeout);
+    }
+    if (zoomIn) {
+      if (this.graph.view.scale * this.cumulativeZoomFactor < 0.15) {
+        this.cumulativeZoomFactor = (this.graph.view.scale + 0.01) / this.graph.view.scale;
+      } else {
+        this.cumulativeZoomFactor *= this.zoomFactor;
+        this.cumulativeZoomFactor =
+          Math.round(this.graph.view.scale * this.cumulativeZoomFactor * 20) /
+          20 /
+          this.graph.view.scale;
+      }
+    } else {
+      if (this.graph.view.scale * this.cumulativeZoomFactor <= 0.15) {
+        this.cumulativeZoomFactor = (this.graph.view.scale - 0.01) / this.graph.view.scale;
+      } else {
+        this.cumulativeZoomFactor /= this.zoomFactor;
+        this.cumulativeZoomFactor =
+          Math.round(this.graph.view.scale * this.cumulativeZoomFactor * 20) /
+          20 /
+          this.graph.view.scale;
+      }
+    }
+
+    this.cumulativeZoomFactor = Math.max(
+      0.01,
+      Math.min(this.graph.view.scale * this.cumulativeZoomFactor, 160) / this.graph.view.scale
+    );
+
+    this.updateZoomTimeout = window.setTimeout(
+      mxUtils.bind(this, function() {
+        var offset = mxUtils.getOffset(this.graph.container);
+        var dx = 0;
+        var dy = 0;
+        if (this.cursorPosition != null) {
+          let factor = this.cumulativeZoomFactor;
+          let scale = Math.round(this.graph.view.scale * factor * 100) / 100;
+          // A changer
+          let dx = this.container.offsetWidth;
+          let dy = this.container.offsetHeight;
+          if (factor > 1) {
+            var f = (factor - 1) / (scale * 2);
+            dx *= -f;
+            dy *= -f;
+          } else {
+            var f = (1 / factor - 1) / (this.graph.view.scale * 2);
+            dx *= f;
+            dy *= f;
+          }
+
+          this.graph.view.scaleAndTranslate(
+            scale,
+            this.view.translate.x + dx,
+            this.view.translate.y + dy
+          );
+        }
+        this.cumulativeZoomFactor = 1;
+        this.updateZoomTimeout = null;
+      }),
+      this.lazyZoomDelay
+    );
   }
 }

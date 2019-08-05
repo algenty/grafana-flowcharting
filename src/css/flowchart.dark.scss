@@ -28,9 +28,10 @@
 
 .flowchart-panel__chart {
   position: relative;
-  cursor: crosshair;
+  // cursor: crosshair;
   flex-grow: 1;
   top: 10px;
+  overflow: auto;
 }
 
 .datapoints-warning {
