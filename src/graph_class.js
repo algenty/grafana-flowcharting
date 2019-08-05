@@ -533,11 +533,10 @@ export default class XGraph {
     //   'XGraph.eventMouseWheel() container.getBoundingClientRect()',
     //   this.container.getBoundingClientRect()
     // );
-
     if (this.graph.isZoomWheelEvent(evt)) {
       this.cursorPosition = new mxPoint(mxEvent.getClientX(evt), mxEvent.getClientY(evt));
       // this.lazyZoomBeta(up);
-      this.lazyZoomCenter(up);
+      this.lazyZoomPointer(up);
       mxEvent.consume(evt);
     }
   }
@@ -545,7 +544,7 @@ export default class XGraph {
   eventKey(evt) {
     // console.log('evt ', evt);
     if (!mxEvent.isConsumed(evt) && evt.keyCode == 27 /* Escape */) {
-      this.graph.cumulativeZoomFactor = 1;
+      this.cumulativeZoomFactor = 1;
       this.graph.zoomActual();
       this.refreshGraph(this.width, this.height);
       // mxEvent.consume(evt);
@@ -636,6 +635,7 @@ export default class XGraph {
   }
 
   lazyZoomCenter(zoomIn) {
+    console.log("this.cumulativeZoomFactor ", this.cumulativeZoomFactor);
     if (zoomIn) {
       this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
     }
@@ -646,30 +646,43 @@ export default class XGraph {
 
   }
 
-  lazyZoomBeta(zoomIn) {
+  lazyZoomPointer(zoomIn) {
     let dx = this.container.offsetWidth;
     let dy = this.container.offsetHeight;
+    console.log("dx : " + dx + " dy : " + dy);
     let x = this.cursorPosition.x;
     let y = this.cursorPosition.x;
-  
-    if(zoomIn) this.cumulativeZoomFactor *= this.zoomFactor;
-    else this.cumulativeZoomFactor /= this.zoomFactor;
+    console.log("x : " + x + " y : " + y);
 
-    let scale = Math.round(this.graph.view.scale * this.cumulativeZoomFactor * 100) / 100;
-    let factor = scale / this.graph.view.scale;
 
-    if (factor > 1)
-    {
-      let f = (factor - 1) / (scale * 2);
+    if (zoomIn) {
+      this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
+    }
+    else {
+      this.cumulativeZoomFactor = this.cumulativeZoomFactor * 0.8;
+    }
+
+    let factor = this.cumulativeZoomFactor;
+    factor = Math.max(0.01, Math.min(this.graph.view.scale * factor, 160)) / this.graph.view.scale;
+    factor = this.cumulativeZoomFactor / this.graph.view.scale;
+    let scale = Math.round(this.graph.view.scale * factor * 100) / 100;
+    // let state = this.graph.view.getState(this.graph.getSelectionCell());
+    factor = scale / this.graph.view.scale;
+
+    if (factor > 1) {
+      var f = (factor - 1) / (scale * 2);
       dx *= -f;
       dy *= -f;
     }
-    else
-    {
-      let f = (1 / factor - 1) / (this.graph.view.scale * 2);
+    else {
+      var f = (1 / factor - 1) / (this.graph.view.scale * 2);
       dx *= f;
       dy *= f;
     }
-    this.graph.view.scaleAndTranslate(scale, this.graph.view.translate.x + dx, this.graph.view.translate.y + dy);
+
+    this.graph.view.scaleAndTranslate(scale,
+      this.graph.view.translate.x + dx,
+      this.graph.view.translate.y + dy);
   }
+
 }
