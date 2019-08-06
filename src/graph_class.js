@@ -502,22 +502,15 @@ export default class XGraph {
 
   eventDbClick(evt, mxcell) {
     u.log(1, 'XGraph.eventDbClick()');
-    u.log(1, 'XGraph.eventDbClick() evt', evt);
-    u.log(1, 'XGraph.eventDbClick() cell', mxcell);
+    u.log(0, 'XGraph.eventDbClick() evt', evt);
+    u.log(0, 'XGraph.eventDbClick() cell', mxcell);
     u.log(
       1,
       'XGraph.eventDbClick() container.getBoundingClientRect()',
       this.container.getBoundingClientRect()
     );
     if (mxcell !== undefined) {
-      const divRect = this.container.getBoundingClientRect();
-      var x = evt.offsetX - evt.currentTarget.offsetLeft;
-      var y = evt.offsetY - evt.currentTarget.offsetTop;    
-      if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
-        let rect = new mxRectangle(x, y, mxcell.geometry.width, mxcell.geometry.height);
-        this.graph.zoomToRect(rect);
-        this.cumulativeZoomFactor = this.graph.view.scale;
-      }
+      this.lazyZoomCell(mxcell);
     }
   }
 
@@ -526,15 +519,19 @@ export default class XGraph {
     if (this.graph.isZoomWheelEvent(evt)) {
       const rect = evt.target.getBoundingClientRect();
       var x = evt.offsetX - evt.currentTarget.offsetLeft;
-      var y = evt.offsetY - evt.currentTarget.offsetTop;    
-      this.cursorPosition = new mxPoint(x, y);
-      this.lazyZoomPointer(up);
+      var y = evt.offsetY - evt.currentTarget.offsetTop;
+      if (up) {
+        this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
+      }
+      else {
+        this.cumulativeZoomFactor = this.cumulativeZoomFactor * 0.8;
+      }
+      this.lazyZoomPointer(this.cumulativeZoomFactor, x, y);
       mxEvent.consume(evt);
     }
   }
 
   eventKey(evt) {
-    // console.log('evt ', evt);
     if (!mxEvent.isConsumed(evt) && evt.keyCode == 27 /* Escape */) {
       this.cumulativeZoomFactor = 1;
       this.graph.zoomActual();
@@ -543,29 +540,18 @@ export default class XGraph {
     }
   }
 
-  lazyZoomCenter(zoomIn) {
-    console.log("this.cumulativeZoomFactor ", this.cumulativeZoomFactor);
-    if (zoomIn) {
-      this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
-    }
-    else {
-      this.cumulativeZoomFactor = this.cumulativeZoomFactor * 0.8;
-    }
-    this.graph.zoomTo(this.cumulativeZoomFactor, true);
+  lazyZoomCenter(factor) {
+    this.graph.zoomTo(factor, true);
   }
 
-  lazyZoomPointer(zoomIn) {
-    let dx = this.cursorPosition.x * 2;
-    let dy = this.cursorPosition.y * 2;
+  lazyZoomPointer(factor, offsetX, offsetY) {
+    u.log(1, "XGraph.lazyZoomPointer()");
+    u.log(0, "XGraph.lazyZoomPointer() factor", factor);
+    u.log(0, "XGraph.lazyZoomPointer() offsetX", offsetX);
+    u.log(0, "XGraph.lazyZoomPointer() offsetY", offsetY);
+    let dx = offsetX * 2;
+    let dy = offsetY * 2;
 
-    if (zoomIn) {
-      this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
-    }
-    else {
-      this.cumulativeZoomFactor = this.cumulativeZoomFactor * 0.8;
-    }
-
-    let factor = this.cumulativeZoomFactor;
     factor = Math.max(0.01, Math.min(this.graph.view.scale * factor, 160)) / this.graph.view.scale;
     factor = this.cumulativeZoomFactor / this.graph.view.scale;
     let scale = Math.round(this.graph.view.scale * factor * 100) / 100;
@@ -585,6 +571,24 @@ export default class XGraph {
     this.graph.view.scaleAndTranslate(scale,
       this.graph.view.translate.x + dx,
       this.graph.view.translate.y + dy);
+  }
+
+  lazyZoomCell(mxcell) {
+    u.log(1, "XGraph.lazyZoomPointer() mxcell", mxcell);
+    u.log(0, "XGraph.lazyZoomPointer() mxcellState", this.graph.view.getState(mxcell));
+    if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
+      const state = this.graph.view.getState(mxcell);
+      if (state !==null) {
+        const x = state.x ;
+        const y = state.y;
+        const width = state.width;
+        const height = state.height;
+        const rect = new mxRectangle(x, y, width, height);
+        this.graph.zoomToRect(rect);
+        this.cumulativeZoomFactor = this.graph.view.scale;
+      }
+    }
+
   }
 
 }

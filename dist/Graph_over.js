@@ -124,15 +124,14 @@ Graph.prototype.getTooltipForCell = function (cell) {
     tip += '</div>';
   }
 
-  u.log(1, 'tip', tip);
+  u.log(1, 'Graph_other.getTooltipForCell() tip', tip);
   return tip;
 }; // In draw.io
+// Graph.prototype.cumulativeZoomFactor = 1;
+// Graph.prototype.lazyZoomDelay = 20;
+// Graph.prototype.updateZoomTimeout = null;
+// Graph.prototype.resize = null;
 
-
-Graph.prototype.cumulativeZoomFactor = 1;
-Graph.prototype.lazyZoomDelay = 20;
-Graph.prototype.updateZoomTimeout = null;
-Graph.prototype.resize = null;
 
 mxEvent.addMouseWheelListener = function (func, container) {
   if (null != func) {

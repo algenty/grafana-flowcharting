@@ -55,7 +55,7 @@ plugin.popover = function (text, tagBook, tagImage) {
 };
 
 plugin.logLevel = 1;
-plugin.logDisplay = true;
+plugin.logDisplay = false;
 
 window.GF_PLUGIN = window.GF_PLUGIN || plugin;
 
