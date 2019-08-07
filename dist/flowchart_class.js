@@ -17,6 +17,12 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/**
+ *Flowchart handler
+ *
+ * @export
+ * @class Flowchart
+ */
 var Flowchart =
 /*#__PURE__*/
 function () {
@@ -36,6 +42,13 @@ function () {
     this.templateSrv = ctrl.templateSrv;
     this["import"](data);
   }
+  /**
+   *Import data object in current flowchart
+   *
+   * @param {Object} obj
+   * @memberof Flowchart
+   */
+
 
   _createClass(Flowchart, [{
     key: "import",
@@ -54,16 +67,36 @@ function () {
       if (obj.options) this.data.bgColor = obj.options.bgColor;else this.data.bgColor = obj.bgColor;
       this.init();
     }
+    /**
+     * Return data without functions to save json in grafana
+     *
+     * @returns {Object} Data object
+     * @memberof Flowchart
+     */
+
   }, {
     key: "getData",
     value: function getData() {
       return this.data;
     }
+    /**
+     *Update states of flowchart/graph
+     *
+     * @param {*} rules
+     * @memberof Flowchart
+     */
+
   }, {
     key: "updateStates",
     value: function updateStates(rules) {
       if (this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
     }
+    /**
+     *Initialisation of flowchart class
+     *
+     * @memberof Flowchart
+     */
+
   }, {
     key: "init",
     value: function init() {

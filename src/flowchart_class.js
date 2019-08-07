@@ -1,6 +1,12 @@
 import XGraph from './graph_class';
 import StateHandler from './statesHandler';
 
+/**
+ *Flowchart handler
+ *
+ * @export
+ * @class Flowchart
+ */
 export default class Flowchart {
   /** @ngInject */
   constructor(name, xmlGraph, container, ctrl, data) {
@@ -17,6 +23,12 @@ export default class Flowchart {
     this.import(data);
   }
 
+  /**
+   *Import data object in current flowchart
+   *
+   * @param {Object} obj
+   * @memberof Flowchart
+   */
   import(obj) {
     u.log(1, `flowchart[${this.data.name}].import()`);
     u.log(0, `flowchart[${this.data.name}].import() obj`, obj);
@@ -43,14 +55,31 @@ export default class Flowchart {
     this.init();
   }
 
+  /**
+   * Return data without functions to save json in grafana
+   *
+   * @returns {Object} Data object
+   * @memberof Flowchart
+   */
   getData() {
     return this.data;
   }
 
+  /**
+   *Update states of flowchart/graph
+   *
+   * @param {*} rules
+   * @memberof Flowchart
+   */
   updateStates(rules) {
     if ( this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
   }
 
+  /**
+   *Initialisation of flowchart class
+   *
+   * @memberof Flowchart
+   */
   init() {
     u.log(1, `flowchart[${this.data.name}].init()`);
     if (this.xgraph === undefined) this.xgraph = new XGraph(this.container, this.getXml(true));

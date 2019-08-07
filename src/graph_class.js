@@ -108,7 +108,19 @@ window.mxUtils = window.mxUtils || mxgraph.mxUtils;
 window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange;
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
 
+/**
+ *mxGraph interface class
+ *
+ * @export
+ * @class XGraph
+ */
 export default class XGraph {
+  /**
+   *Creates an instance of XGraph.
+   * @param {DOM} container
+   * @param {string} xmlGraph
+   * @memberof XGraph
+   */
   constructor(container, xmlGraph) {
     u.log(1, 'XGraph.constructor()');
     this.container = container;
@@ -140,6 +152,11 @@ export default class XGraph {
     this.initGraph();
   }
 
+  /**
+   *Graph initilisation and reset
+   *
+   * @memberof XGraph
+   */
   initGraph() {
     u.log(1, 'XGraph.initGraph()');
     const Graph = require('./Graph')({
@@ -165,10 +182,19 @@ export default class XGraph {
     // KEYS
     mxEvent.addListener(document, 'keydown', mxUtils.bind(this, this.eventKey));
 
+    // CONTEXT MENU
+    // mxEvent.addListener(this.container, 'contextmenu', mxUtils.bind(this, function() {return false;}));
+    this.container.addEventListener('contextmenu', e => e.preventDefault());
+
     // DB CLICK
     this.graph.dblClick = this.eventDbClick.bind(this);
   }
 
+  /**
+   *Draw graph
+   *
+   * @memberof XGraph
+   */
   drawGraph() {
     u.log(1, 'XGraph.drawGraph()');
     this.graph.getModel().beginUpdate();
@@ -186,6 +212,13 @@ export default class XGraph {
     }
   }
 
+  /**
+   *Refresh graph
+   *
+   * @param {*} width
+   * @param {*} height
+   * @memberof XGraph
+   */
   refreshGraph(width, height) {
     u.log(1, 'XGraph.refreshGraph()');
     const $div = $(this.container);
@@ -212,18 +245,36 @@ export default class XGraph {
     this.graph.refresh();
   }
 
+  /**
+   *lock cells
+   *
+   * @param {Boolean} bool
+   * @memberof XGraph
+   */
   lockGraph(bool) {
     if (bool) this.graph.setEnabled(false);
     else this.graph.setEnabled(true);
     this.lock = bool;
   }
 
+  /**
+   *Enable tooltip
+   *
+   * @param {Boolean} bool
+   * @memberof XGraph
+   */
   tooltipGraph(bool) {
     if (bool) this.graph.setTooltips(true);
     else this.graph.setTooltips(false);
     this.tooltip = bool;
   }
 
+  /**
+   *Center graph in panel
+   *
+   * @param {Boolean} bool
+   * @memberof XGraph
+   */
   centerGraph(bool) {
     this.graph.centerZoom = false;
     if (bool) this.graph.center(true, true);
@@ -231,6 +282,12 @@ export default class XGraph {
     this.center = bool;
   }
 
+  /**
+   *Scale graph in panel
+   *
+   * @param {Boolean} bool
+   * @memberof XGraph
+   */
   scaleGraph(bool) {
     if (bool) {
       this.unzoomGraph();
@@ -240,6 +297,12 @@ export default class XGraph {
     this.scale = bool;
   }
 
+  /**
+   *Display grid in panel
+   *
+   * @param {Boolean} bool
+   * @memberof XGraph
+   */
   gridGraph(bool) {
     if (bool) {
       // eslint-disable-next-line no-undef
@@ -250,6 +313,12 @@ export default class XGraph {
     this.grid = bool;
   }
 
+  /**
+   *Zoom/unzoom
+   *
+   * @param {string} percent
+   * @memberof XGraph
+   */
   zoomGraph(percent) {
     u.log(1, 'XGraph.zoomGraph()');
     if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
@@ -262,11 +331,22 @@ export default class XGraph {
     this.zoom = true;
   }
 
+  /**
+   *Restore initial size
+   *
+   * @memberof XGraph
+   */
   unzoomGraph() {
     this.zoom = false;
     this.graph.zoomActual();
   }
 
+  /**
+   *Define background color
+   *
+   * @param {string} bgColor
+   * @memberof XGraph
+   */
   bgGraph(bgColor) {
     const $div = $(this.container);
     if (bgColor) {
@@ -277,14 +357,32 @@ export default class XGraph {
     }
   }
 
+  /**
+   *Return mxgraph object
+   *
+   * @returns {mxGraph}
+   * @memberof XGraph
+   */
   getMxGraph() {
     return this.graph;
   }
 
+  /**
+   *Return xml definition
+   *
+   * @returns {string}
+   * @memberof XGraph
+   */
   getxmlGraph() {
     return this.xmlGraph;
   }
 
+  /**
+   *Assign xml definition and redraw graph
+   *
+   * @param {string} xmlGraph
+   * @memberof XGraph
+   */
   setXmlGraph(xmlGraph) {
     u.log(1, 'XGraph.setXmlGraph()');
     if (u.isencoded(xmlGraph)) this.xmlGraph = u.decode(xmlGraph, true, true, true);
@@ -292,6 +390,13 @@ export default class XGraph {
     this.drawGraph();
   }
 
+  /**
+   *Get list of values or id
+   *
+   * @param {string} prop - id|value
+   * @returns {Array<string>}
+   * @memberof XGraph
+   */
   getCurrentCells(prop) {
     const cellIds = [];
     const model = this.graph.getModel();
@@ -308,6 +413,14 @@ export default class XGraph {
     return cellIds;
   }
 
+  /**
+   *Get list of mxCell
+   *
+   * @param {string} prop - id|value
+   * @param {string} pattern - regex like or string
+   * @returns {Array<mxCell>}
+   * @memberof XGraph
+   */
   findMxCells(prop, pattern) {
     const mxcells = this.getMxCells();
     const result = [];
@@ -522,8 +635,7 @@ export default class XGraph {
       var y = evt.offsetY - evt.currentTarget.offsetTop;
       if (up) {
         this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
-      }
-      else {
+      } else {
         this.cumulativeZoomFactor = this.cumulativeZoomFactor * 0.8;
       }
       this.lazyZoomPointer(this.cumulativeZoomFactor, x, y);
@@ -545,10 +657,10 @@ export default class XGraph {
   }
 
   lazyZoomPointer(factor, offsetX, offsetY) {
-    u.log(1, "XGraph.lazyZoomPointer()");
-    u.log(0, "XGraph.lazyZoomPointer() factor", factor);
-    u.log(0, "XGraph.lazyZoomPointer() offsetX", offsetX);
-    u.log(0, "XGraph.lazyZoomPointer() offsetY", offsetY);
+    u.log(1, 'XGraph.lazyZoomPointer()');
+    u.log(0, 'XGraph.lazyZoomPointer() factor', factor);
+    u.log(0, 'XGraph.lazyZoomPointer() offsetX', offsetX);
+    u.log(0, 'XGraph.lazyZoomPointer() offsetY', offsetY);
     let dx = offsetX * 2;
     let dy = offsetY * 2;
 
@@ -561,25 +673,26 @@ export default class XGraph {
       var f = (factor - 1) / (scale * 2);
       dx *= -f;
       dy *= -f;
-    }
-    else {
+    } else {
       var f = (1 / factor - 1) / (this.graph.view.scale * 2);
       dx *= f;
       dy *= f;
     }
 
-    this.graph.view.scaleAndTranslate(scale,
+    this.graph.view.scaleAndTranslate(
+      scale,
       this.graph.view.translate.x + dx,
-      this.graph.view.translate.y + dy);
+      this.graph.view.translate.y + dy
+    );
   }
 
   lazyZoomCell(mxcell) {
-    u.log(1, "XGraph.lazyZoomPointer() mxcell", mxcell);
-    u.log(0, "XGraph.lazyZoomPointer() mxcellState", this.graph.view.getState(mxcell));
+    u.log(1, 'XGraph.lazyZoomPointer() mxcell', mxcell);
+    u.log(0, 'XGraph.lazyZoomPointer() mxcellState', this.graph.view.getState(mxcell));
     if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
       const state = this.graph.view.getState(mxcell);
-      if (state !==null) {
-        const x = state.x ;
+      if (state !== null) {
+        const x = state.x;
         const y = state.y;
         const width = state.width;
         const height = state.height;
@@ -588,7 +701,9 @@ export default class XGraph {
         this.cumulativeZoomFactor = this.graph.view.scale;
       }
     }
-
   }
 
+  toggleVisible(mxcell, includeEdges) {
+    this.graph.toggleCells(!this.graph.getModel().isVisible(mxcell), [mxcell], includeEdges);
+  }
 }
