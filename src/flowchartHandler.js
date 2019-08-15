@@ -105,12 +105,24 @@ export default class FlowchartHandler {
     return this.flowcharts;
   }
 
+  /**
+   *Return number of flowchart
+   *
+   * @returns {number} Nulber of flowchart 
+   * @memberof FlowchartHandler
+   */
   countFlowcharts() {
     if (this.flowcharts !== undefined && Array.isArray(this.flowcharts))
       return this.flowcharts.length;
     return 0;
   }
 
+  /**
+   *Create a div container for graph
+   *
+   * @returns {DOM}
+   * @memberof FlowchartHandler
+   */
   createContainer() {
     const $container = $(
       `<div id="flowchart_${
@@ -121,6 +133,12 @@ export default class FlowchartHandler {
     return $container[0];
   }
 
+  /**
+   *Add a flowchart
+   *
+   * @param {string} name
+   * @memberof FlowchartHandler
+   */
   addFlowchart(name) {
     u.log(1, 'FlowchartHandler.addFlowchart()');
     const container = this.createContainer();
@@ -130,6 +148,11 @@ export default class FlowchartHandler {
     this.flowcharts.push(flowchart);
   }
 
+  /**
+   *Render for draw
+   *
+   * @memberof FlowchartHandler
+   */
   render() {
     u.log(1, 'flowchartHandler.render()');
     // not repeat render is mouse down
@@ -162,22 +185,49 @@ export default class FlowchartHandler {
     }
   }
 
+  /**
+   *Flag source change
+   *
+   * @memberof FlowchartHandler
+   */
   sourceChanged() {
     this.changeSourceFlag = true;
   }
 
+  /**
+   *Flag options change
+   *
+   * @memberof FlowchartHandler
+   */
   optionChanged() {
     this.changeOptionFlag = true;
   }
 
+  /**
+   *Flag rule change
+   *
+   * @memberof FlowchartHandler
+   */
   ruleChanged() {
     this.changeRuleFlag = true;
   }
 
+  /**
+   *Flag data change
+   *
+   * @memberof FlowchartHandler
+   */
   dataChanged() {
     this.changeDataFlag = true;
   }
 
+  /**
+   *Refresh flowchart then graph
+   *
+   * @param {*} width
+   * @param {*} height
+   * @memberof FlowchartHandler
+   */
   refresh(width, height) {
     u.log(1, `FlowchartHandler.refresh()`);
     this.flowcharts.forEach(flowchart => {
@@ -209,6 +259,11 @@ export default class FlowchartHandler {
     });
   }
 
+  /**
+   *Apply and set options
+   *
+   * @memberof FlowchartHandler
+   */
   setOptions() {
     this.flowcharts.forEach(flowchart => {
       flowchart.setScale(flowchart.data.scale);
@@ -221,6 +276,11 @@ export default class FlowchartHandler {
     });
   }
 
+  /**
+   *(re)draw graph
+   *
+   * @memberof FlowchartHandler
+   */
   draw() {
     u.log(1, `FlowchartHandler.draw()`);
     this.flowcharts.forEach(flowchart => {
@@ -228,6 +288,12 @@ export default class FlowchartHandler {
     });
   }
 
+  /**
+   *Active option link/map
+   *
+   * @param {Object} objToMap
+   * @memberof FlowchartHandler
+   */
   setMap(objToMap) {
     const flowchart = this.getFlowchart(0);
     this.onMapping.active = true;
@@ -237,6 +303,11 @@ export default class FlowchartHandler {
     flowchart.setMap(this.onMapping);
   }
 
+  /**
+   *Desactivate option
+   *
+   * @memberof FlowchartHandler
+   */
   unsetMap() {
     const flowchart = this.getFlowchart(0);
     this.onMapping.active = false;
@@ -245,12 +316,25 @@ export default class FlowchartHandler {
     flowchart.unsetMap();
   }
 
+  /**
+   *Return true if mapping object is active 
+   *
+   * @param {properties} objToMap
+   * @returns true - true if mapping mode
+   * @memberof FlowchartHandler
+   */
   isMapping(objToMap) {
     if (objToMap === undefined || objToMap == null) return this.onMapping.active;
     if (this.onMapping.active === true && objToMap === this.onMapping.object) return true;
     return false;
   }
 
+  /**
+   *Open graph in draw.io
+   *
+   * @param {number} index - index of flowchart
+   * @memberof FlowchartHandler
+   */
   openDrawEditor(index) {
     const urlEditor = 'https://draw.io?embed=1&spin=1&libraries=1&ui=dark';
     const editorWindow = window.open(urlEditor, 'MxGraph Editor', 'width=1280, height=720');

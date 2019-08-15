@@ -10,7 +10,7 @@ export class FlowchartOptionsCtrl {
     this.ctrl = $scope.ctrl;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.panel = this.ctrl.panel;
-    this.sourceTypes = [{ text: 'Url', value: 'url' }, { text: 'XML Content', value: 'xml' }];
+    this.sourceTypes = [{ text: 'XML Content', value: 'xml' },{ text: 'CSV', value: 'csv' },{ text: 'TEXT', value: 'text' }];
   }
 
   /**

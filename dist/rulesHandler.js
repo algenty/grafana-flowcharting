@@ -86,12 +86,34 @@ function () {
       var rule = this.getRule(index);
       var data = rule.getData();
       var newData = {};
+      this.reduce();
       var newRule = new _rule_class["default"](newData.pattern, newData);
       newRule["import"](data);
       newData.alias = "Copy of ".concat(newData.alias);
       this.rules.splice(index, 0, newRule);
       this.data.splice(index, 0, newData);
+      newRule.data.reduce = false;
       this.activeRuleIndex = index;
+      var elt = document.getElementById(newRule.getId()); // NOT WORK : TODO
+
+      if (elt) {
+        setTimeout(function () {
+          elt.focus();
+        }, 100);
+      }
+    }
+    /**
+     *Reduce all rules
+     *
+     * @memberof RulesHandler
+     */
+
+  }, {
+    key: "reduce",
+    value: function reduce() {
+      this.getRules().forEach(function (rule) {
+        rule.data.reduce = true;
+      });
     }
   }, {
     key: "moveRuleToUp",

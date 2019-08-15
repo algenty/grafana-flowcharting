@@ -436,6 +436,13 @@ export default class XGraph {
     return result;
   }
 
+  /**
+   *Select cells in graph with pattern for id or value
+   *
+   * @param {string} prop - "id"|"value"
+   * @param {string} pattern - regex like
+   * @memberof XGraph
+   */
   selectMxCells(prop, pattern) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
@@ -443,11 +450,24 @@ export default class XGraph {
     }
   }
 
+  /**
+   *Unselect cells
+   *
+   * @memberof XGraph
+   */
   unselectMxCells() {
     // this.graph.removeCellOverlays(cell);
     this.graph.clearSelection();
   }
 
+  /**
+   *Create tooltip on image
+   *
+   * @param {*} image
+   * @param {*} tooltip
+   * @returns
+   * @memberof XGraph
+   */
   createOverlay(image, tooltip) {
     const overlay = new mxCellOverlay(image, tooltip);
     overlay.addListener(mxEvent.CLICK, (_sender, _evt) => {
@@ -580,7 +600,6 @@ export default class XGraph {
 
   unsetMap() {
     u.log(1, 'XGraph.unsetMapping()');
-    u.log(0, 'XGraph.unsetMapping() onMapping', this.onMapping);
     this.onMapping.active = false;
     this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
@@ -593,8 +612,6 @@ export default class XGraph {
 
   eventClick(me) {
     u.log(1, 'XGraph.eventClick()');
-    u.log(1, 'XGraph.eventClick() me : ', me);
-    u.log(0, 'XGraph.eventClick() onMapping : ', this.onMapping);
     const self = this;
 
     if (this.onMapping.active) {

@@ -14,6 +14,7 @@ export default class Rule {
     this.linkMaps = [];
     this.valueMaps = [];
     this.rangeMaps = [];
+    this.id = u.uniqueID();
     this.import(data);
   }
 
@@ -132,6 +133,11 @@ export default class Rule {
 
     this.data.sanitize = obj.sanitize || false;
   }
+
+  getId() {
+    return this.id;
+  }
+  
 
   invertColorOrder() {
     const ref = this.data.colors;

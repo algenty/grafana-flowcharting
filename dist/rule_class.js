@@ -31,6 +31,7 @@ function () {
     this.linkMaps = [];
     this.valueMaps = [];
     this.rangeMaps = [];
+    this.id = u.uniqueID();
     this["import"](data);
   }
 
@@ -160,6 +161,11 @@ function () {
       }
 
       this.data.sanitize = obj.sanitize || false;
+    }
+  }, {
+    key: "getId",
+    value: function getId() {
+      return this.id;
     }
   }, {
     key: "invertColorOrder",

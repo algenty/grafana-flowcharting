@@ -42,7 +42,7 @@
                   ng-bind-html="GF_PLUGIN.popover('Name of the rule, for information', 'MAPPING#Rule name')"></span>
               </info-popover>
             </label>
-            <input type="text" class="gf-form-input width-12" ng-model="rule.data.alias"
+            <input type="text" class="gf-form-input width-12" ng-model="rule.data.alias" id="{{ rule.getId() }}"
               placeholder="Name of this rule" />
           </div>
           <div class="gf-form">

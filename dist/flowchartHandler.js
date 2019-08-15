@@ -135,12 +135,26 @@ function () {
     value: function getFlowcharts() {
       return this.flowcharts;
     }
+    /**
+     *Return number of flowchart
+     *
+     * @returns {number} Nulber of flowchart 
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "countFlowcharts",
     value: function countFlowcharts() {
       if (this.flowcharts !== undefined && Array.isArray(this.flowcharts)) return this.flowcharts.length;
       return 0;
     }
+    /**
+     *Create a div container for graph
+     *
+     * @returns {DOM}
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "createContainer",
     value: function createContainer() {
@@ -148,6 +162,13 @@ function () {
       this.$elem.html($container);
       return $container[0];
     }
+    /**
+     *Add a flowchart
+     *
+     * @param {string} name
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "addFlowchart",
     value: function addFlowchart(name) {
@@ -158,6 +179,12 @@ function () {
       this.data.push(data);
       this.flowcharts.push(flowchart);
     }
+    /**
+     *Render for draw
+     *
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "render",
     value: function render() {
@@ -195,26 +222,58 @@ function () {
         this.refresh(width, height);
       }
     }
+    /**
+     *Flag source change
+     *
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "sourceChanged",
     value: function sourceChanged() {
       this.changeSourceFlag = true;
     }
+    /**
+     *Flag options change
+     *
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "optionChanged",
     value: function optionChanged() {
       this.changeOptionFlag = true;
     }
+    /**
+     *Flag rule change
+     *
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "ruleChanged",
     value: function ruleChanged() {
       this.changeRuleFlag = true;
     }
+    /**
+     *Flag data change
+     *
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "dataChanged",
     value: function dataChanged() {
       this.changeDataFlag = true;
     }
+    /**
+     *Refresh flowchart then graph
+     *
+     * @param {*} width
+     * @param {*} height
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "refresh",
     value: function refresh(width, height) {
@@ -251,6 +310,12 @@ function () {
         flowchart.applyStates();
       });
     }
+    /**
+     *Apply and set options
+     *
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "setOptions",
     value: function setOptions() {
@@ -264,6 +329,12 @@ function () {
         flowchart.setBgColor(flowchart.data.bgColor);
       });
     }
+    /**
+     *(re)draw graph
+     *
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "draw",
     value: function draw() {
@@ -272,6 +343,13 @@ function () {
         flowchart.redraw();
       });
     }
+    /**
+     *Active option link/map
+     *
+     * @param {Object} objToMap
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "setMap",
     value: function setMap(objToMap) {
@@ -282,6 +360,12 @@ function () {
       this.onMapping.$scope = this.$scope;
       flowchart.setMap(this.onMapping);
     }
+    /**
+     *Desactivate option
+     *
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "unsetMap",
     value: function unsetMap() {
@@ -291,6 +375,14 @@ function () {
       this.onMapping.id = '';
       flowchart.unsetMap();
     }
+    /**
+     *Return true if mapping object is active 
+     *
+     * @param {properties} objToMap
+     * @returns true - true if mapping mode
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "isMapping",
     value: function isMapping(objToMap) {
@@ -298,6 +390,13 @@ function () {
       if (this.onMapping.active === true && objToMap === this.onMapping.object) return true;
       return false;
     }
+    /**
+     *Open graph in draw.io
+     *
+     * @param {number} index - index of flowchart
+     * @memberof FlowchartHandler
+     */
+
   }, {
     key: "openDrawEditor",
     value: function openDrawEditor(index) {

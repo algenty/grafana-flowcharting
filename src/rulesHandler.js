@@ -15,7 +15,7 @@ export default class RulesHandler {
     u.log(0, 'RuleHandler.import() obj', obj);
     this.rules = [];
     if (obj !== undefined && obj !== null && obj.length > 0) {
-      obj.forEach((map) => {
+      obj.forEach(map => {
         const newData = {};
         const rule = new Rule(map.pattern, newData);
         rule.import(map);
@@ -54,12 +54,32 @@ export default class RulesHandler {
     const rule = this.getRule(index);
     const data = rule.getData();
     const newData = {};
+    this.reduce();
     const newRule = new Rule(newData.pattern, newData);
     newRule.import(data);
     newData.alias = `Copy of ${newData.alias}`;
     this.rules.splice(index, 0, newRule);
     this.data.splice(index, 0, newData);
+    newRule.data.reduce = false;
     this.activeRuleIndex = index;
+    const elt = document.getElementById(newRule.getId());
+    // NOT WORK : TODO
+    if (elt) {
+      setTimeout(() => {
+        elt.focus();
+      }, 100);
+    }
+  }
+
+  /**
+   *Reduce all rules
+   *
+   * @memberof RulesHandler
+   */
+  reduce() {
+    this.getRules().forEach(rule => {
+      rule.data.reduce = true;
+    });
   }
 
   moveRuleToUp(index) {

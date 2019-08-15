@@ -32,6 +32,7 @@ export default class Flowchart {
   import(obj) {
     u.log(1, `flowchart[${this.data.name}].import()`);
     u.log(0, `flowchart[${this.data.name}].import() obj`, obj);
+    this.data.download = (obj.download !== undefined ? obj.download : false);
     if (obj.source) this.data.type = obj.source.type;
     else this.data.type = obj.type || this.data.type || 'xml';
     if (obj.source) this.data.xml = obj.source.xml.value;
@@ -262,7 +263,6 @@ export default class Flowchart {
 
   setMap(onMappingObj) {
     u.log(1, `flowchart[${this.data.name}].setMap()`);
-    u.log(0, `flowchart[${this.data.name}].setMap() onMappingObj`, onMappingObj);
     const container = this.getContainer();
     this.xgraph.setMap(onMappingObj);
     container.scrollIntoView();
@@ -270,7 +270,6 @@ export default class Flowchart {
   }
 
   unsetMap() {
-    u.log(1, `flowchart[${this.data.name}].unsetMap()`);
     this.xgraph.unsetMap();
   }
 }

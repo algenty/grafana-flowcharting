@@ -55,6 +55,7 @@ function () {
     value: function _import(obj) {
       u.log(1, "flowchart[".concat(this.data.name, "].import()"));
       u.log(0, "flowchart[".concat(this.data.name, "].import() obj"), obj);
+      this.data.download = obj.download !== undefined ? obj.download : false;
       if (obj.source) this.data.type = obj.source.type;else this.data.type = obj.type || this.data.type || 'xml';
       if (obj.source) this.data.xml = obj.source.xml.value;else this.data.xml = obj.xml || this.data.xml || '';
       if (obj.source) this.data.url = obj.source.url.value;else this.data.url = 'http://<source>:<port>/<pathToXml>';
@@ -315,7 +316,6 @@ function () {
     key: "setMap",
     value: function setMap(onMappingObj) {
       u.log(1, "flowchart[".concat(this.data.name, "].setMap()"));
-      u.log(0, "flowchart[".concat(this.data.name, "].setMap() onMappingObj"), onMappingObj);
       var container = this.getContainer();
       this.xgraph.setMap(onMappingObj);
       container.scrollIntoView();
@@ -324,7 +324,6 @@ function () {
   }, {
     key: "unsetMap",
     value: function unsetMap() {
-      u.log(1, "flowchart[".concat(this.data.name, "].unsetMap()"));
       this.xgraph.unsetMap();
     }
   }]);

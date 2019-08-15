@@ -11,6 +11,12 @@
 				</h5>
 				<!-- Flowchart Definition -->
 				<div class="gf-form">
+					<gf-form>
+					<gf-form-switch class="gf-form" label="Download source" label-class="width-12" checked="flowchart.data.download"
+						on-change="editor.onOptionChange()" 
+						>
+					</gf-form-switch>
+				</gf-form>
 					<span class="gf-form-label width-12">
 						Flowchart Definition
 						<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('Source of mxgraph definition (Xml definition, Url with xml result)', 'DEFINITION_XML#Type','DEFINITION_XML')"></span></info-popover>
@@ -21,7 +27,7 @@
 					</div>
 				</div>
 				<!-- URL -->
-				<div class="gf-form" name="options.source.url.form" ng-if="flowchart.data.type == 'url'">
+				<div class="gf-form" name="options.source.url.form" ng-if="flowchart.data.download">
 					<div class="gf-form">
 						<span class="gf-form-label width-12">
 							URL
@@ -36,7 +42,7 @@
 				</div>
 				<!-- XML -->
 				<div class="gf-form gf-form--v-stretch" 
-					ng-if="flowchart.data.type == 'xml'">
+					ng-if="!flowchart.data.download">
 					<span class="gf-form-label width-12">
 						XML Content
 						<info-popover mode="right-normal"><span ng-bind-html="GF_PLUGIN.popover('mxgraph model, edit on draw.io and select Extra menu > Edit Diagram', 'DEFINITION_XML#Type','DEFINITION_XML')"></span></info-popover>
