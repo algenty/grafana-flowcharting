@@ -33,9 +33,6 @@ function () {
     }, {
       text: 'CSV',
       value: 'csv'
-    }, {
-      text: 'TEXT',
-      value: 'text'
     }];
   }
   /**
