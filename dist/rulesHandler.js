@@ -15,10 +15,23 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/**
+ * Rules Handler
+ *
+ * @export
+ * @class RulesHandler
+ */
 var RulesHandler =
 /*#__PURE__*/
 function () {
   /** @ngInject */
+
+  /**
+   *Creates an instance of RulesHandler.
+   * @param {*} $scope
+   * @param {*} data
+   * @memberof RulesHandler
+   */
   function RulesHandler($scope, data) {
     _classCallCheck(this, RulesHandler);
 
@@ -28,6 +41,13 @@ function () {
     this.data = data;
     this["import"](this.data);
   }
+  /**
+   * import datas in rule
+   *
+   * @param {*} obj
+   * @memberof RulesHandler
+   */
+
 
   _createClass(RulesHandler, [{
     key: "import",
@@ -50,16 +70,39 @@ function () {
         });
       }
     }
+    /**
+     * Return array of rules
+     *
+     * @returns {Array} of Rules
+     * @memberof RulesHandler
+     */
+
   }, {
     key: "getRules",
     value: function getRules() {
       return this.rules;
     }
+    /**
+     * Get Rule at index
+     *
+     * @param {number} index
+     * @returns {Rule}
+     * @memberof RulesHandler
+     */
+
   }, {
     key: "getRule",
     value: function getRule(index) {
       return this.rules[index];
     }
+    /**
+     * Add a new rule
+     *
+     * @param {string} pattern
+     * @returns {Rule}
+     * @memberof RulesHandler
+     */
+
   }, {
     key: "addRule",
     value: function addRule(pattern) {
@@ -67,19 +110,41 @@ function () {
       var newRule = new _rule_class["default"](pattern, data);
       this.rules.push(newRule);
       this.data.push(data);
+      return newRule;
     }
+    /**
+     * count number of rules
+     *
+     * @returns {number}
+     * @memberof RulesHandler
+     */
+
   }, {
     key: "countRules",
     value: function countRules() {
       if (this.rules !== undefined && Array.isArray(this.rules)) return this.rules.length;
       return 0;
     }
+    /**
+     * Remove rule at index
+     *
+     * @param {number} index
+     * @memberof RulesHandler
+     */
+
   }, {
     key: "removeRule",
     value: function removeRule(index) {
       this.rules.splice(index, 1);
       this.data.splice(index, 1);
     }
+    /**
+     * Clone rules at index in index - 1
+     *
+     * @param {number} index
+     * @memberof RulesHandler
+     */
+
   }, {
     key: "cloneRule",
     value: function cloneRule(index) {
@@ -115,6 +180,13 @@ function () {
         rule.data.reduce = true;
       });
     }
+    /**
+     * Move rule on index in index - 1
+     *
+     * @param {number} index index
+     * @memberof RulesHandler
+     */
+
   }, {
     key: "moveRuleToUp",
     value: function moveRuleToUp(index) {
@@ -129,6 +201,13 @@ function () {
         rules[index] = before;
       }
     }
+    /**
+     * Move rule on index in index + 1
+     *
+     * @param {number} index
+     * @memberof RulesHandler
+     */
+
   }, {
     key: "moveRuleToDown",
     value: function moveRuleToDown(index) {

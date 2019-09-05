@@ -69,6 +69,8 @@ function () {
       this.data.pattern = obj.pattern || this.data.pattern;
       this.data.dateFormat = obj.dateFormat || 'YYYY-MM-DD HH:mm:ss';
       this.data.thresholds = obj.thresholds || [];
+      this.data.stringWarning = obj.stringWarning || '';
+      this.data.stringCritical = obj.stringCritical || '';
       this.data.invert = obj.invert !== undefined ? obj.invert : false;
       this.data.overlayIcon = obj.overlayIcon !== undefined ? obj.overlayIcon : false;
       this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : false;

@@ -1,7 +1,19 @@
 import Rule from './rule_class';
 
+/**
+ * Rules Handler
+ *
+ * @export
+ * @class RulesHandler
+ */
 export default class RulesHandler {
   /** @ngInject */
+  /**
+   *Creates an instance of RulesHandler.
+   * @param {*} $scope
+   * @param {*} data
+   * @memberof RulesHandler
+   */
   constructor($scope, data) {
     u.log(1, 'RulesHandler.constructor()');
     this.$scope = $scope || null;
@@ -10,6 +22,12 @@ export default class RulesHandler {
     this.import(this.data);
   }
 
+  /**
+   * import datas in rule
+   *
+   * @param {*} obj
+   * @memberof RulesHandler
+   */
   import(obj) {
     u.log(1, 'RuleHandler.import()');
     u.log(0, 'RuleHandler.import() obj', obj);
@@ -25,31 +43,70 @@ export default class RulesHandler {
     }
   }
 
+  /**
+   * Return array of rules
+   *
+   * @returns {Array} of Rules
+   * @memberof RulesHandler
+   */
   getRules() {
     return this.rules;
   }
 
+  /**
+   * Get Rule at index
+   *
+   * @param {number} index
+   * @returns {Rule}
+   * @memberof RulesHandler
+   */
   getRule(index) {
     return this.rules[index];
   }
 
+  /**
+   * Add a new rule
+   *
+   * @param {string} pattern
+   * @returns {Rule}
+   * @memberof RulesHandler
+   */
   addRule(pattern) {
     const data = {};
     const newRule = new Rule(pattern, data);
     this.rules.push(newRule);
     this.data.push(data);
+    return newRule;
   }
 
+  /**
+   * count number of rules
+   *
+   * @returns {number}
+   * @memberof RulesHandler
+   */
   countRules() {
     if (this.rules !== undefined && Array.isArray(this.rules)) return this.rules.length;
     return 0;
   }
 
+  /**
+   * Remove rule at index
+   *
+   * @param {number} index
+   * @memberof RulesHandler
+   */
   removeRule(index) {
     this.rules.splice(index, 1);
     this.data.splice(index, 1);
   }
 
+  /**
+   * Clone rules at index in index - 1
+   *
+   * @param {number} index
+   * @memberof RulesHandler
+   */
   cloneRule(index) {
     const rule = this.getRule(index);
     const data = rule.getData();
@@ -82,6 +139,12 @@ export default class RulesHandler {
     });
   }
 
+  /**
+   * Move rule on index in index - 1
+   *
+   * @param {number} index index
+   * @memberof RulesHandler
+   */
   moveRuleToUp(index) {
     const first = 0;
     const rules = this.rules;
@@ -94,6 +157,12 @@ export default class RulesHandler {
     }
   }
 
+  /**
+   * Move rule on index in index + 1
+   *
+   * @param {number} index
+   * @memberof RulesHandler
+   */
   moveRuleToDown(index) {
     const first = 0;
     const rules = this.rules;

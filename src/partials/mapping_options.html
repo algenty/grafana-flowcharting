@@ -148,7 +148,7 @@
                 ng-bind-html="GF_PLUGIN.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
             </info-popover>
           </h5>
-          <div class="gf-form">
+          <div class="gf-form" ng-if="rule.data.type === 'number'">
             <label class="gf-form-label width-8">Thresholds
               <info-popover mode="right-normal">
                 <span
@@ -157,6 +157,28 @@
               </info-popover>
             </label>
             <input type="text" class="gf-form-input width-10" ng-model="rule.data.thresholds" placeholder="50,80"
+              ng-blur="editor.onRulesChange()" array-join />
+          </div>
+          <div class="gf-form" ng-if="rule.data.type === 'string'">
+            <label class="gf-form-label width-8">Warning
+              <info-popover mode="right-normal">
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Value of string metric to define Warning level.', 'MAPPING#Thresholds')">
+                </span>
+              </info-popover>
+            </label>
+            <input type="text" class="gf-form-input width-10" ng-model="rule.data.stringWarning" placeholder="WARN"
+              ng-blur="editor.onRulesChange()" array-join />
+          </div>
+          <div class="gf-form" ng-if="rule.data.type === 'string'">
+            <label class="gf-form-label width-8">Critical
+              <info-popover mode="right-normal">
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Value of string metric to define Error level.', 'MAPPING#Thresholds')">
+                </span>
+              </info-popover>
+            </label>
+            <input type="text" class="gf-form-input width-10" ng-model="rule.data.stringCritical" placeholder="ERROR"
               ng-blur="editor.onRulesChange()" array-join />
           </div>
           <div class="gf-form">
