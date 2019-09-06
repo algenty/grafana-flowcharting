@@ -16,6 +16,9 @@ export default class Rule {
     this.rangeMaps = [];
     this.id = u.uniqueID();
     this.import(data);
+    const LEVEL_OK = 0;
+    const LEVEL_WARN = 1;
+    const LEVEL_ERROR = 2;
   }
 
   getData() {
@@ -51,7 +54,7 @@ export default class Rule {
     this.data.dateFormat = obj.dateFormat || 'YYYY-MM-DD HH:mm:ss';
     this.data.thresholds = obj.thresholds || [];
     this.data.stringWarning = obj.stringWarning || '';
-    this.data.stringCritical = obj.stringCritical || ''; 
+    this.data.stringCritical = obj.stringCritical || '';
     this.data.invert = (obj.invert !== undefined ? obj.invert : false);
     this.data.overlayIcon = (obj.overlayIcon !== undefined ? obj.overlayIcon : false);
     this.data.tooltip = (obj.tooltip !== undefined ? obj.tooltip : false);
@@ -139,7 +142,7 @@ export default class Rule {
   getId() {
     return this.id;
   }
-  
+
 
   invertColorOrder() {
     const ref = this.data.colors;
@@ -154,6 +157,7 @@ export default class Rule {
   // Conditions
   //
   toColorize(value) {
+    if (this.data.colorOn === 'n') return false;
     if (this.data.colorOn === 'a') return true;
     if (this.data.colorOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
     return false;
@@ -176,6 +180,7 @@ export default class Rule {
 
   toLinkable(value) {
     if (this.data.link === false) return false;
+    if (this.data.linkOn === 'n') return false;
     if (this.data.linkOn === 'a') return true;
     if (this.data.linkOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
     return false;
@@ -183,6 +188,7 @@ export default class Rule {
 
   toTooltipize(value) {
     if (this.data.tooltip === false) return false;
+    if (this.data.tooltipOn === 'n') return false;
     if (this.data.tooltipOn === 'a') return true;
     if (this.data.tooltipOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
     return false;
@@ -363,24 +369,43 @@ export default class Rule {
     return _.first(this.data.colors);
   }
 
+  /**
+   * Return Level according to value and rule options
+   *
+   * @param {float} value
+   * @returns 0, 1 or 2
+   * @memberof Rule
+   */
   getThresholdLevel(value) {
-    let thresholdLevel = 0;
-    const thresholds = this.data.thresholds;
 
-    if (thresholds === undefined || thresholds.length === 0) return -1;
-    if (thresholds.length !== 2) return -1;
+    if (this.data.type === 'number') {
+      let thresholdLevel = 0;
+      const thresholds = this.data.thresholds;
 
-    // non invert
-    if (!this.data.invert) {
-      thresholdLevel = 2;
-      if (value >= thresholds[0]) thresholdLevel = 1;
-      if (value >= thresholds[1]) thresholdLevel = 0;
-    } else {
-      thresholdLevel = 0;
-      if (value >= thresholds[0]) thresholdLevel = 1;
-      if (value >= thresholds[1]) thresholdLevel = 2;
+      if (thresholds === undefined || thresholds.length === 0) return -1;
+      if (thresholds.length !== 2) return -1;
+
+      // non invert
+      if (!this.data.invert) {
+        thresholdLevel = 2;
+        if (value >= thresholds[0]) thresholdLevel = 1;
+        if (value >= thresholds[1]) thresholdLevel = 0;
+      } else {
+        thresholdLevel = 0;
+        if (value >= thresholds[0]) thresholdLevel = 1;
+        if (value >= thresholds[1]) thresholdLevel = 2;
+      }
+      return thresholdLevel;
     }
-    return thresholdLevel;
+    else if (this.data.type === 'string') {
+      if (value === this.data.stringWarning ) return 1;
+      if (value === this.data.stringCritical ) return 2;
+      let formatedValue = this.getFormattedValue(value);
+      if (formatedValue === this.data.stringWarning ) return 1;
+      if (formatedValue === this.data.stringCritical ) return 2;
+      return 0;
+    }
+    return 0;
   }
 
   getValueForSerie(serie) {
@@ -492,8 +517,8 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 

@@ -179,16 +179,38 @@ function () {
       this.matchedLink = false;
       u.log(0, 'State.unsetState() state', this);
     }
+    /**
+     *Flag to indicate state is matching by a rule and series
+     *
+     * @returns {boolean}
+     * @memberof State
+     */
+
   }, {
     key: "isMatched",
     value: function isMatched() {
       return this.matched;
     }
+    /**
+     *Flag to indicate state is changed, need apply state
+     *
+     * @returns {boolean}
+     * @memberof State
+     */
+
   }, {
     key: "isChanged",
     value: function isChanged() {
       return this.changed;
     }
+    /**
+     *
+     *
+     * @param {string} prop - id|value
+     * @returns {string} return original value of id or label of cell
+     * @memberof State
+     */
+
   }, {
     key: "getCellProp",
     value: function getCellProp(prop) {

@@ -151,14 +151,33 @@ export default class State {
     u.log(0, 'State.unsetState() state', this);
   }
 
+  /**
+   *Flag to indicate state is matching by a rule and series
+   *
+   * @returns {boolean}
+   * @memberof State
+   */
   isMatched() {
     return this.matched;
   }
 
+  /**
+   *Flag to indicate state is changed, need apply state
+   *
+   * @returns {boolean}
+   * @memberof State
+   */
   isChanged() {
     return this.changed;
   }
 
+  /**
+   *
+   *
+   * @param {string} prop - id|value
+   * @returns {string} return original value of id or label of cell
+   * @memberof State
+   */
   getCellProp(prop) {
     if (prop === 'id') return this.cellId;
     if (prop === 'value') return this.originalValue;

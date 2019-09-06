@@ -33,6 +33,9 @@ function () {
     this.rangeMaps = [];
     this.id = u.uniqueID();
     this["import"](data);
+    var LEVEL_OK = 0;
+    var LEVEL_WARN = 1;
+    var LEVEL_ERROR = 2;
   }
 
   _createClass(Rule, [{
@@ -184,6 +187,7 @@ function () {
   }, {
     key: "toColorize",
     value: function toColorize(value) {
+      if (this.data.colorOn === 'n') return false;
       if (this.data.colorOn === 'a') return true;
       if (this.data.colorOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
       return false;
@@ -209,6 +213,7 @@ function () {
     key: "toLinkable",
     value: function toLinkable(value) {
       if (this.data.link === false) return false;
+      if (this.data.linkOn === 'n') return false;
       if (this.data.linkOn === 'a') return true;
       if (this.data.linkOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
       return false;
@@ -217,6 +222,7 @@ function () {
     key: "toTooltipize",
     value: function toTooltipize(value) {
       if (this.data.tooltip === false) return false;
+      if (this.data.tooltipOn === 'n') return false;
       if (this.data.tooltipOn === 'a') return true;
       if (this.data.tooltipOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
       return false;
@@ -424,25 +430,44 @@ function () {
 
       return _.first(this.data.colors);
     }
+    /**
+     * Return Level according to value and rule options
+     *
+     * @param {float} value
+     * @returns 0, 1 or 2
+     * @memberof Rule
+     */
+
   }, {
     key: "getThresholdLevel",
     value: function getThresholdLevel(value) {
-      var thresholdLevel = 0;
-      var thresholds = this.data.thresholds;
-      if (thresholds === undefined || thresholds.length === 0) return -1;
-      if (thresholds.length !== 2) return -1; // non invert
+      if (this.data.type === 'number') {
+        var thresholdLevel = 0;
+        var thresholds = this.data.thresholds;
+        if (thresholds === undefined || thresholds.length === 0) return -1;
+        if (thresholds.length !== 2) return -1; // non invert
 
-      if (!this.data.invert) {
-        thresholdLevel = 2;
-        if (value >= thresholds[0]) thresholdLevel = 1;
-        if (value >= thresholds[1]) thresholdLevel = 0;
-      } else {
-        thresholdLevel = 0;
-        if (value >= thresholds[0]) thresholdLevel = 1;
-        if (value >= thresholds[1]) thresholdLevel = 2;
+        if (!this.data.invert) {
+          thresholdLevel = 2;
+          if (value >= thresholds[0]) thresholdLevel = 1;
+          if (value >= thresholds[1]) thresholdLevel = 0;
+        } else {
+          thresholdLevel = 0;
+          if (value >= thresholds[0]) thresholdLevel = 1;
+          if (value >= thresholds[1]) thresholdLevel = 2;
+        }
+
+        return thresholdLevel;
+      } else if (this.data.type === 'string') {
+        if (value === this.data.stringWarning) return 1;
+        if (value === this.data.stringCritical) return 2;
+        var formatedValue = this.getFormattedValue(value);
+        if (formatedValue === this.data.stringWarning) return 1;
+        if (formatedValue === this.data.stringCritical) return 2;
+        return 0;
       }
 
-      return thresholdLevel;
+      return 0;
     }
   }, {
     key: "getValueForSerie",
