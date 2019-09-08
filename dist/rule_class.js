@@ -11,6 +11,14 @@ var _moment = _interopRequireDefault(require("moment"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -58,7 +66,7 @@ function () {
       this.data.alias = obj.alias || 'No name';
       this.data.aggregation = obj.aggregation || 'current';
       this.data.decimals = obj.decimals !== undefined ? obj.decimals : 2;
-      this.data.colors = obj.colors || ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
+      this.data.colors = obj.colors ? _toConsumableArray(obj.colors) : ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
       this.data.reduce = true;
       this.data.style = obj.style || obj.colorMode || 'fillColor';
       this.data.colorOn = obj.colorOn || 'a';
@@ -71,7 +79,7 @@ function () {
       this.data.textPattern = obj.textPattern || '/.*/';
       this.data.pattern = obj.pattern || this.data.pattern;
       this.data.dateFormat = obj.dateFormat || 'YYYY-MM-DD HH:mm:ss';
-      this.data.thresholds = obj.thresholds || [];
+      this.data.thresholds = obj.thresholds !== undefined ? _toConsumableArray(obj.thresholds) : [];
       this.data.stringWarning = obj.stringWarning || '';
       this.data.stringCritical = obj.stringCritical || '';
       this.data.invert = obj.invert !== undefined ? obj.invert : false;
@@ -315,7 +323,7 @@ function () {
   }, {
     key: "addLinkMap",
     value: function addLinkMap(pattern) {
-      u.log(1, "Rule.addLinkMap()");
+      u.log(1, 'Rule.addLinkMap()');
       var data = {};
       var m = new LinkMap(pattern, data);
       m["import"](data);
@@ -415,6 +423,14 @@ function () {
     // Format value
     //
 
+    /**
+     *Get color according to value
+     *
+     * @param {*} value
+     * @returns {string} html color
+     * @memberof Rule
+     */
+
   }, {
     key: "getColorForValue",
     value: function getColorForValue(value) {
@@ -429,6 +445,23 @@ function () {
       }
 
       return _.first(this.data.colors);
+    }
+    /**
+     *Get color according level (-1,0,1,2)
+     *
+     * @param {*} level
+     * @returns
+     * @memberof Rule
+     */
+
+  }, {
+    key: "getColorForLevel",
+    value: function getColorForLevel(level) {
+      var colors = _toConsumableArray(this.data.colors);
+
+      if (!this.data.invert) colors = colors.reverse();
+      if (level <= 0) return colors[0];else if (colors[level] !== undefined) return colors[level];
+      return _.first(colors);
     }
     /**
      * Return Level according to value and rule options

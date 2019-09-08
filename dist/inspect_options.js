@@ -20,6 +20,7 @@ function () {
     _classCallCheck(this, InspectOptionsCtrl);
 
     $scope.editor = this;
+    this.enable = false;
     $scope.GF_PLUGIN = window.GF_PLUGIN;
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;

@@ -34,33 +34,31 @@ export default class Rule {
     this.data.type = obj.type || 'number';
     this.data.alias = obj.alias || 'No name';
     this.data.aggregation = obj.aggregation || 'current';
-    this.data.decimals = (obj.decimals !== undefined ? obj.decimals : 2);
-    this.data.colors = obj.colors || [
-      'rgba(245, 54, 54, 0.9)',
-      'rgba(237, 129, 40, 0.89)',
-      'rgba(50, 172, 45, 0.97)',
-    ];
+    this.data.decimals = obj.decimals !== undefined ? obj.decimals : 2;
+    this.data.colors = obj.colors
+      ? [...obj.colors]
+      : ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
     this.data.reduce = true;
     this.data.style = obj.style || obj.colorMode || 'fillColor';
     this.data.colorOn = obj.colorOn || 'a';
-    this.data.link = (obj.link !== undefined ? obj.link : false);
+    this.data.link = obj.link !== undefined ? obj.link : false;
     this.data.linkOn = obj.colorOn || 'a';
     this.data.linkUrl = obj.linkUrl || '';
-    this.data.linkParams = (obj.linkParams !== undefined ? obj.linkParams : false);
+    this.data.linkParams = obj.linkParams !== undefined ? obj.linkParams : false;
     this.data.textOn = obj.textOn || 'wmd';
     this.data.textReplace = obj.textReplace || 'content';
     this.data.textPattern = obj.textPattern || '/.*/';
     this.data.pattern = obj.pattern || this.data.pattern;
     this.data.dateFormat = obj.dateFormat || 'YYYY-MM-DD HH:mm:ss';
-    this.data.thresholds = obj.thresholds || [];
+    this.data.thresholds = obj.thresholds !== undefined ? [...obj.thresholds] : [];
     this.data.stringWarning = obj.stringWarning || '';
     this.data.stringCritical = obj.stringCritical || '';
-    this.data.invert = (obj.invert !== undefined ? obj.invert : false);
-    this.data.overlayIcon = (obj.overlayIcon !== undefined ? obj.overlayIcon : false);
-    this.data.tooltip = (obj.tooltip !== undefined ? obj.tooltip : false);
-    this.data.tooltipLabel = (obj.tooltipLabel !== undefined ? obj.tooltipLabel : this.data.alias);
-    this.data.tooltipColors = (obj.tooltipColors !== undefined ? obj.tooltipColors : false);
-    this.data.tooltipOn = (obj.tooltipOn !== undefined ? obj.tooltipOn : 'a');
+    this.data.invert = obj.invert !== undefined ? obj.invert : false;
+    this.data.overlayIcon = obj.overlayIcon !== undefined ? obj.overlayIcon : false;
+    this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : false;
+    this.data.tooltipLabel = obj.tooltipLabel !== undefined ? obj.tooltipLabel : this.data.alias;
+    this.data.tooltipColors = obj.tooltipColors !== undefined ? obj.tooltipColors : false;
+    this.data.tooltipOn = obj.tooltipOn !== undefined ? obj.tooltipOn : 'a';
     let maps = [];
 
     // SHAPES
@@ -68,11 +66,12 @@ export default class Rule {
     this.data.shapeData = [];
     // For 0.2.0
     maps = [];
-    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) maps = obj.shapeMaps;
+    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0)
+      maps = obj.shapeMaps;
     else maps = obj.shapeData;
 
     if (maps !== undefined && maps !== null && maps.length > 0) {
-      maps.forEach((map) => {
+      maps.forEach(map => {
         const newData = {};
         const sm = new ShapeMap(map.pattern, newData);
         sm.import(map);
@@ -86,10 +85,11 @@ export default class Rule {
     this.data.textData = [];
     // For 0.2.0
     maps = [];
-    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) maps = obj.textMaps;
+    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0)
+      maps = obj.textMaps;
     else maps = obj.textData;
     if (maps !== undefined && maps != null && maps.length > 0) {
-      maps.forEach((map) => {
+      maps.forEach(map => {
         const newData = {};
         const tm = new TextMap(map.pattern, newData);
         tm.import(map);
@@ -102,7 +102,7 @@ export default class Rule {
     this.data.linkProp = obj.linkProp || 'id';
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
-      obj.linkData.forEach((map) => {
+      obj.linkData.forEach(map => {
         const newData = {};
         const lm = new LinkMap(map.pattern, newData);
         lm.import(map);
@@ -116,7 +116,7 @@ export default class Rule {
     // VALUES
     this.data.valueData = [];
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
-      obj.valueData.forEach((map) => {
+      obj.valueData.forEach(map => {
         const newData = {};
         const vm = new ValueMap(map.value, map.text, newData);
         vm.import(map);
@@ -128,7 +128,7 @@ export default class Rule {
     // RANGE
     this.data.rangeData = [];
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
-      obj.rangeData.forEach((map) => {
+      obj.rangeData.forEach(map => {
         const newData = {};
         const rm = new RangeMap(map.from, map.to, map.text, newData);
         this.rangeMaps.push(rm);
@@ -142,7 +142,6 @@ export default class Rule {
   getId() {
     return this.id;
   }
-
 
   invertColorOrder() {
     const ref = this.data.colors;
@@ -227,7 +226,7 @@ export default class Rule {
 
   matchShape(pattern) {
     let found = false;
-    this.shapeMaps.forEach((element) => {
+    this.shapeMaps.forEach(element => {
       if (element.match(pattern)) found = true;
     });
     return found;
@@ -259,7 +258,7 @@ export default class Rule {
 
   matchText(pattern) {
     let found = false;
-    this.textMaps.forEach((element) => {
+    this.textMaps.forEach(element => {
       if (element.match(pattern)) found = true;
     });
     return found;
@@ -269,7 +268,7 @@ export default class Rule {
   // LINK MAPS
   //
   addLinkMap(pattern) {
-    u.log(1, "Rule.addLinkMap()");
+    u.log(1, 'Rule.addLinkMap()');
     const data = {};
     const m = new LinkMap(pattern, data);
     m.import(data);
@@ -292,7 +291,7 @@ export default class Rule {
 
   matchLink(pattern) {
     let found = false;
-    this.linkMaps.forEach((element) => {
+    this.linkMaps.forEach(element => {
       if (element.match(pattern)) found = true;
     });
     return found;
@@ -356,6 +355,13 @@ export default class Rule {
   //
   // Format value
   //
+  /**
+   *Get color according to value
+   *
+   * @param {*} value
+   * @returns {string} html color
+   * @memberof Rule
+   */
   getColorForValue(value) {
     if (!this.data.thresholds || this.data.thresholds.length === 0) {
       return null;
@@ -370,6 +376,21 @@ export default class Rule {
   }
 
   /**
+   *Get color according level (-1,0,1,2)
+   *
+   * @param {*} level
+   * @returns
+   * @memberof Rule
+   */
+  getColorForLevel(level) {
+    let colors = [...this.data.colors];
+    if (!this.data.invert) colors = colors.reverse();
+    if (level <= 0) return colors[0];
+    else if (colors[level] !== undefined) return colors[level];
+    return _.first(colors);
+  }
+
+  /**
    * Return Level according to value and rule options
    *
    * @param {float} value
@@ -377,7 +398,6 @@ export default class Rule {
    * @memberof Rule
    */
   getThresholdLevel(value) {
-
     if (this.data.type === 'number') {
       let thresholdLevel = 0;
       const thresholds = this.data.thresholds;
@@ -396,13 +416,12 @@ export default class Rule {
         if (value >= thresholds[1]) thresholdLevel = 2;
       }
       return thresholdLevel;
-    }
-    else if (this.data.type === 'string') {
-      if (value === this.data.stringWarning ) return 1;
-      if (value === this.data.stringCritical ) return 2;
+    } else if (this.data.type === 'string') {
+      if (value === this.data.stringWarning) return 1;
+      if (value === this.data.stringCritical) return 2;
       let formatedValue = this.getFormattedValue(value);
-      if (formatedValue === this.data.stringWarning ) return 1;
-      if (formatedValue === this.data.stringCritical ) return 2;
+      if (formatedValue === this.data.stringWarning) return 1;
+      if (formatedValue === this.data.stringCritical) return 2;
       return 0;
     }
     return 0;
@@ -517,11 +536,10 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-      // Adjust for scientific notation.
-      (match[2] ? +match[2] : 0)
+        // Adjust for scientific notation.
+        (match[2] ? +match[2] : 0)
     );
   }
-
 }
 
 //
@@ -565,7 +583,7 @@ class ShapeMap {
   export() {
     return {
       pattern: this.data.pattern,
-      hidden: this.data.hidden,
+      hidden: this.data.hidden
     };
   }
 
@@ -620,7 +638,7 @@ class TextMap {
   export() {
     return {
       pattern: this.data.pattern,
-      hidden: this.data.hidden,
+      hidden: this.data.hidden
     };
   }
 }
@@ -665,7 +683,7 @@ class LinkMap {
   export() {
     return {
       pattern: this.data.pattern,
-      hidden: this.data.hidden,
+      hidden: this.data.hidden
     };
   }
 }
@@ -739,7 +757,7 @@ class RangeMap {
       from: this.data.from,
       to: this.data.to,
       text: this.data.text,
-      hidden: this.data.hidden,
+      hidden: this.data.hidden
     };
   }
 }
@@ -810,7 +828,7 @@ class ValueMap {
     return {
       value: this.data.value,
       text: this.data.text,
-      hidden: this.data.hidden,
+      hidden: this.data.hidden
     };
   }
 }

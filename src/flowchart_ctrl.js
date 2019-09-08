@@ -58,7 +58,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onInitEditMode() {
     this.addEditorTab('Flowchart', flowchartOptionsTab, 2);
     this.addEditorTab('Mapping', mappingOptionsTab, 3);
-    // this.addEditorTab('Inspect', inspectOptionsTab, 4);
+    this.addEditorTab('Inspect', inspectOptionsTab, 4);
   }
 
   onRefresh() {

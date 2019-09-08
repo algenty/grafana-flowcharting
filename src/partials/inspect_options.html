@@ -14,7 +14,10 @@
 				</span>
 			</info-popover>
 		</h5>
-		<div class="table-panel-container">
+		<gf-form-switch class="gf-form" label-class="width-14" tooltip="Enable inspect mode to view/modify identity of shapes"
+		label="Enable" checked="editor.enable">
+		</gf-form-switch>
+		<div class="table-panel-container" ng-if="editor.enable">
 			<div class="table-panel-header-bg"/>
 			<div class="table-panel-scroll" style="max-height: 300px;">
 				<table class="table-panel-table">

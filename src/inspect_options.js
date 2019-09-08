@@ -2,6 +2,7 @@ export class InspectOptionsCtrl {
   /** @ngInject */
   constructor($scope) {
     $scope.editor = this;
+    this.enable = false;
     $scope.GF_PLUGIN = window.GF_PLUGIN;
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;

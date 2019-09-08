@@ -107,7 +107,8 @@ function (_MetricsPanelCtrl) {
     key: "onInitEditMode",
     value: function onInitEditMode() {
       this.addEditorTab('Flowchart', _flowchart_options.flowchartOptionsTab, 2);
-      this.addEditorTab('Mapping', _mapping_options.mappingOptionsTab, 3); // this.addEditorTab('Inspect', inspectOptionsTab, 4);
+      this.addEditorTab('Mapping', _mapping_options.mappingOptionsTab, 3);
+      this.addEditorTab('Inspect', _inspect_options.inspectOptionsTab, 4);
     }
   }, {
     key: "onRefresh",

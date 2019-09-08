@@ -91,7 +91,7 @@ function () {
         var value = rule.getValueForSerie(serie);
         var FormattedValue = rule.getFormattedValue(value);
         var level = rule.getThresholdLevel(value);
-        var color = rule.getColorForValue(value);
+        var color = rule.getColorForLevel(level);
         var tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
         var time = this.ctrl.dashboard.formatDate(new Date(), tooltipTimeFormat); // SHAPE
 

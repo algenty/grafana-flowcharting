@@ -476,6 +476,13 @@ export default class XGraph {
     return overlay;
   }
 
+  /**
+   *Add Warning icon
+   *
+   * @param {string} state (OK|WARN|ERROR)
+   * @param {mxCell} mxcell
+   * @memberof XGraph
+   */
   addOverlay(state, mxcell) {
     this.graph.addCellOverlay(
       mxcell,
@@ -483,36 +490,78 @@ export default class XGraph {
     );
   }
 
+  /**
+   *Remove Warning icon
+   *
+   * @param {mxCell} mxcell
+   * @memberof XGraph
+   */
   removeOverlay(mxcell) {
     this.graph.removeCellOverlays(mxcell);
   }
 
+  /**
+   *Add link to cell
+   *
+   * @param {mxCell} mxcell
+   * @param {string} link - Url
+   * @memberof XGraph
+   */
   addLink(mxcell, link) {
     this.graph.setLinkForCell(mxcell, link);
   }
 
+  /**
+   *Get link from cell
+   *
+   * @param {*} mxcell
+   * @memberof XGraph
+   */
   getLink(mxcell) {
     this.graph.getLinkForCell(mxcell);
   }
 
-  addTooltip(mxcell, name, value, color) {
-    this.graph.setAttributeForCell(mxcell, name, value);
-  }
+  // NOT USED ?
+  // addTooltip(mxcell, name, value, color) {
+  //   this.graph.setAttributeForCell(mxcell, name, value);
+  // }
 
-  removeTooltip(mxcell, name) {
-    this.graph.setAttributeForCell(mxcell, name, null);
-  }
+  // NOT USED ?
+  // removeTooltip(mxcell, name) {
+  //   this.graph.setAttributeForCell(mxcell, name, null);
+  // }
 
+  /**
+   *Remove link of cell
+   *
+   * @param {mxCell} mxcell
+   * @memberof XGraph
+   */
   removeLink(mxcell) {
     this.graph.setLinkForCell(mxcell, null);
   }
 
+  /**
+   *Get value or id from cell source
+   *
+   * @param {*} prop
+   * @returns
+   * @memberof XGraph
+   */
   getOrignalCells(prop) {
     if (prop === 'id' || prop === 'value') return this.cells[prop];
     // TODO: attributs
     return [];
   }
 
+  /**
+   *Rename Id of cell
+   *Must be uniq
+   *
+   * @param {string} oldId
+   * @param {string} newId
+   * @memberof XGraph
+   */
   renameId(oldId, newId) {
     const cells = this.findMxCells('id', oldId);
     if (cells !== undefined && cells.length > 0) {
@@ -524,12 +573,26 @@ export default class XGraph {
     }
   }
 
+  /**
+   *Get xml definition from current graph
+   *
+   * @returns
+   * @memberof XGraph
+   */
   getXmlModel() {
     const encoder = new mxCodec();
     const node = encoder.encode(this.graph.getModel());
     return mxUtils.getXml(node);
   }
 
+  /**
+   *Find and return current cell with matching pattern for id or value
+   *
+   * @param {string} prop - "id"|"value"
+   * @param {string} pattern - regex
+   * @returns {Array} strings of id
+   * @memberof XGraph
+   */
   findCurrentCells(prop, pattern) {
     const cells = this.getCurrentCells(prop);
     const result = _.find(cells, cell => {
@@ -538,6 +601,14 @@ export default class XGraph {
     return result;
   }
 
+  /**
+   *Find and return original cell with matching pattern for id or value
+   *
+   * @param {string} prop - "id"|"value"
+   * @param {string} pattern - regex
+   * @returns {Array} strings of id
+   * @memberof XGraph
+   */
   findOriginalCells(prop, pattern) {
     const cells = this.getOrignalCells(prop);
     const result = _.find(cells, cell => {
@@ -546,6 +617,12 @@ export default class XGraph {
     return result;
   }
 
+  /**
+   *Return all cells
+   *
+   * @returns {array} mxCells
+   * @memberof XGraph
+   */
   getMxCells() {
     return this.graph.getModel().cells;
   }

@@ -51,6 +51,9 @@ function () {
       value: 'fontColor'
     }];
     this.colorOn = [{
+      text: 'Never',
+      value: 'n'
+    }, {
       text: 'Warning / Critical',
       value: 'wc'
     }, {
@@ -93,7 +96,8 @@ function () {
     }];
     this.propTypes = [{
       text: 'Id',
-      value: 'id'
+      value: 'id' // { text: "Value", value: "value" }
+
     }];
     this.textPattern = '/.*/';
     this.metricTypes = [{
@@ -205,7 +209,7 @@ function () {
     };
 
     this.getVariables = function () {
-      u.log("MappingOptionsCtrl.getVariables");
+      u.log('MappingOptionsCtrl.getVariables');
       return _this.panelCtrl.getVariables();
     };
   }
@@ -224,7 +228,7 @@ function () {
   }, {
     key: "onRulesChange",
     value: function onRulesChange() {
-      u.log(1, "MappingOptionsCtrl.onRulesChange()");
+      u.log(1, 'MappingOptionsCtrl.onRulesChange()');
       this.flowchartHandler.ruleChanged();
       this.render();
     }

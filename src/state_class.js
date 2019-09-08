@@ -67,7 +67,7 @@ export default class State {
       const value = rule.getValueForSerie(serie);
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
-      const color = rule.getColorForValue(value);
+      const color = rule.getColorForLevel(level);
       const tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
       const time = this.ctrl.dashboard.formatDate(new Date(), tooltipTimeFormat)
 
