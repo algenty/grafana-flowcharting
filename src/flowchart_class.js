@@ -32,7 +32,7 @@ export default class Flowchart {
   import(obj) {
     u.log(1, `flowchart[${this.data.name}].import()`);
     u.log(0, `flowchart[${this.data.name}].import() obj`, obj);
-    this.data.download = (obj.download !== undefined ? obj.download : false);
+    this.data.download = obj.download !== undefined ? obj.download : false;
     if (obj.source) this.data.type = obj.source.type;
     else this.data.type = obj.type || this.data.type || 'xml';
     if (obj.source) this.data.xml = obj.source.xml.value;
@@ -42,15 +42,15 @@ export default class Flowchart {
     if (obj.options) this.data.zoom = obj.options.zoom;
     else this.data.zoom = obj.zoom || '100%';
     if (obj.options) this.data.center = obj.options.center;
-    else this.data.center = (obj.center !== undefined ? obj.center : true);
+    else this.data.center = obj.center !== undefined ? obj.center : true;
     if (obj.options) this.data.scale = obj.options.scale;
-    else this.data.scale = (obj.scale !== undefined ? obj.scale : true);
+    else this.data.scale = obj.scale !== undefined ? obj.scale : true;
     if (obj.options) this.data.lock = obj.options.lock;
-    else this.data.lock = (obj.lock !== undefined ? obj.lock : true);
+    else this.data.lock = obj.lock !== undefined ? obj.lock : true;
     if (obj.options) this.data.tooltip = obj.options.tooltip;
-    else this.data.tooltip = (obj.tooltip !== undefined ? obj.tooltip : true);
+    else this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : true;
     if (obj.options) this.data.grid = obj.options.grid;
-    else this.data.grid = (obj.grid !== undefined ? obj.grid : false);
+    else this.data.grid = obj.grid !== undefined ? obj.grid : false;
     if (obj.options) this.data.bgColor = obj.options.bgColor;
     else this.data.bgColor = obj.bgColor;
     this.init();
@@ -73,7 +73,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   updateStates(rules) {
-    if ( this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
+    if (this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
   }
 
   /**
@@ -83,7 +83,9 @@ export default class Flowchart {
    */
   init() {
     u.log(1, `flowchart[${this.data.name}].init()`);
-    if (this.xgraph === undefined) this.xgraph = new XGraph(this.container, this.getXml(true));
+    debugger
+    if (this.xgraph === undefined)
+      this.xgraph = new XGraph(this.container, this.data.type, this.getContent());
     if (this.data.xml !== undefined && this.data.xml !== null) {
       this.xgraph.drawGraph();
       if (this.data.tooltip) this.xgraph.tooltipGraph(true);
@@ -139,6 +141,16 @@ export default class Flowchart {
     this.init();
   }
 
+  reload() {
+    u.log(1, `flowchart[${this.data.name}].reload()`);
+    if (this.xgraph !== undefined && this.xgraph !== null) {
+      this.xgraph.destroyGraph();
+      this.xgraph = undefined;
+      this.init();
+    }
+    else this.init();
+  }
+
   setLock(bool) {
     this.data.lock = bool;
     this.xgraph.lock = bool;
@@ -174,9 +186,8 @@ export default class Flowchart {
     if (bgColor) this.xgraph.bgGraph(bgColor);
   }
 
-
   scale(bool) {
-    u.log(1, "Flowchart.scale()");
+    u.log(1, 'Flowchart.scale()');
     if (bool !== undefined) this.data.scale = bool;
     this.xgraph.scaleGraph(this.data.scale);
   }
@@ -193,6 +204,34 @@ export default class Flowchart {
   getXml(replaceVarBool) {
     if (!replaceVarBool) return this.data.xml;
     return this.templateSrv.replaceWithText(this.data.xml);
+  }
+
+  /**
+   *Get Source of graph (csv|xml) or get content from url
+   *
+   * @returns
+   * @memberof Flowchart
+   */
+  getContent() {
+    if (this.data.download) {
+      let content = Flowchart.loadContent(this.data.url);
+      if (content !== null) {
+        return content;
+      } else return '';
+    } else {
+      if (this.data.type === 'xml') return this.getXml(true);
+      if (this.data.type === 'csv') return this.getCsv(true);
+    }
+  }
+
+  static loadContent(url) {
+    var req = mxUtils.load(url);
+    if (req.getStatus() === 200) {
+      return req.getText();
+    } else {
+      u.log(3, 'Cannot load ' + url, req.getStatus());
+      return null;
+    }
   }
 
   renameId(oldId, newId) {

@@ -155,10 +155,10 @@ export default class FlowchartHandler {
    */
   render() {
     u.log(1, 'flowchartHandler.render()');
-    // not repeat render is mouse down
+    // not repeat render if mouse down
     if (!this.mousedown) {
       if (this.changeSourceFlag) {
-        this.draw();
+        this.load();
         this.changeSourceFlag = false;
         this.changeRuleFlag = true;
       }
@@ -288,6 +288,18 @@ export default class FlowchartHandler {
     });
   }
 
+    /**
+   *(re)load graph
+   *
+   * @memberof FlowchartHandler
+   */
+  load() {
+    u.log(1, `FlowchartHandler.load()`);
+    this.flowcharts.forEach(flowchart => {
+      flowchart.reload();
+    });
+  }
+
   /**
    *Active option link/map
    *
@@ -350,7 +362,6 @@ export default class FlowchartHandler {
           this.flowcharts[index].redraw(event.data);
           this.sourceChanged();
           this.$scope.$apply();
-          // this.render();
         }
         if (event.data !== undefined || event.data.length === 0) {
           editorWindow.close();

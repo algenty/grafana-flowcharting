@@ -102,7 +102,8 @@ function () {
     key: "init",
     value: function init() {
       u.log(1, "flowchart[".concat(this.data.name, "].init()"));
-      if (this.xgraph === undefined) this.xgraph = new _graph_class["default"](this.container, this.getXml(true));
+      debugger;
+      if (this.xgraph === undefined) this.xgraph = new _graph_class["default"](this.container, this.data.type, this.getContent());
 
       if (this.data.xml !== undefined && this.data.xml !== null) {
         this.xgraph.drawGraph();
@@ -166,6 +167,17 @@ function () {
       this.init();
     }
   }, {
+    key: "reload",
+    value: function reload() {
+      u.log(1, "flowchart[".concat(this.data.name, "].reload()"));
+
+      if (this.xgraph !== undefined && this.xgraph !== null) {
+        this.xgraph.destroyGraph();
+        this.xgraph = undefined;
+        this.init();
+      } else this.init();
+    }
+  }, {
     key: "setLock",
     value: function setLock(bool) {
       this.data.lock = bool;
@@ -210,7 +222,7 @@ function () {
   }, {
     key: "scale",
     value: function scale(bool) {
-      u.log(1, "Flowchart.scale()");
+      u.log(1, 'Flowchart.scale()');
       if (bool !== undefined) this.data.scale = bool;
       this.xgraph.scaleGraph(this.data.scale);
     }
@@ -230,6 +242,27 @@ function () {
     value: function getXml(replaceVarBool) {
       if (!replaceVarBool) return this.data.xml;
       return this.templateSrv.replaceWithText(this.data.xml);
+    }
+    /**
+     *Get Source of graph (csv|xml) or get content from url
+     *
+     * @returns
+     * @memberof Flowchart
+     */
+
+  }, {
+    key: "getContent",
+    value: function getContent() {
+      if (this.data.download) {
+        var content = Flowchart.loadContent(this.data.url);
+
+        if (content !== null) {
+          return content;
+        } else return '';
+      } else {
+        if (this.data.type === 'xml') return this.getXml(true);
+        if (this.data.type === 'csv') return this.getCsv(true);
+      }
     }
   }, {
     key: "renameId",
@@ -325,6 +358,18 @@ function () {
     key: "unsetMap",
     value: function unsetMap() {
       this.xgraph.unsetMap();
+    }
+  }], [{
+    key: "loadContent",
+    value: function loadContent(url) {
+      var req = mxUtils.load(url);
+
+      if (req.getStatus() === 200) {
+        return req.getText();
+      } else {
+        u.log(3, 'Cannot load ' + url, req.getStatus());
+        return null;
+      }
     }
   }]);
 

@@ -188,11 +188,11 @@ function () {
   }, {
     key: "render",
     value: function render() {
-      u.log(1, 'flowchartHandler.render()'); // not repeat render is mouse down
+      u.log(1, 'flowchartHandler.render()'); // not repeat render if mouse down
 
       if (!this.mousedown) {
         if (this.changeSourceFlag) {
-          this.draw();
+          this.load();
           this.changeSourceFlag = false;
           this.changeRuleFlag = true;
         }
@@ -344,6 +344,20 @@ function () {
       });
     }
     /**
+    *(re)load graph
+    *
+    * @memberof FlowchartHandler
+    */
+
+  }, {
+    key: "load",
+    value: function load() {
+      u.log(1, "FlowchartHandler.load()");
+      this.flowcharts.forEach(function (flowchart) {
+        flowchart.reload();
+      });
+    }
+    /**
      *Active option link/map
      *
      * @param {Object} objToMap
@@ -417,8 +431,7 @@ function () {
 
             _this3.sourceChanged();
 
-            _this3.$scope.$apply(); // this.render();
-
+            _this3.$scope.$apply();
           }
 
           if (event.data !== undefined || event.data.length === 0) {

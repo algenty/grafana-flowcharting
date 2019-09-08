@@ -118,16 +118,14 @@ export default class XGraph {
   /**
    *Creates an instance of XGraph.
    * @param {DOM} container
-   * @param {string} xmlGraph
+   * @param {string} definition
    * @memberof XGraph
    */
-  constructor(container, xmlGraph) {
+  constructor(container, type, definition) {
     u.log(1, 'XGraph.constructor()');
     this.container = container;
     this.xmlGraph = undefined;
-    if (u.isencoded(xmlGraph)) this.xmlGraph = u.decode(xmlGraph, true, true, true);
-    else this.xmlGraph = xmlGraph;
-    this.xmlGraph = xmlGraph;
+    this.type = type;
     this.graph = undefined;
     this.scale = true;
     this.tooltip = true;
@@ -149,6 +147,11 @@ export default class XGraph {
     this.cells.attributs = {};
     this.clickBackup = undefined;
 
+    if (type === 'xml') {
+      if (u.isencoded(definition)) this.xmlGraph = u.decode(definition, true, true, true);
+      else this.xmlGraph = definition;
+    }
+    
     this.initGraph();
   }
 
@@ -243,6 +246,11 @@ export default class XGraph {
     this.centerGraph(this.center);
     this.bgGraph(this.bgColor);
     this.graph.refresh();
+  }
+
+  destroyGraph() {
+    this.graph.destroy();
+    this.graph = undefined;
   }
 
   /**
@@ -740,9 +748,10 @@ export default class XGraph {
   eventKey(evt) {
     if (!mxEvent.isConsumed(evt) && evt.keyCode == 27 /* Escape */) {
       this.cumulativeZoomFactor = 1;
-      this.graph.zoomActual();
-      this.refreshGraph(this.width, this.height);
-      // mxEvent.consume(evt);
+      if (this.graph) {
+        this.graph.zoomActual();
+        this.refreshGraph(this.width, this.height);
+      }
     }
   }
 
