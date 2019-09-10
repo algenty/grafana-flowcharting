@@ -35,6 +35,7 @@ function () {
     this.data = data;
     this.data.name = name;
     this.data.xml = xmlGraph;
+    this.data.download = false;
     this.container = container;
     this.xgraph = undefined;
     this.stateHandler = undefined;
@@ -58,7 +59,7 @@ function () {
       this.data.download = obj.download !== undefined ? obj.download : false;
       if (obj.source) this.data.type = obj.source.type;else this.data.type = obj.type || this.data.type || 'xml';
       if (obj.source) this.data.xml = obj.source.xml.value;else this.data.xml = obj.xml || this.data.xml || '';
-      if (obj.source) this.data.url = obj.source.url.value;else this.data.url = 'http://<source>:<port>/<pathToXml>';
+      if (obj.source) this.data.url = obj.source.url.value;else this.data.url = obj.url !== undefined ? obj.url : 'http://<source>:<port>/<pathToXml>';
       if (obj.options) this.data.zoom = obj.options.zoom;else this.data.zoom = obj.zoom || '100%';
       if (obj.options) this.data.center = obj.options.center;else this.data.center = obj.center !== undefined ? obj.center : true;
       if (obj.options) this.data.scale = obj.options.scale;else this.data.scale = obj.scale !== undefined ? obj.scale : true;
@@ -102,7 +103,6 @@ function () {
     key: "init",
     value: function init() {
       u.log(1, "flowchart[".concat(this.data.name, "].init()"));
-      debugger;
       if (this.xgraph === undefined) this.xgraph = new _graph_class["default"](this.container, this.data.type, this.getContent());
 
       if (this.data.xml !== undefined && this.data.xml !== null) {
@@ -164,7 +164,7 @@ function () {
         this.xgraph.setXmlGraph(this.getXml(true));
       }
 
-      this.init();
+      this.refresh();
     }
   }, {
     key: "reload",
@@ -240,8 +240,16 @@ function () {
   }, {
     key: "getXml",
     value: function getXml(replaceVarBool) {
+      u.log(1, "flowchart[".concat(this.data.name, "].getXml()"));
       if (!replaceVarBool) return this.data.xml;
       return this.templateSrv.replaceWithText(this.data.xml);
+    }
+  }, {
+    key: "getCsv",
+    value: function getCsv(replaceVarBool) {
+      u.log(1, "flowchart[".concat(this.data.name, "].getXml()"));
+      if (!replaceVarBool) return this.data.csv;
+      return this.templateSrv.replaceWithText(this.data.csv);
     }
     /**
      *Get Source of graph (csv|xml) or get content from url
@@ -253,8 +261,10 @@ function () {
   }, {
     key: "getContent",
     value: function getContent() {
+      u.log(1, "flowchart[".concat(this.data.name, "].getContent()"));
+
       if (this.data.download) {
-        var content = Flowchart.loadContent(this.data.url);
+        var content = this.loadContent(this.data.url);
 
         if (content !== null) {
           return content;
@@ -262,6 +272,19 @@ function () {
       } else {
         if (this.data.type === 'xml') return this.getXml(true);
         if (this.data.type === 'csv') return this.getCsv(true);
+      }
+    }
+  }, {
+    key: "loadContent",
+    value: function loadContent(url) {
+      u.log(1, "flowchart[".concat(this.data.name, "].loadContent()"));
+      var req = mxUtils.load(url);
+
+      if (req.getStatus() === 200) {
+        return req.getText();
+      } else {
+        u.log(3, 'Cannot load ' + url, req.getStatus());
+        return null;
       }
     }
   }, {
@@ -358,18 +381,6 @@ function () {
     key: "unsetMap",
     value: function unsetMap() {
       this.xgraph.unsetMap();
-    }
-  }], [{
-    key: "loadContent",
-    value: function loadContent(url) {
-      var req = mxUtils.load(url);
-
-      if (req.getStatus() === 200) {
-        return req.getText();
-      } else {
-        u.log(3, 'Cannot load ' + url, req.getStatus());
-        return null;
-      }
     }
   }]);
 

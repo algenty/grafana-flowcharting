@@ -30,10 +30,7 @@ function () {
     this.sourceTypes = [{
       text: 'XML Content',
       value: 'xml'
-    }, {
-      text: 'CSV',
-      value: 'csv'
-    }];
+    }]; //,{ text: 'CSV', value: 'csv' }];
   }
   /**
    *Render

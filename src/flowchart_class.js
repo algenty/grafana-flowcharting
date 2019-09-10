@@ -15,6 +15,7 @@ export default class Flowchart {
     this.data = data;
     this.data.name = name;
     this.data.xml = xmlGraph;
+    this.data.download = false; 
     this.container = container;
     this.xgraph = undefined;
     this.stateHandler = undefined;
@@ -32,13 +33,13 @@ export default class Flowchart {
   import(obj) {
     u.log(1, `flowchart[${this.data.name}].import()`);
     u.log(0, `flowchart[${this.data.name}].import() obj`, obj);
-    this.data.download = obj.download !== undefined ? obj.download : false;
+    this.data.download = (obj.download !== undefined ? obj.download : false);
     if (obj.source) this.data.type = obj.source.type;
     else this.data.type = obj.type || this.data.type || 'xml';
     if (obj.source) this.data.xml = obj.source.xml.value;
     else this.data.xml = obj.xml || this.data.xml || '';
     if (obj.source) this.data.url = obj.source.url.value;
-    else this.data.url = 'http://<source>:<port>/<pathToXml>';
+    else this.data.url = (obj.url !== undefined ? obj.url : 'http://<source>:<port>/<pathToXml>');
     if (obj.options) this.data.zoom = obj.options.zoom;
     else this.data.zoom = obj.zoom || '100%';
     if (obj.options) this.data.center = obj.options.center;
@@ -83,7 +84,6 @@ export default class Flowchart {
    */
   init() {
     u.log(1, `flowchart[${this.data.name}].init()`);
-    debugger
     if (this.xgraph === undefined)
       this.xgraph = new XGraph(this.container, this.data.type, this.getContent());
     if (this.data.xml !== undefined && this.data.xml !== null) {
@@ -138,7 +138,7 @@ export default class Flowchart {
       u.log(2, 'XML Content not defined');
       this.xgraph.setXmlGraph(this.getXml(true));
     }
-    this.init();
+    this.refresh();
   }
 
   reload() {
@@ -202,8 +202,15 @@ export default class Flowchart {
   }
 
   getXml(replaceVarBool) {
+    u.log(1, `flowchart[${this.data.name}].getXml()`);
     if (!replaceVarBool) return this.data.xml;
     return this.templateSrv.replaceWithText(this.data.xml);
+  }
+
+  getCsv(replaceVarBool) {
+    u.log(1, `flowchart[${this.data.name}].getXml()`);
+    if (!replaceVarBool) return this.data.csv;
+    return this.templateSrv.replaceWithText(this.data.csv);
   }
 
   /**
@@ -213,8 +220,9 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   getContent() {
+    u.log(1, `flowchart[${this.data.name}].getContent()`);
     if (this.data.download) {
-      let content = Flowchart.loadContent(this.data.url);
+      let content = this.loadContent(this.data.url);
       if (content !== null) {
         return content;
       } else return '';
@@ -224,7 +232,8 @@ export default class Flowchart {
     }
   }
 
-  static loadContent(url) {
+  loadContent(url) {
+    u.log(1, `flowchart[${this.data.name}].loadContent()`);
     var req = mxUtils.load(url);
     if (req.getStatus() === 200) {
       return req.getText();

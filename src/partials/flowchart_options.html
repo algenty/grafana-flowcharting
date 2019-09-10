@@ -14,7 +14,7 @@
 				<!-- Flowchart Definition -->
 				<div class="gf-form">
 					<gf-form-switch class="gf-form" label="Download source" label-class="width-12"
-						checked="flowchart.data.download" on-change="editor.onOptionChange()">
+						checked="flowchart.data.download" on-change="editor.onSourceChange()">
 					</gf-form-switch>
 				</div>
 				<div class="gf-form">
@@ -30,7 +30,7 @@
 					</div>
 				</div>
 				<!-- URL -->
-				<div class="gf-form" name="options.source.url.form" ng-if="flowchart.data.download">
+				<div class="gf-form" ng-if="flowchart.data.download">
 					<div class="gf-form">
 						<span class="gf-form-label width-12">
 							URL
@@ -38,7 +38,7 @@
 								This service should respond with a xml/plain response containing mxgraph syntax
 							</info-popover>
 						</span>
-						<input type="text" name="options.source.url.input" ng-model="flowchart.data.url"
+						<input type="text" ng-model="flowchart.data.url"
 							class="gf-form-input ng-pristine ng-untouched ng-valid ng-empty" style="width: 300px"
 							ng-change="editor.onSourceChange()" ng-model-onblur>
 					</div>
@@ -58,10 +58,10 @@
 						ng-model="flowchart.data.xml" ng-model-onBlur>
 					</textarea>
 				</div>
-				<div class="section gf-form" ng-if="flowchart.data.type == 'xml'">
+				<!-- <div class="section gf-form" ng-if="flowchart.data.type == 'xml'">
 					<a href="https://draw.io?client=1" target="_blank">Open mxGraph Editor like draw.io and copy/paste model via
 						menu in Extra > Edit diagram...</a>
-				</div>
+				</div> -->
 				<!-- BUTTONS RULES -->
 				<div class="gf-form-inline" ng-if=" flowchart.data.type == 'xml' && !flowchart.data.download ">
 					<div class="gf-form" style="margin-right: 5px;">
