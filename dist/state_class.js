@@ -53,7 +53,7 @@ function () {
     this.tooltips = [];
     this.currentColors = {};
     this.originalColors = {};
-    this.originalValue = this.xgraph.getValueCell(mxcell);
+    this.originalValue = this.xgraph.getLabel(mxcell);
     this.currentValue = this.originalValue;
     var link = this.xgraph.getLink(mxcell);
     if (link === undefined) link = null;

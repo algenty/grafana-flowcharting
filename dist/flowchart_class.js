@@ -91,7 +91,12 @@ function () {
   }, {
     key: "updateStates",
     value: function updateStates(rules) {
-      if (this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
+      var _this = this;
+
+      // if (this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
+      rules.forEach(function (rule) {
+        rule.states = _this.stateHandler.getStatesForRule(rule);
+      });
     }
     /**
      *Initialisation of flowchart class

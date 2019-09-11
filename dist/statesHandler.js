@@ -39,18 +39,79 @@ function () {
    * Init states
    *
    * @param {XGraph} xgraph
-   * @param {Array<Rule>} rules
    * @memberof StateHandler
    */
+  // initStates(xgraph, rules) {
+  //   u.log(1, 'StateHandler.initStates()');
+  //   this.xgraph = xgraph;
+  //   this.states = [];
+  //   this.updateStates(rules);
+  // }
 
 
   _createClass(StateHandler, [{
     key: "initStates",
-    value: function initStates(xgraph, rules) {
+    value: function initStates(xgraph) {
+      var _this = this;
+
       u.log(1, 'StateHandler.initStates()');
       this.xgraph = xgraph;
       this.states = [];
-      this.updateStates(rules);
+      var mxcells = xgraph.getMxCells();
+
+      _.each(mxcells, function (mxcell) {
+        _this.addState(mxcell);
+      });
+    }
+    /**
+     *Return states array for a rule
+     *
+     * @param {Rule} rule - rule mapping
+     * @returns {Array<State>}
+     * @memberof StateHandler
+     */
+
+  }, {
+    key: "getStatesForRule",
+    value: function getStatesForRule(rule) {
+      u.log(1, 'StateHandler.getStatesForRule()');
+      var result = [];
+      var name = null;
+      var xgraph = this.xgraph;
+
+      _.each(this.states, function (state) {
+        var mxcell = state.mxcell;
+        var found = false; // SHAPES
+
+        name = xgraph.getValuePropOfMxCell(rule.data.shapeProp, mxcell);
+
+        if (rule.matchShape(name)) {
+          result.push(state);
+          found = true;
+        } // TEXTS
+
+
+        if (!found) {
+          name = xgraph.getValuePropOfMxCell(rule.data.textProp, mxcell);
+
+          if (rule.matchText(name)) {
+            result.push(state);
+            found = true;
+          }
+        } // LINKS
+
+
+        if (!found) {
+          name = xgraph.getValuePropOfMxCell(rule.data.linkProp, mxcell);
+
+          if (rule.matchText(name)) {
+            result.push(state);
+            found = true;
+          }
+        }
+      });
+
+      return result;
     }
     /**
      * Update States : Add or remove state in states when rules changed
@@ -59,17 +120,18 @@ function () {
      * @param {Array<Rule>} rules
      * @memberof StateHandler
      */
+    // OLD METHOD : see getStatesForRule
 
   }, {
     key: "updateStates",
     value: function updateStates(rules) {
-      var _this = this;
+      var _this2 = this;
 
       u.log(1, 'StateHandler.updateStates()');
       var mxcells = this.xgraph.getMxCells(); // NEW
 
       _.each(mxcells, function (mxcell) {
-        var state = _this.getState(mxcell.id);
+        var state = _this2.getState(mxcell.id);
 
         var found = false;
 
@@ -86,24 +148,24 @@ function () {
               var links = rule.getLinkMaps();
               var name = null; // SHAPES
 
-              if (rule.data.shapeProp === 'id') name = mxcell.id;else if (rule.data.shapeProp === 'value') name = xgraph.getValueCell(mxcell);else name = null;
+              if (rule.data.shapeProp === 'id') name = mxcell.id;else if (rule.data.shapeProp === 'value') name = xgraph.getLabel(mxcell);else name = null;
 
               if (rule.matchShape(name)) {
-                _this.addState(mxcell);
+                _this2.addState(mxcell);
               } // TEXTS
 
 
-              if (rule.data.textProp === 'id') name = mxcell.id;else if (rule.data.textProp === 'value') name = xgraph.getValueCell(mxcell);else name = null;
+              if (rule.data.textProp === 'id') name = mxcell.id;else if (rule.data.textProp === 'value') name = xgraph.getLabel(mxcell);else name = null;
 
               if (rule.matchText(name)) {
-                _this.addState(mxcell);
+                _this2.addState(mxcell);
               } // LINKS
 
 
-              if (rule.data.linkProp === 'id') name = mxcell.id;else if (rule.data.linkProp === 'value') name = xgraph.getValueCell(mxcell);else name = null;
+              if (rule.data.linkProp === 'id') name = mxcell.id;else if (rule.data.linkProp === 'value') name = xgraph.getLabel(mxcell);else name = null;
 
               if (rule.matchLink(name)) {
-                _this.addState(mxcell);
+                _this2.addState(mxcell);
               }
             }
           } catch (err) {
@@ -120,8 +182,6 @@ function () {
               }
             }
           }
-
-          ;
         }
       }); // OLD
       // _.each(mxcells, mxcell => {
@@ -162,7 +222,7 @@ function () {
       return foundState;
     }
     /**
-     * Add a state 
+     * Add a state
      *
      * @param {mxCell} mxcell
      * @returns {State} created state
@@ -187,16 +247,15 @@ function () {
      * @param {mxCell} mxcell
      * @memberof StateHandler
      */
+    // NOT USED
+    // removeState(mxcell) {
+    //   this.states = _.without(this.states, mxcell);
+    // }
 
-  }, {
-    key: "removeState",
-    value: function removeState(mxcell) {
-      this.states = _.without(this.states, mxcell);
-    }
     /**
      * Count number of state
      *
-     * @returns {Number} 
+     * @returns {Number}
      * @memberof StateHandler
      */
 
@@ -242,13 +301,16 @@ function () {
   }, {
     key: "setStates",
     value: function setStates(rules, series) {
+      var _this3 = this;
+
       u.log(1, 'StateHandler.setStates()');
       u.log(0, 'StatesHandler.setStates() Rules', rules);
       u.log(0, 'StatesHandler.setStates() Series', series);
-      u.log(1, 'StatesHandler.setStates() States', this.states);
+      u.log(0, 'StatesHandler.setStates() States', this.states);
       this.prepare();
-      this.states.forEach(function (state) {
-        rules.forEach(function (rule) {
+      rules.forEach(function (rule) {
+        if (rule.states === undefined) rule.states = _this3.getStatesForRule(rule);
+        rule.states.forEach(function (state) {
           series.forEach(function (serie) {
             state.setState(rule, serie);
           });

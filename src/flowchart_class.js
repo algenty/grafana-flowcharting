@@ -74,7 +74,10 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   updateStates(rules) {
-    if (this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
+    // if (this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
+    rules.forEach(rule => {
+      rule.states = this.stateHandler.getStatesForRule(rule);
+    });
   }
 
   /**

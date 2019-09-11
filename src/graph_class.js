@@ -529,16 +529,6 @@ export default class XGraph {
     this.graph.getLinkForCell(mxcell);
   }
 
-  // NOT USED ?
-  // addTooltip(mxcell, name, value, color) {
-  //   this.graph.setAttributeForCell(mxcell, name, value);
-  // }
-
-  // NOT USED ?
-  // removeTooltip(mxcell, name) {
-  //   this.graph.setAttributeForCell(mxcell, name, null);
-  // }
-
   /**
    *Remove link of cell
    *
@@ -601,13 +591,14 @@ export default class XGraph {
    * @returns {Array} strings of id
    * @memberof XGraph
    */
-  findCurrentCells(prop, pattern) {
-    const cells = this.getCurrentCells(prop);
-    const result = _.find(cells, cell => {
-      u.matchString(cell, pattern);
-    });
-    return result;
-  }
+  // NOT USED
+  // findCurrentCells(prop, pattern) {
+  //   const cells = this.getCurrentCells(prop);
+  //   const result = _.find(cells, cell => {
+  //     u.matchString(cell, pattern);
+  //   });
+  //   return result;
+  // }
 
   /**
    *Find and return original cell with matching pattern for id or value
@@ -617,13 +608,14 @@ export default class XGraph {
    * @returns {Array} strings of id
    * @memberof XGraph
    */
-  findOriginalCells(prop, pattern) {
-    const cells = this.getOrignalCells(prop);
-    const result = _.find(cells, cell => {
-      u.matchString(cell, pattern);
-    });
-    return result;
-  }
+  // NOT USED
+  // findOriginalCells(prop, pattern) {
+  //   const cells = this.getOrignalCells(prop);
+  //   const result = _.find(cells, cell => {
+  //     u.matchString(cell, pattern);
+  //   });
+  //   return result;
+  // }
 
   /**
    *Return all cells
@@ -635,19 +627,33 @@ export default class XGraph {
     return this.graph.getModel().cells;
   }
 
-  findCurrentMxCells(prop, pattern) {
-    const cells = [];
-    _.each(this.getMxCells(), cell => {
-      if (prop === 'id') {
-        const id = cell.getId();
-        if (u.matchString(id, pattern)) cells.push(cell);
-      } else if (prop === 'value') {
-        const value = cell.getValue();
-        if (u.matchString(value, pattern)) cells.push(cell);
-      }
-    });
-    return cells;
+  /**
+   * Return value of id or value of mxcell
+   *
+   * @param {mxCell} mxcell
+   * @param {string} prop - "id"|"value"
+   * @memberof XGraph
+   */
+  getValuePropOfMxCell(mxcell,prop) {
+    if (prop === "id") return this.getId(mxcell);
+    if (prop === "value") return this.getLabel(mxcell);
+    return null;
   }
+
+  // NOT USED
+  // findCurrentMxCells(prop, pattern) {
+  //   const cells = [];
+  //   _.each(this.getMxCells(), mxcell => {
+  //     if (prop === 'id') {
+  //       const id = mxcell.getId();
+  //       if (u.matchString(id, pattern)) cells.push(mxcell);
+  //     } else if (prop === 'value') {
+  //       const value = this.getLabel(mxcell);
+  //       if (u.matchString(value, pattern)) cells.push(mxcell);
+  //     }
+  //   });
+  //   return cells;
+  // }
 
   getStyleCell(mxcell, style) {
     const state = this.graph.view.getState(mxcell);
@@ -659,11 +665,22 @@ export default class XGraph {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getValueCell(mxcell) {
+  /**
+   *Return Label/value of mxcell
+   *
+   * @param {mxCell} mxcell
+   * @returns
+   * @memberof XGraph
+   */
+  getLabel(mxcell) {
     if (mxUtils.isNode(mxcell.value)) {
       return mxcell.value.getAttribute('label');
     }
     return mxcell.getValue(mxcell);
+  }
+
+  getId(mxcell){
+    return mxcell.getId();
   }
 
   // eslint-disable-next-line class-methods-use-this

@@ -31,6 +31,10 @@ export default class StateHandler {
   //   this.updateStates(rules);
   // }
   initStates(xgraph) {
+    u.log(1, 'StateHandler.initStates()');
+    this.xgraph = xgraph;
+    this.states = [];
+    let mxcells = xgraph.getMxCells();
     _.each(mxcells, mxcell => {
       this.addState(mxcell);
     });
@@ -40,44 +44,43 @@ export default class StateHandler {
    *Return states array for a rule
    *
    * @param {Rule} rule - rule mapping
+   * @returns {Array<State>}
    * @memberof StateHandler
    */
   getStatesForRule(rule) {
     u.log(1, 'StateHandler.getStatesForRule()');
+    let result = [];
+    let name = null;
+    let xgraph = this.xgraph;
     _.each(this.states, state => {
-      const shapes = rule.getShapeMaps();
-      const texts = rule.getTextMaps();
-      const links = rule.getLinkMaps();
       let mxcell = state.mxcell;
+      let found = false;
 
       // SHAPES
-      if (rule.data.shapeProp === 'id') name = mxcell.id;
-      else if (rule.data.shapeProp === 'value') name = xgraph.getValueCell(mxcell);
-      else name = null;
+      name = xgraph.getValuePropOfMxCell(rule.data.shapeProp, mxcell);
       if (rule.matchShape(name)) {
-        this.addState(mxcell);
+        result.push(state);
+        found = true;
       }
 
       // TEXTS
-      if (rule.data.textProp === 'id') name = mxcell.id;
-      else if (rule.data.textProp === 'value') name = xgraph.getValueCell(mxcell);
-      else name = null;
-      if (rule.matchText(name)) {
-        this.addState(mxcell);
+      if (!found) {
+        name = xgraph.getValuePropOfMxCell(rule.data.textProp, mxcell);
+        if (rule.matchText(name)) {
+          result.push(state);
+          found = true;
+        }
       }
-
       // LINKS
-      if (rule.data.linkProp === 'id') name = mxcell.id;
-      else if (rule.data.linkProp === 'value') name = xgraph.getValueCell(mxcell);
-      else name = null;
-      if (rule.matchLink(name)) {
-        this.addState(mxcell);
-      }
-    });
-    // OLD
-    // _.each(mxcells, mxcell => {
-    //   this.addState(mxcell);
-    // });
+      if (!found) {
+        name = xgraph.getValuePropOfMxCell(rule.data.linkProp, mxcell);
+       if (rule.matchText(name)) {
+         result.push(state);
+         found = true;
+       }
+     }
+   });
+   return result;
   }
 
   /**
@@ -87,6 +90,7 @@ export default class StateHandler {
    * @param {Array<Rule>} rules
    * @memberof StateHandler
    */
+  // OLD METHOD : see getStatesForRule
   updateStates(rules) {
     u.log(1, 'StateHandler.updateStates()');
     const mxcells = this.xgraph.getMxCells();
@@ -103,7 +107,7 @@ export default class StateHandler {
 
           // SHAPES
           if (rule.data.shapeProp === 'id') name = mxcell.id;
-          else if (rule.data.shapeProp === 'value') name = xgraph.getValueCell(mxcell);
+          else if (rule.data.shapeProp === 'value') name = xgraph.getLabel(mxcell);
           else name = null;
           if (rule.matchShape(name)) {
             this.addState(mxcell);
@@ -111,7 +115,7 @@ export default class StateHandler {
 
           // TEXTS
           if (rule.data.textProp === 'id') name = mxcell.id;
-          else if (rule.data.textProp === 'value') name = xgraph.getValueCell(mxcell);
+          else if (rule.data.textProp === 'value') name = xgraph.getLabel(mxcell);
           else name = null;
           if (rule.matchText(name)) {
             this.addState(mxcell);
@@ -119,7 +123,7 @@ export default class StateHandler {
 
           // LINKS
           if (rule.data.linkProp === 'id') name = mxcell.id;
-          else if (rule.data.linkProp === 'value') name = xgraph.getValueCell(mxcell);
+          else if (rule.data.linkProp === 'value') name = xgraph.getLabel(mxcell);
           else name = null;
           if (rule.matchLink(name)) {
             this.addState(mxcell);
@@ -180,9 +184,10 @@ export default class StateHandler {
    * @param {mxCell} mxcell
    * @memberof StateHandler
    */
-  removeState(mxcell) {
-    this.states = _.without(this.states, mxcell);
-  }
+  // NOT USED
+  // removeState(mxcell) {
+  //   this.states = _.without(this.states, mxcell);
+  // }
 
   /**
    * Count number of state
@@ -216,6 +221,7 @@ export default class StateHandler {
       state.prepare();
     });
   }
+
   /**
    * Change states according to rules and datas from grafana
    * @param  {Array<Rule>} rules - Array of Rule object
@@ -225,10 +231,11 @@ export default class StateHandler {
     u.log(1, 'StateHandler.setStates()');
     u.log(0, 'StatesHandler.setStates() Rules', rules);
     u.log(0, 'StatesHandler.setStates() Series', series);
-    u.log(1, 'StatesHandler.setStates() States', this.states);
+    u.log(0, 'StatesHandler.setStates() States', this.states);
     this.prepare();
-    this.states.forEach(state => {
-      rules.forEach(rule => {
+    rules.forEach(rule => {
+      if (rule.states === undefined) rule.states = this.getStatesForRule(rule);
+      rule.states.forEach(state => {
         series.forEach(serie => {
           state.setState(rule, serie);
         });
