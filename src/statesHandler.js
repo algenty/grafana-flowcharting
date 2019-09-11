@@ -22,14 +22,62 @@ export default class StateHandler {
    * Init states
    *
    * @param {XGraph} xgraph
-   * @param {Array<Rule>} rules
    * @memberof StateHandler
    */
-  initStates(xgraph, rules) {
-    u.log(1, 'StateHandler.initStates()');
-    this.xgraph = xgraph;
-    this.states = [];
-    this.updateStates(rules);
+  // initStates(xgraph, rules) {
+  //   u.log(1, 'StateHandler.initStates()');
+  //   this.xgraph = xgraph;
+  //   this.states = [];
+  //   this.updateStates(rules);
+  // }
+  initStates(xgraph) {
+    _.each(mxcells, mxcell => {
+      this.addState(mxcell);
+    });
+  }
+
+  /**
+   *Return states array for a rule
+   *
+   * @param {Rule} rule - rule mapping
+   * @memberof StateHandler
+   */
+  getStatesForRule(rule) {
+    u.log(1, 'StateHandler.getStatesForRule()');
+    _.each(this.states, state => {
+      const shapes = rule.getShapeMaps();
+      const texts = rule.getTextMaps();
+      const links = rule.getLinkMaps();
+      let mxcell = state.mxcell;
+
+      // SHAPES
+      if (rule.data.shapeProp === 'id') name = mxcell.id;
+      else if (rule.data.shapeProp === 'value') name = xgraph.getValueCell(mxcell);
+      else name = null;
+      if (rule.matchShape(name)) {
+        this.addState(mxcell);
+      }
+
+      // TEXTS
+      if (rule.data.textProp === 'id') name = mxcell.id;
+      else if (rule.data.textProp === 'value') name = xgraph.getValueCell(mxcell);
+      else name = null;
+      if (rule.matchText(name)) {
+        this.addState(mxcell);
+      }
+
+      // LINKS
+      if (rule.data.linkProp === 'id') name = mxcell.id;
+      else if (rule.data.linkProp === 'value') name = xgraph.getValueCell(mxcell);
+      else name = null;
+      if (rule.matchLink(name)) {
+        this.addState(mxcell);
+      }
+    });
+    // OLD
+    // _.each(mxcells, mxcell => {
+    //   this.addState(mxcell);
+    // });
   }
 
   /**
@@ -76,8 +124,7 @@ export default class StateHandler {
           if (rule.matchLink(name)) {
             this.addState(mxcell);
           }
-
-        };
+        }
       }
     });
     // OLD
@@ -93,7 +140,7 @@ export default class StateHandler {
   getStates() {
     return this.states;
   }
-  
+
   /**
    * Find state by Id
    * @param  {string} cellId - Id of cell
@@ -112,15 +159,15 @@ export default class StateHandler {
   }
 
   /**
-   * Add a state 
+   * Add a state
    *
    * @param {mxCell} mxcell
    * @returns {State} created state
    * @memberof StateHandler
    */
   addState(mxcell) {
-    let state = this.getState(mxcell.id)
-    if (state === null ) {
+    let state = this.getState(mxcell.id);
+    if (state === null) {
       state = new State(mxcell, this.xgraph, this.ctrl);
       this.states.push(state);
     }
@@ -140,7 +187,7 @@ export default class StateHandler {
   /**
    * Count number of state
    *
-   * @returns {Number} 
+   * @returns {Number}
    * @memberof StateHandler
    */
   countStates() {
