@@ -59,7 +59,7 @@ export default class State {
     u.log(1, 'State.setState()');
     u.log(0, 'State.setState() Rule', rule);
     u.log(0, 'State.setState() Serie', serie);
-    
+
     if (rule.matchSerie(serie)) {
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();

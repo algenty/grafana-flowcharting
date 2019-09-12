@@ -630,11 +630,11 @@ export default class XGraph {
   /**
    * Return value of id or value of mxcell
    *
-   * @param {mxCell} mxcell
    * @param {string} prop - "id"|"value"
+   * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getValuePropOfMxCell(mxcell,prop) {
+  getValuePropOfMxCell(prop,mxcell) {
     if (prop === "id") return this.getId(mxcell);
     if (prop === "value") return this.getLabel(mxcell);
     return null;

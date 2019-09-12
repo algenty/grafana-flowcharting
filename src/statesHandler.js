@@ -30,7 +30,7 @@ export default class StateHandler {
   //   this.states = [];
   //   this.updateStates(rules);
   // }
-  initStates(xgraph) {
+  initStates(xgraph,rules) {
     u.log(1, 'StateHandler.initStates()');
     this.xgraph = xgraph;
     this.states = [];
@@ -38,6 +38,7 @@ export default class StateHandler {
     _.each(mxcells, mxcell => {
       this.addState(mxcell);
     });
+    this.updateStates(rules);
   }
 
   /**
@@ -93,48 +94,9 @@ export default class StateHandler {
   // OLD METHOD : see getStatesForRule
   updateStates(rules) {
     u.log(1, 'StateHandler.updateStates()');
-    const mxcells = this.xgraph.getMxCells();
-    // NEW
-    _.each(mxcells, mxcell => {
-      const state = this.getState(mxcell.id);
-      let found = false;
-      if (state === null) {
-        for (const rule of rules) {
-          const shapes = rule.getShapeMaps();
-          const texts = rule.getTextMaps();
-          const links = rule.getLinkMaps();
-          let name = null;
-
-          // SHAPES
-          if (rule.data.shapeProp === 'id') name = mxcell.id;
-          else if (rule.data.shapeProp === 'value') name = xgraph.getLabel(mxcell);
-          else name = null;
-          if (rule.matchShape(name)) {
-            this.addState(mxcell);
-          }
-
-          // TEXTS
-          if (rule.data.textProp === 'id') name = mxcell.id;
-          else if (rule.data.textProp === 'value') name = xgraph.getLabel(mxcell);
-          else name = null;
-          if (rule.matchText(name)) {
-            this.addState(mxcell);
-          }
-
-          // LINKS
-          if (rule.data.linkProp === 'id') name = mxcell.id;
-          else if (rule.data.linkProp === 'value') name = xgraph.getLabel(mxcell);
-          else name = null;
-          if (rule.matchLink(name)) {
-            this.addState(mxcell);
-          }
-        }
-      }
+    rules.forEach(rule => {
+      rule.states = this.getStatesForRule(rule);
     });
-    // OLD
-    // _.each(mxcells, mxcell => {
-    //   this.addState(mxcell);
-    // });
   }
 
   /**
@@ -232,16 +194,18 @@ export default class StateHandler {
     u.log(0, 'StatesHandler.setStates() Rules', rules);
     u.log(0, 'StatesHandler.setStates() Series', series);
     u.log(0, 'StatesHandler.setStates() States', this.states);
-    this.prepare();
+    // this.prepare();
     rules.forEach(rule => {
-      if (rule.states === undefined) rule.states = this.getStatesForRule(rule);
+      if (rule.states === undefined || rule.states.length === 0 ) rule.states = this.getStatesForRule(rule);
       rule.states.forEach(state => {
+        state.prepare();
         series.forEach(serie => {
           state.setState(rule, serie);
         });
       });
     });
   }
+
   /**
    * Apply color and text
    */

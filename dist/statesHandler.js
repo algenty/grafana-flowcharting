@@ -51,7 +51,7 @@ function () {
 
   _createClass(StateHandler, [{
     key: "initStates",
-    value: function initStates(xgraph) {
+    value: function initStates(xgraph, rules) {
       var _this = this;
 
       u.log(1, 'StateHandler.initStates()');
@@ -62,6 +62,8 @@ function () {
       _.each(mxcells, function (mxcell) {
         _this.addState(mxcell);
       });
+
+      this.updateStates(rules);
     }
     /**
      *Return states array for a rule
@@ -128,66 +130,9 @@ function () {
       var _this2 = this;
 
       u.log(1, 'StateHandler.updateStates()');
-      var mxcells = this.xgraph.getMxCells(); // NEW
-
-      _.each(mxcells, function (mxcell) {
-        var state = _this2.getState(mxcell.id);
-
-        var found = false;
-
-        if (state === null) {
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
-
-          try {
-            for (var _iterator = rules[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var rule = _step.value;
-              var shapes = rule.getShapeMaps();
-              var texts = rule.getTextMaps();
-              var links = rule.getLinkMaps();
-              var name = null; // SHAPES
-
-              if (rule.data.shapeProp === 'id') name = mxcell.id;else if (rule.data.shapeProp === 'value') name = xgraph.getLabel(mxcell);else name = null;
-
-              if (rule.matchShape(name)) {
-                _this2.addState(mxcell);
-              } // TEXTS
-
-
-              if (rule.data.textProp === 'id') name = mxcell.id;else if (rule.data.textProp === 'value') name = xgraph.getLabel(mxcell);else name = null;
-
-              if (rule.matchText(name)) {
-                _this2.addState(mxcell);
-              } // LINKS
-
-
-              if (rule.data.linkProp === 'id') name = mxcell.id;else if (rule.data.linkProp === 'value') name = xgraph.getLabel(mxcell);else name = null;
-
-              if (rule.matchLink(name)) {
-                _this2.addState(mxcell);
-              }
-            }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-                _iterator["return"]();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
-            }
-          }
-        }
-      }); // OLD
-      // _.each(mxcells, mxcell => {
-      //   this.addState(mxcell);
-      // });
-
+      rules.forEach(function (rule) {
+        rule.states = _this2.getStatesForRule(rule);
+      });
     }
     /**
      * Return array of state
@@ -306,11 +251,12 @@ function () {
       u.log(1, 'StateHandler.setStates()');
       u.log(0, 'StatesHandler.setStates() Rules', rules);
       u.log(0, 'StatesHandler.setStates() Series', series);
-      u.log(0, 'StatesHandler.setStates() States', this.states);
-      this.prepare();
+      u.log(0, 'StatesHandler.setStates() States', this.states); // this.prepare();
+
       rules.forEach(function (rule) {
-        if (rule.states === undefined) rule.states = _this3.getStatesForRule(rule);
+        if (rule.states === undefined || rule.states.length === 0) rule.states = _this3.getStatesForRule(rule);
         rule.states.forEach(function (state) {
+          state.prepare();
           series.forEach(function (serie) {
             state.setState(rule, serie);
           });
