@@ -102,7 +102,7 @@ export default class State {
         if (!text.isHidden() && text.match(cellProp)) {
           this.matchedText = true;
           this.matched = true;
-          if (rule.toValorize(value)) {
+          if (rule.toLabelize(value)) {
             const textScoped = this.templateSrv.replaceWithText(FormattedValue);
             this.setText(rule.getReplaceText(this.originalValue, textScoped));
           } else {

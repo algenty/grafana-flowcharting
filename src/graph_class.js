@@ -146,7 +146,6 @@ export default class XGraph {
     this.cells.value = [];
     this.cells.attributs = {};
     this.clickBackup = undefined;
-
     if (type === 'xml') {
       if (u.isencoded(definition)) this.xmlGraph = u.decode(definition, true, true, true);
       else this.xmlGraph = definition;
@@ -656,8 +655,10 @@ export default class XGraph {
   // }
 
   getStyleCell(mxcell, style) {
+    console.log("getStyleCell mxcell", mxcell )
     const state = this.graph.view.getState(mxcell);
-    return state.style[style];
+    if (state) return state.style[style];
+    return null;
   }
 
   setStyleCell(mxcell, style, color) {

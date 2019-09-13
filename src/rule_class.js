@@ -4,8 +4,20 @@ import kbn from 'app/core/utils/kbn';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import moment from 'moment';
 
+/**
+ *Rule definition
+ *
+ * @export
+ * @class Rule
+ */
 export default class Rule {
   /** @ngInject */
+  /**
+   *Creates an instance of Rule.
+   * @param {string} pattern
+   * @param {*} data
+   * @memberof Rule
+   */
   constructor(pattern, data) {
     this.data = data;
     this.data.pattern = pattern;
@@ -21,6 +33,12 @@ export default class Rule {
     const LEVEL_ERROR = 2;
   }
 
+  /**
+   * return data of rule
+   *
+   * @returns {data} 
+   * @memberof Rule
+   */
   getData() {
     return this.data;
   }
@@ -29,6 +47,12 @@ export default class Rule {
     return JSON.stringify(this);
   }
 
+  /**
+   * import data in rule
+   *
+   * @param {data} obj
+   * @memberof Rule
+   */
   import(obj) {
     this.data.unit = obj.unit || 'short';
     this.data.type = obj.type || 'number';
@@ -139,10 +163,21 @@ export default class Rule {
     this.data.sanitize = obj.sanitize || false;
   }
 
+  /**
+   *return uniq id of rule
+   *
+   * @returns
+   * @memberof Rule
+   */
   getId() {
     return this.id;
   }
 
+  /**
+   *Invert color order
+   *
+   * @memberof Rule
+   */
   invertColorOrder() {
     const ref = this.data.colors;
     const copy = ref[0];
@@ -155,6 +190,13 @@ export default class Rule {
   //
   // Conditions
   //
+  /**
+   *Return true or false for condition to colorize
+   *
+   * @param {*} value
+   * @returns
+   * @memberof Rule
+   */
   toColorize(value) {
     if (this.data.colorOn === 'n') return false;
     if (this.data.colorOn === 'a') return true;
@@ -162,7 +204,14 @@ export default class Rule {
     return false;
   }
 
-  toValorize(value) {
+  /**
+   *Return true or false for condition to change label
+   *
+   * @param {*} value
+   * @returns
+   * @memberof Rule
+   */
+  toLabelize(value) {
     if (this.data.textOn === 'wmd' && value !== undefined) return true;
     if (this.data.textOn === 'wmd' && value === undefined) return false;
     if (this.data.textOn === 'n') return false;
@@ -171,12 +220,26 @@ export default class Rule {
     return false;
   }
 
+  /**
+   *Return true or false for condition to display icon warning
+   *
+   * @param {*} value
+   * @returns
+   * @memberof Rule
+   */
   toIconize(value) {
     if (this.data.overlayIcon === false) return false;
     if (this.data.overlayIcon === true && this.getThresholdLevel(value) >= 1) return true;
     return false;
   }
 
+  /**
+   *Return true or false for condition to add/replace link
+   *
+   * @param {*} value
+   * @returns
+   * @memberof Rule
+   */
   toLinkable(value) {
     if (this.data.link === false) return false;
     if (this.data.linkOn === 'n') return false;
@@ -185,6 +248,13 @@ export default class Rule {
     return false;
   }
 
+  /**
+   *Return true or false for condition to display tooltip with values
+   *
+   * @param {*} value
+   * @returns
+   * @memberof Rule
+   */
   toTooltipize(value) {
     if (this.data.tooltip === false) return false;
     if (this.data.tooltipOn === 'n') return false;
@@ -196,6 +266,13 @@ export default class Rule {
   //
   // Series
   //
+  /**
+   *Return boolean if serie is matched by rule
+   *
+   * @param {*} serie
+   * @returns
+   * @memberof Rule
+   */
   matchSerie(serie) {
     return u.matchString(serie.alias, this.data.pattern);
   }
@@ -203,6 +280,12 @@ export default class Rule {
   //
   // SHAPE MAPS
   //
+  /**
+   *Add new shape for rule
+   *
+   * @param {*} pattern
+   * @memberof Rule
+   */
   addShapeMap(pattern) {
     const data = {};
     const m = new ShapeMap(pattern, data);
@@ -211,19 +294,45 @@ export default class Rule {
     this.data.shapeData.push(data);
   }
 
+  /**
+   *Remove shape for rule
+   *
+   * @param {number} index
+   * @memberof Rule
+   */
   removeShapeMap(index) {
     this.data.shapeData.splice(index, 1);
     this.shapeMaps.splice(index, 1);
   }
 
+  /**
+   *Return shape objet in index position
+   *
+   * @param {number} index
+   * @returns {ShapeMap}
+   * @memberof Rule
+   */
   getShapeMap(index) {
     return this.shapeMaps[index];
   }
 
+  /**
+   *Return all ShapeMaps
+   *
+   * @returns {Array<ShapeMap>}
+   * @memberof Rule
+   */
   getShapeMaps() {
     return this.shapeMaps;
   }
 
+  /**
+   *Return bool if shape name (value|id) is in rule
+   *
+   * @param {string} pattern
+   * @returns
+   * @memberof Rule
+   */
   matchShape(pattern) {
     let found = false;
     this.shapeMaps.forEach(element => {
