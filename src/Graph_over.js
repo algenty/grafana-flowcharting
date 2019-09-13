@@ -1,5 +1,4 @@
 mxTooltipHandler.prototype.show = function(tip, x, y) {
-  debugger
   u.log(1, 'mxTooltipHandler.prototype.show()');
   if (!this.destroyed && tip != null && tip.length > 0) {
     // Initializes the DOM nodes if required
@@ -39,7 +38,7 @@ mxTooltipHandler.prototype.hideTooltip = function() {
   }
 };
 
-mxgraph.prototype.getTooltipForCell = function(cell) {
+Graph.prototype.getTooltipForCell = function(cell) {
   u.log(1, 'Graph.prototype.getTooltipForCell()');
   let tip = '';
 

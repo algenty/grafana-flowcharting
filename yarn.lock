@@ -6762,7 +6762,7 @@ mute-stream@0.0.7:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
-mxgraph@4.0.4:
+mxgraph@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/mxgraph/-/mxgraph-4.0.4.tgz#28b3b1e59a0deefcc4ac347dd9a03785453391ef"
   integrity sha512-Mqn2fV9fx3Rd6ArNbco0y8/Qs3Auafx25NAaU0ns9Bg8bYtXqAEJM65BaUAY8OCRDa8Uk2sSOqcS1dYLKDWSbQ==
