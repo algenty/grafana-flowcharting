@@ -126,7 +126,7 @@ function () {
             _this2.matchedText = true;
             _this2.matched = true;
 
-            if (rule.toValorize(value)) {
+            if (rule.toLabelize(value)) {
               var textScoped = _this2.templateSrv.replaceWithText(FormattedValue);
 
               _this2.setText(rule.getReplaceText(_this2.originalValue, textScoped));

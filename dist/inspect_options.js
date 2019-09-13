@@ -25,8 +25,6 @@ function () {
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
-    var text = u.stringify(this.panel);
-    this.json = u.prettifyJSON(text);
     this.logDisplayOption = [{
       text: 'True',
       value: true

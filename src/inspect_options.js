@@ -7,8 +7,6 @@ export class InspectOptionsCtrl {
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
-    const text = u.stringify(this.panel);
-    this.json = u.prettifyJSON(text);
     this.logDisplayOption = [{ text: 'True', value: true }, { text: 'False', value: false }];
     this.logLevelOption = [
       { text: 'DEBUG', value: 0 },

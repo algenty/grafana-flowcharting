@@ -6,6 +6,7 @@ const version = "0.4.0";
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);
 
+  grunt.loadNpmTasks('grunt-git');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-compress');
@@ -13,10 +14,15 @@ module.exports = (grunt) => {
   grunt.initConfig({
 
     clean: {
-      options: {
-        force: true,
+      before_init: {
+        src: ['externals/**/*'],
       },
-      stuff: ['dist'],
+      build: {
+        src: ['dist/**/*'],
+      },
+      after_init: {
+        src: ['externals/**/.git'],
+      },
     },
 
     copy: {
@@ -44,8 +50,8 @@ module.exports = (grunt) => {
         src: ['**/*', '!**/*.js'],
         dest: 'dist/libs/mxgraph/javascript/dist',
       },
-      bower_to_dist: {
-        cwd: 'bower_components/mxgraph/javascript/examples/grapheditor/www',
+      externals_to_dist: {
+        cwd: 'externals/mxgraph/javascript/examples/grapheditor/www',
         expand: true,
         src: ['**/*', '!**/*.js'],
         dest: 'dist/libs/mxgraph/javascript/dist',
@@ -65,7 +71,7 @@ module.exports = (grunt) => {
       },
 
       stencils_to_dist: {
-        cwd: 'bower_components/drawio/src/main/webapp/stencils',
+        cwd: 'externals/drawio/src/main/webapp/stencils',
         expand: true,
         src: ['**/*', '!**/*.js'],
         dest: 'dist/libs/mxgraph/javascript/dist/stencils',
@@ -170,13 +176,33 @@ module.exports = (grunt) => {
         },
         expand: true,
         cwd: '.',
-        src: ['**/*', '!node_modules/**', '!bower_components/**', '!others/**', '!.git/**', '!archives/**', '!public/**', '!backup/**', '!spec/__snapshots__/**'],
+        src: ['**/*', '!node_modules/**', '!bower_components/**', '!others/**', '!.git/**', '!archives/**', '!public/**', '!backup/**', '!spec/__snapshots__/**','!externals/**'],
         dest: 'grafana-flowcharting',
       },
     },
+
+    gitclone: {
+      mxgraph: {
+        options: {
+          repository: 'https://github.com/jgraph/mxgraph',
+          branch: 'master',
+          directory: 'externals/mxgraph',
+          verbose: true,
+        }
+      },
+      drawio: {
+        options: {
+            repository: 'https://github.com/jgraph/drawio',
+            branch: 'master',
+            directory: 'externals/drawio'
+        }
+      }
+    },
+
   });
 
-  grunt.registerTask('default', ['clean', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:bower_to_dist', 'copy:stencils_to_dist']);
+  grunt.registerTask('default', ['clean:build', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:externals_to_dist', 'copy:stencils_to_dist']);
   grunt.registerTask('dev', ['default', 'watch']);
   grunt.registerTask('archive', ['default', 'compress:main']);
+  grunt.registerTask('init', ['clean:before_init','gitclone:mxgraph','gitclone:drawio','clean:after_init']);
 };

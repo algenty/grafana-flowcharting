@@ -655,7 +655,6 @@ export default class XGraph {
   // }
 
   getStyleCell(mxcell, style) {
-    console.log("getStyleCell mxcell", mxcell )
     const state = this.graph.view.getState(mxcell);
     if (state) return state.style[style];
     return null;

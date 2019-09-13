@@ -1,6 +1,9 @@
 "use strict";
 
 mxTooltipHandler.prototype.show = function (tip, x, y) {
+  debugger;
+  u.log(1, 'mxTooltipHandler.prototype.show()');
+
   if (!this.destroyed && tip != null && tip.length > 0) {
     // Initializes the DOM nodes if required
     if (this.div == null) {
@@ -21,6 +24,8 @@ mxTooltipHandler.prototype.show = function (tip, x, y) {
 };
 
 mxTooltipHandler.prototype.init = function () {
+  u.log(1, 'mxTooltipHandler.prototype.init()');
+
   if (this.div === null || this.div === undefined) {
     this.$div = $('<div class="graph-tooltip">');
     this.div = this.$div[0];
@@ -37,8 +42,8 @@ mxTooltipHandler.prototype.hideTooltip = function () {
   }
 };
 
-Graph.prototype.getTooltipForCell = function (cell) {
-  u.log(1, 'Graph_other.getTooltipForCell()');
+mxgraph.prototype.getTooltipForCell = function (cell) {
+  u.log(1, 'Graph.prototype.getTooltipForCell()');
   var tip = '';
 
   if (mxUtils.isNode(cell.value)) {

@@ -25,10 +25,23 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+/**
+ *Rule definition
+ *
+ * @export
+ * @class Rule
+ */
 var Rule =
 /*#__PURE__*/
 function () {
   /** @ngInject */
+
+  /**
+   *Creates an instance of Rule.
+   * @param {string} pattern
+   * @param {*} data
+   * @memberof Rule
+   */
   function Rule(pattern, data) {
     _classCallCheck(this, Rule);
 
@@ -45,6 +58,13 @@ function () {
     var LEVEL_WARN = 1;
     var LEVEL_ERROR = 2;
   }
+  /**
+   * return data of rule
+   *
+   * @returns {data} 
+   * @memberof Rule
+   */
+
 
   _createClass(Rule, [{
     key: "getData",
@@ -56,6 +76,13 @@ function () {
     value: function _export() {
       return JSON.stringify(this);
     }
+    /**
+     * import data in rule
+     *
+     * @param {data} obj
+     * @memberof Rule
+     */
+
   }, {
     key: "import",
     value: function _import(obj) {
@@ -175,11 +202,24 @@ function () {
 
       this.data.sanitize = obj.sanitize || false;
     }
+    /**
+     *return uniq id of rule
+     *
+     * @returns
+     * @memberof Rule
+     */
+
   }, {
     key: "getId",
     value: function getId() {
       return this.id;
     }
+    /**
+     *Invert color order
+     *
+     * @memberof Rule
+     */
+
   }, {
     key: "invertColorOrder",
     value: function invertColorOrder() {
@@ -192,6 +232,14 @@ function () {
     // Conditions
     //
 
+    /**
+     *Return true or false for condition to colorize
+     *
+     * @param {*} value
+     * @returns
+     * @memberof Rule
+     */
+
   }, {
     key: "toColorize",
     value: function toColorize(value) {
@@ -200,9 +248,17 @@ function () {
       if (this.data.colorOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
       return false;
     }
+    /**
+     *Return true or false for condition to change label
+     *
+     * @param {*} value
+     * @returns
+     * @memberof Rule
+     */
+
   }, {
-    key: "toValorize",
-    value: function toValorize(value) {
+    key: "toLabelize",
+    value: function toLabelize(value) {
       if (this.data.textOn === 'wmd' && value !== undefined) return true;
       if (this.data.textOn === 'wmd' && value === undefined) return false;
       if (this.data.textOn === 'n') return false;
@@ -210,6 +266,14 @@ function () {
       if (this.data.textOn === 'co' && this.getThresholdLevel(value) >= 2) return true;
       return false;
     }
+    /**
+     *Return true or false for condition to display icon warning
+     *
+     * @param {*} value
+     * @returns
+     * @memberof Rule
+     */
+
   }, {
     key: "toIconize",
     value: function toIconize(value) {
@@ -217,6 +281,14 @@ function () {
       if (this.data.overlayIcon === true && this.getThresholdLevel(value) >= 1) return true;
       return false;
     }
+    /**
+     *Return true or false for condition to add/replace link
+     *
+     * @param {*} value
+     * @returns
+     * @memberof Rule
+     */
+
   }, {
     key: "toLinkable",
     value: function toLinkable(value) {
@@ -226,6 +298,14 @@ function () {
       if (this.data.linkOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
       return false;
     }
+    /**
+     *Return true or false for condition to display tooltip with values
+     *
+     * @param {*} value
+     * @returns
+     * @memberof Rule
+     */
+
   }, {
     key: "toTooltipize",
     value: function toTooltipize(value) {
@@ -238,6 +318,14 @@ function () {
     // Series
     //
 
+    /**
+     *Return boolean if serie is matched by rule
+     *
+     * @param {*} serie
+     * @returns
+     * @memberof Rule
+     */
+
   }, {
     key: "matchSerie",
     value: function matchSerie(serie) {
@@ -245,6 +333,13 @@ function () {
     } //
     // SHAPE MAPS
     //
+
+    /**
+     *Add new shape for rule
+     *
+     * @param {*} pattern
+     * @memberof Rule
+     */
 
   }, {
     key: "addShapeMap",
@@ -255,22 +350,52 @@ function () {
       this.shapeMaps.push(m);
       this.data.shapeData.push(data);
     }
+    /**
+     *Remove shape for rule
+     *
+     * @param {number} index
+     * @memberof Rule
+     */
+
   }, {
     key: "removeShapeMap",
     value: function removeShapeMap(index) {
       this.data.shapeData.splice(index, 1);
       this.shapeMaps.splice(index, 1);
     }
+    /**
+     *Return shape objet in index position
+     *
+     * @param {number} index
+     * @returns {ShapeMap}
+     * @memberof Rule
+     */
+
   }, {
     key: "getShapeMap",
     value: function getShapeMap(index) {
       return this.shapeMaps[index];
     }
+    /**
+     *Return all ShapeMaps
+     *
+     * @returns {Array<ShapeMap>}
+     * @memberof Rule
+     */
+
   }, {
     key: "getShapeMaps",
     value: function getShapeMaps() {
       return this.shapeMaps;
     }
+    /**
+     *Return bool if shape name (value|id) is in rule
+     *
+     * @param {string} pattern
+     * @returns
+     * @memberof Rule
+     */
+
   }, {
     key: "matchShape",
     value: function matchShape(pattern) {
