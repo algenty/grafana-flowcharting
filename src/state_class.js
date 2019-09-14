@@ -314,6 +314,7 @@ export default class State {
     u.log(1, 'State.addTooltipValue()');
     u.log(0, 'State.addTooltipValue() name', name);
     u.log(0, 'State.addTooltipValue() value', value);
+    debugger
     let element = this.findTooltipValue(name);
     if (element === null) {
       element = {

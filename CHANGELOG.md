@@ -2,22 +2,22 @@
 
 ## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-09-14
 ### Added
-  - Draw.io editor  
-    - Open draw.io with dark theme for better rendering.
+  - Draw.io editor ([Example](https://algenty.github.io/flowcharting-repository/images/openEditor_ani.gif))
+    - Open draw.io with dark theme for better rendering  
     - Display waiting screen when loading xml definition.  
   - Upgrading libraries  
     - mxGraph 4.0.4  
     - draw.io 11.2.8  
   - Graph definition  
-    - Adding download function to download source by http on load.
+    - Adding download function to download source by http on load. ([Example](https://algenty.github.io/flowcharting-repository/images/download_ani.gif))
   - Metric
     - Adding string support for state
-  - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19)  
+  - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19) ([Example](https://algenty.github.io/flowcharting-repository/images/zoom_ani.gif))
     - On the mouse pointer : Ctrl + Mouse
     - Hold right button to move diagram.
     - double click on shape to zoom on.
     - Escape key to restore.
-  - Tooltip/popup support :
+  - Tooltip/popup support (Example)
     - Grafana style css and date
     - Adding metrics with color according levels
     - Adding colors on metrics in tooltip

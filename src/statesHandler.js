@@ -193,7 +193,7 @@ export default class StateHandler {
     u.log(1, 'StateHandler.setStates()');
     u.log(0, 'StatesHandler.setStates() Rules', rules);
     u.log(0, 'StatesHandler.setStates() Series', series);
-    u.log(0, 'StatesHandler.setStates() States', this.states);
+    u.log(1, 'StatesHandler.setStates() States', this.states);
     // this.prepare();
     rules.forEach(rule => {
       if (rule.states === undefined || rule.states.length === 0 ) rule.states = this.getStatesForRule(rule);

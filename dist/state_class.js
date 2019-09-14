@@ -382,6 +382,7 @@ function () {
       u.log(1, 'State.addTooltipValue()');
       u.log(0, 'State.addTooltipValue() name', name);
       u.log(0, 'State.addTooltipValue() value', value);
+      debugger;
       var element = this.findTooltipValue(name);
 
       if (element === null) {

@@ -33,10 +33,13 @@ https://github.com/algenty/grafana-flowcharting
 
 ## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-09-14
 ### Added
-  - Upgrading libraries
-    - mxGraph 4.0.4
-    - draw.io 11.2.8
-  - Graph definition
+  - Draw.io editor  
+    - Open draw.io with dark theme for better rendering.
+    - Display waiting screen when loading xml definition.  
+  - Upgrading libraries  
+    - mxGraph 4.0.4  
+    - draw.io 11.2.8  
+  - Graph definition  
     - Adding download function to download source by http on load.
   - Metric
     - Adding string support for state
