@@ -165,9 +165,9 @@ export default class XGraph {
       libs: 'arrows;basic;bpmn;flowchart'
     });
     require('./Shapes');
-    window.Graph = window.Graph || Graph;
     require('./Graph_over');
     this.graph = new Graph(this.container);
+    this.graph.getTooltipForCell = this.getTooltipForCell;
 
     // /!\ What is setPannig
     this.graph.setPanning(true);
@@ -679,17 +679,39 @@ export default class XGraph {
     return mxcell.getValue(mxcell);
   }
 
+  /**
+   *Return Id of mxCell
+   *
+   * @param {mxCell} mxcell
+   * @returns {string} Id of mxCell
+   * @memberof XGraph
+   */
   getId(mxcell){
     return mxcell.getId();
   }
 
   // eslint-disable-next-line class-methods-use-this
-  setValueCell(mxcell, text) {
+  /**
+   *Assign new label for mxcell
+   *
+   * @param {*} mxcell
+   * @param {string} text - New label
+   * @returns {string} New label
+   * @memberof XGraph
+   */
+  setLabelCell(mxcell, text) {
     if (mxUtils.isNode(mxcell.value)) {
       var label = mxcell.value.setAttribute('label', text);
     } else mxcell.setValue(text);
+    return text;
   }
 
+  /**
+   *Active mapping option when user click on mapping
+   *
+   * @param {Object} onMappingObj
+   * @memberof XGraph
+   */
   setMap(onMappingObj) {
     u.log(1, 'XGraph.setMapping()');
     u.log(0, 'XGraph.setMapping() onMappingObject : ', onMappingObj);
@@ -700,6 +722,11 @@ export default class XGraph {
     }
   }
 
+  /**
+   *Disable mapping when user click on mapping
+   *
+   * @memberof XGraph
+   */
   unsetMap() {
     u.log(1, 'XGraph.unsetMapping()');
     this.onMapping.active = false;
@@ -712,6 +739,12 @@ export default class XGraph {
   // GRAPH HANDLER
   //
 
+  /**
+   *Event for click on graph
+   *
+   * @param {MouseEvent} me
+   * @memberof XGraph
+   */
   eventClick(me) {
     u.log(1, 'XGraph.eventClick()');
     const self = this;
@@ -732,6 +765,13 @@ export default class XGraph {
     }
   }
 
+  /**
+   *Event for double click on graph
+   *
+   * @param {Event} evt
+   * @param {mxCell} mxcell
+   * @memberof XGraph
+   */
   eventDbClick(evt, mxcell) {
     u.log(1, 'XGraph.eventDbClick()');
     u.log(0, 'XGraph.eventDbClick() evt', evt);
@@ -746,6 +786,13 @@ export default class XGraph {
     }
   }
 
+  /**
+   *Event for mouse wheel on graph
+   *
+   * @param {Event} evt
+   * @param {boolean} up
+   * @memberof XGraph
+   */
   eventMouseWheel(evt, up) {
     u.log(1, 'XGraph.eventMouseWheel()');
     if (this.graph.isZoomWheelEvent(evt)) {
@@ -762,6 +809,12 @@ export default class XGraph {
     }
   }
 
+  /**
+   *Event for key on graph
+   *
+   * @param {Event} evt
+   * @memberof XGraph
+   */
   eventKey(evt) {
     if (!mxEvent.isConsumed(evt) && evt.keyCode == 27 /* Escape */) {
       this.cumulativeZoomFactor = 1;
@@ -772,10 +825,24 @@ export default class XGraph {
     }
   }
 
+  /**
+   *Zoom/Unzoom on graph on center
+   *
+   * @param {number} factor - 1 = 100%
+   * @memberof XGraph
+   */
   lazyZoomCenter(factor) {
     this.graph.zoomTo(factor, true);
   }
 
+  /**
+   *Zoom/Unzoom on graph on mouse pointer
+   *
+   * @param {number} factor
+   * @param {number} offsetX
+   * @param {number} offsetY
+   * @memberof XGraph
+   */
   lazyZoomPointer(factor, offsetX, offsetY) {
     u.log(1, 'XGraph.lazyZoomPointer()');
     u.log(0, 'XGraph.lazyZoomPointer() factor', factor);
@@ -806,6 +873,12 @@ export default class XGraph {
     );
   }
 
+  /**
+   *Zoom cell on full panel 
+   *
+   * @param {*} mxcell
+   * @memberof XGraph
+   */
   lazyZoomCell(mxcell) {
     u.log(1, 'XGraph.lazyZoomPointer() mxcell', mxcell);
     u.log(0, 'XGraph.lazyZoomPointer() mxcellState', this.graph.view.getState(mxcell));
@@ -826,4 +899,89 @@ export default class XGraph {
   toggleVisible(mxcell, includeEdges) {
     this.graph.toggleCells(!this.graph.getModel().isVisible(mxcell), [mxcell], includeEdges);
   }
+
+  getTooltipForCell(cell) {
+    u.log(1, 'Graph.prototype.getTooltipForCell()');
+    let tip = '';
+  
+    if (mxUtils.isNode(cell.value)) {
+      let tmp = cell.value.getAttribute('tooltip');
+      // Tooltip
+      if (tmp != null) {
+        if (tmp != null && this.isReplacePlaceholders(cell)) {
+          tmp = this.replacePlaceholders(cell, tmp);
+        }
+        tip += '<div style="word-wrap:break-word;">' + this.sanitizeHtml(tmp) + '</div>';
+      }
+  
+      let ignored = this.builtInProperties;
+      let attrs = cell.value.attributes;
+      let temp = [];
+  
+      // Hides links in edit mode
+      if (this.isEnabled()) {
+        ignored.push('link');
+      }
+  
+      // Attributes
+      for (var i = 0; i < attrs.length; i++) {
+        if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
+          temp.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
+        }
+      }
+  
+      // Sorts by name
+      temp.sort(function(a, b) {
+        if (a.name < b.name) {
+          return -1;
+        } else if (a.name > b.name) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+      if (temp.length > 0) {
+        tip += '<div>';
+        for (var i = 0; i < temp.length; i++) {
+          if (temp[i].name != 'link' || !this.isCustomLink(temp[i].value)) {
+            tip +=
+              (temp[i].name != 'link' ? '<b>' + temp[i].name + ':</b> ' : '') +
+              mxUtils.htmlEntities(temp[i].value) +
+              '\n';
+          }
+        }
+        tip += '</div>';
+      }
+  
+      if (tip.length > 0) {
+        tip = tip.substring(0, tip.length - 1);
+  
+        if (mxClient.IS_SVG) {
+          tip = '<div style="max-width:360px;">' + tip + '</div>';
+        }
+      }
+    }
+  
+    // Date : Last change
+    if (cell.GF_lastChange !== undefined && cell.GF_lastChange !== null) {
+      tip += `<div class="graph-tooltip-time"></br>${cell.GF_lastChange}</div>`;
+    }
+  
+    // Metrics
+    if (cell.GF_tooltips !== undefined && cell.GF_tooltips.length > 0) {
+      let metrics = cell.GF_tooltips;
+      tip += '<div></br>';
+      for (var i = 0; i < metrics.length; i++) {
+        const current = metrics[i];
+        if (current !== undefined) {
+          tip += `${current.name} : `;
+          tip += `<span style="color:${current.color}"><b>${current.value}</b></span></br>`;
+        }
+      }
+      tip += '</div>';
+    }
+    // u.log(1, 'Graph_other.getTooltipForCell() tip', tip);
+    return tip;
+  };
+
 }

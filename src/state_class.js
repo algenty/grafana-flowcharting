@@ -184,25 +184,57 @@ export default class State {
     return '/!\\ Not found';
   }
 
+  /**
+   *Define color for a style
+   *
+   * @param {string} style - fillcolor|fontcolor|stroke
+   * @param {string} color - html color
+   * @memberof State
+   */
   setColorStyle(style, color) {
     u.log(1, 'State.setColorStyle()');
     this.currentColors[style] = color;
   }
 
+  /**
+   *Restore initial color of cell for a style
+   *
+   * @param {string} style - fillcolor|fontcolor|stroke
+   * @memberof State
+   */
   unsetColorStyle(style) {
     this.currentColors[style] = this.originalColors[style];
   }
 
+  /**
+   *Restore initial color of cell
+   *
+   * @memberof State
+   */
   unsetColor() {
     this.styles.forEach((style) => {
       this.unsetColorStyle(style);
     });
   }
 
+  /**
+   *Return current html color for a style 
+   *
+   * @param {string} style - fillcolor|fontcolor|stroke
+   * @returns {string} HTML color
+   * @memberof State
+   */
   getCurrentColorStyle(style) {
     return this.currentColors[style];
   }
 
+  /**
+   *Return initial html color for a style 
+   *
+   * @param {string} style - fillcolor|fontcolor|stroke
+   * @returns {string} HTML color
+   * @memberof State
+   */
   getOriginalColorStyle(style) {
     return this.originalColors[style];
   }
@@ -356,7 +388,7 @@ export default class State {
 
       // TEXTS
       if (this.matchedText) {
-        this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
+        this.xgraph.setLabelCell(this.mxcell, this.getCurrentText());
       }
 
       // LINKS
@@ -371,7 +403,7 @@ export default class State {
     this.styles.forEach((style) => {
       this.xgraph.setStyleCell(this.mxcell, style, this.getCurrentColorStyle(style));
     });
-    this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
+    this.xgraph.setLabelCell(this.mxcell, this.getCurrentText());
     this.mxcell.setAttribute('link', this.getCurrentLink());
     this.xgraph.removeOverlay(this.mxcell);
     this.xgraph.addLink(this.mxcell, this.originalLink);

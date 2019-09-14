@@ -218,17 +218,38 @@ function () {
       if (prop === 'value') return this.originalValue;
       return '/!\\ Not found';
     }
+    /**
+     *Define color for a style
+     *
+     * @param {string} style - fillcolor|fontcolor|stroke
+     * @param {string} color - html color
+     * @memberof State
+     */
+
   }, {
     key: "setColorStyle",
     value: function setColorStyle(style, color) {
       u.log(1, 'State.setColorStyle()');
       this.currentColors[style] = color;
     }
+    /**
+     *Restore initial color of cell for a style
+     *
+     * @param {string} style - fillcolor|fontcolor|stroke
+     * @memberof State
+     */
+
   }, {
     key: "unsetColorStyle",
     value: function unsetColorStyle(style) {
       this.currentColors[style] = this.originalColors[style];
     }
+    /**
+     *Restore initial color of cell
+     *
+     * @memberof State
+     */
+
   }, {
     key: "unsetColor",
     value: function unsetColor() {
@@ -238,11 +259,27 @@ function () {
         _this3.unsetColorStyle(style);
       });
     }
+    /**
+     *Return current html color for a style 
+     *
+     * @param {string} style - fillcolor|fontcolor|stroke
+     * @returns {string} HTML color
+     * @memberof State
+     */
+
   }, {
     key: "getCurrentColorStyle",
     value: function getCurrentColorStyle(style) {
       return this.currentColors[style];
     }
+    /**
+     *Return initial html color for a style 
+     *
+     * @param {string} style - fillcolor|fontcolor|stroke
+     * @returns {string} HTML color
+     * @memberof State
+     */
+
   }, {
     key: "getOriginalColorStyle",
     value: function getOriginalColorStyle(style) {
@@ -431,7 +468,7 @@ function () {
 
 
         if (this.matchedText) {
-          this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
+          this.xgraph.setLabelCell(this.mxcell, this.getCurrentText());
         } // LINKS
 
 
@@ -449,7 +486,7 @@ function () {
       this.styles.forEach(function (style) {
         _this6.xgraph.setStyleCell(_this6.mxcell, style, _this6.getCurrentColorStyle(style));
       });
-      this.xgraph.setValueCell(this.mxcell, this.getCurrentText());
+      this.xgraph.setLabelCell(this.mxcell, this.getCurrentText());
       this.mxcell.setAttribute('link', this.getCurrentLink());
       this.xgraph.removeOverlay(this.mxcell);
       this.xgraph.addLink(this.mxcell, this.originalLink);

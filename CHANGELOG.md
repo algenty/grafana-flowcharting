@@ -1,7 +1,14 @@
 # Changelog
 
-## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-08-06
-### Added  
+## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-09-14
+### Added
+  - Upgrading libraries
+    - mxGraph 4.0.4
+    - draw.io 11.2.8
+  - Graph definition
+    - Adding download function to download source by http on load.
+  - Metric
+    - Adding string support for state
   - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19)  
     - On the mouse pointer : Ctrl + Mouse
     - Hold right button to move diagram.
