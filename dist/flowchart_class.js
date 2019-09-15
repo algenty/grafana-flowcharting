@@ -94,6 +94,7 @@ function () {
       var _this = this;
 
       // if (this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
+      // this.stateHandler.prepare();
       rules.forEach(function (rule) {
         rule.states = _this.stateHandler.getStatesForRule(rule);
       });

@@ -82,7 +82,7 @@ function () {
 
       u.log(1, 'State.setState()');
       u.log(0, 'State.setState() Rule', rule);
-      u.log(0, 'State.setState() Serie', serie);
+      u.log(0, 'State.setState() Serie', serie); // if (this.cellId === "27") debugger
 
       if (rule.matchSerie(serie)) {
         var shapeMaps = rule.getShapeMaps();
@@ -101,17 +101,16 @@ function () {
             _this2.matchedShape = true;
             _this2.matched = true; // tooltips
 
-            if (rule.toTooltipize(value)) {
+            if (rule.toTooltipize(level)) {
               if (rule.data.tooltipColors) _this2.addTooltipValue(rule.data.tooltipLabel, FormattedValue, color);else _this2.addTooltipValue(rule.data.tooltipLabel, FormattedValue, null);
               _this2.lastChange = time;
             } // Color Shape
 
 
             if (_this2.globalLevel <= level) {
-              // this.lastChange = `${new Date()}`;
               _this2.setLevelStyle(rule.data.style, level);
 
-              if (rule.toColorize(value)) {
+              if (rule.toColorize(level)) {
                 _this2.setColorStyle(rule.data.style, color);
               }
 
@@ -126,7 +125,7 @@ function () {
             _this2.matchedText = true;
             _this2.matched = true;
 
-            if (rule.toLabelize(value)) {
+            if (rule.toLabelize(level)) {
               var textScoped = _this2.templateSrv.replaceWithText(FormattedValue);
 
               _this2.setText(rule.getReplaceText(_this2.originalValue, textScoped));
@@ -144,7 +143,7 @@ function () {
             _this2.matched = true;
 
             if (_this2.globalLevel <= level) {
-              if (rule.toLinkable(value)) {
+              if (rule.toLinkable(level)) {
                 var linkScoped = _this2.templateSrv.replaceWithText(rule.getLink());
 
                 _this2.currentLink = linkScoped;
@@ -260,7 +259,7 @@ function () {
       });
     }
     /**
-     *Return current html color for a style 
+     *Return current html color for a style
      *
      * @param {string} style - fillcolor|fontcolor|stroke
      * @returns {string} HTML color
@@ -273,7 +272,7 @@ function () {
       return this.currentColors[style];
     }
     /**
-     *Return initial html color for a style 
+     *Return initial html color for a style
      *
      * @param {string} style - fillcolor|fontcolor|stroke
      * @returns {string} HTML color
@@ -382,7 +381,6 @@ function () {
       u.log(1, 'State.addTooltipValue()');
       u.log(0, 'State.addTooltipValue() name', name);
       u.log(0, 'State.addTooltipValue() value', value);
-      debugger;
       var element = this.findTooltipValue(name);
 
       if (element === null) {
@@ -396,22 +394,18 @@ function () {
         element.value = value;
         element.color = color;
       }
-    }
-  }, {
-    key: "removeTooltipValue",
-    value: function removeTooltipValue(name) {
-      u.log(1, 'State.removeTooltipValue()');
-      u.log(0, 'State.removeTooltipValue() name', name);
+    } // removeTooltipValue(name) {
+    //   u.log(1, 'State.removeTooltipValue()');
+    //   u.log(0, 'State.removeTooltipValue() name', name);
+    //   for (let index = 0; index < this.tooltips.length; index += 1) {
+    //     const element = this.tooltips[index];
+    //     if (element.name === name) {
+    //       this.tooltips.slice(index, 1);
+    //       return;
+    //     }
+    //   }
+    // }
 
-      for (var index = 0; index < this.tooltips.length; index += 1) {
-        var element = this.tooltips[index];
-
-        if (element.name === name) {
-          this.tooltips.slice(index, 1);
-          return;
-        }
-      }
-    }
   }, {
     key: "findTooltipValue",
     value: function findTooltipValue(name) {
@@ -438,65 +432,101 @@ function () {
       return this.mxcell.isEdge();
     }
   }, {
-    key: "applyState",
-    value: function applyState() {
+    key: "applyShape",
+    value: function applyShape() {
       var _this5 = this;
 
+      // Apply colors
+      this.styles.forEach(function (style) {
+        _this5.xgraph.setStyleCell(_this5.mxcell, style, _this5.getCurrentColorStyle(style));
+      }); // Apply icons
+
+      if (this.overlayIcon) {
+        this.xgraph.addOverlay(this.getTextLevel(), this.mxcell);
+      } else {
+        this.xgraph.removeOverlay(this.mxcell);
+      }
+    }
+  }, {
+    key: "applyText",
+    value: function applyText() {
+      this.xgraph.setLabelCell(this.mxcell, this.getCurrentText());
+    }
+  }, {
+    key: "applyLink",
+    value: function applyLink() {
+      this.xgraph.addLink(this.mxcell, this.currentLink);
+    }
+  }, {
+    key: "applyTooltip",
+    value: function applyTooltip() {
+      if (this.tooltips.length > 0) {
+        this.mxcell.GF_lastChange = this.lastChange;
+        this.mxcell.GF_tooltips = this.tooltips;
+      }
+    }
+  }, {
+    key: "applyState",
+    value: function applyState() {
       u.log(1, 'State.applyState()');
+      if (this.cellId === "27") debugger;
 
       if (this.matched) {
-        this.changed = true; // Tooltip
-        // Apply Tooltips
+        this.changed = true; // TOOLTIP
 
-        if (this.tooltips.length > 0) {
-          this.mxcell.GF_lastChange = this.lastChange;
-          this.mxcell.GF_tooltips = this.tooltips;
-        } // SHAPES
-
+        this.applyTooltip(); // SHAPES
 
         if (this.matchedShape) {
-          // Apply colors
-          this.styles.forEach(function (style) {
-            _this5.xgraph.setStyleCell(_this5.mxcell, style, _this5.getCurrentColorStyle(style));
-          }); // Apply icons
-
-          if (this.overlayIcon) {
-            this.xgraph.addOverlay(this.getTextLevel(), this.mxcell);
-          } else {
-            this.xgraph.removeOverlay(this.mxcell);
-          }
+          this.applyShape();
+          this.changedShape = true;
+        } else if (this.changedShape) {
+          this.unsetColor();
+          this.applyShape();
+          this.changedShape = false;
         } // TEXTS
 
 
         if (this.matchedText) {
-          this.xgraph.setLabelCell(this.mxcell, this.getCurrentText());
+          this.applyText();
+          this.changedText = true;
+        } else if (this.changedText) {
+          this.unsetText();
+          this.applyText();
+          this.changedText = false;
         } // LINKS
 
 
         if (this.matchedLink) {
-          this.xgraph.addLink(this.mxcell, this.currentLink);
+          this.applyLink();
+          this.changedLink = true;
+        } else if (this.changedLink) {
+          this.unsetLink();
+          this.applyLink();
+          this.changedLink = false;
         }
-      } else if (this.changed) this.restoreCell();
+      } else if (this.changed) this.restore();
     }
   }, {
-    key: "restoreCell",
-    value: function restoreCell() {
-      var _this6 = this;
-
+    key: "restore",
+    value: function restore() {
       this.unsetState();
-      this.styles.forEach(function (style) {
-        _this6.xgraph.setStyleCell(_this6.mxcell, style, _this6.getCurrentColorStyle(style));
-      });
-      this.xgraph.setLabelCell(this.mxcell, this.getCurrentText());
-      this.mxcell.setAttribute('link', this.getCurrentLink());
-      this.xgraph.removeOverlay(this.mxcell);
-      this.xgraph.addLink(this.mxcell, this.originalLink);
+      this.applyShape();
+      this.applyText();
+      this.applyLink();
       this.changed = false;
+      this.changedShape = false;
+      this.changedText = false;
+      this.changedLink = false;
     }
   }, {
     key: "prepare",
     value: function prepare() {
-      this.unsetState();
+      // this.unsetState();
+      this.matched = false;
+      this.matchedShape = false;
+      this.matchedText = false;
+      this.matchedLink = false;
+      this.tooltips = [];
     }
   }]);
 

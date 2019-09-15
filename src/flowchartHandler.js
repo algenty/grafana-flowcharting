@@ -9,7 +9,7 @@ export default class FlowchartHandler {
 
   /**
    *Creates an instance of FlowchartHandler to handle flowchart
-   * @param {*} $scope - angular scope 
+   * @param {*} $scope - angular scope
    * @param {*} elem - angular elem
    * @param {*} ctrl - ctrlPanel
    * @param {*} data - Empty data to store
@@ -64,7 +64,7 @@ export default class FlowchartHandler {
 
   /**
    * import data into
-   * 
+   *
    * @param {Object} obj
    * @memberof FlowchartHandler
    */
@@ -108,7 +108,7 @@ export default class FlowchartHandler {
   /**
    *Return number of flowchart
    *
-   * @returns {number} Nulber of flowchart 
+   * @returns {number} Nulber of flowchart
    * @memberof FlowchartHandler
    */
   countFlowcharts() {
@@ -125,9 +125,7 @@ export default class FlowchartHandler {
    */
   createContainer() {
     const $container = $(
-      `<div id="flowchart_${
-        u.uniqueID
-      }" style="margin:auto;position:relative,width:100%;height:100%"></div>`
+      `<div id="flowchart_${u.uniqueID}" style="margin:auto;position:relative,width:100%;height:100%"></div>`
     );
     this.$elem.html($container);
     return $container[0];
@@ -167,21 +165,24 @@ export default class FlowchartHandler {
         this.changeOptionFlag = false;
       }
       if (this.changeRuleFlag || this.changeDataFlag) {
+        const rules = this.ctrl.rulesHandler.getRules();
+        const series = this.ctrl.series;
         if (this.changeRuleFlag) {
-          const rules = this.ctrl.rulesHandler.getRules();
-          const series = this.ctrl.series;
           this.flowcharts.forEach(flowchart => {
             flowchart.updateStates(rules);
           });
+          this.changeRuleFlag = false;
         }
-        this.setStates();
+        this.setStates(rules,series);
         this.applyStates();
-        this.changeRuleFlag = false;
+
         this.changeDataFlag = false;
       }
       const width = this.$elem.width();
       const height = this.ctrl.height;
       this.refresh(width, height);
+      console.log("FlowcharHandler.render() states",this.flowcharts[0].getStateHandler().getStates());
+      
     }
   }
 
@@ -236,15 +237,19 @@ export default class FlowchartHandler {
   }
 
   /**
-   * Change states of cell according to rules and series 
+   * Change states of cell according to rules and series
    *
    * @memberof FlowchartHandler
    */
-  setStates() {
-    const rules = this.ctrl.rulesHandler.getRules();
-    const series = this.ctrl.series;
+  setStates(rules,series) {
     this.flowcharts.forEach(flowchart => {
-      flowchart.setStates(rules, series);
+      flowchart.setStates(rules,series);
+    });
+  }
+
+  updateStates(rules) {
+    this.flowcharts.forEach(flowchart => {
+      flowchart.updateStates(rules);
     });
   }
 
@@ -288,7 +293,7 @@ export default class FlowchartHandler {
     });
   }
 
-    /**
+  /**
    *(re)load graph
    *
    * @memberof FlowchartHandler
@@ -329,7 +334,7 @@ export default class FlowchartHandler {
   }
 
   /**
-   *Return true if mapping object is active 
+   *Return true if mapping object is active
    *
    * @param {properties} objToMap
    * @returns true - true if mapping mode

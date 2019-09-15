@@ -193,27 +193,28 @@ export default class Rule {
   /**
    *Return true or false for condition to colorize
    *
-   * @param {*} value
+   * @param {number} level
    * @returns
    * @memberof Rule
    */
-  toColorize(value) {
+  toColorize(level) {
+    if (level === -1) return false;
     if (this.data.colorOn === 'n') return false;
     if (this.data.colorOn === 'a') return true;
-    if (this.data.colorOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
+    if (this.data.colorOn === 'wc' && level >= 1) return true;
     return false;
   }
 
   /**
    *Return true or false for condition to change label
    *
-   * @param {*} value
+   * @param {number} level
    * @returns
    * @memberof Rule
    */
-  toLabelize(value) {
-    if (this.data.textOn === 'wmd' && value !== undefined) return true;
-    if (this.data.textOn === 'wmd' && value === undefined) return false;
+  toLabelize(level) {
+    if (this.data.textOn === 'wmd' && level > 0) return true;
+    if (this.data.textOn === 'wmd' && level === -1) return false;
     if (this.data.textOn === 'n') return false;
     if (this.data.textOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
     if (this.data.textOn === 'co' && this.getThresholdLevel(value) >= 2) return true;
@@ -223,43 +224,43 @@ export default class Rule {
   /**
    *Return true or false for condition to display icon warning
    *
-   * @param {*} value
+   * @param {level} level
    * @returns
    * @memberof Rule
    */
-  toIconize(value) {
+  toIconize(level) {
     if (this.data.overlayIcon === false) return false;
-    if (this.data.overlayIcon === true && this.getThresholdLevel(value) >= 1) return true;
+    if (this.data.overlayIcon === true && level >= 1) return true;
     return false;
   }
 
   /**
    *Return true or false for condition to add/replace link
    *
-   * @param {*} value
+   * @param {number} level
    * @returns
    * @memberof Rule
    */
-  toLinkable(value) {
+  toLinkable(level) {
     if (this.data.link === false) return false;
     if (this.data.linkOn === 'n') return false;
     if (this.data.linkOn === 'a') return true;
-    if (this.data.linkOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
+    if (this.data.linkOn === 'wc' && level >= 1) return true;
     return false;
   }
 
   /**
    *Return true or false for condition to display tooltip with values
    *
-   * @param {*} value
+   * @param {number} level
    * @returns
    * @memberof Rule
    */
-  toTooltipize(value) {
+  toTooltipize(level) {
     if (this.data.tooltip === false) return false;
     if (this.data.tooltipOn === 'n') return false;
     if (this.data.tooltipOn === 'a') return true;
-    if (this.data.tooltipOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
+    if (this.data.tooltipOn === 'wc' && level >= 1) return true;
     return false;
   }
 
@@ -694,11 +695,6 @@ class ShapeMap {
       pattern: this.data.pattern,
       hidden: this.data.hidden
     };
-  }
-
-  toColorize(value) {
-    if (this.data.hidden) return false;
-    return this.rule.toColorize(value);
   }
 
   toVisible() {

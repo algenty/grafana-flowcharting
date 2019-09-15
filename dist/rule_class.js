@@ -235,32 +235,33 @@ function () {
     /**
      *Return true or false for condition to colorize
      *
-     * @param {*} value
+     * @param {number} level
      * @returns
      * @memberof Rule
      */
 
   }, {
     key: "toColorize",
-    value: function toColorize(value) {
+    value: function toColorize(level) {
+      if (level === -1) return false;
       if (this.data.colorOn === 'n') return false;
       if (this.data.colorOn === 'a') return true;
-      if (this.data.colorOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
+      if (this.data.colorOn === 'wc' && level >= 1) return true;
       return false;
     }
     /**
      *Return true or false for condition to change label
      *
-     * @param {*} value
+     * @param {number} level
      * @returns
      * @memberof Rule
      */
 
   }, {
     key: "toLabelize",
-    value: function toLabelize(value) {
-      if (this.data.textOn === 'wmd' && value !== undefined) return true;
-      if (this.data.textOn === 'wmd' && value === undefined) return false;
+    value: function toLabelize(level) {
+      if (this.data.textOn === 'wmd' && level > 0) return true;
+      if (this.data.textOn === 'wmd' && level === -1) return false;
       if (this.data.textOn === 'n') return false;
       if (this.data.textOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
       if (this.data.textOn === 'co' && this.getThresholdLevel(value) >= 2) return true;
@@ -269,50 +270,50 @@ function () {
     /**
      *Return true or false for condition to display icon warning
      *
-     * @param {*} value
+     * @param {level} level
      * @returns
      * @memberof Rule
      */
 
   }, {
     key: "toIconize",
-    value: function toIconize(value) {
+    value: function toIconize(level) {
       if (this.data.overlayIcon === false) return false;
-      if (this.data.overlayIcon === true && this.getThresholdLevel(value) >= 1) return true;
+      if (this.data.overlayIcon === true && level >= 1) return true;
       return false;
     }
     /**
      *Return true or false for condition to add/replace link
      *
-     * @param {*} value
+     * @param {number} level
      * @returns
      * @memberof Rule
      */
 
   }, {
     key: "toLinkable",
-    value: function toLinkable(value) {
+    value: function toLinkable(level) {
       if (this.data.link === false) return false;
       if (this.data.linkOn === 'n') return false;
       if (this.data.linkOn === 'a') return true;
-      if (this.data.linkOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
+      if (this.data.linkOn === 'wc' && level >= 1) return true;
       return false;
     }
     /**
      *Return true or false for condition to display tooltip with values
      *
-     * @param {*} value
+     * @param {number} level
      * @returns
      * @memberof Rule
      */
 
   }, {
     key: "toTooltipize",
-    value: function toTooltipize(value) {
+    value: function toTooltipize(level) {
       if (this.data.tooltip === false) return false;
       if (this.data.tooltipOn === 'n') return false;
       if (this.data.tooltipOn === 'a') return true;
-      if (this.data.tooltipOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
+      if (this.data.tooltipOn === 'wc' && level >= 1) return true;
       return false;
     } //
     // Series
@@ -631,13 +632,13 @@ function () {
     key: "getValueForSerie",
     value: function getValueForSerie(serie) {
       if (this.matchSerie(serie)) {
-        var value = _.get(serie.stats, this.data.aggregation);
+        var _value = _.get(serie.stats, this.data.aggregation);
 
-        if (value === undefined || value === null) {
-          value = serie.datapoints[serie.datapoints.length - 1][0];
+        if (_value === undefined || _value === null) {
+          _value = serie.datapoints[serie.datapoints.length - 1][0];
         }
 
-        return value;
+        return _value;
       }
 
       return '-';
@@ -818,12 +819,6 @@ function () {
         pattern: this.data.pattern,
         hidden: this.data.hidden
       };
-    }
-  }, {
-    key: "toColorize",
-    value: function toColorize(value) {
-      if (this.data.hidden) return false;
-      return this.rule.toColorize(value);
     }
   }, {
     key: "toVisible",

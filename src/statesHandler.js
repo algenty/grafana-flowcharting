@@ -38,7 +38,6 @@ export default class StateHandler {
     _.each(mxcells, mxcell => {
       this.addState(mxcell);
     });
-    this.updateStates(rules);
   }
 
   /**
@@ -53,10 +52,9 @@ export default class StateHandler {
     let result = [];
     let name = null;
     let xgraph = this.xgraph;
-    _.each(this.states, state => {
+    this.states.forEach(state => {
       let mxcell = state.mxcell;
       let found = false;
-
       // SHAPES
       name = xgraph.getValuePropOfMxCell(rule.data.shapeProp, mxcell);
       if (rule.matchShape(name)) {
@@ -194,11 +192,10 @@ export default class StateHandler {
     u.log(0, 'StatesHandler.setStates() Rules', rules);
     u.log(0, 'StatesHandler.setStates() Series', series);
     u.log(1, 'StatesHandler.setStates() States', this.states);
-    // this.prepare();
+    this.prepare();
     rules.forEach(rule => {
       if (rule.states === undefined || rule.states.length === 0 ) rule.states = this.getStatesForRule(rule);
       rule.states.forEach(state => {
-        state.prepare();
         series.forEach(serie => {
           state.setState(rule, serie);
         });

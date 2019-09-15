@@ -62,8 +62,6 @@ function () {
       _.each(mxcells, function (mxcell) {
         _this.addState(mxcell);
       });
-
-      this.updateStates(rules);
     }
     /**
      *Return states array for a rule
@@ -80,8 +78,7 @@ function () {
       var result = [];
       var name = null;
       var xgraph = this.xgraph;
-
-      _.each(this.states, function (state) {
+      this.states.forEach(function (state) {
         var mxcell = state.mxcell;
         var found = false; // SHAPES
 
@@ -112,7 +109,6 @@ function () {
           }
         }
       });
-
       return result;
     }
     /**
@@ -251,12 +247,11 @@ function () {
       u.log(1, 'StateHandler.setStates()');
       u.log(0, 'StatesHandler.setStates() Rules', rules);
       u.log(0, 'StatesHandler.setStates() Series', series);
-      u.log(1, 'StatesHandler.setStates() States', this.states); // this.prepare();
-
+      u.log(1, 'StatesHandler.setStates() States', this.states);
+      this.prepare();
       rules.forEach(function (rule) {
         if (rule.states === undefined || rule.states.length === 0) rule.states = _this3.getStatesForRule(rule);
         rule.states.forEach(function (state) {
-          state.prepare();
           series.forEach(function (serie) {
             state.setState(rule, serie);
           });
