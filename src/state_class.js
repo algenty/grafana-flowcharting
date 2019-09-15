@@ -59,7 +59,6 @@ export default class State {
     u.log(1, 'State.setState()');
     u.log(0, 'State.setState() Rule', rule);
     u.log(0, 'State.setState() Serie', serie);
-    // if (this.cellId === "27") debugger
     if (rule.matchSerie(serie)) {
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
@@ -91,7 +90,7 @@ export default class State {
             if (rule.toColorize(level)) {
               this.setColorStyle(rule.data.style, color);
             }
-            this.overlayIcon = rule.toIconize(value);
+            this.overlayIcon = rule.toIconize(level);
           }
         }
       });
@@ -365,7 +364,8 @@ export default class State {
   applyShape() {
     // Apply colors
     this.styles.forEach(style => {
-      this.xgraph.setStyleCell(this.mxcell, style, this.getCurrentColorStyle(style));
+      const color = this.getCurrentColorStyle(style);
+      this.xgraph.setStyleCell(this.mxcell, style, color);
     });
     // Apply icons
     if (this.overlayIcon) {
@@ -376,6 +376,7 @@ export default class State {
   }
 
   applyText() {
+    let text = this.getCurrentText();
     this.xgraph.setLabelCell(this.mxcell, this.getCurrentText());
   }
 
@@ -392,7 +393,6 @@ export default class State {
 
   applyState() {
     u.log(1, 'State.applyState()');
-    if (this.cellId === "27") debugger
     if (this.matched) {
       this.changed = true;
 
@@ -445,6 +445,9 @@ export default class State {
 
   prepare() {
     // this.unsetState();
+    this.lastChange = null;
+    this.unsetLevel();
+    this.unsetTooltip();
     this.matched = false;
     this.matchedShape = false;
     this.matchedText = false;

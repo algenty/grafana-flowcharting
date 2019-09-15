@@ -181,7 +181,7 @@ export default class FlowchartHandler {
       const width = this.$elem.width();
       const height = this.ctrl.height;
       this.refresh(width, height);
-      console.log("FlowcharHandler.render() states",this.flowcharts[0].getStateHandler().getStates());
+      // console.log("FlowcharHandler.render() states",this.flowcharts[0].getStateHandler().getStates());
       
     }
   }
@@ -363,10 +363,10 @@ export default class FlowchartHandler {
         event.source.postMessage(this.flowcharts[index].data.xml, event.origin);
       } else {
         if (event.data !== undefined && event.data.length > 0) {
-          // this.flowcharts[index].setXml(event.data);
           this.flowcharts[index].redraw(event.data);
           this.sourceChanged();
           this.$scope.$apply();
+          this.render();
         }
         if (event.data !== undefined || event.data.length === 0) {
           editorWindow.close();

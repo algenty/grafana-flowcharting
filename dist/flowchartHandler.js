@@ -220,8 +220,7 @@ function () {
 
         var width = this.$elem.width();
         var height = this.ctrl.height;
-        this.refresh(width, height);
-        console.log("FlowcharHandler.render() states", this.flowcharts[0].getStateHandler().getStates());
+        this.refresh(width, height); // console.log("FlowcharHandler.render() states",this.flowcharts[0].getStateHandler().getStates());
       }
     }
     /**
@@ -433,12 +432,13 @@ function () {
           event.source.postMessage(_this3.flowcharts[index].data.xml, event.origin);
         } else {
           if (event.data !== undefined && event.data.length > 0) {
-            // this.flowcharts[index].setXml(event.data);
             _this3.flowcharts[index].redraw(event.data);
 
             _this3.sourceChanged();
 
             _this3.$scope.$apply();
+
+            _this3.render();
           }
 
           if (event.data !== undefined || event.data.length === 0) {

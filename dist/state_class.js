@@ -82,7 +82,7 @@ function () {
 
       u.log(1, 'State.setState()');
       u.log(0, 'State.setState() Rule', rule);
-      u.log(0, 'State.setState() Serie', serie); // if (this.cellId === "27") debugger
+      u.log(0, 'State.setState() Serie', serie);
 
       if (rule.matchSerie(serie)) {
         var shapeMaps = rule.getShapeMaps();
@@ -114,7 +114,7 @@ function () {
                 _this2.setColorStyle(rule.data.style, color);
               }
 
-              _this2.overlayIcon = rule.toIconize(value);
+              _this2.overlayIcon = rule.toIconize(level);
             }
           }
         }); // TEXT
@@ -438,7 +438,9 @@ function () {
 
       // Apply colors
       this.styles.forEach(function (style) {
-        _this5.xgraph.setStyleCell(_this5.mxcell, style, _this5.getCurrentColorStyle(style));
+        var color = _this5.getCurrentColorStyle(style);
+
+        _this5.xgraph.setStyleCell(_this5.mxcell, style, color);
       }); // Apply icons
 
       if (this.overlayIcon) {
@@ -450,6 +452,7 @@ function () {
   }, {
     key: "applyText",
     value: function applyText() {
+      var text = this.getCurrentText();
       this.xgraph.setLabelCell(this.mxcell, this.getCurrentText());
     }
   }, {
@@ -469,7 +472,6 @@ function () {
     key: "applyState",
     value: function applyState() {
       u.log(1, 'State.applyState()');
-      if (this.cellId === "27") debugger;
 
       if (this.matched) {
         this.changed = true; // TOOLTIP
@@ -522,6 +524,9 @@ function () {
     key: "prepare",
     value: function prepare() {
       // this.unsetState();
+      this.lastChange = null;
+      this.unsetLevel();
+      this.unsetTooltip();
       this.matched = false;
       this.matchedShape = false;
       this.matchedText = false;

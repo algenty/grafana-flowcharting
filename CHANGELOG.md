@@ -17,7 +17,7 @@
     - Hold right button to move diagram.
     - double click on shape to zoom on.
     - Escape key to restore.
-  - Tooltip/popup support (Example)
+  - Tooltip/popup support ([Example](https://algenty.github.io/flowcharting-repository/images/tooltip2_ani.gif))
     - Grafana style css and date
     - Adding metrics with color according levels
     - Adding colors on metrics in tooltip

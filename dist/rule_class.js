@@ -260,8 +260,9 @@ function () {
   }, {
     key: "toLabelize",
     value: function toLabelize(level) {
-      if (this.data.textOn === 'wmd' && level > 0) return true;
-      if (this.data.textOn === 'wmd' && level === -1) return false;
+      // if (this.data.textOn === 'wmd' && level > 0) return true;
+      // if (this.data.textOn === 'wmd' && level === -1) return false;
+      if (this.data.textOn === 'wmd') return true;
       if (this.data.textOn === 'n') return false;
       if (this.data.textOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
       if (this.data.textOn === 'co' && this.getThresholdLevel(value) >= 2) return true;
