@@ -22,14 +22,14 @@
     - Adding metrics with color according levels
     - Adding colors on metrics in tooltip
     - Adding date of change
-    - Adding label for metric
-  - Variables/templates support, accept variable like ${} : 
+    - Adding label input for metric
+  - Variables/templates support, accept variable like ${} ([Example](https://algenty.github.io/flowcharting-repository/images/variable_ani.gif)) 
     - In xml definition
     - In text mapping when type in sring for "Range to text" and "Value to text"
     - In link ovewrite
-  - full shapes from draw.io included
+  - full shapes from draw.io included ([Examples](https://algenty.github.io/flowcharting-repository/images/shapes_ani.gif))
   - Some optimizations
-  
+
 ### Fixed  
   - Optimization when refresh/render [(issue #15)](https://github.com/algenty/grafana-flowcharting/issues/15)  
   - No decimal fixed when 0 [(issue #23)](https://github.com/algenty/grafana-flowcharting/issues/23)

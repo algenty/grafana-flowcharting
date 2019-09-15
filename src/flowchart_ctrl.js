@@ -49,6 +49,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
     this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
+    this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
     $rootScope.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
   }
 
@@ -68,7 +69,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onVarChanged() {
     u.log(1, 'FlowchartCtrl.onVarChanged()');
-    this.flowchartHandler.draw();
+    // this.flowchartHandler.draw();
+    this.flowchartHandler.sourceChanged();
+    this.flowchartHandler.render();
     // this.flowchartHandler.sourceChanged();
   }
 

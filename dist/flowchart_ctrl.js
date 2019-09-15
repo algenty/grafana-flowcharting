@@ -96,6 +96,8 @@ function (_MetricsPanelCtrl) {
 
     _this.events.on('template-variable-value-updated', _this.onVarChanged.bind(_assertThisInitialized(_this)));
 
+    _this.dashboard.events.on('template-variable-value-updated', _this.onVarChanged.bind(_assertThisInitialized(_this)), $scope);
+
     $rootScope.onAppEvent('template-variable-value-updated', _this.onVarChanged.bind(_assertThisInitialized(_this)), $scope);
     return _this;
   } //
@@ -119,8 +121,10 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onVarChanged",
     value: function onVarChanged() {
-      u.log(1, 'FlowchartCtrl.onVarChanged()');
-      this.flowchartHandler.draw(); // this.flowchartHandler.sourceChanged();
+      u.log(1, 'FlowchartCtrl.onVarChanged()'); // this.flowchartHandler.draw();
+
+      this.flowchartHandler.sourceChanged();
+      this.flowchartHandler.render(); // this.flowchartHandler.sourceChanged();
     }
   }, {
     key: "onRender",

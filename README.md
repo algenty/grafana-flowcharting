@@ -12,7 +12,7 @@ Flowcharting is a plugin for grafana. It aims to display complexe diagram draws 
 
 Draw your artwork and monitor it.
 
- ## example
+ ## Example
   - Technical schema example  
 ![example 1](https://github.com/algenty/flowcharting-repository/blob/master/images/fc_archi_example.png?raw=true)
  
@@ -33,34 +33,34 @@ https://github.com/algenty/grafana-flowcharting
 
 ## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-09-14
 ### Added
-  - Draw.io editor  
-    - Open draw.io with dark theme for better rendering.
+  - Draw.io editor ([Example](https://algenty.github.io/flowcharting-repository/images/openEditor_ani.gif))
+    - Open draw.io with dark theme for better rendering  
     - Display waiting screen when loading xml definition.  
   - Upgrading libraries  
     - mxGraph 4.0.4  
     - draw.io 11.2.8  
   - Graph definition  
-    - Adding download function to download source by http on load.
+    - Adding download function to download source by http on load. ([Example](https://algenty.github.io/flowcharting-repository/images/download_ani.gif))
   - Metric
     - Adding string support for state
-  - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19)  
+  - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19) ([Example](https://algenty.github.io/flowcharting-repository/images/zoom_ani.gif))
     - On the mouse pointer : Ctrl + Mouse
     - Hold right button to move diagram.
     - double click on shape to zoom on.
     - Escape key to restore.
-  - Tooltip/popup support :
+  - Tooltip/popup support ([Example](https://algenty.github.io/flowcharting-repository/images/tooltip2_ani.gif))
     - Grafana style css and date
     - Adding metrics with color according levels
     - Adding colors on metrics in tooltip
     - Adding date of change
-    - Adding label for metric
-  - Variables/templates support, accept variable like ${} : 
+    - Adding label input for metric
+  - Variables/templates support, accept variable like ${} ([Example](https://algenty.github.io/flowcharting-repository/images/variable_ani.gif)) 
     - In xml definition
     - In text mapping when type in sring for "Range to text" and "Value to text"
     - In link ovewrite
-  - full shapes from draw.io included
+  - full shapes from draw.io included ([Examples](https://algenty.github.io/flowcharting-repository/images/shapes_ani.gif))
   - Some optimizations
-  
+
 ### Fixed  
   - Optimization when refresh/render [(issue #15)](https://github.com/algenty/grafana-flowcharting/issues/15)  
   - No decimal fixed when 0 [(issue #23)](https://github.com/algenty/grafana-flowcharting/issues/23)
