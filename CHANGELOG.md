@@ -12,7 +12,7 @@
     - Adding download function to download source by http on load. ([Example](https://algenty.github.io/flowcharting-repository/images/download_ani.gif))
   - Metric
     - Adding string support for state
-  - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19) ([Example](https://algenty.github.io/flowcharting-repository/images/zoom_ani.gif))
+  - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19) ([Example](https://algenty.github.io/flowcharting-repository/images/zoom2_ani.gif))
     - On the mouse pointer : Ctrl + Mouse
     - Hold right button to move diagram.
     - double click on shape to zoom on.
