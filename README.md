@@ -175,10 +175,11 @@ grafana-cli plugins install agenty-flowcharting-panel
 
 ```sh
 $ git clone https://github.com/algenty/grafana-flowcharting
-$ npm install --save-dev
-$ ./node_modules/.bin/grunt
+$ yarn install --dev
+$ yarn build init
+$ yarn build
 $ # Make zip file plugin in archives dir
-$ ./node_modules/.bin/grunt archive
+$ yarn build archive
 $ # for dev watching
-$ ./node_modules/.bin/grunt dev
+$ yarn build dev
 ```
