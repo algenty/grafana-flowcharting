@@ -2,13 +2,13 @@
 
 ![Banner](https://github.com/algenty/flowcharting-repository/blob/master/images/banner_large.png?raw=true)
 
-Flowcharting is a plugin for grafana. It aims to display complexe diagram draws with [draw.io](https://draw.io/). Few examples :
-  * Technical architecture schema
-  * Diagrams
+Flowcharting is a plugin for grafana. It aims to display complexe diagram draws with [draw.io](https://draw.io/) like Visio. Few examples :
+  * Technical architecture schema (Legacy, Cloud, Azure, AWS, GCP)
+  * Diagrams (network, electric, flows ...)
   * Organic plans
   * Floorplans
   * UML plan 
-  * ...  
+  * Workflows (Jenkins, Ansible Tower, ...)  
 
 Draw your artwork and monitor it.
 
@@ -183,3 +183,9 @@ $ yarn build archive
 $ # for dev watching
 $ yarn build dev
 ```
+
+### Class diagram
+https://www.draw.io/?chrome=0&lightbox=1&url=https%3A%2F%2Fraw.githubusercontent.com%2Falgenty%2Fflowcharting-repository%2Fmaster%2Fgraphs%2FFlowcharting_carto.drawio
+
+### Event diagram
+https://www.draw.io/?chrome=0&lightbox=1&url=https%3A%2F%2Fraw.githubusercontent.com%2Falgenty%2Fflowcharting-repository%2Fmaster%2Fgraphs%2FFlowcharting_Events.drawio
