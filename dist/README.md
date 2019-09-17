@@ -2,13 +2,13 @@
 
 ![Banner](https://github.com/algenty/flowcharting-repository/blob/master/images/banner_large.png?raw=true)
 
-Flowcharting is a plugin for grafana. It aims to display complexe diagram draws with [draw.io](https://draw.io/). Few examples :
-  * Technical architecture schema
-  * Diagrams
+Flowcharting is a plugin for grafana. It aims to display complexe diagram draws with [draw.io](https://draw.io/) like Visio. Few examples :
+  * Technical architecture schema (Legacy, Cloud, Azure, AWS, GCP)
+  * Diagrams (network, electric, flows ...)
   * Organic plans
   * Floorplans
   * UML plan 
-  * ...  
+  * Workflows (Jenkins, Ansible Tower, ...)  
 
 Draw your artwork and monitor it.
 
@@ -43,7 +43,7 @@ https://github.com/algenty/grafana-flowcharting
     - Adding download function to download source by http on load. ([Example](https://algenty.github.io/flowcharting-repository/images/download_ani.gif))
   - Metric
     - Adding string support for state
-  - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19) ([Example](https://algenty.github.io/flowcharting-repository/images/zoom_ani.gif))
+  - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19) ([Example](https://algenty.github.io/flowcharting-repository/images/zoom2_ani.gif))
     - On the mouse pointer : Ctrl + Mouse
     - Hold right button to move diagram.
     - double click on shape to zoom on.
@@ -175,10 +175,17 @@ grafana-cli plugins install agenty-flowcharting-panel
 
 ```sh
 $ git clone https://github.com/algenty/grafana-flowcharting
-$ npm install --save-dev
-$ ./node_modules/.bin/grunt
+$ yarn install --dev
+$ yarn build init
+$ yarn build
 $ # Make zip file plugin in archives dir
-$ ./node_modules/.bin/grunt archive
+$ yarn build archive
 $ # for dev watching
-$ ./node_modules/.bin/grunt dev
+$ yarn build dev
 ```
+
+### Class diagram
+https://www.draw.io/?chrome=0&lightbox=1&url=https%3A%2F%2Fraw.githubusercontent.com%2Falgenty%2Fflowcharting-repository%2Fmaster%2Fgraphs%2FFlowcharting_carto.drawio
+
+### Event diagram
+https://www.draw.io/?chrome=0&lightbox=1&url=https%3A%2F%2Fraw.githubusercontent.com%2Falgenty%2Fflowcharting-repository%2Fmaster%2Fgraphs%2FFlowcharting_Events.drawio

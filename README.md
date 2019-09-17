@@ -12,7 +12,7 @@ Flowcharting is a plugin for grafana. It aims to display complexe diagram draws 
 
 Draw your artwork and monitor it.
 
- ## Example
+## Use case example
   - Technical schema example  
 ![example 1](https://github.com/algenty/flowcharting-repository/blob/master/images/fc_archi_example.png?raw=true)
  
@@ -27,8 +27,6 @@ https://algenty.github.io/flowcharting-repository/
 # Project site
 https://github.com/algenty/grafana-flowcharting
 
-# Features
-
 # Changelog
 
 ## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-09-14
@@ -40,10 +38,10 @@ https://github.com/algenty/grafana-flowcharting
     - mxGraph 4.0.4  
     - draw.io 11.2.8  
   - Graph definition  
-    - Adding download function to download source by http on load. ([Example](https://algenty.github.io/flowcharting-repository/images/download_ani.gif))
+    - Adding download function to download source by http on load. ([See example](https://algenty.github.io/flowcharting-repository/images/download_ani.gif))
   - Metric
     - Adding string support for state
-  - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19) ([Example](https://algenty.github.io/flowcharting-repository/images/zoom2_ani.gif))
+  - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19) ([See example](https://algenty.github.io/flowcharting-repository/images/zoom2_ani.gif))
     - On the mouse pointer : Ctrl + Mouse
     - Hold right button to move diagram.
     - double click on shape to zoom on.
@@ -54,11 +52,11 @@ https://github.com/algenty/grafana-flowcharting
     - Adding colors on metrics in tooltip
     - Adding date of change
     - Adding label input for metric
-  - Variables/templates support, accept variable like ${} ([Example](https://algenty.github.io/flowcharting-repository/images/variable_ani.gif)) 
+  - Variables/templates support, accept variable like ${} ([See example](https://algenty.github.io/flowcharting-repository/images/variable_ani.gif)) 
     - In xml definition
     - In text mapping when type in sring for "Range to text" and "Value to text"
     - In link ovewrite
-  - full shapes from draw.io included ([Examples](https://algenty.github.io/flowcharting-repository/images/shapes_ani.gif))
+  - full shapes from draw.io included ([See example](https://algenty.github.io/flowcharting-repository/images/shapes_ani.gif))
   - Some optimizations
 
 ### Fixed  
@@ -145,14 +143,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Email : <grafana.flowcharting@gmail.com>
   - Twitter : https://twitter.com/gf_flowcharting
 
-# Tech
+# Dependencies
 
-Grafan flowcharting use libs :
+## Grafane flowcharting plugin dependencies
 
 * [AngularJS] - HTML enhanced for web apps!
 * [lodash] - awesome web-based text editor
 * [jquery] - Markdown parser done right. Fast and easy to extend.
 * [mxGraph] - great UI boilerplate for modern web apps
+* [pako] - Zlib port to javascript
+* [vkbeautify] - Pretty prints and minifies XML/JSON/SQL/CSV
+* [sanitizer] - Caja's HTML Sanitizer
+
+## Build dependencies
+
+* [jest] - Delightful JavaScript Testing
+* [express] - Fast, unopinionated, minimalist web framework
+* [babel] - Soft cushion between you all the cool new file formats being developed for node.js such as CoffeeScript, SASS, and Jade.
+* [grunt] - The JavaScript Task Runne
+* [webpack] - Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.
 
 # Installation
 
@@ -184,8 +193,8 @@ $ # for dev watching
 $ yarn build dev
 ```
 
-### Class diagram
+## Class diagram
 https://www.draw.io/?chrome=0&lightbox=1&url=https%3A%2F%2Fraw.githubusercontent.com%2Falgenty%2Fflowcharting-repository%2Fmaster%2Fgraphs%2FFlowcharting_carto.drawio
 
-### Event diagram
+## Event diagram (In progress)
 https://www.draw.io/?chrome=0&lightbox=1&url=https%3A%2F%2Fraw.githubusercontent.com%2Falgenty%2Fflowcharting-repository%2Fmaster%2Fgraphs%2FFlowcharting_Events.drawio
