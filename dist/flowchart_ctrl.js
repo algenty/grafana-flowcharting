@@ -45,9 +45,7 @@ var u = require('./utils');
 
 window.u = window.u || u;
 
-var FlowchartCtrl =
-/*#__PURE__*/
-function (_MetricsPanelCtrl) {
+var FlowchartCtrl = function (_MetricsPanelCtrl) {
   _inherits(FlowchartCtrl, _MetricsPanelCtrl);
 
   function FlowchartCtrl($scope, $injector, $rootScope, templateSrv) {
@@ -78,7 +76,7 @@ function (_MetricsPanelCtrl) {
     _.defaults(_this.panel, _this.panelDefaults);
 
     _this.panel.graphId = "flowchart_".concat(_this.panel.id);
-    _this.containerDivId = "container_".concat(_this.panel.graphId); // events
+    _this.containerDivId = "container_".concat(_this.panel.graphId);
 
     _this.events.on('render', _this.onRender.bind(_assertThisInitialized(_this)));
 
@@ -100,10 +98,7 @@ function (_MetricsPanelCtrl) {
 
     $rootScope.onAppEvent('template-variable-value-updated', _this.onVarChanged.bind(_assertThisInitialized(_this)), $scope);
     return _this;
-  } //
-  // EVENTS FCT
-  //
-
+  }
 
   _createClass(FlowchartCtrl, [{
     key: "onInitEditMode",
@@ -121,10 +116,9 @@ function (_MetricsPanelCtrl) {
   }, {
     key: "onVarChanged",
     value: function onVarChanged() {
-      u.log(1, 'FlowchartCtrl.onVarChanged()'); // this.flowchartHandler.draw();
-
+      u.log(1, 'FlowchartCtrl.onVarChanged()');
       this.flowchartHandler.sourceChanged();
-      this.flowchartHandler.render(); // this.flowchartHandler.sourceChanged();
+      this.flowchartHandler.render();
     }
   }, {
     key: "onRender",
@@ -154,15 +148,11 @@ function (_MetricsPanelCtrl) {
         text: 'Export SVG',
         click: 'ctrl.exportSVG()'
       });
-    } //
-    // FUNCTIONS
-    //
-
+    }
   }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
-      u.log(1, 'FlowchartCtrl.link()'); // RULES
-
+      u.log(1, 'FlowchartCtrl.link()');
       var newRulesData = [];
       this.rulesHandler = new _rulesHandler["default"](scope, newRulesData);
 
@@ -172,8 +162,7 @@ function (_MetricsPanelCtrl) {
       } else this.rulesHandler["import"](this.panel.rulesData);
 
       if (this.panel.newFlag && this.rulesHandler.countRules() === 0) this.rulesHandler.addRule('.*');
-      this.panel.rulesData = newRulesData; // FLOWCHART
-
+      this.panel.rulesData = newRulesData;
       var newFlowchartsData = [];
       this.flowchartHandler = new _flowchartHandler["default"](scope, elem, ctrl, newFlowchartsData);
 
@@ -183,8 +172,7 @@ function (_MetricsPanelCtrl) {
       } else this.flowchartHandler["import"](this.panel.flowchartsData);
 
       if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) this.flowchartHandler.addFlowchart('Main');
-      this.panel.flowchartsData = newFlowchartsData; // Versions
-
+      this.panel.flowchartsData = newFlowchartsData;
       this.panel.newFlag = false;
       this.panel.version = this.version;
     }
@@ -215,10 +203,7 @@ function (_MetricsPanelCtrl) {
       }
 
       return null;
-    } //
-    // Series
-    //
-
+    }
   }, {
     key: "seriesHandler",
     value: function seriesHandler(seriesData) {

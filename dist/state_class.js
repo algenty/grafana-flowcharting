@@ -11,22 +11,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-/**
- *Class for state of one cell
- *
- * @export
- * @class State
- */
-var State =
-/*#__PURE__*/
-function () {
-  /**
-   *Creates an instance of State.
-   * @param {mxCell} mxcell
-   * @param {XGraph} xgraph
-   * @param {*} ctrl - ctrl panel
-   * @memberof State
-   */
+var State = function () {
   function State(mxcell, xgraph, ctrl) {
     var _this = this;
 
@@ -66,14 +51,6 @@ function () {
       _this.originalColors[style] = color;
     });
   }
-  /**
-   *Define state according to 1 rule and 1 serie without apply display
-   *
-   * @param {Rule} rule
-   * @param {Serie} serie
-   * @memberof State
-   */
-
 
   _createClass(State, [{
     key: "setState",
@@ -93,19 +70,17 @@ function () {
         var level = rule.getThresholdLevel(value);
         var color = rule.getColorForLevel(level);
         var tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
-        var time = this.ctrl.dashboard.formatDate(new Date(), tooltipTimeFormat); // SHAPE
-
+        var time = this.ctrl.dashboard.formatDate(new Date(), tooltipTimeFormat);
         var cellProp = this.getCellProp(rule.data.shapeProp);
         shapeMaps.forEach(function (shape) {
           if (!shape.isHidden() && shape.match(cellProp)) {
             _this2.matchedShape = true;
-            _this2.matched = true; // tooltips
+            _this2.matched = true;
 
             if (rule.toTooltipize(level)) {
               if (rule.data.tooltipColors) _this2.addTooltipValue(rule.data.tooltipLabel, FormattedValue, color);else _this2.addTooltipValue(rule.data.tooltipLabel, FormattedValue, null);
               _this2.lastChange = time;
-            } // Color Shape
-
+            }
 
             if (_this2.globalLevel <= level) {
               _this2.setLevelStyle(rule.data.style, level);
@@ -117,8 +92,7 @@ function () {
               _this2.overlayIcon = rule.toIconize(level);
             }
           }
-        }); // TEXT
-
+        });
         cellProp = this.getCellProp(rule.data.textProp);
         textMaps.forEach(function (text) {
           if (!text.isHidden() && text.match(cellProp)) {
@@ -130,12 +104,10 @@ function () {
 
               _this2.setText(rule.getReplaceText(_this2.originalValue, textScoped));
             } else {
-              // Hide text
               _this2.setText(rule.getReplaceText(_this2.originalValue, ''));
             }
           }
-        }); // LINK
-
+        });
         cellProp = this.getCellProp(rule.data.linkProp);
         linkMaps.forEach(function (link) {
           if (!link.isHidden() && link.match(cellProp)) {
@@ -155,13 +127,6 @@ function () {
 
       u.log(0, 'State.setState() state', this);
     }
-    /**
-     *Restore initial status of state without apply display.
-     * Use applyState() to apply on graph (color, level and text)
-     *
-     * @memberof State
-     */
-
   }, {
     key: "unsetState",
     value: function unsetState() {
@@ -178,38 +143,16 @@ function () {
       this.matchedLink = false;
       u.log(0, 'State.unsetState() state', this);
     }
-    /**
-     *Flag to indicate state is matching by a rule and series
-     *
-     * @returns {boolean}
-     * @memberof State
-     */
-
   }, {
     key: "isMatched",
     value: function isMatched() {
       return this.matched;
     }
-    /**
-     *Flag to indicate state is changed, need apply state
-     *
-     * @returns {boolean}
-     * @memberof State
-     */
-
   }, {
     key: "isChanged",
     value: function isChanged() {
       return this.changed;
     }
-    /**
-     *
-     *
-     * @param {string} prop - id|value
-     * @returns {string} return original value of id or label of cell
-     * @memberof State
-     */
-
   }, {
     key: "getCellProp",
     value: function getCellProp(prop) {
@@ -217,38 +160,17 @@ function () {
       if (prop === 'value') return this.originalValue;
       return '/!\\ Not found';
     }
-    /**
-     *Define color for a style
-     *
-     * @param {string} style - fillcolor|fontcolor|stroke
-     * @param {string} color - html color
-     * @memberof State
-     */
-
   }, {
     key: "setColorStyle",
     value: function setColorStyle(style, color) {
       u.log(1, 'State.setColorStyle()');
       this.currentColors[style] = color;
     }
-    /**
-     *Restore initial color of cell for a style
-     *
-     * @param {string} style - fillcolor|fontcolor|stroke
-     * @memberof State
-     */
-
   }, {
     key: "unsetColorStyle",
     value: function unsetColorStyle(style) {
       this.currentColors[style] = this.originalColors[style];
     }
-    /**
-     *Restore initial color of cell
-     *
-     * @memberof State
-     */
-
   }, {
     key: "unsetColor",
     value: function unsetColor() {
@@ -258,27 +180,11 @@ function () {
         _this3.unsetColorStyle(style);
       });
     }
-    /**
-     *Return current html color for a style
-     *
-     * @param {string} style - fillcolor|fontcolor|stroke
-     * @returns {string} HTML color
-     * @memberof State
-     */
-
   }, {
     key: "getCurrentColorStyle",
     value: function getCurrentColorStyle(style) {
       return this.currentColors[style];
     }
-    /**
-     *Return initial html color for a style
-     *
-     * @param {string} style - fillcolor|fontcolor|stroke
-     * @returns {string} HTML color
-     * @memberof State
-     */
-
   }, {
     key: "getOriginalColorStyle",
     value: function getOriginalColorStyle(style) {
@@ -394,18 +300,7 @@ function () {
         element.value = value;
         element.color = color;
       }
-    } // removeTooltipValue(name) {
-    //   u.log(1, 'State.removeTooltipValue()');
-    //   u.log(0, 'State.removeTooltipValue() name', name);
-    //   for (let index = 0; index < this.tooltips.length; index += 1) {
-    //     const element = this.tooltips[index];
-    //     if (element.name === name) {
-    //       this.tooltips.slice(index, 1);
-    //       return;
-    //     }
-    //   }
-    // }
-
+    }
   }, {
     key: "findTooltipValue",
     value: function findTooltipValue(name) {
@@ -415,12 +310,10 @@ function () {
       }
 
       return null;
-    } // eslint-disable-next-line class-methods-use-this
-
+    }
   }, {
     key: "isGradient",
-    value: function isGradient() {// TODO:
-    }
+    value: function isGradient() {}
   }, {
     key: "isShape",
     value: function isShape() {
@@ -436,12 +329,11 @@ function () {
     value: function applyShape() {
       var _this5 = this;
 
-      // Apply colors
       this.styles.forEach(function (style) {
         var color = _this5.getCurrentColorStyle(style);
 
         _this5.xgraph.setStyleCell(_this5.mxcell, style, color);
-      }); // Apply icons
+      });
 
       if (this.overlayIcon) {
         this.xgraph.addOverlay(this.getTextLevel(), this.mxcell);
@@ -474,9 +366,8 @@ function () {
       u.log(1, 'State.applyState()');
 
       if (this.matched) {
-        this.changed = true; // TOOLTIP
-
-        this.applyTooltip(); // SHAPES
+        this.changed = true;
+        this.applyTooltip();
 
         if (this.matchedShape) {
           this.applyShape();
@@ -485,8 +376,7 @@ function () {
           this.unsetColor();
           this.applyShape();
           this.changedShape = false;
-        } // TEXTS
-
+        }
 
         if (this.matchedText) {
           this.applyText();
@@ -495,8 +385,7 @@ function () {
           this.unsetText();
           this.applyText();
           this.changedText = false;
-        } // LINKS
-
+        }
 
         if (this.matchedLink) {
           this.applyLink();

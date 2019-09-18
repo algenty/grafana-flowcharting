@@ -40,7 +40,7 @@ https://github.com/algenty/grafana-flowcharting
   - Graph definition  
     - Adding download function to download source by http on load. ([See example](https://algenty.github.io/flowcharting-repository/images/download_ani.gif))
   - Metric
-    - Adding string support for state
+    - Adding string support for state (See example)
   - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19) ([See example](https://algenty.github.io/flowcharting-repository/images/zoom2_ani.gif))
     - On the mouse pointer : Ctrl + Mouse
     - Hold right button to move diagram.
@@ -66,6 +66,7 @@ https://github.com/algenty/grafana-flowcharting
 
 ## [[0.3.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.3.0.zip) - 2019-05-07
 ### Added
+
   /!\ Possible breaking change with 0.2.0 and 0.2.5 but it will compatible with next release.  
     
   - Migration process for next release.

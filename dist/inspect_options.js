@@ -12,10 +12,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var InspectOptionsCtrl =
-/*#__PURE__*/
-function () {
-  /** @ngInject */
+var InspectOptionsCtrl = function () {
   function InspectOptionsCtrl($scope) {
     _classCallCheck(this, InspectOptionsCtrl);
 
@@ -97,7 +94,7 @@ function () {
     key: "reset",
     value: function reset() {
       this.flowchartHandler.draw();
-      this.flowchartHandler.refresh(); // this.$scope.$apply();
+      this.flowchartHandler.refresh();
     }
   }, {
     key: "apply",
@@ -127,8 +124,6 @@ function () {
 
   return InspectOptionsCtrl;
 }();
-/** @ngInject */
-
 
 exports.InspectOptionsCtrl = InspectOptionsCtrl;
 

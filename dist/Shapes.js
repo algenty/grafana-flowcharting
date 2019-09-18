@@ -1,14 +1,6 @@
 "use strict";
 
-/**
- * Copyright (c) 2006-2015, JGraph Ltd
- */
-
-/**
- * Registers shapes.
- */
 (function () {
-  // Cube Shape, supports size style
   function CubeShape() {
     mxCylinder.call(this);
   }
@@ -51,7 +43,7 @@
 
   mxCellRenderer.registerShape('cube', CubeShape);
   var tan30 = Math.tan(mxUtils.toRadians(30));
-  var tan30Dx = (0.5 - tan30) / 2; // Cube Shape, supports size style
+  var tan30Dx = (0.5 - tan30) / 2;
 
   function IsoRectangleShape() {
     mxActor.call(this);
@@ -73,7 +65,7 @@
     path.end();
   };
 
-  mxCellRenderer.registerShape('isoRectangle', IsoRectangleShape); // Cube Shape, supports size style
+  mxCellRenderer.registerShape('isoRectangle', IsoRectangleShape);
 
   function IsoCubeShape() {
     mxCylinder.call(this);
@@ -106,7 +98,7 @@
     }
   };
 
-  mxCellRenderer.registerShape('isoCube', IsoCubeShape); // DataStore Shape, supports size style
+  mxCellRenderer.registerShape('isoCube', IsoCubeShape);
 
   function DataStoreShape() {
     mxCylinder.call(this);
@@ -120,7 +112,7 @@
 
     if (isForeground && this.fill != null || !isForeground && this.fill == null) {
       c.moveTo(0, dy);
-      c.curveTo(0, 2 * dy, w, 2 * dy, w, dy); // Needs separate shapes for correct hit-detection
+      c.curveTo(0, 2 * dy, w, 2 * dy, w, dy);
 
       if (!isForeground) {
         c.stroke();
@@ -129,7 +121,7 @@
 
       c.translate(0, dy / 2);
       c.moveTo(0, dy);
-      c.curveTo(0, 2 * dy, w, 2 * dy, w, dy); // Needs separate shapes for correct hit-detection
+      c.curveTo(0, 2 * dy, w, 2 * dy, w, dy);
 
       if (!isForeground) {
         c.stroke();
@@ -138,7 +130,7 @@
 
       c.translate(0, dy / 2);
       c.moveTo(0, dy);
-      c.curveTo(0, 2 * dy, w, 2 * dy, w, dy); // Needs separate shapes for correct hit-detection
+      c.curveTo(0, 2 * dy, w, 2 * dy, w, dy);
 
       if (!isForeground) {
         c.stroke();
@@ -161,7 +153,7 @@
     return new mxRectangle(0, 2.5 * Math.min(rect.height / 2, Math.round(rect.height / 8) + this.strokewidth - 1) * this.scale, 0, 0);
   };
 
-  mxCellRenderer.registerShape('datastore', DataStoreShape); // Note Shape, supports size style
+  mxCellRenderer.registerShape('datastore', DataStoreShape);
 
   function NoteShape() {
     mxCylinder.call(this);
@@ -191,7 +183,7 @@
     }
   };
 
-  mxCellRenderer.registerShape('note', NoteShape); // Note Shape, supports size style
+  mxCellRenderer.registerShape('note', NoteShape);
 
   function SwitchShape() {
     mxActor.call(this);
@@ -210,7 +202,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('switch', SwitchShape); // Folder Shape, supports tabWidth, tabHeight styles
+  mxCellRenderer.registerShape('switch', SwitchShape);
 
   function FolderShape() {
     mxCylinder.call(this);
@@ -231,8 +223,7 @@
       if (tp == 'left') {
         path.moveTo(0, dy);
         path.lineTo(dx, dy);
-      } // Right is default
-      else {
+      } else {
           path.moveTo(w - dx, dy);
           path.lineTo(w, dy);
         }
@@ -244,8 +235,7 @@
         path.lineTo(dx, 0);
         path.lineTo(dx, dy);
         path.lineTo(w, dy);
-      } // Right is default
-      else {
+      } else {
           path.moveTo(0, dy);
           path.lineTo(w - dx, dy);
           path.lineTo(w - dx, 0);
@@ -260,7 +250,7 @@
     }
   };
 
-  mxCellRenderer.registerShape('folder', FolderShape); // Card shape
+  mxCellRenderer.registerShape('folder', FolderShape);
 
   function CardShape() {
     mxActor.call(this);
@@ -281,7 +271,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('card', CardShape); // Tape shape
+  mxCellRenderer.registerShape('card', CardShape);
 
   function TapeShape() {
     mxActor.call(this);
@@ -323,7 +313,7 @@
     return rect;
   };
 
-  mxCellRenderer.registerShape('tape', TapeShape); // Document shape
+  mxCellRenderer.registerShape('tape', TapeShape);
 
   function DocumentShape() {
     mxActor.call(this);
@@ -374,8 +364,7 @@
     }
 
     return null;
-  }; // Parallelogram shape
-
+  };
 
   function ParallelogramShape() {
     mxActor.call(this);
@@ -396,7 +385,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('parallelogram', ParallelogramShape); // Trapezoid shape
+  mxCellRenderer.registerShape('parallelogram', ParallelogramShape);
 
   function TrapezoidShape() {
     mxActor.call(this);
@@ -416,7 +405,7 @@
     this.addPoints(c, [new mxPoint(0, h), new mxPoint(dx, 0), new mxPoint(w - dx, 0), new mxPoint(w, h)], this.isRounded, arcSize, true);
   };
 
-  mxCellRenderer.registerShape('trapezoid', TrapezoidShape); // Curly Bracket shape
+  mxCellRenderer.registerShape('trapezoid', TrapezoidShape);
 
   function CurlyBracketShape() {
     mxActor.call(this);
@@ -434,7 +423,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('curlyBracket', CurlyBracketShape); // Parallel marker shape
+  mxCellRenderer.registerShape('curlyBracket', CurlyBracketShape);
 
   function ParallelMarkerShape() {
     mxActor.call(this);
@@ -456,13 +445,9 @@
   };
 
   mxCellRenderer.registerShape('parallelMarker', ParallelMarkerShape);
-  /**
-   * Adds handJiggle style (jiggle=n sets jiggle)
-   */
 
   function HandJiggle(canvas, defaultVariation) {
-    this.canvas = canvas; // Avoids "spikes" in the output
-
+    this.canvas = canvas;
     this.canvas.setLineJoin('round');
     this.canvas.setLineCap('round');
     this.defaultVariation = defaultVariation;
@@ -518,7 +503,6 @@
   };
 
   HandJiggle.prototype.lineTo = function (endX, endY) {
-    // LATER: Check why this.canvas.lastX cannot be used
     if (this.lastX != null && this.lastY != null) {
       var sign = function sign(x) {
         return typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 0 : NaN : NaN;
@@ -572,14 +556,12 @@
     this.canvas.quadTo = this.originalQuadTo;
     this.canvas.curveTo = this.originalCurveTo;
     this.canvas.arcTo = this.originalArcTo;
-  }; // Installs hand jiggle in all shapes
-
+  };
 
   var mxShapePaint0 = mxShape.prototype.paint;
   mxShape.prototype.defaultJiggle = 1.5;
 
   mxShape.prototype.paint = function (c) {
-    // NOTE: getValue does not return a boolean value so !('0') would return true here and below
     if (this.style != null && mxUtils.getValue(this.style, 'comic', '0') != '0' && c.handHiggle == null) {
       c.handJiggle = new HandJiggle(c, mxUtils.getValue(this.style, 'jiggle', this.defaultJiggle));
     }
@@ -590,14 +572,9 @@
       c.handJiggle.destroy();
       delete c.handJiggle;
     }
-  }; // Sets default jiggle for diamond
-
+  };
 
   mxRhombus.prototype.defaultJiggle = 2;
-  /**
-   * Overrides to avoid call to rect
-   */
-
   var mxRectangleShapeIsHtmlAllowed0 = mxRectangleShape.prototype.isHtmlAllowed;
 
   mxRectangleShape.prototype.isHtmlAllowed = function () {
@@ -648,8 +625,7 @@
           c.lineTo(x + w, y + h);
           c.lineTo(x, y + h);
           c.lineTo(x, y);
-        } // LATER: Check if close is needed here
-
+        }
 
         c.close();
         c.end();
@@ -657,10 +633,6 @@
       }
     }
   };
-  /**
-   * Disables glass effect with hand jiggle.
-   */
-
 
   var mxRectangleShapePaintForeground0 = mxRectangleShape.prototype.paintForeground;
 
@@ -668,9 +640,7 @@
     if (c.handJiggle == null) {
       mxRectangleShapePaintForeground0.apply(this, arguments);
     }
-  }; // End of hand jiggle integration
-  // Process Shape
-
+  };
 
   function ProcessShape() {
     mxRectangleShape.call(this);
@@ -710,8 +680,7 @@
     if (this.isRounded) {
       var f = mxUtils.getValue(this.style, mxConstants.STYLE_ARCSIZE, mxConstants.RECTANGLE_ROUNDING_FACTOR * 100) / 100;
       inset = Math.max(inset, Math.min(w * f, h * f));
-    } // Crisp rendering of inner lines
-
+    }
 
     inset = Math.round(inset);
     c.begin();
@@ -724,7 +693,7 @@
     mxRectangleShape.prototype.paintForeground.apply(this, arguments);
   };
 
-  mxCellRenderer.registerShape('process', ProcessShape); // Transparent Shape
+  mxCellRenderer.registerShape('process', ProcessShape);
 
   function TransparentShape() {
     mxRectangleShape.call(this);
@@ -741,7 +710,7 @@
 
   TransparentShape.prototype.paintForeground = function (c, x, y, w, h) {};
 
-  mxCellRenderer.registerShape('transparent', TransparentShape); // Callout shape
+  mxCellRenderer.registerShape('transparent', TransparentShape);
 
   function CalloutShape() {
     mxActor.call(this);
@@ -771,7 +740,7 @@
     this.addPoints(c, [new mxPoint(0, 0), new mxPoint(w, 0), new mxPoint(w, h - s), new mxPoint(Math.min(w, dx + base), h - s), new mxPoint(dx2, h), new mxPoint(Math.max(0, dx), h - s), new mxPoint(0, h - s)], this.isRounded, arcSize, true, [4]);
   };
 
-  mxCellRenderer.registerShape('callout', CalloutShape); // Step shape
+  mxCellRenderer.registerShape('callout', CalloutShape);
 
   function StepShape() {
     mxActor.call(this);
@@ -794,7 +763,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('step', StepShape); // Hexagon shape
+  mxCellRenderer.registerShape('step', StepShape);
 
   function HexagonShape() {
     mxActor.call(this);
@@ -814,7 +783,7 @@
     this.addPoints(c, [new mxPoint(s, 0), new mxPoint(w - s, 0), new mxPoint(w, 0.5 * h), new mxPoint(w - s, h), new mxPoint(s, h), new mxPoint(0, 0.5 * h)], this.isRounded, arcSize, true);
   };
 
-  mxCellRenderer.registerShape('hexagon', HexagonShape); // Plus Shape
+  mxCellRenderer.registerShape('hexagon', HexagonShape);
 
   function PlusShape() {
     mxRectangleShape.call(this);
@@ -839,8 +808,7 @@
     mxRectangleShape.prototype.paintForeground.apply(this, arguments);
   };
 
-  mxCellRenderer.registerShape('plus', PlusShape); // Overrides painting of rhombus shape to allow for double style
-
+  mxCellRenderer.registerShape('plus', PlusShape);
   var mxRhombusPaintVertexShape = mxRhombus.prototype.paintVertexShape;
 
   mxRhombus.prototype.getLabelBounds = function (rect) {
@@ -863,14 +831,11 @@
       h -= 2 * margin;
 
       if (w > 0 && h > 0) {
-        c.setShadow(false); // Workaround for closure compiler bug where the lines with x and y above
-        // are removed if arguments is used as second argument in call below.
-
+        c.setShadow(false);
         mxRhombusPaintVertexShape.apply(this, [c, x, y, w, h]);
       }
     }
-  }; // CompositeShape
-
+  };
 
   function ExtendedShape() {
     mxRectangleShape.call(this);
@@ -906,10 +871,7 @@
         }
       }
 
-      c.setDashed(false); // Draws the symbols defined in the style. The symbols are
-      // numbered from 1...n. Possible postfixes are align,
-      // verticalAlign, spacing, arcSpacing, width, height
-
+      c.setDashed(false);
       var counter = 0;
       var shape = null;
 
@@ -950,10 +912,8 @@
             y2 += vspacing;
           }
 
-          c.save(); // Small hack to pass style along into subshape
-
-          var tmp = new shape(); // TODO: Clone style and override settings (eg. strokewidth)
-
+          c.save();
+          var tmp = new shape();
           tmp.style = this.style;
           shape.prototype.paintVertexShape.call(tmp, c, x2, y2, width, height);
           c.restore();
@@ -961,13 +921,12 @@
 
         counter++;
       } while (shape != null);
-    } // Paints glass effect
-
+    }
 
     mxRectangleShape.prototype.paintForeground.apply(this, arguments);
   };
 
-  mxCellRenderer.registerShape('ext', ExtendedShape); // Tape Shape, supports size style
+  mxCellRenderer.registerShape('ext', ExtendedShape);
 
   function MessageShape() {
     mxCylinder.call(this);
@@ -991,7 +950,7 @@
     }
   };
 
-  mxCellRenderer.registerShape('message', MessageShape); // UML Actor Shape
+  mxCellRenderer.registerShape('message', MessageShape);
 
   function UmlActorShape() {
     mxShape.call(this);
@@ -1001,29 +960,25 @@
   mxUtils.extend(UmlActorShape, mxShape);
 
   UmlActorShape.prototype.paintBackground = function (c, x, y, w, h) {
-    c.translate(x, y); // Head
-
+    c.translate(x, y);
     c.ellipse(w / 4, 0, w / 2, h / 4);
     c.fillAndStroke();
     c.begin();
     c.moveTo(w / 2, h / 4);
-    c.lineTo(w / 2, 2 * h / 3); // Arms
-
+    c.lineTo(w / 2, 2 * h / 3);
     c.moveTo(w / 2, h / 3);
     c.lineTo(0, h / 3);
     c.moveTo(w / 2, h / 3);
-    c.lineTo(w, h / 3); // Legs
-
+    c.lineTo(w, h / 3);
     c.moveTo(w / 2, 2 * h / 3);
     c.lineTo(0, h);
     c.moveTo(w / 2, 2 * h / 3);
     c.lineTo(w, h);
     c.end();
     c.stroke();
-  }; // Replaces existing actor shape
+  };
 
-
-  mxCellRenderer.registerShape('umlActor', UmlActorShape); // UML Boundary Shape
+  mxCellRenderer.registerShape('umlActor', UmlActorShape);
 
   function UmlBoundaryShape() {
     mxShape.call(this);
@@ -1037,26 +992,22 @@
   };
 
   UmlBoundaryShape.prototype.paintBackground = function (c, x, y, w, h) {
-    c.translate(x, y); // Base line
-
+    c.translate(x, y);
     c.begin();
     c.moveTo(0, h / 4);
     c.lineTo(0, h * 3 / 4);
     c.end();
-    c.stroke(); // Horizontal line
-
+    c.stroke();
     c.begin();
     c.moveTo(0, h / 2);
     c.lineTo(w / 6, h / 2);
     c.end();
-    c.stroke(); // Circle
-
+    c.stroke();
     c.ellipse(w / 6, 0, w * 5 / 6, h);
     c.fillAndStroke();
-  }; // Replaces existing actor shape
+  };
 
-
-  mxCellRenderer.registerShape('umlBoundary', UmlBoundaryShape); // UML Entity Shape
+  mxCellRenderer.registerShape('umlBoundary', UmlBoundaryShape);
 
   function UmlEntityShape() {
     mxEllipse.call(this);
@@ -1074,7 +1025,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('umlEntity', UmlEntityShape); // UML Destroy Shape
+  mxCellRenderer.registerShape('umlEntity', UmlEntityShape);
 
   function UmlDestroyShape() {
     mxShape.call(this);
@@ -1094,7 +1045,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('umlDestroy', UmlDestroyShape); // UML Control Shape
+  mxCellRenderer.registerShape('umlDestroy', UmlDestroyShape);
 
   function UmlControlShape() {
     mxShape.call(this);
@@ -1108,29 +1059,25 @@
   };
 
   UmlControlShape.prototype.paintBackground = function (c, x, y, w, h) {
-    c.translate(x, y); // Upper line
-
+    c.translate(x, y);
     c.begin();
     c.moveTo(w * 3 / 8, h / 8 * 1.1);
     c.lineTo(w * 5 / 8, 0);
     c.end();
-    c.stroke(); // Circle
-
+    c.stroke();
     c.ellipse(0, h / 8, w, h * 7 / 8);
     c.fillAndStroke();
   };
 
   UmlControlShape.prototype.paintForeground = function (c, x, y, w, h) {
-    // Lower line
     c.begin();
     c.moveTo(w * 3 / 8, h / 8 * 1.1);
     c.lineTo(w * 5 / 8, h / 4);
     c.end();
     c.stroke();
-  }; // Replaces existing actor shape
+  };
 
-
-  mxCellRenderer.registerShape('umlControl', UmlControlShape); // UML Lifeline Shape
+  mxCellRenderer.registerShape('umlControl', UmlControlShape);
 
   function UmlLifeline() {
     mxRectangleShape.call(this);
@@ -1182,7 +1129,7 @@
     mxRectangleShape.prototype.paintForeground.call(this, c, x, y, w, Math.min(h, size));
   };
 
-  mxCellRenderer.registerShape('umlLifeline', UmlLifeline); // UML Frame Shape
+  mxCellRenderer.registerShape('umlLifeline', UmlLifeline);
 
   function UmlFrame() {
     mxShape.call(this);
@@ -1286,13 +1233,13 @@
     }
   };
 
-  mxStyleRegistry.putValue('backbonePerimeter', mxPerimeter.BackbonePerimeter); // Callout Perimeter
+  mxStyleRegistry.putValue('backbonePerimeter', mxPerimeter.BackbonePerimeter);
 
   mxPerimeter.CalloutPerimeter = function (bounds, vertex, next, orthogonal) {
     return mxPerimeter.RectanglePerimeter(mxUtils.getDirectedBounds(bounds, new mxRectangle(0, 0, 0, Math.max(0, Math.min(bounds.height, parseFloat(mxUtils.getValue(vertex.style, 'size', CalloutShape.prototype.size)) * vertex.view.scale))), vertex.style), vertex, next, orthogonal);
   };
 
-  mxStyleRegistry.putValue('calloutPerimeter', mxPerimeter.CalloutPerimeter); // Parallelogram Perimeter
+  mxStyleRegistry.putValue('calloutPerimeter', mxPerimeter.CalloutPerimeter);
 
   mxPerimeter.ParallelogramPerimeter = function (bounds, vertex, next, orthogonal) {
     var size = ParallelogramShape.prototype.size;
@@ -1332,7 +1279,7 @@
     return mxUtils.getPerimeterPoint(points, p1, next);
   };
 
-  mxStyleRegistry.putValue('parallelogramPerimeter', mxPerimeter.ParallelogramPerimeter); // Trapezoid Perimeter
+  mxStyleRegistry.putValue('parallelogramPerimeter', mxPerimeter.ParallelogramPerimeter);
 
   mxPerimeter.TrapezoidPerimeter = function (bounds, vertex, next, orthogonal) {
     var size = TrapezoidShape.prototype.size;
@@ -1377,7 +1324,7 @@
     return mxUtils.getPerimeterPoint(points, p1, next);
   };
 
-  mxStyleRegistry.putValue('trapezoidPerimeter', mxPerimeter.TrapezoidPerimeter); // Step Perimeter
+  mxStyleRegistry.putValue('trapezoidPerimeter', mxPerimeter.TrapezoidPerimeter);
 
   mxPerimeter.StepPerimeter = function (bounds, vertex, next, orthogonal) {
     var fixed = mxUtils.getValue(vertex.style, 'fixedSize', '0') != '0';
@@ -1423,7 +1370,7 @@
     return mxUtils.getPerimeterPoint(points, p1, next);
   };
 
-  mxStyleRegistry.putValue('stepPerimeter', mxPerimeter.StepPerimeter); // Hexagon Perimeter 2 (keep existing one)
+  mxStyleRegistry.putValue('stepPerimeter', mxPerimeter.StepPerimeter);
 
   mxPerimeter.HexagonPerimeter2 = function (bounds, vertex, next, orthogonal) {
     var size = HexagonShape.prototype.size;
@@ -1463,7 +1410,7 @@
     return mxUtils.getPerimeterPoint(points, p1, next);
   };
 
-  mxStyleRegistry.putValue('hexagonPerimeter2', mxPerimeter.HexagonPerimeter2); // Provided Interface Shape (aka Lollipop)
+  mxStyleRegistry.putValue('hexagonPerimeter2', mxPerimeter.HexagonPerimeter2);
 
   function LollipopShape() {
     mxShape.call(this);
@@ -1485,7 +1432,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('lollipop', LollipopShape); // Required Interface Shape
+  mxCellRenderer.registerShape('lollipop', LollipopShape);
 
   function RequiresShape() {
     mxShape.call(this);
@@ -1513,7 +1460,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('requires', RequiresShape); // Required Interface Shape
+  mxCellRenderer.registerShape('requires', RequiresShape);
 
   function RequiredInterfaceShape() {
     mxShape.call(this);
@@ -1532,7 +1479,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('requiredInterface', RequiredInterfaceShape); // Provided and Required Interface Shape
+  mxCellRenderer.registerShape('requiredInterface', RequiredInterfaceShape);
 
   function ProvidedRequiredInterfaceShape() {
     mxShape.call(this);
@@ -1555,7 +1502,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('providedRequiredInterface', ProvidedRequiredInterfaceShape); // Component shape
+  mxCellRenderer.registerShape('providedRequiredInterface', ProvidedRequiredInterfaceShape);
 
   function ComponentShape() {
     mxCylinder.call(this);
@@ -1602,7 +1549,7 @@
     }
   };
 
-  mxCellRenderer.registerShape('component', ComponentShape); // State Shapes derives from double ellipse
+  mxCellRenderer.registerShape('component', ComponentShape);
 
   function StateShape() {
     mxDoubleEllipse.call(this);
@@ -1637,7 +1584,7 @@
   ;
   mxUtils.extend(StartStateShape, StateShape);
   StartStateShape.prototype.outerStroke = false;
-  mxCellRenderer.registerShape('startState', StartStateShape); // Link shape
+  mxCellRenderer.registerShape('startState', StartStateShape);
 
   function LinkShape() {
     mxArrowConnector.call(this);
@@ -1658,10 +1605,9 @@
 
   LinkShape.prototype.isArrowRounded = function () {
     return this.isRounded;
-  }; // Registers the link shape
+  };
 
-
-  mxCellRenderer.registerShape('link', LinkShape); // Generic arrow
+  mxCellRenderer.registerShape('link', LinkShape);
 
   function FlexArrowShape() {
     mxArrowConnector.call(this);
@@ -1684,10 +1630,9 @@
 
   FlexArrowShape.prototype.getEdgeWidth = function () {
     return mxUtils.getNumber(this.style, 'width', this.defaultWidth) + Math.max(0, this.strokewidth - 1);
-  }; // Registers the link shape
+  };
 
-
-  mxCellRenderer.registerShape('flexArrow', FlexArrowShape); // Manual Input shape
+  mxCellRenderer.registerShape('flexArrow', FlexArrowShape);
 
   function ManualInputShape() {
     mxActor.call(this);
@@ -1708,7 +1653,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('manualInput', ManualInputShape); // Internal storage
+  mxCellRenderer.registerShape('manualInput', ManualInputShape);
 
   function InternalStorageShape() {
     mxRectangleShape.call(this);
@@ -1746,7 +1691,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('internalStorage', InternalStorageShape); // Internal storage
+  mxCellRenderer.registerShape('internalStorage', InternalStorageShape);
 
   function CornerShape() {
     mxActor.call(this);
@@ -1755,7 +1700,7 @@
   ;
   mxUtils.extend(CornerShape, mxActor);
   CornerShape.prototype.dx = 20;
-  CornerShape.prototype.dy = 20; // Corner
+  CornerShape.prototype.dy = 20;
 
   CornerShape.prototype.redrawPath = function (c, x, y, w, h) {
     var dx = Math.max(0, Math.min(w, parseFloat(mxUtils.getValue(this.style, 'dx', this.dx))));
@@ -1766,7 +1711,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('corner', CornerShape); // Crossbar shape
+  mxCellRenderer.registerShape('corner', CornerShape);
 
   function CrossbarShape() {
     mxActor.call(this);
@@ -1787,7 +1732,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('crossbar', CrossbarShape); // Internal storage
+  mxCellRenderer.registerShape('crossbar', CrossbarShape);
 
   function TeeShape() {
     mxActor.call(this);
@@ -1796,7 +1741,7 @@
   ;
   mxUtils.extend(TeeShape, mxActor);
   TeeShape.prototype.dx = 20;
-  TeeShape.prototype.dy = 20; // Corner
+  TeeShape.prototype.dy = 20;
 
   TeeShape.prototype.redrawPath = function (c, x, y, w, h) {
     var dx = Math.max(0, Math.min(w, parseFloat(mxUtils.getValue(this.style, 'dx', this.dx))));
@@ -1808,7 +1753,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('tee', TeeShape); // Arrow
+  mxCellRenderer.registerShape('tee', TeeShape);
 
   function SingleArrowShape() {
     mxActor.call(this);
@@ -1829,7 +1774,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('singleArrow', SingleArrowShape); // Arrow
+  mxCellRenderer.registerShape('singleArrow', SingleArrowShape);
 
   function DoubleArrowShape() {
     mxActor.call(this);
@@ -1848,7 +1793,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('doubleArrow', DoubleArrowShape); // Data storage
+  mxCellRenderer.registerShape('doubleArrow', DoubleArrowShape);
 
   function DataStorageShape() {
     mxActor.call(this);
@@ -1869,7 +1814,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('dataStorage', DataStorageShape); // Or
+  mxCellRenderer.registerShape('dataStorage', DataStorageShape);
 
   function OrShape() {
     mxActor.call(this);
@@ -1886,7 +1831,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('or', OrShape); // Xor
+  mxCellRenderer.registerShape('or', OrShape);
 
   function XorShape() {
     mxActor.call(this);
@@ -1904,7 +1849,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('xor', XorShape); // Loop limit
+  mxCellRenderer.registerShape('xor', XorShape);
 
   function LoopLimitShape() {
     mxActor.call(this);
@@ -1925,7 +1870,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('loopLimit', LoopLimitShape); // Off page connector
+  mxCellRenderer.registerShape('loopLimit', LoopLimitShape);
 
   function OffPageConnectorShape() {
     mxActor.call(this);
@@ -1946,7 +1891,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('offPageConnector', OffPageConnectorShape); // Internal storage
+  mxCellRenderer.registerShape('offPageConnector', OffPageConnectorShape);
 
   function TapeDataShape() {
     mxEllipse.call(this);
@@ -1964,7 +1909,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('tapeData', TapeDataShape); // OrEllipseShape
+  mxCellRenderer.registerShape('tapeData', TapeDataShape);
 
   function OrEllipseShape() {
     mxEllipse.call(this);
@@ -1988,7 +1933,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('orEllipse', OrEllipseShape); // SumEllipseShape
+  mxCellRenderer.registerShape('orEllipse', OrEllipseShape);
 
   function SumEllipseShape() {
     mxEllipse.call(this);
@@ -2013,7 +1958,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('sumEllipse', SumEllipseShape); // SortShape
+  mxCellRenderer.registerShape('sumEllipse', SumEllipseShape);
 
   function SortShape() {
     mxRhombus.call(this);
@@ -2032,7 +1977,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('sortShape', SortShape); // CollateShape
+  mxCellRenderer.registerShape('sortShape', SortShape);
 
   function CollateShape() {
     mxEllipse.call(this);
@@ -2056,7 +2001,7 @@
     c.fillAndStroke();
   };
 
-  mxCellRenderer.registerShape('collate', CollateShape); // DimensionShape
+  mxCellRenderer.registerShape('collate', CollateShape);
 
   function DimensionShape() {
     mxEllipse.call(this);
@@ -2066,7 +2011,6 @@
   mxUtils.extend(DimensionShape, mxEllipse);
 
   DimensionShape.prototype.paintVertexShape = function (c, x, y, w, h) {
-    // Arrow size
     var al = 10;
     var cy = y + h - al / 2;
     c.begin();
@@ -2077,8 +2021,7 @@
     c.moveTo(x, cy);
     c.lineTo(x + al, cy + al / 2);
     c.moveTo(x, cy);
-    c.lineTo(x + w, cy); // Opposite side
-
+    c.lineTo(x + w, cy);
     c.moveTo(x + w, y);
     c.lineTo(x + w, y + h);
     c.moveTo(x + w, cy);
@@ -2089,7 +2032,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('dimension', DimensionShape); // PartialRectangleShape
+  mxCellRenderer.registerShape('dimension', DimensionShape);
 
   function PartialRectangleShape() {
     mxEllipse.call(this);
@@ -2139,7 +2082,7 @@
     }
   };
 
-  mxCellRenderer.registerShape('partialRectangle', PartialRectangleShape); // LineEllipseShape
+  mxCellRenderer.registerShape('partialRectangle', PartialRectangleShape);
 
   function LineEllipseShape() {
     mxEllipse.call(this);
@@ -2165,7 +2108,7 @@
     c.stroke();
   };
 
-  mxCellRenderer.registerShape('lineEllipse', LineEllipseShape); // Delay
+  mxCellRenderer.registerShape('lineEllipse', LineEllipseShape);
 
   function DelayShape() {
     mxActor.call(this);
@@ -2185,7 +2128,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('delay', DelayShape); // Cross Shape
+  mxCellRenderer.registerShape('delay', DelayShape);
 
   function CrossShape() {
     mxActor.call(this);
@@ -2218,7 +2161,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('cross', CrossShape); // Display
+  mxCellRenderer.registerShape('cross', CrossShape);
 
   function DisplayShape() {
     mxActor.call(this);
@@ -2241,7 +2184,7 @@
     c.end();
   };
 
-  mxCellRenderer.registerShape('display', DisplayShape); // FilledEdge shape
+  mxCellRenderer.registerShape('display', DisplayShape);
 
   function FilledEdge() {
     mxConnector.call(this);
@@ -2252,13 +2195,11 @@
   FilledEdge.prototype.origPaintEdgeShape = FilledEdge.prototype.paintEdgeShape;
 
   FilledEdge.prototype.paintEdgeShape = function (c, pts, rounded) {
-    // Markers modify incoming points array
     var temp = [];
 
     for (var i = 0; i < pts.length; i++) {
       temp.push(mxUtils.clone(pts[i]));
-    } // paintEdgeShape resets dashed to false
-
+    }
 
     var dashed = c.state.dashed;
     var fixDash = c.state.fixDash;
@@ -2274,10 +2215,9 @@
         FilledEdge.prototype.origPaintEdgeShape.apply(this, [c, pts, rounded]);
       }
     }
-  }; // Registers the link shape
+  };
 
-
-  mxCellRenderer.registerShape('filledEdge', FilledEdge); // Implements custom colors for shapes
+  mxCellRenderer.registerShape('filledEdge', FilledEdge);
 
   if (typeof StyleFormatPanel !== 'undefined') {
     (function () {
@@ -2298,8 +2238,7 @@
         return result;
       };
     })();
-  } // Registers and defines the custom marker
-
+  }
 
   mxMarker.addMarker('dash', function (c, shape, type, pe, unitX, unitY, size, source, sw, filled) {
     var nx = unitX * (size + sw + 1);
@@ -2310,8 +2249,7 @@
       c.lineTo(pe.x + ny / 2 - 3 * nx / 2, pe.y - 3 * ny / 2 - nx / 2);
       c.stroke();
     };
-  }); // Registers and defines the custom marker
-
+  });
   mxMarker.addMarker('cross', function (c, shape, type, pe, unitX, unitY, size, source, sw, filled) {
     var nx = unitX * (size + sw + 1);
     var ny = unitY * (size + sw + 1);
@@ -2349,10 +2287,8 @@
   mxMarker.addMarker('circlePlus', function (c, shape, type, pe, unitX, unitY, size, source, sw, filled) {
     var pt = pe.clone();
     var fn = circleMarker.apply(this, arguments);
-    var nx = unitX * (size + 2 * sw); // (size + sw + 1);
-
-    var ny = unitY * (size + 2 * sw); //(size + sw + 1);
-
+    var nx = unitX * (size + 2 * sw);
+    var ny = unitY * (size + 2 * sw);
     return function () {
       fn.apply(this, arguments);
       c.begin();
@@ -2364,9 +2300,6 @@
     };
   });
   mxMarker.addMarker('async', function (c, shape, type, pe, unitX, unitY, size, source, sw, filled) {
-    // The angle of the forward facing arrow sides against the x axis is
-    // 26.565 degrees, 1/sin(26.565) = 2.236 / 2 = 1.118 ( / 2 allows for
-    // only half the strokewidth is processed ).
     var endOffsetX = unitX * sw * 1.118;
     var endOffsetY = unitY * sw * 1.118;
     unitX = unitX * (size + sw);
@@ -2423,9 +2356,6 @@
   mxMarker.addMarker('openAsync', createOpenAsyncArrow(2));
 
   function arrow(canvas, shape, type, pe, unitX, unitY, size, source, sw, filled) {
-    // The angle of the forward facing arrow sides against the x axis is
-    // 26.565 degrees, 1/sin(26.565) = 2.236 / 2 = 1.118 ( / 2 allows for
-    // only half the strokewidth is processed ).
     var endOffsetX = unitX * sw * 1.118;
     var endOffsetY = unitY * sw * 1.118;
     unitX = unitX * (size + sw);
@@ -2454,8 +2384,7 @@
         canvas.stroke();
       }
     };
-  } // Handlers are only added if mxVertexHandler is defined (ie. not in embedded graph)
-
+  }
 
   if (typeof mxVertexHandler !== 'undefined') {
     var createHandle = function createHandle(state, keys, getPositionFn, setPositionFn, ignoreGrid, redrawEdges) {
@@ -2469,14 +2398,13 @@
 
       handle.getPosition = getPositionFn;
       handle.setPosition = setPositionFn;
-      handle.ignoreGrid = ignoreGrid != null ? ignoreGrid : true; // Overridden to update connected edges
+      handle.ignoreGrid = ignoreGrid != null ? ignoreGrid : true;
 
       if (redrawEdges) {
         var positionChanged = handle.positionChanged;
 
         handle.positionChanged = function () {
-          positionChanged.apply(this, arguments); // Redraws connected edges TODO: Include child edges
-
+          positionChanged.apply(this, arguments);
           state.view.invalidate(this.state.cell);
           state.view.validate();
         };
@@ -2648,7 +2576,6 @@
         return [createEdgeWidthHandle(state, true, spacing), createEdgeWidthHandle(state, false, spacing)];
       },
       'flexArrow': function flexArrow(state) {
-        // Do not use state.shape.startSize/endSize since it is cached
         var tol = state.view.graph.gridSize / state.view.scale;
         var handles = [];
 
@@ -2661,12 +2588,11 @@
             var w = Math.sqrt(mxUtils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
             var l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
             state.style[mxConstants.STYLE_STARTSIZE] = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
-            state.style['width'] = Math.round(w * 2) / state.view.scale; // Applies to opposite side
+            state.style['width'] = Math.round(w * 2) / state.view.scale;
 
             if (mxEvent.isControlDown(me.getEvent())) {
               state.style[mxConstants.STYLE_ENDSIZE] = state.style[mxConstants.STYLE_STARTSIZE];
-            } // Snaps to end geometry
-
+            }
 
             if (!mxEvent.isAltDown(me.getEvent())) {
               if (Math.abs(parseFloat(state.style[mxConstants.STYLE_STARTSIZE]) - parseFloat(state.style[mxConstants.STYLE_ENDSIZE])) < tol / 6) {
@@ -2682,13 +2608,12 @@
             var w = Math.sqrt(mxUtils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
             var l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
             state.style[mxConstants.STYLE_STARTSIZE] = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
-            state.style['startWidth'] = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale; // Applies to opposite side
+            state.style['startWidth'] = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale;
 
             if (mxEvent.isControlDown(me.getEvent())) {
               state.style[mxConstants.STYLE_ENDSIZE] = state.style[mxConstants.STYLE_STARTSIZE];
               state.style['endWidth'] = state.style['startWidth'];
-            } // Snaps to endWidth
-
+            }
 
             if (!mxEvent.isAltDown(me.getEvent())) {
               if (Math.abs(parseFloat(state.style[mxConstants.STYLE_STARTSIZE]) - parseFloat(state.style[mxConstants.STYLE_ENDSIZE])) < tol / 6) {
@@ -2711,12 +2636,11 @@
             var w = Math.sqrt(mxUtils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
             var l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
             state.style[mxConstants.STYLE_ENDSIZE] = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
-            state.style['width'] = Math.round(w * 2) / state.view.scale; // Applies to opposite side
+            state.style['width'] = Math.round(w * 2) / state.view.scale;
 
             if (mxEvent.isControlDown(me.getEvent())) {
               state.style[mxConstants.STYLE_STARTSIZE] = state.style[mxConstants.STYLE_ENDSIZE];
-            } // Snaps to start geometry
-
+            }
 
             if (!mxEvent.isAltDown(me.getEvent())) {
               if (Math.abs(parseFloat(state.style[mxConstants.STYLE_ENDSIZE]) - parseFloat(state.style[mxConstants.STYLE_STARTSIZE])) < tol / 6) {
@@ -2732,13 +2656,12 @@
             var w = Math.sqrt(mxUtils.ptSegDistSq(p0.x, p0.y, p1.x, p1.y, pt.x, pt.y));
             var l = mxUtils.ptLineDist(p0.x, p0.y, p0.x + ny, p0.y - nx, pt.x, pt.y);
             state.style[mxConstants.STYLE_ENDSIZE] = Math.round((l - state.shape.strokewidth) * 100 / 3) / 100 / state.view.scale;
-            state.style['endWidth'] = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale; // Applies to opposite side
+            state.style['endWidth'] = Math.max(0, Math.round(w * 2) - state.shape.getEdgeWidth()) / state.view.scale;
 
             if (mxEvent.isControlDown(me.getEvent())) {
               state.style[mxConstants.STYLE_STARTSIZE] = state.style[mxConstants.STYLE_ENDSIZE];
               state.style['startWidth'] = state.style['endWidth'];
-            } // Snaps to start geometry
-
+            }
 
             if (!mxEvent.isAltDown(me.getEvent())) {
               if (Math.abs(parseFloat(state.style[mxConstants.STYLE_ENDSIZE]) - parseFloat(state.style[mxConstants.STYLE_STARTSIZE])) < tol / 6) {
@@ -2975,17 +2898,13 @@
       'loopLimit': createCubeHandleFunction(0.5, LoopLimitShape.prototype.size, true),
       'trapezoid': createTrapezoidHandleFunction(0.5),
       'parallelogram': createTrapezoidHandleFunction(1)
-    }; // Exposes custom handles
-
+    };
     mxGraph.createHandle = createHandle;
     mxGraph.handleFactory = handleFactory;
 
     mxVertexHandler.prototype.createCustomHandles = function () {
-      // Not rotatable means locked
       if (this.state.view.graph.getSelectionCount() == 1) {
-        if (this.graph.isCellRotatable(this.state.cell)) // LATER: Make locked state independent of rotatable flag, fix toggle if default is false
-          //if (this.graph.isCellResizable(this.state.cell) || this.graph.isCellMovable(this.state.cell))
-          {
+        if (this.graph.isCellRotatable(this.state.cell)) {
             var name = this.state.style['shape'];
 
             if (mxCellRenderer.defaultShapes[name] == null && mxStencilRegistry.getStencil(name) == null) {
@@ -3025,7 +2944,6 @@
       return null;
     };
   } else {
-    // Dummy entries to avoid NPE in embed mode
     mxGraph.createHandle = function () {};
 
     mxGraph.handleFactory = {};
@@ -3074,8 +2992,7 @@
     if (pe != null && p0 != null) {
       var isoLineTo = function isoLineTo(x, y, ignoreFirst) {
         var c1 = x - last.x;
-        var c2 = y - last.y; // Solves for isometric base vectors
-
+        var c2 = y - last.y;
         var h = (b2 * c1 - b1 * c2) / (a1 * b2 - a2 * b1);
         var v = (a2 * c1 - a1 * c2) / (a2 * b1 - a1 * b2);
 
@@ -3121,8 +3038,7 @@
     }
 
     return graphCreateEdgeHandler.apply(this, arguments);
-  }; // Defines connection points for all shapes
-
+  };
 
   IsoRectangleShape.prototype.constraints = [];
   IsoCubeShape.prototype.constraints = [];

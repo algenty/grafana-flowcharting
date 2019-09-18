@@ -15,16 +15,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-/**
- *States Handler class
- *
- * @export
- * @class StateHandler
- */
-var StateHandler =
-/*#__PURE__*/
-function () {
-  /** @ngInject */
+var StateHandler = function () {
   function StateHandler(xgraph, ctrl) {
     _classCallCheck(this, StateHandler);
 
@@ -35,19 +26,6 @@ function () {
     this.xgraph = xgraph;
     this.initStates(this.xgraph, ctrl.rulesHandler.getRules());
   }
-  /**
-   * Init states
-   *
-   * @param {XGraph} xgraph
-   * @memberof StateHandler
-   */
-  // initStates(xgraph, rules) {
-  //   u.log(1, 'StateHandler.initStates()');
-  //   this.xgraph = xgraph;
-  //   this.states = [];
-  //   this.updateStates(rules);
-  // }
-
 
   _createClass(StateHandler, [{
     key: "initStates",
@@ -63,14 +41,6 @@ function () {
         _this.addState(mxcell);
       });
     }
-    /**
-     *Return states array for a rule
-     *
-     * @param {Rule} rule - rule mapping
-     * @returns {Array<State>}
-     * @memberof StateHandler
-     */
-
   }, {
     key: "getStatesForRule",
     value: function getStatesForRule(rule) {
@@ -80,15 +50,13 @@ function () {
       var xgraph = this.xgraph;
       this.states.forEach(function (state) {
         var mxcell = state.mxcell;
-        var found = false; // SHAPES
-
+        var found = false;
         name = xgraph.getValuePropOfMxCell(rule.data.shapeProp, mxcell);
 
         if (rule.matchShape(name)) {
           result.push(state);
           found = true;
-        } // TEXTS
-
+        }
 
         if (!found) {
           name = xgraph.getValuePropOfMxCell(rule.data.textProp, mxcell);
@@ -97,8 +65,7 @@ function () {
             result.push(state);
             found = true;
           }
-        } // LINKS
-
+        }
 
         if (!found) {
           name = xgraph.getValuePropOfMxCell(rule.data.linkProp, mxcell);
@@ -111,15 +78,6 @@ function () {
       });
       return result;
     }
-    /**
-     * Update States : Add or remove state in states when rules changed
-     *
-     * @param {XGraph} xgraph
-     * @param {Array<Rule>} rules
-     * @memberof StateHandler
-     */
-    // OLD METHOD : see getStatesForRule
-
   }, {
     key: "updateStates",
     value: function updateStates(rules) {
@@ -130,22 +88,11 @@ function () {
         rule.states = _this2.getStatesForRule(rule);
       });
     }
-    /**
-     * Return array of state
-     * @returns {Array} Array of state object
-     */
-
   }, {
     key: "getStates",
     value: function getStates() {
       return this.states;
     }
-    /**
-     * Find state by Id
-     * @param  {string} cellId - Id of cell
-     * @returns {state}
-     */
-
   }, {
     key: "getState",
     value: function getState(cellId) {
@@ -162,14 +109,6 @@ function () {
 
       return foundState;
     }
-    /**
-     * Add a state
-     *
-     * @param {mxCell} mxcell
-     * @returns {State} created state
-     * @memberof StateHandler
-     */
-
   }, {
     key: "addState",
     value: function addState(mxcell) {
@@ -182,37 +121,11 @@ function () {
 
       return state;
     }
-    /**
-     * Remove state
-     *
-     * @param {mxCell} mxcell
-     * @memberof StateHandler
-     */
-    // NOT USED
-    // removeState(mxcell) {
-    //   this.states = _.without(this.states, mxcell);
-    // }
-
-    /**
-     * Count number of state
-     *
-     * @returns {Number}
-     * @memberof StateHandler
-     */
-
   }, {
     key: "countStates",
     value: function countStates() {
       return this.states.length;
     }
-    /**
-     * Count number of state with level
-     *
-     * @param {Number} level - 0 for OK | 1 for Warning | 2 for Error
-     * @returns {Number}
-     * @memberof StateHandler
-     */
-
   }, {
     key: "countStatesWithLevel",
     value: function countStatesWithLevel(level) {
@@ -222,10 +135,6 @@ function () {
       });
       return count;
     }
-    /**
-     * Restore initial status and prepare states object
-     */
-
   }, {
     key: "prepare",
     value: function prepare() {
@@ -233,12 +142,6 @@ function () {
         state.prepare();
       });
     }
-    /**
-     * Change states according to rules and datas from grafana
-     * @param  {Array<Rule>} rules - Array of Rule object
-     * @param  {Array<Serie>} series - Array of serie object
-     */
-
   }, {
     key: "setStates",
     value: function setStates(rules, series) {
@@ -258,10 +161,6 @@ function () {
         });
       });
     }
-    /**
-     * Apply color and text
-     */
-
   }, {
     key: "applyStates",
     value: function applyStates() {

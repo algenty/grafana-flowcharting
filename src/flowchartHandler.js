@@ -5,8 +5,6 @@ import Flowchart from './flowchart_class';
  * Class FlowchartHandler
  */
 export default class FlowchartHandler {
-  /** @ngInject */
-
   /**
    *Creates an instance of FlowchartHandler to handle flowchart
    * @param {*} $scope - angular scope

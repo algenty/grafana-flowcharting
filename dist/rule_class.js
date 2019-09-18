@@ -25,23 +25,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-/**
- *Rule definition
- *
- * @export
- * @class Rule
- */
-var Rule =
-/*#__PURE__*/
-function () {
-  /** @ngInject */
-
-  /**
-   *Creates an instance of Rule.
-   * @param {string} pattern
-   * @param {*} data
-   * @memberof Rule
-   */
+var Rule = function () {
   function Rule(pattern, data) {
     _classCallCheck(this, Rule);
 
@@ -58,13 +42,6 @@ function () {
     var LEVEL_WARN = 1;
     var LEVEL_ERROR = 2;
   }
-  /**
-   * return data of rule
-   *
-   * @returns {data} 
-   * @memberof Rule
-   */
-
 
   _createClass(Rule, [{
     key: "getData",
@@ -76,13 +53,6 @@ function () {
     value: function _export() {
       return JSON.stringify(this);
     }
-    /**
-     * import data in rule
-     *
-     * @param {data} obj
-     * @memberof Rule
-     */
-
   }, {
     key: "import",
     value: function _import(obj) {
@@ -115,11 +85,9 @@ function () {
       this.data.tooltipLabel = obj.tooltipLabel !== undefined ? obj.tooltipLabel : this.data.alias;
       this.data.tooltipColors = obj.tooltipColors !== undefined ? obj.tooltipColors : false;
       this.data.tooltipOn = obj.tooltipOn !== undefined ? obj.tooltipOn : 'a';
-      var maps = []; // SHAPES
-
+      var maps = [];
       this.data.shapeProp = obj.shapeProp || 'id';
-      this.data.shapeData = []; // For 0.2.0
-
+      this.data.shapeData = [];
       maps = [];
       if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) maps = obj.shapeMaps;else maps = obj.shapeData;
 
@@ -133,12 +101,10 @@ function () {
 
           _this.data.shapeData.push(newData);
         });
-      } // TEXT
-
+      }
 
       this.data.textProp = obj.textProp || 'id';
-      this.data.textData = []; // For 0.2.0
-
+      this.data.textData = [];
       maps = [];
       if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) maps = obj.textMaps;else maps = obj.textData;
 
@@ -152,8 +118,7 @@ function () {
 
           _this.data.textData.push(newData);
         });
-      } // LINK
-
+      }
 
       this.data.linkProp = obj.linkProp || 'id';
       this.data.linkData = [];
@@ -170,8 +135,7 @@ function () {
         });
       }
 
-      this.data.mappingType = obj.mappingType || 1; // VALUES
-
+      this.data.mappingType = obj.mappingType || 1;
       this.data.valueData = [];
 
       if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
@@ -184,8 +148,7 @@ function () {
 
           _this.data.valueData.push(newData);
         });
-      } // RANGE
-
+      }
 
       this.data.rangeData = [];
 
@@ -202,24 +165,11 @@ function () {
 
       this.data.sanitize = obj.sanitize || false;
     }
-    /**
-     *return uniq id of rule
-     *
-     * @returns
-     * @memberof Rule
-     */
-
   }, {
     key: "getId",
     value: function getId() {
       return this.id;
     }
-    /**
-     *Invert color order
-     *
-     * @memberof Rule
-     */
-
   }, {
     key: "invertColorOrder",
     value: function invertColorOrder() {
@@ -228,18 +178,7 @@ function () {
       ref[0] = ref[2];
       ref[2] = copy;
       if (this.data.invert) this.data.invert = false;else this.data.invert = true;
-    } //
-    // Conditions
-    //
-
-    /**
-     *Return true or false for condition to colorize
-     *
-     * @param {number} level
-     * @returns
-     * @memberof Rule
-     */
-
+    }
   }, {
     key: "toColorize",
     value: function toColorize(level) {
@@ -249,33 +188,15 @@ function () {
       if (this.data.colorOn === 'wc' && level >= 1) return true;
       return false;
     }
-    /**
-     *Return true or false for condition to change label
-     *
-     * @param {number} level
-     * @returns
-     * @memberof Rule
-     */
-
   }, {
     key: "toLabelize",
     value: function toLabelize(level) {
-      // if (this.data.textOn === 'wmd' && level > 0) return true;
-      // if (this.data.textOn === 'wmd' && level === -1) return false;
       if (this.data.textOn === 'wmd') return true;
       if (this.data.textOn === 'n') return false;
       if (this.data.textOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
       if (this.data.textOn === 'co' && this.getThresholdLevel(value) >= 2) return true;
       return false;
     }
-    /**
-     *Return true or false for condition to display icon warning
-     *
-     * @param {level} level
-     * @returns
-     * @memberof Rule
-     */
-
   }, {
     key: "toIconize",
     value: function toIconize(level) {
@@ -283,14 +204,6 @@ function () {
       if (this.data.overlayIcon === true && level >= 1) return true;
       return false;
     }
-    /**
-     *Return true or false for condition to add/replace link
-     *
-     * @param {number} level
-     * @returns
-     * @memberof Rule
-     */
-
   }, {
     key: "toLinkable",
     value: function toLinkable(level) {
@@ -300,14 +213,6 @@ function () {
       if (this.data.linkOn === 'wc' && level >= 1) return true;
       return false;
     }
-    /**
-     *Return true or false for condition to display tooltip with values
-     *
-     * @param {number} level
-     * @returns
-     * @memberof Rule
-     */
-
   }, {
     key: "toTooltipize",
     value: function toTooltipize(level) {
@@ -316,33 +221,12 @@ function () {
       if (this.data.tooltipOn === 'a') return true;
       if (this.data.tooltipOn === 'wc' && level >= 1) return true;
       return false;
-    } //
-    // Series
-    //
-
-    /**
-     *Return boolean if serie is matched by rule
-     *
-     * @param {*} serie
-     * @returns
-     * @memberof Rule
-     */
-
+    }
   }, {
     key: "matchSerie",
     value: function matchSerie(serie) {
       return u.matchString(serie.alias, this.data.pattern);
-    } //
-    // SHAPE MAPS
-    //
-
-    /**
-     *Add new shape for rule
-     *
-     * @param {*} pattern
-     * @memberof Rule
-     */
-
+    }
   }, {
     key: "addShapeMap",
     value: function addShapeMap(pattern) {
@@ -352,52 +236,22 @@ function () {
       this.shapeMaps.push(m);
       this.data.shapeData.push(data);
     }
-    /**
-     *Remove shape for rule
-     *
-     * @param {number} index
-     * @memberof Rule
-     */
-
   }, {
     key: "removeShapeMap",
     value: function removeShapeMap(index) {
       this.data.shapeData.splice(index, 1);
       this.shapeMaps.splice(index, 1);
     }
-    /**
-     *Return shape objet in index position
-     *
-     * @param {number} index
-     * @returns {ShapeMap}
-     * @memberof Rule
-     */
-
   }, {
     key: "getShapeMap",
     value: function getShapeMap(index) {
       return this.shapeMaps[index];
     }
-    /**
-     *Return all ShapeMaps
-     *
-     * @returns {Array<ShapeMap>}
-     * @memberof Rule
-     */
-
   }, {
     key: "getShapeMaps",
     value: function getShapeMaps() {
       return this.shapeMaps;
     }
-    /**
-     *Return bool if shape name (value|id) is in rule
-     *
-     * @param {string} pattern
-     * @returns
-     * @memberof Rule
-     */
-
   }, {
     key: "matchShape",
     value: function matchShape(pattern) {
@@ -406,10 +260,7 @@ function () {
         if (element.match(pattern)) found = true;
       });
       return found;
-    } //
-    // TEXT MAPS
-    //
-
+    }
   }, {
     key: "addTextMap",
     value: function addTextMap(pattern) {
@@ -443,10 +294,7 @@ function () {
         if (element.match(pattern)) found = true;
       });
       return found;
-    } //
-    // LINK MAPS
-    //
-
+    }
   }, {
     key: "addLinkMap",
     value: function addLinkMap(pattern) {
@@ -481,10 +329,7 @@ function () {
         if (element.match(pattern)) found = true;
       });
       return found;
-    } //
-    // STRING VALUE MAPS
-    //
-
+    }
   }, {
     key: "addValueMap",
     value: function addValueMap(value, text) {
@@ -509,10 +354,7 @@ function () {
     key: "getValueMaps",
     value: function getValueMaps() {
       return this.valueMaps;
-    } //
-    // STRING RANGE VALUE MAPS
-    //
-
+    }
   }, {
     key: "addRangeMap",
     value: function addRangeMap(from, to, text) {
@@ -546,18 +388,7 @@ function () {
     key: "showRangeMap",
     value: function showRangeMap(index) {
       this.rangeMaps[index].show();
-    } //
-    // Format value
-    //
-
-    /**
-     *Get color according to value
-     *
-     * @param {*} value
-     * @returns {string} html color
-     * @memberof Rule
-     */
-
+    }
   }, {
     key: "getColorForValue",
     value: function getColorForValue(value) {
@@ -573,14 +404,6 @@ function () {
 
       return _.first(this.data.colors);
     }
-    /**
-     *Get color according level (-1,0,1,2)
-     *
-     * @param {*} level
-     * @returns
-     * @memberof Rule
-     */
-
   }, {
     key: "getColorForLevel",
     value: function getColorForLevel(level) {
@@ -590,14 +413,6 @@ function () {
       if (level <= 0) return colors[0];else if (colors[level] !== undefined) return colors[level];
       return _.first(colors);
     }
-    /**
-     * Return Level according to value and rule options
-     *
-     * @param {float} value
-     * @returns 0, 1 or 2
-     * @memberof Rule
-     */
-
   }, {
     key: "getThresholdLevel",
     value: function getThresholdLevel(value) {
@@ -605,7 +420,7 @@ function () {
         var thresholdLevel = 0;
         var thresholds = this.data.thresholds;
         if (thresholds === undefined || thresholds.length === 0) return -1;
-        if (thresholds.length !== 2) return -1; // non invert
+        if (thresholds.length !== 2) return -1;
 
         if (!this.data.invert) {
           thresholdLevel = 2;
@@ -659,7 +474,6 @@ function () {
   }, {
     key: "getFormattedValue",
     value: function getFormattedValue(value) {
-      // Number
       if (this.data.type === 'number') {
         if (!_.isFinite(value)) return 'Invalid Number';
 
@@ -711,10 +525,7 @@ function () {
           value = value[0];
         }
 
-        var date = (0, _moment["default"])(value); // if (this.dashboard.isTimezoneUtc()) {
-        //     date = date.utc();
-        // }
-
+        var date = (0, _moment["default"])(value);
         return date.format(this.data.dateFormat);
       }
 
@@ -754,23 +565,16 @@ function () {
         return 0;
       }
 
-      return Math.max(0, // Number of digits right of decimal point.
-      (match[1] ? match[1].length : 0) - ( // Adjust for scientific notation.
-      match[2] ? +match[2] : 0));
+      return Math.max(0, (match[1] ? match[1].length : 0) - (match[2] ? +match[2] : 0));
     }
   }]);
 
   return Rule;
-}(); //
-// ShapeMap Class
-//
-
+}();
 
 exports["default"] = Rule;
 
-var ShapeMap =
-/*#__PURE__*/
-function () {
+var ShapeMap = function () {
   function ShapeMap(pattern, data) {
     _classCallCheck(this, ShapeMap);
 
@@ -830,14 +634,9 @@ function () {
   }]);
 
   return ShapeMap;
-}(); //
-// TextMap Class
-//
+}();
 
-
-var TextMap =
-/*#__PURE__*/
-function () {
+var TextMap = function () {
   function TextMap(pattern, data) {
     _classCallCheck(this, TextMap);
 
@@ -890,14 +689,9 @@ function () {
   }]);
 
   return TextMap;
-}(); //
-// LinkMap Class
-//
+}();
 
-
-var LinkMap =
-/*#__PURE__*/
-function () {
+var LinkMap = function () {
   function LinkMap(pattern, data) {
     _classCallCheck(this, LinkMap);
 
@@ -950,14 +744,9 @@ function () {
   }]);
 
   return LinkMap;
-}(); //
-// RangeMap Class
-//
+}();
 
-
-var RangeMap =
-/*#__PURE__*/
-function () {
+var RangeMap = function () {
   function RangeMap(from, to, text, data) {
     _classCallCheck(this, RangeMap);
 
@@ -1045,14 +834,9 @@ function () {
   }]);
 
   return RangeMap;
-}(); //
-// ValueMap Class
-//
+}();
 
-
-var ValueMap =
-/*#__PURE__*/
-function () {
+var ValueMap = function () {
   function ValueMap(value, text, data) {
     _classCallCheck(this, ValueMap);
 
