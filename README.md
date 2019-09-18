@@ -66,6 +66,7 @@ https://github.com/algenty/grafana-flowcharting
 
 ## [[0.3.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.3.0.zip) - 2019-05-07
 ### Added
+
   /!\ Possible breaking change with 0.2.0 and 0.2.5 but it will compatible with next release.  
     
   - Migration process for next release.
