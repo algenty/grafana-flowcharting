@@ -18,10 +18,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var MappingOptionsCtrl =
-/*#__PURE__*/
-function () {
-  /** @ngInject */
+var MappingOptionsCtrl = function () {
   function MappingOptionsCtrl($scope) {
     var _this = this;
 
@@ -96,8 +93,7 @@ function () {
     }];
     this.propTypes = [{
       text: 'Id',
-      value: 'id' // { text: "Value", value: "value" }
-
+      value: 'id'
     }];
     this.textPattern = '/.*/';
     this.metricTypes = [{
@@ -232,14 +228,6 @@ function () {
       this.flowchartHandler.ruleChanged();
       this.render();
     }
-    /**
-     * Add Color
-     *
-     * @param {Number} ruleIndex
-     * @param {Number} colorIndex
-     * @memberof MappingOptionsCtrl
-     */
-
   }, {
     key: "onColorChange",
     value: function onColorChange(ruleIndex, colorIndex) {
@@ -253,12 +241,6 @@ function () {
         _this2.onRulesChange();
       };
     }
-    /**
-     * Display cell selection in graph
-     * @param  {} prop
-     * @param  {} value
-     */
-
   }, {
     key: "selectCell",
     value: function selectCell(prop, value) {
@@ -266,12 +248,6 @@ function () {
       var xgraph = flowchart.getXGraph();
       xgraph.selectMxCells(prop, value);
     }
-    /**
-     * Undisplay cell selection
-     *
-     * @memberof MappingOptionsCtrl
-     */
-
   }, {
     key: "unselectCell",
     value: function unselectCell() {
@@ -283,8 +259,6 @@ function () {
 
   return MappingOptionsCtrl;
 }();
-/** @ngInject */
-
 
 exports.MappingOptionsCtrl = MappingOptionsCtrl;
 

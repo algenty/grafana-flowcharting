@@ -14,10 +14,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var FlowchartOptionsCtrl =
-/*#__PURE__*/
-function () {
-  /** @ngInject */
+var FlowchartOptionsCtrl = function () {
   function FlowchartOptionsCtrl($scope) {
     _classCallCheck(this, FlowchartOptionsCtrl);
 
@@ -30,38 +27,20 @@ function () {
     this.sourceTypes = [{
       text: 'XML Content',
       value: 'xml'
-    }]; //,{ text: 'CSV', value: 'csv' }];
+    }];
   }
-  /**
-   *Render
-   *
-   * @memberof FlowchartOptionsCtrl
-   */
-
 
   _createClass(FlowchartOptionsCtrl, [{
     key: "render",
     value: function render() {
       this.flowchartHandler.render();
     }
-    /**
-     * onSourceChange event when source changes
-     *
-     * @memberof FlowchartOptionsCtrl
-     */
-
   }, {
     key: "onSourceChange",
     value: function onSourceChange() {
       this.flowchartHandler.sourceChanged();
       this.render();
     }
-    /**
-     * onOptionChange event when options change
-     *
-     * @memberof FlowchartOptionsCtrl
-     */
-
   }, {
     key: "onOptionChange",
     value: function onOptionChange() {
@@ -69,14 +48,6 @@ function () {
       this.flowchartHandler.optionChanged();
       this.render();
     }
-    /**
-     * Open graph in index in draw.io
-     *
-     * @param {Number} index - index of graph
-     * @memberof FlowchartOptionsCtrl
-     * @see flowchartHandler:openDrawEditor
-     */
-
   }, {
     key: "edit",
     value: function edit(index) {
@@ -91,8 +62,6 @@ function () {
 
   return FlowchartOptionsCtrl;
 }();
-/** @ngInject */
-
 
 exports.FlowchartOptionsCtrl = FlowchartOptionsCtrl;
 

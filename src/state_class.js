@@ -216,7 +216,6 @@ export default class State {
     });
   }
 
-
   /**
    *Return current html color for a style
    *
@@ -434,24 +433,24 @@ export default class State {
   restore() {
     this.unsetState();
     this.applyShape();
-    this.applyText()
+    this.applyText();
     this.applyLink();
     this.changed = false;
     this.changedShape = false;
     this.changedText = false;
     this.changedLink = false;
-
   }
 
   prepare() {
-    // this.unsetState();
-    this.lastChange = null;
-    this.unsetLevel();
-    this.unsetTooltip();
-    this.matched = false;
-    this.matchedShape = false;
-    this.matchedText = false;
-    this.matchedLink = false;
-    this.tooltips = [];
+    if (this.changed) {
+      this.lastChange = null;
+      this.unsetLevel();
+      this.unsetTooltip();
+      this.matched = false;
+      this.matchedShape = false;
+      this.matchedText = false;
+      this.matchedLink = false;
+      this.tooltips = [];
+    }
   }
 }

@@ -43,8 +43,7 @@ plugin.getName = function () {
 
 plugin.getPartialPath = function () {
   return this.partialPath;
-}; // eslint-disable-next-line func-names
-
+};
 
 plugin.popover = function (text, tagBook, tagImage) {
   var url = this.repository;
