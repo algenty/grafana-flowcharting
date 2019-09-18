@@ -122,20 +122,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # Cooming soon/Roadmap
 
 ## 1.0 Pull request
-  - Import Libs shapes from draw.io or custom libs. 
-  - Display tooltip
-  - Inverse stroke color for connector/edge to see it according theme.
-  - Export SVG options.
-  - Add data to tooltip (TooltipOn & mapping).
-  - Use variables/templates in graph.
-  - Add custom stencils/libs from draw.io
-  - Only dark theme is supported at this time
-  - Url source not implemented
-  - SVG export not implemented
+  - [ ] Custom libs. 
+  - [X] Display tooltip (done in 0.4.0)
+  - [ ] Export SVG options
+  - [X] Add data in tooltip (done in 0.4.0)
+  - [X] Use variables/templates in graph (done in 0.4.0)
+  - [X] Add custom stencils/libs from draw.io (done in 0.4.0)
+  - [ ] Support light theme
+  - [X] Url source download (done in 0.4.0)
+  - [ ] SVG export
+  - [ ] Special rule according level (hide, show, change form, move, infront, in back ...)
+  - [ ] Variable support in link
+  - [X] Zoom/Unzoom (done in 0.4.0)
+  - [ ] Histogram in tooltip like heapmap
+  - [ ] Shared graph crosshair
+  - [ ] CSV source
+  - [ ] Map/search shape by value
 
 ## Pull request for version 2.0
-  - Multi graph with auto link when errors
-  - Gradien Mode for color
+  - [ ] Multi graph with auto link when errors
+  - [ ] Gradien Mode for color
 
 # Support or Contact
 
@@ -160,7 +166,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [jest] - Delightful JavaScript Testing
 * [express] - Fast, unopinionated, minimalist web framework
 * [babel] - Soft cushion between you all the cool new file formats being developed for node.js such as CoffeeScript, SASS, and Jade.
-* [grunt] - The JavaScript Task Runne
+* [grunt] - The JavaScript Task Runner
 * [webpack] - Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.
 
 # Installation

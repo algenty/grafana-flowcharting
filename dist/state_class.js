@@ -523,15 +523,16 @@ function () {
   }, {
     key: "prepare",
     value: function prepare() {
-      // this.unsetState();
-      this.lastChange = null;
-      this.unsetLevel();
-      this.unsetTooltip();
-      this.matched = false;
-      this.matchedShape = false;
-      this.matchedText = false;
-      this.matchedLink = false;
-      this.tooltips = [];
+      if (this.changed) {
+        this.lastChange = null;
+        this.unsetLevel();
+        this.unsetTooltip();
+        this.matched = false;
+        this.matchedShape = false;
+        this.matchedText = false;
+        this.matchedLink = false;
+        this.tooltips = [];
+      }
     }
   }]);
 
