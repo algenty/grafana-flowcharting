@@ -40,7 +40,7 @@ https://github.com/algenty/grafana-flowcharting
   - Graph definition  
     - Adding download function to download source by http on load. ([See example](https://algenty.github.io/flowcharting-repository/images/download_ani.gif))
   - Metric
-    - Adding string support for state
+    - Adding string support for state (See example)
   - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19) ([See example](https://algenty.github.io/flowcharting-repository/images/zoom2_ani.gif))
     - On the mouse pointer : Ctrl + Mouse
     - Hold right button to move diagram.
