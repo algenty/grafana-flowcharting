@@ -3,7 +3,7 @@
   "name": "FlowCharting",
   "id": "agenty-flowcharting-panel",
   "info": {
-    "description": "Enhanced and complexe diagrams,flowchart, floorplans, ... for grafana based on draw.io editor",
+    "description": "Flowcharting is a plugin for grafana. It aims to display complexe diagram draws with draw.io like Visio",
     "author": {
       "name": "Arnaud GENTY",
       "url": "https://github.com/algenty/grafana-flowcharting"
@@ -35,7 +35,7 @@
       }
     ],
     "version": "0.4.0",
-    "updated": "2019-05-08",
+    "updated": "2019-09-19",
     "logos": {
       "small": "img/agenty-flowcharting.svg",
       "large": "img/agenty-flowcharting.svg"
