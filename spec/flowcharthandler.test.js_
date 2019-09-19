@@ -18,7 +18,6 @@ const scope = {
 };
 
 const elem = "";
-const ctrl = "";
 
 describe('Create FlowchartHandler', () => {
   test('Object', () => {

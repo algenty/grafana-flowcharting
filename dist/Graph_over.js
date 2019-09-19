@@ -1,9 +1,7 @@
 "use strict";
 
 mxTooltipHandler.prototype.show = function (tip, x, y) {
-  // u.log(1, 'mxTooltipHandler.prototype.show()');
   if (!this.destroyed && tip != null && tip.length > 0) {
-    // Initializes the DOM nodes if required
     if (this.div == null) {
       this.init();
     }
@@ -22,7 +20,6 @@ mxTooltipHandler.prototype.show = function (tip, x, y) {
 };
 
 mxTooltipHandler.prototype.init = function () {
-  // u.log(1, 'mxTooltipHandler.prototype.init()');
   if (this.div === null || this.div === undefined) {
     this.$div = $('<div class="graph-tooltip">');
     this.div = this.$div[0];

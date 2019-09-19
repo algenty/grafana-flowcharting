@@ -7,7 +7,6 @@ import Rule from './rule_class';
  * @class RulesHandler
  */
 export default class RulesHandler {
-  /** @ngInject */
   /**
    *Creates an instance of RulesHandler.
    * @param {*} $scope

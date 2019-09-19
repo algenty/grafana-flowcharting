@@ -8,7 +8,6 @@ import State from './state_class';
  * @class StateHandler
  */
 export default class StateHandler {
-  /** @ngInject */
   constructor(xgraph, ctrl) {
     u.log(1, 'StateHandler.constructor()');
     this.states = [];

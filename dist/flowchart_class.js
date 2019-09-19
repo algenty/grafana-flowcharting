@@ -17,16 +17,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-/**
- *Flowchart handler
- *
- * @export
- * @class Flowchart
- */
-var Flowchart =
-/*#__PURE__*/
-function () {
-  /** @ngInject */
+var Flowchart = function () {
   function Flowchart(name, xmlGraph, container, ctrl, data) {
     _classCallCheck(this, Flowchart);
 
@@ -43,13 +34,6 @@ function () {
     this.templateSrv = ctrl.templateSrv;
     this["import"](data);
   }
-  /**
-   *Import data object in current flowchart
-   *
-   * @param {Object} obj
-   * @memberof Flowchart
-   */
-
 
   _createClass(Flowchart, [{
     key: "import",
@@ -69,42 +53,20 @@ function () {
       if (obj.options) this.data.bgColor = obj.options.bgColor;else this.data.bgColor = obj.bgColor;
       this.init();
     }
-    /**
-     * Return data without functions to save json in grafana
-     *
-     * @returns {Object} Data object
-     * @memberof Flowchart
-     */
-
   }, {
     key: "getData",
     value: function getData() {
       return this.data;
     }
-    /**
-     *Update states of flowchart/graph
-     *
-     * @param {*} rules
-     * @memberof Flowchart
-     */
-
   }, {
     key: "updateStates",
     value: function updateStates(rules) {
       var _this = this;
 
-      // if (this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
-      // this.stateHandler.prepare();
       rules.forEach(function (rule) {
         rule.states = _this.stateHandler.getStatesForRule(rule);
       });
     }
-    /**
-     *Initialisation of flowchart class
-     *
-     * @memberof Flowchart
-     */
-
   }, {
     key: "init",
     value: function init() {
@@ -257,13 +219,6 @@ function () {
       if (!replaceVarBool) return this.data.csv;
       return this.templateSrv.replaceWithText(this.data.csv);
     }
-    /**
-     *Get Source of graph (csv|xml) or get content from url
-     *
-     * @returns
-     * @memberof Flowchart
-     */
-
   }, {
     key: "getContent",
     value: function getContent() {

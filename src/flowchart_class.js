@@ -8,7 +8,6 @@ import StateHandler from './statesHandler';
  * @class Flowchart
  */
 export default class Flowchart {
-  /** @ngInject */
   constructor(name, xmlGraph, container, ctrl, data) {
     u.log(1, `flowchart[${name}].constructor()`);
     u.log(0, `flowchart[${name}].constructor() data`, data);

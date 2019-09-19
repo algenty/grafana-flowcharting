@@ -11,7 +11,6 @@ import moment from 'moment';
  * @class Rule
  */
 export default class Rule {
-  /** @ngInject */
   /**
    *Creates an instance of Rule.
    * @param {string} pattern
