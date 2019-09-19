@@ -3,12 +3,12 @@
 ![Banner](https://github.com/algenty/flowcharting-repository/blob/master/images/banner_large.png?raw=true)
 
 Flowcharting is a plugin for grafana. It aims to display complexe diagram draws with [draw.io](https://draw.io/) like Visio. Few examples :
-  * Technical architecture schema (Legacy, Cloud, Azure, AWS, GCP)
+  * Technical architecture schema (Legacy, Cloud, Azure, AWS, GCP, Kubernetes, Terraform)
   * Diagrams (network, electric, flows ...)
   * Organic plans
   * Floorplans
   * UML plan 
-  * Workflows (Jenkins, Ansible Tower, ...)  
+  * Workflows (Jenkins, Ansible Tower, OpenShift, ...)  
 
 Draw your artwork and monitor it.
 
