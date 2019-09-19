@@ -186,6 +186,8 @@ module.exports = (grunt) => {
         options: {
           repository: 'https://github.com/jgraph/mxgraph',
           branch: 'master',
+          depth: 1,
+          tags: "v4.0.4",
           directory: 'externals/mxgraph',
           verbose: true,
         }
@@ -194,7 +196,10 @@ module.exports = (grunt) => {
         options: {
             repository: 'https://github.com/jgraph/drawio',
             branch: 'master',
-            directory: 'externals/drawio'
+            depth: 1,
+            tags : "v11.2.8",
+            directory: 'externals/drawio',
+            verbose: true,
         }
       }
     },
