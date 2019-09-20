@@ -29,7 +29,7 @@ https://github.com/algenty/grafana-flowcharting
 
 # Changelog
 
-## [[0.4.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0-SNAPSHOP.zip) - 2019-09-14
+## [[0.4.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0.zip) - 2019-09-20
 ### Added
   - Draw.io editor ([Example](https://algenty.github.io/flowcharting-repository/images/openEditor_ani.gif))
     - Open draw.io with dark theme for better rendering  
