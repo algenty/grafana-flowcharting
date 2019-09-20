@@ -120,9 +120,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
 # Cooming soon/Roadmap
 
-## 1.0 Pull request
+## 1.0 Next/Requested enhancement
   - [ ] Custom libs. 
   - [X] Display tooltip (done in 0.4.0)
   - [ ] Export SVG options
@@ -139,8 +140,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Shared graph crosshair
   - [ ] CSV source
   - [ ] Map/search shape by value
-
-## Pull request for version 2.0
+  - [ ] Variables support for downloaded source and compressed source
   - [ ] Multi graph with auto link when errors
   - [ ] Gradien Mode for color
 
