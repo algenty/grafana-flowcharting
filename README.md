@@ -31,7 +31,7 @@ https://github.com/algenty/grafana-flowcharting
 
 ## [[0.4.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0.zip) - 2019-09-20
 ### Added
-  - Draw.io editor ([Example](https://algenty.github.io/flowcharting-repository/images/openEditor_ani.gif))
+  - Draw.io editor ([see example](https://algenty.github.io/flowcharting-repository/images/openEditor_ani.gif))
     - Open draw.io with dark theme for better rendering  
     - Display waiting screen when loading xml definition.  
   - Upgrading libraries  
@@ -46,7 +46,7 @@ https://github.com/algenty/grafana-flowcharting
     - Hold right button to move diagram.
     - double click on shape to zoom on.
     - Escape key to restore.
-  - Tooltip/popup support ([Example](https://algenty.github.io/flowcharting-repository/images/tooltip2_ani.gif))
+  - Tooltip/popup support ([see example](https://algenty.github.io/flowcharting-repository/images/tooltip2_ani.gif))
     - Grafana style css and date
     - Adding metrics with color according levels
     - Adding colors on metrics in tooltip
