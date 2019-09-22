@@ -126,13 +126,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.0 Next/Requested enhancements
   - [ ] Custom libs. 
   - [X] Display tooltip (done in 0.4.0)
-  - [ ] Export SVG options
+  - [ ] Export SVG, png,  options
   - [X] Add data in tooltip (done in 0.4.0)
   - [X] Use variables/templates in graph (done in 0.4.0)
   - [X] Add custom stencils/libs from draw.io (done in 0.4.0)
   - [ ] Support light theme
   - [X] Url source download (done in 0.4.0)
-  - [ ] SVG export
   - [ ] Special rule according level (hide, show, change form, move, infront, in back ...)
   - [ ] Variable support in link
   - [X] Zoom/Unzoom (done in 0.4.0)
@@ -143,6 +142,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Variables support for downloaded source and compressed source
   - [ ] Multi graph with auto link when errors
   - [ ] Gradien Mode for color
+  - [ ] More than 3 colors
+  - [ ] Support images of draw.io
 
 # Support or Contact
 
