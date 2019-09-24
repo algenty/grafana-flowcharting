@@ -4,7 +4,8 @@
 /* eslint-disable object-shorthand */
 window.mxLanguages = window.mxLanguages || ['en'];
 
-const sanitizer = require('sanitizer');
+// const sanitizer = require('./libs/sanitizer.min');
+require('./libs/sanitizer.min');
 const mxgraph = require('mxgraph')({
   mxImageBasePath: GF_PLUGIN.getMxImagePath(),
   mxBasePath: GF_PLUGIN.getMxBasePath(),
@@ -165,12 +166,15 @@ export default class XGraph {
       libs: 'arrows;basic;bpmn;flowchart'
     });
     require('./Shapes');
+    // require('./Format');
     require('./Graph_over');
     this.graph = new Graph(this.container);
+    // this.graph.setHtmlLabels(true);
     this.graph.getTooltipForCell = this.getTooltipForCell;
 
+    
     // /!\ What is setPannig
-    this.graph.setPanning(true);
+    // this.graph.setPanning(true);
 
     // Backup funtions of clicks
     this.clickBackup = this.graph.click;
