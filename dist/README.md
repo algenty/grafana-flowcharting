@@ -144,6 +144,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Gradien Mode for color
   - [ ] More than 3 colors
   - [ ] Support images of draw.io
+  - [ ] Add append mode on text with CR or space
 
 # Support or Contact
 

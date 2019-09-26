@@ -28,6 +28,7 @@ export default class RulesHandler {
    * @memberof RulesHandler
    */
   import(obj) {
+    /*FIXME: sortBy with lodash */
     u.log(1, 'RuleHandler.import()');
     u.log(0, 'RuleHandler.import() obj', obj);
     this.rules = [];
