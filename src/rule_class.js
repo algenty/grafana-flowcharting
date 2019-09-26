@@ -173,6 +173,26 @@ export default class Rule {
   }
 
   /**
+   *Return the order of this rule
+   *Grafana 6+ have a bug when reload dashboad, array are not in order
+   *
+   * @param {number} order
+   * @memberof Rule
+   */
+  setOrder(order) {
+    this.data.order = order;
+  }
+
+  /**
+   *Return order of rule
+   *
+   * @memberof Rule
+   */
+  getOrder() {
+    return this.data.order;
+  }
+
+  /**
    *Invert color order
    *
    * @memberof Rule

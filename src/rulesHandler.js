@@ -28,14 +28,18 @@ export default class RulesHandler {
    * @memberof RulesHandler
    */
   import(obj) {
-    /*FIXME: sortBy with lodash */
     u.log(1, 'RuleHandler.import()');
     u.log(0, 'RuleHandler.import() obj', obj);
     this.rules = [];
+    let index = 1;
     if (obj !== undefined && obj !== null && obj.length > 0) {
+      // Fix bug of grafana 6+
+      if (obj[0].order != undefined) obj = _.sortBy(_.sortBy(obj, o => o.order))
       obj.forEach(map => {
         const newData = {};
         const rule = new Rule(map.pattern, newData);
+        rule.setOrder(index);
+        index += 1;
         rule.import(map);
         this.rules.push(rule);
         this.data.push(newData);
@@ -76,6 +80,7 @@ export default class RulesHandler {
     const newRule = new Rule(pattern, data);
     this.rules.push(newRule);
     this.data.push(data);
+    newRule.setOrder(this.countRules());
     return newRule;
   }
 
@@ -91,6 +96,18 @@ export default class RulesHandler {
   }
 
   /**
+   *Redefine Order number of rules
+   *
+   * @memberof RulesHandler
+   */
+  setOrder() {
+    for (let index = 0; index < this.rules.length; index++) {
+      const rule = this.rules[index];
+      rule.setOrder(index + 1);
+    }
+  }
+
+  /**
    * Remove rule at index
    *
    * @param {number} index
@@ -99,6 +116,7 @@ export default class RulesHandler {
   removeRule(index) {
     this.rules.splice(index, 1);
     this.data.splice(index, 1);
+    this.setOrder();
   }
 
   /**
@@ -119,6 +137,7 @@ export default class RulesHandler {
     this.data.splice(index, 0, newData);
     newRule.data.reduce = false;
     this.activeRuleIndex = index;
+    this.setOrder();
     const elt = document.getElementById(newRule.getId());
     // NOT WORK : TODO
     if (elt) {
@@ -151,7 +170,9 @@ export default class RulesHandler {
     const last = rules.length - 1;
     if (index !== first && last !== first) {
       const curr = rules[index];
+      curr.setOrder(index);
       const before = rules[index - 1];
+      before.setOrder(index + 1);
       rules[index - 1] = curr;
       rules[index] = before;
     }
@@ -169,7 +190,9 @@ export default class RulesHandler {
     const last = rules.length - 1;
     if (index !== last && last !== first) {
       const curr = rules[index];
+      curr.setOrder(index + 2);
       const after = rules[index + 1];
+      after.setOrder(index + 1);
       rules[index + 1] = curr;
       rules[index] = after;
     }

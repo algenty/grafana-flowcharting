@@ -34,11 +34,17 @@ var RulesHandler = function () {
       u.log(1, 'RuleHandler.import()');
       u.log(0, 'RuleHandler.import() obj', obj);
       this.rules = [];
+      var index = 1;
 
       if (obj !== undefined && obj !== null && obj.length > 0) {
+        if (obj[0].order != undefined) obj = _.sortBy(_.sortBy(obj, function (o) {
+          return o.order;
+        }));
         obj.forEach(function (map) {
           var newData = {};
           var rule = new _rule_class["default"](map.pattern, newData);
+          rule.setOrder(index);
+          index += 1;
           rule["import"](map);
 
           _this.rules.push(rule);
@@ -64,6 +70,7 @@ var RulesHandler = function () {
       var newRule = new _rule_class["default"](pattern, data);
       this.rules.push(newRule);
       this.data.push(data);
+      newRule.setOrder(this.countRules());
       return newRule;
     }
   }, {
@@ -73,10 +80,19 @@ var RulesHandler = function () {
       return 0;
     }
   }, {
+    key: "setOrder",
+    value: function setOrder() {
+      for (var index = 0; index < this.rules.length; index++) {
+        var rule = this.rules[index];
+        rule.setOrder(index + 1);
+      }
+    }
+  }, {
     key: "removeRule",
     value: function removeRule(index) {
       this.rules.splice(index, 1);
       this.data.splice(index, 1);
+      this.setOrder();
     }
   }, {
     key: "cloneRule",
@@ -92,6 +108,7 @@ var RulesHandler = function () {
       this.data.splice(index, 0, newData);
       newRule.data.reduce = false;
       this.activeRuleIndex = index;
+      this.setOrder();
       var elt = document.getElementById(newRule.getId());
 
       if (elt) {
@@ -116,7 +133,9 @@ var RulesHandler = function () {
 
       if (index !== first && last !== first) {
         var curr = rules[index];
+        curr.setOrder(index);
         var before = rules[index - 1];
+        before.setOrder(index + 1);
         rules[index - 1] = curr;
         rules[index] = before;
       }
@@ -130,7 +149,9 @@ var RulesHandler = function () {
 
       if (index !== last && last !== first) {
         var curr = rules[index];
+        curr.setOrder(index + 2);
         var after = rules[index + 1];
+        after.setOrder(index + 1);
         rules[index + 1] = curr;
         rules[index] = after;
       }
