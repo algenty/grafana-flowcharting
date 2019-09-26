@@ -171,6 +171,16 @@ var Rule = function () {
       return this.id;
     }
   }, {
+    key: "setOrder",
+    value: function setOrder(order) {
+      this.data.order = order;
+    }
+  }, {
+    key: "getOrder",
+    value: function getOrder() {
+      return this.data.order;
+    }
+  }, {
     key: "invertColorOrder",
     value: function invertColorOrder() {
       var ref = this.data.colors;

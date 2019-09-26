@@ -71,6 +71,9 @@ export default class State {
       const time = this.ctrl.dashboard.formatDate(new Date(), tooltipTimeFormat);
 
       // SHAPE
+      /*FIXME:
+      - [ ] restore if color is never or warning/critical.
+      */
       let cellProp = this.getCellProp(rule.data.shapeProp);
       shapeMaps.forEach(shape => {
         if (!shape.isHidden() && shape.match(cellProp)) {
@@ -349,7 +352,7 @@ export default class State {
 
   // eslint-disable-next-line class-methods-use-this
   isGradient() {
-    // TODO:
+    // TODO: next version
   }
 
   isShape() {
@@ -360,6 +363,9 @@ export default class State {
     return this.mxcell.isEdge();
   }
 
+  /* TODO:
+  - [ ] Change only modified style
+  */
   applyShape() {
     // Apply colors
     this.styles.forEach(style => {

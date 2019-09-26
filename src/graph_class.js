@@ -4,7 +4,7 @@
 /* eslint-disable object-shorthand */
 window.mxLanguages = window.mxLanguages || ['en'];
 
-const sanitizer = require('sanitizer');
+require('./libs/sanitizer.min');
 const mxgraph = require('mxgraph')({
   mxImageBasePath: GF_PLUGIN.getMxImagePath(),
   mxBasePath: GF_PLUGIN.getMxBasePath(),
@@ -169,6 +169,7 @@ export default class XGraph {
     this.graph = new Graph(this.container);
     this.graph.getTooltipForCell = this.getTooltipForCell;
 
+    
     // /!\ What is setPannig
     this.graph.setPanning(true);
 

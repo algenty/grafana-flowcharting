@@ -10,7 +10,7 @@
               class="fa fa-chevron-down fa-lg pointer" ng-click="rule.data.reduce=true"></i>
             <i ng-show="rule.data.reduce==true" class="fa fa-chevron-right fa-lg pointer"
               ng-click="rule.data.reduce=false"></i>
-            Rule
+              {{ rule.data.order }} : Rule
             <span class="section-heading" ng-show="rule.data.alias != undefined && rule.data.alias.length >0">
               [{{ rule.data.alias }}]</span>
           </span>
