@@ -1,7 +1,7 @@
 const path = require("path");
 const sass = require('node-sass');
 // const plugin = require('./src/plugin.js');
-const version = "0.5.0";
+const version = "0.4.0";
 
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);

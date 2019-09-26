@@ -43,9 +43,9 @@ var RulesHandler = function () {
         obj.forEach(function (map) {
           var newData = {};
           var rule = new _rule_class["default"](map.pattern, newData);
+          rule["import"](map);
           rule.setOrder(index);
           index += 1;
-          rule["import"](map);
 
           _this.rules.push(rule);
 

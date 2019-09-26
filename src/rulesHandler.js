@@ -38,9 +38,9 @@ export default class RulesHandler {
       obj.forEach(map => {
         const newData = {};
         const rule = new Rule(map.pattern, newData);
+        rule.import(map);
         rule.setOrder(index);
         index += 1;
-        rule.import(map);
         this.rules.push(rule);
         this.data.push(newData);
       });
