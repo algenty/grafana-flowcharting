@@ -56,3 +56,24 @@ mxEvent.addMouseWheelListener = function(func, container) {
   }
 };
 
+// mxUrlConverter.prototype.convert = function(url)
+// {
+// 	if (this.isEnabled() && this.isRelativeUrl(url))
+// 	{
+// 		if (this.getBaseUrl() == null)
+// 		{
+// 			this.baseUrl = "http://draw.io/"
+// 		}
+		
+// 		if (url.charAt(0) == '/')
+// 		{
+// 			url = this.getBaseDomain() + url;
+// 		}
+// 		else
+// 		{
+// 			url = this.getBaseUrl() + url;
+// 		}
+// 	}
+	
+// 	return url;
+// };

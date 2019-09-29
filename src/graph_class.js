@@ -104,6 +104,7 @@ window.mxTooltip = window.mxTooltip || mxgraph.mxTooltip;
 window.mxTooltipHandler = window.mxTooltipHandler || mxgraph.mxTooltipHandler;
 window.mxTriangle = window.mxTriangle || mxgraph.mxTriangle;
 window.mxUndoManager = window.mxUndoManager || mxgraph.mxUndoManager;
+// window.mxUrlConverter = window.mxUrlConverter || mxgraph.mxUrlConverter;
 window.mxUtils = window.mxUtils || mxgraph.mxUtils;
 window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange;
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;

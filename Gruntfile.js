@@ -56,7 +56,7 @@ module.exports = (grunt) => {
         src: ['**/*', '!**/*.js'],
         dest: 'dist/libs/mxgraph/javascript/dist',
       },
-      externals_to_dist: {
+      mxgraph_to_dist: {
         cwd: 'externals/mxgraph/javascript/examples/grapheditor/www',
         expand: true,
         src: ['**/*', '!**/*.js'],
@@ -71,6 +71,13 @@ module.exports = (grunt) => {
 
       img_to_dist: {
         cwd: 'src',
+        expand: true,
+        src: ['img/**/*'],
+        dest: 'dist/',
+      },
+
+      drawio_img_to_dist: {
+        cwd: 'externals/drawio/src/main/webapp',
         expand: true,
         src: ['img/**/*'],
         dest: 'dist/',
@@ -212,7 +219,7 @@ module.exports = (grunt) => {
 
   });
 
-  grunt.registerTask('default', ['clean:build', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:externals_to_dist', 'copy:stencils_to_dist']);
+  grunt.registerTask('default', ['clean:build', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:mxgraph_to_dist', 'copy:stencils_to_dist']);
   grunt.registerTask('dev', ['default', 'watch']);
   grunt.registerTask('archive', ['default', 'compress:main']);
   grunt.registerTask('init', ['clean:before_init','gitclone:mxgraph','gitclone:drawio','copy:sanitizer_to_src','clean:after_init']);
