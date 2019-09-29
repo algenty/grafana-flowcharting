@@ -17,7 +17,7 @@ window.u = window.u || u;
 class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
-    this.version = '0.3.0';
+    this.version = '0.5.0';
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.templateSrv = templateSrv;

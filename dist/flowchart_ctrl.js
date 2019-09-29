@@ -54,7 +54,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _classCallCheck(this, FlowchartCtrl);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(FlowchartCtrl).call(this, $scope, $injector));
-    _this.version = '0.3.0';
+    _this.version = '0.5.0';
     _this.$rootScope = $rootScope;
     _this.$scope = $scope;
     _this.templateSrv = templateSrv;

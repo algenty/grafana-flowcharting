@@ -24,12 +24,25 @@ var State = function () {
     this.ctrl = ctrl;
     this.templateSrv = this.ctrl.templateSrv;
     this.changed = false;
+    this.changedShape = false;
+    this.changedStyle = {
+      fillColor: false,
+      strokeColor: false,
+      fontColor: false
+    };
+    this.changedText = false;
+    this.changedLink = false;
     this.matched = false;
     this.matchedShape = false;
+    this.matchedStyle = {
+      fillColor: false,
+      strokeColor: false,
+      fontColor: false
+    };
     this.matchedText = false;
     this.matchedLink = false;
     this.globalLevel = -1;
-    this.styles = ['fillColor', 'strokeColor', 'fontColor'];
+    this.styleKeys = ['fillColor', 'strokeColor', 'fontColor'];
     this.level = {
       fillColor: -1,
       strokeColor: -1,
@@ -38,13 +51,14 @@ var State = function () {
     this.tooltips = [];
     this.currentColors = {};
     this.originalColors = {};
-    this.originalValue = this.xgraph.getLabel(mxcell);
-    this.currentValue = this.originalValue;
+    this.originalStyle = mxcell.getStyle();
+    this.originalText = this.xgraph.getLabel(mxcell);
+    this.currentText = this.originalText;
     var link = this.xgraph.getLink(mxcell);
     if (link === undefined) link = null;
     this.originalLink = link;
     this.currentLink = link;
-    this.styles.forEach(function (style) {
+    this.styleKeys.forEach(function (style) {
       var color = _this.xgraph.getStyleCell(mxcell, style);
 
       _this.currentColors[style] = color;
@@ -87,6 +101,10 @@ var State = function () {
 
               if (rule.toColorize(level)) {
                 _this2.setColorStyle(rule.data.style, color);
+
+                _this2.matchedStyle[rule.data.style] = true;
+              } else if (_this2.changedShape) {
+                if (_this2.changedStyle[rule.data.style]) _this2.unsetColorStyle(rule.data.style);
               }
 
               _this2.overlayIcon = rule.toIconize(level);
@@ -102,9 +120,9 @@ var State = function () {
             if (rule.toLabelize(level)) {
               var textScoped = _this2.templateSrv.replaceWithText(FormattedValue);
 
-              _this2.setText(rule.getReplaceText(_this2.originalValue, textScoped));
+              _this2.setText(rule.getReplaceText(_this2.originalText, textScoped));
             } else {
-              _this2.setText(rule.getReplaceText(_this2.originalValue, ''));
+              _this2.setText(rule.getReplaceText(_this2.originalText, ''));
             }
           }
         });
@@ -130,18 +148,22 @@ var State = function () {
   }, {
     key: "unsetState",
     value: function unsetState() {
+      var _this3 = this;
+
       u.log(1, 'State.unsetState()');
       this.lastChange = null;
       this.unsetLevel();
-      this.unsetColor();
+      this.resetStyle();
       this.unsetText();
       this.unsetLink();
       this.unsetTooltip();
       this.matched = false;
       this.matchedShape = false;
+      this.styleKeys.forEach(function (key) {
+        _this3.matchedStyle[key] = false;
+      });
       this.matchedText = false;
       this.matchedLink = false;
-      u.log(0, 'State.unsetState() state', this);
     }
   }, {
     key: "isMatched",
@@ -157,7 +179,7 @@ var State = function () {
     key: "getCellProp",
     value: function getCellProp(prop) {
       if (prop === 'id') return this.cellId;
-      if (prop === 'value') return this.originalValue;
+      if (prop === 'value') return this.originalText;
       return '/!\\ Not found';
     }
   }, {
@@ -174,21 +196,11 @@ var State = function () {
   }, {
     key: "unsetColor",
     value: function unsetColor() {
-      var _this3 = this;
+      var _this4 = this;
 
-      this.styles.forEach(function (style) {
-        _this3.unsetColorStyle(style);
+      this.styleKeys.forEach(function (style) {
+        _this4.unsetColorStyle(style);
       });
-    }
-  }, {
-    key: "getCurrentColorStyle",
-    value: function getCurrentColorStyle(style) {
-      return this.currentColors[style];
-    }
-  }, {
-    key: "getOriginalColorStyle",
-    value: function getOriginalColorStyle(style) {
-      return this.originalColors[style];
     }
   }, {
     key: "unsetLevelStyle",
@@ -205,10 +217,10 @@ var State = function () {
   }, {
     key: "unsetLevel",
     value: function unsetLevel() {
-      var _this4 = this;
+      var _this5 = this;
 
-      this.styles.forEach(function (style) {
-        _this4.unsetLevelStyle(style);
+      this.styleKeys.forEach(function (key) {
+        _this5.unsetLevelStyle(key);
       });
       this.globalLevel = -1;
     }
@@ -254,17 +266,12 @@ var State = function () {
   }, {
     key: "setText",
     value: function setText(text) {
-      this.currentValue = text;
-    }
-  }, {
-    key: "getCurrentText",
-    value: function getCurrentText() {
-      return this.currentValue;
+      this.currentText = text;
     }
   }, {
     key: "unsetText",
     value: function unsetText() {
-      this.currentValue = this.originalValue;
+      this.currentText = this.originalText;
     }
   }, {
     key: "setLink",
@@ -275,11 +282,6 @@ var State = function () {
     key: "unsetLink",
     value: function unsetLink() {
       this.currentLink = this.originalLink;
-    }
-  }, {
-    key: "getCurrentLink",
-    value: function getCurrentLink() {
-      return this.currentLink;
     }
   }, {
     key: "addTooltipValue",
@@ -327,30 +329,84 @@ var State = function () {
   }, {
     key: "applyShape",
     value: function applyShape() {
-      var _this5 = this;
+      this.changedShape = true;
+      this.applyStyle();
+      this.applyIcon();
+    }
+  }, {
+    key: "applyStyle",
+    value: function applyStyle() {
+      var _this6 = this;
 
-      this.styles.forEach(function (style) {
-        var color = _this5.getCurrentColorStyle(style);
+      this.styleKeys.forEach(function (key) {
+        if (_this6.matchedStyle[key]) {
+          var color = _this6.currentColors[key];
 
-        _this5.xgraph.setStyleCell(_this5.mxcell, style, color);
+          _this6.xgraph.setStyleCell(_this6.mxcell, key, color);
+
+          if (color !== _this6.originalColors[key]) _this6.changedStyle[key] = true;
+        }
       });
-
+    }
+  }, {
+    key: "applyIcon",
+    value: function applyIcon() {
       if (this.overlayIcon) {
+        this.changedIcon = true;
         this.xgraph.addOverlay(this.getTextLevel(), this.mxcell);
       } else {
         this.xgraph.removeOverlay(this.mxcell);
       }
     }
   }, {
+    key: "resetShape",
+    value: function resetShape() {
+      this.changedShape = false;
+      this.resetStyle();
+      this.resetIcon();
+    }
+  }, {
+    key: "resetIcon",
+    value: function resetIcon() {
+      this.changedIcon = false;
+      this.xgraph.removeOverlay(this.mxcell);
+    }
+  }, {
+    key: "resetStyle",
+    value: function resetStyle() {
+      var _this7 = this;
+
+      this.unsetColor();
+      this.mxcell.setStyle(this.originalStyle);
+      this.styleKeys.forEach(function (key) {
+        _this7.changedStyle[key] = false;
+      });
+    }
+  }, {
     key: "applyText",
     value: function applyText() {
-      var text = this.getCurrentText();
-      this.xgraph.setLabelCell(this.mxcell, this.getCurrentText());
+      this.changedText = true;
+      this.xgraph.setLabelCell(this.mxcell, this.currentText);
+    }
+  }, {
+    key: "resetText",
+    value: function resetText() {
+      this.changedText = false;
+      this.unsetText();
+      this.xgraph.setLabelCell(this.mxcell, this.originalText);
     }
   }, {
     key: "applyLink",
     value: function applyLink() {
+      this.changedLink = true;
       this.xgraph.addLink(this.mxcell, this.currentLink);
+    }
+  }, {
+    key: "resetLink",
+    value: function resetLink() {
+      this.changedLink = false;
+      this.unsetLink();
+      this.xgraph.addLink(this.mxcell, this.originalLink);
     }
   }, {
     key: "applyTooltip",
@@ -371,43 +427,30 @@ var State = function () {
 
         if (this.matchedShape) {
           this.applyShape();
-          this.changedShape = true;
         } else if (this.changedShape) {
-          this.unsetColor();
-          this.applyShape();
-          this.changedShape = false;
+          this.resetShape();
         }
 
         if (this.matchedText) {
           this.applyText();
-          this.changedText = true;
         } else if (this.changedText) {
-          this.unsetText();
-          this.applyText();
-          this.changedText = false;
+          this.resetText();
         }
 
         if (this.matchedLink) {
           this.applyLink();
-          this.changedLink = true;
         } else if (this.changedLink) {
-          this.unsetLink();
-          this.applyLink();
-          this.changedLink = false;
+          this.resetLink();
         }
-      } else if (this.changed) this.restore();
+      } else if (this.changed) this.reset();
     }
   }, {
-    key: "restore",
-    value: function restore() {
-      this.unsetState();
-      this.applyShape();
-      this.applyText();
-      this.applyLink();
+    key: "reset",
+    value: function reset() {
+      this.resetShape();
+      this.resetText();
+      this.resetLink();
       this.changed = false;
-      this.changedShape = false;
-      this.changedText = false;
-      this.changedLink = false;
     }
   }, {
     key: "prepare",

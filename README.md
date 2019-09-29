@@ -29,6 +29,12 @@ https://github.com/algenty/grafana-flowcharting
 
 # Changelog
 
+## [0.4.0] - 2019-09-26
+### Added  
+
+### Fixed  
+  - Fix reset color when "Color on" is "Always/Critical"
+
 ## [[0.4.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0.zip) - 2019-09-26
 ### Added
   - Draw.io editor ([see example](https://algenty.github.io/flowcharting-repository/images/openEditor_ani.gif))
