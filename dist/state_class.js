@@ -120,9 +120,9 @@ var State = function () {
             if (rule.toLabelize(level)) {
               var textScoped = _this2.templateSrv.replaceWithText(FormattedValue);
 
-              _this2.setText(rule.getReplaceText(_this2.originalText, textScoped));
+              _this2.setText(rule.getReplaceText(_this2.currentText, textScoped));
             } else {
-              _this2.setText(rule.getReplaceText(_this2.originalText, ''));
+              _this2.setText(rule.getReplaceText(_this2.currentText, ''));
             }
           }
         });
@@ -136,7 +136,7 @@ var State = function () {
               if (rule.toLinkable(level)) {
                 var linkScoped = _this2.templateSrv.replaceWithText(rule.getLink());
 
-                _this2.currentLink = linkScoped;
+                _this2.setLink(linkScoped);
               }
             }
           }
@@ -459,6 +459,7 @@ var State = function () {
         this.lastChange = null;
         this.unsetLevel();
         this.unsetTooltip();
+        this.unsetText();
         this.matched = false;
         this.matchedShape = false;
         this.matchedText = false;

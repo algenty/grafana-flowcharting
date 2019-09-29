@@ -88,9 +88,6 @@ export default class State {
       const time = this.ctrl.dashboard.formatDate(new Date(), tooltipTimeFormat);
 
       // SHAPE
-      /*FIXME:
-      - [ ] restore if color is never or warning/critical.
-      */
       let cellProp = this.getCellProp(rule.data.shapeProp);
       shapeMaps.forEach(shape => {
         if (!shape.isHidden() && shape.match(cellProp)) {
@@ -126,10 +123,10 @@ export default class State {
           this.matched = true;
           if (rule.toLabelize(level)) {
             const textScoped = this.templateSrv.replaceWithText(FormattedValue);
-            this.setText(rule.getReplaceText(this.originalText, textScoped));
+            this.setText(rule.getReplaceText(this.currentText, textScoped));
           } else {
             // Hide text
-            this.setText(rule.getReplaceText(this.originalText, ''));
+            this.setText(rule.getReplaceText(this.currentText, ''));
           }
         }
       });
@@ -143,7 +140,7 @@ export default class State {
           if (this.globalLevel <= level) {
             if (rule.toLinkable(level)) {
               const linkScoped = this.templateSrv.replaceWithText(rule.getLink());
-              this.currentLink = linkScoped;
+              this.setLink(linkScoped);
             }
           }
         }
@@ -604,6 +601,7 @@ export default class State {
       this.lastChange = null;
       this.unsetLevel();
       this.unsetTooltip();
+      this.unsetText();
       this.matched = false;
       this.matchedShape = false;
       this.matchedText = false;

@@ -236,8 +236,8 @@ export default class Rule {
     // if (this.data.textOn === 'wmd' && level === -1) return false;
     if (this.data.textOn === 'wmd') return true;
     if (this.data.textOn === 'n') return false;
-    if (this.data.textOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
-    if (this.data.textOn === 'co' && this.getThresholdLevel(value) >= 2) return true;
+    if (this.data.textOn === 'wc' && level >= 1) return true;
+    if (this.data.textOn === 'co' && level >= 2) return true;
     return false;
   }
 
@@ -637,9 +637,17 @@ export default class Rule {
 
   getReplaceText(text, FormattedValue) {
     if (this.data.textReplace === 'content') return FormattedValue;
-    const regexVal = u.stringToJsRegex(this.data.textPattern);
-    if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
-    return text;
+    if (this.data.textReplace === 'pattern') {
+      const regexVal = u.stringToJsRegex(this.data.textPattern);
+      if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
+      return text;
+    }
+    if (this.data.textReplace === 'as') {
+      return `${text} ${FormattedValue}`
+    }
+    if (this.data.textReplace === 'anl') {
+      return `${text}\n${FormattedValue}`
+    }
   }
 
   defaultValueFormatter(value) {

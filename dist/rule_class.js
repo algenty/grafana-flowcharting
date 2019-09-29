@@ -203,8 +203,8 @@ var Rule = function () {
     value: function toLabelize(level) {
       if (this.data.textOn === 'wmd') return true;
       if (this.data.textOn === 'n') return false;
-      if (this.data.textOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
-      if (this.data.textOn === 'co' && this.getThresholdLevel(value) >= 2) return true;
+      if (this.data.textOn === 'wc' && level >= 1) return true;
+      if (this.data.textOn === 'co' && level >= 2) return true;
       return false;
     }
   }, {
@@ -458,13 +458,13 @@ var Rule = function () {
     key: "getValueForSerie",
     value: function getValueForSerie(serie) {
       if (this.matchSerie(serie)) {
-        var _value = _.get(serie.stats, this.data.aggregation);
+        var value = _.get(serie.stats, this.data.aggregation);
 
-        if (_value === undefined || _value === null) {
-          _value = serie.datapoints[serie.datapoints.length - 1][0];
+        if (value === undefined || value === null) {
+          value = serie.datapoints[serie.datapoints.length - 1][0];
         }
 
-        return _value;
+        return value;
       }
 
       return '-';
@@ -545,9 +545,20 @@ var Rule = function () {
     key: "getReplaceText",
     value: function getReplaceText(text, FormattedValue) {
       if (this.data.textReplace === 'content') return FormattedValue;
-      var regexVal = u.stringToJsRegex(this.data.textPattern);
-      if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
-      return text;
+
+      if (this.data.textReplace === 'pattern') {
+        var regexVal = u.stringToJsRegex(this.data.textPattern);
+        if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
+        return text;
+      }
+
+      if (this.data.textReplace === 'as') {
+        return "".concat(text, " ").concat(FormattedValue);
+      }
+
+      if (this.data.textReplace === 'anl') {
+        return "".concat(text, "\n").concat(FormattedValue);
+      }
     }
   }, {
     key: "defaultValueFormatter",

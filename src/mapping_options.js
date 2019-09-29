@@ -36,7 +36,9 @@ export class MappingOptionsCtrl {
     ];
     this.textReplace = [
       { text: 'All content', value: 'content' },
-      { text: 'Substring', value: 'pattern' }
+      { text: 'Substring', value: 'pattern' },
+      { text: 'Append (Space) ', value: 'as' },
+      { text: 'Append (New line) ', value: 'anl' }
     ];
     this.propTypes = [
       { text: 'Id', value: 'id' }

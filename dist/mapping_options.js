@@ -90,6 +90,12 @@ var MappingOptionsCtrl = function () {
     }, {
       text: 'Substring',
       value: 'pattern'
+    }, {
+      text: 'Append (Space) ',
+      value: 'as'
+    }, {
+      text: 'Append (New line) ',
+      value: 'anl'
     }];
     this.propTypes = [{
       text: 'Id',
