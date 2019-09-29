@@ -48,6 +48,7 @@ var Flowchart = function () {
       if (obj.options) this.data.center = obj.options.center;else this.data.center = obj.center !== undefined ? obj.center : true;
       if (obj.options) this.data.scale = obj.options.scale;else this.data.scale = obj.scale !== undefined ? obj.scale : true;
       if (obj.options) this.data.lock = obj.options.lock;else this.data.lock = obj.lock !== undefined ? obj.lock : true;
+      if (obj.options) this.data.allowDrawio = false;else this.data.allowDrawio = obj.allowDrawio !== undefined ? obj.allowDrawio : false;
       if (obj.options) this.data.tooltip = obj.options.tooltip;else this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : true;
       if (obj.options) this.data.grid = obj.options.grid;else this.data.grid = obj.grid !== undefined ? obj.grid : false;
       if (obj.options) this.data.bgColor = obj.options.bgColor;else this.data.bgColor = obj.bgColor;
@@ -74,6 +75,7 @@ var Flowchart = function () {
       if (this.xgraph === undefined) this.xgraph = new _graph_class["default"](this.container, this.data.type, this.getContent());
 
       if (this.data.xml !== undefined && this.data.xml !== null) {
+        if (this.data.allowDrawio) this.xgraph.allowDrawio(true);else this.xgraph.allowDrawio(false);
         this.xgraph.drawGraph();
         if (this.data.tooltip) this.xgraph.tooltipGraph(true);
         if (this.data.scale) this.xgraph.scaleGraph(true);else this.xgraph.zoomGraph(this.data.zoom);

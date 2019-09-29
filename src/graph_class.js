@@ -104,7 +104,7 @@ window.mxTooltip = window.mxTooltip || mxgraph.mxTooltip;
 window.mxTooltipHandler = window.mxTooltipHandler || mxgraph.mxTooltipHandler;
 window.mxTriangle = window.mxTriangle || mxgraph.mxTriangle;
 window.mxUndoManager = window.mxUndoManager || mxgraph.mxUndoManager;
-// window.mxUrlConverter = window.mxUrlConverter || mxgraph.mxUrlConverter;
+window.mxUrlConverter = window.mxUrlConverter || mxgraph.mxUrlConverter;
 window.mxUtils = window.mxUtils || mxgraph.mxUtils;
 window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange;
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
@@ -249,6 +249,8 @@ export default class XGraph {
     this.graph.refresh();
   }
 
+
+
   destroyGraph() {
     this.graph.destroy();
     this.graph = undefined;
@@ -276,6 +278,11 @@ export default class XGraph {
     if (bool) this.graph.setTooltips(true);
     else this.graph.setTooltips(false);
     this.tooltip = bool;
+  }
+
+  allowDrawio(bool) {
+    if(bool) mxUrlConverter.prototype.baseUrl = "http://draw.io/";
+    else mxUrlConverter.prototype.baseUrl = null;
   }
 
   /**

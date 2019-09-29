@@ -35,6 +35,7 @@ https://github.com/algenty/grafana-flowcharting
     - Append (Space) : Concat metrics with a space as a separator
     - Append (New line) : Concat metrics with a line break
   - Variabilization in "Url" for link mapping ([See example](https://algenty.github.io/flowcharting-repository/images/variable_link_ani.png))
+  - New check box to allow download images from draw.io ([See example](https://algenty.github.io/flowcharting-repository/images/drawio_source_ani.png))
 
 ### Fixed  
   - Fix color to reset when "Color on" is "Always/Critical" and metric is OK  
@@ -158,7 +159,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Multi graph with auto link when errors
   - [ ] Gradien Mode for color
   - [ ] More than 3 colors
-  - [ ] Support images of draw.io
+  - [ ] Support cloud images from draw.io
+  - [X] Support images from draw.io
   - [X] Add append mode on text with CR or space
 
 # Support or Contact
