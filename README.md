@@ -39,7 +39,7 @@ https://github.com/algenty/grafana-flowcharting
 
 ### Fixed  
   - Fix color to reset when "Color on" is "Always/Critical" and metric is OK  
-  - Fix border to empty instead black when "color mode" is "Fill" [(issue #29)](https://github.com/algenty/grafana-flowcharting/issues/29)  
+  - Fix border to empty instead black when "color mode" is "Fill" [(issue #24)](https://github.com/algenty/grafana-flowcharting/issues/24)  
   - Fix error when "Value On" is not "When metric displayed"
   - Fix Link [(issue #37)](https://github.com/algenty/grafana-flowcharting/issues/37)  
 
