@@ -52,7 +52,8 @@ var Flowchart = function () {
       if (obj.options) this.data.tooltip = obj.options.tooltip;else this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : true;
       if (obj.options) this.data.grid = obj.options.grid;else this.data.grid = obj.grid !== undefined ? obj.grid : false;
       if (obj.options) this.data.bgColor = obj.options.bgColor;else this.data.bgColor = obj.bgColor;
-      this.data.editorUrl = obj.editorUrl !== undefined ? obj.editorUrl : "https://draw.io";
+      this.data.editorUrl = obj.editorUrl !== undefined ? obj.editorUrl : "https://www.draw.io";
+      this.data.editorTheme = obj.editorTheme !== undefined ? obj.editorTheme : "dark";
       this.init();
     }
   }, {
@@ -226,6 +227,11 @@ var Flowchart = function () {
     key: "getUrlEditor",
     value: function getUrlEditor() {
       return this.data.editorUrl;
+    }
+  }, {
+    key: "getThemeEditor",
+    value: function getThemeEditor() {
+      return this.data.editorTheme;
     }
   }, {
     key: "getContent",

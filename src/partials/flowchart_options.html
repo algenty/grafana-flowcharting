@@ -29,13 +29,20 @@
           </gf-form-switch>
         </div>
         <div class="gf-form"  ng-if="!flowchart.data.download">
-          <label class="gf-form-label width-12">Editor address
+          <label class="gf-form-label width-12">Editor Url & Theme
             <info-popover mode="right-normal"><span
-                ng-bind-html="GF_PLUGIN.popover('Address od editor when click on button edit draw', 'FLOWCHART#address')"></span>
+                ng-bind-html="GF_PLUGIN.popover('Address and theme of editor when click on button edit draw', 'FLOWCHART#address')"></span>
             </info-popover>
           </label>
           <input type="text" class="gf-form-input width-30" ng-model="flowchart.data.editorUrl"
             placeholder="https://draw.io" />
+          <div class="gf-form-select-wrapper width-8">
+            <select
+              class="gf-form-input"
+              ng-model="flowchart.data.editorTheme"
+              ng-options="c.value as c.text for c in editor.themes"
+            ></select>
+          </div>
         </div>
         <div class="gf-form">
           <span class="gf-form-label width-12">

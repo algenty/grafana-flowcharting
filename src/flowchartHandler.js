@@ -350,11 +350,13 @@ export default class FlowchartHandler {
    */
   openDrawEditor(index) {
     const urlEditor = this.getFlowchart(index).getUrlEditor();
-    const urlParams = urlEditor + '?embed=1&spin=1&libraries=1&ui=dark';
+    const theme = this.getFlowchart(index).getThemeEditor();
+    const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}`;
    console.log("urlParams ", urlParams);
     const editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     window.addEventListener('message', event => {
-      if (event.origin !== urlEditor) return;
+      // debugger
+      // if (event.origin !== urlEditor) return;
       // when editor is open
       if (event.data === 'ready') {
         // send xml

@@ -28,6 +28,19 @@ var FlowchartOptionsCtrl = function () {
       text: 'XML Content',
       value: 'xml'
     }];
+    this.themes = [{
+      text: 'Dark',
+      value: 'dark'
+    }, {
+      text: 'Light',
+      value: 'kennedy'
+    }, {
+      text: 'Mobile',
+      value: 'minimal'
+    }, {
+      text: 'Atlas',
+      value: 'atlas'
+    }];
   }
 
   _createClass(FlowchartOptionsCtrl, [{

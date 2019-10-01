@@ -55,7 +55,8 @@ export default class Flowchart {
     else this.data.grid = obj.grid !== undefined ? obj.grid : false;
     if (obj.options) this.data.bgColor = obj.options.bgColor;
     else this.data.bgColor = obj.bgColor;
-    this.data.editorUrl = obj.editorUrl !== undefined ? obj.editorUrl : "https://draw.io";
+    this.data.editorUrl = obj.editorUrl !== undefined ? obj.editorUrl : "https://www.draw.io";
+    this.data.editorTheme = obj.editorTheme !== undefined ? obj.editorTheme : "dark";
     this.init();
   }
 
@@ -225,6 +226,10 @@ export default class Flowchart {
 
   getUrlEditor() {
     return this.data.editorUrl;
+  }
+
+  getThemeEditor() {
+    return this.data.editorTheme;
   }
 
   /**

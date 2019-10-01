@@ -19,23 +19,26 @@ Draw your artwork and monitor it.
 See more example at draw.io  
 
 # Getting started
-https://algenty.github.io/flowcharting-repository/STARTED.html
+<https://algenty.github.io/flowcharting-repository/STARTED.html>
 
 # Documentation
-https://algenty.github.io/flowcharting-repository/
+<https://algenty.github.io/flowcharting-repository/>
 
 # Project site
-https://github.com/algenty/grafana-flowcharting
+<https://github.com/algenty/grafana-flowcharting>
 
 # Changelog
 
-## [[0.5.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0-SNAPSHOT.zip) - 2019-09-29
+## [[0.5.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0-SNAPSHOT.zip) - 2019-10-02
 ### Added  
   - 2 new modes for "Update text value" ([See example](https://algenty.github.io/flowcharting-repository/images/append_mode_ani.png))
     - Append (Space) : Concat metrics with a space as a separator
     - Append (New line) : Concat metrics with a line break
   - Variabilization in "Url" for link mapping ([See example](https://algenty.github.io/flowcharting-repository/images/variable_link_ani.png))
   - New check box to allow download images from draw.io ([See example](https://algenty.github.io/flowcharting-repository/images/drawio_source_ani.png))
+  - New editor option :
+    - Other editor draw.io like internal website draw.io are supported
+    - Choose the themeof editor 
 
 ### Fixed  
   - Fix color to reset when "Color on" is "Always/Critical" and metric is OK  
@@ -141,7 +144,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.0 Next/Requested enhancements
   - [ ] Custom libs.
-  - [ ] Internat draw.io website [(issue #43)](https://github.com/algenty/grafana-flowcharting/issues/43)  
+  - [X] Internat draw.io website [(issue #43)](https://github.com/algenty/grafana-flowcharting/issues/43)  
   - [X] Display tooltip (done in 0.4.0)
   - [ ] Export SVG, png,  options
   - [X] Add data in tooltip (done in 0.4.0)

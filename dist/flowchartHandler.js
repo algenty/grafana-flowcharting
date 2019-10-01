@@ -265,12 +265,11 @@ var FlowchartHandler = function () {
       var _this3 = this;
 
       var urlEditor = this.getFlowchart(index).getUrlEditor();
-      var urlParams = urlEditor + '?embed=1&spin=1&libraries=1&ui=dark';
+      var theme = this.getFlowchart(index).getThemeEditor();
+      var urlParams = "".concat(urlEditor, "?embed=1&spin=1&libraries=1&ui=").concat(theme);
       console.log("urlParams ", urlParams);
       var editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
       window.addEventListener('message', function (event) {
-        if (event.origin !== urlEditor) return;
-
         if (event.data === 'ready') {
           event.source.postMessage(_this3.flowcharts[index].data.xml, event.origin);
         } else {

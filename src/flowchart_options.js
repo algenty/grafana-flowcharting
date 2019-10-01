@@ -11,6 +11,12 @@ export class FlowchartOptionsCtrl {
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.panel = this.ctrl.panel;
     this.sourceTypes = [{ text: 'XML Content', value: 'xml' }]
+    this.themes = [
+      { text: 'Dark', value: 'dark' },
+      { text: 'Light', value: 'kennedy' },
+      { text: 'Mobile', value: 'minimal' },
+      { text: 'Atlas', value: 'atlas' },
+    ];
     //,{ text: 'CSV', value: 'csv' }];
   }
 
