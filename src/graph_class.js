@@ -167,6 +167,7 @@ export default class XGraph {
     });
     require('./Shapes');
     require('./Graph_over');
+    // require('./stencils.min');
     this.graph = new Graph(this.container);
     this.graph.getTooltipForCell = this.getTooltipForCell;
 

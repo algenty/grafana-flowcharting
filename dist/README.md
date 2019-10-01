@@ -29,7 +29,7 @@ https://github.com/algenty/grafana-flowcharting
 
 # Changelog
 
-## [[0.5.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0.zip) - 2019-09-29
+## [[0.5.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0-SNAPSHOT.zip) - 2019-09-29
 ### Added  
   - 2 new modes for "Update text value" ([See example](https://algenty.github.io/flowcharting-repository/images/append_mode_ani.png))
     - Append (Space) : Concat metrics with a space as a separator
@@ -39,7 +39,7 @@ https://github.com/algenty/grafana-flowcharting
 
 ### Fixed  
   - Fix color to reset when "Color on" is "Always/Critical" and metric is OK  
-  - Fix border to empty instead black when "color mode" is "Fill" [(issue #29)](https://github.com/algenty/grafana-flowcharting/issues/29)  
+  - Fix border to empty instead black when "color mode" is "Fill" [(issue #24)](https://github.com/algenty/grafana-flowcharting/issues/24)  
   - Fix error when "Value On" is not "When metric displayed"
   - Fix Link [(issue #37)](https://github.com/algenty/grafana-flowcharting/issues/37)  
 
@@ -140,7 +140,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # Cooming soon/Roadmap
 
 ## 1.0 Next/Requested enhancements
-  - [ ] Custom libs. 
+  - [ ] Custom libs.
+  - [ ] Internat draw.io website [(issue #43)](https://github.com/algenty/grafana-flowcharting/issues/43)  
   - [X] Display tooltip (done in 0.4.0)
   - [ ] Export SVG, png,  options
   - [X] Add data in tooltip (done in 0.4.0)

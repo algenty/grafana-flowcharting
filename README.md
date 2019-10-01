@@ -140,7 +140,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # Cooming soon/Roadmap
 
 ## 1.0 Next/Requested enhancements
-  - [ ] Custom libs. 
+  - [ ] Custom libs.
+  - [ ] Internat draw.io website [(issue #43)](https://github.com/algenty/grafana-flowcharting/issues/43)  
   - [X] Display tooltip (done in 0.4.0)
   - [ ] Export SVG, png,  options
   - [X] Add data in tooltip (done in 0.4.0)

@@ -351,10 +351,11 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   openDrawEditor(index) {
-    const urlEditor = 'https://draw.io?embed=1&spin=1&libraries=1&ui=dark';
-    const editorWindow = window.open(urlEditor, 'MxGraph Editor', 'width=1280, height=720');
+    const urlEditor = this.getFlowchart(index).getUrlEditor();
+    const urlParams = urlEditor + '?embed=1&spin=1&libraries=1&ui=dark';
+    const editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     window.addEventListener('message', event => {
-      if (event.origin !== 'https://www.draw.io') return;
+      if (event.origin !== urlEditor) return;
       // when editor is open
       if (event.data === 'ready') {
         // send xml

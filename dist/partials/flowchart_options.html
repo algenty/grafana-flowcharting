@@ -28,6 +28,15 @@
           >
           </gf-form-switch>
         </div>
+        <div class="gf-form"  ng-if="!flowchart.data.download">
+          <label class="gf-form-label width-12">Editor address
+            <info-popover mode="right-normal"><span
+                ng-bind-html="GF_PLUGIN.popover('Address od editor when click on button edit draw', 'FLOWCHART#address')"></span>
+            </info-popover>
+          </label>
+          <input type="text" class="gf-form-input width-30" ng-model="flowchart.data.editorUrl"
+            placeholder="https://draw.io" />
+        </div>
         <div class="gf-form">
           <span class="gf-form-label width-12">
             Source Type

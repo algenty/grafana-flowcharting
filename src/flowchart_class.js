@@ -55,6 +55,7 @@ export default class Flowchart {
     else this.data.grid = obj.grid !== undefined ? obj.grid : false;
     if (obj.options) this.data.bgColor = obj.options.bgColor;
     else this.data.bgColor = obj.bgColor;
+    this.data.editorUrl = obj.editorUrl !== undefined ? obj.editorUrl : "https://draw.io";
     this.init();
   }
 
@@ -220,6 +221,10 @@ export default class Flowchart {
     u.log(1, `flowchart[${this.data.name}].getXml()`);
     if (!replaceVarBool) return this.data.csv;
     return this.templateSrv.replaceWithText(this.data.csv);
+  }
+
+  getUrlEditor() {
+    return this.data.editorUrl;
   }
 
   /**

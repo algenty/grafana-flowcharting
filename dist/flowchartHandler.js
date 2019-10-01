@@ -264,10 +264,11 @@ var FlowchartHandler = function () {
     value: function openDrawEditor(index) {
       var _this3 = this;
 
-      var urlEditor = 'https://draw.io?embed=1&spin=1&libraries=1&ui=dark';
-      var editorWindow = window.open(urlEditor, 'MxGraph Editor', 'width=1280, height=720');
+      var urlEditor = this.getFlowchart(index).getUrlEditor();
+      var urlParams = urlEditor + '?embed=1&spin=1&libraries=1&ui=dark';
+      var editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
       window.addEventListener('message', function (event) {
-        if (event.origin !== 'https://www.draw.io') return;
+        if (event.origin !== urlEditor) return;
 
         if (event.data === 'ready') {
           event.source.postMessage(_this3.flowcharts[index].data.xml, event.origin);
