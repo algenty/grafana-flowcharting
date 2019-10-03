@@ -20,6 +20,14 @@ plugin.getRootPath = function () {
   return this.dirname;
 };
 
+plugin.getLibsPath = function () {
+  return `${this.dirname}/libs`;
+};
+
+plugin.getShapesPath = function () {
+  return `${this.dirname}/libs/shapes`;
+};
+
 plugin.getMxBasePath = function () {
   return this.mxBasePath;
 };

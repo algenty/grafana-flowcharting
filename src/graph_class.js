@@ -17,6 +17,7 @@ window.BASE_PATH = window.BASE_PATH || GF_PLUGIN.getMxBasePath();
 window.RESOURCES_PATH = window.BASE_PATH || `${window.BASE_PATH}resources`;
 window.RESOURCE_BASE = window.RESOURCE_BASE || `${window.RESOURCES_PATH}/grapheditor`;
 window.STENCIL_PATH = window.STENCIL_PATH || `${window.BASE_PATH}stencils`;
+window.SHAPES_PATH = window.SHAPES_PATH || GF_PLUGIN.getShapesPath();
 window.IMAGE_PATH = window.IMAGE_PATH || `${window.BASE_PATH}images`;
 window.STYLE_PATH = window.STYLE_PATH || `${window.BASE_PATH}styles`;
 window.CSS_PATH = window.CSS_PATH || `${window.BASE_PATH}styles`;
