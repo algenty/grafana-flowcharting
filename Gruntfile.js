@@ -130,7 +130,7 @@ module.exports = (grunt) => {
           expand: true,
           src: ['*.js', '!mxHandler.js', "!Graph.js", "!init.js", "!utils.js", "!backup/**/*", "!__mocks__", "!libs/sanitizer.min.js"],
           dest: 'dist',
-          ext: '**/*.js',
+          ext: '.js',
         }],
       },
     },

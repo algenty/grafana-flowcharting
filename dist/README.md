@@ -37,7 +37,7 @@ See more example at draw.io
   - Variabilization in "Url" for link mapping ([See example](https://algenty.github.io/flowcharting-repository/images/variable_link_ani.png))
   - New check box to allow download images from draw.io ([See example](https://algenty.github.io/flowcharting-repository/images/drawio_source_ani.png))
   - New editor option :
-    - Other editor draw.io like internal website draw.io
+    - Other editor draw.io like internal website draw.io are supported
     - Choose the themeof editor 
 
 ### Fixed  
@@ -144,7 +144,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.0 Next/Requested enhancements
   - [ ] Custom libs.
-  - [ ] Internat draw.io website [(issue #43)](https://github.com/algenty/grafana-flowcharting/issues/43)  
+  - [X] Internat draw.io website [(issue #43)](https://github.com/algenty/grafana-flowcharting/issues/43)  
   - [X] Display tooltip (done in 0.4.0)
   - [ ] Export SVG, png,  options
   - [X] Add data in tooltip (done in 0.4.0)
