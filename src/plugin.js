@@ -25,7 +25,7 @@ plugin.getLibsPath = function () {
 };
 
 plugin.getShapesPath = function () {
-  return `${this.dirname}/libs/shapes`;
+  return `${this.dirname}libs/shapes`;
 };
 
 plugin.getMxBasePath = function () {
