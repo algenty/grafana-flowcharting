@@ -609,4 +609,12 @@ export default class State {
       this.tooltips = [];
     }
   }
+
+  highlightCell() {
+    this.xgraph.highlightCell(this.mxcell);
+  }
+
+  unhighlightCell() {
+    this.xgraph.unhighlightCell(this.mxcell);
+  }
 }

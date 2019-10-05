@@ -256,10 +256,20 @@ var MappingOptionsCtrl = function () {
     }
   }, {
     key: "unselectCell",
-    value: function unselectCell() {
+    value: function unselectCell(prop, value) {
       var flowchart = this.flowchartHandler.getFlowchart(0);
       var xgraph = flowchart.getXGraph();
-      xgraph.unselectMxCells();
+      xgraph.unselectMxCells(prop, value);
+    }
+  }, {
+    key: "highlightCells",
+    value: function highlightCells(rule) {
+      rule.highlightCells();
+    }
+  }, {
+    key: "unhighlightCells",
+    value: function unhighlightCells(rule) {
+      rule.unhighlightCells();
     }
   }]);
 

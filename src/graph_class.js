@@ -152,7 +152,7 @@ export default class XGraph {
       if (u.isencoded(definition)) this.xmlGraph = u.decode(definition, true, true, true);
       else this.xmlGraph = definition;
     }
-    
+
     this.initGraph();
   }
 
@@ -166,13 +166,12 @@ export default class XGraph {
     const Graph = require('./Graph')({
       libs: 'arrows;basic;bpmn;flowchart'
     });
+    window.Graph = window.Graph || Graph;
     require('./Shapes');
     require('./Graph_over');
-    // require('./stencils.min');
     this.graph = new Graph(this.container);
     this.graph.getTooltipForCell = this.getTooltipForCell;
 
-    
     // /!\ What is setPannig
     this.graph.setPanning(true);
 
@@ -251,8 +250,6 @@ export default class XGraph {
     this.graph.refresh();
   }
 
-
-
   destroyGraph() {
     this.graph.destroy();
     this.graph = undefined;
@@ -283,7 +280,7 @@ export default class XGraph {
   }
 
   allowDrawio(bool) {
-    if(bool) mxUrlConverter.prototype.baseUrl = "http://draw.io/";
+    if (bool) mxUrlConverter.prototype.baseUrl = 'http://draw.io/';
     else mxUrlConverter.prototype.baseUrl = null;
   }
 
@@ -464,7 +461,8 @@ export default class XGraph {
   selectMxCells(prop, pattern) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
-      this.graph.setSelectionCells(mxcells);
+      // this.graph.setSelectionCells(mxcells);
+      this.highlightCells(mxcells);
     }
   }
 
@@ -473,9 +471,14 @@ export default class XGraph {
    *
    * @memberof XGraph
    */
-  unselectMxCells() {
+  unselectMxCells(prop, pattern) {
     // this.graph.removeCellOverlays(cell);
-    this.graph.clearSelection();
+    // this.graph.clearSelection();
+    const mxcells = this.findMxCells(prop, pattern);
+    if (mxcells) {
+      // this.graph.setSelectionCells(mxcells);
+      this.unhighlightCells(mxcells);
+    }
   }
 
   /**
@@ -644,9 +647,9 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getValuePropOfMxCell(prop,mxcell) {
-    if (prop === "id") return this.getId(mxcell);
-    if (prop === "value") return this.getLabel(mxcell);
+  getValuePropOfMxCell(prop, mxcell) {
+    if (prop === 'id') return this.getId(mxcell);
+    if (prop === 'value') return this.getLabel(mxcell);
     return null;
   }
 
@@ -697,7 +700,7 @@ export default class XGraph {
    * @returns {string} Id of mxCell
    * @memberof XGraph
    */
-  getId(mxcell){
+  getId(mxcell) {
     return mxcell.getId();
   }
 
@@ -885,7 +888,83 @@ export default class XGraph {
   }
 
   /**
-   *Zoom cell on full panel 
+   * Highlights the given cell.
+   */
+  highlightCells(cells) {
+    for (var i = 0; i < cells.length; i++) {
+      this.highlightCell(cells[i]);
+    }
+  }
+
+  /**
+   * UnHighlights the given cell.
+   */
+  unhighlightCells(cells) {
+    for (var i = 0; i < cells.length; i++) {
+      this.unhighlightCell(cells[i]);
+    }
+  }
+
+  /**
+   * Highlights the given cell.
+   */
+  // highlightCell(cell, color, duration, opacity)
+  highlightCell(cell) {
+    if(cell.highlight) return;
+    let color = '#99ff33';
+    // color = (color != null) ? color : mxConstants.DEFAULT_VALID_COLOR;
+    // duration = (duration != null) ? duration : 1000;
+    let opacity = 100;
+    var state = this.graph.view.getState(cell);
+
+    if (state != null) {
+      var sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+      var hl = new mxCellHighlight(this.graph, color, sw, false);
+
+      if (opacity != null) {
+        hl.opacity = opacity;
+      }
+
+      hl.highlight(state);
+      cell.highlight = hl;
+
+      // Fades out the highlight after a duration
+      // window.setTimeout(function()
+      // {
+      // 	if (hl.shape != null)
+      // 	{
+      // 	 	mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 1200ms ease-in-out');
+      // 		hl.shape.node.style.opacity = 0;
+      // 	}
+
+      // 	// Destroys the highlight after the fade
+      // 	window.setTimeout(function()
+      // 	{
+      // 		hl.destroy();
+      // 	}, 1200);
+      // }, duration);
+    }
+  }
+
+  unhighlightCell(cell) {
+    if (cell && cell.highlight) {
+      let hl = cell.highlight;
+      // Fades out the highlight after a duration
+      if (hl.shape != null) {
+        mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 500ms ease-in-out');
+        hl.shape.node.style.opacity = 0;
+      }
+
+      // Destroys the highlight after the fade
+      window.setTimeout(function() {
+        hl.destroy();
+      }, 500);
+      cell.highlight = null;
+    }
+  }
+
+  /**
+   *Zoom cell on full panel
    *
    * @param {*} mxcell
    * @memberof XGraph
@@ -914,7 +993,7 @@ export default class XGraph {
   getTooltipForCell(cell) {
     u.log(1, 'Graph.prototype.getTooltipForCell()');
     let tip = '';
-  
+
     if (mxUtils.isNode(cell.value)) {
       let tmp = cell.value.getAttribute('tooltip');
       // Tooltip
@@ -924,23 +1003,23 @@ export default class XGraph {
         }
         tip += '<div style="word-wrap:break-word;">' + this.sanitizeHtml(tmp) + '</div>';
       }
-  
+
       let ignored = this.builtInProperties;
       let attrs = cell.value.attributes;
       let temp = [];
-  
+
       // Hides links in edit mode
       if (this.isEnabled()) {
         ignored.push('link');
       }
-  
+
       // Attributes
       for (var i = 0; i < attrs.length; i++) {
         if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
           temp.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
         }
       }
-  
+
       // Sorts by name
       temp.sort(function(a, b) {
         if (a.name < b.name) {
@@ -963,21 +1042,21 @@ export default class XGraph {
         }
         tip += '</div>';
       }
-  
+
       if (tip.length > 0) {
         tip = tip.substring(0, tip.length - 1);
-  
+
         if (mxClient.IS_SVG) {
           tip = '<div style="max-width:360px;">' + tip + '</div>';
         }
       }
     }
-  
+
     // Date : Last change
     if (cell.GF_lastChange !== undefined && cell.GF_lastChange !== null) {
       tip += `<div class="graph-tooltip-time"></br>${cell.GF_lastChange}</div>`;
     }
-  
+
     // Metrics
     if (cell.GF_tooltips !== undefined && cell.GF_tooltips.length > 0) {
       let metrics = cell.GF_tooltips;
@@ -993,6 +1072,5 @@ export default class XGraph {
     }
     // u.log(1, 'Graph_other.getTooltipForCell() tip', tip);
     return tip;
-  };
-
+  }
 }

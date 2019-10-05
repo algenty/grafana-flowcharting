@@ -151,11 +151,20 @@ export class MappingOptionsCtrl {
    *
    * @memberof MappingOptionsCtrl
    */
-  unselectCell() {
+  unselectCell(prop, value) {
     const flowchart = this.flowchartHandler.getFlowchart(0);
     const xgraph = flowchart.getXGraph();
-    xgraph.unselectMxCells();
+    xgraph.unselectMxCells(prop, value);
   }
+
+  highlightCells(rule) {
+    rule.highlightCells();
+  }
+
+  unhighlightCells(rule) {
+    rule.unhighlightCells();
+  }
+
 }
 
 /** @ngInject */

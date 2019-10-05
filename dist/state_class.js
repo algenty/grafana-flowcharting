@@ -467,6 +467,16 @@ var State = function () {
         this.tooltips = [];
       }
     }
+  }, {
+    key: "highlightCell",
+    value: function highlightCell() {
+      this.xgraph.highlightCell(this.mxcell);
+    }
+  }, {
+    key: "unhighlightCell",
+    value: function unhighlightCell() {
+      this.xgraph.unhighlightCell(this.mxcell);
+    }
   }]);
 
   return State;

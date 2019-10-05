@@ -172,6 +172,22 @@ export default class Rule {
     return this.id;
   }
 
+  highlightCells() {
+    if(this.states) {
+      this.states.forEach(state => {
+        state.highlightCell();
+      });
+    }
+  }
+
+  unhighlightCells() {
+    if(this.states) {
+      this.states.forEach(state => {
+        state.unhighlightCell();
+      });
+    }
+  }
+
   /**
    *Return the order of this rule
    *Grafana 6+ have a bug when reload dashboad, array are not in order
@@ -956,7 +972,7 @@ class ValueMap {
   isHidden() {
     return this.data.hidden;
   }
-
+  
   export() {
     return {
       value: this.data.value,
@@ -964,6 +980,7 @@ class ValueMap {
       hidden: this.data.hidden
     };
   }
+
 }
 
 function formatValue(value, unit, decimals) {

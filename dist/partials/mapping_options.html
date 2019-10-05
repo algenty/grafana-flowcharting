@@ -2,7 +2,7 @@
   <div class="editor-row" ng-repeat="rule in rulesHandler.getRules()">
     <div>
       <!-- HEADER of style -->
-      <div class="gf-form-label gf-form-label--grow"
+      <div class="gf-form-label gf-form-label--grow" ng-mouseover="editor.highlightCells(rule)" ng-mouseleave="editor.unhighlightCells(rule)"
         style="vertical-align: middle;width:100%;height: 30px; display: inline-block;">
         <div style="text-align: left;float: left;vertical-align: middle">
           <span class="section-heading">
@@ -42,7 +42,7 @@
                   ng-bind-html="GF_PLUGIN.popover('Name of the rule, for information', 'MAPPING#Rule name')"></span>
               </info-popover>
             </label>
-            <input type="text" class="gf-form-input width-12" ng-model="rule.data.alias" id="{{ rule.getId() }}"
+            <input type="text" class="gf-form-input width-12" ng-model="rule.data.alias" id="{{ rule.getId() }}" 
               placeholder="Name of this rule" />
           </div>
           <div class="gf-form">
@@ -402,7 +402,7 @@
                 class="gf-form-input width-13" ng-model="shape.data.pattern"
                 bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
                 bs-typeahead="editor.getCellNamesForShape" ng-blur="editor.onRulesChange()" data-min-length="0"
-                data-items="100" ng-model-onblur data-placement="right" ng-mouseleave="editor.unselectCell()"
+                data-items="100" ng-model-onblur data-placement="right" ng-mouseleave="editor.unselectCell(rule.data.shapeProp,shape.data.pattern)"
                 ng-mouseover="editor.selectCell(rule.data.shapeProp,shape.data.pattern)" />
             </div>
             <div class="gf-form">
@@ -458,7 +458,7 @@
                 class="gf-form-input width-13" ng-model="text.data.pattern"
                 bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/text (see inspect tab)'"
                 bs-typeahead="editor.getCellNamesForText" ng-blur="editor.onRulesChange()" ng-model-onblur
-                data-min-length="0" data-items="100" data-placement="right" ng-mouseleave="editor.unselectCell()"
+                data-min-length="0" data-items="100" data-placement="right" ng-mouseleave="editor.unselectCell(rule.data.textProp,text.data.pattern)"
                 ng-mouseover="editor.selectCell(rule.data.textProp,text.data.pattern)" />
             </div>
 
@@ -509,7 +509,7 @@
                 class="gf-form-input width-13" ng-model="link.data.pattern"
                 bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/link (see inspect tab)'"
                 bs-typeahead="editor.getCellNamesForLink" ng-blur="editor.onRulesChange()" ng-model-onblur
-                data-min-length="0" data-items="100" data-placement="right" ng-mouseleave="editor.unselectCell()"
+                data-min-length="0" data-items="100" data-placement="right" ng-mouseleave="editor.unselectCell(rule.data.linkProp,link.data.pattern)"
                 ng-mouseover="editor.selectCell(rule.data.linkProp,link.data.pattern)" />
             </div>
 

@@ -171,6 +171,24 @@ var Rule = function () {
       return this.id;
     }
   }, {
+    key: "highlightCells",
+    value: function highlightCells() {
+      if (this.states) {
+        this.states.forEach(function (state) {
+          state.highlightCell();
+        });
+      }
+    }
+  }, {
+    key: "unhighlightCells",
+    value: function unhighlightCells() {
+      if (this.states) {
+        this.states.forEach(function (state) {
+          state.unhighlightCell();
+        });
+      }
+    }
+  }, {
     key: "setOrder",
     value: function setOrder(order) {
       this.data.order = order;

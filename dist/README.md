@@ -38,13 +38,15 @@ See more example at draw.io
   - New check box to allow download images from draw.io ([See example](https://algenty.github.io/flowcharting-repository/images/drawio_source_ani.png))
   - New editor option :
     - Other editor draw.io like internal website draw.io are supported
-    - Choose the themeof editor 
+    - Choose the themeof editor identification_mode_ani
+  - New identification mode for shapes when cursor is over of rule or mapping ([See example](https://algenty.github.io/flowcharting-repository/images/identification_mode_ani.png))
 
 ### Fixed  
   - Fix color to reset when "Color on" is "Always/Critical" and metric is OK  
   - Fix border to empty instead black when "color mode" is "Fill" [(issue #24)](https://github.com/algenty/grafana-flowcharting/issues/24)  
   - Fix error when "Value On" is not "When metric displayed"
   - Fix Link [(issue #37)](https://github.com/algenty/grafana-flowcharting/issues/37)  
+  - Fix hyperlink text appears in white over flowchart [(issue #45)](https://github.com/algenty/grafana-flowcharting/issues/45)
 
 ## [[0.4.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0.zip) - 2019-09-26
 ### Added

@@ -34,7 +34,7 @@ plugin.getLibsPath = function () {
 };
 
 plugin.getShapesPath = function () {
-  return "".concat(this.dirname, "/libs/shapes");
+  return "".concat(this.dirname, "libs/shapes");
 };
 
 plugin.getMxBasePath = function () {

@@ -56,6 +56,7 @@ mxEvent.addMouseWheelListener = function(func, container) {
   }
 };
 
+
 mxStencilRegistry.libraries.mockup = [SHAPES_PATH + "/mockup/mxMockupButtons.js"];
 mxStencilRegistry.libraries.arrows2 = [SHAPES_PATH + "/mxArrows.js"];
 mxStencilRegistry.libraries.atlassian = [STENCIL_PATH + "/atlassian.xml", SHAPES_PATH + "/mxAtlassian.js"];
