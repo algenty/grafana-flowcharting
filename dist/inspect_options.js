@@ -109,16 +109,12 @@ var InspectOptionsCtrl = function () {
   }, {
     key: "selectCell",
     value: function selectCell(state) {
-      var flowchart = this.flowchartHandler.getFlowchart(0);
-      var xgraph = flowchart.getXGraph();
-      if (state.edited) xgraph.selectMxCells('id', state.previousId);else xgraph.selectMxCells('id', state.cellId);
+      state.highlightCell();
     }
   }, {
     key: "unselectCell",
-    value: function unselectCell() {
-      var flowchart = this.flowchartHandler.getFlowchart(0);
-      var xgraph = flowchart.getXGraph();
-      xgraph.unselectMxCells();
+    value: function unselectCell(state) {
+      state.unhighlightCell();
     }
   }]);
 

@@ -71,16 +71,11 @@ export class InspectOptionsCtrl {
   }
 
   selectCell(state) {
-    const flowchart = this.flowchartHandler.getFlowchart(0);
-    const xgraph = flowchart.getXGraph();
-    if (state.edited) xgraph.selectMxCells('id', state.previousId);
-    else xgraph.selectMxCells('id', state.cellId);
+    state.highlightCell();
   }
 
-  unselectCell() {
-    const flowchart = this.flowchartHandler.getFlowchart(0);
-    const xgraph = flowchart.getXGraph();
-    xgraph.unselectMxCells();
+  unselectCell(state) {
+    state.unhighlightCell();
   }
 }
 

@@ -260,34 +260,37 @@ var FlowchartHandler = function () {
       return false;
     }
   }, {
+    key: "listenMessage",
+    value: function listenMessage(event) {
+      var index = this.currentFlowchartIndex;
+
+      if (event.data === 'ready') {
+        event.source.postMessage(this.flowcharts[index].data.xml, event.origin);
+      } else {
+        if (this.onEdit && event.data !== undefined && event.data.length > 0) {
+          this.flowcharts[index].redraw(event.data);
+          this.sourceChanged();
+          this.$scope.$apply();
+          this.render();
+        }
+
+        if (this.onEdit && event.data !== undefined || event.data.length === 0) {
+          this.editorWindow.close();
+          this.onEdit = false;
+          window.removeEventListener('message', this.listenMessage.bind(this), false);
+        }
+      }
+    }
+  }, {
     key: "openDrawEditor",
     value: function openDrawEditor(index) {
-      var _this3 = this;
-
       var urlEditor = this.getFlowchart(index).getUrlEditor();
+      this.currentFlowchartIndex = index;
       var theme = this.getFlowchart(index).getThemeEditor();
       var urlParams = "".concat(urlEditor, "?embed=1&spin=1&libraries=1&ui=").concat(theme);
-      console.log("urlParams ", urlParams);
-      var editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
-      window.addEventListener('message', function (event) {
-        if (event.data === 'ready') {
-          event.source.postMessage(_this3.flowcharts[index].data.xml, event.origin);
-        } else {
-          if (event.data !== undefined && event.data.length > 0) {
-            _this3.flowcharts[index].redraw(event.data);
-
-            _this3.sourceChanged();
-
-            _this3.$scope.$apply();
-
-            _this3.render();
-          }
-
-          if (event.data !== undefined || event.data.length === 0) {
-            editorWindow.close();
-          }
-        }
-      });
+      this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
+      this.onEdit = true;
+      window.addEventListener('message', this.listenMessage.bind(this), false);
     }
   }]);
 

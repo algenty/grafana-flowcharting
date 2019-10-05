@@ -66,7 +66,7 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="state in flowchartHandler.getFlowchart(0).getStateHandler().getStates()"
-							ng-mouseleave="editor.unselectCell()" ng-mouseover="editor.selectCell(state)">
+							ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
 							<td>
 								<div class="flowchartTable-editor" ng-dblclick="editor.onEdit(state)">
 									<div ng-hide="state.edited || state.edit"><span>{{state.cellId}}</span></div>

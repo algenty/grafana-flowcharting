@@ -342,6 +342,29 @@ export default class FlowchartHandler {
     return false;
   }
 
+  listenMessage(event) {
+    // debugger
+    // if (event.origin !== urlEditor) return;
+    // when editor is open
+    let index = this.currentFlowchartIndex;
+    if (event.data === 'ready') {
+      // send xml
+      event.source.postMessage(this.flowcharts[index].data.xml, event.origin);
+    } else {
+      if (this.onEdit && event.data !== undefined && event.data.length > 0) {
+        this.flowcharts[index].redraw(event.data);
+        this.sourceChanged();
+        this.$scope.$apply();
+        this.render();
+      }
+      if (this.onEdit && event.data !== undefined || event.data.length === 0) {
+        this.editorWindow.close();
+        this.onEdit = false;
+        window.removeEventListener('message', this.listenMessage.bind(this) ,false);
+      }
+    }
+  }
+
   /**
    *Open graph in draw.io
    *
@@ -350,28 +373,11 @@ export default class FlowchartHandler {
    */
   openDrawEditor(index) {
     const urlEditor = this.getFlowchart(index).getUrlEditor();
+    this.currentFlowchartIndex = index;
     const theme = this.getFlowchart(index).getThemeEditor();
     const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}`;
-   console.log("urlParams ", urlParams);
-    const editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
-    window.addEventListener('message', event => {
-      // debugger
-      // if (event.origin !== urlEditor) return;
-      // when editor is open
-      if (event.data === 'ready') {
-        // send xml
-        event.source.postMessage(this.flowcharts[index].data.xml, event.origin);
-      } else {
-        if (event.data !== undefined && event.data.length > 0) {
-          this.flowcharts[index].redraw(event.data);
-          this.sourceChanged();
-          this.$scope.$apply();
-          this.render();
-        }
-        if (event.data !== undefined || event.data.length === 0) {
-          editorWindow.close();
-        }
-      }
-    });
+    this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
+    this.onEdit = true;
+    window.addEventListener('message', this.listenMessage.bind(this) ,false);
   }
 }
