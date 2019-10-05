@@ -39,7 +39,8 @@ See more example at draw.io
   - New editor option :
     - Other editor draw.io like internal website draw.io are supported
     - Choose the themeof editor identification_mode_ani
-  - New identification mode for shapes when cursor is over of rule or mapping ([See example](https://algenty.github.io/flowcharting-repository/images/identification_mode_ani.png))
+  - New identification mode for shapes when mouse cursor is over the rules or the mapping ([See example](https://algenty.github.io/flowcharting-repository/images/identification_mode_ani.png))
+  - Support Dynamic shapes like Floorplan, isometric plans and more ([See example](https://algenty.github.io/flowcharting-repository/images/dynamic_shapes_ani.png))
 
 ### Fixed  
   - Fix color to reset when "Color on" is "Always/Critical" and metric is OK  
