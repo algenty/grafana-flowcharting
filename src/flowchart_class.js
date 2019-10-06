@@ -94,10 +94,9 @@ export default class Flowchart {
     if (this.xgraph === undefined)
       this.xgraph = new XGraph(this.container, this.data.type, this.getContent());
     if (this.data.xml !== undefined && this.data.xml !== null) {
-      
       if (this.data.allowDrawio) this.xgraph.allowDrawio(true);
       else this.xgraph.allowDrawio(false);
-
+      this.setOptions();
       this.xgraph.drawGraph();
       if (this.data.tooltip) this.xgraph.tooltipGraph(true);
       if (this.data.scale) this.xgraph.scaleGraph(true);
@@ -126,6 +125,18 @@ export default class Flowchart {
     if (series === undefined) u.log(3, "Series shoudn't be null");
     this.stateHandler.setStates(rules, series);
   }
+
+  setOptions() {
+    this.setScale(this.data.scale);
+    this.setCenter(this.data.center);
+    this.setGrid(this.data.grid);
+    this.setTooltip(this.data.tooltip);
+    this.setLock(this.data.lock);
+    this.setZoom(this.data.zoom);
+    this.setBgColor(this.data.bgColor);
+  }
+
+
 
   applyStates() {
     u.log(1, `flowchart[${this.data.name}].applyStates()`);

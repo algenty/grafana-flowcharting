@@ -69,10 +69,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onVarChanged() {
     u.log(1, 'FlowchartCtrl.onVarChanged()');
-    // this.flowchartHandler.draw();
     this.flowchartHandler.sourceChanged();
     this.flowchartHandler.render();
-    // this.flowchartHandler.sourceChanged();
   }
 
   onRender() {

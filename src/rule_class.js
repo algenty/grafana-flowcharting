@@ -42,10 +42,6 @@ export default class Rule {
     return this.data;
   }
 
-  export() {
-    return JSON.stringify(this);
-  }
-
   /**
    * import data in rule
    *
@@ -172,6 +168,11 @@ export default class Rule {
     return this.id;
   }
 
+  /**
+   *Highlight Cells in rule (mapping color text and link)
+   *
+   * @memberof Rule
+   */
   highlightCells() {
     if(this.states) {
       this.states.forEach(state => {
@@ -180,6 +181,11 @@ export default class Rule {
     }
   }
 
+  /**
+   *Highlight Cells in rule (mapping color text and link)
+   *
+   * @memberof Rule
+   */
   unhighlightCells() {
     if(this.states) {
       this.states.forEach(state => {

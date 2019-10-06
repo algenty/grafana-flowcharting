@@ -29,7 +29,7 @@ See more example at draw.io
 
 # Changelog
 
-## [[0.5.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0-SNAPSHOT.zip) - 2019-10-05
+## [[0.5.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0-SNAPSHOT.zip) - 2019-10-06
 ### Added  
   - 2 new modes for "Update text value" ([See example](https://algenty.github.io/flowcharting-repository/images/append_mode_ani.png))
     - Append (Space) : Concat metrics with a space as a separator
@@ -50,6 +50,7 @@ See more example at draw.io
   - Fix Link [(issue #37)](https://github.com/algenty/grafana-flowcharting/issues/37)  
   - Fix hyperlink text appears in white over flowchart [(issue #45)](https://github.com/algenty/grafana-flowcharting/issues/45)
   - Fix "Multiple FlowCharts On a Dashboard", when edit, both are the same draw [(issue #48)](https://github.com/algenty/grafana-flowcharting/issues/48)
+  - Fix options after reload or variable changed [(issue #44)](https://github.com/algenty/grafana-flowcharting/issues/48)
 
 ## [[0.4.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0.zip) - 2019-09-26
 ### Added

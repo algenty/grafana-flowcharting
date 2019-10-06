@@ -49,11 +49,6 @@ var Rule = function () {
       return this.data;
     }
   }, {
-    key: "export",
-    value: function _export() {
-      return JSON.stringify(this);
-    }
-  }, {
     key: "import",
     value: function _import(obj) {
       var _this = this;

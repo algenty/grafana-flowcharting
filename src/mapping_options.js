@@ -157,10 +157,22 @@ export class MappingOptionsCtrl {
     xgraph.unselectMxCells(prop, value);
   }
 
+  /**
+   *Turn Highlight on of cells in rule
+   *
+   * @param {*} rule
+   * @memberof MappingOptionsCtrl
+   */
   highlightCells(rule) {
     rule.highlightCells();
   }
 
+  /**
+   *Turn Highlight off of cells in rule
+   *
+   * @param {*} rule
+   * @memberof MappingOptionsCtrl
+   */
   unhighlightCells(rule) {
     rule.unhighlightCells();
   }

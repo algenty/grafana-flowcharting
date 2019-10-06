@@ -610,10 +610,20 @@ export default class State {
     }
   }
 
+  /**
+   *Highlight mxcell
+   *
+   * @memberof State
+   */
   highlightCell() {
     this.xgraph.highlightCell(this.mxcell);
   }
 
+  /**
+   * unhighlight mxcell
+   *
+   * @memberof State
+   */
   unhighlightCell() {
     this.xgraph.unhighlightCell(this.mxcell);
   }

@@ -245,7 +245,6 @@ export default class XGraph {
     $div.css(css);
     if (!this.scale) this.zoomGraph(this.zoomPercent);
     else this.unzoomGraph();
-
     this.tooltipGraph(this.tooltip);
     this.lockGraph(this.lock);
     this.scaleGraph(this.scale);
