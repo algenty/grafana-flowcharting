@@ -137,13 +137,13 @@
         <!-- Thresholds -->
         <div class="section gf-form-group" ng-if="['number', 'string'].indexOf(rule.data.type) !== -1">
           <h5 class="section-heading" ng-if="rule.data.invert">
-            Thresholds (Ok > Warn > Error)
+            Thresholds (Ok > Warn > Critical)
             <info-popover mode="right-normal"><span
                 ng-bind-html="GF_PLUGIN.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
             </info-popover>
           </h5>
           <h5 class="section-heading" ng-if="!rule.data.invert">
-            Thresholds (Error > Warn > Ok)
+            Thresholds (Critical > Warn > Ok)
             <info-popover mode="right-normal"><span
                 ng-bind-html="GF_PLUGIN.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
             </info-popover>
