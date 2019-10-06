@@ -127,13 +127,18 @@ var Flowchart = function () {
       this.stateHandler.applyStates();
     }
   }, {
-    key: "refresh",
-    value: function refresh(width, height) {
+    key: "applyOptions",
+    value: function applyOptions(width, height) {
       u.log(1, "flowchart[".concat(this.data.name, "].refresh()"));
       u.log(0, "flowchart[".concat(this.data.name, "].refresh() data"), this.data);
       if (width !== undefined && width != null) this.setWidth(width);
       if (height !== undefined && height != null) this.setHeight(height);
-      this.xgraph.refreshGraph(this.width, this.height);
+      this.xgraph.applyGraph(this.width, this.height);
+    }
+  }, {
+    key: "refresh",
+    value: function refresh() {
+      this.xgraph.refresh();
     }
   }, {
     key: "redraw",
@@ -148,7 +153,7 @@ var Flowchart = function () {
         this.xgraph.setXmlGraph(this.getXml(true));
       }
 
-      this.refresh();
+      this.applyOptions();
     }
   }, {
     key: "reload",

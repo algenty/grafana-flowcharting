@@ -143,12 +143,17 @@ export default class Flowchart {
     this.stateHandler.applyStates();
   }
 
-  refresh(width, height) {
+  applyOptions(width, height) {
     u.log(1, `flowchart[${this.data.name}].refresh()`);
     u.log(0, `flowchart[${this.data.name}].refresh() data`, this.data);
     if (width !== undefined && width != null) this.setWidth(width);
     if (height !== undefined && height != null) this.setHeight(height);
-    this.xgraph.refreshGraph(this.width, this.height);
+    this.xgraph.applyGraph(this.width, this.height);
+  }
+
+  refresh()
+  {
+    this.xgraph.refresh();
   }
 
   redraw(xmlGraph) {
@@ -160,7 +165,7 @@ export default class Flowchart {
       u.log(2, 'XML Content not defined');
       this.xgraph.setXmlGraph(this.getXml(true));
     }
-    this.refresh();
+    this.applyOptions();
   }
 
   reload() {

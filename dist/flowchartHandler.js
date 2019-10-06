@@ -28,6 +28,7 @@ var FlowchartHandler = function () {
     this.ctrl = ctrl;
     this.flowcharts = [];
     this.data = data;
+    this.firstLoad = true;
     this.changeSourceFlag = false;
     this.changeOptionFlag = true;
     this.changeDataFlag = false;
@@ -121,17 +122,20 @@ var FlowchartHandler = function () {
     key: "render",
     value: function render() {
       u.log(1, 'flowchartHandler.render()');
+      this.optionsFlag = true;
 
       if (!this.mousedown) {
         if (this.changeSourceFlag) {
           this.load();
           this.changeSourceFlag = false;
           this.changeRuleFlag = true;
+          this.optionsFlag = true;
         }
 
         if (this.changeOptionFlag) {
           this.setOptions();
           this.changeOptionFlag = false;
+          this.optionsFlag = true;
         }
 
         if (this.changeRuleFlag || this.changeDataFlag) {
@@ -148,11 +152,17 @@ var FlowchartHandler = function () {
           this.setStates(rules, series);
           this.applyStates();
           this.changeDataFlag = false;
+          this.optionsFlag = false;
+          this.refresh();
         }
 
-        var width = this.$elem.width();
-        var height = this.ctrl.height;
-        this.refresh(width, height);
+        if (this.optionsFlag || this.firstLoad) {
+          var width = this.$elem.width();
+          var height = this.ctrl.height;
+          this.applyOptions(width, height);
+          this.optionsFlag = false;
+          this.firstLoad = false;
+        }
       }
     }
   }, {
@@ -176,11 +186,18 @@ var FlowchartHandler = function () {
       this.changeDataFlag = true;
     }
   }, {
-    key: "refresh",
-    value: function refresh(width, height) {
-      u.log(1, "FlowchartHandler.refresh()");
+    key: "applyOptions",
+    value: function applyOptions(width, height) {
+      u.log(1, "FlowchartHandler.applyOptions()");
       this.flowcharts.forEach(function (flowchart) {
-        flowchart.refresh(width, height);
+        flowchart.applyOptions(width, height);
+      });
+    }
+  }, {
+    key: "refresh",
+    value: function refresh() {
+      this.flowcharts.forEach(function (flowchart) {
+        flowchart.refresh();
       });
     }
   }, {

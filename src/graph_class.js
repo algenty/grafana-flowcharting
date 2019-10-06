@@ -229,7 +229,7 @@ export default class XGraph {
    * @param {*} height
    * @memberof XGraph
    */
-  refreshGraph(width, height) {
+  applyGraph(width, height) {
     u.log(1, 'XGraph.refreshGraph()');
     const $div = $(this.container);
     const size = Math.min(width, height);
@@ -251,6 +251,10 @@ export default class XGraph {
     this.gridGraph(this.grid);
     this.centerGraph(this.center);
     this.bgGraph(this.bgColor);
+    this.refresh();
+  }
+
+  refresh() {
     this.graph.refresh();
   }
 
@@ -284,8 +288,14 @@ export default class XGraph {
   }
 
   allowDrawio(bool) {
-    if (bool) mxUrlConverter.prototype.baseUrl = 'http://draw.io/';
-    else mxUrlConverter.prototype.baseUrl = null;
+    if (bool) {
+      mxUrlConverter.prototype.baseUrl = 'http://draw.io/';
+      mxUrlConverter.prototype.baseDomain = '';
+    }
+    else {
+      mxUrlConverter.prototype.baseUrl = null;
+      mxUrlConverter.prototype.baseDomain = null;
+    }
   }
 
   /**
@@ -476,11 +486,8 @@ export default class XGraph {
    * @memberof XGraph
    */
   unselectMxCells(prop, pattern) {
-    // this.graph.removeCellOverlays(cell);
-    // this.graph.clearSelection();
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
-      // this.graph.setSelectionCells(mxcells);
       this.unhighlightCells(mxcells);
     }
   }
@@ -838,7 +845,7 @@ export default class XGraph {
       this.cumulativeZoomFactor = 1;
       if (this.graph) {
         this.graph.zoomActual();
-        this.refreshGraph(this.width, this.height);
+        this.applyGraph(this.width, this.height);
       }
     }
   }

@@ -51,6 +51,7 @@ See more example at draw.io
   - Fix hyperlink text appears in white over flowchart [(issue #45)](https://github.com/algenty/grafana-flowcharting/issues/45)
   - Fix "Multiple FlowCharts On a Dashboard", when edit, both are the same draw [(issue #48)](https://github.com/algenty/grafana-flowcharting/issues/48)
   - Fix options after reload or variable changed [(issue #44)](https://github.com/algenty/grafana-flowcharting/issues/48)
+  - Fix auto reset zoom/unzoom when data refreshed, only ESC or change options on flowchart reset zoom now[(issue #38)](https://github.com/algenty/grafana-flowcharting/issues/38)
 
 ## [[0.4.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0.zip) - 2019-09-26
 ### Added
@@ -158,7 +159,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Add custom stencils/libs from draw.io (done in 0.4.0)
   - [ ] Support light theme
   - [X] Url source download (done in 0.4.0)
-  - [ ] Special rule according level (hide, show, change form, move, infront, in back ...)
+  - [ ] Special rule according level (hide, show, change form, move, infront, in back, attributes,  ...)
+  - [ ] Custom variables like ${_label},${_value}, ${_alias}, ${_rule}, ${_level} ...
   - [ ] Variable support in link
   - [X] Zoom/Unzoom (done in 0.4.0)
   - [ ] Histogram in tooltip like heapmap
