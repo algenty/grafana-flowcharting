@@ -154,17 +154,20 @@ export default class FlowchartHandler {
     // not repeat render if mouse down
     this.optionsFlag = true;
     if (!this.mousedown) {
+      // SOURCE
       if (this.changeSourceFlag) {
         this.load();
         this.changeSourceFlag = false;
         this.changeRuleFlag = true;
         this.optionsFlag = true;
       }
+      // OPTIONS
       if (this.changeOptionFlag) {
         this.setOptions();
         this.changeOptionFlag = false;
         this.optionsFlag = true;
       }
+      // RULES or DATAS
       if (this.changeRuleFlag || this.changeDataFlag) {
         const rules = this.ctrl.rulesHandler.getRules();
         const series = this.ctrl.series;
@@ -178,10 +181,9 @@ export default class FlowchartHandler {
         this.applyStates();
         this.changeDataFlag = false;
         this.optionsFlag = false;
-        this.refresh();
       }
-
-      if (this.optionsFlag||this.firstLoad) {
+      // OTHER : Resize, OnLoad
+      if (this.optionsFlag || this.firstLoad) {
         const width = this.$elem.width();
         const height = this.ctrl.height;
         this.applyOptions(width, height);
@@ -273,6 +275,7 @@ export default class FlowchartHandler {
     this.flowcharts.forEach(flowchart => {
       flowchart.applyStates();
     });
+    this.refresh();
   }
 
   /**

@@ -153,7 +153,6 @@ var FlowchartHandler = function () {
           this.applyStates();
           this.changeDataFlag = false;
           this.optionsFlag = false;
-          this.refresh();
         }
 
         if (this.optionsFlag || this.firstLoad) {
@@ -220,6 +219,7 @@ var FlowchartHandler = function () {
       this.flowcharts.forEach(function (flowchart) {
         flowchart.applyStates();
       });
+      this.refresh();
     }
   }, {
     key: "setOptions",

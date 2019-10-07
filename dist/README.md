@@ -38,7 +38,7 @@ See more example at draw.io
   - New check box to allow download images from draw.io ([See example](https://algenty.github.io/flowcharting-repository/images/drawio_source_ani.png))
   - New editor option :
     - Other editor draw.io like internal website draw.io are supported
-    - Choose the themeof editor identification_mode_ani
+    - Choose the theme of editor identification_mode_ani
   - New identification mode for shapes when mouse cursor is over the rules or the mapping ([See example](https://algenty.github.io/flowcharting-repository/images/identification_mode_ani.png))
   - Support Dynamic shapes like Floorplan, isometric plans and more ([See example](https://algenty.github.io/flowcharting-repository/images/dynamic_shapes_ani.png))
   - Some optimizations, Display is twice as fast on load.
@@ -161,7 +161,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Url source download (done in 0.4.0)
   - [ ] Special rule according level (hide, show, change form, move, infront, in back, attributes,  ...)
   - [ ] Custom variables like ${_label},${_value}, ${_alias}, ${_rule}, ${_level} ...
-  - [ ] Variable support in link
+  - [X] Variable support in link (done in 0.5.0)
   - [X] Zoom/Unzoom (done in 0.4.0)
   - [ ] Histogram in tooltip like heapmap
   - [ ] Shared graph crosshair
@@ -172,8 +172,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Gradien Mode for color
   - [ ] More than 3 colors
   - [ ] Support cloud images from draw.io
-  - [X] Support images from draw.io
-  - [X] Add append mode on text with CR or space
+  - [X] Support images from draw.io (done in 0.5.0)
+  - [X] Add append mode on text with CR or space (done in 0.5.0)
 
 # Support or Contact
 
