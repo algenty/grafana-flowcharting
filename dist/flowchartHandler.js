@@ -152,7 +152,7 @@ var FlowchartHandler = function () {
           this.setStates(rules, series);
           this.applyStates();
           this.changeDataFlag = false;
-          this.optionsFlag = false;
+          this.optionsFlag = true;
         }
 
         if (this.optionsFlag || this.firstLoad) {

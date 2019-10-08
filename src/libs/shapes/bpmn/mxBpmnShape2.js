@@ -210,7 +210,7 @@ mxBpmnShape.prototype.redrawPath = function(c, x, y, w, h, layer)
 		if (s != null)
 		{
 			var f = this.symbols[s];
-
+			var isInverse = false;
 			if (f != null)
 			{
 				var strokeColor = c.state.strokeColor;

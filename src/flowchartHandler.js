@@ -180,8 +180,9 @@ export default class FlowchartHandler {
         this.setStates(rules, series);
         this.applyStates();
         this.changeDataFlag = false;
-        this.optionsFlag = false;
+        this.optionsFlag = true;
       }
+
       // OTHER : Resize, OnLoad
       if (this.optionsFlag || this.firstLoad) {
         const width = this.$elem.width();
