@@ -362,16 +362,46 @@ div.mxTooltip {
 }
 
 div.rule-item {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  font-family: Roboto,Helvetica Neue,Arial,sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-box-direction: normal;
+  box-sizing: inherit;
+  text-decoration: none;
+  touch-action: manipulation;
+  // cursor: pointer;
+  display: block;
+  margin: 3px;
+  padding: 7px;
+  background: linear-gradient(135deg,#2f2f32,#262628);
+  box-shadow: -1px -1px 0 0 hsla(0,0%,100%,.1),1px 1px 0 0 rgba(0,0,0,.3);
+  color: #d8d9da;
+}
+
+span.rule-extend {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   font-family: Roboto, Helvetica Neue, Arial, sans-serif;
   font-size: 13px;
   line-height: 1.5;
-  color: #d8d9da;
   -webkit-box-direction: normal;
+  cursor: pointer;
+  color: #dad9d8;
   box-sizing: inherit;
 }
 
-div.rule-title {
+span.rule-title {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-family: Roboto, Helvetica Neue, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-box-direction: normal;
+  cursor: pointer;
+  color: #dad9d8;
+  box-sizing: inherit;
+}
+
+span.rule-nav {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   font-family: Roboto, Helvetica Neue, Arial, sans-serif;
   font-size: 13px;
@@ -380,4 +410,5 @@ div.rule-title {
   cursor: pointer;
   color: #d8d9da;
   box-sizing: inherit;
+  float: right;
 }
