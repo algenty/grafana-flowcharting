@@ -4,16 +4,15 @@
       <!-- HEADER of style -->
       <div class="rule-item" ng-mouseover="editor.highlightCells(rule)" ng-mouseleave="editor.unhighlightCells(rule)">
         <span class="rule-extend" ng-click="rule.data.reduce=!rule.data.reduce">
-          <i class="fa fa-chevron-down" 
-            ng-class="{'fa-chevron-down': rule.data.reduce, 'fa-chevron-right': rule.data.reduce === false}"
-            ng-click="rule.data.reduce=!rule.data.reduce">
+          <i class="fa fa-chevron-right" 
+            ng-class="{'fa-chevron-right': rule.data.reduce, 'fa-chevron-down': rule.data.reduce === false}">
           </i>          
         </span>
         <span class="rule-title" ng-click="rule.data.reduce=!rule.data.reduce">{{ rule.data.order }} : Rule [{{ rule.data.alias }}]</span>
         <span class="rule-nav">
-          <i class="fa fa-arrow-up fa-lg pointer"
+          <i class="fa fa-arrow-up fa-lg"
             ng-click="rulesHandler.moveRuleToUp($index);editor.onRulesChange()"></i>
-          <i class="fa fa-arrow-down fa-lg pointer"
+          <i class="fa fa-arrow-down fa-lg"
             ng-click="rulesHandler.moveRuleToDown($index);editor.onRulesChange()"></i>
         </span>
       </div>

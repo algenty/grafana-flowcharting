@@ -303,7 +303,7 @@ div.mxTooltip {
 
 div.rule-item {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  font-family: Roboto,Helvetica Neue,Arial,sans-serif;
+  font-family: Roboto, Helvetica Neue, Arial, sans-serif;
   font-size: 13px;
   line-height: 1.5;
   -webkit-box-direction: normal;
@@ -316,6 +316,9 @@ div.rule-item {
   background: linear-gradient(135deg, #2f2f32, #262628);
   box-shadow: -1px -1px 0 0 rgba(255, 255, 255, 0.1), 1px 1px 0 0 rgba(0, 0, 0, 0.3);
   color: #d8d9da; }
+
+div.rule-item:hover {
+  background: linear-gradient(135deg, #3d3d41, #262628); }
 
 span.rule-extend {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
