@@ -1,7 +1,8 @@
-.flowchart-panel {
+div.flowchart-panel {
   display: flex;
   flex-direction: column;
-  height: 100%; }
+  height: 100%;
+  width: 100%; }
 
 .flowchart-panel--legend-right {
   flex-direction: row; }
@@ -9,9 +10,6 @@
 .flowchart-panel--legend-right .flowchart-legend {
   flex: 0 1 10px;
   height: 100%; }
-
-_:-ms-fullscreen, :root .flowchart-panel--legend-right .flowchart-legend {
-  flex: 0 1 200px; }
 
 .flowchart-panel--legend-right .flowchart-legend-series {
   display: block;
@@ -23,11 +21,12 @@ _:-ms-fullscreen, :root .flowchart-panel--legend-right .flowchart-legend {
 .flowchart-legend__container {
   height: 100%; }
 
-.flowchart-panel__chart {
+div.flowchart-panel__chart {
   position: relative;
-  cursor: crosshair;
   flex-grow: 1;
-  top: 10px; }
+  width: 100%;
+  height: 100%;
+  margin: 0; }
 
 .datapoints-warning {
   pointer: none;
@@ -65,52 +64,52 @@ _:-ms-fullscreen, :root .flowchart-panel--legend-right .flowchart-legend {
   white-space: nowrap;
   font-size: 85%;
   text-align: left;
-  color: 52545c; }
+  color: #d8d9da; }
 
 .flowchart-legend-icon.current::before {
-  content: "Current: "; }
+  content: 'Current: '; }
 
 .flowchart-legend-icon.max::before {
-  content: "Max: "; }
+  content: 'Max: '; }
 
 .flowchart-legend-icon.min::before {
-  content: "Min: "; }
+  content: 'Min: '; }
 
 .flowchart-legend-icon.total::before {
-  content: "Total: "; }
+  content: 'Total: '; }
 
 .flowchart-legend-icon.avg::before {
-  content: "Avg: "; }
+  content: 'Avg: '; }
 
 .flowchart-legend-alias.current::before {
-  content: "Current: "; }
+  content: 'Current: '; }
 
 .flowchart-legend-alias.max::before {
-  content: "Max: "; }
+  content: 'Max: '; }
 
 .flowchart-legend-alias.min::before {
-  content: "Min: "; }
+  content: 'Min: '; }
 
 .flowchart-legend-alias.total::before {
-  content: "Total: "; }
+  content: 'Total: '; }
 
 .flowchart-legend-alias.avg::before {
-  content: "Avg: "; }
+  content: 'Avg: '; }
 
 .flowchart-legend-value.current::before {
-  content: "Current: "; }
+  content: 'Current: '; }
 
 .flowchart-legend-value.max::before {
-  content: "Max: "; }
+  content: 'Max: '; }
 
 .flowchart-legend-value.min::before {
-  content: "Min: "; }
+  content: 'Min: '; }
 
 .flowchart-legend-value.total::before {
-  content: "Total: "; }
+  content: 'Total: '; }
 
 .flowchart-legend-value.avg::before {
-  content: "Avg: "; }
+  content: 'Avg: '; }
 
 .flowchart-legend-icon .fa {
   font-size: 135%;
@@ -145,9 +144,9 @@ _:-ms-fullscreen, :root .flowchart-panel--legend-right .flowchart-legend {
   float: none; }
 
 .flowchart-legend-table .flowchart-legend-series--right-y .flowchart-legend-alias::after {
-  content: "(right-y)";
+  content: '(right-y)';
   padding: 0 5px;
-  color: #767980; }
+  color: #8e8e8e; }
 
 .flowchart-legend-table td,
 .flowchart-legend-alias,
@@ -179,40 +178,40 @@ _:-ms-fullscreen, :root .flowchart-panel--legend-right .flowchart-legend {
   overflow: hidden; }
 
 .flowchart-legend-table .flowchart-legend-series:nth-child(odd) {
-  background: #dde4ed; }
+  background: #262628; }
 
 .flowchart-legend-table .flowchart-legend-value.current::before {
-  content: ""; }
+  content: ''; }
 
 .flowchart-legend-table .flowchart-legend-value.max::before {
-  content: ""; }
+  content: ''; }
 
 .flowchart-legend-table .flowchart-legend-value.min::before {
-  content: ""; }
+  content: ''; }
 
 .flowchart-legend-table .flowchart-legend-value.total::before {
-  content: ""; }
+  content: ''; }
 
 .flowchart-legend-table .flowchart-legend-value.avg::before {
-  content: ""; }
+  content: ''; }
 
 .flowchart-legend-table th {
   text-align: right;
   padding: 0px 10px 1px 0;
   font-weight: bold;
-  color: #61c2f2;
+  color: #33b5e5;
   font-size: 85%;
   white-space: nowrap; }
 
 .flowchart-legend-series-hidden .flowchart-legend-value,
 .flowchart-legend-series-hidden .flowchart-legend-alias {
-  color: #acb6bf; }
+  color: #8e8e8e; }
 
 .flowchart-tooltip {
   white-space: nowrap;
   font-size: 12px;
-  background-color: #dde4ed;
-  color: #35373f; }
+  background-color: #141414;
+  color: #d8d9da; }
 
 .flowchart-tooltip .flowchart-tooltip-time {
   text-align: center;
@@ -220,12 +219,138 @@ _:-ms-fullscreen, :root .flowchart-panel--legend-right .flowchart-legend {
   top: -3px;
   padding: 0.2rem;
   font-weight: bold;
-  color: #35373f; }
+  color: #d8d9da; }
 
 .flowchart-tooltip .flowchart-tooltip-value {
   display: table-cell;
   font-weight: bold;
   padding-left: 15px;
   text-align: right; }
+
+.flowchartTable-editor-scroll {
+  overflow: auto; }
+
+.flowchartTable-editor-container {
+  padding-top: 2.2em;
+  position: relative; }
+
+.datapoints-warning {
+  pointer: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+  margin-top: -50px;
+  margin-left: -100px;
+  width: 200px;
+  text-align: center;
+  cursor: auto;
+  padding: 10px; }
+
+table.flowchartTable-editor {
+  font-family: Arial, Helvetica, sans-serif;
+  border: 2px solid #161719;
+  background-color: #212124;
+  width: 90%;
+  height: 200px;
+  text-align: left;
+  border-collapse: collapse; }
+
+table.flowchartTable-editor td,
+table.flowchartTable-editor th {
+  border: 2px solid #161719;
+  padding: 2px 2px; }
+
+table.flowchartTable-editor tbody td {
+  font-size: 11px;
+  color: #e6e6e6; }
+
+table.flowchartTable-editor thead {
+  background: #2f2f32;
+  border-bottom: 2px solid #000000; }
+
+table.flowchartTable-editor thead th {
+  font-size: 12px;
+  font-weight: bold;
+  color: #33b5e5;
+  text-align: center;
+  border-left: 2px solid #171819; }
+
+table.flowchartTable-editor thead th:first-child {
+  border-left: none; }
+
+table.flowchartTable-editor tfoot td {
+  font-size: 12px; }
+
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid #333; }
+
+div.mxTooltip {
+  -webkit-box-shadow: 3px 3px 12px #c0c0c0;
+  -moz-box-shadow: 3px 3px 12px #c0c0c0;
+  box-shadow: 3px 3px 12px #c0c0c0;
+  background: #ffffcc;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  font-family: Arial;
+  font-size: 8pt;
+  position: absolute;
+  cursor: default;
+  padding: 4px;
+  color: black; }
+
+div.rule-item {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-family: Roboto, Helvetica Neue, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-box-direction: normal;
+  box-sizing: inherit;
+  text-decoration: none;
+  touch-action: manipulation;
+  display: block;
+  margin: 3px;
+  padding: 7px;
+  background: linear-gradient(135deg, #2f2f32, #262628);
+  box-shadow: -1px -1px 0 0 rgba(255, 255, 255, 0.1), 1px 1px 0 0 rgba(0, 0, 0, 0.3);
+  color: #d8d9da; }
+
+div.rule-item:hover {
+  background: linear-gradient(135deg, #3d3d41, #262628); }
+
+span.rule-extend {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-family: Roboto, Helvetica Neue, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-box-direction: normal;
+  cursor: pointer;
+  color: #dad9d8;
+  box-sizing: inherit; }
+
+span.rule-title {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-family: Roboto, Helvetica Neue, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-box-direction: normal;
+  cursor: pointer;
+  color: #dad9d8;
+  box-sizing: inherit; }
+
+span.rule-nav {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-family: Roboto, Helvetica Neue, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-box-direction: normal;
+  cursor: pointer;
+  color: #d8d9da;
+  box-sizing: inherit;
+  float: right; }
 
 /*# sourceMappingURL=flowchart.light.css.map */

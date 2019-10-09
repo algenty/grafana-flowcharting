@@ -128,11 +128,9 @@ var Flowchart = function () {
     }
   }, {
     key: "applyOptions",
-    value: function applyOptions(width, height) {
+    value: function applyOptions() {
       u.log(1, "flowchart[".concat(this.data.name, "].refresh()"));
       u.log(0, "flowchart[".concat(this.data.name, "].refresh() data"), this.data);
-      if (width !== undefined && width != null) this.setWidth(width);
-      if (height !== undefined && height != null) this.setHeight(height);
       this.xgraph.applyGraph(this.width, this.height);
     }
   }, {

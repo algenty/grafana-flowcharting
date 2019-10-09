@@ -1,7 +1,8 @@
-.flowchart-panel {
+div.flowchart-panel {
   display: flex;
   flex-direction: column;
-  height: 100%; }
+  height: 100%;
+  width: 100%; }
 
 .flowchart-panel--legend-right {
   flex-direction: row; }
@@ -20,11 +21,12 @@
 .flowchart-legend__container {
   height: 100%; }
 
-.flowchart-panel__chart {
+div.flowchart-panel__chart {
   position: relative;
   flex-grow: 1;
-  top: 10px;
-  overflow: auto; }
+  width: 100%;
+  height: 100%;
+  margin: 0; }
 
 .datapoints-warning {
   pointer: none;

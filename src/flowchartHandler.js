@@ -180,14 +180,12 @@ export default class FlowchartHandler {
         this.setStates(rules, series);
         this.applyStates();
         this.changeDataFlag = false;
-        this.optionsFlag = true;
+        this.optionsFlag = false;
       }
 
       // OTHER : Resize, OnLoad
       if (this.optionsFlag || this.firstLoad) {
-        const width = this.$elem.width();
-        const height = this.ctrl.height;
-        this.applyOptions(width, height);
+        this.applyOptions();
         this.optionsFlag = false;
         this.firstLoad = false;
       }
@@ -233,14 +231,12 @@ export default class FlowchartHandler {
   /**
    *Refresh flowchart then graph
    *
-   * @param {*} width
-   * @param {*} height
    * @memberof FlowchartHandler
    */
-  applyOptions(width, height) {
+  applyOptions() {
     u.log(1, `FlowchartHandler.applyOptions()`);
     this.flowcharts.forEach(flowchart => {
-      flowchart.applyOptions(width, height);
+      flowchart.applyOptions();
     });
   }
 

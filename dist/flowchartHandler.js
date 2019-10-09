@@ -152,13 +152,11 @@ var FlowchartHandler = function () {
           this.setStates(rules, series);
           this.applyStates();
           this.changeDataFlag = false;
-          this.optionsFlag = true;
+          this.optionsFlag = false;
         }
 
         if (this.optionsFlag || this.firstLoad) {
-          var width = this.$elem.width();
-          var height = this.ctrl.height;
-          this.applyOptions(width, height);
+          this.applyOptions();
           this.optionsFlag = false;
           this.firstLoad = false;
         }
@@ -186,10 +184,10 @@ var FlowchartHandler = function () {
     }
   }, {
     key: "applyOptions",
-    value: function applyOptions(width, height) {
+    value: function applyOptions() {
       u.log(1, "FlowchartHandler.applyOptions()");
       this.flowcharts.forEach(function (flowchart) {
-        flowchart.applyOptions(width, height);
+        flowchart.applyOptions();
       });
     }
   }, {

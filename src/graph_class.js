@@ -223,33 +223,24 @@ export default class XGraph {
   }
 
   /**
-   *Refresh graph
+   *apply options on graph
    *
    * @param {*} width
    * @param {*} height
    * @memberof XGraph
    */
-  applyGraph(width, height) {
+  applyGraph() {
     u.log(1, 'XGraph.refreshGraph()');
-    const $div = $(this.container);
-    const size = Math.min(width, height);
-    this.width = width;
-    this.height = height;
-    const css = {
-      margin: 'auto',
-      position: 'relative',
-      width: width,
-      height: `${size - 30}px`
-    };
-
-    $div.css(css);
     if (!this.scale) this.zoomGraph(this.zoomPercent);
     else this.unzoomGraph();
     this.tooltipGraph(this.tooltip);
     this.lockGraph(this.lock);
-    this.scaleGraph(this.scale);
+    if (this.scale && this.center) this.fitGraph()
+    else {
+      this.scaleGraph(this.scale);
+      this.centerGraph(this.center);
+    }
     this.gridGraph(this.grid);
-    this.centerGraph(this.center);
     this.bgGraph(this.bgColor);
     this.refresh();
   }
@@ -291,8 +282,7 @@ export default class XGraph {
     if (bool) {
       mxUrlConverter.prototype.baseUrl = 'http://draw.io/';
       mxUrlConverter.prototype.baseDomain = '';
-    }
-    else {
+    } else {
       mxUrlConverter.prototype.baseUrl = null;
       mxUrlConverter.prototype.baseDomain = null;
     }
@@ -324,6 +314,24 @@ export default class XGraph {
       this.graph.view.rendering = true;
     }
     this.scale = bool;
+  }
+
+  fitGraph() {
+    var margin = 2;
+    var max = 3;
+
+    var bounds = this.graph.getGraphBounds();
+    var cw = this.graph.container.clientWidth - margin;
+    var ch = this.graph.container.clientHeight - margin;
+    var w = bounds.width / this.graph.view.scale;
+    var h = bounds.height / this.graph.view.scale;
+    var s = Math.min(max, Math.min(cw / w, ch / h));
+
+    this.graph.view.scaleAndTranslate(
+      s,
+      (margin + cw - w * s) / (2 * s) - bounds.x / this.graph.view.scale,
+      (margin + ch - h * s) / (2 * s) - bounds.y / this.graph.view.scale
+    );
   }
 
   /**
@@ -921,7 +929,7 @@ export default class XGraph {
    */
   // highlightCell(cell, color, duration, opacity)
   highlightCell(cell) {
-    if(cell.highlight) return;
+    if (cell.highlight) return;
     let color = '#99ff33';
     // color = (color != null) ? color : mxConstants.DEFAULT_VALID_COLOR;
     // duration = (duration != null) ? duration : 1000;

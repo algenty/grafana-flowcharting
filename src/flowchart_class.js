@@ -143,11 +143,9 @@ export default class Flowchart {
     this.stateHandler.applyStates();
   }
 
-  applyOptions(width, height) {
+  applyOptions() {
     u.log(1, `flowchart[${this.data.name}].refresh()`);
     u.log(0, `flowchart[${this.data.name}].refresh() data`, this.data);
-    if (width !== undefined && width != null) this.setWidth(width);
-    if (height !== undefined && height != null) this.setHeight(height);
     this.xgraph.applyGraph(this.width, this.height);
   }
 
