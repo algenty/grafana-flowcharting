@@ -240,6 +240,7 @@ export default class Rule {
    */
   toColorize(level) {
     if (level === -1) return false;
+    if (this.data.colorMode === "disabled") return false;
     if (this.data.colorOn === 'n') return false;
     if (this.data.colorOn === 'a') return true;
     if (this.data.colorOn === 'wc' && level >= 1) return true;

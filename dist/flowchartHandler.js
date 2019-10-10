@@ -143,9 +143,7 @@ var FlowchartHandler = function () {
           var series = this.ctrl.series;
 
           if (this.changeRuleFlag) {
-            this.flowcharts.forEach(function (flowchart) {
-              flowchart.updateStates(rules);
-            });
+            this.updateStates(rules);
             this.changeRuleFlag = false;
           }
 

@@ -36,7 +36,7 @@ var MappingOptionsCtrl = function () {
     this.unitFormats = _kbn["default"].getUnitFormats();
     this.style = [{
       text: 'Disabled',
-      value: null
+      value: 'disabled'
     }, {
       text: 'Stroke',
       value: 'strokeColor'
@@ -46,6 +46,12 @@ var MappingOptionsCtrl = function () {
     }, {
       text: 'Text',
       value: 'fontColor'
+    }, {
+      text: 'Background (image)',
+      value: 'imageBackground'
+    }, {
+      text: 'Border (image)',
+      value: 'imageBorder'
     }];
     this.colorOn = [{
       text: 'Never',

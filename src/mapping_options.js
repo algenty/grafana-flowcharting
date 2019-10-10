@@ -16,10 +16,12 @@ export class MappingOptionsCtrl {
     this.rulesHandler = this.panelCtrl.rulesHandler;
     this.unitFormats = kbn.getUnitFormats();
     this.style = [
-      { text: 'Disabled', value: null },
+      { text: 'Disabled', value: 'disabled' },
       { text: 'Stroke', value: 'strokeColor' },
       { text: 'Fill', value: 'fillColor' },
-      { text: 'Text', value: 'fontColor' }
+      { text: 'Text', value: 'fontColor' },
+      { text: 'Background (image)', value: 'imageBackground' },
+      { text: 'Border (image)', value: 'imageBorder' },
     ];
     this.colorOn = [
       { text: 'Never', value: 'n' },

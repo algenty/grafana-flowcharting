@@ -41,6 +41,7 @@ See more example at draw.io
     - Choose the theme of editor identification_mode_ani
   - New identification mode for shapes when mouse cursor is over the rules or the mapping ([See example](https://algenty.github.io/flowcharting-repository/images/identification_mode_ani.png))
   - Support Dynamic shapes like Floorplan, isometric plans and more ([See example](https://algenty.github.io/flowcharting-repository/images/dynamic_shapes_ani.png))
+  - New color mode for no SVG object like pictures/cliparts/images ([See example](https://algenty.github.io/flowcharting-repository/images/colormode_ani.png))
   - Some optimizations, Display is twice as fast on load.
 
 ### Fixed  
@@ -173,7 +174,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Multi graph with auto link when errors
   - [ ] Gradien Mode for color
   - [ ] More than 3 colors
-  - [ ] Support cloud images from draw.io
+  - [ ] New style for image : imageBackground, imageBorder
+  - [X] Support cloud images from draw.io
   - [X] Support images from draw.io (done in 0.5.0)
   - [X] Add append mode on text with CR or space (done in 0.5.0)
 

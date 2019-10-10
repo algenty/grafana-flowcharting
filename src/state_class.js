@@ -25,7 +25,9 @@ export default class State {
     this.changedStyle = {
       fillColor: false,
       strokeColor: false,
-      fontColor: false
+      fontColor: false,
+      imageBorder: false,
+      imageBackground : false,
     };
     this.changedText = false;
     this.changedLink = false;
@@ -36,16 +38,20 @@ export default class State {
     this.matchedStyle = {
       fillColor: false,
       strokeColor: false,
-      fontColor: false
+      fontColor: false,
+      imageBorder: false,
+      imageBackground : false,
     };
     this.matchedText = false;
     this.matchedLink = false;
     this.globalLevel = -1;
-    this.styleKeys = ['fillColor', 'strokeColor', 'fontColor'];
+    this.styleKeys = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
     this.level = {
       fillColor: -1,
       strokeColor: -1,
-      fontColor: -1
+      fontColor: -1,
+      imageBorder: -1,
+      imageBackground : -1,
     };
     this.tooltips = [];
     this.currentColors = {};

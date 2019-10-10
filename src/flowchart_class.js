@@ -81,6 +81,9 @@ export default class Flowchart {
     // this.stateHandler.prepare();
     rules.forEach(rule => {
       rule.states = this.stateHandler.getStatesForRule(rule);
+      rule.states.forEach(state => {
+        state.unsetState();
+      });
     });
   }
 

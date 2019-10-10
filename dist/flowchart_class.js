@@ -68,6 +68,9 @@ var Flowchart = function () {
 
       rules.forEach(function (rule) {
         rule.states = _this.stateHandler.getStatesForRule(rule);
+        rule.states.forEach(function (state) {
+          state.unsetState();
+        });
       });
     }
   }, {

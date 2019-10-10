@@ -172,9 +172,7 @@ export default class FlowchartHandler {
         const rules = this.ctrl.rulesHandler.getRules();
         const series = this.ctrl.series;
         if (this.changeRuleFlag) {
-          this.flowcharts.forEach(flowchart => {
-            flowchart.updateStates(rules);
-          });
+          this.updateStates(rules);
           this.changeRuleFlag = false;
         }
         this.setStates(rules, series);
