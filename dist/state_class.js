@@ -96,9 +96,10 @@ var State = function () {
           if (!shape.isHidden() && shape.match(cellProp)) {
             _this2.matchedShape = true;
             _this2.matched = true;
+            _this2.mxcell.serie = serie;
 
             if (rule.toTooltipize(level)) {
-              if (rule.data.tooltipColors) _this2.addTooltipValue(rule.data.tooltipLabel, FormattedValue, color);else _this2.addTooltipValue(rule.data.tooltipLabel, FormattedValue, null);
+              if (rule.data.tooltipColors) _this2.addTooltip(rule.data.tooltipLabel, FormattedValue, color, serie);else _this2.addTooltip(rule.data.tooltipLabel, FormattedValue, null, serie);
               _this2.lastChange = time;
             }
 
@@ -290,8 +291,8 @@ var State = function () {
       this.currentLink = this.originalLink;
     }
   }, {
-    key: "addTooltipValue",
-    value: function addTooltipValue(name, value, color) {
+    key: "addTooltip",
+    value: function addTooltip(name, value, color, serie) {
       u.log(1, 'State.addTooltipValue()');
       u.log(0, 'State.addTooltipValue() name', name);
       u.log(0, 'State.addTooltipValue() value', value);
@@ -301,12 +302,14 @@ var State = function () {
         element = {
           name: name,
           value: value,
-          color: color
+          color: color,
+          serie: serie
         };
         this.tooltips.push(element);
       } else {
         element.value = value;
         element.color = color;
+        element.serie = serie;
       }
     }
   }, {

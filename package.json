@@ -41,6 +41,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react-app": "^7.0.2",
     "babel-preset-stage-0": "^6.24.1",
+    "chartist": "^0.11.4",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.2",
     "enzyme-to-json": "^3.3.5",

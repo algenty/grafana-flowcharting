@@ -2,29 +2,7 @@ div.flowchart-panel {
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 100%
-}
-
-.flowchart-panel--legend-right {
-  flex-direction: row;
-}
-
-.flowchart-panel--legend-right .flowchart-legend {
-  flex: 0 1 10px;
-  height: 100%;
-}
-
-.flowchart-panel--legend-right .flowchart-legend-series {
-  display: block;
-  padding-left: 0px;
-}
-
-.flowchart-panel--legend-right .flowchart-legend-table .flowchart-legend-series {
-  display: table-row;
-}
-
-.flowchart-legend__container {
-  height: 100%;
+  width: 100%;
 }
 
 div.flowchart-panel__chart {
@@ -37,272 +15,6 @@ div.flowchart-panel__chart {
   // overflow: auto;
 }
 
-.datapoints-warning {
-  pointer: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 10;
-  margin-top: -50px;
-  margin-left: -100px;
-  width: 200px;
-  text-align: center;
-  cursor: auto;
-  padding: 10px;
-}
-
-.flowchart-legend {
-  flex: 0 1 auto;
-  margin: 0 1rem;
-  text-align: center;
-  padding-top: 6px;
-  position: relative;
-}
-
-.flowchart-legend .popover-content {
-  padding: 0;
-}
-
-.flowchart-legend-icon {
-  position: relative;
-  padding-right: 4px;
-  top: 1px;
-}
-
-.flowchart-legend-icon,
-.flowchart-legend-alias,
-.flowchart-legend-value {
-  cursor: pointer;
-  float: left;
-  white-space: nowrap;
-  font-size: 85%;
-  text-align: left;
-  color: #d8d9da;
-}
-
-.flowchart-legend-icon.current::before {
-  content: 'Current: ';
-}
-
-.flowchart-legend-icon.max::before {
-  content: 'Max: ';
-}
-
-.flowchart-legend-icon.min::before {
-  content: 'Min: ';
-}
-
-.flowchart-legend-icon.total::before {
-  content: 'Total: ';
-}
-
-.flowchart-legend-icon.avg::before {
-  content: 'Avg: ';
-}
-
-.flowchart-legend-alias.current::before {
-  content: 'Current: ';
-}
-
-.flowchart-legend-alias.max::before {
-  content: 'Max: ';
-}
-
-.flowchart-legend-alias.min::before {
-  content: 'Min: ';
-}
-
-.flowchart-legend-alias.total::before {
-  content: 'Total: ';
-}
-
-.flowchart-legend-alias.avg::before {
-  content: 'Avg: ';
-}
-
-.flowchart-legend-value.current::before {
-  content: 'Current: ';
-}
-
-.flowchart-legend-value.max::before {
-  content: 'Max: ';
-}
-
-.flowchart-legend-value.min::before {
-  content: 'Min: ';
-}
-
-.flowchart-legend-value.total::before {
-  content: 'Total: ';
-}
-
-.flowchart-legend-value.avg::before {
-  content: 'Avg: ';
-}
-
-.flowchart-legend-icon .fa {
-  font-size: 135%;
-  position: relative;
-  top: 1px;
-}
-
-.flowchart-legend-series {
-  float: left;
-  white-space: nowrap;
-  padding-left: 10px;
-}
-
-.flowchart-legend-series--right-y {
-  float: right;
-}
-
-.flowchart-legend-value {
-  padding-left: 6px;
-}
-
-.flowchart-legend-table tbody {
-  display: block;
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 100%;
-  padding-bottom: 1px;
-  padding-right: 5px;
-}
-
-.flowchart-legend-table .flowchart-legend-series {
-  display: table-row;
-  float: none;
-  padding-left: 0;
-}
-
-.flowchart-legend-table .flowchart-legend-series--right-y {
-  float: none;
-}
-
-.flowchart-legend-table .flowchart-legend-series--right-y .flowchart-legend-alias::after {
-  content: '(right-y)';
-  padding: 0 5px;
-  color: #8e8e8e;
-}
-
-.flowchart-legend-table td,
-.flowchart-legend-alias,
-.flowchart-legend-icon,
-.flowchart-legend-value {
-  float: none;
-  display: table-cell;
-  white-space: nowrap;
-  padding: 2px 10px;
-  text-align: right;
-}
-
-.flowchart-legend-table .flowchart-legend-icon {
-  width: 5px;
-  padding: 0;
-  top: 0;
-}
-
-.flowchart-legend-table .flowchart-legend-icon .fa {
-  top: 4px;
-}
-
-.flowchart-legend-table .flowchart-legend-value {
-  padding-left: 15px;
-}
-
-.flowchart-legend-table .flowchart-legend-alias {
-  padding-left: 7px;
-  text-align: left;
-  width: 95%;
-  max-width: 650px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-.flowchart-legend-table .flowchart-legend-series:nth-child(odd) {
-  background: #262628;
-}
-
-.flowchart-legend-table .flowchart-legend-value.current::before {
-  content: '';
-}
-
-.flowchart-legend-table .flowchart-legend-value.max::before {
-  content: '';
-}
-
-.flowchart-legend-table .flowchart-legend-value.min::before {
-  content: '';
-}
-
-.flowchart-legend-table .flowchart-legend-value.total::before {
-  content: '';
-}
-
-.flowchart-legend-table .flowchart-legend-value.avg::before {
-  content: '';
-}
-
-.flowchart-legend-table th {
-  text-align: right;
-  padding: 0px 10px 1px 0;
-  font-weight: bold;
-  color: #33b5e5;
-  font-size: 85%;
-  white-space: nowrap;
-}
-
-.flowchart-legend-series-hidden .flowchart-legend-value,
-.flowchart-legend-series-hidden .flowchart-legend-alias {
-  color: #8e8e8e;
-}
-
-.flowchart-tooltip {
-  white-space: nowrap;
-  font-size: 12px;
-  background-color: #141414;
-  color: #d8d9da;
-}
-
-.flowchart-tooltip .flowchart-tooltip-time {
-  text-align: center;
-  position: relative;
-  top: -3px;
-  padding: 0.2rem;
-  font-weight: bold;
-  color: #d8d9da;
-}
-
-.flowchart-tooltip .flowchart-tooltip-value {
-  display: table-cell;
-  font-weight: bold;
-  padding-left: 15px;
-  text-align: right;
-}
-
-.flowchartTable-editor-scroll {
-  overflow: auto;
-}
-
-.flowchartTable-editor-container {
-  padding-top: 2.2em;
-  position: relative;
-}
-
-.datapoints-warning {
-  pointer: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 10;
-  margin-top: -50px;
-  margin-left: -100px;
-  width: 200px;
-  text-align: center;
-  cursor: auto;
-  padding: 10px;
-}
-
 table.flowchartTable-editor {
   font-family: Arial, Helvetica, sans-serif;
   border: 2px solid #161719;
@@ -312,6 +24,7 @@ table.flowchartTable-editor {
   text-align: left;
   border-collapse: collapse;
 }
+
 table.flowchartTable-editor td,
 table.flowchartTable-editor th {
   border: 2px solid #161719;
@@ -345,23 +58,6 @@ hr {
   margin-bottom: 1rem;
   border: 0;
   border-top: 1px solid #333;
-}
-
-div.mxTooltip {
-  -webkit-box-shadow: 3px 3px 12px #c0c0c0;
-  -moz-box-shadow: 3px 3px 12px #c0c0c0;
-  box-shadow: 3px 3px 12px #c0c0c0;
-  background: #ffffcc;
-  border-style: solid;
-  border-width: 1px;
-  border-color: black;
-  font-family: Arial;
-  font-size: 8pt;
-  position: absolute;
-  cursor: default;
-  padding: 4px;
-  color: black;
-  // visibility: hidden;
 }
 
 div.rule-item {
@@ -418,3 +114,632 @@ span.rule-nav {
   box-sizing: inherit;
   float: right;
 }
+
+// .ct-label {
+//   fill: rgba(0, 0, 0, 0.4);
+//   color: rgba(0, 0, 0, 0.4);
+//   font-size: 0.75rem;
+//   line-height: 1;
+// }
+
+.ct-chart-line .ct-label,
+.ct-chart-bar .ct-label {
+  display: block;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.ct-chart-pie .ct-label,
+.ct-chart-donut .ct-label {
+  dominant-baseline: central;
+}
+
+.ct-label.ct-horizontal.ct-start {
+  -webkit-box-align: flex-end;
+  -webkit-align-items: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  -webkit-box-pack: flex-start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  text-anchor: start;
+}
+
+.ct-label.ct-horizontal.ct-end {
+  -webkit-box-align: flex-start;
+  -webkit-align-items: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: flex-start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  text-anchor: start;
+}
+
+.ct-label.ct-vertical.ct-start {
+  -webkit-box-align: flex-end;
+  -webkit-align-items: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  -webkit-box-pack: flex-end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: flex-end;
+  justify-content: flex-end;
+  text-align: right;
+  text-anchor: end;
+}
+
+.ct-label.ct-vertical.ct-end {
+  -webkit-box-align: flex-end;
+  -webkit-align-items: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  -webkit-box-pack: flex-start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  text-anchor: start;
+}
+
+.ct-chart-bar .ct-label.ct-horizontal.ct-start {
+  -webkit-box-align: flex-end;
+  -webkit-align-items: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  text-align: center;
+  text-anchor: start;
+}
+
+.ct-chart-bar .ct-label.ct-horizontal.ct-end {
+  -webkit-box-align: flex-start;
+  -webkit-align-items: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  text-align: center;
+  text-anchor: start;
+}
+
+.ct-chart-bar.ct-horizontal-bars .ct-label.ct-horizontal.ct-start {
+  -webkit-box-align: flex-end;
+  -webkit-align-items: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  -webkit-box-pack: flex-start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  text-anchor: start;
+}
+
+.ct-chart-bar.ct-horizontal-bars .ct-label.ct-horizontal.ct-end {
+  -webkit-box-align: flex-start;
+  -webkit-align-items: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: flex-start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  text-anchor: start;
+}
+
+.ct-chart-bar.ct-horizontal-bars .ct-label.ct-vertical.ct-start {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: flex-end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: flex-end;
+  justify-content: flex-end;
+  text-align: right;
+  text-anchor: end;
+}
+
+.ct-chart-bar.ct-horizontal-bars .ct-label.ct-vertical.ct-end {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: flex-start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+  text-anchor: end;
+}
+
+.ct-grid {
+  stroke: rgba(0, 0, 0, 0.2);
+  stroke-width: 1px;
+  stroke-dasharray: 2px;
+}
+
+.ct-grid-background {
+  fill: none;
+}
+
+.ct-point {
+  stroke-width: 1px;
+  stroke-linecap: round;
+}
+
+.ct-line {
+  fill: none;
+  stroke-width: 1px;
+}
+
+.ct-area {
+  stroke: none;
+  fill-opacity: 0.1;
+}
+
+.ct-bar {
+  fill: none;
+  stroke-width: 10px;
+}
+
+.ct-slice-donut {
+  fill: none;
+  stroke-width: 60px;
+}
+
+.ct-series-a .ct-point,
+.ct-series-a .ct-line,
+.ct-series-a .ct-bar,
+.ct-series-a .ct-slice-donut {
+  stroke: #d70206;
+}
+
+.ct-series-a .ct-slice-pie,
+.ct-series-a .ct-slice-donut-solid,
+.ct-series-a .ct-area {
+  fill: #d70206;
+}
+
+
+.ct-square {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-square:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 100%;
+}
+.ct-square:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-square > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-minor-second {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-minor-second:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 93.75%;
+}
+.ct-minor-second:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-minor-second > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-major-second {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-major-second:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 88.8888888889%;
+}
+.ct-major-second:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-major-second > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-minor-third {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-minor-third:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 83.3333333333%;
+}
+.ct-minor-third:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-minor-third > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-major-third {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-major-third:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 80%;
+}
+.ct-major-third:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-major-third > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-perfect-fourth {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-perfect-fourth:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 75%;
+}
+.ct-perfect-fourth:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-perfect-fourth > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-perfect-fifth {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-perfect-fifth:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 66.6666666667%;
+}
+.ct-perfect-fifth:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-perfect-fifth > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-minor-sixth {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-minor-sixth:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 62.5%;
+}
+.ct-minor-sixth:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-minor-sixth > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-golden-section {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-golden-section:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 61.804697157%;
+}
+.ct-golden-section:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-golden-section > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-major-sixth {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-major-sixth:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 60%;
+}
+.ct-major-sixth:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-major-sixth > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-minor-seventh {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-minor-seventh:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 56.25%;
+}
+.ct-minor-seventh:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-minor-seventh > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-major-seventh {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-major-seventh:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 53.3333333333%;
+}
+.ct-major-seventh:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-major-seventh > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-octave {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-octave:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 50%;
+}
+.ct-octave:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-octave > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-major-tenth {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-major-tenth:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 40%;
+}
+.ct-major-tenth:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-major-tenth > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-major-eleventh {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-major-eleventh:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 37.5%;
+}
+.ct-major-eleventh:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-major-eleventh > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-major-twelfth {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-major-twelfth:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 33.3333333333%;
+}
+.ct-major-twelfth:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-major-twelfth > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-double-octave {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+.ct-double-octave:before {
+  display: block;
+  float: left;
+  content: '';
+  width: 0;
+  height: 0;
+  padding-bottom: 25%;
+}
+.ct-double-octave:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.ct-double-octave > svg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ct-chart .ct-series.ct-series-a .ct-area { fill: orange; }
+.ct-chart .ct-series.ct-series-a .ct-line { stroke: orange; }

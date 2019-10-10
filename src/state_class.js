@@ -99,11 +99,13 @@ export default class State {
         if (!shape.isHidden() && shape.match(cellProp)) {
           this.matchedShape = true;
           this.matched = true;
+          // Test
+          this.mxcell.serie = serie;
           // tooltips
           if (rule.toTooltipize(level)) {
             if (rule.data.tooltipColors)
-              this.addTooltipValue(rule.data.tooltipLabel, FormattedValue, color);
-            else this.addTooltipValue(rule.data.tooltipLabel, FormattedValue, null);
+              this.addTooltip(rule.data.tooltipLabel, FormattedValue, color, serie);
+            else this.addTooltip(rule.data.tooltipLabel, FormattedValue, null, serie);
             this.lastChange = time;
           }
 
@@ -380,7 +382,7 @@ export default class State {
    * @param {string} color - Color for the value
    * @memberof State
    */
-  addTooltipValue(name, value, color) {
+  addTooltip(name, value, color, serie) {
     u.log(1, 'State.addTooltipValue()');
     u.log(0, 'State.addTooltipValue() name', name);
     u.log(0, 'State.addTooltipValue() value', value);
@@ -389,12 +391,14 @@ export default class State {
       element = {
         name: name,
         value: value,
-        color: color
+        color: color,
+        serie: serie
       };
       this.tooltips.push(element);
     } else {
       element.value = value;
       element.color = color;
+      element.serie = serie;
     }
   }
 

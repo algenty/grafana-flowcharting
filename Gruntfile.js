@@ -110,11 +110,12 @@ module.exports = (grunt) => {
 
     sass: {
       options: {
-        sourceMap: true,
+        sourceMap: false,
         implementation: sass,
       },
       dist: {
         files: {
+          'dist/css/chartist-settings.css': 'src/css/_chartist-settings.scss',
           'dist/css/flowchart.dark.css': 'src/css/flowchart.dark.scss',
           'dist/css/flowchart.light.css': 'src/css/flowchart.light.scss',
         },
