@@ -181,7 +181,8 @@ export default class XGraph {
     this.graph = new Graph(this.container);
     this.graph.getTooltipForCell = this.getTooltipForCell;
     this.graph.getTooltipChart = this.getTooltipChart;
-    this.graph.getTooltipMetrics = this.getTooltipMetrics;
+    this.graph.getTooltipGFs = this.getTooltipGFs;
+    this.graph.getTooltipMetric = this.getTooltipMetric;
     this.graph.getTooltipDate = this.getTooltipDate;
 
     // /!\ What is setPannig
@@ -1076,30 +1077,16 @@ export default class XGraph {
         attrDiv.innerHTML = attrString;
         div.appendChild(attrDiv);
       }
-
-      // if (tip.length > 0) {
-      //   tip = tip.substring(0, tip.length - 1);
-
-      //   if (mxClient.IS_SVG) {
-      //     tip = '<div style="max-width:360px;">' + tip + '</div>';
-      //   }
-      // }
     }
 
-    // Date : Last change
-    div.appendChild(this.getTooltipDate(cell));
+    // GF Tooltips
+    div.appendChild(this.getTooltipGFs(cell));
 
-    // Metrics
-    div.appendChild(this.getTooltipMetrics(cell));
-
-    // Graph
-    div.appendChild(this.getTooltipChart(cell));
-    // console.log('Graph_other.getTooltipForCell() div', div);
     return div;
   }
 
-  getTooltipDate(cell) {
-    let date = cell.GF_lastChange;
+  getTooltipDate(GF_date) {
+    let date = GF_date;
     var dateDiv = document.createElement('div');
     if (date !== undefined && date !== null) {
       dateDiv.className = 'graph-tooltip-time';
@@ -1108,27 +1095,37 @@ export default class XGraph {
     return dateDiv;
   }
 
-  getTooltipMetrics(cell) {
-    let metrics = cell.GF_tooltips;
-    var metricsDiv = document.createElement('div');
-    if (metrics !== undefined && metrics.length > 0) {
-      var metricsString = '';
-      metricsString = '</br>';
-      for (var i = 0; i < metrics.length; i++) {
-        const current = metrics[i];
-        if (current !== undefined) {
-          metricsString += `${current.name} : `;
-          metricsString += `<span style="color:${current.color}"><b>${current.value}</b></span></br>`;
+  getTooltipGFs(cell) {
+    let GFs = cell.GF_tooltips;
+    var GFsDiv = document.createElement('div');
+    if (GFs !== undefined && GFs.length > 0) {
+      // metricsString = '</br>';
+      GFsDiv.appendChild(this.getTooltipDate(cell.getTooltipDate));
+      for (var i = 0; i < GFs.length; i++) {
+        // Metric + Graph in the same div
+        var GFDiv = document.createElement('div');
+        const GF = GFs[i];
+        {
+          GFDiv.appendChild(this.getTooltipMetric(GF));
+          GFDiv.appendChild(this.getTooltipChart(GF));
         }
+        GFsDiv.appendChild(GFDiv);
       }
-      metricsDiv.innerHTML = metricsString;
     }
-    return metricsDiv;
+    return GFsDiv;
   }
 
-  arrayColumn(arr, n) {
-    return arr.map(x=> x[n]);
+  getTooltipMetric(GF_tooltip) {
+    var metricDiv = document.createElement('div');
+    var metricString = '';
+    if (GF_tooltip !== undefined) {
+      metricString += `${GF_tooltip.name} : `;
+      metricString += `<span style="color:${GF_tooltip.color}"><b>${GF_tooltip.value}</b></span></br>`;
+    }
+    metricDiv.innerHTML = metricString;
+    return metricDiv;
   }
+
   /**
    *Return DIV charts
    *
@@ -1136,64 +1133,64 @@ export default class XGraph {
    * @returns
    * @memberof XGraph
    */
-  getTooltipChart(cell) {
+  getTooltipChart(GF_tooltip) {
     function arrayColumn(arr, n) {
-      return arr.map(x=> x[n]);
+      return arr.map(x => x[n]);
     }
-    var serie = cell.GF_tooltips[0].serie;
-    // console.log('serie ', serie);
-    const values = arrayColumn(serie.flotpairs,1);
-    // console.log("values ", values);
-    var chartDiv = document.createElement('div');
-    chartDiv.className = 'ct-chart ct-golden-section';
-    var data =       
-    {
-      // series: [[10, 14, 12, 13, 10, 8, 10, 9, 14, 28]]
-      series : [values]
-    }
-    var options =       
-    {
-      showPoint: false,
-      showLine: true,
-      showArea: true,
-      fullWidth: true,
-      showLabel: false,
-      axisX: {
-        showGrid: false,
+    if (GF_tooltip.chartDiv === undefined) {
+      var serie = GF_tooltip.serie;
+      const values = arrayColumn(serie.flotpairs, 1);
+      var chartDiv = document.createElement('div');
+      chartDiv.className = 'ct-chart ct-golden-section';
+      var data = {
+        // series: [[10, 14, 12, 13, 10, 8, 10, 9, 14, 28]]
+        series: [values]
+      };
+      var options = {
+        showPoint: false,
+        showLine: true,
+        showArea: true,
+        fullWidth: true,
         showLabel: false,
-        offset: 0
-      },
-      axisY: {
-        showGrid: false,
-        showLabel: false,
-        offset: 0
-      },
-      chartPadding: 0,
-      low: 0
-    }
+        axisX: {
+          showGrid: false,
+          showLabel: false,
+          offset: 0
+        },
+        axisY: {
+          showGrid: false,
+          showLabel: false,
+          offset: 0
+        },
+        chartPadding: 0,
+        low: 0
+      };
 
-    var chart = new Chartist.Line(chartDiv, data, options)
-    console.log("chart ", chart);
-    chart.on('draw', function(data) {
-      if (data.type === 'line' || data.type === 'area') {
-        data.element.animate({
-          d: {
-            begin: 1000 * data.index,
-            dur: 1000,
-            from: data.path
-              .clone()
-              .scale(1, 0)
-              .translate(0, data.chartRect.height())
-              .stringify(),
-            to: data.path.clone().stringify(),
-            easing: Chartist.Svg.Easing.easeOutQuint
-          }
-        });
-      }
-    });
-    chart.on('created', () => {
-      console.log("created",chartDiv);
-    })
-    return chartDiv;
+      var chart = new Chartist.Line(chartDiv, data, options);
+      console.log('chart ', chart);
+      chart.on('draw', function(data) {
+        if (data.type === 'line' || data.type === 'area') {
+          data.element.animate({
+            d: {
+              begin: 1000 * data.index,
+              dur: 1000,
+              from: data.path
+                .clone()
+                .scale(1, 0)
+                .translate(0, data.chartRect.height())
+                .stringify(),
+              to: data.path.clone().stringify(),
+              easing: Chartist.Svg.Easing.easeOutQuint
+            }
+          });
+        }
+      });
+      chart.on('created', () => {
+        console.log('created', chartDiv);
+      });
+      GF_tooltip.chartDiv = chartDiv;
+      return chartDiv;
+    }
+    else return GF_tooltip.chartDiv;
   }
 }
