@@ -54,7 +54,8 @@ var State = function () {
       imageBorder: -1,
       imageBackground: -1
     };
-    this.tooltips = [];
+    this.tooltips = this.emptyTooltips();
+    this.mxcell.GF_tooltips = this.tooltips;
     this.currentColors = {};
     this.originalColors = {};
     this.originalStyle = mxcell.getStyle();
@@ -100,7 +101,8 @@ var State = function () {
 
             if (rule.toTooltipize(level)) {
               if (rule.data.tooltipColors) _this2.addTooltip(rule.data.tooltipLabel, FormattedValue, color, serie);else _this2.addTooltip(rule.data.tooltipLabel, FormattedValue, null, serie);
-              _this2.lastChange = time;
+
+              _this2.updateTooltipDate(time);
             }
 
             if (_this2.globalLevel <= level) {
@@ -158,7 +160,6 @@ var State = function () {
       var _this3 = this;
 
       u.log(1, 'State.unsetState()');
-      this.lastChange = null;
       this.unsetLevel();
       this.resetStyle();
       this.unsetText();
@@ -217,9 +218,8 @@ var State = function () {
   }, {
     key: "unsetTooltip",
     value: function unsetTooltip() {
-      this.tooltips = [];
-      this.mxcell.GF_tooltips = undefined;
-      this.mxcell.GF_lastChange = undefined;
+      this.tooltips = this.emptyTooltips();
+      this.mxcell.GF_tooltips = this.tooltips;
     }
   }, {
     key: "unsetLevel",
@@ -296,28 +296,34 @@ var State = function () {
       u.log(1, 'State.addTooltipValue()');
       u.log(0, 'State.addTooltipValue() name', name);
       u.log(0, 'State.addTooltipValue() value', value);
-      var element = this.findTooltipValue(name);
+      var metric = this.findTooltipValue(name);
+      this.tooltips.checked = true;
 
-      if (element === null) {
-        element = {
+      if (metric === null) {
+        metric = {
           name: name,
           value: value,
           color: color,
           serie: serie
         };
-        this.tooltips.push(element);
+        this.tooltips.metrics.push(metric);
       } else {
-        element.value = value;
-        element.color = color;
-        element.serie = serie;
+        metric.value = value;
+        metric.color = color;
+        metric.serie = serie;
       }
+    }
+  }, {
+    key: "updateTooltipDate",
+    value: function updateTooltipDate(date) {
+      this.tooltips.lastChange = date;
     }
   }, {
     key: "findTooltipValue",
     value: function findTooltipValue(name) {
-      for (var index = 0; index < this.tooltips.length; index += 1) {
-        var element = this.tooltips[index];
-        if (element.name === name) return element;
+      for (var index = 0; index < this.tooltips.metrics.length; index += 1) {
+        var metric = this.tooltips.metrics[index];
+        if (metric.name === name) return metric;
       }
 
       return null;
@@ -420,8 +426,7 @@ var State = function () {
   }, {
     key: "applyTooltip",
     value: function applyTooltip() {
-      if (this.tooltips.length > 0) {
-        this.mxcell.GF_lastChange = this.lastChange;
+      if (this.tooltips.checked === true) {
         this.mxcell.GF_tooltips = this.tooltips;
       }
     }
@@ -473,8 +478,28 @@ var State = function () {
         this.matchedShape = false;
         this.matchedText = false;
         this.matchedLink = false;
-        this.tooltips = [];
+        this.tooltips = this.emptyTooltips();
       }
+    }
+  }, {
+    key: "emptyTooltips",
+    value: function emptyTooltips() {
+      return {
+        checked: false,
+        state: this,
+        lastChange: undefined,
+        metrics: []
+      };
+    }
+  }, {
+    key: "emptyMetric",
+    value: function emptyMetric() {
+      return {
+        name: undefined,
+        value: undefined,
+        color: undefined,
+        serie: undefined
+      };
     }
   }, {
     key: "highlightCell",

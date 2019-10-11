@@ -2,7 +2,9 @@ mxTooltipHandler.prototype.show = function(tip, x, y) {
   // u.log(1, 'mxTooltipHandler.prototype.show()');
 
   // TYPE STRING
-    if (!this.destroyed && tip != null && tip.length > 0) return;
+    if ( this.destroyed) return;
+    if (tip == null) return;
+    if ( tip.length == 0) return;
     // Initializes the DOM nodes if required
     if (this.div == null) {
       this.init();

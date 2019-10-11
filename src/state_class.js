@@ -53,7 +53,8 @@ export default class State {
       imageBorder: -1,
       imageBackground : -1,
     };
-    this.tooltips = [];
+    this.tooltips = this.emptyTooltips();
+    this.mxcell.GF_tooltips = this.tooltips;
     this.currentColors = {};
     this.originalColors = {};
     this.originalStyle = mxcell.getStyle();
@@ -106,7 +107,7 @@ export default class State {
             if (rule.data.tooltipColors)
               this.addTooltip(rule.data.tooltipLabel, FormattedValue, color, serie);
             else this.addTooltip(rule.data.tooltipLabel, FormattedValue, null, serie);
-            this.lastChange = time;
+            this.updateTooltipDate(time);
           }
 
           // Color Shape
@@ -165,7 +166,6 @@ export default class State {
    */
   unsetState() {
     u.log(1, 'State.unsetState()');
-    this.lastChange = null;
     this.unsetLevel();
     // this.unsetColor(); Replace by reset
     this.resetStyle();
@@ -263,9 +263,8 @@ export default class State {
    * @memberof State
    */
   unsetTooltip() {
-    this.tooltips = [];
-    this.mxcell.GF_tooltips = undefined;
-    this.mxcell.GF_lastChange = undefined;
+    this.tooltips = this.emptyTooltips();
+    this.mxcell.GF_tooltips = this.tooltips;
   }
 
   /**
@@ -386,33 +385,26 @@ export default class State {
     u.log(1, 'State.addTooltipValue()');
     u.log(0, 'State.addTooltipValue() name', name);
     u.log(0, 'State.addTooltipValue() value', value);
-    let element = this.findTooltipValue(name);
-    if (element === null) {
-      element = {
+    let metric = this.findTooltipValue(name);
+    this.tooltips.checked = true;
+    if (metric === null) {
+      metric = {
         name: name,
         value: value,
         color: color,
         serie: serie
       };
-      this.tooltips.push(element);
+      this.tooltips.metrics.push(metric);
     } else {
-      element.value = value;
-      element.color = color;
-      element.serie = serie;
+      metric.value = value;
+      metric.color = color;
+      metric.serie = serie;
     }
   }
 
-  // removeTooltipValue(name) {
-  //   u.log(1, 'State.removeTooltipValue()');
-  //   u.log(0, 'State.removeTooltipValue() name', name);
-  //   for (let index = 0; index < this.tooltips.length; index += 1) {
-  //     const element = this.tooltips[index];
-  //     if (element.name === name) {
-  //       this.tooltips.slice(index, 1);
-  //       return;
-  //     }
-  //   }
-  // }
+  updateTooltipDate(date) {
+    this.tooltips.lastChange = date;
+  }
 
   /**
    *Return the value of metric if is in tooltip else return null
@@ -422,9 +414,9 @@ export default class State {
    * @memberof State
    */
   findTooltipValue(name) {
-    for (let index = 0; index < this.tooltips.length; index += 1) {
-      const element = this.tooltips[index];
-      if (element.name === name) return element;
+    for (let index = 0; index < this.tooltips.metrics.length; index += 1) {
+      const metric = this.tooltips.metrics[index];
+      if (metric.name === name) return metric;
     }
     return null;
   }
@@ -547,8 +539,7 @@ export default class State {
    * @memberof State
    */
   applyTooltip() {
-    if (this.tooltips.length > 0) {
-      this.mxcell.GF_lastChange = this.lastChange;
+    if (this.tooltips.checked  === true) {
       this.mxcell.GF_tooltips = this.tooltips;
     }
   }
@@ -616,8 +607,38 @@ export default class State {
       this.matchedShape = false;
       this.matchedText = false;
       this.matchedLink = false;
-      this.tooltips = [];
+      this.tooltips = this.emptyTooltips();
     }
+  }
+
+  /**
+   * Factory for tooltip GF
+   *
+   * @returns empty tooltips information
+   * @memberof State
+   */
+  emptyTooltips() {
+    return {
+      checked : false,
+      state : this,
+      lastChange : undefined,
+      metrics : [],
+    };
+  }
+
+  /**
+   * Factory for metric GF
+   *
+   * @returns
+   * @memberof State
+   */
+  emptyMetric() {
+    return {
+      name: undefined,
+      value: undefined,
+      color: undefined,
+      serie: undefined
+    };
   }
 
   /**

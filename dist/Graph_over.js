@@ -1,7 +1,9 @@
 "use strict";
 
 mxTooltipHandler.prototype.show = function (tip, x, y) {
-  if (!this.destroyed && tip != null && tip.length > 0) return;
+  if (this.destroyed) return;
+  if (tip == null) return;
+  if (tip.length == 0) return;
 
   if (this.div == null) {
     this.init();

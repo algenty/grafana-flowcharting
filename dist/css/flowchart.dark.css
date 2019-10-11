@@ -102,6 +102,12 @@ span.rule-nav {
   box-sizing: inherit;
   float: right; }
 
+div.tooltip-text {
+  display: block;
+  word-wrap: break-word;
+  max-width: 200px;
+  white-space: normal; }
+
 .ct-chart-line .ct-label,
 .ct-chart-bar .ct-label {
   display: block;

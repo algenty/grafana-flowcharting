@@ -115,6 +115,15 @@ span.rule-nav {
   float: right;
 }
 
+div.tooltip-text {
+  display: block;
+  word-wrap:break-word;
+  max-width: 200px;
+  white-space: normal
+}
+
+
+
 // .ct-label {
 //   fill: rgba(0, 0, 0, 0.4);
 //   color: rgba(0, 0, 0, 0.4);
