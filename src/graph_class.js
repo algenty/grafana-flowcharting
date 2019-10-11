@@ -1126,6 +1126,9 @@ export default class XGraph {
     return metricsDiv;
   }
 
+  arrayColumn(arr, n) {
+    return arr.map(x=> x[n]);
+  }
   /**
    *Return DIV charts
    *
@@ -1134,14 +1137,19 @@ export default class XGraph {
    * @memberof XGraph
    */
   getTooltipChart(cell) {
+    function arrayColumn(arr, n) {
+      return arr.map(x=> x[n]);
+    }
     var serie = cell.GF_tooltips[0].serie;
-    console.log('serie ', serie);
+    // console.log('serie ', serie);
+    const values = arrayColumn(serie.flotpairs,1);
+    // console.log("values ", values);
     var chartDiv = document.createElement('div');
     chartDiv.className = 'ct-chart ct-golden-section';
     var data =       
     {
       // series: [[10, 14, 12, 13, 10, 8, 10, 9, 14, 28]]
-      series : [serie.flotpairs]
+      series : [values]
     }
     var options =       
     {
@@ -1166,23 +1174,23 @@ export default class XGraph {
 
     var chart = new Chartist.Line(chartDiv, data, options)
     console.log("chart ", chart);
-    // chart.on('draw', function(data) {
-    //   if (data.type === 'line' || data.type === 'area') {
-    //     data.element.animate({
-    //       d: {
-    //         begin: 1000 * data.index,
-    //         dur: 1000,
-    //         from: data.path
-    //           .clone()
-    //           .scale(1, 0)
-    //           .translate(0, data.chartRect.height())
-    //           .stringify(),
-    //         to: data.path.clone().stringify(),
-    //         easing: Chartist.Svg.Easing.easeOutQuint
-    //       }
-    //     });
-    //   }
-    // });
+    chart.on('draw', function(data) {
+      if (data.type === 'line' || data.type === 'area') {
+        data.element.animate({
+          d: {
+            begin: 1000 * data.index,
+            dur: 1000,
+            from: data.path
+              .clone()
+              .scale(1, 0)
+              .translate(0, data.chartRect.height())
+              .stringify(),
+            to: data.path.clone().stringify(),
+            easing: Chartist.Svg.Easing.easeOutQuint
+          }
+        });
+      }
+    });
     chart.on('created', () => {
       console.log("created",chartDiv);
     })
