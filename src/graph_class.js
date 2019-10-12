@@ -924,7 +924,7 @@ export default class XGraph {
   }
 
   /**
-   * UnHighlights the given cell.
+   * UnHighlights the given array of cells.
    */
   unhighlightCells(cells) {
     for (var i = 0; i < cells.length; i++) {
@@ -955,24 +955,15 @@ export default class XGraph {
       hl.highlight(state);
       cell.highlight = hl;
 
-      // Fades out the highlight after a duration
-      // window.setTimeout(function()
-      // {
-      // 	if (hl.shape != null)
-      // 	{
-      // 	 	mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 1200ms ease-in-out');
-      // 		hl.shape.node.style.opacity = 0;
-      // 	}
-
-      // 	// Destroys the highlight after the fade
-      // 	window.setTimeout(function()
-      // 	{
-      // 		hl.destroy();
-      // 	}, 1200);
-      // }, duration);
     }
   }
 
+  /**
+   *UnHighlights the given cell.
+   *
+   * @param {*} cell
+   * @memberof XGraph
+   */
   unhighlightCell(cell) {
     if (cell && cell.highlight) {
       let hl = cell.highlight;
@@ -983,7 +974,7 @@ export default class XGraph {
       }
 
       // Destroys the highlight after the fade
-      window.setTimeout(function () {
+      window.setTimeout(function() {
         hl.destroy();
       }, 500);
       cell.highlight = null;
@@ -1041,7 +1032,7 @@ export default class XGraph {
 
       // Hides links in edit mode
       // if (this.isEnabled()) {
-        ignored.push('link');
+      ignored.push('link');
       // }
 
       // Attributes
@@ -1052,7 +1043,7 @@ export default class XGraph {
       }
 
       // Sorts by name
-      temp.sort(function (a, b) {
+      temp.sort(function(a, b) {
         if (a.name < b.name) {
           return -1;
         } else if (a.name > b.name) {
@@ -1084,115 +1075,124 @@ export default class XGraph {
       hasTips = true;
       div.appendChild(divs);
     }
-    if(hasTips) return div;
+    if (hasTips) return div;
     return '';
   }
 
-getTooltipDate(date) {
-  var dateDiv = document.createElement('div');
-  if (date !== undefined && date !== null) {
-    dateDiv.className = 'graph-tooltip-time';
-    dateDiv.innerHTML = `</br>${date}`;
-  }
-  return dateDiv;
-}
-
-getTooltipGFs(cell) {
-  let tooltips = cell.GF_tooltips;
-  if (tooltips == undefined || !tooltips.checked) return null;
-  var GFsDiv = document.createElement('div');
-  if (tooltips.metrics.length > 0) {
-    GFsDiv.appendChild(this.getTooltipDate(tooltips.lastChange));
-    for (var i = 0; i < tooltips.metrics.length; i++) {
-      // Metric + Graph in the same div
-      var GFDiv = document.createElement('div');
-      const metric = tooltips.metrics[i];
-      {
-        GFDiv.appendChild(this.getTooltipMetric(metric));
-        GFDiv.appendChild(this.getTooltipChart(metric));
-      }
-      GFsDiv.appendChild(GFDiv);
+  getTooltipDate(date) {
+    var dateDiv = document.createElement('div');
+    if (date !== undefined && date !== null) {
+      dateDiv.className = 'graph-tooltip-time';
+      dateDiv.innerHTML = `</br>${date}`;
     }
+    return dateDiv;
   }
-  return GFsDiv;
-}
 
-getTooltipMetric(metric) {
-  var metricDiv = document.createElement('div');
-  var metricString = '';
-  if (metric !== undefined) {
-    metricString += `${metric.name} : `;
-    metricString += `<span style="color:${metric.color}"><b>${metric.value}</b></span></br>`;
-  }
-  metricDiv.innerHTML = metricString;
-  return metricDiv;
-}
-
-/**
- *Return DIV charts
- *
- * @param {mxCell} cell
- * @returns
- * @memberof XGraph
- */
-getTooltipChart(metric) {
-  function arrayColumn(arr, n) {
-    return arr.map(x => x[n]);
-  }
-  if (metric.chartDiv === undefined) {
-    var serie = metric.serie;
-    const values = arrayColumn(serie.flotpairs, 1);
-    var chartDiv = document.createElement('div');
-    chartDiv.className = 'ct-chart ct-golden-section';
-    var data = {
-      // series: [[10, 14, 12, 13, 10, 8, 10, 9, 14, 28]]
-      series: [values]
-    };
-    var options = {
-      showPoint: false,
-      showLine: true,
-      showArea: true,
-      fullWidth: true,
-      showLabel: false,
-      axisX: {
-        showGrid: false,
-        showLabel: false,
-        offset: 0
-      },
-      axisY: {
-        showGrid: false,
-        showLabel: false,
-        offset: 0
-      },
-      chartPadding: 0,
-      low: 0
-    };
-
-    var chart = new Chartist.Line(chartDiv, data, options);
-    console.log('chart ', chart);
-    chart.on('draw', function (data) {
-      if (data.type === 'line' || data.type === 'area') {
-        data.element.animate({
-          d: {
-            begin: 1000 * data.index,
-            dur: 1000,
-            from: data.path
-              .clone()
-              .scale(1, 0)
-              .translate(0, data.chartRect.height())
-              .stringify(),
-            to: data.path.clone().stringify(),
-            easing: Chartist.Svg.Easing.easeOutQuint
-          }
-        });
+  getTooltipGFs(cell) {
+    let tooltips = cell.GF_tooltips;
+    if (tooltips == undefined || !tooltips.checked) return null;
+    var GFsDiv = document.createElement('div');
+    if (tooltips.metrics.length > 0) {
+      GFsDiv.appendChild(this.getTooltipDate(tooltips.lastChange));
+      for (var i = 0; i < tooltips.metrics.length; i++) {
+        // Metric + Graph in the same div
+        var GFDiv = document.createElement('div');
+        const metric = tooltips.metrics[i];
+        {
+          GFDiv.appendChild(this.getTooltipMetric(metric));
+          GFDiv.appendChild(this.getTooltipChart(metric));
+        }
+        GFsDiv.appendChild(GFDiv);
       }
-    });
-    chart.on('created', () => {
-      console.log('created', chartDiv);
-    });
-    metric.chartDiv = chartDiv;
-    return chartDiv;
+    }
+    return GFsDiv;
   }
-  else return metric.chartDiv;
-}
+
+  getTooltipMetric(metric) {
+    var metricDiv = document.createElement('div');
+    var metricString = '';
+    if (metric !== undefined) {
+      metricString += `${metric.name} : `;
+      metricString += `<span style="color:${metric.color}"><b>${metric.value}</b></span></br>`;
+    }
+    metricDiv.innerHTML = metricString;
+    return metricDiv;
+  }
+
+  /**
+   *Return DIV charts
+   *
+   * @param {mxCell} cell
+   * @returns
+   * @memberof XGraph
+   */
+  getTooltipChart(metric) {
+    let defaultColor = '#8c8980';
+    function arrayColumn(arr, n) {
+      return arr.map(x => x[n]);
+    }
+    if (metric.chartDiv === undefined) {
+      const serie = metric.serie;
+      const values = arrayColumn(serie.flotpairs, 1);
+      let color = (metric.color != null? metric.color: defaultColor);
+      var chartDiv = document.createElement('div');
+      chartDiv.className = 'ct-chart ct-golden-section';
+      var data = {
+        // series: [[10, 14, 12, 13, 10, 8, 10, 9, 14, 28]]
+        series: [values]
+      };
+      var options = {
+        showPoint: false,
+        showLine: true,
+        showArea: true,
+        fullWidth: true,
+        showLabel: false,
+        axisX: {
+          showGrid: false,
+          showLabel: false,
+          offset: 0
+        },
+        axisY: {
+          showGrid: false,
+          showLabel: false,
+          offset: 0
+        },
+        chartPadding: 0,
+        low: 0
+      };
+
+      var chart = new Chartist.Line(chartDiv, data, options);
+      console.log('chart ', chart);
+      chart.on('draw', function(data) {
+        console.log('data ', data);
+        if (data.type === 'line' || data.type === 'area') {
+          if (data.type === 'line') data.element.attr({
+            style: `stroke: ${color}`
+          });
+          if (data.type === 'area') data.element.attr({
+            style: `fill: ${color}`
+          });
+          data.element.animate({
+            d: {
+              begin: 1000 * data.index,
+              dur: 1000,
+              from: data.path
+                .clone()
+                .scale(1, 0)
+                .translate(0, data.chartRect.height())
+                .stringify(),
+              to: data.path.clone().stringify(),
+              easing: Chartist.Svg.Easing.easeOutQuint
+            }
+          });
+        }
+      });
+      chart.on('created', () => {
+        console.log('created', chartDiv);
+      });
+
+      metric.chartDiv = chartDiv;
+      return chartDiv;
+    } else return metric.chartDiv;
+  }
 }
