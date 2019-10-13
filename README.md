@@ -43,7 +43,8 @@ See more example at draw.io
   - Support Dynamic shapes like Floorplan, isometric plans and more ([See example](https://algenty.github.io/flowcharting-repository/images/dynamic_shapes_ani.png))
   - New color mode for no SVG object like pictures/cliparts/images ([See example](https://algenty.github.io/flowcharting-repository/images/colormode_ani.png))
   - Graphs in tooltip ([See example](https://algenty.github.io/flowcharting-repository/images/tooltip_graph.png))
-  - Define the direction for each metrics/graph in tooltips (horizontal or verticel)
+    - Color graph with defined colors in threshold
+  - Define the direction for each metrics/graph in tooltips (horizontal or vertical)
   - Some optimizations, Display is twice as fast on load.
 
 ### Fixed  
@@ -57,7 +58,7 @@ See more example at draw.io
   - Fix auto reset zoom/unzoom when data refreshed, only ESC or change options on flowchart reset zoom now [(issue #38)](https://github.com/algenty/grafana-flowcharting/issues/38)
   - Fix error for BPNM shapes [(Issue #51)](https://github.com/algenty/grafana-flowcharting/issues/51)
   - Fix display when center and scale are checked on flowchart options.
-  - Fix Zoom with mouse on firefox and Edge.
+  - Fix Zoom with mouse wheel on firefox and Edge.
 
 ## [[0.4.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0.zip) - 2019-09-26
 ### Added
@@ -87,7 +88,7 @@ See more example at draw.io
     - In text mapping when type in sring for "Range to text" and "Value to text"
     - In link ovewrite
   - full shapes from draw.io included ([See example](https://algenty.github.io/flowcharting-repository/images/shapes_ani.gif))
-  - Some optimizations
+  - Some optimizations on render and display.
 
 ### Fixed  
   - Optimization when refresh/render [(issue #15)](https://github.com/algenty/grafana-flowcharting/issues/15)  
@@ -169,7 +170,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Custom variables like ${_label},${_value}, ${_alias}, ${_rule}, ${_level} ...
   - [X] Variable support in link (done in 0.5.0)
   - [X] Zoom/Unzoom (done in 0.4.0)
-  - [ ] Histogram in tooltip like heapmap
   - [ ] Shared graph crosshair
   - [ ] CSV source
   - [ ] Map/search shape by value
@@ -177,8 +177,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Multi graph with auto link when errors
   - [ ] Gradien Mode for color
   - [ ] More than 3 colors
-  - [-] Graph in tooltip
-  - [ ] New style for image : imageBackground, imageBorder
+  - [X] Graph in tooltip
+  - [ ] Histogram
+  - [ ] Merge Graph
+  - [X] New style for image : imageBackground, imageBorder
   - [X] Support cloud images from draw.io
   - [X] Support images from draw.io (done in 0.5.0)
   - [X] Add append mode on text with CR or space (done in 0.5.0)
