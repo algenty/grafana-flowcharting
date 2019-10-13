@@ -78,6 +78,10 @@ export default class Rule {
     this.data.tooltipLabel = obj.tooltipLabel !== undefined ? obj.tooltipLabel : this.data.alias;
     this.data.tooltipColors = obj.tooltipColors !== undefined ? obj.tooltipColors : false;
     this.data.tooltipOn = obj.tooltipOn !== undefined ? obj.tooltipOn : 'a';
+    this.data.tpDirection = obj.tpDirection !== undefined ? obj.tpDirection : 'v';
+    this.data.tpGraph = obj.tpGraph !== undefined ? obj.tpGraph : false;
+    this.data.tpGraphSize = obj.tpGraphSize !== undefined ? obj.tpGraphSize : '100%';
+    this.data.tpGraphType = obj.tpGraphType !== undefined ? obj.tpGraphType : 'line';
     let maps = [];
 
     // SHAPES

@@ -30,6 +30,7 @@ export class MappingOptionsCtrl {
     ];
     this.linkOn = [{ text: 'Warning / Critical', value: 'wc' }, { text: 'Always', value: 'a' }];
     this.tooltipOn = [{ text: 'Warning / Critical', value: 'wc' }, { text: 'Always', value: 'a' }];
+    this.tpDirection = [{ text: 'Vertical', value: 'v' }, { text: 'Horizontal ', value: 'h' }];
     this.textOn = [
       { text: 'Never', value: 'n' },
       { text: 'When Metric Displayed', value: 'wmd' },
@@ -72,6 +73,16 @@ export class MappingOptionsCtrl {
       { text: 'Diff', value: 'diff' }
     ];
     this.mappingTypes = [{ text: 'Value to text', value: 1 }, { text: 'Range to text', value: 2 }];
+    this.tpGraphType = [
+      { text: 'Line', value: 'line'},
+      // { text: 'Histogram', value: 'bar'},
+    ];
+    this.tpGraphSize = [
+      { text: 'Adjustable', value: '100%'},
+      { text: 'Small', value: '100px'},
+      { text: 'Medium', value: '200px'},
+      { text: 'Large', value: '400px'},
+    ];
 
     this.getMetricNames = () => {
       if (!this.panelCtrl.series) {

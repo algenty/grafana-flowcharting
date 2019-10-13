@@ -105,6 +105,13 @@ module.exports = (grunt) => {
           spawn: false,
         },
       },
+      microbuild: {
+        files: ['src/**/*'],
+        tasks: ['microbuild'],
+        options: {
+          spawn: false,
+        },
+      },
     },
 
 
@@ -227,7 +234,9 @@ module.exports = (grunt) => {
   });
 
   grunt.registerTask('default', ['clean:build', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:mxgraph_to_dist', 'copy:stencils_to_dist']);
-  grunt.registerTask('dev', ['default', 'watch']);
+  grunt.registerTask('microbuild', ['sass', 'babel', 'webpack' ]);
+  grunt.registerTask('dev', ['default', 'watch:rebuild_all']);
+  grunt.registerTask('microdev', ['microbuild', 'watch:microbuild']);
   grunt.registerTask('archive', ['default', 'compress:main']);
   grunt.registerTask('init', ['clean:before_init','gitclone:mxgraph','gitclone:drawio','clean:after_init']);
 };

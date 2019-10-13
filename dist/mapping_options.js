@@ -77,6 +77,13 @@ var MappingOptionsCtrl = function () {
       text: 'Always',
       value: 'a'
     }];
+    this.tpDirection = [{
+      text: 'Vertical',
+      value: 'v'
+    }, {
+      text: 'Horizontal ',
+      value: 'h'
+    }];
     this.textOn = [{
       text: 'Never',
       value: 'n'
@@ -171,6 +178,23 @@ var MappingOptionsCtrl = function () {
     }, {
       text: 'Range to text',
       value: 2
+    }];
+    this.tpGraphType = [{
+      text: 'Line',
+      value: 'line'
+    }];
+    this.tpGraphSize = [{
+      text: 'Adjustable',
+      value: '100%'
+    }, {
+      text: 'Small',
+      value: '100px'
+    }, {
+      text: 'Medium',
+      value: '200px'
+    }, {
+      text: 'Large',
+      value: '400px'
     }];
 
     this.getMetricNames = function () {

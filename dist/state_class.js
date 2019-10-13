@@ -100,7 +100,12 @@ var State = function () {
             _this2.mxcell.serie = serie;
 
             if (rule.toTooltipize(level)) {
-              if (rule.data.tooltipColors) _this2.addTooltip(rule.data.tooltipLabel, FormattedValue, color, serie);else _this2.addTooltip(rule.data.tooltipLabel, FormattedValue, null, serie);
+              var tpColor = null;
+              if (rule.data.tooltipColors) tpColor = color;
+
+              _this2.addTooltip(rule.data.tooltipLabel, FormattedValue, tpColor, rule.data.tpDirection);
+
+              if (rule.data.tpGraph) _this2.addTooltipGraph(rule.data.tooltipLabel, rule.data.tpGraphType, rule.data.tpGraphSize, serie);
 
               _this2.updateTooltipDate(time);
             }
@@ -292,7 +297,7 @@ var State = function () {
     }
   }, {
     key: "addTooltip",
-    value: function addTooltip(name, value, color, serie) {
+    value: function addTooltip(name, value, color, direction) {
       u.log(1, 'State.addTooltipValue()');
       u.log(0, 'State.addTooltipValue() name', name);
       u.log(0, 'State.addTooltipValue() value', value);
@@ -304,13 +309,39 @@ var State = function () {
           name: name,
           value: value,
           color: color,
-          serie: serie
+          direction: direction
         };
         this.tooltips.metrics.push(metric);
       } else {
         metric.value = value;
         metric.color = color;
-        metric.serie = serie;
+        metric.direction = direction;
+      }
+    }
+  }, {
+    key: "addTooltipGraph",
+    value: function addTooltipGraph(name, type, size, serie) {
+      var metric = this.findTooltipValue(name);
+      metric.graph = true;
+
+      if (metric === null) {
+        metric = {
+          name: name,
+          graph: true,
+          graphOptions: {
+            type: type,
+            size: size,
+            serie: serie
+          }
+        };
+        this.tooltips.metrics.push(metric);
+      } else {
+        metric.graph = true;
+        metric.graphOptions = {
+          type: type,
+          size: size,
+          serie: serie
+        };
       }
     }
   }, {

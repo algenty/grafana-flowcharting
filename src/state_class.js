@@ -104,9 +104,13 @@ export default class State {
           this.mxcell.serie = serie;
           // tooltips
           if (rule.toTooltipize(level)) {
-            if (rule.data.tooltipColors)
-              this.addTooltip(rule.data.tooltipLabel, FormattedValue, color, serie);
-            else this.addTooltip(rule.data.tooltipLabel, FormattedValue, null, serie);
+            // Metrics
+            let tpColor = null;
+            if (rule.data.tooltipColors) tpColor = color;
+            this.addTooltip(rule.data.tooltipLabel, FormattedValue, tpColor, rule.data.tpDirection);
+            // Graph
+            if(rule.data.tpGraph) this.addTooltipGraph(rule.data.tooltipLabel, rule.data.tpGraphType, rule.data.tpGraphSize, serie);
+            // Date
             this.updateTooltipDate(time);
           }
 
@@ -381,7 +385,7 @@ export default class State {
    * @param {string} color - Color for the value
    * @memberof State
    */
-  addTooltip(name, value, color, serie) {
+  addTooltip(name, value, color, direction) {
     u.log(1, 'State.addTooltipValue()');
     u.log(0, 'State.addTooltipValue() name', name);
     u.log(0, 'State.addTooltipValue() value', value);
@@ -392,13 +396,48 @@ export default class State {
         name: name,
         value: value,
         color: color,
-        serie: serie
+        direction: direction,
       };
       this.tooltips.metrics.push(metric);
     } else {
       metric.value = value;
       metric.color = color;
-      metric.serie = serie;
+      metric.direction = direction; 
+    }
+  }
+
+  /**
+   *Add Graph options to tooltip
+   *
+   * @param {string} name
+   * @param {string} type
+   * @param {string} size
+   * @param {timeSerie} serie
+   * @memberof State
+   */
+addTooltipGraph(name,type,size,serie) {
+    let metric = this.findTooltipValue(name);
+    metric.graph = true;
+    if (metric === null) {
+      metric = {
+        name: name,
+        graph : true,
+        graphOptions : {
+          type : type,
+          size : size,
+          serie : serie
+        }
+      }
+      this.tooltips.metrics.push(metric);
+    }
+    else
+    {
+      metric.graph = true;
+      metric.graphOptions = {
+        type : type,
+        size : size,
+        serie : serie        
+      }
     }
   }
 

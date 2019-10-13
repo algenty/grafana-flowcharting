@@ -108,6 +108,9 @@ div.tooltip-text {
   max-width: 200px;
   white-space: normal; }
 
+div.tooltip-metric {
+  margin: 5px 5px 5px 5px; }
+
 .ct-chart-line .ct-label,
 .ct-chart-bar .ct-label {
   display: block;

@@ -196,12 +196,13 @@ export default class XGraph {
 
     // CTRL+MOUSEWHEEL
     mxEvent.addMouseWheelListener(mxUtils.bind(this, this.eventMouseWheel), this.container);
+    if (mxClient.IS_IE || mxClient.IS_EDGE)
+      mxEvent.addListener(this.container, 'wheel', mxUtils.bind(this, this.eventMouseWheel));
 
     // KEYS
     mxEvent.addListener(document, 'keydown', mxUtils.bind(this, this.eventKey));
 
     // CONTEXT MENU
-    // mxEvent.addListener(this.container, 'contextmenu', mxUtils.bind(this, function() {return false;}));
     this.container.addEventListener('contextmenu', e => e.preventDefault());
 
     // DB CLICK
@@ -836,10 +837,23 @@ export default class XGraph {
    */
   eventMouseWheel(evt, up) {
     u.log(1, 'XGraph.eventMouseWheel()');
+    u.log(0, 'XGraph.eventMouseWheel() evt', evt);
+    u.log(0, 'XGraph.eventMouseWheel() up', up);
     if (this.graph.isZoomWheelEvent(evt)) {
-      const rect = evt.target.getBoundingClientRect();
-      var x = evt.offsetX - evt.currentTarget.offsetLeft;
-      var y = evt.offsetY - evt.currentTarget.offsetTop;
+      if (up == null || up == undefined) {
+        u.log(0, 'XGraph.eventMouseWheel() up', "Not defined");
+        if(evt.deltaY < 0) up = true;
+        else up = false;
+      }
+      // const rect = evt.target.getBoundingClientRect();
+      // let offsetLeft = (evt.currentTarget.offsetLeft != undefined ? evt.currentTarget.offsetLeft : 0 );
+      // let offsetTop = (evt.currentTarget.offsetTop != undefined ? evt.currentTarget.offsetTop : 0 )
+      // u.log(0, 'XGraph.eventMouseWheel() offsetLeft', offsetLeft);
+      // u.log(0, 'XGraph.eventMouseWheel() offsetTop', offsetTop);
+      // var x = evt.layerX - offsetLeft;
+      // var y = evt.layerY - offsetTop;
+      var x = evt.layerX;
+      var y = evt.layerY;
       if (up) {
         this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
       } else {
@@ -954,7 +968,6 @@ export default class XGraph {
 
       hl.highlight(state);
       cell.highlight = hl;
-
     }
   }
 
@@ -988,8 +1001,8 @@ export default class XGraph {
    * @memberof XGraph
    */
   lazyZoomCell(mxcell) {
-    u.log(1, 'XGraph.lazyZoomPointer() mxcell', mxcell);
-    u.log(0, 'XGraph.lazyZoomPointer() mxcellState', this.graph.view.getState(mxcell));
+    u.log(1, 'XGraph.lazyZoomCell() mxcell', mxcell);
+    u.log(0, 'XGraph.lazyZoomCell() mxcellState', this.graph.view.getState(mxcell));
     if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
       const state = this.graph.view.getState(mxcell);
       if (state !== null) {
@@ -1091,19 +1104,22 @@ export default class XGraph {
   getTooltipGFs(cell) {
     let tooltips = cell.GF_tooltips;
     if (tooltips == undefined || !tooltips.checked) return null;
-    var GFsDiv = document.createElement('div');
+    let GFsDiv = document.createElement('div');
     if (tooltips.metrics.length > 0) {
       GFsDiv.appendChild(this.getTooltipDate(tooltips.lastChange));
+      let MetricsDiv = document.createElement('div');
       for (var i = 0; i < tooltips.metrics.length; i++) {
         // Metric + Graph in the same div
-        var GFDiv = document.createElement('div');
+        let GFDiv = document.createElement('div');
+        GFDiv.className = 'tooltip-metric';
         const metric = tooltips.metrics[i];
-        {
-          GFDiv.appendChild(this.getTooltipMetric(metric));
-          GFDiv.appendChild(this.getTooltipChart(metric));
-        }
-        GFsDiv.appendChild(GFDiv);
+        if (metric.direction != null && metric.direction === 'h')
+          GFDiv.style = 'display:inline-block;*display:inline;*zoom:1';
+        GFDiv.appendChild(this.getTooltipMetric(metric));
+        GFDiv.appendChild(this.getTooltipChart(metric));
+        MetricsDiv.appendChild(GFDiv);
       }
+      GFsDiv.appendChild(MetricsDiv);
     }
     return GFsDiv;
   }
@@ -1127,19 +1143,41 @@ export default class XGraph {
    * @memberof XGraph
    */
   getTooltipChart(metric) {
+    u.log(0, 'getTooltipChart() metric ', metric);
     let defaultColor = '#8c8980';
+
     function arrayColumn(arr, n) {
       return arr.map(x => x[n]);
     }
+
+    function array2Coor(arr) {
+      let result = [];
+      for (let index = 0; index < arr.length; index++) {
+        result.push({
+          x: arr[index][0],
+          y: arr[index][1]
+        });
+      }
+      return result;
+    }
+
     if (metric.chartDiv === undefined) {
-      const serie = metric.serie;
-      const values = arrayColumn(serie.flotpairs, 1);
-      let color = (metric.color != null? metric.color: defaultColor);
       var chartDiv = document.createElement('div');
+      chartDiv.className = 'tooltip-graph';
+      // Return empty graph
+      if (!metric.graph) return chartDiv;
+      const serie = metric.graphOptions.serie;
+      const coor = array2Coor(serie.flotpairs);
+      let color = metric.color != null ? metric.color : defaultColor;
+      let size = undefined;
+      if (metric.graphOptions.size != null) {
+        size = metric.graphOptions.size;
+        chartDiv.style = `width:${size};`;
+      }
       chartDiv.className = 'ct-chart ct-golden-section';
       var data = {
         // series: [[10, 14, 12, 13, 10, 8, 10, 9, 14, 28]]
-        series: [values]
+        series: [coor]
       };
       var options = {
         showPoint: false,
@@ -1147,6 +1185,7 @@ export default class XGraph {
         showArea: true,
         fullWidth: true,
         showLabel: false,
+        width: size,
         axisX: {
           showGrid: false,
           showLabel: false,
@@ -1162,16 +1201,18 @@ export default class XGraph {
       };
 
       var chart = new Chartist.Line(chartDiv, data, options);
-      console.log('chart ', chart);
+      metric.chart = chart;
       chart.on('draw', function(data) {
-        console.log('data ', data);
+        u.log(0, 'Chartis.on() data ', data);
         if (data.type === 'line' || data.type === 'area') {
-          if (data.type === 'line') data.element.attr({
-            style: `stroke: ${color}`
-          });
-          if (data.type === 'area') data.element.attr({
-            style: `fill: ${color}`
-          });
+          if (data.type === 'line')
+            data.element.attr({
+              style: `stroke: ${color}`
+            });
+          if (data.type === 'area')
+            data.element.attr({
+              style: `fill: ${color}`
+            });
           data.element.animate({
             d: {
               begin: 1000 * data.index,
@@ -1187,9 +1228,9 @@ export default class XGraph {
           });
         }
       });
-      chart.on('created', () => {
-        console.log('created', chartDiv);
-      });
+      // chart.on('created', () => {
+      //   console.log('created', chartDiv);
+      // });
 
       metric.chartDiv = chartDiv;
       return chartDiv;
