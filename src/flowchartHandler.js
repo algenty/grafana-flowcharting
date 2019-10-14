@@ -179,7 +179,7 @@ export default class FlowchartHandler {
         // this.applyStates();
 
         // Change to async to optimize
-        this.asyncRefreshStates(rules,series);
+        this.async_refreshStates(rules,series);
         this.changeDataFlag = false;
         this.optionsFlag = false;
       }
@@ -241,7 +241,25 @@ export default class FlowchartHandler {
     });
   }
 
-  async asyncRefreshStates(rules,series) {
+  /**
+   *Call refreshStates asynchronously
+   *
+   * @param {*} rules
+   * @param {*} series
+   * @memberof FlowchartHandler
+   */
+  async_refreshStates(rules,series) {
+    this.refreshStates(rules,series);
+  }
+
+  /**
+   *Refresh rules according new rules or data
+   *
+   * @param {*} rules
+   * @param {*} series
+   * @memberof FlowchartHandler
+   */
+  refreshStates(rules,series) {
     if (this.changeRuleFlag) {
       this.updateStates(rules);
       this.changeRuleFlag = false;

@@ -73,6 +73,15 @@ export default class State {
   }
 
   /**
+   *Call applyState() asynchronously
+   *
+   * @memberof State
+   */
+  async async_applyState() {
+    this.applyState();
+  }
+
+  /**
    *Define state according to 1 rule and 1 serie without apply display
    *
    * @param {Rule} rule

@@ -211,4 +211,13 @@ export default class StateHandler {
       state.applyState();
     });
   }
+
+  /**
+   *Call applyStates asynchronously
+   *
+   * @memberof StateHandler
+   */
+  async_applyStates() {
+    this.applyStates();
+  }
 }

@@ -179,7 +179,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] More than 3 colors
   - [X] Graph in tooltip
   - [ ] Histogram
-  - [ ] Merge Graph
+  - [ ] Merge Graphs
+  - [ ] Filter for null values in graph
+  - [ ] Inspector on series
   - [X] New style for image : imageBackground, imageBorder
   - [X] Support cloud images from draw.io
   - [X] Support images from draw.io (done in 0.5.0)

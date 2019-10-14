@@ -169,6 +169,11 @@ var StateHandler = function () {
         state.applyState();
       });
     }
+  }, {
+    key: "async_applyStates",
+    value: function async_applyStates() {
+      this.applyStates();
+    }
   }]);
 
   return StateHandler;
