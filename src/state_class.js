@@ -1,3 +1,5 @@
+import TooltipHandler from './tooltipHandler';
+
 /**
  *Class for state of one cell
  *
@@ -27,7 +29,7 @@ export default class State {
       strokeColor: false,
       fontColor: false,
       imageBorder: false,
-      imageBackground : false,
+      imageBackground: false
     };
     this.changedText = false;
     this.changedLink = false;
@@ -40,7 +42,7 @@ export default class State {
       strokeColor: false,
       fontColor: false,
       imageBorder: false,
-      imageBackground : false,
+      imageBackground: false
     };
     this.matchedText = false;
     this.matchedLink = false;
@@ -51,10 +53,10 @@ export default class State {
       strokeColor: -1,
       fontColor: -1,
       imageBorder: -1,
-      imageBackground : -1,
+      imageBackground: -1
     };
-    this.tooltips = this.emptyTooltips();
-    this.mxcell.GF_tooltips = this.tooltips;
+    this.tooltipHandler = null;
+    this.mxcell.GF_tooltipHandler = null;
     this.currentColors = {};
     this.originalColors = {};
     this.originalStyle = mxcell.getStyle();
@@ -64,7 +66,6 @@ export default class State {
     if (link === undefined) link = null;
     this.originalLink = link;
     this.currentLink = link;
-
     this.styleKeys.forEach(style => {
       const color = this.xgraph.getStyleCell(mxcell, style);
       this.currentColors[style] = color;
@@ -100,8 +101,7 @@ export default class State {
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
       const color = rule.getColorForLevel(level);
-      const tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
-      const time = this.ctrl.dashboard.formatDate(new Date(), tooltipTimeFormat);
+      const tooltipName = rule.data.alias + "_" + serie.alias; 
 
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
@@ -115,12 +115,19 @@ export default class State {
           if (rule.toTooltipize(level)) {
             // Metrics
             let tpColor = null;
+            let label = (rule.data.tooltipLabel == null || rule.data.tooltipLabel.length === 0) ? serie.alias : rule.data.tooltipLabel;
             if (rule.data.tooltipColors) tpColor = color;
-            this.addTooltip(rule.data.tooltipLabel, FormattedValue, tpColor, rule.data.tpDirection);
+            this.addTooltip(tooltipName, label, FormattedValue, tpColor, rule.data.tpDirection);
             // Graph
-            if(rule.data.tpGraph) this.addTooltipGraph(rule.data.tooltipLabel, rule.data.tpGraphType, rule.data.tpGraphSize, serie);
+            if (rule.data.tpGraph)
+              this.addTooltipGraph(
+                tooltipName,                
+                rule.data.tpGraphType,
+                rule.data.tpGraphSize,
+                serie
+              );
             // Date
-            this.updateTooltipDate(time);
+            this.updateTooltipDate();
           }
 
           // Color Shape
@@ -276,8 +283,8 @@ export default class State {
    * @memberof State
    */
   unsetTooltip() {
-    this.tooltips = this.emptyTooltips();
-    this.mxcell.GF_tooltips = this.tooltips;
+    if (this.tooltipHandler != null) this.tooltipHandler.destroy();
+    this.tooltipHandler = null;
   }
 
   /**
@@ -389,30 +396,17 @@ export default class State {
   /**
    *Add metric to tooltip of shape
    *
-   * @param {string} name - Label to display in tooltip
+   * @param {string} label - Label to display in tooltip
    * @param {string} value - Formatted value
    * @param {string} color - Color for the value
    * @memberof State
    */
-  addTooltip(name, value, color, direction) {
+  addTooltip(name, label, value, color, direction) {
     u.log(1, 'State.addTooltipValue()');
-    u.log(0, 'State.addTooltipValue() name', name);
+    u.log(0, 'State.addTooltipValue() label', label);
     u.log(0, 'State.addTooltipValue() value', value);
-    let metric = this.findTooltipValue(name);
-    this.tooltips.checked = true;
-    if (metric === null) {
-      metric = {
-        name: name,
-        value: value,
-        color: color,
-        direction: direction,
-      };
-      this.tooltips.metrics.push(metric);
-    } else {
-      metric.value = value;
-      metric.color = color;
-      metric.direction = direction; 
-    }
+    if (this.tooltipHandler == null) this.tooltipHandler = new TooltipHandler(this.mxcell);
+    this.tooltipHandler.addMetric(name, label, value, color, direction);
   }
 
   /**
@@ -424,49 +418,12 @@ export default class State {
    * @param {timeSerie} serie
    * @memberof State
    */
-addTooltipGraph(name,type,size,serie) {
-    let metric = this.findTooltipValue(name);
-    metric.graph = true;
-    if (metric === null) {
-      metric = {
-        name: name,
-        graph : true,
-        graphOptions : {
-          type : type,
-          size : size,
-          serie : serie
-        }
-      }
-      this.tooltips.metrics.push(metric);
-    }
-    else
-    {
-      metric.graph = true;
-      metric.graphOptions = {
-        type : type,
-        size : size,
-        serie : serie        
-      }
-    }
+  addTooltipGraph(name, type, size, serie) {
+    this.tooltipHandler.addGraph(name, type, size, serie);
   }
 
-  updateTooltipDate(date) {
-    this.tooltips.lastChange = date;
-  }
-
-  /**
-   *Return the value of metric if is in tooltip else return null
-   *
-   * @param {string} name
-   * @returns
-   * @memberof State
-   */
-  findTooltipValue(name) {
-    for (let index = 0; index < this.tooltips.metrics.length; index += 1) {
-      const metric = this.tooltips.metrics[index];
-      if (metric.name === name) return metric;
-    }
-    return null;
+  updateTooltipDate() {
+    this.tooltipHandler.updateDate();
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -510,7 +467,7 @@ addTooltipGraph(name,type,size,serie) {
       if (this.matchedStyle[key]) {
         const color = this.currentColors[key];
         this.xgraph.setStyleCell(this.mxcell, key, color);
-        if (color !== this.originalColors[key] ) this.changedStyle[key] = true;
+        if (color !== this.originalColors[key]) this.changedStyle[key] = true;
       }
     });
   }
@@ -587,8 +544,8 @@ addTooltipGraph(name,type,size,serie) {
    * @memberof State
    */
   applyTooltip() {
-    if (this.tooltips.checked  === true) {
-      this.mxcell.GF_tooltips = this.tooltips;
+    if (this.tooltipHandler != null && this.tooltipHandler.isChecked()) {
+      this.mxcell.GF_tooltipHandler = this.tooltipHandler;
     }
   }
 
@@ -655,38 +612,7 @@ addTooltipGraph(name,type,size,serie) {
       this.matchedShape = false;
       this.matchedText = false;
       this.matchedLink = false;
-      this.tooltips = this.emptyTooltips();
     }
-  }
-
-  /**
-   * Factory for tooltip GF
-   *
-   * @returns empty tooltips information
-   * @memberof State
-   */
-  emptyTooltips() {
-    return {
-      checked : false,
-      state : this,
-      lastChange : undefined,
-      metrics : [],
-    };
-  }
-
-  /**
-   * Factory for metric GF
-   *
-   * @returns
-   * @memberof State
-   */
-  emptyMetric() {
-    return {
-      name: undefined,
-      value: undefined,
-      color: undefined,
-      serie: undefined
-    };
   }
 
   /**

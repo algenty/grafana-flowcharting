@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
+var _tooltipHandler = _interopRequireDefault(require("./tooltipHandler"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -58,8 +62,8 @@ var State = function () {
       imageBorder: -1,
       imageBackground: -1
     };
-    this.tooltips = this.emptyTooltips();
-    this.mxcell.GF_tooltips = this.tooltips;
+    this.tooltipHandler = null;
+    this.mxcell.GF_tooltipHandler = null;
     this.currentColors = {};
     this.originalColors = {};
     this.originalStyle = mxcell.getStyle();
@@ -118,8 +122,7 @@ var State = function () {
         var FormattedValue = rule.getFormattedValue(value);
         var level = rule.getThresholdLevel(value);
         var color = rule.getColorForLevel(level);
-        var tooltipTimeFormat = 'YYYY-MM-DD HH:mm:ss';
-        var time = this.ctrl.dashboard.formatDate(new Date(), tooltipTimeFormat);
+        var tooltipName = rule.data.alias + "_" + serie.alias;
         var cellProp = this.getCellProp(rule.data.shapeProp);
         shapeMaps.forEach(function (shape) {
           if (!shape.isHidden() && shape.match(cellProp)) {
@@ -129,13 +132,14 @@ var State = function () {
 
             if (rule.toTooltipize(level)) {
               var tpColor = null;
+              var label = rule.data.tooltipLabel == null || rule.data.tooltipLabel.length === 0 ? serie.alias : rule.data.tooltipLabel;
               if (rule.data.tooltipColors) tpColor = color;
 
-              _this2.addTooltip(rule.data.tooltipLabel, FormattedValue, tpColor, rule.data.tpDirection);
+              _this2.addTooltip(tooltipName, label, FormattedValue, tpColor, rule.data.tpDirection);
 
-              if (rule.data.tpGraph) _this2.addTooltipGraph(rule.data.tooltipLabel, rule.data.tpGraphType, rule.data.tpGraphSize, serie);
+              if (rule.data.tpGraph) _this2.addTooltipGraph(tooltipName, rule.data.tpGraphType, rule.data.tpGraphSize, serie);
 
-              _this2.updateTooltipDate(time);
+              _this2.updateTooltipDate();
             }
 
             if (_this2.globalLevel <= level) {
@@ -251,8 +255,8 @@ var State = function () {
   }, {
     key: "unsetTooltip",
     value: function unsetTooltip() {
-      this.tooltips = this.emptyTooltips();
-      this.mxcell.GF_tooltips = this.tooltips;
+      if (this.tooltipHandler != null) this.tooltipHandler.destroy();
+      this.tooltipHandler = null;
     }
   }, {
     key: "unsetLevel",
@@ -325,67 +329,22 @@ var State = function () {
     }
   }, {
     key: "addTooltip",
-    value: function addTooltip(name, value, color, direction) {
+    value: function addTooltip(name, label, value, color, direction) {
       u.log(1, 'State.addTooltipValue()');
-      u.log(0, 'State.addTooltipValue() name', name);
+      u.log(0, 'State.addTooltipValue() label', label);
       u.log(0, 'State.addTooltipValue() value', value);
-      var metric = this.findTooltipValue(name);
-      this.tooltips.checked = true;
-
-      if (metric === null) {
-        metric = {
-          name: name,
-          value: value,
-          color: color,
-          direction: direction
-        };
-        this.tooltips.metrics.push(metric);
-      } else {
-        metric.value = value;
-        metric.color = color;
-        metric.direction = direction;
-      }
+      if (this.tooltipHandler == null) this.tooltipHandler = new _tooltipHandler["default"](this.mxcell);
+      this.tooltipHandler.addMetric(name, label, value, color, direction);
     }
   }, {
     key: "addTooltipGraph",
     value: function addTooltipGraph(name, type, size, serie) {
-      var metric = this.findTooltipValue(name);
-      metric.graph = true;
-
-      if (metric === null) {
-        metric = {
-          name: name,
-          graph: true,
-          graphOptions: {
-            type: type,
-            size: size,
-            serie: serie
-          }
-        };
-        this.tooltips.metrics.push(metric);
-      } else {
-        metric.graph = true;
-        metric.graphOptions = {
-          type: type,
-          size: size,
-          serie: serie
-        };
-      }
+      this.tooltipHandler.addGraph(name, type, size, serie);
     }
   }, {
     key: "updateTooltipDate",
-    value: function updateTooltipDate(date) {
-      this.tooltips.lastChange = date;
-    }
-  }, {
-    key: "findTooltipValue",
-    value: function findTooltipValue(name) {
-      for (var index = 0; index < this.tooltips.metrics.length; index += 1) {
-        var metric = this.tooltips.metrics[index];
-        if (metric.name === name) return metric;
-      }
-
-      return null;
+    value: function updateTooltipDate() {
+      this.tooltipHandler.updateDate();
     }
   }, {
     key: "isGradient",
@@ -485,8 +444,8 @@ var State = function () {
   }, {
     key: "applyTooltip",
     value: function applyTooltip() {
-      if (this.tooltips.checked === true) {
-        this.mxcell.GF_tooltips = this.tooltips;
+      if (this.tooltipHandler != null && this.tooltipHandler.isChecked()) {
+        this.mxcell.GF_tooltipHandler = this.tooltipHandler;
       }
     }
   }, {
@@ -537,28 +496,7 @@ var State = function () {
         this.matchedShape = false;
         this.matchedText = false;
         this.matchedLink = false;
-        this.tooltips = this.emptyTooltips();
       }
-    }
-  }, {
-    key: "emptyTooltips",
-    value: function emptyTooltips() {
-      return {
-        checked: false,
-        state: this,
-        lastChange: undefined,
-        metrics: []
-      };
-    }
-  }, {
-    key: "emptyMetric",
-    value: function emptyMetric() {
-      return {
-        name: undefined,
-        value: undefined,
-        color: undefined,
-        serie: undefined
-      };
     }
   }, {
     key: "highlightCell",

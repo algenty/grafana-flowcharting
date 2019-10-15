@@ -180,10 +180,10 @@ export default class XGraph {
     u.log(1, 'XGraph.initGraph()');
     this.graph = new Graph(this.container);
     this.graph.getTooltipForCell = this.getTooltipForCell;
-    this.graph.getTooltipChart = this.getTooltipChart;
-    this.graph.getTooltipGFs = this.getTooltipGFs;
-    this.graph.getTooltipMetric = this.getTooltipMetric;
-    this.graph.getTooltipDate = this.getTooltipDate;
+    // this.graph.getTooltipChart = this.getTooltipChart;
+    // this.graph.getTooltipGFs = this.getTooltipGFs;
+    // this.graph.getTooltipMetric = this.getTooltipMetric;
+    // this.graph.getTooltipDate = this.getTooltipDate;
 
     // /!\ What is setPannig
     this.graph.setPanning(true);
@@ -841,8 +841,8 @@ export default class XGraph {
     u.log(0, 'XGraph.eventMouseWheel() up', up);
     if (this.graph.isZoomWheelEvent(evt)) {
       if (up == null || up == undefined) {
-        u.log(0, 'XGraph.eventMouseWheel() up', "Not defined");
-        if(evt.deltaY < 0) up = true;
+        u.log(0, 'XGraph.eventMouseWheel() up', 'Not defined');
+        if (evt.deltaY < 0) up = true;
         else up = false;
       }
       // const rect = evt.target.getBoundingClientRect();
@@ -1083,11 +1083,19 @@ export default class XGraph {
     }
 
     // GF Tooltips
-    let divs = this.getTooltipGFs(cell);
-    if (divs !== null) {
-      hasTips = true;
-      div.appendChild(divs);
+    if (cell.GF_tooltipHandler != null) {
+      let tooltipHandler = cell.GF_tooltipHandler;
+      let gfDiv = tooltipHandler.getTooltipDiv(div);
+      if (gfDiv !== null) {
+        hasTips = true;
+      }
     }
+    // let divs = this.getTooltipGFs(cell);
+    // if (divs !== null) {
+    //   hasTips = true;
+    //   div.appendChild(divs);
+    // }
+
     if (hasTips) return div;
     return '';
   }

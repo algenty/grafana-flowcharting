@@ -68,6 +68,13 @@ module.exports = (grunt) => {
         src: ['**/*', '!**/*.js'],
         dest: 'dist/libs/mxgraph/javascript/dist',
       },
+      chartist_to_dist: {
+        cwd: 'node_modules/chartist/dist/chartist.min.js',
+        expand: true,
+        src: ['**/*', '!**/*.js'],
+        dest: 'dist/chartist',
+      },
+
 
       readme: {
         expand: true,
@@ -187,6 +194,31 @@ module.exports = (grunt) => {
           path: path.resolve(process.cwd(), "./dist"),
           filename: "utils.js",
           library: "utils",
+          libraryTarget: "umd",
+        },
+        externals: {
+          jquery: "jquery",
+          lodash: "lodash",
+        },
+      },
+      tooltip: {
+        entry: "./src/tooltipHandler.js",
+        mode: "development",
+        module: {
+          rules: [
+            {
+              test: /\.m?js$/,
+              exclude: /(node_modules|bower_components|externals)/,
+              use: {
+                loader: 'babel-loader',
+              },
+            },
+          ],
+        },
+        output: {
+          path: path.resolve(process.cwd(), "./dist"),
+          filename: "tooltipHandler.js",
+          library: "tooltipHandler",
           libraryTarget: "umd",
         },
         externals: {
