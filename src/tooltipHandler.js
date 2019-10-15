@@ -161,6 +161,7 @@ export default class TooltipHandler {
     let serie = metric.graphOptions.serie;
     let coor = TooltipHandler.array2Coor(serie.flotpairs);
     let div = document.createElement('div');
+    // div.className = 'tooltip-graph';
     let color = metric.color;
     if (parentDiv != undefined) parentDiv.appendChild(div);
     div.className = 'ct-chart ct-golden-section';
