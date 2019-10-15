@@ -30,7 +30,7 @@ export default class TooltipHandler {
         offset: 0
       },
       chartPadding: 0,
-      low: 0
+      // low: 0
     };
   }
 
@@ -112,8 +112,13 @@ export default class TooltipHandler {
       div.appendChild(metricsDiv);
       for (let index = 0; index < this.metrics.length; index++) {
         const metric = this.metrics[index];
+        if(metric.div) {
+          metricsDiv.appendChild(metric.div);
+          return metric.div;
+        }
         let metricDiv = document.createElement('div');
         metricDiv.className = 'tooltip-metric';
+        metric.div = metricsDiv;
         metricsDiv.appendChild(metricDiv);
         if (metric.direction != null && metric.direction === 'h')
         metricDiv.style = 'display:inline-block;*display:inline;*zoom:1';
@@ -150,6 +155,7 @@ export default class TooltipHandler {
 
   getChartDiv(metric, parentDiv) {
     let div = document.createElement('div');
+    div.className = 'tooltip-graph';
     if (parentDiv != undefined) parentDiv.appendChild(div);
     if (metric.graph) {
       if (metric.graphOptions.type === 'line') this.getLineChartDiv(metric, div);
@@ -161,9 +167,8 @@ export default class TooltipHandler {
     let serie = metric.graphOptions.serie;
     let coor = TooltipHandler.array2Coor(serie.flotpairs);
     let div = document.createElement('div');
-    // div.className = 'tooltip-graph';
-    let color = metric.color;
     if (parentDiv != undefined) parentDiv.appendChild(div);
+    let color = metric.color;
     div.className = 'ct-chart ct-golden-section';
     if (metric.graphOptions.size != null) div.style = `width:${metric.graphOptions.size};`;
     let data = {

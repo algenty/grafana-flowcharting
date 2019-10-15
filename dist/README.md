@@ -44,7 +44,8 @@ See more example at draw.io
   - New color mode for no SVG object like pictures/cliparts/images ([See example](https://algenty.github.io/flowcharting-repository/images/colormode_ani.png))
   - Graphs in tooltip ([See example](https://algenty.github.io/flowcharting-repository/images/tooltip_graph.png))
     - Color graph with defined colors in threshold
-  - Define the direction for each metrics/graph in tooltips (horizontal or vertical)
+    - Size of graph ([See example](https://algenty.github.io/flowcharting-repository/images/graph_size.png))
+  - Define the orientation in  tooltip for each metrics/graph in tooltips : horizontal or vertical ([See example](https://algenty.github.io/flowcharting-repository/images/tooltip_direction_ani.png))
   - Some optimizations, Display is twice as fast on load.
 
 ### Fixed  
@@ -58,7 +59,7 @@ See more example at draw.io
   - Fix auto reset zoom/unzoom when data refreshed, only ESC or change options on flowchart reset zoom now [(issue #38)](https://github.com/algenty/grafana-flowcharting/issues/38)
   - Fix error for BPNM shapes [(Issue #51)](https://github.com/algenty/grafana-flowcharting/issues/51)
   - Fix display when center and scale are checked on flowchart options.
-  - Fix Zoom with mouse wheel on firefox and Edge.
+  - Fix Zoom with mouse wheel for firefox and Edge.
 
 ## [[0.4.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0.zip) - 2019-09-26
 ### Added
@@ -165,6 +166,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Use variables/templates in graph (done in 0.4.0)
   - [X] Add custom stencils/libs from draw.io (done in 0.4.0)
   - [ ] Support light theme
+  - [ ] Annotation
   - [X] Url source download (done in 0.4.0)
   - [ ] Special rule according level (hide, show, change form, move, infront, in back, attributes,  ...)
   - [ ] Custom variables like ${_label},${_value}, ${_alias}, ${_rule}, ${_level} ...

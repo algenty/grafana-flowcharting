@@ -476,7 +476,7 @@
               class="gf-form-input width-12"
               ng-model="rule.data.tooltipLabel"
               ng-blur="editor.onRulesChange()"
-              placeholder="Label of this metric"
+              placeholder="auto"
             />
           </div>
           <div class="gf-form" ng-if="rule.data.tooltip">
@@ -502,7 +502,7 @@
             <label class="gf-form-label width-12"
               >Tooltip direction
               <info-popover mode="right-normal">
-                <span ng-bind-html="GF_PLUGIN.popover('Define the sens of display', 'MAPPING')">
+                <span ng-bind-html="GF_PLUGIN.popover('Define the sens of display', 'MAPPING', 'tooltip_direction_ani')">
                 </span>
               </info-popover>
             </label>
@@ -532,7 +532,7 @@
             Graph Tooltips
             <info-popover mode="right-normal">
               <span
-                ng-bind-html="GF_PLUGIN.popover('Add Graph into the tooltip', 'MAPPING','tooltip_graph_ani')"
+                ng-bind-html="GF_PLUGIN.popover('Add Graph into the tooltip', 'MAPPING','tooltip_graph')"
               >
               </span>
             </info-popover>
@@ -564,7 +564,7 @@
             <label class="gf-form-label width-12"
               >Graph Size
               <info-popover mode="right-normal">
-                <span ng-bind-html="GF_PLUGIN.popover('Select size of graph', 'MAPPING')"> </span>
+                <span ng-bind-html="GF_PLUGIN.popover('Select size of graph', 'MAPPING','graph_size')"> </span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-12">
