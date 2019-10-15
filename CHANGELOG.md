@@ -1,5 +1,37 @@
 # Changelog
 
+## [[0.5.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0-SNAPSHOT.zip) - 2019-10-13
+### Added  
+  - 2 new modes for "Update text value" ([See example](https://algenty.github.io/flowcharting-repository/images/append_mode_ani.png))
+    - Append (Space) : Concat metrics with a space as a separator
+    - Append (New line) : Concat metrics with a line break
+  - Variabilization in "Url" for link mapping ([See example](https://algenty.github.io/flowcharting-repository/images/variable_link_ani.png))
+  - New check box to allow download images from draw.io ([See example](https://algenty.github.io/flowcharting-repository/images/drawio_source_ani.png))
+  - New editor option :
+    - Other editor draw.io like internal website draw.io are supported
+    - Choose the theme of editor
+  - New identification mode for shapes when mouse cursor is over the rules or the mapping ([See example](https://algenty.github.io/flowcharting-repository/images/identification_mode_ani.png))
+  - Support Dynamic shapes like Floorplan, isometric plans and more ([See example](https://algenty.github.io/flowcharting-repository/images/dynamic_shapes_ani.png))
+  - New color mode for no SVG object like pictures/cliparts/images ([See example](https://algenty.github.io/flowcharting-repository/images/colormode_ani.png))
+  - Graphs in tooltip ([See example](https://algenty.github.io/flowcharting-repository/images/tooltip_graph.png))
+    - Color graph with defined colors in threshold
+    - Size of graph ([See example](https://algenty.github.io/flowcharting-repository/images/graph_size.png))
+  - Define the orientation in  tooltip for each metrics/graph in tooltips : horizontal or vertical ([See example](https://algenty.github.io/flowcharting-repository/images/tooltip_direction_ani.png))
+  - Some optimizations, Display is twice as fast on load.
+
+### Fixed  
+  - Fix color to reset when "Color on" is "Always/Critical" and metric is OK  
+  - Fix border to empty instead black when "color mode" is "Fill" [(issue #24)](https://github.com/algenty/grafana-flowcharting/issues/24)  
+  - Fix error when "Value On" is not "When metric displayed"
+  - Fix Link [(issue #37)](https://github.com/algenty/grafana-flowcharting/issues/37)  
+  - Fix hyperlink text appears in white over flowchart [(issue #45)](https://github.com/algenty/grafana-flowcharting/issues/45)
+  - Fix "Multiple FlowCharts On a Dashboard", when edit, both are the same draw [(issue #48)](https://github.com/algenty/grafana-flowcharting/issues/48)
+  - Fix options after reload or variable changed [(issue #44)](https://github.com/algenty/grafana-flowcharting/issues/48)
+  - Fix auto reset zoom/unzoom when data refreshed, only ESC or change options on flowchart reset zoom now [(issue #38)](https://github.com/algenty/grafana-flowcharting/issues/38)
+  - Fix error for BPNM shapes [(Issue #51)](https://github.com/algenty/grafana-flowcharting/issues/51)
+  - Fix display when center and scale are checked on flowchart options.
+  - Fix Zoom with mouse wheel for firefox and Edge.
+
 ## [[0.4.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0.zip) - 2019-09-26
 ### Added
   - Draw.io editor ([see example](https://algenty.github.io/flowcharting-repository/images/openEditor_ani.gif))
@@ -28,7 +60,7 @@
     - In text mapping when type in sring for "Range to text" and "Value to text"
     - In link ovewrite
   - full shapes from draw.io included ([See example](https://algenty.github.io/flowcharting-repository/images/shapes_ani.gif))
-  - Some optimizations
+  - Some optimizations on render and display.
 
 ### Fixed  
   - Optimization when refresh/render [(issue #15)](https://github.com/algenty/grafana-flowcharting/issues/15)  
@@ -39,6 +71,7 @@
 
 ## [[0.3.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.3.0.zip) - 2019-05-07
 ### Added
+
   /!\ Possible breaking change with 0.2.0 and 0.2.5 but it will compatible with next release.  
     
   - Migration process for next release.
@@ -85,6 +118,7 @@
 ### Added
   - Display graph with mxgraph libs
   - Inspect tab to explore object in graph and preview colors
+
 
 
 # Annex
