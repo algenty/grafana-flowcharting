@@ -102,6 +102,10 @@ export default class TooltipHandler {
   getTooltipDiv(parentDiv) {
     // if (this.div != null) return this.div;
     if (!this.checked) return null;
+    if(this.div != null) {
+      if (parentDiv != undefined) parentDiv.appendChild(this.div);
+      return this.div;
+    }
     this.div = document.createElement('div');
     let div = this.div;
     div.id = this.mxcell.mxObjectId + '_GLOBAL';
@@ -118,7 +122,6 @@ export default class TooltipHandler {
         }
         let metricDiv = document.createElement('div');
         metricDiv.className = 'tooltip-metric';
-        metric.div = metricsDiv;
         metricsDiv.appendChild(metricDiv);
         if (metric.direction != null && metric.direction === 'h')
         metricDiv.style = 'display:inline-block;*display:inline;*zoom:1';
