@@ -124,7 +124,9 @@ export default class State {
                 tooltipName,                
                 rule.data.tpGraphType,
                 rule.data.tpGraphSize,
-                serie
+                serie,
+                rule.data.tpGraphLow,
+                rule.data.tpGraphHigh,
               );
             // Date
             this.updateTooltipDate();
@@ -418,8 +420,8 @@ export default class State {
    * @param {timeSerie} serie
    * @memberof State
    */
-  addTooltipGraph(name, type, size, serie) {
-    this.tooltipHandler.addGraph(name, type, size, serie);
+  addTooltipGraph(name, type, size, serie, low, high) {
+    this.tooltipHandler.addGraph(name, type, size, serie, low, high);
   }
 
   updateTooltipDate() {

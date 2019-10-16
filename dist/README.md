@@ -37,7 +37,7 @@ See more example at draw.io
   - Variabilization in "Url" for link mapping ([See example](https://algenty.github.io/flowcharting-repository/images/variable_link_ani.png))
   - New check box to allow download images from draw.io ([See example](https://algenty.github.io/flowcharting-repository/images/drawio_source_ani.png))
   - New editor option :
-    - Other editor draw.io like internal website draw.io are supported
+    - Choose other editor draw.io like internal website
     - Choose the theme of editor
   - New identification mode for shapes when mouse cursor is over the rules or the mapping ([See example](https://algenty.github.io/flowcharting-repository/images/identification_mode_ani.png))
   - Support Dynamic shapes like Floorplan, isometric plans and more ([See example](https://algenty.github.io/flowcharting-repository/images/dynamic_shapes_ani.png))
@@ -116,6 +116,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Add custom stencils/libs from draw.io (done in 0.4.0)
   - [ ] Support light theme
   - [ ] Annotation
+  - [ ] Tooltips on text and arrow/line
   - [X] Url source download (done in 0.4.0)
   - [ ] Special rule according level (hide, show, change form, move, infront, in back, attributes,  ...)
   - [ ] Custom variables like ${_label},${_value}, ${_alias}, ${_rule}, ${_level} ...
@@ -131,6 +132,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Graph in tooltip
   - [ ] Histogram
   - [ ] Merge Graphs
+  - [ ] carriage return after new rule in tooltips option
   - [ ] Filter for null values in graph
   - [ ] Inspector on series
   - [X] New style for image : imageBackground, imageBorder

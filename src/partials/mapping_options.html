@@ -42,7 +42,7 @@
             </info-popover>
           </h5>
           <div class="gf-form" ng-if="rule.data.type !== 'hidden'">
-            <label class="gf-form-label width-14"
+            <label class="gf-form-label width-10"
               >Rule name
               <info-popover mode="right-normal"
                 ><span
@@ -59,8 +59,8 @@
             />
           </div>
           <div class="gf-form">
-            <label class="gf-form-label width-14"
-              >Apply to metrics named
+            <label class="gf-form-label width-10"
+              >Apply to metrics
               <info-popover mode="right-normal"
                 ><span
                   ng-bind-html="GF_PLUGIN.popover('Select alias or name of metric', 'MAPPING#Apply to metrics named','mp_metrics_name')"
@@ -82,7 +82,7 @@
             />
           </div>
           <div class="gf-form" ng-if="rule.data.type !== 'hidden'">
-            <label class="gf-form-label width-14"
+            <label class="gf-form-label width-10"
               >Aggregation
               <info-popover mode="right-normal"
                 ><span
@@ -113,7 +113,7 @@
             </info-popover>
           </h5>
           <div class="gf-form">
-            <label class="gf-form-label width-14"
+            <label class="gf-form-label width-10"
               >Type
               <info-popover mode="right-normal"
                 ><span
@@ -131,7 +131,7 @@
             </div>
           </div>
           <div class="gf-form" ng-if="rule.data.type === 'date'">
-            <label class="gf-form-label width-14"
+            <label class="gf-form-label width-10"
               >Date Format
               <info-popover mode="right-normal"
                 ><span
@@ -174,7 +174,7 @@
 
           <div ng-if="rule.data.type === 'number'">
             <div class="gf-form">
-              <label class="gf-form-label width-14"
+              <label class="gf-form-label width-10"
                 >Unit
                 <info-popover mode="right-normal"
                   ><span
@@ -190,7 +190,7 @@
               ></div>
             </div>
             <div class="gf-form">
-              <label class="gf-form-label width-14"
+              <label class="gf-form-label width-10"
                 >Decimals
                 <info-popover mode="right-normal"
                   ><span
@@ -231,7 +231,7 @@
             </info-popover>
           </h5>
           <div class="gf-form" ng-if="rule.data.type === 'number'">
-            <label class="gf-form-label width-8"
+            <label class="gf-form-label width-10"
               >Thresholds
               <info-popover mode="right-normal">
                 <span
@@ -250,7 +250,7 @@
             />
           </div>
           <div class="gf-form" ng-if="rule.data.type === 'string'">
-            <label class="gf-form-label width-8"
+            <label class="gf-form-label width-10"
               >Warning
               <info-popover mode="right-normal">
                 <span
@@ -268,7 +268,7 @@
             />
           </div>
           <div class="gf-form" ng-if="rule.data.type === 'string'">
-            <label class="gf-form-label width-8"
+            <label class="gf-form-label width-10"
               >Critical
               <info-popover mode="right-normal">
                 <span
@@ -286,7 +286,7 @@
             />
           </div>
           <div class="gf-form">
-            <label class="gf-form-label width-8"
+            <label class="gf-form-label width-10"
               >Color Mode
               <info-popover mode="right-normal">
                 <span
@@ -305,7 +305,7 @@
             </div>
           </div>
           <div class="gf-form">
-            <label class="gf-form-label width-8"
+            <label class="gf-form-label width-10"
               >Colors
               <info-popover mode="right-normal">
                 <span
@@ -341,7 +341,7 @@
           <gf-form-switch
             class="gf-form"
             label="Icon state"
-            label-class="width-12"
+            label-class="width-10"
             checked="rule.data.overlayIcon"
             on-change="editor.onRulesChange()"
           >
@@ -363,7 +363,7 @@
             </info-popover>
           </h5>
           <div class="gf-form">
-            <label class="gf-form-label width-12"
+            <label class="gf-form-label width-10"
               >Color on
               <info-popover mode="right-normal">
                 <span
@@ -382,7 +382,7 @@
             </div>
           </div>
           <div class="gf-form">
-            <label class="gf-form-label width-12"
+            <label class="gf-form-label width-10"
               >Value on
               <info-popover mode="right-normal">
                 <span
@@ -401,7 +401,7 @@
             </div>
           </div>
           <div class="gf-form" ng-if="rule.data.textOn != 'n'">
-            <label class="gf-form-label width-12"
+            <label class="gf-form-label width-10"
               >Update text value
               <info-popover mode="right-normal">
                 <span
@@ -423,7 +423,7 @@
             class="gf-form"
             ng-if="rule.data.textReplace == 'pattern' && rule.data.textOn != 'n'"
           >
-            <label class="gf-form-label width-12"
+            <label class="gf-form-label width-10"
               >Text pattern
               <info-popover mode="right-normal">
                 <span
@@ -455,15 +455,15 @@
           </h5>
           <gf-form-switch
             class="gf-form"
-            label-class="width-12"
+            label-class="width-10"
             tooltip="Add tooltips metrics and graphs on shapes"
-            label="Enable metrics in tooltip"
+            label="Display metrics"
             checked="rule.data.tooltip"
             on-change="editor.onRulesChange()"
           >
           </gf-form-switch>
           <div class="gf-form" ng-if="rule.data.tooltip">
-            <label class="gf-form-label width-12"
+            <label class="gf-form-label width-10"
               >Label
               <info-popover mode="right-normal"
                 ><span
@@ -480,8 +480,8 @@
             />
           </div>
           <div class="gf-form" ng-if="rule.data.tooltip">
-            <label class="gf-form-label width-12"
-              >Tooltip when state is
+            <label class="gf-form-label width-10"
+              >When state is
               <info-popover mode="right-normal">
                 <span
                   ng-bind-html="GF_PLUGIN.popover('Define condition to add values in tooltip', 'MAPPING')"
@@ -499,10 +499,12 @@
             </div>
           </div>
           <div class="gf-form" ng-if="rule.data.tooltip">
-            <label class="gf-form-label width-12"
-              >Tooltip direction
+            <label class="gf-form-label width-10"
+              >Direction
               <info-popover mode="right-normal">
-                <span ng-bind-html="GF_PLUGIN.popover('Define the sens of display', 'MAPPING', 'tooltip_direction_ani')">
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Define the sens of display', 'MAPPING', 'tooltip_direction_ani')"
+                >
                 </span>
               </info-popover>
             </label>
@@ -518,7 +520,7 @@
           <gf-form-switch
             label="Color with state"
             class="gf-form"
-            label-class="width-12"
+            label-class="width-10"
             tooltip="Color values in tooltip with state/thresholds colors"
             checked="rule.data.tooltipColors"
             ng-if="rule.data.tooltip"
@@ -539,13 +541,13 @@
           </h5>
           <gf-form-switch
             class="gf-form"
-            label-class="width-12"
-            label="Enable Graph in tooltip"
+            label-class="width-10"
+            label="Display graph"
             checked="rule.data.tpGraph"
             on-change="editor.onRulesChange()"
           ></gf-form-switch>
           <div class="gf-form" ng-if="rule.data.tpGraph">
-            <label class="gf-form-label width-12"
+            <label class="gf-form-label width-10"
               >Graph type
               <info-popover mode="right-normal">
                 <span ng-bind-html="GF_PLUGIN.popover('Select type of graph', 'MAPPING')"> </span>
@@ -561,10 +563,13 @@
             </div>
           </div>
           <div class="gf-form" ng-if="rule.data.tpGraph">
-            <label class="gf-form-label width-12"
+            <label class="gf-form-label width-10"
               >Graph Size
               <info-popover mode="right-normal">
-                <span ng-bind-html="GF_PLUGIN.popover('Select size of graph', 'MAPPING','graph_size')"> </span>
+                <span
+                  ng-bind-html="GF_PLUGIN.popover('Select size of graph', 'MAPPING','graph_size')"
+                >
+                </span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-12">
@@ -575,6 +580,38 @@
                 ng-change="editor.onRulesChange()"
               ></select>
             </div>
+          </div>
+          <div class="gf-form" ng-if="rule.data.tpGraph">
+            <label class="gf-form-label width-6"
+              >Y-Min
+              <info-popover mode="right-normal">
+                <span ng-bind-html="GF_PLUGIN.popover('Select the min for the scale', 'MAPPING')">
+                </span>
+              </info-popover>
+            </label>
+            <input
+              type="number"
+              class="gf-form-input width-5"
+              ng-model="rule.data.tpGraphLow"
+              ng-blur="editor.onRulesChange()"
+              placeholder="auto"
+              data-placement="right"
+            />
+            <label class="gf-form-label width-6"
+              >Y-Max
+              <info-popover mode="right-normal">
+                <span ng-bind-html="GF_PLUGIN.popover('Select the max for the scale', 'MAPPING')">
+                </span>
+              </info-popover>
+            </label>
+            <input
+              type="number"
+              class="gf-form-input width-5"
+              ng-model="rule.data.tpGraphHigh"
+              ng-blur="editor.onRulesChange()"
+              placeholder="auto"
+              data-placement="right"
+            />
           </div>
         </div>
 
@@ -591,13 +628,13 @@
           </h5>
           <gf-form-switch
             class="gf-form"
-            label-class="width-12"
+            label-class="width-10"
             label="Object as link"
             checked="rule.data.link"
             on-change="editor.onRulesChange()"
           ></gf-form-switch>
           <div class="gf-form" ng-if="rule.data.link">
-            <label class="gf-form-label width-12"
+            <label class="gf-form-label width-10"
               >Overwrite link on
               <info-popover mode="right-normal">
                 <span ng-bind-html="GF_PLUGIN.popover('Open link definition', 'MAPPING')"> </span>
@@ -613,7 +650,7 @@
             </div>
           </div>
           <div class="gf-form" ng-if="rule.data.link">
-            <label class="gf-form-label width-12">
+            <label class="gf-form-label width-10">
               Url
               <info-popover mode="right-normal">
                 <span
@@ -633,7 +670,7 @@
 
           <gf-form-switch
             class="gf-form"
-            label-class="width-12"
+            label-class="width-10"
             label="Add params to link"
             checked="rule.data.linkParams"
             ng-if="rule.data.link"
@@ -655,7 +692,7 @@
               </info-popover>
             </h5>
             <div class="gf-form">
-              <span class="gf-form-label width-8">
+              <span class="gf-form-label width-10">
                 Props
               </span>
               <!-- ID INPUT -->
@@ -756,7 +793,7 @@
               </info-popover>
             </h5>
             <div class="gf-form">
-              <span class="gf-form-label width-8">
+              <span class="gf-form-label width-10">
                 Props
               </span>
               <div class="gf-form-select-wrapper">
@@ -850,7 +887,7 @@
           <div class="section gf-form-group" ng-if="rule.data.link">
             <h5 class="section-heading">Link Mappings</h5>
             <div class="gf-form">
-              <span class="gf-form-label width-8">
+              <span class="gf-form-label width-10">
                 Props
               </span>
               <div class="gf-form-select-wrapper">
@@ -945,7 +982,7 @@
             <h5 class="section-heading">Value Mappings</h5>
             <div class="gf-form-group">
               <div class="gf-form">
-                <span class="gf-form-label width-8">
+                <span class="gf-form-label width-10">
                   Type
                 </span>
                 <div class="gf-form-select-wrapper">

@@ -30,7 +30,6 @@ export default class TooltipHandler {
         offset: 0
       },
       chartPadding: 0,
-      // low: 0
     };
   }
 
@@ -38,10 +37,21 @@ export default class TooltipHandler {
     return this.checked;
   }
 
+  /**
+   *
+   *
+   * @param {*} name
+   * @param {*} label
+   * @param {*} value
+   * @param {*} color
+   * @param {*} direction
+   * @returns
+   * @memberof TooltipHandler
+   */
   addMetric(name, label, value, color, direction) {
     let metric = this.findTooltipValue(name);
     this.checked = true;
-    let found = metric != null ? true : false;
+    let found = (metric != null) ? true : false;
     if (!found) {
       metric = {
         graphOptions: {}
@@ -53,9 +63,10 @@ export default class TooltipHandler {
     metric.color = color != null ? color : this.defaultColor;
     metric.direction = direction;
     if (!found) this.metrics.push(metric);
+    return metric
   }
 
-  addGraph(name, type, size, serie) {
+  addGraph(name, type, size, serie, low, high) {
     let metric = this.findTooltipValue(name);
     let found = metric != null ? true : false;
     if (!found) {
@@ -68,6 +79,8 @@ export default class TooltipHandler {
     metric.graphOptions.type = type;
     metric.graphOptions.size = size;
     metric.graphOptions.serie = serie;
+    metric.graphOptions.low = low;
+    metric.graphOptions.high = high;
     if (!found) this.metrics.push(metric);
   }
 
@@ -177,6 +190,8 @@ export default class TooltipHandler {
     let data = {
       series: [coor]
     };
+    if (metric.graphOptions.low != null) this.lineOptions.low = metric.graphOptions.low;
+    if (metric.graphOptions.high != null) this.lineOptions.high = metric.graphOptions.high;
     let chart = new Chartist.Line(div, data, this.lineOptions);
     metric.graphOptions.chart = chart;
     chart.on('draw', function(data) {

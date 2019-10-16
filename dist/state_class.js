@@ -137,7 +137,7 @@ var State = function () {
 
               _this2.addTooltip(tooltipName, label, FormattedValue, tpColor, rule.data.tpDirection);
 
-              if (rule.data.tpGraph) _this2.addTooltipGraph(tooltipName, rule.data.tpGraphType, rule.data.tpGraphSize, serie);
+              if (rule.data.tpGraph) _this2.addTooltipGraph(tooltipName, rule.data.tpGraphType, rule.data.tpGraphSize, serie, rule.data.tpGraphLow, rule.data.tpGraphHigh);
 
               _this2.updateTooltipDate();
             }
@@ -338,8 +338,8 @@ var State = function () {
     }
   }, {
     key: "addTooltipGraph",
-    value: function addTooltipGraph(name, type, size, serie) {
-      this.tooltipHandler.addGraph(name, type, size, serie);
+    value: function addTooltipGraph(name, type, size, serie, low, high) {
+      this.tooltipHandler.addGraph(name, type, size, serie, low, high);
     }
   }, {
     key: "updateTooltipDate",

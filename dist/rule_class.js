@@ -84,6 +84,8 @@ var Rule = function () {
       this.data.tpGraph = obj.tpGraph !== undefined ? obj.tpGraph : false;
       this.data.tpGraphSize = obj.tpGraphSize !== undefined ? obj.tpGraphSize : '100%';
       this.data.tpGraphType = obj.tpGraphType !== undefined ? obj.tpGraphType : 'line';
+      this.data.tpGraphLow = obj.tpGraphLow;
+      this.data.tpGraphHigh = obj.tpGraphHigh;
       var maps = [];
       this.data.shapeProp = obj.shapeProp || 'id';
       this.data.shapeData = [];
