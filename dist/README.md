@@ -45,6 +45,7 @@ See more example at draw.io
   - Graphs in tooltip ([See example](https://algenty.github.io/flowcharting-repository/images/tooltip_graph.png))
     - Color graph with defined colors in threshold
     - Size of graph ([See example](https://algenty.github.io/flowcharting-repository/images/graph_size.png))
+    - Scale of graph (Y-min and Y-max)
   - Define the orientation in  tooltip for each metrics/graph in tooltips : horizontal or vertical ([See example](https://algenty.github.io/flowcharting-repository/images/tooltip_direction_ani.png))
   - Some optimizations, Display is twice as fast on load.
 

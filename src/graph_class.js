@@ -1086,11 +1086,6 @@ export default class XGraph {
         hasTips = true;
       }
     }
-    // let divs = this.getTooltipGFs(cell);
-    // if (divs !== null) {
-    //   hasTips = true;
-    //   div.appendChild(divs);
-    // }
 
     if (hasTips) return div;
     return '';
