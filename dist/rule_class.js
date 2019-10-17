@@ -49,11 +49,6 @@ var Rule = function () {
       return this.data;
     }
   }, {
-    key: "export",
-    value: function _export() {
-      return JSON.stringify(this);
-    }
-  }, {
     key: "import",
     value: function _import(obj) {
       var _this = this;
@@ -85,6 +80,12 @@ var Rule = function () {
       this.data.tooltipLabel = obj.tooltipLabel !== undefined ? obj.tooltipLabel : this.data.alias;
       this.data.tooltipColors = obj.tooltipColors !== undefined ? obj.tooltipColors : false;
       this.data.tooltipOn = obj.tooltipOn !== undefined ? obj.tooltipOn : 'a';
+      this.data.tpDirection = obj.tpDirection !== undefined ? obj.tpDirection : 'v';
+      this.data.tpGraph = obj.tpGraph !== undefined ? obj.tpGraph : false;
+      this.data.tpGraphSize = obj.tpGraphSize !== undefined ? obj.tpGraphSize : '100%';
+      this.data.tpGraphType = obj.tpGraphType !== undefined ? obj.tpGraphType : 'line';
+      this.data.tpGraphLow = obj.tpGraphLow;
+      this.data.tpGraphHigh = obj.tpGraphHigh;
       var maps = [];
       this.data.shapeProp = obj.shapeProp || 'id';
       this.data.shapeData = [];
@@ -171,6 +172,24 @@ var Rule = function () {
       return this.id;
     }
   }, {
+    key: "highlightCells",
+    value: function highlightCells() {
+      if (this.states) {
+        this.states.forEach(function (state) {
+          state.highlightCell();
+        });
+      }
+    }
+  }, {
+    key: "unhighlightCells",
+    value: function unhighlightCells() {
+      if (this.states) {
+        this.states.forEach(function (state) {
+          state.unhighlightCell();
+        });
+      }
+    }
+  }, {
     key: "setOrder",
     value: function setOrder(order) {
       this.data.order = order;
@@ -193,6 +212,7 @@ var Rule = function () {
     key: "toColorize",
     value: function toColorize(level) {
       if (level === -1) return false;
+      if (this.data.colorMode === "disabled") return false;
       if (this.data.colorOn === 'n') return false;
       if (this.data.colorOn === 'a') return true;
       if (this.data.colorOn === 'wc' && level >= 1) return true;
@@ -203,8 +223,8 @@ var Rule = function () {
     value: function toLabelize(level) {
       if (this.data.textOn === 'wmd') return true;
       if (this.data.textOn === 'n') return false;
-      if (this.data.textOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
-      if (this.data.textOn === 'co' && this.getThresholdLevel(value) >= 2) return true;
+      if (this.data.textOn === 'wc' && level >= 1) return true;
+      if (this.data.textOn === 'co' && level >= 2) return true;
       return false;
     }
   }, {
@@ -458,13 +478,13 @@ var Rule = function () {
     key: "getValueForSerie",
     value: function getValueForSerie(serie) {
       if (this.matchSerie(serie)) {
-        var _value = _.get(serie.stats, this.data.aggregation);
+        var value = _.get(serie.stats, this.data.aggregation);
 
-        if (_value === undefined || _value === null) {
-          _value = serie.datapoints[serie.datapoints.length - 1][0];
+        if (value === undefined || value === null) {
+          value = serie.datapoints[serie.datapoints.length - 1][0];
         }
 
-        return _value;
+        return value;
       }
 
       return '-';
@@ -545,9 +565,20 @@ var Rule = function () {
     key: "getReplaceText",
     value: function getReplaceText(text, FormattedValue) {
       if (this.data.textReplace === 'content') return FormattedValue;
-      var regexVal = u.stringToJsRegex(this.data.textPattern);
-      if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
-      return text;
+
+      if (this.data.textReplace === 'pattern') {
+        var regexVal = u.stringToJsRegex(this.data.textPattern);
+        if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
+        return text;
+      }
+
+      if (this.data.textReplace === 'as') {
+        return "".concat(text, " ").concat(FormattedValue);
+      }
+
+      if (this.data.textReplace === 'anl') {
+        return "".concat(text, "\n").concat(FormattedValue);
+      }
     }
   }, {
     key: "defaultValueFormatter",

@@ -16,10 +16,12 @@ export class MappingOptionsCtrl {
     this.rulesHandler = this.panelCtrl.rulesHandler;
     this.unitFormats = kbn.getUnitFormats();
     this.style = [
-      { text: 'Disabled', value: null },
+      { text: 'Disabled', value: 'disabled' },
       { text: 'Stroke', value: 'strokeColor' },
       { text: 'Fill', value: 'fillColor' },
-      { text: 'Text', value: 'fontColor' }
+      { text: 'Text', value: 'fontColor' },
+      { text: 'Background (image)', value: 'imageBackground' },
+      { text: 'Border (image)', value: 'imageBorder' },
     ];
     this.colorOn = [
       { text: 'Never', value: 'n' },
@@ -28,6 +30,7 @@ export class MappingOptionsCtrl {
     ];
     this.linkOn = [{ text: 'Warning / Critical', value: 'wc' }, { text: 'Always', value: 'a' }];
     this.tooltipOn = [{ text: 'Warning / Critical', value: 'wc' }, { text: 'Always', value: 'a' }];
+    this.tpDirection = [{ text: 'Vertical', value: 'v' }, { text: 'Horizontal ', value: 'h' }];
     this.textOn = [
       { text: 'Never', value: 'n' },
       { text: 'When Metric Displayed', value: 'wmd' },
@@ -36,7 +39,9 @@ export class MappingOptionsCtrl {
     ];
     this.textReplace = [
       { text: 'All content', value: 'content' },
-      { text: 'Substring', value: 'pattern' }
+      { text: 'Substring', value: 'pattern' },
+      { text: 'Append (Space) ', value: 'as' },
+      { text: 'Append (New line) ', value: 'anl' }
     ];
     this.propTypes = [
       { text: 'Id', value: 'id' }
@@ -68,6 +73,16 @@ export class MappingOptionsCtrl {
       { text: 'Diff', value: 'diff' }
     ];
     this.mappingTypes = [{ text: 'Value to text', value: 1 }, { text: 'Range to text', value: 2 }];
+    this.tpGraphType = [
+      { text: 'Line', value: 'line'},
+      // { text: 'Histogram', value: 'bar'},
+    ];
+    this.tpGraphSize = [
+      { text: 'Adjustable', value: '100%'},
+      { text: 'Small', value: '100px'},
+      { text: 'Medium', value: '200px'},
+      { text: 'Large', value: '400px'},
+    ];
 
     this.getMetricNames = () => {
       if (!this.panelCtrl.series) {
@@ -149,11 +164,32 @@ export class MappingOptionsCtrl {
    *
    * @memberof MappingOptionsCtrl
    */
-  unselectCell() {
+  unselectCell(prop, value) {
     const flowchart = this.flowchartHandler.getFlowchart(0);
     const xgraph = flowchart.getXGraph();
-    xgraph.unselectMxCells();
+    xgraph.unselectMxCells(prop, value);
   }
+
+  /**
+   *Turn Highlight on of cells in rule
+   *
+   * @param {*} rule
+   * @memberof MappingOptionsCtrl
+   */
+  highlightCells(rule) {
+    rule.highlightCells();
+  }
+
+  /**
+   *Turn Highlight off of cells in rule
+   *
+   * @param {*} rule
+   * @memberof MappingOptionsCtrl
+   */
+  unhighlightCells(rule) {
+    rule.unhighlightCells();
+  }
+
 }
 
 /** @ngInject */

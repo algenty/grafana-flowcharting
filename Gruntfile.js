@@ -1,7 +1,7 @@
 const path = require("path");
 const sass = require('node-sass');
 // const plugin = require('./src/plugin.js');
-const version = "0.4.0";
+const version = "0.5.0";
 
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);
@@ -32,6 +32,12 @@ module.exports = (grunt) => {
         src: ['sanitizer.min.js'],
         dest: 'src/libs',
       },
+      shapes_to_src:  {
+        cwd: 'externals/drawio/src/main/webapp/shapes',
+        expand: true,
+        src: ['**/*.js'],
+        dest: 'src/libs/shapes',
+      },      
       src_to_dist: {
         cwd: 'src',
         expand: true,
@@ -56,12 +62,19 @@ module.exports = (grunt) => {
         src: ['**/*', '!**/*.js'],
         dest: 'dist/libs/mxgraph/javascript/dist',
       },
-      externals_to_dist: {
+      mxgraph_to_dist: {
         cwd: 'externals/mxgraph/javascript/examples/grapheditor/www',
         expand: true,
         src: ['**/*', '!**/*.js'],
         dest: 'dist/libs/mxgraph/javascript/dist',
       },
+      chartist_to_dist: {
+        cwd: 'node_modules/chartist/dist/chartist.min.js',
+        expand: true,
+        src: ['**/*', '!**/*.js'],
+        dest: 'dist/chartist',
+      },
+
 
       readme: {
         expand: true,
@@ -71,6 +84,13 @@ module.exports = (grunt) => {
 
       img_to_dist: {
         cwd: 'src',
+        expand: true,
+        src: ['img/**/*'],
+        dest: 'dist/',
+      },
+
+      drawio_img_to_dist: {
+        cwd: 'externals/drawio/src/main/webapp',
         expand: true,
         src: ['img/**/*'],
         dest: 'dist/',
@@ -92,16 +112,24 @@ module.exports = (grunt) => {
           spawn: false,
         },
       },
+      microbuild: {
+        files: ['src/**/*'],
+        tasks: ['microbuild'],
+        options: {
+          spawn: false,
+        },
+      },
     },
 
 
     sass: {
       options: {
-        sourceMap: true,
+        sourceMap: false,
         implementation: sass,
       },
       dist: {
         files: {
+          'dist/css/chartist-settings.css': 'src/css/_chartist-settings.scss',
           'dist/css/flowchart.dark.css': 'src/css/flowchart.dark.scss',
           'dist/css/flowchart.light.css': 'src/css/flowchart.light.scss',
         },
@@ -115,7 +143,7 @@ module.exports = (grunt) => {
         files: [{
           cwd: 'src',
           expand: true,
-          src: ['*.js', '!mxHandler.js', "!Graph.js", "!init.js", "!utils.js", "!backup/**/*", "!__mocks__"],
+          src: ['**/*.js', '!mxHandler.js', "!Graph.js", "!init.js", "!utils.js", "!backup/**/*", "!__mocks__", "!libs/sanitizer.min.js"],
           dest: 'dist',
           ext: '.js',
         }],
@@ -173,6 +201,31 @@ module.exports = (grunt) => {
           lodash: "lodash",
         },
       },
+      tooltip: {
+        entry: "./src/tooltipHandler.js",
+        mode: "development",
+        module: {
+          rules: [
+            {
+              test: /\.m?js$/,
+              exclude: /(node_modules|bower_components|externals)/,
+              use: {
+                loader: 'babel-loader',
+              },
+            },
+          ],
+        },
+        output: {
+          path: path.resolve(process.cwd(), "./dist"),
+          filename: "tooltipHandler.js",
+          library: "tooltipHandler",
+          libraryTarget: "umd",
+        },
+        externals: {
+          jquery: "jquery",
+          lodash: "lodash",
+        },
+      },
     },
 
     compress: {
@@ -212,8 +265,10 @@ module.exports = (grunt) => {
 
   });
 
-  grunt.registerTask('default', ['clean:build', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:externals_to_dist', 'copy:stencils_to_dist']);
-  grunt.registerTask('dev', ['default', 'watch']);
+  grunt.registerTask('default', ['clean:build', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:mxgraph_to_dist', 'copy:stencils_to_dist']);
+  grunt.registerTask('microbuild', ['copy:src_to_dist', 'sass', 'babel', 'webpack' ]);
+  grunt.registerTask('dev', ['default', 'watch:rebuild_all']);
+  grunt.registerTask('microdev', ['microbuild', 'watch:microbuild']);
   grunt.registerTask('archive', ['default', 'compress:main']);
-  grunt.registerTask('init', ['clean:before_init','gitclone:mxgraph','gitclone:drawio','copy:sanitizer_to_src','clean:after_init']);
+  grunt.registerTask('init', ['clean:before_init','gitclone:mxgraph','gitclone:drawio','clean:after_init']);
 };

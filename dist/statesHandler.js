@@ -70,7 +70,7 @@ var StateHandler = function () {
         if (!found) {
           name = xgraph.getValuePropOfMxCell(rule.data.linkProp, mxcell);
 
-          if (rule.matchText(name)) {
+          if (rule.matchLink(name)) {
             result.push(state);
             found = true;
           }
@@ -168,6 +168,11 @@ var StateHandler = function () {
       this.states.forEach(function (state) {
         state.applyState();
       });
+    }
+  }, {
+    key: "async_applyStates",
+    value: function async_applyStates() {
+      this.applyStates();
     }
   }]);
 

@@ -29,6 +29,14 @@ plugin.getRootPath = function () {
   return this.dirname;
 };
 
+plugin.getLibsPath = function () {
+  return "".concat(this.dirname, "/libs");
+};
+
+plugin.getShapesPath = function () {
+  return "".concat(this.dirname, "libs/shapes");
+};
+
 plugin.getMxBasePath = function () {
   return this.mxBasePath;
 };
@@ -57,7 +65,7 @@ plugin.popover = function (text, tagBook, tagImage) {
   return "\n  <div id=\"popover\" style=\"display:flex;flex-wrap:wrap;width: 100%;\">\n    <div style=\"flex:1;height:100px;margin-bottom: 20px;\">".concat(desc, "</div>\n    <div style=\"flex:1;height:100px;margin-bottom: 20px;\">").concat(book, "</div>\n    <div style=\"flex-basis: 100%;height:100px;margin-bottom:20px;\">").concat(image, "</div>\n  </div>");
 };
 
-plugin.logLevel = 0;
+plugin.logLevel = 1;
 plugin.logDisplay = false;
 window.GF_PLUGIN = window.GF_PLUGIN || plugin;
 var _default = plugin;

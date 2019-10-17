@@ -166,6 +166,11 @@ module.exports = {
     }
   },
 
+  // sleep time expects milliseconds
+  sleep(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  },
+
   uniqueID() {
     function chr4() {
       return Math.random()

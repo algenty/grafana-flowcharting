@@ -42,10 +42,6 @@ export default class Rule {
     return this.data;
   }
 
-  export() {
-    return JSON.stringify(this);
-  }
-
   /**
    * import data in rule
    *
@@ -82,6 +78,12 @@ export default class Rule {
     this.data.tooltipLabel = obj.tooltipLabel !== undefined ? obj.tooltipLabel : this.data.alias;
     this.data.tooltipColors = obj.tooltipColors !== undefined ? obj.tooltipColors : false;
     this.data.tooltipOn = obj.tooltipOn !== undefined ? obj.tooltipOn : 'a';
+    this.data.tpDirection = obj.tpDirection !== undefined ? obj.tpDirection : 'v';
+    this.data.tpGraph = obj.tpGraph !== undefined ? obj.tpGraph : false;
+    this.data.tpGraphSize = obj.tpGraphSize !== undefined ? obj.tpGraphSize : '100%';
+    this.data.tpGraphType = obj.tpGraphType !== undefined ? obj.tpGraphType : 'line';
+    this.data.tpGraphLow = obj.tpGraphLow;
+    this.data.tpGraphHigh = obj.tpGraphHigh;
     let maps = [];
 
     // SHAPES
@@ -173,6 +175,32 @@ export default class Rule {
   }
 
   /**
+   *Highlight Cells in rule (mapping color text and link)
+   *
+   * @memberof Rule
+   */
+  highlightCells() {
+    if(this.states) {
+      this.states.forEach(state => {
+        state.highlightCell();
+      });
+    }
+  }
+
+  /**
+   *Highlight Cells in rule (mapping color text and link)
+   *
+   * @memberof Rule
+   */
+  unhighlightCells() {
+    if(this.states) {
+      this.states.forEach(state => {
+        state.unhighlightCell();
+      });
+    }
+  }
+
+  /**
    *Return the order of this rule
    *Grafana 6+ have a bug when reload dashboad, array are not in order
    *
@@ -218,6 +246,7 @@ export default class Rule {
    */
   toColorize(level) {
     if (level === -1) return false;
+    if (this.data.colorMode === "disabled") return false;
     if (this.data.colorOn === 'n') return false;
     if (this.data.colorOn === 'a') return true;
     if (this.data.colorOn === 'wc' && level >= 1) return true;
@@ -236,8 +265,8 @@ export default class Rule {
     // if (this.data.textOn === 'wmd' && level === -1) return false;
     if (this.data.textOn === 'wmd') return true;
     if (this.data.textOn === 'n') return false;
-    if (this.data.textOn === 'wc' && this.getThresholdLevel(value) >= 1) return true;
-    if (this.data.textOn === 'co' && this.getThresholdLevel(value) >= 2) return true;
+    if (this.data.textOn === 'wc' && level >= 1) return true;
+    if (this.data.textOn === 'co' && level >= 2) return true;
     return false;
   }
 
@@ -637,9 +666,17 @@ export default class Rule {
 
   getReplaceText(text, FormattedValue) {
     if (this.data.textReplace === 'content') return FormattedValue;
-    const regexVal = u.stringToJsRegex(this.data.textPattern);
-    if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
-    return text;
+    if (this.data.textReplace === 'pattern') {
+      const regexVal = u.stringToJsRegex(this.data.textPattern);
+      if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
+      return text;
+    }
+    if (this.data.textReplace === 'as') {
+      return `${text} ${FormattedValue}`
+    }
+    if (this.data.textReplace === 'anl') {
+      return `${text}\n${FormattedValue}`
+    }
   }
 
   defaultValueFormatter(value) {
@@ -948,7 +985,7 @@ class ValueMap {
   isHidden() {
     return this.data.hidden;
   }
-
+  
   export() {
     return {
       value: this.data.value,
@@ -956,6 +993,7 @@ class ValueMap {
       hidden: this.data.hidden
     };
   }
+
 }
 
 function formatValue(value, unit, decimals) {

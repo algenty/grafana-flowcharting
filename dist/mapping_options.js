@@ -36,7 +36,7 @@ var MappingOptionsCtrl = function () {
     this.unitFormats = _kbn["default"].getUnitFormats();
     this.style = [{
       text: 'Disabled',
-      value: null
+      value: 'disabled'
     }, {
       text: 'Stroke',
       value: 'strokeColor'
@@ -46,6 +46,12 @@ var MappingOptionsCtrl = function () {
     }, {
       text: 'Text',
       value: 'fontColor'
+    }, {
+      text: 'Background (image)',
+      value: 'imageBackground'
+    }, {
+      text: 'Border (image)',
+      value: 'imageBorder'
     }];
     this.colorOn = [{
       text: 'Never',
@@ -71,6 +77,13 @@ var MappingOptionsCtrl = function () {
       text: 'Always',
       value: 'a'
     }];
+    this.tpDirection = [{
+      text: 'Vertical',
+      value: 'v'
+    }, {
+      text: 'Horizontal ',
+      value: 'h'
+    }];
     this.textOn = [{
       text: 'Never',
       value: 'n'
@@ -90,6 +103,12 @@ var MappingOptionsCtrl = function () {
     }, {
       text: 'Substring',
       value: 'pattern'
+    }, {
+      text: 'Append (Space) ',
+      value: 'as'
+    }, {
+      text: 'Append (New line) ',
+      value: 'anl'
     }];
     this.propTypes = [{
       text: 'Id',
@@ -159,6 +178,23 @@ var MappingOptionsCtrl = function () {
     }, {
       text: 'Range to text',
       value: 2
+    }];
+    this.tpGraphType = [{
+      text: 'Line',
+      value: 'line'
+    }];
+    this.tpGraphSize = [{
+      text: 'Adjustable',
+      value: '100%'
+    }, {
+      text: 'Small',
+      value: '100px'
+    }, {
+      text: 'Medium',
+      value: '200px'
+    }, {
+      text: 'Large',
+      value: '400px'
     }];
 
     this.getMetricNames = function () {
@@ -250,10 +286,20 @@ var MappingOptionsCtrl = function () {
     }
   }, {
     key: "unselectCell",
-    value: function unselectCell() {
+    value: function unselectCell(prop, value) {
       var flowchart = this.flowchartHandler.getFlowchart(0);
       var xgraph = flowchart.getXGraph();
-      xgraph.unselectMxCells();
+      xgraph.unselectMxCells(prop, value);
+    }
+  }, {
+    key: "highlightCells",
+    value: function highlightCells(rule) {
+      rule.highlightCells();
+    }
+  }, {
+    key: "unhighlightCells",
+    value: function unhighlightCells(rule) {
+      rule.unhighlightCells();
     }
   }]);
 
