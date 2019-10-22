@@ -12,6 +12,7 @@ export default class RulesHandler {
    * @param {*} $scope
    * @param {*} data
    * @memberof RulesHandler
+   * @ngInject
    */
   constructor($scope, data) {
     u.log(1, 'RulesHandler.constructor()');

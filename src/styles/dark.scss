@@ -117,9 +117,9 @@ span.rule-nav {
 
 div.tooltip-text {
   display: block;
-  word-wrap:break-word;
+  word-wrap: break-word;
   max-width: 200px;
-  white-space: normal
+  white-space: normal;
 }
 
 div.tooltip-metric {
@@ -131,11 +131,9 @@ div.tooltip-graph {
 }
 
 div.tooltip-date {
-  margin-top:5px;
-  margin-bottom:5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
-
-
 
 .ct-label {
   fill: rgba(0, 0, 0, 0.4);
@@ -336,7 +334,6 @@ div.tooltip-date {
 .ct-series-a .ct-area {
   fill: #d70206;
 }
-
 
 .ct-square {
   display: block;
@@ -763,5 +760,9 @@ div.tooltip-date {
   left: 0;
 }
 
-.ct-chart .ct-series.ct-series-a .ct-area { fill: rgb(34, 230, 27); }
-.ct-chart .ct-series.ct-series-a .ct-line { stroke: rgb(34, 230, 27); }
+.ct-chart .ct-series.ct-series-a .ct-area {
+  fill: rgb(34, 230, 27);
+}
+.ct-chart .ct-series.ct-series-a .ct-line {
+  stroke: rgb(34, 230, 27);
+}

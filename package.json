@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/algenty/grafana-flowcharting",
   "jest": {
-    "testEnvironment": "node"
+    "globalSetup": "<rootDir>/spec/globalSetup.js",
+    "globalTeardown": "<rootDir>/spec/globalTeardown.js"
   },
   "devDependencies": {
     "@angular/common": "^7.2.12",

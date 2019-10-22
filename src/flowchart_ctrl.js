@@ -1,9 +1,9 @@
 // eslint-disable-next-line import/no-unresolved
-import { MetricsPanelCtrl } from 'app/plugins/sdk';
+import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 // eslint-disable-next-line import/no-unresolved
-import TimeSeries from 'app/core/time_series2';
+import TimeSeries from 'grafana/app/core/time_series2';
 // eslint-disable-next-line import/no-unresolved
-import kbn from 'app/core/utils/kbn';
+import kbn from 'grafana/app/core/utils/kbn';
 import { mappingOptionsTab } from './mapping_options';
 import { flowchartOptionsTab } from './flowchart_options';
 import { inspectOptionsTab } from './inspect_options';
@@ -15,6 +15,7 @@ const u = require('./utils');
 window.u = window.u || u;
 
 class FlowchartCtrl extends MetricsPanelCtrl {
+  /** @ngInject */
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
     this.version = '0.5.0';
