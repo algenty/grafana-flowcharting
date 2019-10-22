@@ -1,6 +1,7 @@
 
 // setup-jest.js
 // import 'babel-polyfill';
+require('regenerator-runtime/runtime');
 import lodash from 'lodash';
 global._ = lodash;
 

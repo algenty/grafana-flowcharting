@@ -20,7 +20,10 @@
   "homepage": "https://github.com/algenty/grafana-flowcharting",
   "jest": {
     "globalSetup": "<rootDir>/spec/globalSetup.js",
-    "globalTeardown": "<rootDir>/spec/globalTeardown.js"
+    "globalTeardown": "<rootDir>/spec/globalTeardown.js",
+    "moduleNameMapper": {
+      "grafana/*": "<rootDir>/spec/grafana-sdk-mock.js"
+    }
   },
   "devDependencies": {
     "@angular/common": "^7.2.12",
