@@ -97,6 +97,7 @@
     "webpack": "^4.29.1"
   },
   "dependencies": {
+    "@grafana/toolkit": "^6.4.3",
     "eslint-config-airbnb-base": "^13.1.0"
   }
 }
