@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 // eslint-disable-next-line import/no-unresolved
-import kbn from 'app/core/utils/kbn';
+import kbn from 'grafana/app/core/utils/kbn';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import moment from 'moment';
 

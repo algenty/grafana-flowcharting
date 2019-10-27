@@ -1,4 +1,4 @@
-import { loadPluginCss } from 'app/plugins/sdk';
+import { loadPluginCss } from 'grafana/app/plugins/sdk';
 import { FlowchartCtrl } from './flowchart_ctrl';
 
 

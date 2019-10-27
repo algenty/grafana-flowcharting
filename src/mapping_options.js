@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-unresolved
-import kbn from 'app/core/utils/kbn';
+import kbn from 'grafana/app/core/utils/kbn';
 import { plugin } from './plugin';
 
 export class MappingOptionsCtrl {
