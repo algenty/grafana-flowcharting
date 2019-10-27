@@ -72,7 +72,7 @@ export default class StateHandler {
       // LINKS
       if (!found) {
         name = xgraph.getValuePropOfMxCell(rule.data.linkProp, mxcell);
-       if (rule.matchText(name)) {
+       if (rule.matchLink(name)) {
          result.push(state);
          found = true;
        }
@@ -210,5 +210,14 @@ export default class StateHandler {
     this.states.forEach(state => {
       state.applyState();
     });
+  }
+
+  /**
+   *Call applyStates asynchronously
+   *
+   * @memberof StateHandler
+   */
+  async_applyStates() {
+    this.applyStates();
   }
 }

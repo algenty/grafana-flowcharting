@@ -20,6 +20,14 @@ plugin.getRootPath = function () {
   return this.dirname;
 };
 
+plugin.getLibsPath = function () {
+  return `${this.dirname}/libs`;
+};
+
+plugin.getShapesPath = function () {
+  return `${this.dirname}libs/shapes`;
+};
+
 plugin.getMxBasePath = function () {
   return this.mxBasePath;
 };
@@ -54,7 +62,7 @@ plugin.popover = function (text, tagBook, tagImage) {
   </div>`;
 };
 
-plugin.logLevel = 0;
+plugin.logLevel = 1;
 plugin.logDisplay = false;
 
 window.GF_PLUGIN = window.GF_PLUGIN || plugin;

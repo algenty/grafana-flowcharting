@@ -47,12 +47,16 @@ export default class Flowchart {
     else this.data.scale = obj.scale !== undefined ? obj.scale : true;
     if (obj.options) this.data.lock = obj.options.lock;
     else this.data.lock = obj.lock !== undefined ? obj.lock : true;
+    if (obj.options) this.data.allowDrawio = false;
+    else this.data.allowDrawio = obj.allowDrawio !== undefined ? obj.allowDrawio : false;
     if (obj.options) this.data.tooltip = obj.options.tooltip;
     else this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : true;
     if (obj.options) this.data.grid = obj.options.grid;
     else this.data.grid = obj.grid !== undefined ? obj.grid : false;
     if (obj.options) this.data.bgColor = obj.options.bgColor;
     else this.data.bgColor = obj.bgColor;
+    this.data.editorUrl = obj.editorUrl !== undefined ? obj.editorUrl : "https://www.draw.io";
+    this.data.editorTheme = obj.editorTheme !== undefined ? obj.editorTheme : "dark";
     this.init();
   }
 
@@ -77,6 +81,9 @@ export default class Flowchart {
     // this.stateHandler.prepare();
     rules.forEach(rule => {
       rule.states = this.stateHandler.getStatesForRule(rule);
+      rule.states.forEach(state => {
+        state.unsetState();
+      });
     });
   }
 
@@ -90,6 +97,9 @@ export default class Flowchart {
     if (this.xgraph === undefined)
       this.xgraph = new XGraph(this.container, this.data.type, this.getContent());
     if (this.data.xml !== undefined && this.data.xml !== null) {
+      if (this.data.allowDrawio) this.xgraph.allowDrawio(true);
+      else this.xgraph.allowDrawio(false);
+      this.setOptions();
       this.xgraph.drawGraph();
       if (this.data.tooltip) this.xgraph.tooltipGraph(true);
       if (this.data.scale) this.xgraph.scaleGraph(true);
@@ -119,17 +129,32 @@ export default class Flowchart {
     this.stateHandler.setStates(rules, series);
   }
 
+  setOptions() {
+    this.setScale(this.data.scale);
+    this.setCenter(this.data.center);
+    this.setGrid(this.data.grid);
+    this.setTooltip(this.data.tooltip);
+    this.setLock(this.data.lock);
+    this.setZoom(this.data.zoom);
+    this.setBgColor(this.data.bgColor);
+  }
+
+
+
   applyStates() {
     u.log(1, `flowchart[${this.data.name}].applyStates()`);
     this.stateHandler.applyStates();
   }
 
-  refresh(width, height) {
+  applyOptions() {
     u.log(1, `flowchart[${this.data.name}].refresh()`);
     u.log(0, `flowchart[${this.data.name}].refresh() data`, this.data);
-    if (width !== undefined && width != null) this.setWidth(width);
-    if (height !== undefined && height != null) this.setHeight(height);
-    this.xgraph.refreshGraph(this.width, this.height);
+    this.xgraph.applyGraph(this.width, this.height);
+  }
+
+  refresh()
+  {
+    this.xgraph.refresh();
   }
 
   redraw(xmlGraph) {
@@ -141,7 +166,7 @@ export default class Flowchart {
       u.log(2, 'XML Content not defined');
       this.xgraph.setXmlGraph(this.getXml(true));
     }
-    this.refresh();
+    this.applyOptions();
   }
 
   reload() {
@@ -214,6 +239,14 @@ export default class Flowchart {
     u.log(1, `flowchart[${this.data.name}].getXml()`);
     if (!replaceVarBool) return this.data.csv;
     return this.templateSrv.replaceWithText(this.data.csv);
+  }
+
+  getUrlEditor() {
+    return this.data.editorUrl;
+  }
+
+  getThemeEditor() {
+    return this.data.editorTheme;
   }
 
   /**

@@ -1,3 +1,5 @@
+import { resolve } from 'path';
+
 /* eslint-disable no-undef */
 /* eslint-disable new-cap */
 /* eslint-disable dot-notation */
@@ -13,10 +15,13 @@ const mxgraph = require('mxgraph')({
   mxLoadResources: false
 });
 
+const Chartist = require('chartist');
+
 window.BASE_PATH = window.BASE_PATH || GF_PLUGIN.getMxBasePath();
 window.RESOURCES_PATH = window.BASE_PATH || `${window.BASE_PATH}resources`;
 window.RESOURCE_BASE = window.RESOURCE_BASE || `${window.RESOURCES_PATH}/grapheditor`;
 window.STENCIL_PATH = window.STENCIL_PATH || `${window.BASE_PATH}stencils`;
+window.SHAPES_PATH = window.SHAPES_PATH || GF_PLUGIN.getShapesPath();
 window.IMAGE_PATH = window.IMAGE_PATH || `${window.BASE_PATH}images`;
 window.STYLE_PATH = window.STYLE_PATH || `${window.BASE_PATH}styles`;
 window.CSS_PATH = window.CSS_PATH || `${window.BASE_PATH}styles`;
@@ -104,9 +109,21 @@ window.mxTooltip = window.mxTooltip || mxgraph.mxTooltip;
 window.mxTooltipHandler = window.mxTooltipHandler || mxgraph.mxTooltipHandler;
 window.mxTriangle = window.mxTriangle || mxgraph.mxTriangle;
 window.mxUndoManager = window.mxUndoManager || mxgraph.mxUndoManager;
+window.mxUrlConverter = window.mxUrlConverter || mxgraph.mxUrlConverter;
 window.mxUtils = window.mxUtils || mxgraph.mxUtils;
 window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange;
 window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
+
+// Extends mxGraph
+require('./Shapes');
+const Graph = require('./Graph')({
+  libs: 'arrows;basic;bpmn;flowchart'
+});
+Graph.handleFactory = mxGraph.handleFactory;
+Graph.createHandle = mxGraph.createHandle;
+// Specifics function for Flowcharting
+require('./Graph_over');
+window.Graph = window.Graph || Graph;
 
 /**
  *mxGraph interface class
@@ -150,7 +167,7 @@ export default class XGraph {
       if (u.isencoded(definition)) this.xmlGraph = u.decode(definition, true, true, true);
       else this.xmlGraph = definition;
     }
-    
+
     this.initGraph();
   }
 
@@ -161,15 +178,9 @@ export default class XGraph {
    */
   initGraph() {
     u.log(1, 'XGraph.initGraph()');
-    const Graph = require('./Graph')({
-      libs: 'arrows;basic;bpmn;flowchart'
-    });
-    require('./Shapes');
-    require('./Graph_over');
     this.graph = new Graph(this.container);
     this.graph.getTooltipForCell = this.getTooltipForCell;
 
-    
     // /!\ What is setPannig
     this.graph.setPanning(true);
 
@@ -181,12 +192,13 @@ export default class XGraph {
 
     // CTRL+MOUSEWHEEL
     mxEvent.addMouseWheelListener(mxUtils.bind(this, this.eventMouseWheel), this.container);
+    if (mxClient.IS_IE || mxClient.IS_EDGE)
+      mxEvent.addListener(this.container, 'wheel', mxUtils.bind(this, this.eventMouseWheel));
 
     // KEYS
     mxEvent.addListener(document, 'keydown', mxUtils.bind(this, this.eventKey));
 
     // CONTEXT MENU
-    // mxEvent.addListener(this.container, 'contextmenu', mxUtils.bind(this, function() {return false;}));
     this.container.addEventListener('contextmenu', e => e.preventDefault());
 
     // DB CLICK
@@ -216,35 +228,29 @@ export default class XGraph {
   }
 
   /**
-   *Refresh graph
+   *apply options on graph
    *
    * @param {*} width
    * @param {*} height
    * @memberof XGraph
    */
-  refreshGraph(width, height) {
+  applyGraph() {
     u.log(1, 'XGraph.refreshGraph()');
-    const $div = $(this.container);
-    const size = Math.min(width, height);
-    this.width = width;
-    this.height = height;
-    const css = {
-      margin: 'auto',
-      position: 'relative',
-      width: width,
-      height: `${size - 30}px`
-    };
-
-    $div.css(css);
     if (!this.scale) this.zoomGraph(this.zoomPercent);
     else this.unzoomGraph();
-
     this.tooltipGraph(this.tooltip);
     this.lockGraph(this.lock);
-    this.scaleGraph(this.scale);
+    if (this.scale && this.center) this.fitGraph();
+    else {
+      this.scaleGraph(this.scale);
+      this.centerGraph(this.center);
+    }
     this.gridGraph(this.grid);
-    this.centerGraph(this.center);
     this.bgGraph(this.bgColor);
+    this.refresh();
+  }
+
+  refresh() {
     this.graph.refresh();
   }
 
@@ -277,6 +283,16 @@ export default class XGraph {
     this.tooltip = bool;
   }
 
+  allowDrawio(bool) {
+    if (bool) {
+      mxUrlConverter.prototype.baseUrl = 'http://draw.io/';
+      mxUrlConverter.prototype.baseDomain = '';
+    } else {
+      mxUrlConverter.prototype.baseUrl = null;
+      mxUrlConverter.prototype.baseDomain = null;
+    }
+  }
+
   /**
    *Center graph in panel
    *
@@ -303,6 +319,24 @@ export default class XGraph {
       this.graph.view.rendering = true;
     }
     this.scale = bool;
+  }
+
+  fitGraph() {
+    var margin = 2;
+    var max = 3;
+
+    var bounds = this.graph.getGraphBounds();
+    var cw = this.graph.container.clientWidth - margin;
+    var ch = this.graph.container.clientHeight - margin;
+    var w = bounds.width / this.graph.view.scale;
+    var h = bounds.height / this.graph.view.scale;
+    var s = Math.min(max, Math.min(cw / w, ch / h));
+
+    this.graph.view.scaleAndTranslate(
+      s,
+      (margin + cw - w * s) / (2 * s) - bounds.x / this.graph.view.scale,
+      (margin + ch - h * s) / (2 * s) - bounds.y / this.graph.view.scale
+    );
   }
 
   /**
@@ -454,7 +488,8 @@ export default class XGraph {
   selectMxCells(prop, pattern) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
-      this.graph.setSelectionCells(mxcells);
+      // this.graph.setSelectionCells(mxcells);
+      this.highlightCells(mxcells);
     }
   }
 
@@ -463,9 +498,11 @@ export default class XGraph {
    *
    * @memberof XGraph
    */
-  unselectMxCells() {
-    // this.graph.removeCellOverlays(cell);
-    this.graph.clearSelection();
+  unselectMxCells(prop, pattern) {
+    const mxcells = this.findMxCells(prop, pattern);
+    if (mxcells) {
+      this.unhighlightCells(mxcells);
+    }
   }
 
   /**
@@ -634,9 +671,9 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getValuePropOfMxCell(prop,mxcell) {
-    if (prop === "id") return this.getId(mxcell);
-    if (prop === "value") return this.getLabel(mxcell);
+  getValuePropOfMxCell(prop, mxcell) {
+    if (prop === 'id') return this.getId(mxcell);
+    if (prop === 'value') return this.getLabel(mxcell);
     return null;
   }
 
@@ -687,7 +724,7 @@ export default class XGraph {
    * @returns {string} Id of mxCell
    * @memberof XGraph
    */
-  getId(mxcell){
+  getId(mxcell) {
     return mxcell.getId();
   }
 
@@ -796,10 +833,23 @@ export default class XGraph {
    */
   eventMouseWheel(evt, up) {
     u.log(1, 'XGraph.eventMouseWheel()');
+    u.log(0, 'XGraph.eventMouseWheel() evt', evt);
+    u.log(0, 'XGraph.eventMouseWheel() up', up);
     if (this.graph.isZoomWheelEvent(evt)) {
-      const rect = evt.target.getBoundingClientRect();
-      var x = evt.offsetX - evt.currentTarget.offsetLeft;
-      var y = evt.offsetY - evt.currentTarget.offsetTop;
+      if (up == null || up == undefined) {
+        u.log(0, 'XGraph.eventMouseWheel() up', 'Not defined');
+        if (evt.deltaY < 0) up = true;
+        else up = false;
+      }
+      // const rect = evt.target.getBoundingClientRect();
+      // let offsetLeft = (evt.currentTarget.offsetLeft != undefined ? evt.currentTarget.offsetLeft : 0 );
+      // let offsetTop = (evt.currentTarget.offsetTop != undefined ? evt.currentTarget.offsetTop : 0 )
+      // u.log(0, 'XGraph.eventMouseWheel() offsetLeft', offsetLeft);
+      // u.log(0, 'XGraph.eventMouseWheel() offsetTop', offsetTop);
+      // var x = evt.layerX - offsetLeft;
+      // var y = evt.layerY - offsetTop;
+      var x = evt.layerX;
+      var y = evt.layerY;
       if (up) {
         this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
       } else {
@@ -821,7 +871,7 @@ export default class XGraph {
       this.cumulativeZoomFactor = 1;
       if (this.graph) {
         this.graph.zoomActual();
-        this.refreshGraph(this.width, this.height);
+        this.applyGraph(this.width, this.height);
       }
     }
   }
@@ -875,14 +925,80 @@ export default class XGraph {
   }
 
   /**
-   *Zoom cell on full panel 
+   * Highlights the given cell.
+   */
+  highlightCells(cells) {
+    for (var i = 0; i < cells.length; i++) {
+      this.highlightCell(cells[i]);
+    }
+  }
+
+  /**
+   * UnHighlights the given array of cells.
+   */
+  unhighlightCells(cells) {
+    for (var i = 0; i < cells.length; i++) {
+      this.unhighlightCell(cells[i]);
+    }
+  }
+
+  /**
+   * Highlights the given cell.
+   */
+  // highlightCell(cell, color, duration, opacity)
+  highlightCell(cell) {
+    if (cell.highlight) return;
+    let color = '#99ff33';
+    // color = (color != null) ? color : mxConstants.DEFAULT_VALID_COLOR;
+    // duration = (duration != null) ? duration : 1000;
+    let opacity = 100;
+    var state = this.graph.view.getState(cell);
+
+    if (state != null) {
+      var sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+      var hl = new mxCellHighlight(this.graph, color, sw, false);
+
+      if (opacity != null) {
+        hl.opacity = opacity;
+      }
+
+      hl.highlight(state);
+      cell.highlight = hl;
+    }
+  }
+
+  /**
+   *UnHighlights the given cell.
+   *
+   * @param {*} cell
+   * @memberof XGraph
+   */
+  unhighlightCell(cell) {
+    if (cell && cell.highlight) {
+      let hl = cell.highlight;
+      // Fades out the highlight after a duration
+      if (hl.shape != null) {
+        mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 500ms ease-in-out');
+        hl.shape.node.style.opacity = 0;
+      }
+
+      // Destroys the highlight after the fade
+      window.setTimeout(function() {
+        hl.destroy();
+      }, 500);
+      cell.highlight = null;
+    }
+  }
+
+  /**
+   *Zoom cell on full panel
    *
    * @param {*} mxcell
    * @memberof XGraph
    */
   lazyZoomCell(mxcell) {
-    u.log(1, 'XGraph.lazyZoomPointer() mxcell', mxcell);
-    u.log(0, 'XGraph.lazyZoomPointer() mxcellState', this.graph.view.getState(mxcell));
+    u.log(1, 'XGraph.lazyZoomCell() mxcell', mxcell);
+    u.log(0, 'XGraph.lazyZoomCell() mxcellState', this.graph.view.getState(mxcell));
     if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
       const state = this.graph.view.getState(mxcell);
       if (state !== null) {
@@ -903,34 +1019,38 @@ export default class XGraph {
 
   getTooltipForCell(cell) {
     u.log(1, 'Graph.prototype.getTooltipForCell()');
-    let tip = '';
-  
+    let hasTips = false;
+    let div = document.createElement('div');
     if (mxUtils.isNode(cell.value)) {
       let tmp = cell.value.getAttribute('tooltip');
       // Tooltip
       if (tmp != null) {
+        hasTips = true;
         if (tmp != null && this.isReplacePlaceholders(cell)) {
           tmp = this.replacePlaceholders(cell, tmp);
         }
-        tip += '<div style="word-wrap:break-word;">' + this.sanitizeHtml(tmp) + '</div>';
+        let ttDiv = document.createElement('div');
+        ttDiv.className = 'tooltip-text';
+        ttDiv.innerHTML = this.sanitizeHtml(tmp);
+        div.appendChild(ttDiv);
       }
-  
+
       let ignored = this.builtInProperties;
       let attrs = cell.value.attributes;
       let temp = [];
-  
+
       // Hides links in edit mode
-      if (this.isEnabled()) {
-        ignored.push('link');
-      }
-  
+      // if (this.isEnabled()) {
+      ignored.push('link');
+      // }
+
       // Attributes
       for (var i = 0; i < attrs.length; i++) {
         if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
           temp.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
         }
       }
-  
+
       // Sorts by name
       temp.sort(function(a, b) {
         if (a.name < b.name) {
@@ -942,47 +1062,38 @@ export default class XGraph {
         }
       });
       if (temp.length > 0) {
-        tip += '<div>';
+        hasTips = true;
+        var attrDiv = document.createElement('div');
+        var attrString = '';
         for (var i = 0; i < temp.length; i++) {
           if (temp[i].name != 'link' || !this.isCustomLink(temp[i].value)) {
-            tip +=
+            attrString +=
               (temp[i].name != 'link' ? '<b>' + temp[i].name + ':</b> ' : '') +
               mxUtils.htmlEntities(temp[i].value) +
               '\n';
           }
         }
-        tip += '</div>';
-      }
-  
-      if (tip.length > 0) {
-        tip = tip.substring(0, tip.length - 1);
-  
-        if (mxClient.IS_SVG) {
-          tip = '<div style="max-width:360px;">' + tip + '</div>';
-        }
+        attrDiv.innerHTML = attrString;
+        div.appendChild(attrDiv);
       }
     }
-  
-    // Date : Last change
-    if (cell.GF_lastChange !== undefined && cell.GF_lastChange !== null) {
-      tip += `<div class="graph-tooltip-time"></br>${cell.GF_lastChange}</div>`;
-    }
-  
-    // Metrics
-    if (cell.GF_tooltips !== undefined && cell.GF_tooltips.length > 0) {
-      let metrics = cell.GF_tooltips;
-      tip += '<div></br>';
-      for (var i = 0; i < metrics.length; i++) {
-        const current = metrics[i];
-        if (current !== undefined) {
-          tip += `${current.name} : `;
-          tip += `<span style="color:${current.color}"><b>${current.value}</b></span></br>`;
-        }
+
+    // GF Tooltips
+    if (cell.GF_tooltipHandler != null) {
+      let tooltipHandler = cell.GF_tooltipHandler;
+      let gfDiv = tooltipHandler.getTooltipDiv(div);
+      if (gfDiv !== null) {
+        hasTips = true;
       }
-      tip += '</div>';
     }
-    // u.log(1, 'Graph_other.getTooltipForCell() tip', tip);
-    return tip;
-  };
+    // let divs = this.getTooltipGFs(cell);
+    // if (divs !== null) {
+    //   hasTips = true;
+    //   div.appendChild(divs);
+    // }
+
+    if (hasTips) return div;
+    return '';
+  }
 
 }
