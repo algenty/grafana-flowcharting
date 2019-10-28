@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-unresolved
-import kbn from 'grafana/app/core/utils/kbn';
+import kbn from 'app/core/utils/kbn';
 import { plugin } from './plugin';
 
 export class MappingOptionsCtrl {
@@ -192,12 +192,13 @@ export class MappingOptionsCtrl {
 
 }
 
+/** @ngInject */
 export function mappingOptionsTab($q, uiSegmentSrv) {
   'use strict';
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `public/plugins/agenty-flowcharting-panel/partials/mapping_options.html`,
+    templateUrl: `${GF_PLUGIN.getPartialPath()}/mapping_options.html`,
     controller: MappingOptionsCtrl
   };
 }

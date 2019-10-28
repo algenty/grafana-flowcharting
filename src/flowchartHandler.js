@@ -13,7 +13,6 @@ export default class FlowchartHandler {
    * @param {*} data - Empty data to store
    * @memberof FlowchartHandler
    */
-  /** @ngInject */
   constructor($scope, elem, ctrl, data) {
     u.log(1, 'FlowchartHandler.constructor()');
     u.log(0, 'FlowchartHandler.constructor() data', data);

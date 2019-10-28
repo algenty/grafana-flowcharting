@@ -15,11 +15,11 @@ const mxgraph = require('mxgraph')({
   mxLoadResources: false
 });
 
-
 const Chartist = require('chartist');
+
 window.BASE_PATH = window.BASE_PATH || GF_PLUGIN.getMxBasePath();
 window.RESOURCES_PATH = window.BASE_PATH || `${window.BASE_PATH}resources`;
-window.RESOURCE_BASE = window.RESOURCE_BASE || `${window.RESOURCES_PATH}grapheditor`;
+window.RESOURCE_BASE = window.RESOURCE_BASE || `${window.RESOURCES_PATH}/grapheditor`;
 window.STENCIL_PATH = window.STENCIL_PATH || `${window.BASE_PATH}stencils`;
 window.SHAPES_PATH = window.SHAPES_PATH || GF_PLUGIN.getShapesPath();
 window.IMAGE_PATH = window.IMAGE_PATH || `${window.BASE_PATH}images`;
@@ -1086,6 +1086,11 @@ export default class XGraph {
         hasTips = true;
       }
     }
+    // let divs = this.getTooltipGFs(cell);
+    // if (divs !== null) {
+    //   hasTips = true;
+    //   div.appendChild(divs);
+    // }
 
     if (hasTips) return div;
     return '';

@@ -85,7 +85,7 @@ export function inspectOptionsTab($q, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `public/plugins/agenty-flowcharting-panel/partials/inspect_options.html`,
+    templateUrl: `${GF_PLUGIN.getPartialPath()}/inspect_options.html`,
     controller: InspectOptionsCtrl
   };
 }

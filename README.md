@@ -29,7 +29,7 @@ See more example at draw.io
 
 # Changelog
 
-## [[0.5.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0.zip) - 2019-10-17
+## [[0.5.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0-SNAPSHOT.zip) - 2019-10-13
 ### Added  
   - 2 new modes for "Update text value" ([See example](https://algenty.github.io/flowcharting-repository/images/append_mode_ani.png))
     - Append (Space) : Concat metrics with a space as a separator
@@ -45,7 +45,6 @@ See more example at draw.io
   - Graphs in tooltip ([See example](https://algenty.github.io/flowcharting-repository/images/tooltip_graph.png))
     - Color graph with defined colors in threshold
     - Size of graph ([See example](https://algenty.github.io/flowcharting-repository/images/graph_size.png))
-    - Scale of graph (Y-min and Y-max)
   - Define the orientation in  tooltip for each metrics/graph in tooltips : horizontal or vertical ([See example](https://algenty.github.io/flowcharting-repository/images/tooltip_direction_ani.png))
   - Some optimizations, Display is twice as fast on load.
 

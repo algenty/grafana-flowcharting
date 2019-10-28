@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 // eslint-disable-next-line import/no-unresolved
-import kbn from 'grafana/app/core/utils/kbn';
+import kbn from 'app/core/utils/kbn';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import moment from 'moment';
 
@@ -35,7 +35,7 @@ export default class Rule {
   /**
    * return data of rule
    *
-   * @returns {data}
+   * @returns {data} 
    * @memberof Rule
    */
   getData() {
@@ -985,7 +985,7 @@ class ValueMap {
   isHidden() {
     return this.data.hidden;
   }
-
+  
   export() {
     return {
       value: this.data.value,

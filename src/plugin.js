@@ -1,18 +1,18 @@
 import $ from 'jquery';
 
 const plugin = {};
-plugin.dirname = `${__dirname}`;
+plugin.dirname = `${__dirname}/`;
 plugin.repository = 'https://algenty.github.io/flowcharting-repository/';
 plugin.mxBasePath = `${plugin.dirname}libs/mxgraph/javascript/dist/`;
 plugin.mxImagePath = `${plugin.mxBasePath}images/`;
-plugin.partialPath = `${plugin.dirname}partials/`;
+plugin.partialPath = `${plugin.dirname}/partials/`;
 plugin.data = {};
 
 $.ajaxSetup({
   async: false,
 });
 
-$.getJSON(`${plugin.dirname}plugin.json`, (data) => {
+$.getJSON(`${plugin.dirname}/plugin.json`, (data) => {
   plugin.data = data;
 });
 
@@ -21,7 +21,7 @@ plugin.getRootPath = function () {
 };
 
 plugin.getLibsPath = function () {
-  return `${this.dirname}libs`;
+  return `${this.dirname}/libs`;
 };
 
 plugin.getShapesPath = function () {

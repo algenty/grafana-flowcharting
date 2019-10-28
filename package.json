@@ -19,11 +19,7 @@
   },
   "homepage": "https://github.com/algenty/grafana-flowcharting",
   "jest": {
-    "globalSetup": "<rootDir>/spec/globalSetup.js",
-    "globalTeardown": "<rootDir>/spec/globalTeardown.js",
-    "moduleNameMapper": {
-      "grafana/*": "<rootDir>/spec/grafana-sdk-mock.js"
-    }
+    "testEnvironment": "node"
   },
   "devDependencies": {
     "@angular/common": "^7.2.12",
@@ -97,7 +93,6 @@
     "webpack": "^4.29.1"
   },
   "dependencies": {
-    "@grafana/toolkit": "^6.4.3",
     "eslint-config-airbnb-base": "^13.1.0"
   }
 }

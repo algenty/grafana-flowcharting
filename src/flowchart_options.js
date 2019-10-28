@@ -66,11 +66,12 @@ export class FlowchartOptionsCtrl {
   }
 }
 
+/** @ngInject */
 export function flowchartOptionsTab($q, $sce, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `public/plugins/agenty-flowcharting-panel/partials/flowchart_options.html`,
+    templateUrl: `${GF_PLUGIN.getPartialPath()}/flowchart_options.html`,
     controller: FlowchartOptionsCtrl,
   };
 }
