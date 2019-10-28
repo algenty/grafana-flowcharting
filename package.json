@@ -32,7 +32,11 @@
     "@grafana/runtime": "canary",
     "@grafana/toolkit": "canary",
     "@grafana/ui": "canary",
-    "grafana-sdk-mocks": "grafana/grafana-sdk-mocks"
+    "grafana-sdk-mocks": "grafana/grafana-sdk-mocks",
+    "express": "^4.16.4",
+    "babel-polyfill": "^6.26.0",
+    "jquery": "^3.4.1",
+    "angular": "^1.7.8"
   },
   "dependencies": {
     "mxgraph": "^4.0.4",
