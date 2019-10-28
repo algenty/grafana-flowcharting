@@ -20,7 +20,11 @@
   },
   "homepage": "https://github.com/algenty/grafana-flowcharting",
   "jest": {
-    "testEnvironment": "node"
+    "globalSetup": "<rootDir>/spec/globalSetup.js",
+    "globalTeardown": "<rootDir>/spec/globalTeardown.js",
+    "moduleNameMapper": {
+      "grafana/*": "<rootDir>/spec/grafana-sdk-mock.js"
+    }
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.3.4",
