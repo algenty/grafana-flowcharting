@@ -4,10 +4,14 @@ import TimeSeries from 'grafana/app/core/time_series2';
 import kbn from 'grafana/app/core/utils/kbn';
 
 // Tabs
-import { mappingOptionsTab } from './mapping_options';
-import { inspectOptionsTab } from './inspect_options';
-import { flowchartOptionsTab } from './flowchart_options';
+// import { mappingOptionsTab } from './mapping_options';
+// import { inspectOptionsTab } from './inspect_options';
+// import { flowchartOptionsTab } from './flowchart_options';
 import { emptyOptionsTab } from './empty_options';
+
+// Controller
+import FlowchartOptionsCtrl from './flowchart_options';
+// import EmptyOptionsCtrl from './empty_options';
 
 // Handlers
 import RulesHandler from './rulesHandler';
@@ -65,6 +69,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // this.addEditorTab('Mapping', mappingOptionsTab, 3);
     // this.addEditorTab('Inspect', inspectOptionsTab, 4);
     this.addEditorTab('Empty', emptyOptionsTab, 5);
+    // this.addEditorTab('Empty', 'public/plugins/agenty-flowcharting-panel/partials/empty_options.html', 5);
   }
 
   onRefresh() {

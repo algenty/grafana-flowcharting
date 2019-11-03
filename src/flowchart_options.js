@@ -1,23 +1,22 @@
 /* eslint-disable no-unused-vars */
-import { plugin } from './plugin';
-
-export class FlowchartOptionsCtrl {
+export default class FlowchartOptionsCtrl {
   /* @ngInject */
   constructor($scope) {
-    $scope.editor = this;
+    debugger
+    $scope.flowchartEditor = this;
     $scope.GF_PLUGIN = window.GF_PLUGIN;
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.panel = this.ctrl.panel;
     this.sourceTypes = [{ text: 'XML Content', value: 'xml' }]
+    //,{ text: 'CSV', value: 'csv' }];
     this.themes = [
       { text: 'Dark', value: 'dark' },
       { text: 'Light', value: 'kennedy' },
       { text: 'Mobile', value: 'minimal' },
       { text: 'Atlas', value: 'atlas' },
     ];
-    //,{ text: 'CSV', value: 'csv' }];
   }
 
   /**
@@ -66,7 +65,6 @@ export class FlowchartOptionsCtrl {
   }
 }
 
-/** @ngInject */
 export function flowchartOptionsTab($q, $sce, uiSegmentSrv) {
   return {
     restrict: 'E',
