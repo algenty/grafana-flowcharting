@@ -1,0 +1,28 @@
+import FlowchartHandler from '../src/flowchartHandler';
+
+const ctrl = {
+  templateSrv: {
+    replaceWithText: function (text) { return text },
+  },
+};
+
+const scope = {
+  ctrl : {
+      version : "0.2.0",
+      panel : {
+          version : "0.2.0",
+          rulesData : [],
+          FlowchartData : [],
+      }
+  }
+};
+
+const elem = "";
+
+describe('Create FlowchartHandler', () => {
+  test('Object', () => {
+    const data = [];
+    const fh = new FlowchartHandler(scope, elem, ctrl, data);
+    expect(fh).toMatchSnapshot();
+  });
+});

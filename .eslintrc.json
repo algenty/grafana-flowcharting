@@ -1,0 +1,37 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "jquery": true,
+        "amd": true,
+        "jest": true
+    },
+    "plugins": [
+        "lodash"
+    ],
+    "extends": [
+        "airbnb-base"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly",
+        "u": false,
+        "_": false,
+        "GF_PLUGIN": false,
+        "moment": false,
+        "logLevel": false,
+        "logDisplay": false
+    },
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "rules": {
+        "lodash/prefer-lodash-method": "off",
+        "prefer-destructuring": 0,
+        "global-require": 0,
+        "quotes": 0,
+        "max-len": 0,
+        "object-shorthand": 0
+    }
+}
