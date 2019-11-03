@@ -1,23 +1,27 @@
-// eslint-disable-next-line import/no-unresolved
+import FlowChartingPlugin from 'plugin';
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
-// eslint-disable-next-line import/no-unresolved
 import TimeSeries from 'grafana/app/core/time_series2';
-// eslint-disable-next-line import/no-unresolved
 import kbn from 'grafana/app/core/utils/kbn';
+
+// Tabs
 import { mappingOptionsTab } from './mapping_options';
-import { flowchartOptionsTab } from './flowchart_options';
 import { inspectOptionsTab } from './inspect_options';
+import { flowchartOptionsTab } from './flowchart_options';
+import { emptyOptionsTab } from './empty_options';
+
+// Handlers
 import RulesHandler from './rulesHandler';
 import FlowchartHandler from './flowchartHandler';
 
 const u = require('./utils');
-
 window.u = window.u || u;
 
 class FlowchartCtrl extends MetricsPanelCtrl {
+  /* @ngInject */
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
-    this.version = '0.5.0';
+    this.plugin = FlowChartingPlugin.init($scope, $injector, $rootScope, templateSrv);
+    this.version = GF_PLUGIN.getVersion();
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.templateSrv = templateSrv;
@@ -57,31 +61,32 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // EVENTS FCT
   //
   onInitEditMode() {
-    this.addEditorTab('Flowchart', flowchartOptionsTab, 2);
-    this.addEditorTab('Mapping', mappingOptionsTab, 3);
-    this.addEditorTab('Inspect', inspectOptionsTab, 4);
+    // this.addEditorTab('Flowchart', flowchartOptionsTab, 2);
+    // this.addEditorTab('Mapping', mappingOptionsTab, 3);
+    // this.addEditorTab('Inspect', inspectOptionsTab, 4);
+    this.addEditorTab('Empty', emptyOptionsTab, 5);
   }
 
   onRefresh() {
-    u.log(1, 'FlowchartCtrl.onRefresh()');
+    GF_PLUGIN.log(1, 'FlowchartCtrl.onRefresh()');
     this.onRender();
   }
 
   onVarChanged() {
-    u.log(1, 'FlowchartCtrl.onVarChanged()');
+    GF_PLUGIN.log(1, 'FlowchartCtrl.onVarChanged()');
     this.flowchartHandler.sourceChanged();
     this.flowchartHandler.render();
   }
 
   onRender() {
-    u.log(1, 'FlowchartCtrl.onRender()');
+    GF_PLUGIN.log(1, 'FlowchartCtrl.onRender()');
   }
 
   onDataReceived(dataList) {
-    u.log(1, 'FlowchartCtrl.onDataReceived()');
-    u.log(0, 'FlowchartCtrl.onDataReceived() dataList', dataList);
+    GF_PLUGIN.log(1, 'FlowchartCtrl.onDataReceived()');
+    GF_PLUGIN.log(0, 'FlowchartCtrl.onDataReceived() dataList', dataList);
     this.series = dataList.map(this.seriesHandler.bind(this));
-    u.log(0, 'FlowchartCtrl.onDataReceived() this.series', dataList);
+    GF_PLUGIN.log(0, 'FlowchartCtrl.onDataReceived() this.series', dataList);
     this.flowchartHandler.dataChanged();
     this.render();
   }
@@ -102,7 +107,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
-    u.log(1, 'FlowchartCtrl.link()');
+    GF_PLUGIN.log(1, 'FlowchartCtrl.link()');
 
     // RULES
     const newRulesData = [];
@@ -156,7 +161,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
 
   seriesHandler(seriesData) {
-    u.log(1, 'FlowchartCtrl.seriesHandler()');
+    GF_PLUGIN.log(1, 'FlowchartCtrl.seriesHandler()');
     const series = new TimeSeries({
       datapoints: seriesData.datapoints,
       alias: seriesData.target,
@@ -176,5 +181,4 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };
-
 FlowchartCtrl.templateUrl = './partials/module.html';

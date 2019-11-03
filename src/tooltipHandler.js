@@ -155,8 +155,8 @@ export default class TooltipHandler {
   }
 
   getMetricDiv(metric, parentDiv) {
-    u.log(1,`TooltipHandler[${this.mxcell.mxObjectId}].getMetricDiv()`);
-    u.log(0,`TooltipHandler[${this.mxcell.mxObjectId}].getMetricDiv() metric`, metric);
+    GF_PLUGIN.log(1,`TooltipHandler[${this.mxcell.mxObjectId}].getMetricDiv()`);
+    GF_PLUGIN.log(0,`TooltipHandler[${this.mxcell.mxObjectId}].getMetricDiv() metric`, metric);
     let div = document.createElement('div');
     div.id = this.mxcell.mxObjectId + '_METRIC_' + metric.name;
     let string = '';
@@ -195,7 +195,7 @@ export default class TooltipHandler {
     let chart = new Chartist.Line(div, data, this.lineOptions);
     metric.graphOptions.chart = chart;
     chart.on('draw', function(data) {
-      u.log(0, 'Chartis.on() data ', data);
+      GF_PLUGIN.log(0, 'Chartis.on() data ', data);
       if (data.type === 'line' || data.type === 'area') {
         if (data.type === 'line')
           data.element.attr({

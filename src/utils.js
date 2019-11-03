@@ -190,14 +190,12 @@ module.exports = {
 
   matchString(str, pattern) {
     if (str === undefined || pattern === undefined || str.length === 0 || pattern.length === 0) {
-      // u.log(0, `Match str=${str} pattern=${pattern}`, false);
       return false;
     }
     if (str === pattern) return true;
     const regex = this.stringToJsRegex(pattern);
     const matching = str.toString().match(regex);
     if (matching) {
-      // u.log(0, `Match str=${str} pattern=${pattern}`, true);
       return true;
     }
     return false;
@@ -229,32 +227,4 @@ module.exports = {
       return text;
     }
   },
-
-  log(level, title, obj) {
-    // 0 : DEBUG
-    // 1 : INFO
-    // 2 : WARN
-    // 3 : ERROR
-    // eslint-disable-next-line no-undef
-    if (GF_PLUGIN.logDisplay !== undefined && GF_PLUGIN.logDisplay === true) {
-      // eslint-disable-next-line no-undef
-      if (GF_PLUGIN.logLevel !== undefined && level >= GF_PLUGIN.logLevel) {
-        if (level === 0) {
-          console.debug(`DEBUG : ${title}`, obj);
-          return;
-        }
-        if (level === 1) {
-          console.info(` INFO : ${title}`, obj);
-          return;
-        }
-        if (level === 2) {
-          console.warn(` WARN : ${title}`, obj);
-          return;
-        }
-        if (level === 3) {
-          console.error(`ERROR : ${title}`, obj);
-        }
-      }
-    }
-  }
 };

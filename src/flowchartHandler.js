@@ -14,8 +14,8 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   constructor($scope, elem, ctrl, data) {
-    u.log(1, 'FlowchartHandler.constructor()');
-    u.log(0, 'FlowchartHandler.constructor() data', data);
+    GF_PLUGIN.log(1, 'FlowchartHandler.constructor()');
+    GF_PLUGIN.log(0, 'FlowchartHandler.constructor() data', data);
     this.$scope = $scope || null;
     this.$elem = elem.find('.flowchart-panel__chart');
     this.ctrl = ctrl;
@@ -66,8 +66,8 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   import(obj) {
-    u.log(1, 'FlowchartHandler.import()');
-    u.log(0, 'FlowchartHandler.import() obj', obj);
+    GF_PLUGIN.log(1, 'FlowchartHandler.import()');
+    GF_PLUGIN.log(0, 'FlowchartHandler.import() obj', obj);
     this.flowcharts = [];
     if (obj !== undefined && obj !== null && obj.length > 0) {
       obj.forEach(map => {
@@ -135,7 +135,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   addFlowchart(name) {
-    u.log(1, 'FlowchartHandler.addFlowchart()');
+    GF_PLUGIN.log(1, 'FlowchartHandler.addFlowchart()');
     const container = this.createContainer();
     const data = {};
     const flowchart = new Flowchart(name, this.defaultXml, container, this.ctrl, data);
@@ -149,7 +149,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   render() {
-    u.log(1, 'flowchartHandler.render()');
+    GF_PLUGIN.log(1, 'flowchartHandler.render()');
     // not repeat render if mouse down
     this.optionsFlag = true;
     if (!this.mousedown) {
@@ -235,7 +235,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   applyOptions() {
-    u.log(1, `FlowchartHandler.applyOptions()`);
+    GF_PLUGIN.log(1, `FlowchartHandler.applyOptions()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.applyOptions();
     });
@@ -320,7 +320,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   draw() {
-    u.log(1, `FlowchartHandler.draw()`);
+    GF_PLUGIN.log(1, `FlowchartHandler.draw()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.redraw();
     });
@@ -332,7 +332,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   load() {
-    u.log(1, `FlowchartHandler.load()`);
+    GF_PLUGIN.log(1, `FlowchartHandler.load()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.reload();
     });

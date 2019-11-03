@@ -9,7 +9,7 @@ import State from './state_class';
  */
 export default class StateHandler {
   constructor(xgraph, ctrl) {
-    u.log(1, 'StateHandler.constructor()');
+    GF_PLUGIN.log(1, 'StateHandler.constructor()');
     this.states = [];
     this.ctrl = ctrl;
     this.templateSrv = this.ctrl.templateSrv;
@@ -24,13 +24,13 @@ export default class StateHandler {
    * @memberof StateHandler
    */
   // initStates(xgraph, rules) {
-  //   u.log(1, 'StateHandler.initStates()');
+  //   GF_PLUGIN.log(1, 'StateHandler.initStates()');
   //   this.xgraph = xgraph;
   //   this.states = [];
   //   this.updateStates(rules);
   // }
   initStates(xgraph,rules) {
-    u.log(1, 'StateHandler.initStates()');
+    GF_PLUGIN.log(1, 'StateHandler.initStates()');
     this.xgraph = xgraph;
     this.states = [];
     let mxcells = xgraph.getMxCells();
@@ -47,7 +47,7 @@ export default class StateHandler {
    * @memberof StateHandler
    */
   getStatesForRule(rule) {
-    u.log(1, 'StateHandler.getStatesForRule()');
+    GF_PLUGIN.log(1, 'StateHandler.getStatesForRule()');
     let result = [];
     let name = null;
     let xgraph = this.xgraph;
@@ -90,7 +90,7 @@ export default class StateHandler {
    */
   // OLD METHOD : see getStatesForRule
   updateStates(rules) {
-    u.log(1, 'StateHandler.updateStates()');
+    GF_PLUGIN.log(1, 'StateHandler.updateStates()');
     rules.forEach(rule => {
       rule.states = this.getStatesForRule(rule);
     });
@@ -187,10 +187,10 @@ export default class StateHandler {
    * @param  {Array<Serie>} series - Array of serie object
    */
   setStates(rules, series) {
-    u.log(1, 'StateHandler.setStates()');
-    u.log(0, 'StatesHandler.setStates() Rules', rules);
-    u.log(0, 'StatesHandler.setStates() Series', series);
-    u.log(0, 'StatesHandler.setStates() States', this.states);
+    GF_PLUGIN.log(1, 'StateHandler.setStates()');
+    GF_PLUGIN.log(0, 'StatesHandler.setStates() Rules', rules);
+    GF_PLUGIN.log(0, 'StatesHandler.setStates() Series', series);
+    GF_PLUGIN.log(0, 'StatesHandler.setStates() States', this.states);
     this.prepare();
     rules.forEach(rule => {
       if (rule.states === undefined || rule.states.length === 0 ) rule.states = this.getStatesForRule(rule);
@@ -206,7 +206,7 @@ export default class StateHandler {
    * Apply color and text
    */
   applyStates() {
-    u.log(1, 'StateHandler.applyStates()');
+    GF_PLUGIN.log(1, 'StateHandler.applyStates()');
     this.states.forEach(state => {
       state.applyState();
     });

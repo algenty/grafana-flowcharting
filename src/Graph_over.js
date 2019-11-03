@@ -1,5 +1,5 @@
 mxTooltipHandler.prototype.show = function(tip, x, y) {
-  // u.log(1, 'mxTooltipHandler.prototype.show()');
+  // GF_PLUGIN.log(1, 'mxTooltipHandler.prototype.show()');
 
   // TYPE STRING
     if ( this.destroyed) return;
@@ -21,7 +21,7 @@ mxTooltipHandler.prototype.show = function(tip, x, y) {
 };
 
 mxTooltipHandler.prototype.init = function() {
-  // u.log(1, 'mxTooltipHandler.prototype.init()');
+  // GF_PLUGIN.log(1, 'mxTooltipHandler.prototype.init()');
   if (this.div === null || this.div === undefined) {
     this.$div = $('<div class="graph-tooltip">');
     this.div = this.$div[0];

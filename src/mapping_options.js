@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-unresolved
 import kbn from 'grafana/app/core/utils/kbn';
-import { plugin } from './plugin';
 
 export class MappingOptionsCtrl {
   /** @ngInject */
@@ -92,28 +91,28 @@ export class MappingOptionsCtrl {
     };
 
     this.getCellNamesForShape = () => {
-      u.log(1, 'MappingOptionsCtrl.getCellNamesForShape()');
+      GF_PLUGIN.log(1, 'MappingOptionsCtrl.getCellNamesForShape()');
       const flowchart = this.flowchartHandler.getFlowchart(0);
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getCellNamesForText = () => {
-      u.log(1, 'MappingOptionsCtrl.getCellNamesForText()');
+      GF_PLUGIN.log(1, 'MappingOptionsCtrl.getCellNamesForText()');
       const flowchart = this.flowchartHandler.getFlowchart(0);
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getCellNamesForLink = () => {
-      u.log(1, 'MappingOptionsCtrl.getCellNamesForLink()');
+      GF_PLUGIN.log(1, 'MappingOptionsCtrl.getCellNamesForLink()');
       const flowchart = this.flowchartHandler.getFlowchart(0);
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getVariables = () => {
-      u.log('MappingOptionsCtrl.getVariables');
+      GF_PLUGIN.log('MappingOptionsCtrl.getVariables');
       return this.panelCtrl.getVariables();
     };
   }
@@ -128,7 +127,7 @@ export class MappingOptionsCtrl {
   }
 
   onRulesChange() {
-    u.log(1, 'MappingOptionsCtrl.onRulesChange()');
+    GF_PLUGIN.log(1, 'MappingOptionsCtrl.onRulesChange()');
     this.flowchartHandler.ruleChanged();
     this.render();
   }
