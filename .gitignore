@@ -1,9 +1,0 @@
-/bower_components
-/externals
-/node_modules
-/externals
-/.vscode
-/archives
-/public
-/coverage
-yarn-error.log
