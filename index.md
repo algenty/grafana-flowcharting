@@ -19,28 +19,22 @@ Flowcharting is a plugin for grafana. It aims to display and monitor complexe di
   * ...  
 
 
+# Why use Grafana FlowCharting
+
+draw.io is completely free online diagram editor and open source technology stack for building diagramming applications, that enables you to create flowcharts, UML, entity relation, network diagrams, mockups and more.
+With Grafana FlowCharting, it's easy to add metrics, colors and label over the graph.
+
+
 [Get started now](#getting-started){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/algenty/grafana-flowcharting){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ---
 
+# How to use Grafana FlowCharting
+
+Define your model on draw.io and import it in Grafana FlowCharting
+
 ## Getting started
 
-### Dependencies
-
-Grafana Flowcharting is a plugin for [Grafana](https://grafana.com), to draw  and monitor your artwork.  
-You can change colors ,labels and links of each object in mapping sections with the rules.
-The draw and the javascripts use [draw.io](https://github.com/jgraph/drawio) for editor and [mxgraph](https://github.com/jgraph/mxgraph) for librairies
-
-
-### Quick start: Install and use GF (Grafana Flowcharting)
-
-1. Install GF with grafana-cli
-```sh
-grafana-cli plugins install agenty-flowcharting-panel
-```
-
-
-### Manuel or custom installation
 
 
 ### Configure FlowCharting
