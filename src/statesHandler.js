@@ -10,7 +10,7 @@ import State from './state_class';
 export default class StateHandler {
   constructor(xgraph, ctrl) {
     GF_PLUGIN.log(1, 'StateHandler.constructor()');
-    this.states = [];
+    this.states = new Map();
     this.ctrl = ctrl;
     this.templateSrv = this.ctrl.templateSrv;
     this.xgraph = xgraph;
@@ -18,21 +18,16 @@ export default class StateHandler {
   }
 
   /**
-   * Init states
+   *Initialisation of states
    *
-   * @param {XGraph} xgraph
+   * @param {*} xgraph
+   * @param {*} rules
    * @memberof StateHandler
    */
-  // initStates(xgraph, rules) {
-  //   GF_PLUGIN.log(1, 'StateHandler.initStates()');
-  //   this.xgraph = xgraph;
-  //   this.states = [];
-  //   this.updateStates(rules);
-  // }
-  initStates(xgraph,rules) {
+  initStates(xgraph, rules) {
     GF_PLUGIN.log(1, 'StateHandler.initStates()');
     this.xgraph = xgraph;
-    this.states = [];
+    this.states.clear();
     let mxcells = xgraph.getMxCells();
     _.each(mxcells, mxcell => {
       this.addState(mxcell);
@@ -48,16 +43,17 @@ export default class StateHandler {
    */
   getStatesForRule(rule) {
     GF_PLUGIN.log(1, 'StateHandler.getStatesForRule()');
-    let result = [];
+    let result = new Map();
     let name = null;
     let xgraph = this.xgraph;
     this.states.forEach(state => {
       let mxcell = state.mxcell;
+      let id = mxcell.id;
       let found = false;
       // SHAPES
       name = xgraph.getValuePropOfMxCell(rule.data.shapeProp, mxcell);
       if (rule.matchShape(name)) {
-        result.push(state);
+        result.set(id, state);
         found = true;
       }
 
@@ -65,20 +61,20 @@ export default class StateHandler {
       if (!found) {
         name = xgraph.getValuePropOfMxCell(rule.data.textProp, mxcell);
         if (rule.matchText(name)) {
-          result.push(state);
+          result.set(id, state);
           found = true;
         }
       }
       // LINKS
       if (!found) {
         name = xgraph.getValuePropOfMxCell(rule.data.linkProp, mxcell);
-       if (rule.matchLink(name)) {
-         result.push(state);
-         found = true;
-       }
-     }
-   });
-   return result;
+        if (rule.matchLink(name)) {
+          result.set(id, state);
+          found = true;
+        }
+      }
+    });
+    return result;
   }
 
   /**
@@ -110,15 +106,7 @@ export default class StateHandler {
    * @returns {state}
    */
   getState(cellId) {
-    let foundState = null;
-    for (let index = 0; index < this.states.length; index++) {
-      const state = this.states[index];
-      if (cellId == state.cellId) {
-        foundState = state;
-        break;
-      }
-    }
-    return foundState;
+    return this.states.get(cellId);
   }
 
   /**
@@ -129,24 +117,10 @@ export default class StateHandler {
    * @memberof StateHandler
    */
   addState(mxcell) {
-    let state = this.getState(mxcell.id);
-    if (state === null) {
-      state = new State(mxcell, this.xgraph, this.ctrl);
-      this.states.push(state);
-    }
+    let state = new State(mxcell, this.xgraph, this.ctrl);
+    this.states.set(mxcell.id, state);
     return state;
   }
-
-  /**
-   * Remove state
-   *
-   * @param {mxCell} mxcell
-   * @memberof StateHandler
-   */
-  // NOT USED
-  // removeState(mxcell) {
-  //   this.states = _.without(this.states, mxcell);
-  // }
 
   /**
    * Count number of state
@@ -155,7 +129,7 @@ export default class StateHandler {
    * @memberof StateHandler
    */
   countStates() {
-    return this.states.length;
+    return this.states.size;
   }
 
   /**
@@ -165,13 +139,15 @@ export default class StateHandler {
    * @returns {Number}
    * @memberof StateHandler
    */
-  countStatesWithLevel(level) {
-    let count = 0;
-    this.states.forEach(state => {
-      if (state.getLevel() === level) count += 1;
-    });
-    return count;
-  }
+  // countStatesWithLevel(level) {
+  //   let count = 0;
+  //   this.states.forEach(state => {
+  //     if (state.getLevel() === level) count += 1;
+  //   });
+  //   return count;
+  // }
+
+
   /**
    * Restore initial status and prepare states object
    */
@@ -188,12 +164,12 @@ export default class StateHandler {
    */
   setStates(rules, series) {
     GF_PLUGIN.log(1, 'StateHandler.setStates()');
-    GF_PLUGIN.log(0, 'StatesHandler.setStates() Rules', rules);
-    GF_PLUGIN.log(0, 'StatesHandler.setStates() Series', series);
-    GF_PLUGIN.log(0, 'StatesHandler.setStates() States', this.states);
+    // GF_PLUGIN.log(0, 'StatesHandler.setStates() Rules', rules);
+    // GF_PLUGIN.log(0, 'StatesHandler.setStates() Series', series);
+    // GF_PLUGIN.log(0, 'StatesHandler.setStates() States', this.states);
     this.prepare();
     rules.forEach(rule => {
-      if (rule.states === undefined || rule.states.length === 0 ) rule.states = this.getStatesForRule(rule);
+      if (rule.states === undefined || rule.states.length === 0) rule.states = this.getStatesForRule(rule);
       rule.states.forEach(state => {
         series.forEach(serie => {
           state.setState(rule, serie);
@@ -208,7 +184,10 @@ export default class StateHandler {
   applyStates() {
     GF_PLUGIN.log(1, 'StateHandler.applyStates()');
     this.states.forEach(state => {
-      state.applyState();
+      // state.applyState();
+      // GF_PLUGIN.startPerf("async_applyState "+state.cellId);
+      state.async_applyState();
+      // GF_PLUGIN.stopPerf("async_applyState "+state.cellId);
     });
   }
 
@@ -217,7 +196,9 @@ export default class StateHandler {
    *
    * @memberof StateHandler
    */
-  async_applyStates() {
+  async async_applyStates() {
+    GF_PLUGIN.startPerf("async_applyStates");
     this.applyStates();
+    GF_PLUGIN.stopPerf("async_applyStates");
   }
 }

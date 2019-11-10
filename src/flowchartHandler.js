@@ -19,7 +19,9 @@ export default class FlowchartHandler {
     this.$scope = $scope || null;
     this.$elem = elem.find('.flowchart-panel__chart');
     this.ctrl = ctrl;
+    // this.flowcharts = new Map();
     this.flowcharts = [];
+    this.currentFlowchart = 'Main';
     this.data = data;
     this.firstLoad = true;
     this.changeSourceFlag = false;
@@ -68,6 +70,7 @@ export default class FlowchartHandler {
   import(obj) {
     GF_PLUGIN.log(1, 'FlowchartHandler.import()');
     GF_PLUGIN.log(0, 'FlowchartHandler.import() obj', obj);
+    // this.flowcharts.clear();
     this.flowcharts = [];
     if (obj !== undefined && obj !== null && obj.length > 0) {
       obj.forEach(map => {
@@ -75,6 +78,7 @@ export default class FlowchartHandler {
         const newData = {};
         const fc = new Flowchart(map.name, map.xml, container, this.ctrl, newData);
         fc.import(map);
+        // this.flowcharts.set(fc.data.name,fc);
         this.flowcharts.push(fc);
         this.data.push(newData);
       });
@@ -82,14 +86,16 @@ export default class FlowchartHandler {
   }
 
   /**
-   * Get flowchart in index position
+   * Get flowchart with name
    *
-   * @param {Number} index
+   * @param {string} name
    * @returns {Flowchart}
    * @memberof FlowchartHandler
    */
-  getFlowchart(index) {
-    return this.flowcharts[index];
+  getFlowchart(name) {
+    // if(name) return this.flowcharts.get(name);
+    // else return this.flowcharts.get(this.currentFlowchart);
+    return this.flowcharts[0];
   }
 
   /**
@@ -150,6 +156,7 @@ export default class FlowchartHandler {
    */
   render() {
     GF_PLUGIN.log(1, 'flowchartHandler.render()');
+    GF_PLUGIN.startPerf(`${this.constructor.name}.render()`);
     // not repeat render if mouse down
     this.optionsFlag = true;
     if (!this.mousedown) {
@@ -191,6 +198,7 @@ export default class FlowchartHandler {
         this.firstLoad = false;
       }
     }
+    GF_PLUGIN.stopPerf(`${this.constructor.name}.render()`);
   }
 
   /**
@@ -260,12 +268,14 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   refreshStates(rules,series) {
+    GF_PLUGIN.startPerf(`${this.constructor.name}.refreshStates()`);
     if (this.changeRuleFlag) {
       this.updateStates(rules);
       this.changeRuleFlag = false;
     }
     this.setStates(rules, series);
     this.applyStates();
+    GF_PLUGIN.stopPerf(`${this.constructor.name}.refreshStates()`);
   }
 
   refresh() {
@@ -280,15 +290,19 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   setStates(rules, series) {
+    GF_PLUGIN.startPerf(`${this.constructor.name}.setStates()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.setStates(rules, series);
     });
+    GF_PLUGIN.stopPerf(`${this.constructor.name}.setStates()`);
   }
 
   updateStates(rules) {
+    GF_PLUGIN.startPerf(`${this.constructor.name}.updateStates()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.updateStates(rules);
     });
+    GF_PLUGIN.stopPerf(`${this.constructor.name}.updateStates()`);
   }
 
   /**
@@ -297,10 +311,12 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   applyStates() {
+    GF_PLUGIN.startPerf(`${this.constructor.name}.applyStates()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.applyStates();
     });
     this.refresh();
+    GF_PLUGIN.stopPerf(`${this.constructor.name}.applyStates()`);
   }
 
   /**
@@ -345,7 +361,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   setMap(objToMap) {
-    const flowchart = this.getFlowchart(0);
+    const flowchart = this.getFlowchart(this.currentFlowchart);
     this.onMapping.active = true;
     this.onMapping.object = objToMap;
     this.onMapping.id = objToMap.getId();
@@ -359,7 +375,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   unsetMap() {
-    const flowchart = this.getFlowchart(0);
+    const flowchart = this.getFlowchart(this.currentFlowchart);
     this.onMapping.active = false;
     this.onMapping.object = undefined;
     this.onMapping.id = '';
@@ -407,10 +423,9 @@ export default class FlowchartHandler {
    * @param {number} index - index of flowchart
    * @memberof FlowchartHandler
    */
-  openDrawEditor(index) {
-    const urlEditor = this.getFlowchart(index).getUrlEditor();
-    this.currentFlowchartIndex = index;
-    const theme = this.getFlowchart(index).getThemeEditor();
+  openDrawEditor() {
+    const urlEditor = this.getFlowchart().getUrlEditor();
+    const theme = this.getFlowchart().getThemeEditor();
     const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}`;
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;

@@ -1,3 +1,5 @@
+import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants";
+
 mxTooltipHandler.prototype.show = function(tip, x, y) {
   // GF_PLUGIN.log(1, 'mxTooltipHandler.prototype.show()');
 
@@ -16,6 +18,7 @@ mxTooltipHandler.prototype.show = function(tip, x, y) {
       this.div.appendChild(tip);
     }
     this.$div.place_tt(x + 20, y);
+    GF_PLUGIN.log(0,'mxTooltipHandler.prototype.show div',this.div.innerHTML)
     this.div.style.visibility = '';
     mxUtils.fit(this.div);
 };

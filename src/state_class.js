@@ -79,6 +79,7 @@ export default class State {
    * @memberof State
    */
   async async_applyState() {
+    // new Promise (this.applyState.bind(this));
     this.applyState();
   }
 
@@ -101,7 +102,6 @@ export default class State {
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
       const color = rule.getColorForLevel(level);
-      const tooltipName = rule.data.alias + "_" + serie.alias; 
 
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
@@ -114,22 +114,18 @@ export default class State {
           // tooltips
           if (rule.toTooltipize(level)) {
             // Metrics
+            if (this.tooltipHandler == null) this.tooltipHandler = new TooltipHandler(this.mxcell);
             let tpColor = null;
             let label = (rule.data.tooltipLabel == null || rule.data.tooltipLabel.length === 0) ? serie.alias : rule.data.tooltipLabel;
             if (rule.data.tooltipColors) tpColor = color;
-            this.addTooltip(tooltipName, label, FormattedValue, tpColor, rule.data.tpDirection);
+            let metric = this.tooltipHandler.addMetric().setLabel(label).setValue(FormattedValue).setColor(tpColor).setDirection(rule.data.tpDirection);
             // Graph
-            if (rule.data.tpGraph)
-              this.addTooltipGraph(
-                tooltipName,                
-                rule.data.tpGraphType,
-                rule.data.tpGraphSize,
-                serie,
-                rule.data.tpGraphLow,
-                rule.data.tpGraphHigh,
-              );
+            if (rule.data.tpGraph) {
+              let graph = metric.addGraph(rule.data.tpGraphType);
+              graph.setColor(tpColor).setSerie(serie).setSize(rule.data.tpGraphSize).setScaling(rule.data.tpGraphLow,rule.data.tpGraphHigh);
+            }
             // Date
-            this.updateTooltipDate();
+            this.tooltipHandler.updateDate();
           }
 
           // Color Shape
@@ -468,7 +464,7 @@ export default class State {
     this.styleKeys.forEach(key => {
       if (this.matchedStyle[key]) {
         const color = this.currentColors[key];
-        this.xgraph.setStyleCell(this.mxcell, key, color);
+        this.xgraph.setStyleCell(this.mxcell, key, color, true);
         if (color !== this.originalColors[key]) this.changedStyle[key] = true;
       }
     });
@@ -584,7 +580,9 @@ export default class State {
       } else if (this.changedLink) {
         this.resetLink();
       }
-    } else if (this.changed) this.reset();
+    } else if (this.changed) {
+      this.reset();
+    }
   }
 
   /**

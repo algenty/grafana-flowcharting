@@ -65,7 +65,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="state in flowchartHandler.getFlowchart(0).getStateHandler().getStates()"
+						<tr ng-repeat="state in flowchartHandler.getFlowchart().getStateHandler().getStates()"
 							ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
 							<td>
 								<div class="flowchartTable-editor" ng-dblclick="editor.onEdit(state)">
@@ -145,7 +145,7 @@
 			<button class="btn btn-danger btn-small" ng-click="editor.reset()" style="margin-right: 5px;">
 				<i class="fa fa-power-off"></i> Reinit graph and color
 			</button>
-			<button ng-show="flowchartHandler.getFlowchart(0).getStateHandler().edited" class="btn btn-secondary btn-small"
+			<button ng-show="flowchartHandler.getFlowchart().getStateHandler().edited" class="btn btn-secondary btn-small"
 				ng-click="editor.apply()" style="margin-right: 5px;">
 				<i class="fa fa-save"></i> Apply changes
 			</button>

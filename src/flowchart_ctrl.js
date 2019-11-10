@@ -1,33 +1,21 @@
-import FlowChartingPlugin from 'plugin';
+import FlowChartingPlugin from './plugin';
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import TimeSeries from 'grafana/app/core/time_series2';
 import kbn from 'grafana/app/core/utils/kbn';
-
-// Tabs
-// import { mappingOptionsTab } from './mapping_options';
-// import { inspectOptionsTab } from './inspect_options';
-// import { flowchartOptionsTab } from './flowchart_options';
-import { emptyOptionsTab } from './empty_options';
-
-// Controller
-import FlowchartOptionsCtrl from './flowchart_options';
-// import EmptyOptionsCtrl from './empty_options';
-
-// Handlers
+import { mappingOptionsTab } from './mapping_options';
+import { flowchartOptionsTab } from './flowchart_options';
+import { inspectOptionsTab } from './inspect_options';
 import RulesHandler from './rulesHandler';
 import FlowchartHandler from './flowchartHandler';
 
-const u = require('./utils');
-window.u = window.u || u;
-
 class FlowchartCtrl extends MetricsPanelCtrl {
-  /* @ngInject */
+  /** @ngInject **/
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
-    this.plugin = FlowChartingPlugin.init($scope, $injector, $rootScope, templateSrv);
-    this.version = GF_PLUGIN.getVersion();
+    FlowChartingPlugin.init($scope,templateSrv);
     this.$rootScope = $rootScope;
     this.$scope = $scope;
+    this.version = GF_PLUGIN.getVersion();
     this.templateSrv = templateSrv;
     this.unitFormats = kbn.getUnitFormats();
     this.changedSource = true;
@@ -58,18 +46,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
     this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-    $rootScope.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
+    if($scope.$root.onAppEvent) $scope.$root.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
   }
 
   //
   // EVENTS FCT
   //
   onInitEditMode() {
-    // this.addEditorTab('Flowchart', flowchartOptionsTab, 2);
-    // this.addEditorTab('Mapping', mappingOptionsTab, 3);
-    // this.addEditorTab('Inspect', inspectOptionsTab, 4);
-    this.addEditorTab('Empty', emptyOptionsTab, 5);
-    // this.addEditorTab('Empty', 'public/plugins/agenty-flowcharting-panel/partials/empty_options.html', 5);
+    this.addEditorTab('Flowchart', flowchartOptionsTab, 2);
+    this.addEditorTab('Mapping', mappingOptionsTab, 3);
+    this.addEditorTab('Inspect', inspectOptionsTab, 4);
   }
 
   onRefresh() {
@@ -113,6 +99,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     GF_PLUGIN.log(1, 'FlowchartCtrl.link()');
+    GF_PLUGIN.startPerf(`${this.constructor.name}.link()`);
 
     // RULES
     const newRulesData = [];
@@ -137,6 +124,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // Versions
     this.panel.newFlag = false;
     this.panel.version = this.version;
+    GF_PLUGIN.stopPerf(`${this.constructor.name}.link()`);
   }
 
   exportSVG() {
@@ -186,4 +174,5 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };
+
 FlowchartCtrl.templateUrl = './partials/module.html';

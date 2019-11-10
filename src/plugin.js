@@ -1,29 +1,47 @@
-import $ from 'jquery';
 export default class FlowChartingPlugin {
-  // constructor(context_root) {
-  /* @ngInject */
   constructor(context_root) {
-    this.contextroot = context_root;
-    this.dirname = this.contextroot + '/public/plugins/agenty-flowcharting-panel/';
+    this.contextRoot = context_root;
     this.data = this.loadJson();
     this.repo = this.getRepo();
-    this.logLevel = 0;
+    this.logLevel = 3;
     this.logDisplay = true;
-    window.GF_PLUGIN = window.GF_PLUGIN || this;
+    this.perf = true;
+    this.marky = null;
+  }
+
+  static initUtils() {
+    const u = require('./utils');
+    window.u = window.u || u;
   }
 
   static init($scope, $injector, $rootScope, templateSrv) {
-    let plugin;
-    if($rootScope == undefined) {
-      plugin = new FlowChartingPlugin('');
+    FlowChartingPlugin.initUtils();
+    let plugin, contextRoot;
+    if($scope == undefined) {
+      console.warn("$scope is undefined, use __dirname instead");
+      contextRoot = __dirname;
+      if (contextRoot.length >0) plugin = new FlowChartingPlugin(contextRoot);
+      else {
+        contextRoot = FlowChartingPlugin.defaultContextRoot;
+        console.warn("__dirname is empty, user default",contextRoot);
+        plugin = new FlowChartingPlugin(contextRoot);
+      }
     }
     else {
-      plugin = new FlowChartingPlugin($rootScope.appSubUrl);
+      contextRoot = $scope.$root.appSubUrl + FlowChartingPlugin.defaultContextRoot;
+      console.info("Context-root for plugin is",contextRoot);
+      plugin = new FlowChartingPlugin(contextRoot);
       plugin.$rootScope = $rootScope;
+      plugin.$scope = $scope;
+      plugin.$injector = $injector;
       plugin.templateSrv = templateSrv;
     }
     window.GF_PLUGIN = plugin;
     return plugin;
+  }
+
+  setPerf(bool) {
+    this.perf = bool;
   }
 
   getLevel() {
@@ -32,6 +50,10 @@ export default class FlowChartingPlugin {
 
   setLevel(level) {
     this.logLevel = level;
+  }
+
+  getTemplateSrv() {
+    return this.templateSrv;
   }
 
   isLogEnable() {
@@ -43,10 +65,11 @@ export default class FlowChartingPlugin {
   }
 
   getRepo() {
+    let url = null;
     this.data.info.links.forEach(link => {
-      if (link.name === 'Documentation') return link.url;
-      return null;
+      if (link.name === 'Documentation') url =  link.url;
     });
+    return url;
   }
 
   loadJson() {
@@ -55,19 +78,17 @@ export default class FlowChartingPlugin {
       async: false
     });
 
-    $.getJSON(`${this.dirname}/plugin.json`, obj => {
+    $.getJSON(`${this.contextRoot}/plugin.json`, obj => {
       data = obj;
     });
     return data;
   }
 
   getRootPath() {
-    return this.dirname;
+    return this.contextRoot;
   }
 
-  getRepoPath() {}
-
-  getVersion() {
+   getVersion() {
     return this.data.info.version;
   }
 
@@ -92,11 +113,11 @@ export default class FlowChartingPlugin {
   }
 
   getPartialPath() {
-    return `${this.getRootPath}/partials/`;
+    return `${this.getRootPath()}/partials/`;
   }
 
   popover(text, tagBook, tagImage) {
-    const url = plugin.repository;
+    const url = this.repo;
     const images = `${this.repo}images/`;
     const textEncoded = String(text)
       .replace(/&/g, '&amp;')
@@ -116,6 +137,22 @@ export default class FlowChartingPlugin {
       <div style="flex:1;height:100px;margin-bottom: 20px;">${book}</div>
       <div style="flex-basis: 100%;height:100px;margin-bottom:20px;">${image}</div>
     </div>`;
+  }
+
+  startPerf(name) {
+    if(this.perf) {
+      if(this.marky == null) this.marky = u.getMarky();
+      if(name == null) name = "Flowcharting";
+      return this.marky.mark(name);
+    }
+  }
+
+  stopPerf(name) {
+    if(this.perf) {
+      if(name == null) name = "Flowcharting";
+      let entry = this.marky.stop(name);
+      console.log("Perfomance of "+name,entry);
+    }
   }
 
   log(level, title, obj) {
@@ -146,6 +183,4 @@ export default class FlowChartingPlugin {
     }
   }
 }
-
-// /* @ngInject */
-FlowChartingPlugin.init();
+FlowChartingPlugin.defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';

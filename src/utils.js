@@ -1,5 +1,7 @@
 const pako = require('pako');
 const vkbeautify = require('vkbeautify');
+const colorconv = require('color-normalize');
+const marky = require('marky');
 
 // sources :
 // https://jgraph.github.io/drawio-tools/tools/convert.html
@@ -166,7 +168,6 @@ module.exports = {
     }
   },
 
-  // sleep time expects milliseconds
   sleep(time) {
     return new Promise(resolve => setTimeout(resolve, time));
   },
@@ -190,12 +191,14 @@ module.exports = {
 
   matchString(str, pattern) {
     if (str === undefined || pattern === undefined || str.length === 0 || pattern.length === 0) {
+      // GF_PLUGIN.log(0, `Match str=${str} pattern=${pattern}`, false);
       return false;
     }
     if (str === pattern) return true;
     const regex = this.stringToJsRegex(pattern);
     const matching = str.toString().match(regex);
     if (matching) {
+      // GF_PLUGIN.log(0, `Match str=${str} pattern=${pattern}`, true);
       return true;
     }
     return false;
@@ -219,6 +222,33 @@ module.exports = {
     }
   },
 
+  generateColor(colorStart, colorEnd, colorCount) {
+    // The beginning of your gradient
+    let start = colorconv(colorStart, 'uint8');
+    let end = colorconv(colorEnd, 'uint8');
+    // The number of colors to compute
+    var len = colorCount;
+
+    //Alpha blending amount
+    var alpha = 0.0;
+
+    var saida = [];
+
+    for (i = 0; i < len; i++) {
+      var c = [];
+      alpha += 1.0 / len;
+
+      c[0] = start[0] * alpha + (1 - alpha) * end[0];
+      c[1] = start[1] * alpha + (1 - alpha) * end[1];
+      c[2] = start[2] * alpha + (1 - alpha) * end[2];
+      c[3] = start[3] * alpha + (1 - alpha) * end[3];
+
+      saida.push(`rgba(${c[0]},${c[1]},${c[2]},${c[3]})`);
+    }
+
+    return saida;
+  },
+
   prettifyJSON(text) {
     try {
       return vkbeautify.json(text);
@@ -227,4 +257,11 @@ module.exports = {
       return text;
     }
   },
+
+  getMarky() {
+    return marky;
+  },
+
+  log(level, title, obj) {
+  }
 };

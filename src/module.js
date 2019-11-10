@@ -1,4 +1,3 @@
-import { FlowChartingPlugin } from './plugin';
 import { loadPluginCss } from 'grafana/app/plugins/sdk';
 import { FlowchartCtrl } from './flowchart_ctrl';
 

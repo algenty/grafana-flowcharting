@@ -97,6 +97,7 @@ export default class Flowchart {
     if (this.xgraph === undefined)
       this.xgraph = new XGraph(this.container, this.data.type, this.getContent());
     if (this.data.xml !== undefined && this.data.xml !== null) {
+      if (this.data.download) this.xgraph.setXmlGraph(this.getContent());
       if (this.data.allowDrawio) this.xgraph.allowDrawio(true);
       else this.xgraph.allowDrawio(false);
       this.setOptions();
@@ -112,23 +113,47 @@ export default class Flowchart {
     }
   }
 
+  /**
+   *Get states handler
+   *
+   * @returns
+   * @memberof Flowchart
+   */
   getStateHandler() {
     return this.stateHandler;
   }
 
+  /**
+   *Get XGraph
+   *
+   * @returns
+   * @memberof Flowchart
+   */
   getXGraph() {
     return this.xgraph;
   }
 
+  /**
+   *Init states with rules and series
+   *
+   * @param {*} rules
+   * @param {*} series
+   * @memberof Flowchart
+   */
   setStates(rules, series) {
     GF_PLUGIN.log(1, `flowchart[${this.data.name}].setStates()`);
-    GF_PLUGIN.log(0, `flowchart[${this.data.name}].setStates() rules`, rules);
-    GF_PLUGIN.log(0, `flowchart[${this.data.name}].setStates() series`, series);
+    // GF_PLUGIN.log(0, `flowchart[${this.data.name}].setStates() rules`, rules);
+    // GF_PLUGIN.log(0, `flowchart[${this.data.name}].setStates() series`, series);
     if (rules === undefined) GF_PLUGIN.log(3, "Rules shoudn't be null");
     if (series === undefined) GF_PLUGIN.log(3, "Series shoudn't be null");
     this.stateHandler.setStates(rules, series);
   }
 
+  /**
+   *Init options of graph
+   *
+   * @memberof Flowchart
+   */
   setOptions() {
     this.setScale(this.data.scale);
     this.setCenter(this.data.center);
@@ -140,23 +165,46 @@ export default class Flowchart {
   }
 
 
-
+  /**
+   *Apply new states (colors,text ...)
+   *
+   * @memberof Flowchart
+   */
   applyStates() {
     GF_PLUGIN.log(1, `flowchart[${this.data.name}].applyStates()`);
+    // this.stateHandler.applyStates();
+    GF_PLUGIN.startPerf(`${this.constructor.name}.applyStates()`);
     this.stateHandler.applyStates();
+    GF_PLUGIN.stopPerf(`${this.constructor.name}.applyStates()`);
   }
 
+  /**
+   *Apply options
+   *
+   * @memberof Flowchart
+   */
   applyOptions() {
     GF_PLUGIN.log(1, `flowchart[${this.data.name}].refresh()`);
-    GF_PLUGIN.log(0, `flowchart[${this.data.name}].refresh() data`, this.data);
+    // GF_PLUGIN.log(0, `flowchart[${this.data.name}].refresh() data`, this.data);
     this.xgraph.applyGraph(this.width, this.height);
   }
 
+  /**
+   *Refresh graph
+   *
+   * @memberof Flowchart
+   */
   refresh()
   {
     this.xgraph.refresh();
   }
 
+  /**
+   *Reset and redraw graph when source changed
+   *
+   * @param {*} xmlGraph
+   * @memberof Flowchart
+   */
   redraw(xmlGraph) {
     GF_PLUGIN.log(1, `flowchart[${this.data.name}].redraw()`);
     if (xmlGraph !== undefined) {
@@ -169,6 +217,11 @@ export default class Flowchart {
     this.applyOptions();
   }
 
+  /**
+   *Reload source of graph
+   *
+   * @memberof Flowchart
+   */
   reload() {
     GF_PLUGIN.log(1, `flowchart[${this.data.name}].reload()`);
     if (this.xgraph !== undefined && this.xgraph !== null) {
@@ -258,7 +311,8 @@ export default class Flowchart {
   getContent() {
     GF_PLUGIN.log(1, `flowchart[${this.data.name}].getContent()`);
     if (this.data.download) {
-      let content = this.loadContent(this.data.url);
+      let url = this.templateSrv.replaceWithText(this.data.url);
+      let content = this.loadContent(url);
       if (content !== null) {
         return content;
       } else return '';
@@ -268,6 +322,13 @@ export default class Flowchart {
     }
   }
 
+  /**
+   *Load source from url
+   *
+   * @param {*} url
+   * @returns
+   * @memberof Flowchart
+   */
   loadContent(url) {
     GF_PLUGIN.log(1, `flowchart[${this.data.name}].loadContent()`);
     var req = mxUtils.load(url);
