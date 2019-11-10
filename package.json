@@ -36,11 +36,11 @@
     "express": "^4.16.4",
     "babel-polyfill": "^6.26.0",
     "jquery": "^3.4.1",
-    "angular": "^1.7.8"
-  },
-  "dependencies": {
-    "mxgraph": "^4.0.4",
+    "angular": "^1.7.8",
     "chartist": "^0.11.4",
+    "marky": "^1.2.1",
+    "mxgraph": "^4.0.4",
     "vkbeautify": "^0.99.3"
-  }
+  },
+  "dependencies": {}
 }
