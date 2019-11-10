@@ -1,5 +1,6 @@
 /* eslint-disable prefer-destructuring */
 import Flowchart from './flowchart_class';
+import { resolve } from 'url';
 
 /**
  * Class FlowchartHandler
@@ -161,26 +162,39 @@ export default class FlowchartHandler {
     this.optionsFlag = true;
     if (!this.mousedown) {
       // SOURCE
-      if (this.changeSourceFlag) {
-        this.load();
-        this.changeSourceFlag = false;
-        this.changeRuleFlag = true;
-        this.optionsFlag = true;
-      }
-      // OPTIONS
-      if (this.changeOptionFlag) {
-        this.setOptions();
-        this.changeOptionFlag = false;
-        this.optionsFlag = true;
-      }
-      // RULES or DATAS
-      if (this.changeRuleFlag || this.changeDataFlag) {
-        const rules = this.ctrl.rulesHandler.getRules();
-        const series = this.ctrl.series;
-        this.async_refreshStates(rules, series);
-        this.changeDataFlag = false;
-        this.optionsFlag = false;
-      }
+      new Promise((resolve, reject) => {
+        // console.log("SOURCE");  
+        if (this.changeSourceFlag) {
+          this.load();
+          this.changeSourceFlag = false;
+          this.changeRuleFlag = true;
+          this.optionsFlag = true;
+        }
+        resolve(true);
+      })
+        .then(() => {
+          // OPTIONS
+          new Promise((resolve, reject) => {
+            // console.log("OPTIONS");
+            if (this.changeOptionFlag) {
+              this.setOptions();
+              this.changeOptionFlag = false;
+              this.optionsFlag = true;
+            }
+            resolve(true);
+          })
+            .then(() => {
+            // RULES or DATAS
+            // console.log("RULES or DATAS");
+            if (this.changeRuleFlag || this.changeDataFlag) {
+              const rules = this.ctrl.rulesHandler.getRules();
+              const series = this.ctrl.series;
+              this.async_refreshStates(rules, series);
+              this.changeDataFlag = false;
+              this.optionsFlag = false;
+            }
+          })
+        })
 
       // OTHER : Resize, OnLoad
       if (this.optionsFlag || this.firstLoad) {

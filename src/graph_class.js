@@ -806,7 +806,7 @@ export default class XGraph {
     GF_PLUGIN.log.info( 'XGraph.eventDbClick()');
     GF_PLUGIN.log.debug( 'XGraph.eventDbClick() evt', evt);
     GF_PLUGIN.log.debug( 'XGraph.eventDbClick() cell', mxcell);
-    GF_PLUGIN.log(
+    GF_PLUGIN.log.info(
       1,
       'XGraph.eventDbClick() container.getBoundingClientRect()',
       this.container.getBoundingClientRect()

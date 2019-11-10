@@ -138,7 +138,7 @@ export default class FlowChartingPlugin {
 FlowChartingPlugin.defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
 
 class Perf {
-  enablePerf = true;
+  enablePerf = false;
   marky = null;
   constructor() {
   }

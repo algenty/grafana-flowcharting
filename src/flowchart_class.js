@@ -172,9 +172,7 @@ export default class Flowchart {
    */
   applyStates() {
     GF_PLUGIN.log.info( `flowchart[${this.data.name}].applyStates()`);
-    GF_PLUGIN.perf.start(`flowchart[${this.data.name}].applyStates()`);
     this.stateHandler.applyStates();
-    GF_PLUGIN.perf.stop(`flowchart[${this.data.name}].applyStates()`);
   }
 
   /**

@@ -184,10 +184,7 @@ export default class StateHandler {
   applyStates() {
     GF_PLUGIN.log.info( 'StateHandler.applyStates()');
     this.states.forEach(state => {
-      // state.applyState();
-      // GF_PLUGIN.perf.start("async_applyState "+state.cellId);
       state.async_applyState();
-      // GF_PLUGIN.perf.stop("async_applyState "+state.cellId);
     });
   }
 
