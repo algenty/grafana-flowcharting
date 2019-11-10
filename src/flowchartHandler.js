@@ -160,48 +160,54 @@ export default class FlowchartHandler {
     GF_PLUGIN.perf.start('flowchartHandler.render()');
     // not repeat render if mouse down
     this.optionsFlag = true;
-    if (!this.mousedown) {
+    self = this;
+    if (!self.mousedown) {
       // SOURCE
       new Promise((resolve, reject) => {
-        // console.log("SOURCE");  
-        if (this.changeSourceFlag) {
-          this.load();
-          this.changeSourceFlag = false;
-          this.changeRuleFlag = true;
-          this.optionsFlag = true;
+        GF_PLUGIN.log.debug("render : SOURCE");  
+        if (self.changeSourceFlag) {
+          self.load();
+          self.changeSourceFlag = false;
+          self.changeRuleFlag = true;
+          self.optionsFlag = true;
         }
         resolve(true);
       })
         .then(() => {
           // OPTIONS
           new Promise((resolve, reject) => {
-            // console.log("OPTIONS");
-            if (this.changeOptionFlag) {
-              this.setOptions();
-              this.changeOptionFlag = false;
-              this.optionsFlag = true;
+            GF_PLUGIN.log.debug("render : OPTIONS");
+            if (self.changeOptionFlag) {
+              self.setOptions();
+              self.changeOptionFlag = false;
+              self.optionsFlag = true;
             }
             resolve(true);
           })
             .then(() => {
-            // RULES or DATAS
-            // console.log("RULES or DATAS");
-            if (this.changeRuleFlag || this.changeDataFlag) {
-              const rules = this.ctrl.rulesHandler.getRules();
-              const series = this.ctrl.series;
-              this.async_refreshStates(rules, series);
-              this.changeDataFlag = false;
-              this.optionsFlag = false;
-            }
-          })
+              // RULES or DATAS
+              new Promise((resolve, reject) => {
+                GF_PLUGIN.log.debug("render : RULES or DATAS");
+                if (self.changeRuleFlag || self.changeDataFlag) {
+                  const rules = self.ctrl.rulesHandler.getRules();
+                  const series = self.ctrl.series;
+                  self.async_refreshStates(rules, series);
+                  self.changeDataFlag = false;
+                  self.optionsFlag = false;
+                }
+                resolve(true);
+              })
+                .then(() => {
+                  // OTHER : Resize, OnLoad
+                  GF_PLUGIN.log.debug("render : OTHER : Resize, OnLoad");
+                  if (self.optionsFlag || self.firstLoad) {
+                    self.applyOptions();
+                    self.optionsFlag = false;
+                    self.firstLoad = false;
+                  }
+                })
+            })
         })
-
-      // OTHER : Resize, OnLoad
-      if (this.optionsFlag || this.firstLoad) {
-        this.applyOptions();
-        this.optionsFlag = false;
-        this.firstLoad = false;
-      }
     }
     GF_PLUGIN.perf.stop('flowchartHandler.render()');
   }
@@ -408,13 +414,12 @@ export default class FlowchartHandler {
   listenMessage(event) {
     // if (event.origin !== urlEditor) return;
     // when editor is open
-    let index = this.currentFlowchartIndex;
     if (event.data === 'ready') {
       // send xml
-      event.source.postMessage(this.flowcharts[index].data.xml, event.origin);
+      event.source.postMessage(this.getFlowchart(this.currentFlowchart).data.xml, event.origin);
     } else {
       if (this.onEdit && event.data !== undefined && event.data.length > 0) {
-        this.flowcharts[index].redraw(event.data);
+        this.getFlowchart(this.currentFlowchart).redraw(event.data);
         this.sourceChanged();
         this.$scope.$apply();
         this.render();
@@ -430,12 +435,11 @@ export default class FlowchartHandler {
   /**
    *Open graph in draw.io
    *
-   * @param {number} index - index of flowchart
    * @memberof FlowchartHandler
    */
   openDrawEditor() {
-    const urlEditor = this.getFlowchart().getUrlEditor();
-    const theme = this.getFlowchart().getThemeEditor();
+    const urlEditor = this.getFlowchart(this.currentFlowchart).getUrlEditor();
+    const theme = this.getFlowchart(this.currentFlowchart).getThemeEditor();
     const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}`;
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;

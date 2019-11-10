@@ -93,7 +93,7 @@ export default class FlowChartingPlugin {
   }
 
   getShapesPath() {
-    return `${this.getLibsPath()}libs/shapes`;
+    return `${this.getLibsPath()}/shapes`;
   }
 
   getMxBasePath() {

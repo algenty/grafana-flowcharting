@@ -674,7 +674,7 @@ export default class XGraph {
       try {
         let endColor = this.getStyleCell(mxcell, style);
         let startColor = color;
-        let steps = u.generateColor(startColor, endColor, 10);
+        let steps = u.generateColor(startColor, endColor, 5);
         let count = 0;
         let self = this;
         function graduate(count, steps) {
@@ -683,7 +683,7 @@ export default class XGraph {
             // var caller = arguments.callee;
             window.setTimeout(function() {
               graduate(count + 1, steps);
-            }, 20);
+            }, 40);
           }
         }
         graduate(count, steps);
