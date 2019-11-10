@@ -59,25 +59,25 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRefresh() {
-    GF_PLUGIN.log(1, 'FlowchartCtrl.onRefresh()');
+    GF_PLUGIN.log.info( 'FlowchartCtrl.onRefresh()');
     this.onRender();
   }
 
   onVarChanged() {
-    GF_PLUGIN.log(1, 'FlowchartCtrl.onVarChanged()');
+    GF_PLUGIN.log.info( 'FlowchartCtrl.onVarChanged()');
     this.flowchartHandler.sourceChanged();
     this.flowchartHandler.render();
   }
 
   onRender() {
-    GF_PLUGIN.log(1, 'FlowchartCtrl.onRender()');
+    GF_PLUGIN.log.info( 'FlowchartCtrl.onRender()');
   }
 
   onDataReceived(dataList) {
-    GF_PLUGIN.log(1, 'FlowchartCtrl.onDataReceived()');
-    GF_PLUGIN.log(0, 'FlowchartCtrl.onDataReceived() dataList', dataList);
+    GF_PLUGIN.log.info( 'FlowchartCtrl.onDataReceived()');
+    GF_PLUGIN.log.debug( 'FlowchartCtrl.onDataReceived() dataList', dataList);
     this.series = dataList.map(this.seriesHandler.bind(this));
-    GF_PLUGIN.log(0, 'FlowchartCtrl.onDataReceived() this.series', dataList);
+    GF_PLUGIN.log.debug( 'FlowchartCtrl.onDataReceived() this.series', dataList);
     this.flowchartHandler.dataChanged();
     this.render();
   }
@@ -98,8 +98,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
-    GF_PLUGIN.log(1, 'FlowchartCtrl.link()');
-    GF_PLUGIN.startPerf(`${this.constructor.name}.link()`);
+    GF_PLUGIN.log.info( 'FlowchartCtrl.link()');
+    GF_PLUGIN.perf.start(`${this.constructor.name}.link()`);
 
     // RULES
     const newRulesData = [];
@@ -124,7 +124,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // Versions
     this.panel.newFlag = false;
     this.panel.version = this.version;
-    GF_PLUGIN.stopPerf(`${this.constructor.name}.link()`);
+    GF_PLUGIN.perf.stop(`${this.constructor.name}.link()`);
   }
 
   exportSVG() {
@@ -154,7 +154,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
 
   seriesHandler(seriesData) {
-    GF_PLUGIN.log(1, 'FlowchartCtrl.seriesHandler()');
+    GF_PLUGIN.log.info( 'FlowchartCtrl.seriesHandler()');
     const series = new TimeSeries({
       datapoints: seriesData.datapoints,
       alias: seriesData.target,

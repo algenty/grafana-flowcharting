@@ -427,7 +427,7 @@ export default class Rule {
   // LINK MAPS
   //
   addLinkMap(pattern) {
-    GF_PLUGIN.log(1, 'Rule.addLinkMap()');
+    GF_PLUGIN.log.info( 'Rule.addLinkMap()');
     const data = {};
     const m = new LinkMap(pattern, data);
     m.import(data);
@@ -595,7 +595,7 @@ export default class Rule {
         }
         return value;
       } catch (error) {
-        GF_PLUGIN.log(3, "datapoint for serie is null", error);
+        GF_PLUGIN.log.error( "datapoint for serie is null", error);
         return null;
       }
     }

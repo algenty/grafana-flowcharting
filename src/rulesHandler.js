@@ -14,7 +14,7 @@ export default class RulesHandler {
    * @memberof RulesHandler
    */
   constructor($scope, data) {
-    GF_PLUGIN.log(1, 'RulesHandler.constructor()');
+    GF_PLUGIN.log.info( 'RulesHandler.constructor()');
     this.$scope = $scope || null;
     this.rules = [];
     this.data = data;
@@ -28,8 +28,8 @@ export default class RulesHandler {
    * @memberof RulesHandler
    */
   import(obj) {
-    GF_PLUGIN.log(1, 'RuleHandler.import()');
-    GF_PLUGIN.log(0, 'RuleHandler.import() obj', obj);
+    GF_PLUGIN.log.info( 'RuleHandler.import()');
+    GF_PLUGIN.log.debug( 'RuleHandler.import() obj', obj);
     this.rules = [];
     let index = 1;
     if (obj !== undefined && obj !== null && obj.length > 0) {

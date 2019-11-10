@@ -168,8 +168,10 @@ module.exports = {
     }
   },
 
-  sleep(time) {
-    return new Promise(resolve => setTimeout(resolve, time));
+  sleep(ms,mess) {
+    var waitUntil = new Date().getTime() + ms ;
+    while (new Date().getTime() < waitUntil) true;
+    if(mess) console.log(mess);
   },
 
   uniqueID() {
@@ -191,14 +193,14 @@ module.exports = {
 
   matchString(str, pattern) {
     if (str === undefined || pattern === undefined || str.length === 0 || pattern.length === 0) {
-      // GF_PLUGIN.log(0, `Match str=${str} pattern=${pattern}`, false);
+      // GF_PLUGIN.log.debug( `Match str=${str} pattern=${pattern}`, false);
       return false;
     }
     if (str === pattern) return true;
     const regex = this.stringToJsRegex(pattern);
     const matching = str.toString().match(regex);
     if (matching) {
-      // GF_PLUGIN.log(0, `Match str=${str} pattern=${pattern}`, true);
+      // GF_PLUGIN.log.debug( `Match str=${str} pattern=${pattern}`, true);
       return true;
     }
     return false;

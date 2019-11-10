@@ -3,10 +3,10 @@ export default class FlowChartingPlugin {
     this.contextRoot = context_root;
     this.data = this.loadJson();
     this.repo = this.getRepo();
-    this.logLevel = 3;
-    this.logDisplay = true;
-    this.perf = true;
+    this.enablePerf = true;
     this.marky = null;
+    this.perf = new Perf();
+    this.log=new Log();
   }
 
   static initUtils() {
@@ -17,19 +17,19 @@ export default class FlowChartingPlugin {
   static init($scope, $injector, $rootScope, templateSrv) {
     FlowChartingPlugin.initUtils();
     let plugin, contextRoot;
-    if($scope == undefined) {
+    if ($scope == undefined) {
       console.warn("$scope is undefined, use __dirname instead");
       contextRoot = __dirname;
-      if (contextRoot.length >0) plugin = new FlowChartingPlugin(contextRoot);
+      if (contextRoot.length > 0) plugin = new FlowChartingPlugin(contextRoot);
       else {
         contextRoot = FlowChartingPlugin.defaultContextRoot;
-        console.warn("__dirname is empty, user default",contextRoot);
+        console.warn("__dirname is empty, user default", contextRoot);
         plugin = new FlowChartingPlugin(contextRoot);
       }
     }
     else {
       contextRoot = $scope.$root.appSubUrl + FlowChartingPlugin.defaultContextRoot;
-      console.info("Context-root for plugin is",contextRoot);
+      console.info("Context-root for plugin is", contextRoot);
       plugin = new FlowChartingPlugin(contextRoot);
       plugin.$rootScope = $rootScope;
       plugin.$scope = $scope;
@@ -38,10 +38,6 @@ export default class FlowChartingPlugin {
     }
     window.GF_PLUGIN = plugin;
     return plugin;
-  }
-
-  setPerf(bool) {
-    this.perf = bool;
   }
 
   getLevel() {
@@ -67,7 +63,7 @@ export default class FlowChartingPlugin {
   getRepo() {
     let url = null;
     this.data.info.links.forEach(link => {
-      if (link.name === 'Documentation') url =  link.url;
+      if (link.name === 'Documentation') url = link.url;
     });
     return url;
   }
@@ -88,7 +84,7 @@ export default class FlowChartingPlugin {
     return this.contextRoot;
   }
 
-   getVersion() {
+  getVersion() {
     return this.data.info.version;
   }
 
@@ -138,49 +134,68 @@ export default class FlowChartingPlugin {
       <div style="flex-basis: 100%;height:100px;margin-bottom:20px;">${image}</div>
     </div>`;
   }
+}
+FlowChartingPlugin.defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
 
-  startPerf(name) {
-    if(this.perf) {
-      if(this.marky == null) this.marky = u.getMarky();
-      if(name == null) name = "Flowcharting";
+class Perf {
+  enablePerf = true;
+  marky = null;
+  constructor() {
+  }
+
+  enable(bool) {
+    this.enablePerf = bool;
+  }
+
+  start(name) {
+    if (this.enablePerf) {
+      if (this.marky == null) this.marky = u.getMarky();
+      if (name == null) name = "Flowcharting";
       return this.marky.mark(name);
     }
   }
 
-  stopPerf(name) {
-    if(this.perf) {
-      if(name == null) name = "Flowcharting";
+  stop(name) {
+    if (this.enablePerf) {
+      if (name == null) name = "Flowcharting";
       let entry = this.marky.stop(name);
-      console.log("Perfomance of "+name,entry);
-    }
-  }
-
-  log(level, title, obj) {
-    // 0 : DEBUG
-    // 1 : INFO
-    // 2 : WARN
-    // 3 : ERROR
-    // eslint-disable-next-line no-undef
-    if (this.logDisplay !== undefined && this.logDisplay === true) {
-      // eslint-disable-next-line no-undef
-      if (this.logLevel !== undefined && level >= this.logLevel) {
-        if (level === 3) {
-          console.error(`ERROR : ${title}`, obj);
-        }
-        if (level === 2) {
-          console.warn(` WARN : ${title}`, obj);
-          return;
-        }
-        if (level === 1) {
-          console.info(` INFO : ${title}`, obj);
-          return;
-        }
-        if (level === 0) {
-          console.debug(`DEBUG : ${title}`, obj);
-          return;
-        }
-      }
+      console.log("Perfomance of " + name, entry);
     }
   }
 }
-FlowChartingPlugin.defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
+
+
+class Log {
+  logLevel = 2;
+  logDisplay = true;
+  constructor() {
+
+  }
+
+  toDisplay(level) {
+    if (this.logDisplay !== undefined && this.logDisplay === true) {
+      if (this.logLevel !== undefined && level >= this.logLevel) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  debug(title,obj) {
+    if(this.toDisplay(Log.DEBUG)) console.debug(`GF DEBUG : ${title}`, obj);
+  }
+
+  warn(title,obj) {
+    if(this.toDisplay(Log.WARN)) console.debug(`GF WARN : ${title}`, obj);
+  }
+  info(title,obj) {
+    if(this.toDisplay(Log.INFO)) console.debug(`GF INFO : ${title}`, obj);
+  }
+  error(title,obj) {
+    if(this.toDisplay(Log.ERROR)) console.debug(`GF ERROR : ${title}`, obj);
+  }
+}
+Log.DEBUG = 0;
+Log.INFO = 1;
+Log.WARN = 2;
+Log.ERROR = 3;

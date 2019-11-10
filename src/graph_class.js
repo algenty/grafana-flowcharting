@@ -15,7 +15,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   constructor(container, type, definition) {
-    GF_PLUGIN.log(1, 'XGraph.constructor()');
+    GF_PLUGIN.log.info( 'XGraph.constructor()');
     this.container = container;
     this.xmlGraph = undefined;
     this.type = type;
@@ -50,7 +50,7 @@ export default class XGraph {
   }
 
   static initMxGgraph() {
-    GF_PLUGIN.startPerf(`${this.constructor.name}.initMxGgraph()`);
+    GF_PLUGIN.perf.start(`${this.constructor.name}.initMxGgraph()`);
     window.mxLanguages = window.mxLanguages || ['en'];
 
     require('./libs/sanitizer.min');
@@ -169,7 +169,7 @@ export default class XGraph {
     // Specifics function for Flowcharting
     require('./Graph_over');
     window.Graph = window.Graph || Graph;
-    GF_PLUGIN.stopPerf(`${this.constructor.name}.initMxGgraph()`);
+    GF_PLUGIN.perf.stop(`${this.constructor.name}.initMxGgraph()`);
   }
 
   /**
@@ -178,8 +178,8 @@ export default class XGraph {
    * @memberof XGraph
    */
   initGraph() {
-    GF_PLUGIN.log(1, 'XGraph.initGraph()');
-    GF_PLUGIN.startPerf(`${this.constructor.name}.initGraph()`);
+    GF_PLUGIN.log.info( 'XGraph.initGraph()');
+    GF_PLUGIN.perf.start(`${this.constructor.name}.initGraph()`);
     this.graph = new Graph(this.container);
     this.graph.getTooltipForCell = this.getTooltipForCell;
 
@@ -205,7 +205,7 @@ export default class XGraph {
 
     // DB CLICK
     this.graph.dblClick = this.eventDbClick.bind(this);
-    GF_PLUGIN.stopPerf(`${this.constructor.name}.initGraph()`);
+    GF_PLUGIN.perf.stop(`${this.constructor.name}.initGraph()`);
   }
 
   /**
@@ -214,7 +214,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   drawGraph() {
-    GF_PLUGIN.log(1, 'XGraph.drawGraph()');
+    GF_PLUGIN.log.info( 'XGraph.drawGraph()');
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
@@ -222,7 +222,7 @@ export default class XGraph {
       const codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, this.graph.getModel());
     } catch (error) {
-      GF_PLUGIN.log(3, 'Error in draw', error);
+      GF_PLUGIN.log.error( 'Error in draw', error);
     } finally {
       this.graph.getModel().endUpdate();
       this.cells['id'] = this.getCurrentCells('id');
@@ -238,7 +238,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   applyGraph() {
-    GF_PLUGIN.log(1, 'XGraph.refreshGraph()');
+    GF_PLUGIN.log.info( 'XGraph.refreshGraph()');
     if (!this.scale) this.zoomGraph(this.zoomPercent);
     else this.unzoomGraph();
     this.tooltipGraph(this.tooltip);
@@ -365,7 +365,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   zoomGraph(percent) {
-    GF_PLUGIN.log(1, 'XGraph.zoomGraph()');
+    GF_PLUGIN.log.info( 'XGraph.zoomGraph()');
     if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
       const ratio = percent.replace('%', '') / 100;
       this.graph.zoomTo(ratio, true);
@@ -429,7 +429,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   setXmlGraph(xmlGraph) {
-    GF_PLUGIN.log(1, 'XGraph.setXmlGraph()');
+    GF_PLUGIN.log.info( 'XGraph.setXmlGraph()');
     if (u.isencoded(xmlGraph)) this.xmlGraph = u.decode(xmlGraph, true, true, true);
     else this.xmlGraph = xmlGraph;
     this.drawGraph();
@@ -607,7 +607,7 @@ export default class XGraph {
         cell.id = newId;
       });
     } else {
-      GF_PLUGIN.log(2, `Cell ${oldId} not found`);
+      GF_PLUGIN.log.warn( `Cell ${oldId} not found`);
     }
   }
 
@@ -688,7 +688,7 @@ export default class XGraph {
         }
         graduate(count, steps);
       } catch (error) {
-        GF_PLUGIN.log(3, 'Error on graduate color', error);
+        GF_PLUGIN.log.error( 'Error on graduate color', error);
         this.graph.setCellStyles(style, color, [mxcell]);
       }
     } else this.graph.setCellStyles(style, color, [mxcell]);
@@ -743,8 +743,8 @@ export default class XGraph {
    * @memberof XGraph
    */
   setMap(onMappingObj) {
-    GF_PLUGIN.log(1, 'XGraph.setMapping()');
-    GF_PLUGIN.log(0, 'XGraph.setMapping() onMappingObject : ', onMappingObj);
+    GF_PLUGIN.log.info( 'XGraph.setMapping()');
+    GF_PLUGIN.log.debug( 'XGraph.setMapping() onMappingObject : ', onMappingObj);
     this.onMapping = onMappingObj;
     if (this.onMapping.active === true) {
       this.container.style.cursor = 'crosshair';
@@ -758,7 +758,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   unsetMap() {
-    GF_PLUGIN.log(1, 'XGraph.unsetMapping()');
+    GF_PLUGIN.log.info( 'XGraph.unsetMapping()');
     this.onMapping.active = false;
     this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
@@ -776,7 +776,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventClick(me) {
-    GF_PLUGIN.log(1, 'XGraph.eventClick()');
+    GF_PLUGIN.log.info( 'XGraph.eventClick()');
     const self = this;
 
     if (this.onMapping.active) {
@@ -803,9 +803,9 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventDbClick(evt, mxcell) {
-    GF_PLUGIN.log(1, 'XGraph.eventDbClick()');
-    GF_PLUGIN.log(0, 'XGraph.eventDbClick() evt', evt);
-    GF_PLUGIN.log(0, 'XGraph.eventDbClick() cell', mxcell);
+    GF_PLUGIN.log.info( 'XGraph.eventDbClick()');
+    GF_PLUGIN.log.debug( 'XGraph.eventDbClick() evt', evt);
+    GF_PLUGIN.log.debug( 'XGraph.eventDbClick() cell', mxcell);
     GF_PLUGIN.log(
       1,
       'XGraph.eventDbClick() container.getBoundingClientRect()',
@@ -824,20 +824,20 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventMouseWheel(evt, up) {
-    GF_PLUGIN.log(1, 'XGraph.eventMouseWheel()');
-    GF_PLUGIN.log(0, 'XGraph.eventMouseWheel() evt', evt);
-    GF_PLUGIN.log(0, 'XGraph.eventMouseWheel() up', up);
+    GF_PLUGIN.log.info( 'XGraph.eventMouseWheel()');
+    GF_PLUGIN.log.debug( 'XGraph.eventMouseWheel() evt', evt);
+    GF_PLUGIN.log.debug( 'XGraph.eventMouseWheel() up', up);
     if (this.graph.isZoomWheelEvent(evt)) {
       if (up == null || up == undefined) {
-        GF_PLUGIN.log(0, 'XGraph.eventMouseWheel() up', 'Not defined');
+        GF_PLUGIN.log.debug( 'XGraph.eventMouseWheel() up', 'Not defined');
         if (evt.deltaY < 0) up = true;
         else up = false;
       }
       // const rect = evt.target.getBoundingClientRect();
       // let offsetLeft = (evt.currentTarget.offsetLeft != undefined ? evt.currentTarget.offsetLeft : 0 );
       // let offsetTop = (evt.currentTarget.offsetTop != undefined ? evt.currentTarget.offsetTop : 0 )
-      // GF_PLUGIN.log(0, 'XGraph.eventMouseWheel() offsetLeft', offsetLeft);
-      // GF_PLUGIN.log(0, 'XGraph.eventMouseWheel() offsetTop', offsetTop);
+      // GF_PLUGIN.log.debug( 'XGraph.eventMouseWheel() offsetLeft', offsetLeft);
+      // GF_PLUGIN.log.debug( 'XGraph.eventMouseWheel() offsetTop', offsetTop);
       // var x = evt.layerX - offsetLeft;
       // var y = evt.layerY - offsetTop;
       var x = evt.layerX;
@@ -887,10 +887,10 @@ export default class XGraph {
    * @memberof XGraph
    */
   lazyZoomPointer(factor, offsetX, offsetY) {
-    GF_PLUGIN.log(1, 'XGraph.lazyZoomPointer()');
-    GF_PLUGIN.log(0, 'XGraph.lazyZoomPointer() factor', factor);
-    GF_PLUGIN.log(0, 'XGraph.lazyZoomPointer() offsetX', offsetX);
-    GF_PLUGIN.log(0, 'XGraph.lazyZoomPointer() offsetY', offsetY);
+    GF_PLUGIN.log.info( 'XGraph.lazyZoomPointer()');
+    GF_PLUGIN.log.debug( 'XGraph.lazyZoomPointer() factor', factor);
+    GF_PLUGIN.log.debug( 'XGraph.lazyZoomPointer() offsetX', offsetX);
+    GF_PLUGIN.log.debug( 'XGraph.lazyZoomPointer() offsetY', offsetY);
     let dx = offsetX * 2;
     let dy = offsetY * 2;
 
@@ -989,8 +989,8 @@ export default class XGraph {
    * @memberof XGraph
    */
   lazyZoomCell(mxcell) {
-    GF_PLUGIN.log(1, 'XGraph.lazyZoomCell() mxcell', mxcell);
-    GF_PLUGIN.log(0, 'XGraph.lazyZoomCell() mxcellState', this.graph.view.getState(mxcell));
+    GF_PLUGIN.log.info( 'XGraph.lazyZoomCell() mxcell', mxcell);
+    GF_PLUGIN.log.debug( 'XGraph.lazyZoomCell() mxcellState', this.graph.view.getState(mxcell));
     if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
       const state = this.graph.view.getState(mxcell);
       if (state !== null) {
@@ -1010,7 +1010,7 @@ export default class XGraph {
   }
 
   getTooltipForCell(cell) {
-    GF_PLUGIN.log(1, 'Graph.prototype.getTooltipForCell()');
+    GF_PLUGIN.log.info( 'Graph.prototype.getTooltipForCell()');
     let hasTips = false;
     let div = document.createElement('div');
     if (mxUtils.isNode(cell.value)) {

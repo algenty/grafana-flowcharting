@@ -90,21 +90,21 @@ export class MappingOptionsCtrl {
     };
 
     this.getCellNamesForShape = () => {
-      GF_PLUGIN.log(1, 'MappingOptionsCtrl.getCellNamesForShape()');
+      GF_PLUGIN.log.info( 'MappingOptionsCtrl.getCellNamesForShape()');
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getCellNamesForText = () => {
-      GF_PLUGIN.log(1, 'MappingOptionsCtrl.getCellNamesForText()');
+      GF_PLUGIN.log.info( 'MappingOptionsCtrl.getCellNamesForText()');
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getCellNamesForLink = () => {
-      GF_PLUGIN.log(1, 'MappingOptionsCtrl.getCellNamesForLink()');
+      GF_PLUGIN.log.info( 'MappingOptionsCtrl.getCellNamesForLink()');
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
@@ -126,7 +126,7 @@ export class MappingOptionsCtrl {
   }
 
   onRulesChange() {
-    GF_PLUGIN.log(1, 'MappingOptionsCtrl.onRulesChange()');
+    GF_PLUGIN.log.info( 'MappingOptionsCtrl.onRulesChange()');
     this.flowchartHandler.ruleChanged();
     this.render();
   }

@@ -43,7 +43,7 @@ export class FlowchartOptionsCtrl {
    * @memberof FlowchartOptionsCtrl
    */
   onOptionChange() {
-    GF_PLUGIN.log(1, "FlowchartOptionsCtrl.onOptionChange()");
+    GF_PLUGIN.log.info( "FlowchartOptionsCtrl.onOptionChange()");
     this.flowchartHandler.optionChanged();
     this.render();
   }

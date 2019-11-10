@@ -14,8 +14,8 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   constructor($scope, elem, ctrl, data) {
-    GF_PLUGIN.log(1, 'FlowchartHandler.constructor()');
-    GF_PLUGIN.log(0, 'FlowchartHandler.constructor() data', data);
+    GF_PLUGIN.log.info('FlowchartHandler.constructor()');
+    GF_PLUGIN.log.debug('FlowchartHandler.constructor() data', data);
     this.$scope = $scope || null;
     this.$elem = elem.find('.flowchart-panel__chart');
     this.ctrl = ctrl;
@@ -68,8 +68,8 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   import(obj) {
-    GF_PLUGIN.log(1, 'FlowchartHandler.import()');
-    GF_PLUGIN.log(0, 'FlowchartHandler.import() obj', obj);
+    GF_PLUGIN.log.info('FlowchartHandler.import()');
+    GF_PLUGIN.log.debug('FlowchartHandler.import() obj', obj);
     // this.flowcharts.clear();
     this.flowcharts = [];
     if (obj !== undefined && obj !== null && obj.length > 0) {
@@ -141,7 +141,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   addFlowchart(name) {
-    GF_PLUGIN.log(1, 'FlowchartHandler.addFlowchart()');
+    GF_PLUGIN.log.info('FlowchartHandler.addFlowchart()');
     const container = this.createContainer();
     const data = {};
     const flowchart = new Flowchart(name, this.defaultXml, container, this.ctrl, data);
@@ -155,8 +155,8 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   render() {
-    GF_PLUGIN.log(1, 'flowchartHandler.render()');
-    GF_PLUGIN.startPerf(`${this.constructor.name}.render()`);
+    GF_PLUGIN.log.info('flowchartHandler.render()');
+    GF_PLUGIN.perf.start('flowchartHandler.render()');
     // not repeat render if mouse down
     this.optionsFlag = true;
     if (!this.mousedown) {
@@ -177,16 +177,7 @@ export default class FlowchartHandler {
       if (this.changeRuleFlag || this.changeDataFlag) {
         const rules = this.ctrl.rulesHandler.getRules();
         const series = this.ctrl.series;
-
-        // if (this.changeRuleFlag) {
-        //   this.updateStates(rules);
-        //   this.changeRuleFlag = false;
-        // }
-        // this.setStates(rules, series);
-        // this.applyStates();
-
-        // Change to async to optimize
-        this.async_refreshStates(rules,series);
+        this.async_refreshStates(rules, series);
         this.changeDataFlag = false;
         this.optionsFlag = false;
       }
@@ -198,7 +189,7 @@ export default class FlowchartHandler {
         this.firstLoad = false;
       }
     }
-    GF_PLUGIN.stopPerf(`${this.constructor.name}.render()`);
+    GF_PLUGIN.perf.stop('flowchartHandler.render()');
   }
 
   /**
@@ -243,7 +234,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   applyOptions() {
-    GF_PLUGIN.log(1, `FlowchartHandler.applyOptions()`);
+    GF_PLUGIN.log.info(`FlowchartHandler.applyOptions()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.applyOptions();
     });
@@ -256,8 +247,8 @@ export default class FlowchartHandler {
    * @param {*} series
    * @memberof FlowchartHandler
    */
-  async_refreshStates(rules,series) {
-    this.refreshStates(rules,series);
+  async_refreshStates(rules, series) {
+    this.refreshStates(rules, series);
   }
 
   /**
@@ -267,15 +258,15 @@ export default class FlowchartHandler {
    * @param {*} series
    * @memberof FlowchartHandler
    */
-  refreshStates(rules,series) {
-    GF_PLUGIN.startPerf(`${this.constructor.name}.refreshStates()`);
+  refreshStates(rules, series) {
+    GF_PLUGIN.perf.start(`${this.constructor.name}.refreshStates()`);
     if (this.changeRuleFlag) {
       this.updateStates(rules);
       this.changeRuleFlag = false;
     }
     this.setStates(rules, series);
     this.applyStates();
-    GF_PLUGIN.stopPerf(`${this.constructor.name}.refreshStates()`);
+    GF_PLUGIN.perf.stop(`${this.constructor.name}.refreshStates()`);
   }
 
   refresh() {
@@ -290,19 +281,19 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   setStates(rules, series) {
-    GF_PLUGIN.startPerf(`${this.constructor.name}.setStates()`);
+    GF_PLUGIN.perf.start(`${this.constructor.name}.setStates()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.setStates(rules, series);
     });
-    GF_PLUGIN.stopPerf(`${this.constructor.name}.setStates()`);
+    GF_PLUGIN.perf.stop(`${this.constructor.name}.setStates()`);
   }
 
   updateStates(rules) {
-    GF_PLUGIN.startPerf(`${this.constructor.name}.updateStates()`);
+    GF_PLUGIN.perf.start(`${this.constructor.name}.updateStates()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.updateStates(rules);
     });
-    GF_PLUGIN.stopPerf(`${this.constructor.name}.updateStates()`);
+    GF_PLUGIN.perf.stop(`${this.constructor.name}.updateStates()`);
   }
 
   /**
@@ -311,12 +302,17 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   applyStates() {
-    GF_PLUGIN.startPerf(`${this.constructor.name}.applyStates()`);
-    this.flowcharts.forEach(flowchart => {
-      flowchart.applyStates();
-    });
-    this.refresh();
-    GF_PLUGIN.stopPerf(`${this.constructor.name}.applyStates()`);
+    GF_PLUGIN.perf.start(`${this.constructor.name}.applyStates()`);
+    let pr = new Promise(() => {
+      this.flowcharts.forEach(flowchart => {
+        flowchart.applyStates();
+      });
+    })
+      .then(() => {
+        this.refresh();
+      }
+      )
+    GF_PLUGIN.perf.stop(`${this.constructor.name}.applyStates()`);
   }
 
   /**
@@ -336,7 +332,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   draw() {
-    GF_PLUGIN.log(1, `FlowchartHandler.draw()`);
+    GF_PLUGIN.log.info(`FlowchartHandler.draw()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.redraw();
     });
@@ -348,7 +344,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   load() {
-    GF_PLUGIN.log(1, `FlowchartHandler.load()`);
+    GF_PLUGIN.log.info(`FlowchartHandler.load()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.reload();
     });
