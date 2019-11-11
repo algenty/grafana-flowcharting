@@ -9,7 +9,7 @@ import State from './state_class';
  */
 export default class StateHandler {
   constructor(xgraph, ctrl) {
-    GF_PLUGIN.log.info( 'StateHandler.constructor()');
+    GFP.log.info( 'StateHandler.constructor()');
     this.states = new Map();
     this.ctrl = ctrl;
     this.templateSrv = this.ctrl.templateSrv;
@@ -25,7 +25,7 @@ export default class StateHandler {
    * @memberof StateHandler
    */
   initStates(xgraph, rules) {
-    GF_PLUGIN.log.info( 'StateHandler.initStates()');
+    GFP.log.info( 'StateHandler.initStates()');
     this.xgraph = xgraph;
     this.states.clear();
     let mxcells = xgraph.getMxCells();
@@ -42,7 +42,7 @@ export default class StateHandler {
    * @memberof StateHandler
    */
   getStatesForRule(rule) {
-    GF_PLUGIN.log.info( 'StateHandler.getStatesForRule()');
+    GFP.log.info( 'StateHandler.getStatesForRule()');
     let result = new Map();
     let name = null;
     let xgraph = this.xgraph;
@@ -86,7 +86,7 @@ export default class StateHandler {
    */
   // OLD METHOD : see getStatesForRule
   updateStates(rules) {
-    GF_PLUGIN.log.info( 'StateHandler.updateStates()');
+    GFP.log.info( 'StateHandler.updateStates()');
     rules.forEach(rule => {
       rule.states = this.getStatesForRule(rule);
     });
@@ -163,10 +163,10 @@ export default class StateHandler {
    * @param  {Array<Serie>} series - Array of serie object
    */
   setStates(rules, series) {
-    GF_PLUGIN.log.info( 'StateHandler.setStates()');
-    // GF_PLUGIN.log.debug( 'StatesHandler.setStates() Rules', rules);
-    // GF_PLUGIN.log.debug( 'StatesHandler.setStates() Series', series);
-    // GF_PLUGIN.log.debug( 'StatesHandler.setStates() States', this.states);
+    GFP.log.info( 'StateHandler.setStates()');
+    // GFP.log.debug( 'StatesHandler.setStates() Rules', rules);
+    // GFP.log.debug( 'StatesHandler.setStates() Series', series);
+    // GFP.log.debug( 'StatesHandler.setStates() States', this.states);
     this.prepare();
     rules.forEach(rule => {
       if (rule.states === undefined || rule.states.length === 0) rule.states = this.getStatesForRule(rule);
@@ -182,7 +182,7 @@ export default class StateHandler {
    * Apply color and text
    */
   applyStates() {
-    GF_PLUGIN.log.info( 'StateHandler.applyStates()');
+    GFP.log.info( 'StateHandler.applyStates()');
     this.states.forEach(state => {
       state.async_applyState();
     });
@@ -194,8 +194,8 @@ export default class StateHandler {
    * @memberof StateHandler
    */
   async async_applyStates() {
-    GF_PLUGIN.perf.start("async_applyStates");
+    GFP.perf.start("async_applyStates");
     this.applyStates();
-    GF_PLUGIN.perf.stop("async_applyStates");
+    GFP.perf.stop("async_applyStates");
   }
 }

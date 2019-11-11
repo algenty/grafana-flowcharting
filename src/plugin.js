@@ -7,15 +7,16 @@ export default class FlowChartingPlugin {
     this.marky = null;
     this.perf = new Perf();
     this.log=new Log();
+    this.utils = require('./utils');
   }
 
-  static initUtils() {
-    const u = require('./utils');
-    window.u = window.u || u;
-  }
+  // static initUtils() {
+  //   const u = require('./utils');
+  //   window.u = window.u || u;
+  // }
 
   static init($scope, $injector, $rootScope, templateSrv) {
-    FlowChartingPlugin.initUtils();
+    // FlowChartingPlugin.initUtils();
     let plugin, contextRoot;
     if ($scope == undefined) {
       console.warn("$scope is undefined, use __dirname instead");
@@ -36,7 +37,7 @@ export default class FlowChartingPlugin {
       plugin.$injector = $injector;
       plugin.templateSrv = templateSrv;
     }
-    window.GF_PLUGIN = plugin;
+    window.GFP = plugin;
     return plugin;
   }
 
@@ -149,7 +150,7 @@ class Perf {
 
   start(name) {
     if (this.enablePerf) {
-      if (this.marky == null) this.marky = u.getMarky();
+      if (this.marky == null) this.marky = GFP.utils.getMarky();
       if (name == null) name = "Flowcharting";
       return this.marky.mark(name);
     }

@@ -15,7 +15,7 @@ export default class State {
    * @memberof State
    */
   constructor(mxcell, xgraph, ctrl) {
-    GF_PLUGIN.log.info( 'State.constructor()');
+    GFP.log.info( 'State.constructor()');
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
@@ -91,9 +91,9 @@ export default class State {
    * @memberof State
    */
   setState(rule, serie) {
-    GF_PLUGIN.log.info( 'State.setState()');
-    GF_PLUGIN.log.debug( 'State.setState() Rule', rule);
-    GF_PLUGIN.log.debug( 'State.setState() Serie', serie);
+    GFP.log.info( 'State.setState()');
+    GFP.log.debug( 'State.setState() Rule', rule);
+    GFP.log.debug( 'State.setState() Serie', serie);
     if (rule.matchSerie(serie)) {
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
@@ -173,7 +173,7 @@ export default class State {
         }
       });
     }
-    GF_PLUGIN.log.debug( 'State.setState() state', this);
+    GFP.log.debug( 'State.setState() state', this);
   }
 
   /**
@@ -183,7 +183,7 @@ export default class State {
    * @memberof State
    */
   unsetState() {
-    GF_PLUGIN.log.info( 'State.unsetState()');
+    GFP.log.info( 'State.unsetState()');
     this.unsetLevel();
     // this.unsetColor(); Replace by reset
     this.resetStyle();
@@ -240,7 +240,7 @@ export default class State {
    * @memberof State
    */
   setColorStyle(style, color) {
-    GF_PLUGIN.log.info( 'State.setColorStyle()');
+    GFP.log.info( 'State.setColorStyle()');
     this.currentColors[style] = color;
   }
 
@@ -305,7 +305,7 @@ export default class State {
    * @memberof State
    */
   setLevelStyle(style, level) {
-    GF_PLUGIN.log.info( 'State.setLevelStyle()');
+    GFP.log.info( 'State.setLevelStyle()');
     this.level[style] = level;
     if (this.globalLevel < level) this.globalLevel = level;
   }
@@ -400,9 +400,9 @@ export default class State {
    * @memberof State
    */
   addTooltip(name, label, value, color, direction) {
-    GF_PLUGIN.log.info( 'State.addTooltipValue()');
-    GF_PLUGIN.log.debug( 'State.addTooltipValue() label', label);
-    GF_PLUGIN.log.debug( 'State.addTooltipValue() value', value);
+    GFP.log.info( 'State.addTooltipValue()');
+    GFP.log.debug( 'State.addTooltipValue() label', label);
+    GFP.log.debug( 'State.addTooltipValue() value', value);
     if (this.tooltipHandler == null) this.tooltipHandler = new TooltipHandler(this.mxcell);
     this.tooltipHandler.addMetric(name, label, value, color, direction);
   }
@@ -553,7 +553,7 @@ export default class State {
    * @memberof State
    */
   applyState() {
-    GF_PLUGIN.log.info( 'State.applyState()');
+    GFP.log.info( 'State.applyState()');
     if (this.matched) {
       this.changed = true;
 

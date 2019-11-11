@@ -25,7 +25,7 @@ export default class Rule {
     this.linkMaps = [];
     this.valueMaps = [];
     this.rangeMaps = [];
-    this.id = u.uniqueID();
+    this.id = GFP.utils.uniqueID();
     this.import(data);
     const LEVEL_OK = 0;
     const LEVEL_WARN = 1;
@@ -324,7 +324,7 @@ export default class Rule {
    * @memberof Rule
    */
   matchSerie(serie) {
-    return u.matchString(serie.alias, this.data.pattern);
+    return GFP.utils.matchString(serie.alias, this.data.pattern);
   }
 
   //
@@ -427,7 +427,7 @@ export default class Rule {
   // LINK MAPS
   //
   addLinkMap(pattern) {
-    GF_PLUGIN.log.info( 'Rule.addLinkMap()');
+    GFP.log.info( 'Rule.addLinkMap()');
     const data = {};
     const m = new LinkMap(pattern, data);
     m.import(data);
@@ -595,7 +595,7 @@ export default class Rule {
         }
         return value;
       } catch (error) {
-        GF_PLUGIN.log.error( "datapoint for serie is null", error);
+        GFP.log.error( "datapoint for serie is null", error);
         return null;
       }
     }
@@ -676,7 +676,7 @@ export default class Rule {
   getReplaceText(text, FormattedValue) {
     if (this.data.textReplace === 'content') return FormattedValue;
     if (this.data.textReplace === 'pattern') {
-      const regexVal = u.stringToJsRegex(this.data.textPattern);
+      const regexVal = GFP.utils.stringToJsRegex(this.data.textPattern);
       if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
       return text;
     }
@@ -724,7 +724,7 @@ export default class Rule {
 class ShapeMap {
   constructor(pattern, data) {
     this.data = data;
-    this.id = u.uniqueID();
+    this.id = GFP.utils.uniqueID();
     this.data.pattern = undefined;
     this.data.pattern = pattern;
     this.import(data);
@@ -737,7 +737,7 @@ class ShapeMap {
 
   match(text) {
     if (text === undefined || text === null || text.length === 0) return false;
-    return u.matchString(text, this.data.pattern);
+    return GFP.utils.matchString(text, this.data.pattern);
   }
 
   getId() {
@@ -775,7 +775,7 @@ class ShapeMap {
 class TextMap {
   constructor(pattern, data) {
     this.data = data;
-    this.id = u.uniqueID();
+    this.id = GFP.utils.uniqueID();
     this.data.pattern = pattern;
     this.import(data);
   }
@@ -787,7 +787,7 @@ class TextMap {
 
   match(text) {
     if (text === undefined || text === null || text.length === 0) return false;
-    return u.matchString(text, this.data.pattern);
+    return GFP.utils.matchString(text, this.data.pattern);
   }
 
   getId() {
@@ -820,7 +820,7 @@ class TextMap {
 class LinkMap {
   constructor(pattern, data) {
     this.data = data;
-    this.id = u.uniqueID();
+    this.id = GFP.utils.uniqueID();
     this.data.pattern = pattern;
     this.import(data);
   }
@@ -832,7 +832,7 @@ class LinkMap {
 
   match(text) {
     if (text === undefined || text === null || text.length === 0) return false;
-    return u.matchString(text, this.data.pattern);
+    return GFP.utils.matchString(text, this.data.pattern);
   }
 
   getId() {
@@ -865,7 +865,7 @@ class LinkMap {
 class RangeMap {
   constructor(from, to, text, data) {
     this.data = data;
-    this.id = u.uniqueID();
+    this.id = GFP.utils.uniqueID();
     this.data.from = from;
     this.data.to = to;
     this.data.text = text;
@@ -939,7 +939,7 @@ class RangeMap {
 class ValueMap {
   constructor(value, text, data) {
     this.data = data;
-    this.id = u.uniqueID();
+    this.id = GFP.utils.uniqueID();
     this.data.value = value;
     this.data.text = text;
     this.data.hidden = false;
@@ -964,7 +964,7 @@ class ValueMap {
       return true;
     }
 
-    return u.matchString(value.toString(), this.data.value);
+    return GFP.utils.matchString(value.toString(), this.data.value);
   }
 
   getId() {

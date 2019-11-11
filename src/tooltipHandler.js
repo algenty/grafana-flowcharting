@@ -278,7 +278,7 @@ class LineGraphTooltip extends GraphTooltip {
     if (this.high != null) this.chartistOptions.high = this.high;
     this.chart = new Chartist.Line(div, this.data, this.chartistOptions);
     this.chart.on('draw', function(data) {
-      // GF_PLUGIN.log.info( 'Chartis.on() context ', data);
+      // GFP.log.info( 'Chartis.on() context ', data);
       if (data.type === 'line' || data.type === 'area') {
         if (data.type === 'line')
           data.element.attr({

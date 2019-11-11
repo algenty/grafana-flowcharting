@@ -4,7 +4,7 @@ export class MappingOptionsCtrl {
   /** @ngInject */
   constructor($scope) {
     $scope.editor = this;
-    $scope.GF_PLUGIN = window.GF_PLUGIN;
+    $scope.GFP = window.GFP;
     this.$scope = $scope;
     this.panelCtrl = $scope.ctrl;
     this.panel = this.panelCtrl.panel;
@@ -90,28 +90,28 @@ export class MappingOptionsCtrl {
     };
 
     this.getCellNamesForShape = () => {
-      GF_PLUGIN.log.info( 'MappingOptionsCtrl.getCellNamesForShape()');
+      GFP.log.info( 'MappingOptionsCtrl.getCellNamesForShape()');
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getCellNamesForText = () => {
-      GF_PLUGIN.log.info( 'MappingOptionsCtrl.getCellNamesForText()');
+      GFP.log.info( 'MappingOptionsCtrl.getCellNamesForText()');
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getCellNamesForLink = () => {
-      GF_PLUGIN.log.info( 'MappingOptionsCtrl.getCellNamesForLink()');
+      GFP.log.info( 'MappingOptionsCtrl.getCellNamesForLink()');
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp('id');
       return _.map(cells, t => t);
     };
 
     this.getVariables = () => {
-      GF_PLUGIN.log('MappingOptionsCtrl.getVariables');
+      GFP.log('MappingOptionsCtrl.getVariables');
       return this.panelCtrl.getVariables();
     };
   }
@@ -126,7 +126,7 @@ export class MappingOptionsCtrl {
   }
 
   onRulesChange() {
-    GF_PLUGIN.log.info( 'MappingOptionsCtrl.onRulesChange()');
+    GFP.log.info( 'MappingOptionsCtrl.onRulesChange()');
     this.flowchartHandler.ruleChanged();
     this.render();
   }
@@ -196,7 +196,7 @@ export function mappingOptionsTab($q, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `${GF_PLUGIN.getPartialPath()}/mapping_options.html`,
+    templateUrl: `${GFP.getPartialPath()}/mapping_options.html`,
     controller: MappingOptionsCtrl
   };
 }

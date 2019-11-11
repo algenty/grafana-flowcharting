@@ -193,14 +193,14 @@ module.exports = {
 
   matchString(str, pattern) {
     if (str === undefined || pattern === undefined || str.length === 0 || pattern.length === 0) {
-      // GF_PLUGIN.log.debug( `Match str=${str} pattern=${pattern}`, false);
+      // GFP.log.debug( `Match str=${str} pattern=${pattern}`, false);
       return false;
     }
     if (str === pattern) return true;
     const regex = this.stringToJsRegex(pattern);
     const matching = str.toString().match(regex);
     if (matching) {
-      // GF_PLUGIN.log.debug( `Match str=${str} pattern=${pattern}`, true);
+      // GFP.log.debug( `Match str=${str} pattern=${pattern}`, true);
       return true;
     }
     return false;

@@ -3,7 +3,7 @@ export class InspectOptionsCtrl {
   constructor($scope) {
     $scope.editor = this;
     this.enable = false;
-    $scope.GF_PLUGIN = window.GF_PLUGIN;
+    $scope.GFP = window.GFP;
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
@@ -14,8 +14,8 @@ export class InspectOptionsCtrl {
       { text: 'WARNING', value: 2 },
       { text: 'ERROR', value: 3 },
     ];
-    this.logLevel = GF_PLUGIN.logLevel;
-    this.logDisplay = GF_PLUGIN.logDisplay;
+    this.logLevel = GFP.logLevel;
+    this.logDisplay = GFP.logDisplay;
 
     this.flowchartHandler = this.ctrl.flowchartHandler;
     $scope.flowchartHandler = this.ctrl.flowchartHandler;
@@ -32,8 +32,8 @@ export class InspectOptionsCtrl {
   }
 
   onDebug() {
-    GF_PLUGIN.logLevel = this.logLevel;
-    GF_PLUGIN.logDisplay = this.logDisplay;
+    GFP.logLevel = this.logLevel;
+    GFP.logDisplay = this.logDisplay;
   }
 
   onChangeId(state) {
@@ -85,7 +85,7 @@ export function inspectOptionsTab($q, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `${GF_PLUGIN.getPartialPath()}/inspect_options.html`,
+    templateUrl: `${GFP.getPartialPath()}/inspect_options.html`,
     controller: InspectOptionsCtrl
   };
 }

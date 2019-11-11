@@ -37,7 +37,7 @@
             Options
             <info-popover mode="right-normal"
               ><span
-                ng-bind-html="GF_PLUGIN.popover('Options for mapping objects and metrics', 'MAPPING','fc_archi_example')"
+                ng-bind-html="GFP.popover('Options for mapping objects and metrics', 'MAPPING','fc_archi_example')"
               ></span>
             </info-popover>
           </h5>
@@ -46,7 +46,7 @@
               >Rule name
               <info-popover mode="right-normal"
                 ><span
-                  ng-bind-html="GF_PLUGIN.popover('Name of the rule, for information', 'MAPPING#Rule name')"
+                  ng-bind-html="GFP.popover('Name of the rule, for information', 'MAPPING#Rule name')"
                 ></span>
               </info-popover>
             </label>
@@ -63,7 +63,7 @@
               >Apply to metrics
               <info-popover mode="right-normal"
                 ><span
-                  ng-bind-html="GF_PLUGIN.popover('Select alias or name of metric', 'MAPPING#Apply to metrics named','mp_metrics_name')"
+                  ng-bind-html="GFP.popover('Select alias or name of metric', 'MAPPING#Apply to metrics named','mp_metrics_name')"
                 ></span>
               </info-popover>
             </label>
@@ -86,7 +86,7 @@
               >Aggregation
               <info-popover mode="right-normal"
                 ><span
-                  ng-bind-html="GF_PLUGIN.popover('Select an aggregation for all values of metric', 'MAPPING#Aggregation')"
+                  ng-bind-html="GFP.popover('Select an aggregation for all values of metric', 'MAPPING#Aggregation')"
                 ></span>
               </info-popover>
             </label>
@@ -107,7 +107,7 @@
             Type
             <info-popover mode="right-normal">
               <span
-                ng-bind-html="GF_PLUGIN.popover('Specify unit (Number, String or date) and type for displayed values by Text Mappings.', 'MAPPING#Type')"
+                ng-bind-html="GFP.popover('Specify unit (Number, String or date) and type for displayed values by Text Mappings.', 'MAPPING#Type')"
               >
               </span>
             </info-popover>
@@ -117,7 +117,7 @@
               >Type
               <info-popover mode="right-normal"
                 ><span
-                  ng-bind-html="GF_PLUGIN.popover('Select type and unit of metric to display it for the good format.', 'MAPPING#Type')"
+                  ng-bind-html="GFP.popover('Select type and unit of metric to display it for the good format.', 'MAPPING#Type')"
                 ></span>
               </info-popover>
             </label>
@@ -135,7 +135,7 @@
               >Date Format
               <info-popover mode="right-normal"
                 ><span
-                  ng-bind-html="GF_PLUGIN.popover('Select format of the date to display it in text with text mapping.', 'MAPPING#Type')"
+                  ng-bind-html="GFP.popover('Select format of the date to display it in text with text mapping.', 'MAPPING#Type')"
                 ></span>
               </info-popover>
             </label>
@@ -178,7 +178,7 @@
                 >Unit
                 <info-popover mode="right-normal"
                   ><span
-                    ng-bind-html="GF_PLUGIN.popover('Select unit of aggregated value.', 'MAPPING#Type')"
+                    ng-bind-html="GFP.popover('Select unit of aggregated value.', 'MAPPING#Type')"
                   ></span>
                 </info-popover>
               </label>
@@ -194,7 +194,7 @@
                 >Decimals
                 <info-popover mode="right-normal"
                   ><span
-                    ng-bind-html="GF_PLUGIN.popover('Select number of decimals', 'MAPPING#Type')"
+                    ng-bind-html="GFP.popover('Select number of decimals', 'MAPPING#Type')"
                   ></span>
                 </info-popover>
               </label>
@@ -218,7 +218,7 @@
             Thresholds (Ok > Warn > Critical)
             <info-popover mode="right-normal"
               ><span
-                ng-bind-html="GF_PLUGIN.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"
+                ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"
               ></span>
             </info-popover>
           </h5>
@@ -226,7 +226,7 @@
             Thresholds (Critical > Warn > Ok)
             <info-popover mode="right-normal"
               ><span
-                ng-bind-html="GF_PLUGIN.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"
+                ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"
               ></span>
             </info-popover>
           </h5>
@@ -235,7 +235,7 @@
               >Thresholds
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('The threshold field accepts 2 comma-separated values which represent 3 ranges that correspond to the three colors directly to the right. ', 'MAPPING#Thresholds')"
+                  ng-bind-html="GFP.popover('The threshold field accepts 2 comma-separated values which represent 3 ranges that correspond to the three colors directly to the right. ', 'MAPPING#Thresholds')"
                 >
                 </span>
               </info-popover>
@@ -254,7 +254,7 @@
               >Warning
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Value of string metric to define Warning level.', 'MAPPING#Thresholds')"
+                  ng-bind-html="GFP.popover('Value of string metric to define Warning level.', 'MAPPING#Thresholds')"
                 >
                 </span>
               </info-popover>
@@ -272,7 +272,7 @@
               >Critical
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Value of string metric to define Error level.', 'MAPPING#Thresholds')"
+                  ng-bind-html="GFP.popover('Value of string metric to define Error level.', 'MAPPING#Thresholds')"
                 >
                 </span>
               </info-popover>
@@ -290,7 +290,7 @@
               >Color Mode
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Fill to color content, Stroke for outline or arrows, Text for text.', 'MAPPING#Thresholds', 'colormode_ani')"
+                  ng-bind-html="GFP.popover('Fill to color content, Stroke for outline or arrows, Text for text.', 'MAPPING#Thresholds', 'colormode_ani')"
                 >
                 </span>
               </info-popover>
@@ -309,7 +309,7 @@
               >Colors
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Select a color and opacity for each state.', 'MAPPING#Thresholds')"
+                  ng-bind-html="GFP.popover('Select a color and opacity for each state.', 'MAPPING#Thresholds')"
                 >
                 </span>
               </info-popover>
@@ -357,7 +357,7 @@
             Display
             <info-popover mode="right-normal">
               <span
-                ng-bind-html="GF_PLUGIN.popover('Select the condition to display the colors, values and link', 'MAPPING')"
+                ng-bind-html="GFP.popover('Select the condition to display the colors, values and link', 'MAPPING')"
               >
               </span>
             </info-popover>
@@ -367,7 +367,7 @@
               >Color on
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Select when color is applied.', 'MAPPING#Color On')"
+                  ng-bind-html="GFP.popover('Select when color is applied.', 'MAPPING#Color On')"
                 >
                 </span>
               </info-popover>
@@ -386,7 +386,7 @@
               >Value on
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Condition for value replace text.', 'MAPPING#Value on')"
+                  ng-bind-html="GFP.popover('Condition for value replace text.', 'MAPPING#Value on')"
                 >
                 </span>
               </info-popover>
@@ -405,7 +405,7 @@
               >Update text value
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Whitch part of text to replace', 'MAPPING','example_text_pattern')"
+                  ng-bind-html="GFP.popover('Whitch part of text to replace', 'MAPPING','example_text_pattern')"
                 >
                 </span>
               </info-popover>
@@ -427,7 +427,7 @@
               >Text pattern
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Pattern of text to replace by value of metric/aggregation', 'MAPPING','example_text_pattern')"
+                  ng-bind-html="GFP.popover('Pattern of text to replace by value of metric/aggregation', 'MAPPING','example_text_pattern')"
                 >
                 </span>
               </info-popover>
@@ -448,7 +448,7 @@
             Tooltips
             <info-popover mode="right-normal">
               <span
-                ng-bind-html="GF_PLUGIN.popover('Add/change tooltip/popup with aggregated values in shapes defined in color mapping', 'MAPPING')"
+                ng-bind-html="GFP.popover('Add/change tooltip/popup with aggregated values in shapes defined in color mapping', 'MAPPING')"
               >
               </span>
             </info-popover>
@@ -467,7 +467,7 @@
               >Label
               <info-popover mode="right-normal"
                 ><span
-                  ng-bind-html="GF_PLUGIN.popover('Label of metric in popup', 'MAPPING#Tooltip')"
+                  ng-bind-html="GFP.popover('Label of metric in popup', 'MAPPING#Tooltip')"
                 ></span>
               </info-popover>
             </label>
@@ -484,7 +484,7 @@
               >When state is
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Define condition to add values in tooltip', 'MAPPING')"
+                  ng-bind-html="GFP.popover('Define condition to add values in tooltip', 'MAPPING')"
                 >
                 </span>
               </info-popover>
@@ -503,7 +503,7 @@
               >Direction
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Define the sens of display', 'MAPPING', 'tooltip_direction_ani')"
+                  ng-bind-html="GFP.popover('Define the sens of display', 'MAPPING', 'tooltip_direction_ani')"
                 >
                 </span>
               </info-popover>
@@ -534,7 +534,7 @@
             Graph Tooltips
             <info-popover mode="right-normal">
               <span
-                ng-bind-html="GF_PLUGIN.popover('Add Graph into the tooltip', 'MAPPING','tooltip_graph')"
+                ng-bind-html="GFP.popover('Add Graph into the tooltip', 'MAPPING','tooltip_graph')"
               >
               </span>
             </info-popover>
@@ -550,7 +550,7 @@
             <label class="gf-form-label width-10"
               >Graph type
               <info-popover mode="right-normal">
-                <span ng-bind-html="GF_PLUGIN.popover('Select type of graph', 'MAPPING')"> </span>
+                <span ng-bind-html="GFP.popover('Select type of graph', 'MAPPING')"> </span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-12">
@@ -567,7 +567,7 @@
               >Graph Size
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Select size of graph', 'MAPPING','graph_size')"
+                  ng-bind-html="GFP.popover('Select size of graph', 'MAPPING','graph_size')"
                 >
                 </span>
               </info-popover>
@@ -585,7 +585,7 @@
             <label class="gf-form-label width-6"
               >Y-Min
               <info-popover mode="right-normal">
-                <span ng-bind-html="GF_PLUGIN.popover('Select the min for the scale', 'MAPPING')">
+                <span ng-bind-html="GFP.popover('Select the min for the scale', 'MAPPING')">
                 </span>
               </info-popover>
             </label>
@@ -600,7 +600,7 @@
             <label class="gf-form-label width-6"
               >Y-Max
               <info-popover mode="right-normal">
-                <span ng-bind-html="GF_PLUGIN.popover('Select the max for the scale', 'MAPPING')">
+                <span ng-bind-html="GFP.popover('Select the max for the scale', 'MAPPING')">
                 </span>
               </info-popover>
             </label>
@@ -621,7 +621,7 @@
             Link
             <info-popover mode="right-normal">
               <span
-                ng-bind-html="GF_PLUGIN.popover('Overrite the link when state change', 'MAPPING')"
+                ng-bind-html="GFP.popover('Overrite the link when state change', 'MAPPING')"
               >
               </span>
             </info-popover>
@@ -637,7 +637,7 @@
             <label class="gf-form-label width-10"
               >Overwrite link on
               <info-popover mode="right-normal">
-                <span ng-bind-html="GF_PLUGIN.popover('Open link definition', 'MAPPING')"> </span>
+                <span ng-bind-html="GFP.popover('Open link definition', 'MAPPING')"> </span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-12">
@@ -654,7 +654,7 @@
               Url
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Specify an URL (relative or absolute)', 'MAPPING')"
+                  ng-bind-html="GFP.popover('Specify an URL (relative or absolute)', 'MAPPING')"
                 >
                 </span>
               </info-popover>
@@ -686,7 +686,7 @@
               Color Mappings
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Select the objects to colorize', 'MAPPING','fc_subway_example')"
+                  ng-bind-html="GFP.popover('Select the objects to colorize', 'MAPPING','fc_subway_example')"
                 >
                 </span>
               </info-popover>
@@ -787,7 +787,7 @@
               Text Mappings
               <info-popover mode="right-normal">
                 <span
-                  ng-bind-html="GF_PLUGIN.popover('Select the text object to replace by value', 'MAPPING','fc_subway_example')"
+                  ng-bind-html="GFP.popover('Select the text object to replace by value', 'MAPPING','fc_subway_example')"
                 >
                 </span>
               </info-popover>

@@ -3,7 +3,7 @@ export class FlowchartOptionsCtrl {
   /** @ngInject **/
   constructor($scope) {
     $scope.editor = this;
-    $scope.GF_PLUGIN = window.GF_PLUGIN;
+    $scope.GFP = window.GFP;
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.flowchartHandler = this.ctrl.flowchartHandler;
@@ -43,7 +43,7 @@ export class FlowchartOptionsCtrl {
    * @memberof FlowchartOptionsCtrl
    */
   onOptionChange() {
-    GF_PLUGIN.log.info( "FlowchartOptionsCtrl.onOptionChange()");
+    GFP.log.info( "FlowchartOptionsCtrl.onOptionChange()");
     this.flowchartHandler.optionChanged();
     this.render();
   }
@@ -69,7 +69,7 @@ export function flowchartOptionsTab($q, $sce, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `${GF_PLUGIN.getPartialPath()}/flowchart_options.html`,
+    templateUrl: `${GFP.getPartialPath()}/flowchart_options.html`,
     controller: FlowchartOptionsCtrl,
   };
 }
