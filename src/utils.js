@@ -168,10 +168,10 @@ module.exports = {
     }
   },
 
-  sleep(ms,mess) {
-    var waitUntil = new Date().getTime() + ms ;
+  sleep(ms, mess) {
+    var waitUntil = new Date().getTime() + ms;
     while (new Date().getTime() < waitUntil) true;
-    if(mess) console.log(mess);
+    if (mess) console.log(mess);
   },
 
   uniqueID() {
@@ -264,6 +264,18 @@ module.exports = {
     return marky;
   },
 
-  log(level, title, obj) {
+  loadJS(fname) {
+    try {
+      var req = mxUtils.load(fname);
+      if (req != null && req.getStatus() >= 200 && req.getStatus() <= 299) {
+        eval.call(window, req.getText());
+        console.info('eval.call succesfully', fname);
+      }
+    }
+    catch (e) {
+      if (window.console != null) {
+        console.error('Error eval.call:', fname, e);
+      }
+    }
   }
 };

@@ -93,8 +93,16 @@ export default class FlowChartingPlugin {
     return `${this.getRootPath()}libs`;
   }
 
+  getDrawioPath() {
+    return `${this.getLibsPath()}/drawio`;
+  }
+
   getShapesPath() {
-    return `${this.getLibsPath()}/shapes`;
+    return `${this.getDrawioPath()}/shapes`;
+  }
+
+  getStencilsPath() {
+    return `${this.getDrawioPath()}/shapes`;
   }
 
   getMxBasePath() {
@@ -164,7 +172,6 @@ class Perf {
     }
   }
 }
-
 
 class Log {
   logLevel = 2;
