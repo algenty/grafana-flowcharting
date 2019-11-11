@@ -1,14 +1,12 @@
 const path = require("path");
-const sass = require('node-sass');
-// const plugin = require('./src/plugin.js');
-const version = "0.6.0";
+const plugin = require('./src/plugin.json');
+const version = plugin.info.version;
 
 module.exports = (grunt) => {
   require('load-grunt-tasks')(grunt);
 
   grunt.loadNpmTasks('grunt-git');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-compress');
 
   grunt.initConfig({
@@ -59,7 +57,7 @@ module.exports = (grunt) => {
       },
     },
 
-    makeArchive: {
+    compress: {
       main: {
         options: {
           archive: "archives/agenty-flowcharting-panel-" + version + "-SNAPSHOT.zip",
@@ -96,10 +94,10 @@ module.exports = (grunt) => {
 
   });
 
-  grunt.registerTask('default', ['clean:build', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:mxgraph_to_dist', 'copy:stencils_to_dist']);
-  grunt.registerTask('microbuild', ['copy:src_to_dist', 'sass', 'babel', 'webpack' ]);
-  grunt.registerTask('dev', ['default', 'watch:rebuild_all']);
-  grunt.registerTask('microdev', ['microbuild', 'watch:microbuild']);
+  // grunt.registerTask('default', ['clean:build', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:mxgraph_to_dist', 'copy:stencils_to_dist']);
+  // grunt.registerTask('microbuild', ['copy:src_to_dist', 'sass', 'babel', 'webpack' ]);
+  // grunt.registerTask('dev', ['default', 'watch:rebuild_all']);
+  // grunt.registerTask('microdev', ['microbuild', 'watch:microbuild']);
   grunt.registerTask('archive', ['compress:main']);
   grunt.registerTask('init', ['clean:before_init','gitclone:mxgraph','gitclone:drawio','clean:after_init']);
 };
