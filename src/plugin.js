@@ -174,6 +174,7 @@ FlowChartingPlugin.defaultContextRoot = '/public/plugins/agenty-flowcharting-pan
 class Perf {
   enablePerf = false;
   marky = null;
+  stack = [];
   constructor() {
   }
 
@@ -184,14 +185,19 @@ class Perf {
   start(name) {
     if (this.enablePerf) {
       if (this.marky == null) this.marky = GFP.utils.getMarky();
-      if (name == null) name = "Flowcharting";
+      if (name == null) {
+        name = `GFP ${GFP.utils.uniqueID()}`;
+        this.stack.push(name);
+      }
       return this.marky.mark(name);
     }
   }
 
   stop(name) {
     if (this.enablePerf) {
-      if (name == null) name = "Flowcharting";
+      if (name == null) {
+        name = this.stack.shift();
+      }
       let entry = this.marky.stop(name);
       console.log("Perfomance of " + name, entry);
     }
