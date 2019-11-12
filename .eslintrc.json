@@ -15,12 +15,9 @@
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly",
-        "u": false,
-        "_": false,
-        "GF_PLUGIN": false,
+         "_": false,
+        "GFP": false,
         "moment": false,
-        "logLevel": false,
-        "logDisplay": false
     },
     "parserOptions": {
         "ecmaVersion": 2018,
