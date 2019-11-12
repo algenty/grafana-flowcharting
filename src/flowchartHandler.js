@@ -156,60 +156,48 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   render() {
-    GFP.log.info('flowchartHandler.render()');
-    GFP.perf.start('flowchartHandler.render()');
     // not repeat render if mouse down
     this.optionsFlag = true;
-    self = this;
-    if (!self.mousedown) {
-      // SOURCE
-      new Promise((resolve, reject) => {
-        GFP.log.debug("render : SOURCE");  
+    let id = GFP.utils.uniqueID()
+    GFP.perf.start("PERF : Render "+id);
+    if (!this.mousedown) {
+      let self = this;
+      new Promise((resolve) => {
+        // SOURCE
         if (self.changeSourceFlag) {
           self.load();
           self.changeSourceFlag = false;
           self.changeRuleFlag = true;
           self.optionsFlag = true;
         }
+        // OPTIONS
+        if (self.changeOptionFlag) {
+          self.setOptions();
+          self.changeOptionFlag = false;
+          self.optionsFlag = true;
+        }
+        // RULES or DATAS
+        if (self.changeRuleFlag || self.changeDataFlag) {
+          const rules = self.ctrl.rulesHandler.getRules();
+          const series = self.ctrl.series;
+
+          // Change to async to optimize
+          self.async_refreshStates(rules, series);
+          self.changeDataFlag = false;
+          self.optionsFlag = false;
+        }
         resolve(true);
       })
         .then(() => {
-          // OPTIONS
-          new Promise((resolve, reject) => {
-            GFP.log.debug("render : OPTIONS");
-            if (self.changeOptionFlag) {
-              self.setOptions();
-              self.changeOptionFlag = false;
-              self.optionsFlag = true;
-            }
-            resolve(true);
-          })
-            .then(() => {
-              // RULES or DATAS
-              new Promise((resolve, reject) => {
-                GFP.log.debug("render : RULES or DATAS");
-                if (self.changeRuleFlag || self.changeDataFlag) {
-                  const rules = self.ctrl.rulesHandler.getRules();
-                  const series = self.ctrl.series;
-                  self.async_refreshStates(rules, series);
-                  self.changeDataFlag = false;
-                  self.optionsFlag = false;
-                }
-                resolve(true);
-              })
-                .then(() => {
-                  // OTHER : Resize, OnLoad
-                  GFP.log.debug("render : OTHER : Resize, OnLoad");
-                  if (self.optionsFlag || self.firstLoad) {
-                    self.applyOptions();
-                    self.optionsFlag = false;
-                    self.firstLoad = false;
-                  }
-                })
-            })
-        })
+          // OTHER : Resize, OnLoad
+          if (self.optionsFlag || self.firstLoad) {
+            self.applyOptions();
+            self.optionsFlag = false;
+            self.firstLoad = false;
+          }
+        });
     }
-    GFP.perf.stop('flowchartHandler.render()');
+    GFP.perf.stop("PERF : Render "+id);
   }
 
   /**

@@ -41,22 +41,47 @@ export default class FlowChartingPlugin {
     return plugin;
   }
 
+  /**
+   * Get current log level
+   * @return level (0 : DEBUG, 1: INFO, 2: WARNING, 3: ERROR)
+   * @memberof FlowChartingPlugin
+   */
   getLevel() {
     return this.logLevel;
   }
 
+  /**
+   * Define current log level (0 : DEBUG, 1: INFO, 2: WARNING, 3: ERROR)
+   * @param  {any} level 
+   * @return {void}@memberof FlowChartingPlugin
+   */
   setLevel(level) {
     this.logLevel = level;
   }
 
+  /**
+   * Get templateSrv from dashboard
+   * @return 
+   * @memberof FlowChartingPlugin
+   */
   getTemplateSrv() {
     return this.templateSrv;
   }
 
+  /**
+   * Get if log is enable
+   * @return 
+   * @memberof FlowChartingPlugin
+   */
   isLogEnable() {
     return this.logDisplay;
   }
 
+  /**
+   * Define log enable
+   * @param  {any} enable 
+   * @return {void}@memberof FlowChartingPlugin
+   */
   setLog(enable) {
     this.logDisplay = enable;
   }

@@ -224,7 +224,7 @@ module.exports = {
     }
   },
 
-  generateColor(colorStart, colorEnd, colorCount) {
+  getStepColors(colorStart, colorEnd, colorCount) {
     // The beginning of your gradient
     let start = colorconv(colorStart, 'uint8');
     let end = colorconv(colorEnd, 'uint8');
