@@ -1,4 +1,3 @@
-
 declare var GFP: FlowChartingPlugin;
 /**
  * Global Manager of plugin
@@ -9,10 +8,10 @@ export default class FlowChartingPlugin {
   private contextRoot: string;
   private data: any;
   private repo: string;
-  public perf: Perf;
-  public log: Log;
-  public utils: any;
-  static defaultContextRoot: string = '/public/plugins/agenty-flowcharting-panel/';
+  perf: Perf;
+  log: Log;
+  utils: any;
+  static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   private templateSrv: any;
 
   constructor(context_root: string) {
@@ -24,36 +23,32 @@ export default class FlowChartingPlugin {
     this.utils = require('./utils');
   }
 
-
   /**
    * Initialize
    * @static
-   * @param  {*} $scope 
-   * @return FlowChartingPlugin 
+   * @param  {*} $scope
+   * @return FlowChartingPlugin
    * @memberof FlowChartingPlugin
    */
   static init($scope: any): FlowChartingPlugin {
     let plugin, contextRoot;
     if ($scope == undefined) {
-      console.warn("$scope is undefined, use __dirname instead");
+      console.warn('$scope is undefined, use __dirname instead');
       contextRoot = __dirname;
-      if (contextRoot.length > 0) plugin = new FlowChartingPlugin(contextRoot);
+      if (contextRoot.length > 0) { plugin = new FlowChartingPlugin(contextRoot); }
       else {
         contextRoot = FlowChartingPlugin.defaultContextRoot;
-        console.warn("__dirname is empty, user default", contextRoot);
+        console.warn('__dirname is empty, user default', contextRoot);
         plugin = new FlowChartingPlugin(contextRoot);
       }
-    }
-    else {
+    } else {
       contextRoot = $scope.$root.appSubUrl + FlowChartingPlugin.defaultContextRoot;
-      console.info("Context-root for plugin is", contextRoot);
+      console.info('Context-root for plugin is', contextRoot);
       plugin = new FlowChartingPlugin(contextRoot);
     }
-    (<any>window).GFP = plugin;
+    (window as any).GFP = plugin;
     return plugin;
   }
-
-
 
   /**
    * Get templateSrv from dashboard
@@ -66,26 +61,26 @@ export default class FlowChartingPlugin {
 
   /**
    * Get url of documentation site
-   * @return string 
+   * @return string
    * @memberof FlowChartingPlugin
    */
   private getRepo(): string {
-    let url: string = '';
+    let url = '';
     // let link: any;
-    this.data.info.links.forEach((link: { name: string, url: string }) => {
-      if (link.name === 'Documentation') url = link.url;
+    this.data.info.links.forEach((link: { name: string; url: string }) => {
+      if (link.name === 'Documentation') { url = link.url; }
     });
     return url;
   }
 
   /**
-   * 
+   *
    * @private
-   * @return * 
+   * @return *
    * @memberof FlowChartingPlugin
    */
   private loadJson(): any {
-    let data: any = require('./plugin.json');
+    const data: any = require('./plugin.json');
     return data;
   }
 
@@ -99,7 +94,6 @@ export default class FlowChartingPlugin {
     return this.contextRoot;
   }
 
-
   /**
    * return the uri libs path for GF
    *
@@ -111,7 +105,7 @@ export default class FlowChartingPlugin {
   }
 
   /**
-   * return the uri draw.io libs for GF 
+   * return the uri draw.io libs for GF
    *
    * @returns {string}
    * @memberof FlowChartingPlugin
@@ -121,7 +115,7 @@ export default class FlowChartingPlugin {
   }
 
   /**
-   * return the uri path of shapes js for GF 
+   * return the uri path of shapes js for GF
    *
    * @returns {string}
    * @memberof FlowChartingPlugin
@@ -161,7 +155,7 @@ export default class FlowChartingPlugin {
   }
 
   /**
-   * Return partials path (html) for edit mode in grafana 
+   * Return partials path (html) for edit mode in grafana
    *
    * @returns {string}
    * @memberof FlowChartingPlugin
@@ -181,14 +175,14 @@ export default class FlowChartingPlugin {
   }
 
   /**
-  * Return Html for popup with links to documentation
-  *
-  * @param {string} text
-  * @param {string} tagBook
-  * @param {string} [tagImage]
-  * @returns {string}
-  * @memberof FlowChartingPlugin
-  */
+   * Return Html for popup with links to documentation
+   *
+   * @param {string} text
+   * @param {string} tagBook
+   * @param {string} [tagImage]
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
   popover(text: string, tagBook: string, tagImage?: string): string {
     const url = this.repo;
     const images = `${this.repo}images/`;
@@ -200,10 +194,8 @@ export default class FlowChartingPlugin {
     const desc = `${textEncoded}`;
     let book = '';
     let image = '';
-    if (tagBook)
-      book = `<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
-    if (tagImage)
-      image = `<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
+    if (tagBook) { book = `<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`; }
+    if (tagImage) { image = `<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`; }
     return `
     <div id="popover" style="display:flex;flex-wrap:wrap;width: 100%;">
       <div style="flex:1;height:100px;margin-bottom: 20px;">${desc}</div>
@@ -213,13 +205,11 @@ export default class FlowChartingPlugin {
   }
 }
 
-
 class Perf {
-  enablePerf: boolean = false;
+  enablePerf = false;
   marky: any = null;
-  stack: Array<string> = [];
-  constructor() {
-  }
+  stack: string[] = [];
+  constructor() {}
 
   enable(bool: boolean): void {
     this.enablePerf = bool;
@@ -228,40 +218,38 @@ class Perf {
   start(name?: string) {
     if (this.enablePerf) {
       try {
-        if (this.marky == null) this.marky = GFP.utils.getMarky();
-        if (name == null) name = `GFP ${GFP.utils.uniqueID()}`;
+        if (this.marky == null) { this.marky = GFP.utils.getMarky(); }
+        if (name == null) { name = `GFP ${GFP.utils.uniqueID()}`; }
         this.stack.push(name);
         this.marky.mark(name);
       } catch (error) {
-        GFP.log.warn("Unable to start perf", error);
+        GFP.log.warn('Unable to start perf', error);
       }
     }
   }
 
-  stop(name: (string | undefined)): PerformanceEntry | undefined | void {
+  stop(name: string | undefined): PerformanceEntry | undefined | void {
     if (this.enablePerf) {
       try {
-        if (name == undefined) name = this.stack.shift();
-        let entry: PerformanceEntry = this.marky.stop(name);
-        console.log("Perfomance of " + name, entry);
+        if (name == undefined) { name = this.stack.shift(); }
+        const entry: PerformanceEntry = this.marky.stop(name);
+        console.log('Perfomance of ' + name, entry);
         return entry;
       } catch (error) {
-        GFP.log.warn("Unable to stop perf", error);
+        GFP.log.warn('Unable to stop perf', error);
       }
     }
   }
 }
 
 class Log {
-  public static DEBUG: 0;
-  public static INFO: 1;
-  public static WARN: 2;
-  public static ERROR: 3;
-  logLevel: number = 2;
-  logDisplay: boolean = true;
-  constructor() {
-
-  }
+  static DEBUG: 0;
+  static INFO: 1;
+  static WARN: 2;
+  static ERROR: 3;
+  logLevel = 2;
+  logDisplay = true;
+  constructor() {}
 
   /**
    * If message must be displayed
@@ -270,7 +258,7 @@ class Log {
    * @returns {boolean}
    * @memberof Log
    */
-  toDisplay(level: number):boolean {
+  toDisplay(level: number): boolean {
     if (this.logDisplay !== undefined && this.logDisplay === true) {
       if (this.logLevel !== undefined && level >= this.logLevel) {
         return true;
@@ -286,8 +274,8 @@ class Log {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  debug(title: string, obj: (any | undefined)): void {
-    if (this.toDisplay(Log.DEBUG)) console.debug(`GF DEBUG : ${title}`, obj);
+  debug(title: string, obj: any | undefined): void {
+    if (this.toDisplay(Log.DEBUG)) { console.debug(`GF DEBUG : ${title}`, obj); }
   }
 
   /**
@@ -297,8 +285,8 @@ class Log {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  warn(title: string, obj: (any | undefined)) {
-    if (this.toDisplay(Log.WARN)) console.debug(`GF WARN : ${title}`, obj);
+  warn(title: string, obj?: any) {
+    if (this.toDisplay(Log.WARN)) { console.debug(`GF WARN : ${title}`, obj); }
   }
 
   /**
@@ -308,8 +296,8 @@ class Log {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  info(title: string, obj: (any | undefined)) {
-    if (this.toDisplay(Log.INFO)) console.debug(`GF INFO : ${title}`, obj);
+  info(title: string, obj?: any) {
+    if (this.toDisplay(Log.INFO)) { console.debug(`GF INFO : ${title}`, obj); }
   }
 
   /**
@@ -319,8 +307,7 @@ class Log {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  error(title: string, obj: (any | undefined)) {
-    if (this.toDisplay(Log.ERROR)) console.debug(`GF ERROR : ${title}`, obj);
+  error(title: string, obj?: any) {
+    if (this.toDisplay(Log.ERROR)) { console.debug(`GF ERROR : ${title}`, obj); }
   }
-
 }
