@@ -3,14 +3,30 @@ import TooltipHandler from './tooltipHandler';
 
 declare var GFP: any;
 // type typeColor = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
-interface typeColor {
-  fillColor: string | undefined;
-  strokeColor: string | undefined;
-  fontColor: string | undefined;
-  imageBorder: string | undefined;
-  imageBackground: string | undefined
+interface TStylesColor {
+  fillColor: string;
+  strokeColor: string;
+  fontColor: string;
+  imageBorder: string;
+  imageBackground: string;
 }
-type styleColor = keyof typeColor;
+interface TStylesBoolean {
+  fillColor: boolean;
+  strokeColor: boolean;
+  fontColor: boolean;
+  imageBorder: boolean;
+  imageBackground: boolean;
+}
+
+interface TstylesLevel {
+  fillColor: number;
+  strokeColor: number;
+  fontColor: number;
+  imageBorder: number;
+  imageBackground: number;
+}
+
+type TstylesKeys = keyof TStylesColor;
 
 /**
  *Class for state of one cell
@@ -24,30 +40,59 @@ export default class State {
   xgraph: any;
   ctrl: any;
   templateSrv: any;
-  changed: boolean;
-  changedShape: boolean;
-  changedStyle: { fillColor: boolean; strokeColor: boolean; fontColor: boolean; imageBorder: boolean; imageBackground: boolean; };
-  changedText: boolean;
-  changedLink: boolean;
-  matched: boolean;
-  matchedShape: boolean;
-  matchedStyle: { fillColor: boolean; strokeColor: boolean; fontColor: boolean; imageBorder: boolean; imageBackground: boolean; };
-  matchedText: boolean;
-  matchedLink: boolean;
-  globalLevel: number;
-  styleKeys: styleColor[];
-  level: { fillColor: number; strokeColor: number; fontColor: number; imageBorder: number; imageBackground: number; };
-  tooltipHandler: null;
-  currentColors: typeColor;
-  originalColors: typeColor;
-  originalStyle: any;
-  originalText: any;
-  currentText: any;
-  originalLink: any;
-  currentLink: any;
-  overlayIcon: any;
-  changedIcon: boolean | undefined;
-  lastChange: null;
+  changed: boolean = false;
+  changedShape: boolean = false;
+  changedStyle: TStylesBoolean = {
+    fillColor: false,
+    strokeColor: false,
+    fontColor: false,
+    imageBorder: false,
+    imageBackground: false
+  };
+  changedText: boolean = false;
+  changedLink: boolean = false;
+  matched: boolean = false;
+  matchedShape: boolean = false;
+  matchedText: boolean = false;
+  matchedLink: boolean = false;
+  matchedStyle: TStylesBoolean = {
+    fillColor: false,
+    strokeColor: false,
+    fontColor: false,
+    imageBorder: false,
+    imageBackground: false
+  };
+  globalLevel: number = -1;
+  styleKeys: Array<TstylesKeys> = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
+  level: TstylesLevel = {
+    fillColor: -1,
+    strokeColor: -1,
+    fontColor: -1,
+    imageBorder: -1,
+    imageBackground: -1
+  };
+  tooltipHandler: TooltipHandler;
+  currentColors: TStylesColor = {
+    fillColor: undefined,
+    strokeColor: undefined,
+    fontColor: undefined,
+    imageBorder: undefined,
+    imageBackground: undefined,
+  };
+  originalColors: TStylesColor = {
+    fillColor: undefined,
+    strokeColor: undefined,
+    fontColor: undefined,
+    imageBorder: undefined,
+    imageBackground: undefined,
+  };
+  originalStyle: string;
+  originalText: string;
+  currentText: string;
+  originalLink: string;
+  currentLink: string;
+  overlayIcon: boolean;
+  changedIcon: boolean | undefined = true;
   /**
    *Creates an instance of State.
    * @param {mxCell} mxcell
@@ -62,44 +107,8 @@ export default class State {
     this.xgraph = xgraph;
     this.ctrl = ctrl;
     this.templateSrv = this.ctrl.templateSrv;
-    // If Cell is modified
-    this.changed = false;
-    this.changedShape = false;
-    this.changedStyle = {
-      fillColor: false,
-      strokeColor: false,
-      fontColor: false,
-      imageBorder: false,
-      imageBackground: false
-    };
-    this.changedText = false;
-    this.changedLink = false;
-
-    // If state is target
-    this.matched = false;
-    this.matchedShape = false;
-    this.matchedStyle = {
-      fillColor: false,
-      strokeColor: false,
-      fontColor: false,
-      imageBorder: false,
-      imageBackground: false
-    };
-    this.matchedText = false;
-    this.matchedLink = false;
-    this.globalLevel = -1;
-    this.styleKeys = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
-    this.level = {
-      fillColor: -1,
-      strokeColor: -1,
-      fontColor: -1,
-      imageBorder: -1,
-      imageBackground: -1
-    };
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
-    this.currentColors = {};
-    this.originalColors = {};
     this.originalStyle = mxcell.getStyle();
     this.originalText = this.xgraph.getLabel(mxcell);
     this.currentText = this.originalText;
@@ -435,17 +444,12 @@ export default class State {
   /**
    *Add metric to tooltip of shape
    *
-   * @param {string} label - Label to display in tooltip
-   * @param {string} value - Formatted value
-   * @param {string} color - Color for the value
    * @memberof State
    */
-  addTooltip(name, label, value, color, direction) {
+  addTooltip() {
     GFP.log.info('State.addTooltipValue()');
-    GFP.log.debug('State.addTooltipValue() label', label);
-    GFP.log.debug('State.addTooltipValue() value', value);
     if (this.tooltipHandler == null) this.tooltipHandler = new TooltipHandler(this.mxcell);
-    this.tooltipHandler.addMetric(name, label, value, color, direction);
+    this.tooltipHandler.addMetric();
   }
 
   /**
@@ -457,9 +461,9 @@ export default class State {
    * @param {timeSerie} serie
    * @memberof State
    */
-  addTooltipGraph(name, type, size, serie, low, high) {
-    this.tooltipHandler.addGraph(name, type, size, serie, low, high);
-  }
+  // addTooltipGraph(name, type, size, serie, low, high) {
+  //   this.tooltipHandler.addGraph(name, type, size, serie, low, high);
+  // }
 
   updateTooltipDate() {
     this.tooltipHandler.updateDate();
@@ -481,12 +485,12 @@ export default class State {
   }
 
   /**
-   *Return true if is a arrow/connector
+   * Return true if is a arrow/connector
    *
-   * @returns
+   * @returns {boolean}
    * @memberof State
    */
-  isConnector() {
+  isConnector():boolean {
     return this.mxcell.isEdge();
   }
 
@@ -645,7 +649,6 @@ export default class State {
    */
   prepare() {
     if (this.changed) {
-      this.lastChange = null;
       this.unsetLevel();
       this.unsetTooltip();
       this.unsetText();

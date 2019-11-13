@@ -46,7 +46,7 @@ export default class TooltipHandler {
   }
 
   /**
-   *Update date in tooltip
+   * Update date in tooltip
    *
    * @memberof TooltipHandler
    */
