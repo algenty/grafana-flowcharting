@@ -168,10 +168,12 @@ module.exports = {
     }
   },
 
-  sleep(ms, mess) {
-    var waitUntil = new Date().getTime() + ms;
-    while (new Date().getTime() < waitUntil) true;
-    if (mess) console.log(mess);
+  async sleep(ms, mess) {
+    function delay(ms) {
+      return new Promise(resolve=> setTimeout(resolve,ms));
+    }
+    await delay(ms);
+    if(mess) console.log(mess);
   },
 
   uniqueID() {

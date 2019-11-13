@@ -3,6 +3,7 @@
   "include": ["src", "types"],
   "compilerOptions": {
     "rootDir": "./src",
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
     "typeRoots": ["./node_modules/@types"]
   }

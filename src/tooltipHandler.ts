@@ -1,5 +1,8 @@
+//import FlowChartingPlugin from './plugin';
+//import * as Chartist from 'chartist';
 const Chartist = require('chartist');
 
+declare var GFP: any;
 /**
  *
  *
@@ -7,7 +10,13 @@ const Chartist = require('chartist');
  * @class TooltipHandler
  */
 export default class TooltipHandler {
-  constructor(mxcell) {
+  timeFormat: string;
+  mxcell: any;
+  checked: boolean;
+  metrics: Set<MetricTooltip>;
+  lastChange: string | undefined;
+  div: HTMLHeadingElement | undefined;
+  constructor(mxcell: any) {
     this.timeFormat = 'YYYY-MM-DD HH:mm:ss';
     this.mxcell = mxcell;
     this.checked = false;
@@ -15,21 +24,21 @@ export default class TooltipHandler {
   }
 
   /**
-   *Return if tooltip is available
+   * Return if tooltip is available
    *
-   * @returns
+   * @returns {boolean}
    * @memberof TooltipHandler
    */
-  isChecked() {
+  isChecked(): boolean {
     return this.checked;
   }
 
   /**
    * Add a metric (one value) for tooltip
-   * @returns
+   * @returns {MetricTooltip}
    * @memberof TooltipHandler
    */
-  addMetric() {
+  addMetric(): MetricTooltip {
     this.checked = true;
     let metric = new MetricTooltip();
     this.metrics.add(metric);
@@ -46,15 +55,15 @@ export default class TooltipHandler {
     this.lastChange =
       current_datetime.getFullYear() +
       '-' +
-      (current_datetime.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) +
+      (current_datetime.getMonth() + 1).toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) +
       '-' +
-      current_datetime.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) +
+      current_datetime.getDate().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) +
       ' ' +
-      current_datetime.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) +
+      current_datetime.getHours().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) +
       ':' +
-      current_datetime.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) +
+      current_datetime.getMinutes().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false }) +
       ':' +
-      current_datetime.getSeconds().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+      current_datetime.getSeconds().toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false });
   }
 
   destroy() {
@@ -62,7 +71,7 @@ export default class TooltipHandler {
     if (this.mxcell.GF_tooltipHandler) delete this.mxcell.GF_tooltipHandler;
   }
 
-  getDiv(parentDiv) {
+  getDiv(parentDiv: HTMLDivElement) {
     if (this.div != null) {
       if (parentDiv != undefined) parentDiv.appendChild(this.div);
       return this.div;
@@ -72,7 +81,7 @@ export default class TooltipHandler {
     if (parentDiv != undefined) parentDiv.appendChild(div);
     if (this.metrics.size > 0) {
       this.getDateDiv(div);
-      this.metrics.forEach(metric => {
+      this.metrics.forEach((metric: MetricTooltip) => {
         metric.getDiv(div);
       });
     }
@@ -80,7 +89,7 @@ export default class TooltipHandler {
     return div;
   }
 
-  getDateDiv(parentDiv) {
+  getDateDiv(parentDiv: HTMLDivElement) {
     let div = document.createElement('div');
     div.id = this.mxcell.mxObjectId + '_DATE';
     if (parentDiv != undefined) parentDiv.appendChild(div);
@@ -90,52 +99,49 @@ export default class TooltipHandler {
   }
 }
 
+type directionType = 'v' | 'h';
+type graphType = 'line' | 'bar';
 /**
  *Create a metric for tooltip
  *
  * @class MetricTooltip
  */
 class MetricTooltip {
-  constructor(name) {
-    this.name = name;
+  color: string;
+  graphs: Set<GraphTooltip>;
+  label: any;
+  value: any;
+  direction: directionType = 'v';
+  div: HTMLDivElement | undefined;
+  constructor() {
     this.color = '#8c8980';
     this.graphs = new Set();
   }
-  //name, label, value, color, direction
-  setName(name) {
-    this.name = name;
-    return this;
-  }
 
-  setLabel(label) {
+  setLabel(label: string): this {
     this.label = label;
     return this;
   }
 
-  setValue(value) {
+  setValue(value: string): this {
     this.value = value;
     return this;
   }
 
-  setColor(color) {
+  setColor(color: string): this {
     if (color != null) this.color = color;
     return this;
   }
 
-  setDirection(direction) {
+  setDirection(direction: directionType): this {
     this.direction = direction;
     return this;
   }
 
-  set(key, value) {
-    this[key] = value;
-    return this;
-  }
-
-  getDiv(parentDiv) {
+  getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     let div = document.createElement('div');
     div.className = 'tooltip-metric';
-    if (this.direction === 'h') div.style = 'display: inline-block;';
+    if (this.direction === 'h') div.style.display = 'inline-block;';
     if (parentDiv != undefined) parentDiv.appendChild(div);
     this.div = div;
     this.getTextDiv(div);
@@ -143,9 +149,9 @@ class MetricTooltip {
     return div;
   }
 
-  getTextDiv(parentDiv) {
+  getTextDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     let div = document.createElement('div');
-    div.classname = 'tooltip-text';
+    div.className = 'tooltip-text';
     let string = '';
     if (parentDiv != undefined) parentDiv.appendChild(div);
     if (this.label !== undefined) {
@@ -156,7 +162,7 @@ class MetricTooltip {
     return div;
   }
 
-  getGraphsDiv(parentDiv) {
+  getGraphsDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     let div = document.createElement('div');
     if (parentDiv != undefined) parentDiv.appendChild(div);
     if (this.graphs.size > 0)
@@ -166,11 +172,20 @@ class MetricTooltip {
     return div;
   }
 
-  addGraph(type) {
-    this.graphType = type;
-    let graph = null;
-    if (type === 'line') graph = new LineGraphTooltip();
-    if (type === 'bar') graph = new BarGraphTooltip();
+  addGraph(type: graphType): GraphTooltip {
+    let graph: GraphTooltip;
+    switch (type) {
+      case 'line':
+        graph = new LineGraphTooltip();
+        break;
+      case 'bar':
+        graph = new BarGraphTooltip();
+        break;
+      default:
+        GFP.log.error("Graph type unknow",type);
+        graph = new BarGraphTooltip();
+        break;
+    }
     this.graphs.add(graph);
     return graph;
   }
@@ -182,52 +197,59 @@ class MetricTooltip {
  * @class GraphTooltip
  */
 class GraphTooltip {
+  color: string | undefined;
+  type: graphType | undefined;
+  name: string | undefined;
+  size: string | undefined;
+  serie: any | undefined;
+  low: number | undefined;
+  high: any;
+  div: HTMLDivElement | undefined;
+  parentDiv: any;
   constructor() {
     this.color = '#8c8980';
-    this.type = 'unknow';
   }
-  setName(name) {
+
+  getDiv(div: HTMLDivElement) {
+    this.div;
+  }
+  setName(name: string): this {
     this.name = name;
     return this;
   }
 
-  setType(type) {
+  setType(type: graphType): this {
     this.type = type;
     return this;
   }
 
-  setSize(size) {
+  setSize(size: string): this {
     this.size = size;
     return this;
   }
 
-  setSerie(serie) {
+  setSerie(serie: any): this {
     this.serie = serie;
     return this;
   }
 
-  setScaling(low, high) {
+  setScaling(low: number, high: string): this {
     this.low = low;
     this.high = high;
     return this;
   }
 
-  setColor(color) {
+  setColor(color: string): this {
     if (color != null) this.color = color;
     return this;
   }
 
-  set(key, value) {
-    this[key] = value;
-    return this;
-  }
-
-  setParentDiv(div) {
+  setParentDiv(div: HTMLDivElement): this {
     this.parentDiv = div;
     return this;
   }
 
-  static array2Coor(arr) {
+  static array2Coor(arr: any) {
     let result = [];
     for (let index = 0; index < arr.length; index++) {
       result.push({
@@ -240,6 +262,10 @@ class GraphTooltip {
 }
 
 class LineGraphTooltip extends GraphTooltip {
+  chartistOptions: any;
+  div: HTMLDivElement | undefined;
+  data: { series: { x: any; y: any; }[][]; } | undefined;
+  chart: any;
   constructor() {
     super();
     this.type = 'line';
@@ -263,7 +289,7 @@ class LineGraphTooltip extends GraphTooltip {
     };
   }
 
-  getDiv(parentDiv) {
+  getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     let coor = GraphTooltip.array2Coor(this.serie.flotpairs);
     let div = document.createElement('div');
     let color = this.color;
@@ -273,11 +299,11 @@ class LineGraphTooltip extends GraphTooltip {
     this.data = {
       series: [coor]
     };
-    if (this.size != null) div.style = `width:${this.size};`;
+    if (this.size != null) div.style.width = this.size;
     if (this.low != null) this.chartistOptions.low = this.low;
     if (this.high != null) this.chartistOptions.high = this.high;
     this.chart = new Chartist.Line(div, this.data, this.chartistOptions);
-    this.chart.on('draw', function(data) {
+    this.chart.on('draw', (data:any) => {
       // GFP.log.info( 'Chartis.on() context ', data);
       if (data.type === 'line' || data.type === 'area') {
         if (data.type === 'line')
@@ -308,6 +334,8 @@ class LineGraphTooltip extends GraphTooltip {
 }
 
 class BarGraphTooltip extends GraphTooltip {
+  chartistOptions: any;
+  data: { series: { x: any; y: any; }[][]; }|undefined;
   constructor() {
     super();
     this.type = 'bar';
@@ -331,7 +359,7 @@ class BarGraphTooltip extends GraphTooltip {
     };
   }
 
-  getDiv(parentDiv) {
+  getDiv(parentDiv:HTMLDivElement):HTMLDivElement {
     let coor = GraphTooltip.array2Coor(this.serie.flotpairs);
     let div = document.createElement('div');
     let color = this.color;
@@ -340,14 +368,14 @@ class BarGraphTooltip extends GraphTooltip {
       series: [coor]
     };
     div.className = 'ct-chart ct-golden-section';
-    if (this.size != null) div.style = `width:${this.size};`;
+    if (this.size != null) div.style.width = this.size;
     if (this.low != null) this.chartistOptions.low = this.low;
     if (this.high != null) this.chartistOptions.high = this.high;
     let chart = new Chartist.Bar(div, this.data, this.chartistOptions);
     let seq = 0,
       delays = Math.round(50 / (coor.length / 10)),
       durations = Math.round(250 / (coor.length / 10));
-    chart.on('draw', function(data) {
+    chart.on('draw', function (data:any) {
       if (data.type === 'bar') {
         data.element.attr({
           style: `stroke: ${color}`
@@ -364,5 +392,6 @@ class BarGraphTooltip extends GraphTooltip {
         });
       }
     });
+    return div;
   }
 }

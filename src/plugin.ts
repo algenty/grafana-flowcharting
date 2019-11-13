@@ -1,0 +1,326 @@
+
+declare var GFP: FlowChartingPlugin;
+/**
+ * Global Manager of plugin
+ * @export
+ * @class FlowChartingPlugin
+ */
+export default class FlowChartingPlugin {
+  private contextRoot: string;
+  private data: any;
+  private repo: string;
+  public perf: Perf;
+  public log: Log;
+  public utils: any;
+  static defaultContextRoot: string = '/public/plugins/agenty-flowcharting-panel/';
+  private templateSrv: any;
+
+  constructor(context_root: string) {
+    this.contextRoot = context_root;
+    this.data = this.loadJson();
+    this.repo = this.getRepo();
+    this.perf = new Perf();
+    this.log = new Log();
+    this.utils = require('./utils');
+  }
+
+
+  /**
+   * Initialize
+   * @static
+   * @param  {*} $scope 
+   * @return FlowChartingPlugin 
+   * @memberof FlowChartingPlugin
+   */
+  static init($scope: any): FlowChartingPlugin {
+    let plugin, contextRoot;
+    if ($scope == undefined) {
+      console.warn("$scope is undefined, use __dirname instead");
+      contextRoot = __dirname;
+      if (contextRoot.length > 0) plugin = new FlowChartingPlugin(contextRoot);
+      else {
+        contextRoot = FlowChartingPlugin.defaultContextRoot;
+        console.warn("__dirname is empty, user default", contextRoot);
+        plugin = new FlowChartingPlugin(contextRoot);
+      }
+    }
+    else {
+      contextRoot = $scope.$root.appSubUrl + FlowChartingPlugin.defaultContextRoot;
+      console.info("Context-root for plugin is", contextRoot);
+      plugin = new FlowChartingPlugin(contextRoot);
+    }
+    (<any>window).GFP = plugin;
+    return plugin;
+  }
+
+
+
+  /**
+   * Get templateSrv from dashboard
+   * @return TemplateSrv
+   * @memberof FlowChartingPlugin
+   */
+  getTemplateSrv(): any {
+    return this.templateSrv;
+  }
+
+  /**
+   * Get url of documentation site
+   * @return string 
+   * @memberof FlowChartingPlugin
+   */
+  private getRepo(): string {
+    let url: string = '';
+    // let link: any;
+    this.data.info.links.forEach((link: { name: string, url: string }) => {
+      if (link.name === 'Documentation') url = link.url;
+    });
+    return url;
+  }
+
+  /**
+   * 
+   * @private
+   * @return * 
+   * @memberof FlowChartingPlugin
+   */
+  private loadJson(): any {
+    let data: any = require('./plugin.json');
+    return data;
+  }
+
+  /**
+   * return the uri path for GF
+   *
+   * @returns {string} Uri path of plugin
+   * @memberof FlowChartingPlugin
+   */
+  getRootPath(): string {
+    return this.contextRoot;
+  }
+
+
+  /**
+   * return the uri libs path for GF
+   *
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
+  getLibsPath(): string {
+    return `${this.getRootPath()}libs`;
+  }
+
+  /**
+   * return the uri draw.io libs for GF 
+   *
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
+  getDrawioPath(): string {
+    return `${this.getLibsPath()}/drawio`;
+  }
+
+  /**
+   * return the uri path of shapes js for GF 
+   *
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
+  getShapesPath(): string {
+    return `${this.getDrawioPath()}/shapes`;
+  }
+
+  /**
+   * return the uri path of stencils xml for GF
+   *
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
+  getStencilsPath(): string {
+    return `${this.getDrawioPath()}/shapes`;
+  }
+
+  /**
+   * return the uri path of mxgraph base for GF
+   *
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
+  getMxBasePath(): string {
+    return `${this.getLibsPath()}/mxgraph/javascript/dist/`;
+  }
+
+  /**
+   * return the uri path of mxgraph image for GF
+   *
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
+  getMxImagePath(): string {
+    return `${this.getMxBasePath()}images/`;
+  }
+
+  /**
+   * Return partials path (html) for edit mode in grafana 
+   *
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
+  getPartialPath(): string {
+    return `${this.getRootPath()}/partials/`;
+  }
+
+  /**
+   * return version of GF
+   *
+   * @returns {string} version (plugin.json)
+   * @memberof FlowChartingPlugin
+   */
+  getVersion(): string {
+    return this.data.info.version;
+  }
+
+  /**
+  * Return Html for popup with links to documentation
+  *
+  * @param {string} text
+  * @param {string} tagBook
+  * @param {string} [tagImage]
+  * @returns {string}
+  * @memberof FlowChartingPlugin
+  */
+  popover(text: string, tagBook: string, tagImage?: string): string {
+    const url = this.repo;
+    const images = `${this.repo}images/`;
+    const textEncoded = String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+    const desc = `${textEncoded}`;
+    let book = '';
+    let image = '';
+    if (tagBook)
+      book = `<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
+    if (tagImage)
+      image = `<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
+    return `
+    <div id="popover" style="display:flex;flex-wrap:wrap;width: 100%;">
+      <div style="flex:1;height:100px;margin-bottom: 20px;">${desc}</div>
+      <div style="flex:1;height:100px;margin-bottom: 20px;">${book}</div>
+      <div style="flex-basis: 100%;height:100px;margin-bottom:20px;">${image}</div>
+    </div>`;
+  }
+}
+
+
+class Perf {
+  enablePerf: boolean = false;
+  marky: any = null;
+  stack: Array<string> = [];
+  constructor() {
+  }
+
+  enable(bool: boolean): void {
+    this.enablePerf = bool;
+  }
+
+  start(name?: string) {
+    if (this.enablePerf) {
+      try {
+        if (this.marky == null) this.marky = GFP.utils.getMarky();
+        if (name == null) name = `GFP ${GFP.utils.uniqueID()}`;
+        this.stack.push(name);
+        this.marky.mark(name);
+      } catch (error) {
+        GFP.log.warn("Unable to start perf", error);
+      }
+    }
+  }
+
+  stop(name: (string | undefined)): PerformanceEntry | undefined | void {
+    if (this.enablePerf) {
+      try {
+        if (name == undefined) name = this.stack.shift();
+        let entry: PerformanceEntry = this.marky.stop(name);
+        console.log("Perfomance of " + name, entry);
+        return entry;
+      } catch (error) {
+        GFP.log.warn("Unable to stop perf", error);
+      }
+    }
+  }
+}
+
+class Log {
+  public static DEBUG: 0;
+  public static INFO: 1;
+  public static WARN: 2;
+  public static ERROR: 3;
+  logLevel: number = 2;
+  logDisplay: boolean = true;
+  constructor() {
+
+  }
+
+  /**
+   * If message must be displayed
+   *
+   * @param {number} level (DEBUG : 0, INFO : 1, WARN:2, ERROR:3)
+   * @returns {boolean}
+   * @memberof Log
+   */
+  toDisplay(level: number):boolean {
+    if (this.logDisplay !== undefined && this.logDisplay === true) {
+      if (this.logLevel !== undefined && level >= this.logLevel) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Display debug message in console
+   *
+   * @param {string} title
+   * @param {((any | undefined))} obj
+   * @memberof Log
+   */
+  debug(title: string, obj: (any | undefined)): void {
+    if (this.toDisplay(Log.DEBUG)) console.debug(`GF DEBUG : ${title}`, obj);
+  }
+
+  /**
+   * Display warn message in console
+   *
+   * @param {string} title
+   * @param {((any | undefined))} obj
+   * @memberof Log
+   */
+  warn(title: string, obj: (any | undefined)) {
+    if (this.toDisplay(Log.WARN)) console.debug(`GF WARN : ${title}`, obj);
+  }
+
+  /**
+   * Display info message in console
+   *
+   * @param {string} title
+   * @param {((any | undefined))} obj
+   * @memberof Log
+   */
+  info(title: string, obj: (any | undefined)) {
+    if (this.toDisplay(Log.INFO)) console.debug(`GF INFO : ${title}`, obj);
+  }
+
+  /**
+   * Display error message in console
+   *
+   * @param {string} title
+   * @param {((any | undefined))} obj
+   * @memberof Log
+   */
+  error(title: string, obj: (any | undefined)) {
+    if (this.toDisplay(Log.ERROR)) console.debug(`GF ERROR : ${title}`, obj);
+  }
+
+}
