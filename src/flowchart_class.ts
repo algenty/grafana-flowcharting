@@ -1,24 +1,31 @@
 import XGraph from './graph_class';
 import StateHandler from './statesHandler';
-import { anyTypeAnnotation } from '@babel/types';
+import State from './state_class';
+import Rule from './rule_class';
 
 declare var GFP: any;
+declare var mxUtils: any;
 type TSourceType = 'xml' | 'csv';
+type TPropType = 'id' | 'value';
+interface TOnMappingObj {
+
+}
 interface TFlowchartData {
-  name : string;
-  xml : string;
-  download : boolean;
-  type : TSourceType;
-  url : string;
-  zoom : string;
-  center : boolean;
-  scale : boolean;
-  lock:boolean;
-  allowDrawio : boolean;
-  tooltip : boolean;
-  grid : boolean;
-  bgColor : string;
-  editorUrl : string;
+  name: string;
+  xml: string;
+  csv: string
+  download: boolean;
+  type: TSourceType;
+  url: string;
+  zoom: string;
+  center: boolean;
+  scale: boolean;
+  lock: boolean;
+  allowDrawio: boolean;
+  tooltip: boolean;
+  grid: boolean;
+  bgColor: string;
+  editorUrl: string;
   editorTheme: string;
 }
 
@@ -30,21 +37,22 @@ interface TFlowchartData {
  * @class Flowchart
  */
 export default class Flowchart {
-  data : TFlowchartData;
-  container : string;
-  xgraph : any;
-  stateHandler : any;
-  ctrl : any;
-  templateSrv : any;
-  width : any;
-  height : any;
-  constructor(name:string, xmlGraph:string, container:string, ctrl:any, data:TFlowchartData) {
-    GFP.log.info( `flowchart[${name}].constructor()`);
-    GFP.log.debug( `flowchart[${name}].constructor() data`, data);
+  data: TFlowchartData;
+  container: HTMLDivElement;
+  xgraph: any;
+  stateHandler: any;
+  ctrl: any;
+  templateSrv: any;
+  width: any;
+  height: any;
+  states : Map<string,State>|undefined;
+  constructor(name: string, xmlGraph: string, container: HTMLDivElement, ctrl: any, data: TFlowchartData) {
+    GFP.log.info(`flowchart[${name}].constructor()`);
+    GFP.log.debug(`flowchart[${name}].constructor() data`, data);
     this.data = data;
     this.data.name = name;
     this.data.xml = xmlGraph;
-    this.data.download = false; 
+    this.data.download = false;
     this.container = container;
     this.xgraph = undefined;
     this.stateHandler = undefined;
@@ -59,9 +67,9 @@ export default class Flowchart {
    * @param {Object} obj
    * @memberof Flowchart
    */
-  import(obj):this {
-    GFP.log.info( `flowchart[${this.data.name}].import()`);
-    GFP.log.debug( `flowchart[${this.data.name}].import() obj`, obj);
+  import(obj: any): this {
+    GFP.log.info(`flowchart[${this.data.name}].import()`);
+    GFP.log.debug(`flowchart[${this.data.name}].import() obj`, obj);
     this.data.download = (obj.download !== undefined ? obj.download : false);
     if (obj.source) this.data.type = obj.source.type;
     else this.data.type = obj.type || this.data.type || 'xml';
@@ -97,7 +105,7 @@ export default class Flowchart {
    * @returns {Object} Data object
    * @memberof Flowchart
    */
-  getData():TFlowchartData {
+  getData(): TFlowchartData {
     return this.data;
   }
 
@@ -107,14 +115,15 @@ export default class Flowchart {
    * @param {*} rules
    * @memberof Flowchart
    */
-  updateStates(rules) {
+  updateStates(rules: Array<Rule>) {
     // if (this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
     // this.stateHandler.prepare();
     rules.forEach(rule => {
       rule.states = this.stateHandler.getStatesForRule(rule);
-      rule.states.forEach(state => {
+      if (rule.states) rule.states.forEach((state: any) => {
         state.unsetState();
       });
+      else GFP.log.warn("States not defined for this rule")
     });
   }
 
@@ -124,7 +133,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   init() {
-    GFP.log.info( `flowchart[${this.data.name}].init()`);
+    GFP.log.info(`flowchart[${this.data.name}].init()`);
     if (this.xgraph === undefined)
       this.xgraph = new XGraph(this.container, this.data.type, this.getContent());
     if (this.data.xml !== undefined && this.data.xml !== null) {
@@ -140,7 +149,7 @@ export default class Flowchart {
       if (this.data.lock) this.xgraph.lockGraph(true);
       this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
     } else {
-      GFP.log.error( 'XML Graph not defined');
+      GFP.log.error('XML Graph not defined');
     }
   }
 
@@ -171,13 +180,14 @@ export default class Flowchart {
    * @param {*} series
    * @memberof Flowchart
    */
-  setStates(rules, series) {
-    GFP.log.info( `flowchart[${this.data.name}].setStates()`);
+  setStates(rules: Rule[], series: any): this {
+    GFP.log.info(`flowchart[${this.data.name}].setStates()`);
     // GFP.log.debug( `flowchart[${this.data.name}].setStates() rules`, rules);
     // GFP.log.debug( `flowchart[${this.data.name}].setStates() series`, series);
-    if (rules === undefined) GFP.log.error( "Rules shoudn't be null");
-    if (series === undefined) GFP.log.error( "Series shoudn't be null");
+    if (rules === undefined) GFP.log.error("Rules shoudn't be null");
+    if (series === undefined) GFP.log.error("Series shoudn't be null");
     this.stateHandler.setStates(rules, series);
+    return this;
   }
 
   /**
@@ -185,7 +195,7 @@ export default class Flowchart {
    *
    * @memberof Flowchart
    */
-  setOptions() {
+  setOptions(): this {
     this.setScale(this.data.scale);
     this.setCenter(this.data.center);
     this.setGrid(this.data.grid);
@@ -193,6 +203,7 @@ export default class Flowchart {
     this.setLock(this.data.lock);
     this.setZoom(this.data.zoom);
     this.setBgColor(this.data.bgColor);
+    return this;
   }
 
 
@@ -201,9 +212,10 @@ export default class Flowchart {
    *
    * @memberof Flowchart
    */
-  applyStates() {
-    GFP.log.info( `flowchart[${this.data.name}].applyStates()`);
+  applyStates(): this {
+    GFP.log.info(`flowchart[${this.data.name}].applyStates()`);
     this.stateHandler.applyStates();
+    return this;
   }
 
   /**
@@ -212,7 +224,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   applyOptions() {
-    GFP.log.info( `flowchart[${this.data.name}].refresh()`);
+    GFP.log.info(`flowchart[${this.data.name}].refresh()`);
     // GFP.log.debug( `flowchart[${this.data.name}].refresh() data`, this.data);
     this.xgraph.applyGraph(this.width, this.height);
   }
@@ -222,8 +234,7 @@ export default class Flowchart {
    *
    * @memberof Flowchart
    */
-  refresh()
-  {
+  refresh() {
     this.xgraph.refresh();
   }
 
@@ -233,13 +244,13 @@ export default class Flowchart {
    * @param {*} xmlGraph
    * @memberof Flowchart
    */
-  redraw(xmlGraph) {
-    GFP.log.info( `flowchart[${this.data.name}].redraw()`);
+  redraw(xmlGraph: string) {
+    GFP.log.info(`flowchart[${this.data.name}].redraw()`);
     if (xmlGraph !== undefined) {
       this.data.xml = xmlGraph;
       this.xgraph.setXmlGraph(this.getXml(true));
     } else {
-      GFP.log.warn( 'XML Content not defined');
+      GFP.log.warn('XML Content not defined');
       this.xgraph.setXmlGraph(this.getXml(true));
     }
     this.applyOptions();
@@ -251,7 +262,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   reload() {
-    GFP.log.info( `flowchart[${this.data.name}].reload()`);
+    GFP.log.info(`flowchart[${this.data.name}].reload()`);
     if (this.xgraph !== undefined && this.xgraph !== null) {
       this.xgraph.destroyGraph();
       this.xgraph = undefined;
@@ -260,73 +271,82 @@ export default class Flowchart {
     else this.init();
   }
 
-  setLock(bool) {
+  setLock(bool: boolean): this {
     this.data.lock = bool;
     this.xgraph.lock = bool;
+    return this;
   }
 
-  lock(bool) {
+  lock(bool: boolean): this {
     if (bool !== undefined) this.data.lock = bool;
     this.xgraph.lockGraph(this.data.lock);
+    return this;
   }
 
-  setTooltip(bool) {
+  setTooltip(bool: boolean): this {
     this.data.tooltip = bool;
     this.xgraph.tooltip = bool;
+    return this;
   }
 
-  tooltip(bool) {
+  tooltip(bool: boolean): this {
     if (bool !== undefined) this.data.tooltip = bool;
     this.xgraph.tooltipGraph(this.data.tooltip);
+    return this;
   }
 
-  setScale(bool) {
+  setScale(bool: boolean): this {
     this.data.scale = bool;
     this.xgraph.scale = bool;
+    return this;
   }
 
-  setBgColor(bgColor) {
+  setBgColor(bgColor: string): this {
     this.data.bgColor = bgColor;
     this.xgraph.bgColor = bgColor;
+    return this;
   }
 
-  bgColor(bgColor) {
+  bgColor(bgColor: string): this {
     this.data.bgColor = bgColor;
     if (bgColor) this.xgraph.bgGraph(bgColor);
+    return this;
   }
 
-  scale(bool) {
-    GFP.log.info( 'Flowchart.scale()');
+  scale(bool: boolean): this {
+    GFP.log.info('Flowchart.scale()');
     if (bool !== undefined) this.data.scale = bool;
     this.xgraph.scaleGraph(this.data.scale);
+    return this;
   }
 
-  setCenter(bool) {
+  setCenter(bool: boolean) {
     this.data.center = bool;
     this.xgraph.center = bool;
+    return this;
   }
 
-  getNamesByProp(prop) {
+  getNamesByProp(prop: TPropType) {
     return this.xgraph.getOrignalCells(prop);
   }
 
-  getXml(replaceVarBool) {
-    GFP.log.info( `flowchart[${this.data.name}].getXml()`);
+  getXml(replaceVarBool: boolean): string {
+    GFP.log.info(`flowchart[${this.data.name}].getXml()`);
     if (!replaceVarBool) return this.data.xml;
     return this.templateSrv.replaceWithText(this.data.xml);
   }
 
-  getCsv(replaceVarBool) {
-    GFP.log.info( `flowchart[${this.data.name}].getXml()`);
+  getCsv(replaceVarBool: boolean): string {
+    GFP.log.info(`flowchart[${this.data.name}].getXml()`);
     if (!replaceVarBool) return this.data.csv;
     return this.templateSrv.replaceWithText(this.data.csv);
   }
 
-  getUrlEditor() {
+  getUrlEditor(): string {
     return this.data.editorUrl;
   }
 
-  getThemeEditor() {
+  getThemeEditor(): string {
     return this.data.editorTheme;
   }
 
@@ -336,8 +356,8 @@ export default class Flowchart {
    * @returns
    * @memberof Flowchart
    */
-  getContent() {
-    GFP.log.info( `flowchart[${this.data.name}].getContent()`);
+  getContent():string {
+    GFP.log.info(`flowchart[${this.data.name}].getContent()`);
     if (this.data.download) {
       let url = this.templateSrv.replaceWithText(this.data.url);
       let content = this.loadContent(url);
@@ -348,6 +368,8 @@ export default class Flowchart {
       if (this.data.type === 'xml') return this.getXml(true);
       if (this.data.type === 'csv') return this.getCsv(true);
     }
+    GFP.log.error('type unknow',this.data.type )
+    return '';
   }
 
   /**
@@ -357,61 +379,71 @@ export default class Flowchart {
    * @returns
    * @memberof Flowchart
    */
-  loadContent(url) {
-    GFP.log.info( `flowchart[${this.data.name}].loadContent()`);
-    var req = mxUtils.load(url);
+  loadContent(url:string):string|null {
+    GFP.log.info(`flowchart[${this.data.name}].loadContent()`);
+    var req:any = mxUtils.load(url);
     if (req.getStatus() === 200) {
       return req.getText();
     } else {
-      GFP.log.error( 'Cannot load ' + url, req.getStatus());
-      return null;
+      GFP.log.error('Cannot load ' + url, req.getStatus());
+      return `Error when loading ${url}`;
     }
   }
 
-  renameId(oldId, newId) {
+  renameId(oldId:string, newId:string):this {
     this.xgraph.renameId(oldId, newId);
+    return this;
   }
 
-  applyModel() {
-    this.xmlGraph = this.xgraph.getXmlModel();
-    this.redraw(this.xmlGraph);
+  applyModel():this {
+    this.data.xml = this.xgraph.getXmlModel();
+    this.redraw(this.data.xml);
+    return this;
   }
 
-  center(bool) {
+  center(bool:boolean):this {
     if (bool !== undefined) this.data.center = bool;
     this.xgraph.centerGraph(this.data.center);
+    return this;
   }
 
-  setZoom(percent) {
+  setZoom(percent:string):this {
     this.data.zoom = percent;
     this.xgraph.zoomPercent = percent;
+    return this;
   }
 
-  zoom(percent) {
-    if (percent !== undefined) this.data.percent = percent;
-    this.xgraph.zoomGraph(this.data.percent);
+  zoom(percent:string):this {
+    if (percent !== undefined) this.data.zoom = percent;
+    this.xgraph.zoomGraph(this.data.zoom);
+    return this;
   }
 
-  setGrid(bool) {
+  setGrid(bool:boolean):this {
     this.data.grid = bool;
     this.xgraph.grid = bool;
+    return this;
   }
 
-  grid(bool) {
+  grid(bool:boolean):this {
     if (bool !== undefined) this.data.grid = bool;
     this.xgraph.gridGraph(this.data.grid);
+    return this;
   }
 
-  setWidth(width) {
+  setWidth(width:number):this {
     this.width = width;
+    return this;
   }
 
-  setHeight(height) {
+  setHeight(height:number):this {
     this.height = height;
+    return this;
   }
 
-  setXml(xml) {
+  setXml(xml:string):this {
     this.data.xml = xml;
+    return this;
   }
 
   minify() {
@@ -430,12 +462,12 @@ export default class Flowchart {
     if (!GFP.utils.isencoded(this.data.xml)) this.data.xml = GFP.utils.encode(this.data.xml, true, true, true);
   }
 
-  getContainer() {
+  getContainer():HTMLDivElement {
     return this.container;
   }
 
-  setMap(onMappingObj) {
-    GFP.log.info( `flowchart[${this.data.name}].setMap()`);
+  setMap(onMappingObj:TOnMappingObj) {
+    GFP.log.info(`flowchart[${this.data.name}].setMap()`);
     const container = this.getContainer();
     this.xgraph.setMap(onMappingObj);
     container.scrollIntoView();

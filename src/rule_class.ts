@@ -59,8 +59,9 @@ interface TRuleData {
   mappingType: number;
   valueData: Array<TValueMapData>;
   rangeData: Array<TRangeMapData>;
-  sanitize: boolean; 
-  order : number;
+  sanitize: boolean;
+  order: number;
+  states: Map<string, State>;
 }
 /**
  *Rule definition
@@ -77,7 +78,7 @@ export default class Rule {
   rangeMaps: RangeMap[] = [];
   id: string;
   sanitize: boolean = false;
-  states: Map<string, State>|undefined;
+  states: Map<string, State> | undefined;
 
   /**
    *Creates an instance of Rule.
@@ -399,7 +400,7 @@ export default class Rule {
    * @memberof Rule
    */
   addShapeMap(pattern: string): ShapeMap {
-    const data:any = {};
+    const data: any = {};
     const m = new ShapeMap(pattern, data);
     m.import(data);
     this.shapeMaps.push(m);
@@ -466,7 +467,7 @@ export default class Rule {
    * @memberof Rule
    */
   addTextMap(pattern: string): TextMap {
-    const data:any = {};
+    const data: any = {};
     const m = new TextMap(pattern, data);
     m.import(data);
     this.textMaps.push(m);
@@ -536,7 +537,7 @@ export default class Rule {
    */
   addLinkMap(pattern: string): LinkMap {
     GFP.log.info('Rule.addLinkMap()');
-    const data:any = {};
+    const data: any = {};
     const m = new LinkMap(pattern, data);
     m.import(data);
     this.linkMaps.push(m);
@@ -597,7 +598,7 @@ export default class Rule {
   // STRING VALUE MAPS
   //
   addValueMap(value: string, text: string): ValueMap {
-    const data:any = {};
+    const data: any = {};
     const m = new ValueMap(value, text, data);
     m.import(data);
     this.valueMaps.push(m);
@@ -623,7 +624,7 @@ export default class Rule {
   // STRING RANGE VALUE MAPS
   //
   addRangeMap(from: number, to: number, text: string): RangeMap {
-    const data:any = {};
+    const data: any = {};
     const m = new RangeMap(from, to, text, data);
     this.rangeMaps.push(m);
     this.data.rangeData.push(data);
@@ -809,10 +810,10 @@ export default class Rule {
       if (_.isArray(value)) {
         value = value[0];
       }
-      const date = moment(value);
-      // if (this.dashboard.isTimezoneUtc()) {
-      //     date = date.utc();
-      // }
+      // const date = moment(value);
+      if (this.dashboard.isTimezoneUtc()) {
+          date = date.utc();
+      }
       return date.format(this.data.dateFormat);
     }
     return value;
