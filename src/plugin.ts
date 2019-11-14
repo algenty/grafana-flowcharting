@@ -32,11 +32,12 @@ export default class FlowChartingPlugin {
    */
   static init($scope: any): FlowChartingPlugin {
     let plugin, contextRoot;
-    if ($scope == undefined) {
+    if ($scope === undefined) {
       console.warn('$scope is undefined, use __dirname instead');
       contextRoot = __dirname;
-      if (contextRoot.length > 0) { plugin = new FlowChartingPlugin(contextRoot); }
-      else {
+      if (contextRoot.length > 0) {
+        plugin = new FlowChartingPlugin(contextRoot);
+      } else {
         contextRoot = FlowChartingPlugin.defaultContextRoot;
         console.warn('__dirname is empty, user default', contextRoot);
         plugin = new FlowChartingPlugin(contextRoot);
@@ -68,7 +69,9 @@ export default class FlowChartingPlugin {
     let url = '';
     // let link: any;
     this.data.info.links.forEach((link: { name: string; url: string }) => {
-      if (link.name === 'Documentation') { url = link.url; }
+      if (link.name === 'Documentation') {
+        url = link.url;
+      }
     });
     return url;
   }
@@ -194,8 +197,12 @@ export default class FlowChartingPlugin {
     const desc = `${textEncoded}`;
     let book = '';
     let image = '';
-    if (tagBook) { book = `<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`; }
-    if (tagImage) { image = `<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`; }
+    if (tagBook) {
+      book = `<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
+    }
+    if (tagImage) {
+      image = `<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
+    }
     return `
     <div id="popover" style="display:flex;flex-wrap:wrap;width: 100%;">
       <div style="flex:1;height:100px;margin-bottom: 20px;">${desc}</div>
@@ -218,8 +225,12 @@ class Perf {
   start(name?: string) {
     if (this.enablePerf) {
       try {
-        if (this.marky == null) { this.marky = GFP.utils.getMarky(); }
-        if (name == null) { name = `GFP ${GFP.utils.uniqueID()}`; }
+        if (this.marky == null) {
+          this.marky = GFP.utils.getMarky();
+        }
+        if (name == null) {
+          name = `GFP ${GFP.utils.uniqueID()}`;
+        }
         this.stack.push(name);
         this.marky.mark(name);
       } catch (error) {
@@ -231,7 +242,9 @@ class Perf {
   stop(name: string | undefined): PerformanceEntry | undefined | void {
     if (this.enablePerf) {
       try {
-        if (name == undefined) { name = this.stack.shift(); }
+        if (name === undefined) {
+          name = this.stack.shift();
+        }
         const entry: PerformanceEntry = this.marky.stop(name);
         console.log('Perfomance of ' + name, entry);
         return entry;
@@ -275,7 +288,9 @@ class Log {
    * @memberof Log
    */
   debug(title: string, obj: any | undefined): void {
-    if (this.toDisplay(Log.DEBUG)) { console.debug(`GF DEBUG : ${title}`, obj); }
+    if (this.toDisplay(Log.DEBUG)) {
+      console.debug(`GF DEBUG : ${title}`, obj);
+    }
   }
 
   /**
@@ -286,7 +301,9 @@ class Log {
    * @memberof Log
    */
   warn(title: string, obj?: any) {
-    if (this.toDisplay(Log.WARN)) { console.debug(`GF WARN : ${title}`, obj); }
+    if (this.toDisplay(Log.WARN)) {
+      console.warn(`GF WARN : ${title}`, obj);
+    }
   }
 
   /**
@@ -297,7 +314,9 @@ class Log {
    * @memberof Log
    */
   info(title: string, obj?: any) {
-    if (this.toDisplay(Log.INFO)) { console.debug(`GF INFO : ${title}`, obj); }
+    if (this.toDisplay(Log.INFO)) {
+      console.info(`GF INFO : ${title}`, obj);
+    }
   }
 
   /**
@@ -308,6 +327,8 @@ class Log {
    * @memberof Log
    */
   error(title: string, obj?: any) {
-    if (this.toDisplay(Log.ERROR)) { console.debug(`GF ERROR : ${title}`, obj); }
+    if (this.toDisplay(Log.ERROR)) {
+      console.error(`GF ERROR : ${title}`, obj);
+    }
   }
 }
