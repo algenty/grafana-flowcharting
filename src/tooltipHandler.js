@@ -46,15 +46,15 @@ export default class TooltipHandler {
     this.lastChange =
       current_datetime.getFullYear() +
       '-' +
-      (current_datetime.getMonth() + 1) +
+      (current_datetime.getMonth() + 1).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) +
       '-' +
-      current_datetime.getDate() +
+      current_datetime.getDate().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) +
       ' ' +
-      current_datetime.getHours() +
+      current_datetime.getHours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) +
       ':' +
-      current_datetime.getMinutes() +
+      current_datetime.getMinutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) +
       ':' +
-      current_datetime.getSeconds();
+      current_datetime.getSeconds().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
   }
 
   destroy() {
