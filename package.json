@@ -52,6 +52,6 @@
     "vkbeautify": "^0.99.3"
   },
   "dependencies": {
-    "@grafana/toolkit": "lastest"
+    "@grafana/toolkit": "canary"
   }
 }

@@ -24,6 +24,7 @@
         "sourceType": "module"
     },
     "rules": {
+        "no-console": "off",
         "lodash/prefer-lodash-method": "off",
         "prefer-destructuring": 0,
         "global-require": 0,

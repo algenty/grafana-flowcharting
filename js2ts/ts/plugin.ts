@@ -14,8 +14,8 @@ export default class FlowChartingPlugin {
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   private templateSrv: any;
 
-  constructor(contextRoot: string) {
-    this.contextRoot = contextRoot;
+  constructor(context_root: string) {
+    this.contextRoot = context_root;
     this.data = this.loadJson();
     this.repo = this.getRepo();
     this.perf = new Perf();
@@ -33,18 +33,18 @@ export default class FlowChartingPlugin {
   static init($scope: any): FlowChartingPlugin {
     let plugin, contextRoot;
     if ($scope === undefined) {
-      // console.warn('$scope is undefined, use __dirname instead');
+      console.warn('$scope is undefined, use __dirname instead');
       contextRoot = __dirname;
       if (contextRoot.length > 0) {
         plugin = new FlowChartingPlugin(contextRoot);
       } else {
         contextRoot = FlowChartingPlugin.defaultContextRoot;
-        // console.warn('__dirname is empty, user default', contextRoot);
+        console.warn('__dirname is empty, user default', contextRoot);
         plugin = new FlowChartingPlugin(contextRoot);
       }
     } else {
       contextRoot = $scope.$root.appSubUrl + FlowChartingPlugin.defaultContextRoot;
-      // console.info('Context-root for plugin is', contextRoot);
+      console.info('Context-root for plugin is', contextRoot);
       plugin = new FlowChartingPlugin(contextRoot);
     }
     (window as any).GFP = plugin;
@@ -289,7 +289,7 @@ class Log {
    */
   debug(title: string, obj: any | undefined): void {
     if (this.toDisplay(Log.DEBUG)) {
-      // console.debug(`GF DEBUG : ${title}`, obj);
+      console.debug(`GF DEBUG : ${title}`, obj);
     }
   }
 
@@ -315,7 +315,7 @@ class Log {
    */
   info(title: string, obj?: any) {
     if (this.toDisplay(Log.INFO)) {
-      // console.info(`GF INFO : ${title}`, obj);
+      console.info(`GF INFO : ${title}`, obj);
     }
   }
 
