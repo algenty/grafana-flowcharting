@@ -40,7 +40,7 @@ export default class TooltipHandler {
    */
   addMetric(): MetricTooltip {
     this.checked = true;
-    let metric = new MetricTooltip();
+    const metric = new MetricTooltip();
     this.metrics.add(metric);
     return metric;
   }
@@ -51,7 +51,7 @@ export default class TooltipHandler {
    * @memberof TooltipHandler
    */
   updateDate() {
-    let current_datetime = new Date();
+    const current_datetime = new Date();
     this.lastChange =
       current_datetime.getFullYear() +
       '-' +
@@ -68,17 +68,17 @@ export default class TooltipHandler {
 
   destroy() {
     this.metrics.clear();
-    if (this.mxcell.GF_tooltipHandler) delete this.mxcell.GF_tooltipHandler;
+    if (this.mxcell.GF_tooltipHandler) { delete this.mxcell.GF_tooltipHandler; }
   }
 
   getDiv(parentDiv: HTMLDivElement) {
     if (this.div != null) {
-      if (parentDiv != undefined) parentDiv.appendChild(this.div);
+      if (parentDiv != undefined) { parentDiv.appendChild(this.div); }
       return this.div;
     }
-    if (!this.checked) return null;
-    let div = document.createElement('div');
-    if (parentDiv != undefined) parentDiv.appendChild(div);
+    if (!this.checked) { return null; }
+    const div = document.createElement('div');
+    if (parentDiv != undefined) { parentDiv.appendChild(div); }
     if (this.metrics.size > 0) {
       this.getDateDiv(div);
       this.metrics.forEach((metric: MetricTooltip) => {
@@ -90,9 +90,9 @@ export default class TooltipHandler {
   }
 
   getDateDiv(parentDiv: HTMLDivElement) {
-    let div = document.createElement('div');
+    const div = document.createElement('div');
     div.id = this.mxcell.mxObjectId + '_DATE';
-    if (parentDiv != undefined) parentDiv.appendChild(div);
+    if (parentDiv != undefined) { parentDiv.appendChild(div); }
     div.className = 'graph-tooltip-time tooltip-date';
     div.innerHTML = `${this.lastChange}`;
     return div;
@@ -129,7 +129,7 @@ class MetricTooltip {
   }
 
   setColor(color: string): this {
-    if (color != null) this.color = color;
+    if (color != null) { this.color = color; }
     return this;
   }
 
@@ -139,10 +139,10 @@ class MetricTooltip {
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
-    let div = document.createElement('div');
+    const div = document.createElement('div');
     div.className = 'tooltip-metric';
-    if (this.direction === 'h') div.style.display = 'inline-block;';
-    if (parentDiv != undefined) parentDiv.appendChild(div);
+    if (this.direction === 'h') { div.style.display = 'inline-block;'; }
+    if (parentDiv != undefined) { parentDiv.appendChild(div); }
     this.div = div;
     this.getTextDiv(div);
     this.getGraphsDiv(div);
@@ -150,10 +150,10 @@ class MetricTooltip {
   }
 
   getTextDiv(parentDiv: HTMLDivElement): HTMLDivElement {
-    let div = document.createElement('div');
+    const div = document.createElement('div');
     div.className = 'tooltip-text';
     let string = '';
-    if (parentDiv != undefined) parentDiv.appendChild(div);
+    if (parentDiv != undefined) { parentDiv.appendChild(div); }
     if (this.label !== undefined) {
       string += `${this.label} : `;
       string += `<span style="color:${this.color}"><b>${this.value}</b></span>`;
@@ -163,12 +163,13 @@ class MetricTooltip {
   }
 
   getGraphsDiv(parentDiv: HTMLDivElement): HTMLDivElement {
-    let div = document.createElement('div');
-    if (parentDiv != undefined) parentDiv.appendChild(div);
-    if (this.graphs.size > 0)
+    const div = document.createElement('div');
+    if (parentDiv != undefined) { parentDiv.appendChild(div); }
+    if (this.graphs.size > 0) {
       this.graphs.forEach(graph => {
         graph.getDiv(div);
       });
+    }
     return div;
   }
 
@@ -182,7 +183,7 @@ class MetricTooltip {
         graph = new BarGraphTooltip();
         break;
       default:
-        GFP.log.error("Graph type unknow",type);
+        GFP.log.error('Graph type unknow', type);
         graph = new BarGraphTooltip();
         break;
     }
@@ -240,7 +241,7 @@ class GraphTooltip {
   }
 
   setColor(color: string): this {
-    if (color != null) this.color = color;
+    if (color != null) { this.color = color; }
     return this;
   }
 
@@ -250,11 +251,11 @@ class GraphTooltip {
   }
 
   static array2Coor(arr: any) {
-    let result = [];
+    const result = [];
     for (let index = 0; index < arr.length; index++) {
       result.push({
         x: arr[index][0],
-        y: arr[index][1]
+        y: arr[index][1],
       });
     }
     return result;
@@ -264,7 +265,7 @@ class GraphTooltip {
 class LineGraphTooltip extends GraphTooltip {
   chartistOptions: any;
   div: HTMLDivElement | undefined;
-  data: { series: { x: any; y: any; }[][]; } | undefined;
+  data: { series: Array<{ x: any; y: any }>[] } | undefined;
   chart: any;
   constructor() {
     super();
@@ -278,42 +279,44 @@ class LineGraphTooltip extends GraphTooltip {
       axisX: {
         showGrid: false,
         showLabel: false,
-        offset: 0
+        offset: 0,
       },
       axisY: {
         showGrid: false,
         showLabel: false,
-        offset: 0
+        offset: 0,
       },
-      chartPadding: 0
+      chartPadding: 0,
     };
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
-    let coor = GraphTooltip.array2Coor(this.serie.flotpairs);
-    let div = document.createElement('div');
-    let color = this.color;
+    const coor = GraphTooltip.array2Coor(this.serie.flotpairs);
+    const div = document.createElement('div');
+    const color = this.color;
     this.div = div;
-    if (parentDiv != undefined) parentDiv.appendChild(div);
+    if (parentDiv != undefined) { parentDiv.appendChild(div); }
     div.className = 'ct-chart ct-golden-section';
     this.data = {
-      series: [coor]
+      series: [coor],
     };
-    if (this.size != null) div.style.width = this.size;
-    if (this.low != null) this.chartistOptions.low = this.low;
-    if (this.high != null) this.chartistOptions.high = this.high;
+    if (this.size != null) { div.style.width = this.size; }
+    if (this.low != null) { this.chartistOptions.low = this.low; }
+    if (this.high != null) { this.chartistOptions.high = this.high; }
     this.chart = new Chartist.Line(div, this.data, this.chartistOptions);
-    this.chart.on('draw', (data:any) => {
+    this.chart.on('draw', (data: any) => {
       // GFP.log.info( 'Chartis.on() context ', data);
       if (data.type === 'line' || data.type === 'area') {
-        if (data.type === 'line')
+        if (data.type === 'line') {
           data.element.attr({
-            style: `stroke: ${color}`
+            style: `stroke: ${color}`,
           });
-        if (data.type === 'area')
+        }
+        if (data.type === 'area') {
           data.element.attr({
-            style: `fill: ${color}`
+            style: `fill: ${color}`,
           });
+        }
         data.element.animate({
           d: {
             begin: 1000 * data.index,
@@ -324,8 +327,8 @@ class LineGraphTooltip extends GraphTooltip {
               .translate(0, data.chartRect.height())
               .stringify(),
             to: data.path.clone().stringify(),
-            easing: Chartist.Svg.Easing.easeOutQuint
-          }
+            easing: Chartist.Svg.Easing.easeOutQuint,
+          },
         });
       }
     });
@@ -335,7 +338,7 @@ class LineGraphTooltip extends GraphTooltip {
 
 class BarGraphTooltip extends GraphTooltip {
   chartistOptions: any;
-  data: { series: { x: any; y: any; }[][]; }|undefined;
+  data: { series: Array<{ x: any; y: any }>[] } | undefined;
   constructor() {
     super();
     this.type = 'bar';
@@ -348,37 +351,37 @@ class BarGraphTooltip extends GraphTooltip {
       axisX: {
         showGrid: false,
         showLabel: false,
-        offset: 0
+        offset: 0,
       },
       axisY: {
         showGrid: false,
         showLabel: false,
-        offset: 0
+        offset: 0,
       },
-      chartPadding: 0
+      chartPadding: 0,
     };
   }
 
-  getDiv(parentDiv:HTMLDivElement):HTMLDivElement {
-    let coor = GraphTooltip.array2Coor(this.serie.flotpairs);
-    let div = document.createElement('div');
-    let color = this.color;
-    if (parentDiv != undefined) parentDiv.appendChild(div);
+  getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
+    const coor = GraphTooltip.array2Coor(this.serie.flotpairs);
+    const div = document.createElement('div');
+    const color = this.color;
+    if (parentDiv != undefined) { parentDiv.appendChild(div); }
     this.data = {
-      series: [coor]
+      series: [coor],
     };
     div.className = 'ct-chart ct-golden-section';
-    if (this.size != null) div.style.width = this.size;
-    if (this.low != null) this.chartistOptions.low = this.low;
-    if (this.high != null) this.chartistOptions.high = this.high;
-    let chart = new Chartist.Bar(div, this.data, this.chartistOptions);
+    if (this.size != null) { div.style.width = this.size; }
+    if (this.low != null) { this.chartistOptions.low = this.low; }
+    if (this.high != null) { this.chartistOptions.high = this.high; }
+    const chart = new Chartist.Bar(div, this.data, this.chartistOptions);
     let seq = 0,
       delays = Math.round(50 / (coor.length / 10)),
       durations = Math.round(250 / (coor.length / 10));
-    chart.on('draw', function (data:any) {
+    chart.on('draw', function(data: any) {
       if (data.type === 'bar') {
         data.element.attr({
-          style: `stroke: ${color}`
+          style: `stroke: ${color}`,
         });
         seq++;
         data.element.animate({
@@ -387,8 +390,8 @@ class BarGraphTooltip extends GraphTooltip {
             dur: durations,
             from: 0,
             to: 1,
-            easing: 'ease'
-          }
+            easing: 'ease',
+          },
         });
       }
     });

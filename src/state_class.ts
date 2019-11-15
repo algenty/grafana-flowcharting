@@ -8,7 +8,7 @@ interface typeColor {
   strokeColor: string | undefined;
   fontColor: string | undefined;
   imageBorder: string | undefined;
-  imageBackground: string | undefined
+  imageBackground: string | undefined;
 }
 type styleColor = keyof typeColor;
 
@@ -26,17 +26,17 @@ export default class State {
   templateSrv: any;
   changed: boolean;
   changedShape: boolean;
-  changedStyle: { fillColor: boolean; strokeColor: boolean; fontColor: boolean; imageBorder: boolean; imageBackground: boolean; };
+  changedStyle: { fillColor: boolean; strokeColor: boolean; fontColor: boolean; imageBorder: boolean; imageBackground: boolean };
   changedText: boolean;
   changedLink: boolean;
   matched: boolean;
   matchedShape: boolean;
-  matchedStyle: { fillColor: boolean; strokeColor: boolean; fontColor: boolean; imageBorder: boolean; imageBackground: boolean; };
+  matchedStyle: { fillColor: boolean; strokeColor: boolean; fontColor: boolean; imageBorder: boolean; imageBackground: boolean };
   matchedText: boolean;
   matchedLink: boolean;
   globalLevel: number;
   styleKeys: styleColor[];
-  level: { fillColor: number; strokeColor: number; fontColor: number; imageBorder: number; imageBackground: number; };
+  level: { fillColor: number; strokeColor: number; fontColor: number; imageBorder: number; imageBackground: number };
   tooltipHandler: null;
   currentColors: typeColor;
   originalColors: typeColor;
@@ -70,7 +70,7 @@ export default class State {
       strokeColor: false,
       fontColor: false,
       imageBorder: false,
-      imageBackground: false
+      imageBackground: false,
     };
     this.changedText = false;
     this.changedLink = false;
@@ -83,7 +83,7 @@ export default class State {
       strokeColor: false,
       fontColor: false,
       imageBorder: false,
-      imageBackground: false
+      imageBackground: false,
     };
     this.matchedText = false;
     this.matchedLink = false;
@@ -94,7 +94,7 @@ export default class State {
       strokeColor: -1,
       fontColor: -1,
       imageBorder: -1,
-      imageBackground: -1
+      imageBackground: -1,
     };
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
@@ -104,7 +104,7 @@ export default class State {
     this.originalText = this.xgraph.getLabel(mxcell);
     this.currentText = this.originalText;
     let link = this.xgraph.getLink(mxcell);
-    if (link === undefined) link = null;
+    if (link === undefined) { link = null; }
     this.originalLink = link;
     this.currentLink = link;
     this.styleKeys.forEach(style => {
@@ -155,15 +155,24 @@ export default class State {
           // tooltips
           if (rule.toTooltipize(level)) {
             // Metrics
-            if (this.tooltipHandler == null) this.tooltipHandler = new TooltipHandler(this.mxcell);
+            if (this.tooltipHandler == null) { this.tooltipHandler = new TooltipHandler(this.mxcell); }
             let tpColor = null;
-            let label = (rule.data.tooltipLabel == null || rule.data.tooltipLabel.length === 0) ? serie.alias : rule.data.tooltipLabel;
-            if (rule.data.tooltipColors) tpColor = color;
-            let metric = this.tooltipHandler.addMetric().setLabel(label).setValue(FormattedValue).setColor(tpColor).setDirection(rule.data.tpDirection);
+            const label = rule.data.tooltipLabel == null || rule.data.tooltipLabel.length === 0 ? serie.alias : rule.data.tooltipLabel;
+            if (rule.data.tooltipColors) { tpColor = color; }
+            const metric = this.tooltipHandler
+              .addMetric()
+              .setLabel(label)
+              .setValue(FormattedValue)
+              .setColor(tpColor)
+              .setDirection(rule.data.tpDirection);
             // Graph
             if (rule.data.tpGraph) {
-              let graph = metric.addGraph(rule.data.tpGraphType);
-              graph.setColor(tpColor).setSerie(serie).setSize(rule.data.tpGraphSize).setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh);
+              const graph = metric.addGraph(rule.data.tpGraphType);
+              graph
+                .setColor(tpColor)
+                .setSerie(serie)
+                .setSize(rule.data.tpGraphSize)
+                .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh);
             }
             // Date
             this.tooltipHandler.updateDate();
@@ -176,7 +185,7 @@ export default class State {
               this.setColorStyle(rule.data.style, color);
               this.matchedStyle[rule.data.style] = true;
             } else if (this.changedShape) {
-              if (this.changedStyle[rule.data.style]) this.unsetColorStyle(rule.data.style);
+              if (this.changedStyle[rule.data.style]) { this.unsetColorStyle(rule.data.style); }
             }
             this.overlayIcon = rule.toIconize(level);
           }
@@ -268,8 +277,8 @@ export default class State {
    * @memberof State
    */
   getCellProp(prop) {
-    if (prop === 'id') return this.cellId;
-    if (prop === 'value') return this.originalText;
+    if (prop === 'id') { return this.cellId; }
+    if (prop === 'value') { return this.originalText; }
     return '/!\\ Not found';
   }
 
@@ -322,7 +331,7 @@ export default class State {
    * @memberof State
    */
   unsetTooltip() {
-    if (this.tooltipHandler != null) this.tooltipHandler.destroy();
+    if (this.tooltipHandler != null) { this.tooltipHandler.destroy(); }
     this.tooltipHandler = null;
   }
 
@@ -348,7 +357,7 @@ export default class State {
   setLevelStyle(style, level) {
     GFP.log.info('State.setLevelStyle()');
     this.level[style] = level;
-    if (this.globalLevel < level) this.globalLevel = level;
+    if (this.globalLevel < level) { this.globalLevel = level; }
   }
 
   /**
@@ -444,7 +453,7 @@ export default class State {
     GFP.log.info('State.addTooltipValue()');
     GFP.log.debug('State.addTooltipValue() label', label);
     GFP.log.debug('State.addTooltipValue() value', value);
-    if (this.tooltipHandler == null) this.tooltipHandler = new TooltipHandler(this.mxcell);
+    if (this.tooltipHandler == null) { this.tooltipHandler = new TooltipHandler(this.mxcell); }
     this.tooltipHandler.addMetric(name, label, value, color, direction);
   }
 
@@ -506,7 +515,7 @@ export default class State {
       if (this.matchedStyle[key]) {
         const color = this.currentColors[key];
         this.xgraph.setStyleCell(this.mxcell, key, color, true);
-        if (color !== this.originalColors[key]) this.changedStyle[key] = true;
+        if (color !== this.originalColors[key]) { this.changedStyle[key] = true; }
       }
     });
   }
