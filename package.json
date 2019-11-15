@@ -30,7 +30,6 @@
     "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@grafana/data": "canary",
     "@grafana/runtime": "canary",
-    "@grafana/toolkit": "canary",
     "@grafana/ui": "canary",
     "@types/angular": "^1.6.56",
     "@types/jquery": "^3.3.31",
@@ -52,5 +51,7 @@
     "mxgraph": "^4.0.4",
     "vkbeautify": "^0.99.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@grafana/toolkit": "lastest"
+  }
 }
