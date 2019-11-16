@@ -1,15 +1,87 @@
-import kbn from 'grafana/app/core/utils/kbn';
+// import kbn from 'grafana/app/core/utils/kbn';
 import moment from 'moment';
+import grafana from 'grafana_func';
+import State from './state_class';
+import _ from 'lodash';
+
+declare var GFP: any;
+type Taggregation = 'first' | 'current' | 'min' | 'max' | 'total' | 'avg' | 'count' | 'delta' | 'range' | 'diff';
+type TTypeStyle = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
+type TLinkOn = 'wc' | 'a';
+type TTooltipOn = 'wc' | 'a';
+type TColorOn = 'n' | 'wc' | 'a';
+type TTextOn = 'n' | 'wmd' | 'wc' | 'co';
+type TDirection = 'v' | 'h';
+type TTextReplace = 'content' | 'pattern' | 'as' | 'anl';
+type TDateFormat = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
+type TGraphSize = '100%' | '100px' | '200px' | '400px';
+type TGraphType = 'line' | 'bar';
+type TPropType = 'id' | 'value';
+interface TIRuleData {
+  order: number;
+  pattern: string;
+  unit: string;
+  type: string;
+  alias: string;
+  aggregation: Taggregation;
+  decimals: number;
+  colors: string[];
+  reduce: boolean;
+  style: TTypeStyle;
+  colorOn: TColorOn;
+  link: boolean;
+  linkOn: TLinkOn;
+  linkUrl: string;
+  linkParams: boolean;
+  textOn: TTextOn;
+  textReplace: TTextReplace;
+  textPattern: string;
+  dateFormat: TDateFormat;
+  thresholds: number[];
+  stringWarning: string;
+  stringCritical: string;
+  invert: boolean;
+  overlayIcon: boolean;
+  tooltip: boolean;
+  tooltipLabel: string;
+  tooltipColors: boolean;
+  tooltipOn: TTooltipOn;
+  tpDirection: TDirection;
+  tpGraph: boolean;
+  tpGraphSize: TGraphSize;
+  tpGraphType: TGraphType;
+  tpGraphLow: number;
+  tpGraphHigh: number;
+  shapeProp: TPropType;
+  shapeData: TShapeData[];
+  textProp: TPropType;
+  textData: TTextData[];
+  linkProp: TPropType;
+  linkData: TLinkData[];
+  mappingType: number;
+  valueData: TValueMapData[];
+  rangeData: TRangeMapData[];
+  sanitize: boolean;
+}
 
 /**
- *Rule definition
+ * Rule definition
  *
  * @export
  * @class Rule
  */
 export default class Rule {
+  data: TIRuleData;
+  shapeMaps: ShapeMap[];
+  textMaps: TextMap[];
+  linkMaps: LinkMap[];
+  valueMaps: ValueMap[];
+  rangeMaps: RangeMap[];
+  id: string;
+  states!: Map<string, State>;
+
   /**
-   *Creates an instance of Rule.
+   * Creates an instance of Rule.
    * @param {string} pattern
    * @param {*} data
    * @memberof Rule
@@ -24,15 +96,12 @@ export default class Rule {
     this.rangeMaps = [];
     this.id = GFP.utils.uniqueID();
     this.import(data);
-    const LEVEL_OK = 0;
-    const LEVEL_WARN = 1;
-    const LEVEL_ERROR = 2;
   }
 
   /**
    * return data of rule
    *
-   * @returns {data} 
+   * @returns {data}
    * @memberof Rule
    */
   getData() {
@@ -51,9 +120,7 @@ export default class Rule {
     this.data.alias = obj.alias || 'No name';
     this.data.aggregation = obj.aggregation || 'current';
     this.data.decimals = obj.decimals !== undefined ? obj.decimals : 2;
-    this.data.colors = obj.colors
-      ? [...obj.colors]
-      : ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
+    this.data.colors = obj.colors ? [...obj.colors] : ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
     this.data.reduce = true;
     this.data.style = obj.style || obj.colorMode || 'fillColor';
     this.data.colorOn = obj.colorOn || 'a';
@@ -88,12 +155,14 @@ export default class Rule {
     this.data.shapeData = [];
     // For 0.2.0
     maps = [];
-    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0)
+    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) {
       maps = obj.shapeMaps;
-    else maps = obj.shapeData;
+    } else {
+      maps = obj.shapeData;
+    }
 
     if (maps !== undefined && maps !== null && maps.length > 0) {
-      maps.forEach(map => {
+      maps.forEach((map: any) => {
         const newData = {};
         const sm = new ShapeMap(map.pattern, newData);
         sm.import(map);
@@ -107,11 +176,13 @@ export default class Rule {
     this.data.textData = [];
     // For 0.2.0
     maps = [];
-    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0)
+    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) {
       maps = obj.textMaps;
-    else maps = obj.textData;
+    } else {
+      maps = obj.textData;
+    }
     if (maps !== undefined && maps != null && maps.length > 0) {
-      maps.forEach(map => {
+      maps.forEach((map: any) => {
         const newData = {};
         const tm = new TextMap(map.pattern, newData);
         tm.import(map);
@@ -124,7 +195,7 @@ export default class Rule {
     this.data.linkProp = obj.linkProp || 'id';
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
-      obj.linkData.forEach(map => {
+      obj.linkData.forEach((map: any) => {
         const newData = {};
         const lm = new LinkMap(map.pattern, newData);
         lm.import(map);
@@ -138,7 +209,7 @@ export default class Rule {
     // VALUES
     this.data.valueData = [];
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
-      obj.valueData.forEach(map => {
+      obj.valueData.forEach((map: any) => {
         const newData = {};
         const vm = new ValueMap(map.value, map.text, newData);
         vm.import(map);
@@ -162,7 +233,7 @@ export default class Rule {
   }
 
   /**
-   *return uniq id of rule
+   * Return uniq id of rule
    *
    * @returns
    * @memberof Rule
@@ -172,7 +243,7 @@ export default class Rule {
   }
 
   /**
-   *Highlight Cells in rule (mapping color text and link)
+   * Highlight Cells in rule (mapping color text and link)
    *
    * @memberof Rule
    */
@@ -185,7 +256,7 @@ export default class Rule {
   }
 
   /**
-   *Highlight Cells in rule (mapping color text and link)
+   * Highlight Cells in rule (mapping color text and link)
    *
    * @memberof Rule
    */
@@ -198,8 +269,8 @@ export default class Rule {
   }
 
   /**
-   *Return the order of this rule
-   *Grafana 6+ have a bug when reload dashboad, array are not in order
+   * Return the order of this rule
+   * Grafana 6+ have a bug when reload dashboad, array are not in order
    *
    * @param {number} order
    * @memberof Rule
@@ -209,7 +280,7 @@ export default class Rule {
   }
 
   /**
-   *Return order of rule
+   * Return order of rule
    *
    * @memberof Rule
    */
@@ -218,7 +289,7 @@ export default class Rule {
   }
 
   /**
-   *Invert color order
+   * Invert color order
    *
    * @memberof Rule
    */
@@ -227,31 +298,41 @@ export default class Rule {
     const copy = ref[0];
     ref[0] = ref[2];
     ref[2] = copy;
-    if (this.data.invert) this.data.invert = false;
-    else this.data.invert = true;
+    if (this.data.invert) {
+      this.data.invert = false;
+    } else {
+      this.data.invert = true;
+    }
   }
 
   //
   // Conditions
   //
   /**
-   *Return true or false for condition to colorize
+   * Return true or false for condition to colorize
    *
    * @param {number} level
    * @returns
    * @memberof Rule
    */
   toColorize(level) {
-    if (level === -1) return false;
-    if (this.data.colorMode === "disabled") return false;
-    if (this.data.colorOn === 'n') return false;
-    if (this.data.colorOn === 'a') return true;
-    if (this.data.colorOn === 'wc' && level >= 1) return true;
+    if (level === -1) {
+      return false;
+    }
+    if (this.data.colorOn === 'n') {
+      return false;
+    }
+    if (this.data.colorOn === 'a') {
+      return true;
+    }
+    if (this.data.colorOn === 'wc' && level >= 1) {
+      return true;
+    }
     return false;
   }
 
   /**
-   *Return true or false for condition to change label
+   * Return true or false for condition to change label
    *
    * @param {number} level
    * @returns
@@ -260,53 +341,75 @@ export default class Rule {
   toLabelize(level) {
     // if (this.data.textOn === 'wmd' && level > 0) return true;
     // if (this.data.textOn === 'wmd' && level === -1) return false;
-    if (this.data.textOn === 'wmd') return true;
-    if (this.data.textOn === 'n') return false;
-    if (this.data.textOn === 'wc' && level >= 1) return true;
-    if (this.data.textOn === 'co' && level >= 2) return true;
+    if (this.data.textOn === 'wmd') {
+      return true;
+    }
+    if (this.data.textOn === 'n') {
+      return false;
+    }
+    if (this.data.textOn === 'wc' && level >= 1) {
+      return true;
+    }
+    if (this.data.textOn === 'co' && level >= 2) {
+      return true;
+    }
     return false;
   }
 
   /**
-   *Return true or false for condition to display icon warning
+   * Return true or false for condition to display icon warning
    *
    * @param {level} level
    * @returns
    * @memberof Rule
    */
   toIconize(level) {
-    if (this.data.overlayIcon === false) return false;
-    if (this.data.overlayIcon === true && level >= 1) return true;
+    if (this.data.overlayIcon === false) {
+      return false;
+    }
+    if (this.data.overlayIcon === true && level >= 1) {
+      return true;
+    }
     return false;
   }
 
   /**
-   *Return true or false for condition to add/replace link
+   * Return true or false for condition to add/replace link
    *
    * @param {number} level
    * @returns
    * @memberof Rule
    */
   toLinkable(level) {
-    if (this.data.link === false) return false;
-    if (this.data.linkOn === 'n') return false;
-    if (this.data.linkOn === 'a') return true;
-    if (this.data.linkOn === 'wc' && level >= 1) return true;
+    if (this.data.link === false) {
+      return false;
+    }
+    if (this.data.linkOn === 'a') {
+      return true;
+    }
+    if (this.data.linkOn === 'wc' && level >= 1) {
+      return true;
+    }
     return false;
   }
 
   /**
-   *Return true or false for condition to display tooltip with values
+   * Return true or false for condition to display tooltip with values
    *
    * @param {number} level
    * @returns
    * @memberof Rule
    */
   toTooltipize(level) {
-    if (this.data.tooltip === false) return false;
-    if (this.data.tooltipOn === 'n') return false;
-    if (this.data.tooltipOn === 'a') return true;
-    if (this.data.tooltipOn === 'wc' && level >= 1) return true;
+    if (this.data.tooltip === false) {
+      return false;
+    }
+    if (this.data.tooltipOn === 'a') {
+      return true;
+    }
+    if (this.data.tooltipOn === 'wc' && level >= 1) {
+      return true;
+    }
     return false;
   }
 
@@ -314,7 +417,7 @@ export default class Rule {
   // Series
   //
   /**
-   *Return boolean if serie is matched by rule
+   * Return boolean if serie is matched by rule
    *
    * @param {*} serie
    * @returns
@@ -328,7 +431,7 @@ export default class Rule {
   // SHAPE MAPS
   //
   /**
-   *Add new shape for rule
+   * Add new shape for rule
    *
    * @param {*} pattern
    * @memberof Rule
@@ -342,7 +445,7 @@ export default class Rule {
   }
 
   /**
-   *Remove shape for rule
+   * Remove shape for rule
    *
    * @param {number} index
    * @memberof Rule
@@ -353,7 +456,7 @@ export default class Rule {
   }
 
   /**
-   *Return shape objet in index position
+   * Return shape objet in index position
    *
    * @param {number} index
    * @returns {ShapeMap}
@@ -364,7 +467,7 @@ export default class Rule {
   }
 
   /**
-   *Return all ShapeMaps
+   * Return all ShapeMaps
    *
    * @returns {Array<ShapeMap>}
    * @memberof Rule
@@ -374,7 +477,7 @@ export default class Rule {
   }
 
   /**
-   *Return bool if shape name (value|id) is in rule
+   * Return bool if shape name (value|id) is in rule
    *
    * @param {string} pattern
    * @returns
@@ -383,7 +486,9 @@ export default class Rule {
   matchShape(pattern) {
     let found = false;
     this.shapeMaps.forEach(element => {
-      if (element.match(pattern)) found = true;
+      if (element.match(pattern)) {
+        found = true;
+      }
     });
     return found;
   }
@@ -415,7 +520,9 @@ export default class Rule {
   matchText(pattern) {
     let found = false;
     this.textMaps.forEach(element => {
-      if (element.match(pattern)) found = true;
+      if (element.match(pattern)) {
+        found = true;
+      }
     });
     return found;
   }
@@ -424,7 +531,7 @@ export default class Rule {
   // LINK MAPS
   //
   addLinkMap(pattern) {
-    GFP.log.info( 'Rule.addLinkMap()');
+    GFP.log.info('Rule.addLinkMap()');
     const data = {};
     const m = new LinkMap(pattern, data);
     m.import(data);
@@ -448,7 +555,9 @@ export default class Rule {
   matchLink(pattern) {
     let found = false;
     this.linkMaps.forEach(element => {
-      if (element.match(pattern)) found = true;
+      if (element.match(pattern)) {
+        found = true;
+      }
     });
     return found;
   }
@@ -512,7 +621,7 @@ export default class Rule {
   // Format value
   //
   /**
-   *Get color according to value
+   * Get color according to value
    *
    * @param {*} value
    * @returns {string} html color
@@ -528,22 +637,27 @@ export default class Rule {
         return this.data.colors[i];
       }
     }
-    return _.first(this.data.colors);
+    return this.data.colors[0];
   }
 
   /**
-   *Get color according level (-1,0,1,2)
+   * Get color according level (-1,0,1,2)
    *
    * @param {*} level
    * @returns
    * @memberof Rule
    */
-  getColorForLevel(level) {
+  getColorForLevel(level: number) {
     let colors = [...this.data.colors];
-    if (!this.data.invert) colors = colors.reverse();
-    if (level <= 0) return colors[0];
-    else if (colors[level] !== undefined) return colors[level];
-    return _.first(colors);
+    if (!this.data.invert) {
+      colors = colors.reverse();
+    }
+    if (level <= 0) {
+      return colors[0];
+    } else if (colors[level] !== undefined) {
+      return colors[level];
+    }
+    return colors[0];
   }
 
   /**
@@ -558,26 +672,46 @@ export default class Rule {
       let thresholdLevel = 0;
       const thresholds = this.data.thresholds;
 
-      if (thresholds === undefined || thresholds.length === 0) return -1;
-      if (thresholds.length !== 2) return -1;
+      if (thresholds === undefined || thresholds.length === 0) {
+        return -1;
+      }
+      if (thresholds.length !== 2) {
+        return -1;
+      }
 
       // non invert
       if (!this.data.invert) {
         thresholdLevel = 2;
-        if (value >= thresholds[0]) thresholdLevel = 1;
-        if (value >= thresholds[1]) thresholdLevel = 0;
+        if (value >= thresholds[0]) {
+          thresholdLevel = 1;
+        }
+        if (value >= thresholds[1]) {
+          thresholdLevel = 0;
+        }
       } else {
         thresholdLevel = 0;
-        if (value >= thresholds[0]) thresholdLevel = 1;
-        if (value >= thresholds[1]) thresholdLevel = 2;
+        if (value >= thresholds[0]) {
+          thresholdLevel = 1;
+        }
+        if (value >= thresholds[1]) {
+          thresholdLevel = 2;
+        }
       }
       return thresholdLevel;
     } else if (this.data.type === 'string') {
-      if (value === this.data.stringWarning) return 1;
-      if (value === this.data.stringCritical) return 2;
-      let formatedValue = this.getFormattedValue(value);
-      if (formatedValue === this.data.stringWarning) return 1;
-      if (formatedValue === this.data.stringCritical) return 2;
+      if (value === this.data.stringWarning) {
+        return 1;
+      }
+      if (value === this.data.stringCritical) {
+        return 2;
+      }
+      const formatedValue = this.getFormattedValue(value);
+      if (formatedValue === this.data.stringWarning) {
+        return 1;
+      }
+      if (formatedValue === this.data.stringCritical) {
+        return 2;
+      }
       return 0;
     }
     return 0;
@@ -586,13 +720,14 @@ export default class Rule {
   getValueForSerie(serie) {
     if (this.matchSerie(serie)) {
       try {
-        let value = _.get(serie.stats, this.data.aggregation);
+        // let value = _.get(serie.stats, this.data.aggregation);
+        let value = serie.stats[this.data.aggregation];
         if (value === undefined || value === null) {
           value = serie.datapoints[serie.datapoints.length - 1][0];
         }
         return value;
       } catch (error) {
-        GFP.log.error( "datapoint for serie is null", error);
+        GFP.log.error('datapoint for serie is null', error);
         return null;
       }
     }
@@ -605,28 +740,31 @@ export default class Rule {
   }
 
   getLink() {
-    if (this.data.linkParams) return this.data.linkUrl + window.location.search;
+    if (this.data.linkParams) {
+      return this.data.linkUrl + window.location.search;
+    }
     return this.data.linkUrl;
   }
 
   getFormattedValue(value) {
     // Number
     if (this.data.type === 'number') {
-      if (!_.isFinite(value)) return 'Invalid Number';
+      if (!_.isFinite(value)) {
+        return 'Invalid Number';
+      }
       if (value === null || value === void 0) {
         return '-';
       }
       let decimals = this.decimalPlaces(value);
-      decimals =
-        typeof this.data.decimals === 'number' ? Math.min(this.data.decimals, decimals) : decimals;
-      return formatValue(value, this.data.unit, this.data.decimals);
+      decimals = typeof this.data.decimals === 'number' ? Math.min(this.data.decimals, decimals) : decimals;
+      return grafana.formatValue(value, this.data.unit, this.data.decimals);
     }
 
     if (this.data.type === 'string') {
       if (value === null || value === void 0) {
         value = 'null';
       }
-      
+
       if (_.isArray(value)) {
         value = value.join(', ');
       }
@@ -634,7 +772,9 @@ export default class Rule {
       if (mappingType === 1 && this.valueMaps) {
         for (let i = 0; i < this.valueMaps.length; i += 1) {
           const map = this.valueMaps[i];
-          if (map.match(value)) return map.getFormattedText(value);
+          if (map.match(value)) {
+            return map.getFormattedText(value);
+          }
         }
         return value.toString();
       }
@@ -642,7 +782,9 @@ export default class Rule {
       if (mappingType === 2 && this.rangeMaps) {
         for (let i = 0; i < this.rangeMaps.length; i += 1) {
           const map = this.rangeMaps[i];
-          if (map.match(value)) return map.getFormattedText(value);
+          if (map.match(value)) {
+            return map.getFormattedText(value);
+          }
         }
         return value.toString();
       }
@@ -650,7 +792,6 @@ export default class Rule {
       if (value === null || value === void 0) {
         return 'null';
       }
-
     }
 
     if (this.data.type === 'date') {
@@ -671,17 +812,21 @@ export default class Rule {
   }
 
   getReplaceText(text, FormattedValue) {
-    if (this.data.textReplace === 'content') return FormattedValue;
+    if (this.data.textReplace === 'content') {
+      return FormattedValue;
+    }
     if (this.data.textReplace === 'pattern') {
       const regexVal = GFP.utils.stringToJsRegex(this.data.textPattern);
-      if (text.toString().match(regexVal)) return text.toString().replace(regexVal, FormattedValue);
+      if (text.toString().match(regexVal)) {
+        return text.toString().replace(regexVal, FormattedValue);
+      }
       return text;
     }
     if (this.data.textReplace === 'as') {
-      return `${text} ${FormattedValue}`
+      return `${text} ${FormattedValue}`;
     }
     if (this.data.textReplace === 'anl') {
-      return `${text}\n${FormattedValue}`
+      return `${text}\n${FormattedValue}`;
     }
   }
 
@@ -694,14 +839,17 @@ export default class Rule {
       value = value.join(', ');
     }
 
-    if (this.sanitize) {
+    if (this.data.sanitize) {
       return this.$sanitize(value);
     }
     return _.escape(value);
   }
+  $sanitize(value: any) {
+    throw new Error('Method not implemented.');
+  }
 
   decimalPlaces(num) {
-    let match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+    const match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
     if (!match) {
       return 0;
     }
@@ -709,31 +857,35 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-      // Adjust for scientific notation.
-      (match[2] ? +match[2] : 0)
+        // Adjust for scientific notation.
+        (match[2] ? +match[2] : 0)
     );
   }
 }
 
-//
-// ShapeMap Class
-//
-class ShapeMap {
-  constructor(pattern, data) {
+interface TGFMapData {
+  pattern?: string;
+  hidden?: boolean;
+}
+class GFMap {
+  data!: TGFMapData;
+  id: string;
+  constructor(pattern, data: TGFMapData) {
     this.data = data;
-    this.id = GFP.utils.uniqueID();
-    this.data.pattern = undefined;
     this.data.pattern = pattern;
+    this.id = GFP.utils.uniqueID();
     this.import(data);
   }
 
-  import(obj) {
+  import(obj: any) {
     this.data.pattern = obj.pattern || '';
     this.data.hidden = obj.hidden || false;
   }
 
   match(text) {
-    if (text === undefined || text === null || text.length === 0) return false;
+    if (text === undefined || text === null || text.length === 0) {
+      return false;
+    }
     return GFP.utils.matchString(text, this.data.pattern);
   }
 
@@ -751,118 +903,76 @@ class ShapeMap {
 
   isHidden() {
     return this.data.hidden;
-  }
-
-  export() {
-    return {
-      pattern: this.data.pattern,
-      hidden: this.data.hidden
-    };
   }
 
   toVisible() {
-    if (this.data.hidden) return false;
+    if (this.data.hidden) {
+      return false;
+    }
     return true;
   }
-}
-
-//
-// TextMap Class
-//
-class TextMap {
-  constructor(pattern, data) {
-    this.data = data;
-    this.id = GFP.utils.uniqueID();
-    this.data.pattern = pattern;
-    this.import(data);
-  }
-
-  import(obj) {
-    this.data.pattern = obj.pattern || this.data.pattern;
-    this.data.hidden = obj.hidden || false;
-  }
-
-  match(text) {
-    if (text === undefined || text === null || text.length === 0) return false;
-    return GFP.utils.matchString(text, this.data.pattern);
-  }
-
-  getId() {
-    return this.id;
-  }
-
-  show() {
-    this.data.hidden = false;
-  }
-
-  hide() {
-    this.data.hidden = true;
-  }
-
-  isHidden() {
-    return this.data.hidden;
-  }
 
   export() {
     return {
       pattern: this.data.pattern,
-      hidden: this.data.hidden
+      hidden: this.data.hidden,
     };
   }
 }
 
-//
-// LinkMap Class
-//
-class LinkMap {
-  constructor(pattern, data) {
-    this.data = data;
-    this.id = GFP.utils.uniqueID();
-    this.data.pattern = pattern;
-    this.import(data);
-  }
-
-  import(obj) {
-    this.data.pattern = obj.pattern || this.data.pattern || '';
-    this.data.hidden = obj.hidden || false;
-  }
-
-  match(text) {
-    if (text === undefined || text === null || text.length === 0) return false;
-    return GFP.utils.matchString(text, this.data.pattern);
-  }
-
-  getId() {
-    return this.id;
-  }
-
-  show() {
-    this.data.hidden = false;
-  }
-
-  hide() {
-    this.data.hidden = true;
-  }
-
-  isHidden() {
-    return this.data.hidden;
-  }
-
-  export() {
-    return {
-      pattern: this.data.pattern,
-      hidden: this.data.hidden
-    };
+interface TShapeData extends TGFMapData {}
+/**
+ * ShapeMap class for mapping
+ * @class ShapeMap
+ * @extends GFMap
+ */
+class ShapeMap extends GFMap {
+  constructor(pattern, data: TShapeData | {}) {
+    super(pattern, data);
+    // this.import(data);
   }
 }
 
-//
-// RangeMap Class
-//
+interface TTextData extends TGFMapData {}
+/**
+ * TextMap class for mapping
+ * @class TextMap
+ * @extends GFMap
+ */
+class TextMap extends GFMap {
+  constructor(pattern, data: TTextData) {
+    super(pattern, data);
+    // this.import(data);
+  }
+}
+
+interface TLinkData extends TGFMapData {}
+/**
+ * LinkMap class for mapping
+ * @class LinkMap
+ * @extends GFMap
+ */
+class LinkMap extends GFMap {
+  constructor(pattern, data: TLinkData) {
+    super(pattern, data);
+  }
+}
+
+interface TRangeMapData {
+  from?: string | null;
+  to?: string | null;
+  text?: string;
+  hidden?: boolean;
+}
+
+/**
+ * TextMap class for Range Value
+ * @class RangeMap
+ */
 class RangeMap {
-  constructor(from, to, text, data) {
+  data: TRangeMapData;
+  constructor(from: string, to: string, text: string, data: TRangeMapData) {
     this.data = data;
-    this.id = GFP.utils.uniqueID();
     this.data.from = from;
     this.data.to = to;
     this.data.text = text;
@@ -870,7 +980,7 @@ class RangeMap {
     this.import(data);
   }
 
-  import(obj) {
+  import(obj: any) {
     this.data.from = obj.from || this.data.from || '';
     this.data.to = obj.to || this.data.to || '';
     this.data.text = obj.text || this.data.text || '';
@@ -892,16 +1002,7 @@ class RangeMap {
     return false;
   }
 
-  getId() {
-    return this.id;
-  }
-
   getFormattedText(value) {
-    if (value === null) {
-      if (this.data.from === 'null' && this.data.to === 'null') {
-        return this.data.text;
-      }
-    }
     if (this.match(value)) {
       return this.data.text;
     }
@@ -920,30 +1021,39 @@ class RangeMap {
     return this.data.hidden;
   }
 
+  toVisible() {
+    if (this.data.hidden) {
+      return false;
+    }
+    return true;
+  }
+
   export() {
     return {
       from: this.data.from,
       to: this.data.to,
       text: this.data.text,
-      hidden: this.data.hidden
+      hidden: this.data.hidden,
     };
   }
 }
 
-//
-// ValueMap Class
-//
+interface TValueMapData {
+  value?: string | null;
+  text?: string | null;
+  hidden?: boolean;
+}
 class ValueMap {
-  constructor(value, text, data) {
+  data: TValueMapData;
+  constructor(value: string, text: string, data: TValueMapData) {
     this.data = data;
-    this.id = GFP.utils.uniqueID();
     this.data.value = value;
     this.data.text = text;
     this.data.hidden = false;
     this.import(data);
   }
 
-  import(obj) {
+  import(obj: any) {
     this.data.value = obj.value || this.data.value || '';
     this.data.text = obj.text || this.data.text || '';
     this.data.hidden = obj.hidden || this.data.hidden || false;
@@ -962,10 +1072,6 @@ class ValueMap {
     }
 
     return GFP.utils.matchString(value.toString(), this.data.value);
-  }
-
-  getId() {
-    return this.id;
   }
 
   getFormattedText(value) {
@@ -996,12 +1102,8 @@ class ValueMap {
     return {
       value: this.data.value,
       text: this.data.text,
-      hidden: this.data.hidden
+      hidden: this.data.hidden,
     };
   }
-
 }
 
-function formatValue(value, unit, decimals) {
-  return kbn.valueFormats[unit](value, decimals, null).toString();
-}

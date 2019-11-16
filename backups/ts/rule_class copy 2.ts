@@ -768,15 +768,15 @@ export default class Rule {
 
 interface TGFMapData {
   pattern: string;
-  id: string;
   hidden: boolean;
 }
 class GFMap {
-  data: TGFMapData;
-  constructor(pattern, data) {
-    this.data.pattern = pattern;
-    this.data.id = GFP.utils.uniqueID();
-    this.data.hidden = false;
+  data!: TGFMapData;
+  id: string;
+  constructor(pattern, data: TGFMapData) {
+    this.data = data;
+    this.id = GFP.utils.uniqueID();
+    this.import(data);
   }
 
   import(obj: any) {
@@ -805,16 +805,16 @@ class GFMap {
     return this.data.hidden;
   }
 
+  toVisible() {
+    if (this.data.hidden) return false;
+    return true;
+  }
+
   export() {
     return {
       pattern: this.data.pattern,
       hidden: this.data.hidden,
     };
-  }
-
-  toVisible() {
-    if (this.data.hidden) return false;
-    return true;
   }
 }
 
@@ -842,7 +842,6 @@ class TextMap extends GFMap {
   }
 }
 
-
 /**
  * LinkMap class for mapping
  * @class LinkMap
@@ -854,13 +853,21 @@ class LinkMap extends GFMap {
   }
 }
 
-//
-// RangeMap Class
-//
+interface TRangeMapData {
+  from?: string | null;
+  to?: string | null;
+  text?: string;
+  hidden?: boolean;
+}
+
+/**
+ * TextMap class for Range Value
+ * @class RangeMap
+ */
 class RangeMap {
-  constructor(from, to, text, data) {
+  data: TRangeMapData;
+  constructor(from:string, to:string, text:string, data:TRangeMapData) {
     this.data = data;
-    this.id = GFP.utils.uniqueID();
     this.data.from = from;
     this.data.to = to;
     this.data.text = text;
@@ -868,7 +875,7 @@ class RangeMap {
     this.import(data);
   }
 
-  import(obj) {
+  import(obj:any) {
     this.data.from = obj.from || this.data.from || '';
     this.data.to = obj.to || this.data.to || '';
     this.data.text = obj.text || this.data.text || '';
@@ -890,16 +897,7 @@ class RangeMap {
     return false;
   }
 
-  getId() {
-    return this.id;
-  }
-
   getFormattedText(value) {
-    if (value === null) {
-      if (this.data.from === 'null' && this.data.to === 'null') {
-        return this.data.text;
-      }
-    }
     if (this.match(value)) {
       return this.data.text;
     }
@@ -918,6 +916,11 @@ class RangeMap {
     return this.data.hidden;
   }
 
+  toVisible() {
+    if (this.data.hidden) return false;
+    return true;
+  }
+
   export() {
     return {
       from: this.data.from,
@@ -928,20 +931,22 @@ class RangeMap {
   }
 }
 
-//
-// ValueMap Class
-//
+interface TValueMapData{
+  value ?:string|null;
+  text ?: string|null;
+  hidden ?: boolean;
+}
 class ValueMap {
-  constructor(value, text, data) {
+  data : TValueMapData;
+  constructor(value:string, text:string, data:TValueMapData) {
     this.data = data;
-    this.id = GFP.utils.uniqueID();
     this.data.value = value;
     this.data.text = text;
     this.data.hidden = false;
     this.import(data);
   }
 
-  import(obj) {
+  import(obj:any) {
     this.data.value = obj.value || this.data.value || '';
     this.data.text = obj.text || this.data.text || '';
     this.data.hidden = obj.hidden || this.data.hidden || false;
@@ -960,10 +965,6 @@ class ValueMap {
     }
 
     return GFP.utils.matchString(value.toString(), this.data.value);
-  }
-
-  getId() {
-    return this.id;
   }
 
   getFormattedText(value) {

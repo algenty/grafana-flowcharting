@@ -159,45 +159,41 @@ export default class FlowchartHandler {
     // not repeat render if mouse down
     this.optionsFlag = true;
     let id = GFP.utils.uniqueID()
-    GFP.perf.start("PERF : Render "+id);
+    GFP.perf.start("PERF : Render " + id);
     if (!this.mousedown) {
       let self = this;
-      new Promise((resolve) => {
-        // SOURCE
-        if (self.changeSourceFlag) {
-          self.load();
-          self.changeSourceFlag = false;
-          self.changeRuleFlag = true;
-          self.optionsFlag = true;
-        }
-        // OPTIONS
-        if (self.changeOptionFlag) {
-          self.setOptions();
-          self.changeOptionFlag = false;
-          self.optionsFlag = true;
-        }
-        // RULES or DATAS
-        if (self.changeRuleFlag || self.changeDataFlag) {
-          const rules = self.ctrl.rulesHandler.getRules();
-          const series = self.ctrl.series;
+      // SOURCE
+      if (self.changeSourceFlag) {
+        self.load();
+        self.changeSourceFlag = false;
+        self.changeRuleFlag = true;
+        self.optionsFlag = true;
+      }
+      // OPTIONS
+      if (self.changeOptionFlag) {
+        self.setOptions();
+        self.changeOptionFlag = false;
+        self.optionsFlag = true;
+      }
+      // RULES or DATAS
+      if (self.changeRuleFlag || self.changeDataFlag) {
+        const rules = self.ctrl.rulesHandler.getRules();
+        const series = self.ctrl.series;
 
-          // Change to async to optimize
-          self.async_refreshStates(rules, series);
-          self.changeDataFlag = false;
-          self.optionsFlag = false;
-        }
-        resolve(true);
-      })
-        .then(() => {
-          // OTHER : Resize, OnLoad
-          if (self.optionsFlag || self.firstLoad) {
-            self.applyOptions();
-            self.optionsFlag = false;
-            self.firstLoad = false;
-          }
-        });
+        // Change to async to optimize
+        self.async_refreshStates(rules, series);
+        self.changeDataFlag = false;
+        self.optionsFlag = false;
+      }
+      // OTHER : Resize, OnLoad
+      if (self.optionsFlag || self.firstLoad) {
+        self.applyOptions();
+        self.optionsFlag = false;
+        self.firstLoad = false;
+      }
     }
-    GFP.perf.stop("PERF : Render "+id);
+    this.refresh();
+    GFP.perf.stop("PERF : Render " + id);
   }
 
   /**

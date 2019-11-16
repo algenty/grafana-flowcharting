@@ -1,6 +1,7 @@
 import kbn from 'grafana/app/core/utils/kbn';
 import moment from 'moment';
-import { string } from 'prop-types';
+import State from './state_class';
+import _ from 'lodash';
 
 declare var GFP: any;
 type Taggregation = 'first' | 'current' | 'min' | 'max' | 'total' | 'avg' | 'count' | 'delta' | 'range' | 'diff';
@@ -8,7 +9,7 @@ type TTypeStyle = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'i
 type TLinkOn = 'wc' | 'a';
 type TTooltipOn = 'wc' | 'a';
 type TColorOn = 'n' | 'wc' | 'a';
-type TTextOn = 'n' | 'wc' | 'a';
+type TTextOn = 'n' | 'wmd' | 'wc' | 'co';
 type TDirection = 'v' | 'h';
 type TTextReplace = 'content' | 'pattern' | 'as' | 'anl';
 type TDateFormat = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
@@ -16,6 +17,7 @@ type TGraphSize = '100%' | '100px' | '200px' | '400px';
 type TGraphType = 'line' | 'bar';
 type TPropType = 'id' | 'value';
 interface TIRuleData {
+  order:number;
   pattern: string;
   unit: string;
   type: string;
@@ -50,7 +52,16 @@ interface TIRuleData {
   tpGraphLow: number;
   tpGraphHigh: number;
   shapeProp: TPropType;
-  shapeData: TShapeData;
+  shapeData: TShapeData[];
+  textProp: TPropType;
+  textData: TTextData[];
+  linkProp:TPropType;
+  linkData: TLinkData[];
+  mappingType:number;
+  valueData : TValueMapData[];
+  rangeData : TRangeMapData[];
+  sanitize:boolean;
+
 }
 
 /**
@@ -67,6 +78,7 @@ export default class Rule {
   valueMaps: Array<ValueMap>;
   rangeMaps: Array<RangeMap>;
   id: string;
+  states !: Map<string,State>;
 
   /**
    *Creates an instance of Rule.
@@ -147,7 +159,7 @@ export default class Rule {
     else maps = obj.shapeData;
 
     if (maps !== undefined && maps !== null && maps.length > 0) {
-      maps.forEach(map => {
+      maps.forEach((map: any) => {
         const newData = {};
         const sm = new ShapeMap(map.pattern, newData);
         sm.import(map);
@@ -164,7 +176,7 @@ export default class Rule {
     if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) maps = obj.textMaps;
     else maps = obj.textData;
     if (maps !== undefined && maps != null && maps.length > 0) {
-      maps.forEach(map => {
+      maps.forEach((map: any) => {
         const newData = {};
         const tm = new TextMap(map.pattern, newData);
         tm.import(map);
@@ -177,7 +189,7 @@ export default class Rule {
     this.data.linkProp = obj.linkProp || 'id';
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
-      obj.linkData.forEach(map => {
+      obj.linkData.forEach((map: any) => {
         const newData = {};
         const lm = new LinkMap(map.pattern, newData);
         lm.import(map);
@@ -191,7 +203,7 @@ export default class Rule {
     // VALUES
     this.data.valueData = [];
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
-      obj.valueData.forEach(map => {
+      obj.valueData.forEach((map: any) => {
         const newData = {};
         const vm = new ValueMap(map.value, map.text, newData);
         vm.import(map);
@@ -296,7 +308,6 @@ export default class Rule {
    */
   toColorize(level) {
     if (level === -1) return false;
-    if (this.data.colorMode === 'disabled') return false;
     if (this.data.colorOn === 'n') return false;
     if (this.data.colorOn === 'a') return true;
     if (this.data.colorOn === 'wc' && level >= 1) return true;
@@ -342,7 +353,6 @@ export default class Rule {
    */
   toLinkable(level) {
     if (this.data.link === false) return false;
-    if (this.data.linkOn === 'n') return false;
     if (this.data.linkOn === 'a') return true;
     if (this.data.linkOn === 'wc' && level >= 1) return true;
     return false;
@@ -357,7 +367,6 @@ export default class Rule {
    */
   toTooltipize(level) {
     if (this.data.tooltip === false) return false;
-    if (this.data.tooltipOn === 'n') return false;
     if (this.data.tooltipOn === 'a') return true;
     if (this.data.tooltipOn === 'wc' && level >= 1) return true;
     return false;
@@ -581,7 +590,7 @@ export default class Rule {
         return this.data.colors[i];
       }
     }
-    return _.first(this.data.colors);
+    return this.data.colors[0];
   }
 
   /**
@@ -591,12 +600,12 @@ export default class Rule {
    * @returns
    * @memberof Rule
    */
-  getColorForLevel(level) {
+  getColorForLevel(level:number) {
     let colors = [...this.data.colors];
     if (!this.data.invert) colors = colors.reverse();
     if (level <= 0) return colors[0];
     else if (colors[level] !== undefined) return colors[level];
-    return _.first(colors);
+    return colors[0];
   }
 
   /**
@@ -639,7 +648,8 @@ export default class Rule {
   getValueForSerie(serie) {
     if (this.matchSerie(serie)) {
       try {
-        let value = _.get(serie.stats, this.data.aggregation);
+        // let value = _.get(serie.stats, this.data.aggregation);
+        let value = serie.stats[this.data.aggregation ];
         if (value === undefined || value === null) {
           value = serie.datapoints[serie.datapoints.length - 1][0];
         }
@@ -745,10 +755,13 @@ export default class Rule {
       value = value.join(', ');
     }
 
-    if (this.sanitize) {
+    if (this.data.sanitize) {
       return this.$sanitize(value);
     }
     return _.escape(value);
+  }
+  $sanitize(value: any) {
+    throw new Error("Method not implemented.");
   }
 
   decimalPlaces(num) {
@@ -767,16 +780,17 @@ export default class Rule {
 }
 
 interface TGFMapData {
-  pattern: string;
-  id: string;
-  hidden: boolean;
+  pattern?: string;
+  hidden?: boolean;
 }
 class GFMap {
-  data: TGFMapData;
-  constructor(pattern, data) {
+  data!: TGFMapData;
+  id: string;
+  constructor(pattern, data: TGFMapData) {
+    this.data = data;
     this.data.pattern = pattern;
-    this.data.id = GFP.utils.uniqueID();
-    this.data.hidden = false;
+    this.id = GFP.utils.uniqueID();
+    this.import(data);
   }
 
   import(obj: any) {
@@ -805,62 +819,72 @@ class GFMap {
     return this.data.hidden;
   }
 
+  toVisible() {
+    if (this.data.hidden) return false;
+    return true;
+  }
+
   export() {
     return {
       pattern: this.data.pattern,
       hidden: this.data.hidden,
     };
   }
-
-  toVisible() {
-    if (this.data.hidden) return false;
-    return true;
-  }
 }
 
+interface TShapeData extends TGFMapData {}
 /**
  * ShapeMap class for mapping
  * @class ShapeMap
  * @extends GFMap
  */
 class ShapeMap extends GFMap {
-  constructor(pattern, data) {
+  constructor(pattern, data: TShapeData | {}) {
     super(pattern, data);
     // this.import(data);
   }
 }
 
+interface TTextData extends TGFMapData {}
 /**
  * TextMap class for mapping
  * @class TextMap
  * @extends GFMap
  */
 class TextMap extends GFMap {
-  constructor(pattern, data) {
+  constructor(pattern, data: TTextData) {
     super(pattern, data);
     // this.import(data);
   }
 }
 
-
+interface TLinkData extends TGFMapData {}
 /**
  * LinkMap class for mapping
  * @class LinkMap
  * @extends GFMap
  */
 class LinkMap extends GFMap {
-  constructor(pattern, data) {
+  constructor(pattern, data: TLinkData) {
     super(pattern, data);
   }
 }
 
-//
-// RangeMap Class
-//
+interface TRangeMapData {
+  from?: string | null;
+  to?: string | null;
+  text?: string;
+  hidden?: boolean;
+}
+
+/**
+ * TextMap class for Range Value
+ * @class RangeMap
+ */
 class RangeMap {
-  constructor(from, to, text, data) {
+  data: TRangeMapData;
+  constructor(from: string, to: string, text: string, data: TRangeMapData) {
     this.data = data;
-    this.id = GFP.utils.uniqueID();
     this.data.from = from;
     this.data.to = to;
     this.data.text = text;
@@ -868,7 +892,7 @@ class RangeMap {
     this.import(data);
   }
 
-  import(obj) {
+  import(obj: any) {
     this.data.from = obj.from || this.data.from || '';
     this.data.to = obj.to || this.data.to || '';
     this.data.text = obj.text || this.data.text || '';
@@ -890,16 +914,7 @@ class RangeMap {
     return false;
   }
 
-  getId() {
-    return this.id;
-  }
-
   getFormattedText(value) {
-    if (value === null) {
-      if (this.data.from === 'null' && this.data.to === 'null') {
-        return this.data.text;
-      }
-    }
     if (this.match(value)) {
       return this.data.text;
     }
@@ -918,6 +933,11 @@ class RangeMap {
     return this.data.hidden;
   }
 
+  toVisible() {
+    if (this.data.hidden) return false;
+    return true;
+  }
+
   export() {
     return {
       from: this.data.from,
@@ -928,20 +948,22 @@ class RangeMap {
   }
 }
 
-//
-// ValueMap Class
-//
+interface TValueMapData {
+  value?: string | null;
+  text?: string | null;
+  hidden?: boolean;
+}
 class ValueMap {
-  constructor(value, text, data) {
+  data: TValueMapData;
+  constructor(value: string, text: string, data: TValueMapData) {
     this.data = data;
-    this.id = GFP.utils.uniqueID();
     this.data.value = value;
     this.data.text = text;
     this.data.hidden = false;
     this.import(data);
   }
 
-  import(obj) {
+  import(obj: any) {
     this.data.value = obj.value || this.data.value || '';
     this.data.text = obj.text || this.data.text || '';
     this.data.hidden = obj.hidden || this.data.hidden || false;
@@ -960,10 +982,6 @@ class ValueMap {
     }
 
     return GFP.utils.matchString(value.toString(), this.data.value);
-  }
-
-  getId() {
-    return this.id;
   }
 
   getFormattedText(value) {

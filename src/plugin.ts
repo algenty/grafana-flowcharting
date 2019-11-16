@@ -5,21 +5,22 @@ declare var GFP: FlowChartingPlugin;
  * @class FlowChartingPlugin
  */
 export default class FlowChartingPlugin {
-  private contextRoot: string;
-  private data: any;
-  private repo: string;
+  contextRoot: string;
+  data: any;
+  repo: string;
   perf: Perf;
   log: Log;
   utils: any;
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
-  private templateSrv: any;
+  templateSrv: any;
 
-  constructor(contextRoot: string) {
+  constructor(contextRoot: string, templateSrv: any) {
     this.contextRoot = contextRoot;
     this.data = this.loadJson();
     this.repo = this.getRepo();
     this.perf = new Perf();
     this.log = new Log();
+    this.templateSrv = templateSrv;
     this.utils = require('./utils');
   }
 
@@ -30,22 +31,22 @@ export default class FlowChartingPlugin {
    * @return FlowChartingPlugin
    * @memberof FlowChartingPlugin
    */
-  static init($scope: any): FlowChartingPlugin {
+  static init($scope: any, templateSrv: any): FlowChartingPlugin {
     let plugin, contextRoot;
     if ($scope === undefined) {
       // console.warn('$scope is undefined, use __dirname instead');
       contextRoot = __dirname;
       if (contextRoot.length > 0) {
-        plugin = new FlowChartingPlugin(contextRoot);
+        plugin = new FlowChartingPlugin(contextRoot, templateSrv);
       } else {
         contextRoot = FlowChartingPlugin.defaultContextRoot;
         // console.warn('__dirname is empty, user default', contextRoot);
-        plugin = new FlowChartingPlugin(contextRoot);
+        plugin = new FlowChartingPlugin(contextRoot, templateSrv);
       }
     } else {
       contextRoot = $scope.$root.appSubUrl + FlowChartingPlugin.defaultContextRoot;
       // console.info('Context-root for plugin is', contextRoot);
-      plugin = new FlowChartingPlugin(contextRoot);
+      plugin = new FlowChartingPlugin(contextRoot, templateSrv);
     }
     (window as any).GFP = plugin;
     return plugin;
@@ -58,6 +59,11 @@ export default class FlowChartingPlugin {
    */
   getTemplateSrv(): any {
     return this.templateSrv;
+  }
+
+  replaceWithText(content: any): any {
+    return this.templateSrv.replaceWithText(content);
+    // return content;
   }
 
   /**

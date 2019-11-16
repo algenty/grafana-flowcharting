@@ -282,13 +282,13 @@ export default class Flowchart {
   getXml(replaceVarBool) {
     GFP.log.info( `flowchart[${this.data.name}].getXml()`);
     if (!replaceVarBool) return this.data.xml;
-    return this.templateSrv.replaceWithText(this.data.xml);
+    return GFP.replaceWithText(this.data.xml);
   }
 
   getCsv(replaceVarBool) {
     GFP.log.info( `flowchart[${this.data.name}].getXml()`);
     if (!replaceVarBool) return this.data.csv;
-    return this.templateSrv.replaceWithText(this.data.csv);
+    return GFP.nreplaceWithText(this.data.csv);
   }
 
   getUrlEditor() {
@@ -308,7 +308,7 @@ export default class Flowchart {
   getContent() {
     GFP.log.info( `flowchart[${this.data.name}].getContent()`);
     if (this.data.download) {
-      let url = this.templateSrv.replaceWithText(this.data.url);
+      let url = GFP.replaceWithText(this.data.url);
       let content = this.loadContent(url);
       if (content !== null) {
         return content;
