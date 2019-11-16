@@ -3,8 +3,9 @@ import moment from 'moment';
 import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
+import FlowChartingPlugin from './plugin';
 
-declare var GFP: any;
+declare var GFP: FlowChartingPlugin;
 type Taggregation = 'first' | 'current' | 'min' | 'max' | 'total' | 'avg' | 'count' | 'delta' | 'range' | 'diff';
 type TTypeStyle = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
 type TLinkOn = 'wc' | 'a';
@@ -53,11 +54,11 @@ interface TIRuleData {
   tpGraphLow: number;
   tpGraphHigh: number;
   shapeProp: TPropType;
-  shapeData: TShapeData[];
+  shapeData: TShapeMapData[];
   textProp: TPropType;
-  textData: TTextData[];
+  textData: TTextMapData[];
   linkProp: TPropType;
-  linkData: TLinkData[];
+  linkData: TlinkMapData[];
   mappingType: number;
   valueData: TValueMapData[];
   rangeData: TRangeMapData[];
@@ -148,7 +149,7 @@ export default class Rule {
     this.data.tpGraphType = obj.tpGraphType !== undefined ? obj.tpGraphType : 'line';
     this.data.tpGraphLow = obj.tpGraphLow;
     this.data.tpGraphHigh = obj.tpGraphHigh;
-    let maps = [];
+    let maps: any = [];
 
     // SHAPES
     this.data.shapeProp = obj.shapeProp || 'id';
@@ -162,8 +163,8 @@ export default class Rule {
     }
 
     if (maps !== undefined && maps !== null && maps.length > 0) {
-      maps.forEach((map: any) => {
-        const newData = {};
+      maps.forEach((map: TShapeMapData) => {
+        const newData: TShapeMapData = {};
         const sm = new ShapeMap(map.pattern, newData);
         sm.import(map);
         this.shapeMaps.push(sm);
@@ -182,8 +183,8 @@ export default class Rule {
       maps = obj.textData;
     }
     if (maps !== undefined && maps != null && maps.length > 0) {
-      maps.forEach((map: any) => {
-        const newData = {};
+      maps.forEach((map: TTextMapData) => {
+        const newData: TTextMapData = {};
         const tm = new TextMap(map.pattern, newData);
         tm.import(map);
         this.textMaps.push(tm);
@@ -195,8 +196,8 @@ export default class Rule {
     this.data.linkProp = obj.linkProp || 'id';
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
-      obj.linkData.forEach((map: any) => {
-        const newData = {};
+      obj.linkData.forEach((map: TlinkMapData) => {
+        const newData: TlinkMapData = {};
         const lm = new LinkMap(map.pattern, newData);
         lm.import(map);
         this.linkMaps.push(lm);
@@ -209,8 +210,8 @@ export default class Rule {
     // VALUES
     this.data.valueData = [];
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
-      obj.valueData.forEach((map: any) => {
-        const newData = {};
+      obj.valueData.forEach((map: TValueMapData) => {
+        const newData: TValueMapData = {};
         const vm = new ValueMap(map.value, map.text, newData);
         vm.import(map);
         this.valueMaps.push(vm);
@@ -877,42 +878,46 @@ class GFMap {
     this.import(data);
   }
 
-  import(obj: any) {
+  import(obj: any): this {
     this.data.pattern = obj.pattern || '';
     this.data.hidden = obj.hidden || false;
+    return this;
   }
 
-  match(text) {
+  match(text: string): boolean {
     if (text === undefined || text === null || text.length === 0) {
       return false;
     }
     return GFP.utils.matchString(text, this.data.pattern);
   }
 
-  getId() {
+  getId(): string {
     return this.id;
   }
 
-  show() {
+  show(): this {
     this.data.hidden = false;
+    return this;
   }
 
-  hide() {
+  hide(): this {
     this.data.hidden = true;
+    return this;
   }
 
-  isHidden() {
+  isHidden(): boolean {
+    if (this.data.hidden === undefined) return false;
     return this.data.hidden;
   }
 
-  toVisible() {
+  toVisible(): boolean {
     if (this.data.hidden) {
       return false;
     }
     return true;
   }
 
-  export() {
+  export(): TGFMapData {
     return {
       pattern: this.data.pattern,
       hidden: this.data.hidden,
@@ -920,40 +925,39 @@ class GFMap {
   }
 }
 
-interface TShapeData extends TGFMapData {}
+interface TShapeMapData extends TGFMapData {}
 /**
  * ShapeMap class for mapping
  * @class ShapeMap
  * @extends GFMap
  */
 class ShapeMap extends GFMap {
-  constructor(pattern, data: TShapeData | {}) {
+  constructor(pattern: string | undefined, data: TShapeMapData | {}) {
     super(pattern, data);
-    // this.import(data);
   }
 }
 
-interface TTextData extends TGFMapData {}
+interface TTextMapData extends TGFMapData {}
 /**
  * TextMap class for mapping
  * @class TextMap
  * @extends GFMap
  */
 class TextMap extends GFMap {
-  constructor(pattern, data: TTextData) {
+  constructor(pattern, data: TTextMapData) {
     super(pattern, data);
     // this.import(data);
   }
 }
 
-interface TLinkData extends TGFMapData {}
+interface TlinkMapData extends TGFMapData {}
 /**
  * LinkMap class for mapping
  * @class LinkMap
  * @extends GFMap
  */
 class LinkMap extends GFMap {
-  constructor(pattern, data: TLinkData) {
+  constructor(pattern, data: TlinkMapData) {
     super(pattern, data);
   }
 }
@@ -1039,13 +1043,13 @@ class RangeMap {
 }
 
 interface TValueMapData {
-  value?: string | null;
-  text?: string | null;
+  value?: string;
+  text?: string;
   hidden?: boolean;
 }
 class ValueMap {
   data: TValueMapData;
-  constructor(value: string, text: string, data: TValueMapData) {
+  constructor(value: string | undefined, text: string | undefined, data: TValueMapData) {
     this.data = data;
     this.data.value = value;
     this.data.text = text;

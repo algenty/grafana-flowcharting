@@ -1,7 +1,7 @@
 import TooltipHandler from './tooltipHandler';
-// import FlowChartingPlugin from './plugin';
+import FlowChartingPlugin from './plugin';
 
-declare var GFP: any;
+declare var GFP: FlowChartingPlugin;
 // type typeColor = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
 interface TIStringStyles {
   fillColor: string | undefined;
@@ -39,8 +39,6 @@ export default class State {
   mxcell: any;
   cellId: any;
   xgraph: any;
-  ctrl: any;
-  templateSrv: any;
   changed: boolean;
   changedShape: boolean;
   changedStyle: TIBooleanStyles;
@@ -60,9 +58,9 @@ export default class State {
   originalStyle: any;
   originalText: any;
   currentText: any;
-  originalLink: any;
-  currentLink: any;
-  overlayIcon: any;
+  originalLink: string | null;
+  currentLink: string | null;
+  overlayIcon: boolean;
   changedIcon: boolean | undefined;
   /**
    * Creates an instance of State.
@@ -76,14 +74,13 @@ export default class State {
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
-    this.ctrl = ctrl;
-    this.templateSrv = this.ctrl.templateSrv;
     // If Cell is modified
     this.changed = false;
     this.changedShape = false;
     this.changedStyle = State.getDefaultFlagStyles();
     this.changedText = false;
     this.changedLink = false;
+    this.overlayIcon = false;
 
     // If state is target
     this.matched = false;
