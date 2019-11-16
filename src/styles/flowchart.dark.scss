@@ -8,11 +8,9 @@ div.flowchart-panel {
 div.flowchart-panel__chart {
   position: relative;
   flex-grow: 1;
-  // top: 10px;
   width: 100%;
   height: 100%;
   margin: 0;
-  // overflow: auto;
 }
 
 table.flowchartTable-editor {
@@ -127,7 +125,7 @@ div.tooltip-metric {
 }
 
 div.tooltip-graph {
-  // margin: 5px 5px 5px 5px;
+  margin: 5px 5px 5px 5px;
 }
 
 div.tooltip-date {
