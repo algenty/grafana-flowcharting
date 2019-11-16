@@ -3,6 +3,9 @@
   "include": ["src", "types"],
   "compilerOptions": {
     "rootDir": "./src",
+    "allowSyntheticDefaultImports": true,
+    "target": "es6",
+    "moduleResolution": "node",
     "baseUrl": "./src",
     "typeRoots": ["./node_modules/@types"]
   }
