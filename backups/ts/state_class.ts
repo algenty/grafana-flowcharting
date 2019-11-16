@@ -1,4 +1,33 @@
 import TooltipHandler from './tooltipHandler';
+// import FlowChartingPlugin from './plugin';
+
+declare var GFP: any;
+// type typeColor = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
+interface IStringStyles {
+  fillColor: string | undefined;
+  strokeColor: string | undefined;
+  fontColor: string | undefined;
+  imageBorder: string | undefined;
+  imageBackground: string | undefined;
+}
+
+interface IBooleanStyles {
+  fillColor: boolean;
+  strokeColor: boolean;
+  fontColor: boolean;
+  imageBorder: boolean;
+  imageBackground: boolean;
+}
+
+interface INumberStyles {
+  fillColor: number;
+  strokeColor: number;
+  fontColor: number;
+  imageBorder: number;
+  imageBackground: number;
+}
+
+type TStyleColor = keyof IStringStyles;
 
 /**
  *Class for state of one cell
@@ -7,6 +36,34 @@ import TooltipHandler from './tooltipHandler';
  * @class State
  */
 export default class State {
+  mxcell: any;
+  cellId: any;
+  xgraph: any;
+  ctrl: any;
+  templateSrv: any;
+  changed: boolean;
+  changedShape: boolean;
+  changedStyle: IBooleanStyles;
+  changedText: boolean;
+  changedLink: boolean;
+  matched: boolean;
+  matchedShape: boolean;
+  matchedStyle: IBooleanStyles;
+  matchedText: boolean;
+  matchedLink: boolean;
+  globalLevel: number;
+  styleKeys: TStyleColor[];
+  level: INumberStyles;
+  tooltipHandler: TooltipHandler;
+  currentColors: IStringStyles;
+  originalColors: IStringStyles;
+  originalStyle: any;
+  originalText: any;
+  currentText: any;
+  originalLink: any;
+  currentLink: any;
+  overlayIcon: any;
+  changedIcon: boolean | undefined;
   /**
    *Creates an instance of State.
    * @param {mxCell} mxcell
@@ -14,8 +71,8 @@ export default class State {
    * @param {*} ctrl - ctrl panel
    * @memberof State
    */
-  constructor(mxcell, xgraph, ctrl) {
-    GFP.log.info( 'State.constructor()');
+  constructor(mxcell: any, xgraph: any, ctrl: any) {
+    GFP.log.info('State.constructor()');
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
@@ -24,53 +81,67 @@ export default class State {
     // If Cell is modified
     this.changed = false;
     this.changedShape = false;
-    this.changedStyle = {
-      fillColor: false,
-      strokeColor: false,
-      fontColor: false,
-      imageBorder: false,
-      imageBackground: false
-    };
+    this.changedStyle = State.getDefaultFlagStyles();
     this.changedText = false;
     this.changedLink = false;
 
     // If state is target
     this.matched = false;
     this.matchedShape = false;
-    this.matchedStyle = {
-      fillColor: false,
-      strokeColor: false,
-      fontColor: false,
-      imageBorder: false,
-      imageBackground: false
-    };
+    this.matchedStyle = State.getDefaultFlagStyles();
     this.matchedText = false;
     this.matchedLink = false;
     this.globalLevel = -1;
     this.styleKeys = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
-    this.level = {
-      fillColor: -1,
-      strokeColor: -1,
-      fontColor: -1,
-      imageBorder: -1,
-      imageBackground: -1
-    };
+    this.level = State.getDefaultLevelStyles();
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
-    this.currentColors = {};
-    this.originalColors = {};
+    this.currentColors = State.getDefaultValueStyles();
+    this.originalColors = State.getDefaultValueStyles();
     this.originalStyle = mxcell.getStyle();
     this.originalText = this.xgraph.getLabel(mxcell);
     this.currentText = this.originalText;
     let link = this.xgraph.getLink(mxcell);
-    if (link === undefined) link = null;
+    if (link === undefined) {
+      link = null;
+    }
     this.originalLink = link;
     this.currentLink = link;
     this.styleKeys.forEach(style => {
-      const color = this.xgraph.getStyleCell(mxcell, style);
+      const color: string = this.xgraph.getStyleCell(mxcell, style);
       this.currentColors[style] = color;
       this.originalColors[style] = color;
     });
+  }
+
+  static getDefaultValueStyles(): IStringStyles {
+    return {
+      fillColor: undefined,
+      strokeColor: undefined,
+      fontColor: undefined,
+      imageBorder: undefined,
+      imageBackground: undefined,
+    };
+  }
+
+  static getDefaultLevelStyles(): INumberStyles {
+    return {
+      fillColor: -1,
+      strokeColor: -1,
+      fontColor: -1,
+      imageBorder: -1,
+      imageBackground: -1,
+    };
+  }
+
+  static getDefaultFlagStyles(): IBooleanStyles {
+    return {
+      fillColor: false,
+      strokeColor: false,
+      fontColor: false,
+      imageBorder: false,
+      imageBackground: false,
+    };
   }
 
   /**
@@ -91,9 +162,9 @@ export default class State {
    * @memberof State
    */
   setState(rule, serie) {
-    GFP.log.info( 'State.setState()');
-    GFP.log.debug( 'State.setState() Rule', rule);
-    GFP.log.debug( 'State.setState() Serie', serie);
+    GFP.log.info('State.setState()');
+    GFP.log.debug('State.setState() Rule', rule);
+    GFP.log.debug('State.setState() Serie', serie);
     if (rule.matchSerie(serie)) {
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
@@ -114,15 +185,28 @@ export default class State {
           // tooltips
           if (rule.toTooltipize(level)) {
             // Metrics
-            if (this.tooltipHandler == null) this.tooltipHandler = new TooltipHandler(this.mxcell);
+            if (this.tooltipHandler == undefined) {
+              this.tooltipHandler = new TooltipHandler(this.mxcell);
+            }
             let tpColor = null;
-            let label = (rule.data.tooltipLabel == null || rule.data.tooltipLabel.length === 0) ? serie.alias : rule.data.tooltipLabel;
-            if (rule.data.tooltipColors) tpColor = color;
-            let metric = this.tooltipHandler.addMetric().setLabel(label).setValue(FormattedValue).setColor(tpColor).setDirection(rule.data.tpDirection);
+            const label = rule.data.tooltipLabel == null || rule.data.tooltipLabel.length === 0 ? serie.alias : rule.data.tooltipLabel;
+            if (rule.data.tooltipColors) {
+              tpColor = color;
+            }
+            const metric = this.tooltipHandler
+              .addMetric()
+              .setLabel(label)
+              .setValue(FormattedValue)
+              .setColor(tpColor)
+              .setDirection(rule.data.tpDirection);
             // Graph
             if (rule.data.tpGraph) {
-              let graph = metric.addGraph(rule.data.tpGraphType);
-              graph.setColor(tpColor).setSerie(serie).setSize(rule.data.tpGraphSize).setScaling(rule.data.tpGraphLow,rule.data.tpGraphHigh);
+              const graph = metric.addGraph(rule.data.tpGraphType);
+              graph
+                .setColor(tpColor)
+                .setSerie(serie)
+                .setSize(rule.data.tpGraphSize)
+                .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh);
             }
             // Date
             this.tooltipHandler.updateDate();
@@ -135,7 +219,9 @@ export default class State {
               this.setColorStyle(rule.data.style, color);
               this.matchedStyle[rule.data.style] = true;
             } else if (this.changedShape) {
-              if (this.changedStyle[rule.data.style]) this.unsetColorStyle(rule.data.style);
+              if (this.changedStyle[rule.data.style]) {
+                this.unsetColorStyle(rule.data.style);
+              }
             }
             this.overlayIcon = rule.toIconize(level);
           }
@@ -173,7 +259,7 @@ export default class State {
         }
       });
     }
-    GFP.log.debug( 'State.setState() state', this);
+    GFP.log.debug('State.setState() state', this);
   }
 
   /**
@@ -183,7 +269,7 @@ export default class State {
    * @memberof State
    */
   unsetState() {
-    GFP.log.info( 'State.unsetState()');
+    GFP.log.info('State.unsetState()');
     this.unsetLevel();
     // this.unsetColor(); Replace by reset
     this.resetStyle();
@@ -227,8 +313,12 @@ export default class State {
    * @memberof State
    */
   getCellProp(prop) {
-    if (prop === 'id') return this.cellId;
-    if (prop === 'value') return this.originalText;
+    if (prop === 'id') {
+      return this.cellId;
+    }
+    if (prop === 'value') {
+      return this.originalText;
+    }
     return '/!\\ Not found';
   }
 
@@ -240,7 +330,7 @@ export default class State {
    * @memberof State
    */
   setColorStyle(style, color) {
-    GFP.log.info( 'State.setColorStyle()');
+    GFP.log.info('State.setColorStyle()');
     this.currentColors[style] = color;
   }
 
@@ -281,7 +371,9 @@ export default class State {
    * @memberof State
    */
   unsetTooltip() {
-    if (this.tooltipHandler != null) this.tooltipHandler.destroy();
+    if (this.tooltipHandler != null) {
+      this.tooltipHandler.destroy();
+    }
     this.tooltipHandler = null;
   }
 
@@ -305,9 +397,11 @@ export default class State {
    * @memberof State
    */
   setLevelStyle(style, level) {
-    GFP.log.info( 'State.setLevelStyle()');
+    GFP.log.info('State.setLevelStyle()');
     this.level[style] = level;
-    if (this.globalLevel < level) this.globalLevel = level;
+    if (this.globalLevel < level) {
+      this.globalLevel = level;
+    }
   }
 
   /**
@@ -400,24 +494,13 @@ export default class State {
    * @memberof State
    */
   addTooltip(name, label, value, color, direction) {
-    GFP.log.info( 'State.addTooltipValue()');
-    GFP.log.debug( 'State.addTooltipValue() label', label);
-    GFP.log.debug( 'State.addTooltipValue() value', value);
-    if (this.tooltipHandler == null) this.tooltipHandler = new TooltipHandler(this.mxcell);
-    this.tooltipHandler.addMetric(name, label, value, color, direction);
-  }
-
-  /**
-   *Add Graph options to tooltip
-   *
-   * @param {string} name
-   * @param {string} type
-   * @param {string} size
-   * @param {timeSerie} serie
-   * @memberof State
-   */
-  addTooltipGraph(name, type, size, serie, low, high) {
-    this.tooltipHandler.addGraph(name, type, size, serie, low, high);
+    GFP.log.info('State.addTooltipValue()');
+    GFP.log.debug('State.addTooltipValue() label', label);
+    GFP.log.debug('State.addTooltipValue() value', value);
+    if (this.tooltipHandler == null) {
+      this.tooltipHandler = new TooltipHandler(this.mxcell);
+    }
+    this.tooltipHandler.addMetric();
   }
 
   updateTooltipDate() {
@@ -465,7 +548,9 @@ export default class State {
       if (this.matchedStyle[key]) {
         const color = this.currentColors[key];
         this.xgraph.setStyleCell(this.mxcell, key, color, true);
-        if (color !== this.originalColors[key]) this.changedStyle[key] = true;
+        if (color !== this.originalColors[key]) {
+          this.changedStyle[key] = true;
+        }
       }
     });
   }
@@ -553,7 +638,7 @@ export default class State {
    * @memberof State
    */
   applyState() {
-    GFP.log.info( 'State.applyState()');
+    GFP.log.info('State.applyState()');
     if (this.matched) {
       this.changed = true;
 
@@ -604,7 +689,6 @@ export default class State {
    */
   prepare() {
     if (this.changed) {
-      this.lastChange = null;
       this.unsetLevel();
       this.unsetTooltip();
       this.unsetText();

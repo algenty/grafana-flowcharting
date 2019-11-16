@@ -287,7 +287,7 @@ class GraphTooltip {
   }
 
   static array2Coor(arr: any) {
-    const result: Array<{ x: number; y: number }> = [];
+    const result:Array<{x:number,y:number}> = [];
     for (let index = 0; index < arr.length; index++) {
       result.push({
         x: arr[index][0],

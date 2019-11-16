@@ -152,7 +152,7 @@ class MetricTooltip {
     return this;
   }
 
-  setColor(color: string | null): this {
+  setColor(color: string|null): this {
     if (color !== null) {
       this.color = color;
     }
@@ -274,7 +274,7 @@ class GraphTooltip {
     return this;
   }
 
-  setColor(color: string | null): this {
+  setColor(color: string): this {
     if (color !== null) {
       this.color = color;
     }
@@ -287,7 +287,7 @@ class GraphTooltip {
   }
 
   static array2Coor(arr: any) {
-    const result: Array<{ x: number; y: number }> = [];
+    const result = [];
     for (let index = 0; index < arr.length; index++) {
       result.push({
         x: arr[index][0],

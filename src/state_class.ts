@@ -3,17 +3,34 @@ import TooltipHandler from './tooltipHandler';
 
 declare var GFP: any;
 // type typeColor = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
-interface typeColor {
+interface TIStringStyles {
   fillColor: string | undefined;
   strokeColor: string | undefined;
   fontColor: string | undefined;
   imageBorder: string | undefined;
   imageBackground: string | undefined;
 }
-type styleColor = keyof typeColor;
+
+interface TIBooleanStyles {
+  fillColor: boolean;
+  strokeColor: boolean;
+  fontColor: boolean;
+  imageBorder: boolean;
+  imageBackground: boolean;
+}
+
+interface TINumberStyles {
+  fillColor: number;
+  strokeColor: number;
+  fontColor: number;
+  imageBorder: number;
+  imageBackground: number;
+}
+
+type TStyleColor = keyof TIStringStyles;
 
 /**
- *Class for state of one cell
+ * Class for state of one cell
  *
  * @export
  * @class State
@@ -26,20 +43,20 @@ export default class State {
   templateSrv: any;
   changed: boolean;
   changedShape: boolean;
-  changedStyle: { fillColor: boolean; strokeColor: boolean; fontColor: boolean; imageBorder: boolean; imageBackground: boolean };
+  changedStyle: TIBooleanStyles;
   changedText: boolean;
   changedLink: boolean;
   matched: boolean;
   matchedShape: boolean;
-  matchedStyle: { fillColor: boolean; strokeColor: boolean; fontColor: boolean; imageBorder: boolean; imageBackground: boolean };
+  matchedStyle: TIBooleanStyles;
   matchedText: boolean;
   matchedLink: boolean;
   globalLevel: number;
-  styleKeys: styleColor[];
-  level: { fillColor: number; strokeColor: number; fontColor: number; imageBorder: number; imageBackground: number };
-  tooltipHandler: null;
-  currentColors: typeColor;
-  originalColors: typeColor;
+  styleKeys: TStyleColor[];
+  level: TINumberStyles;
+  tooltipHandler: TooltipHandler | undefined;
+  currentColors: TIStringStyles;
+  originalColors: TIStringStyles;
   originalStyle: any;
   originalText: any;
   currentText: any;
@@ -47,9 +64,8 @@ export default class State {
   currentLink: any;
   overlayIcon: any;
   changedIcon: boolean | undefined;
-  lastChange: null;
   /**
-   *Creates an instance of State.
+   * Creates an instance of State.
    * @param {mxCell} mxcell
    * @param {XGraph} xgraph
    * @param {*} ctrl - ctrl panel
@@ -65,46 +81,30 @@ export default class State {
     // If Cell is modified
     this.changed = false;
     this.changedShape = false;
-    this.changedStyle = {
-      fillColor: false,
-      strokeColor: false,
-      fontColor: false,
-      imageBorder: false,
-      imageBackground: false,
-    };
+    this.changedStyle = State.getDefaultFlagStyles();
     this.changedText = false;
     this.changedLink = false;
 
     // If state is target
     this.matched = false;
     this.matchedShape = false;
-    this.matchedStyle = {
-      fillColor: false,
-      strokeColor: false,
-      fontColor: false,
-      imageBorder: false,
-      imageBackground: false,
-    };
+    this.matchedStyle = State.getDefaultFlagStyles();
     this.matchedText = false;
     this.matchedLink = false;
     this.globalLevel = -1;
     this.styleKeys = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
-    this.level = {
-      fillColor: -1,
-      strokeColor: -1,
-      fontColor: -1,
-      imageBorder: -1,
-      imageBackground: -1,
-    };
-    this.tooltipHandler = null;
+    this.level = State.getDefaultLevelStyles();
+    this.tooltipHandler = undefined;
     this.mxcell.GF_tooltipHandler = null;
-    this.currentColors = {};
-    this.originalColors = {};
+    this.currentColors = State.getDefaultValueStyles();
+    this.originalColors = State.getDefaultValueStyles();
     this.originalStyle = mxcell.getStyle();
     this.originalText = this.xgraph.getLabel(mxcell);
     this.currentText = this.originalText;
     let link = this.xgraph.getLink(mxcell);
-    if (link === undefined) { link = null; }
+    if (link === undefined) {
+      link = null;
+    }
     this.originalLink = link;
     this.currentLink = link;
     this.styleKeys.forEach(style => {
@@ -114,8 +114,38 @@ export default class State {
     });
   }
 
+  static getDefaultValueStyles(): TIStringStyles {
+    return {
+      fillColor: undefined,
+      strokeColor: undefined,
+      fontColor: undefined,
+      imageBorder: undefined,
+      imageBackground: undefined,
+    };
+  }
+
+  static getDefaultLevelStyles(): TINumberStyles {
+    return {
+      fillColor: -1,
+      strokeColor: -1,
+      fontColor: -1,
+      imageBorder: -1,
+      imageBackground: -1,
+    };
+  }
+
+  static getDefaultFlagStyles(): TIBooleanStyles {
+    return {
+      fillColor: false,
+      strokeColor: false,
+      fontColor: false,
+      imageBorder: false,
+      imageBackground: false,
+    };
+  }
+
   /**
-   *Call applyState() asynchronously
+   * Call applyState() asynchronously
    *
    * @memberof State
    */
@@ -125,7 +155,7 @@ export default class State {
   }
 
   /**
-   *Define state according to 1 rule and 1 serie without apply display
+   * Define state according to 1 rule and 1 serie without apply display
    *
    * @param {Rule} rule
    * @param {Serie} serie
@@ -133,8 +163,8 @@ export default class State {
    */
   setState(rule, serie) {
     GFP.log.info('State.setState()');
-    GFP.log.debug('State.setState() Rule', rule);
-    GFP.log.debug('State.setState() Serie', serie);
+    // GFP.log.debug('State.setState() Rule', rule);
+    // GFP.log.debug('State.setState() Serie', serie);
     if (rule.matchSerie(serie)) {
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
@@ -155,10 +185,14 @@ export default class State {
           // tooltips
           if (rule.toTooltipize(level)) {
             // Metrics
-            if (this.tooltipHandler == null) { this.tooltipHandler = new TooltipHandler(this.mxcell); }
+            if (this.tooltipHandler === undefined) {
+              this.tooltipHandler = new TooltipHandler(this.mxcell);
+            }
             let tpColor = null;
             const label = rule.data.tooltipLabel == null || rule.data.tooltipLabel.length === 0 ? serie.alias : rule.data.tooltipLabel;
-            if (rule.data.tooltipColors) { tpColor = color; }
+            if (rule.data.tooltipColors) {
+              tpColor = color;
+            }
             const metric = this.tooltipHandler
               .addMetric()
               .setLabel(label)
@@ -185,7 +219,9 @@ export default class State {
               this.setColorStyle(rule.data.style, color);
               this.matchedStyle[rule.data.style] = true;
             } else if (this.changedShape) {
-              if (this.changedStyle[rule.data.style]) { this.unsetColorStyle(rule.data.style); }
+              if (this.changedStyle[rule.data.style]) {
+                this.unsetColorStyle(rule.data.style);
+              }
             }
             this.overlayIcon = rule.toIconize(level);
           }
@@ -227,7 +263,7 @@ export default class State {
   }
 
   /**
-   *Restore initial status of state without apply display.
+   * Restore initial status of state without apply display.
    * Use applyState() to apply on graph (color, level and text)
    *
    * @memberof State
@@ -250,7 +286,7 @@ export default class State {
   }
 
   /**
-   *Flag to indicate state is matching by a rule and series
+   * Flag to indicate state is matching by a rule and series
    *
    * @returns {boolean}
    * @memberof State
@@ -260,7 +296,7 @@ export default class State {
   }
 
   /**
-   *Flag to indicate state is changed, need apply state
+   * Flag to indicate state is changed, need apply state
    *
    * @returns {boolean}
    * @memberof State
@@ -277,13 +313,17 @@ export default class State {
    * @memberof State
    */
   getCellProp(prop) {
-    if (prop === 'id') { return this.cellId; }
-    if (prop === 'value') { return this.originalText; }
+    if (prop === 'id') {
+      return this.cellId;
+    }
+    if (prop === 'value') {
+      return this.originalText;
+    }
     return '/!\\ Not found';
   }
 
   /**
-   *Define color for a style
+   * Define color for a style
    *
    * @param {string} style - fillcolor|fontcolor|stroke
    * @param {string} color - html color
@@ -295,7 +335,7 @@ export default class State {
   }
 
   /**
-   *Reset color with initial color
+   * Reset color with initial color
    *
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
@@ -305,7 +345,7 @@ export default class State {
   }
 
   /**
-   *Restore initial color of cell
+   * Restore initial color of cell
    *
    * @memberof State
    */
@@ -316,7 +356,7 @@ export default class State {
   }
 
   /**
-   *Reset default level (-1) for the style
+   * Reset default level (-1) for the style
    *
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
@@ -326,17 +366,19 @@ export default class State {
   }
 
   /**
-   *Reset tooltip
+   * Reset tooltip
    *
    * @memberof State
    */
   unsetTooltip() {
-    if (this.tooltipHandler != null) { this.tooltipHandler.destroy(); }
-    this.tooltipHandler = null;
+    if (this.tooltipHandler != null) {
+      this.tooltipHandler.destroy();
+    }
+    this.tooltipHandler = undefined;
   }
 
   /**
-   *Reset level to -1 for all style
+   * Reset level to -1 for all style
    *
    * @memberof State
    */
@@ -348,7 +390,7 @@ export default class State {
   }
 
   /**
-   *Attribute a level for a style
+   * Attribute a level for a style
    *
    * @param {string} style - fillcolor|fontcolor|stroke
    * @param {number} level
@@ -357,11 +399,13 @@ export default class State {
   setLevelStyle(style, level) {
     GFP.log.info('State.setLevelStyle()');
     this.level[style] = level;
-    if (this.globalLevel < level) { this.globalLevel = level; }
+    if (this.globalLevel < level) {
+      this.globalLevel = level;
+    }
   }
 
   /**
-   *Retrun the level for a style
+   * Retrun the level for a style
    *
    * @param {string} style - fillcolor|fontcolor|stroke
    * @returns
@@ -372,7 +416,7 @@ export default class State {
   }
 
   /**
-   *Get the highest/global level
+   * Get the highest/global level
    *
    * @returns
    * @memberof State
@@ -382,7 +426,7 @@ export default class State {
   }
 
   /**
-   *Return the label level of current level
+   * Return the label level of current level
    *
    * @returns
    * @memberof State
@@ -404,7 +448,7 @@ export default class State {
   }
 
   /**
-   *Attribute new label
+   * Attribute new label
    *
    * @param {string} text
    * @memberof State
@@ -414,7 +458,7 @@ export default class State {
   }
 
   /**
-   *Reset the current label with the initial label
+   * Reset the current label with the initial label
    *
    * @memberof State
    */
@@ -423,7 +467,7 @@ export default class State {
   }
 
   /**
-   *Assign new link
+   * Assign new link
    *
    * @param {string} url
    * @memberof State
@@ -433,7 +477,7 @@ export default class State {
   }
 
   /**
-   *Reset current link with original/initial link
+   * Reset current link with original/initial link
    *
    * @memberof State
    */
@@ -442,7 +486,7 @@ export default class State {
   }
 
   /**
-   *Add metric to tooltip of shape
+   * Add metric to tooltip of shape
    *
    * @param {string} label - Label to display in tooltip
    * @param {string} value - Formatted value
@@ -453,25 +497,16 @@ export default class State {
     GFP.log.info('State.addTooltipValue()');
     GFP.log.debug('State.addTooltipValue() label', label);
     GFP.log.debug('State.addTooltipValue() value', value);
-    if (this.tooltipHandler == null) { this.tooltipHandler = new TooltipHandler(this.mxcell); }
-    this.tooltipHandler.addMetric(name, label, value, color, direction);
-  }
-
-  /**
-   *Add Graph options to tooltip
-   *
-   * @param {string} name
-   * @param {string} type
-   * @param {string} size
-   * @param {timeSerie} serie
-   * @memberof State
-   */
-  addTooltipGraph(name, type, size, serie, low, high) {
-    this.tooltipHandler.addGraph(name, type, size, serie, low, high);
+    if (this.tooltipHandler == null) {
+      this.tooltipHandler = new TooltipHandler(this.mxcell);
+    }
+    this.tooltipHandler.addMetric();
   }
 
   updateTooltipDate() {
-    this.tooltipHandler.updateDate();
+    if (this.tooltipHandler) {
+      this.tooltipHandler.updateDate();
+    }
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -480,7 +515,7 @@ export default class State {
   }
 
   /**
-   *Return true if is a shape/vertex
+   * Return true if is a shape/vertex
    *
    * @returns
    * @memberof State
@@ -490,7 +525,7 @@ export default class State {
   }
 
   /**
-   *Return true if is a arrow/connector
+   * Return true if is a arrow/connector
    *
    * @returns
    * @memberof State
@@ -500,7 +535,7 @@ export default class State {
   }
 
   /**
-   *Apply and draw new shape color and form
+   * Apply and draw new shape color and form
    *
    * @memberof State
    */
@@ -515,7 +550,9 @@ export default class State {
       if (this.matchedStyle[key]) {
         const color = this.currentColors[key];
         this.xgraph.setStyleCell(this.mxcell, key, color, true);
-        if (color !== this.originalColors[key]) { this.changedStyle[key] = true; }
+        if (color !== this.originalColors[key]) {
+          this.changedStyle[key] = true;
+        }
       }
     });
   }
@@ -555,7 +592,7 @@ export default class State {
   }
 
   /**
-   *Apply new label
+   * Apply new label
    *
    * @memberof State
    */
@@ -571,7 +608,7 @@ export default class State {
   }
 
   /**
-   *Apply new link
+   * Apply new link
    *
    * @memberof State
    */
@@ -587,7 +624,7 @@ export default class State {
   }
 
   /**
-   *Apply new tooltip
+   * Apply new tooltip
    *
    * @memberof State
    */
@@ -598,7 +635,7 @@ export default class State {
   }
 
   /**
-   *Apply new state
+   * Apply new state
    *
    * @memberof State
    */
@@ -636,7 +673,7 @@ export default class State {
   }
 
   /**
-   *Reset and restore state
+   * Reset and restore state
    *
    * @memberof State
    */
@@ -648,13 +685,12 @@ export default class State {
   }
 
   /**
-   *Prepare state for a new rule and serie
+   * Prepare state for a new rule and serie
    *
    * @memberof State
    */
   prepare() {
     if (this.changed) {
-      this.lastChange = null;
       this.unsetLevel();
       this.unsetTooltip();
       this.unsetText();
@@ -666,7 +702,7 @@ export default class State {
   }
 
   /**
-   *Highlight mxcell
+   * Highlight mxcell
    *
    * @memberof State
    */
@@ -675,7 +711,7 @@ export default class State {
   }
 
   /**
-   * unhighlight mxcell
+   * Unhighlight mxcell
    *
    * @memberof State
    */
