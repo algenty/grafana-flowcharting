@@ -168,7 +168,7 @@ class MetricTooltip {
     const div = document.createElement('div');
     div.className = 'tooltip-metric';
     if (this.direction === 'h') {
-      div.style.display = 'inline-block;';
+      div.style.display = 'inline-block';
     }
     if (parentDiv !== undefined) {
       parentDiv.appendChild(div);
