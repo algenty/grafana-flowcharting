@@ -133,7 +133,7 @@ export default class Flowchart {
   static getDefaultData(): TFlowchartData {
     return {
       name: 'name',
-      xml: require('./defaultGraph.drawio'),
+      xml: '',
       csv: '',
       download: false,
       type: 'xml',
