@@ -1,7 +1,7 @@
 import Flowchart from './flowchart_class';
-import {TFlowchartData} from './flowchart_class';
+import { TFlowchartData } from './flowchart_class';
 import FlowChartingPlugin from './plugin';
-import {TOnMappingObj} from './graph_class';
+import { TOnMappingObj } from './graph_class';
 import Rule from './rule_class';
 import _ from 'lodash';
 
@@ -12,27 +12,27 @@ declare var GFP: FlowChartingPlugin;
  */
 export default class FlowchartHandler {
   $scope: ng.IScope;
-  $elem : any; //TODO: elem ?
-  ctrl : any ;//TODO: ctrl ?
-  flowcharts : Flowchart[] = []
-  currentFlowchart : string = 'Main'; // name of current Flowchart
-  data : TFlowchartData[];
-  firstLoad : boolean = true; // First load
-  changeSourceFlag : boolean = false; // Source changed
-  changeOptionFlag : boolean = true; // Options changed
-  changeDataFlag: boolean = false; // Data changed
-  changeRuleFlag: boolean = false; // rules changed
-  static defaultXml:string = require('./defaultGraph.drawio');
-  onMapping : TOnMappingObj = {
+  $elem: any; //TODO: elem ?
+  ctrl: any; //TODO: ctrl ?
+  flowcharts: Flowchart[] = [];
+  currentFlowchart = 'Main'; // name of current Flowchart
+  data: TFlowchartData[];
+  firstLoad = true; // First load
+  changeSourceFlag = false; // Source changed
+  changeOptionFlag = true; // Options changed
+  changeDataFlag = false; // Data changed
+  changeRuleFlag = false; // rules changed
+  static defaultXml: string | null = FlowchartHandler.getDefaultGraph();
+  onMapping: TOnMappingObj = {
     active: false,
-    object : undefined,
-    id : undefined,
-    $scope : undefined,
-  }
-  mousedownTimeout:number = 0;
-  mousedown:number = 0;
-  onEdit : boolean = false; // editor open or not
-  editorWindow : Window|null = null; // Window draw.io editor
+    object: undefined,
+    id: undefined,
+    $scope: undefined,
+  };
+  mousedownTimeout = 0;
+  mousedown = 0;
+  onEdit = false; // editor open or not
+  editorWindow: Window | null = null; // Window draw.io editor
 
   /**
    * Creates an instance of FlowchartHandler to handle flowchart
@@ -42,7 +42,7 @@ export default class FlowchartHandler {
    * @param {*} data - Empty data to store
    * @memberof FlowchartHandler
    */
-  constructor($scope : ng.IScope, elem : any, ctrl : any, data:) {
+  constructor($scope: ng.IScope, elem: any, ctrl: any, data: TFlowchartData[]) {
     GFP.log.info('FlowchartHandler.constructor()');
     GFP.log.debug('FlowchartHandler.constructor() data', data);
     this.$scope = $scope || null;
@@ -76,7 +76,7 @@ export default class FlowchartHandler {
    * @param {Object} obj
    * @memberof FlowchartHandler
    */
-  import(obj:any) {
+  import(obj: any) {
     GFP.log.info('FlowchartHandler.import()');
     // GFP.log.debug('FlowchartHandler.import() obj', obj);
     // this.flowcharts.clear();
@@ -92,6 +92,21 @@ export default class FlowchartHandler {
         this.data.push(newData);
       });
     }
+  }
+
+  static getDefaultGraph(): string | null {
+    let result: string | null = FlowchartHandler.defaultXml;
+    if (result) {
+      async () => {
+        function get() {
+          fetch('./defaultGraph.drawio')
+            .then(response => response.text())
+            .then(text => (result = text));
+        }
+        await get();
+      };
+    }
+    return result;
   }
 
   /**
@@ -117,39 +132,38 @@ export default class FlowchartHandler {
   }
 
   /**
-   *Return number of flowchart
+   * Return number of flowchart
    *
    * @returns {number} Nulber of flowchart
    * @memberof FlowchartHandler
    */
-  countFlowcharts():number {
-    if (this.flowcharts !== undefined && Array.isArray(this.flowcharts))
+  countFlowcharts(): number {
+    if (this.flowcharts !== undefined && Array.isArray(this.flowcharts)) {
       return this.flowcharts.length;
+    }
     return 0;
   }
 
   /**
-   *Create a div container for graph
+   * Create a div container for graph
    *
-   * @returns {DOM}
+   * @returns {HTMLDivElement}
    * @memberof FlowchartHandler
    */
-  createContainer():HTMLDivElement {
+  createContainer(): HTMLDivElement {
     //TODO: Convert to createDocument
-    const $container = $(
-      `<div id="flowchart_${GFP.utils.uniqueID()}" style="margin:auto;position:relative,width:100%;height:100%"></div>`
-    );
+    const $container = $(`<div id="flowchart_${GFP.utils.uniqueID()}" style="margin:auto;position:relative,width:100%;height:100%"></div>`);
     this.$elem.html($container);
-    return <HTMLDivElement>$container[0];
+    return $container[0] as HTMLDivElement;
   }
 
   /**
-   *Add a flowchart
+   * Add a flowchart
    *
    * @param {string} name
    * @memberof FlowchartHandler
    */
-  addFlowchart(name:string) {
+  addFlowchart(name: string) {
     GFP.log.info('FlowchartHandler.addFlowchart()');
     const container = this.createContainer();
     const data = Flowchart.getDefaultData();
@@ -159,17 +173,17 @@ export default class FlowchartHandler {
   }
 
   /**
-   *Render for draw
+   * Render for draw
    *
    * @memberof FlowchartHandler
    */
   render() {
     // not repeat render if mouse down
-    let id = GFP.utils.uniqueID()
-    GFP.perf.start("PERF : Render " + id);
+    const id = GFP.utils.uniqueID();
+    GFP.perf.start('PERF : Render ' + id);
     if (!this.mousedown) {
-      let optionsFlag:boolean = false;
-      let self = this;
+      let optionsFlag = false;
+      const self = this;
       // SOURCE
       if (self.changeSourceFlag) {
         self.load();
@@ -201,7 +215,7 @@ export default class FlowchartHandler {
       }
     }
     this.refresh();
-    GFP.perf.stop("PERF : Render " + id);
+    GFP.perf.stop('PERF : Render ' + id);
   }
 
   /**
@@ -259,18 +273,18 @@ export default class FlowchartHandler {
    * @param {*} series
    * @memberof FlowchartHandler
    */
-  async_refreshStates(rules:Rule[], series:any[]) {
+  async_refreshStates(rules: Rule[], series: any[]) {
     this.refreshStates(rules, series);
   }
 
   /**
-   *Refresh rules according new rules or data
+   * Refresh rules according new rules or data
    *
    * @param {Rule[]} rules
    * @param {*} series TODO: Define type of series
    * @memberof FlowchartHandler
    */
-  refreshStates(rules:Rule[], series:any[]) {
+  refreshStates(rules: Rule[], series: any[]) {
     GFP.perf.start(`${this.constructor.name}.refreshStates()`);
     if (this.changeRuleFlag) {
       this.updateStates(rules);
@@ -287,7 +301,6 @@ export default class FlowchartHandler {
     });
   }
 
-
   /**
    * Change states of cell according to rules and series
    *
@@ -295,7 +308,7 @@ export default class FlowchartHandler {
    * @param {any[]} series
    * @memberof FlowchartHandler
    */
-  setStates(rules:Rule[], series:any[]) {
+  setStates(rules: Rule[], series: any[]) {
     GFP.perf.start(`${this.constructor.name}.setStates()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.setStates(rules, series);
@@ -309,7 +322,7 @@ export default class FlowchartHandler {
    * @param {Rule[]} rules
    * @memberof FlowchartHandler
    */
-  updateStates(rules:Rule[]) {
+  updateStates(rules: Rule[]) {
     GFP.perf.start(`${this.constructor.name}.updateStates()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.updateStates(rules);
@@ -328,16 +341,14 @@ export default class FlowchartHandler {
       this.flowcharts.forEach(flowchart => {
         flowchart.applyStates();
       });
-    })
-      .then(() => {
-        this.refresh();
-      }
-      )
+    }).then(() => {
+      this.refresh();
+    });
     GFP.perf.stop(`${this.constructor.name}.applyStates()`);
   }
 
   /**
-   *Apply and set options
+   * Apply and set options
    *
    * @memberof FlowchartHandler
    */
@@ -348,7 +359,7 @@ export default class FlowchartHandler {
   }
 
   /**
-   *(re)draw graph
+   * (re)draw graph
    *
    * @memberof FlowchartHandler
    */
@@ -360,7 +371,7 @@ export default class FlowchartHandler {
   }
 
   /**
-   *(re)load graph
+   * (re)load graph
    *
    * @memberof FlowchartHandler
    */
@@ -372,7 +383,7 @@ export default class FlowchartHandler {
   }
 
   /**
-   *Active option link/map
+   * Active option link/map
    *
    * @param {Object} objToMap
    * @memberof FlowchartHandler
@@ -387,7 +398,7 @@ export default class FlowchartHandler {
   }
 
   /**
-   *Desactivate option
+   * Desactivate option
    *
    * @memberof FlowchartHandler
    */
@@ -400,24 +411,29 @@ export default class FlowchartHandler {
   }
 
   /**
-   *Return true if mapping object is active
+   * Return true if mapping object is active
    *
    * @param {properties} objToMap
    * @returns true - true if mapping mode
    * @memberof FlowchartHandler
    */
   isMapping(objToMap) {
-    if (objToMap === undefined || objToMap == null) return this.onMapping.active;
-    if (this.onMapping.active === true && objToMap === this.onMapping.object) return true;
+    if (objToMap === undefined || objToMap == null) {
+      return this.onMapping.active;
+    }
+    if (this.onMapping.active === true && objToMap === this.onMapping.object) {
+      return true;
+    }
     return false;
   }
 
-  listenMessage(event:MessageEvent) {
+  listenMessage(event: MessageEvent) {
     if (event.data === 'ready') {
       // send xml
-      if(event.source) {
-        if (!(event.source instanceof MessagePort) && !(event.source instanceof ServiceWorker))
-        event.source.postMessage(this.getFlowchart(this.currentFlowchart).data.xml, event.origin);
+      if (event.source) {
+        if (!(event.source instanceof MessagePort) && !(event.source instanceof ServiceWorker)) {
+          event.source.postMessage(this.getFlowchart(this.currentFlowchart).data.xml, event.origin);
+        }
       }
     } else {
       if (this.onEdit && event.data !== undefined && event.data.length > 0) {
@@ -427,7 +443,9 @@ export default class FlowchartHandler {
         this.render();
       }
       if ((this.onEdit && event.data !== undefined) || event.data.length === 0) {
-        if(this.editorWindow) this.editorWindow.close();
+        if (this.editorWindow) {
+          this.editorWindow.close();
+        }
         this.onEdit = false;
         window.removeEventListener('message', this.listenMessage.bind(this), false);
       }
@@ -435,7 +453,7 @@ export default class FlowchartHandler {
   }
 
   /**
-   *Open graph in draw.io
+   * Open graph in draw.io
    *
    * @memberof FlowchartHandler
    */

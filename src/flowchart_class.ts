@@ -22,7 +22,7 @@ export interface TFlowchartData {
   allowDrawio: boolean;
   tooltip: boolean;
   grid: boolean;
-  bgColor: string|null;
+  bgColor: string | null;
   editorUrl: string;
   editorTheme: string;
 }
@@ -130,25 +130,25 @@ export default class Flowchart {
     return this;
   }
 
-  static getDefaultData():TFlowchartData {
+  static getDefaultData(): TFlowchartData {
     return {
-    name: 'name',
-    xml: require('./defaultGraph.drawio'),
-    csv: '';
-    download: false;
-    type: 'xml';
-    url: 'http://<YourUrl>/<Your XML/drawio file/api>',
-    zoom: '100%',
-    center: true,
-    scale: true,
-    lock: true,
-    allowDrawio: false,
-    tooltip: false,
-    grid: false,
-    bgColor: null,
-    editorUrl: 'https://www.draw.io',
-    editorTheme: 'dark',
-    }
+      name: 'name',
+      xml: require('./defaultGraph.drawio'),
+      csv: '',
+      download: false,
+      type: 'xml',
+      url: 'http://<YourUrl>/<Your XML/drawio file/api>',
+      zoom: '100%',
+      center: true,
+      scale: true,
+      lock: true,
+      allowDrawio: false,
+      tooltip: false,
+      grid: false,
+      bgColor: null,
+      editorUrl: 'https://www.draw.io',
+      editorTheme: 'dark',
+    };
   }
 
   /**
