@@ -1,4 +1,5 @@
 import XGraph from './graph_class';
+import { TOnMappingObj } from './graph_class';
 import StateHandler from './statesHandler';
 import State from './state_class';
 import Rule from './rule_class';
@@ -7,8 +8,7 @@ declare var GFP: any;
 declare var mxUtils: any;
 type TSourceType = 'xml' | 'csv';
 type TPropType = 'id' | 'value';
-interface TOnMappingObj {}
-interface TFlowchartData {
+export interface TFlowchartData {
   name: string;
   xml: string;
   csv: string;
@@ -22,7 +22,7 @@ interface TFlowchartData {
   allowDrawio: boolean;
   tooltip: boolean;
   grid: boolean;
-  bgColor: string;
+  bgColor: string|null;
   editorUrl: string;
   editorTheme: string;
 }
@@ -43,6 +43,7 @@ export default class Flowchart {
   width: any;
   height: any;
   states: Map<string, State> | undefined;
+
   constructor(name: string, xmlGraph: string, container: HTMLDivElement, ctrl: any, data: TFlowchartData) {
     GFP.log.info(`flowchart[${name}].constructor()`);
     GFP.log.debug(`flowchart[${name}].constructor() data`, data);
@@ -127,6 +128,27 @@ export default class Flowchart {
     this.data.editorTheme = obj.editorTheme !== undefined ? obj.editorTheme : 'dark';
     this.init();
     return this;
+  }
+
+  static getDefaultData():TFlowchartData {
+    return {
+    name: 'name',
+    xml: require('./defaultGraph.drawio'),
+    csv: '';
+    download: false;
+    type: 'xml';
+    url: 'http://<YourUrl>/<Your XML/drawio file/api>',
+    zoom: '100%',
+    center: true,
+    scale: true,
+    lock: true,
+    allowDrawio: false,
+    tooltip: false,
+    grid: false,
+    bgColor: null,
+    editorUrl: 'https://www.draw.io',
+    editorTheme: 'dark',
+    }
   }
 
   /**
@@ -294,7 +316,7 @@ export default class Flowchart {
    * @param {*} xmlGraph
    * @memberof Flowchart
    */
-  redraw(xmlGraph: string) {
+  redraw(xmlGraph?: string) {
     GFP.log.info(`flowchart[${this.data.name}].redraw()`);
     if (xmlGraph !== undefined) {
       this.data.xml = xmlGraph;

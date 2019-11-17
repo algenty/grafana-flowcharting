@@ -23,9 +23,9 @@ type TStyleType = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'i
 
 export interface TOnMappingObj {
   active: boolean;
-  object: GFMap;
-  id: string;
-  $scope: any;
+  object: GFMap|undefined;
+  id: string|undefined;
+  $scope: ng.IScope|undefined;
 }
 
 export interface TCellsValue {
@@ -859,7 +859,7 @@ export default class XGraph {
     this.onMapping.active = false;
     this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
-    this.onMapping.$scope.$apply();
+    if(this.onMapping.$scope) this.onMapping.$scope.$apply();
   }
 
   //
@@ -879,12 +879,14 @@ export default class XGraph {
       const state = me.getState();
       if (state) {
         const id = state.cell.id;
-        this.onMapping.object.data.pattern = id;
-        const elt = document.getElementById(this.onMapping.id);
-        if (elt) {
-          setTimeout(() => {
-            elt.focus();
-          }, 100);
+        if (this.onMapping.object) this.onMapping.object.data.pattern = id;
+        if (this.onMapping.id) {
+          const elt = document.getElementById(this.onMapping.id);
+          if (elt) {
+            setTimeout(() => {
+              elt.focus();
+            }, 100);
+          }
         }
         this.unsetMap();
       }
