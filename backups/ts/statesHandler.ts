@@ -1,47 +1,50 @@
-/* global u */
 import State from './state_class';
+import Rule from './rule_class';
+import FlowChartingPlugin from './plugin';
+
+declare var GFP: FlowChartingPlugin;
 
 /**
- *States Handler class
+ * States Handler class
  *
  * @export
  * @class StateHandler
  */
 export default class StateHandler {
-  constructor(xgraph, ctrl) {
+  states: Map<string, State>;
+  xgraph: any;
+  constructor(xgraph) {
     GFP.log.info( 'StateHandler.constructor()');
     this.states = new Map();
-    this.ctrl = ctrl;
-    this.templateSrv = this.ctrl.templateSrv;
     this.xgraph = xgraph;
-    this.initStates(this.xgraph, ctrl.rulesHandler.getRules());
+    this.initStates(this.xgraph);
   }
 
   /**
-   *Initialisation of states
+   * Initialisation of states
    *
    * @param {*} xgraph
    * @param {*} rules
    * @memberof StateHandler
    */
-  initStates(xgraph, rules) {
+  initStates(xgraph:any) {
     GFP.log.info( 'StateHandler.initStates()');
     this.xgraph = xgraph;
     this.states.clear();
     let mxcells = xgraph.getMxCells();
-    _.each(mxcells, mxcell => {
+    mxcells.forEach( (mxcell:any) => {
       this.addState(mxcell);
     });
   }
 
   /**
-   *Return states array for a rule
+   * Return states array for a rule
    *
    * @param {Rule} rule - rule mapping
    * @returns {Array<State>}
    * @memberof StateHandler
    */
-  getStatesForRule(rule) {
+  getStatesForRule(rule:Rule) {
     GFP.log.info( 'StateHandler.getStatesForRule()');
     let result = new Map();
     let name = null;
@@ -84,8 +87,7 @@ export default class StateHandler {
    * @param {Array<Rule>} rules
    * @memberof StateHandler
    */
-  // OLD METHOD : see getStatesForRule
-  updateStates(rules) {
+  updateStates(rules:Rule[]) {
     GFP.log.info( 'StateHandler.updateStates()');
     rules.forEach(rule => {
       rule.states = this.getStatesForRule(rule);
@@ -105,7 +107,7 @@ export default class StateHandler {
    * @param  {string} cellId - Id of cell
    * @returns {state}
    */
-  getState(cellId) {
+  getState(cellId:string):State|undefined {
     return this.states.get(cellId);
   }
 
@@ -116,8 +118,8 @@ export default class StateHandler {
    * @returns {State} created state
    * @memberof StateHandler
    */
-  addState(mxcell) {
-    let state = new State(mxcell, this.xgraph, this.ctrl);
+  addState(mxcell:any):State {
+    let state = new State(mxcell, this.xgraph);
     this.states.set(mxcell.id, state);
     return state;
   }
@@ -128,33 +130,18 @@ export default class StateHandler {
    * @returns {Number}
    * @memberof StateHandler
    */
-  countStates() {
+  countStates():number {
     return this.states.size;
   }
 
   /**
-   * Count number of state with level
-   *
-   * @param {Number} level - 0 for OK | 1 for Warning | 2 for Error
-   * @returns {Number}
-   * @memberof StateHandler
-   */
-  // countStatesWithLevel(level) {
-  //   let count = 0;
-  //   this.states.forEach(state => {
-  //     if (state.getLevel() === level) count += 1;
-  //   });
-  //   return count;
-  // }
-
-
-  /**
    * Restore initial status and prepare states object
    */
-  prepare() {
+  prepare():this {
     this.states.forEach(state => {
       state.prepare();
     });
+    return this;
   }
 
   /**
@@ -162,20 +149,21 @@ export default class StateHandler {
    * @param  {Array<Rule>} rules - Array of Rule object
    * @param  {Array<Serie>} series - Array of serie object
    */
-  setStates(rules, series) {
+  setStates(rules:Rule[], series:any[]):this {
     GFP.log.info( 'StateHandler.setStates()');
     // GFP.log.debug( 'StatesHandler.setStates() Rules', rules);
     // GFP.log.debug( 'StatesHandler.setStates() Series', series);
     // GFP.log.debug( 'StatesHandler.setStates() States', this.states);
     this.prepare();
     rules.forEach(rule => {
-      if (rule.states === undefined || rule.states.length === 0) rule.states = this.getStatesForRule(rule);
+      if (rule.states === undefined || rule.states.size === 0) rule.states = this.getStatesForRule(rule);
       rule.states.forEach(state => {
         series.forEach(serie => {
           state.setState(rule, serie);
         });
       });
     });
+    return this;
   }
 
   /**

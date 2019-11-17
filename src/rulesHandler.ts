@@ -1,4 +1,9 @@
 import Rule from './rule_class';
+import { TRuleData } from './rule_class';
+import FlowChartingPlugin from './plugin';
+import _ from 'lodash';
+
+declare var GFP: FlowChartingPlugin;
 
 /**
  * Rules Handler
@@ -7,15 +12,16 @@ import Rule from './rule_class';
  * @class RulesHandler
  */
 export default class RulesHandler {
+  rules: Rule[];
+  data: TRuleData[];
+  activeRuleIndex: any;
   /**
-   *Creates an instance of RulesHandler.
-   * @param {*} $scope
-   * @param {*} data
+   * Creates an instance of RulesHandler.
+   * @param {any[]} data
    * @memberof RulesHandler
    */
-  constructor($scope, data) {
-    GFP.log.info( 'RulesHandler.constructor()');
-    this.$scope = $scope || null;
+  constructor(data: TRuleData[]) {
+    GFP.log.info('RulesHandler.constructor()');
     this.rules = [];
     this.data = data;
     this.import(this.data);
@@ -27,16 +33,18 @@ export default class RulesHandler {
    * @param {*} obj
    * @memberof RulesHandler
    */
-  import(obj) {
-    GFP.log.info( 'RuleHandler.import()');
-    GFP.log.debug( 'RuleHandler.import() obj', obj);
+  import(obj: any[]) {
+    GFP.log.info('RuleHandler.import()');
+    // GFP.log.debug('RuleHandler.import() obj', obj);
     this.rules = [];
     let index = 1;
     if (obj !== undefined && obj !== null && obj.length > 0) {
       // Fix bug of grafana 6+
-      if (obj[0].order != undefined) obj = _.sortBy(_.sortBy(obj, o => o.order))
+      if (obj[0].order !== undefined) {
+        obj = _.sortBy(_.sortBy(obj, o => o.order));
+      }
       obj.forEach(map => {
-        const newData = {};
+        const newData: any = {};
         const rule = new Rule(map.pattern, newData);
         rule.import(map);
         rule.setOrder(index);
@@ -76,7 +84,7 @@ export default class RulesHandler {
    * @memberof RulesHandler
    */
   addRule(pattern) {
-    const data = {};
+    const data: any = {};
     const newRule = new Rule(pattern, data);
     this.rules.push(newRule);
     this.data.push(data);
@@ -91,12 +99,14 @@ export default class RulesHandler {
    * @memberof RulesHandler
    */
   countRules() {
-    if (this.rules !== undefined && Array.isArray(this.rules)) return this.rules.length;
+    if (this.rules !== undefined && Array.isArray(this.rules)) {
+      return this.rules.length;
+    }
     return 0;
   }
 
   /**
-   *Redefine Order number of rules
+   * Redefine Order number of rules
    *
    * @memberof RulesHandler
    */
@@ -128,7 +138,7 @@ export default class RulesHandler {
   cloneRule(index) {
     const rule = this.getRule(index);
     const data = rule.getData();
-    const newData = {};
+    const newData: any = {};
     this.reduce();
     const newRule = new Rule(newData.pattern, newData);
     newRule.import(data);
@@ -148,7 +158,7 @@ export default class RulesHandler {
   }
 
   /**
-   *Reduce all rules
+   * Reduce all rules
    *
    * @memberof RulesHandler
    */
