@@ -3,12 +3,22 @@ import { GFMap } from './rule_class';
 import _ from 'lodash';
 
 declare var GFP: FlowChartingPlugin;
-declare var mxMouseEvent:any, mxCell:any ,mxCellOverlay:any, mxEvent : any, mxClient : any, mxUtils : any, mxCodec : any, mxUrlConverter : any;
+declare var mxCellHighlight: any,
+  mxMouseEvent: any,
+  mxCell: any,
+  mxCellOverlay: any,
+  mxEvent: any,
+  mxClient: any,
+  mxUtils: any,
+  mxCodec: any,
+  mxConstants : any,
+  mxRectangle: any,
+  mxUrlConverter: any;
 type mxCell = typeof mxCell;
 type mxMouseEvent = typeof mxMouseEvent;
 
 type TSourceType = 'xml' | 'csv';
-type TPropType = 'id'| 'value';
+type TPropType = 'id' | 'value';
 type TStyleType = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
 
 export interface TOnMappingObj {
@@ -103,7 +113,7 @@ export default class XGraph {
 
     myWindow.BASE_PATH = myWindow.BASE_PATH || GFP.getMxBasePath();
     myWindow.RESOURCES_PATH = myWindow.BASE_PATH || GFP.getMxResourcePath(); //`${myWindow.BASE_PATH}resources`;
-    myWindow.RESOURCE_BASE = myWindow.RESOURCE_BASE ||  GFP.getMxResourcePath(); //`${myWindow.RESOURCES_PATH}/grapheditor`;
+    myWindow.RESOURCE_BASE = myWindow.RESOURCE_BASE || GFP.getMxResourcePath(); //`${myWindow.RESOURCES_PATH}/grapheditor`;
     myWindow.STENCIL_PATH = myWindow.STENCIL_PATH || GFP.getStencilsPath();
     myWindow.SHAPES_PATH = myWindow.SHAPES_PATH || GFP.getShapesPath();
     myWindow.IMAGE_PATH = myWindow.IMAGE_PATH || GFP.getMxImagePath(); //`${myWindow.BASE_PATH}images`;
@@ -218,7 +228,7 @@ export default class XGraph {
    *
    * @memberof XGraph
    */
-  initGraph():this {
+  initGraph(): this {
     GFP.log.info('XGraph.initGraph()');
     GFP.perf.start(`${this.constructor.name}.initGraph()`);
     this.graph = new (<any>window).Graph(this.container);
@@ -254,7 +264,7 @@ export default class XGraph {
    *
    * @memberof XGraph
    */
-  drawGraph():this {
+  drawGraph(): this {
     GFP.log.info('XGraph.drawGraph()');
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
@@ -279,7 +289,7 @@ export default class XGraph {
    * @param {*} height
    * @memberof XGraph
    */
-  applyGraph():this {
+  applyGraph(): this {
     GFP.log.info('XGraph.refreshGraph()');
     if (!this.scale) this.zoomGraph(this.zoomPercent);
     else this.unzoomGraph();
@@ -296,12 +306,12 @@ export default class XGraph {
     return this;
   }
 
-  refresh():this {
+  refresh(): this {
     this.graph.refresh();
     return this;
   }
 
-  destroyGraph():this {
+  destroyGraph(): this {
     this.graph.destroy();
     this.graph = undefined;
     return this;
@@ -313,7 +323,7 @@ export default class XGraph {
    * @param {Boolean} bool
    * @memberof XGraph
    */
-  lockGraph(bool:boolean):this {
+  lockGraph(bool: boolean): this {
     if (bool) this.graph.setEnabled(false);
     else this.graph.setEnabled(true);
     this.lock = bool;
@@ -326,14 +336,14 @@ export default class XGraph {
    * @param {Boolean} bool
    * @memberof XGraph
    */
-  tooltipGraph(bool:boolean):this {
+  tooltipGraph(bool: boolean): this {
     if (bool) this.graph.setTooltips(true);
     else this.graph.setTooltips(false);
     this.tooltip = bool;
     return this;
   }
 
-  allowDrawio(bool:boolean) {
+  allowDrawio(bool: boolean) {
     if (bool) {
       mxUrlConverter.prototype.baseUrl = 'http://draw.io/';
       mxUrlConverter.prototype.baseDomain = '';
@@ -350,7 +360,7 @@ export default class XGraph {
    * @param {Boolean} bool
    * @memberof XGraph
    */
-  centerGraph(bool:boolean):this {
+  centerGraph(bool: boolean): this {
     this.graph.centerZoom = false;
     if (bool) this.graph.center(true, true);
     else this.graph.center(false, false);
@@ -364,7 +374,7 @@ export default class XGraph {
    * @param {boolean} bool
    * @memberof XGraph
    */
-  scaleGraph(bool:boolean) {
+  scaleGraph(bool: boolean) {
     if (bool) {
       this.unzoomGraph();
       this.graph.fit();
@@ -380,7 +390,7 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  fitGraph():this {
+  fitGraph(): this {
     var margin = 2;
     var max = 3;
 
@@ -406,7 +416,7 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  gridGraph(bool:boolean):this {
+  gridGraph(bool: boolean): this {
     if (bool) {
       // eslint-disable-next-line no-undef
       this.container.style.backgroundImage = `url('${GFP.getMxImagePath}/grid.gif')`;
@@ -417,7 +427,6 @@ export default class XGraph {
     return this;
   }
 
-
   /**
    * Zoom/unzoom
    *
@@ -425,10 +434,10 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  zoomGraph(percent:string):this {
+  zoomGraph(percent: string): this {
     GFP.log.info('XGraph.zoomGraph()');
     if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
-      const ratio:number = Number(percent.replace('%', '')) / 100;
+      const ratio: number = Number(percent.replace('%', '')) / 100;
       this.graph.zoomTo(ratio, true);
       this.zoomPercent = percent;
     } else {
@@ -438,19 +447,17 @@ export default class XGraph {
     return this;
   }
 
-
   /**
    * Restore initial size
    *
    * @returns {this}
    * @memberof XGraph
    */
-  unzoomGraph():this {
+  unzoomGraph(): this {
     this.zoom = false;
     this.graph.zoomActual();
-    return this
+    return this;
   }
-
 
   /**
    * Define background color
@@ -458,7 +465,7 @@ export default class XGraph {
    * @param {this} bgColor
    * @memberof XGraph
    */
-  bgGraph(bgColor):this {
+  bgGraph(bgColor): this {
     const $div = $(this.container);
     if (bgColor) {
       this.bgColor = bgColor;
@@ -468,7 +475,6 @@ export default class XGraph {
     }
     return this;
   }
-
 
   /**
    * Return mxgraph object
@@ -490,7 +496,6 @@ export default class XGraph {
     return this.xmlGraph;
   }
 
-
   /**
    * Assign xml definition and redraw graph
    *
@@ -498,14 +503,13 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  setXmlGraph(xmlGraph):this {
+  setXmlGraph(xmlGraph): this {
     GFP.log.info('XGraph.setXmlGraph()');
     if (GFP.utils.isencoded(xmlGraph)) this.xmlGraph = GFP.utils.decode(xmlGraph, true, true, true);
     else this.xmlGraph = xmlGraph;
     this.drawGraph();
     return this;
   }
-
 
   /**
    * Get list of values or id
@@ -514,16 +518,16 @@ export default class XGraph {
    * @returns {string[]}
    * @memberof XGraph
    */
-  getCurrentCells(prop:TPropType):string[] {
-    const cellIds:string[] = [];
+  getCurrentCells(prop: TPropType): string[] {
+    const cellIds: string[] = [];
     const model = this.graph.getModel();
     const cells = model.cells;
     if (prop === 'id') {
-      _.each(cells, (mxcell:mxCell) => {
+      _.each(cells, (mxcell: mxCell) => {
         cellIds.push(this.getId(mxcell));
       });
     } else if (prop === 'value') {
-      _.each(cells,(mxcell:mxCell) => {
+      _.each(cells, (mxcell: mxCell) => {
         cellIds.push(this.getLabel(mxcell));
       });
     }
@@ -538,15 +542,15 @@ export default class XGraph {
    * @returns {mxCell[]}
    * @memberof XGraph
    */
-  findMxCells(prop:TPropType, pattern:string):mxCell[] {
+  findMxCells(prop: TPropType, pattern: string): mxCell[] {
     const mxcells = this.getMxCells();
-    const result:any[] = [];
+    const result: any[] = [];
     if (prop === 'id') {
-      _.each(mxcells, (mxcell:mxCell) => {
+      _.each(mxcells, (mxcell: mxCell) => {
         if (GFP.utils.matchString(mxcell.id, pattern)) result.push(mxcell);
       });
     } else if (prop === 'value') {
-      _.each(mxcells, (mxcell:mxCell) => {
+      _.each(mxcells, (mxcell: mxCell) => {
         if (GFP.utils.matchString(mxcell.getValue(), pattern)) result.push(mxcell);
       });
     }
@@ -560,7 +564,7 @@ export default class XGraph {
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  selectMxCells(prop:TPropType, pattern:string) {
+  selectMxCells(prop: TPropType, pattern: string) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       // this.graph.setSelectionCells(mxcells);
@@ -573,7 +577,7 @@ export default class XGraph {
    *
    * @memberof XGraph
    */
-  unselectMxCells(prop:TPropType, pattern:string) {
+  unselectMxCells(prop: TPropType, pattern: string) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       this.unhighlightCells(mxcells);
@@ -603,7 +607,7 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  addOverlay(state:string, mxcell:mxCell) {
+  addOverlay(state: string, mxcell: mxCell) {
     this.graph.addCellOverlay(mxcell, this.createOverlay(this.graph.warningImage, `State: ${state}`));
   }
 
@@ -613,7 +617,7 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  removeOverlay(mxcell:mxCell) {
+  removeOverlay(mxcell: mxCell) {
     this.graph.removeCellOverlays(mxcell);
   }
 
@@ -624,7 +628,7 @@ export default class XGraph {
    * @param {string} link - Url
    * @memberof XGraph
    */
-  addLink(mxcell:mxCell, link) {
+  addLink(mxcell: mxCell, link) {
     this.graph.setLinkForCell(mxcell, link);
   }
 
@@ -638,7 +642,6 @@ export default class XGraph {
     this.graph.getLinkForCell(mxcell);
   }
 
-
   /**
    * Remove link of cell
    *
@@ -646,7 +649,7 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  removeLink(mxcell:mxCell):this {
+  removeLink(mxcell: mxCell): this {
     this.graph.setLinkForCell(mxcell, null);
     return this;
   }
@@ -658,12 +661,11 @@ export default class XGraph {
    * @returns {string[]} value of labels or id frome source
    * @memberof XGraph
    */
-  getOrignalCells(prop:TPropType):string[] {
+  getOrignalCells(prop: TPropType): string[] {
     if (prop === 'id' || prop === 'value') return this.cells[prop];
     // TODO: attributs
     return [];
   }
-
 
   /**
    * Rename Id of cell
@@ -673,7 +675,7 @@ export default class XGraph {
    * @returns {this} XGraph
    * @memberof XGraph
    */
-  renameId(oldId:string, newId:string):this {
+  renameId(oldId: string, newId: string): this {
     const cells = this.findMxCells('id', oldId);
     if (cells !== undefined && cells.length > 0) {
       cells.forEach(cell => {
@@ -682,7 +684,7 @@ export default class XGraph {
     } else {
       GFP.log.warn(`Cell ${oldId} not found`);
     }
-    return this
+    return this;
   }
 
   /**
@@ -714,19 +716,19 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getValuePropOfMxCell(prop:TPropType, mxcell:mxCell) {
+  getValuePropOfMxCell(prop: TPropType, mxcell: mxCell) {
     if (prop === 'id') return this.getId(mxcell);
     if (prop === 'value') return this.getLabel(mxcell);
     return null;
   }
 
-  getStyleCell(mxcell:mxCell, style:TStyleType):string|null {
+  getStyleCell(mxcell: mxCell, style: TStyleType): string | null {
     const state = this.graph.view.getState(mxcell);
     if (state) return state.style[style];
     return null;
   }
 
-  setStyleCell(mxcell:mxCell, style:TStyleType, color:string, animate = false):this {
+  setStyleCell(mxcell: mxCell, style: TStyleType, color: string, animate = false): this {
     if (animate) {
       try {
         let endColor = this.getStyleCell(mxcell, style);
@@ -758,7 +760,7 @@ export default class XGraph {
    * @returns {string} Label of current cell
    * @memberof XGraph
    */
-  getLabel(mxcell:mxCell):string {
+  getLabel(mxcell: mxCell): string {
     if (mxUtils.isNode(mxcell.value)) {
       return mxcell.value.getAttribute('label');
     }
@@ -772,7 +774,7 @@ export default class XGraph {
    * @returns {string} Id of mxCell
    * @memberof XGraph
    */
-  getId(mxcell):string {
+  getId(mxcell): string {
     return mxcell.getId();
   }
 
@@ -784,8 +786,8 @@ export default class XGraph {
    * @returns {string} New label
    * @memberof XGraph
    */
-  setLabelCell(mxcell:mxCell, text:string):string {
-    let label:string = text;
+  setLabelCell(mxcell: mxCell, text: string): string {
+    let label: string = text;
     if (mxUtils.isNode(mxcell.value)) {
       label = mxcell.value.setAttribute('label', text);
     } else mxcell.setValue(text);
@@ -798,7 +800,7 @@ export default class XGraph {
    * @param {Object} onMappingObj
    * @memberof XGraph
    */
-  setMap(onMappingObj:TOnMappingObj) {
+  setMap(onMappingObj: TOnMappingObj) {
     GFP.log.info('XGraph.setMapping()');
     GFP.log.debug('XGraph.setMapping() onMappingObject : ', onMappingObj);
     this.onMapping = onMappingObj;
@@ -831,7 +833,7 @@ export default class XGraph {
    * @param {MouseEvent} me
    * @memberof XGraph
    */
-  eventClick(me:mxMouseEvent) {
+  eventClick(me: mxMouseEvent) {
     GFP.log.info('XGraph.eventClick()');
     const self = this;
 
@@ -852,33 +854,33 @@ export default class XGraph {
   }
 
   /**
-   *Event for double click on graph
+   * Event for double click on graph
    *
-   * @param {Event} evt
+   * @param {MouseEvent} evt
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  eventDbClick(evt, mxcell) {
+  eventDbClick(evt: MouseEvent, mxcell: mxCell) {
     GFP.log.info('XGraph.eventDbClick()');
     GFP.log.debug('XGraph.eventDbClick() evt', evt);
     GFP.log.debug('XGraph.eventDbClick() cell', mxcell);
-    GFP.log.info(1, 'XGraph.eventDbClick() container.getBoundingClientRect()', this.container.getBoundingClientRect());
+    GFP.log.info('XGraph.eventDbClick() container.getBoundingClientRect()', this.container.getBoundingClientRect());
     if (mxcell !== undefined) {
       this.lazyZoomCell(mxcell);
     }
   }
 
   /**
-   *Event for mouse wheel on graph
+   * Event for mouse wheel on graph
    *
    * @param {Event} evt
    * @param {boolean} up
    * @memberof XGraph
    */
-  eventMouseWheel(evt, up) {
+  eventMouseWheel(evt: WheelEvent, up: boolean) {
     GFP.log.info('XGraph.eventMouseWheel()');
-    GFP.log.debug('XGraph.eventMouseWheel() evt', evt);
-    GFP.log.debug('XGraph.eventMouseWheel() up', up);
+    // GFP.log.debug('XGraph.eventMouseWheel() evt', evt);
+    // GFP.log.debug('XGraph.eventMouseWheel() up', up);
     if (this.graph.isZoomWheelEvent(evt)) {
       if (up == null || up == undefined) {
         GFP.log.debug('XGraph.eventMouseWheel() up', 'Not defined');
@@ -892,8 +894,14 @@ export default class XGraph {
       // GFP.log.debug( 'XGraph.eventMouseWheel() offsetTop', offsetTop);
       // var x = evt.layerX - offsetLeft;
       // var y = evt.layerY - offsetTop;
-      var x = evt.layerX;
-      var y = evt.layerY;
+
+      // Before TS
+      // var x = evt.layerX;
+      // var y = evt.layerY;
+      // After TS
+      var x = evt.offsetX;
+      var y = evt.offsetY;
+
       if (up) {
         this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
       } else {
@@ -905,50 +913,50 @@ export default class XGraph {
   }
 
   /**
-   *Event for key on graph
+   * Event for key on graph
    *
-   * @param {Event} evt
+   * @param {KeyboardEvent} evt
    * @memberof XGraph
    */
-  eventKey(evt) {
+  eventKey(evt: KeyboardEvent) {
     if (!mxEvent.isConsumed(evt) && evt.keyCode == 27 /* Escape */) {
       this.cumulativeZoomFactor = 1;
       if (this.graph) {
         this.graph.zoomActual();
-        this.applyGraph(this.width, this.height);
+        this.applyGraph();
       }
     }
   }
-  width(width: any, height: any) {
-    throw new Error('Method not implemented.');
-  }
-  height(width: any, height: any) {
-    throw new Error('Method not implemented.');
-  }
+  // width(width: any, height: any) {
+  //   throw new Error('Method not implemented.');
+  // }
+  // height(width: any, height: any) {
+  //   throw new Error('Method not implemented.');
+  // }
 
   /**
-   *Zoom/Unzoom on graph on center
+   * Zoom/Unzoom on graph on center
    *
    * @param {number} factor - 1 = 100%
    * @memberof XGraph
    */
-  lazyZoomCenter(factor) {
+  lazyZoomCenter(factor: number) {
     this.graph.zoomTo(factor, true);
   }
 
   /**
-   *Zoom/Unzoom on graph on mouse pointer
+   * Zoom/Unzoom on graph on mouse pointer
    *
    * @param {number} factor
    * @param {number} offsetX
    * @param {number} offsetY
    * @memberof XGraph
    */
-  lazyZoomPointer(factor, offsetX, offsetY) {
+  lazyZoomPointer(factor: number, offsetX: number, offsetY: number) {
     GFP.log.info('XGraph.lazyZoomPointer()');
-    GFP.log.debug('XGraph.lazyZoomPointer() factor', factor);
-    GFP.log.debug('XGraph.lazyZoomPointer() offsetX', offsetX);
-    GFP.log.debug('XGraph.lazyZoomPointer() offsetY', offsetY);
+    // GFP.log.debug('XGraph.lazyZoomPointer() factor', factor);
+    // GFP.log.debug('XGraph.lazyZoomPointer() offsetX', offsetX);
+    // GFP.log.debug('XGraph.lazyZoomPointer() offsetY', offsetY);
     let dx = offsetX * 2;
     let dy = offsetY * 2;
 
@@ -966,14 +974,16 @@ export default class XGraph {
       dx *= f;
       dy *= f;
     }
-
     this.graph.view.scaleAndTranslate(scale, this.graph.view.translate.x + dx, this.graph.view.translate.y + dy);
   }
 
   /**
    * Highlights the given cell.
+   *
+   * @param {mxCell[]} cells
+   * @memberof XGraph
    */
-  highlightCells(cells) {
+  highlightCells(cells: mxCell[]) {
     for (var i = 0; i < cells.length; i++) {
       this.highlightCell(cells[i]);
     }
@@ -981,8 +991,11 @@ export default class XGraph {
 
   /**
    * UnHighlights the given array of cells.
+   *
+   * @param {mxCell[]} cells
+   * @memberof XGraph
    */
-  unhighlightCells(cells) {
+  unhighlightCells(cells: mxCell[]) {
     for (var i = 0; i < cells.length; i++) {
       this.unhighlightCell(cells[i]);
     }
@@ -990,36 +1003,38 @@ export default class XGraph {
 
   /**
    * Highlights the given cell.
+   *
+   * @param {*} cell
+   * @returns
+   * @memberof XGraph
    */
-  // highlightCell(cell, color, duration, opacity)
-  highlightCell(cell) {
-    if (cell.highlight) return;
-    let color = '#99ff33';
-    // color = (color != null) ? color : mxConstants.DEFAULT_VALID_COLOR;
-    // duration = (duration != null) ? duration : 1000;
-    let opacity = 100;
-    var state = this.graph.view.getState(cell);
+  highlightCell(cell: mxCell) {
+    if (!cell.highlight) {
+      let color = '#99ff33';
+      let opacity = 100;
+      var state = this.graph.view.getState(cell);
 
-    if (state != null) {
-      var sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-      var hl = new mxCellHighlight(this.graph, color, sw, false);
+      if (state != null) {
+        var sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+        var hl = new mxCellHighlight(this.graph, color, sw, false);
 
-      if (opacity != null) {
-        hl.opacity = opacity;
+        if (opacity != null) {
+          hl.opacity = opacity;
+        }
+
+        hl.highlight(state);
+        cell.highlight = hl;
       }
-
-      hl.highlight(state);
-      cell.highlight = hl;
     }
   }
 
   /**
-   *UnHighlights the given cell.
+   * UnHighlights the given cell.
    *
-   * @param {*} cell
+   * @param {mxCell} cell
    * @memberof XGraph
    */
-  unhighlightCell(cell) {
+  unhighlightCell(cell:mxCell) {
     if (cell && cell.highlight) {
       let hl = cell.highlight;
       // Fades out the highlight after a duration
@@ -1039,10 +1054,10 @@ export default class XGraph {
   /**
    *Zoom cell on full panel
    *
-   * @param {*} mxcell
+   * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  lazyZoomCell(mxcell) {
+  lazyZoomCell(mxcell:mxCell) {
     GFP.log.info('XGraph.lazyZoomCell() mxcell', mxcell);
     GFP.log.debug('XGraph.lazyZoomCell() mxcellState', this.graph.view.getState(mxcell));
     if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
