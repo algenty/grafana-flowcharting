@@ -183,6 +183,7 @@ export default class FlowChartingPlugin {
     return `${this.getMxBasePath()}resources/`;
   }
 
+
   /**
    * return the uri path of mxgraph image for GF
    *
