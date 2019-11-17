@@ -140,7 +140,7 @@ export default class FlowChartingPlugin {
    * @memberof FlowChartingPlugin
    */
   getStencilsPath(): string {
-    return `${this.getDrawioPath()}/shapes`;
+    return `${this.getDrawioPath()}/stencils`;
   }
 
   /**
@@ -152,6 +152,37 @@ export default class FlowChartingPlugin {
   getMxBasePath(): string {
     return `${this.getLibsPath()}/mxgraph/javascript/dist/`;
   }
+
+  /**
+   * return the uri path of mxgraph styles for GF
+   *
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
+  getMxStylePath(): string {
+    return `${this.getMxBasePath()}styles/`;
+  }
+
+  /**
+   * return the uri path of mxgraph Css for GF
+   *
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
+  getMxCssPath(): string {
+    return `${this.getMxBasePath()}css/`;
+  }
+
+  /**
+   * return the uri path of mxgraph ressources for GF
+   *
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
+  getMxResourcePath(): string {
+    return `${this.getMxBasePath()}resources/`;
+  }
+
 
   /**
    * return the uri path of mxgraph image for GF

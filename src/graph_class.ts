@@ -1,3 +1,27 @@
+import FlowChartingPlugin from './plugin';
+import { GFMap } from './rule_class';
+import _ from 'lodash';
+
+declare var GFP: FlowChartingPlugin;
+declare var mxMouseEvent:any, mxCell:any ,mxCellOverlay:any, mxEvent : any, mxClient : any, mxUtils : any, mxCodec : any, mxUrlConverter : any;
+type mxCell = typeof mxCell;
+type mxMouseEvent = typeof mxMouseEvent;
+
+type TSourceType = 'xml' | 'csv';
+type TPropType = 'id'| 'value';
+type TStyleType = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
+
+export interface TOnMappingObj {
+  active: boolean;
+  object: GFMap;
+  id: string;
+  $scope: any;
+}
+
+export interface TCellsValue {
+  id: string[];
+  value: string[];
+}
 
 /**
  *mxGraph interface class
@@ -6,6 +30,24 @@
  * @class XGraph
  */
 export default class XGraph {
+  container: HTMLDivElement;
+  xmlGraph: string | undefined;
+  type: TSourceType;
+  graph: any;
+  scale: boolean;
+  tooltip: boolean;
+  lock: boolean;
+  center: boolean;
+  zoom: boolean;
+  zoomFactor: number;
+  cumulativeZoomFactor: number;
+  grid: boolean;
+  bgColor: string | undefined;
+  zoomPercent: string;
+  cells: TCellsValue;
+  clickBackup!: () => void;
+  dbclickBackup!: () => void;
+  onMapping!: TOnMappingObj;
   /**
    *Creates an instance of XGraph.
    * @param {DOM} container
@@ -26,17 +68,14 @@ export default class XGraph {
     // BEGIN ZOOM MouseWheele
     this.zoomFactor = 1.2;
     this.cumulativeZoomFactor = 1;
-    this.updateZoomTimeout = null;
-    this.resize = null;
     // END ZOOM MouseWheele
     this.grid = false;
     this.bgColor = undefined;
     this.zoomPercent = '1';
-    this.cells = {};
-    this.cells.id = [];
-    this.cells.value = [];
-    this.cells.attributs = {};
-    this.clickBackup = undefined;
+    this.cells = {
+      id: [],
+      value: [],
+    };
     XGraph.initMxGgraph();
 
     if (type === 'xml') {
@@ -49,123 +88,124 @@ export default class XGraph {
 
   static initMxGgraph() {
     // START PERF
+    let myWindow = window as any;
     GFP.perf.start(`${this.constructor.name}.initMxGgraph()`);
-    if (window.Graph) return;
-    window.mxLanguages = window.mxLanguages || ['en'];
+    if (myWindow.Graph) return;
+    myWindow.mxLanguages = myWindow.mxLanguages || ['en'];
 
     const mxgraph = require('mxgraph')({
       mxImageBasePath: GFP.getMxImagePath(),
       mxBasePath: GFP.getMxBasePath(),
       mxLoadStylesheets: false,
       mxLanguage: 'en',
-      mxLoadResources: false
+      mxLoadResources: false,
     });
 
-    window.BASE_PATH = window.BASE_PATH || GFP.getMxBasePath();
-    window.RESOURCES_PATH = window.BASE_PATH || `${window.BASE_PATH}resources`;
-    window.RESOURCE_BASE = window.RESOURCE_BASE || `${window.RESOURCES_PATH}/grapheditor`;
-    window.STENCIL_PATH = window.STENCIL_PATH || GFP.getStencilsPath();
-    window.SHAPES_PATH = window.SHAPES_PATH || GFP.getShapesPath();
-    window.IMAGE_PATH = window.IMAGE_PATH || `${window.BASE_PATH}images`;
-    window.STYLE_PATH = window.STYLE_PATH || `${window.BASE_PATH}styles`;
-    window.CSS_PATH = window.CSS_PATH || `${window.BASE_PATH}styles`;
-    window.mxLanguages = window.mxLanguages || ['en'];
+    myWindow.BASE_PATH = myWindow.BASE_PATH || GFP.getMxBasePath();
+    myWindow.RESOURCES_PATH = myWindow.BASE_PATH || GFP.getMxResourcePath(); //`${myWindow.BASE_PATH}resources`;
+    myWindow.RESOURCE_BASE = myWindow.RESOURCE_BASE ||  GFP.getMxResourcePath(); //`${myWindow.RESOURCES_PATH}/grapheditor`;
+    myWindow.STENCIL_PATH = myWindow.STENCIL_PATH || GFP.getStencilsPath();
+    myWindow.SHAPES_PATH = myWindow.SHAPES_PATH || GFP.getShapesPath();
+    myWindow.IMAGE_PATH = myWindow.IMAGE_PATH || GFP.getMxImagePath(); //`${myWindow.BASE_PATH}images`;
+    myWindow.STYLE_PATH = myWindow.STYLE_PATH || GFP.getMxStylePath(); //`${myWindow.BASE_PATH}styles`;
+    myWindow.CSS_PATH = myWindow.CSS_PATH || GFP.getMxCssPath(); //`${myWindow.BASE_PATH}styles`;
+    myWindow.mxLanguages = myWindow.mxLanguages || ['en'];
 
     // Put to global vars to work
-    window.mxActor = window.mxActor || mxgraph.mxActor;
-    window.mxArrow = window.mxArrow || mxgraph.mxArrow;
-    window.mxArrowConnector = window.mxArrowConnector || mxgraph.mxArrowConnector;
-    window.mxCell = window.mxCell || mxgraph.mxCell;
-    window.mxCellEditor = window.mxCellEditor || mxgraph.mxCellEditor;
-    window.mxCellHighlight = window.mxCellHighlight || mxgraph.mxCellHighlight;
-    window.mxCellOverlay = window.mxCellOverlay || mxgraph.mxCellOverlay;
-    window.mxCellRenderer = window.mxCellRenderer || mxgraph.mxCellRenderer;
-    window.mxCellState = window.mxCellState || mxgraph.mxCellState;
-    window.mxClient = window.mxClient || mxgraph.mxClient;
-    mxClient.mxBasePath = GFP.getMxBasePath();
-    mxClient.mxImageBasePath = GFP.getMxImagePath();
-    mxClient.mxLoadResources = true;
-    mxClient.mxLanguage = 'en';
-    mxClient.mxLoadStylesheets = true;
-    window.mxCloud = window.mxCloud || mxgraph.mxCloud;
-    window.mxCodec = window.mxCodec || mxgraph.mxCodec;
-    window.mxCompactTreeLayout = window.mxCompactTreeLayout || mxgraph.mxCompactTreeLayout;
-    window.mxConnectionConstraint = window.mxConnectionConstraint || mxgraph.mxConnectionConstraint;
-    window.mxConnectionHandler = window.mxConnectionHandler || mxgraph.mxConnectionHandler;
-    window.mxConnector = window.mxConnector || mxgraph.mxConnector;
-    window.mxConstants = window.mxConstants || mxgraph.mxConstants;
-    window.mxConstraintHandler = window.mxConstraintHandler || mxgraph.mxConstraintHandler;
-    window.mxCylinder = window.mxCylinder || mxgraph.mxCylinder;
-    window.mxDefaultKeyHandler = window.mxDefaultKeyHandler || mxgraph.mxDefaultKeyHandler;
-    window.mxDefaultPopupMenu = window.mxDefaultPopupMenu || mxgraph.mxDefaultPopupMenu;
-    window.mxDefaultToolbar = window.mxDefaultToolbar || mxgraph.mxDefaultToolbar;
-    window.mxDivResizer = window.mxDivResizer || mxgraph.mxDivResizer;
-    window.mxDoubleEllipse = window.mxDoubleEllipse || mxgraph.mxDoubleEllipse;
-    window.mxDragSource = window.mxDragSource || mxgraph.mxDragSource;
-    window.mxEdgeStyle = window.mxEdgeStyle || mxgraph.mxEdgeStyle;
-    window.mxEdgeHandler = window.mxEdgeHandler || mxgraph.mxEdgeHandler;
-    window.mxEditor = window.mxEditor || mxgraph.mxEditor;
-    window.mxElbowEdgeHandler = window.mxElbowEdgeHandler || mxgraph.mxElbowEdgeHandler;
-    window.mxEllipse = window.mxEllipse || mxgraph.mxEllipse;
-    window.mxEvent = window.mxEvent || mxgraph.mxEvent;
-    window.mxEventObject = window.mxEventObject || mxgraph.mxEventObject;
-    window.mxFile = window.mxFile || mxgraph.mxFile;
-    window.mxGeometry = window.mxGeometry || mxgraph.mxGeometry;
-    window.mxGraph = window.mxGraph || mxgraph.mxGraph;
-    window.mxGraphHandler = window.mxGraphHandler || mxgraph.mxGraphHandler;
-    window.mxGraphModel = window.mxGraphModel || mxgraph.mxGraphModel;
-    window.mxGraphView = window.mxGraphView || mxgraph.mxGraphView;
-    window.mxGuide = window.mxGuide || mxgraph.mxGuide;
-    window.mxHexagon = window.mxHexagon || mxgraph.mxHexagon;
-    window.mxHandle = window.mxHandle || mxgraph.mxHandle;
-    window.mxHierarchicalLayout = window.mxHierarchicalLayout || mxgraph.mxHierarchicalLayout;
-    window.mxImage = window.mxImage || mxgraph.mxImage;
-    window.mxImageShape = window.mxImageShape || mxgraph.mxImageShape;
-    window.mxKeyHandler = window.mxKeyHandler || mxgraph.mxKeyHandler;
-    window.mxLabel = window.mxLabel || mxgraph.mxLabel;
-    window.mxLayoutManager = window.mxLayoutManager || mxgraph.mxLayoutManager;
-    window.mxLine = window.mxLine || mxgraph.mxLine;
-    window.mxMarker = window.mxMarker || mxgraph.mxMarker;
-    window.mxOutline = window.mxOutline || mxgraph.mxOutline;
-    window.mxPanningHandler = window.mxPanningHandler || mxgraph.mxPanningHandler;
-    window.mxPerimeter = window.mxPerimeter || mxgraph.mxPerimeter;
-    window.mxPoint = window.mxPoint || mxgraph.mxPoint;
-    window.mxPolyline = window.mxPolyline || mxgraph.mxPolyline;
-    window.mxPopupMenu = window.mxPopupMenu || mxgraph.mxPopupMenu;
-    window.mxPopupMenuHandler = window.mxPopupMenuHandler || mxgraph.mxPopupMenuHandler;
-    window.mxPrintPreview = window.mxPrintPreview || mxgraph.mxPrintPreview;
-    window.mxRectangle = window.mxRectangle || mxgraph.mxRectangle;
-    window.mxRectangleShape = window.mxRectangleShape || mxgraph.mxRectangleShape;
-    window.mxResources = window.mxResources || mxgraph.mxResources;
-    window.mxRhombus = window.mxRhombus || mxgraph.mxRhombus;
-    window.mxRubberband = window.mxRubberband || mxgraph.mxRubberband;
-    window.mxShape = window.mxShape || mxgraph.mxShape;
-    window.mxStackLayout = window.mxStackLayout || mxgraph.mxStackLayout;
-    window.mxStencil = window.mxStencil || mxgraph.mxStencil;
-    window.mxStencilRegistry = window.mxStencilRegistry || mxgraph.mxStencilRegistry;
-    window.mxStylesheet = window.mxStylesheet || mxgraph.mxStylesheet;
-    window.mxStyleRegistry = window.mxStyleRegistry || mxgraph.mxStyleRegistry;
-    window.mxSvgCanvas2D = window.mxSvgCanvas2D || mxgraph.mxSvgCanvas2D;
-    window.mxSwimlane = window.mxSwimlane || mxgraph.mxSwimlane;
-    window.mxText = window.mxText || mxgraph.mxText;
-    window.mxToolbar = window.mxToolbar || mxgraph.mxToolbar;
-    window.mxTooltip = window.mxTooltip || mxgraph.mxTooltip;
-    window.mxTooltipHandler = window.mxTooltipHandler || mxgraph.mxTooltipHandler;
-    window.mxTriangle = window.mxTriangle || mxgraph.mxTriangle;
-    window.mxUndoManager = window.mxUndoManager || mxgraph.mxUndoManager;
-    window.mxUrlConverter = window.mxUrlConverter || mxgraph.mxUrlConverter;
-    window.mxUtils = window.mxUtils || mxgraph.mxUtils;
-    window.mxValueChange = window.mxValueChange || mxgraph.mxValueChange;
-    window.mxVertexHandler = window.mxVertexHandler || mxgraph.mxVertexHandler;
+    myWindow.mxActor = myWindow.mxActor || mxgraph.mxActor;
+    myWindow.mxArrow = myWindow.mxArrow || mxgraph.mxArrow;
+    myWindow.mxArrowConnector = myWindow.mxArrowConnector || mxgraph.mxArrowConnector;
+    myWindow.mxCell = myWindow.mxCell || mxgraph.mxCell;
+    myWindow.mxCellEditor = myWindow.mxCellEditor || mxgraph.mxCellEditor;
+    myWindow.mxCellHighlight = myWindow.mxCellHighlight || mxgraph.mxCellHighlight;
+    myWindow.mxCellOverlay = myWindow.mxCellOverlay || mxgraph.mxCellOverlay;
+    myWindow.mxCellRenderer = myWindow.mxCellRenderer || mxgraph.mxCellRenderer;
+    myWindow.mxCellState = myWindow.mxCellState || mxgraph.mxCellState;
+    myWindow.mxClient = myWindow.mxClient || mxgraph.mxClient;
+    myWindow.mxClient.mxBasePath = GFP.getMxBasePath();
+    myWindow.mxClient.mxImageBasePath = GFP.getMxImagePath();
+    myWindow.mxClient.mxLoadResources = true;
+    myWindow.mxClient.mxLanguage = 'en';
+    myWindow.mxClient.mxLoadStylesheets = true;
+    myWindow.mxCloud = myWindow.mxCloud || mxgraph.mxCloud;
+    myWindow.mxCodec = myWindow.mxCodec || mxgraph.mxCodec;
+    myWindow.mxCompactTreeLayout = myWindow.mxCompactTreeLayout || mxgraph.mxCompactTreeLayout;
+    myWindow.mxConnectionConstraint = myWindow.mxConnectionConstraint || mxgraph.mxConnectionConstraint;
+    myWindow.mxConnectionHandler = myWindow.mxConnectionHandler || mxgraph.mxConnectionHandler;
+    myWindow.mxConnector = myWindow.mxConnector || mxgraph.mxConnector;
+    myWindow.mxConstants = myWindow.mxConstants || mxgraph.mxConstants;
+    myWindow.mxConstraintHandler = myWindow.mxConstraintHandler || mxgraph.mxConstraintHandler;
+    myWindow.mxCylinder = myWindow.mxCylinder || mxgraph.mxCylinder;
+    myWindow.mxDefaultKeyHandler = myWindow.mxDefaultKeyHandler || mxgraph.mxDefaultKeyHandler;
+    myWindow.mxDefaultPopupMenu = myWindow.mxDefaultPopupMenu || mxgraph.mxDefaultPopupMenu;
+    myWindow.mxDefaultToolbar = myWindow.mxDefaultToolbar || mxgraph.mxDefaultToolbar;
+    myWindow.mxDivResizer = myWindow.mxDivResizer || mxgraph.mxDivResizer;
+    myWindow.mxDoubleEllipse = myWindow.mxDoubleEllipse || mxgraph.mxDoubleEllipse;
+    myWindow.mxDragSource = myWindow.mxDragSource || mxgraph.mxDragSource;
+    myWindow.mxEdgeStyle = myWindow.mxEdgeStyle || mxgraph.mxEdgeStyle;
+    myWindow.mxEdgeHandler = myWindow.mxEdgeHandler || mxgraph.mxEdgeHandler;
+    myWindow.mxEditor = myWindow.mxEditor || mxgraph.mxEditor;
+    myWindow.mxElbowEdgeHandler = myWindow.mxElbowEdgeHandler || mxgraph.mxElbowEdgeHandler;
+    myWindow.mxEllipse = myWindow.mxEllipse || mxgraph.mxEllipse;
+    myWindow.mxEvent = myWindow.mxEvent || mxgraph.mxEvent;
+    myWindow.mxEventObject = myWindow.mxEventObject || mxgraph.mxEventObject;
+    myWindow.mxFile = myWindow.mxFile || mxgraph.mxFile;
+    myWindow.mxGeometry = myWindow.mxGeometry || mxgraph.mxGeometry;
+    myWindow.mxGraph = myWindow.mxGraph || mxgraph.mxGraph;
+    myWindow.mxGraphHandler = myWindow.mxGraphHandler || mxgraph.mxGraphHandler;
+    myWindow.mxGraphModel = myWindow.mxGraphModel || mxgraph.mxGraphModel;
+    myWindow.mxGraphView = myWindow.mxGraphView || mxgraph.mxGraphView;
+    myWindow.mxGuide = myWindow.mxGuide || mxgraph.mxGuide;
+    myWindow.mxHexagon = myWindow.mxHexagon || mxgraph.mxHexagon;
+    myWindow.mxHandle = myWindow.mxHandle || mxgraph.mxHandle;
+    myWindow.mxHierarchicalLayout = myWindow.mxHierarchicalLayout || mxgraph.mxHierarchicalLayout;
+    myWindow.mxImage = myWindow.mxImage || mxgraph.mxImage;
+    myWindow.mxImageShape = myWindow.mxImageShape || mxgraph.mxImageShape;
+    myWindow.mxKeyHandler = myWindow.mxKeyHandler || mxgraph.mxKeyHandler;
+    myWindow.mxLabel = myWindow.mxLabel || mxgraph.mxLabel;
+    myWindow.mxLayoutManager = myWindow.mxLayoutManager || mxgraph.mxLayoutManager;
+    myWindow.mxLine = myWindow.mxLine || mxgraph.mxLine;
+    myWindow.mxMarker = myWindow.mxMarker || mxgraph.mxMarker;
+    myWindow.mxOutline = myWindow.mxOutline || mxgraph.mxOutline;
+    myWindow.mxPanningHandler = myWindow.mxPanningHandler || mxgraph.mxPanningHandler;
+    myWindow.mxPerimeter = myWindow.mxPerimeter || mxgraph.mxPerimeter;
+    myWindow.mxPoint = myWindow.mxPoint || mxgraph.mxPoint;
+    myWindow.mxPolyline = myWindow.mxPolyline || mxgraph.mxPolyline;
+    myWindow.mxPopupMenu = myWindow.mxPopupMenu || mxgraph.mxPopupMenu;
+    myWindow.mxPopupMenuHandler = myWindow.mxPopupMenuHandler || mxgraph.mxPopupMenuHandler;
+    myWindow.mxPrintPreview = myWindow.mxPrintPreview || mxgraph.mxPrintPreview;
+    myWindow.mxRectangle = myWindow.mxRectangle || mxgraph.mxRectangle;
+    myWindow.mxRectangleShape = myWindow.mxRectangleShape || mxgraph.mxRectangleShape;
+    myWindow.mxResources = myWindow.mxResources || mxgraph.mxResources;
+    myWindow.mxRhombus = myWindow.mxRhombus || mxgraph.mxRhombus;
+    myWindow.mxRubberband = myWindow.mxRubberband || mxgraph.mxRubberband;
+    myWindow.mxShape = myWindow.mxShape || mxgraph.mxShape;
+    myWindow.mxStackLayout = myWindow.mxStackLayout || mxgraph.mxStackLayout;
+    myWindow.mxStencil = myWindow.mxStencil || mxgraph.mxStencil;
+    myWindow.mxStencilRegistry = myWindow.mxStencilRegistry || mxgraph.mxStencilRegistry;
+    myWindow.mxStylesheet = myWindow.mxStylesheet || mxgraph.mxStylesheet;
+    myWindow.mxStyleRegistry = myWindow.mxStyleRegistry || mxgraph.mxStyleRegistry;
+    myWindow.mxSvgCanvas2D = myWindow.mxSvgCanvas2D || mxgraph.mxSvgCanvas2D;
+    myWindow.mxSwimlane = myWindow.mxSwimlane || mxgraph.mxSwimlane;
+    myWindow.mxText = myWindow.mxText || mxgraph.mxText;
+    myWindow.mxToolbar = myWindow.mxToolbar || mxgraph.mxToolbar;
+    myWindow.mxTooltip = myWindow.mxTooltip || mxgraph.mxTooltip;
+    myWindow.mxTooltipHandler = myWindow.mxTooltipHandler || mxgraph.mxTooltipHandler;
+    myWindow.mxTriangle = myWindow.mxTriangle || mxgraph.mxTriangle;
+    myWindow.mxUndoManager = myWindow.mxUndoManager || mxgraph.mxUndoManager;
+    myWindow.mxUrlConverter = myWindow.mxUrlConverter || mxgraph.mxUrlConverter;
+    myWindow.mxUtils = myWindow.mxUtils || mxgraph.mxUtils;
+    myWindow.mxValueChange = myWindow.mxValueChange || mxgraph.mxValueChange;
+    myWindow.mxVertexHandler = myWindow.mxVertexHandler || mxgraph.mxVertexHandler;
 
     // Load libs for Draw.io
     GFP.utils.loadJS(`${GFP.getLibsPath()}/sanitizer.min.js`);
-    
+
     // Load Draw.io libs
     GFP.utils.loadJS(`${GFP.getLibsPath()}/viewer.min.js`);
     GFP.utils.loadJS(`${GFP.getLibsPath()}/shapes.min.js`);
     GFP.utils.loadJS(`${GFP.getLibsPath()}/stencils.min.js`);
-    
+
     // Specifics function for Flowcharting
     GFP.utils.loadJS(`${GFP.getLibsPath()}/Graph_custom.js`);
 
@@ -178,10 +218,10 @@ export default class XGraph {
    *
    * @memberof XGraph
    */
-  initGraph() {
+  initGraph():this {
     GFP.log.info('XGraph.initGraph()');
     GFP.perf.start(`${this.constructor.name}.initGraph()`);
-    this.graph = new Graph(this.container);
+    this.graph = new (<any>window).Graph(this.container);
     // this.graph.getTooltipForCell = this.getTooltipForCell;
 
     // /!\ What is setPannig
@@ -195,8 +235,7 @@ export default class XGraph {
 
     // CTRL+MOUSEWHEEL
     mxEvent.addMouseWheelListener(mxUtils.bind(this, this.eventMouseWheel), this.container);
-    if (mxClient.IS_IE || mxClient.IS_EDGE)
-      mxEvent.addListener(this.container, 'wheel', mxUtils.bind(this, this.eventMouseWheel));
+    if (mxClient.IS_IE || mxClient.IS_EDGE) mxEvent.addListener(this.container, 'wheel', mxUtils.bind(this, this.eventMouseWheel));
 
     // KEYS
     mxEvent.addListener(document, 'keydown', mxUtils.bind(this, this.eventKey));
@@ -207,6 +246,7 @@ export default class XGraph {
     // DB CLICK
     this.graph.dblClick = this.eventDbClick.bind(this);
     GFP.perf.stop(`${this.constructor.name}.initGraph()`);
+    return this;
   }
 
   /**
@@ -214,7 +254,7 @@ export default class XGraph {
    *
    * @memberof XGraph
    */
-  drawGraph() {
+  drawGraph():this {
     GFP.log.info('XGraph.drawGraph()');
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
@@ -229,16 +269,17 @@ export default class XGraph {
       this.cells['id'] = this.getCurrentCells('id');
       this.cells['value'] = this.getCurrentCells('value');
     }
+    return this;
   }
 
   /**
-   *apply options on graph
+   * Apply options on graph
    *
    * @param {*} width
    * @param {*} height
    * @memberof XGraph
    */
-  applyGraph() {
+  applyGraph():this {
     GFP.log.info('XGraph.refreshGraph()');
     if (!this.scale) this.zoomGraph(this.zoomPercent);
     else this.unzoomGraph();
@@ -252,42 +293,47 @@ export default class XGraph {
     this.gridGraph(this.grid);
     this.bgGraph(this.bgColor);
     this.refresh();
+    return this;
   }
 
-  refresh() {
+  refresh():this {
     this.graph.refresh();
+    return this;
   }
 
-  destroyGraph() {
+  destroyGraph():this {
     this.graph.destroy();
     this.graph = undefined;
+    return this;
   }
 
   /**
-   *lock cells
+   * lock cells
    *
    * @param {Boolean} bool
    * @memberof XGraph
    */
-  lockGraph(bool) {
+  lockGraph(bool:boolean):this {
     if (bool) this.graph.setEnabled(false);
     else this.graph.setEnabled(true);
     this.lock = bool;
+    return this;
   }
 
   /**
-   *Enable tooltip
+   * Enable tooltip
    *
    * @param {Boolean} bool
    * @memberof XGraph
    */
-  tooltipGraph(bool) {
+  tooltipGraph(bool:boolean):this {
     if (bool) this.graph.setTooltips(true);
     else this.graph.setTooltips(false);
     this.tooltip = bool;
+    return this;
   }
 
-  allowDrawio(bool) {
+  allowDrawio(bool:boolean) {
     if (bool) {
       mxUrlConverter.prototype.baseUrl = 'http://draw.io/';
       mxUrlConverter.prototype.baseDomain = '';
@@ -295,37 +341,46 @@ export default class XGraph {
       mxUrlConverter.prototype.baseUrl = null;
       mxUrlConverter.prototype.baseDomain = null;
     }
+    return this;
   }
 
   /**
-   *Center graph in panel
+   * Center graph in panel
    *
    * @param {Boolean} bool
    * @memberof XGraph
    */
-  centerGraph(bool) {
+  centerGraph(bool:boolean):this {
     this.graph.centerZoom = false;
     if (bool) this.graph.center(true, true);
     else this.graph.center(false, false);
     this.center = bool;
+    return this;
   }
 
   /**
-   *Scale graph in panel
+   * Scale graph in panel
    *
-   * @param {Boolean} bool
+   * @param {boolean} bool
    * @memberof XGraph
    */
-  scaleGraph(bool) {
+  scaleGraph(bool:boolean) {
     if (bool) {
       this.unzoomGraph();
       this.graph.fit();
       this.graph.view.rendering = true;
     }
     this.scale = bool;
+    return this;
   }
 
-  fitGraph() {
+  /**
+   * Scale graph into container
+   *
+   * @returns {this}
+   * @memberof XGraph
+   */
+  fitGraph():this {
     var margin = 2;
     var max = 3;
 
@@ -341,59 +396,69 @@ export default class XGraph {
       (margin + cw - w * s) / (2 * s) - bounds.x / this.graph.view.scale,
       (margin + ch - h * s) / (2 * s) - bounds.y / this.graph.view.scale
     );
+    return this;
   }
 
   /**
-   *Display grid in panel
+   * Display grid in panel
    *
-   * @param {Boolean} bool
+   * @param {boolean} bool
+   * @returns {this}
    * @memberof XGraph
    */
-  gridGraph(bool) {
+  gridGraph(bool:boolean):this {
     if (bool) {
       // eslint-disable-next-line no-undef
-      this.container.style.backgroundImage = `url('${IMAGE_PATH}/grid.gif')`;
+      this.container.style.backgroundImage = `url('${GFP.getMxImagePath}/grid.gif')`;
     } else {
       this.container.style.backgroundImage = '';
     }
     this.grid = bool;
+    return this;
   }
 
+
   /**
-   *Zoom/unzoom
+   * Zoom/unzoom
    *
    * @param {string} percent
+   * @returns {this}
    * @memberof XGraph
    */
-  zoomGraph(percent) {
+  zoomGraph(percent:string):this {
     GFP.log.info('XGraph.zoomGraph()');
     if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
-      const ratio = percent.replace('%', '') / 100;
+      const ratio:number = Number(percent.replace('%', '')) / 100;
       this.graph.zoomTo(ratio, true);
       this.zoomPercent = percent;
     } else {
       this.unzoomGraph();
     }
     this.zoom = true;
+    return this;
   }
 
+
   /**
-   *Restore initial size
+   * Restore initial size
    *
+   * @returns {this}
    * @memberof XGraph
    */
-  unzoomGraph() {
+  unzoomGraph():this {
     this.zoom = false;
     this.graph.zoomActual();
+    return this
   }
 
+
   /**
-   *Define background color
+   * Define background color
    *
-   * @param {string} bgColor
+   * @param {this} bgColor
    * @memberof XGraph
    */
-  bgGraph(bgColor) {
+  bgGraph(bgColor):this {
     const $div = $(this.container);
     if (bgColor) {
       this.bgColor = bgColor;
@@ -401,12 +466,14 @@ export default class XGraph {
     } else {
       $div.css('background-color', '');
     }
+    return this;
   }
 
+
   /**
-   *Return mxgraph object
+   * Return mxgraph object
    *
-   * @returns {mxGraph}
+   * @returns
    * @memberof XGraph
    */
   getMxGraph() {
@@ -414,7 +481,7 @@ export default class XGraph {
   }
 
   /**
-   *Return xml definition
+   * Return xml definition
    *
    * @returns {string}
    * @memberof XGraph
@@ -423,59 +490,63 @@ export default class XGraph {
     return this.xmlGraph;
   }
 
+
   /**
-   *Assign xml definition and redraw graph
+   * Assign xml definition and redraw graph
    *
    * @param {string} xmlGraph
+   * @returns {this}
    * @memberof XGraph
    */
-  setXmlGraph(xmlGraph) {
+  setXmlGraph(xmlGraph):this {
     GFP.log.info('XGraph.setXmlGraph()');
     if (GFP.utils.isencoded(xmlGraph)) this.xmlGraph = GFP.utils.decode(xmlGraph, true, true, true);
     else this.xmlGraph = xmlGraph;
     this.drawGraph();
+    return this;
   }
 
+
   /**
-   *Get list of values or id
+   * Get list of values or id
    *
-   * @param {string} prop - id|value
-   * @returns {Array<string>}
+   * @param {TPropType} prop
+   * @returns {string[]}
    * @memberof XGraph
    */
-  getCurrentCells(prop) {
-    const cellIds = [];
+  getCurrentCells(prop:TPropType):string[] {
+    const cellIds:string[] = [];
     const model = this.graph.getModel();
     const cells = model.cells;
     if (prop === 'id') {
-      _.each(cells, cell => {
-        cellIds.push(cell.getId());
+      _.each(cells, (mxcell:mxCell) => {
+        cellIds.push(this.getId(mxcell));
       });
     } else if (prop === 'value') {
-      _.each(cells, cell => {
-        cellIds.push(cell.getValue());
+      _.each(cells,(mxcell:mxCell) => {
+        cellIds.push(this.getLabel(mxcell));
       });
     }
     return cellIds;
   }
 
   /**
-   *Get list of mxCell
+   * Get list of mxCell
    *
    * @param {string} prop - id|value
    * @param {string} pattern - regex like or string
-   * @returns {Array<mxCell>}
+   * @returns {mxCell[]}
    * @memberof XGraph
    */
-  findMxCells(prop, pattern) {
+  findMxCells(prop:TPropType, pattern:string):mxCell[] {
     const mxcells = this.getMxCells();
-    const result = [];
+    const result:any[] = [];
     if (prop === 'id') {
-      _.each(mxcells, mxcell => {
+      _.each(mxcells, (mxcell:mxCell) => {
         if (GFP.utils.matchString(mxcell.id, pattern)) result.push(mxcell);
       });
     } else if (prop === 'value') {
-      _.each(mxcells, mxcell => {
+      _.each(mxcells, (mxcell:mxCell) => {
         if (GFP.utils.matchString(mxcell.getValue(), pattern)) result.push(mxcell);
       });
     }
@@ -489,7 +560,7 @@ export default class XGraph {
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  selectMxCells(prop, pattern) {
+  selectMxCells(prop:TPropType, pattern:string) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       // this.graph.setSelectionCells(mxcells);
@@ -502,7 +573,7 @@ export default class XGraph {
    *
    * @memberof XGraph
    */
-  unselectMxCells(prop, pattern) {
+  unselectMxCells(prop:TPropType, pattern:string) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       this.unhighlightCells(mxcells);
@@ -532,11 +603,8 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  addOverlay(state, mxcell) {
-    this.graph.addCellOverlay(
-      mxcell,
-      this.createOverlay(this.graph.warningImage, `State: ${state}`)
-    );
+  addOverlay(state:string, mxcell:mxCell) {
+    this.graph.addCellOverlay(mxcell, this.createOverlay(this.graph.warningImage, `State: ${state}`));
   }
 
   /**
@@ -545,63 +613,67 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  removeOverlay(mxcell) {
+  removeOverlay(mxcell:mxCell) {
     this.graph.removeCellOverlays(mxcell);
   }
 
   /**
-   *Add link to cell
+   * Add link to cell
    *
    * @param {mxCell} mxcell
    * @param {string} link - Url
    * @memberof XGraph
    */
-  addLink(mxcell, link) {
+  addLink(mxcell:mxCell, link) {
     this.graph.setLinkForCell(mxcell, link);
   }
 
   /**
-   *Get link from cell
+   * Get link from cell
    *
-   * @param {*} mxcell
+   * @param {mxCell} mxcell
    * @memberof XGraph
    */
   getLink(mxcell) {
     this.graph.getLinkForCell(mxcell);
   }
 
+
   /**
-   *Remove link of cell
+   * Remove link of cell
    *
    * @param {mxCell} mxcell
+   * @returns {this}
    * @memberof XGraph
    */
-  removeLink(mxcell) {
+  removeLink(mxcell:mxCell):this {
     this.graph.setLinkForCell(mxcell, null);
+    return this;
   }
 
   /**
-   *Get value or id from cell source
+   * Get value or id from cell source
    *
-   * @param {*} prop
-   * @returns
+   * @param {TPropType} prop
+   * @returns {string[]} value of labels or id frome source
    * @memberof XGraph
    */
-  getOrignalCells(prop) {
+  getOrignalCells(prop:TPropType):string[] {
     if (prop === 'id' || prop === 'value') return this.cells[prop];
     // TODO: attributs
     return [];
   }
 
+
   /**
-   *Rename Id of cell
-   *Must be uniq
-   *
+   * Rename Id of cell
+   * Must be uniq
    * @param {string} oldId
    * @param {string} newId
+   * @returns {this} XGraph
    * @memberof XGraph
    */
-  renameId(oldId, newId) {
+  renameId(oldId:string, newId:string):this {
     const cells = this.findMxCells('id', oldId);
     if (cells !== undefined && cells.length > 0) {
       cells.forEach(cell => {
@@ -610,10 +682,11 @@ export default class XGraph {
     } else {
       GFP.log.warn(`Cell ${oldId} not found`);
     }
+    return this
   }
 
   /**
-   *Get xml definition from current graph
+   * Get xml definition from current graph
    *
    * @returns
    * @memberof XGraph
@@ -625,9 +698,9 @@ export default class XGraph {
   }
 
   /**
-   *Return all cells
+   * Return all cells
    *
-   * @returns {array} mxCells
+   * @returns {Map<mxCell>} mxCells
    * @memberof XGraph
    */
   getMxCells() {
@@ -641,19 +714,19 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getValuePropOfMxCell(prop, mxcell) {
+  getValuePropOfMxCell(prop:TPropType, mxcell:mxCell) {
     if (prop === 'id') return this.getId(mxcell);
     if (prop === 'value') return this.getLabel(mxcell);
     return null;
   }
 
-  getStyleCell(mxcell, style) {
+  getStyleCell(mxcell:mxCell, style:TStyleType):string|null {
     const state = this.graph.view.getState(mxcell);
     if (state) return state.style[style];
     return null;
   }
 
-  setStyleCell(mxcell, style, color, animate = false) {
+  setStyleCell(mxcell:mxCell, style:TStyleType, color:string, animate = false):this {
     if (animate) {
       try {
         let endColor = this.getStyleCell(mxcell, style);
@@ -664,8 +737,7 @@ export default class XGraph {
         function graduate(count, steps) {
           if (count < steps.length) {
             self.graph.setCellStyles(style, steps[count], [mxcell]);
-            // var caller = arguments.callee;
-            window.setTimeout(function () {
+            window.setTimeout(function() {
               graduate(count + 1, steps);
             }, 40);
           }
@@ -676,17 +748,17 @@ export default class XGraph {
         this.graph.setCellStyles(style, color, [mxcell]);
       }
     } else this.graph.setCellStyles(style, color, [mxcell]);
+    return this;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   /**
-   *Return Label/value of mxcell
+   * Return Label/value of mxcell
    *
    * @param {mxCell} mxcell
-   * @returns
+   * @returns {string} Label of current cell
    * @memberof XGraph
    */
-  getLabel(mxcell) {
+  getLabel(mxcell:mxCell):string {
     if (mxUtils.isNode(mxcell.value)) {
       return mxcell.value.getAttribute('label');
     }
@@ -694,39 +766,39 @@ export default class XGraph {
   }
 
   /**
-   *Return Id of mxCell
+   * Return Id of mxCell
    *
    * @param {mxCell} mxcell
    * @returns {string} Id of mxCell
    * @memberof XGraph
    */
-  getId(mxcell) {
+  getId(mxcell):string {
     return mxcell.getId();
   }
 
-  // eslint-disable-next-line class-methods-use-this
   /**
-   *Assign new label for mxcell
+   * Assign new label for mxcell
    *
-   * @param {*} mxcell
+   * @param {mxCell} mxcell
    * @param {string} text - New label
    * @returns {string} New label
    * @memberof XGraph
    */
-  setLabelCell(mxcell, text) {
+  setLabelCell(mxcell:mxCell, text:string):string {
+    let label:string = text;
     if (mxUtils.isNode(mxcell.value)) {
-      var label = mxcell.value.setAttribute('label', text);
+      label = mxcell.value.setAttribute('label', text);
     } else mxcell.setValue(text);
-    return text;
+    return label;
   }
 
   /**
-   *Active mapping option when user click on mapping
+   * Active mapping option when user click on mapping
    *
    * @param {Object} onMappingObj
    * @memberof XGraph
    */
-  setMap(onMappingObj) {
+  setMap(onMappingObj:TOnMappingObj) {
     GFP.log.info('XGraph.setMapping()');
     GFP.log.debug('XGraph.setMapping() onMappingObject : ', onMappingObj);
     this.onMapping = onMappingObj;
@@ -737,7 +809,7 @@ export default class XGraph {
   }
 
   /**
-   *Disable mapping when user click on mapping
+   * Disable mapping when user click on mapping
    *
    * @memberof XGraph
    */
@@ -754,12 +826,12 @@ export default class XGraph {
   //
 
   /**
-   *Event for click on graph
+   * Event for click on graph
    *
    * @param {MouseEvent} me
    * @memberof XGraph
    */
-  eventClick(me) {
+  eventClick(me:mxMouseEvent) {
     GFP.log.info('XGraph.eventClick()');
     const self = this;
 
@@ -790,11 +862,7 @@ export default class XGraph {
     GFP.log.info('XGraph.eventDbClick()');
     GFP.log.debug('XGraph.eventDbClick() evt', evt);
     GFP.log.debug('XGraph.eventDbClick() cell', mxcell);
-    GFP.log.info(
-      1,
-      'XGraph.eventDbClick() container.getBoundingClientRect()',
-      this.container.getBoundingClientRect()
-    );
+    GFP.log.info(1, 'XGraph.eventDbClick() container.getBoundingClientRect()', this.container.getBoundingClientRect());
     if (mxcell !== undefined) {
       this.lazyZoomCell(mxcell);
     }
@@ -851,6 +919,12 @@ export default class XGraph {
       }
     }
   }
+  width(width: any, height: any) {
+    throw new Error('Method not implemented.');
+  }
+  height(width: any, height: any) {
+    throw new Error('Method not implemented.');
+  }
 
   /**
    *Zoom/Unzoom on graph on center
@@ -893,11 +967,7 @@ export default class XGraph {
       dy *= f;
     }
 
-    this.graph.view.scaleAndTranslate(
-      scale,
-      this.graph.view.translate.x + dx,
-      this.graph.view.translate.y + dy
-    );
+    this.graph.view.scaleAndTranslate(scale, this.graph.view.translate.x + dx, this.graph.view.translate.y + dy);
   }
 
   /**
@@ -959,7 +1029,7 @@ export default class XGraph {
       }
 
       // Destroys the highlight after the fade
-      window.setTimeout(function () {
+      window.setTimeout(function() {
         hl.destroy();
       }, 500);
       cell.highlight = null;

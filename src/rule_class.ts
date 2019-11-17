@@ -868,7 +868,7 @@ interface TGFMapData {
   pattern?: string;
   hidden?: boolean;
 }
-class GFMap {
+export class GFMap {
   data!: TGFMapData;
   id: string;
   constructor(pattern, data: TGFMapData) {
