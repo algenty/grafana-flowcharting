@@ -859,7 +859,9 @@ export default class XGraph {
     this.onMapping.active = false;
     this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
-    if (this.onMapping.$scope) { this.onMapping.$scope.$apply(); }
+    if (this.onMapping.$scope) {
+      this.onMapping.$scope.$apply();
+    }
   }
 
   //
@@ -879,7 +881,9 @@ export default class XGraph {
       const state = me.getState();
       if (state) {
         const id = state.cell.id;
-        if (this.onMapping.object) { this.onMapping.object.data.pattern = id; }
+        if (this.onMapping.object) {
+          this.onMapping.object.data.pattern = id;
+        }
         if (this.onMapping.id) {
           const elt = document.getElementById(this.onMapping.id);
           if (elt) {
