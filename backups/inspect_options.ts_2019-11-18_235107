@@ -3,7 +3,7 @@ import FlowchartHandler from './flowchartHandler';
 import State from 'state_class';
 
 declare var GFP: FlowChartingPlugin;
-interface TInspectOptionsScope extends ng.IScope {
+interface IInspectOptionsScope extends ng.IScope {
   flowchartHandler: any;
   editor: InspectOptionsCtrl;
   GFP: FlowChartingPlugin;
@@ -22,7 +22,7 @@ interface TSelectNumber {
 
 export class InspectOptionsCtrl {
   enable = false; // enable inspector or not
-  $scope: TInspectOptionsScope;
+  $scope: IInspectOptionsScope;
   ctrl: any; //TODO: define type
   panel: any; //TODO: define type
   logDisplayOption: TSelectBoolean[] = [
@@ -41,7 +41,7 @@ export class InspectOptionsCtrl {
   panelCtrl: any;
   colors: any; //TODO: define style
   /** @ngInject */
-  constructor($scope: TInspectOptionsScope) {
+  constructor($scope: IInspectOptionsScope) {
     $scope.editor = this;
     $scope.GFP = GFP;
     this.$scope = $scope;

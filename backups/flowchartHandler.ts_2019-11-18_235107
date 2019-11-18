@@ -390,7 +390,7 @@ export default class FlowchartHandler {
    * @param {Object} objToMap
    * @memberof FlowchartHandler
    */
-  setMap(objToMap: GFMap) {
+  setMap(objToMap:GFMap) {
     const flowchart = this.getFlowchart(this.currentFlowchart);
     this.onMapping.active = true;
     this.onMapping.object = objToMap;
@@ -459,7 +459,7 @@ export default class FlowchartHandler {
    *
    * @memberof FlowchartHandler
    */
-  openDrawEditor(name?: string) {
+  openDrawEditor(name?:string) {
     const urlEditor = this.getFlowchart(name).getUrlEditor();
     const theme = this.getFlowchart(name).getThemeEditor();
     const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}`;
