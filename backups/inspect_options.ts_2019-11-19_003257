@@ -70,7 +70,7 @@ export class InspectOptionsCtrl {
 
   onChangeId(state: State) {
     if (state.newcellId !== undefined && state.cellId !== state.newcellId) {
-      state.edited = true;
+      this.flowchartHandler.getFlowchart().getStateHandler().edited = true;
       if (state.previousId === undefined) {
         state.previousId = state.cellId;
       }
@@ -108,11 +108,11 @@ export class InspectOptionsCtrl {
     flowchart.applyModel();
   }
 
-  selectCell(state: State) {
+  selectCell(state:State) {
     state.highlightCell();
   }
 
-  unselectCell(state: State) {
+  unselectCell(state:State) {
     state.unhighlightCell();
   }
 }

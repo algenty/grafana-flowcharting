@@ -80,7 +80,7 @@ export default class XGraph {
     this.cumulativeZoomFactor = 1;
     // END ZOOM MouseWheele
     this.grid = false;
-    this.bgColor = null;
+    this.bgColor = undefined;
     this.zoomPercent = '1';
     this.cells = {
       id: [],

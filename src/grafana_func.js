@@ -1,6 +1,7 @@
 // import { getValueFormat } from '@grafana/data';
 import kbn from 'grafana/app/core/utils/kbn';
 
+
 var grafana = {
   // formatValue(value, unit, decimals) {
   //   const fmt = getValueFormat(unit);
@@ -9,6 +10,9 @@ var grafana = {
   // }
   formatValue(value, unit, decimals) {
     return kbn.valueFormats[unit](value, decimals, null).toString();
+  },
+  getUnitFormats() {
+    return kbn.getUnitFormats();
   }
 };
 
