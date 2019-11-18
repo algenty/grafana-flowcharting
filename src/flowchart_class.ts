@@ -22,7 +22,7 @@ export interface TFlowchartData {
   allowDrawio: boolean;
   tooltip: boolean;
   grid: boolean;
-  bgColor: string | null;
+  bgColor: string|null;
   editorUrl: string;
   editorTheme: string;
 }
@@ -378,7 +378,7 @@ export default class Flowchart {
     return this;
   }
 
-  setBgColor(bgColor: string): this {
+  setBgColor(bgColor: string|null): this {
     this.data.bgColor = bgColor;
     this.xgraph.bgColor = bgColor;
     return this;
