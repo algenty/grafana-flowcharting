@@ -22,7 +22,7 @@ export default class FlowchartHandler {
   changeOptionFlag = true; // Options changed
   changeDataFlag = false; // Data changed
   changeRuleFlag = false; // rules changed
-  static defaultXml: string = FlowchartHandler.getDefaultGraph();
+  static defaultXml: string | null = FlowchartHandler.getDefaultGraph();
   onMapping: TOnMappingObj = {
     active: false,
     object: undefined,
@@ -94,7 +94,7 @@ export default class FlowchartHandler {
     }
   }
 
-  static getDefaultGraph(): string {
+  static getDefaultGraph(): string | null {
     let result: string | null = FlowchartHandler.defaultXml;
     if (result) {
       result =
