@@ -38,10 +38,10 @@ type TStyleColor = keyof TIStringStyles;
 export default class State {
   mxcell: any;
   cellId: string;
-  newcellId?: string; // for inspect mode
-  previousId?: string; // for inspect mode
-  edited?: boolean; // if modified in inspector
-  edit?: boolean; // if modified in inspector
+  newcellId ?: string; // for inspect mode
+  previousId ?: string; // for inspect mode
+  edited ?:boolean; // if modified in inspector
+  edit ?:boolean; // if modified in inspector
   xgraph: any; //TODO:
   changed: boolean;
   changedShape: boolean;

@@ -1,22 +1,55 @@
+import FlowChartingPlugin from './plugin';
+import FlowchartHandler from './flowchartHandler';
+import State from 'state_class';
+
+declare var GFP: FlowChartingPlugin;
+type TLevelLog = 0 | 1 | 2 | 3;
+interface ImyScope extends ng.IScope {
+  flowchartHandler: any;
+  editor: InspectOptionsCtrl;
+  GFP: FlowChartingPlugin;
+  ctrl: any; //TODO: define type
+}
+
+interface TLogDisplayOption {
+  text: string;
+  value: boolean;
+}
+
+interface TLogLevelOption {
+  text: string;
+  value: TLevelLog;
+}
+
 export class InspectOptionsCtrl {
+  enable: boolean = false; // enable inspector or not
+  $scope: ImyScope;
+  ctrl: any; //TODO: define type
+  panel: any; //TODO: define type
+  logDisplayOption: TLogDisplayOption[] = [
+    { text: 'True', value: true },
+    { text: 'False', value: false },
+  ];
+  logLevelOption: TLogLevelOption[] = [
+    { text: 'DEBUG', value: 0 },
+    { text: 'INFO', value: 1 },
+    { text: 'WARNING', value: 2 },
+    { text: 'ERROR', value: 3 },
+  ];
+  logLevel: number;
+  logDisplay: boolean;
+  flowchartHandler: FlowchartHandler;
+  panelCtrl: any;
+  colors: any; //TODO: define style
   /** @ngInject */
-  constructor($scope) {
+  constructor($scope: ImyScope) {
     $scope.editor = this;
-    this.enable = false;
-    $scope.GFP = window.GFP;
+    $scope.GFP = GFP;
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
-    this.logDisplayOption = [{ text: 'True', value: true }, { text: 'False', value: false }];
-    this.logLevelOption = [
-      { text: 'DEBUG', value: 0 },
-      { text: 'INFO', value: 1 },
-      { text: 'WARNING', value: 2 },
-      { text: 'ERROR', value: 3 },
-    ];
-    this.logLevel = GFP.logLevel;
-    this.logDisplay = GFP.logDisplay;
-
+    this.logLevel = GFP.log.logLevel;
+    this.logDisplay = GFP.log.logDisplay;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     $scope.flowchartHandler = this.ctrl.flowchartHandler;
   }
@@ -26,17 +59,17 @@ export class InspectOptionsCtrl {
   }
 
   onColorChange(styleIndex, colorIndex) {
-    return (newColor) => {
+    return newColor => {
       this.colors[colorIndex] = newColor;
     };
   }
 
   onDebug() {
-    GFP.logLevel = this.logLevel;
-    GFP.logDisplay = this.logDisplay;
+    GFP.log.logLevel = this.logLevel;
+    GFP.log.logDisplay = this.logDisplay;
   }
 
-  onChangeId(state) {
+  onChangeId(state:State) {
     if (state.newcellId !== undefined && state.cellId !== state.newcellId) {
       this.flowchartHandler.getFlowchart().getStateHandler().edited = true;
       if (state.previousId === undefined) state.previousId = state.cellId;
@@ -46,12 +79,12 @@ export class InspectOptionsCtrl {
     state.edit = false;
   }
 
-  onEdit(state) {
+  onEdit(state:State) {
     state.edit = true;
     state.newcellId = state.cellId;
     let elt = document.getElementById(state.cellId);
-    setTimeout(function () {
-      elt.focus();
+    setTimeout(function() {
+      if(elt) elt.focus();
     }, 100);
   }
 
@@ -64,7 +97,7 @@ export class InspectOptionsCtrl {
   apply() {
     const flowchart = this.flowchartHandler.getFlowchart();
     const states = flowchart.getStateHandler().getStates();
-    states.forEach((state) => {
+    states.forEach(state => {
       if (state.edited) flowchart.renameId(state.previousId, state.cellId);
     });
     flowchart.applyModel();
@@ -86,6 +119,6 @@ export function inspectOptionsTab($q, uiSegmentSrv) {
     restrict: 'E',
     scope: true,
     templateUrl: `${GFP.getPartialPath()}/inspect_options.html`,
-    controller: InspectOptionsCtrl
+    controller: InspectOptionsCtrl,
   };
 }

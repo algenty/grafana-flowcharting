@@ -292,12 +292,12 @@ class Perf {
 }
 
 class Log {
-  static DEBUG = 0;
-  static INFO = 1;
-  static WARN = 2;
-  static ERROR = 3;
-  logLevel = 2;
-  logDisplay = true;
+  static DEBUG:number = 0;
+  static INFO:number = 1;
+  static WARN:number = 2;
+  static ERROR:number= 3;
+  logLevel:number = 2;
+  logDisplay:boolean = true;
   constructor() {}
 
   /**

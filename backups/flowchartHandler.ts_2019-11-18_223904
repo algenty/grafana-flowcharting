@@ -118,7 +118,7 @@ export default class FlowchartHandler {
    * @returns {Flowchart}
    * @memberof FlowchartHandler
    */
-  getFlowchart(name?: string) {
+  getFlowchart(name?:string) {
     //TODO: When multi flowchart
     return this.flowcharts[0];
   }
