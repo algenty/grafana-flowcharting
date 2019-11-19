@@ -17,7 +17,7 @@
         "SharedArrayBuffer": "readonly",
          "_": false,
         "GFP": false,
-        "moment": false,
+        "moment": false
     },
     "parserOptions": {
         "ecmaVersion": 2018,

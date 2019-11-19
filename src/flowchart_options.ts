@@ -1,19 +1,4 @@
-import FlowChartingPlugin from './plugin';
 import FlowchartHandler from 'flowchartHandler';
-
-declare var GFP: FlowChartingPlugin;
-
-interface TFlowchartOptionsScope extends ng.IScope {
-  flowchartHandler: any;
-  editor: FlowchartOptionsCtrl;
-  GFP: FlowChartingPlugin;
-  ctrl: any; //TODO: redefine any
-}
-
-interface TSelectString {
-  text: string;
-  value: string;
-}
 
 export class FlowchartOptionsCtrl {
   $scope: TFlowchartOptionsScope;

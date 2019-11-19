@@ -51,8 +51,8 @@ export interface TRuleData {
   tpGraph: boolean;
   tpGraphSize: TGraphSize;
   tpGraphType: TGraphType;
-  tpGraphLow: number;
-  tpGraphHigh: number;
+  tpGraphLow: number|null;
+  tpGraphHigh: number|null;
   shapeProp: TPropType;
   shapeData: TShapeMapData[];
   textProp: TPropType;
@@ -87,7 +87,7 @@ export default class Rule {
    * @param {*} data
    * @memberof Rule
    */
-  constructor(pattern, data) {
+  constructor(pattern:string, data:TRuleData) {
     this.data = data;
     this.data.pattern = pattern;
     this.shapeMaps = [];
@@ -99,13 +99,62 @@ export default class Rule {
     this.import(data);
   }
 
+  static getDefaultData():TRuleData {
+    return {
+      order: 1,
+      pattern: '.*',
+      unit: 'short',
+      type: 'number',
+      alias: 'myRule',
+      aggregation: 'current',
+      decimals: 2,
+      colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
+      reduce: true,
+      style: 'fillColor',
+      colorOn: 'a',
+      link: false,
+      linkOn: 'a',
+      linkUrl: '',
+      linkParams: false,
+      textOn: 'wmd',
+      textReplace: 'content',
+      textPattern: '/.*/',
+      dateFormat: 'YYYY-MM-DD HH:mm:ss',
+      thresholds: [],
+      stringWarning: '',
+      stringCritical: '',
+      invert: false,
+      overlayIcon: false,
+      tooltip: false,
+      tooltipLabel: '',
+      tooltipColors: false,
+      tooltipOn: 'a',
+      tpDirection: 'v',
+      tpGraph: false,
+      tpGraphSize: '100%',
+      tpGraphType: 'line',
+      tpGraphLow: null,
+      tpGraphHigh: null,
+      shapeProp: 'id',
+      shapeData: [],
+      textProp: 'id',
+      textData: [],
+      linkProp: 'id',
+      linkData: [],
+      mappingType: 1,
+      valueData: [],
+      rangeData: [],
+      sanitize: false,
+    }
+  }
+
   /**
    * return data of rule
    *
    * @returns {data}
    * @memberof Rule
    */
-  getData() {
+  getData():TRuleData {
     return this.data;
   }
 

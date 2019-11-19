@@ -83,8 +83,8 @@ export default class RulesHandler {
    * @returns {Rule}
    * @memberof RulesHandler
    */
-  addRule(pattern) {
-    const data: any = {};
+  addRule(pattern:string) {
+    const data = Rule.getDefaultData();
     const newRule = new Rule(pattern, data);
     this.rules.push(newRule);
     this.data.push(data);
@@ -98,7 +98,7 @@ export default class RulesHandler {
    * @returns {number}
    * @memberof RulesHandler
    */
-  countRules() {
+  countRules():number {
     if (this.rules !== undefined && Array.isArray(this.rules)) {
       return this.rules.length;
     }
