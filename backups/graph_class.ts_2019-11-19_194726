@@ -322,14 +322,6 @@ export default class XGraph {
     return this;
   }
 
-  // refreshLabel(mxcell):this {
-  //   if(mxcell) {
-  //     debugger
-  //     let state = this.graph.view.getState(mxcell)
-  //     state.
-  //   }
-  // }
-
   destroyGraph(): this {
     this.graph.destroy();
     this.graph = undefined;
@@ -673,8 +665,8 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getLink(mxcell: mxCell): string | null {
-    return this.graph.getLinkForCell(mxcell);
+  getLink(mxcell) {
+    this.graph.getLinkForCell(mxcell);
   }
 
   /**
@@ -771,7 +763,7 @@ export default class XGraph {
     return null;
   }
 
-  setStyleCell(mxcell: mxCell, style: TStyleType, color: string | null, animate = false): this {
+  setStyleCell(mxcell: mxCell, style: TStyleType, color: string, animate = false): this {
     if (animate) {
       try {
         const endColor = this.getStyleCell(mxcell, style);
@@ -838,7 +830,6 @@ export default class XGraph {
     } else {
       mxcell.setValue(text);
     }
-    this.graph.model.setValue(mxcell, text);
     return label;
   }
 
@@ -869,7 +860,7 @@ export default class XGraph {
     this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
     if (this.onMapping.$scope) {
-      this.onMapping.$scope.$applyAsync();
+      this.onMapping.$scope.$apply();
     }
   }
 

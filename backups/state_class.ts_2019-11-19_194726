@@ -1,15 +1,14 @@
 import TooltipHandler from './tooltipHandler';
 import FlowChartingPlugin from './plugin';
-import XGraph from './graph_class';
 
 declare var GFP: FlowChartingPlugin;
 // type typeColor = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
 interface TIStringStyles {
-  fillColor: string | null;
-  strokeColor: string | null;
-  fontColor: string | null;
-  imageBorder: string | null;
-  imageBackground: string | null;
+  fillColor: string | undefined;
+  strokeColor: string | undefined;
+  fontColor: string | undefined;
+  imageBorder: string | undefined;
+  imageBackground: string | undefined;
 }
 
 interface TIBooleanStyles {
@@ -43,7 +42,7 @@ export default class State {
   previousId?: string; // for inspect mode
   edited?: boolean; // if modified in inspector
   edit?: boolean; // if modified in inspector
-  xgraph: XGraph;
+  xgraph: any; //TODO:
   changed: boolean;
   changedShape: boolean;
   changedStyle: TIBooleanStyles;
@@ -109,7 +108,7 @@ export default class State {
     this.originalLink = link;
     this.currentLink = link;
     this.styleKeys.forEach(style => {
-      const color: string | null = this.xgraph.getStyleCell(mxcell, style);
+      const color: string = this.xgraph.getStyleCell(mxcell, style);
       this.currentColors[style] = color;
       this.originalColors[style] = color;
     });
@@ -117,11 +116,11 @@ export default class State {
 
   static getDefaultValueStyles(): TIStringStyles {
     return {
-      fillColor: null,
-      strokeColor: null,
-      fontColor: null,
-      imageBorder: null,
-      imageBackground: null,
+      fillColor: undefined,
+      strokeColor: undefined,
+      fontColor: undefined,
+      imageBorder: undefined,
+      imageBackground: undefined,
     };
   }
 

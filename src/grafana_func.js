@@ -11,6 +11,7 @@ var grafana = {
   formatValue(value, unit, decimals) {
     return kbn.valueFormats[unit](value, decimals, null).toString();
   },
+  
   getUnitFormats() {
     return kbn.getUnitFormats();
   }

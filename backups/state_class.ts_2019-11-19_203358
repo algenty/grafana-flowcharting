@@ -43,7 +43,7 @@ export default class State {
   previousId?: string; // for inspect mode
   edited?: boolean; // if modified in inspector
   edit?: boolean; // if modified in inspector
-  xgraph: XGraph;
+  xgraph: XGraph; 
   changed: boolean;
   changedShape: boolean;
   changedStyle: TIBooleanStyles;
@@ -109,7 +109,7 @@ export default class State {
     this.originalLink = link;
     this.currentLink = link;
     this.styleKeys.forEach(style => {
-      const color: string | null = this.xgraph.getStyleCell(mxcell, style);
+      const color: string|null = this.xgraph.getStyleCell(mxcell, style);
       this.currentColors[style] = color;
       this.originalColors[style] = color;
     });

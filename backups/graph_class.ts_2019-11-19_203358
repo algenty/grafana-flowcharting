@@ -673,7 +673,7 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getLink(mxcell: mxCell): string | null {
+  getLink(mxcell:mxCell):string|null {
     return this.graph.getLinkForCell(mxcell);
   }
 
@@ -771,7 +771,7 @@ export default class XGraph {
     return null;
   }
 
-  setStyleCell(mxcell: mxCell, style: TStyleType, color: string | null, animate = false): this {
+  setStyleCell(mxcell: mxCell, style: TStyleType, color: string|null, animate = false): this {
     if (animate) {
       try {
         const endColor = this.getStyleCell(mxcell, style);
