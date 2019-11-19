@@ -1,5 +1,6 @@
 // import { getValueFormat } from '@grafana/data';
 import kbn from 'grafana/app/core/utils/kbn';
+import { loadPluginCss } from 'grafana/app/plugins/sdk';
 
 
 var grafana = {
@@ -14,6 +15,13 @@ var grafana = {
   
   getUnitFormats() {
     return kbn.getUnitFormats();
+  },
+  
+  loadCss() {
+    loadPluginCss({
+      dark: 'plugins/agenty-flowcharting-panel/css/flowchart.dark.css',
+      light: 'plugins/agenty-flowcharting-panel/css/flowchart.light.css',
+    });
   }
 };
 
