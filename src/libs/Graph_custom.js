@@ -47,7 +47,6 @@ Graph.prototype.getTooltipForCell = function (cell) {
     let tmp = cell.value.getAttribute('tooltip');
     // Tooltip
     if (tmp != null) {
-      console.log("tmp",tmp);
       hasTips = true;
       if (tmp != null && this.isReplacePlaceholders(cell)) {
         tmp = this.replacePlaceholders(cell, tmp);
