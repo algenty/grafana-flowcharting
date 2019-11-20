@@ -1,3 +1,4 @@
+import moment from 'moment';
 const Chartist = require('chartist');
 
 /**
@@ -20,14 +21,15 @@ export default class TooltipHandler {
       fullWidth: true,
       showLabel: false,
       axisX: {
-        showGrid: false,
-        showLabel: false,
-        offset: 0
+        showGrid: true,
+        showLabel: true,
+	labelInterpolationFnc: function(value, index) {
+	  return index % 15 === 0 ? value : null;
+	}
       },
       axisY: {
-        showGrid: false,
-        showLabel: false,
-        offset: 0
+        showGrid: true,
+        showLabel: true,
       },
       chartPadding: 0,
     };
@@ -181,40 +183,38 @@ export default class TooltipHandler {
 
   getLineChartDiv(metric, parentDiv) {
     let serie = metric.graphOptions.serie;
-    let coor = TooltipHandler.array2Coor(serie.flotpairs);
+    let data = TooltipHandler.array2Coor(serie.flotpairs);
     let div = document.createElement('div');
     if (parentDiv != undefined) parentDiv.appendChild(div);
     let color = metric.color;
     div.className = 'ct-chart ct-golden-section';
     if (metric.graphOptions.size != null) div.style = `width:${metric.graphOptions.size};`;
-    let data = {
-      series: [coor]
-    };
     if (metric.graphOptions.low != null) this.lineOptions.low = metric.graphOptions.low;
     if (metric.graphOptions.high != null) this.lineOptions.high = metric.graphOptions.high;
+    console.log(this.lineOptions);
     let chart = new Chartist.Line(div, data, this.lineOptions);
     metric.graphOptions.chart = chart;
-    chart.on('draw', function(data) {
-      u.log(0, 'Chartis.on() data ', data);
-      if (data.type === 'line' || data.type === 'area') {
-        if (data.type === 'line')
-          data.element.attr({
+    chart.on('draw', function(_data) {
+      u.log(0, 'Chartist.on() data ', _data);
+      if (_data.type === 'line' || _data.type === 'area') {
+        if (_data.type === 'line')
+          _data.element.attr({
             style: `stroke: ${color}`
           });
-        if (data.type === 'area')
-          data.element.attr({
+        if (_data.type === 'area')
+          _data.element.attr({
             style: `fill: ${color}`
           });
-        data.element.animate({
+        _data.element.animate({
           d: {
-            begin: 1000 * data.index,
+            begin: 1000 * _data.index,
             dur: 1000,
-            from: data.path
+            from: _data.path
               .clone()
               .scale(1, 0)
-              .translate(0, data.chartRect.height())
+              .translate(0, _data.chartRect.height())
               .stringify(),
-            to: data.path.clone().stringify(),
+            to: _data.path.clone().stringify(),
             easing: Chartist.Svg.Easing.easeOutQuint
           }
         });
@@ -224,13 +224,21 @@ export default class TooltipHandler {
   }
 
   static array2Coor(arr) {
-    let result = [];
+    const timeFormat = 'MM/DD HH:mm';
+    let data = {
+      labels: [], 
+      series: []
+    };
+    let serie = [];
+
     for (let index = 0; index < arr.length; index++) {
-      result.push({
-        x: arr[index][0],
-        y: arr[index][1]
-      });
+      data.labels.push(moment.unix(arr[index][0]/1000).format(timeFormat))
     }
-    return result;
+    for (let index = 0; index < arr.length; index++) {
+      serie.push(arr[index][1]);
+    }
+    data.series.push(serie);
+
+    return data;
   }
 }

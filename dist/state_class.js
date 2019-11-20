@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _tooltipHandler = _interopRequireDefault(require("./tooltipHandler"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -333,7 +333,7 @@ var State = function () {
       u.log(1, 'State.addTooltipValue()');
       u.log(0, 'State.addTooltipValue() label', label);
       u.log(0, 'State.addTooltipValue() value', value);
-      if (this.tooltipHandler == null) this.tooltipHandler = new _tooltipHandler["default"](this.mxcell);
+      if (this.tooltipHandler == null) this.tooltipHandler = new _tooltipHandler.default(this.mxcell);
       this.tooltipHandler.addMetric(name, label, value, color, direction);
     }
   }, {
@@ -513,4 +513,4 @@ var State = function () {
   return State;
 }();
 
-exports["default"] = State;
+exports.default = State;

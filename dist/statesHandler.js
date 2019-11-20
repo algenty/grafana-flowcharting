@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _state_class = _interopRequireDefault(require("./state_class"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -115,7 +115,7 @@ var StateHandler = function () {
       var state = this.getState(mxcell.id);
 
       if (state === null) {
-        state = new _state_class["default"](mxcell, this.xgraph, this.ctrl);
+        state = new _state_class.default(mxcell, this.xgraph, this.ctrl);
         this.states.push(state);
       }
 
@@ -179,4 +179,4 @@ var StateHandler = function () {
   return StateHandler;
 }();
 
-exports["default"] = StateHandler;
+exports.default = StateHandler;

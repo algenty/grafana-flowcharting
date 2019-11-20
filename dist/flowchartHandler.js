@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _flowchart_class = _interopRequireDefault(require("./flowchart_class"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -41,7 +41,7 @@ var FlowchartHandler = function () {
       object: undefined,
       id: undefined
     };
-    this["import"](this.data);
+    this.import(this.data);
     ctrl.events.on('render', function () {
       _this.render();
     });
@@ -76,8 +76,8 @@ var FlowchartHandler = function () {
           var container = _this2.createContainer();
 
           var newData = {};
-          var fc = new _flowchart_class["default"](map.name, map.xml, container, _this2.ctrl, newData);
-          fc["import"](map);
+          var fc = new _flowchart_class.default(map.name, map.xml, container, _this2.ctrl, newData);
+          fc.import(map);
 
           _this2.flowcharts.push(fc);
 
@@ -114,7 +114,7 @@ var FlowchartHandler = function () {
       u.log(1, 'FlowchartHandler.addFlowchart()');
       var container = this.createContainer();
       var data = {};
-      var flowchart = new _flowchart_class["default"](name, this.defaultXml, container, this.ctrl, data);
+      var flowchart = new _flowchart_class.default(name, this.defaultXml, container, this.ctrl, data);
       this.data.push(data);
       this.flowcharts.push(flowchart);
     }
@@ -313,4 +313,4 @@ var FlowchartHandler = function () {
   return FlowchartHandler;
 }();
 
-exports["default"] = FlowchartHandler;
+exports.default = FlowchartHandler;

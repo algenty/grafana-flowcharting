@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
+exports.default = void 0;
 
 var _jquery = _interopRequireDefault(require("jquery"));
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var plugin = {};
 plugin.dirname = "".concat(__dirname, "/");
@@ -17,11 +17,11 @@ plugin.mxImagePath = "".concat(plugin.mxBasePath, "images/");
 plugin.partialPath = "".concat(plugin.dirname, "/partials/");
 plugin.data = {};
 
-_jquery["default"].ajaxSetup({
+_jquery.default.ajaxSetup({
   async: false
 });
 
-_jquery["default"].getJSON("".concat(plugin.dirname, "/plugin.json"), function (data) {
+_jquery.default.getJSON("".concat(plugin.dirname, "/plugin.json"), function (data) {
   plugin.data = data;
 });
 
@@ -69,4 +69,4 @@ plugin.logLevel = 1;
 plugin.logDisplay = false;
 window.GF_PLUGIN = window.GF_PLUGIN || plugin;
 var _default = plugin;
-exports["default"] = _default;
+exports.default = _default;

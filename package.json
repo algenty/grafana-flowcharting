@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/algenty/grafana-flowcharting"
+    "url": "git+https://github.com/gretamosa/grafana-flowcharting"
   },
   "author": "Arnaud GENTY",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/algenty/grafana-flowcharting/issues"
+    "url": "https://github.com/gretamosa/grafana-flowcharting/issues"
   },
-  "homepage": "https://github.com/algenty/grafana-flowcharting",
+  "homepage": "https://github.com/gretamosa/grafana-flowcharting",
   "jest": {
     "testEnvironment": "node"
   },
