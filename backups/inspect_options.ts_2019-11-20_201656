@@ -1,7 +1,24 @@
 import FlowChartingPlugin from './plugin';
 import FlowchartHandler from './flowchartHandler';
 import State from 'state_class';
-import { TSelectBoolean, TSelectNumber, GFP, TInspectOptionsScope } from '../types';
+
+declare var GFP: FlowChartingPlugin;
+interface TInspectOptionsScope extends ng.IScope {
+  flowchartHandler: any;
+  editor: InspectOptionsCtrl;
+  GFP: FlowChartingPlugin;
+  ctrl: any; //TODO: define type
+}
+
+interface TSelectBoolean {
+  text: string;
+  value: boolean;
+}
+
+interface TSelectNumber {
+  text: string;
+  value: number;
+}
 
 export class InspectOptionsCtrl {
   enable = false; // enable inspector or not

@@ -1,7 +1,7 @@
 import Rule from './rule_class';
 import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
-import { TIRuleData, GFP } from '../types';
+
 
 /**
  * Rules Handler
@@ -32,7 +32,7 @@ export default class RulesHandler {
    * @param {any} obj
    * @memberof RulesHandler
    */
-  import(obj: any[]): this {
+  import(obj: any[]):this {
     GFP.log.info('RuleHandler.import()');
     this.rules = [];
     let index = 1;
@@ -54,7 +54,7 @@ export default class RulesHandler {
     return this;
   }
 
-  static getDafaultData(): TIRuleData[] {
+  static getDafaultData():TIRuleData[] {
     return [];
   }
 
@@ -64,7 +64,7 @@ export default class RulesHandler {
    * @returns {Array} of Rules
    * @memberof RulesHandler
    */
-  getRules(): Rule[] {
+  getRules():Rule[] {
     return this.rules;
   }
 
@@ -75,7 +75,7 @@ export default class RulesHandler {
    * @returns {Rule}
    * @memberof RulesHandler
    */
-  getRule(index: number) {
+  getRule(index:number) {
     return this.rules[index];
   }
 
@@ -86,7 +86,7 @@ export default class RulesHandler {
    * @returns {Rule} New rule
    * @memberof RulesHandler
    */
-  addRule(pattern: string): Rule {
+  addRule(pattern: string):Rule {
     const data = Rule.getDefaultData();
     const newRule = new Rule(pattern, data);
     this.rules.push(newRule);
@@ -126,11 +126,12 @@ export default class RulesHandler {
    * @param {number} index
    * @memberof RulesHandler
    */
-  removeRule(index: number) {
+  removeRule(index:number) {
     this.rules.splice(index, 1);
     this.data.splice(index, 1);
     this.setOrder();
   }
+
 
   /**
    * Clone rules at index in index - 1
@@ -139,7 +140,7 @@ export default class RulesHandler {
    * @returns {Rule}
    * @memberof RulesHandler
    */
-  cloneRule(index: number): Rule {
+  cloneRule(index:number):Rule {
     const rule = this.getRule(index);
     const data = rule.getData();
     const newData: TIRuleData = Rule.getDefaultData();
@@ -159,7 +160,7 @@ export default class RulesHandler {
         elt.focus();
       }, 100);
     }
-    return newRule;
+    return newRule
   }
 
   /**
@@ -179,7 +180,7 @@ export default class RulesHandler {
    * @param {number} index index
    * @memberof RulesHandler
    */
-  moveRuleToUp(index: number) {
+  moveRuleToUp(index:number) {
     const first = 0;
     const rules = this.rules;
     const last = rules.length - 1;
@@ -199,7 +200,7 @@ export default class RulesHandler {
    * @param {number} index
    * @memberof RulesHandler
    */
-  moveRuleToDown(index: number) {
+  moveRuleToDown(index:number) {
     const first = 0;
     const rules = this.rules;
     const last = rules.length - 1;

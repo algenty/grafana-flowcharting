@@ -2,7 +2,6 @@ import State from './state_class';
 import Rule from './rule_class';
 import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
-import { mxCell } from '../types';
 
 declare var GFP: FlowChartingPlugin;
 

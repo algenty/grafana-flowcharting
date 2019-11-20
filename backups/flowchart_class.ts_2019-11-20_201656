@@ -1,10 +1,31 @@
 import XGraph from './graph_class';
+import { TIOnMappingObj } from './graph_class';
 import StateHandler from './statesHandler';
 import State from './state_class';
 import Rule from './rule_class';
-import { TFlowchartData, GFP, mxUtils, TIOnMappingObj, TPropertieKey } from '../types';
 
-
+declare var GFP: any;
+declare var mxUtils: any;
+type TSourceType = 'xml' | 'csv';
+type TPropType = 'id' | 'value';
+export interface TFlowchartData {
+  name: string;
+  xml: string;
+  csv: string;
+  download: boolean;
+  type: TSourceType;
+  url: string;
+  zoom: string;
+  center: boolean;
+  scale: boolean;
+  lock: boolean;
+  allowDrawio: boolean;
+  tooltip: boolean;
+  grid: boolean;
+  bgColor: string | null;
+  editorUrl: string;
+  editorTheme: string;
+}
 
 /**
  * Flowchart handler
@@ -410,7 +431,7 @@ export default class Flowchart {
     return this;
   }
 
-  getNamesByProp(prop: TPropertieKey ): string[] {
+  getNamesByProp(prop: TPropType): string[] {
     if (this.xgraph) {
       return this.xgraph.getOrignalCells(prop);
     }

@@ -10,6 +10,11 @@ interface TSelectNumber {
   value: number;
 }
 
+interface TSelectBoolean {
+  text: string;
+  value: boolean;
+}
+
 type TSourceType = 'xml' | 'csv'; // Source type
 type TPropertieKey = 'id' | 'value'; //Type properties for finding cells
 interface TSelectSource extends TSelectString {
@@ -54,10 +59,6 @@ type TStyleKeyDisable = TStyleKey | 'disable';
 interface TSelectStyle extends TSelectString {
   value: TStyleKeyDisable;
 }
-
-// MxGraph
-
-
 
 // ToolTip
 type TDirection = 'v' | 'h';
@@ -154,25 +155,65 @@ interface TRangeMapData {
 }
 
 interface TValueMapData {
-  value: string|null;
+  value: string;
   text: string;
   hidden: boolean;
 }
 
+type mxCell = any;
+type mxMouseEvent = any;
+
 // XGraph
-type mxCell = typeof mxCell;
-type mxMouseEvent = typeof mxMouseEvent;
+declare var mxCellHighlight: any,
+  mxCellOverlay: any,
+  mxEvent: any,
+  mxClient: any,
+  mxUtils: any,
+  mxCodec: any,
+  mxConstants: any,
+  mxRectangle: any,
+  mxUrlConverter: any;
+
+
 
 // For mapping object
 interface TIOnMappingObj {
   active: boolean;
   object: GFMap | null;
   id: string | null;
-  $scope: ng.IScope | undefined;
+  $scope: ng.IScope | null;
 }
 
 // Export of id and label
 export interface TICellsIdLabel {
   id: string[];
   value: string[]; // Label
+}
+
+// Inspect
+interface TInspectOptionsScope extends ng.IScope {
+  flowchartHandler: any;
+  editor: InspectOptionsCtrl;
+  GFP: FlowChartingPlugin;
+  ctrl: any; //TODO: define type
+}
+
+// Flowcharts
+interface TFlowchartData {
+  name: string;
+  xml: string;
+  csv: string;
+  download: boolean;
+  type: TSourceType;
+  url: string;
+  zoom: string;
+  center: boolean;
+  scale: boolean;
+  lock: boolean;
+  allowDrawio: boolean;
+  tooltip: boolean;
+  grid: boolean;
+  bgColor: string | null;
+  editorUrl: string;
+  editorTheme: string;
 }

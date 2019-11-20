@@ -474,7 +474,7 @@ export default class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  matchShape(pattern: string | null): boolean {
+  matchShape(pattern: string|null): boolean {
     let found = false;
     this.shapeMaps.forEach(element => {
       if (element.match(pattern)) {
@@ -509,7 +509,7 @@ export default class Rule {
     return this.textMaps;
   }
 
-  matchText(pattern: string | null): boolean {
+  matchText(pattern: string|null): boolean {
     let found = false;
     this.textMaps.forEach(element => {
       if (element.match(pattern)) {
@@ -545,7 +545,7 @@ export default class Rule {
     return this.linkMaps;
   }
 
-  matchLink(pattern: string | null): boolean {
+  matchLink(pattern: string|null): boolean {
     let found = false;
     this.linkMaps.forEach(element => {
       if (element.match(pattern)) {
@@ -877,7 +877,7 @@ export class GFMap {
     return {};
   }
 
-  match(text: string | null): boolean {
+  match(text: string|null): boolean {
     if (text === undefined || text === null || text.length === 0) {
       return false;
     }
@@ -1038,7 +1038,7 @@ class RangeMap {
 
 class ValueMap {
   data: TValueMapData;
-  constructor(value: string , text: string , data: TValueMapData) {
+  constructor(value: string | undefined, text: string | undefined, data: TValueMapData) {
     this.data = data;
     this.data.value = value;
     this.data.text = text;

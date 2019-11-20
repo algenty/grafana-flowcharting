@@ -4,7 +4,6 @@ import RulesHandler from 'rulesHandler';
 import Rule from 'rule_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
-import { TSelectStyle, TSelectString, TSelectAggregation, TSelectText, TSelectGraphType, TSelectGraphSize } from '../types';
 
 declare var GFP: FlowChartingPlugin;
 type TPropType = 'id' | 'value';

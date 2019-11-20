@@ -1,22 +1,22 @@
+import FlowChartingPlugin from './plugin';
+import { GFMap } from './rule_class';
 import _ from 'lodash';
-import {
-  TSourceType,
-  TIOnMappingObj,
-  GFP,
-  mxEvent,
-  mxUtils,
-  mxClient,
-  mxCodec,
-  mxUrlConverter,
-  TPropertieKey,
-  mxCellOverlay,
-  TStyleKey,
-  mxConstants,
-  mxCellHighlight,
-  mxRectangle,
-  mxCell,
-  mxMouseEvent,
-} from '../types';
+
+
+declare var mxCellHighlight: any,
+  mxMouseEvent: any,
+  mxCell: any,
+  mxCellOverlay: any,
+  mxEvent: any,
+  mxClient: any,
+  mxUtils: any,
+  mxCodec: any,
+  mxConstants: any,
+  mxRectangle: any,
+  mxUrlConverter: any;
+
+
+
 
 /**
  * mxGraph interface class
@@ -26,19 +26,19 @@ import {
  */
 export default class XGraph {
   container: HTMLDivElement;
-  xmlGraph: string = '';
+  xmlGraph: string | undefined;
   type: TSourceType = 'xml';
   graph: any = undefined;
-  scale = true;
-  tooltip = true;
-  lock = true;
-  center = true;
-  zoom = false;
+  scale: boolean = true;
+  tooltip: boolean = true;
+  lock: boolean = true;
+  center: boolean = true;;
+  zoom: boolean = false;
   zoomFactor: number;
   cumulativeZoomFactor: number;
-  grid = false;
+  grid: boolean = false;;
   bgColor: string | null = null;
-  zoomPercent = '1';
+  zoomPercent: string = '1';
   cells: any; //TODO : Define type
   clickBackup!: () => void;
   dbclickBackup!: () => void;
@@ -49,7 +49,7 @@ export default class XGraph {
    * @param {string} definition
    * @memberof XGraph
    */
-  constructor(container: HTMLDivElement, type: TSourceType, definition: string) {
+  constructor(container:HTMLDivElement, type:string , definition:string ) {
     GFP.log.info('XGraph.constructor()');
     this.container = container;
     this.type = type;
@@ -495,7 +495,7 @@ export default class XGraph {
    * @returns {string}
    * @memberof XGraph
    */
-  getxmlGraph(): string {
+  getxmlGraph() {
     return this.xmlGraph;
   }
 
@@ -506,7 +506,7 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  setXmlGraph(xmlGraph: string): this {
+  setXmlGraph(xmlGraph): this {
     GFP.log.info('XGraph.setXmlGraph()');
     if (GFP.utils.isencoded(xmlGraph)) {
       this.xmlGraph = GFP.utils.decode(xmlGraph, true, true, true);

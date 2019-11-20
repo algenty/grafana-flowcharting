@@ -148,7 +148,7 @@ export default class State {
           // tooltips
           if (rule.toTooltipize(level)) {
             // Metrics
-            if (this.tooltipHandler === null || this.tooltipHandler === undefined) {
+            if (this.tooltipHandler === null || this.tooltipHandler === undefined ) {
               this.tooltipHandler = new TooltipHandler(this.mxcell);
             }
             let tpColor;

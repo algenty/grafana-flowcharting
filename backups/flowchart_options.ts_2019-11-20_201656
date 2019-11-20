@@ -1,5 +1,4 @@
 import FlowchartHandler from 'flowchartHandler';
-import { TIFlowchartOptionsScope, TSelectSource, TSelectString, GFP } from '../types';
 
 export class FlowchartOptionsCtrl {
   $scope: TIFlowchartOptionsScope;

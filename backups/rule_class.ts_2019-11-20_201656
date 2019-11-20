@@ -3,7 +3,6 @@ import moment from 'moment';
 import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
-import { TIRuleData, GFP, TShapeMapData, TTextMapData, TlinkMapData, TValueMapData, TRangeMapData, TGFMapData } from '../types';
 
 /**
  * Rule definition
@@ -153,7 +152,7 @@ export default class Rule {
 
     if (maps !== undefined && maps !== null && maps.length > 0) {
       maps.forEach((map: TShapeMapData) => {
-        const newData: TShapeMapData = ShapeMap.getDefaultData();
+        const newData: TShapeMapData = {};
         const sm = new ShapeMap(map.pattern, newData);
         sm.import(map);
         this.shapeMaps.push(sm);
@@ -173,7 +172,7 @@ export default class Rule {
     }
     if (maps !== undefined && maps != null && maps.length > 0) {
       maps.forEach((map: TTextMapData) => {
-        const newData: TTextMapData = TextMap.getDefaultData();
+        const newData: TTextMapData = {};
         const tm = new TextMap(map.pattern, newData);
         tm.import(map);
         this.textMaps.push(tm);
@@ -186,7 +185,7 @@ export default class Rule {
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
       obj.linkData.forEach((map: TlinkMapData) => {
-        const newData: TlinkMapData = LinkMap.getDefaultData();
+        const newData: TlinkMapData = {};
         const lm = new LinkMap(map.pattern, newData);
         lm.import(map);
         this.linkMaps.push(lm);
@@ -212,7 +211,7 @@ export default class Rule {
     this.data.rangeData = [];
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
       obj.rangeData.forEach(map => {
-        const newData: TRangeMapData = RangeMap.getDefaultData();
+        const newData:TRangeMapData = RangeMap.getDefaultData();
         const rm = new RangeMap(map.from, map.to, map.text, newData);
         this.rangeMaps.push(rm);
         this.data.rangeData.push(newData);
@@ -228,7 +227,7 @@ export default class Rule {
    * @returns
    * @memberof Rule
    */
-  getId(): string {
+  getId():string {
     return this.id;
   }
 
@@ -474,7 +473,7 @@ export default class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  matchShape(pattern: string | null): boolean {
+  matchShape(pattern: string): boolean {
     let found = false;
     this.shapeMaps.forEach(element => {
       if (element.match(pattern)) {
@@ -509,7 +508,7 @@ export default class Rule {
     return this.textMaps;
   }
 
-  matchText(pattern: string | null): boolean {
+  matchText(pattern: string): boolean {
     let found = false;
     this.textMaps.forEach(element => {
       if (element.match(pattern)) {
@@ -545,7 +544,7 @@ export default class Rule {
     return this.linkMaps;
   }
 
-  matchLink(pattern: string | null): boolean {
+  matchLink(pattern: string): boolean {
     let found = false;
     this.linkMaps.forEach(element => {
       if (element.match(pattern)) {
@@ -851,8 +850,8 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 }
@@ -874,10 +873,12 @@ export class GFMap {
   }
 
   static getDefaultData() {
-    return {};
+    return {
+
+    }
   }
 
-  match(text: string | null): boolean {
+  match(text: string): boolean {
     if (text === undefined || text === null || text.length === 0) {
       return false;
     }
@@ -931,6 +932,7 @@ class ShapeMap extends GFMap {
   }
 }
 
+
 /**
  * TextMap class for mapping
  * @class TextMap
@@ -943,6 +945,7 @@ class TextMap extends GFMap {
   }
 }
 
+
 /**
  * LinkMap class for mapping
  * @class LinkMap
@@ -953,6 +956,8 @@ class LinkMap extends GFMap {
     super(pattern, data);
   }
 }
+
+
 
 /**
  * TextMap class for Range Value
@@ -982,7 +987,7 @@ class RangeMap {
       to: null,
       text: null,
       hidden: false,
-    };
+    }
   }
 
   match(value) {
@@ -1036,9 +1041,10 @@ class RangeMap {
   }
 }
 
+
 class ValueMap {
   data: TValueMapData;
-  constructor(value: string , text: string , data: TValueMapData) {
+  constructor(value: string | undefined, text: string | undefined, data: TValueMapData) {
     this.data = data;
     this.data.value = value;
     this.data.text = text;
@@ -1051,7 +1057,7 @@ class ValueMap {
       value: '',
       text: '',
       hidden: false,
-    };
+    }
   }
 
   import(obj: any) {

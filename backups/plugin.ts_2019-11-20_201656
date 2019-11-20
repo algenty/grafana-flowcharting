@@ -11,7 +11,7 @@ export default class FlowChartingPlugin {
   perf: Perf;
   log: Log;
   utils: any;
-  static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
+  static defaultContextRoot: string = '/public/plugins/agenty-flowcharting-panel/';
   templateSrv: any;
 
   constructor(contextRoot: string, templateSrv: any) {
@@ -252,7 +252,7 @@ class Perf {
   enablePerf = false;
   marky: any = null;
   stack: string[] = [];
-  constructor() {}
+  constructor() { }
 
   enable(bool: boolean): void {
     this.enablePerf = bool;
@@ -298,7 +298,7 @@ class Log {
   static ERROR = 3;
   logLevel = 2;
   logDisplay = true;
-  constructor() {}
+  constructor() { }
 
   /**
    * If message must be displayed

@@ -3,6 +3,9 @@ import FlowchartHandler from './flowchartHandler';
 import State from 'state_class';
 import { TSelectBoolean, TSelectNumber, GFP, TInspectOptionsScope } from '../types';
 
+
+
+
 export class InspectOptionsCtrl {
   enable = false; // enable inspector or not
   $scope: TInspectOptionsScope;

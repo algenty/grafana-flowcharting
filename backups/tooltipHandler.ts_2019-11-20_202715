@@ -87,7 +87,7 @@ export default class TooltipHandler {
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement | null {
     if (this.div !== undefined) {
-      if (parentDiv && this.div) {
+      if (parentDiv && this.div ) {
         parentDiv.appendChild(this.div);
       }
       return this.div;

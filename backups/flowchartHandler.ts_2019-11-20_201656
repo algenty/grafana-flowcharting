@@ -1,8 +1,8 @@
 import Flowchart from './flowchart_class';
+import { TFlowchartData } from './flowchart_class';
 import FlowChartingPlugin from './plugin';
 import Rule, { GFMap } from './rule_class';
 import _ from 'lodash';
-import { TIOnMappingObj, TFlowchartData } from '../types';
 
 declare var GFP: FlowChartingPlugin;
 
@@ -24,9 +24,9 @@ export default class FlowchartHandler {
   static defaultXml: string = FlowchartHandler.getDefaultGraph();
   onMapping: TIOnMappingObj = {
     active: false,
-    object: null,
-    id: null,
-    $scope: null,
+    object: undefined,
+    id: undefined,
+    $scope: undefined,
   };
   mousedownTimeout = 0;
   mousedown = 0;

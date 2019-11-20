@@ -1,7 +1,10 @@
 import TooltipHandler from './tooltipHandler';
 import XGraph from './graph_class';
 import Rule from 'rule_class';
-import { TIStylesBoolean, TStyleArray, TIStylesNumber, TIStylesString, mxCell, GFP, TPropertieKey, TStyleKey } from '../types';
+
+
+
+
 
 /**
  * Class for state of one cell
@@ -17,18 +20,18 @@ export default class State {
   edited?: boolean; // if modified in inspector
   edit?: boolean; // if modified in inspector
   xgraph: XGraph;
-  changed = false;
-  changedShape = false;
+  changed: boolean = false;
+  changedShape: boolean = false;
   changedStyle: TIStylesBoolean;
-  changedText = false;
-  changedLink = false;
-  matched = false;
-  matchedShape = false;
+  changedText: boolean = false;
+  changedLink: boolean = false;
+  matched: boolean = false;
+  matchedShape: boolean = false;
   matchedStyle: TIStylesBoolean;
-  matchedText = false;
-  matchedLink = false;
-  globalLevel = -1;
-  styleKeys: TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
+  matchedText: boolean = false;
+  matchedLink: boolean = false;
+  globalLevel: number = -1;
+  styleKeys: TStyleArray =['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
   level: TIStylesNumber;
   tooltipHandler: TooltipHandler | null = null;
   currentColors: TIStylesString;
@@ -38,8 +41,8 @@ export default class State {
   currentText: string;
   originalLink: string | null;
   currentLink: string | null;
-  overlayIcon = false;
-  changedIcon = false;
+  overlayIcon: boolean = false;
+  changedIcon: boolean = false;
   /**
    * Creates an instance of State.
    * @param {mxCell} mxcell
@@ -57,7 +60,7 @@ export default class State {
     // If state is target
     this.matchedStyle = State.getDefaultFlagStyles();
     this.level = State.getDefaultLevelStyles();
-    this.tooltipHandler = null;
+    this.tooltipHandler = undefined;
     this.mxcell.GF_tooltipHandler = null;
     this.currentColors = State.getDefaultValueStyles();
     this.originalColors = State.getDefaultValueStyles();
@@ -124,7 +127,7 @@ export default class State {
    * @param {any} serie
    * @memberof State
    */
-  setState(rule: Rule, serie: any) {
+  setState(rule:Rule, serie: any) {
     GFP.log.info('State.setState()');
     // GFP.log.debug('State.setState() Rule', rule);
     // GFP.log.debug('State.setState() Serie', serie);
@@ -148,7 +151,7 @@ export default class State {
           // tooltips
           if (rule.toTooltipize(level)) {
             // Metrics
-            if (this.tooltipHandler === null || this.tooltipHandler === undefined) {
+            if (this.tooltipHandler === undefined) {
               this.tooltipHandler = new TooltipHandler(this.mxcell);
             }
             let tpColor;
@@ -254,7 +257,7 @@ export default class State {
    * @returns {boolean}
    * @memberof State
    */
-  isMatched(): boolean {
+  isMatched():boolean {
     return this.matched;
   }
 
@@ -264,7 +267,7 @@ export default class State {
    * @returns {boolean}
    * @memberof State
    */
-  isChanged(): boolean {
+  isChanged():boolean {
     return this.changed;
   }
 
@@ -275,7 +278,7 @@ export default class State {
    * @returns {string} return original value of id or label of cell
    * @memberof State
    */
-  getCellProp(prop: TPropertieKey) {
+  getCellProp(prop:TPropertieKey) {
     if (prop === 'id') {
       return this.cellId;
     }
@@ -292,7 +295,7 @@ export default class State {
    * @param {string} color - html color
    * @memberof State
    */
-  setColorStyle(style: TStyleKey, color: string) {
+  setColorStyle(style:TStyleKey, color:string) {
     GFP.log.info('State.setColorStyle()');
     this.currentColors[style] = color;
   }
@@ -303,7 +306,7 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetColorStyle(style: TStyleKey) {
+  unsetColorStyle(style:TStyleKey) {
     this.currentColors[style] = this.originalColors[style];
   }
 
@@ -313,7 +316,7 @@ export default class State {
    * @memberof State
    */
   unsetColor() {
-    this.styleKeys.forEach(style => {
+    this.styleKeys.forEach( (style) => {
       this.unsetColorStyle(style);
     });
   }
@@ -324,7 +327,7 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetLevelStyle(style: TStyleKey) {
+  unsetLevelStyle(style:TStyleKey) {
     this.level[style] = -1;
   }
 
@@ -346,7 +349,7 @@ export default class State {
    * @memberof State
    */
   unsetLevel() {
-    this.styleKeys.forEach((style: TStyleKey) => {
+    this.styleKeys.forEach((style:TStyleKey) => {
       this.unsetLevelStyle(style);
     });
     this.globalLevel = -1;
@@ -359,7 +362,7 @@ export default class State {
    * @param {number} level
    * @memberof State
    */
-  setLevelStyle(style: TStyleKey, level: number) {
+  setLevelStyle(style:TStyleKey, level:number) {
     GFP.log.info('State.setLevelStyle()');
     this.level[style] = level;
     if (this.globalLevel < level) {
@@ -374,7 +377,7 @@ export default class State {
    * @returns {number}
    * @memberof State
    */
-  getLevelStyle(style: TStyleKey): number {
+  getLevelStyle(style:TStyleKey):number {
     return this.level[style];
   }
 
@@ -384,7 +387,7 @@ export default class State {
    * @returns {number}
    * @memberof State
    */
-  getLevel(): number {
+  getLevel():number {
     return this.globalLevel;
   }
 
@@ -394,7 +397,7 @@ export default class State {
    * @returns {string}
    * @memberof State
    */
-  getTextLevel(): string {
+  getTextLevel():string {
     const level = this.getLevel();
     switch (level) {
       case -1:
@@ -416,7 +419,7 @@ export default class State {
    * @param {string} text
    * @memberof State
    */
-  setText(text: string) {
+  setText(text:string) {
     this.currentText = text;
   }
 
@@ -435,7 +438,7 @@ export default class State {
    * @param {string} url
    * @memberof State
    */
-  setLink(url: string) {
+  setLink(url:string) {
     this.currentLink = url;
   }
 
@@ -478,7 +481,7 @@ export default class State {
    * @returns
    * @memberof State
    */
-  isShape(): boolean {
+  isShape():boolean {
     return this.mxcell.isVertex();
   }
 
@@ -488,7 +491,7 @@ export default class State {
    * @returns
    * @memberof State
    */
-  isConnector(): boolean {
+  isConnector():boolean {
     return this.mxcell.isEdge();
   }
 

@@ -1,22 +1,7 @@
 import _ from 'lodash';
-import {
-  TSourceType,
-  TIOnMappingObj,
-  GFP,
-  mxEvent,
-  mxUtils,
-  mxClient,
-  mxCodec,
-  mxUrlConverter,
-  TPropertieKey,
-  mxCellOverlay,
-  TStyleKey,
-  mxConstants,
-  mxCellHighlight,
-  mxRectangle,
-  mxCell,
-  mxMouseEvent,
-} from '../types';
+import { TSourceType, TIOnMappingObj, GFP, mxEvent, mxUtils, mxClient, mxCodec, mxUrlConverter, TPropertieKey, mxCellOverlay, TStyleKey, mxConstants, mxCellHighlight, mxRectangle, mxCell, mxMouseEvent } from '../types';
+
+
 
 /**
  * mxGraph interface class
@@ -495,7 +480,7 @@ export default class XGraph {
    * @returns {string}
    * @memberof XGraph
    */
-  getxmlGraph(): string {
+  getxmlGraph():string {
     return this.xmlGraph;
   }
 
@@ -506,7 +491,7 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  setXmlGraph(xmlGraph: string): this {
+  setXmlGraph(xmlGraph:string): this {
     GFP.log.info('XGraph.setXmlGraph()');
     if (GFP.utils.isencoded(xmlGraph)) {
       this.xmlGraph = GFP.utils.decode(xmlGraph, true, true, true);

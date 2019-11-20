@@ -1,5 +1,4 @@
 import Chartist from 'chartist';
-import { TDirection, TGraphType, GFP, TGraphSize } from '../types';
 
 /**
  *
@@ -8,12 +7,12 @@ import { TDirection, TGraphType, GFP, TGraphSize } from '../types';
  * @class TooltipHandler
  */
 export default class TooltipHandler {
-  timeFormat = 'YYYY-MM-DD HH:mm:ss';
+  timeFormat: string = 'YYYY-MM-DD HH:mm:ss';
   mxcell: any;
-  checked = false;
+  checked: boolean = false;
   metrics: Set<MetricTooltip>;
   lastChange: string | undefined;
-  div: HTMLHeadingElement | null = null;
+  div: HTMLHeadingElement | null;
   constructor(mxcell: any) {
     this.mxcell = mxcell;
     this.checked = false;
@@ -87,7 +86,7 @@ export default class TooltipHandler {
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement | null {
     if (this.div !== undefined) {
-      if (parentDiv && this.div) {
+      if (parentDiv !== undefined) {
         parentDiv.appendChild(this.div);
       }
       return this.div;
@@ -120,6 +119,7 @@ export default class TooltipHandler {
     return div;
   }
 }
+
 
 /**
  * Create a metric for tooltip
@@ -228,7 +228,7 @@ class MetricTooltip {
  * @class GraphTooltip
  */
 class GraphTooltip {
-  color = '#8c8980';
+  color: string = '#8c8980';
   type: TGraphType = 'line';
   name?: string;
   size: TGraphSize = '100%';
@@ -237,12 +237,13 @@ class GraphTooltip {
   high: number | null = null;
   div: HTMLDivElement | undefined;
   parentDiv: any;
-  constructor() {}
+  constructor() {
+  }
 
   getDiv(div: HTMLDivElement): HTMLDivElement | undefined {
     return this.div;
   }
-
+  
   setName(name: string): this {
     this.name = name;
     return this;
@@ -263,7 +264,7 @@ class GraphTooltip {
     return this;
   }
 
-  setScaling(low: number | null, high: number | null): this {
+  setScaling(low: number|null, high: number|null): this {
     this.low = low;
     this.high = high;
     return this;
