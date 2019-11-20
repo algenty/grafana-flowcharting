@@ -28,10 +28,10 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.3.4",
-    "@grafana/data": "canary",
-    "@grafana/runtime": "canary",
-    "@grafana/toolkit": "canary",
-    "@grafana/ui": "canary",
+    "@grafana/data": "6.5.0-beta.1",
+    "@grafana/runtime": "6.5.0-beta.1",
+    "@grafana/toolkit": "6.5.0-beta.1",
+    "@grafana/ui": "6.5.0-beta.1",
     "@types/angular": "^1.6.56",
     "@types/chartist": "^0.9.46",
     "@types/jquery": "^3.3.31",
@@ -54,6 +54,7 @@
     "vkbeautify": "^0.99.3"
   },
   "dependencies": {
+    "@grafana/toolkit": "6.5.0-beta.1",
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
     "babel-loader": "^8.0.6",
