@@ -2,7 +2,6 @@ import Rule from './rule_class';
 import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
 
-declare var GFP: FlowChartingPlugin;
 
 /**
  * Rules Handler
@@ -29,12 +28,12 @@ export default class RulesHandler {
   /**
    * import datas in rule
    *
-   * @param {*} obj
+   * @return this
+   * @param {any} obj
    * @memberof RulesHandler
    */
-  import(obj: any[]) {
+  import(obj: any[]):this {
     GFP.log.info('RuleHandler.import()');
-    // GFP.log.debug('RuleHandler.import() obj', obj);
     this.rules = [];
     let index = 1;
     if (obj !== undefined && obj !== null && obj.length > 0) {
@@ -52,6 +51,11 @@ export default class RulesHandler {
         this.data.push(newData);
       });
     }
+    return this;
+  }
+
+  static getDafaultData():TIRuleData[] {
+    return [];
   }
 
   /**
@@ -60,7 +64,7 @@ export default class RulesHandler {
    * @returns {Array} of Rules
    * @memberof RulesHandler
    */
-  getRules() {
+  getRules():Rule[] {
     return this.rules;
   }
 
@@ -71,7 +75,7 @@ export default class RulesHandler {
    * @returns {Rule}
    * @memberof RulesHandler
    */
-  getRule(index) {
+  getRule(index:number) {
     return this.rules[index];
   }
 
@@ -79,10 +83,10 @@ export default class RulesHandler {
    * Add a new rule
    *
    * @param {string} pattern
-   * @returns {Rule}
+   * @returns {Rule} New rule
    * @memberof RulesHandler
    */
-  addRule(pattern: string) {
+  addRule(pattern: string):Rule {
     const data = Rule.getDefaultData();
     const newRule = new Rule(pattern, data);
     this.rules.push(newRule);
@@ -122,22 +126,24 @@ export default class RulesHandler {
    * @param {number} index
    * @memberof RulesHandler
    */
-  removeRule(index) {
+  removeRule(index:number) {
     this.rules.splice(index, 1);
     this.data.splice(index, 1);
     this.setOrder();
   }
 
+
   /**
    * Clone rules at index in index - 1
    *
    * @param {number} index
+   * @returns {Rule}
    * @memberof RulesHandler
    */
-  cloneRule(index) {
+  cloneRule(index:number):Rule {
     const rule = this.getRule(index);
     const data = rule.getData();
-    const newData: any = {};
+    const newData: TIRuleData = Rule.getDefaultData();
     this.reduce();
     const newRule = new Rule(newData.pattern, newData);
     newRule.import(data);
@@ -148,12 +154,13 @@ export default class RulesHandler {
     this.activeRuleIndex = index;
     this.setOrder();
     const elt = document.getElementById(newRule.getId());
-    // NOT WORK : TODO
+    //TODO: verify ScrollTo
     if (elt) {
       setTimeout(() => {
         elt.focus();
       }, 100);
     }
+    return newRule
   }
 
   /**
@@ -173,7 +180,7 @@ export default class RulesHandler {
    * @param {number} index index
    * @memberof RulesHandler
    */
-  moveRuleToUp(index) {
+  moveRuleToUp(index:number) {
     const first = 0;
     const rules = this.rules;
     const last = rules.length - 1;
@@ -193,7 +200,7 @@ export default class RulesHandler {
    * @param {number} index
    * @memberof RulesHandler
    */
-  moveRuleToDown(index) {
+  moveRuleToDown(index:number) {
     const first = 0;
     const rules = this.rules;
     const last = rules.length - 1;

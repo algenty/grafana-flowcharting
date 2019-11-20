@@ -7,14 +7,13 @@ import Chartist from 'chartist';
  * @class TooltipHandler
  */
 export default class TooltipHandler {
-  timeFormat: string;
+  timeFormat: string = 'YYYY-MM-DD HH:mm:ss';
   mxcell: any;
-  checked: boolean;
+  checked: boolean = false;
   metrics: Set<MetricTooltip>;
   lastChange: string | undefined;
-  div: HTMLHeadingElement | undefined;
+  div: HTMLHeadingElement | null;
   constructor(mxcell: any) {
-    this.timeFormat = 'YYYY-MM-DD HH:mm:ss';
     this.mxcell = mxcell;
     this.checked = false;
     this.metrics = new Set();

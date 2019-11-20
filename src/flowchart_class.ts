@@ -1,5 +1,5 @@
 import XGraph from './graph_class';
-import { TOnMappingObj } from './graph_class';
+import { TIOnMappingObj } from './graph_class';
 import StateHandler from './statesHandler';
 import State from './state_class';
 import Rule from './rule_class';
@@ -608,7 +608,7 @@ export default class Flowchart {
     return this.container;
   }
 
-  setMap(onMappingObj: TOnMappingObj) {
+  setMap(onMappingObj: TIOnMappingObj) {
     GFP.log.info(`flowchart[${this.data.name}].setMap()`);
     const container = this.getContainer();
     if (this.xgraph) {

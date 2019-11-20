@@ -4,14 +4,6 @@ import Rule from 'rule_class';
 
 
 
-interface TINumberStyles {
-  fillColor: number;
-  strokeColor: number;
-  fontColor: number;
-  imageBorder: number;
-  imageBackground: number;
-}
-
 
 
 /**
@@ -28,29 +20,29 @@ export default class State {
   edited?: boolean; // if modified in inspector
   edit?: boolean; // if modified in inspector
   xgraph: XGraph;
-  changed: boolean;
-  changedShape: boolean;
+  changed: boolean = false;
+  changedShape: boolean = false;
   changedStyle: TIStylesBoolean;
-  changedText: boolean;
-  changedLink: boolean;
-  matched: boolean;
-  matchedShape: boolean;
+  changedText: boolean = false;
+  changedLink: boolean = false;
+  matched: boolean = false;
+  matchedShape: boolean = false;
   matchedStyle: TIStylesBoolean;
-  matchedText: boolean;
-  matchedLink: boolean;
-  globalLevel: number;
-  styleKeys: TStyleArray;
-  level: TINumberStyles;
-  tooltipHandler: TooltipHandler | undefined;
+  matchedText: boolean = false;
+  matchedLink: boolean = false;
+  globalLevel: number = -1;
+  styleKeys: TStyleArray =['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
+  level: TIStylesNumber;
+  tooltipHandler: TooltipHandler | null = null;
   currentColors: TIStylesString;
   originalColors: TIStylesString;
-  originalStyle: any;
-  originalText: any;
-  currentText: any;
+  originalStyle: string;
+  originalText: string;
+  currentText: string;
   originalLink: string | null;
   currentLink: string | null;
-  overlayIcon: boolean;
-  changedIcon: boolean | undefined;
+  overlayIcon: boolean = false;
+  changedIcon: boolean = false;
   /**
    * Creates an instance of State.
    * @param {mxCell} mxcell
@@ -63,21 +55,10 @@ export default class State {
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
     // If Cell is modified
-    this.changed = false;
-    this.changedShape = false;
     this.changedStyle = State.getDefaultFlagStyles();
-    this.changedText = false;
-    this.changedLink = false;
-    this.overlayIcon = false;
 
     // If state is target
-    this.matched = false;
-    this.matchedShape = false;
     this.matchedStyle = State.getDefaultFlagStyles();
-    this.matchedText = false;
-    this.matchedLink = false;
-    this.globalLevel = -1;
-    this.styleKeys = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
     this.level = State.getDefaultLevelStyles();
     this.tooltipHandler = undefined;
     this.mxcell.GF_tooltipHandler = null;
@@ -109,7 +90,7 @@ export default class State {
     };
   }
 
-  static getDefaultLevelStyles(): TINumberStyles {
+  static getDefaultLevelStyles(): TIStylesNumber {
     return {
       fillColor: -1,
       strokeColor: -1,
@@ -143,10 +124,10 @@ export default class State {
    * Define state according to 1 rule and 1 serie without apply display
    *
    * @param {Rule} rule
-   * @param {Serie} serie
+   * @param {any} serie
    * @memberof State
    */
-  setState(rule:Rule, serie) {
+  setState(rule:Rule, serie: any) {
     GFP.log.info('State.setState()');
     // GFP.log.debug('State.setState() Rule', rule);
     // GFP.log.debug('State.setState() Serie', serie);
@@ -276,7 +257,7 @@ export default class State {
    * @returns {boolean}
    * @memberof State
    */
-  isMatched() {
+  isMatched():boolean {
     return this.matched;
   }
 
@@ -286,7 +267,7 @@ export default class State {
    * @returns {boolean}
    * @memberof State
    */
-  isChanged() {
+  isChanged():boolean {
     return this.changed;
   }
 
@@ -314,7 +295,7 @@ export default class State {
    * @param {string} color - html color
    * @memberof State
    */
-  setColorStyle(style, color) {
+  setColorStyle(style:TStyleKey, color:string) {
     GFP.log.info('State.setColorStyle()');
     this.currentColors[style] = color;
   }
@@ -325,7 +306,7 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetColorStyle(style) {
+  unsetColorStyle(style:TStyleKey) {
     this.currentColors[style] = this.originalColors[style];
   }
 
@@ -335,7 +316,7 @@ export default class State {
    * @memberof State
    */
   unsetColor() {
-    this.styleKeys.forEach( (style:TStyleKey) => {
+    this.styleKeys.forEach( (style) => {
       this.unsetColorStyle(style);
     });
   }
@@ -356,10 +337,10 @@ export default class State {
    * @memberof State
    */
   unsetTooltip() {
-    if (this.tooltipHandler != null) {
+    if (this.tooltipHandler !== null) {
       this.tooltipHandler.destroy();
     }
-    this.tooltipHandler = undefined;
+    this.tooltipHandler = null;
   }
 
   /**
@@ -393,10 +374,10 @@ export default class State {
    * Retrun the level for a style
    *
    * @param {TStyleKey} style
-   * @returns
+   * @returns {number}
    * @memberof State
    */
-  getLevelStyle(style:TStyleKey) {
+  getLevelStyle(style:TStyleKey):number {
     return this.level[style];
   }
 
@@ -413,10 +394,10 @@ export default class State {
   /**
    * Return the label level of current level
    *
-   * @returns
+   * @returns {string}
    * @memberof State
    */
-  getTextLevel() {
+  getTextLevel():string {
     const level = this.getLevel();
     switch (level) {
       case -1:
@@ -500,7 +481,7 @@ export default class State {
    * @returns
    * @memberof State
    */
-  isShape() {
+  isShape():boolean {
     return this.mxcell.isVertex();
   }
 
@@ -510,7 +491,7 @@ export default class State {
    * @returns
    * @memberof State
    */
-  isConnector() {
+  isConnector():boolean {
     return this.mxcell.isEdge();
   }
 

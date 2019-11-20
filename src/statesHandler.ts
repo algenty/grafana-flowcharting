@@ -54,6 +54,7 @@ export default class StateHandler {
       const mxcell = state.mxcell;
       const id = mxcell.id;
       let found = false;
+
       // SHAPES
       name = xgraph.getValuePropOfMxCell(rule.data.shapeProp, mxcell);
       if (rule.matchShape(name)) {
@@ -69,6 +70,7 @@ export default class StateHandler {
           found = true;
         }
       }
+
       // LINKS
       if (!found) {
         name = xgraph.getValuePropOfMxCell(rule.data.linkProp, mxcell);
@@ -119,7 +121,7 @@ export default class StateHandler {
    * @returns {State} created state
    * @memberof StateHandler
    */
-  addState(mxcell: any): State {
+  addState(mxcell: mxCell): State {
     const state = new State(mxcell, this.xgraph);
     this.states.set(mxcell.id, state);
     return state;

@@ -1,7 +1,6 @@
 import Flowchart from './flowchart_class';
 import { TFlowchartData } from './flowchart_class';
 import FlowChartingPlugin from './plugin';
-import { TOnMappingObj } from './graph_class';
 import Rule, { GFMap } from './rule_class';
 import _ from 'lodash';
 
@@ -23,7 +22,7 @@ export default class FlowchartHandler {
   changeDataFlag = false; // Data changed
   changeRuleFlag = false; // rules changed
   static defaultXml: string = FlowchartHandler.getDefaultGraph();
-  onMapping: TOnMappingObj = {
+  onMapping: TIOnMappingObj = {
     active: false,
     object: undefined,
     id: undefined,

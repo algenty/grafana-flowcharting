@@ -2,7 +2,7 @@ import FlowChartingPlugin from './plugin';
 import { GFMap } from './rule_class';
 import _ from 'lodash';
 
-declare var GFP: FlowChartingPlugin;
+
 declare var mxCellHighlight: any,
   mxMouseEvent: any,
   mxCell: any,
@@ -14,24 +14,9 @@ declare var mxCellHighlight: any,
   mxConstants: any,
   mxRectangle: any,
   mxUrlConverter: any;
-type mxCell = typeof mxCell;
-type mxMouseEvent = typeof mxMouseEvent;
 
-type TSourceType = 'xml' | 'csv';
-type TPropType = 'id' | 'value';
-type TStyleType = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
 
-export interface TOnMappingObj {
-  active: boolean;
-  object: GFMap | undefined;
-  id: string | undefined;
-  $scope: ng.IScope | undefined;
-}
 
-export interface TCellsValue {
-  id: string[];
-  value: string[];
-}
 
 /**
  * mxGraph interface class
@@ -42,46 +27,36 @@ export interface TCellsValue {
 export default class XGraph {
   container: HTMLDivElement;
   xmlGraph: string | undefined;
-  type: TSourceType;
-  graph: any;
-  scale: boolean;
-  tooltip: boolean;
-  lock: boolean;
-  center: boolean;
-  zoom: boolean;
+  type: TSourceType = 'xml';
+  graph: any = undefined;
+  scale: boolean = true;
+  tooltip: boolean = true;
+  lock: boolean = true;
+  center: boolean = true;;
+  zoom: boolean = false;
   zoomFactor: number;
   cumulativeZoomFactor: number;
-  grid: boolean;
-  bgColor: string | null;
-  zoomPercent: string;
-  cells: TCellsValue;
+  grid: boolean = false;;
+  bgColor: string | null = null;
+  zoomPercent: string = '1';
+  cells: any; //TODO : Define type
   clickBackup!: () => void;
   dbclickBackup!: () => void;
-  onMapping!: TOnMappingObj;
+  onMapping!: TIOnMappingObj;
   /**
    * Creates an instance of XGraph.
    * @param {DOM} container
    * @param {string} definition
    * @memberof XGraph
    */
-  constructor(container, type, definition) {
+  constructor(container:HTMLDivElement, type:string , definition:string ) {
     GFP.log.info('XGraph.constructor()');
     this.container = container;
-    this.xmlGraph = undefined;
     this.type = type;
-    this.graph = undefined;
-    this.scale = true;
-    this.tooltip = true;
-    this.lock = true;
-    this.center = true;
-    this.zoom = false;
     // BEGIN ZOOM MouseWheele
     this.zoomFactor = 1.2;
     this.cumulativeZoomFactor = 1;
     // END ZOOM MouseWheele
-    this.grid = false;
-    this.bgColor = null;
-    this.zoomPercent = '1';
     this.cells = {
       id: [],
       value: [],
@@ -545,11 +520,11 @@ export default class XGraph {
   /**
    * Get list of values or id
    *
-   * @param {TPropType} prop
+   * @param {TPropertieKey} prop
    * @returns {string[]}
    * @memberof XGraph
    */
-  getCurrentCells(prop: TPropType): string[] {
+  getCurrentCells(prop: TPropertieKey): string[] {
     const cellIds: string[] = [];
     const model = this.graph.getModel();
     const cells = model.cells;
@@ -573,7 +548,7 @@ export default class XGraph {
    * @returns {mxCell[]}
    * @memberof XGraph
    */
-  findMxCells(prop: TPropType, pattern: string): mxCell[] {
+  findMxCells(prop: TPropertieKey, pattern: string): mxCell[] {
     const mxcells = this.getMxCells();
     const result: any[] = [];
     if (prop === 'id') {
@@ -599,7 +574,7 @@ export default class XGraph {
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  selectMxCells(prop: TPropType, pattern: string) {
+  selectMxCells(prop: TPropertieKey, pattern: string) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       // this.graph.setSelectionCells(mxcells);
@@ -612,7 +587,7 @@ export default class XGraph {
    *
    * @memberof XGraph
    */
-  unselectMxCells(prop: TPropType, pattern: string) {
+  unselectMxCells(prop: TPropertieKey, pattern: string) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       this.unhighlightCells(mxcells);
@@ -692,11 +667,11 @@ export default class XGraph {
   /**
    * Get value or id from cell source
    *
-   * @param {TPropType} prop
+   * @param {TPropertieKey} prop
    * @returns {string[]} value of labels or id frome source
    * @memberof XGraph
    */
-  getOrignalCells(prop: TPropType): string[] {
+  getOrignalCells(prop: TPropertieKey): string[] {
     if (prop === 'id' || prop === 'value') {
       return this.cells[prop];
     }
@@ -753,7 +728,7 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getValuePropOfMxCell(prop: TPropType, mxcell: mxCell) {
+  getValuePropOfMxCell(prop: TPropertieKey, mxcell: mxCell) {
     if (prop === 'id') {
       return this.getId(mxcell);
     }
@@ -763,7 +738,7 @@ export default class XGraph {
     return null;
   }
 
-  getStyleCell(mxcell: mxCell, style: TStyleType): string | null {
+  getStyleCell(mxcell: mxCell, style: TStyleKey): string | null {
     const state = this.graph.view.getState(mxcell);
     if (state) {
       return state.style[style];
@@ -771,7 +746,7 @@ export default class XGraph {
     return null;
   }
 
-  setStyleCell(mxcell: mxCell, style: TStyleType, color: string | null, animate = false): this {
+  setStyleCell(mxcell: mxCell, style: TStyleKey, color: string | null, animate = false): this {
     if (animate) {
       try {
         const endColor = this.getStyleCell(mxcell, style);
@@ -848,7 +823,7 @@ export default class XGraph {
    * @param {Object} onMappingObj
    * @memberof XGraph
    */
-  setMap(onMappingObj: TOnMappingObj) {
+  setMap(onMappingObj: TIOnMappingObj) {
     GFP.log.info('XGraph.setMapping()');
     GFP.log.debug('XGraph.setMapping() onMappingObject : ', onMappingObj);
     this.onMapping = onMappingObj;

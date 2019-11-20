@@ -199,7 +199,7 @@ export default class Rule {
     this.data.valueData = [];
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
       obj.valueData.forEach((map: TValueMapData) => {
-        const newData: TValueMapData = {};
+        const newData: TValueMapData = ValueMap.getDefaultdata();
         const vm = new ValueMap(map.value, map.text, newData);
         vm.import(map);
         this.valueMaps.push(vm);
@@ -211,7 +211,7 @@ export default class Rule {
     this.data.rangeData = [];
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
       obj.rangeData.forEach(map => {
-        const newData = {};
+        const newData:TRangeMapData = RangeMap.getDefaultData();
         const rm = new RangeMap(map.from, map.to, map.text, newData);
         this.rangeMaps.push(rm);
         this.data.rangeData.push(newData);
@@ -227,7 +227,7 @@ export default class Rule {
    * @returns
    * @memberof Rule
    */
-  getId() {
+  getId():string {
     return this.id;
   }
 
@@ -264,7 +264,7 @@ export default class Rule {
    * @param {number} order
    * @memberof Rule
    */
-  setOrder(order) {
+  setOrder(order: number) {
     this.data.order = order;
   }
 
@@ -273,7 +273,7 @@ export default class Rule {
    *
    * @memberof Rule
    */
-  getOrder() {
+  getOrder(): number {
     return this.data.order;
   }
 
@@ -304,7 +304,7 @@ export default class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  toColorize(level):boolean {
+  toColorize(level: number): boolean {
     if (level === -1) {
       return false;
     }
@@ -324,10 +324,10 @@ export default class Rule {
    * Return true or false for condition to change label
    *
    * @param {number} level
-   * @returns
+   * @returns {boolean}
    * @memberof Rule
    */
-  toLabelize(level):boolean {
+  toLabelize(level: number): boolean {
     // if (this.data.textOn === 'wmd' && level > 0) return true;
     // if (this.data.textOn === 'wmd' && level === -1) return false;
     if (this.data.textOn === 'wmd') {
@@ -349,10 +349,10 @@ export default class Rule {
    * Return true or false for condition to display icon warning
    *
    * @param {level} level
-   * @returns
+   * @returns {boolean}
    * @memberof Rule
    */
-  toIconize(level):boolean {
+  toIconize(level: number): boolean {
     if (this.data.overlayIcon === false) {
       return false;
     }
@@ -366,10 +366,10 @@ export default class Rule {
    * Return true or false for condition to add/replace link
    *
    * @param {number} level
-   * @returns
+   * @returns {boolean}
    * @memberof Rule
    */
-  toLinkable(level):boolean {
+  toLinkable(level: number): boolean {
     if (this.data.link === false) {
       return false;
     }
@@ -389,7 +389,7 @@ export default class Rule {
    * @returns
    * @memberof Rule
    */
-  toTooltipize(level):boolean {
+  toTooltipize(level: number): boolean {
     if (this.data.tooltip === false) {
       return false;
     }
@@ -409,10 +409,10 @@ export default class Rule {
    * Return boolean if serie is matched by rule
    *
    * @param {*} serie
-   * @returns
+   * @returns {boolean}
    * @memberof Rule
    */
-  matchSerie(serie):boolean {
+  matchSerie(serie): boolean {
     return GFP.utils.matchString(serie.alias, this.data.pattern);
   }
 
@@ -422,15 +422,16 @@ export default class Rule {
   /**
    * Add new shape for rule
    *
-   * @param {*} pattern
+   * @param {string} pattern
    * @memberof Rule
    */
-  addShapeMap(pattern) {
-    const data = {};
+  addShapeMap(pattern: string): ShapeMap {
+    const data = ShapeMap.getDefaultData();
     const m = new ShapeMap(pattern, data);
     m.import(data);
     this.shapeMaps.push(m);
     this.data.shapeData.push(data);
+    return m;
   }
 
   /**
@@ -451,7 +452,7 @@ export default class Rule {
    * @returns {ShapeMap}
    * @memberof Rule
    */
-  getShapeMap(index) {
+  getShapeMap(index: number): ShapeMap {
     return this.shapeMaps[index];
   }
 
@@ -461,7 +462,7 @@ export default class Rule {
    * @returns {Array<ShapeMap>}
    * @memberof Rule
    */
-  getShapeMaps() {
+  getShapeMaps(): ShapeMap[] {
     return this.shapeMaps;
   }
 
@@ -469,10 +470,10 @@ export default class Rule {
    * Return bool if shape name (value|id) is in rule
    *
    * @param {string} pattern
-   * @returns
+   * @returns {boolean}
    * @memberof Rule
    */
-  matchShape(pattern:string) {
+  matchShape(pattern: string): boolean {
     let found = false;
     this.shapeMaps.forEach(element => {
       if (element.match(pattern)) {
@@ -485,28 +486,29 @@ export default class Rule {
   //
   // TEXT MAPS
   //
-  addTextMap(pattern:string) {
-    const data = {};
+  addTextMap(pattern: string): TextMap {
+    const data: TTextMapData = TextMap.getDefaultData();
     const m = new TextMap(pattern, data);
     m.import(data);
     this.textMaps.push(m);
     this.data.textData.push(data);
+    return m;
   }
 
-  removeTextMap(index:number) {
+  removeTextMap(index: number) {
     this.data.textData.splice(index, 1);
     this.textMaps.splice(index, 1);
   }
 
-  getTextMap(index:number) {
+  getTextMap(index: number): TextMap {
     return this.textMaps[index];
   }
 
-  getTextMaps() {
+  getTextMaps(): TextMap[] {
     return this.textMaps;
   }
 
-  matchText(pattern:string) {
+  matchText(pattern: string): boolean {
     let found = false;
     this.textMaps.forEach(element => {
       if (element.match(pattern)) {
@@ -519,29 +521,30 @@ export default class Rule {
   //
   // LINK MAPS
   //
-  addLinkMap(pattern:string) {
+  addLinkMap(pattern: string): LinkMap {
     GFP.log.info('Rule.addLinkMap()');
-    const data = {};
+    const data: TlinkMapData = LinkMap.getDefaultData();
     const m = new LinkMap(pattern, data);
     m.import(data);
     this.linkMaps.push(m);
     this.data.linkData.push(data);
+    return m;
   }
 
-  removeLinkMap(index:number) {
+  removeLinkMap(index: number) {
     this.data.linkData.splice(index, 1);
     this.linkMaps.splice(index, 1);
   }
 
-  getLinkMap(index:number) {
+  getLinkMap(index: number): LinkMap {
     return this.linkMaps[index];
   }
 
-  getLinkMaps() {
+  getLinkMaps(): LinkMap[] {
     return this.linkMaps;
   }
 
-  matchLink(pattern) {
+  matchLink(pattern: string): boolean {
     let found = false;
     this.linkMaps.forEach(element => {
       if (element.match(pattern)) {
@@ -554,12 +557,13 @@ export default class Rule {
   //
   // STRING VALUE MAPS
   //
-  addValueMap(value, text) {
-    const data = {};
+  addValueMap(value: string, text: string): ValueMap {
+    const data: TValueMapData = ValueMap.getDefaultdata();
     const m = new ValueMap(value, text, data);
     m.import(data);
     this.valueMaps.push(m);
     this.data.valueData.push(data);
+    return m;
   }
 
   removeValueMap(index) {
@@ -579,7 +583,7 @@ export default class Rule {
   // STRING RANGE VALUE MAPS
   //
   addRangeMap(from, to, text) {
-    const data = {};
+    const data = RangeMap.getDefaultData();
     const m = new RangeMap(from, to, text, data);
     this.rangeMaps.push(m);
     this.data.rangeData.push(data);
@@ -846,8 +850,8 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 }
@@ -866,6 +870,12 @@ export class GFMap {
     this.data.pattern = obj.pattern || '';
     this.data.hidden = obj.hidden || false;
     return this;
+  }
+
+  static getDefaultData() {
+    return {
+
+    }
   }
 
   match(text: string): boolean {
@@ -917,7 +927,7 @@ export class GFMap {
  * @extends GFMap
  */
 class ShapeMap extends GFMap {
-  constructor(pattern: string | undefined, data: TShapeMapData | {}) {
+  constructor(pattern: string, data: TShapeMapData | {}) {
     super(pattern, data);
   }
 }
@@ -929,7 +939,7 @@ class ShapeMap extends GFMap {
  * @extends GFMap
  */
 class TextMap extends GFMap {
-  constructor(pattern, data: TTextMapData) {
+  constructor(pattern: string, data: TTextMapData) {
     super(pattern, data);
     // this.import(data);
   }
@@ -942,7 +952,7 @@ class TextMap extends GFMap {
  * @extends GFMap
  */
 class LinkMap extends GFMap {
-  constructor(pattern, data: TlinkMapData) {
+  constructor(pattern: string, data: TlinkMapData) {
     super(pattern, data);
   }
 }
@@ -969,6 +979,15 @@ class RangeMap {
     this.data.to = obj.to || this.data.to || '';
     this.data.text = obj.text || this.data.text || '';
     this.data.hidden = obj.hidden || this.data.hidden || false;
+  }
+
+  static getDefaultData(): TRangeMapData {
+    return {
+      from: null,
+      to: null,
+      text: null,
+      hidden: false,
+    }
   }
 
   match(value) {
@@ -1031,6 +1050,14 @@ class ValueMap {
     this.data.text = text;
     this.data.hidden = false;
     this.import(data);
+  }
+
+  static getDefaultdata() {
+    return {
+      value: '',
+      text: '',
+      hidden: false,
+    }
   }
 
   import(obj: any) {

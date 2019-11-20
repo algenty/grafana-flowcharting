@@ -42,18 +42,27 @@ interface TIStylesBoolean {
   imageBackground: boolean;
 }
 
-type TStyleKeyDisable = TStyleKey | 'disable'; 
+interface TIStylesNumber {
+  fillColor: number;
+  strokeColor: number;
+  fontColor: number;
+  imageBorder: number;
+  imageBackground: number;
+}
+
+type TStyleKeyDisable = TStyleKey | 'disable';
 interface TSelectStyle extends TSelectString {
   value: TStyleKeyDisable;
 }
 
 // MxGraph
-type mxCell = any;
+
+
 
 // ToolTip
 type TDirection = 'v' | 'h';
 type TGraphType = 'line' | 'bar';
-type TGraphSize = '100%' | '100px' | '200px'| '400px';
+type TGraphSize = '100%' | '100px' | '200px' | '400px';
 
 interface TSelectGraphSize extends TSelectString {
   value: TGraphSize;
@@ -129,23 +138,41 @@ interface TIRuleData {
 }
 
 interface TGFMapData {
-  pattern?: string;
-  hidden?: boolean;
+  pattern: string;
+  hidden: boolean;
 }
 
-interface TShapeMapData extends TGFMapData {}
-interface TTextMapData extends TGFMapData {}
-interface TlinkMapData extends TGFMapData {}
+interface TShapeMapData extends TGFMapData { }
+interface TTextMapData extends TGFMapData { }
+interface TlinkMapData extends TGFMapData { }
 
 interface TRangeMapData {
   from?: string | null;
   to?: string | null;
-  text?: string;
-  hidden?: boolean;
+  text: string | null;
+  hidden: boolean;
 }
 
 interface TValueMapData {
-  value?: string;
-  text?: string;
-  hidden?: boolean;
+  value: string|null;
+  text: string;
+  hidden: boolean;
+}
+
+// XGraph
+type mxCell = typeof mxCell;
+type mxMouseEvent = typeof mxMouseEvent;
+
+// For mapping object
+interface TIOnMappingObj {
+  active: boolean;
+  object: GFMap | null;
+  id: string | null;
+  $scope: ng.IScope | undefined;
+}
+
+// Export of id and label
+export interface TICellsIdLabel {
+  id: string[];
+  value: string[]; // Label
 }
