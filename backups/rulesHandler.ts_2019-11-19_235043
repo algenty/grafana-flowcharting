@@ -1,4 +1,5 @@
 import Rule from './rule_class';
+import { TRuleData } from './rule_class';
 import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
 
@@ -12,14 +13,14 @@ declare var GFP: FlowChartingPlugin;
  */
 export default class RulesHandler {
   rules: Rule[];
-  data: TIRuleData[];
+  data: TRuleData[];
   activeRuleIndex: any;
   /**
    * Creates an instance of RulesHandler.
    * @param {any[]} data
    * @memberof RulesHandler
    */
-  constructor(data: TIRuleData[]) {
+  constructor(data: TRuleData[]) {
     GFP.log.info('RulesHandler.constructor()');
     this.rules = [];
     this.data = data;
@@ -82,7 +83,7 @@ export default class RulesHandler {
    * @returns {Rule}
    * @memberof RulesHandler
    */
-  addRule(pattern: string) {
+  addRule(pattern:string) {
     const data = Rule.getDefaultData();
     const newRule = new Rule(pattern, data);
     this.rules.push(newRule);
@@ -97,7 +98,7 @@ export default class RulesHandler {
    * @returns {number}
    * @memberof RulesHandler
    */
-  countRules(): number {
+  countRules():number {
     if (this.rules !== undefined && Array.isArray(this.rules)) {
       return this.rules.length;
     }

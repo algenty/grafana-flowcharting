@@ -1,5 +1,7 @@
+import FlowChartingPlugin from './plugin';
 import Chartist from 'chartist';
 
+declare var GFP: FlowChartingPlugin;
 /**
  *
  *
@@ -121,7 +123,8 @@ export default class TooltipHandler {
   }
 }
 
-
+type directionType = 'v' | 'h';
+type graphType = 'line' | 'bar';
 /**
  * Create a metric for tooltip
  *
@@ -130,9 +133,9 @@ export default class TooltipHandler {
 class MetricTooltip {
   color: string;
   graphs: Set<GraphTooltip>;
-  label!: string;
-  value!: string;
-  direction: TDirection = 'v';
+  label: any;
+  value: any;
+  direction: directionType = 'v';
   div: HTMLDivElement | undefined;
   constructor() {
     this.color = '#8c8980';
@@ -156,7 +159,7 @@ class MetricTooltip {
     return this;
   }
 
-  setDirection(direction: TDirection): this {
+  setDirection(direction: directionType): this {
     this.direction = direction;
     return this;
   }
@@ -204,7 +207,7 @@ class MetricTooltip {
     return div;
   }
 
-  addGraph(type: TGraphType): GraphTooltip {
+  addGraph(type: graphType): GraphTooltip {
     let graph: GraphTooltip;
     switch (type) {
       case 'line':
@@ -229,33 +232,33 @@ class MetricTooltip {
  * @class GraphTooltip
  */
 class GraphTooltip {
-  color: string = '#8c8980';
-  type: TGraphType = 'line';
-  name?: string;
-  size: TGraphSize = '100%';
+  color: string | undefined;
+  type: graphType | undefined;
+  name: string | undefined;
+  size: string | null = '100%';
   serie: any | undefined;
-  low: number | null = null;
-  high: number | null = null;
+  low: number | undefined;
+  high: any;
   div: HTMLDivElement | undefined;
   parentDiv: any;
   constructor() {
+    this.color = '#8c8980';
   }
 
   getDiv(div: HTMLDivElement): HTMLDivElement | undefined {
     return this.div;
   }
-  
   setName(name: string): this {
     this.name = name;
     return this;
   }
 
-  setType(type: TGraphType): this {
+  setType(type: graphType): this {
     this.type = type;
     return this;
   }
 
-  setSize(size: TGraphSize): this {
+  setSize(size: string): this {
     this.size = size;
     return this;
   }
@@ -265,7 +268,7 @@ class GraphTooltip {
     return this;
   }
 
-  setScaling(low: number|null, high: number|null): this {
+  setScaling(low: number, high: string): this {
     this.low = low;
     this.high = high;
     return this;

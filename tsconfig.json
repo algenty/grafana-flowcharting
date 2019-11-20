@@ -1,6 +1,7 @@
 {
   "extends": "./node_modules/@grafana/toolkit/src/config/tsconfig.plugin.json",
   "include": ["src", "types"],
+  "files": ["types/index.d.ts"],
   "compilerOptions": {
     "rootDir": "./src",
     "allowSyntheticDefaultImports": true,

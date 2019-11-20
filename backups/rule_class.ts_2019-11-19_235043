@@ -3,6 +3,67 @@ import moment from 'moment';
 import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
+import FlowChartingPlugin from './plugin';
+
+declare var GFP: FlowChartingPlugin;
+type Taggregation = 'first' | 'current' | 'min' | 'max' | 'total' | 'avg' | 'count' | 'delta' | 'range' | 'diff';
+type TTypeStyle = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
+type TLinkOn = 'wc' | 'a';
+type TTooltipOn = 'wc' | 'a';
+type TColorOn = 'n' | 'wc' | 'a';
+type TTextOn = 'n' | 'wmd' | 'wc' | 'co';
+type TDirection = 'v' | 'h';
+type TTextReplace = 'content' | 'pattern' | 'as' | 'anl';
+type TDateFormat = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
+type TGraphSize = '100%' | '100px' | '200px' | '400px';
+type TGraphType = 'line' | 'bar';
+type TPropType = 'id' | 'value';
+export interface TRuleData {
+  order: number;
+  pattern: string;
+  unit: string;
+  type: string;
+  alias: string;
+  aggregation: Taggregation;
+  decimals: number;
+  colors: string[];
+  reduce: boolean;
+  style: TTypeStyle;
+  colorOn: TColorOn;
+  link: boolean;
+  linkOn: TLinkOn;
+  linkUrl: string;
+  linkParams: boolean;
+  textOn: TTextOn;
+  textReplace: TTextReplace;
+  textPattern: string;
+  dateFormat: TDateFormat;
+  thresholds: number[];
+  stringWarning: string;
+  stringCritical: string;
+  invert: boolean;
+  overlayIcon: boolean;
+  tooltip: boolean;
+  tooltipLabel: string;
+  tooltipColors: boolean;
+  tooltipOn: TTooltipOn;
+  tpDirection: TDirection;
+  tpGraph: boolean;
+  tpGraphSize: TGraphSize;
+  tpGraphType: TGraphType;
+  tpGraphLow: number|null;
+  tpGraphHigh: number|null;
+  shapeProp: TPropType;
+  shapeData: TShapeMapData[];
+  textProp: TPropType;
+  textData: TTextMapData[];
+  linkProp: TPropType;
+  linkData: TlinkMapData[];
+  mappingType: number;
+  valueData: TValueMapData[];
+  rangeData: TRangeMapData[];
+  sanitize: boolean;
+}
 
 /**
  * Rule definition
@@ -11,7 +72,7 @@ import _ from 'lodash';
  * @class Rule
  */
 export default class Rule {
-  data: TIRuleData;
+  data: TRuleData;
   shapeMaps: ShapeMap[];
   textMaps: TextMap[];
   linkMaps: LinkMap[];
@@ -26,7 +87,7 @@ export default class Rule {
    * @param {*} data
    * @memberof Rule
    */
-  constructor(pattern: string, data: TIRuleData) {
+  constructor(pattern:string, data:TRuleData) {
     this.data = data;
     this.data.pattern = pattern;
     this.shapeMaps = [];
@@ -38,7 +99,7 @@ export default class Rule {
     this.import(data);
   }
 
-  static getDefaultData(): TIRuleData {
+  static getDefaultData():TRuleData {
     return {
       order: 1,
       pattern: '.*',
@@ -84,7 +145,7 @@ export default class Rule {
       valueData: [],
       rangeData: [],
       sanitize: false,
-    };
+    }
   }
 
   /**
@@ -93,7 +154,7 @@ export default class Rule {
    * @returns {data}
    * @memberof Rule
    */
-  getData(): TIRuleData {
+  getData():TRuleData {
     return this.data;
   }
 
@@ -301,10 +362,10 @@ export default class Rule {
    * Return true or false for condition to colorize
    *
    * @param {number} level
-   * @returns {boolean}
+   * @returns
    * @memberof Rule
    */
-  toColorize(level):boolean {
+  toColorize(level) {
     if (level === -1) {
       return false;
     }
@@ -327,7 +388,7 @@ export default class Rule {
    * @returns
    * @memberof Rule
    */
-  toLabelize(level):boolean {
+  toLabelize(level) {
     // if (this.data.textOn === 'wmd' && level > 0) return true;
     // if (this.data.textOn === 'wmd' && level === -1) return false;
     if (this.data.textOn === 'wmd') {
@@ -352,7 +413,7 @@ export default class Rule {
    * @returns
    * @memberof Rule
    */
-  toIconize(level):boolean {
+  toIconize(level) {
     if (this.data.overlayIcon === false) {
       return false;
     }
@@ -369,7 +430,7 @@ export default class Rule {
    * @returns
    * @memberof Rule
    */
-  toLinkable(level):boolean {
+  toLinkable(level) {
     if (this.data.link === false) {
       return false;
     }
@@ -389,7 +450,7 @@ export default class Rule {
    * @returns
    * @memberof Rule
    */
-  toTooltipize(level):boolean {
+  toTooltipize(level) {
     if (this.data.tooltip === false) {
       return false;
     }
@@ -412,7 +473,7 @@ export default class Rule {
    * @returns
    * @memberof Rule
    */
-  matchSerie(serie):boolean {
+  matchSerie(serie) {
     return GFP.utils.matchString(serie.alias, this.data.pattern);
   }
 
@@ -472,7 +533,7 @@ export default class Rule {
    * @returns
    * @memberof Rule
    */
-  matchShape(pattern:string) {
+  matchShape(pattern) {
     let found = false;
     this.shapeMaps.forEach(element => {
       if (element.match(pattern)) {
@@ -485,7 +546,7 @@ export default class Rule {
   //
   // TEXT MAPS
   //
-  addTextMap(pattern:string) {
+  addTextMap(pattern) {
     const data = {};
     const m = new TextMap(pattern, data);
     m.import(data);
@@ -493,12 +554,12 @@ export default class Rule {
     this.data.textData.push(data);
   }
 
-  removeTextMap(index:number) {
+  removeTextMap(index) {
     this.data.textData.splice(index, 1);
     this.textMaps.splice(index, 1);
   }
 
-  getTextMap(index:number) {
+  getTextMap(index) {
     return this.textMaps[index];
   }
 
@@ -506,7 +567,7 @@ export default class Rule {
     return this.textMaps;
   }
 
-  matchText(pattern:string) {
+  matchText(pattern) {
     let found = false;
     this.textMaps.forEach(element => {
       if (element.match(pattern)) {
@@ -519,7 +580,7 @@ export default class Rule {
   //
   // LINK MAPS
   //
-  addLinkMap(pattern:string) {
+  addLinkMap(pattern) {
     GFP.log.info('Rule.addLinkMap()');
     const data = {};
     const m = new LinkMap(pattern, data);
@@ -528,12 +589,12 @@ export default class Rule {
     this.data.linkData.push(data);
   }
 
-  removeLinkMap(index:number) {
+  removeLinkMap(index) {
     this.data.linkData.splice(index, 1);
     this.linkMaps.splice(index, 1);
   }
 
-  getLinkMap(index:number) {
+  getLinkMap(index) {
     return this.linkMaps[index];
   }
 
@@ -852,6 +913,10 @@ export default class Rule {
   }
 }
 
+interface TGFMapData {
+  pattern?: string;
+  hidden?: boolean;
+}
 export class GFMap {
   data!: TGFMapData;
   id: string;
@@ -911,6 +976,7 @@ export class GFMap {
   }
 }
 
+interface TShapeMapData extends TGFMapData {}
 /**
  * ShapeMap class for mapping
  * @class ShapeMap
@@ -922,7 +988,7 @@ class ShapeMap extends GFMap {
   }
 }
 
-
+interface TTextMapData extends TGFMapData {}
 /**
  * TextMap class for mapping
  * @class TextMap
@@ -935,7 +1001,7 @@ class TextMap extends GFMap {
   }
 }
 
-
+interface TlinkMapData extends TGFMapData {}
 /**
  * LinkMap class for mapping
  * @class LinkMap
@@ -947,7 +1013,12 @@ class LinkMap extends GFMap {
   }
 }
 
-
+interface TRangeMapData {
+  from?: string | null;
+  to?: string | null;
+  text?: string;
+  hidden?: boolean;
+}
 
 /**
  * TextMap class for Range Value
@@ -1022,7 +1093,11 @@ class RangeMap {
   }
 }
 
-
+interface TValueMapData {
+  value?: string;
+  text?: string;
+  hidden?: boolean;
+}
 class ValueMap {
   data: TValueMapData;
   constructor(value: string | undefined, text: string | undefined, data: TValueMapData) {

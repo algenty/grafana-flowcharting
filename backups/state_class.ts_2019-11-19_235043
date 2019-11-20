@@ -1,8 +1,24 @@
 import TooltipHandler from './tooltipHandler';
+import FlowChartingPlugin from './plugin';
 import XGraph from './graph_class';
-import Rule from 'rule_class';
 
+declare var GFP: FlowChartingPlugin;
+// type typeColor = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
+interface TIStringStyles {
+  fillColor: string | null;
+  strokeColor: string | null;
+  fontColor: string | null;
+  imageBorder: string | null;
+  imageBackground: string | null;
+}
 
+interface TIBooleanStyles {
+  fillColor: boolean;
+  strokeColor: boolean;
+  fontColor: boolean;
+  imageBorder: boolean;
+  imageBackground: boolean;
+}
 
 interface TINumberStyles {
   fillColor: number;
@@ -12,7 +28,7 @@ interface TINumberStyles {
   imageBackground: number;
 }
 
-
+type TStyleColor = keyof TIStringStyles;
 
 /**
  * Class for state of one cell
@@ -30,20 +46,20 @@ export default class State {
   xgraph: XGraph;
   changed: boolean;
   changedShape: boolean;
-  changedStyle: TIStylesBoolean;
+  changedStyle: TIBooleanStyles;
   changedText: boolean;
   changedLink: boolean;
   matched: boolean;
   matchedShape: boolean;
-  matchedStyle: TIStylesBoolean;
+  matchedStyle: TIBooleanStyles;
   matchedText: boolean;
   matchedLink: boolean;
   globalLevel: number;
-  styleKeys: TStyleArray;
+  styleKeys: TStyleColor[];
   level: TINumberStyles;
   tooltipHandler: TooltipHandler | undefined;
-  currentColors: TIStylesString;
-  originalColors: TIStylesString;
+  currentColors: TIStringStyles;
+  originalColors: TIStringStyles;
   originalStyle: any;
   originalText: any;
   currentText: any;
@@ -57,7 +73,7 @@ export default class State {
    * @param {XGraph} xgraph
    * @memberof State
    */
-  constructor(mxcell: mxCell, xgraph: XGraph) {
+  constructor(mxcell: any, xgraph: any) {
     GFP.log.info('State.constructor()');
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
@@ -99,7 +115,7 @@ export default class State {
     });
   }
 
-  static getDefaultValueStyles(): TIStylesString {
+  static getDefaultValueStyles(): TIStringStyles {
     return {
       fillColor: null,
       strokeColor: null,
@@ -119,7 +135,7 @@ export default class State {
     };
   }
 
-  static getDefaultFlagStyles(): TIStylesBoolean {
+  static getDefaultFlagStyles(): TIBooleanStyles {
     return {
       fillColor: false,
       strokeColor: false,
@@ -146,7 +162,7 @@ export default class State {
    * @param {Serie} serie
    * @memberof State
    */
-  setState(rule:Rule, serie) {
+  setState(rule, serie) {
     GFP.log.info('State.setState()');
     // GFP.log.debug('State.setState() Rule', rule);
     // GFP.log.debug('State.setState() Serie', serie);
@@ -173,7 +189,7 @@ export default class State {
             if (this.tooltipHandler === undefined) {
               this.tooltipHandler = new TooltipHandler(this.mxcell);
             }
-            let tpColor;
+            let tpColor = null;
             const label = rule.data.tooltipLabel == null || rule.data.tooltipLabel.length === 0 ? serie.alias : rule.data.tooltipLabel;
             if (rule.data.tooltipColors) {
               tpColor = color;
@@ -297,7 +313,7 @@ export default class State {
    * @returns {string} return original value of id or label of cell
    * @memberof State
    */
-  getCellProp(prop:TPropertieKey) {
+  getCellProp(prop) {
     if (prop === 'id') {
       return this.cellId;
     }
@@ -335,7 +351,7 @@ export default class State {
    * @memberof State
    */
   unsetColor() {
-    this.styleKeys.forEach( (style:TStyleKey) => {
+    this.styleKeys.forEach(style => {
       this.unsetColorStyle(style);
     });
   }
@@ -346,7 +362,7 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetLevelStyle(style:TStyleKey) {
+  unsetLevelStyle(style) {
     this.level[style] = -1;
   }
 
@@ -368,8 +384,8 @@ export default class State {
    * @memberof State
    */
   unsetLevel() {
-    this.styleKeys.forEach((style:TStyleKey) => {
-      this.unsetLevelStyle(style);
+    this.styleKeys.forEach(key => {
+      this.unsetLevelStyle(key);
     });
     this.globalLevel = -1;
   }
@@ -377,11 +393,11 @@ export default class State {
   /**
    * Attribute a level for a style
    *
-   * @param {TStyleKey} style
+   * @param {string} style - fillcolor|fontcolor|stroke
    * @param {number} level
    * @memberof State
    */
-  setLevelStyle(style:TStyleKey, level:number) {
+  setLevelStyle(style, level) {
     GFP.log.info('State.setLevelStyle()');
     this.level[style] = level;
     if (this.globalLevel < level) {
@@ -392,21 +408,21 @@ export default class State {
   /**
    * Retrun the level for a style
    *
-   * @param {TStyleKey} style
+   * @param {string} style - fillcolor|fontcolor|stroke
    * @returns
    * @memberof State
    */
-  getLevelStyle(style:TStyleKey) {
+  getLevelStyle(style) {
     return this.level[style];
   }
 
   /**
    * Get the highest/global level
    *
-   * @returns {number}
+   * @returns
    * @memberof State
    */
-  getLevel():number {
+  getLevel() {
     return this.globalLevel;
   }
 
@@ -438,7 +454,7 @@ export default class State {
    * @param {string} text
    * @memberof State
    */
-  setText(text:string) {
+  setText(text) {
     this.currentText = text;
   }
 
@@ -457,7 +473,7 @@ export default class State {
    * @param {string} url
    * @memberof State
    */
-  setLink(url:string) {
+  setLink(url) {
     this.currentLink = url;
   }
 
@@ -473,10 +489,15 @@ export default class State {
   /**
    * Add metric to tooltip of shape
    *
+   * @param {string} label - Label to display in tooltip
+   * @param {string} value - Formatted value
+   * @param {string} color - Color for the value
    * @memberof State
    */
-  addTooltip() {
+  addTooltip(name, label, value, color, direction) {
     GFP.log.info('State.addTooltipValue()');
+    GFP.log.debug('State.addTooltipValue() label', label);
+    GFP.log.debug('State.addTooltipValue() value', value);
     if (this.tooltipHandler == null) {
       this.tooltipHandler = new TooltipHandler(this.mxcell);
     }

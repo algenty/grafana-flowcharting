@@ -1,11 +1,11 @@
 import FlowchartHandler from 'flowchartHandler';
 
 export class FlowchartOptionsCtrl {
-  $scope: TIFlowchartOptionsScope;
+  $scope: TFlowchartOptionsScope;
   ctrl: any; //TODO: redefine any
   flowchartHandler: FlowchartHandler;
   panel: any;
-  sourceTypes: TSelectSource[] = [{ text: 'XML Content', value: 'xml' }];
+  sourceTypes: TSelectString[] = [{ text: 'XML Content', value: 'xml' }];
   themes: TSelectString[] = [
     { text: 'Dark', value: 'dark' },
     { text: 'Light', value: 'kennedy' },
@@ -13,7 +13,7 @@ export class FlowchartOptionsCtrl {
     { text: 'Atlas', value: 'atlas' },
   ];
   /* @ngInject */
-  constructor($scope: TIFlowchartOptionsScope) {
+  constructor($scope: TFlowchartOptionsScope) {
     $scope.editor = this;
     $scope.GFP = GFP;
     this.$scope = $scope;

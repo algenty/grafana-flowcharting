@@ -15,6 +15,15 @@ interface TMappingOptionsScope extends ng.IScope {
   ctrl: any; //TODO: define type
 }
 
+interface TSelectString {
+  text: string;
+  value: string;
+}
+
+interface TSelectNumber {
+  text: string;
+  value: number;
+}
 
 export class MappingOptionsCtrl {
   $scope: TMappingOptionsScope;
@@ -23,7 +32,7 @@ export class MappingOptionsCtrl {
   flowchartHandler: FlowchartHandler;
   rulesHandler: RulesHandler;
   unitFormats: any;
-  style: TSelectStyle[] = [
+  style: TSelectString[] = [
     { text: 'Disabled', value: 'disabled' },
     { text: 'Stroke', value: 'strokeColor' },
     { text: 'Fill', value: 'fillColor' },
@@ -77,7 +86,7 @@ export class MappingOptionsCtrl {
     { text: 'MMMM D, YYYY LT', value: 'MMMM D, YYYY LT' },
     { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
   ];
-  aggregationTypes: TSelectAggregation[] = [
+  aggregationTypes: TSelectString[] = [
     { text: 'First', value: 'first' },
     { text: 'Last', value: 'current' },
     { text: 'Min', value: 'min' },
@@ -89,15 +98,15 @@ export class MappingOptionsCtrl {
     { text: 'Range', value: 'range' },
     { text: 'Diff', value: 'diff' },
   ];
-  mappingTypes: TSelectText[] = [
+  mappingTypes: TSelectNumber[] = [
     { text: 'Value to text', value: 1 },
     { text: 'Range to text', value: 2 },
   ];
-  tpGraphType: TSelectGraphType[] = [
+  tpGraphType: TSelectString[] = [
     { text: 'Line', value: 'line' },
     { text: 'Histogram', value: 'bar' },
   ];
-  tpGraphSize: TSelectGraphSize[] = [
+  tpGraphSize: TSelectString[] = [
     { text: 'Adjustable', value: '100%' },
     { text: 'Small', value: '100px' },
     { text: 'Medium', value: '200px' },
