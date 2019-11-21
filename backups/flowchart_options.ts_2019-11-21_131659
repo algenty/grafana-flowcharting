@@ -1,23 +1,20 @@
 import FlowchartHandler from 'flowchartHandler';
-import * as gf from '../types/flowcharting';
-
-import FlowChartingPlugin from 'plugin';
-declare var GFP: FlowChartingPlugin;
+import { TIFlowchartOptionsScope, TSelectSource, TSelectString, GFP } from '../types/flowcharting';
 
 export class FlowchartOptionsCtrl {
-  $scope: gf.TIFlowchartOptionsScope;
+  $scope: TIFlowchartOptionsScope;
   ctrl: any; //TODO: redefine any
   flowchartHandler: FlowchartHandler;
   panel: any;
-  sourceTypes: gf.TSelectSource[] = [{ text: 'XML Content', value: 'xml' }];
-  themes: gf.TSelectString[] = [
+  sourceTypes: TSelectSource[] = [{ text: 'XML Content', value: 'xml' }];
+  themes: TSelectString[] = [
     { text: 'Dark', value: 'dark' },
     { text: 'Light', value: 'kennedy' },
     { text: 'Mobile', value: 'minimal' },
     { text: 'Atlas', value: 'atlas' },
   ];
   /* @ngInject */
-  constructor($scope: gf.TIFlowchartOptionsScope) {
+  constructor($scope: TIFlowchartOptionsScope) {
     $scope.editor = this;
     $scope.GFP = GFP;
     this.$scope = $scope;

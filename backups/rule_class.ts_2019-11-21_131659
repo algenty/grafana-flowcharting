@@ -3,10 +3,7 @@ import moment from 'moment';
 import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
-import * as gf from '../types/flowcharting';
-
-import FlowChartingPlugin from 'plugin';
-declare var GFP: FlowChartingPlugin;
+import { TIRuleData, GFP, TShapeMapData, TTextMapData, TlinkMapData, TValueMapData, TRangeMapData, TGFMapData } from '../types/flowcharting';
 
 /**
  * Rule definition
@@ -15,7 +12,7 @@ declare var GFP: FlowChartingPlugin;
  * @class Rule
  */
 export default class Rule {
-  data: gf.TIRuleData;
+  data: TIRuleData;
   shapeMaps: ShapeMap[];
   textMaps: TextMap[];
   linkMaps: LinkMap[];
@@ -30,7 +27,7 @@ export default class Rule {
    * @param {*} data
    * @memberof Rule
    */
-  constructor(pattern: string, data: gf.TIRuleData) {
+  constructor(pattern: string, data: TIRuleData) {
     this.data = data;
     this.data.pattern = pattern;
     this.shapeMaps = [];
@@ -42,7 +39,7 @@ export default class Rule {
     this.import(data);
   }
 
-  static getDefaultData(): gf.TIRuleData {
+  static getDefaultData(): TIRuleData {
     return {
       order: 1,
       pattern: '.*',
@@ -97,7 +94,7 @@ export default class Rule {
    * @returns {data}
    * @memberof Rule
    */
-  getData(): gf.TIRuleData {
+  getData(): TIRuleData {
     return this.data;
   }
 
@@ -155,8 +152,8 @@ export default class Rule {
     }
 
     if (maps !== undefined && maps !== null && maps.length > 0) {
-      maps.forEach((map: gf.TShapeMapData) => {
-        const newData: gf.TShapeMapData = ShapeMap.getDefaultData() as gf.TShapeMapData;
+      maps.forEach((map: TShapeMapData) => {
+        const newData: TShapeMapData = <TShapeMapData>ShapeMap.getDefaultData();
         const sm = new ShapeMap(map.pattern, newData);
         sm.import(map);
         this.shapeMaps.push(sm);
@@ -175,8 +172,8 @@ export default class Rule {
       maps = obj.textData;
     }
     if (maps !== undefined && maps != null && maps.length > 0) {
-      maps.forEach((map: gf.TTextMapData) => {
-        const newData: gf.TTextMapData = TextMap.getDefaultData() as gf.TTextMapData;
+      maps.forEach((map: TTextMapData) => {
+        const newData: TTextMapData = <TTextMapData>TextMap.getDefaultData();
         const tm = new TextMap(map.pattern, newData);
         tm.import(map);
         this.textMaps.push(tm);
@@ -188,8 +185,8 @@ export default class Rule {
     this.data.linkProp = obj.linkProp || 'id';
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
-      obj.linkData.forEach((map: gf.TlinkMapData) => {
-        const newData: gf.TlinkMapData = LinkMap.getDefaultData() as gf.TlinkMapData;
+      obj.linkData.forEach((map: TlinkMapData) => {
+        const newData: TlinkMapData = <TlinkMapData>LinkMap.getDefaultData();
         const lm = new LinkMap(map.pattern, newData);
         lm.import(map);
         this.linkMaps.push(lm);
@@ -202,8 +199,8 @@ export default class Rule {
     // VALUES
     this.data.valueData = [];
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
-      obj.valueData.forEach((map: gf.TValueMapData) => {
-        const newData: gf.TValueMapData = ValueMap.getDefaultdata();
+      obj.valueData.forEach((map: TValueMapData) => {
+        const newData: TValueMapData = ValueMap.getDefaultdata();
         const vm = new ValueMap(map.value, map.text, newData);
         vm.import(map);
         this.valueMaps.push(vm);
@@ -215,7 +212,7 @@ export default class Rule {
     this.data.rangeData = [];
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
       obj.rangeData.forEach(map => {
-        const newData: gf.TRangeMapData = RangeMap.getDefaultData();
+        const newData: TRangeMapData = RangeMap.getDefaultData();
         const rm = new RangeMap(map.from, map.to, map.text, newData);
         this.rangeMaps.push(rm);
         this.data.rangeData.push(newData);
@@ -430,7 +427,7 @@ export default class Rule {
    * @memberof Rule
    */
   addShapeMap(pattern: string): ShapeMap {
-    const data = ShapeMap.getDefaultData() as gf.TShapeMapData;
+    const data = <TShapeMapData>ShapeMap.getDefaultData();
     const m = new ShapeMap(pattern, data);
     m.import(data);
     this.shapeMaps.push(m);
@@ -491,7 +488,7 @@ export default class Rule {
   // TEXT MAPS
   //
   addTextMap(pattern: string): TextMap {
-    const data = TextMap.getDefaultData() as gf.TTextMapData;
+    const data = <TTextMapData>TextMap.getDefaultData();
     const m = new TextMap(pattern, data);
     m.import(data);
     this.textMaps.push(m);
@@ -527,7 +524,7 @@ export default class Rule {
   //
   addLinkMap(pattern: string): LinkMap {
     GFP.log.info('Rule.addLinkMap()');
-    const data = LinkMap.getDefaultData() as gf.TlinkMapData;
+    const data = <TlinkMapData>LinkMap.getDefaultData();
     const m = new LinkMap(pattern, data);
     m.import(data);
     this.linkMaps.push(m);
@@ -562,7 +559,7 @@ export default class Rule {
   // STRING VALUE MAPS
   //
   addValueMap(value: string, text: string): ValueMap {
-    const data: gf.TValueMapData = ValueMap.getDefaultdata();
+    const data: TValueMapData = ValueMap.getDefaultdata();
     const m = new ValueMap(value, text, data);
     m.import(data);
     this.valueMaps.push(m);
@@ -861,9 +858,9 @@ export default class Rule {
 }
 
 export class GFMap {
-  data!: gf.TGFMapData;
+  data!: TGFMapData;
   id: string;
-  constructor(pattern, data: gf.TGFMapData) {
+  constructor(pattern, data: TGFMapData) {
     this.data = data;
     this.data.pattern = pattern;
     this.id = GFP.utils.uniqueID();
@@ -915,7 +912,7 @@ export class GFMap {
     return true;
   }
 
-  export(): gf.TGFMapData {
+  export(): TGFMapData {
     return {
       pattern: this.data.pattern,
       hidden: this.data.hidden,
@@ -929,7 +926,7 @@ export class GFMap {
  * @extends GFMap
  */
 class ShapeMap extends GFMap {
-  constructor(pattern: string, data: gf.TShapeMapData) {
+  constructor(pattern: string, data: TShapeMapData) {
     super(pattern, data);
   }
 }
@@ -940,7 +937,7 @@ class ShapeMap extends GFMap {
  * @extends GFMap
  */
 class TextMap extends GFMap {
-  constructor(pattern: string, data: gf.TTextMapData) {
+  constructor(pattern: string, data: TTextMapData) {
     super(pattern, data);
     // this.import(data);
   }
@@ -952,7 +949,7 @@ class TextMap extends GFMap {
  * @extends GFMap
  */
 class LinkMap extends GFMap {
-  constructor(pattern: string, data: gf.TlinkMapData) {
+  constructor(pattern: string, data: TlinkMapData) {
     super(pattern, data);
   }
 }
@@ -962,8 +959,8 @@ class LinkMap extends GFMap {
  * @class RangeMap
  */
 class RangeMap {
-  data: gf.TRangeMapData;
-  constructor(from: string, to: string, text: string, data: gf.TRangeMapData) {
+  data: TRangeMapData;
+  constructor(from: string, to: string, text: string, data: TRangeMapData) {
     this.data = data;
     this.data.from = from;
     this.data.to = to;
@@ -979,7 +976,7 @@ class RangeMap {
     this.data.hidden = obj.hidden || this.data.hidden || false;
   }
 
-  static getDefaultData(): gf.TRangeMapData {
+  static getDefaultData(): TRangeMapData {
     return {
       from: null,
       to: null,
@@ -1040,8 +1037,8 @@ class RangeMap {
 }
 
 class ValueMap {
-  data: gf.TValueMapData;
-  constructor(value: string, text: string, data: gf.TValueMapData) {
+  data: TValueMapData;
+  constructor(value: string, text: string, data: TValueMapData) {
     this.data = data;
     this.data.value = value;
     this.data.text = text;

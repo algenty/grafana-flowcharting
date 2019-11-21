@@ -1,19 +1,22 @@
 import _ from 'lodash';
-import * as gf from '../types/flowcharting';
-
-import FlowChartingPlugin from 'plugin';
-declare var GFP: FlowChartingPlugin;
-declare var mxEvent: any,
-  mxUtils: any,
-  mxClient: any,
-  mxCodec: any,
-  mxUrlConverter: any,
-  mxCellOverlay: any,
-  mxConstants: any,
-  mxCellHighlight: any,
-  mxRectangle: any;
-type mxCell = any;
-type mxMouseEvent = any;
+import {
+  TSourceType,
+  TIOnMappingObj,
+  GFP,
+  mxEvent,
+  mxUtils,
+  mxClient,
+  mxCodec,
+  mxUrlConverter,
+  TPropertieKey,
+  mxCellOverlay,
+  TStyleKey,
+  mxConstants,
+  mxCellHighlight,
+  mxRectangle,
+  mxCell,
+  mxMouseEvent,
+} from '../types/flowcharting';
 
 /**
  * mxGraph interface class
@@ -24,7 +27,7 @@ type mxMouseEvent = any;
 export default class XGraph {
   container: HTMLDivElement;
   xmlGraph = '';
-  type: gf.TSourceType = 'xml';
+  type: TSourceType = 'xml';
   graph: any = undefined;
   scale = true;
   tooltip = true;
@@ -39,14 +42,14 @@ export default class XGraph {
   cells: any; //TODO : Define type
   clickBackup!: () => void;
   dbclickBackup!: () => void;
-  onMapping!: gf.TIOnMappingObj;
+  onMapping!: TIOnMappingObj;
   /**
    * Creates an instance of XGraph.
    * @param {DOM} container
    * @param {string} definition
    * @memberof XGraph
    */
-  constructor(container: HTMLDivElement, type: gf.TSourceType, definition: string) {
+  constructor(container: HTMLDivElement, type: TSourceType, definition: string) {
     GFP.log.info('XGraph.constructor()');
     this.container = container;
     this.type = type;
@@ -517,11 +520,11 @@ export default class XGraph {
   /**
    * Get list of values or id
    *
-   * @param { gf.TPropertieKey} prop
+   * @param {TPropertieKey} prop
    * @returns {string[]}
    * @memberof XGraph
    */
-  getCurrentCells(prop: gf.TPropertieKey): string[] {
+  getCurrentCells(prop: TPropertieKey): string[] {
     const cellIds: string[] = [];
     const model = this.graph.getModel();
     const cells = model.cells;
@@ -545,7 +548,7 @@ export default class XGraph {
    * @returns {mxCell[]}
    * @memberof XGraph
    */
-  findMxCells(prop: gf.TPropertieKey, pattern: string): mxCell[] {
+  findMxCells(prop: TPropertieKey, pattern: string): mxCell[] {
     const mxcells = this.getMxCells();
     const result: any[] = [];
     if (prop === 'id') {
@@ -571,7 +574,7 @@ export default class XGraph {
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  selectMxCells(prop: gf.TPropertieKey, pattern: string) {
+  selectMxCells(prop: TPropertieKey, pattern: string) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       // this.graph.setSelectionCells(mxcells);
@@ -584,7 +587,7 @@ export default class XGraph {
    *
    * @memberof XGraph
    */
-  unselectMxCells(prop: gf.TPropertieKey, pattern: string) {
+  unselectMxCells(prop: TPropertieKey, pattern: string) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       this.unhighlightCells(mxcells);
@@ -664,11 +667,11 @@ export default class XGraph {
   /**
    * Get value or id from cell source
    *
-   * @param { gf.TPropertieKey} prop
+   * @param {TPropertieKey} prop
    * @returns {string[]} value of labels or id frome source
    * @memberof XGraph
    */
-  getOrignalCells(prop: gf.TPropertieKey): string[] {
+  getOrignalCells(prop: TPropertieKey): string[] {
     if (prop === 'id' || prop === 'value') {
       return this.cells[prop];
     }
@@ -725,7 +728,7 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getValuePropOfMxCell(prop: gf.TPropertieKey, mxcell: mxCell) {
+  getValuePropOfMxCell(prop: TPropertieKey, mxcell: mxCell) {
     if (prop === 'id') {
       return this.getId(mxcell);
     }
@@ -735,7 +738,7 @@ export default class XGraph {
     return null;
   }
 
-  getStyleCell(mxcell: mxCell, style: gf.TStyleKey): string | null {
+  getStyleCell(mxcell: mxCell, style: TStyleKey): string | null {
     const state = this.graph.view.getState(mxcell);
     if (state) {
       return state.style[style];
@@ -743,7 +746,7 @@ export default class XGraph {
     return null;
   }
 
-  setStyleCell(mxcell: mxCell, style: gf.TStyleKey, color: string | null, animate = false): this {
+  setStyleCell(mxcell: mxCell, style: TStyleKey, color: string | null, animate = false): this {
     if (animate) {
       try {
         const endColor = this.getStyleCell(mxcell, style);
@@ -820,7 +823,7 @@ export default class XGraph {
    * @param {Object} onMappingObj
    * @memberof XGraph
    */
-  setMap(onMappingObj: gf.TIOnMappingObj) {
+  setMap(onMappingObj: TIOnMappingObj) {
     GFP.log.info('XGraph.setMapping()');
     GFP.log.debug('XGraph.setMapping() onMappingObject : ', onMappingObj);
     this.onMapping = onMappingObj;

@@ -1,10 +1,7 @@
 import TooltipHandler from './tooltipHandler';
 import XGraph from './graph_class';
 import Rule from 'rule_class';
-import * as gf from '../types/flowcharting';
-
-import FlowChartingPlugin from 'plugin';
-declare var GFP: FlowChartingPlugin;
+import { TIStylesBoolean, TStyleArray, TIStylesNumber, TIStylesString, mxCell, GFP, TPropertieKey, TStyleKey } from '../types/flowcharting';
 
 /**
  * Class for state of one cell
@@ -22,20 +19,20 @@ export default class State {
   xgraph: XGraph;
   changed = false;
   changedShape = false;
-  changedStyle: gf.TIStylesBoolean;
+  changedStyle: TIStylesBoolean;
   changedText = false;
   changedLink = false;
   matched = false;
   matchedShape = false;
-  matchedStyle: gf.TIStylesBoolean;
+  matchedStyle: TIStylesBoolean;
   matchedText = false;
   matchedLink = false;
   globalLevel = -1;
-  styleKeys: gf.TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
-  level: gf.TIStylesNumber;
+  styleKeys: TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
+  level: TIStylesNumber;
   tooltipHandler: TooltipHandler | null = null;
-  currentColors: gf.TIStylesString;
-  originalColors: gf.TIStylesString;
+  currentColors: TIStylesString;
+  originalColors: TIStylesString;
   originalStyle: string;
   originalText: string;
   currentText: string;
@@ -49,7 +46,7 @@ export default class State {
    * @param {XGraph} xgraph
    * @memberof State
    */
-  constructor(mxcell: gf.mxCell, xgraph: XGraph) {
+  constructor(mxcell: mxCell, xgraph: XGraph) {
     GFP.log.info('State.constructor()');
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
@@ -80,7 +77,7 @@ export default class State {
     });
   }
 
-  static getDefaultValueStyles(): gf.TIStylesString {
+  static getDefaultValueStyles(): TIStylesString {
     return {
       fillColor: null,
       strokeColor: null,
@@ -90,7 +87,7 @@ export default class State {
     };
   }
 
-  static getDefaultLevelStyles(): gf.TIStylesNumber {
+  static getDefaultLevelStyles(): TIStylesNumber {
     return {
       fillColor: -1,
       strokeColor: -1,
@@ -100,7 +97,7 @@ export default class State {
     };
   }
 
-  static getDefaultFlagStyles(): gf.TIStylesBoolean {
+  static getDefaultFlagStyles(): TIStylesBoolean {
     return {
       fillColor: false,
       strokeColor: false,
@@ -278,7 +275,7 @@ export default class State {
    * @returns {string} return original value of id or label of cell
    * @memberof State
    */
-  getCellProp(prop: gf.TPropertieKey) {
+  getCellProp(prop: TPropertieKey) {
     if (prop === 'id') {
       return this.cellId;
     }
@@ -295,7 +292,7 @@ export default class State {
    * @param {string} color - html color
    * @memberof State
    */
-  setColorStyle(style: gf.TStyleKey, color: string) {
+  setColorStyle(style: TStyleKey, color: string) {
     GFP.log.info('State.setColorStyle()');
     this.currentColors[style] = color;
   }
@@ -306,7 +303,7 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetColorStyle(style: gf.TStyleKey) {
+  unsetColorStyle(style: TStyleKey) {
     this.currentColors[style] = this.originalColors[style];
   }
 
@@ -327,7 +324,7 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetLevelStyle(style: gf.TStyleKey) {
+  unsetLevelStyle(style: TStyleKey) {
     this.level[style] = -1;
   }
 
@@ -349,7 +346,7 @@ export default class State {
    * @memberof State
    */
   unsetLevel() {
-    this.styleKeys.forEach((style: gf.TStyleKey) => {
+    this.styleKeys.forEach((style: TStyleKey) => {
       this.unsetLevelStyle(style);
     });
     this.globalLevel = -1;
@@ -362,7 +359,7 @@ export default class State {
    * @param {number} level
    * @memberof State
    */
-  setLevelStyle(style: gf.TStyleKey, level: number) {
+  setLevelStyle(style: TStyleKey, level: number) {
     GFP.log.info('State.setLevelStyle()');
     this.level[style] = level;
     if (this.globalLevel < level) {
@@ -377,7 +374,7 @@ export default class State {
    * @returns {number}
    * @memberof State
    */
-  getLevelStyle(style: gf.TStyleKey): number {
+  getLevelStyle(style: TStyleKey): number {
     return this.level[style];
   }
 
@@ -468,6 +465,11 @@ export default class State {
     if (this.tooltipHandler) {
       this.tooltipHandler.updateDate();
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  isGradient() {
+    // TODO: next version
   }
 
   /**

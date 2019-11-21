@@ -1,8 +1,5 @@
 import Chartist from 'chartist';
-import * as gf from '../types/flowcharting';
-
-import FlowChartingPlugin from 'plugin';
-declare var GFP: FlowChartingPlugin;
+import { TDirection, TGraphType, GFP, TGraphSize } from '../types/flowcharting';
 
 /**
  *
@@ -134,7 +131,7 @@ class MetricTooltip {
   graphs: Set<GraphTooltip>;
   label!: string;
   value!: string;
-  direction: gf.TDirection = 'v';
+  direction: TDirection = 'v';
   div: HTMLDivElement | undefined;
   constructor() {
     this.color = '#8c8980';
@@ -158,7 +155,7 @@ class MetricTooltip {
     return this;
   }
 
-  setDirection(direction: gf.TDirection): this {
+  setDirection(direction: TDirection): this {
     this.direction = direction;
     return this;
   }
@@ -206,7 +203,7 @@ class MetricTooltip {
     return div;
   }
 
-  addGraph(type: gf.TGraphType): GraphTooltip {
+  addGraph(type: TGraphType): GraphTooltip {
     let graph: GraphTooltip;
     switch (type) {
       case 'line':
@@ -232,9 +229,9 @@ class MetricTooltip {
  */
 class GraphTooltip {
   color = '#8c8980';
-  type: gf.TGraphType = 'line';
+  type: TGraphType = 'line';
   name?: string;
-  size: gf.TGraphSize = '100%';
+  size: TGraphSize = '100%';
   serie: any | undefined;
   low: number | null = null;
   high: number | null = null;
@@ -251,12 +248,12 @@ class GraphTooltip {
     return this;
   }
 
-  setType(type: gf.TGraphType): this {
+  setType(type: TGraphType): this {
     this.type = type;
     return this;
   }
 
-  setSize(size: gf.TGraphSize): this {
+  setSize(size: TGraphSize): this {
     this.size = size;
     return this;
   }

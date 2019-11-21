@@ -3,72 +3,79 @@ import RulesHandler from 'rulesHandler';
 import Rule from 'rule_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
-import * as gf from '../types/flowcharting';
-
-import FlowChartingPlugin from 'plugin';
-declare var GFP: FlowChartingPlugin;
+import {
+  TSelectStyle,
+  TSelectString,
+  TSelectAggregation,
+  TSelectText,
+  TSelectGraphType,
+  TSelectGraphSize,
+  TMappingOptionsScope,
+  GFP,
+  TPropertieKey,
+} from '../types/flowcharting';
 
 export class MappingOptionsCtrl {
-  $scope: gf.TMappingOptionsScope;
+  $scope: TMappingOptionsScope;
   panelCtrl: any;
   panel: any;
   flowchartHandler: FlowchartHandler;
   rulesHandler: RulesHandler;
   unitFormats: any;
-  style: gf.TSelectStyle[] = [
+  style: TSelectStyle[] = [
     { text: 'Stroke', value: 'strokeColor' },
     { text: 'Fill', value: 'fillColor' },
     { text: 'Text', value: 'fontColor' },
     { text: 'Background (image)', value: 'imageBackground' },
     { text: 'Border (image)', value: 'imageBorder' },
   ];
-  colorOn: gf.TSelectString[] = [
+  colorOn: TSelectString[] = [
     { text: 'Never', value: 'n' },
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
-  linkOn: gf.TSelectString[] = [
+  linkOn: TSelectString[] = [
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
-  tooltipOn: gf.TSelectString[] = [
+  tooltipOn: TSelectString[] = [
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
-  tpDirection: gf.TSelectString[] = [
+  tpDirection: TSelectString[] = [
     { text: 'Vertical', value: 'v' },
     { text: 'Horizontal ', value: 'h' },
   ];
-  textOn: gf.TSelectString[] = [
+  textOn: TSelectString[] = [
     { text: 'Never', value: 'n' },
     { text: 'When Metric Displayed', value: 'wmd' },
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Critical Only', value: 'co' },
   ];
-  textReplace: gf.TSelectString[] = [
+  textReplace: TSelectString[] = [
     { text: 'All content', value: 'content' },
     { text: 'Substring', value: 'pattern' },
     { text: 'Append (Space) ', value: 'as' },
     { text: 'Append (New line) ', value: 'anl' },
   ];
-  propTypes: gf.TSelectString[] = [
+  propTypes: TSelectString[] = [
     { text: 'Id', value: 'id' },
     // { text: "Value", value: "value" }
   ];
   textPattern = '/.*/';
-  metricTypes: gf.TSelectString[] = [
+  metricTypes: TSelectString[] = [
     { text: 'Number', value: 'number' },
     { text: 'String', value: 'string' },
     { text: 'Date', value: 'date' },
   ];
-  dateFormats: gf.TSelectString[] = [
+  dateFormats: TSelectString[] = [
     { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
     { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
     { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
     { text: 'MMMM D, YYYY LT', value: 'MMMM D, YYYY LT' },
     { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
   ];
-  aggregationTypes: gf.TSelectAggregation[] = [
+  aggregationTypes: TSelectAggregation[] = [
     { text: 'First', value: 'first' },
     { text: 'Last', value: 'current' },
     { text: 'Min', value: 'min' },
@@ -80,15 +87,15 @@ export class MappingOptionsCtrl {
     { text: 'Range', value: 'range' },
     { text: 'Diff', value: 'diff' },
   ];
-  mappingTypes: gf.TSelectText[] = [
+  mappingTypes: TSelectText[] = [
     { text: 'Value to text', value: 1 },
     { text: 'Range to text', value: 2 },
   ];
-  tpGraphType: gf.TSelectGraphType[] = [
+  tpGraphType: TSelectGraphType[] = [
     { text: 'Line', value: 'line' },
     { text: 'Histogram', value: 'bar' },
   ];
-  tpGraphSize: gf.TSelectGraphSize[] = [
+  tpGraphSize: TSelectGraphSize[] = [
     { text: 'Adjustable', value: '100%' },
     { text: 'Small', value: '100px' },
     { text: 'Medium', value: '200px' },
@@ -101,7 +108,7 @@ export class MappingOptionsCtrl {
   getVariables: () => any;
 
   /** @ngInject */
-  constructor($scope: gf.TMappingOptionsScope) {
+  constructor($scope: TMappingOptionsScope) {
     $scope.editor = this;
     $scope.GFP = GFP;
     this.$scope = $scope;
@@ -188,7 +195,7 @@ export class MappingOptionsCtrl {
    * @param  {} prop
    * @param  {} value
    */
-  selectCell(prop: gf.TPropertieKey, value: string) {
+  selectCell(prop: TPropertieKey, value: string) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {

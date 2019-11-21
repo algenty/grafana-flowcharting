@@ -1,20 +1,17 @@
 import FlowchartHandler from './flowchartHandler';
 import State from 'state_class';
-import * as gf from '../types/flowcharting';
-
-import FlowChartingPlugin from 'plugin';
-declare var GFP: FlowChartingPlugin;
+import { TSelectBoolean, TSelectNumber, GFP, TInspectOptionsScope } from '../types/flowcharting';
 
 export class InspectOptionsCtrl {
   enable = false; // enable inspector or not
-  $scope: gf.TInspectOptionsScope;
+  $scope: TInspectOptionsScope;
   ctrl: any; //TODO: define type
   panel: any; //TODO: define type
-  logDisplayOption: gf.TSelectBoolean[] = [
+  logDisplayOption: TSelectBoolean[] = [
     { text: 'True', value: true },
     { text: 'False', value: false },
   ];
-  logLevelOption: gf.TSelectNumber[] = [
+  logLevelOption: TSelectNumber[] = [
     { text: 'DEBUG', value: 0 },
     { text: 'INFO', value: 1 },
     { text: 'WARNING', value: 2 },
@@ -26,7 +23,7 @@ export class InspectOptionsCtrl {
   panelCtrl: any;
   colors: any; //TODO: define style
   /** @ngInject */
-  constructor($scope: gf.TInspectOptionsScope) {
+  constructor($scope: TInspectOptionsScope) {
     $scope.editor = this;
     $scope.GFP = GFP;
     this.$scope = $scope;

@@ -2,11 +2,7 @@ import XGraph from './graph_class';
 import StateHandler from './statesHandler';
 import State from './state_class';
 import Rule from './rule_class';
-import * as gf from '../types/flowcharting';
-
-import FlowChartingPlugin from 'plugin';
-declare var GFP: FlowChartingPlugin;
-declare var mxUtils: any;
+import { TFlowchartData, GFP, mxUtils, TIOnMappingObj, TPropertieKey } from '../types/flowcharting';
 
 /**
  * Flowchart handler
@@ -15,7 +11,7 @@ declare var mxUtils: any;
  * @class Flowchart
  */
 export default class Flowchart {
-  data: gf.TFlowchartData;
+  data: TFlowchartData;
   container: HTMLDivElement;
   xgraph: XGraph | undefined = undefined;
   stateHandler!: StateHandler;
@@ -25,7 +21,7 @@ export default class Flowchart {
   // height: any;
   states: Map<string, State> | undefined;
 
-  constructor(name: string, xmlGraph: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {
+  constructor(name: string, xmlGraph: string, container: HTMLDivElement, ctrl: any, data: TFlowchartData) {
     GFP.log.info(`flowchart[${name}].constructor()`);
     GFP.log.debug(`flowchart[${name}].constructor() data`, data);
     this.data = data;
@@ -109,7 +105,7 @@ export default class Flowchart {
     return this;
   }
 
-  static getDefaultData(): gf.TFlowchartData {
+  static getDefaultData(): TFlowchartData {
     return {
       name: 'name',
       xml: '',
@@ -136,7 +132,7 @@ export default class Flowchart {
    * @returns {Object} Data object
    * @memberof Flowchart
    */
-  getData(): gf.TFlowchartData {
+  getData(): TFlowchartData {
     return this.data;
   }
 
@@ -412,7 +408,7 @@ export default class Flowchart {
     return this;
   }
 
-  getNamesByProp(prop: gf.TPropertieKey): string[] {
+  getNamesByProp(prop: TPropertieKey): string[] {
     if (this.xgraph) {
       return this.xgraph.getOrignalCells(prop);
     }
@@ -589,7 +585,7 @@ export default class Flowchart {
     return this.container;
   }
 
-  setMap(onMappingObj: gf.TIOnMappingObj) {
+  setMap(onMappingObj: TIOnMappingObj) {
     GFP.log.info(`flowchart[${this.data.name}].setMap()`);
     const container = this.getContainer();
     if (this.xgraph) {
