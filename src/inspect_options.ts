@@ -1,4 +1,3 @@
-import FlowChartingPlugin from './plugin';
 import FlowchartHandler from './flowchartHandler';
 import State from 'state_class';
 import { TSelectBoolean, TSelectNumber, GFP, TInspectOptionsScope } from '../types';

@@ -1,5 +1,4 @@
 import Rule from './rule_class';
-import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
 import { TIRuleData, GFP } from '../types';
 

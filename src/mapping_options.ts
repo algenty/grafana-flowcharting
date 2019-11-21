@@ -1,20 +1,11 @@
-import FlowChartingPlugin from './plugin';
 import FlowchartHandler from './flowchartHandler';
 import RulesHandler from 'rulesHandler';
 import Rule from 'rule_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
-import { TSelectStyle, TSelectString, TSelectAggregation, TSelectText, TSelectGraphType, TSelectGraphSize } from '../types';
+import { TSelectStyle, TSelectString, TSelectAggregation, TSelectText, TSelectGraphType, TSelectGraphSize, TMappingOptionsScope, GFP, TPropertieKey } from '../types';
 
-declare var GFP: FlowChartingPlugin;
-type TPropType = 'id' | 'value';
-interface TMappingOptionsScope extends ng.IScope {
-  rulesHandler: any;
-  flowchartHandler: any;
-  editor: MappingOptionsCtrl;
-  GFP: FlowChartingPlugin;
-  ctrl: any; //TODO: define type
-}
+
 
 export class MappingOptionsCtrl {
   $scope: TMappingOptionsScope;
@@ -24,7 +15,6 @@ export class MappingOptionsCtrl {
   rulesHandler: RulesHandler;
   unitFormats: any;
   style: TSelectStyle[] = [
-    { text: 'Disabled', value: 'disabled' },
     { text: 'Stroke', value: 'strokeColor' },
     { text: 'Fill', value: 'fillColor' },
     { text: 'Text', value: 'fontColor' },
@@ -197,7 +187,7 @@ export class MappingOptionsCtrl {
    * @param  {} prop
    * @param  {} value
    */
-  selectCell(prop: TPropType, value: string) {
+  selectCell(prop: TPropertieKey, value: string) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {

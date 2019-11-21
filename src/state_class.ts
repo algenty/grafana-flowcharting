@@ -355,16 +355,16 @@ export default class State {
   /**
    * Attribute a level for a style
    *
-   * @param {TStyleKey} style
+   * @param {TStyleKeyDisable} style
    * @param {number} level
    * @memberof State
    */
   setLevelStyle(style: TStyleKey, level: number) {
     GFP.log.info('State.setLevelStyle()');
-    this.level[style] = level;
-    if (this.globalLevel < level) {
-      this.globalLevel = level;
-    }
+      this.level[style] = level;
+      if (this.globalLevel < level) {
+        this.globalLevel = level;
+      }
   }
 
   /**

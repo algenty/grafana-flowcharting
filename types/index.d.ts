@@ -55,9 +55,8 @@ interface TIStylesNumber {
   imageBackground: number;
 }
 
-type TStyleKeyDisable = TStyleKey | 'disable';
 interface TSelectStyle extends TSelectString {
-  value: TStyleKeyDisable;
+  value: TStyleKey;
 }
 
 // ToolTip
@@ -143,9 +142,9 @@ interface TGFMapData {
   hidden: boolean;
 }
 
-interface TShapeMapData extends TGFMapData { }
-interface TTextMapData extends TGFMapData { }
-interface TlinkMapData extends TGFMapData { }
+type TShapeMapData = TGFMapData;
+type TTextMapData = TGFMapData;
+type TlinkMapData = TGFMapData;
 
 interface TRangeMapData {
   from?: string | null;
@@ -216,4 +215,12 @@ interface TFlowchartData {
   bgColor: string | null;
   editorUrl: string;
   editorTheme: string;
+}
+
+interface TMappingOptionsScope extends ng.IScope {
+  rulesHandler: any;
+  flowchartHandler: FlowchartHandler;
+  editor: MappingOptionsCtrl;
+  GFP: FlowChartingPlugin;
+  ctrl: any; //TODO: define type
 }

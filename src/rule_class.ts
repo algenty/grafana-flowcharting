@@ -153,7 +153,7 @@ export default class Rule {
 
     if (maps !== undefined && maps !== null && maps.length > 0) {
       maps.forEach((map: TShapeMapData) => {
-        const newData: TShapeMapData = ShapeMap.getDefaultData();
+        const newData: TShapeMapData = <TShapeMapData>ShapeMap.getDefaultData();
         const sm = new ShapeMap(map.pattern, newData);
         sm.import(map);
         this.shapeMaps.push(sm);
@@ -173,7 +173,7 @@ export default class Rule {
     }
     if (maps !== undefined && maps != null && maps.length > 0) {
       maps.forEach((map: TTextMapData) => {
-        const newData: TTextMapData = TextMap.getDefaultData();
+        const newData: TTextMapData = <TTextMapData>TextMap.getDefaultData();
         const tm = new TextMap(map.pattern, newData);
         tm.import(map);
         this.textMaps.push(tm);
@@ -186,7 +186,7 @@ export default class Rule {
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
       obj.linkData.forEach((map: TlinkMapData) => {
-        const newData: TlinkMapData = LinkMap.getDefaultData();
+        const newData: TlinkMapData = <TlinkMapData>LinkMap.getDefaultData();
         const lm = new LinkMap(map.pattern, newData);
         lm.import(map);
         this.linkMaps.push(lm);
@@ -427,7 +427,7 @@ export default class Rule {
    * @memberof Rule
    */
   addShapeMap(pattern: string): ShapeMap {
-    const data = ShapeMap.getDefaultData();
+    const data = <TShapeMapData> ShapeMap.getDefaultData();
     const m = new ShapeMap(pattern, data);
     m.import(data);
     this.shapeMaps.push(m);
@@ -488,7 +488,7 @@ export default class Rule {
   // TEXT MAPS
   //
   addTextMap(pattern: string): TextMap {
-    const data: TTextMapData = TextMap.getDefaultData();
+    const data = <TTextMapData> TextMap.getDefaultData();
     const m = new TextMap(pattern, data);
     m.import(data);
     this.textMaps.push(m);
@@ -524,7 +524,7 @@ export default class Rule {
   //
   addLinkMap(pattern: string): LinkMap {
     GFP.log.info('Rule.addLinkMap()');
-    const data: TlinkMapData = LinkMap.getDefaultData();
+    const data = <TlinkMapData> LinkMap.getDefaultData();
     const m = new LinkMap(pattern, data);
     m.import(data);
     this.linkMaps.push(m);
@@ -926,7 +926,7 @@ export class GFMap {
  * @extends GFMap
  */
 class ShapeMap extends GFMap {
-  constructor(pattern: string, data: TShapeMapData | {}) {
+  constructor(pattern: string, data: TShapeMapData) {
     super(pattern, data);
   }
 }
