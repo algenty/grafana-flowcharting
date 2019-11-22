@@ -21,8 +21,6 @@ export default class Flowchart {
   stateHandler!: StateHandler;
   ctrl: any;
   templateSrv: any;
-  // width: any;
-  // height: any;
   states: Map<string, State> | undefined;
 
   constructor(name: string, xmlGraph: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {

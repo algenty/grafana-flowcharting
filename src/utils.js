@@ -170,10 +170,10 @@ module.exports = {
 
   async sleep(ms, mess) {
     function delay(ms) {
-      return new Promise(resolve=> setTimeout(resolve,ms));
+      return new Promise(resolve => setTimeout(resolve, ms));
     }
     await delay(ms);
-    if(mess) console.log(mess);
+    if (mess) console.log(mess);
   },
 
   uniqueID() {
@@ -279,5 +279,16 @@ module.exports = {
         console.error('Error eval.call:', fname, e);
       }
     }
+  },
+
+  getfileContent(url) {
+    let result;
+    const request = async () => {
+      const response = await fetch(url);
+      const result = await response.text();
+      console.log(getfileContent, url, result);
+    }
+    request();
+    return result;
   }
 };
