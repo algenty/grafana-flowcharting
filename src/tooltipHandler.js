@@ -83,20 +83,16 @@ export default class TooltipHandler {
     if (!found) this.metrics.push(metric);
   }
 
-  updateDate() {
-    let current_datetime = new Date();
-    this.lastChange =
-      current_datetime.getFullYear() +
-      '-' +
-      (current_datetime.getMonth() + 1) +
-      '-' +
-      current_datetime.getDate() +
-      ' ' +
-      current_datetime.getHours() +
-      ':' +
-      current_datetime.getMinutes() +
-      ':' +
-      current_datetime.getSeconds();
+  updateDate(rule, serie) {
+    let _last;
+    for (let _index = serie.flotpairs.length-1; _index >= 0; _index--) {
+      if (serie.flotpairs[_index][1] > 0) {
+        _last = serie.flotpairs[_index];
+        break;
+      }
+    }
+    this.lastChange = moment.unix(_last[0] / 1000).format('MM/DD HH:mm');
+    this.lastValue = rule.getFormattedValue(_last[1]);
   }
 
   findTooltipValue(name) {
@@ -148,7 +144,7 @@ export default class TooltipHandler {
     div.id = this.mxcell.mxObjectId + '_DATE';
     if (parentDiv != undefined) parentDiv.appendChild(div);
     div.className = 'graph-tooltip-time tooltip-date';
-    div.innerHTML = `${this.lastChange}`;
+    div.innerHTML = `Last value: ${this.lastChange} - ${this.lastValue}`;
     return div;
   }
 

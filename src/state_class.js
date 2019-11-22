@@ -129,7 +129,7 @@ export default class State {
                 rule.data.tpGraphHigh,
               );
             // Date
-            this.updateTooltipDate();
+            this.updateTooltipDate(rule, serie);
           }
 
           // Color Shape
@@ -424,8 +424,8 @@ export default class State {
     this.tooltipHandler.addGraph(name, type, size, serie, low, high);
   }
 
-  updateTooltipDate() {
-    this.tooltipHandler.updateDate();
+  updateTooltipDate(rule, serie) {
+    this.tooltipHandler.updateDate(rule, serie);
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -607,6 +607,7 @@ export default class State {
   prepare() {
     if (this.changed) {
       this.lastChange = null;
+      this.lastValue = null;
       this.unsetLevel();
       this.unsetTooltip();
       this.unsetText();
