@@ -1,5 +1,5 @@
 import moment from 'moment';
-const Chartist = require('chartist');
+import Chartist from 'chartist';
 
 /**
  *
@@ -23,9 +23,6 @@ export default class TooltipHandler {
       axisX: {
         showGrid: true,
         showLabel: true,
-	labelInterpolationFnc: function(value, index) {
-	  return index % 15 === 0 ? value : null;
-	}
       },
       axisY: {
         showGrid: true,
@@ -115,9 +112,8 @@ export default class TooltipHandler {
   }
 
   getTooltipDiv(parentDiv) {
-    // if (this.div != null) return this.div;
     if (!this.checked) return null;
-    if(this.div != null) {
+    if (this.div != null) {
       if (parentDiv != undefined) parentDiv.appendChild(this.div);
       return this.div;
     }
@@ -161,11 +157,12 @@ export default class TooltipHandler {
     u.log(0,`TooltipHandler[${this.mxcell.mxObjectId}].getMetricDiv() metric`, metric);
     let div = document.createElement('div');
     div.id = this.mxcell.mxObjectId + '_METRIC_' + metric.name;
+    div.style = 'padding-bottom: 10px';
     let string = '';
     if (parentDiv != undefined) parentDiv.appendChild(div);
     if (metric !== undefined) {
       string += `${metric.label} : `;
-      string += `<span style="color:${metric.color}"><b>${metric.value}</b></span>`;
+      string += `<span style="color:${metric.color};"><b>${metric.value}</b></span>`;
     }
     div.innerHTML = string;
     return div;
@@ -188,23 +185,33 @@ export default class TooltipHandler {
     if (parentDiv != undefined) parentDiv.appendChild(div);
     let color = metric.color;
     div.className = 'ct-chart ct-golden-section';
-    if (metric.graphOptions.size != null) div.style = `width:${metric.graphOptions.size};`;
+    if (metric.graphOptions.size != null) {
+      div.style = `width:${metric.graphOptions.size.split('|')[0]};`;
+      this.lineOptions.axisX.labelInterpolationFnc = function(value, index) {
+	  return index % Math.ceil(data.labels.length / metric.graphOptions.size.split('|')[1]) === 0 ? value : null;
+	}
+    }
     if (metric.graphOptions.low != null) this.lineOptions.low = metric.graphOptions.low;
     if (metric.graphOptions.high != null) this.lineOptions.high = metric.graphOptions.high;
-    console.log(this.lineOptions);
     let chart = new Chartist.Line(div, data, this.lineOptions);
     metric.graphOptions.chart = chart;
     chart.on('draw', function(_data) {
-      u.log(0, 'Chartist.on() data ', _data);
+      if (_data.type === 'line' || _data.type === 'grid') {
+        _data.element.attr({
+          style: `stroke: ${color}`
+        });
+      }
+      if (_data.type === 'area') {
+        _data.element.attr({
+          style: `fill: ${color}`
+        });
+      }
+      if (_data.type === 'label') {
+	_data.element.getNode().childNodes.forEach((child) => {
+	  child.style.color = color;
+	});
+      }
       if (_data.type === 'line' || _data.type === 'area') {
-        if (_data.type === 'line')
-          _data.element.attr({
-            style: `stroke: ${color}`
-          });
-        if (_data.type === 'area')
-          _data.element.attr({
-            style: `fill: ${color}`
-          });
         _data.element.animate({
           d: {
             begin: 1000 * _data.index,

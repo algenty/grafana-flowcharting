@@ -78,10 +78,10 @@ export class MappingOptionsCtrl {
       // { text: 'Histogram', value: 'bar'},
     ];
     this.tpGraphSize = [
-      { text: 'Adjustable', value: '100%'},
-      { text: 'Small', value: '100px'},
-      { text: 'Medium', value: '200px'},
-      { text: 'Large', value: '400px'},
+      { text: 'Adjustable', value: '100%|1' },
+      { text: 'Small', value: '100px|1' },
+      { text: 'Medium', value: '200px|2' },
+      { text: 'Large', value: '400px|5' }
     ];
 
     this.getMetricNames = () => {

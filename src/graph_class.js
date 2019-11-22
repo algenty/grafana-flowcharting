@@ -529,9 +529,10 @@ export default class XGraph {
    * @memberof XGraph
    */
   addOverlay(state, mxcell) {
+    let warningImage = new mxImage(GF_PLUGIN.dirname + 'img/warning.svg',16, 16);
     this.graph.addCellOverlay(
       mxcell,
-      this.createOverlay(this.graph.warningImage, `State: ${state}`)
+      this.createOverlay(warningImage, `State: ${state}`)
     );
   }
 
