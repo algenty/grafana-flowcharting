@@ -131,7 +131,7 @@ export default class State {
     GFP.log.info('State.setState()');
     // GFP.log.debug('State.setState() Rule', rule);
     // GFP.log.debug('State.setState() Serie', serie);
-    if (rule.matchSerie(serie)) {
+    if (!rule.isHidden() && rule.matchSerie(serie)) {
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
       const linkMaps = rule.getLinkMaps();
@@ -541,7 +541,7 @@ export default class State {
    */
   resetStyle() {
     this.unsetColor();
-    this.mxcell.setStyle(this.originalStyle);
+    this.xgraph.setStyles(this.mxcell,this.originalStyle);
     this.styleKeys.forEach(key => {
       this.changedStyle[key] = false;
     });

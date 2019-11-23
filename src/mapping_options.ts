@@ -153,6 +153,17 @@ export class MappingOptionsCtrl {
     };
   }
 
+  isFirstRule(index:number):boolean {
+    if(index=== 0) return true;
+    return false;
+  }
+
+  isLastRule(index:number):boolean {
+    let count = this.rulesHandler.countRules();
+    if (index === (count - 1)) return true;
+    return false;
+  }
+
   render() {
     this.panelCtrl.render();
   }

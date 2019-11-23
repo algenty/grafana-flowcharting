@@ -11,7 +11,7 @@ export default class FlowChartingPlugin {
   perf: Perf;
   log: Log;
   utils: any;
-  static defaultContextRoot = 'public/plugins/agenty-flowcharting-panel/';
+  static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   templateSrv: any;
 
   constructor(contextRoot: string, templateSrv: any) {

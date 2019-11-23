@@ -94,6 +94,7 @@ interface TIRuleData {
   order: number;
   pattern: string;
   unit: string;
+  hidden : boolean;
   type: string;
   alias: string;
   aggregation: TAggregation;

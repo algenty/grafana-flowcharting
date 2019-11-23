@@ -771,6 +771,17 @@ export default class XGraph {
   }
 
   /**
+   * Apply the styles to mxcell
+   *
+   * @param {mxCell} mxcell
+   * @param {string} styles
+   * @memberof XGraph
+   */
+  setStyles(mxcell:mxCell,styles:string) {
+    this.graph.getModel().setStyle(mxcell, styles)
+  }
+
+  /**
    * Return Label/value of mxcell
    *
    * @param {mxCell} mxcell

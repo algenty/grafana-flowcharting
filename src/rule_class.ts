@@ -49,6 +49,7 @@ export default class Rule {
       unit: 'short',
       type: 'number',
       alias: 'myRule',
+      hidden: false,
       aggregation: 'current',
       decimals: 2,
       colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
@@ -279,6 +280,20 @@ export default class Rule {
    */
   getOrder(): number {
     return this.data.order;
+  }
+
+  isHidden():boolean {
+    return this.data.hidden;
+  }
+
+  hide(): this {
+    this.data.hidden = true;
+    return this;
+  }
+
+  show(): this {
+    this.data.hidden = false;
+    return this;
   }
 
   /**

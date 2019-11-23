@@ -2,31 +2,38 @@
   <div class="editor-row" ng-repeat="rule in rulesHandler.getRules()">
     <div>
       <!-- HEADER of style -->
-      <div
-        class="rule-item"
-        ng-mouseover="editor.highlightCells(rule)"
-        ng-mouseleave="editor.unhighlightCells(rule)"
-      >
-        <span class="rule-extend" ng-click="rule.data.reduce=!rule.data.reduce">
-          <i
-            class="fa fa-chevron-right"
-            ng-class="{'fa-chevron-right': rule.data.reduce, 'fa-chevron-down': rule.data.reduce === false}"
-          >
-          </i>
-        </span>
-        <span class="rule-title" ng-click="rule.data.reduce=!rule.data.reduce"
-          >{{ rule.data.order }} : Rule [{{ rule.data.alias }}]</span
-        >
-        <span class="rule-nav">
-          <i
-            class="fa fa-arrow-up fa-lg"
-            ng-click="rulesHandler.moveRuleToUp($index);editor.onRulesChange()"
-          ></i>
-          <i
-            class="fa fa-arrow-down fa-lg"
-            ng-click="rulesHandler.moveRuleToDown($index);editor.onRulesChange()"
-          ></i>
-        </span>
+      <div class="rule-item" ng-mouseover="editor.highlightCells(rule)" ng-mouseleave="editor.unhighlightCells(rule)">
+        <div id="left" style="float:left;width:100px;">
+          <span class="rule-extend" ng-click="rule.data.reduce=!rule.data.reduce">
+            <i class="fa fa-chevron-right" ng-class="{'fa-chevron-right': rule.data.reduce, 'fa-chevron-down': rule.data.reduce === false}"> </i>
+          </span>
+          <span class="rule-title" ng-click="rule.data.reduce=!rule.data.reduce">{{ rule.data.order }} : Rule [{{ rule.data.alias }}]</span>
+        </div>
+        <div id="center" style="display: inline-block;margin:0 auto;width:100px;"></div>
+        <div id="right" style="float:right">
+          <div id="show/hide" style="width:20px;clear:left;display: inline-block;">
+            <span class="rule-nav" ng-if="!rule.isHidden()">
+              <i class="fa fa-w fa-eye pointer" bs-tooltip="'Hide selected object graph in rule'" ng-click="rule.hide();editor.onRulesChange()"></i>
+            </span>
+            <span class="rule-nav" ng-if="rule.isHidden()"
+              ><i
+                class="fa fa-w fa-eye-slash pointer"
+                bs-tooltip="'show selected object graph in rule'"
+                ng-click="rule.show();editor.onRulesChange()"
+              ></i
+            ></span>
+          </div>
+          <div id="up" style="width:20px;clear:left;display: inline-block;">
+            <span class="rule-nav" ng-if="!editor.isFirstRule($index)"
+              ><i class="fa fa-arrow-up fa-lg" ng-click="rulesHandler.moveRuleToUp($index);editor.onRulesChange()"></i
+            ></span>
+          </div>
+          <div id="down" style="width:20px;clear:right;display: inline-block;">
+            <span class="rule-nav" ng-if="!editor.isLastRule($index)"
+              ><i class="fa fa-arrow-down fa-lg" ng-click="rulesHandler.moveRuleToDown($index);editor.onRulesChange()"></i
+            ></span>
+          </div>
+        </div>
       </div>
 
       <!-- CORPS -->
@@ -36,35 +43,23 @@
           <h5 class="section-heading">
             Options
             <info-popover mode="right-normal"
-              ><span
-                ng-bind-html="GFP.popover('Options for mapping objects and metrics', 'MAPPING','fc_archi_example')"
-              ></span>
+              ><span ng-bind-html="GFP.popover('Options for mapping objects and metrics', 'MAPPING','fc_archi_example')"></span>
             </info-popover>
           </h5>
           <div class="gf-form" ng-if="rule.data.type !== 'hidden'">
             <label class="gf-form-label width-10"
               >Rule name
               <info-popover mode="right-normal"
-                ><span
-                  ng-bind-html="GFP.popover('Name of the rule, for information', 'MAPPING#Rule name')"
-                ></span>
+                ><span ng-bind-html="GFP.popover('Name of the rule, for information', 'MAPPING#Rule name')"></span>
               </info-popover>
             </label>
-            <input
-              type="text"
-              class="gf-form-input width-12"
-              ng-model="rule.data.alias"
-              id="{{ rule.getId() }}"
-              placeholder="Name of this rule"
-            />
+            <input type="text" class="gf-form-input width-12" ng-model="rule.data.alias" id="{{ rule.getId() }}" placeholder="Name of this rule" />
           </div>
           <div class="gf-form">
             <label class="gf-form-label width-10"
               >Apply to metrics
               <info-popover mode="right-normal"
-                ><span
-                  ng-bind-html="GFP.popover('Select alias or name of metric', 'MAPPING#Apply to metrics named','mp_metrics_name')"
-                ></span>
+                ><span ng-bind-html="GFP.popover('Select alias or name of metric', 'MAPPING#Apply to metrics named','mp_metrics_name')"></span>
               </info-popover>
             </label>
             <input
@@ -85,9 +80,7 @@
             <label class="gf-form-label width-10"
               >Aggregation
               <info-popover mode="right-normal"
-                ><span
-                  ng-bind-html="GFP.popover('Select an aggregation for all values of metric', 'MAPPING#Aggregation')"
-                ></span>
+                ><span ng-bind-html="GFP.popover('Select an aggregation for all values of metric', 'MAPPING#Aggregation')"></span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-12">
@@ -116,9 +109,7 @@
             <label class="gf-form-label width-10"
               >Type
               <info-popover mode="right-normal"
-                ><span
-                  ng-bind-html="GFP.popover('Select type and unit of metric to display it for the good format.', 'MAPPING#Type')"
-                ></span>
+                ><span ng-bind-html="GFP.popover('Select type and unit of metric to display it for the good format.', 'MAPPING#Type')"></span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-16">
@@ -134,9 +125,7 @@
             <label class="gf-form-label width-10"
               >Date Format
               <info-popover mode="right-normal"
-                ><span
-                  ng-bind-html="GFP.popover('Select format of the date to display it in text with text mapping.', 'MAPPING#Type')"
-                ></span>
+                ><span ng-bind-html="GFP.popover('Select format of the date to display it in text with text mapping.', 'MAPPING#Type')"></span>
               </info-popover>
             </label>
             <gf-form-dropdown
@@ -177,9 +166,7 @@
               <label class="gf-form-label width-10"
                 >Unit
                 <info-popover mode="right-normal"
-                  ><span
-                    ng-bind-html="GFP.popover('Select unit of aggregated value.', 'MAPPING#Type')"
-                  ></span>
+                  ><span ng-bind-html="GFP.popover('Select unit of aggregated value.', 'MAPPING#Type')"></span>
                 </info-popover>
               </label>
               <div
@@ -193,9 +180,7 @@
               <label class="gf-form-label width-10"
                 >Decimals
                 <info-popover mode="right-normal"
-                  ><span
-                    ng-bind-html="GFP.popover('Select number of decimals', 'MAPPING#Type')"
-                  ></span>
+                  ><span ng-bind-html="GFP.popover('Select number of decimals', 'MAPPING#Type')"></span>
                 </info-popover>
               </label>
               <input
@@ -210,24 +195,17 @@
         </div>
 
         <!-- Thresholds -->
-        <div
-          class="section gf-form-group"
-          ng-if="['number', 'string'].indexOf(rule.data.type) !== -1"
-        >
+        <div class="section gf-form-group" ng-if="['number', 'string'].indexOf(rule.data.type) !== -1">
           <h5 class="section-heading" ng-if="rule.data.invert">
             Thresholds (Ok > Warn > Critical)
             <info-popover mode="right-normal"
-              ><span
-                ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"
-              ></span>
+              ><span ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
             </info-popover>
           </h5>
           <h5 class="section-heading" ng-if="!rule.data.invert">
             Thresholds (Critical > Warn > Ok)
             <info-popover mode="right-normal"
-              ><span
-                ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"
-              ></span>
+              ><span ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
             </info-popover>
           </h5>
           <div class="gf-form" ng-if="rule.data.type === 'number'">
@@ -253,10 +231,7 @@
             <label class="gf-form-label width-10"
               >Warning
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Value of string metric to define Warning level.', 'MAPPING#Thresholds')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Value of string metric to define Warning level.', 'MAPPING#Thresholds')"> </span>
               </info-popover>
             </label>
             <input
@@ -271,10 +246,7 @@
             <label class="gf-form-label width-10"
               >Critical
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Value of string metric to define Error level.', 'MAPPING#Thresholds')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Value of string metric to define Error level.', 'MAPPING#Thresholds')"> </span>
               </info-popover>
             </label>
             <input
@@ -308,34 +280,20 @@
             <label class="gf-form-label width-10"
               >Colors
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Select a color and opacity for each state.', 'MAPPING#Thresholds')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Select a color and opacity for each state.', 'MAPPING#Thresholds')"> </span>
               </info-popover>
             </label>
             <span class="gf-form-label">
-              <color-picker
-                color="rule.data.colors[0]"
-                onChange="editor.onColorChange($index, 0)"
-              ></color-picker>
+              <color-picker color="rule.data.colors[0]" onChange="editor.onColorChange($index, 0)"></color-picker>
             </span>
             <span class="gf-form-label">
-              <color-picker
-                color="rule.data.colors[1]"
-                onChange="editor.onColorChange($index, 1)"
-              ></color-picker>
+              <color-picker color="rule.data.colors[1]" onChange="editor.onColorChange($index, 1)"></color-picker>
             </span>
             <span class="gf-form-label">
-              <color-picker
-                color="rule.data.colors[2]"
-                onChange="editor.onColorChange($index, 2)"
-              ></color-picker>
+              <color-picker color="rule.data.colors[2]" onChange="editor.onColorChange($index, 2)"></color-picker>
             </span>
             <div class="gf-form-label">
-              <a class="pointer" ng-click="rule.invertColorOrder();editor.onRulesChange()"
-                >Invert</a
-              >
+              <a class="pointer" ng-click="rule.invertColorOrder();editor.onRulesChange()">Invert</a>
             </div>
           </div>
           <gf-form-switch
@@ -349,27 +307,18 @@
         </div>
 
         <!-- Display -->
-        <div
-          class="section gf-form-group"
-          ng-if="['number', 'string'].indexOf(rule.data.type) !== -1"
-        >
+        <div class="section gf-form-group" ng-if="['number', 'string'].indexOf(rule.data.type) !== -1">
           <h5 class="section-heading">
             Display
             <info-popover mode="right-normal">
-              <span
-                ng-bind-html="GFP.popover('Select the condition to display the colors, values and link', 'MAPPING')"
-              >
-              </span>
+              <span ng-bind-html="GFP.popover('Select the condition to display the colors, values and link', 'MAPPING')"> </span>
             </info-popover>
           </h5>
           <div class="gf-form">
             <label class="gf-form-label width-10"
               >Color on
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Select when color is applied.', 'MAPPING#Color On')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Select when color is applied.', 'MAPPING#Color On')"> </span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-12">
@@ -385,10 +334,7 @@
             <label class="gf-form-label width-10"
               >Value on
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Condition for value replace text.', 'MAPPING#Value on')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Condition for value replace text.', 'MAPPING#Value on')"> </span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-12">
@@ -404,10 +350,7 @@
             <label class="gf-form-label width-10"
               >Update text value
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Whitch part of text to replace', 'MAPPING','example_text_pattern')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Whitch part of text to replace', 'MAPPING','example_text_pattern')"> </span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-12">
@@ -419,16 +362,11 @@
               ></select>
             </div>
           </div>
-          <div
-            class="gf-form"
-            ng-if="rule.data.textReplace == 'pattern' && rule.data.textOn != 'n'"
-          >
+          <div class="gf-form" ng-if="rule.data.textReplace == 'pattern' && rule.data.textOn != 'n'">
             <label class="gf-form-label width-10"
               >Text pattern
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Pattern of text to replace by value of metric/aggregation', 'MAPPING','example_text_pattern')"
-                >
+                <span ng-bind-html="GFP.popover('Pattern of text to replace by value of metric/aggregation', 'MAPPING','example_text_pattern')">
                 </span>
               </info-popover>
             </label>
@@ -447,9 +385,7 @@
           <h5 class="section-heading">
             Tooltips
             <info-popover mode="right-normal">
-              <span
-                ng-bind-html="GFP.popover('Add/change tooltip/popup with aggregated values in shapes defined in color mapping', 'MAPPING')"
-              >
+              <span ng-bind-html="GFP.popover('Add/change tooltip/popup with aggregated values in shapes defined in color mapping', 'MAPPING')">
               </span>
             </info-popover>
           </h5>
@@ -466,27 +402,16 @@
             <label class="gf-form-label width-10"
               >Label
               <info-popover mode="right-normal"
-                ><span
-                  ng-bind-html="GFP.popover('Label of metric in popup', 'MAPPING#Tooltip')"
-                ></span>
+                ><span ng-bind-html="GFP.popover('Label of metric in popup', 'MAPPING#Tooltip')"></span>
               </info-popover>
             </label>
-            <input
-              type="text"
-              class="gf-form-input width-12"
-              ng-model="rule.data.tooltipLabel"
-              ng-blur="editor.onRulesChange()"
-              placeholder="auto"
-            />
+            <input type="text" class="gf-form-input width-12" ng-model="rule.data.tooltipLabel" ng-blur="editor.onRulesChange()" placeholder="auto" />
           </div>
           <div class="gf-form" ng-if="rule.data.tooltip">
             <label class="gf-form-label width-10"
               >When state is
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Define condition to add values in tooltip', 'MAPPING')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Define condition to add values in tooltip', 'MAPPING')"> </span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-12">
@@ -502,10 +427,7 @@
             <label class="gf-form-label width-10"
               >Direction
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Define the sens of display', 'MAPPING', 'tooltip_direction_ani')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Define the sens of display', 'MAPPING', 'tooltip_direction_ani')"> </span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-12">
@@ -533,10 +455,7 @@
           <h5 class="section-heading">
             Graph Tooltips
             <info-popover mode="right-normal">
-              <span
-                ng-bind-html="GFP.popover('Add Graph into the tooltip', 'MAPPING','tooltip_graph')"
-              >
-              </span>
+              <span ng-bind-html="GFP.popover('Add Graph into the tooltip', 'MAPPING','tooltip_graph')"> </span>
             </info-popover>
           </h5>
           <gf-form-switch
@@ -566,10 +485,7 @@
             <label class="gf-form-label width-10"
               >Graph Size
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Select size of graph', 'MAPPING','graph_size')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Select size of graph', 'MAPPING','graph_size')"> </span>
               </info-popover>
             </label>
             <div class="gf-form-select-wrapper width-12">
@@ -585,8 +501,7 @@
             <label class="gf-form-label width-6"
               >Y-Min
               <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Select the min for the scale', 'MAPPING')">
-                </span>
+                <span ng-bind-html="GFP.popover('Select the min for the scale', 'MAPPING')"> </span>
               </info-popover>
             </label>
             <input
@@ -600,8 +515,7 @@
             <label class="gf-form-label width-6"
               >Y-Max
               <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Select the max for the scale', 'MAPPING')">
-                </span>
+                <span ng-bind-html="GFP.popover('Select the max for the scale', 'MAPPING')"> </span>
               </info-popover>
             </label>
             <input
@@ -620,10 +534,7 @@
           <h5 class="section-heading">
             Link
             <info-popover mode="right-normal">
-              <span
-                ng-bind-html="GFP.popover('Overrite the link when state change', 'MAPPING')"
-              >
-              </span>
+              <span ng-bind-html="GFP.popover('Overrite the link when state change', 'MAPPING')"> </span>
             </info-popover>
           </h5>
           <gf-form-switch
@@ -653,28 +564,13 @@
             <label class="gf-form-label width-10">
               Url
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Specify an URL (relative or absolute)', 'MAPPING')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Specify an URL (relative or absolute)', 'MAPPING')"> </span>
               </info-popover>
             </label>
-            <input
-              type="text"
-              class="gf-form-input width-29"
-              ng-model="rule.data.linkUrl"
-              ng-blur="editor.onRulesChange()"
-              data-placement="right"
-            />
+            <input type="text" class="gf-form-input width-29" ng-model="rule.data.linkUrl" ng-blur="editor.onRulesChange()" data-placement="right" />
           </div>
 
-          <gf-form-switch
-            class="gf-form"
-            label-class="width-10"
-            label="Add params to link"
-            checked="rule.data.linkParams"
-            ng-if="rule.data.link"
-          >
+          <gf-form-switch class="gf-form" label-class="width-10" label="Add params to link" checked="rule.data.linkParams" ng-if="rule.data.link">
           </gf-form-switch>
         </div>
 
@@ -685,10 +581,7 @@
             <h5 class="section-heading">
               Color Mappings
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Select the objects to colorize', 'MAPPING','fc_subway_example')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Select the objects to colorize', 'MAPPING','fc_subway_example')"> </span>
               </info-popover>
             </h5>
             <div class="gf-form">
@@ -705,11 +598,7 @@
                 ></select>
               </div>
             </div>
-            <div
-              class="gf-form"
-              ng-class="{'gf-form-disabled': shape.data.hidden}"
-              ng-repeat="shape in rule.getShapeMaps()"
-            >
+            <div class="gf-form" ng-class="{'gf-form-disabled': shape.data.hidden}" ng-repeat="shape in rule.getShapeMaps()">
               <label class="gf-form-label" style="margin-right: 2px;">
                 <i
                   class="fa fa-w fa-remove pointer"
@@ -731,27 +620,11 @@
                   ng-click="shape.show();editor.onRulesChange()"
                 ></i>
               </label>
-              <label
-                class="gf-form-label"
-                style="margin-right: 2px;"
-                ng-hide="flowchartHandler.isMapping(shape)"
-              >
-                <i
-                  class="fa fa-link pointer"
-                  ng-click="flowchartHandler.setMap(shape)"
-                  bs-tooltip="'Link it on object graph'"
-                ></i>
+              <label class="gf-form-label" style="margin-right: 2px;" ng-hide="flowchartHandler.isMapping(shape)">
+                <i class="fa fa-link pointer" ng-click="flowchartHandler.setMap(shape)" bs-tooltip="'Link it on object graph'"></i>
               </label>
-              <label
-                class="gf-form-label"
-                style="margin-right: 2px;color:orange"
-                ng-show="flowchartHandler.isMapping(shape)"
-              >
-                <i
-                  class="fa fa-unlink pointer"
-                  bs-tooltip="'Cancel link object graph selection'"
-                  ng-click="flowchartHandler.unsetMap()"
-                ></i>
+              <label class="gf-form-label" style="margin-right: 2px;color:orange" ng-show="flowchartHandler.isMapping(shape)">
+                <i class="fa fa-unlink pointer" bs-tooltip="'Cancel link object graph selection'" ng-click="flowchartHandler.unsetMap()"></i>
               </label>
               <input
                 type="text"
@@ -772,11 +645,7 @@
             </div>
             <div class="gf-form">
               <label class="gf-form-label">
-                <i
-                  class="fa fa-plus pointer"
-                  ng-click="rule.addShapeMap('')"
-                  style="margin-right: 2px;"
-                ></i>
+                <i class="fa fa-plus pointer" ng-click="rule.addShapeMap('')" style="margin-right: 2px;"></i>
               </label>
             </div>
           </div>
@@ -786,10 +655,7 @@
             <h5 class="section-heading">
               Text Mappings
               <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('Select the text object to replace by value', 'MAPPING','fc_subway_example')"
-                >
-                </span>
+                <span ng-bind-html="GFP.popover('Select the text object to replace by value', 'MAPPING','fc_subway_example')"> </span>
               </info-popover>
             </h5>
             <div class="gf-form">
@@ -805,11 +671,7 @@
                 ></select>
               </div>
             </div>
-            <div
-              class="gf-form"
-              ng-class="{'gf-form-disabled': text.data.hidden}"
-              ng-repeat="text in rule.getTextMaps()"
-            >
+            <div class="gf-form" ng-class="{'gf-form-disabled': text.data.hidden}" ng-repeat="text in rule.getTextMaps()">
               <label class="gf-form-label" style="margin-right: 2px;">
                 <i
                   class="fa fa-w fa-remove pointer"
@@ -818,11 +680,7 @@
                 ></i>
               </label>
               <label class="gf-form-label" ng-if="!text.isHidden()" style="margin-right: 2px;">
-                <i
-                  class="fa fa-w fa-eye pointer"
-                  bs-tooltip="'Hide selected object graph in rule'"
-                  ng-click="text.hide();editor.onRulesChange()"
-                ></i>
+                <i class="fa fa-w fa-eye pointer" bs-tooltip="'Hide selected object graph in rule'" ng-click="text.hide();editor.onRulesChange()"></i>
               </label>
               <label class="gf-form-label" ng-if="text.isHidden()" style="margin-right: 2px;">
                 <i
@@ -831,27 +689,11 @@
                   ng-click="text.show();editor.onRulesChange()"
                 ></i>
               </label>
-              <label
-                class="gf-form-label"
-                style="margin-right: 2px;"
-                ng-hide="flowchartHandler.isMapping(text)"
-              >
-                <i
-                  class="fa fa-link pointer"
-                  ng-click="flowchartHandler.setMap(text)"
-                  bs-tooltip="'Link it on object graph'"
-                ></i>
+              <label class="gf-form-label" style="margin-right: 2px;" ng-hide="flowchartHandler.isMapping(text)">
+                <i class="fa fa-link pointer" ng-click="flowchartHandler.setMap(text)" bs-tooltip="'Link it on object graph'"></i>
               </label>
-              <label
-                class="gf-form-label"
-                style="margin-right: 2px;color:orange"
-                ng-show="flowchartHandler.isMapping(text)"
-              >
-                <i
-                  class="fa fa-unlink pointer"
-                  bs-tooltip="'Cancel link object graph selection'"
-                  ng-click="flowchartHandler.unsetMap()"
-                ></i>
+              <label class="gf-form-label" style="margin-right: 2px;color:orange" ng-show="flowchartHandler.isMapping(text)">
+                <i class="fa fa-unlink pointer" bs-tooltip="'Cancel link object graph selection'" ng-click="flowchartHandler.unsetMap()"></i>
               </label>
 
               <input
@@ -874,11 +716,7 @@
 
             <div class="gf-form">
               <label class="gf-form-label">
-                <i
-                  class="fa fa-plus pointer"
-                  ng-click="rule.addTextMap('')"
-                  style="margin-right: 2px;"
-                ></i>
+                <i class="fa fa-plus pointer" ng-click="rule.addTextMap('')" style="margin-right: 2px;"></i>
               </label>
             </div>
           </div>
@@ -899,11 +737,7 @@
                 ></select>
               </div>
             </div>
-            <div
-              class="gf-form"
-              ng-class="{'gf-form-disabled': link.data.hidden}"
-              ng-repeat="link in rule.getLinkMaps()"
-            >
+            <div class="gf-form" ng-class="{'gf-form-disabled': link.data.hidden}" ng-repeat="link in rule.getLinkMaps()">
               <label class="gf-form-label" style="margin-right: 2px;">
                 <i
                   class="fa fa-w fa-remove pointer"
@@ -912,11 +746,7 @@
                 ></i>
               </label>
               <label class="gf-form-label" ng-if="!link.isHidden()" style="margin-right: 2px;">
-                <i
-                  class="fa fa-w fa-eye pointer"
-                  bs-tooltip="'Hide selected object graph in rule'"
-                  ng-click="link.hide();editor.onRulesChange()"
-                ></i>
+                <i class="fa fa-w fa-eye pointer" bs-tooltip="'Hide selected object graph in rule'" ng-click="link.hide();editor.onRulesChange()"></i>
               </label>
               <label class="gf-form-label" ng-if="link.isHidden()" style="margin-right: 2px;">
                 <i
@@ -925,27 +755,11 @@
                   ng-click="link.show();editor.onRulesChange()"
                 ></i>
               </label>
-              <label
-                class="gf-form-label"
-                style="margin-right: 2px;"
-                ng-hide="flowchartHandler.isMapping(link)"
-              >
-                <i
-                  class="fa fa-link pointer"
-                  ng-click="flowchartHandler.setMap(link)"
-                  bs-tooltip="'Link it on object graph'"
-                ></i>
+              <label class="gf-form-label" style="margin-right: 2px;" ng-hide="flowchartHandler.isMapping(link)">
+                <i class="fa fa-link pointer" ng-click="flowchartHandler.setMap(link)" bs-tooltip="'Link it on object graph'"></i>
               </label>
-              <label
-                class="gf-form-label"
-                style="margin-right: 2px;color:orange"
-                ng-show="flowchartHandler.isMapping(link)"
-              >
-                <i
-                  class="fa fa-unlink pointer"
-                  bs-tooltip="'Cancel link object graph selection'"
-                  ng-click="flowchartHandler.unsetMap()"
-                ></i>
+              <label class="gf-form-label" style="margin-right: 2px;color:orange" ng-show="flowchartHandler.isMapping(link)">
+                <i class="fa fa-unlink pointer" bs-tooltip="'Cancel link object graph selection'" ng-click="flowchartHandler.unsetMap()"></i>
               </label>
 
               <input
@@ -968,11 +782,7 @@
 
             <div class="gf-form">
               <label class="gf-form-label">
-                <i
-                  class="fa fa-plus pointer"
-                  ng-click="rule.addLinkMap('')"
-                  style="margin-right: 2px;"
-                ></i>
+                <i class="fa fa-plus pointer" ng-click="rule.addLinkMap('')" style="margin-right: 2px;"></i>
               </label>
             </div>
           </div>
@@ -998,10 +808,7 @@
               <div class="gf-form-group" ng-if="rule.data.mappingType===1">
                 <div class="gf-form" ng-repeat="map in rule.getValueMaps()">
                   <span class="gf-form-label">
-                    <i
-                      class="fa fa-remove pointer"
-                      ng-click="rule.removeValueMap($index);editor.onRulesChange()"
-                    ></i>
+                    <i class="fa fa-remove pointer" ng-click="rule.removeValueMap($index);editor.onRulesChange()"></i>
                   </span>
                   <input
                     type="text"
@@ -1030,9 +837,7 @@
                 </div>
                 <div class="gf-form">
                   <label class="gf-form-label">
-                    <a class="pointer" ng-click="rule.addValueMap('','');editor.onRulesChange()"
-                      ><i class="fa fa-plus"></i
-                    ></a>
+                    <a class="pointer" ng-click="rule.addValueMap('','');editor.onRulesChange()"><i class="fa fa-plus"></i></a>
                   </label>
                 </div>
               </div>
@@ -1040,10 +845,7 @@
               <div class="gf-form-group" ng-if="rule.data.mappingType==2">
                 <div class="gf-form" ng-repeat="rangeMap in rule.getRangeMaps()">
                   <span class="gf-form-label">
-                    <i
-                      class="fa fa-remove pointer"
-                      ng-click="rule.removeRangeMap($index);editor.onRulesChange()"
-                    ></i>
+                    <i class="fa fa-remove pointer" ng-click="rule.removeRangeMap($index);editor.onRulesChange()"></i>
                   </span>
                   <span class="gf-form-label">From</span>
                   <input
@@ -1054,13 +856,7 @@
                     ng-model-onblur
                   />
                   <span class="gf-form-label">To</span>
-                  <input
-                    type="text"
-                    ng-model="rangeMap.data.to"
-                    class="gf-form-input max-width-6"
-                    ng-blur="editor.onRulesChange()"
-                    ng-model-onblur
-                  />
+                  <input type="text" ng-model="rangeMap.data.to" class="gf-form-input max-width-6" ng-blur="editor.onRulesChange()" ng-model-onblur />
                   <span class="gf-form-label">Text</span>
                   <input
                     type="text"
@@ -1077,9 +873,7 @@
                 </div>
                 <div class="gf-form">
                   <label class="gf-form-label">
-                    <a class="pointer" ng-click="rule.addRangeMap('','','');editor.onRulesChange()"
-                      ><i class="fa fa-plus"></i
-                    ></a>
+                    <a class="pointer" ng-click="rule.addRangeMap('','','');editor.onRulesChange()"><i class="fa fa-plus"></i></a>
                   </label>
                 </div>
               </div>
@@ -1092,18 +886,12 @@
         <!-- BUTTONS RULES -->
         <div class="gf-form-inline">
           <div class="gf-form" style="margin-right: 5px;">
-            <button
-              class="btn btn-danger btn-small"
-              ng-click="rulesHandler.removeRule($index);editor.onRulesChange()"
-            >
+            <button class="btn btn-danger btn-small" ng-click="rulesHandler.removeRule($index);editor.onRulesChange()">
               <i class="fa fa-trash"></i> Remove Rule
             </button>
           </div>
           <div class="gf-form">
-            <button
-              class="btn btn-secondary btn-small"
-              ng-click="rulesHandler.cloneRule($index);editor.onRulesChange()"
-            >
+            <button class="btn btn-secondary btn-small" ng-click="rulesHandler.cloneRule($index);editor.onRulesChange()">
               <i class="fa fa-copy"></i> Copy Rule
             </button>
           </div>
@@ -1114,9 +902,7 @@
 
   <div class="editor-row">
     <div class="gf-form-button-row">
-      <button class="btn btn-inverse" ng-click="rulesHandler.addRule('/.*/')">
-        <i class="fa fa-plus"></i>&nbsp;Add Rule
-      </button>
+      <button class="btn btn-inverse" ng-click="rulesHandler.addRule('/.*/')"><i class="fa fa-plus"></i>&nbsp;Add Rule</button>
     </div>
   </div>
 </div>
