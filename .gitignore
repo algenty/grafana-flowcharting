@@ -7,5 +7,6 @@
 /public
 /coverage
 /dist
+/archives
 
 yarn-error.log

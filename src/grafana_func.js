@@ -19,8 +19,8 @@ var grafana = {
   
   loadCss() {
     loadPluginCss({
-      dark: 'plugins/agenty-flowcharting-panel/css/flowchart.dark.css',
-      light: 'plugins/agenty-flowcharting-panel/css/flowchart.light.css',
+      dark: 'plugins/agenty-flowcharting-panel/static/css/flowchart.dark.css',
+      light: 'plugins/agenty-flowcharting-panel/static/css/flowchart.light.css',
     });
   }
 };
