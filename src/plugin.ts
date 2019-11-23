@@ -104,6 +104,16 @@ export default class FlowChartingPlugin {
   }
 
   /**
+   * return the uri path for static
+   *
+   * @returns {string}
+   * @memberof FlowChartingPlugin
+   */
+  getStaticPath(): string {
+    return `${this.getRootPath()}static`;
+  }
+
+  /**
    * return the uri libs path for GF
    *
    * @returns {string}
@@ -296,7 +306,7 @@ class Log {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  logLevel = 2;
+  logLevel = 1;
   logDisplay = true;
   constructor() {}
 
@@ -323,7 +333,7 @@ class Log {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  debug(title: string, obj: any | undefined): void {
+  async debug(title: string, obj: any | undefined) {
     if (this.toDisplay(Log.DEBUG)) {
       // console.debug(`GF DEBUG : ${title}`, obj);
     }
@@ -336,7 +346,7 @@ class Log {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  warn(title: string, obj?: any) {
+  async warn(title: string, obj?: any) {
     if (this.toDisplay(Log.WARN)) {
       console.warn(`GF WARN : ${title}`, obj);
     }
@@ -349,9 +359,9 @@ class Log {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  info(title: string, obj?: any) {
+  async info(title: string, obj?: any) {
     if (this.toDisplay(Log.INFO)) {
-      // console.info(`GF INFO : ${title}`, obj);
+      console.info(`GF INFO : ${title}`, obj);
     }
   }
 
@@ -362,7 +372,7 @@ class Log {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  error(title: string, obj?: any) {
+  async error(title: string, obj?: any) {
     if (this.toDisplay(Log.ERROR)) {
       console.error(`GF ERROR : ${title}`, obj);
     }

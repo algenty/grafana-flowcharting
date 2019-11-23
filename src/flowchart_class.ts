@@ -5,6 +5,7 @@ import Rule from './rule_class';
 import * as gf from '../types/flowcharting';
 
 import FlowChartingPlugin from 'plugin';
+import FlowchartHandler from 'flowchartHandler';
 declare var GFP: FlowChartingPlugin;
 declare var mxUtils: any;
 
@@ -110,7 +111,7 @@ export default class Flowchart {
   static getDefaultData(): gf.TFlowchartData {
     return {
       name: 'name',
-      xml: '',
+      xml: FlowchartHandler.getDefaultGraph(),
       csv: '',
       download: false,
       type: 'xml',
