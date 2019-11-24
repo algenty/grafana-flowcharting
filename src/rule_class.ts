@@ -15,16 +15,16 @@ declare var GFP: FlowChartingPlugin;
  */
 export default class Rule {
   data: gf.TIRuleData;
-  shapeMaps: ShapeMap[] = []
-  textMaps: TextMap[]= [];
+  shapeMaps: ShapeMap[] = [];
+  textMaps: TextMap[] = [];
   linkMaps: LinkMap[] = [];
   valueMaps: ValueMap[] = [];
   rangeMaps: RangeMap[] = [];
   id: string;
-  removeClick : number = 2;
+  removeClick: number = 2;
   states!: Map<string, State>;
-  highestLevel: number = -1
-  highestColor: string = ''
+  highestLevel: number = -1;
+  highestColor: string = '';
   highestFormattedValue: string = '';
 
   /**

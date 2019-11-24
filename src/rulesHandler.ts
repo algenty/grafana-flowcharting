@@ -128,8 +128,8 @@ export default class RulesHandler {
    * @param {number} index
    * @memberof RulesHandler
    */
-  removeRule(rule:Rule) {
-    let index = rule.getOrder() - 1;
+  removeRule(rule: Rule) {
+    const index = rule.getOrder() - 1;
     this.rules.splice(index, 1);
     this.data.splice(index, 1);
     this.setOrder();
@@ -142,7 +142,7 @@ export default class RulesHandler {
    * @returns {Rule}
    * @memberof RulesHandler
    */
-  cloneRule(rule:Rule): Rule {
+  cloneRule(rule: Rule): Rule {
     const index = rule.getOrder() - 1;
     const data = rule.getData();
     const newData: gf.TIRuleData = Rule.getDefaultData();
@@ -182,8 +182,8 @@ export default class RulesHandler {
    * @param {rule} rule
    * @memberof RulesHandler
    */
-  moveRuleToUp(rule:Rule) {
-    let index = rule.getOrder() - 1;
+  moveRuleToUp(rule: Rule) {
+    const index = rule.getOrder() - 1;
     const first = 0;
     const rules = this.rules;
     const last = rules.length - 1;
@@ -203,8 +203,8 @@ export default class RulesHandler {
    * @param {Rule} rule
    * @memberof RulesHandler
    */
-  moveRuleToDown(rule:Rule) {
-    let index = rule.getOrder() -1; 
+  moveRuleToDown(rule: Rule) {
+    const index = rule.getOrder() - 1;
     const first = 0;
     const rules = this.rules;
     const last = rules.length - 1;

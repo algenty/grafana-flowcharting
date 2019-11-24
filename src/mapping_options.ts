@@ -239,14 +239,14 @@ export class MappingOptionsCtrl {
     rule.highlightCells();
   }
 
-  removeRule(rule: Rule, force?:boolean) {
-    if (rule.removeClick === 1 || force ) {
+  removeRule(rule: Rule, force?: boolean) {
+    if (rule.removeClick === 1 || force) {
       this.rulesHandler.removeRule(rule);
       this.onRulesChange();
     }
     rule.removeClick = 1;
     window.setInterval(() => {
-      if(rule) rule.removeClick = 2;
+      if (rule) { rule.removeClick = 2; }
     }, 2000);
   }
 
@@ -256,20 +256,19 @@ export class MappingOptionsCtrl {
   }
 
   getStyleRemove(rule: Rule) {
-    if(rule) {
-      if(rule.removeClick === 1) return "color:brown"
+    if (rule) {
+      if (rule.removeClick === 1) { return 'color:brown'; }
     }
-    return "";
+    return '';
   }
 
-  moveRule(rule:Rule, up:boolean) {
-    if(up) {
+  moveRule(rule: Rule, up: boolean) {
+    if (up) {
       this.rulesHandler.moveRuleToUp(rule);
-    }
-    else {
+    } else {
       this.rulesHandler.moveRuleToDown(rule);
     }
-    this.onRulesChange()
+    this.onRulesChange();
   }
 
   /**

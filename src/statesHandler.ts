@@ -106,14 +106,13 @@ export default class StateHandler {
     return this.states;
   }
 
-  getStatesForInspect():State[] {
-    let states:State[] = []
-    this.states.forEach( (state) => {
-      states.push(state)
+  getStatesForInspect(): State[] {
+    const states: State[] = [];
+    this.states.forEach(state => {
+      states.push(state);
     });
     return states;
   }
-
 
   /**
    * Find state by Id
@@ -170,7 +169,7 @@ export default class StateHandler {
     this.prepare();
     rules.forEach(rule => {
       rule.highestLevel = -1;
-      rule.highestFormattedValue ='';
+      rule.highestFormattedValue = '';
       rule.highestColor = '';
       if (rule.states === undefined || rule.states.size === 0) {
         rule.states = this.getStatesForRule(rule);
