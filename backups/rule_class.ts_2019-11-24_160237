@@ -21,11 +21,11 @@ export default class Rule {
   valueMaps: ValueMap[] = [];
   rangeMaps: RangeMap[] = [];
   id: string;
-  removeClick = 2;
+  removeClick: number = 2;
   states!: Map<string, State>;
-  highestLevel = -1;
-  highestColor = '';
-  highestFormattedValue = '';
+  highestLevel: number = -1;
+  highestColor: string = '';
+  highestFormattedValue: string = '';
 
   /**
    * Creates an instance of Rule.

@@ -246,9 +246,7 @@ export class MappingOptionsCtrl {
     }
     rule.removeClick = 1;
     window.setInterval(() => {
-      if (rule) {
-        rule.removeClick = 2;
-      }
+      if (rule) { rule.removeClick = 2; }
     }, 2000);
   }
 
@@ -259,9 +257,7 @@ export class MappingOptionsCtrl {
 
   getStyleRemove(rule: Rule) {
     if (rule) {
-      if (rule.removeClick === 1) {
-        return 'color:brown';
-      }
+      if (rule.removeClick === 1) { return 'color:brown'; }
     }
     return '';
   }
