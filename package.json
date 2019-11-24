@@ -54,11 +54,12 @@
     "vkbeautify": "^0.99.3"
   },
   "dependencies": {
-    "@grafana/toolkit": "canary",
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
+    "@grafana/toolkit": "canary",
     "babel-loader": "^8.0.6",
     "babel-plugin-angularjs-annotate": "^0.10.0",
+    "eslint-config-airbnb": "^18.0.1",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.2"
   }

@@ -23,7 +23,7 @@
 				<table class="table-panel-table">
 					<thead>
 						<tr>
-							<th>
+							<th style="width: 100px;">
 								<div class="table-panel-table-header-inner pointer">
 									Id
 									<info-popover mode="right-normal">
@@ -33,7 +33,7 @@
 									</info-popover>
 								</div>
 							</th>
-							<th>
+							<th style="width: 300px;">
 								<div class="table-panel-table-header-inner pointer">
 									Text</div>
 							</th>
@@ -65,7 +65,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="state in flowchartHandler.getFlowchart().getStateHandler().getStates()"
+						<tr ng-repeat="state in flowchartHandler.getFlowchart().getStateHandler().getStatesForInspect()"
 							ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
 							<td>
 								<div class="flowchartTable-editor" ng-dblclick="editor.onEdit(state)">
@@ -92,31 +92,30 @@
 							</td>
 							<td>
 								<div class="flowchartTable-editor">
-									<div ng-show="state.getOriginalColorStyle('fontColor') !== undefined"
+									<div ng-show="state.getColorStyle('fontColor') !== null"
 										style="display:table-cell;vertical-align:middle;">
-										<div class="sp-preview">
-											<div class="sp-preview-inner" bs-tooltip="state.getOriginalColorStyle('fontColor')"
-												style="background-color: {{state.getOriginalColorStyle('fontColor')}};border: 1px solid rgb(228, 228, 228);" />
+										<div bs-tooltip="state.getColorStyle('fontColor')"
+												style="width: 16px;height: 16px; background-color: {{state.getColorStyle('fontColor')}};border: 1px solid rgb(228, 228, 228);" >
 										</div>
 									</div>
+								</div>
 							</td>
 							<td>
 								<div class="flowchartTable-editor">
-									<div ng-show="state.getOriginalColorStyle('fillColor') !== undefined"
+									<div ng-show="state.getColorStyle('fillColor') !== null"
 										style="display:table-cell;vertical-align:middle;">
-										<div class="sp-preview">
-											<div class="sp-preview-inner" bs-tooltip="state.getOriginalColorStyle('fillColor')"
-												style="background-color: {{state.getOriginalColorStyle('fillColor')}};border: 1px solid rgb(228, 228, 228);" />
+										<div bs-tooltip="state.getColorStyle('fillColor')"
+												style="width: 16px;height: 16px; background-color: {{state.getColorStyle('fillColor')}};border: 1px solid rgb(228, 228, 228);" >
 										</div>
 									</div>
+								</div>
 							</td>
 							<td>
 								<div class="flowchartTable-editor">
-									<div ng-show="state.getOriginalColorStyle('strokeColor') !== undefined"
+									<div ng-show="state.getColorStyle('strokeColor') !== null"
 										style="display:table-cell;vertical-align:middle;">
-										<div class="sp-preview">
-											<div class="sp-preview-inner" bs-tooltip="state.getOriginalColorStyle('strokeColor')"
-												style="background-color: {{state.getOriginalColorStyle('strokeColor')}};border: 1px solid rgb(228, 228, 228);" />
+										<div bs-tooltip="state.getColorStyle('strokeColor')"
+												style="width: 16px;height: 16px; background-color: {{state.getColorStyle('strokeColor')}};border: 1px solid rgb(228, 228, 228);" >
 										</div>
 									</div>
 								</div>
