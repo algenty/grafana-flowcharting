@@ -62,6 +62,7 @@ interface TSelectStyle extends TSelectString {
 // ToolTip
 type TDirection = 'v' | 'h';
 type TGraphType = 'line' | 'bar';
+type TGraphScale = 'linear' | 'log';
 type TGraphSize = '100%' | '100px' | '200px' | '400px';
 
 interface TSelectGraphSize extends TSelectString {
@@ -69,6 +70,10 @@ interface TSelectGraphSize extends TSelectString {
 }
 interface TSelectGraphType extends TSelectString {
   value: TGraphType;
+}
+
+interface TSelectGraphScale extends TSelectString {
+  value: TGraphScale;
 }
 
 // Range or value
@@ -126,6 +131,7 @@ interface TIRuleData {
   tpGraphType: TGraphType;
   tpGraphLow: number | null;
   tpGraphHigh: number | null;
+  tpGraphScale : TGraphScale;
   shapeProp: TPropertieKey;
   shapeData: TShapeMapData[];
   textProp: TPropertieKey;

@@ -546,6 +546,22 @@
               data-placement="right"
             />
           </div>
+          <div class="gf-form" ng-if="rule.data.tpGraph">
+            <label class="gf-form-label width-10"
+              >Scale type
+              <info-popover mode="right-normal">
+                <span ng-bind-html="GFP.popover('Select scale type', 'MAPPING')"> </span>
+              </info-popover>
+            </label>
+            <div class="gf-form-select-wrapper width-12">
+              <select
+                class="gf-form-input"
+                ng-model="rule.data.tpGraphScale"
+                ng-options="c.value as c.text for c in editor.tpGraphScale"
+                ng-change="editor.onRulesChange()"
+              ></select>
+            </div>
+          </div>
         </div>
 
         <!-- LINK -->

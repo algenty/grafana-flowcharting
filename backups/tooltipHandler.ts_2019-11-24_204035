@@ -238,7 +238,7 @@ class GraphTooltip {
   serie: any | undefined;
   low: number | null = null;
   high: number | null = null;
-  scaleType: gf.TGraphScale = 'linear';
+  scaleType : gf.TGraphScale = 'linear';
   div: HTMLDivElement | undefined;
   parentDiv: any;
   constructor() {}
@@ -273,7 +273,7 @@ class GraphTooltip {
     return this;
   }
 
-  setScale(type: gf.TGraphScale) {
+  setScale(type:gf.TGraphScale) {
     this.scaleType = type;
   }
 
@@ -352,10 +352,9 @@ class LineGraphTooltip extends GraphTooltip {
       this.chartistOptions.high = this.high;
     }
 
-    if (this.scaleType !== null && this.scaleType !== undefined && this.scaleType === 'log') {
+    if (this.scaleType !== null) {
       this.chartistOptions.axisY.type = this.scaleType;
     }
-
     this.chart = new Chartist.Line(div, this.data, this.chartistOptions);
     this.chart.on('draw', (data: any) => {
       // GFP.log.info( 'Chartis.on() context ', data);
@@ -436,11 +435,6 @@ class BarGraphTooltip extends GraphTooltip {
     if (this.high !== null) {
       this.chartistOptions.high = this.high;
     }
-
-    if (this.scaleType !== null && this.scaleType !== undefined && this.scaleType === 'log') {
-      this.chartistOptions.axisY.type = this.scaleType;
-    }
-
     const chart = new Chartist.Bar(div, this.data, this.chartistOptions);
     let seq = 0;
     const delays = Math.round(50 / (coor.length / 10));

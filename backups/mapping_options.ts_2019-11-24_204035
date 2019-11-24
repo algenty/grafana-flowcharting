@@ -90,7 +90,7 @@ export class MappingOptionsCtrl {
   ];
   tpGraphScale: gf.TSelectGraphScale[] = [
     { text: 'Linear', value: 'linear' },
-    { text: 'Logarithmic', value: 'log' },
+    { text: 'Logarithmic', value: 'logarithmic' },
   ];
   tpGraphSize: gf.TSelectGraphSize[] = [
     { text: 'Adjustable', value: '100%' },

@@ -36,13 +36,14 @@ See more example at draw.io
     - States
   - Tooltip Graph :
     - Histogram ([See example](https://algenty.github.io/flowcharting-repository/images/histogram_ani.png))
+    - Logarithmic scale. 
   - Variables support in download input url ([See example](https://algenty.github.io/flowcharting-repository/images/url_download_variable_ani.png))
   - Add graduate effect when color changed.
   - New rule design in editor
   - Typescript convertion.
   - Migration to grafana-toolkit.
   - New Mxgraph/Draw.io engine for best support.
-  - better Zoom for firefox and IE/edge.
+  - Better Zoom for firefox and IE/edge.
 ### Fixed
   - Fix download url on first load.
   - Fix value null for string [(issue #65)](https://github.com/algenty/grafana-flowcharting/issues/65)
