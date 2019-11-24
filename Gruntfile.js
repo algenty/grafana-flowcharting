@@ -94,10 +94,6 @@ module.exports = (grunt) => {
 
   });
 
-  // grunt.registerTask('default', ['clean:build', 'copy:src_to_dist', 'sass', 'copy:readme', 'copy:img_to_dist', 'babel', 'webpack', 'copy:res_to_dist', 'copy:mxgraph_to_dist', 'copy:stencils_to_dist']);
-  // grunt.registerTask('microbuild', ['copy:src_to_dist', 'sass', 'babel', 'webpack' ]);
-  // grunt.registerTask('dev', ['default', 'watch:rebuild_all']);
-  // grunt.registerTask('microdev', ['microbuild', 'watch:microbuild']);
   grunt.registerTask('archive', ['compress:main']);
   grunt.registerTask('init', ['clean:before_init','gitclone:mxgraph','gitclone:drawio','clean:after_init']);
 };

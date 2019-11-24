@@ -22,7 +22,7 @@
         </div>
         <div id="right" style="float:right">
           <div id="delete" style="width:20px;clear:left;display: inline-block;">
-            <span ng-if="rule.removeClick > 1" class="rule-nav" bs-tooltip="'Click twice to remove rule'" 
+            <span ng-if="rule.removeClick > 1" class="rule-nav" bs-tooltip="'Click twice to remove rule'"
               ><i class="fa fa-w fa-remove pointer" ng-click="editor.removeRule(rule)"></i
             ></span>
             <span ng-if="rule.removeClick === 1" class="rule-nav" bs-tooltip="'Click to remove rule'" style="color:brown"
@@ -43,12 +43,12 @@
             </span>
           </div>
           <div id="up" style="width:20px;clear:left;display: inline-block;">
-            <span class="rule-nav" ng-if="!editor.isFirstRule($index)"
+            <span class="rule-nav" ng-if="!editor.isFirstRule($index)" bs-tooltip="'Move up'"
               ><i class="fa fa-arrow-up fa-lg" ng-click="editor.moveRule(rule, true)"></i
             ></span>
           </div>
           <div id="down" style="width:20px;clear:right;display: inline-block;">
-            <span class="rule-nav" ng-if="!editor.isLastRule($index)"
+            <span class="rule-nav" ng-if="!editor.isLastRule($index)" bs-tooltip="'Move down'"
               ><i class="fa fa-arrow-down fa-lg" ng-click="editor.moveRule(rule, false)"></i
             ></span>
           </div>
