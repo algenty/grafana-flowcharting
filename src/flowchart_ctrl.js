@@ -76,6 +76,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onDataReceived(dataList) {
     GFP.log.info( 'FlowchartCtrl.onDataReceived()');
     GFP.log.debug( 'FlowchartCtrl.onDataReceived() dataList', dataList);
+    console.log("dataList ", dataList);
     this.series = dataList.map(this.seriesHandler.bind(this));
     GFP.log.debug( 'FlowchartCtrl.onDataReceived() this.series', dataList);
     this.flowchartHandler.dataChanged();
@@ -160,6 +161,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       alias: seriesData.target,
       unit: seriesData.unit,
     });
+    console.log("series ", series);
+    
     series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
     const datapoints = seriesData.datapoints || [];
     if (datapoints && datapoints.length > 0) {
