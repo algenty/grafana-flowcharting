@@ -7,18 +7,40 @@ import * as gf from '../types/flowcharting';
 declare var GFP: FlowChartingPlugin;
 
 
+/**
+ *
+ *
+ * @export
+ * @class Metric
+ */
 export default class Metric {
   type: string = 'unknow';
-  constructor() {
+  scopedVars: any;
+  metrics: any;
+  constructor(dataList: any, scopedVars) {
+    this.scopedVars = scopedVars;
+  }
 
+  getScopedData(): any {
+    return {
+      scopedVars: _.extend({}, this.scopedVars),
+    };
   }
 }
 
+/**
+ * Serie data
+ *
+ * @export
+ * @class Serie
+ * @extends {Metric}
+ */
 export class Serie extends Metric {
   nullPointMode: string = 'connected';
-  constructor() {
-    super();
-    this.type = 'timeseries'
+  constructor(dataList: any, scopedVars) {
+    super(dataList, scopedVars);
+    this.type = 'timeseries';
+    this.metrics = dataList.map(this.seriesHandler.bind(this));
   }
 
   seriesHandler(seriesData) {
@@ -27,20 +49,40 @@ export class Serie extends Metric {
     return series;
   }
 
+  getValue(aggregator: gf.TAggregation): number | string | null {
+    try {
+      let value = this.metrics.stats[this.metrics.aggregation];
+      if (value === undefined || value === null) {
+        value = this.metrics.datapoints[this.metrics.datapoints.length - 1][0];
+      }
+      return value;
+    } catch (error) {
+      GFP.log.error('datapoint for serie is null', error);
+      return null;
+    }
+  }
 }
 
+
+/**
+ * Table data
+ *
+ * @export
+ * @class Table
+ * @extends {Metric}
+ */
 export class Table extends Metric {
   tableColumnOptions: any;
-  tableColumn:string = '';
-  constructor() {
-    super();
+  tableColumn: string = '';
+  constructor(dataList: any, scopedVars: any) {
+    super(dataList, scopedVars);
     this.type = 'table'
-    
+    this.metrics = dataList.map(this.tableHandler.bind(this));
   }
 
   tableHandler(tableData) {
-    const datapoints:any = [];
-    const columnNames:any = {};
+    const datapoints: any = [];
+    const columnNames: any = {};
 
     tableData.columns.forEach((column, columnIndex) => {
       columnNames[columnIndex] = column.text;
@@ -53,7 +95,6 @@ export class Table extends Metric {
 
     tableData.rows.forEach(row => {
       const datapoint = {};
-
       row.forEach((value, columnIndex) => {
         const key = columnNames[columnIndex];
         datapoint[key] = value;
