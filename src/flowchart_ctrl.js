@@ -74,6 +74,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
+    debugger
+    return
     GFP.log.info( 'FlowchartCtrl.onDataReceived()');
     GFP.log.debug( 'FlowchartCtrl.onDataReceived() dataList', dataList);
     console.log("dataList ", dataList);
