@@ -9,14 +9,14 @@ declare var GFP: FlowChartingPlugin;
 
 export default class Metric {
   type: string = 'unknow';
-  constructor() {
+  constructor(dataList) {
 
   }
 }
 
 export class Serie extends Metric {
   nullPointMode: string = 'connected';
-  constructor() {
+  constructor(data) {
     super();
     this.type = 'timeseries'
   }
@@ -32,7 +32,7 @@ export class Serie extends Metric {
 export class Table extends Metric {
   tableColumnOptions: any;
   tableColumn:string = '';
-  constructor() {
+  constructor(dataList) {
     super();
     this.type = 'table'
     
