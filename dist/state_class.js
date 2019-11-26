@@ -139,7 +139,7 @@ var State = function () {
 
               if (rule.data.tpGraph) _this2.addTooltipGraph(tooltipName, rule.data.tpGraphType, rule.data.tpGraphSize, serie, rule.data.tpGraphLow, rule.data.tpGraphHigh);
 
-              _this2.updateTooltipDate();
+              _this2.updateTooltipDate(rule, serie);
             }
 
             if (_this2.globalLevel <= level) {
@@ -343,8 +343,8 @@ var State = function () {
     }
   }, {
     key: "updateTooltipDate",
-    value: function updateTooltipDate() {
-      this.tooltipHandler.updateDate();
+    value: function updateTooltipDate(rule, serie) {
+      this.tooltipHandler.updateDate(rule, serie);
     }
   }, {
     key: "isGradient",
@@ -489,6 +489,7 @@ var State = function () {
     value: function prepare() {
       if (this.changed) {
         this.lastChange = null;
+        this.lastValue = null;
         this.unsetLevel();
         this.unsetTooltip();
         this.unsetText();

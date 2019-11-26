@@ -185,16 +185,16 @@ var MappingOptionsCtrl = function () {
     }];
     this.tpGraphSize = [{
       text: 'Adjustable',
-      value: '100%'
+      value: '100%|1'
     }, {
       text: 'Small',
-      value: '100px'
+      value: '100px|1'
     }, {
       text: 'Medium',
-      value: '200px'
+      value: '200px|2'
     }, {
       text: 'Large',
-      value: '400px'
+      value: '400px|5'
     }];
 
     this.getMetricNames = function () {
