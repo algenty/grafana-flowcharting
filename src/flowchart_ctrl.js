@@ -7,6 +7,7 @@ import { flowchartOptionsTab } from './flowchart_options';
 import { inspectOptionsTab } from './inspect_options';
 import RulesHandler from './rulesHandler';
 import FlowchartHandler from './flowchartHandler';
+import MetricHandler from './metricHandler';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
   /** @ngInject **/
@@ -23,6 +24,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.changedOptions = true;
     this.rulesHandler = undefined;
     this.flowchartHandler = undefined;
+    this.metricHandler = new MetricHandler(this.$scope);
     this.series = [];
     this.panelDefaults = {
       newFlag: true,
@@ -74,14 +76,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-    debugger
-    return
-    GFP.log.info( 'FlowchartCtrl.onDataReceived()');
-    GFP.log.debug( 'FlowchartCtrl.onDataReceived() dataList', dataList);
-    console.log("dataList ", dataList);
-    this.series = dataList.map(this.seriesHandler.bind(this));
-    GFP.log.debug( 'FlowchartCtrl.onDataReceived() this.series', dataList);
-    this.flowchartHandler.dataChanged();
+    if (this.metricHandler) this.metricHandler.onDataReceived(dataList);
     this.render();
   }
 
@@ -103,6 +98,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   link(scope, elem, attrs, ctrl) {
     GFP.log.info( 'FlowchartCtrl.link()');
     GFP.perf.start(`${this.constructor.name}.link()`);
+
+    // DATA
+    
 
     // RULES
     const newRulesData = [];

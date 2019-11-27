@@ -1,8 +1,10 @@
-import FlowChartingPlugin from 'plugin';
-import TimeSeries from 'app/core/time_series2';
+
+// import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
-import { Table, Serie, Metric } from 'metric_class';
-declare var GFP: FlowChartingPlugin;
+import {Serie,Table} from './metric_class';
+
+// import { Table, Serie } from './metric_class';
+// declare var GFP: FlowChartingPlugin;
 
 export default class MetricHandler {
   panel: any;
@@ -10,8 +12,7 @@ export default class MetricHandler {
   tables: Table[] = [];
   series: Serie[] = []
   metrics: (Serie|Table)[] = [];
-  constructor($scope: ng.IScope, ctrl: any) {
-    this.panel = ctrl.panel;
+  constructor($scope: ng.IScope) {
     this.$scope = $scope;
   }
 
@@ -19,11 +20,8 @@ export default class MetricHandler {
     this.tables = [];
     this.series = [];
     this.metrics = [];
-    const data: any = {
-      scopedVars: _.extend({}, this.panel.scopedVars),
-    };
 
-    dataList.array.forEach( (dl) => {
+    dataList.forEach( (dl) => {
       this.addMetric(dl);
     });
   }
@@ -32,7 +30,7 @@ export default class MetricHandler {
     if (data.type === 'table') {
       this.addTable(data)
     } else {
-      this.addMetric(data);
+      this.addSerie(data);
     }
   }
   

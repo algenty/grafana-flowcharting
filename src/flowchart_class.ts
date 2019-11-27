@@ -4,7 +4,7 @@ import State from './state_class';
 import Rule from './rule_class';
 import * as gf from '../types/flowcharting';
 
-import FlowChartingPlugin from 'plugin';
+import FlowChartingPlugin from './plugin';
 import FlowchartHandler from 'flowchartHandler';
 declare var GFP: FlowChartingPlugin;
 declare var mxUtils: any;

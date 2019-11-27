@@ -5,7 +5,7 @@ import grafana from 'grafana_func';
 import _ from 'lodash';
 import * as gf from '../types/flowcharting';
 
-import FlowChartingPlugin from 'plugin';
+import FlowChartingPlugin from './plugin';
 declare var GFP: FlowChartingPlugin;
 
 export class MappingOptionsCtrl {

@@ -2,7 +2,7 @@ import FlowchartHandler from './flowchartHandler';
 import State from 'state_class';
 import * as gf from '../types/flowcharting';
 
-import FlowChartingPlugin from 'plugin';
+import FlowChartingPlugin from './plugin';
 declare var GFP: FlowChartingPlugin;
 
 export class InspectOptionsCtrl {
