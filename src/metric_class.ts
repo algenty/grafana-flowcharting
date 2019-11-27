@@ -112,21 +112,21 @@ export class Table extends Metric {
     const result = [];
     this.metrics.state = {};
     for (let index = 0; index < columnNames.length; index++) {
-      const element = this.metrics.datapoints[index];
+      // const element = this.metrics.datapoints[index];
+      this.metrics.stats[index].total = 0;
+      this.metrics.stats[index].max = -Number.MAX_VALUE;
+      this.metrics.stats[index].min = Number.MAX_VALUE;
+      this.metrics.stats[index].logmin = Number.MAX_VALUE;
+      this.metrics.stats[index].avg = null;
+      this.metrics.stats[index].current = null;
+      this.metrics.stats[index].first = null;
+      this.metrics.stats[index].delta = 0;
+      this.metrics.stats[index].diff = null;
+      this.metrics.stats[index].range = null;
+      this.metrics.stats[index].timeStep = Number.MAX_VALUE;
+      this.allIsNull = true;
+      this.allIsZero = true;
     }
-    this.stats.total = 0;
-    this.stats.max = -Number.MAX_VALUE;
-    this.stats.min = Number.MAX_VALUE;
-    this.stats.logmin = Number.MAX_VALUE;
-    this.stats.avg = null;
-    this.stats.current = null;
-    this.stats.first = null;
-    this.stats.delta = 0;
-    this.stats.diff = null;
-    this.stats.range = null;
-    this.stats.timeStep = Number.MAX_VALUE;
-    this.allIsNull = true;
-    this.allIsZero = true;
 
     const ignoreNulls = fillStyle === 'connected';
     const nullAsZero = fillStyle === 'null as zero';
