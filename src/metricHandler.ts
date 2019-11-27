@@ -27,6 +27,7 @@ export default class MetricHandler {
   }
 
   addMetric(data:any) {
+    console.log("TCL: MetricHandler -> addMetric -> data", data)
     if (data.type === 'table') {
       this.addTable(data)
     } else {

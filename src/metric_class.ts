@@ -14,8 +14,10 @@ declare var GFP: FlowChartingPlugin;
 export default class Metric {
   type: string = 'unknow';
   scopedVars: any;
-  metrics: any;
-  constructor(dataList: any) {}
+  metrics: any = {}
+  name : string = '';
+  nullPointMode: string = 'connected';
+  constructor(dataList: any) { }
 }
 
 /**
@@ -26,12 +28,13 @@ export default class Metric {
  * @extends {Metric}
  */
 export class Serie extends Metric {
-  nullPointMode: string = 'connected';
-  metrics: any = {};
   constructor(dataList: any) {
     super(dataList);
     this.type = 'timeseries';
+    this.name = dataList.alias;
     this.metrics = this.seriesHandler(dataList);
+    console.log("TCL: Serie -> constructor -> this", this)
+
   }
 
   seriesHandler(seriesData) {
@@ -64,24 +67,27 @@ export class Serie extends Metric {
 export class Table extends Metric {
   tableColumnOptions!: any;
   tableColumn: string = '';
+  allIsNull!: boolean;
+  allIsZero!: boolean;
   constructor(dataList: any) {
     super(dataList);
     this.type = 'table';
-    debugger
-    this.metrics.datapoints = this.tableHandler(dataList);
-    debugger;
+    this.metrics = this.tableHandler(dataList);
+    console.log("TCL: Table -> constructor -> this", this)
   }
 
-  tableHandler(tableData:any) {
-    const datapoints: any = [];
-    const columnNames: any = {};
+  tableHandler(tableData: any) {
+    const table: any = {
+      datapoints: [],
+      columnNames: {},
+    }
 
     // index columns {0: "Time", 1: "Value", 2: "Min", 3: "Max", 4: "Info"}
     tableData.columns.forEach((column, columnIndex) => {
-      columnNames[columnIndex] = column.text;
+      table.columnNames[columnIndex] = column.text;
     });
 
-    this.tableColumnOptions = columnNames;
+    this.tableColumnOptions = table.columnNames;
     if (!_.find(tableData.columns, ['text', this.tableColumn])) {
       this.setTableColumnToSensibleDefault(tableData);
     }
@@ -89,13 +95,15 @@ export class Table extends Metric {
     tableData.rows.forEach(row => {
       const datapoint = {};
       row.forEach((value, columnIndex) => {
-        const key = columnNames[columnIndex];
+        const key = table.columnNames[columnIndex];
         datapoint[key] = value;
       });
 
-      datapoints.push(datapoint);
+      table.datapoints.push(datapoint);
     });
-    return datapoints;
+    debugger
+    this.metrics.flotpairs = this.getFlotPairs(this.nullPointMode);
+    return table;
   }
 
   setTableColumnToSensibleDefault(tableData) {
@@ -106,13 +114,16 @@ export class Table extends Metric {
         return col.type !== 'time';
       }).text;
     }
+
   }
 
   getFlotPairs(fillStyle: string) {
-    const result = [];
+    const result = Array();
     this.metrics.state = {};
-    for (let index = 0; index < columnNames.length; index++) {
-      // const element = this.metrics.datapoints[index];
+    const ignoreNulls = fillStyle === 'connected';
+    const nullAsZero = fillStyle === 'null as zero';
+
+    for(const index of this.tableColumnOptions) {
       this.metrics.stats[index].total = 0;
       this.metrics.stats[index].max = -Number.MAX_VALUE;
       this.metrics.stats[index].min = Number.MAX_VALUE;
@@ -126,110 +137,107 @@ export class Table extends Metric {
       this.metrics.stats[index].timeStep = Number.MAX_VALUE;
       this.allIsNull = true;
       this.allIsZero = true;
-    }
 
-    const ignoreNulls = fillStyle === 'connected';
-    const nullAsZero = fillStyle === 'null as zero';
-    let currentTime;
-    let currentValue;
-    let nonNulls = 0;
-    let previousTime;
-    let previousValue = 0;
-    let previousDeltaUp = true;
+      let currentTime: any;
+      let currentValue: any;
+      let nonNulls = 0;
+      let previousTime;
+      let previousValue = 0;
+      let previousDeltaUp = true;
 
-    for (let i = 0; i < this.datapoints.length; i++) {
-      currentValue = this.datapoints[i][0];
-      currentTime = this.datapoints[i][1];
+      for (let i = 0; i < this.metrics.datapoints.length; i++) {
+        currentValue = this.metrics.datapoints[i][0];
+        currentTime = this.metrics.datapoints[i][1];
 
-      // Due to missing values we could have different timeStep all along the series
-      // so we have to find the minimum one (could occur with aggregators such as ZimSum)
-      if (previousTime !== undefined) {
-        const timeStep = currentTime - previousTime;
-        if (timeStep < this.stats.timeStep) {
-          this.stats.timeStep = timeStep;
-        }
-      }
-      previousTime = currentTime;
-
-      if (currentValue === null) {
-        if (ignoreNulls) {
-          continue;
-        }
-        if (nullAsZero) {
-          currentValue = 0;
-        }
-      }
-
-      if (currentValue !== null) {
-        if (_.isNumber(currentValue)) {
-          this.stats.total += currentValue;
-          this.allIsNull = false;
-          nonNulls++;
-        }
-
-        if (currentValue > this.stats.max) {
-          this.stats.max = currentValue;
-        }
-
-        if (currentValue < this.stats.min) {
-          this.stats.min = currentValue;
-        }
-
-        if (this.stats.first === null) {
-          this.stats.first = currentValue;
-        } else {
-          if (previousValue > currentValue) {
-            // counter reset
-            previousDeltaUp = false;
-            if (i === this.datapoints.length - 1) {
-              // reset on last
-              this.stats.delta += currentValue;
-            }
-          } else {
-            if (previousDeltaUp) {
-              this.stats.delta += currentValue - previousValue; // normal increment
-            } else {
-              this.stats.delta += currentValue; // account for counter reset
-            }
-            previousDeltaUp = true;
+        // Due to missing values we could have different timeStep all along the series
+        // so we have to find the minimum one (could occur with aggregators such as ZimSum)
+        if (previousTime !== undefined) {
+          const timeStep = currentTime - previousTime;
+          if (timeStep < this.metrics.stats[index].timeStep) {
+            this.metrics.stats[index].timeStep = timeStep;
           }
         }
-        previousValue = currentValue;
+        previousTime = currentTime;
 
-        if (currentValue < this.stats.logmin && currentValue > 0) {
-          this.stats.logmin = currentValue;
+        if (currentValue === null) {
+          if (ignoreNulls) {
+            continue;
+          }
+          if (nullAsZero) {
+            currentValue = 0;
+          }
         }
 
-        if (currentValue !== 0) {
-          this.allIsZero = false;
+        if (currentValue !== null) {
+          if (_.isNumber(currentValue)) {
+            this.metrics.stats[index].total += currentValue;
+            this.allIsNull = false;
+            nonNulls++;
+          }
+
+          if (currentValue > this.metrics.stats[index].max) {
+            this.metrics.stats[index].max = currentValue;
+          }
+
+          if (currentValue < this.metrics.stats[index].min) {
+            this.metrics.stats[index].min = currentValue;
+          }
+
+          if (this.metrics.stats[index].first === null) {
+            this.metrics.stats[index].first = currentValue;
+          } else {
+            if (previousValue > currentValue) {
+              // counter reset
+              previousDeltaUp = false;
+              if (i === this.metrics.datapoints.length - 1) {
+                // reset on last
+                this.metrics.stats[index].delta += currentValue;
+              }
+            } else {
+              if (previousDeltaUp) {
+                this.metrics.stats[index].delta += currentValue - previousValue; // normal increment
+              } else {
+                this.metrics.stats[index].delta += currentValue; // account for counter reset
+              }
+              previousDeltaUp = true;
+            }
+          }
+          previousValue = currentValue;
+
+          if (currentValue < this.metrics.stats[index].logmin && currentValue > 0) {
+            this.metrics.stats[index].logmin = currentValue;
+          }
+
+          if (currentValue !== 0) {
+            this.allIsZero = false;
+          }
+        }
+        result.push([currentTime, currentValue]);
+      }
+
+      if (this.metrics.stats[index].max === -Number.MAX_VALUE) {
+        this.metrics.stats[index].max = null;
+      }
+      if (this.metrics.stats[index].min === Number.MAX_VALUE) {
+        this.metrics.stats[index].min = null;
+      }
+
+      if (result.length && !this.allIsNull) {
+        this.metrics.stats[index].avg = this.metrics.stats[index].total / nonNulls;
+        this.metrics.stats[index].current = result[result.length - 1][1];
+        if (this.metrics.stats[index].current === null && result.length > 1) {
+          this.metrics.stats[index].current = result[result.length - 2][1];
         }
       }
-
-      result.push([currentTime, currentValue]);
-    }
-
-    if (this.stats.max === -Number.MAX_VALUE) {
-      this.stats.max = null;
-    }
-    if (this.stats.min === Number.MAX_VALUE) {
-      this.stats.min = null;
-    }
-
-    if (result.length && !this.allIsNull) {
-      this.stats.avg = this.stats.total / nonNulls;
-      this.stats.current = result[result.length - 1][1];
-      if (this.stats.current === null && result.length > 1) {
-        this.stats.current = result[result.length - 2][1];
+      if (this.metrics.stats[index].max !== null && this.metrics[index].stats[index].min !== null) {
+        this.metrics.stats[index].range = this.metrics[index][index].stats[index].max - this.metrics.stats[index].min;
       }
-    }
-    if (this.stats.max !== null && this.stats.min !== null) {
-      this.stats.range = this.stats.max - this.stats.min;
-    }
-    if (this.stats.current !== null && this.stats.first !== null) {
-      this.stats.diff = this.stats.current - this.stats.first;
-    }
+      if (this.metrics.stats[index].current !== null && this.metrics.stats[index].first !== null) {
+        this.metrics.stats[index].diff = this.metrics.stats[index].current - this.metrics.stats[index].first;
+      }
 
-    this.stats.count = result.length;
+      this.metrics.stats[index].count = result.length;
+    }
     return result;
   }
 }
