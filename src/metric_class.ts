@@ -77,9 +77,10 @@ export class Table extends Metric {
   }
 
   tableHandler(tableData: any) {
-    const table: any = {
-      datapoints: [],
-      columnNames: {},
+    let table:any  = {
+      datapoints:  [],
+      columnNames:  {},
+      stats : {},
     }
 
     // index columns {0: "Time", 1: "Value", 2: "Min", 3: "Max", 4: "Info"}
@@ -98,11 +99,9 @@ export class Table extends Metric {
         const key = table.columnNames[columnIndex];
         datapoint[key] = value;
       });
-
       table.datapoints.push(datapoint);
     });
-    debugger
-    this.metrics.flotpairs = this.getFlotPairs(this.nullPointMode);
+    this.metrics.flotpairs = this.getFlotPairs(this.nullPointMode,table);
     return table;
   }
 
@@ -117,26 +116,28 @@ export class Table extends Metric {
 
   }
 
-  getFlotPairs(fillStyle: string) {
+  getFlotPairs(fillStyle: string, table : any) {
     const result = Array();
-    this.metrics.state = {};
     const ignoreNulls = fillStyle === 'connected';
     const nullAsZero = fillStyle === 'null as zero';
-
-    for(const index of this.tableColumnOptions) {
-      this.metrics.stats[index].total = 0;
-      this.metrics.stats[index].max = -Number.MAX_VALUE;
-      this.metrics.stats[index].min = Number.MAX_VALUE;
-      this.metrics.stats[index].logmin = Number.MAX_VALUE;
-      this.metrics.stats[index].avg = null;
-      this.metrics.stats[index].current = null;
-      this.metrics.stats[index].first = null;
-      this.metrics.stats[index].delta = 0;
-      this.metrics.stats[index].diff = null;
-      this.metrics.stats[index].range = null;
-      this.metrics.stats[index].timeStep = Number.MAX_VALUE;
-      this.allIsNull = true;
-      this.allIsZero = true;
+    debugger
+    for(const index in table.columnNames) {
+      let currName = table.columnNames[index].text;
+      table.stats[index] = {};
+      table.stats[index].name = currName;
+      table.stats[index].total = 0;
+      table.stats[index].max = -Number.MAX_VALUE;
+      table.stats[index].min = Number.MAX_VALUE;
+      table.stats[index].logmin = Number.MAX_VALUE;
+      table.stats[index].avg = null;
+      table.stats[index].current = null;
+      table.stats[index].first = null;
+      table.stats[index].delta = 0;
+      table.stats[index].diff = null;
+      table.stats[index].range = null;
+      table.stats[index].timeStep = Number.MAX_VALUE;
+      table.allIsNull = true;
+      table.allIsZero = true;
 
       let currentTime: any;
       let currentValue: any;
@@ -145,16 +146,16 @@ export class Table extends Metric {
       let previousValue = 0;
       let previousDeltaUp = true;
 
-      for (let i = 0; i < this.metrics.datapoints.length; i++) {
-        currentValue = this.metrics.datapoints[i][0];
-        currentTime = this.metrics.datapoints[i][1];
+      for (let i = 0; i < table.datapoints.length; i++) {
+        currentValue = table.datapoints[i][currName];
+        currentTime = table.datapoints[i][0];
 
         // Due to missing values we could have different timeStep all along the series
         // so we have to find the minimum one (could occur with aggregators such as ZimSum)
         if (previousTime !== undefined) {
           const timeStep = currentTime - previousTime;
-          if (timeStep < this.metrics.stats[index].timeStep) {
-            this.metrics.stats[index].timeStep = timeStep;
+          if (timeStep < table.stats[index].timeStep) {
+            table.stats[index].timeStep = timeStep;
           }
         }
         previousTime = currentTime;
@@ -170,42 +171,42 @@ export class Table extends Metric {
 
         if (currentValue !== null) {
           if (_.isNumber(currentValue)) {
-            this.metrics.stats[index].total += currentValue;
+            table.stats[index].total += currentValue;
             this.allIsNull = false;
             nonNulls++;
           }
 
-          if (currentValue > this.metrics.stats[index].max) {
-            this.metrics.stats[index].max = currentValue;
+          if (currentValue > table.stats[index].max) {
+            table.stats[index].max = currentValue;
           }
 
-          if (currentValue < this.metrics.stats[index].min) {
-            this.metrics.stats[index].min = currentValue;
+          if (currentValue < table.stats[index].min) {
+            table.stats[index].min = currentValue;
           }
 
-          if (this.metrics.stats[index].first === null) {
-            this.metrics.stats[index].first = currentValue;
+          if (table.stats[index].first === null) {
+            table.stats[index].first = currentValue;
           } else {
             if (previousValue > currentValue) {
               // counter reset
               previousDeltaUp = false;
-              if (i === this.metrics.datapoints.length - 1) {
+              if (i === table.datapoints.length - 1) {
                 // reset on last
-                this.metrics.stats[index].delta += currentValue;
+                table.stats[index].delta += currentValue;
               }
             } else {
               if (previousDeltaUp) {
-                this.metrics.stats[index].delta += currentValue - previousValue; // normal increment
+                table.stats[index].delta += currentValue - previousValue; // normal increment
               } else {
-                this.metrics.stats[index].delta += currentValue; // account for counter reset
+                table.stats[index].delta += currentValue; // account for counter reset
               }
               previousDeltaUp = true;
             }
           }
           previousValue = currentValue;
 
-          if (currentValue < this.metrics.stats[index].logmin && currentValue > 0) {
-            this.metrics.stats[index].logmin = currentValue;
+          if (currentValue < table.stats[index].logmin && currentValue > 0) {
+            table.stats[index].logmin = currentValue;
           }
 
           if (currentValue !== 0) {
@@ -215,28 +216,28 @@ export class Table extends Metric {
         result.push([currentTime, currentValue]);
       }
 
-      if (this.metrics.stats[index].max === -Number.MAX_VALUE) {
-        this.metrics.stats[index].max = null;
+      if (table.stats[index].max === -Number.MAX_VALUE) {
+        table.stats[index].max = null;
       }
-      if (this.metrics.stats[index].min === Number.MAX_VALUE) {
-        this.metrics.stats[index].min = null;
+      if (table.stats[index].min === Number.MAX_VALUE) {
+        table.stats[index].min = null;
       }
 
       if (result.length && !this.allIsNull) {
-        this.metrics.stats[index].avg = this.metrics.stats[index].total / nonNulls;
-        this.metrics.stats[index].current = result[result.length - 1][1];
-        if (this.metrics.stats[index].current === null && result.length > 1) {
-          this.metrics.stats[index].current = result[result.length - 2][1];
+        table.stats[index].avg = table.stats[index].total / nonNulls;
+        table.stats[index].current = result[result.length - 1][1];
+        if (table.stats[index].current === null && result.length > 1) {
+          table.stats[index].current = result[result.length - 2][1];
         }
       }
-      if (this.metrics.stats[index].max !== null && this.metrics[index].stats[index].min !== null) {
-        this.metrics.stats[index].range = this.metrics[index][index].stats[index].max - this.metrics.stats[index].min;
+      if (table.stats[index].max !== null && table[index].stats[index].min !== null) {
+        table.stats[index].range = table[index][index].stats[index].max - table.stats[index].min;
       }
-      if (this.metrics.stats[index].current !== null && this.metrics.stats[index].first !== null) {
-        this.metrics.stats[index].diff = this.metrics.stats[index].current - this.metrics.stats[index].first;
+      if (table.stats[index].current !== null && table.stats[index].first !== null) {
+        table.stats[index].diff = table.stats[index].current - table.stats[index].first;
       }
 
-      this.metrics.stats[index].count = result.length;
+      table.stats[index].count = result.length;
     }
     return result;
   }
