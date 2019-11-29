@@ -62,6 +62,7 @@ interface TSelectStyle extends TSelectString {
 // ToolTip
 type TDirection = 'v' | 'h';
 type TGraphType = 'line' | 'bar';
+type TGraphCoordinate = { x?: number; y: number };
 type TGraphScale = 'linear' | 'log';
 type TGraphSize = '100%' | '100px' | '200px' | '400px';
 
@@ -88,6 +89,9 @@ interface TSelectAggregation extends TSelectString {
   value: TAggregation;
 }
 
+// Metric
+type TMetricType = 'table' | 'serie';
+
 // Rules
 type TLinkOn = 'wc' | 'a';
 type TTooltipOn = 'wc' | 'a';
@@ -98,11 +102,14 @@ type TDateFormat = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY
 interface TIRuleData {
   order: number;
   pattern: string;
-  unit: string;
-  hidden : boolean;
-  type: string;
+  metricType : TMetricType;
   alias: string;
+  refId: string;
+  column : string;
   aggregation: TAggregation;
+  unit: string; 
+  type: string;
+  hidden : boolean;
   decimals: number;
   colors: string[];
   reduce: boolean;

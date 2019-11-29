@@ -1,6 +1,5 @@
 import FlowChartingPlugin from './plugin';
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
-import TimeSeries from 'grafana/app/core/time_series2';
 import kbn from 'grafana/app/core/utils/kbn';
 import { mappingOptionsTab } from './mapping_options';
 import { flowchartOptionsTab } from './flowchart_options';
@@ -24,8 +23,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.changedOptions = true;
     this.rulesHandler = undefined;
     this.flowchartHandler = undefined;
-    this.metricHandler = new MetricHandler(this.$scope);
-    this.series = [];
+    this.metricHandler = undefined;
     this.panelDefaults = {
       newFlag: true,
       format: 'short',
@@ -76,12 +74,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-    if (this.metricHandler) this.metricHandler.onDataReceived(dataList);
+    GFP.perf.start('onDataReceived');
+    if (this.metricHandler) {
+      this.metricHandler.initData(dataList);
+      this.flowchartHandler.dataChanged();
+    }
+    GFP.perf.stop('onDataReceived');
     this.render();
   }
 
   onDataError() {
-    this.series = [];
     this.render();
   }
 
@@ -100,7 +102,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     GFP.perf.start(`${this.constructor.name}.link()`);
 
     // DATA
-    
+    this.metricHandler = new MetricHandler(this.$scope);
 
     // RULES
     const newRulesData = [];
@@ -150,30 +152,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     return null;
   }
 
-  //
-  // Series
-  //
-
-  seriesHandler(seriesData) {
-    GFP.log.info( 'FlowchartCtrl.seriesHandler()');
-    const series = new TimeSeries({
-      datapoints: seriesData.datapoints,
-      alias: seriesData.target,
-      unit: seriesData.unit,
-    });
-    console.log("series ", series);
-    
-    series.flotpairs = series.getFlotPairs(this.panel.nullPointMode);
-    const datapoints = seriesData.datapoints || [];
-    if (datapoints && datapoints.length > 0) {
-      const last = datapoints[datapoints.length - 1][1];
-      const from = this.range.from;
-      if (last - from < -10000) {
-        series.isOutsideRange = true;
-      }
-    }
-    return series;
-  }
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };

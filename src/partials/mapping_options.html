@@ -1,6 +1,6 @@
 <div class="edit-tab-content">
   <div class="editor-row" ng-repeat="rule in rulesHandler.getRules()">
-    <div>
+    <div ng-init="editor.initType(rule)">
       <!-- HEADER of style -->
       <div class="rule-item" ng-mouseover="editor.highlightCells(rule)" ng-mouseleave="editor.unhighlightCells(rule)">
         <div id="left" style="float:left;width:30%;">
@@ -10,10 +10,10 @@
           <span class="rule-title" ng-click="rule.data.reduce=!rule.data.reduce">{{ rule.data.order }} : Rule [{{ rule.data.alias }}]</span>
         </div>
         <div id="center" style="display: inline-block;margin: 0 auto;width:50%;">
-          <div style="display: inline-block;margin-right: 5px;"><span>Curr. level : {{rule.highestLevel}}</span></div>
-          <div style="display: inline-block;margin-right: 5px;"><span>Curr. value : {{rule.highestFormattedValue}}</span></div>
+          <div style="display: inline-block;margin-right: 5px;"><span>Last level : [{{rule.highestLevel}}]</span></div>
+          <div style="display: inline-block;margin-right: 5px;"><span>value : [{{rule.highestFormattedValue}}]</span></div>
           <div style="display: inline-block;margin-right: 5px;">
-            <div style="display: inline-block;margin-right: 5px;"><span>Curr. color : </span></div>
+            <div style="display: inline-block;margin-right: 5px;"><span>color : </span></div>
             <div
               bs-tooltip="rule.highestColor"
               style="display: inline-block; width: 10px;height: 10px; background-color: {{rule.highestColor}};border: 1px solid rgb(228, 228, 228);"
@@ -65,7 +65,7 @@
               ><span ng-bind-html="GFP.popover('Options for mapping objects and metrics', 'MAPPING','fc_archi_example')"></span>
             </info-popover>
           </h5>
-          <div class="gf-form" ng-if="rule.data.type !== 'hidden'">
+          <div class="gf-form">
             <label class="gf-form-label width-10"
               >Rule name
               <info-popover mode="right-normal"
@@ -74,6 +74,24 @@
             </label>
             <input type="text" class="gf-form-input width-12" ng-model="rule.data.alias" id="{{ rule.getId() }}" placeholder="Name of this rule" />
           </div>
+          <!-- Data type -->
+          <div class="gf-form" ng-if="editor.isMultipleType()">
+            <label class="gf-form-label width-10"
+              >Metrics Type
+              <info-popover mode="right-normal"
+                ><span ng-bind-html="GFP.popover('Only one type of queries by rule Series or table', 'MAPPING#Aggregation')"></span>
+              </info-popover>
+            </label>
+            <div class="gf-form-select-wrapper width-12">
+              <select
+                class="gf-form-input"
+                ng-model="rule.data.metricType"
+                ng-options="c.value as c.text for c in editor.metricType"
+                ng-blur="editor.onRulesChange()"
+              ></select>
+            </div>
+          </div>
+          <!-- Metric Name -->
           <div class="gf-form">
             <label class="gf-form-label width-10"
               >Apply to metrics
@@ -93,9 +111,40 @@
               data-min-length="0"
               data-items="100"
               data-placement="right"
+              ng-if="rule.data.metricType === 'serie'"
             />
+            <div class="gf-form-select-wrapper width-12" ng-if="rule.data.metricType === 'table'">
+              <select
+                class="gf-form-input"
+                ng-model="rule.data.refId"
+                ng-options="o for o in editor.getTablesName()"
+                ng-blur="editor.onRulesChange()"
+              >
+              <option style="display:none" value="">select a table</option>
+            </select>
+            </div>
           </div>
-          <div class="gf-form" ng-if="rule.data.type !== 'hidden'">
+          <!-- Columns -->
+          <div class="gf-form" ng-if="rule.data.metricType === 'table'">
+            <label class="gf-form-label width-10"
+              >Apply to column
+              <info-popover mode="right-normal"
+                ><span ng-bind-html="GFP.popover('Column name of the table', 'MAPPING#Aggregation')"></span>
+              </info-popover>
+            </label>
+            <div class="gf-form-select-wrapper width-12">
+              <select
+                class="gf-form-input"
+                ng-model="rule.data.column"
+                ng-options="o for o in editor.getColumnsForTable(rule.data.refId)"
+                ng-blur="editor.onRulesChange()"
+              >
+              <option style="display:none" value="">select a column</option>
+            </select>
+            </div>
+          </div>
+          <!-- Aggregation -->
+          <div class="gf-form">
             <label class="gf-form-label width-10"
               >Aggregation
               <info-popover mode="right-normal"
