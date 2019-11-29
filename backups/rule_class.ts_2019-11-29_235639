@@ -445,12 +445,8 @@ export default class Rule {
    * @memberof Rule
    */
   matchMetric(metric: Metric): boolean {
-    if (this.data.metricType === 'serie' && metric.type === 'serie') {
-      return GFP.utils.matchString(metric.getName(), this.data.pattern);
-    }
-    if (this.data.metricType === 'table' && metric.type === 'table') {
-      return metric.getName() === this.data.refId;
-    }
+    if (this.data.metricType === 'serie' && metric.type === 'serie') return GFP.utils.matchString(metric.getName(), this.data.pattern);
+    if (this.data.metricType === 'table' && metric.type === 'table') return metric.getName() === this.data.refId;
     return false;
   }
 
@@ -751,7 +747,7 @@ export default class Rule {
   getValueForMetric(metric: Metric): string | number | null {
     if (this.matchMetric(metric)) {
       try {
-        const value = metric.getValue(this.data.aggregation, this.data.column);
+        let value = metric.getValue(this.data.aggregation, this.data.column);
         return value;
       } catch (error) {
         GFP.log.error('datapoint for metric is null', error);

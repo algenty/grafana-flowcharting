@@ -3,5 +3,7 @@ do
   echo "$file is empty"
   base=$(basename $file)
   backup=$(ls -1t ./backups/${base}*|head -1)
-  cp ./backups/$backup $file
+  set -x
+  cp $backup $file
+  set +x
 done
