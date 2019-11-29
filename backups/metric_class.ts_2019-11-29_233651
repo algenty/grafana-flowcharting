@@ -186,7 +186,7 @@ export class Table extends Metric {
   }
 
   getFlotPairs(fillStyle: string, table: any) {
-    const result: any[] = [];
+    const result = Array();
     const ignoreNulls = fillStyle === 'connected';
     const nullAsZero = fillStyle === 'null as zero';
     table.allIsNull = true;

@@ -3,6 +3,7 @@ import _ from 'lodash';
 import Metric, { Serie, Table } from './metric_class';
 import * as gf from '../types/flowcharting';
 
+
 /**
  * Data Series/Tables handler
  *
@@ -42,6 +43,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addMetric(data: any) {
+
     if (data.type === 'table') {
       this.addTable(data);
     } else {
@@ -85,12 +87,8 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   getNames(type?: gf.TMetricType): string[] {
-    if (type === 'serie') {
-      return this.series.map(m => m.getName());
-    }
-    if (type === 'table') {
-      return this.tables.map(m => m.getName());
-    }
+    if (type === 'serie') { return this.series.map(m => m.getName()); }
+    if (type === 'table') { return this.tables.map(m => m.getName()); }
     return this.metrics.map(m => m.getName());
   }
 
@@ -102,12 +100,8 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   getMetrics(type?: gf.TMetricType): Metric[] {
-    if (type === 'serie') {
-      return this.series;
-    }
-    if (type === 'table') {
-      return this.tables;
-    }
+    if (type === 'serie') { return this.series; }
+    if (type === 'table') { return this.tables; }
     return this.metrics;
   }
 
@@ -119,12 +113,8 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   isTypeOf(type?: gf.TMetricType): boolean {
-    if (type === 'serie') {
-      return this.series.length > 0;
-    }
-    if (type === 'table') {
-      return this.tables.length > 0;
-    }
+    if (type === 'serie') { return this.series.length > 0; }
+    if (type === 'table') { return this.tables.length > 0; }
     return false;
   }
 
@@ -139,15 +129,9 @@ export default class MetricHandler {
   findMetrics(name: string, type?: gf.TMetricType): Metric[] {
     let metrics: Metric[] = [];
     if (type) {
-      if (type === 'table') {
-        metrics = this.tables.filter(m => m.getName() === name);
-      }
-      if (type === 'serie') {
-        metrics = this.series.filter(m => m.getName() === name);
-      }
-    } else {
-      metrics = this.metrics.filter(m => m.getName() === name);
-    }
+      if (type === 'table') { metrics = this.tables.filter(m => m.getName() === name); }
+      if (type === 'serie') { metrics = this.series.filter(m => m.getName() === name); }
+    } else { metrics = this.metrics.filter(m => m.getName() === name); }
     return metrics;
   }
 
@@ -159,7 +143,7 @@ export default class MetricHandler {
    * @returns {string[]}
    * @memberof MetricHandler
    */
-  getColumnsName(metricName: string, type?: gf.TMetricType): string[] {
+  getColumnsName(metricName:string, type?: gf.TMetricType): string[] {
     const metrics = this.findMetrics(metricName, type);
     let columns: string[] = [];
     metrics.forEach(m => {

@@ -170,25 +170,25 @@ export class MappingOptionsCtrl {
 
   isOnlySeries(): boolean {
     const bool = this.metricHandler.isTypeOf('serie') && !this.metricHandler.isTypeOf('table');
+    console.log('TCL: MappingOptionsCtrl -> isOnlySeries()', bool);
     return bool;
   }
 
   isOnlyTables(): boolean {
     const bool = !this.metricHandler.isTypeOf('serie') && this.metricHandler.isTypeOf('table');
+    console.log('TCL: MappingOptionsCtrl -> isOnlyTables()', bool);
     return bool;
   }
 
   isMultipleType(): boolean {
     const bool = this.metricHandler.isTypeOf('serie') && this.metricHandler.isTypeOf('table');
+    console.log('TCL: MappingOptionsCtrl -> isMultipleType()', bool);
     return bool;
   }
 
   initType(rule: Rule) {
-    if (this.isOnlyTables()) {
-      rule.data.metricType = 'table';
-    } else if (this.isOnlySeries()) {
-      rule.data.metricType = 'serie';
-    }
+    if (this.isOnlyTables()) { rule.data.metricType = 'table'; }
+    else if (this.isOnlySeries()) { rule.data.metricType = 'serie'; }
   }
 
   getTablesName(): string[] {

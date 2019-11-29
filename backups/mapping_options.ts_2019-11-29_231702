@@ -184,11 +184,8 @@ export class MappingOptionsCtrl {
   }
 
   initType(rule: Rule) {
-    if (this.isOnlyTables()) {
-      rule.data.metricType = 'table';
-    } else if (this.isOnlySeries()) {
-      rule.data.metricType = 'serie';
-    }
+    if (this.isOnlyTables()) { rule.data.metricType = 'table'; }
+    else if (this.isOnlySeries()) { rule.data.metricType = 'serie'; }
   }
 
   getTablesName(): string[] {

@@ -30,7 +30,7 @@ export default class Metric {
   }
 
   /**
-   * Get value of metric for an aggregation
+   * Get value of metric for an aggregation 
    *
    * @param {gf.TAggregation} aggregator
    * @param {string} [column]
@@ -92,7 +92,7 @@ export class Serie extends Metric {
   }
 
   /**
-   * Get value of serie for an aggregation
+   * Get value of serie for an aggregation 
    *
    * @param {gf.TAggregation} aggregator
    * @param {string} [column]
@@ -175,7 +175,7 @@ export class Table extends Metric {
     return table;
   }
 
-  setTableColumnToSensibleDefault(tableData: any) {
+  setTableColumnToSensibleDefault(tableData:any) {
     if (tableData.columns.length === 1) {
       this.tableColumn = tableData.columns[0].text;
     } else {
@@ -186,7 +186,7 @@ export class Table extends Metric {
   }
 
   getFlotPairs(fillStyle: string, table: any) {
-    const result: any[] = [];
+    const result = Array();
     const ignoreNulls = fillStyle === 'connected';
     const nullAsZero = fillStyle === 'null as zero';
     table.allIsNull = true;
@@ -218,9 +218,7 @@ export class Table extends Metric {
       let previousDeltaUp = true;
 
       for (let i = 0; i < table.datapoints.length; i++) {
-        if (table.timeColumn) {
-          currentTime = table.datapoints[i][table.timeColumn];
-        }
+        if (table.timeColumn) { currentTime = table.datapoints[i][table.timeColumn]; }
         currentValue = table.datapoints[i][currName];
 
         // Due to missing values we could have different timeStep all along the series
@@ -316,7 +314,7 @@ export class Table extends Metric {
   }
 
   /**
-   * Get value of table for an aggregation
+   * Get value of table for an aggregation 
    *
    * @param {gf.TAggregation} aggregator
    * @param {string} [column]
@@ -338,9 +336,7 @@ export class Table extends Metric {
 
   getColumnIndex(column: string): number | null {
     for (const idx in this.tableColumnOptions) {
-      if (column === this.tableColumnOptions[idx]) {
-        return Number(idx);
-      }
+      if (column === this.tableColumnOptions[idx]) { return Number(idx); }
     }
     return null;
   }
@@ -354,11 +350,9 @@ export class Table extends Metric {
   }
 
   getCoor(column: string): gf.TGraphCoordinate[] {
-    return this.metrics.datapoints.map(d => {
+    return this.metrics.datapoints.map( (d) =>{
       const coor: gf.TGraphCoordinate = { y: d[column] };
-      if (this.metrics.timeColumn) {
-        coor.x = d[this.metrics.timeColumn];
-      }
+      if (this.metrics.timeColumn) { coor.x = d[this.metrics.timeColumn]; }
       return coor;
     });
   }
