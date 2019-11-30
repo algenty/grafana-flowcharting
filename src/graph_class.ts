@@ -3,6 +3,8 @@ import * as gf from '../types/flowcharting';
 
 import FlowChartingPlugin from './plugin';
 declare var GFP: FlowChartingPlugin;
+declare var Graph: any;
+
 declare var mxEvent: any,
   mxUtils: any,
   mxClient: any,
@@ -22,6 +24,7 @@ type mxMouseEvent = any;
  * @class XGraph
  */
 export default class XGraph {
+  static initialized: boolean = false;
   container: HTMLDivElement;
   xmlGraph = '';
   type: gf.TSourceType = 'xml';
@@ -59,7 +62,6 @@ export default class XGraph {
       value: [],
     };
     XGraph.initMxGgraph();
-
     if (type === 'xml') {
       if (GFP.utils.isencoded(definition)) {
         this.xmlGraph = GFP.utils.decode(definition, true, true, true);
@@ -67,17 +69,18 @@ export default class XGraph {
         this.xmlGraph = definition;
       }
     }
-
     this.initGraph();
   }
 
   static initMxGgraph() {
-    // START PERF
+    // START PERFinitMxGgraph
     const myWindow = window as any;
-    GFP.perf.start(`${this.constructor.name}.initMxGgraph()`);
-    if (myWindow.Graph) {
+    GFP.perf.start(`======> initMxGgraph`);
+    if (XGraph.initialized) {
+      GFP.perf.stop(`======> initMxGgraph`);
       return;
     }
+
     myWindow.mxLanguages = myWindow.mxLanguages || ['en'];
 
     const mxgraph = require('mxgraph')({
@@ -185,19 +188,39 @@ export default class XGraph {
     myWindow.mxValueChange = myWindow.mxValueChange || mxgraph.mxValueChange;
     myWindow.mxVertexHandler = myWindow.mxVertexHandler || mxgraph.mxVertexHandler;
 
-    // Load libs for Draw.io
-    GFP.utils.loadJS(`${GFP.getLibsPath()}/sanitizer.min.js`);
+    // Async load not work
+    // const loadfiles = [
+    //   `${GFP.getLibsPath()}/sanitizer.min.js`,
+    //   `${GFP.getLibsPath()}/viewer.min.js`,
+    //   `${GFP.getLibsPath()}/shapes.min.js`,
+    //   `${GFP.getLibsPath()}/stencils.min.js`,
+    //   `${GFP.getLibsPath()}/Graph_custom.js`,
+    // ];
+    // await GFP.utils.loadJS_2(loadfiles);
+
+    //Load libs for Draw.io
+    require('./libs/sanitizer.min');
+    // GFP.utils.loadJS(`${GFP.getLibsPath()}/sanitizer.min.js`);
 
     // Load Draw.io libs
     GFP.utils.loadJS(`${GFP.getLibsPath()}/viewer.min.js`);
+    // require('./libs/viewer.min');
+
+    // Shapes
     GFP.utils.loadJS(`${GFP.getLibsPath()}/shapes.min.js`);
-    GFP.utils.loadJS(`${GFP.getLibsPath()}/stencils.min.js`);
+    // require('./libs/shapes.min');
+
+    // Stencils
+    // GFP.utils.loadJS(`${GFP.getLibsPath()}/stencils.min.js`);
+    require('./libs/stencils.min');
 
     // Specifics function for Flowcharting
-    GFP.utils.loadJS(`${GFP.getLibsPath()}/Graph_custom.js`);
+    require('./libs/Graph_custom');
+    // GFP.utils.loadJS(`${GFP.getLibsPath()}/Graph_custom.js`);
 
+    XGraph.initialized = true;
     // STOP PERF
-    GFP.perf.stop(`${this.constructor.name}.initMxGgraph()`);
+    GFP.perf.stop(`======> initMxGgraph`);
   }
 
   /**
@@ -208,8 +231,7 @@ export default class XGraph {
   initGraph(): this {
     GFP.log.info('XGraph.initGraph()');
     GFP.perf.start(`${this.constructor.name}.initGraph()`);
-    this.graph = new (window as any).Graph(this.container);
-    // this.graph.getTooltipForCell = this.getTooltipForCell;
+    this.graph = new Graph(this.container);
 
     // /!\ What is setPannig
     this.graph.setPanning(true);

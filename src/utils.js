@@ -281,6 +281,27 @@ module.exports = {
     }
   },
 
+  loadJS_2(fnames) {
+    let fetchs = []
+    fnames.forEach(fn => {
+      fetchs.push(
+        fetch(fn).then((response) => {
+          return response.text();
+        }).then((text) => {
+          try {
+            eval.call(window, text);
+            console.info(`${fn} eval with success`);
+          } catch (error) {
+            console.error(`Unable to eval ${fn}`);
+          }
+        }).catch((error) => {
+          console.error(`Unable to load ${fn}`, error);
+        })
+      )
+    });
+    return Promise.all(fetchs);
+  },
+
   getfileContent(url) {
     let result;
     const request = async () => {
