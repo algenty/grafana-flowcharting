@@ -29,8 +29,9 @@ See more example at draw.io
 
 # Changelog
 
-## [[0.6.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0-SNAPSHOT.zip) - 2019-11-24
+## [[0.6.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0-SNAPSHOT.zip) - 2019-11-30  
 ### Added  
+  - Experimental implementation for table data type (mysql, postgres, streaming data ...)
   - Some optimization on : 
     - tooltips
     - States
@@ -38,9 +39,9 @@ See more example at draw.io
     - Histogram ([See example](https://algenty.github.io/flowcharting-repository/images/histogram_ani.png))
     - Logarithmic scale. 
   - Variables support in download input url ([See example](https://algenty.github.io/flowcharting-repository/images/url_download_variable_ani.png))
-  - Add graduate effect when color changed.
-  - New rule design in editor
-  - Typescript convertion.
+  - Add graduate effect when color changed ([See example](https://video.twimg.com/tweet_video/EISkJwdWwAAi5Qh.mp4))
+  - New rule design in editor ([See example](https://algenty.github.io/flowcharting-repository/images/rule_design.png))
+  - Typescript reconvertion.
   - Migration to grafana-toolkit.
   - New Mxgraph/Draw.io engine for best support.
   - Better Zoom for firefox and IE/edge.
@@ -48,6 +49,7 @@ See more example at draw.io
   - Fix download url on first load.
   - Fix value null for string [(issue #65)](https://github.com/algenty/grafana-flowcharting/issues/65)
   - Fix bug "subways" Editor [(issue #73)](https://github.com/algenty/grafana-flowcharting/issues/73)
+  - Fix date on 2 digit in tooltip [(issue #77)](https://github.com/algenty/grafana-flowcharting/issues/73)
   - Fix minors bug.
 
 ## [[0.5.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0.zip) - 2019-10-17
@@ -67,7 +69,7 @@ See more example at draw.io
     - Color graph with defined colors in threshold
     - Size of graph ([See example](https://algenty.github.io/flowcharting-repository/images/graph_size.png))
   - Define the orientation in  tooltip for each metrics/graph in tooltips : horizontal or vertical ([See example](https://algenty.github.io/flowcharting-repository/images/tooltip_direction_ani.png))
-  - Some optimizations, Display is twice as fast on load.
+  - Some optimizations, Display is twice as fast on load.  
 
 ### Fixed  
   - Fix color to reset when "Color on" is "Always/Critical" and metric is OK  
