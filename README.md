@@ -181,6 +181,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [pako] - Zlib port to javascript
 * [vkbeautify] - Pretty prints and minifies XML/JSON/SQL/CSV
 * [sanitizer] - Caja's HTML Sanitizer
+* [chartist] - Graph for tooltip
 
 ## Build dependencies
 
