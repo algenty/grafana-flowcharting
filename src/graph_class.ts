@@ -72,6 +72,26 @@ export default class XGraph {
     this.initGraph();
   }
 
+  static isValidXml(source: string) {
+    try {
+      let div = document.createElement('div');
+      let g = new Graph(div);
+      if (GFP.utils.isencoded(source)) {
+        source = GFP.utils.decode(source, true, true, true);
+      }
+      const xmlDoc = mxUtils.parseXml(source);
+      const codec = new mxCodec(xmlDoc);
+      g.getModel().beginUpdate();
+      codec.decode(xmlDoc.documentElement, g.getModel());
+      g.getModel().endUpdate();
+      g.destroy();
+      return true;
+    } catch (error) {
+      GFP.log.error('isValidXml', error);
+      return false;
+    }
+  }
+
   static initMxGgraph() {
     // START PERFinitMxGgraph
     const myWindow = window as any;
@@ -1118,5 +1138,13 @@ export default class XGraph {
 
   toggleVisible(mxcell, includeEdges) {
     this.graph.toggleCells(!this.graph.getModel().isVisible(mxcell), [mxcell], includeEdges);
+  }
+
+  static compress(source: string): string {
+    return Graph.compress(source, true);
+  }
+
+  static decompress(source: string): string {
+    return Graph.decompress(source, true);
   }
 }

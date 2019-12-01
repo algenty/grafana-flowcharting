@@ -2,6 +2,7 @@ import FlowchartHandler from 'flowchartHandler';
 import * as gf from '../types/flowcharting';
 
 import FlowChartingPlugin from './plugin';
+import XGraph from 'graph_class';
 declare var GFP: FlowChartingPlugin;
 
 export class FlowchartOptionsCtrl {
@@ -16,6 +17,10 @@ export class FlowchartOptionsCtrl {
     { text: 'Mobile', value: 'minimal' },
     { text: 'Atlas', value: 'atlas' },
   ];
+  errorSourceFlag: boolean = false;
+  errorSourceMsg: string = '';
+  errorDownloadFlag: boolean = false;
+  errorDownloadMsg: string = '';
   /* @ngInject */
   constructor($scope: gf.TIFlowchartOptionsScope) {
     $scope.editor = this;
@@ -54,6 +59,52 @@ export class FlowchartOptionsCtrl {
     GFP.log.info('FlowchartOptionsCtrl.onOptionChange()');
     this.flowchartHandler.optionChanged();
     this.render();
+  }
+
+  checkSource_onSourceChange(source: string): boolean {
+    let bool = XGraph.isValidXml(source);
+    this.errorSourceFlag = !bool;
+    if (!bool) this.errorSourceMsg = 'Invalid Xml definition';
+    else this.errorSourceMsg = '';
+    return bool;
+  }
+
+  checkUrl_onSourceChange(url: string): boolean {
+    console.log('TCL: FlowchartOptionsCtrl -> url', url);
+    this.errorDownloadFlag = false;
+    this.errorDownloadMsg = '';
+    let init: RequestInit = { method: 'GET', mode: 'cors', cache: 'default' };
+    try {
+      url = this.ctrl.templateSrv.replaceWithText(url);
+      fetch(url, init)
+        .then(response => {
+          if (!(response.status >= 200 && response.status <= 299)) {
+            this.errorSourceFlag = true;
+            this.errorDownloadMsg = `Error ${response.status} : ${response.statusText}`;
+            this.$scope.$applyAsync();
+          } else {
+            response.text().then(text => {
+              let bool = XGraph.isValidXml(text);
+              this.errorSourceFlag = !bool;
+              if (this.errorSourceFlag) this.errorSourceMsg = 'Response is an invalid Xml definition';
+              else {
+                this.errorDownloadMsg = '';
+                this.onSourceChange();
+              }
+              this.$scope.$applyAsync();
+            });
+          }
+        })
+        .catch(error => {
+          this.errorSourceFlag = true;
+          this.errorDownloadMsg = `Error : ${error}`;
+          this.$scope.$applyAsync();
+        });
+    } catch (error) {
+      this.errorDownloadFlag = true;
+      this.errorDownloadMsg = 'Error when call url';
+    }
+    return true;
   }
 
   /**

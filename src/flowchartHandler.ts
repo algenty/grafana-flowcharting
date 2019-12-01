@@ -16,7 +16,7 @@ export default class FlowchartHandler {
   ctrl: any; //TODO: ctrl ?
   flowcharts: Flowchart[] = [];
   currentFlowchart = 'Main'; // name of current Flowchart
-  data!: gf.TFlowchartData[];
+  data: gf.TFlowchartHandlerData;
   firstLoad = true; // First load
   changeSourceFlag = false; // Source changed
   changeOptionFlag = true; // Options changed
@@ -42,7 +42,7 @@ export default class FlowchartHandler {
    * @param {*} data - Empty data to store
    * @memberof FlowchartHandler
    */
-  constructor($scope: ng.IScope, elem: any, ctrl: any, data: gf.TFlowchartData[]) {
+  constructor($scope: ng.IScope, elem: any, ctrl: any, data: gf.TFlowchartHandlerData) {
     GFP.log.info('FlowchartHandler.constructor()');
     GFP.log.debug('FlowchartHandler.constructor() data', data);
     FlowchartHandler.getDefaultGraph();
@@ -50,7 +50,7 @@ export default class FlowchartHandler {
     this.$elem = elem.find('.flowchart-panel__chart');
     this.ctrl = ctrl;
     this.data = data;
-    this.import(this.data);
+    // this.import(this.data);
 
     // Events Render
     ctrl.events.on('render', () => {
@@ -71,28 +71,50 @@ export default class FlowchartHandler {
     };
   }
 
+  static getDefaultData(): gf.TFlowchartHandlerData {
+    return {
+      flowcharts: [],
+    };
+  }
+
   /**
    * import data into
    *
+   * @returns {this}
    * @param {Object} obj
    * @memberof FlowchartHandler
    */
-  import(obj: any) {
+  import(obj: any): this {
     GFP.log.info('FlowchartHandler.import()');
     this.flowcharts = [];
-    if (obj !== undefined && obj !== null && obj.length > 0) {
-      obj.forEach(map => {
+    if (obj !== undefined && obj !== null) {
+      // For version 0.5.0 and under
+      let tmpFc: gf.TFlowchartData[];
+      if (Array.isArray(obj)) {
+        tmpFc = obj;
+      } else {
+        tmpFc = obj.flowcharts;
+      }
+      // import data
+      tmpFc.forEach( (fcData:gf.TFlowchartData) => {
         const container = this.createContainer();
         const newData = Flowchart.getDefaultData();
-        const fc = new Flowchart(map.name, map.xml, container, this.ctrl, newData);
-        fc.import(map);
-        // this.flowcharts.set(fc.data.name,fc);
+        const fc = new Flowchart(fcData.name, fcData.xml, container, this.ctrl, newData);
+        fc.import(fcData);
         this.flowcharts.push(fc);
-        this.data.push(newData);
+        this.data.flowcharts.push(newData);
       });
     }
+    return this;
   }
 
+  /**
+   * Return default xml source graph
+   *
+   * @static
+   * @returns {string}
+   * @memberof FlowchartHandler
+   */
   static getDefaultGraph(): string {
     const result = FlowchartHandler.defaultXml;
     if (!result) {
@@ -119,7 +141,7 @@ export default class FlowchartHandler {
    * @returns {Flowchart}
    * @memberof FlowchartHandler
    */
-  getFlowchart(name?: string) {
+  getFlowchart(name?: string): Flowchart {
     //TODO: When multi flowchart
     return this.flowcharts[0];
   }
@@ -130,7 +152,7 @@ export default class FlowchartHandler {
    * @returns {Flowchart[]} Array of flowchart
    * @memberof FlowchartHandler
    */
-  getFlowcharts() {
+  getFlowcharts(): Flowchart[] {
     return this.flowcharts;
   }
 
@@ -164,15 +186,17 @@ export default class FlowchartHandler {
    * Add a flowchart
    *
    * @param {string} name
+   * @returns {Flowchart}
    * @memberof FlowchartHandler
    */
-  addFlowchart(name: string) {
+  addFlowchart(name: string): Flowchart {
     GFP.log.info('FlowchartHandler.addFlowchart()');
     const container = this.createContainer();
     const data = Flowchart.getDefaultData();
     const flowchart = new Flowchart(name, FlowchartHandler.defaultXml, container, this.ctrl, data);
-    this.data.push(data);
+    this.data.flowcharts.push(data);
     this.flowcharts.push(flowchart);
+    return flowchart;
   }
 
   /**
@@ -224,49 +248,59 @@ export default class FlowchartHandler {
   /**
    * Flag source change
    *
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  sourceChanged() {
+  sourceChanged(): this {
     this.changeSourceFlag = true;
+    return this;
   }
 
   /**
    * Flag options change
    *
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  optionChanged() {
+  optionChanged(): this {
     this.changeOptionFlag = true;
+    return this;
   }
 
   /**
    * Flag rule change
    *
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  ruleChanged() {
+  ruleChanged(): this {
     this.changeRuleFlag = true;
+    return this;
   }
 
   /**
    * Flag data change
    *
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  dataChanged() {
+  dataChanged(): this {
     this.changeDataFlag = true;
+    return this;
   }
 
   /**
-   * Refresh flowchart then graph
+   * Apply options on graphs
    *
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  applyOptions() {
+  applyOptions(): this {
     GFP.log.info(`FlowchartHandler.applyOptions()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.applyOptions();
     });
+    return this;
   }
 
   /**
@@ -285,9 +319,10 @@ export default class FlowchartHandler {
    *
    * @param {Rule[]} rules
    * @param {Metric[]} metrics
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  refreshStates(rules: Rule[], metrics: Metric[]) {
+  refreshStates(rules: Rule[], metrics: Metric[]): this {
     GFP.perf.start(`${this.constructor.name}.refreshStates()`);
     if (this.changeRuleFlag) {
       this.updateStates(rules);
@@ -296,49 +331,62 @@ export default class FlowchartHandler {
     this.setStates(rules, metrics);
     this.applyStates();
     GFP.perf.stop(`${this.constructor.name}.refreshStates()`);
+    return this;
   }
 
-  refresh() {
+  /**
+   * Refresh all flowchart
+   *
+   * @returns {this}
+   * @memberof FlowchartHandler
+   */
+  refresh(): this {
     this.flowcharts.forEach(flowchart => {
       flowchart.refresh();
     });
+    return this;
   }
 
   /**
    * Change states of cell according to rules and metrics
    *
    * @param {Rule[]} rules
-   * @param {Metric[]} metrics
+   * @param {any[]} metrics
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  setStates(rules: Rule[], metrics: any[]) {
+  setStates(rules: Rule[], metrics: any[]): this {
     GFP.perf.start(`${this.constructor.name}.setStates()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.setStates(rules, metrics);
     });
     GFP.perf.stop(`${this.constructor.name}.setStates()`);
+    return this;
   }
 
   /**
    * Update states with rule
    *
    * @param {Rule[]} rules
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  updateStates(rules: Rule[]) {
+  updateStates(rules: Rule[]): this {
     GFP.perf.start(`${this.constructor.name}.updateStates()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.updateStates(rules);
     });
     GFP.perf.stop(`${this.constructor.name}.updateStates()`);
+    return this;
   }
 
   /**
    * Apply state of cell after setStates
    *
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  applyStates() {
+  applyStates(): this {
     GFP.perf.start(`${this.constructor.name}.applyStates()`);
     new Promise(() => {
       this.flowcharts.forEach(flowchart => {
@@ -348,41 +396,48 @@ export default class FlowchartHandler {
       this.refresh();
     });
     GFP.perf.stop(`${this.constructor.name}.applyStates()`);
+    return this;
   }
 
   /**
-   * Apply and set options
+   * Set and apply options
    *
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  setOptions() {
+  setOptions(): this {
     this.flowcharts.forEach(flowchart => {
       flowchart.setOptions();
     });
+    return this;
   }
 
   /**
    * (re)draw graph
    *
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  draw() {
+  draw(): this {
     GFP.log.info(`FlowchartHandler.draw()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.redraw();
     });
+    return this;
   }
 
   /**
    * (re)load graph
    *
+   * @returns {this}
    * @memberof FlowchartHandler
    */
-  load() {
+  load(): this {
     GFP.log.info(`FlowchartHandler.load()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.reload();
     });
+    return this;
   }
 
   /**

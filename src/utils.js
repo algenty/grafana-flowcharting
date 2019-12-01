@@ -90,30 +90,15 @@ module.exports = {
     }
 
     if (base64) {
-      try {
         data = atob(data);
-      } catch (e) {
-        console.error(e);
-        return;
-      }
     }
 
     if (deflate && data.length > 0) {
-      try {
         data = this.bytesToString(pako.inflateRaw(data));
-      } catch (e) {
-        console.error(e);
-        return;
-      }
     }
 
     if (encode) {
-      try {
         data = decodeURIComponent(data);
-      } catch (e) {
-        console.error(e);
-        return;
-      }
     }
 
     return data;

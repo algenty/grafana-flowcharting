@@ -477,7 +477,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   loadContent(url: string): string | null {
-    GFP.log.info(`flowchart[${this.data.name}].loadContent()`);
+    GFP.log.info(`flowchart.loadContent()`);
     const req: any = mxUtils.load(url);
     if (req.getStatus() === 200) {
       return req.getText();
@@ -574,12 +574,14 @@ export default class Flowchart {
   decode() {
     if (GFP.utils.isencoded(this.data.xml)) {
       this.data.xml = GFP.utils.decode(this.data.xml, true, true, true);
+      // this.data.xml = XGraph.decompress(this.data.xml);
     }
   }
 
   encode() {
     if (!GFP.utils.isencoded(this.data.xml)) {
       this.data.xml = GFP.utils.encode(this.data.xml, true, true, true);
+      // this.data.xml = XGraph.compress(this.data.xml);
     }
   }
 

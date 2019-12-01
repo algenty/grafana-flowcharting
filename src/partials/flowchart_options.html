@@ -76,11 +76,12 @@
               ng-model="flowchart.data.url"
               class="gf-form-input ng-pristine ng-untouched ng-valid ng-empty"
               style="width: 300px"
-              ng-change="editor.onSourceChange()"
+              ng-change="editor.checkUrl_onSourceChange(flowchart.data.url)"
               ng-model-onblur
             />
           </div>
         </div>
+        <span style="color: brown;font-weight: bold;">{{editor.errorDownloadMsg}}</span>
         <!-- XML/CSV -->
         <div class="gf-form gf-form--v-stretch" ng-if="!flowchart.data.download">
           <span class="gf-form-label width-12">
@@ -97,12 +98,13 @@
             rows="10"
             placeholder="This text should respect xml/plain mxgraph syntax"
             style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;"
-            ng-change="editor.onSourceChange()"
+            ng-change="editor.checkSource_onSourceChange(flowchart.data.xml)"
             ng-model="flowchart.data.xml"
             ng-model-onBlur
           >
           </textarea>
         </div>
+        <span style="color: brown;font-weight: bold;">{{editor.errorSourceMsg}}</span>
         <!-- BUTTONS RULES -->
         <div
           class="gf-form-inline"

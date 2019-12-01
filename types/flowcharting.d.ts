@@ -231,6 +231,10 @@ interface TFlowchartData {
   editorTheme: string;
 }
 
+interface TFlowchartHandlerData {
+  flowcharts : TFlowchartData[];
+}
+
 interface TMappingOptionsScope extends ng.IScope {
   rulesHandler: any;
   flowchartHandler: FlowchartHandler;
