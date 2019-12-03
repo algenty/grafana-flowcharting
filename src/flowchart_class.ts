@@ -21,21 +21,19 @@ export default class Flowchart {
   container: HTMLDivElement;
   xgraph: XGraph | undefined = undefined;
   stateHandler!: StateHandler;
-  ctrl: any;
+  // ctrl: any;
   templateSrv: any;
   states: Map<string, State> | undefined;
 
-  constructor(name: string, xmlGraph: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {
+  constructor(name: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {
     GFP.log.info(`flowchart[${name}].constructor()`);
     GFP.log.debug(`flowchart[${name}].constructor() data`, data);
     this.data = data;
     this.data.name = name;
-    this.data.xml = xmlGraph;
-    this.data.download = false;
     this.container = container;
-    this.ctrl = ctrl;
+    // this.ctrl = ctrl;
     this.templateSrv = ctrl.templateSrv;
-    this.import(data);
+    // this.import(data);
   }
 
   /**

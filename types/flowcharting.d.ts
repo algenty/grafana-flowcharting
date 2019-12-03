@@ -99,6 +99,9 @@ type TColorOn = 'n' | 'wc' | 'a';
 type TTextOn = 'n' | 'wmd' | 'wc' | 'co';
 type TTextReplace = 'content' | 'pattern' | 'as' | 'anl';
 type TDateFormat = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
+interface TIRulesHandlerData  {
+  rulesData: TIRuleData[];
+}
 interface TIRuleData {
   order: number;
   pattern: string;

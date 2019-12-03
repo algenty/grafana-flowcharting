@@ -99,7 +99,7 @@ export default class FlowchartHandler {
       tmpFc.forEach( (fcData:gf.TFlowchartData) => {
         const container = this.createContainer();
         const newData = Flowchart.getDefaultData();
-        const fc = new Flowchart(fcData.name, fcData.xml, container, this.ctrl, newData);
+        const fc = new Flowchart(fcData.name, container, this.ctrl, newData);
         fc.import(fcData);
         this.flowcharts.push(fc);
         this.data.flowcharts.push(newData);
@@ -193,7 +193,7 @@ export default class FlowchartHandler {
     GFP.log.info('FlowchartHandler.addFlowchart()');
     const container = this.createContainer();
     const data = Flowchart.getDefaultData();
-    const flowchart = new Flowchart(name, FlowchartHandler.defaultXml, container, this.ctrl, data);
+    const flowchart = new Flowchart(name, container, this.ctrl, data);
     this.data.flowcharts.push(data);
     this.flowcharts.push(flowchart);
     return flowchart;
@@ -446,13 +446,14 @@ export default class FlowchartHandler {
    * @param {Object} objToMap
    * @memberof FlowchartHandler
    */
-  setMap(objToMap: GFMap) {
+  setMap(objToMap: GFMap):this {
     const flowchart = this.getFlowchart(this.currentFlowchart);
     this.onMapping.active = true;
     this.onMapping.object = objToMap;
     this.onMapping.id = objToMap.getId();
     this.onMapping.$scope = this.$scope;
     flowchart.setMap(this.onMapping);
+    return this;
   }
 
   /**
@@ -460,12 +461,13 @@ export default class FlowchartHandler {
    *
    * @memberof FlowchartHandler
    */
-  unsetMap() {
+  unsetMap():this {
     const flowchart = this.getFlowchart(this.currentFlowchart);
     this.onMapping.active = false;
     this.onMapping.object = undefined;
     this.onMapping.id = '';
     flowchart.unsetMap();
+    return this;
   }
 
   /**
@@ -475,7 +477,7 @@ export default class FlowchartHandler {
    * @returns true - true if mapping mode
    * @memberof FlowchartHandler
    */
-  isMapping(objToMap) {
+  isMapping(objToMap:GFMap):boolean {
     if (objToMap === undefined || objToMap == null) {
       return this.onMapping.active;
     }
@@ -485,7 +487,7 @@ export default class FlowchartHandler {
     return false;
   }
 
-  listenMessage(event: MessageEvent) {
+  private listenMessage(event: MessageEvent) {
     if (event.data === 'ready') {
       // send xml
       if (event.source) {

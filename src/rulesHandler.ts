@@ -13,18 +13,18 @@ declare var GFP: FlowChartingPlugin;
  */
 export default class RulesHandler {
   rules: Rule[];
-  data: gf.TIRuleData[];
+  data: gf.TIRulesHandlerData;
   activeRuleIndex: any;
   /**
    * Creates an instance of RulesHandler.
    * @param {any[]} data
    * @memberof RulesHandler
    */
-  constructor(data: gf.TIRuleData[]) {
+  constructor(data: gf.TIRulesHandlerData) {
     GFP.log.info('RulesHandler.constructor()');
     this.rules = [];
-    this.data = data;
-    this.import(this.data);
+    this.data= data;
+    // this.import(this.data);
   }
 
   /**
@@ -38,26 +38,34 @@ export default class RulesHandler {
     GFP.log.info('RuleHandler.import()');
     this.rules = [];
     let index = 1;
-    if (obj !== undefined && obj !== null && obj.length > 0) {
-      // Fix bug of grafana 6+
-      if (obj[0].order !== undefined) {
-        obj = _.sortBy(_.sortBy(obj, o => o.order));
+    if (obj !== undefined && obj !== null ) {
+      let tmpRules: gf.TIRuleData[];
+      if (Array.isArray(obj)) {
+        tmpRules = obj;
+      } else {
+        tmpRules = obj.rulesData;
       }
-      obj.forEach(map => {
+      // Fix bug of grafana 6+
+      if (tmpRules[0].order !== undefined) {
+        tmpRules = _.sortBy(_.sortBy(tmpRules, o => o.order));
+      }
+      tmpRules.forEach(map => {
         const newData: any = {};
         const rule = new Rule(map.pattern, newData);
         rule.import(map);
         rule.setOrder(index);
         index += 1;
         this.rules.push(rule);
-        this.data.push(newData);
+        this.data.rulesData.push(newData);
       });
     }
     return this;
   }
 
-  static getDafaultData(): gf.TIRuleData[] {
-    return [];
+  static getDefaultData(): gf.TIRulesHandlerData {
+    return {
+      rulesData:  [],
+    };
   }
 
   /**
@@ -92,7 +100,7 @@ export default class RulesHandler {
     const data = Rule.getDefaultData();
     const newRule = new Rule(pattern, data);
     this.rules.push(newRule);
-    this.data.push(data);
+    this.data.rulesData.push(data);
     newRule.setOrder(this.countRules());
     return newRule;
   }
@@ -131,7 +139,7 @@ export default class RulesHandler {
   removeRule(rule: Rule) {
     const index = rule.getOrder() - 1;
     this.rules.splice(index, 1);
-    this.data.splice(index, 1);
+    this.data.rulesData.splice(index, 1);
     this.setOrder();
   }
 
@@ -151,7 +159,7 @@ export default class RulesHandler {
     newRule.import(data);
     newData.alias = `Copy of ${newData.alias}`;
     this.rules.splice(index, 0, newRule);
-    this.data.splice(index, 0, newData);
+    this.data.rulesData.splice(index, 0, newData);
     newRule.data.reduce = false;
     this.activeRuleIndex = index;
     this.setOrder();
