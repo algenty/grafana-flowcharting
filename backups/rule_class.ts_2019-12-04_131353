@@ -173,7 +173,7 @@ export default class Rule {
       maps.forEach((shapeData: gf.TShapeMapData) => {
         // const newData: gf.TShapeMapData = ShapeMap.getDefaultData() as gf.TShapeMapData;
         // const sm = new ShapeMap(map.pattern, newData);
-        this.addShapeMap('new').import(shapeData);
+        this.addShapeMap("new").import(shapeData);
         // sm.import(shapeData);
         // this.shapeMaps.push(sm);
         // this.data.shapeData.push(newData);
@@ -195,7 +195,7 @@ export default class Rule {
       maps.forEach((textData: gf.TTextMapData) => {
         // const newData: gf.TTextMapData = TextMap.getDefaultData() as gf.TTextMapData;
         // const tm = new TextMap(textData.pattern, newData);
-        this.addTextMap('new').import(textData);
+        this.addTextMap("new").import(textData);
         // tm.import(textData);
         // this.textMaps.push(tm);
         // this.data.textData.push(newData);
@@ -209,7 +209,7 @@ export default class Rule {
       obj.linkData.forEach((linkData: gf.TlinkMapData) => {
         // const newData: gf.TlinkMapData = LinkMap.getDefaultData() as gf.TlinkMapData;
         // const lm = new LinkMap(linkData.pattern, newData);
-        this.addLinkMap('new').import(linkData);
+        this.addLinkMap("new").import(linkData);
         // lm.import(linkData);
         // this.linkMaps.push(lm);
         // this.data.linkData.push(newData);
@@ -222,7 +222,7 @@ export default class Rule {
     this.data.valueData = [];
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
       obj.valueData.forEach((valueData: gf.TValueMapData) => {
-        this.addValueMap('value', 'text').import(valueData);
+        this.addValueMap('value','text').import(valueData);
         // const newData: gf.TValueMapData = ValueMap.getDefaultdata();
         // const vm = new ValueMap(valueData.value, valueData.text, newData);
         // vm.import(valueData);
@@ -235,7 +235,7 @@ export default class Rule {
     this.data.rangeData = [];
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
       obj.rangeData.forEach(rangeData => {
-        this.addRangeMap('from', 'to', 'text').import(rangeData);
+        this.addRangeMap('from','to','text').import(rangeData);
         // const newData: gf.TRangeMapData = RangeMap.getDefaultData();
         // const rm = new RangeMap(map.from, map.to, map.text, newData);
         // this.rangeMaps.push(rm);
@@ -616,18 +616,18 @@ export default class Rule {
     this.valueMaps.splice(index, 1);
   }
 
-  getValueMap(index): ValueMap {
+  getValueMap(index):ValueMap {
     return this.valueMaps[index];
   }
 
-  getValueMaps(): ValueMap[] {
+  getValueMaps():ValueMap[] {
     return this.valueMaps;
   }
 
   //
   // STRING RANGE VALUE MAPS
   //
-  addRangeMap(from, to, text): RangeMap {
+  addRangeMap(from, to, text):RangeMap {
     const data = RangeMap.getDefaultData();
     const m = new RangeMap(from, to, text, data);
     this.rangeMaps.push(m);
@@ -640,22 +640,22 @@ export default class Rule {
     this.rangeMaps.splice(index, 1);
   }
 
-  getRangeMap(index): RangeMap {
+  getRangeMap(index):RangeMap {
     return this.rangeMaps[index];
   }
 
-  getRangeMaps(): RangeMap[] {
+  getRangeMaps():RangeMap[] {
     return this.rangeMaps;
   }
 
-  hideRangeMap(index): this {
+  hideRangeMap(index):this {
     this.rangeMaps[index].hide();
     return this;
   }
 
-  showRangeMap(index): this {
+  showRangeMap(index):this {
     this.rangeMaps[index].show();
-    return this;
+    return this
   }
 
   //
@@ -1012,12 +1012,12 @@ class RangeMap {
     // this.import(data);
   }
 
-  import(obj: any): this {
+  import(obj: any):this {
     this.data.from = obj.from || this.data.from || '';
     this.data.to = obj.to || this.data.to || '';
     this.data.text = obj.text || this.data.text || '';
     this.data.hidden = obj.hidden || this.data.hidden || false;
-    return this;
+    return this
   }
 
   static getDefaultData(): gf.TRangeMapData {
@@ -1029,7 +1029,7 @@ class RangeMap {
     };
   }
 
-  match(value: any): boolean {
+  match(value:any):boolean {
     if (this.data.from === 'null' && this.data.to === 'null') {
       return true;
     }
@@ -1044,7 +1044,7 @@ class RangeMap {
     return false;
   }
 
-  getFormattedText(value: any): string | null {
+  getFormattedText(value:any):string|null {
     if (this.match(value)) {
       return this.data.text;
     }

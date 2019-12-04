@@ -24,7 +24,7 @@ type mxMouseEvent = any;
  * @class XGraph
  */
 export default class XGraph {
-  static initialized = false;
+  static initialized: boolean = false;
   container: HTMLDivElement;
   xmlGraph = '';
   type: gf.TSourceType = 'xml';
@@ -74,8 +74,8 @@ export default class XGraph {
 
   static isValidXml(source: string) {
     try {
-      const div = document.createElement('div');
-      const g = new Graph(div);
+      let div = document.createElement('div');
+      let g = new Graph(div);
       if (GFP.utils.isencoded(source)) {
         source = GFP.utils.decode(source, true, true, true);
       }

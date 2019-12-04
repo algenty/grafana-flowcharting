@@ -17,10 +17,10 @@ export class FlowchartOptionsCtrl {
     { text: 'Mobile', value: 'minimal' },
     { text: 'Atlas', value: 'atlas' },
   ];
-  errorSourceFlag = false;
-  errorSourceMsg = '';
-  errorDownloadFlag = false;
-  errorDownloadMsg = '';
+  errorSourceFlag: boolean = false;
+  errorSourceMsg: string = '';
+  errorDownloadFlag: boolean = false;
+  errorDownloadMsg: string = '';
   /* @ngInject */
   constructor($scope: gf.TIFlowchartOptionsScope) {
     $scope.editor = this;
@@ -62,20 +62,18 @@ export class FlowchartOptionsCtrl {
   }
 
   checkSource_onSourceChange(source: string): boolean {
-    const bool = XGraph.isValidXml(source);
+    let bool = XGraph.isValidXml(source);
     this.errorSourceFlag = !bool;
-    if (!bool) {
-      this.errorSourceMsg = 'Invalid Xml definition';
-    } else {
-      this.errorSourceMsg = '';
-    }
+    if (!bool) this.errorSourceMsg = 'Invalid Xml definition';
+    else this.errorSourceMsg = '';
     return bool;
   }
 
   checkUrl_onSourceChange(url: string): boolean {
+    console.log('TCL: FlowchartOptionsCtrl -> url', url);
     this.errorDownloadFlag = false;
     this.errorDownloadMsg = '';
-    const init: RequestInit = { method: 'GET', mode: 'cors', cache: 'default' };
+    let init: RequestInit = { method: 'GET', mode: 'cors', cache: 'default' };
     try {
       url = this.ctrl.templateSrv.replaceWithText(url);
       fetch(url, init)
@@ -86,11 +84,10 @@ export class FlowchartOptionsCtrl {
             this.$scope.$applyAsync();
           } else {
             response.text().then(text => {
-              const bool = XGraph.isValidXml(text);
+              let bool = XGraph.isValidXml(text);
               this.errorSourceFlag = !bool;
-              if (this.errorSourceFlag) {
-                this.errorSourceMsg = 'Response is an invalid Xml definition';
-              } else {
+              if (this.errorSourceFlag) this.errorSourceMsg = 'Response is an invalid Xml definition';
+              else {
                 this.errorDownloadMsg = '';
                 this.onSourceChange();
               }

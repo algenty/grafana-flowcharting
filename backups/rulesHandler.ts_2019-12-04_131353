@@ -23,7 +23,7 @@ export default class RulesHandler {
   constructor(data: gf.TIRulesHandlerData) {
     GFP.log.info('RulesHandler.constructor()');
     this.rules = [];
-    this.data = data;
+    this.data= data;
     // this.import(this.data);
   }
 
@@ -38,7 +38,7 @@ export default class RulesHandler {
     GFP.log.info('RuleHandler.import()');
     this.rules = [];
     let index = 1;
-    if (obj !== undefined && obj !== null) {
+    if (obj !== undefined && obj !== null ) {
       // For version < 0.6.0
       let tmpRules: gf.TIRuleData[];
       if (Array.isArray(obj)) {
@@ -53,7 +53,7 @@ export default class RulesHandler {
       tmpRules.forEach(ruleData => {
         // const newData: any = Rule.getDefaultData();
         // const rule = new Rule(map.pattern, newData);
-        const rule = this.addRule('new');
+        const rule = this.addRule("new");
         rule.import(ruleData);
         rule.setOrder(index);
         index += 1;
@@ -66,7 +66,7 @@ export default class RulesHandler {
 
   static getDefaultData(): gf.TIRulesHandlerData {
     return {
-      rulesData: [],
+      rulesData:  [],
     };
   }
 
@@ -87,7 +87,7 @@ export default class RulesHandler {
    * @returns {Rule}
    * @memberof RulesHandler
    */
-  getRule(index: number): Rule {
+  getRule(index: number):Rule {
     return this.rules[index];
   }
 
@@ -125,7 +125,7 @@ export default class RulesHandler {
    *
    * @memberof RulesHandler
    */
-  setOrder(): this {
+  setOrder():this {
     for (let index = 0; index < this.rules.length; index++) {
       const rule = this.rules[index];
       rule.setOrder(index + 1);
@@ -181,7 +181,7 @@ export default class RulesHandler {
    *
    * @memberof RulesHandler
    */
-  reduce(): this {
+  reduce():this {
     this.getRules().forEach(rule => {
       rule.data.reduce = true;
     });

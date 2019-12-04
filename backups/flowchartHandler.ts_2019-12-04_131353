@@ -95,7 +95,7 @@ export default class FlowchartHandler {
         tmpFc = obj.flowcharts;
       }
       // import data
-      tmpFc.forEach((fcData: gf.TFlowchartData) => {
+      tmpFc.forEach( (fcData:gf.TFlowchartData) => {
         const container = this.createContainer();
         const newData = Flowchart.getDefaultData();
         const fc = new Flowchart(fcData.name, container, this.ctrl, newData);
@@ -445,7 +445,7 @@ export default class FlowchartHandler {
    * @param {Object} objToMap
    * @memberof FlowchartHandler
    */
-  setMap(objToMap: GFMap): this {
+  setMap(objToMap: GFMap):this {
     const flowchart = this.getFlowchart(this.currentFlowchart);
     this.onMapping.active = true;
     this.onMapping.object = objToMap;
@@ -460,7 +460,7 @@ export default class FlowchartHandler {
    *
    * @memberof FlowchartHandler
    */
-  unsetMap(): this {
+  unsetMap():this {
     const flowchart = this.getFlowchart(this.currentFlowchart);
     this.onMapping.active = false;
     this.onMapping.object = undefined;
@@ -476,7 +476,7 @@ export default class FlowchartHandler {
    * @returns true - true if mapping mode
    * @memberof FlowchartHandler
    */
-  isMapping(objToMap: GFMap): boolean {
+  isMapping(objToMap:GFMap):boolean {
     if (objToMap === undefined || objToMap == null) {
       return this.onMapping.active;
     }
