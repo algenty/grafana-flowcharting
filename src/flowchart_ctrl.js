@@ -28,8 +28,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       newFlag: true,
       format: 'short',
       valueName: 'current',
-      rulesData: [],
-      flowchartsData: [],
+      rulesData: RulesHandler.getDefaultData(),
+      flowchartsData: FlowchartHandler.getDefaultData(),
     };
 
     _.defaults(this.panel, this.panelDefaults);
@@ -107,6 +107,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // RULES
     const newRulesData = RulesHandler.getDefaultData();
     this.rulesHandler = new RulesHandler(newRulesData);
+    // for version < 0.4.0
     if (this.panel.version === undefined && this.panel.styles !== undefined) {
       this.rulesHandler.import(this.panel.styles);
       delete this.panel.styles;
@@ -117,6 +118,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // FLOWCHART
     const newFlowchartsData = FlowchartHandler.getDefaultData();
     this.flowchartHandler = new FlowchartHandler(scope, elem, ctrl, newFlowchartsData);
+    // for version < 0.4.0
     if (this.panel.version === undefined && this.panel.flowchart !== undefined) {
       this.flowchartHandler.import([this.panel.flowchart]);
       delete this.panel.flowchart;

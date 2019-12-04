@@ -31,9 +31,7 @@ export default class Flowchart {
     this.data = data;
     this.data.name = name;
     this.container = container;
-    // this.ctrl = ctrl;
     this.templateSrv = ctrl.templateSrv;
-    // this.import(data);
   }
 
   /**
@@ -230,12 +228,12 @@ export default class Flowchart {
   setStates(rules: Rule[], metrics: Metric[]): this {
     GFP.log.info(`flowchart[${this.data.name}].setStates()`);
     if (rules === undefined) {
-      GFP.log.error("Rules shoudn't be null");
+      GFP.log.warn("Rules shoudn't be null");
     }
     if (metrics === undefined) {
-      GFP.log.error("Metrics shoudn't be null");
+      GFP.log.warn("Metrics shoudn't be null");
     }
-    this.stateHandler.setStates(rules, metrics);
+    if (this.stateHandler) this.stateHandler.setStates(rules, metrics);
     return this;
   }
 
@@ -262,7 +260,7 @@ export default class Flowchart {
    */
   applyStates(): this {
     GFP.log.info(`flowchart[${this.data.name}].applyStates()`);
-    this.stateHandler.applyStates();
+    if (this.stateHandler) this.stateHandler.applyStates();
     return this;
   }
 

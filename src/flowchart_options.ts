@@ -124,6 +124,10 @@ export class FlowchartOptionsCtrl {
   getFlowcharts() {
     return this.flowchartHandler.getFlowcharts();
   }
+
+  getNames():string[] {
+    return this.flowchartHandler.getFlowchartNames();
+  }
 }
 
 /** @ngInject */

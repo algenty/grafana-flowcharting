@@ -193,6 +193,7 @@ export default class FlowchartHandler {
     const container = this.createContainer();
     const data = Flowchart.getDefaultData();
     const flowchart = new Flowchart(name, container, this.ctrl, data);
+    flowchart.init();
     this.data.flowcharts.push(data);
     this.flowcharts.push(flowchart);
     return flowchart;
@@ -523,5 +524,9 @@ export default class FlowchartHandler {
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;
     window.addEventListener('message', this.listenMessage.bind(this), false);
+  }
+
+  getFlowchartNames():string[] {
+    return this.flowcharts.map((f) => f.data.name);
   }
 }

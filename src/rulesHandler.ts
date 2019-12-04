@@ -47,15 +47,14 @@ export default class RulesHandler {
         tmpRules = obj.rulesData;
       }
       // Fix bug of grafana 6+
-      if (tmpRules[0].order !== undefined) {
+      if (tmpRules.length > 0 && tmpRules[0].order !== undefined) {
         tmpRules = _.sortBy(_.sortBy(tmpRules, o => o.order));
       }
+
       tmpRules.forEach(ruleData => {
         // const newData: any = Rule.getDefaultData();
         // const rule = new Rule(map.pattern, newData);
-        const rule = this.addRule('new');
-        rule.import(ruleData);
-        rule.setOrder(index);
+        this.addRule('new').import(ruleData).setOrder(index);
         index += 1;
         // this.rules.push(rule);
         // this.data.rulesData.push(rule.getData());

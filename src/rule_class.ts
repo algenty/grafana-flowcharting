@@ -111,7 +111,7 @@ export default class Rule {
    * @param {data} obj
    * @memberof Rule
    */
-  import(obj) {
+  import(obj):this {
     this.data.unit = obj.unit || 'short';
     this.data.type = obj.type || 'number';
     this.data.metricType = obj.metricType || 'serie';
@@ -242,8 +242,8 @@ export default class Rule {
         // this.data.rangeData.push(newData);
       });
     }
-
     this.data.sanitize = obj.sanitize || false;
+    return this;
   }
 
   /**
