@@ -160,6 +160,7 @@ export default class Rule {
     // SHAPES
     this.data.shapeProp = obj.shapeProp || 'id';
     this.data.shapeData = [];
+
     // For 0.2.0
     maps = [];
     if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) {
@@ -169,12 +170,13 @@ export default class Rule {
     }
 
     if (maps !== undefined && maps !== null && maps.length > 0) {
-      maps.forEach((map: gf.TShapeMapData) => {
-        const newData: gf.TShapeMapData = ShapeMap.getDefaultData() as gf.TShapeMapData;
-        const sm = new ShapeMap(map.pattern, newData);
-        sm.import(map);
-        this.shapeMaps.push(sm);
-        this.data.shapeData.push(newData);
+      maps.forEach((shapeData: gf.TShapeMapData) => {
+        // const newData: gf.TShapeMapData = ShapeMap.getDefaultData() as gf.TShapeMapData;
+        // const sm = new ShapeMap(map.pattern, newData);
+        this.addShapeMap("new").import(shapeData);
+        // sm.import(shapeData);
+        // this.shapeMaps.push(sm);
+        // this.data.shapeData.push(newData);
       });
     }
 
@@ -188,13 +190,15 @@ export default class Rule {
     } else {
       maps = obj.textData;
     }
+
     if (maps !== undefined && maps != null && maps.length > 0) {
-      maps.forEach((map: gf.TTextMapData) => {
-        const newData: gf.TTextMapData = TextMap.getDefaultData() as gf.TTextMapData;
-        const tm = new TextMap(map.pattern, newData);
-        tm.import(map);
-        this.textMaps.push(tm);
-        this.data.textData.push(newData);
+      maps.forEach((textData: gf.TTextMapData) => {
+        // const newData: gf.TTextMapData = TextMap.getDefaultData() as gf.TTextMapData;
+        // const tm = new TextMap(textData.pattern, newData);
+        this.addTextMap("new").import(textData);
+        // tm.import(textData);
+        // this.textMaps.push(tm);
+        // this.data.textData.push(newData);
       });
     }
 
@@ -202,12 +206,13 @@ export default class Rule {
     this.data.linkProp = obj.linkProp || 'id';
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
-      obj.linkData.forEach((map: gf.TlinkMapData) => {
-        const newData: gf.TlinkMapData = LinkMap.getDefaultData() as gf.TlinkMapData;
-        const lm = new LinkMap(map.pattern, newData);
-        lm.import(map);
-        this.linkMaps.push(lm);
-        this.data.linkData.push(newData);
+      obj.linkData.forEach((linkData: gf.TlinkMapData) => {
+        // const newData: gf.TlinkMapData = LinkMap.getDefaultData() as gf.TlinkMapData;
+        // const lm = new LinkMap(linkData.pattern, newData);
+        this.addLinkMap("new").import(linkData);
+        // lm.import(linkData);
+        // this.linkMaps.push(lm);
+        // this.data.linkData.push(newData);
       });
     }
 
@@ -216,23 +221,25 @@ export default class Rule {
     // VALUES
     this.data.valueData = [];
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
-      obj.valueData.forEach((map: gf.TValueMapData) => {
-        const newData: gf.TValueMapData = ValueMap.getDefaultdata();
-        const vm = new ValueMap(map.value, map.text, newData);
-        vm.import(map);
-        this.valueMaps.push(vm);
-        this.data.valueData.push(newData);
+      obj.valueData.forEach((valueData: gf.TValueMapData) => {
+        this.addValueMap('value','text').import(valueData);
+        // const newData: gf.TValueMapData = ValueMap.getDefaultdata();
+        // const vm = new ValueMap(valueData.value, valueData.text, newData);
+        // vm.import(valueData);
+        // this.valueMaps.push(vm);
+        // this.data.valueData.push(newData);
       });
     }
 
     // RANGE
     this.data.rangeData = [];
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
-      obj.rangeData.forEach(map => {
-        const newData: gf.TRangeMapData = RangeMap.getDefaultData();
-        const rm = new RangeMap(map.from, map.to, map.text, newData);
-        this.rangeMaps.push(rm);
-        this.data.rangeData.push(newData);
+      obj.rangeData.forEach(rangeData => {
+        this.addRangeMap('from','to','text').import(rangeData);
+        // const newData: gf.TRangeMapData = RangeMap.getDefaultData();
+        // const rm = new RangeMap(map.from, map.to, map.text, newData);
+        // this.rangeMaps.push(rm);
+        // this.data.rangeData.push(newData);
       });
     }
 
@@ -466,7 +473,7 @@ export default class Rule {
   addShapeMap(pattern: string): ShapeMap {
     const data = ShapeMap.getDefaultData() as gf.TShapeMapData;
     const m = new ShapeMap(pattern, data);
-    m.import(data);
+    // m.import(data);
     this.shapeMaps.push(m);
     this.data.shapeData.push(data);
     return m;
@@ -527,7 +534,7 @@ export default class Rule {
   addTextMap(pattern: string): TextMap {
     const data = TextMap.getDefaultData() as gf.TTextMapData;
     const m = new TextMap(pattern, data);
-    m.import(data);
+    // m.import(data);
     this.textMaps.push(m);
     this.data.textData.push(data);
     return m;
@@ -598,7 +605,7 @@ export default class Rule {
   addValueMap(value: string, text: string): ValueMap {
     const data: gf.TValueMapData = ValueMap.getDefaultdata();
     const m = new ValueMap(value, text, data);
-    m.import(data);
+    // m.import(data);
     this.valueMaps.push(m);
     this.data.valueData.push(data);
     return m;
@@ -609,22 +616,23 @@ export default class Rule {
     this.valueMaps.splice(index, 1);
   }
 
-  getValueMap(index) {
+  getValueMap(index):ValueMap {
     return this.valueMaps[index];
   }
 
-  getValueMaps() {
+  getValueMaps():ValueMap[] {
     return this.valueMaps;
   }
 
   //
   // STRING RANGE VALUE MAPS
   //
-  addRangeMap(from, to, text) {
+  addRangeMap(from, to, text):RangeMap {
     const data = RangeMap.getDefaultData();
     const m = new RangeMap(from, to, text, data);
     this.rangeMaps.push(m);
     this.data.rangeData.push(data);
+    return m;
   }
 
   removeRangeMap(index) {
@@ -632,20 +640,22 @@ export default class Rule {
     this.rangeMaps.splice(index, 1);
   }
 
-  getRangeMap(index) {
+  getRangeMap(index):RangeMap {
     return this.rangeMaps[index];
   }
 
-  getRangeMaps() {
+  getRangeMaps():RangeMap[] {
     return this.rangeMaps;
   }
 
-  hideRangeMap(index) {
+  hideRangeMap(index):this {
     this.rangeMaps[index].hide();
+    return this;
   }
 
-  showRangeMap(index) {
+  showRangeMap(index):this {
     this.rangeMaps[index].show();
+    return this
   }
 
   //
@@ -897,7 +907,7 @@ export class GFMap {
     this.data = data;
     this.data.pattern = pattern;
     this.id = GFP.utils.uniqueID();
-    this.import(data);
+    // this.import(data);
   }
 
   import(obj: any): this {
@@ -999,14 +1009,15 @@ class RangeMap {
     this.data.to = to;
     this.data.text = text;
     this.data.hidden = false;
-    this.import(data);
+    // this.import(data);
   }
 
-  import(obj: any) {
+  import(obj: any):this {
     this.data.from = obj.from || this.data.from || '';
     this.data.to = obj.to || this.data.to || '';
     this.data.text = obj.text || this.data.text || '';
     this.data.hidden = obj.hidden || this.data.hidden || false;
+    return this
   }
 
   static getDefaultData(): gf.TRangeMapData {
@@ -1018,7 +1029,7 @@ class RangeMap {
     };
   }
 
-  match(value) {
+  match(value:any):boolean {
     if (this.data.from === 'null' && this.data.to === 'null') {
       return true;
     }
@@ -1033,7 +1044,7 @@ class RangeMap {
     return false;
   }
 
-  getFormattedText(value) {
+  getFormattedText(value:any):string|null {
     if (this.match(value)) {
       return this.data.text;
     }

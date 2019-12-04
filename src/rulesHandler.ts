@@ -50,14 +50,15 @@ export default class RulesHandler {
       if (tmpRules[0].order !== undefined) {
         tmpRules = _.sortBy(_.sortBy(tmpRules, o => o.order));
       }
-      tmpRules.forEach(map => {
-        const newData: any = Rule.getDefaultData();
-        const rule = new Rule(map.pattern, newData);
-        rule.import(map);
+      tmpRules.forEach(ruleData => {
+        // const newData: any = Rule.getDefaultData();
+        // const rule = new Rule(map.pattern, newData);
+        const rule = this.addRule("new");
+        rule.import(ruleData);
         rule.setOrder(index);
         index += 1;
-        this.rules.push(rule);
-        this.data.rulesData.push(newData);
+        // this.rules.push(rule);
+        // this.data.rulesData.push(rule.getData());
       });
     }
     return this;
@@ -86,7 +87,7 @@ export default class RulesHandler {
    * @returns {Rule}
    * @memberof RulesHandler
    */
-  getRule(index: number) {
+  getRule(index: number):Rule {
     return this.rules[index];
   }
 
@@ -124,11 +125,12 @@ export default class RulesHandler {
    *
    * @memberof RulesHandler
    */
-  setOrder() {
+  setOrder():this {
     for (let index = 0; index < this.rules.length; index++) {
       const rule = this.rules[index];
       rule.setOrder(index + 1);
     }
+    return this;
   }
 
   /**
@@ -179,10 +181,11 @@ export default class RulesHandler {
    *
    * @memberof RulesHandler
    */
-  reduce() {
+  reduce():this {
     this.getRules().forEach(rule => {
       rule.data.reduce = true;
     });
+    return this;
   }
 
   /**
