@@ -50,7 +50,6 @@ export default class FlowchartHandler {
     this.$elem = elem.find('.flowchart-panel__chart');
     this.ctrl = ctrl;
     this.data = data;
-    // this.import(this.data);
 
     // Events Render
     ctrl.events.on('render', () => {

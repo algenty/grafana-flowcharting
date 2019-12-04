@@ -34,11 +34,12 @@ export default class RulesHandler {
    * @param {any} obj
    * @memberof RulesHandler
    */
-  import(obj: any[]): this {
+  import(obj: any): this {
     GFP.log.info('RuleHandler.import()');
     this.rules = [];
     let index = 1;
     if (obj !== undefined && obj !== null ) {
+      // For version < 0.6.0
       let tmpRules: gf.TIRuleData[];
       if (Array.isArray(obj)) {
         tmpRules = obj;
@@ -50,7 +51,7 @@ export default class RulesHandler {
         tmpRules = _.sortBy(_.sortBy(tmpRules, o => o.order));
       }
       tmpRules.forEach(map => {
-        const newData: any = {};
+        const newData: any = Rule.getDefaultData();
         const rule = new Rule(map.pattern, newData);
         rule.import(map);
         rule.setOrder(index);

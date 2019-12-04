@@ -105,7 +105,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.metricHandler = new MetricHandler(this.$scope);
 
     // RULES
-    const newRulesData = [];
+    const newRulesData = RulesHandler.getDefaultData();
     this.rulesHandler = new RulesHandler(newRulesData);
     if (this.panel.version === undefined && this.panel.styles !== undefined) {
       this.rulesHandler.import(this.panel.styles);
