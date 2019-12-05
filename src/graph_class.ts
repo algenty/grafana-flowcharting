@@ -1136,6 +1136,21 @@ export default class XGraph {
     }
   }
 
+  static loadXml(url) : string|null {
+    try {
+      const req: any = mxUtils.load(url);
+      if (req.getStatus() >= 200 && req.getStatus() <= 299) {
+        return req.getText();
+      } else {
+        GFP.log.error('Cannot load ' + url, req.getStatus());
+      }
+      
+    } catch (error) {
+      GFP.log.error('Cannot load ' + url, error);
+    }
+    return null;
+  }
+
   toggleVisible(mxcell, includeEdges) {
     this.graph.toggleCells(!this.graph.getModel().isVisible(mxcell), [mxcell], includeEdges);
   }

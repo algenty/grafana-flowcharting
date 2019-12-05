@@ -8,7 +8,6 @@ import FlowChartingPlugin from './plugin';
 import FlowchartHandler from 'flowchartHandler';
 import Metric from 'metric_class';
 declare var GFP: FlowChartingPlugin;
-declare var mxUtils: any;
 
 /**
  * Flowchart handler
@@ -105,6 +104,13 @@ export default class Flowchart {
     return this;
   }
 
+  /**
+   * Return the default XML when new
+   *
+   * @static
+   * @returns {gf.TFlowchartData}
+   * @memberof Flowchart
+   */
   static getDefaultData(): gf.TFlowchartData {
     return {
       name: 'name',
@@ -164,37 +170,42 @@ export default class Flowchart {
    */
   init() {
     GFP.log.info(`flowchart[${this.data.name}].init()`);
-    if (this.xgraph === undefined) {
-      this.xgraph = new XGraph(this.container, this.data.type, this.getContent());
-    }
-    if (this.data.xml !== undefined && this.data.xml !== null) {
-      if (this.data.download) {
-        this.xgraph.setXmlGraph(this.getContent());
+    try {
+      if (this.xgraph === undefined) {
+        this.xgraph = new XGraph(this.container, this.data.type, this.getContent());
       }
-      if (this.data.allowDrawio) {
-        this.xgraph.allowDrawio(true);
+      if (this.data.xml !== undefined && this.data.xml !== null) {
+        if (this.data.download) {
+          this.xgraph.setXmlGraph(this.getContent());
+        }
+        if (this.data.allowDrawio) {
+          this.xgraph.allowDrawio(true);
+        } else {
+          this.xgraph.allowDrawio(false);
+        }
+        this.setOptions();
+        this.xgraph.drawGraph();
+        if (this.data.tooltip) {
+          this.xgraph.tooltipGraph(true);
+        }
+        if (this.data.scale) {
+          this.xgraph.scaleGraph(true);
+        } else {
+          this.xgraph.zoomGraph(this.data.zoom);
+        }
+        if (this.data.center) {
+          this.xgraph.centerGraph(true);
+        }
+        if (this.data.lock) {
+          this.xgraph.lockGraph(true);
+        }
+        this.stateHandler = new StateHandler(this.xgraph);
       } else {
-        this.xgraph.allowDrawio(false);
+        GFP.log.error('XML Graph not defined');
       }
-      this.setOptions();
-      this.xgraph.drawGraph();
-      if (this.data.tooltip) {
-        this.xgraph.tooltipGraph(true);
-      }
-      if (this.data.scale) {
-        this.xgraph.scaleGraph(true);
-      } else {
-        this.xgraph.zoomGraph(this.data.zoom);
-      }
-      if (this.data.center) {
-        this.xgraph.centerGraph(true);
-      }
-      if (this.data.lock) {
-        this.xgraph.lockGraph(true);
-      }
-      this.stateHandler = new StateHandler(this.xgraph);
-    } else {
-      GFP.log.error('XML Graph not defined');
+      
+    } catch (error) {
+      GFP.log.error('Unable to initialize graph',error);
     }
   }
 
@@ -325,6 +336,13 @@ export default class Flowchart {
     }
   }
 
+  /**
+   * Set paramater lock
+   *
+   * @param {boolean} bool
+   * @returns {this}
+   * @memberof Flowchart
+   */
   setLock(bool: boolean): this {
     this.data.lock = bool;
     if (this.xgraph) {
@@ -333,7 +351,14 @@ export default class Flowchart {
     return this;
   }
 
-  lock(bool: boolean): this {
+  /**
+   * Lock graph
+   *
+   * @param {boolean} bool
+   * @returns {this}
+   * @memberof Flowchart
+   */
+  applyLock(bool: boolean): this {
     if (bool !== undefined) {
       this.data.lock = bool;
     }
@@ -343,6 +368,13 @@ export default class Flowchart {
     return this;
   }
 
+  /**
+   * Set enable tooltip
+   *
+   * @param {boolean} bool
+   * @returns {this}
+   * @memberof Flowchart
+   */
   setTooltip(bool: boolean): this {
     this.data.tooltip = bool;
     if (this.xgraph) {
@@ -351,7 +383,14 @@ export default class Flowchart {
     return this;
   }
 
-  tooltip(bool: boolean): this {
+  /**
+   * Enable tooltip
+   *
+   * @param {boolean} bool
+   * @returns {this}
+   * @memberof Flowchart
+   */
+  applyTooltip(bool: boolean): this {
     if (bool !== undefined) {
       this.data.tooltip = bool;
     }
@@ -361,6 +400,13 @@ export default class Flowchart {
     return this;
   }
 
+  /**
+   * Set scale parameter
+   *
+   * @param {boolean} bool
+   * @returns {this}
+   * @memberof Flowchart
+   */
   setScale(bool: boolean): this {
     this.data.scale = bool;
     if (this.xgraph) {
@@ -369,6 +415,13 @@ export default class Flowchart {
     return this;
   }
 
+  /**
+   * Set BgColor
+   *
+   * @param {(string | null)} bgColor
+   * @returns {this}
+   * @memberof Flowchart
+   */
   setBgColor(bgColor: string | null): this {
     this.data.bgColor = bgColor;
     if (this.xgraph) {
@@ -377,7 +430,14 @@ export default class Flowchart {
     return this;
   }
 
-  bgColor(bgColor: string): this {
+  /**
+   * Apply Background color
+   *
+   * @param {string} bgColor
+   * @returns {this}
+   * @memberof Flowchart
+   */
+  ApplyBgColor(bgColor: string): this {
     this.data.bgColor = bgColor;
     if (bgColor) {
       if (this.xgraph) {
@@ -387,7 +447,14 @@ export default class Flowchart {
     return this;
   }
 
-  scale(bool: boolean): this {
+  /**
+   * Apply scale parameter
+   *
+   * @param {boolean} bool
+   * @returns {this}
+   * @memberof Flowchart
+   */
+  applyScale(bool: boolean): this {
     GFP.log.info('Flowchart.scale()');
     if (bool !== undefined) {
       this.data.scale = bool;
@@ -398,6 +465,13 @@ export default class Flowchart {
     return this;
   }
 
+  /**
+   * set center parameter
+   *
+   * @param {boolean} bool
+   * @returns
+   * @memberof Flowchart
+   */
   setCenter(bool: boolean) {
     this.data.center = bool;
     if (this.xgraph) {
@@ -406,6 +480,13 @@ export default class Flowchart {
     return this;
   }
 
+  /**
+   * Get names array of names according id or value
+   *
+   * @param {gf.TPropertieKey} prop
+   * @returns {string[]}
+   * @memberof Flowchart
+   */
   getNamesByProp(prop: gf.TPropertieKey): string[] {
     if (this.xgraph) {
       return this.xgraph.getOrignalCells(prop);
@@ -413,6 +494,13 @@ export default class Flowchart {
     return [];
   }
 
+  /**
+   * get XML def with var replaced
+   *
+   * @param {boolean} replaceVarBool
+   * @returns {string}
+   * @memberof Flowchart
+   */
   getXml(replaceVarBool: boolean): string {
     GFP.log.info(`flowchart[${this.data.name}].getXml()`);
     if (!replaceVarBool) {
@@ -421,6 +509,13 @@ export default class Flowchart {
     return this.templateSrv.replaceWithText(this.data.xml);
   }
 
+  /**
+   * get CSV def with var replaced
+   *
+   * @param {boolean} replaceVarBool
+   * @returns {string}
+   * @memberof Flowchart
+   */
   getCsv(replaceVarBool: boolean): string {
     GFP.log.info(`flowchart[${this.data.name}].getXml()`);
     if (!replaceVarBool) {
@@ -429,6 +524,12 @@ export default class Flowchart {
     return this.templateSrv.replaceWithText(this.data.csv);
   }
 
+  /**
+   * Get Url editor
+   *
+   * @returns {string}
+   * @memberof Flowchart
+   */
   getUrlEditor(): string {
     return this.data.editorUrl;
   }
@@ -473,14 +574,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   loadContent(url: string): string | null {
-    GFP.log.info(`flowchart.loadContent()`);
-    const req: any = mxUtils.load(url);
-    if (req.getStatus() === 200) {
-      return req.getText();
-    } else {
-      GFP.log.error('Cannot load ' + url, req.getStatus());
-      return `Error when loading ${url}`;
-    }
+    return XGraph.loadXml(url);
   }
 
   renameId(oldId: string, newId: string): this {
@@ -490,6 +584,12 @@ export default class Flowchart {
     return this;
   }
 
+  /**
+   * Apply xml to graph
+   *
+   * @returns {this}
+   * @memberof Flowchart
+   */
   applyModel(): this {
     if (this.xgraph) {
       this.data.xml = this.xgraph.getXmlModel();
@@ -543,16 +643,6 @@ export default class Flowchart {
     }
     return this;
   }
-
-  // setWidth(width: number): this {
-  //   this.width = width;
-  //   return this;
-  // }
-
-  // setHeight(height: number): this {
-  //   this.height = height;
-  //   return this;
-  // }
 
   setXml(xml: string): this {
     this.data.xml = xml;
