@@ -1,6 +1,5 @@
 import FlowChartingPlugin from './plugin';
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
-import kbn from 'grafana/app/core/utils/kbn';
 import { mappingOptionsTab } from './mapping_options';
 import { flowchartOptionsTab } from './flowchart_options';
 import { inspectOptionsTab } from './inspect_options';
@@ -17,7 +16,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.$scope = $scope;
     this.version = GFP.getVersion();
     this.templateSrv = templateSrv;
-    this.unitFormats = kbn.getUnitFormats();
     this.changedSource = true;
     this.changedData = true;
     this.changedOptions = true;

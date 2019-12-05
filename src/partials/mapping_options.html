@@ -669,7 +669,7 @@
               </info-popover>
             </h5>
             <div class="gf-form">
-              <span class="gf-form-label width-10">
+              <span class="gf-form-label width-7">
                 Props
               </span>
               <!-- ID INPUT -->
@@ -683,38 +683,38 @@
               </div>
             </div>
             <div class="gf-form" ng-class="{'gf-form-disabled': shape.data.hidden}" ng-repeat="shape in rule.getShapeMaps()">
-              <label class="gf-form-label" style="margin-right: 2px;">
+              <label class="gf-form-label" style="margin-right: 4px;">
                 <i
                   class="fa fa-w fa-remove pointer"
                   bs-tooltip="'Delete this mapping object'"
                   ng-click="rule.removeShapeMap($index);editor.onRulesChange()"
                 ></i>
               </label>
-              <label class="gf-form-label" ng-if="!shape.isHidden()" style="margin-right: 2px;">
+              <label class="gf-form-label" ng-if="!shape.isHidden()" style="margin-right: 4px;">
                 <i
                   class="fa fa-w fa-eye pointer"
                   bs-tooltip="'Hide selected object graph in rule'"
                   ng-click="shape.hide();editor.onRulesChange()"
                 ></i>
               </label>
-              <label class="gf-form-label" ng-if="shape.isHidden()" style="margin-right: 2px;">
+              <label class="gf-form-label" ng-if="shape.isHidden()" style="margin-right: 4px;">
                 <i
                   class="fa fa-w fa-eye-slash pointer"
                   bs-tooltip="'show selected object graph in rule'"
                   ng-click="shape.show();editor.onRulesChange()"
                 ></i>
               </label>
-              <label class="gf-form-label" style="margin-right: 2px;" ng-hide="flowchartHandler.isMapping(shape)">
+              <label class="gf-form-label" style="margin-right: 4px;" ng-hide="flowchartHandler.isMapping(shape)">
                 <i class="fa fa-link pointer" ng-click="flowchartHandler.setMap(shape)" bs-tooltip="'Link it on object graph'"></i>
               </label>
-              <label class="gf-form-label" style="margin-right: 2px;color:orange" ng-show="flowchartHandler.isMapping(shape)">
+              <label class="gf-form-label" style="margin-right: 4px;color:orange" ng-show="flowchartHandler.isMapping(shape)">
                 <i class="fa fa-unlink pointer" bs-tooltip="'Cancel link object graph selection'" ng-click="flowchartHandler.unsetMap()"></i>
               </label>
               <input
                 type="text"
                 id="{{ shape.getId() }}"
                 placeholder="id or regex of shape"
-                class="gf-form-input width-13"
+                class="gf-form-input width-10"
                 ng-model="shape.data.pattern"
                 bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
                 bs-typeahead="editor.getCellNamesForShape"
@@ -743,7 +743,7 @@
               </info-popover>
             </h5>
             <div class="gf-form">
-              <span class="gf-form-label width-10">
+              <span class="gf-form-label width-7">
                 Props
               </span>
               <div class="gf-form-select-wrapper">
@@ -756,27 +756,27 @@
               </div>
             </div>
             <div class="gf-form" ng-class="{'gf-form-disabled': text.data.hidden}" ng-repeat="text in rule.getTextMaps()">
-              <label class="gf-form-label" style="margin-right: 2px;">
+              <label class="gf-form-label" style="margin-right: 4px;">
                 <i
                   class="fa fa-w fa-remove pointer"
                   bs-tooltip="'Delete this mapping object'"
                   ng-click="rule.removeTextMap($index);editor.onRulesChange()"
                 ></i>
               </label>
-              <label class="gf-form-label" ng-if="!text.isHidden()" style="margin-right: 2px;">
+              <label class="gf-form-label" ng-if="!text.isHidden()" style="margin-right: 4px;">
                 <i class="fa fa-w fa-eye pointer" bs-tooltip="'Hide selected object graph in rule'" ng-click="text.hide();editor.onRulesChange()"></i>
               </label>
-              <label class="gf-form-label" ng-if="text.isHidden()" style="margin-right: 2px;">
+              <label class="gf-form-label" ng-if="text.isHidden()" style="margin-right: 4px;">
                 <i
                   class="fa fa-w fa-eye-slash pointer"
                   bs-tooltip="'show selected object graph in rule'"
                   ng-click="text.show();editor.onRulesChange()"
                 ></i>
               </label>
-              <label class="gf-form-label" style="margin-right: 2px;" ng-hide="flowchartHandler.isMapping(text)">
+              <label class="gf-form-label" style="margin-right: 4px;" ng-hide="flowchartHandler.isMapping(text)">
                 <i class="fa fa-link pointer" ng-click="flowchartHandler.setMap(text)" bs-tooltip="'Link it on object graph'"></i>
               </label>
-              <label class="gf-form-label" style="margin-right: 2px;color:orange" ng-show="flowchartHandler.isMapping(text)">
+              <label class="gf-form-label" style="margin-right: 4px;color:orange" ng-show="flowchartHandler.isMapping(text)">
                 <i class="fa fa-unlink pointer" bs-tooltip="'Cancel link object graph selection'" ng-click="flowchartHandler.unsetMap()"></i>
               </label>
 
@@ -784,7 +784,7 @@
                 type="text"
                 id="{{ text.getId() }}"
                 placeholder="id or regex of shape/text name"
-                class="gf-form-input width-13"
+                class="gf-form-input width-10"
                 ng-model="text.data.pattern"
                 bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/text (see inspect tab)'"
                 bs-typeahead="editor.getCellNamesForText"
@@ -809,7 +809,7 @@
           <div class="section gf-form-group" ng-if="rule.data.link">
             <h5 class="section-heading">Link Mappings</h5>
             <div class="gf-form">
-              <span class="gf-form-label width-10">
+              <span class="gf-form-label width-7">
                 Props
               </span>
               <div class="gf-form-select-wrapper">
@@ -822,27 +822,27 @@
               </div>
             </div>
             <div class="gf-form" ng-class="{'gf-form-disabled': link.data.hidden}" ng-repeat="link in rule.getLinkMaps()">
-              <label class="gf-form-label" style="margin-right: 2px;">
+              <label class="gf-form-label" style="margin-right: 4px;">
                 <i
                   class="fa fa-w fa-remove pointer"
                   bs-tooltip="'Delete this mapping object'"
                   ng-click="rule.removeLinkMap($index);editor.onRulesChange()"
                 ></i>
               </label>
-              <label class="gf-form-label" ng-if="!link.isHidden()" style="margin-right: 2px;">
+              <label class="gf-form-label" ng-if="!link.isHidden()" style="margin-right: 4px;">
                 <i class="fa fa-w fa-eye pointer" bs-tooltip="'Hide selected object graph in rule'" ng-click="link.hide();editor.onRulesChange()"></i>
               </label>
-              <label class="gf-form-label" ng-if="link.isHidden()" style="margin-right: 2px;">
+              <label class="gf-form-label" ng-if="link.isHidden()" style="margin-right: 4px;">
                 <i
                   class="fa fa-w fa-eye-slash pointer"
                   bs-tooltip="'show selected object graph in rule'"
                   ng-click="link.show();editor.onRulesChange()"
                 ></i>
               </label>
-              <label class="gf-form-label" style="margin-right: 2px;" ng-hide="flowchartHandler.isMapping(link)">
+              <label class="gf-form-label" style="margin-right: 4px;" ng-hide="flowchartHandler.isMapping(link)">
                 <i class="fa fa-link pointer" ng-click="flowchartHandler.setMap(link)" bs-tooltip="'Link it on object graph'"></i>
               </label>
-              <label class="gf-form-label" style="margin-right: 2px;color:orange" ng-show="flowchartHandler.isMapping(link)">
+              <label class="gf-form-label" style="margin-right: 4px;color:orange" ng-show="flowchartHandler.isMapping(link)">
                 <i class="fa fa-unlink pointer" bs-tooltip="'Cancel link object graph selection'" ng-click="flowchartHandler.unsetMap()"></i>
               </label>
 
@@ -850,7 +850,7 @@
                 type="link"
                 id="{{ link.getId() }}"
                 placeholder="id or regex of shape/link name"
-                class="gf-form-input width-13"
+                class="gf-form-input width-10"
                 ng-model="link.data.pattern"
                 bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/link (see inspect tab)'"
                 bs-typeahead="editor.getCellNamesForLink"
@@ -876,7 +876,7 @@
             <h5 class="section-heading">Value Mappings</h5>
             <div class="gf-form-group">
               <div class="gf-form">
-                <span class="gf-form-label width-10">
+                <span class="gf-form-label width-7">
                   Type
                 </span>
                 <div class="gf-form-select-wrapper">
@@ -896,7 +896,7 @@
                   </span>
                   <input
                     type="text"
-                    class="gf-form-input max-width-6"
+                    class="gf-form-input max-width-5"
                     ng-model="map.data.value"
                     placeholder="Value"
                     ng-blur="editor.onRulesChange()"
@@ -907,7 +907,7 @@
                   </label>
                   <input
                     type="text"
-                    class="gf-form-input max-width-14"
+                    class="gf-form-input max-width-8"
                     ng-model="map.data.text"
                     placeholder="Text"
                     bs-typeahead="editor.getVariables"
@@ -935,17 +935,17 @@
                   <input
                     type="text"
                     ng-model="rangeMap.data.from"
-                    class="gf-form-input max-width-6"
+                    class="gf-form-input max-width-5"
                     ng-blur="editor.onRulesChange()"
                     ng-model-onblur
                   />
                   <span class="gf-form-label">To</span>
-                  <input type="text" ng-model="rangeMap.data.to" class="gf-form-input max-width-6" ng-blur="editor.onRulesChange()" ng-model-onblur />
+                  <input type="text" ng-model="rangeMap.data.to" class="gf-form-input max-width-5" ng-blur="editor.onRulesChange()" ng-model-onblur />
                   <span class="gf-form-label">Text</span>
                   <input
                     type="text"
                     ng-model="rangeMap.data.text"
-                    class="gf-form-input max-width-14"
+                    class="gf-form-input max-width-8"
                     bs-typeahead="editor.getVariables"
                     bs-tooltip="'Specify string or variables to replace values'"
                     data-min-length="0"
