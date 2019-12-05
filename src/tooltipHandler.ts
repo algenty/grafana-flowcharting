@@ -1,5 +1,6 @@
 import Chartist from 'chartist';
 import * as gf from '../types/flowcharting';
+import { mxCell } from '../types/flowcharting';
 
 import FlowChartingPlugin from './plugin';
 import Metric from './metric_class';
@@ -13,7 +14,7 @@ declare var GFP: FlowChartingPlugin;
  */
 export default class TooltipHandler {
   timeFormat = 'YYYY-MM-DD HH:mm:ss';
-  mxcell: any;
+  mxcell: mxCell;
   checked = false;
   metrics: Set<MetricTooltip>;
   lastChange: string | undefined;
@@ -130,7 +131,7 @@ export default class TooltipHandler {
  *
  * @class MetricTooltip
  */
-class MetricTooltip {
+export class MetricTooltip {
   color: string;
   graphs: Set<GraphTooltip>;
   label!: string;
@@ -242,8 +243,9 @@ class GraphTooltip {
   high: number | null = null;
   scaleType: gf.TGraphScale = 'linear';
   div: HTMLDivElement | undefined;
-  parentDiv: any;
-  constructor() {}
+  chart: any;
+  parentDiv: HTMLDivElement | undefined;
+  constructor() { }
 
   getDiv(div: HTMLDivElement): HTMLDivElement | undefined {
     return this.div;
@@ -296,24 +298,18 @@ class GraphTooltip {
     return this;
   }
 
-  static array2Coor(arr: any) {
-    const result: Array<{ x: number; y: number }> = [];
-    for (let index = 0; index < arr.length; index++) {
-      result.push({
-        x: arr[index][0],
-        y: arr[index][1],
-      });
-    }
-    return result;
+  getChart() {
+    return this.chart;
   }
+
 }
 
 class LineGraphTooltip extends GraphTooltip {
-  chartistOptions: any;
+  chartistOptions: Chartist.ILineChartOptions;
   div: HTMLDivElement | undefined;
   // data: { series: Array<{ x: any; y: any }>[] } | undefined;
   data: any;
-  chart: any;
+  chart!: Chartist.IChartistLineChart;
   constructor() {
     super();
     this.type = 'line';
@@ -322,7 +318,6 @@ class LineGraphTooltip extends GraphTooltip {
       showLine: true,
       showArea: true,
       fullWidth: true,
-      showLabel: false,
       axisX: {
         showGrid: false,
         showLabel: false,
@@ -333,12 +328,12 @@ class LineGraphTooltip extends GraphTooltip {
         showLabel: false,
         offset: 0,
       },
-      chartPadding: 0,
+      chartPadding: { top: 0, left: 0, right: 0, bottom: 0 },
     };
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
-    const coor = this.metric.getCoor(this.column);
+    const coor = <Chartist.IChartistSeriesData>this.metric.getCoor(this.column);
     const div = document.createElement('div');
     const color = this.color;
     this.div = div;
@@ -360,7 +355,8 @@ class LineGraphTooltip extends GraphTooltip {
     }
 
     if (this.scaleType !== null && this.scaleType !== undefined && this.scaleType === 'log') {
-      this.chartistOptions.axisY.type = this.scaleType;
+      // this.chartistOptions.axisY.type = this.scaleType;
+      // NOT SUPPORTED AT THIS TIME
     }
 
     this.chart = new Chartist.Line(div, this.data, this.chartistOptions);
@@ -397,18 +393,14 @@ class LineGraphTooltip extends GraphTooltip {
 }
 
 class BarGraphTooltip extends GraphTooltip {
-  chartistOptions: any;
+  chartistOptions: Chartist.IBarChartOptions;
   // data: { series: Array<{ x: any; y: any }>[] } | undefined;
   data: any;
+  chart!: Chartist.IChartistBarChart;
   constructor() {
     super();
     this.type = 'bar';
     this.chartistOptions = {
-      showPoint: false,
-      showLine: true,
-      showArea: true,
-      fullWidth: true,
-      showLabel: false,
       axisX: {
         showGrid: false,
         showLabel: false,
@@ -419,12 +411,12 @@ class BarGraphTooltip extends GraphTooltip {
         showLabel: false,
         offset: 0,
       },
-      chartPadding: 0,
+      chartPadding: { top: 0, left: 0, right: 0, bottom: 0 },
     };
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
-    const coor = this.metric.getCoor(this.column);
+    const coor = <Chartist.IChartistSeriesData>this.metric.getCoor(this.column);
     const div = document.createElement('div');
     const color = this.color;
     this.div = div;
@@ -446,14 +438,14 @@ class BarGraphTooltip extends GraphTooltip {
     }
 
     if (this.scaleType !== null && this.scaleType !== undefined && this.scaleType === 'log') {
-      this.chartistOptions.axisY.type = this.scaleType;
+      // this.chartistOptions.axisY.type = this.scaleType;
     }
 
-    const chart = new Chartist.Bar(div, this.data, this.chartistOptions);
+    this.chart = new Chartist.Bar(div, this.data, this.chartistOptions);
     let seq = 0;
     const delays = Math.round(50 / (coor.length / 10));
     const durations = Math.round(250 / (coor.length / 10));
-    chart.on('draw', (data: any) => {
+    this.chart.on('draw', (data: any) => {
       if (data.type === 'bar') {
         data.element.attr({
           style: `stroke: ${color}`,

@@ -4,8 +4,10 @@ import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
 import { mxCell } from '../types/flowcharting';
 import Metric from './metric_class';
+import XGraph from 'graph_class';
 
 declare var GFP: FlowChartingPlugin;
+
 
 /**
  * States Handler class
@@ -15,8 +17,8 @@ declare var GFP: FlowChartingPlugin;
  */
 export default class StateHandler {
   states: Map<string, State>;
-  xgraph: any;
-  constructor(xgraph) {
+  xgraph: XGraph;
+  constructor(xgraph: XGraph) {
     GFP.log.info('StateHandler.constructor()');
     this.states = new Map();
     this.xgraph = xgraph;
@@ -26,11 +28,11 @@ export default class StateHandler {
   /**
    * Initialisation of states
    *
-   * @param {*} xgraph
-   * @param {*} rules
+   * @returns {this}
+   * @param {XGraph} xgraph
    * @memberof StateHandler
    */
-  initStates(xgraph: any) {
+  initStates(xgraph: XGraph): this {
     GFP.log.info('StateHandler.initStates()');
     this.xgraph = xgraph;
     this.states.clear();
@@ -38,6 +40,7 @@ export default class StateHandler {
     _.each(mxcells, mxcell => {
       this.addState(mxcell);
     });
+    return this;
   }
 
   /**
@@ -50,16 +53,16 @@ export default class StateHandler {
   getStatesForRule(rule: Rule) {
     GFP.log.info('StateHandler.getStatesForRule()');
     const result = new Map();
-    let name = null;
+    let name: string | null;
     const xgraph = this.xgraph;
     this.states.forEach(state => {
-      const mxcell = state.mxcell;
-      const id = mxcell.id;
+      const mxcell: mxCell = state.mxcell;
+      const id: string = mxcell.id;
       let found = false;
 
       // SHAPES
       name = xgraph.getValuePropOfMxCell(rule.data.shapeProp, mxcell);
-      if (rule.matchShape(name)) {
+      if (name !== null && rule.matchShape(name)) {
         result.set(id, state);
         found = true;
       }

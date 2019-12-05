@@ -1,10 +1,10 @@
-import TooltipHandler from './tooltipHandler';
 import XGraph from './graph_class';
 import Rule from 'rule_class';
 import * as gf from '../types/flowcharting';
-
+import { mxCell } from '../types/flowcharting';
 import FlowChartingPlugin from './plugin';
 import Metric from './metric_class';
+import TooltipHandler from './tooltipHandler';
 declare var GFP: FlowChartingPlugin;
 
 /**
@@ -14,7 +14,7 @@ declare var GFP: FlowChartingPlugin;
  * @class State
  */
 export default class State {
-  mxcell: any;
+  mxcell: mxCell;
   cellId: string;
   newcellId?: string; // for inspect mode
   previousId?: string; // for inspect mode
@@ -124,11 +124,12 @@ export default class State {
   /**
    * Define state according to 1 rule and 1 serie without apply display
    *
+   * @returns {this}
    * @param {Rule} rule
    * @param {Metric} metric
    * @memberof State
    */
-  setState(rule: Rule, metric: Metric) {
+  setState(rule: Rule, metric: Metric):this {
     GFP.log.info('State.setState()');
     GFP.log.info('State.setState() rule', rule);
     GFP.log.info('State.setState() metric', metric);
@@ -248,16 +249,17 @@ export default class State {
         }
       });
     }
-    GFP.log.debug('State.setState() state', this);
+    return this;
   }
 
   /**
    * Restore initial status of state without apply display.
    * Use applyState() to apply on graph (color, level and text)
    *
+   * @returns {this}
    * @memberof State
    */
-  unsetState() {
+  unsetState():this {
     GFP.log.info('State.unsetState()');
     this.unsetLevel();
     // this.unsetColor(); Replace by reset
@@ -272,6 +274,7 @@ export default class State {
     });
     this.matchedText = false;
     this.matchedLink = false;
+    return this;
   }
 
   /**
@@ -298,29 +301,31 @@ export default class State {
    *
    *
    * @param {string} prop - id|value
-   * @returns {string} return original value of id or label of cell
+   * @returns {string|null} return original value of id or label of cell
    * @memberof State
    */
-  getCellProp(prop: gf.TPropertieKey) {
+  getCellProp(prop: gf.TPropertieKey):string|null {
     if (prop === 'id') {
       return this.cellId;
     }
     if (prop === 'value') {
       return this.originalText;
     }
-    return '/!\\ Not found';
+    return null;
   }
 
   /**
    * Define color for a style
    *
+   * @return {this}
    * @param {string} style - fillcolor|fontcolor|stroke
    * @param {string} color - html color
    * @memberof State
    */
-  setColorStyle(style: gf.TStyleKey, color: string) {
+  setColorStyle(style: gf.TStyleKey, color: string):this {
     GFP.log.info('State.setColorStyle()');
     this.currentColors[style] = color;
+    return this;
   }
 
   /**
@@ -336,71 +341,83 @@ export default class State {
   /**
    * Reset color with initial color
    *
+   * @returns {this}
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetColorStyle(style: gf.TStyleKey) {
+  unsetColorStyle(style: gf.TStyleKey):this {
     this.currentColors[style] = this.originalColors[style];
+    return this;
   }
 
   /**
    * Restore initial color of cell
    *
+   * @returns {this}
    * @memberof State
    */
-  unsetColor() {
+  unsetColor():this {
     this.styleKeys.forEach(style => {
       this.unsetColorStyle(style);
     });
+    return this;
   }
 
   /**
    * Reset default level (-1) for the style
    *
+   * @returns {this}
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetLevelStyle(style: gf.TStyleKey) {
+  unsetLevelStyle(style: gf.TStyleKey):this {
     this.level[style] = -1;
+    return this;
   }
 
   /**
    * Reset tooltip
    *
+   * @returns {this}
    * @memberof State
    */
-  unsetTooltip() {
+  unsetTooltip():this {
     if (this.tooltipHandler !== null) {
       this.tooltipHandler.destroy();
     }
     this.tooltipHandler = null;
+    return this;
   }
 
   /**
    * Reset level to -1 for all style
    *
+   * @returns {this}
    * @memberof State
    */
-  unsetLevel() {
+  unsetLevel():this {
     this.styleKeys.forEach((style: gf.TStyleKey) => {
       this.unsetLevelStyle(style);
     });
     this.globalLevel = -1;
+    return this;
   }
 
   /**
    * Attribute a level for a style
    *
+   * @returns {this}
    * @param {TStyleKeyDisable} style
    * @param {number} level
    * @memberof State
    */
-  setLevelStyle(style: gf.TStyleKey, level: number) {
+  setLevelStyle(style: gf.TStyleKey, level: number):this {
     GFP.log.info('State.setLevelStyle()');
     this.level[style] = level;
     if (this.globalLevel < level) {
       this.globalLevel = level;
     }
+    return this;
   }
 
   /**
@@ -449,58 +466,70 @@ export default class State {
   /**
    * Attribute new label
    *
+   * @returns {this}
    * @param {string} text
    * @memberof State
    */
-  setText(text: string) {
+  setText(text: string):this {
     this.currentText = text;
+    return this;
   }
 
   /**
    * Reset the current label with the initial label
    *
+   * @returns {this}
    * @memberof State
    */
-  unsetText() {
+  unsetText():this {
     this.currentText = this.originalText;
+    return this
   }
 
   /**
    * Assign new link
    *
+   * @returns {this}
    * @param {string} url
    * @memberof State
    */
-  setLink(url: string) {
+  setLink(url: string):this {
     this.currentLink = url;
+    return this;
   }
 
   /**
    * Reset current link with original/initial link
    *
+   * @returns {this}
    * @memberof State
    */
-  unsetLink() {
+  unsetLink():this {
     this.currentLink = this.originalLink;
+    return this;
   }
+
 
   /**
    * Add metric to tooltip of shape
    *
+   * @returns {this}
    * @memberof State
    */
-  addTooltip() {
+  addTooltip():this {
     GFP.log.info('State.addTooltipValue()');
     if (this.tooltipHandler == null) {
       this.tooltipHandler = new TooltipHandler(this.mxcell);
     }
     this.tooltipHandler.addMetric();
+    return this;
   }
 
-  updateTooltipDate() {
+  updateTooltipDate():this {
     if (this.tooltipHandler) {
       this.tooltipHandler.updateDate();
     }
+    return this
   }
 
   /**
@@ -528,13 +557,20 @@ export default class State {
    *
    * @memberof State
    */
-  applyShape() {
+  applyShape():this {
     this.changedShape = true;
     this.applyStyle();
     this.applyIcon();
+    return this;
   }
 
-  applyStyle() {
+  /**
+   * Apply Styles to shape
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  applyStyle():this {
     this.styleKeys.forEach(key => {
       if (this.matchedStyle[key]) {
         const color = this.currentColors[key];
@@ -544,9 +580,16 @@ export default class State {
         }
       }
     });
+    return this;
   }
 
-  applyIcon() {
+  /**
+   * Apply icon warning
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  applyIcon():this {
     // Apply icons
     if (this.overlayIcon) {
       this.changedIcon = true;
@@ -554,17 +597,32 @@ export default class State {
     } else {
       this.xgraph.removeOverlay(this.mxcell);
     }
+    return this;
   }
 
-  resetShape() {
+  /**
+   * Restore initial state to shape
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  resetShape():this {
     this.changedShape = false;
     this.resetStyle();
     this.resetIcon();
+    return this;
   }
 
-  resetIcon() {
+  /**
+   * Remove icon from shape
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  resetIcon():this {
     this.changedIcon = false;
     this.xgraph.removeOverlay(this.mxcell);
+    return this;
   }
 
   /**
@@ -572,12 +630,13 @@ export default class State {
    *
    * @memberof State
    */
-  resetStyle() {
+  resetStyle():this {
     this.unsetColor();
     this.xgraph.setStyles(this.mxcell, this.originalStyle);
     this.styleKeys.forEach(key => {
       this.changedStyle[key] = false;
     });
+    return this;
   }
 
   /**
@@ -585,50 +644,70 @@ export default class State {
    *
    * @memberof State
    */
-  applyText() {
+  applyText():this {
     this.changedText = true;
     this.xgraph.setLabelCell(this.mxcell, this.currentText);
+    return this;
   }
 
-  resetText() {
+  /**
+   * Reset text with the source value
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  resetText():this {
     this.changedText = false;
     this.unsetText();
     this.xgraph.setLabelCell(this.mxcell, this.originalText);
+    return this;
   }
 
   /**
    * Apply new link
    *
+   * @returns {this}
    * @memberof State
    */
-  applyLink() {
+  applyLink():this {
     this.changedLink = true;
     this.xgraph.addLink(this.mxcell, this.currentLink);
+    return this;
   }
 
-  resetLink() {
+  /**
+   * Reset link
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  resetLink():this {
     this.changedLink = false;
     this.unsetLink();
     this.xgraph.addLink(this.mxcell, this.originalLink);
+    return this;
   }
 
   /**
    * Apply new tooltip
    *
+   * @returns {this}
    * @memberof State
    */
-  applyTooltip() {
+  applyTooltip():this {
     if (this.tooltipHandler != null && this.tooltipHandler.isChecked()) {
       this.mxcell.GF_tooltipHandler = this.tooltipHandler;
     }
+    return this;
   }
 
   /**
    * Apply new state
    *
+   * @returns {this}
    * @memberof State
    */
-  applyState() {
+  applyState():this {
     GFP.log.info('State.applyState()');
     if (this.matched) {
       this.changed = true;
@@ -659,26 +738,30 @@ export default class State {
     } else if (this.changed) {
       this.reset();
     }
+    return this;
   }
 
   /**
    * Reset and restore state
    *
+   * @returns {this}
    * @memberof State
    */
-  reset() {
+  reset():this {
     this.resetShape();
     this.resetText();
     this.resetLink();
     this.changed = false;
+    return this;
   }
 
   /**
    * Prepare state for a new rule and serie
    *
+   * @returns {this}
    * @memberof State
    */
-  prepare() {
+  prepare():this {
     if (this.changed) {
       this.unsetLevel();
       this.unsetTooltip();
@@ -688,23 +771,28 @@ export default class State {
       this.matchedText = false;
       this.matchedLink = false;
     }
+    return this;
   }
 
   /**
    * Highlight mxcell
    *
+   * @returns {this}
    * @memberof State
    */
-  highlightCell() {
+  highlightCell():this {
     this.xgraph.highlightCell(this.mxcell);
+    return this;
   }
 
   /**
    * Unhighlight mxcell
    *
+   * @returns {this}
    * @memberof State
    */
-  unhighlightCell() {
+  unhighlightCell():this {
     this.xgraph.unhighlightCell(this.mxcell);
+    return this;
   }
 }

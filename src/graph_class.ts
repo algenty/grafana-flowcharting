@@ -748,7 +748,7 @@ export default class XGraph {
    * @returns {Map<mxCell>} mxCells
    * @memberof XGraph
    */
-  getMxCells() {
+  getMxCells():any {
     return this.graph.getModel().cells;
   }
 
@@ -759,7 +759,7 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getValuePropOfMxCell(prop: gf.TPropertieKey, mxcell: mxCell) {
+  getValuePropOfMxCell(prop: gf.TPropertieKey, mxcell: mxCell):string|null {
     if (prop === 'id') {
       return this.getId(mxcell);
     }
