@@ -235,12 +235,12 @@ export class MetricTooltip {
 class GraphTooltip {
   color = '#8c8980';
   type: gf.TGraphType = 'line';
-  data: Chartist.IChartistData = {
-    series: [
+  data : Chartist.IChartistData =  {
+    series : [
       {
-        data: [{ x: 0, y: 0 }],
-      },
-    ],
+        data : [{x : 0, y :0}]
+      }
+    ]
   };
   name?: string;
   column?: string;
@@ -252,7 +252,7 @@ class GraphTooltip {
   div: HTMLDivElement | undefined;
   chart: any;
   parentDiv: HTMLDivElement | undefined;
-  constructor() {}
+  constructor() { }
 
   getDiv(div: HTMLDivElement): HTMLDivElement | undefined {
     return this.div;
@@ -308,6 +308,7 @@ class GraphTooltip {
   getChart() {
     return this.chart;
   }
+
 }
 
 class LineGraphTooltip extends GraphTooltip {

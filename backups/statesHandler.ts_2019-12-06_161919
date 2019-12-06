@@ -8,6 +8,7 @@ import XGraph from 'graph_class';
 
 declare var GFP: FlowChartingPlugin;
 
+
 /**
  * States Handler class
  *

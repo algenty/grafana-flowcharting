@@ -129,7 +129,7 @@ export default class State {
    * @param {Metric} metric
    * @memberof State
    */
-  setState(rule: Rule, metric: Metric): this {
+  setState(rule: Rule, metric: Metric):this {
     GFP.log.info('State.setState()');
     GFP.log.info('State.setState() rule', rule);
     GFP.log.info('State.setState() metric', metric);
@@ -259,7 +259,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  unsetState(): this {
+  unsetState():this {
     GFP.log.info('State.unsetState()');
     this.unsetLevel();
     // this.unsetColor(); Replace by reset
@@ -304,7 +304,7 @@ export default class State {
    * @returns {string|null} return original value of id or label of cell
    * @memberof State
    */
-  getCellProp(prop: gf.TPropertieKey): string | null {
+  getCellProp(prop: gf.TPropertieKey):string|null {
     if (prop === 'id') {
       return this.cellId;
     }
@@ -322,7 +322,7 @@ export default class State {
    * @param {string} color - html color
    * @memberof State
    */
-  setColorStyle(style: gf.TStyleKey, color: string): this {
+  setColorStyle(style: gf.TStyleKey, color: string):this {
     GFP.log.info('State.setColorStyle()');
     this.currentColors[style] = color;
     return this;
@@ -345,7 +345,7 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetColorStyle(style: gf.TStyleKey): this {
+  unsetColorStyle(style: gf.TStyleKey):this {
     this.currentColors[style] = this.originalColors[style];
     return this;
   }
@@ -356,7 +356,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  unsetColor(): this {
+  unsetColor():this {
     this.styleKeys.forEach(style => {
       this.unsetColorStyle(style);
     });
@@ -370,7 +370,7 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetLevelStyle(style: gf.TStyleKey): this {
+  unsetLevelStyle(style: gf.TStyleKey):this {
     this.level[style] = -1;
     return this;
   }
@@ -381,7 +381,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  unsetTooltip(): this {
+  unsetTooltip():this {
     if (this.tooltipHandler !== null) {
       this.tooltipHandler.destroy();
     }
@@ -395,7 +395,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  unsetLevel(): this {
+  unsetLevel():this {
     this.styleKeys.forEach((style: gf.TStyleKey) => {
       this.unsetLevelStyle(style);
     });
@@ -411,7 +411,7 @@ export default class State {
    * @param {number} level
    * @memberof State
    */
-  setLevelStyle(style: gf.TStyleKey, level: number): this {
+  setLevelStyle(style: gf.TStyleKey, level: number):this {
     GFP.log.info('State.setLevelStyle()');
     this.level[style] = level;
     if (this.globalLevel < level) {
@@ -470,7 +470,7 @@ export default class State {
    * @param {string} text
    * @memberof State
    */
-  setText(text: string): this {
+  setText(text: string):this {
     this.currentText = text;
     return this;
   }
@@ -481,9 +481,9 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  unsetText(): this {
+  unsetText():this {
     this.currentText = this.originalText;
-    return this;
+    return this
   }
 
   /**
@@ -493,7 +493,7 @@ export default class State {
    * @param {string} url
    * @memberof State
    */
-  setLink(url: string): this {
+  setLink(url: string):this {
     this.currentLink = url;
     return this;
   }
@@ -504,10 +504,11 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  unsetLink(): this {
+  unsetLink():this {
     this.currentLink = this.originalLink;
     return this;
   }
+
 
   /**
    * Add metric to tooltip of shape
@@ -515,7 +516,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  addTooltip(): this {
+  addTooltip():this {
     GFP.log.info('State.addTooltipValue()');
     if (this.tooltipHandler == null) {
       this.tooltipHandler = new TooltipHandler(this.mxcell);
@@ -524,11 +525,11 @@ export default class State {
     return this;
   }
 
-  updateTooltipDate(): this {
+  updateTooltipDate():this {
     if (this.tooltipHandler) {
       this.tooltipHandler.updateDate();
     }
-    return this;
+    return this
   }
 
   /**
@@ -556,7 +557,7 @@ export default class State {
    *
    * @memberof State
    */
-  applyShape(): this {
+  applyShape():this {
     this.changedShape = true;
     this.applyStyle();
     this.applyIcon();
@@ -569,7 +570,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  applyStyle(): this {
+  applyStyle():this {
     this.styleKeys.forEach(key => {
       if (this.matchedStyle[key]) {
         const color = this.currentColors[key];
@@ -588,7 +589,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  applyIcon(): this {
+  applyIcon():this {
     // Apply icons
     if (this.overlayIcon) {
       this.changedIcon = true;
@@ -605,7 +606,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  resetShape(): this {
+  resetShape():this {
     this.changedShape = false;
     this.resetStyle();
     this.resetIcon();
@@ -618,7 +619,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  resetIcon(): this {
+  resetIcon():this {
     this.changedIcon = false;
     this.xgraph.removeOverlay(this.mxcell);
     return this;
@@ -629,7 +630,7 @@ export default class State {
    *
    * @memberof State
    */
-  resetStyle(): this {
+  resetStyle():this {
     this.unsetColor();
     this.xgraph.setStyles(this.mxcell, this.originalStyle);
     this.styleKeys.forEach(key => {
@@ -643,7 +644,7 @@ export default class State {
    *
    * @memberof State
    */
-  applyText(): this {
+  applyText():this {
     this.changedText = true;
     this.xgraph.setLabelCell(this.mxcell, this.currentText);
     return this;
@@ -655,7 +656,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  resetText(): this {
+  resetText():this {
     this.changedText = false;
     this.unsetText();
     this.xgraph.setLabelCell(this.mxcell, this.originalText);
@@ -668,7 +669,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  applyLink(): this {
+  applyLink():this {
     this.changedLink = true;
     this.xgraph.addLink(this.mxcell, this.currentLink);
     return this;
@@ -680,7 +681,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  resetLink(): this {
+  resetLink():this {
     this.changedLink = false;
     this.unsetLink();
     this.xgraph.addLink(this.mxcell, this.originalLink);
@@ -693,7 +694,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  applyTooltip(): this {
+  applyTooltip():this {
     if (this.tooltipHandler != null && this.tooltipHandler.isChecked()) {
       this.mxcell.GF_tooltipHandler = this.tooltipHandler;
     }
@@ -706,7 +707,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  applyState(): this {
+  applyState():this {
     GFP.log.info('State.applyState()');
     if (this.matched) {
       this.changed = true;
@@ -746,7 +747,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  reset(): this {
+  reset():this {
     this.resetShape();
     this.resetText();
     this.resetLink();
@@ -760,7 +761,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  prepare(): this {
+  prepare():this {
     if (this.changed) {
       this.unsetLevel();
       this.unsetTooltip();
@@ -779,7 +780,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  highlightCell(): this {
+  highlightCell():this {
     this.xgraph.highlightCell(this.mxcell);
     return this;
   }
@@ -790,7 +791,7 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  unhighlightCell(): this {
+  unhighlightCell():this {
     this.xgraph.unhighlightCell(this.mxcell);
     return this;
   }

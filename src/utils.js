@@ -179,7 +179,7 @@ module.exports = {
   },
 
   matchString(str, pattern) {
-    if (str === undefined || pattern === undefined || str.length === 0 || pattern.length === 0) {
+    if (str === null || str === undefined || pattern === null || pattern === undefined || str.length === 0 || pattern.length === 0) {
       // GFP.log.debug( `Match str=${str} pattern=${pattern}`, false);
       return false;
     }

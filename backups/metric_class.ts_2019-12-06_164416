@@ -48,7 +48,7 @@ export default class Metric {
    * @returns {gf.TGraphCoordinate[]}
    * @memberof Metric
    */
-  getData(column?: string): number[] | Array<{ x: number | Date; y: number }> {
+  getData(column?: string): number [] | { x: number | Date; y: number }[] {
     return [];
   }
 
@@ -112,7 +112,7 @@ export class Serie extends Metric {
     }
   }
 
-  getData(): number[] | Array<{ x: number | Date; y: number }> {
+  getData(): number [] | { x: number | Date; y: number }[] {
     return this.metrics.flotpairs.map(d => {
       return { x: d[0], y: d[1] };
     });
@@ -353,12 +353,12 @@ export class Table extends Metric {
     return result;
   }
 
-  getData(column: string): number[] | Array<{ x: number | Date; y: number }> {
+  getData(column: string): number [] | { x: number | Date; y: number }[] {
     if (this.metrics.timeColumn) {
       return this.metrics.datapoints.map(d => {
         return { x: d[this.metrics.timeColumn], y: d[column] };
       });
-    }
+    } 
     return this.metrics.datapoints.map(d => d[column]);
   }
 }

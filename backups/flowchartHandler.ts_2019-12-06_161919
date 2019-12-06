@@ -526,7 +526,7 @@ export default class FlowchartHandler {
     window.addEventListener('message', this.listenMessage.bind(this), false);
   }
 
-  getFlowchartNames(): string[] {
-    return this.flowcharts.map(f => f.data.name);
+  getFlowchartNames():string[] {
+    return this.flowcharts.map((f) => f.data.name);
   }
 }

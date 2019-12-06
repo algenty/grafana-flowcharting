@@ -24,7 +24,7 @@ export class InspectOptionsCtrl {
   logLevel: number;
   logDisplay: boolean;
   flowchartHandler: FlowchartHandler;
-  metricHandler: MetricHandler;
+  metricHandler : MetricHandler;
   panelCtrl: any;
   colors: any; //TODO: define style
   /** @ngInject */

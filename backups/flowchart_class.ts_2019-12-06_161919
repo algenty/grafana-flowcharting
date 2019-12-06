@@ -203,8 +203,9 @@ export default class Flowchart {
       } else {
         GFP.log.error('XML Graph not defined');
       }
+      
     } catch (error) {
-      GFP.log.error('Unable to initialize graph', error);
+      GFP.log.error('Unable to initialize graph',error);
     }
   }
 
@@ -243,9 +244,7 @@ export default class Flowchart {
     if (metrics === undefined) {
       GFP.log.warn("Metrics shoudn't be null");
     }
-    if (this.stateHandler) {
-      this.stateHandler.setStates(rules, metrics);
-    }
+    if (this.stateHandler) this.stateHandler.setStates(rules, metrics);
     return this;
   }
 
@@ -272,9 +271,7 @@ export default class Flowchart {
    */
   applyStates(): this {
     GFP.log.info(`flowchart[${this.data.name}].applyStates()`);
-    if (this.stateHandler) {
-      this.stateHandler.applyStates();
-    }
+    if (this.stateHandler) this.stateHandler.applyStates();
     return this;
   }
 

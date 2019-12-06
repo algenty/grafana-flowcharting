@@ -54,9 +54,7 @@ export default class RulesHandler {
       tmpRules.forEach(ruleData => {
         // const newData: any = Rule.getDefaultData();
         // const rule = new Rule(map.pattern, newData);
-        this.addRule('new')
-          .import(ruleData)
-          .setOrder(index);
+        this.addRule('new').import(ruleData).setOrder(index);
         index += 1;
         // this.rules.push(rule);
         // this.data.rulesData.push(rule.getData());

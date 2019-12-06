@@ -34,12 +34,12 @@ export default class XGraph {
   lock = true;
   center = true;
   zoom = false;
-  zoomFactor = 1.2;
-  cumulativeZoomFactor = 1;
+  zoomFactor: number = 1.2;
+  cumulativeZoomFactor: number = 1;
   grid = false;
   bgColor: string | null = null;
-  zoomPercent = '1';
-  cells: { id: string[]; value: string[] } = {
+  zoomPercent:string = '1';
+  cells: { id: string[], value: string[] } = {
     id: [],
     value: [],
   };
@@ -1140,6 +1140,7 @@ export default class XGraph {
       } else {
         GFP.log.error('Cannot load ' + url, req.getStatus());
       }
+
     } catch (error) {
       GFP.log.error('Cannot load ' + url, error);
     }
