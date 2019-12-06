@@ -3,6 +3,7 @@ import State from 'state_class';
 import * as gf from '../types/flowcharting';
 
 import FlowChartingPlugin from './plugin';
+import MetricHandler from './metricHandler';
 declare var GFP: FlowChartingPlugin;
 
 export class InspectOptionsCtrl {
@@ -23,6 +24,7 @@ export class InspectOptionsCtrl {
   logLevel: number;
   logDisplay: boolean;
   flowchartHandler: FlowchartHandler;
+  metricHandler : MetricHandler;
   panelCtrl: any;
   colors: any; //TODO: define style
   /** @ngInject */
@@ -35,6 +37,7 @@ export class InspectOptionsCtrl {
     this.logLevel = GFP.log.logLevel;
     this.logDisplay = GFP.log.logDisplay;
     this.flowchartHandler = this.ctrl.flowchartHandler;
+    this.metricHandler = this.ctrl.metricHandler;
     $scope.flowchartHandler = this.ctrl.flowchartHandler;
   }
 

@@ -235,6 +235,13 @@ export class MetricTooltip {
 class GraphTooltip {
   color = '#8c8980';
   type: gf.TGraphType = 'line';
+  data : Chartist.IChartistData =  {
+    series : [
+      {
+        data : [{x : 0, y :0}]
+      }
+    ]
+  };
   name?: string;
   column?: string;
   size: gf.TGraphSize = '100%';
@@ -308,7 +315,6 @@ class LineGraphTooltip extends GraphTooltip {
   chartistOptions: Chartist.ILineChartOptions;
   div: HTMLDivElement | undefined;
   // data: { series: Array<{ x: any; y: any }>[] } | undefined;
-  data: any;
   chart!: Chartist.IChartistLineChart;
   constructor() {
     super();
@@ -333,7 +339,7 @@ class LineGraphTooltip extends GraphTooltip {
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
-    const coor = <Chartist.IChartistSeriesData>this.metric.getCoor(this.column);
+    this.data.series[0]['data'] = this.metric.getData(this.column);
     const div = document.createElement('div');
     const color = this.color;
     this.div = div;
@@ -341,9 +347,6 @@ class LineGraphTooltip extends GraphTooltip {
       parentDiv.appendChild(div);
     }
     div.className = 'ct-chart ct-golden-section';
-    this.data = {
-      series: [coor],
-    };
     if (this.size !== null) {
       div.style.width = this.size;
     }
@@ -394,8 +397,6 @@ class LineGraphTooltip extends GraphTooltip {
 
 class BarGraphTooltip extends GraphTooltip {
   chartistOptions: Chartist.IBarChartOptions;
-  // data: { series: Array<{ x: any; y: any }>[] } | undefined;
-  data: any;
   chart!: Chartist.IChartistBarChart;
   constructor() {
     super();
@@ -416,7 +417,7 @@ class BarGraphTooltip extends GraphTooltip {
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
-    const coor = <Chartist.IChartistSeriesData>this.metric.getCoor(this.column);
+    this.data.series[0]['data'] = this.metric.getData(this.column);
     const div = document.createElement('div');
     const color = this.color;
     this.div = div;
@@ -424,9 +425,6 @@ class BarGraphTooltip extends GraphTooltip {
       parentDiv.appendChild(div);
     }
     div.className = 'ct-chart ct-golden-section';
-    this.data = {
-      series: [coor],
-    };
     if (this.size !== null) {
       div.style.width = this.size;
     }
@@ -443,8 +441,9 @@ class BarGraphTooltip extends GraphTooltip {
 
     this.chart = new Chartist.Bar(div, this.data, this.chartistOptions);
     let seq = 0;
-    const delays = Math.round(50 / (coor.length / 10));
-    const durations = Math.round(250 / (coor.length / 10));
+    const length = this.data.series[0]['data'].length;
+    const delays = Math.round(50 / (length / 10));
+    const durations = Math.round(250 / (length / 10));
     this.chart.on('draw', (data: any) => {
       if (data.type === 'bar') {
         data.element.attr({

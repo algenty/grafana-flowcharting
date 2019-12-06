@@ -17,7 +17,7 @@ export default class Metric {
   metrics: any = {};
   name = '';
   nullPointMode = 'connected';
-  constructor(dataList: any) {}
+  constructor(dataList: any) { }
 
   /**
    * Get name of metric
@@ -48,7 +48,7 @@ export default class Metric {
    * @returns {gf.TGraphCoordinate[]}
    * @memberof Metric
    */
-  getCoor(column?: string): gf.TGraphCoordinate[] {
+  getData(column?: string): Array<number> | Array<{ x: number | Date, y: number }> {
     return [];
   }
 
@@ -112,10 +112,8 @@ export class Serie extends Metric {
     }
   }
 
-  getCoor(): gf.TGraphCoordinate[] {
-    return this.metrics.flotpairs.map((d: any) => {
-      return { x: d[0], y: d[1] };
-    });
+  getData(): Array<number> | Array<{ x: number | Date, y: number }> {
+    return this.metrics.flotpairs.map( (d) => { return { x: d[0], y: d[1] } });
   }
 
   getColumnsName(): string[] {
@@ -353,13 +351,12 @@ export class Table extends Metric {
     return result;
   }
 
-  getCoor(column: string): gf.TGraphCoordinate[] {
-    return this.metrics.datapoints.map(d => {
-      const coor: gf.TGraphCoordinate = { y: d[column] };
-      if (this.metrics.timeColumn) {
-        coor.x = d[this.metrics.timeColumn];
-      }
-      return coor;
-    });
+  getData(column: string): Array<number> | Array<{ x: number | Date, y: number }> {
+    if (this.metrics.timeColumn) {
+      return this.metrics.datapoints.map( (d) => {
+        return { x : d[this.metrics.timeColumn], y : d[column]}
+      });
+    }
+    else return this.metrics.datapoints.map( d => d[column] );
   }
 }

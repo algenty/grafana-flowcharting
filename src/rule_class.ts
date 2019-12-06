@@ -111,7 +111,7 @@ export default class Rule {
    * @param {data} obj
    * @memberof Rule
    */
-  import(obj):this {
+  import(obj): this {
     this.data.unit = obj.unit || 'short';
     this.data.type = obj.type || 'number';
     this.data.metricType = obj.metricType || 'serie';
@@ -740,17 +740,17 @@ export default class Rule {
       }
       return thresholdLevel;
     } else if (this.data.type === 'string') {
-      if (value === this.data.stringWarning) {
+      if (GFP.utils.matchString(value, this.data.stringWarning)) {
         return 1;
       }
-      if (value === this.data.stringCritical) {
+      if (GFP.utils.matchString(this.data.stringCritical, this.data.stringWarning)) {
         return 2;
       }
       const formatedValue = this.getFormattedValue(value);
-      if (formatedValue === this.data.stringWarning) {
+      if (GFP.utils.matchString(formatedValue, this.data.stringWarning)) {
         return 1;
       }
-      if (formatedValue === this.data.stringCritical) {
+      if (GFP.utils.matchString(formatedValue, this.data.stringCritical)) {
         return 2;
       }
       return 0;
@@ -894,8 +894,8 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 }

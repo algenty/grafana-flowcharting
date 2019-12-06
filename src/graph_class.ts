@@ -34,12 +34,15 @@ export default class XGraph {
   lock = true;
   center = true;
   zoom = false;
-  zoomFactor: number;
-  cumulativeZoomFactor: number;
+  zoomFactor: number = 1.2;
+  cumulativeZoomFactor: number = 1;
   grid = false;
   bgColor: string | null = null;
-  zoomPercent = '1';
-  cells: any; //TODO : Define type
+  zoomPercent:string = '1';
+  cells: { id: string[], value: string[] } = {
+    id: [],
+    value: [],
+  };
   clickBackup!: () => void;
   dbclickBackup!: () => void;
   onMapping!: gf.TIOnMappingObj;
@@ -53,14 +56,7 @@ export default class XGraph {
     GFP.log.info('XGraph.constructor()');
     this.container = container;
     this.type = type;
-    // BEGIN ZOOM MouseWheele
-    this.zoomFactor = 1.2;
-    this.cumulativeZoomFactor = 1;
     // END ZOOM MouseWheele
-    this.cells = {
-      id: [],
-      value: [],
-    };
     XGraph.initMxGgraph();
     if (type === 'xml') {
       if (GFP.utils.isencoded(definition)) {
@@ -748,7 +744,7 @@ export default class XGraph {
    * @returns {Map<mxCell>} mxCells
    * @memberof XGraph
    */
-  getMxCells():any {
+  getMxCells(): any {
     return this.graph.getModel().cells;
   }
 
@@ -759,7 +755,7 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getValuePropOfMxCell(prop: gf.TPropertieKey, mxcell: mxCell):string|null {
+  getValuePropOfMxCell(prop: gf.TPropertieKey, mxcell: mxCell): string | null {
     if (prop === 'id') {
       return this.getId(mxcell);
     }
@@ -1136,7 +1132,7 @@ export default class XGraph {
     }
   }
 
-  static loadXml(url) : string|null {
+  static loadXml(url): string | null {
     try {
       const req: any = mxUtils.load(url);
       if (req.getStatus() >= 200 && req.getStatus() <= 299) {
@@ -1144,7 +1140,7 @@ export default class XGraph {
       } else {
         GFP.log.error('Cannot load ' + url, req.getStatus());
       }
-      
+
     } catch (error) {
       GFP.log.error('Cannot load ' + url, error);
     }
