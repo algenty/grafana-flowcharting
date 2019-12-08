@@ -29,7 +29,7 @@ See more example at draw.io
 
 # Changelog
 
-## [[0.6.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0-SNAPSHOT.zip) - 2019-12-07  
+## [[0.6.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0-SNAPSHOT.zip) - 2019-12-08  
 ### Added  
   - Experimental implementation for table type data (Mysql, Postgres, Zabbix, Streaming, loki and other ...)
   - Some optimization on : 

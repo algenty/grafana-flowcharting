@@ -1,54 +1,15 @@
 import Rule from '../src/rule_class';
+const data = Rule.getDefaultData();
 
-const series = [
-  {
-    datapoints: [
-      [87.2288864455515, 1553029068638],
-      [87.3044867732176, 1553029069138],
-      [87.41570847045853, 1553029069638],
-    ],
-    label: 'A-series',
-    id: 'A-series',
-    alias: 'A-series',
-    aliasEscaped: 'A-series',
-    bars: {},
-    stats: {
-      total: 50819.34737192067,
-      max: 90.15954449591173,
-      min: 78.19373234740918,
-      logmin: 78.19373234740918,
-      avg: 84.69891228653445,
-      current: 79.17554249669148,
-      first: 87.2288864455515,
-      delta: 12316.4939445703,
-      diff: -8.053343948860018,
-      range: 11.96581214850255,
-      timeStep: 500,
-      count: 600,
-    },
-    legend: true,
-    hasMsResolution: true,
-    allIsNull: false,
-    allIsZero: false,
-    flotpairs: [
-      [1553029068638, 87.2288864455515],
-      [1553029069138, 87.3044867732176],
-      [1553029069638, 87.41570847045853],
-    ],
-  },
-];
 
 describe('Rule', () => {
-  const data = {};
   const rule = new Rule('/.*/', data);
   test('Should be equals', () => {
-    // expect(rule).toEqual(modeleRule);
     expect(rule.getData()).toMatchSnapshot();
   });
 });
 
 describe('Level', () => {
-  const data = {};
   const rule = new Rule('/.*/', data);
   test('In order', () => {
     rule.data.thresholds = [50, 80];
@@ -68,7 +29,6 @@ describe('Level', () => {
 });
 
 describe('Colors', () => {
-  const data = {};
   const rule = new Rule('/.*/', data);
   rule.data.thresholds = [50, 80];
   test('Each colors', () => {
@@ -79,7 +39,6 @@ describe('Colors', () => {
 });
 
 describe('Colorize', () => {
-  const data = {};
   const rule = new Rule('/.*/', data);
   rule.data.thresholds = [50, 80];
 
@@ -113,7 +72,6 @@ describe('Colorize', () => {
 describe('Shape', () => {
   const pattern = '/.*Toto.*/';
   test('addshape & remove', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.addShapeMap(pattern);
     expect(rule.getShapeMaps().length).toBe(1);
@@ -124,7 +82,6 @@ describe('Shape', () => {
   });
 
   test('Match on one', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.addShapeMap(pattern);
     const sm = rule.getShapeMap(0);
@@ -133,7 +90,6 @@ describe('Shape', () => {
   });
 
   test('Match on all', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.addShapeMap(pattern);
     expect(rule.matchShape('Toto')).toBeTruthy();
@@ -145,7 +101,6 @@ describe('Text', () => {
   const pattern = '/.*Toto.*/';
 
   test('addshape & remove', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.addTextMap(pattern);
     expect(rule.getTextMaps().length).toBe(1);
@@ -154,7 +109,6 @@ describe('Text', () => {
   });
 
   test('Match on one', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.addTextMap(pattern);
     const sm = rule.getTextMap(0);
@@ -162,7 +116,6 @@ describe('Text', () => {
   });
 
   test('Match on all', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.addTextMap(pattern);
     expect(rule.matchText('Toto')).toBeTruthy();
@@ -173,7 +126,6 @@ describe('Text', () => {
 describe('Link', () => {
   const pattern = '/.*Toto.*/';
   test('addshape & remove', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.addLinkMap(pattern);
     expect(rule.getLinkMaps().length).toBe(1);
@@ -183,7 +135,6 @@ describe('Link', () => {
   });
 
   test('Match on one', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.addLinkMap(pattern);
     const sm = rule.getLinkMap(0);
@@ -191,7 +142,6 @@ describe('Link', () => {
   });
 
   test('Match on all', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.addLinkMap(pattern);
     expect(rule.matchLink('Toto')).toBeTruthy();
@@ -201,7 +151,6 @@ describe('Link', () => {
 
 describe('ValueMap', () => {
   test('addshape & remove', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.data.mappingType = 1;
     rule.addValueMap(1, 'This 1');
@@ -213,7 +162,6 @@ describe('ValueMap', () => {
   });
 
   test('Mapping values', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.data.mappingType = 1;
     rule.data.type = 'string';
@@ -227,7 +175,6 @@ describe('ValueMap', () => {
 
 describe('RangeMap', () => {
   test('addshape & remove', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.data.mappingType = 2;
     rule.data.type = 'string';
@@ -240,7 +187,6 @@ describe('RangeMap', () => {
   });
 
   test('Mapping values', () => {
-    const data = {};
     const rule = new Rule('/.*/', data);
     rule.data.mappingType = 2;
     rule.data.type = 'string';
@@ -249,29 +195,6 @@ describe('RangeMap', () => {
     expect(rule.getFormattedValue(3)).toBe('Between 0 and 5');
     expect(rule.getFormattedValue(7)).toBe('Between 6 and 10');
     expect(rule.getFormattedValue(12)).toBe('12');
-  });
-});
-
-describe('Series', () => {
-  const data = {};
-  const rule = new Rule('/.*/', data);
-  const serie = series[0];
-  test('matchSerie', () => {
-    expect(rule.matchSerie(serie)).toBeTruthy();
-  });
-
-  test('Values', () => {
-    expect(rule.getValueForSerie(serie)).toBe(79.17554249669148);
-  });
-
-  test('Formatted Values', () => {
-    const value = rule.getValueForSerie(serie);
-    expect(rule.getFormattedValue(value)).toBe('79.18');
-  });
-
-  test('Change aggregation to max', () => {
-    rule.data.aggregation = 'max';
-    expect(rule.getValueForSerie(serie)).toBe(90.15954449591173);
   });
 });
 

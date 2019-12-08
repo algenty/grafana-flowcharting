@@ -444,7 +444,7 @@ export default class Rule {
    * @memberof Rule
    */
   addShapeMap(pattern: string): ShapeMap {
-    const data = ShapeMap.getDefaultData() as gf.TShapeMapData;
+    const data = <gf.TShapeMapData>ShapeMap.getDefaultData();
     const m = new ShapeMap(pattern, data);
     this.shapeMaps.push(m);
     this.data.shapeData.push(data);

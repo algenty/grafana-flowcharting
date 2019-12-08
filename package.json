@@ -39,6 +39,7 @@
     "@types/jquery": "^3.3.31",
     "@types/lodash": "^4.14.146",
     "angular": "^1.7.9",
+    "babel-eslint": "^10.0.3",
     "babel-polyfill": "^6.26.0",
     "chartist": "^0.11.4",
     "color-normalize": "^1.5.0",

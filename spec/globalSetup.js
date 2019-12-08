@@ -13,7 +13,6 @@ const options = {
 
 const app = express();
 app.get('*', (req, res) => {
-  // console.log('globalSetup : app.get req.path ', req.path);
   const filePath = req.path.replace(urlReplace, './dist');
   res.sendFile(filePath, options, (err) => {
     if (err) {
@@ -23,9 +22,7 @@ app.get('*', (req, res) => {
 });
 
 module.exports = () => {
-  // eslint-disable-next-line no-underscore-dangle
-  global.__express__ = app.listen(80, 'localhost', () => {
-    // eslint-disable-next-line no-console
-    console.log('Express open at port 80');
+  global.__express__ = app.listen(8080, 'localhost', () => {
+    console.log('Express open at port 8080');
   });
 };
