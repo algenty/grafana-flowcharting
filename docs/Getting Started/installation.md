@@ -23,11 +23,11 @@ $ grafana-cli plugins install agenty-flowcharting-panel
 
 Repository section
 
-1. Download last version from [Repository section](https://TODO) and unzip file in data/plugin directory
+1. Download last version from download section and unzip file in data/plugin directory
  
 ```sh
 $ cd ${grafana_home}/data/plugin
-$ wget https://algenty.github.io/grafana-flowcharting/archives/lastest.zip
-$ unzip lastest.zip
+$ wget https://algenty.github.io/grafana-flowcharting/archives/<lastest>.zip
+$ unzip <lastest>.zip
 ```
 2. Restart Grafana
