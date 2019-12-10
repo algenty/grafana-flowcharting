@@ -1,6 +1,7 @@
 // import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
 import Metric, { Serie, Table } from './metric_class';
+import * as gf from '../types/flowcharting';
 
 /**
  * Data Series/Tables handler

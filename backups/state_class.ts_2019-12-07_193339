@@ -12,10 +12,10 @@ import TooltipHandler from './tooltipHandler';
 export default class State {
   mxcell: mxCell;
   cellId: string;
-  newcellId: string | undefined; // for inspect mode
-  previousId: string | undefined; // for inspect mode
-  edited: boolean | undefined; // if modified in inspector
-  edit: boolean | undefined; // if modified in inspector
+  newcellId?: string; // for inspect mode
+  previousId?: string; // for inspect mode
+  edited?: boolean; // if modified in inspector
+  edit?: boolean; // if modified in inspector
   xgraph: XGraph;
   changed = false;
   changedShape = false;

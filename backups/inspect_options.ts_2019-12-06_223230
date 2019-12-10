@@ -1,6 +1,10 @@
 import FlowchartHandler from './flowchartHandler';
 import State from 'state_class';
+import * as gf from '../types/flowcharting';
+
+import FlowChartingPlugin from './plugin';
 import MetricHandler from './metricHandler';
+declare var GFP: FlowChartingPlugin;
 
 export class InspectOptionsCtrl {
   enable = false; // enable inspector or not

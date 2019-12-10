@@ -129,15 +129,13 @@ export default class TooltipHandler {
 export class MetricTooltip {
   color: string;
   graphs: Set<GraphTooltip>;
-  label: string;
-  value: string;
+  label!: string;
+  value!: string;
   direction: gf.TDirection = 'v';
   div: HTMLDivElement | undefined;
   constructor() {
     this.color = '#8c8980';
     this.graphs = new Set();
-    this.label = '';
-    this.value = '';
   }
 
   setLabel(label: string): this {
@@ -239,10 +237,10 @@ class GraphTooltip {
       },
     ],
   };
-  name: string | undefined;
-  column: string | undefined;
+  name?: string;
+  column?: string;
   size: gf.TGraphSize = '100%';
-  metric: Metric | undefined;
+  metric!: Metric;
   low: number | null = null;
   high: number | null = null;
   scaleType: gf.TGraphScale = 'linear';
@@ -311,7 +309,7 @@ class LineGraphTooltip extends GraphTooltip {
   chartistOptions: Chartist.ILineChartOptions;
   div: HTMLDivElement | undefined;
   // data: { series: Array<{ x: any; y: any }>[] } | undefined;
-  chart: Chartist.IChartistLineChart | undefined;
+  chart!: Chartist.IChartistLineChart;
   constructor() {
     super();
     this.type = 'line';
@@ -335,9 +333,7 @@ class LineGraphTooltip extends GraphTooltip {
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
-    if (this.metric) {
-      this.data.series[0]['data'] = this.metric.getData(this.column);
-    }
+    this.data.series[0]['data'] = this.metric.getData(this.column);
     const div = document.createElement('div');
     const color = this.color;
     this.div = div;
@@ -395,7 +391,7 @@ class LineGraphTooltip extends GraphTooltip {
 
 class BarGraphTooltip extends GraphTooltip {
   chartistOptions: Chartist.IBarChartOptions;
-  chart: Chartist.IChartistBarChart | undefined;
+  chart!: Chartist.IChartistBarChart;
   constructor() {
     super();
     this.type = 'bar';
@@ -415,9 +411,7 @@ class BarGraphTooltip extends GraphTooltip {
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
-    if (this.metric) {
-      this.data.series[0]['data'] = this.metric.getData(this.column);
-    }
+    this.data.series[0]['data'] = this.metric.getData(this.column);
     const div = document.createElement('div');
     const color = this.color;
     this.div = div;

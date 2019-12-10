@@ -1,5 +1,9 @@
 import Rule from './rule_class';
 import _ from 'lodash';
+import * as gf from '../types/flowcharting';
+
+import FlowChartingPlugin from './plugin';
+declare var GFP: FlowChartingPlugin;
 
 /**
  * Rules Handler
@@ -48,10 +52,14 @@ export default class RulesHandler {
       }
 
       tmpRules.forEach(ruleData => {
+        // const newData: any = Rule.getDefaultData();
+        // const rule = new Rule(map.pattern, newData);
         this.addRule('new')
           .import(ruleData)
           .setOrder(index);
         index += 1;
+        // this.rules.push(rule);
+        // this.data.rulesData.push(rule.getData());
       });
     }
     return this;

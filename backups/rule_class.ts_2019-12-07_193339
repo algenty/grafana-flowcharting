@@ -19,7 +19,7 @@ export default class Rule {
   rangeMaps: RangeMap[] = [];
   id: string;
   removeClick = 2;
-  states: Map<string, State>;
+  states!: Map<string, State>;
   highestLevel = -1;
   highestColor = '';
   highestFormattedValue = '';
@@ -34,7 +34,6 @@ export default class Rule {
     this.data = data;
     this.data.pattern = pattern;
     this.id = GFP.utils.uniqueID();
-    this.states = new Map();
   }
 
   static getDefaultData(): gf.TIRuleData {
@@ -454,14 +453,12 @@ export default class Rule {
   /**
    * Remove shape for rule
    *
-   * @returns {this}
    * @param {number} index
    * @memberof Rule
    */
-  removeShapeMap(index: number): this {
+  removeShapeMap(index: number) {
     this.data.shapeData.splice(index, 1);
     this.shapeMaps.splice(index, 1);
-    return this;
   }
 
   /**

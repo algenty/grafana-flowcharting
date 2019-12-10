@@ -2,7 +2,11 @@ import moment from 'moment';
 import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
+import * as gf from '../types/flowcharting';
+
+import FlowChartingPlugin from './plugin';
 import Metric from 'metric_class';
+declare var GFP: FlowChartingPlugin;
 
 /**
  * Rule definition
@@ -19,7 +23,7 @@ export default class Rule {
   rangeMaps: RangeMap[] = [];
   id: string;
   removeClick = 2;
-  states: Map<string, State>;
+  states!: Map<string, State>;
   highestLevel = -1;
   highestColor = '';
   highestFormattedValue = '';
@@ -34,7 +38,7 @@ export default class Rule {
     this.data = data;
     this.data.pattern = pattern;
     this.id = GFP.utils.uniqueID();
-    this.states = new Map();
+    this.import(data);
   }
 
   static getDefaultData(): gf.TIRuleData {
@@ -104,11 +108,10 @@ export default class Rule {
   /**
    * import data in rule
    *
-   * @returns {this}
    * @param {data} obj
    * @memberof Rule
    */
-  import(obj: any): this {
+  import(obj): this {
     this.data.unit = obj.unit || 'short';
     this.data.type = obj.type || 'number';
     this.data.metricType = obj.metricType || 'serie';
@@ -168,7 +171,12 @@ export default class Rule {
 
     if (maps !== undefined && maps !== null && maps.length > 0) {
       maps.forEach((shapeData: gf.TShapeMapData) => {
+        // const newData: gf.TShapeMapData = ShapeMap.getDefaultData() as gf.TShapeMapData;
+        // const sm = new ShapeMap(map.pattern, newData);
         this.addShapeMap('new').import(shapeData);
+        // sm.import(shapeData);
+        // this.shapeMaps.push(sm);
+        // this.data.shapeData.push(newData);
       });
     }
 
@@ -185,7 +193,12 @@ export default class Rule {
 
     if (maps !== undefined && maps != null && maps.length > 0) {
       maps.forEach((textData: gf.TTextMapData) => {
+        // const newData: gf.TTextMapData = TextMap.getDefaultData() as gf.TTextMapData;
+        // const tm = new TextMap(textData.pattern, newData);
         this.addTextMap('new').import(textData);
+        // tm.import(textData);
+        // this.textMaps.push(tm);
+        // this.data.textData.push(newData);
       });
     }
 
@@ -194,7 +207,12 @@ export default class Rule {
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
       obj.linkData.forEach((linkData: gf.TlinkMapData) => {
+        // const newData: gf.TlinkMapData = LinkMap.getDefaultData() as gf.TlinkMapData;
+        // const lm = new LinkMap(linkData.pattern, newData);
         this.addLinkMap('new').import(linkData);
+        // lm.import(linkData);
+        // this.linkMaps.push(lm);
+        // this.data.linkData.push(newData);
       });
     }
 
@@ -205,6 +223,11 @@ export default class Rule {
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
       obj.valueData.forEach((valueData: gf.TValueMapData) => {
         this.addValueMap('value', 'text').import(valueData);
+        // const newData: gf.TValueMapData = ValueMap.getDefaultdata();
+        // const vm = new ValueMap(valueData.value, valueData.text, newData);
+        // vm.import(valueData);
+        // this.valueMaps.push(vm);
+        // this.data.valueData.push(newData);
       });
     }
 
@@ -213,6 +236,10 @@ export default class Rule {
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
       obj.rangeData.forEach(rangeData => {
         this.addRangeMap('from', 'to', 'text').import(rangeData);
+        // const newData: gf.TRangeMapData = RangeMap.getDefaultData();
+        // const rm = new RangeMap(map.from, map.to, map.text, newData);
+        // this.rangeMaps.push(rm);
+        // this.data.rangeData.push(newData);
       });
     }
     this.data.sanitize = obj.sanitize || false;
@@ -446,6 +473,7 @@ export default class Rule {
   addShapeMap(pattern: string): ShapeMap {
     const data = ShapeMap.getDefaultData() as gf.TShapeMapData;
     const m = new ShapeMap(pattern, data);
+    // m.import(data);
     this.shapeMaps.push(m);
     this.data.shapeData.push(data);
     return m;
@@ -454,14 +482,12 @@ export default class Rule {
   /**
    * Remove shape for rule
    *
-   * @returns {this}
    * @param {number} index
    * @memberof Rule
    */
-  removeShapeMap(index: number): this {
+  removeShapeMap(index: number) {
     this.data.shapeData.splice(index, 1);
     this.shapeMaps.splice(index, 1);
-    return this;
   }
 
   /**
@@ -579,6 +605,7 @@ export default class Rule {
   addValueMap(value: string, text: string): ValueMap {
     const data: gf.TValueMapData = ValueMap.getDefaultdata();
     const m = new ValueMap(value, text, data);
+    // m.import(data);
     this.valueMaps.push(m);
     this.data.valueData.push(data);
     return m;
@@ -731,13 +758,6 @@ export default class Rule {
     return 0;
   }
 
-  /**
-   * Get value for this metric
-   *
-   * @param {Metric} metric
-   * @returns {(string | number | null)}
-   * @memberof Rule
-   */
   getValueForMetric(metric: Metric): string | number | null {
     if (this.matchMetric(metric)) {
       try {
@@ -751,24 +771,11 @@ export default class Rule {
     return '-';
   }
 
-  /**
-   * Get formatting value according unit
-   *
-   * @param {Metric} metric
-   * @returns {string}
-   * @memberof Rule
-   */
   getFormattedValueForMetric(metric: Metric): string {
     const formattedValue = this.getValueForMetric(metric);
     return this.getFormattedValue(formattedValue);
   }
 
-  /**
-   * Get defined link
-   *
-   * @returns
-   * @memberof Rule
-   */
   getLink() {
     if (this.data.linkParams) {
       return this.data.linkUrl + window.location.search;
@@ -776,13 +783,6 @@ export default class Rule {
     return this.data.linkUrl;
   }
 
-  /**
-   * Format a one value according rule
-   *
-   * @param {*} value
-   * @returns
-   * @memberof Rule
-   */
   getFormattedValue(value: any) {
     // Number
     if (this.data.type === 'number') {
@@ -848,15 +848,7 @@ export default class Rule {
     return value;
   }
 
-  /**
-   * Replace text according text options
-   *
-   * @param {*} text
-   * @param {*} FormattedValue
-   * @returns
-   * @memberof Rule
-   */
-  getReplaceText(text: string, FormattedValue: string): string {
+  getReplaceText(text, FormattedValue) {
     if (this.data.textReplace === 'content') {
       return FormattedValue;
     }
@@ -873,10 +865,9 @@ export default class Rule {
     if (this.data.textReplace === 'anl') {
       return `${text}\n${FormattedValue}`;
     }
-    return text;
   }
 
-  defaultValueFormatter(value: any) {
+  defaultValueFormatter(value) {
     if (value === null || value === void 0 || value === undefined) {
       return '';
     }
@@ -919,37 +910,16 @@ export class GFMap {
     // this.import(data);
   }
 
-  /**
-   * Import data from panel
-   *
-   * @param {*} obj
-   * @returns {this}
-   * @memberof GFMap
-   */
   import(obj: any): this {
     this.data.pattern = obj.pattern || '';
     this.data.hidden = obj.hidden || false;
     return this;
   }
 
-  /**
-   * Return default data
-   *
-   * @static
-   * @returns
-   * @memberof GFMap
-   */
   static getDefaultData() {
     return {};
   }
 
-  /**
-   * Return if text match pattern
-   *
-   * @param {(string | null)} text
-   * @returns {boolean}
-   * @memberof GFMap
-   */
   match(text: string | null): boolean {
     if (text === undefined || text === null || text.length === 0) {
       return false;
@@ -957,44 +927,20 @@ export class GFMap {
     return GFP.utils.matchString(text, this.data.pattern);
   }
 
-  /**
-   * Return uniq ID
-   *
-   * @returns {string}
-   * @memberof GFMap
-   */
   getId(): string {
     return this.id;
   }
 
-  /**
-   * Show/enable
-   *
-   * @returns {this}
-   * @memberof GFMap
-   */
   show(): this {
     this.data.hidden = false;
     return this;
   }
 
-  /**
-   * Hide/disable
-   *
-   * @returns {this}
-   * @memberof GFMap
-   */
   hide(): this {
     this.data.hidden = true;
     return this;
   }
 
-  /**
-   * Return if hidden
-   *
-   * @returns {boolean}
-   * @memberof GFMap
-   */
   isHidden(): boolean {
     if (this.data.hidden === undefined) {
       return false;
@@ -1002,12 +948,6 @@ export class GFMap {
     return this.data.hidden;
   }
 
-  /**
-   * Toggle Visible/Hide
-   *
-   * @returns {boolean}
-   * @memberof GFMap
-   */
   toVisible(): boolean {
     if (this.data.hidden) {
       return false;
@@ -1072,13 +1012,6 @@ class RangeMap {
     // this.import(data);
   }
 
-  /**
-   * import data from panel
-   *
-   * @param {*} obj
-   * @returns {this}
-   * @memberof RangeMap
-   */
   import(obj: any): this {
     this.data.from = obj.from || this.data.from || '';
     this.data.to = obj.to || this.data.to || '';
@@ -1087,13 +1020,6 @@ class RangeMap {
     return this;
   }
 
-  /**
-   * Get default data
-   *
-   * @static
-   * @returns {gf.TRangeMapData}
-   * @memberof RangeMap
-   */
   static getDefaultData(): gf.TRangeMapData {
     return {
       from: null,
@@ -1103,13 +1029,6 @@ class RangeMap {
     };
   }
 
-  /**
-   * Match value
-   *
-   * @param {*} value
-   * @returns {boolean}
-   * @memberof RangeMap
-   */
   match(value: any): boolean {
     if (this.data.from === 'null' && this.data.to === 'null') {
       return true;
@@ -1125,13 +1044,6 @@ class RangeMap {
     return false;
   }
 
-  /**
-   * Return Formatted value
-   *
-   * @param {*} value
-   * @returns {(string | null)}
-   * @memberof RangeMap
-   */
   getFormattedText(value: any): string | null {
     if (this.match(value)) {
       return this.data.text;
@@ -1139,40 +1051,18 @@ class RangeMap {
     return value;
   }
 
-  /**
-   * Show/enable range
-   *
-   * @memberof RangeMap
-   */
   show() {
     this.data.hidden = false;
   }
 
-  /**
-   * Hide/disable range
-   *
-   * @memberof RangeMap
-   */
   hide() {
     this.data.hidden = true;
   }
 
-  /**
-   * Is hidden
-   *
-   * @returns
-   * @memberof RangeMap
-   */
   isHidden() {
     return this.data.hidden;
   }
 
-  /**
-   * is visible
-   *
-   * @returns
-   * @memberof RangeMap
-   */
   toVisible() {
     if (this.data.hidden) {
       return false;
@@ -1180,12 +1070,6 @@ class RangeMap {
     return true;
   }
 
-  /**
-   * Export current data
-   *
-   * @returns
-   * @memberof RangeMap
-   */
   export() {
     return {
       from: this.data.from,
@@ -1206,13 +1090,6 @@ class ValueMap {
     this.import(data);
   }
 
-  /**
-   * Get default data
-   *
-   * @static
-   * @returns
-   * @memberof ValueMap
-   */
   static getDefaultdata() {
     return {
       value: '',
@@ -1221,28 +1098,13 @@ class ValueMap {
     };
   }
 
-  /**
-   * import data from panel
-   *
-   * @param {*} obj
-   * @returns {this}
-   * @memberof ValueMap
-   */
-  import(obj: any): this {
+  import(obj: any) {
     this.data.value = obj.value || this.data.value || '';
     this.data.text = obj.text || this.data.text || '';
     this.data.hidden = obj.hidden || this.data.hidden || false;
-    return this;
   }
 
-  /**
-   * Match value with datas
-   *
-   * @param {any} value
-   * @returns {boolean}
-   * @memberof ValueMap
-   */
-  match(value: any): boolean {
+  match(value) {
     if (value === null || value === undefined) {
       if (this.data.value === 'null') {
         return true;
@@ -1253,17 +1115,11 @@ class ValueMap {
     if (!_.isString(value) && Number(this.data.value) === Number(value)) {
       return true;
     }
+
     return GFP.utils.matchString(value.toString(), this.data.value);
   }
 
-  /**
-   * Get formatted value
-   *
-   * @param {any} value
-   * @returns
-   * @memberof ValueMap
-   */
-  getFormattedText(value: any): string {
+  getFormattedText(value) {
     if (value === null) {
       if (this.data.value === 'null') {
         return this.data.text;
@@ -1272,43 +1128,21 @@ class ValueMap {
     if (this.match(value)) {
       return this.data.text;
     }
-    return `${value}`;
+    return value;
   }
 
-  /**
-   * Show/enable valuemap
-   *
-   * @memberof ValueMap
-   */
   show() {
     this.data.hidden = false;
   }
 
-  /**
-   * Hide/disable valuemap
-   *
-   * @memberof ValueMap
-   */
   hide() {
     this.data.hidden = true;
   }
 
-  /**
-   * Is hidden/disable
-   *
-   * @returns
-   * @memberof ValueMap
-   */
   isHidden() {
     return this.data.hidden;
   }
 
-  /**
-   * export data
-   *
-   * @returns
-   * @memberof ValueMap
-   */
   export() {
     return {
       value: this.data.value,

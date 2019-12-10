@@ -1,7 +1,10 @@
 import FlowchartHandler from 'flowchartHandler';
+import * as gf from '../types/flowcharting';
 
+import FlowChartingPlugin from './plugin';
 import XGraph from 'graph_class';
 import Flowchart from 'flowchart_class';
+declare var GFP: FlowChartingPlugin;
 
 export class FlowchartOptionsCtrl {
   $scope: gf.TIFlowchartOptionsScope;

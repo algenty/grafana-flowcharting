@@ -1,6 +1,7 @@
 import Rule from './rule_class';
 import _ from 'lodash';
 
+
 /**
  * Rules Handler
  *

@@ -3,6 +3,7 @@ import Rule, { GFMap } from './rule_class';
 import _ from 'lodash';
 import Metric from './metric_class';
 
+
 /**
  * Class FlowchartHandler
  */

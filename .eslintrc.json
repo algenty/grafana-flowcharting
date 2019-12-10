@@ -1,4 +1,5 @@
 {
+    "parser": "babel-eslint",
     "env": {
         "browser": true,
         "es6": true,
@@ -6,12 +7,6 @@
         "amd": true,
         "jest": true
     },
-    "plugins": [
-        "lodash"
-    ],
-    "extends": [
-        "airbnb-base"
-    ],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly",
@@ -20,7 +15,7 @@
         "moment": false
     },
     "parserOptions": {
-        "ecmaVersion": 2018,
+        "ecmaVersion": 9,
         "sourceType": "module"
     },
     "rules": {

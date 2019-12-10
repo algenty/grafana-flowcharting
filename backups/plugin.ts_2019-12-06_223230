@@ -48,7 +48,7 @@ export default class FlowChartingPlugin {
       // console.info('Context-root for plugin is', contextRoot);
       plugin = new FlowChartingPlugin(contextRoot, templateSrv);
     }
-    window.GFP = plugin;
+    (window as any).GFP = plugin;
     return plugin;
   }
 

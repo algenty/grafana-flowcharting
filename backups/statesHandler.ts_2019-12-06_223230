@@ -1,8 +1,12 @@
 import State from './state_class';
 import Rule from './rule_class';
+import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
+import { mxCell } from '../types/flowcharting';
 import Metric from './metric_class';
 import XGraph from 'graph_class';
+
+declare var GFP: FlowChartingPlugin;
 
 /**
  * States Handler class

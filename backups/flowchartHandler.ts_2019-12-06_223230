@@ -1,7 +1,11 @@
 import Flowchart from './flowchart_class';
+import FlowChartingPlugin from './plugin';
 import Rule, { GFMap } from './rule_class';
 import _ from 'lodash';
+import * as gf from '../types/flowcharting';
 import Metric from './metric_class';
+
+declare var GFP: FlowChartingPlugin;
 
 /**
  * Class FlowchartHandler

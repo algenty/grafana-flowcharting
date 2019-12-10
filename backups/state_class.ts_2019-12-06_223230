@@ -1,7 +1,11 @@
 import XGraph from './graph_class';
 import Rule from 'rule_class';
+import * as gf from '../types/flowcharting';
+import { mxCell } from '../types/flowcharting';
+import FlowChartingPlugin from './plugin';
 import Metric from './metric_class';
 import TooltipHandler from './tooltipHandler';
+declare var GFP: FlowChartingPlugin;
 
 /**
  * Class for state of one cell
@@ -12,10 +16,10 @@ import TooltipHandler from './tooltipHandler';
 export default class State {
   mxcell: mxCell;
   cellId: string;
-  newcellId: string | undefined; // for inspect mode
-  previousId: string | undefined; // for inspect mode
-  edited: boolean | undefined; // if modified in inspector
-  edit: boolean | undefined; // if modified in inspector
+  newcellId?: string; // for inspect mode
+  previousId?: string; // for inspect mode
+  edited?: boolean; // if modified in inspector
+  edit?: boolean; // if modified in inspector
   xgraph: XGraph;
   changed = false;
   changedShape = false;
@@ -46,7 +50,7 @@ export default class State {
    * @param {XGraph} xgraph
    * @memberof State
    */
-  constructor(mxcell: mxCell, xgraph: XGraph) {
+  constructor(mxcell: gf.mxCell, xgraph: XGraph) {
     GFP.log.info('State.constructor()');
     this.mxcell = mxcell;
     this.cellId = mxcell.id;

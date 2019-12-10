@@ -1,5 +1,9 @@
+import FlowChartingPlugin from './plugin';
 import grafana from './grafana_func';
 import _ from 'lodash';
+
+import * as gf from '../types/flowcharting';
+declare var GFP: FlowChartingPlugin;
 
 /**
  * Metric parent
@@ -115,7 +119,7 @@ export class Serie extends Metric {
   }
 
   getColumnsName(): string[] {
-    //TODO: If multi column
+    //TODO:
     return ['time', 'value'];
   }
 }

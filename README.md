@@ -29,7 +29,7 @@ See more example at draw.io
 
 # Changelog
 
-## [[0.6.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0-SNAPSHOT.zip) - 2019-11-30  
+## [[0.6.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0-SNAPSHOT.zip) - 2019-12-08  
 ### Added  
   - Experimental implementation for table type data (Mysql, Postgres, Zabbix, Streaming, loki and other ...)
   - Some optimization on : 
@@ -37,7 +37,6 @@ See more example at draw.io
     - States
   - Tooltip Graph :
     - Histogram ([See example](https://algenty.github.io/flowcharting-repository/images/histogram_ani.png))
-    - Logarithmic scale. 
   - Variables support in download input url ([See example](https://algenty.github.io/flowcharting-repository/images/url_download_variable_ani.png))
   - Add graduate effect when color changed ([See example](https://video.twimg.com/tweet_video/EISkJwdWwAAi5Qh.mp4))
   - New rule design in editor ([See example](https://algenty.github.io/flowcharting-repository/images/rule_design.png))
@@ -45,7 +44,7 @@ See more example at draw.io
   - Build migration to grafana-toolkit (thanks Dominik and Ryan).
   - New engine graph for best compatibility with draw.io
   - Better Zoom for firefox and IE/edge.
-  - Add checks on edit mode for XML and URL.
+  - Add controls on edit mode for XML and URL.
   - Regular expression for String type value implemented to define level state.
 ### Fixed
   - Fix download url on first load.
@@ -139,10 +138,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Add data in tooltip (done in 0.4.0)
   - [X] Use variables/templates in graph (done in 0.4.0)
   - [X] Add custom stencils/libs from draw.io (done in 0.4.0)
-  - [ ] Progressive change color like gauge
+  - [X] Progressive change color like gauge
   - [ ] Support light theme
   - [ ] Annotation
-  - [ ] Tooltips on text and arrow/line
+  - [X] Tooltips on text and arrow/line
   - [X] Url source download (done in 0.4.0)
   - [ ] Special rule according level (hide, show, change form, move, infront, in back, attributes,  ...)
   - [ ] Custom variables like ${_label},${_value}, ${_alias}, ${_rule}, ${_level} ...
@@ -158,8 +157,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Graph in tooltip
   - [X] Histogram
   - [ ] Merge Graphs
-  - [ ] carriage return after new rule in tooltips option
-  - [ ] Filter for null values in graph
+  - [X] carriage return after new rule in tooltips option
+  - [X] Filter for null values in graph
   - [ ] Inspector on series
   - [X] New style for image : imageBackground, imageBorder
   - [X] Support cloud images from draw.io
