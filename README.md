@@ -37,7 +37,6 @@ See more example at draw.io
     - States
   - Tooltip Graph :
     - Histogram ([See example](https://algenty.github.io/flowcharting-repository/images/histogram_ani.png))
-    - Logarithmic scale. 
   - Variables support in download input url ([See example](https://algenty.github.io/flowcharting-repository/images/url_download_variable_ani.png))
   - Add graduate effect when color changed ([See example](https://video.twimg.com/tweet_video/EISkJwdWwAAi5Qh.mp4))
   - New rule design in editor ([See example](https://algenty.github.io/flowcharting-repository/images/rule_design.png))
