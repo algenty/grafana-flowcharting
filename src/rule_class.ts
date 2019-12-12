@@ -848,33 +848,7 @@ export default class Rule {
     return value;
   }
 
-  /**
-   * Replace text according text options
-   *
-   * @param {*} text
-   * @param {*} FormattedValue
-   * @returns
-   * @memberof Rule
-   */
-  getReplaceText(text: string, FormattedValue: string): string {
-    if (this.data.textReplace === 'content') {
-      return FormattedValue;
-    }
-    if (this.data.textReplace === 'pattern') {
-      const regexVal = GFP.utils.stringToJsRegex(this.data.textPattern);
-      if (text.toString().match(regexVal)) {
-        return text.toString().replace(regexVal, FormattedValue);
-      }
-      return text;
-    }
-    if (this.data.textReplace === 'as') {
-      return `${text} ${FormattedValue}`;
-    }
-    if (this.data.textReplace === 'anl') {
-      return `${text}\n${FormattedValue}`;
-    }
-    return text;
-  }
+
 
   defaultValueFormatter(value: any) {
     if (value === null || value === void 0 || value === undefined) {
@@ -1042,7 +1016,35 @@ class ShapeMap extends GFMap {
 class TextMap extends GFMap {
   constructor(pattern: string, data: gf.TTextMapData) {
     super(pattern, data);
-    // this.import(data);
+  }
+
+
+   /**
+   * Replace text according text options
+   *
+   * @param {*} text
+   * @param {*} FormattedValue
+   * @returns
+   * @memberof Rule
+   */
+  getReplaceText(text: string, FormattedValue: string): string {
+    if (this.data.textReplace === 'content') {
+      return FormattedValue;
+    }
+    if (this.data.textReplace === 'pattern') {
+      const regexVal = GFP.utils.stringToJsRegex(this.data.textPattern);
+      if (text.toString().match(regexVal)) {
+        return text.toString().replace(regexVal, FormattedValue);
+      }
+      return text;
+    }
+    if (this.data.textReplace === 'as') {
+      return `${text} ${FormattedValue}`;
+    }
+    if (this.data.textReplace === 'anl') {
+      return `${text}\n${FormattedValue}`;
+    }
+    return text;
   }
 }
 

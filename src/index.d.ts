@@ -119,15 +119,15 @@ namespace gf {
     decimals: number;
     colors: string[];
     reduce: boolean;
-    style: TStyleKeyDisable;
+    // style: TStyleKeyDisable;
     colorOn: TColorOn;
     link: boolean;
     linkOn: TLinkOn;
     linkUrl: string;
     linkParams: boolean;
     textOn: TTextOn;
-    textReplace: TTextReplace;
-    textPattern: string;
+    // textReplace: TTextReplace;
+    // textPattern: string;
     dateFormat: TDateFormat;
     thresholds: number[];
     stringWarning: string;
@@ -162,8 +162,15 @@ namespace gf {
     hidden: boolean;
   }
 
-  type TShapeMapData = TGFMapData;
-  type TTextMapData = TGFMapData;
+  interface TShapeMapData extends TGFMapData{
+    style: TStyleKeyDisable;
+  }
+
+  interface TTextMapData extends  TGFMapData{
+    textReplace : TTextReplace;
+    textPattern : string;
+  }
+
   type TlinkMapData = TGFMapData;
 
   interface TRangeMapData {
