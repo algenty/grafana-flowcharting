@@ -37,6 +37,13 @@ export default class Rule {
     this.states = new Map();
   }
 
+  /**
+   * Get default data
+   *
+   * @static
+   * @returns {gf.TIRuleData}
+   * @memberof Rule
+   */
   static getDefaultData(): gf.TIRuleData {
     return {
       order: 1,
@@ -109,53 +116,46 @@ export default class Rule {
    * @memberof Rule
    */
   import(obj: any): this {
-    this.data.unit = obj.unit || 'short';
-    this.data.type = obj.type || 'number';
-    this.data.metricType = obj.metricType || 'serie';
-    this.data.alias = obj.alias || 'No name';
-    this.data.refId = obj.refId || 'A';
-    this.data.column = obj.column || 'Time';
-    this.data.aggregation = obj.aggregation || 'current';
-    this.data.decimals = obj.decimals !== undefined ? obj.decimals : 2;
-    this.data.colors = obj.colors ? [...obj.colors] : ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'];
-    this.data.reduce = true;
-    this.data.style = obj.style || obj.colorMode || 'fillColor';
-    this.data.colorOn = obj.colorOn || 'a';
-    this.data.link = obj.link !== undefined ? obj.link : false;
-    this.data.linkOn = obj.colorOn || 'a';
-    this.data.linkUrl = obj.linkUrl || '';
-    this.data.linkParams = obj.linkParams !== undefined ? obj.linkParams : false;
-    this.data.textOn = obj.textOn || 'wmd';
-    this.data.textReplace = obj.textReplace || 'content';
-    this.data.textPattern = obj.textPattern || '/.*/';
-    this.data.pattern = obj.pattern || this.data.pattern;
-    this.data.dateFormat = obj.dateFormat || 'YYYY-MM-DD HH:mm:ss';
-    this.data.thresholds = obj.thresholds !== undefined ? [...obj.thresholds] : [];
-    this.data.stringWarning = obj.stringWarning || '';
-    this.data.stringCritical = obj.stringCritical || '';
-    this.data.invert = obj.invert !== undefined ? obj.invert : false;
-    this.data.overlayIcon = obj.overlayIcon !== undefined ? obj.overlayIcon : false;
-    this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : false;
-    this.data.tooltipLabel = obj.tooltipLabel !== undefined ? obj.tooltipLabel : this.data.alias;
-    this.data.tooltipColors = obj.tooltipColors !== undefined ? obj.tooltipColors : false;
-    this.data.tooltipOn = obj.tooltipOn !== undefined ? obj.tooltipOn : 'a';
-    this.data.tpDirection = obj.tpDirection !== undefined ? obj.tpDirection : 'v';
-    this.data.tpGraph = obj.tpGraph !== undefined ? obj.tpGraph : false;
-    this.data.tpGraphSize = obj.tpGraphSize !== undefined ? obj.tpGraphSize : '100%';
-    this.data.tpGraphType = obj.tpGraphType !== undefined ? obj.tpGraphType : 'line';
-    if (obj.tpGraphLow !== undefined) {
-      this.data.tpGraphLow = obj.tpGraphLow;
-    }
-    if (obj.tpGraphHigh !== undefined) {
-      this.data.tpGraphHigh = obj.tpGraphHigh;
-    }
-    if (obj.tpGraphScale !== undefined) {
-      this.data.tpGraphScale = obj.tpGraphScale;
-    }
+    if (!!obj.unit) this.data.unit = obj.unit;
+    if (!!obj.type) this.data.type = obj.type;
+    if (!!obj.metricType) this.data.metricType = obj.metricType;
+    if (!!obj.alias) this.data.alias = obj.alias;
+    if (!!obj.refId) this.data.refId = obj.refId;
+    if (!!obj.column) this.data.column = obj.column;
+    if (!!obj.aggregation) this.data.aggregation = obj.aggregation;
+    if (!!obj.decimals || obj.decimals == 0) this.data.decimals = obj.decimals;
+    if (!!obj.colors) this.data.colors = obj.colors;
+    if (!!this.data.reduce) this.data.reduce = true;
+    if (!!obj.style) this.data.style = obj.style;
+    if (!!obj.colorOn) this.data.colorOn = obj.colorOn;
+    if (!!obj.link) this.data.link = obj.link;
+    if (!!obj.linkUrl) this.data.linkUrl;
+    if (!!obj.linkParams) this.data.linkParams = obj.linkParams;
+    if (!!obj.textOn) this.data.textOn = obj.textOn;
+    if (!!obj.textReplace) this.data.textReplace = obj.textReplace;
+    if (!!obj.textPattern) this.data.textPattern = obj.textPattern;
+    if (!!obj.pattern) this.data.pattern = obj.pattern;
+    if (!!obj.dateFormat) this.data.dateFormat = obj.dateFormat;
+    if (!!obj.thresholds) this.data.thresholds = obj.thresholds;
+    if (!!obj.stringWarning) this.data.stringWarning = obj.stringWarning;
+    if (!!obj.stringCritical) this.data.stringCritical = obj.stringCritical;
+    if (!!obj.invert) this.data.invert = obj.invert;
+    if (!!obj.overlayIcon) this.data.overlayIcon;
+    if (!!obj.tooltip) this.data.tooltip = obj.tooltip;
+    if (!!obj.tooltipLabel) this.data.tooltipLabel = obj.tooltipLabel;
+    if (!!obj.tooltipColors) this.data.tooltipColors = obj.tooltipColors;
+    if (!!obj.tooltipOn) this.data.tooltipOn = obj.tooltipOn;
+    if (!!obj.tpDirection) this.data.tpDirection = obj.tpDirection;
+    if (!!obj.tpGraph) this.data.tpGraph = obj.tpGraph !== undefined;
+    if (!!obj.tpGraphSize) this.data.tpGraphSize = obj.tpGraphSize;
+    if (!!obj.tpGraphType) this.data.tpGraphType = obj.tpGraphType;
+    if (!!obj.tpGraphLow) this.data.tpGraphLow = obj.tpGraphLow;
+    if (!!obj.tpGraphHigh) this.data.tpGraphHigh = obj.tpGraphHigh;
+    if (!!obj.tpGraphScale) this.data.tpGraphScale = obj.tpGraphScale;
     let maps: any = [];
 
     // SHAPES
-    this.data.shapeProp = obj.shapeProp || 'id';
+    if(!!obj.shapeProp)this.data.shapeProp = obj.shapeProp;
     this.data.shapeData = [];
 
     // For 0.2.0
@@ -903,8 +903,8 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 }
