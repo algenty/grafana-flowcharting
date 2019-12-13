@@ -444,7 +444,7 @@ export default class Rule {
    * @memberof Rule
    */
   addShapeMap(pattern: string): ShapeMap {
-    const data = ShapeMap.getDefaultData() as gf.TShapeMapData;
+    const data = ShapeMap.getDefaultData();
     const m = new ShapeMap(pattern, data);
     this.shapeMaps.push(m);
     this.data.shapeData.push(data);
@@ -906,16 +906,6 @@ export class GFMap {
     return this;
   }
 
-  /**
-   * Return default data
-   *
-   * @static
-   * @returns
-   * @memberof GFMap
-   */
-  static getDefaultData():gf.TShapeMapData {
-    return {};
-  }
 
   /**
    * Return if text match pattern
