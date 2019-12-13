@@ -913,7 +913,7 @@ export class GFMap {
    * @returns
    * @memberof GFMap
    */
-  static getDefaultData() {
+  static getDefaultData():gf.TShapeMapData {
     return {};
   }
 
