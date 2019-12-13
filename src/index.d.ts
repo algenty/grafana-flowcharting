@@ -121,10 +121,10 @@ namespace gf {
     reduce: boolean;
     // style: TStyleKeyDisable;
     colorOn: TColorOn;
-    link: boolean;
+    //link: boolean;
     linkOn: TLinkOn;
-    linkUrl: string;
-    linkParams: boolean;
+    //linkUrl: string;
+    //linkParams: boolean;
     textOn: TTextOn;
     // textReplace: TTextReplace;
     // textPattern: string;
@@ -163,7 +163,7 @@ namespace gf {
   }
 
   interface TShapeMapData extends TGFMapData{
-    style: TStyleKeyDisable;
+    style: TStyleKey;
   }
 
   interface TTextMapData extends  TGFMapData{
@@ -171,7 +171,10 @@ namespace gf {
     textPattern : string;
   }
 
-  type TlinkMapData = TGFMapData;
+  interface TlinkMapData extends TGFMapData {
+    linkUrl : string;
+    linkParams : boolean;
+  }
 
   interface TRangeMapData {
     from?: string | null;

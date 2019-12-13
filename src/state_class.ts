@@ -127,8 +127,6 @@ export default class State {
    */
   setState(rule: Rule, metric: Metric): this {
     GFP.log.info('State.setState()');
-    GFP.log.info('State.setState() rule', rule);
-    GFP.log.info('State.setState() metric', metric);
     if (!rule.isHidden() && rule.matchMetric(metric)) {
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
@@ -185,13 +183,13 @@ export default class State {
 
           // Color Shape
           if (this.globalLevel <= level) {
-            this.setLevelStyle(rule.data.style, level);
+            this.setLevelStyle(shape.data.style, level);
             if (rule.toColorize(level)) {
-              this.setColorStyle(rule.data.style, color);
-              this.matchedStyle[rule.data.style] = true;
+              this.setColorStyle(shape.data.style, color);
+              this.matchedStyle[shape.data.style] = true;
             } else if (this.changedShape) {
-              if (this.changedStyle[rule.data.style]) {
-                this.unsetColorStyle(rule.data.style);
+              if (this.changedStyle[shape.data.style]) {
+                this.unsetColorStyle(shape.data.style);
               }
             }
             this.overlayIcon = rule.toIconize(level);
@@ -212,10 +210,10 @@ export default class State {
           this.matched = true;
           if (rule.toLabelize(level)) {
             const textScoped = GFP.replaceWithText(FormattedValue);
-            this.setText(rule.getReplaceText(this.currentText, textScoped));
+            this.setText(text.getReplaceText(this.currentText, textScoped));
           } else {
             // Hide text
-            this.setText(rule.getReplaceText(this.currentText, ''));
+            this.setText(text.getReplaceText(this.currentText, ''));
           }
           if (level >= rule.highestLevel) {
             rule.highestLevel = level;
@@ -233,7 +231,7 @@ export default class State {
           this.matched = true;
           if (this.globalLevel <= level) {
             if (rule.toLinkable(level)) {
-              const linkScoped = GFP.replaceWithText(rule.getLink());
+              const linkScoped = GFP.replaceWithText(link.getLink());
               this.setLink(linkScoped);
             }
             if (level >= rule.highestLevel) {

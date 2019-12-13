@@ -27,7 +27,7 @@ export default class Rule {
   /**
    * Creates an instance of Rule.
    * @param {string} pattern
-   * @param {*} data
+   * @param {TIRuleData} data
    * @memberof Rule
    */
   constructor(pattern: string, data: gf.TIRuleData) {
@@ -59,15 +59,15 @@ export default class Rule {
       decimals: 2,
       colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
       reduce: true,
-      style: 'fillColor',
+      //style: 'fillColor',
       colorOn: 'a',
-      link: false,
+      //link: false,
       linkOn: 'a',
-      linkUrl: '',
-      linkParams: false,
+      //linkUrl: '',
+      //linkParams: false,
       textOn: 'wmd',
-      textReplace: 'content',
-      textPattern: '/.*/',
+      //textReplace: 'content',
+      //textPattern: '/.*/',
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
       thresholds: [],
       stringWarning: '',
@@ -126,14 +126,24 @@ export default class Rule {
     if (!!obj.decimals || obj.decimals == 0) this.data.decimals = obj.decimals;
     if (!!obj.colors) this.data.colors = obj.colors;
     if (!!this.data.reduce) this.data.reduce = true;
-    if (!!obj.style) this.data.style = obj.style;
     if (!!obj.colorOn) this.data.colorOn = obj.colorOn;
-    if (!!obj.link) this.data.link = obj.link;
-    if (!!obj.linkUrl) this.data.linkUrl;
-    if (!!obj.linkParams) this.data.linkParams = obj.linkParams;
+    // 0.7.0
+    let style: gf.TStyleKey | undefined = undefined;
+    if (!!obj.style) style = obj.style;
+    // 0.7.0
+    let link: boolean = false;
+    let linkUrl: string | undefined = undefined;
+    let linkParams: boolean | undefined = undefined;
+    if (!!obj.link) link = obj.link;
+    if (!!obj.linkUrl) linkUrl = obj.linkUrl;
+    if (!!obj.linkParams) linkParams = obj.linkParams;
+
     if (!!obj.textOn) this.data.textOn = obj.textOn;
-    if (!!obj.textReplace) this.data.textReplace = obj.textReplace;
-    if (!!obj.textPattern) this.data.textPattern = obj.textPattern;
+    // 0.7.0
+    let textReplace: gf.TTextReplace | undefined = undefined;
+    let textPattern: string | undefined = undefined;
+    if (!!obj.textReplace) textReplace = obj.textReplace;
+    if (!!obj.textPattern) textPattern = obj.textPattern;
     if (!!obj.pattern) this.data.pattern = obj.pattern;
     if (!!obj.dateFormat) this.data.dateFormat = obj.dateFormat;
     if (!!obj.thresholds) this.data.thresholds = obj.thresholds;
@@ -155,7 +165,7 @@ export default class Rule {
     let maps: any = [];
 
     // SHAPES
-    if(!!obj.shapeProp)this.data.shapeProp = obj.shapeProp;
+    if (!!obj.shapeProp) this.data.shapeProp = obj.shapeProp;
     this.data.shapeData = [];
 
     // For 0.2.0
@@ -168,6 +178,8 @@ export default class Rule {
 
     if (maps !== undefined && maps !== null && maps.length > 0) {
       maps.forEach((shapeData: gf.TShapeMapData) => {
+        // 0.7.0
+        if (!!style) shapeData.style = <gf.TStyleKey>style;
         this.addShapeMap('new').import(shapeData);
       });
     }
@@ -185,6 +197,9 @@ export default class Rule {
 
     if (maps !== undefined && maps != null && maps.length > 0) {
       maps.forEach((textData: gf.TTextMapData) => {
+        // 0.7.0
+        if (!!textReplace) textData.textReplace = textReplace;
+        if (!!textPattern) textData.textPattern = textPattern;
         this.addTextMap('new').import(textData);
       });
     }
@@ -194,6 +209,9 @@ export default class Rule {
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
       obj.linkData.forEach((linkData: gf.TlinkMapData) => {
+        // 0.7.0
+        if (!!linkUrl && link) linkData.linkUrl = linkUrl;
+        if (!!linkParams && link) linkData.linkParams = linkParams;
         this.addLinkMap('new').import(linkData);
       });
     }
@@ -382,9 +400,6 @@ export default class Rule {
    * @memberof Rule
    */
   toLinkable(level: number): boolean {
-    if (this.data.link === false) {
-      return false;
-    }
     if (this.data.linkOn === 'a') {
       return true;
     }
@@ -506,7 +521,7 @@ export default class Rule {
   // TEXT MAPS
   //
   addTextMap(pattern: string): TextMap {
-    const data = TextMap.getDefaultData() as gf.TTextMapData;
+    const data = TextMap.getDefaultData();
     const m = new TextMap(pattern, data);
     // m.import(data);
     this.textMaps.push(m);
@@ -542,7 +557,7 @@ export default class Rule {
   //
   addLinkMap(pattern: string): LinkMap {
     GFP.log.info('Rule.addLinkMap()');
-    const data = LinkMap.getDefaultData() as gf.TlinkMapData;
+    const data = LinkMap.getDefaultData();
     const m = new LinkMap(pattern, data);
     m.import(data);
     this.linkMaps.push(m);
@@ -764,19 +779,6 @@ export default class Rule {
   }
 
   /**
-   * Get defined link
-   *
-   * @returns
-   * @memberof Rule
-   */
-  getLink() {
-    if (this.data.linkParams) {
-      return this.data.linkUrl + window.location.search;
-    }
-    return this.data.linkUrl;
-  }
-
-  /**
    * Format a one value according rule
    *
    * @param {*} value
@@ -901,8 +903,8 @@ export class GFMap {
    * @memberof GFMap
    */
   import(obj: any): this {
-    this.data.pattern = obj.pattern || '';
-    this.data.hidden = obj.hidden || false;
+    if (!!obj.pattern) this.data.pattern = obj.pattern;
+    if (!!obj.hidden) this.data.hidden = obj.hidden;
     return this;
   }
 
@@ -993,10 +995,42 @@ export class GFMap {
  * @extends GFMap
  */
 class ShapeMap extends GFMap {
+  data: gf.TShapeMapData
   constructor(pattern: string, data: gf.TShapeMapData) {
     super(pattern, data);
+    this.data = data;
+  }
+
+  /**
+   * Return default data
+   *
+   * @static
+   * @returns {gf.TShapeMapData}
+   * @memberof ShapeMap
+   */
+  static getDefaultData(): gf.TShapeMapData {
+    return {
+      pattern: '',
+      hidden: false,
+      style: 'fillColor'
+    }
+  }
+
+  /**
+   * Import data
+   *
+   * @param {*} obj
+   * @returns {this}
+   * @memberof ShapeMap
+   */
+  import(obj: any): this {
+    super.import(obj);
+    if (!!obj.style) this.data.style = obj.style;
+    return this;
   }
 }
+
+
 
 /**
  * TextMap class for mapping
@@ -1004,19 +1038,37 @@ class ShapeMap extends GFMap {
  * @extends GFMap
  */
 class TextMap extends GFMap {
+  data: gf.TTextMapData;
   constructor(pattern: string, data: gf.TTextMapData) {
     super(pattern, data);
+    this.data = data;
+  }
+
+  static getDefaultData(): gf.TTextMapData {
+    return {
+      pattern: '',
+      hidden: false,
+      textReplace: 'content',
+      textPattern: '/.*/'
+    }
+  }
+
+  import(obj: any): this {
+    super.import(obj);
+    if (!!obj.textReplace) this.data.textReplace = obj.textReplace;
+    if (!!obj.textPattern) this.data.textPattern = obj.textPattern;
+    return this
   }
 
 
-   /**
-   * Replace text according text options
-   *
-   * @param {*} text
-   * @param {*} FormattedValue
-   * @returns
-   * @memberof Rule
-   */
+  /**
+  * Replace text according text options
+  *
+  * @param {string} text
+  * @param {string} FormattedValue
+  * @returns
+  * @memberof Rule
+  */
   getReplaceText(text: string, FormattedValue: string): string {
     if (this.data.textReplace === 'content') {
       return FormattedValue;
@@ -1044,8 +1096,39 @@ class TextMap extends GFMap {
  * @extends GFMap
  */
 class LinkMap extends GFMap {
+  data: gf.TlinkMapData;
   constructor(pattern: string, data: gf.TlinkMapData) {
     super(pattern, data);
+    this.data = data;
+  }
+
+  static getDefaultData(): gf.TlinkMapData {
+    return {
+      pattern: '',
+      hidden: false,
+      linkUrl: '',
+      linkParams: false
+    }
+  }
+
+  /**
+  * Get defined link
+  *
+  * @returns
+  * @memberof Rule
+  */
+  getLink() {
+    if (this.data.linkParams) {
+      return this.data.linkUrl + window.location.search;
+    }
+    return this.data.linkUrl;
+  }
+
+  import(obj: any): this {
+    super.import(obj);
+    if (!!obj.linkUrl) this.data.linkUrl = obj.linkUrl;
+    if (!!obj.linkParams) this.data.linkParams = obj.linkParams;
+    return this
   }
 }
 
