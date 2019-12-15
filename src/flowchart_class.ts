@@ -39,64 +39,37 @@ export default class Flowchart {
   import(obj: any): this {
     GFP.log.info(`flowchart[${this.data.name}].import()`);
     GFP.log.debug(`flowchart[${this.data.name}].import() obj`, obj);
-    this.data.download = obj.download !== undefined ? obj.download : false;
-    if (obj.source) {
+    if (!!obj.download) this.data.download = obj.download;
+    // 0.3.0
+    if (!!obj.source) {
       this.data.type = obj.source.type;
-    } else {
-      this.data.type = obj.type || this.data.type || 'xml';
-    }
-    if (obj.source) {
       this.data.xml = obj.source.xml.value;
-    } else {
-      this.data.xml = obj.xml || this.data.xml || '';
-    }
-    if (obj.source) {
       this.data.url = obj.source.url.value;
-    } else {
-      this.data.url = obj.url !== undefined ? obj.url : 'http://<source>:<port>/<pathToXml>';
     }
-    if (obj.options) {
+    // 0.3.0
+    if (!!obj.options) {
       this.data.zoom = obj.options.zoom;
-    } else {
-      this.data.zoom = obj.zoom || '100%';
-    }
-    if (obj.options) {
       this.data.center = obj.options.center;
-    } else {
-      this.data.center = obj.center !== undefined ? obj.center : true;
-    }
-    if (obj.options) {
       this.data.scale = obj.options.scale;
-    } else {
-      this.data.scale = obj.scale !== undefined ? obj.scale : true;
-    }
-    if (obj.options) {
       this.data.lock = obj.options.lock;
-    } else {
-      this.data.lock = obj.lock !== undefined ? obj.lock : true;
-    }
-    if (obj.options) {
       this.data.allowDrawio = false;
-    } else {
-      this.data.allowDrawio = obj.allowDrawio !== undefined ? obj.allowDrawio : false;
-    }
-    if (obj.options) {
       this.data.tooltip = obj.options.tooltip;
-    } else {
-      this.data.tooltip = obj.tooltip !== undefined ? obj.tooltip : true;
-    }
-    if (obj.options) {
       this.data.grid = obj.options.grid;
-    } else {
-      this.data.grid = obj.grid !== undefined ? obj.grid : false;
-    }
-    if (obj.options) {
       this.data.bgColor = obj.options.bgColor;
-    } else {
-      this.data.bgColor = obj.bgColor;
     }
-    this.data.editorUrl = obj.editorUrl !== undefined ? obj.editorUrl : 'https://www.draw.io';
-    this.data.editorTheme = obj.editorTheme !== undefined ? obj.editorTheme : 'dark';
+    if (!!obj.type) this.data.type = obj.type;
+    if (!!obj.xml) this.data.xml = obj.xml;
+    if (!!obj.url) this.data.url = obj.url;
+    if (!!obj.zoom) this.data.zoom = obj.zoom;
+    if (!!obj.center) this.data.center = obj.center;
+    if (!!obj.scale) this.data.scale = obj.scale;
+    if (!!obj.lock) this.data.lock = obj.lock;
+    if (!!obj.allowDrawio) this.data.allowDrawio = obj.allowDrawio;
+    if (!!obj.tooltip) this.data.tooltip = obj.tooltip;
+    if (!!obj.grid) this.data.grid = obj.grid;
+    if (!!obj.bgColor) this.data.bgColor = obj.bgColor;
+    if (!!obj.editorUrl) this.data.editorUrl = obj.editorUrl;
+    if (!!obj.editorTheme) this.data.editorTheme = obj.editorTheme;
     this.init();
     return this;
   }

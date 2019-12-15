@@ -310,6 +310,14 @@ export class MappingOptionsCtrl {
     this.onRulesChange();
   }
 
+  haveSubstringsText(rule:Rule):boolean {
+    let haveSbT = false;
+    rule.getTextMaps().forEach(textMap => {
+      if (textMap.data.textReplace == "pattern") haveSbT = true;
+    });
+    return haveSbT;
+  }
+
   /**
    * Turn Highlight off of cells in rule
    *
