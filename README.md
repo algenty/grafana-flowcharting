@@ -32,20 +32,21 @@ See more example at draw.io
 ## [[0.6.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0-SNAPSHOT.zip) - 2019-12-08  
 ### Added  
   - Experimental implementation for table type data (Mysql, Postgres, Zabbix, Streaming, loki and other ...)
+  - PlaceHolder feature supported [see doc from draw.io](https://desk.draw.io/support/solutions/articles/16000051979)
   - Some optimization on : 
     - tooltips
     - States
   - Tooltip Graph :
     - Histogram ([See example](https://algenty.github.io/flowcharting-repository/images/histogram_ani.png))
   - Variables support in download input url ([See example](https://algenty.github.io/flowcharting-repository/images/url_download_variable_ani.png))
-  - Add graduate effect when color changed ([See example](https://video.twimg.com/tweet_video/EISkJwdWwAAi5Qh.mp4))
+  - Add graduate animation when color changed ([See example](https://video.twimg.com/tweet_video/EISkJwdWwAAi5Qh.mp4))
   - New rule design in editor ([See example](https://algenty.github.io/flowcharting-repository/images/rule_design.png))
-  - Typescript migration for best quality.
+  - Typescript migration for best quality code.
   - Build migration to grafana-toolkit (thanks Dominik and Ryan).
-  - New engine graph for best compatibility with draw.io
+  - New engine graph for best compatibility with draw.io.
   - Better Zoom for firefox and IE/edge.
-  - Add controls on edit mode for XML and URL.
-  - Regular expression for String type value implemented to define level state.
+  - Add checks/controls on edit mode for XML and URL.
+  - Regular expression for String type values implemented to define level state.
 ### Fixed
   - Fix download url on first load.
   - Fix value null for string [(issue #65)](https://github.com/algenty/grafana-flowcharting/issues/65)

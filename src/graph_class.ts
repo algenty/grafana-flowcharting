@@ -64,7 +64,15 @@ export default class XGraph {
     this.initGraph();
   }
 
-  static isValidXml(source: string) {
+  /**
+   * Validate XML definition
+   *
+   * @static
+   * @param {string} source
+   * @returns {boolean}
+   * @memberof XGraph
+   */
+  static isValidXml(source: string): boolean {
     try {
       const div = document.createElement('div');
       const g = new Graph(div);
@@ -837,18 +845,18 @@ export default class XGraph {
    *
    * @param {mxCell} mxcell
    * @param {string} text - New label
-   * @returns {string} New label
+   * @returns {this}
    * @memberof XGraph
    */
-  setLabelCell(mxcell: mxCell, text: string): string {
-    let label: string = text;
-    if (mxUtils.isNode(mxcell.value)) {
-      label = mxcell.value.setAttribute('label', text);
-    } else {
-      mxcell.setValue(text);
-    }
-    this.graph.model.setValue(mxcell, text);
-    return label;
+  setLabelCell(mxcell: mxCell, text: string): this {
+    // if (mxUtils.isNode(mxcell.value)) {
+    //   label = mxcell.value.setAttribute('label', text);
+    // } else {
+    //   mxcell.setValue(text);
+    //   this.graph.model.setValue(mxcell, text);
+    // }
+    this.graph.cellLabelChanged(mxcell, text, false);
+    return this;
   }
 
   /**
