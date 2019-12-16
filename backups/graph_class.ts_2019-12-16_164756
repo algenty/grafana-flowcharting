@@ -845,7 +845,7 @@ export default class XGraph {
    *
    * @param {mxCell} mxcell
    * @param {string} text - New label
-   * @returns {this}
+   * @returns {this} 
    * @memberof XGraph
    */
   setLabelCell(mxcell: mxCell, text: string): this {
