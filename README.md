@@ -29,7 +29,7 @@ See more example at draw.io
 
 # Changelog
 
-## [[0.6.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0-SNAPSHOT.zip) - 2019-12-08  
+## [[0.6.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0-SNAPSHOT.zip) - 2019-12-16  
 ### Added  
   - Experimental implementation for table type data (Mysql, Postgres, Zabbix, Streaming, loki and other ...)
   - PlaceHolder feature supported [see doc from draw.io](https://desk.draw.io/support/solutions/articles/16000051979)
