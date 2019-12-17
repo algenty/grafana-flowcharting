@@ -8,7 +8,7 @@ import FlowchartHandler from './flowchartHandler';
 import MetricHandler from './metricHandler';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
-  /** @ngInject **/
+  /**@ngInject*/
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
     FlowChartingPlugin.init($scope,templateSrv);

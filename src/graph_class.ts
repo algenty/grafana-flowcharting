@@ -837,18 +837,12 @@ export default class XGraph {
    *
    * @param {mxCell} mxcell
    * @param {string} text - New label
-   * @returns {string} New label
+   * @returns {this}
    * @memberof XGraph
    */
-  setLabelCell(mxcell: mxCell, text: string): string {
-    let label: string = text;
-    if (mxUtils.isNode(mxcell.value)) {
-      label = mxcell.value.setAttribute('label', text);
-    } else {
-      mxcell.setValue(text);
-    }
-    this.graph.model.setValue(mxcell, text);
-    return label;
+  setLabelCell(mxcell: mxCell, text: string): this {
+    this.graph.cellLabelChanged(mxcell, text, false);
+    return this;
   }
 
   /**

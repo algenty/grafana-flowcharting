@@ -162,18 +162,18 @@ namespace gf {
     hidden: boolean;
   }
 
-  interface TShapeMapData extends TGFMapData{
+  interface TShapeMapData extends TGFMapData {
     style: TStyleKey;
   }
 
-  interface TTextMapData extends  TGFMapData{
-    textReplace : TTextReplace;
-    textPattern : string;
+  interface TTextMapData extends TGFMapData {
+    textReplace: TTextReplace;
+    textPattern: string;
   }
 
   interface TlinkMapData extends TGFMapData {
-    linkUrl : string;
-    linkParams : boolean;
+    linkUrl: string;
+    linkParams: boolean;
   }
 
   interface TRangeMapData {

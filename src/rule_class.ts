@@ -116,56 +116,130 @@ export default class Rule {
    * @memberof Rule
    */
   import(obj: any): this {
-    if (!!obj.unit) this.data.unit = obj.unit;
-    if (!!obj.type) this.data.type = obj.type;
-    if (!!obj.metricType) this.data.metricType = obj.metricType;
-    if (!!obj.alias) this.data.alias = obj.alias;
-    if (!!obj.refId) this.data.refId = obj.refId;
-    if (!!obj.column) this.data.column = obj.column;
-    if (!!obj.aggregation) this.data.aggregation = obj.aggregation;
-    if (!!obj.decimals || obj.decimals == 0) this.data.decimals = obj.decimals;
-    if (!!obj.colors) this.data.colors = obj.colors;
-    if (!!this.data.reduce) this.data.reduce = true;
-    if (!!obj.colorOn) this.data.colorOn = obj.colorOn;
+    if (!!obj.unit) {
+      this.data.unit = obj.unit;
+    }
+    if (!!obj.type) {
+      this.data.type = obj.type;
+    }
+    if (!!obj.metricType) {
+      this.data.metricType = obj.metricType;
+    }
+    if (!!obj.alias) {
+      this.data.alias = obj.alias;
+    }
+    if (!!obj.refId) {
+      this.data.refId = obj.refId;
+    }
+    if (!!obj.column) {
+      this.data.column = obj.column;
+    }
+    if (!!obj.aggregation) {
+      this.data.aggregation = obj.aggregation;
+    }
+    if (!!obj.decimals || obj.decimals === 0) {
+      this.data.decimals = obj.decimals;
+    }
+    if (!!obj.colors) {
+      this.data.colors = obj.colors;
+    }
+    if (!!this.data.reduce) {
+      this.data.reduce = true;
+    }
+    if (!!obj.colorOn) {
+      this.data.colorOn = obj.colorOn;
+    }
     // 0.7.0
     let style: gf.TStyleKey | undefined = undefined;
-    if (!!obj.style) style = obj.style;
+    if (!!obj.style) {
+      style = obj.style;
+    }
     // 0.7.0
-    let link: boolean = false;
+    let link = false;
     let linkUrl: string | undefined = undefined;
     let linkParams: boolean | undefined = undefined;
-    if (!!obj.link) link = obj.link;
-    if (!!obj.linkUrl) linkUrl = obj.linkUrl;
-    if (!!obj.linkParams) linkParams = obj.linkParams;
+    if (!!obj.link) {
+      link = obj.link;
+    }
+    if (!!obj.linkUrl) {
+      linkUrl = obj.linkUrl;
+    }
+    if (!!obj.linkParams) {
+      linkParams = obj.linkParams;
+    }
 
-    if (!!obj.textOn) this.data.textOn = obj.textOn;
+    if (!!obj.textOn) {
+      this.data.textOn = obj.textOn;
+    }
     // 0.7.0
     let textReplace: gf.TTextReplace | undefined = undefined;
     let textPattern: string | undefined = undefined;
-    if (!!obj.textReplace) textReplace = obj.textReplace;
-    if (!!obj.textPattern) textPattern = obj.textPattern;
-    if (!!obj.pattern) this.data.pattern = obj.pattern;
-    if (!!obj.dateFormat) this.data.dateFormat = obj.dateFormat;
-    if (!!obj.thresholds) this.data.thresholds = obj.thresholds;
-    if (!!obj.stringWarning) this.data.stringWarning = obj.stringWarning;
-    if (!!obj.stringCritical) this.data.stringCritical = obj.stringCritical;
-    if (!!obj.invert) this.data.invert = obj.invert;
-    if (!!obj.overlayIcon) this.data.overlayIcon;
-    if (!!obj.tooltip) this.data.tooltip = obj.tooltip;
-    if (!!obj.tooltipLabel) this.data.tooltipLabel = obj.tooltipLabel;
-    if (!!obj.tooltipColors) this.data.tooltipColors = obj.tooltipColors;
-    if (!!obj.tooltipOn) this.data.tooltipOn = obj.tooltipOn;
-    if (!!obj.tpDirection) this.data.tpDirection = obj.tpDirection;
-    if (!!obj.tpGraph) this.data.tpGraph = obj.tpGraph !== undefined;
-    if (!!obj.tpGraphSize) this.data.tpGraphSize = obj.tpGraphSize;
-    if (!!obj.tpGraphType) this.data.tpGraphType = obj.tpGraphType;
-    if (!!obj.tpGraphLow) this.data.tpGraphLow = obj.tpGraphLow;
-    if (!!obj.tpGraphHigh) this.data.tpGraphHigh = obj.tpGraphHigh;
-    if (!!obj.tpGraphScale) this.data.tpGraphScale = obj.tpGraphScale;
+    if (!!obj.textReplace) {
+      textReplace = obj.textReplace;
+    }
+    if (!!obj.textPattern) {
+      textPattern = obj.textPattern;
+    }
+    if (!!obj.pattern) {
+      this.data.pattern = obj.pattern;
+    }
+    if (!!obj.dateFormat) {
+      this.data.dateFormat = obj.dateFormat;
+    }
+    if (!!obj.thresholds) {
+      this.data.thresholds = obj.thresholds;
+    }
+    if (!!obj.stringWarning) {
+      this.data.stringWarning = obj.stringWarning;
+    }
+    if (!!obj.stringCritical) {
+      this.data.stringCritical = obj.stringCritical;
+    }
+    if (!!obj.invert) {
+      this.data.invert = obj.invert;
+    }
+    if (!!obj.overlayIcon) {
+      this.data.overlayIcon = obj.overlayIcon;
+    }
+    if (!!obj.tooltip) {
+      this.data.tooltip = obj.tooltip;
+    }
+    if (!!obj.tooltipLabel) {
+      this.data.tooltipLabel = obj.tooltipLabel;
+    }
+    if (!!obj.tooltipColors) {
+      this.data.tooltipColors = obj.tooltipColors;
+    }
+    if (!!obj.tooltipOn) {
+      this.data.tooltipOn = obj.tooltipOn;
+    }
+    if (!!obj.tpDirection) {
+      this.data.tpDirection = obj.tpDirection;
+    }
+    if (!!obj.tpGraph) {
+      this.data.tpGraph = obj.tpGraph !== undefined;
+    }
+    if (!!obj.tpGraphSize) {
+      this.data.tpGraphSize = obj.tpGraphSize;
+    }
+    if (!!obj.tpGraphType) {
+      this.data.tpGraphType = obj.tpGraphType;
+    }
+    if (!!obj.tpGraphLow) {
+      this.data.tpGraphLow = obj.tpGraphLow;
+    }
+    if (!!obj.tpGraphHigh) {
+      this.data.tpGraphHigh = obj.tpGraphHigh;
+    }
+    if (!!obj.tpGraphScale) {
+      this.data.tpGraphScale = obj.tpGraphScale;
+    }
     let maps: any = [];
 
     // SHAPES
-    if (!!obj.shapeProp) this.data.shapeProp = obj.shapeProp;
+    if (!!obj.shapeProp) {
+      this.data.shapeProp = obj.shapeProp;
+    }
     this.data.shapeData = [];
 
     // For 0.2.0
@@ -179,7 +253,9 @@ export default class Rule {
     if (maps !== undefined && maps !== null && maps.length > 0) {
       maps.forEach((shapeData: gf.TShapeMapData) => {
         // 0.7.0
-        if (!!style) shapeData.style = <gf.TStyleKey>style;
+        if (!!style) {
+          shapeData.style = style as gf.TStyleKey;
+        }
         this.addShapeMap('new').import(shapeData);
       });
     }
@@ -198,8 +274,12 @@ export default class Rule {
     if (maps !== undefined && maps != null && maps.length > 0) {
       maps.forEach((textData: gf.TTextMapData) => {
         // 0.7.0
-        if (!!textReplace) textData.textReplace = textReplace;
-        if (!!textPattern) textData.textPattern = textPattern;
+        if (!!textReplace) {
+          textData.textReplace = textReplace;
+        }
+        if (!!textPattern) {
+          textData.textPattern = textPattern;
+        }
         this.addTextMap('new').import(textData);
       });
     }
@@ -210,8 +290,12 @@ export default class Rule {
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
       obj.linkData.forEach((linkData: gf.TlinkMapData) => {
         // 0.7.0
-        if (!!linkUrl && link) linkData.linkUrl = linkUrl;
-        if (!!linkParams && link) linkData.linkParams = linkParams;
+        if (!!linkUrl && link) {
+          linkData.linkUrl = linkUrl;
+        }
+        if (!!linkParams && link) {
+          linkData.linkParams = linkParams;
+        }
         this.addLinkMap('new').import(linkData);
       });
     }
@@ -850,8 +934,6 @@ export default class Rule {
     return value;
   }
 
-
-
   defaultValueFormatter(value: any) {
     if (value === null || value === void 0 || value === undefined) {
       return '';
@@ -879,8 +961,8 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-      // Adjust for scientific notation.
-      (match[2] ? +match[2] : 0)
+        // Adjust for scientific notation.
+        (match[2] ? +match[2] : 0)
     );
   }
 }
@@ -903,11 +985,14 @@ export class GFMap {
    * @memberof GFMap
    */
   import(obj: any): this {
-    if (!!obj.pattern) this.data.pattern = obj.pattern;
-    if (!!obj.hidden) this.data.hidden = obj.hidden;
+    if (!!obj.pattern) {
+      this.data.pattern = obj.pattern;
+    }
+    if (!!obj.hidden) {
+      this.data.hidden = obj.hidden;
+    }
     return this;
   }
-
 
   /**
    * Return if text match pattern
@@ -995,7 +1080,7 @@ export class GFMap {
  * @extends GFMap
  */
 class ShapeMap extends GFMap {
-  data: gf.TShapeMapData
+  data: gf.TShapeMapData;
   constructor(pattern: string, data: gf.TShapeMapData) {
     super(pattern, data);
     this.data = data;
@@ -1012,8 +1097,8 @@ class ShapeMap extends GFMap {
     return {
       pattern: '',
       hidden: false,
-      style: 'fillColor'
-    }
+      style: 'fillColor',
+    };
   }
 
   /**
@@ -1025,12 +1110,12 @@ class ShapeMap extends GFMap {
    */
   import(obj: any): this {
     super.import(obj);
-    if (!!obj.style) this.data.style = obj.style;
+    if (!!obj.style) {
+      this.data.style = obj.style;
+    }
     return this;
   }
 }
-
-
 
 /**
  * TextMap class for mapping
@@ -1049,26 +1134,29 @@ class TextMap extends GFMap {
       pattern: '',
       hidden: false,
       textReplace: 'content',
-      textPattern: '/.*/'
-    }
+      textPattern: '/.*/',
+    };
   }
 
   import(obj: any): this {
     super.import(obj);
-    if (!!obj.textReplace) this.data.textReplace = obj.textReplace;
-    if (!!obj.textPattern) this.data.textPattern = obj.textPattern;
-    return this
+    if (!!obj.textReplace) {
+      this.data.textReplace = obj.textReplace;
+    }
+    if (!!obj.textPattern) {
+      this.data.textPattern = obj.textPattern;
+    }
+    return this;
   }
 
-
   /**
-  * Replace text according text options
-  *
-  * @param {string} text
-  * @param {string} FormattedValue
-  * @returns
-  * @memberof Rule
-  */
+   * Replace text according text options
+   *
+   * @param {string} text
+   * @param {string} FormattedValue
+   * @returns
+   * @memberof Rule
+   */
   getReplaceText(text: string, FormattedValue: string): string {
     if (this.data.textReplace === 'content') {
       return FormattedValue;
@@ -1107,16 +1195,16 @@ class LinkMap extends GFMap {
       pattern: '',
       hidden: false,
       linkUrl: '',
-      linkParams: false
-    }
+      linkParams: false,
+    };
   }
 
   /**
-  * Get defined link
-  *
-  * @returns
-  * @memberof Rule
-  */
+   * Get defined link
+   *
+   * @returns
+   * @memberof Rule
+   */
   getLink() {
     if (this.data.linkParams) {
       return this.data.linkUrl + window.location.search;
@@ -1126,9 +1214,13 @@ class LinkMap extends GFMap {
 
   import(obj: any): this {
     super.import(obj);
-    if (!!obj.linkUrl) this.data.linkUrl = obj.linkUrl;
-    if (!!obj.linkParams) this.data.linkParams = obj.linkParams;
-    return this
+    if (!!obj.linkUrl) {
+      this.data.linkUrl = obj.linkUrl;
+    }
+    if (!!obj.linkParams) {
+      this.data.linkParams = obj.linkParams;
+    }
+    return this;
   }
 }
 
