@@ -216,9 +216,9 @@ grafana-cli plugins install agenty-flowcharting-panel
 $ git clone https://github.com/algenty/grafana-flowcharting
 $ yarn build
 $ # Make zip file plugin in archives dir
-$ yarn archive
+$ yarn build archive
 $ # for dev watching
-$ yarn dev
+$ yarn build dev
 ```
 
 ## Class diagram
