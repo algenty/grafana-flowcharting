@@ -116,46 +116,120 @@ export default class Rule {
    * @memberof Rule
    */
   import(obj: any): this {
-    if (!!obj.unit) this.data.unit = obj.unit;
-    if (!!obj.type) this.data.type = obj.type;
-    if (!!obj.metricType) this.data.metricType = obj.metricType;
-    if (!!obj.alias) this.data.alias = obj.alias;
-    if (!!obj.refId) this.data.refId = obj.refId;
-    if (!!obj.column) this.data.column = obj.column;
-    if (!!obj.aggregation) this.data.aggregation = obj.aggregation;
-    if (!!obj.decimals || obj.decimals == 0) this.data.decimals = obj.decimals;
-    if (!!obj.colors) this.data.colors = obj.colors;
-    if (!!this.data.reduce) this.data.reduce = true;
-    if (!!obj.style) this.data.style = obj.style;
-    if (!!obj.colorOn) this.data.colorOn = obj.colorOn;
-    if (!!obj.link) this.data.link = obj.link;
-    if (!!obj.linkUrl) this.data.linkUrl;
-    if (!!obj.linkParams) this.data.linkParams = obj.linkParams;
-    if (!!obj.textOn) this.data.textOn = obj.textOn;
-    if (!!obj.textReplace) this.data.textReplace = obj.textReplace;
-    if (!!obj.textPattern) this.data.textPattern = obj.textPattern;
-    if (!!obj.pattern) this.data.pattern = obj.pattern;
-    if (!!obj.dateFormat) this.data.dateFormat = obj.dateFormat;
-    if (!!obj.thresholds) this.data.thresholds = obj.thresholds;
-    if (!!obj.stringWarning) this.data.stringWarning = obj.stringWarning;
-    if (!!obj.stringCritical) this.data.stringCritical = obj.stringCritical;
-    if (!!obj.invert) this.data.invert = obj.invert;
-    if (!!obj.overlayIcon) this.data.overlayIcon;
-    if (!!obj.tooltip) this.data.tooltip = obj.tooltip;
-    if (!!obj.tooltipLabel) this.data.tooltipLabel = obj.tooltipLabel;
-    if (!!obj.tooltipColors) this.data.tooltipColors = obj.tooltipColors;
-    if (!!obj.tooltipOn) this.data.tooltipOn = obj.tooltipOn;
-    if (!!obj.tpDirection) this.data.tpDirection = obj.tpDirection;
-    if (!!obj.tpGraph) this.data.tpGraph = obj.tpGraph !== undefined;
-    if (!!obj.tpGraphSize) this.data.tpGraphSize = obj.tpGraphSize;
-    if (!!obj.tpGraphType) this.data.tpGraphType = obj.tpGraphType;
-    if (!!obj.tpGraphLow) this.data.tpGraphLow = obj.tpGraphLow;
-    if (!!obj.tpGraphHigh) this.data.tpGraphHigh = obj.tpGraphHigh;
-    if (!!obj.tpGraphScale) this.data.tpGraphScale = obj.tpGraphScale;
+    if (!!obj.unit) {
+      this.data.unit = obj.unit;
+    }
+    if (!!obj.type) {
+      this.data.type = obj.type;
+    }
+    if (!!obj.metricType) {
+      this.data.metricType = obj.metricType;
+    }
+    if (!!obj.alias) {
+      this.data.alias = obj.alias;
+    }
+    if (!!obj.refId) {
+      this.data.refId = obj.refId;
+    }
+    if (!!obj.column) {
+      this.data.column = obj.column;
+    }
+    if (!!obj.aggregation) {
+      this.data.aggregation = obj.aggregation;
+    }
+    if (!!obj.decimals || obj.decimals === 0) {
+      this.data.decimals = obj.decimals;
+    }
+    if (!!obj.colors) {
+      this.data.colors = obj.colors;
+    }
+    if (!!this.data.reduce) {
+      this.data.reduce = true;
+    }
+    if (!!obj.style) {
+      this.data.style = obj.style;
+    }
+    if (!!obj.colorOn) {
+      this.data.colorOn = obj.colorOn;
+    }
+    if (!!obj.link) {
+      this.data.link = obj.link;
+    }
+    if (!!obj.linkUrl) {
+      this.data.linkUrl = obj.linkUrl;
+    }
+    if (!!obj.linkParams) {
+      this.data.linkParams = obj.linkParams;
+    }
+    if (!!obj.textOn) {
+      this.data.textOn = obj.textOn;
+    }
+    if (!!obj.textReplace) {
+      this.data.textReplace = obj.textReplace;
+    }
+    if (!!obj.textPattern) {
+      this.data.textPattern = obj.textPattern;
+    }
+    if (!!obj.pattern) {
+      this.data.pattern = obj.pattern;
+    }
+    if (!!obj.dateFormat) {
+      this.data.dateFormat = obj.dateFormat;
+    }
+    if (!!obj.thresholds) {
+      this.data.thresholds = obj.thresholds;
+    }
+    if (!!obj.stringWarning) {
+      this.data.stringWarning = obj.stringWarning;
+    }
+    if (!!obj.stringCritical) {
+      this.data.stringCritical = obj.stringCritical;
+    }
+    if (!!obj.invert) {
+      this.data.invert = obj.invert;
+    }
+    if (!!obj.overlayIcon) {
+      this.data.overlayIcon = obj.overlayIcon;
+    }
+    if (!!obj.tooltip) {
+      this.data.tooltip = obj.tooltip;
+    }
+    if (!!obj.tooltipLabel) {
+      this.data.tooltipLabel = obj.tooltipLabel;
+    }
+    if (!!obj.tooltipColors) {
+      this.data.tooltipColors = obj.tooltipColors;
+    }
+    if (!!obj.tooltipOn) {
+      this.data.tooltipOn = obj.tooltipOn;
+    }
+    if (!!obj.tpDirection) {
+      this.data.tpDirection = obj.tpDirection;
+    }
+    if (!!obj.tpGraph) {
+      this.data.tpGraph = obj.tpGraph !== undefined;
+    }
+    if (!!obj.tpGraphSize) {
+      this.data.tpGraphSize = obj.tpGraphSize;
+    }
+    if (!!obj.tpGraphType) {
+      this.data.tpGraphType = obj.tpGraphType;
+    }
+    if (!!obj.tpGraphLow) {
+      this.data.tpGraphLow = obj.tpGraphLow;
+    }
+    if (!!obj.tpGraphHigh) {
+      this.data.tpGraphHigh = obj.tpGraphHigh;
+    }
+    if (!!obj.tpGraphScale) {
+      this.data.tpGraphScale = obj.tpGraphScale;
+    }
     let maps: any = [];
 
     // SHAPES
-    if (!!obj.shapeProp) this.data.shapeProp = obj.shapeProp;
+    if (!!obj.shapeProp) {
+      this.data.shapeProp = obj.shapeProp;
+    }
     this.data.shapeData = [];
 
     // For 0.2.0
