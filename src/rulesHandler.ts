@@ -119,7 +119,7 @@ export default class RulesHandler {
    * @memberof RulesHandler
    */
   setOrder(): this {
-    let lg = this.rules.length;
+    const lg = this.rules.length;
     for (let index = 0; index < lg; index++) {
       const rule = this.rules[index];
       rule.setOrder(index + 1);

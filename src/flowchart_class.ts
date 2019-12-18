@@ -158,8 +158,7 @@ export default class Flowchart {
         } else {
           GFP.log.warn('States not defined for this rule');
         }
-      }
-      else {
+      } else {
         GFP.log.error('updateStates => this.stateHandler undefined');
       }
     });

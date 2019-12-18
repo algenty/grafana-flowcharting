@@ -111,7 +111,7 @@ export default class StateHandler {
   }
 
   /**
-   * get array states 
+   * get array states
    *
    * @returns {State[]}
    * @memberof StateHandler

@@ -79,6 +79,7 @@ export class Serie extends Metric {
     this.type = 'serie';
     this.name = dataList.alias;
     this.metrics = this.seriesHandler(dataList);
+    GFP.log.debug('Serie->Constructor this.metrics', this.metrics)
   }
 
   seriesHandler(seriesData) {
@@ -213,77 +214,80 @@ export class Table extends Metric {
       let previousValue = 0;
       let previousDeltaUp = true;
 
-      for (let i = 0; i < table.datapoints.length; i++) {
-        if (table.timeColumn) {
-          currentTime = table.datapoints[i][table.timeColumn];
-        }
-        currentValue = table.datapoints[i][currName];
-
-        // Due to missing values we could have different timeStep all along the series
-        // so we have to find the minimum one (could occur with aggregators such as ZimSum)
-        if (previousTime !== undefined) {
-          const timeStep = currentTime - previousTime;
-          if (timeStep < table.stats[currName].timeStep) {
-            table.stats[currName].timeStep = timeStep;
+      try {
+        for (let i = 0; i < table.datapoints.length; i++) {
+          if (table.timeColumn) {
+            currentTime = table.datapoints[i][table.timeColumn];
           }
-        }
-        previousTime = currentTime;
-
-        if (currentValue === null) {
-          if (ignoreNulls) {
-            continue;
-          }
-          if (nullAsZero) {
-            currentValue = 0;
-          }
-        }
-
-        if (currentValue !== null) {
-          if (_.isNumber(currentValue)) {
-            table.stats[currName].total += currentValue;
-            this.allIsNull = false;
-            nonNulls++;
-          }
-
-          if (currentValue > table.stats[currName].max) {
-            table.stats[currName].max = currentValue;
-          }
-
-          if (currentValue < table.stats[currName].min) {
-            table.stats[currName].min = currentValue;
-          }
-
-          if (table.stats[currName].first === null) {
-            table.stats[currName].first = currentValue;
-          } else {
-            if (previousValue > currentValue) {
-              // counter reset
-              previousDeltaUp = false;
-              if (i === table.datapoints.length - 1) {
-                // reset on last
-                table.stats[currName].delta += currentValue;
-              }
-            } else {
-              if (previousDeltaUp) {
-                table.stats[currName].delta += currentValue - previousValue; // normal increment
-              } else {
-                table.stats[currName].delta += currentValue; // account for counter reset
-              }
-              previousDeltaUp = true;
+          currentValue = table.datapoints[i][currName];
+  
+          if (previousTime !== undefined) {
+            const timeStep = currentTime - previousTime;
+            if (timeStep < table.stats[currName].timeStep) {
+              table.stats[currName].timeStep = timeStep;
             }
           }
-          previousValue = currentValue;
-
-          if (currentValue < table.stats[currName].logmin && currentValue > 0) {
-            table.stats[currName].logmin = currentValue;
+          previousTime = currentTime;
+  
+          if (currentValue === null) {
+            if (ignoreNulls) {
+              continue;
+            }
+            if (nullAsZero) {
+              currentValue = 0;
+            }
           }
-
-          if (currentValue !== 0) {
-            this.allIsZero = false;
+  
+          if (currentValue !== null) {
+            if (_.isNumber(currentValue)) {
+              table.stats[currName].total += currentValue;
+              this.allIsNull = false;
+              nonNulls++;
+            }
+  
+            if (currentValue > table.stats[currName].max) {
+              table.stats[currName].max = currentValue;
+            }
+  
+            if (currentValue < table.stats[currName].min) {
+              table.stats[currName].min = currentValue;
+            }
+  
+            if (table.stats[currName].first === null) {
+              table.stats[currName].first = currentValue;
+            } else {
+              if (previousValue > currentValue) {
+                // counter reset
+                previousDeltaUp = false;
+                if (i === table.datapoints.length - 1) {
+                  // reset on last
+                  table.stats[currName].delta += currentValue;
+                }
+              } else {
+                if (previousDeltaUp) {
+                  table.stats[currName].delta += currentValue - previousValue; // normal increment
+                } else {
+                  table.stats[currName].delta += currentValue; // account for counter reset
+                }
+                previousDeltaUp = true;
+              }
+            }
+            previousValue = currentValue;
+  
+            if (currentValue < table.stats[currName].logmin && currentValue > 0) {
+              table.stats[currName].logmin = currentValue;
+            }
+  
+            if (currentValue !== 0) {
+              this.allIsZero = false;
+            }
           }
+          result.push([currentTime, currentValue]);
         }
-        result.push([currentTime, currentValue]);
+      } catch (error) {
+        GFP.error("Unable to aggregate data", error);
       }
+
 
       if (table.stats[currName].max === -Number.MAX_VALUE) {
         table.stats[currName].max = null;

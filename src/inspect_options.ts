@@ -127,7 +127,7 @@ export class InspectOptionsCtrl {
    * @returns {this}
    * @memberof InspectOptionsCtrl
    */
-  unselectCell(state: State):this {
+  unselectCell(state: State): this {
     state.unhighlightCell();
     return this;
   }
