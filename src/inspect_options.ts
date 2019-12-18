@@ -75,29 +75,61 @@ export class InspectOptionsCtrl {
     }, 100);
   }
 
-  reset() {
-    this.flowchartHandler.draw();
-    this.flowchartHandler.refresh();
-    // this.$scope.$apply();
+  /**
+   * Redraw graph after modified options
+   *
+   * @returns {this}
+   * @memberof InspectOptionsCtrl
+   */
+  reset(): this {
+    this.flowchartHandler.draw().refresh();
+    return this;
   }
 
-  apply() {
+  /**
+   * Apply modification
+   *
+   * @returns {this}
+   * @memberof InspectOptionsCtrl
+   */
+  apply(): this {
     const flowchart = this.flowchartHandler.getFlowchart();
-    const states = flowchart.getStateHandler().getStates();
-    states.forEach(state => {
-      if (state.edited && state.previousId) {
-        flowchart.renameId(state.previousId, state.cellId);
-      }
-    });
-    flowchart.applyModel();
+    if (flowchart.stateHandler !== undefined) {
+      const states = flowchart.stateHandler.getStates();
+      states.forEach(state => {
+        if (state.edited && state.previousId) {
+          flowchart.renameId(state.previousId, state.cellId);
+        }
+      });
+      flowchart.applyModel();
+    } else {
+      GFP.log.console.error('apply => flowchart.stateHandler');
+    }
+    return this;
   }
 
-  selectCell(state: State) {
+  /**
+   * Select concerned Cells
+   *
+   * @param {State} state
+   * @returns {this}
+   * @memberof InspectOptionsCtrl
+   */
+  selectCell(state: State): this {
     state.highlightCell();
+    return this;
   }
 
-  unselectCell(state: State) {
+  /**
+   * Unselect concerned cell
+   *
+   * @param {State} state
+   * @returns {this}
+   * @memberof InspectOptionsCtrl
+   */
+  unselectCell(state: State):this {
     state.unhighlightCell();
+    return this;
   }
 }
 

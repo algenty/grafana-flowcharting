@@ -483,6 +483,13 @@ export default class FlowchartHandler {
     return false;
   }
 
+  /**
+   * Wait for draw.io answer
+   *
+   * @private
+   * @param {MessageEvent} event
+   * @memberof FlowchartHandler
+   */
   private listenMessage(event: MessageEvent) {
     if (event.data === 'ready') {
       // send xml
@@ -522,6 +529,12 @@ export default class FlowchartHandler {
     window.addEventListener('message', this.listenMessage.bind(this), false);
   }
 
+  /**
+   * Get flowchart names
+   *
+   * @returns {string[]}
+   * @memberof FlowchartHandler
+   */
   getFlowchartNames(): string[] {
     return this.flowcharts.map(f => f.data.name);
   }

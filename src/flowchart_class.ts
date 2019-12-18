@@ -16,7 +16,7 @@ export default class Flowchart {
   data: gf.TFlowchartData;
   container: HTMLDivElement;
   xgraph: XGraph | undefined = undefined;
-  stateHandler!: StateHandler;
+  stateHandler: StateHandler | undefined;
   // ctrl: any;
   templateSrv: any;
   states: Map<string, State> | undefined;
@@ -144,29 +144,35 @@ export default class Flowchart {
    * Update states of flowchart/graph
    *
    * @param {*} rules
+   * @returns {this}
    * @memberof Flowchart
    */
-  updateStates(rules: Rule[]) {
-    // if (this.stateHandler !== undefined) this.stateHandler.updateStates(rules);
-    // this.stateHandler.prepare();
+  updateStates(rules: Rule[]): this {
     rules.forEach(rule => {
-      rule.states = this.stateHandler.getStatesForRule(rule);
-      if (rule.states) {
-        rule.states.forEach((state: any) => {
-          state.unsetState();
-        });
-      } else {
-        GFP.log.warn('States not defined for this rule');
+      if (this.stateHandler !== undefined) {
+        rule.states = this.stateHandler.getStatesForRule(rule);
+        if (rule.states) {
+          rule.states.forEach((state: any) => {
+            state.unsetState();
+          });
+        } else {
+          GFP.log.warn('States not defined for this rule');
+        }
+      }
+      else {
+        GFP.log.error('updateStates => this.stateHandler undefined');
       }
     });
+    return this;
   }
 
   /**
    * Initialisation of flowchart class
    *
+   * @return {this}
    * @memberof Flowchart
    */
-  init() {
+  init(): this {
     GFP.log.info(`flowchart[${this.data.name}].init()`);
     try {
       if (this.xgraph === undefined) {
@@ -204,6 +210,7 @@ export default class Flowchart {
     } catch (error) {
       GFP.log.error('Unable to initialize graph', error);
     }
+    return this;
   }
 
   /**
