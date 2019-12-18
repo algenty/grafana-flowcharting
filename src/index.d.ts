@@ -189,7 +189,7 @@ namespace gf {
     hidden: boolean;
   }
 
-  // XGraph
+  // mxGraph API
   declare var mxCellHighlight: any,
     mxCellOverlay: any,
     mxEvent: any,

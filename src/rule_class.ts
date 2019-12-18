@@ -1081,6 +1081,12 @@ export class GFMap {
  */
 class ShapeMap extends GFMap {
   data: gf.TShapeMapData;
+  /**
+   * Creates an instance of ShapeMap.
+   * @param {string} pattern
+   * @param {gf.TShapeMapData} data
+   * @memberof ShapeMap
+   */
   constructor(pattern: string, data: gf.TShapeMapData) {
     super(pattern, data);
     this.data = data;
@@ -1129,6 +1135,13 @@ class TextMap extends GFMap {
     this.data = data;
   }
 
+  /**
+   * Return default data
+   *
+   * @static
+   * @returns {gf.TTextMapData}
+   * @memberof TextMap
+   */
   static getDefaultData(): gf.TTextMapData {
     return {
       pattern: '',
@@ -1138,6 +1151,13 @@ class TextMap extends GFMap {
     };
   }
 
+  /**
+   * Import data from current or old version
+   *
+   * @param {*} obj
+   * @returns {this}
+   * @memberof TextMap
+   */
   import(obj: any): this {
     super.import(obj);
     if (!!obj.textReplace) {

@@ -307,11 +307,21 @@ class GraphTooltip {
   }
 }
 
+/**
+ * tooltip for line graph
+ *
+ * @class LineGraphTooltip
+ * @extends {GraphTooltip}
+ */
 class LineGraphTooltip extends GraphTooltip {
   chartistOptions: Chartist.ILineChartOptions;
   div: HTMLDivElement | undefined;
   // data: { series: Array<{ x: any; y: any }>[] } | undefined;
   chart: Chartist.IChartistLineChart | undefined;
+  /**
+   * Creates an instance of LineGraphTooltip.
+   * @memberof LineGraphTooltip
+   */
   constructor() {
     super();
     this.type = 'line';
@@ -334,6 +344,13 @@ class LineGraphTooltip extends GraphTooltip {
     };
   }
 
+  /**
+   * get current Div
+   *
+   * @param {HTMLDivElement} parentDiv
+   * @returns {HTMLDivElement}
+   * @memberof LineGraphTooltip
+   */
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     if (this.metric) {
       this.data.series[0]['data'] = this.metric.getData(this.column);
@@ -393,9 +410,19 @@ class LineGraphTooltip extends GraphTooltip {
   }
 }
 
+/**
+ * Tooltip for Histogram
+ *
+ * @class BarGraphTooltip
+ * @extends {GraphTooltip}
+ */
 class BarGraphTooltip extends GraphTooltip {
   chartistOptions: Chartist.IBarChartOptions;
   chart: Chartist.IChartistBarChart | undefined;
+  /**
+   * Creates an instance of BarGraphTooltip.
+   * @memberof BarGraphTooltip
+   */
   constructor() {
     super();
     this.type = 'bar';
@@ -414,6 +441,13 @@ class BarGraphTooltip extends GraphTooltip {
     };
   }
 
+  /**
+   * Get current div
+   *
+   * @param {HTMLDivElement} parentDiv
+   * @returns {HTMLDivElement}
+   * @memberof BarGraphTooltip
+   */
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     if (this.metric) {
       this.data.series[0]['data'] = this.metric.getData(this.column);

@@ -13,6 +13,11 @@ import XGraph from 'graph_class';
 export default class StateHandler {
   states: Map<string, State>;
   xgraph: XGraph;
+  /**
+   * Creates an instance of StateHandler.
+   * @param {XGraph} xgraph
+   * @memberof StateHandler
+   */
   constructor(xgraph: XGraph) {
     GFP.log.info('StateHandler.constructor()');
     this.states = new Map();
@@ -105,6 +110,12 @@ export default class StateHandler {
     return this.states;
   }
 
+  /**
+   * get array states 
+   *
+   * @returns {State[]}
+   * @memberof StateHandler
+   */
   getStatesForInspect(): State[] {
     const states: State[] = [];
     this.states.forEach(state => {

@@ -10,8 +10,8 @@ import TooltipHandler from './tooltipHandler';
  * @class State
  */
 export default class State {
-  mxcell: mxCell;
-  cellId: string;
+  mxcell: mxCell; // mxCell State
+  cellId: string; // cell ID in mxcell
   newcellId: string | undefined; // for inspect mode
   previousId: string | undefined; // for inspect mode
   edited: boolean | undefined; // if modified in inspector
