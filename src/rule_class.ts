@@ -215,10 +215,10 @@ export default class Rule {
     if (!!obj.tpGraphType) {
       this.data.tpGraphType = obj.tpGraphType;
     }
-    if (!!obj.tpGraphLow) {
+    if (!!obj.tpGraphLow || obj.tpGraphLow === 0) {
       this.data.tpGraphLow = obj.tpGraphLow;
     }
-    if (!!obj.tpGraphHigh) {
+    if (!!obj.tpGraphHigh || obj.tpGraphHigh === 0) {
       this.data.tpGraphHigh = obj.tpGraphHigh;
     }
     if (!!obj.tpGraphScale) {

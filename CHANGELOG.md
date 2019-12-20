@@ -1,25 +1,30 @@
 # Changelog
 
-## [[0.6.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0-SNAPSHOT.zip) - 2019-11-24
+## [[0.6.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0.zip) - 2019-12-20  
 ### Added  
-  - Some optimization on : 
+  - Experimental implementation for table type data (Mysql, Postgres, Zabbix, Streaming, loki and other ...)
+  - PlaceHolder feature supported [see doc from draw.io](https://desk.draw.io/support/solutions/articles/16000051979)
+  - Some optimization on :  
     - tooltips
     - States
   - Tooltip Graph :
     - Histogram ([See example](https://algenty.github.io/flowcharting-repository/images/histogram_ani.png))
-    - Logarithmic scale. 
   - Variables support in download input url ([See example](https://algenty.github.io/flowcharting-repository/images/url_download_variable_ani.png))
-  - Add graduate effect when color changed.
-  - New rule design in editor
-  - Typescript convertion.
-  - Migration to grafana-toolkit.
-  - New Mxgraph/Draw.io engine for best support.
+  - Add graduate animation when color changed ([See example](https://video.twimg.com/tweet_video/EISkJwdWwAAi5Qh.mp4))
+  - New rule design in editor ([See example](https://algenty.github.io/flowcharting-repository/images/rule_design.png))
+  - Typescript migration for best quality code.
+  - Build migration to grafana-toolkit (thanks Dominik and Ryan).
+  - New engine graph for best compatibility with draw.io.
   - Better Zoom for firefox and IE/edge.
+  - Add checks/controls on edit mode for XML and URL.
+  - Regular expression for String type values implemented to define level state.
 ### Fixed
   - Fix download url on first load.
   - Fix value null for string [(issue #65)](https://github.com/algenty/grafana-flowcharting/issues/65)
   - Fix bug "subways" Editor [(issue #73)](https://github.com/algenty/grafana-flowcharting/issues/73)
+  - Fix date on 2 digit in tooltip [(issue #77)](https://github.com/algenty/grafana-flowcharting/issues/73)
   - Fix minors bug.
+
 
 
 ## [[0.5.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0-SNAPSHOT.zip) - 2019-10-13
