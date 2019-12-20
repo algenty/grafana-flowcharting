@@ -61,9 +61,8 @@ export default class FlowChartingPlugin {
     return this.templateSrv;
   }
 
-  replaceWithText(content: any): any {
+  replaceWithText(content: string): string {
     return this.templateSrv.replaceWithText(content);
-    // return content;
   }
 
   /**
@@ -73,7 +72,6 @@ export default class FlowChartingPlugin {
    */
   private getRepo(): string {
     let url = '';
-    // let link: any;
     this.data.info.links.forEach((link: { name: string; url: string }) => {
       if (link.name === 'Documentation') {
         url = link.url;

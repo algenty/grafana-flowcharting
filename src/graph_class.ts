@@ -10,8 +10,8 @@ declare var mxEvent: any,
   mxConstants: any,
   mxCellHighlight: any,
   mxRectangle: any;
-type mxCell = any;
-type mxMouseEvent = any;
+
+type mxCellOverlay = any;
 
 /**
  * mxGraph interface class
@@ -64,6 +64,14 @@ export default class XGraph {
     this.initGraph();
   }
 
+  /**
+   * Valided XML definition
+   *
+   * @static
+   * @param {string} source
+   * @returns
+   * @memberof XGraph
+   */
   static isValidXml(source: string) {
     try {
       const div = document.createElement('div');
@@ -84,6 +92,13 @@ export default class XGraph {
     }
   }
 
+  /**
+   * Init Global vars an libs for mxgraph
+   *
+   * @static
+   * @returns
+   * @memberof XGraph
+   */
   static initMxGgraph() {
     // START PERFinitMxGgraph
     const myWindow = window as any;
@@ -275,6 +290,7 @@ export default class XGraph {
   /**
    * Draw graph
    *
+   * @returns {this}
    * @memberof XGraph
    */
   drawGraph(): this {
@@ -298,8 +314,7 @@ export default class XGraph {
   /**
    * Apply options on graph
    *
-   * @param {*} width
-   * @param {*} height
+   * @return this
    * @memberof XGraph
    */
   applyGraph(): this {
@@ -323,11 +338,23 @@ export default class XGraph {
     return this;
   }
 
+  /**
+   * Refresh graph
+   *
+   * @returns {this}
+   * @memberof XGraph
+   */
   refresh(): this {
     this.graph.refresh();
     return this;
   }
 
+  /**
+   * Destroy Graph object and DOM
+   *
+   * @returns {this}
+   * @memberof XGraph
+   */
   destroyGraph(): this {
     this.graph.destroy();
     this.graph = undefined;
@@ -337,6 +364,7 @@ export default class XGraph {
   /**
    * lock cells
    *
+   * @returns {this}
    * @param {Boolean} bool
    * @memberof XGraph
    */
@@ -353,6 +381,7 @@ export default class XGraph {
   /**
    * Enable tooltip
    *
+   * @returns {this}
    * @param {Boolean} bool
    * @memberof XGraph
    */
@@ -366,7 +395,14 @@ export default class XGraph {
     return this;
   }
 
-  allowDrawio(bool: boolean) {
+  /**
+   * Allow downloads images from site draw.io
+   *
+   * @param {boolean} bool
+   * @returns {this}
+   * @memberof XGraph
+   */
+  allowDrawio(bool: boolean): this {
     if (bool) {
       mxUrlConverter.prototype.baseUrl = 'http://draw.io/';
       mxUrlConverter.prototype.baseDomain = '';
@@ -380,6 +416,7 @@ export default class XGraph {
   /**
    * Center graph in panel
    *
+   * @returns {this}
    * @param {Boolean} bool
    * @memberof XGraph
    */
@@ -397,10 +434,11 @@ export default class XGraph {
   /**
    * Scale graph in panel
    *
+   * @returns {this}
    * @param {boolean} bool
    * @memberof XGraph
    */
-  scaleGraph(bool: boolean) {
+  scaleGraph(bool: boolean): this {
     if (bool) {
       this.unzoomGraph();
       this.graph.fit();
@@ -593,28 +631,32 @@ export default class XGraph {
   /**
    * Select cells in graph with pattern for id or value
    *
+   * @return {this}
    * @param {string} prop - "id"|"value"
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  selectMxCells(prop: gf.TPropertieKey, pattern: string) {
+  selectMxCells(prop: gf.TPropertieKey, pattern: string): this {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       // this.graph.setSelectionCells(mxcells);
       this.highlightCells(mxcells);
     }
+    return this;
   }
 
   /**
    * Unselect cells
    *
+   * @returns {this}
    * @memberof XGraph
    */
-  unselectMxCells(prop: gf.TPropertieKey, pattern: string) {
+  unselectMxCells(prop: gf.TPropertieKey, pattern: string): this {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       this.unhighlightCells(mxcells);
     }
+    return this;
   }
 
   /**
@@ -622,10 +664,10 @@ export default class XGraph {
    *
    * @param {*} image
    * @param {*} tooltip
-   * @returns
+   * @returns {mxCellOverlay}
    * @memberof XGraph
    */
-  createOverlay(image, tooltip) {
+  createOverlay(image, tooltip): mxCellOverlay {
     const overlay = new mxCellOverlay(image, tooltip);
     overlay.addListener(mxEvent.CLICK, (_sender, _evt) => {
       mxUtils.alert(`${tooltip}\nLast update: ${new Date()}`);
@@ -769,6 +811,16 @@ export default class XGraph {
     return null;
   }
 
+  /**
+   * Apply style on Cell
+   *
+   * @param {mxCell} mxcell
+   * @param {gf.TStyleKey} style
+   * @param {(string | null)} color
+   * @param {boolean} [animate=false]
+   * @returns {this}
+   * @memberof XGraph
+   */
   setStyleCell(mxcell: mxCell, style: gf.TStyleKey, color: string | null, animate = false): this {
     if (animate) {
       try {

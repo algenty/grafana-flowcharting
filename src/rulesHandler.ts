@@ -10,10 +10,10 @@ import _ from 'lodash';
 export default class RulesHandler {
   rules: Rule[];
   data: gf.TIRulesHandlerData;
-  activeRuleIndex: any;
+  activeRuleIndex: number = 0;
   /**
    * Creates an instance of RulesHandler.
-   * @param {any[]} data
+   * @param {TIRulesHandlerData} data
    * @memberof RulesHandler
    */
   constructor(data: gf.TIRulesHandlerData) {
@@ -24,7 +24,7 @@ export default class RulesHandler {
   }
 
   /**
-   * import datas in rule
+   * import datas in rule from current or old version
    *
    * @return this
    * @param {any} obj
