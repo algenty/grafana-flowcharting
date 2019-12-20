@@ -66,6 +66,8 @@ export class FlowchartOptionsCtrl {
       this.errorSourceMsg = 'Invalid Xml definition';
     } else {
       this.errorSourceMsg = '';
+      this.onSourceChange();
+      this.$scope.$applyAsync();
     }
     return bool;
   }
