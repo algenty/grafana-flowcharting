@@ -225,10 +225,10 @@ export default class Rule {
     if (!!obj.tpGraphType) {
       this.data.tpGraphType = obj.tpGraphType;
     }
-    if (!!obj.tpGraphLow) {
+    if (!!obj.tpGraphLow || obj.tpGraphLow === 0) {
       this.data.tpGraphLow = obj.tpGraphLow;
     }
-    if (!!obj.tpGraphHigh) {
+    if (!!obj.tpGraphHigh || obj.tpGraphHigh === 0) {
       this.data.tpGraphHigh = obj.tpGraphHigh;
     }
     if (!!obj.tpGraphScale) {
@@ -961,8 +961,8 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 }
