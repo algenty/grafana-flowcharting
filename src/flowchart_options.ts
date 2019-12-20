@@ -60,12 +60,15 @@ export class FlowchartOptionsCtrl {
   }
 
   checkSource_onSourceChange(source: string): boolean {
+    GFP.log.debug("")
     const bool = XGraph.isValidXml(source);
     this.errorSourceFlag = !bool;
     if (!bool) {
       this.errorSourceMsg = 'Invalid Xml definition';
     } else {
       this.errorSourceMsg = '';
+      this.onSourceChange();
+      this.$scope.$applyAsync();
     }
     return bool;
   }
