@@ -25,6 +25,8 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   initData(dataList: any) {
+    GFP.log.info('initData');
+    GFP.log.debug('initData', dataList);
     this.tables = [];
     this.series = [];
     this.metrics = [];
@@ -32,6 +34,10 @@ export default class MetricHandler {
     dataList.forEach(dl => {
       this.addMetric(dl);
     });
+
+    GFP.log.debug('tables : ', this.tables.length);
+    GFP.log.debug('series : ', this.series.length);
+    GFP.log.debug('metrics : ', this.metrics.length);
   }
 
   /**
@@ -41,7 +47,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addMetric(data: any) {
-    GFP.log.debug("addMetric", data);
+    GFP.log.debug('addMetric', data);
     if (data.type === 'table') {
       this.addTable(data);
     } else {
@@ -57,6 +63,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addTable(data: any): Table {
+    GFP.log.info('addTable');
     const table = new Table(data);
     this.tables.push(table);
     this.metrics.push(table);
@@ -71,6 +78,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addSerie(data: any): Serie {
+    GFP.log.info('addSerie');
     const serie = new Serie(data);
     this.series.push(serie);
     this.metrics.push(serie);
@@ -85,13 +93,16 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   getNames(type?: gf.TMetricType): string[] {
+    let names: string[] = [];
     if (type === 'serie') {
-      return this.series.map(m => m.getName());
+      names = this.series.map(m => m.getName());
+    } else if (type === 'table') {
+      names = this.tables.map(m => m.getName());
+    } else {
+      names = this.metrics.map(m => m.getName());
     }
-    if (type === 'table') {
-      return this.tables.map(m => m.getName());
-    }
-    return this.metrics.map(m => m.getName());
+    GFP.log.debug("getNames", names)
+    return names;
   }
 
   /**

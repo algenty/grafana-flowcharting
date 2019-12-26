@@ -22,6 +22,7 @@ export default class Metric {
    * @memberof Metric
    */
   getName(): string {
+    if (this.name === undefined || this.name === null) GFP.log.error("Metric => getName : Name is null");
     return this.name;
   }
 
@@ -76,9 +77,10 @@ export default class Metric {
 export class Serie extends Metric {
   constructor(dataList: any) {
     super(dataList);
+    console.log("TCL: Serie -> constructor -> dataList", dataList)
     this.type = 'serie';
-    this.name = dataList.alias;
     this.metrics = this.seriesHandler(dataList);
+    this.name = this.metrics.alias;
     GFP.log.debug('Serie->Constructor this.metrics', this.metrics)
   }
 
@@ -129,10 +131,10 @@ export class Serie extends Metric {
  * @extends {Metric}
  */
 export class Table extends Metric {
-  tableColumnOptions!: any;
+  tableColumnOptions: any = {};
   tableColumn = '';
-  allIsNull!: boolean;
-  allIsZero!: boolean;
+  allIsNull: boolean = true;
+  allIsZero: boolean = true;
   constructor(dataList: any) {
     super(dataList);
     this.type = 'table';
