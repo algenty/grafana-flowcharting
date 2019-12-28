@@ -101,7 +101,7 @@ export default class MetricHandler {
     } else {
       names = this.metrics.map(m => m.getName());
     }
-    GFP.log.debug('getNames', names);
+    GFP.log.debug("getNames", names)
     return names;
   }
 

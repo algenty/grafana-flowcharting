@@ -22,9 +22,7 @@ export default class Metric {
    * @memberof Metric
    */
   getName(): string {
-    if (this.name === undefined || this.name === null) {
-      GFP.log.error('Metric => getName : Name is null');
-    }
+    if (this.name === undefined || this.name === null) GFP.log.error("Metric => getName : Name is null");
     return this.name;
   }
 
@@ -79,11 +77,11 @@ export default class Metric {
 export class Serie extends Metric {
   constructor(dataList: any) {
     super(dataList);
-    console.log('TCL: Serie -> constructor -> dataList', dataList);
+    console.log("TCL: Serie -> constructor -> dataList", dataList)
     this.type = 'serie';
     this.metrics = this.seriesHandler(dataList);
     this.name = this.metrics.alias;
-    GFP.log.debug('Serie->Constructor this.metrics', this.metrics);
+    GFP.log.debug('Serie->Constructor this.metrics', this.metrics)
   }
 
   seriesHandler(seriesData) {
@@ -135,8 +133,8 @@ export class Serie extends Metric {
 export class Table extends Metric {
   tableColumnOptions: any = {};
   tableColumn = '';
-  allIsNull = true;
-  allIsZero = true;
+  allIsNull: boolean = true;
+  allIsZero: boolean = true;
   constructor(dataList: any) {
     super(dataList);
     this.type = 'table';
@@ -224,7 +222,7 @@ export class Table extends Metric {
             currentTime = table.datapoints[i][table.timeColumn];
           }
           currentValue = table.datapoints[i][currName];
-
+  
           if (previousTime !== undefined) {
             const timeStep = currentTime - previousTime;
             if (timeStep < table.stats[currName].timeStep) {
@@ -232,7 +230,7 @@ export class Table extends Metric {
             }
           }
           previousTime = currentTime;
-
+  
           if (currentValue === null) {
             if (ignoreNulls) {
               continue;
@@ -241,22 +239,22 @@ export class Table extends Metric {
               currentValue = 0;
             }
           }
-
+  
           if (currentValue !== null) {
             if (_.isNumber(currentValue)) {
               table.stats[currName].total += currentValue;
               this.allIsNull = false;
               nonNulls++;
             }
-
+  
             if (currentValue > table.stats[currName].max) {
               table.stats[currName].max = currentValue;
             }
-
+  
             if (currentValue < table.stats[currName].min) {
               table.stats[currName].min = currentValue;
             }
-
+  
             if (table.stats[currName].first === null) {
               table.stats[currName].first = currentValue;
             } else {
@@ -277,11 +275,11 @@ export class Table extends Metric {
               }
             }
             previousValue = currentValue;
-
+  
             if (currentValue < table.stats[currName].logmin && currentValue > 0) {
               table.stats[currName].logmin = currentValue;
             }
-
+  
             if (currentValue !== 0) {
               this.allIsZero = false;
             }
@@ -289,8 +287,9 @@ export class Table extends Metric {
           result.push([currentTime, currentValue]);
         }
       } catch (error) {
-        GFP.error('Unable to aggregate data', error);
+        GFP.error("Unable to aggregate data", error);
       }
+
 
       if (table.stats[currName].max === -Number.MAX_VALUE) {
         table.stats[currName].max = null;

@@ -10,7 +10,7 @@ import _ from 'lodash';
 export default class RulesHandler {
   rules: Rule[];
   data: gf.TIRulesHandlerData;
-  activeRuleIndex = 0;
+  activeRuleIndex: number = 0;
   /**
    * Creates an instance of RulesHandler.
    * @param {TIRulesHandlerData} data
