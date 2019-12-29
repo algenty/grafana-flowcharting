@@ -79,11 +79,9 @@ export default class Metric {
 export class Serie extends Metric {
   constructor(dataList: any) {
     super(dataList);
-    console.log('TCL: Serie -> constructor -> dataList', dataList);
     this.type = 'serie';
     this.metrics = this.seriesHandler(dataList);
     this.name = this.metrics.alias;
-    GFP.log.debug('Serie->Constructor this.metrics', this.metrics);
   }
 
   seriesHandler(seriesData) {
