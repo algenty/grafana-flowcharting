@@ -483,14 +483,15 @@ export default class FlowchartHandler {
     return false;
   }
 
-  private listenMessage(event: MessageEvent) {
+  listenMessage(event: any) {
     if (event.data === 'ready') {
       // send xml
-      if (event.source) {
-        if (!(event.source instanceof MessagePort) && !(event.source instanceof ServiceWorker)) {
-          event.source.postMessage(this.getFlowchart(this.currentFlowchart).data.xml, event.origin);
-        }
-      }
+      event.source.postMessage(this.getFlowchart(this.currentFlowchart).data.xml, event.origin);
+      // if (event.source) {
+      //   if (!(event.source instanceof MessagePort) && !(event.source instanceof ServiceWorker)) {
+      //     event.source.postMessage(this.getFlowchart(this.currentFlowchart).data.xml, event.origin);
+      //   }
+      // }
     } else {
       if (this.onEdit && event.data !== undefined && event.data.length > 0) {
         this.getFlowchart(this.currentFlowchart).redraw(event.data);

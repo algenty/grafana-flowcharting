@@ -77,8 +77,8 @@ export class Serie extends Metric {
   constructor(dataList: any) {
     super(dataList);
     this.type = 'serie';
-    this.name = dataList.alias;
     this.metrics = this.seriesHandler(dataList);
+    this.name = this.metrics.alias;
   }
 
   seriesHandler(seriesData) {

@@ -30,6 +30,7 @@ var grafana = {
     return new TimeSeries({
       datapoints: seriesData.datapoints || [],
       alias: seriesData.target,
+      unit: seriesData.unit,
     });
   }
 
