@@ -55,6 +55,7 @@ export class InspectOptionsCtrl {
   onChangeId(state: State) {
     if (state.newcellId !== undefined && state.cellId !== state.newcellId) {
       state.edited = true;
+      this.flowchartHandler.getFlowchart().getStateHandler().edited = true;
       if (state.previousId === undefined) {
         state.previousId = state.cellId;
       }
@@ -67,6 +68,8 @@ export class InspectOptionsCtrl {
   onEdit(state: State) {
     state.edit = true;
     state.newcellId = state.cellId;
+    // let stateHandler = this.flowchartHandler.getFlowchart().getStateHandler();
+    // stateHandler.edited = true;
     const elt = document.getElementById(state.cellId);
     setTimeout(() => {
       if (elt) {
@@ -87,8 +90,10 @@ export class InspectOptionsCtrl {
     states.forEach(state => {
       if (state.edited && state.previousId) {
         flowchart.renameId(state.previousId, state.cellId);
+        state.edited = false;
       }
     });
+    this.flowchartHandler.getFlowchart().getStateHandler().edited = false;
     flowchart.applyModel();
   }
 

@@ -13,6 +13,7 @@ import XGraph from 'graph_class';
 export default class StateHandler {
   states: Map<string, State>;
   xgraph: XGraph;
+  edited = false;
   constructor(xgraph: XGraph) {
     GFP.log.info('StateHandler.constructor()');
     this.states = new Map();
