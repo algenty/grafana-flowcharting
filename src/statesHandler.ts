@@ -13,6 +13,7 @@ import XGraph from 'graph_class';
 export default class StateHandler {
   states: Map<string, State>;
   xgraph: XGraph;
+  edited = false;
   /**
    * Creates an instance of StateHandler.
    * @param {XGraph} xgraph

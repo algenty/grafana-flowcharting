@@ -55,6 +55,10 @@ export class InspectOptionsCtrl {
   onChangeId(state: State) {
     if (state.newcellId !== undefined && state.cellId !== state.newcellId) {
       state.edited = true;
+      let sh = this.flowchartHandler.getFlowchart().getStateHandler();
+      if (sh !== undefined) {
+        sh.edited = true;
+      }
       if (state.previousId === undefined) {
         state.previousId = state.cellId;
       }
@@ -67,6 +71,8 @@ export class InspectOptionsCtrl {
   onEdit(state: State) {
     state.edit = true;
     state.newcellId = state.cellId;
+    // let stateHandler = this.flowchartHandler.getFlowchart().getStateHandler();
+    // stateHandler.edited = true;
     const elt = document.getElementById(state.cellId);
     setTimeout(() => {
       if (elt) {
@@ -75,61 +81,31 @@ export class InspectOptionsCtrl {
     }, 100);
   }
 
-  /**
-   * Redraw graph after modified options
-   *
-   * @returns {this}
-   * @memberof InspectOptionsCtrl
-   */
-  reset(): this {
-    this.flowchartHandler.draw().refresh();
-    return this;
+  reset() {
+    this.flowchartHandler.draw();
+    this.flowchartHandler.refresh();
+    // this.$scope.$apply();
   }
 
-  /**
-   * Apply modification
-   *
-   * @returns {this}
-   * @memberof InspectOptionsCtrl
-   */
-  apply(): this {
+  apply() {
     const flowchart = this.flowchartHandler.getFlowchart();
-    if (flowchart.stateHandler !== undefined) {
-      const states = flowchart.stateHandler.getStates();
-      states.forEach(state => {
-        if (state.edited && state.previousId) {
-          flowchart.renameId(state.previousId, state.cellId);
-        }
-      });
-      flowchart.applyModel();
-    } else {
-      GFP.log.console.error('apply => flowchart.stateHandler');
-    }
-    return this;
+    const states = flowchart.getStateHandler().getStates();
+    states.forEach(state => {
+      if (state.edited && state.previousId) {
+        flowchart.renameId(state.previousId, state.cellId);
+        state.edited = false;
+      }
+    });
+    this.flowchartHandler.getFlowchart().getStateHandler().edited = false;
+    flowchart.applyModel();
   }
 
-  /**
-   * Select concerned Cells
-   *
-   * @param {State} state
-   * @returns {this}
-   * @memberof InspectOptionsCtrl
-   */
-  selectCell(state: State): this {
+  selectCell(state: State) {
     state.highlightCell();
-    return this;
   }
 
-  /**
-   * Unselect concerned cell
-   *
-   * @param {State} state
-   * @returns {this}
-   * @memberof InspectOptionsCtrl
-   */
-  unselectCell(state: State): this {
+  unselectCell(state: State) {
     state.unhighlightCell();
-    return this;
   }
 }
 
