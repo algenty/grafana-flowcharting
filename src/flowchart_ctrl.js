@@ -17,10 +17,11 @@ window.u = window.u || u;
 class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
+    $rootScope.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
+  }
+
+  $onInit() {
     this.version = '0.5.0';
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.templateSrv = templateSrv;
     this.unitFormats = kbn.getUnitFormats();
     this.changedSource = true;
     this.changedData = true;
@@ -41,6 +42,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.containerDivId = `container_${this.panel.graphId}`;
 
     // events
+    if (!this.events) {
+      this.events = this.panel.events;
+    }
     this.events.on('render', this.onRender.bind(this));
     this.events.on('refresh', this.onRefresh.bind(this));
     this.events.on('data-received', this.onDataReceived.bind(this));
@@ -49,8 +53,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
     this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
-    this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-    $rootScope.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
+    this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), this.$scope);
   }
 
   //

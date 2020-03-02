@@ -1,10 +1,11 @@
 /bower_components
 /externals
-/node_modules
 /externals
 /.vscode
 /archives
 /public
 /coverage
-/dist
+node_modules/
+dist/
 yarn-error.log
+yarn.lock
