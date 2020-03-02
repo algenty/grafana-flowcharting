@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.3.4",
-    "@grafana/data": "canary",
+    "@grafana/data": "^6.7.0-pre-934a8f08ae",
     "@grafana/runtime": "^6.6.0-pre-047abc87c2",
     "@grafana/toolkit": "^6.6.0-pre-047abc87c2",
     "@grafana/ui": "^6.6.0-pre-047abc87c2",
