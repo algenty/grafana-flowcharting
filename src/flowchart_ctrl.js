@@ -12,15 +12,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
 
+    FlowChartingPlugin.init($scope,templateSrv);
     if($scope.$root.onAppEvent) $scope.$root.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
   }
 
   $onInit() {
-    FlowChartingPlugin.init($scope,templateSrv);
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.version = GFP.getVersion();
-    this.templateSrv = templateSrv;
     this.changedSource = true;
     this.changedData = true;
     this.changedOptions = true;
