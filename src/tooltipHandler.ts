@@ -1,4 +1,6 @@
 import Chartist from 'chartist';
+import Rule from 'rule_class';
+import moment from 'moment';
 import Metric from './metric_class';
 
 /**
@@ -12,7 +14,7 @@ export default class TooltipHandler {
   mxcell: mxCell;
   checked = false;
   metrics: Set<MetricTooltip>;
-  lastChange: string | undefined;
+  lastValue: string | undefined;
   div: HTMLHeadingElement | null = null;
   constructor(mxcell: any) {
     this.mxcell = mxcell;
@@ -47,35 +49,14 @@ export default class TooltipHandler {
    *
    * @memberof TooltipHandler
    */
-  updateDate() {
-    const currentDateTime = new Date();
-    this.lastChange =
-      currentDateTime.getFullYear() +
-      '-' +
-      (currentDateTime.getMonth() + 1).toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      '-' +
-      currentDateTime.getDate().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      ' ' +
-      currentDateTime.getHours().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      ':' +
-      currentDateTime.getMinutes().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      ':' +
-      currentDateTime.getSeconds().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      });
+  updateDate(rule: Rule, metric: Metric) {
+    const timeFormat = 'MM/DD/YYYY HH:mm';
+    const data = metric.getData(rule.data.column).pop();
+    if (data) {
+      this.lastValue = moment.unix(data['x'] / 1000).format(timeFormat);
+    } else {
+      this.lastValue = 'N/A';
+    }
   }
 
   destroy() {
@@ -116,7 +97,7 @@ export default class TooltipHandler {
       parentDiv.appendChild(div);
     }
     div.className = 'graph-tooltip-time tooltip-date';
-    div.innerHTML = `${this.lastChange}`;
+    div.innerHTML = `Last value at ${this.lastValue}`;
     return div;
   }
 }
@@ -333,7 +314,7 @@ class LineGraphTooltip extends GraphTooltip {
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
-    let thisArg = this;
+    const thisArg = this;
 
     if (this.metric) {
       this.data.series[0]['data'] = this.metric.getData(this.column);

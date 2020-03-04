@@ -180,7 +180,7 @@ export default class State {
                 .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh);
             }
             // Date
-            this.tooltipHandler.updateDate();
+            this.tooltipHandler.updateDate(rule, metric);
           }
 
           // Color Shape
@@ -520,9 +520,9 @@ export default class State {
     return this;
   }
 
-  updateTooltipDate(): this {
+  updateTooltipDate(rule: Rule, metric: Metric): this {
     if (this.tooltipHandler) {
-      this.tooltipHandler.updateDate();
+      this.tooltipHandler.updateDate(rule, metric);
     }
     return this;
   }
