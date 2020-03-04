@@ -175,6 +175,10 @@ export default class StateHandler {
         metrics.forEach(metric => {
           state.setState(rule, metric);
         });
+        // No data series
+        if (metrics.length === 0) {
+          state.setState(rule);
+        }
       });
     });
     return this;

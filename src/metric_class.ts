@@ -1,3 +1,4 @@
+import moment from 'moment';
 import grafana from './grafana_func';
 import _ from 'lodash';
 
@@ -45,6 +46,17 @@ export default class Metric {
    * @memberof Metric
    */
   getData(column?: string): number[] | Array<{ x: number | Date; y: number }> {
+    return [];
+  }
+
+  /**
+   * Return time labels for Chartist
+   *
+   * @param {string} [column]
+   * @returns {string[]}
+   * @memberof Metric
+   */
+  getLabels(column?: string): string[] {
     return [];
   }
 
@@ -111,6 +123,14 @@ export class Serie extends Metric {
   getData(): number[] | Array<{ x: number | Date; y: number }> {
     return this.metrics.flotpairs.map(d => {
       return { x: d[0], y: d[1] };
+    });
+  }
+
+  getLabels(): string[] {
+    const timeFormat = 'MM/DD HH:mm';
+
+    return this.metrics.flotpairs.map(d => {
+      return moment.unix(d[0] / 1000).format(timeFormat);
     });
   }
 
@@ -356,5 +376,16 @@ export class Table extends Metric {
       });
     }
     return this.metrics.datapoints.map(d => d[column]);
+  }
+
+  getLabels(column: string): string[] {
+    const timeFormat = 'MM/DD HH:mm';
+
+    if (this.metrics.timeColumn) {
+      return this.metrics.datapoints.map(d => {
+        return moment.unix(d[this.metrics.timeColumn] / 1000).format(timeFormat);
+      });
+    }
+    return this.metrics.datapoints.map(d => moment.unix(d[column] / 1000).format(timeFormat));
   }
 }

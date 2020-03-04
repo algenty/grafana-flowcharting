@@ -1,4 +1,6 @@
 import Chartist from 'chartist';
+import Rule from 'rule_class';
+import moment from 'moment';
 import Metric from './metric_class';
 
 /**
@@ -12,7 +14,7 @@ export default class TooltipHandler {
   mxcell: mxCell;
   checked = false;
   metrics: Set<MetricTooltip>;
-  lastChange: string | undefined;
+  lastValue: string | undefined;
   div: HTMLHeadingElement | null = null;
   constructor(mxcell: any) {
     this.mxcell = mxcell;
@@ -47,35 +49,14 @@ export default class TooltipHandler {
    *
    * @memberof TooltipHandler
    */
-  updateDate() {
-    const currentDateTime = new Date();
-    this.lastChange =
-      currentDateTime.getFullYear() +
-      '-' +
-      (currentDateTime.getMonth() + 1).toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      '-' +
-      currentDateTime.getDate().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      ' ' +
-      currentDateTime.getHours().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      ':' +
-      currentDateTime.getMinutes().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      ':' +
-      currentDateTime.getSeconds().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      });
+  updateDate(rule: Rule, metric: Metric) {
+    const timeFormat = 'MM/DD/YYYY HH:mm';
+    const data = metric.getData(rule.data.column).pop();
+    if (data) {
+      this.lastValue = moment.unix(data['x'] / 1000).format(timeFormat);
+    } else {
+      this.lastValue = 'N/A';
+    }
   }
 
   destroy() {
@@ -116,7 +97,7 @@ export default class TooltipHandler {
       parentDiv.appendChild(div);
     }
     div.className = 'graph-tooltip-time tooltip-date';
-    div.innerHTML = `${this.lastChange}`;
+    div.innerHTML = `Last value at ${this.lastValue}`;
     return div;
   }
 }
@@ -321,22 +302,23 @@ class LineGraphTooltip extends GraphTooltip {
       showArea: true,
       fullWidth: true,
       axisX: {
-        showGrid: false,
-        showLabel: false,
-        offset: 0,
+        showGrid: true,
+        showLabel: true,
       },
       axisY: {
-        showGrid: false,
-        showLabel: false,
-        offset: 0,
+        showGrid: true,
+        showLabel: true,
       },
       chartPadding: { top: 0, left: 0, right: 0, bottom: 0 },
     };
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
+    const thisArg = this;
+
     if (this.metric) {
       this.data.series[0]['data'] = this.metric.getData(this.column);
+      this.data.labels = this.metric.getLabels(this.column);
     }
     const div = document.createElement('div');
     const color = this.color;
@@ -347,6 +329,13 @@ class LineGraphTooltip extends GraphTooltip {
     div.className = 'ct-chart ct-golden-section';
     if (this.size !== null) {
       div.style.width = this.size;
+      if (this.chartistOptions.axisX) {
+        this.chartistOptions.axisX.labelInterpolationFnc = (value, index, labels) => {
+          const labelSize = 100;
+
+          return index % Math.ceil(labels.length / (parseInt(thisArg.size, 10) / labelSize)) === 0 ? value : null;
+        };
+      }
     }
     if (this.low !== null) {
       this.chartistOptions.low = this.low;
@@ -363,7 +352,17 @@ class LineGraphTooltip extends GraphTooltip {
     this.chart = new Chartist.Line(div, this.data, this.chartistOptions);
     this.chart.on('draw', (data: any) => {
       // GFP.log.info( 'Chartis.on() context ', data);
-      if (data.type === 'line' || data.type === 'area') {
+      if (data.type === 'line' || data.type === 'area' || data.type === 'label' || data.type === 'grid') {
+        if (data.type === 'grid' && data.index === 0) {
+          data.element.attr({
+            style: `stroke: ${color}`,
+          });
+        }
+        if (data.type === 'label') {
+          data.element.getNode().childNodes.forEach(child => {
+            child.style.color = color;
+          });
+        }
         if (data.type === 'line') {
           data.element.attr({
             style: `stroke: ${color}`,
@@ -374,21 +373,24 @@ class LineGraphTooltip extends GraphTooltip {
             style: `fill: ${color}`,
           });
         }
-        data.element.animate({
-          d: {
-            begin: 1000 * data.index,
-            dur: 1000,
-            from: data.path
-              .clone()
-              .scale(1, 0)
-              .translate(0, data.chartRect.height())
-              .stringify(),
-            to: data.path.clone().stringify(),
-            easing: Chartist.Svg.Easing.easeOutQuint,
-          },
-        });
+        if (data.type === 'area' || data.type === 'line') {
+          data.element.animate({
+            d: {
+              begin: 1000 * data.index,
+              dur: 1000,
+              from: data.path
+                .clone()
+                .scale(1, 0)
+                .translate(0, data.chartRect.height())
+                .stringify(),
+              to: data.path.clone().stringify(),
+              easing: Chartist.Svg.Easing.easeOutQuint,
+            },
+          });
+        }
       }
     });
+
     return div;
   }
 }
