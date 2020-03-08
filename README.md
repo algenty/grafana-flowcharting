@@ -29,6 +29,10 @@ See more example at draw.io
 
 # Changelog
 
+## [[0.6.2]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.1.zip) - 2020-01-15  
+### Fixed
+  - Fix same name metric for zabbix
+
 ## [[0.6.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.1.zip) - 2020-01-15  
 ### Fixed
   - Fix endless loading when edit graph [(issue #102)](https://github.com/algenty/grafana-flowcharting/issues/102)

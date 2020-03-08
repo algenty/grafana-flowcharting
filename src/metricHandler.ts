@@ -41,6 +41,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addMetric(data: any) {
+    GFP.log.warn('data', data);
     if (data.type === 'table') {
       this.addTable(data);
     } else {

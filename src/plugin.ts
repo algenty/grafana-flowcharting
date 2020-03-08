@@ -333,7 +333,7 @@ class Log {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async debug(title: string, obj: any | undefined) {
+  debug(title: string, obj: any | undefined) {
     if (this.toDisplay(Log.DEBUG)) {
       //console.debug(`GF DEBUG : ${title}`, obj);
     }
