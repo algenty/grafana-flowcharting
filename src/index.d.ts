@@ -119,8 +119,8 @@ namespace gf {
     decimals: number;
     colors: string[];
     reduce: boolean;
-    // style: TStyleKeyDisable;
-    colorOn: TColorOn;
+    //style: TStyleKeyDisable;
+    //colorOn: TColorOn;
     //link: boolean;
     linkOn: TLinkOn;
     //linkUrl: string;
@@ -164,6 +164,7 @@ namespace gf {
 
   interface TShapeMapData extends TGFMapData {
     style: TStyleKey;
+    colorOn : TColorOn;
   }
 
   interface TTextMapData extends TGFMapData {

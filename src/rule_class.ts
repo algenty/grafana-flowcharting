@@ -60,7 +60,7 @@ export default class Rule {
       colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
       reduce: true,
       //style: 'fillColor',
-      colorOn: 'a',
+      //colorOn: 'a',
       //link: false,
       linkOn: 'a',
       //linkUrl: '',
@@ -146,14 +146,19 @@ export default class Rule {
     if (!!this.data.reduce) {
       this.data.reduce = true;
     }
+
+    // 0.7.0
+    let colorOn : gf.TColorOn | undefined = undefined;
     if (!!obj.colorOn) {
-      this.data.colorOn = obj.colorOn;
+      colorOn = obj.colorOn;
     }
+
     // 0.7.0
     let style: gf.TStyleKey | undefined = undefined;
     if (!!obj.style) {
       style = obj.style;
     }
+
     // 0.7.0
     let link = false;
     let linkUrl: string | undefined = undefined;
@@ -171,6 +176,7 @@ export default class Rule {
     if (!!obj.textOn) {
       this.data.textOn = obj.textOn;
     }
+
     // 0.7.0
     let textReplace: gf.TTextReplace | undefined = undefined;
     let textPattern: string | undefined = undefined;
@@ -255,6 +261,11 @@ export default class Rule {
         // 0.7.0
         if (!!style) {
           shapeData.style = style as gf.TStyleKey;
+        }
+        
+        // 0.7.0
+        if(!!colorOn) {
+          shapeData.colorOn = colorOn as gf.TColorOn;
         }
         this.addShapeMap('new').import(shapeData);
       });
