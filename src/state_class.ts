@@ -184,7 +184,7 @@ export default class State {
           // Color Shape
           if (this.globalLevel <= level) {
             this.setLevelStyle(shape.data.style, level);
-            if (rule.toColorize(level)) {
+            if (shape.toColorize(level)) {
               this.setColorStyle(shape.data.style, color);
               this.matchedStyle[shape.data.style] = true;
             } else if (this.changedShape) {

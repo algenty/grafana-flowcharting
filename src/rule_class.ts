@@ -141,7 +141,7 @@ export default class Rule {
       this.data.decimals = obj.decimals;
     }
     if (!!obj.colors) {
-      this.data.colors = obj.colors;
+      this.data.colors = obj.colors.slice(0);
     }
     if (!!this.data.reduce) {
       this.data.reduce = true;
@@ -193,7 +193,7 @@ export default class Rule {
       this.data.dateFormat = obj.dateFormat;
     }
     if (!!obj.thresholds) {
-      this.data.thresholds = obj.thresholds;
+      this.data.thresholds = obj.thresholds.slice(0);
     }
     if (!!obj.stringWarning) {
       this.data.stringWarning = obj.stringWarning;
@@ -422,28 +422,30 @@ export default class Rule {
   //
   // Conditions
   //
+
   /**
    * Return true or false for condition to colorize
    *
    * @param {number} level
    * @returns {boolean}
    * @memberof Rule
+   * 0.7.0 : Moved to shapeMap
    */
-  toColorize(level: number): boolean {
-    if (level === -1) {
-      return false;
-    }
-    if (this.data.colorOn === 'n') {
-      return false;
-    }
-    if (this.data.colorOn === 'a') {
-      return true;
-    }
-    if (this.data.colorOn === 'wc' && level >= 1) {
-      return true;
-    }
-    return false;
-  }
+  // toColorize(level: number): boolean {
+  //   if (level === -1) {
+  //     return false;
+  //   }
+  //   if (this.data.colorOn === 'n') {
+  //     return false;
+  //   }
+  //   if (this.data.colorOn === 'a') {
+  //     return true;
+  //   }
+  //   if (this.data.colorOn === 'wc' && level >= 1) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   /**
    * Return true or false for condition to change label
@@ -1115,7 +1117,32 @@ class ShapeMap extends GFMap {
       pattern: '',
       hidden: false,
       style: 'fillColor',
+      colorOn: 'a',
     };
+  }
+
+  /**
+   * Return true or false for condition to colorize
+   *
+   * @param {number} level
+   * @returns {boolean}
+   * @memberof Rule
+   * 0.7.0 : Moved to shape
+   */
+  toColorize(level: number): boolean {
+    if (level === -1) {
+      return false;
+    }
+    if (this.data.colorOn === 'n') {
+      return false;
+    }
+    if (this.data.colorOn === 'a') {
+      return true;
+    }
+    if (this.data.colorOn === 'wc' && level >= 1) {
+      return true;
+    }
+    return false;
   }
 
   /**
