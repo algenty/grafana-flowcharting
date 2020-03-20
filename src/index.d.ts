@@ -164,7 +164,7 @@ namespace gf {
 
   interface TShapeMapData extends TGFMapData {
     style: TStyleKey;
-    colorOn : TColorOn;
+    colorOn: TColorOn;
   }
 
   interface TTextMapData extends TGFMapData {
@@ -176,7 +176,7 @@ namespace gf {
   interface TlinkMapData extends TGFMapData {
     linkUrl: string;
     linkParams: boolean;
-    linkOn : TLinkOn;
+    linkOn: TLinkOn;
   }
 
   interface TRangeMapData {
