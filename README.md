@@ -32,7 +32,7 @@ See more example at draw.io
 ## [[0.7.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0-SNAPSHOT.zip) - 2019-03-19  
 ### Added  
   - Select "color mode" for each id/value in mapping options instead one by rule.  
-  - new conditions and design in rule for each mapping intead one by rule. 
+  - new conditions and design in rule for each mapping instead one by rule. 
     - when : When condition applied
     - what : which shape
     - how : how to colorize shape 
