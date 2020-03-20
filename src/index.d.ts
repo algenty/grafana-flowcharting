@@ -122,10 +122,10 @@ namespace gf {
     //style: TStyleKeyDisable;
     //colorOn: TColorOn;
     //link: boolean;
-    linkOn: TLinkOn;
+    //linkOn: TLinkOn;
     //linkUrl: string;
     //linkParams: boolean;
-    textOn: TTextOn;
+    //textOn: TTextOn;
     // textReplace: TTextReplace;
     // textPattern: string;
     dateFormat: TDateFormat;
@@ -170,11 +170,13 @@ namespace gf {
   interface TTextMapData extends TGFMapData {
     textReplace: TTextReplace;
     textPattern: string;
+    textOn: TTextOn;
   }
 
   interface TlinkMapData extends TGFMapData {
     linkUrl: string;
     linkParams: boolean;
+    linkOn : TLinkOn;
   }
 
   interface TRangeMapData {

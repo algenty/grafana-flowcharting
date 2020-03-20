@@ -62,10 +62,10 @@ export default class Rule {
       //style: 'fillColor',
       //colorOn: 'a',
       //link: false,
-      linkOn: 'a',
+      //linkOn: 'a',
       //linkUrl: '',
       //linkParams: false,
-      textOn: 'wmd',
+      //textOn: 'wmd',
       //textReplace: 'content',
       //textPattern: '/.*/',
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
@@ -148,7 +148,7 @@ export default class Rule {
     }
 
     // 0.7.0
-    let colorOn : gf.TColorOn | undefined = undefined;
+    let colorOn: gf.TColorOn | undefined = undefined;
     if (!!obj.colorOn) {
       colorOn = obj.colorOn;
     }
@@ -173,8 +173,16 @@ export default class Rule {
       linkParams = obj.linkParams;
     }
 
+    // 0.7.0
+    let linkOn: gf.TLinkOn | undefined = undefined;
+    if (!!obj.linkOn) {
+      linkOn = obj.linkOn;
+    }
+
+    // 0.7.0
+    let textOn: gf.TTextOn | undefined = undefined;
     if (!!obj.textOn) {
-      this.data.textOn = obj.textOn;
+      textOn = obj.textOn;
     }
 
     // 0.7.0
@@ -262,9 +270,9 @@ export default class Rule {
         if (!!style) {
           shapeData.style = style as gf.TStyleKey;
         }
-        
+
         // 0.7.0
-        if(!!colorOn) {
+        if (!!colorOn) {
           shapeData.colorOn = colorOn as gf.TColorOn;
         }
         this.addShapeMap('new').import(shapeData);
@@ -291,6 +299,10 @@ export default class Rule {
         if (!!textPattern) {
           textData.textPattern = textPattern;
         }
+        if (!!textOn) {
+          textData.textOn = textOn as gf.TTextOn;
+        }
+
         this.addTextMap('new').import(textData);
       });
     }
@@ -306,6 +318,9 @@ export default class Rule {
         }
         if (!!linkParams && link) {
           linkData.linkParams = linkParams;
+        }
+        if (!!linkOn) {
+          linkData.linkOn = linkOn as gf.TLinkOn;
         }
         this.addLinkMap('new').import(linkData);
       });
@@ -454,23 +469,24 @@ export default class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  toLabelize(level: number): boolean {
-    // if (this.data.textOn === 'wmd' && level > 0) return true;
-    // if (this.data.textOn === 'wmd' && level === -1) return false;
-    if (this.data.textOn === 'wmd') {
-      return true;
-    }
-    if (this.data.textOn === 'n') {
-      return false;
-    }
-    if (this.data.textOn === 'wc' && level >= 1) {
-      return true;
-    }
-    if (this.data.textOn === 'co' && level >= 2) {
-      return true;
-    }
-    return false;
-  }
+  // 0.7.0 Moved to textMap
+  // toLabelize(level: number): boolean {
+  //   // if (this.data.textOn === 'wmd' && level > 0) return true;
+  //   // if (this.data.textOn === 'wmd' && level === -1) return false;
+  //   if (this.data.textOn === 'wmd') {
+  //     return true;
+  //   }
+  //   if (this.data.textOn === 'n') {
+  //     return false;
+  //   }
+  //   if (this.data.textOn === 'wc' && level >= 1) {
+  //     return true;
+  //   }
+  //   if (this.data.textOn === 'co' && level >= 2) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   /**
    * Return true or false for condition to display icon warning
@@ -496,15 +512,16 @@ export default class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  toLinkable(level: number): boolean {
-    if (this.data.linkOn === 'a') {
-      return true;
-    }
-    if (this.data.linkOn === 'wc' && level >= 1) {
-      return true;
-    }
-    return false;
-  }
+  // 0.7.0 : Moved to LinkMap
+  // toLinkable(level: number): boolean {
+  //   if (this.data.linkOn === 'a') {
+  //     return true;
+  //   }
+  //   if (this.data.linkOn === 'wc' && level >= 1) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   /**
    * Return true or false for condition to display tooltip with values
@@ -1126,7 +1143,7 @@ class ShapeMap extends GFMap {
    *
    * @param {number} level
    * @returns {boolean}
-   * @memberof Rule
+   * @memberof ShapeMap
    * 0.7.0 : Moved to shape
    */
   toColorize(level: number): boolean {
@@ -1157,6 +1174,9 @@ class ShapeMap extends GFMap {
     if (!!obj.style) {
       this.data.style = obj.style;
     }
+    if (!!obj.colorOn) {
+      this.data.colorOn = obj.colorOn;
+    }
     return this;
   }
 }
@@ -1186,7 +1206,33 @@ class TextMap extends GFMap {
       hidden: false,
       textReplace: 'content',
       textPattern: '/.*/',
+      textOn: 'wmd',
     };
+  }
+
+  /**
+   * Return true or false for condition to change label
+   *
+   * @param {number} level
+   * @returns {boolean}
+   * @memberof TextMap
+   */
+  toLabelize(level: number): boolean {
+    // if (this.data.textOn === 'wmd' && level > 0) return true;
+    // if (this.data.textOn === 'wmd' && level === -1) return false;
+    if (this.data.textOn === 'wmd') {
+      return true;
+    }
+    if (this.data.textOn === 'n') {
+      return false;
+    }
+    if (this.data.textOn === 'wc' && level >= 1) {
+      return true;
+    }
+    if (this.data.textOn === 'co' && level >= 2) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -1204,6 +1250,10 @@ class TextMap extends GFMap {
     if (!!obj.textPattern) {
       this.data.textPattern = obj.textPattern;
     }
+    if (!!obj.textOn) {
+      this.data.textOn = obj.textOn;
+    }
+
     return this;
   }
 
@@ -1254,6 +1304,7 @@ class LinkMap extends GFMap {
       hidden: false,
       linkUrl: '',
       linkParams: false,
+      linkOn: 'a',
     };
   }
 
@@ -1270,6 +1321,13 @@ class LinkMap extends GFMap {
     return this.data.linkUrl;
   }
 
+  /**
+   * Import data to Link
+   *
+   * @param {*} obj
+   * @returns {this}
+   * @memberof LinkMap
+   */
   import(obj: any): this {
     super.import(obj);
     if (!!obj.linkUrl) {
@@ -1278,7 +1336,27 @@ class LinkMap extends GFMap {
     if (!!obj.linkParams) {
       this.data.linkParams = obj.linkParams;
     }
+    if (!!obj.linkOn) {
+      this.data.linkOn = obj.linkOn;
+    }
     return this;
+  }
+
+  /**
+   * Return true or false for condition to add/replace link
+   *
+   * @param {number} level
+   * @returns {boolean}
+   * @memberof LinkMap
+   */
+  toLinkable(level: number): boolean {
+    if (this.data.linkOn === 'a') {
+      return true;
+    }
+    if (this.data.linkOn === 'wc' && level >= 1) {
+      return true;
+    }
+    return false;
   }
 }
 

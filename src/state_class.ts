@@ -208,7 +208,7 @@ export default class State {
         if (!text.isHidden() && text.match(cellProp)) {
           this.matchedText = true;
           this.matched = true;
-          if (rule.toLabelize(level)) {
+          if (text.toLabelize(level)) {
             const textScoped = GFP.replaceWithText(FormattedValue);
             this.setText(text.getReplaceText(this.currentText, textScoped));
           } else {
@@ -230,7 +230,7 @@ export default class State {
           this.matchedLink = true;
           this.matched = true;
           if (this.globalLevel <= level) {
-            if (rule.toLinkable(level)) {
+            if (link.toLinkable(level)) {
               const linkScoped = GFP.replaceWithText(link.getLink());
               this.setLink(linkScoped);
             }

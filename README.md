@@ -29,11 +29,16 @@ See more example at draw.io
 
 # Changelog
 
-## [[0.7.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0-SNAPSHOT.zip) - 2019-12-28  
+## [[0.7.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0-SNAPSHOT.zip) - 2019-03-19  
 ### Added  
   - Select "color mode" for each id/value in mapping options instead one by rule.  
+  - new conditions and design in rule for each mapping intead one by rule. 
+    - when : When condition applied
+    - what : which shape
+    - how : how to colorize shape 
 ### Fixed  
   - Fix getNames for series [(issue #100)](https://github.com/algenty/grafana-flowcharting/issues/100)  
+  - Fix colors when cloned rules [(issue #124)](https://github.com/algenty/grafana-flowcharting/issues/124)  
 
 ## [[0.6.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0.zip) - 2019-12-21  
 ### Added  
