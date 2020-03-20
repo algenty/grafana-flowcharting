@@ -36,9 +36,13 @@ See more example at draw.io
     - when : When condition applied
     - what : which shape
     - how : how to colorize shape 
+  - Update libs :
+    - draw.io : 12.8.6 (Kubernetes shapes and more)
+    - mxgraph : 4.1.0
 ### Fixed  
   - Fix getNames for series [(issue #100)](https://github.com/algenty/grafana-flowcharting/issues/100)  
   - Fix colors when cloned rules [(issue #124)](https://github.com/algenty/grafana-flowcharting/issues/124)  
+  - Fix shapes from last versions of draw.io [(issue #124)](https://github.com/algenty/grafana-flowcharting/issues/125)  
 
 ## [[0.6.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0.zip) - 2019-12-21  
 ### Added  
