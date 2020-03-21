@@ -200,7 +200,7 @@ export default class FlowchartHandler {
    *
    * @memberof FlowchartHandler
    */
-  async render() {
+   render() {
     // not repeat render if mouse down
     const id = GFP.utils.uniqueID();
     GFP.perf.start('PERF : Render ' + id);
@@ -238,6 +238,7 @@ export default class FlowchartHandler {
       }
       // this.refresh();
     }
+    this.ctrl.renderingCompleted();
     GFP.perf.stop('PERF : Render ' + id);
   }
 
