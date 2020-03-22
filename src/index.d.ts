@@ -255,6 +255,8 @@ namespace gf {
     flowchartHandler: FlowchartHandler;
     editor: MappingOptionsCtrl;
     GFP: FlowChartingPlugin;
-    ctrl: any; //TODO: define type
+    ctrl: any;
   }
-};
+}
+
+
