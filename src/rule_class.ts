@@ -268,12 +268,12 @@ export default class Rule {
       maps.forEach((shapeData: gf.TShapeMapData) => {
         // 0.7.0
         if (!!style) {
-          shapeData.style = style as gf.TStyleKey;
+          shapeData.style = style;
         }
 
         // 0.7.0
         if (!!colorOn) {
-          shapeData.colorOn = colorOn as gf.TColorOn;
+          shapeData.colorOn = colorOn;
         }
         this.addShapeMap('new').import(shapeData);
       });
@@ -300,7 +300,7 @@ export default class Rule {
           textData.textPattern = textPattern;
         }
         if (!!textOn) {
-          textData.textOn = textOn as gf.TTextOn;
+          textData.textOn = textOn;
         }
 
         this.addTextMap('new').import(textData);
@@ -320,7 +320,7 @@ export default class Rule {
           linkData.linkParams = linkParams;
         }
         if (!!linkOn) {
-          linkData.linkOn = linkOn as gf.TLinkOn;
+          linkData.linkOn = linkOn;
         }
         this.addLinkMap('new').import(linkData);
       });
@@ -420,18 +420,76 @@ export default class Rule {
   /**
    * Invert color order
    *
+   * @returns {this}
    * @memberof Rule
    */
-  invertColorOrder() {
-    const ref = this.data.colors;
-    const copy = ref[0];
-    ref[0] = ref[2];
-    ref[2] = copy;
-    if (this.data.invert) {
-      this.data.invert = false;
-    } else {
-      this.data.invert = true;
+  invertColorOrder(): this {
+    // const ref = this.data.colors;
+    // const copy = ref[0];
+    // ref[0] = ref[2];
+    // ref[2] = copy;
+    this.data.colors.reverse();
+    this.data.invert = !this.data.invert;
+    // if (this.data.invert) {
+    //   this.data.invert = false;
+    // } else {
+    //   this.data.invert = true;
+    // }
+    return this;
+  }
+
+  /**
+   *
+   *
+   * @param {number} index
+   * @returns {this}
+   * @memberof Rule
+   */
+  addColor(index: number): this {
+    let color = this.data.colors[index];
+    let value = 999;
+    this.data.colors.splice(index, 0, color);
+    this.data.thresholds.splice(index, 0, value);
+    GFP.log.debug('this',this);
+    return this;
+  }
+
+  /**
+   *
+   *
+   * @param {number} index
+   * @returns {this}
+   * @memberof Rule
+   */
+  removeColor(index: number): this {
+    debugger;
+    if (index !== 0) {
+      this.data.thresholds.splice(index, 1);
+      this.data.colors.splice(index, 1);
     }
+    GFP.log.debug('this',this);
+    return this;
+  }
+
+  /**
+   * Return a color
+   *
+   * @param {number} index
+   * @returns {string} html color
+   * @memberof Rule
+   */
+  getColor(index: number): string {
+    return this.data.colors[index];
+  }
+
+  /**
+   * Return Array of html colors
+   *
+   * @returns {string[]}
+   * @memberof Rule
+   */
+  getColors(): string[] {
+    return this.data.colors;
   }
 
   //
@@ -991,14 +1049,14 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 }
 
 export class GFMap {
-  data!: gf.TGFMapData;
+  data: gf.TGFMapData;
   id: string;
   constructor(pattern, data: gf.TGFMapData) {
     this.data = data;

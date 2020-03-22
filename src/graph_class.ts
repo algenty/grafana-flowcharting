@@ -1,17 +1,17 @@
 import _ from 'lodash';
 declare var Graph: any;
 
-declare var mxEvent: any,
-  mxUtils: any,
-  mxClient: any,
-  mxCodec: any,
-  mxUrlConverter: any,
-  mxCellOverlay: any,
-  mxConstants: any,
-  mxCellHighlight: any,
-  mxRectangle: any;
+declare var mxEvent: any;
+declare var mxClient: any;
+declare var mxCodec: any;
+declare var mxUrlConverter: any;
+declare var mxCellOverlay: any;
+declare var mxConstants: any;
+declare var mxCellHighlight: any;
+declare var mxRectangle: any;
+declare var mxUtils: any;
 
-type mxCellOverlay = any;
+// type mxCellOverlay = any;
 
 /**
  * mxGraph interface class
@@ -39,9 +39,9 @@ export default class XGraph {
     id: [],
     value: [],
   };
-  clickBackup!: () => void;
-  dbclickBackup!: () => void;
-  onMapping!: gf.TIOnMappingObj;
+  clickBackup: any;
+  dbclickBackup: any;
+  onMapping: gf.TIOnMappingObj;
   /**
    * Creates an instance of XGraph.
    * @param {DOM} container
@@ -52,6 +52,12 @@ export default class XGraph {
     GFP.log.info('XGraph.constructor()');
     this.container = container;
     this.type = type;
+    this.onMapping = {
+      active : false,
+      $scope : null,
+      id : null,
+      object : null,
+    }
     // END ZOOM MouseWheele
     XGraph.initMxGgraph();
     if (type === 'xml') {
@@ -101,7 +107,7 @@ export default class XGraph {
    */
   static initMxGgraph() {
     // START PERFinitMxGgraph
-    const myWindow = window as any;
+    const myWindow:any = window;
     GFP.perf.start(`======> initMxGgraph`);
     if (XGraph.initialized) {
       GFP.perf.stop(`======> initMxGgraph`);
@@ -667,7 +673,7 @@ export default class XGraph {
    * @returns {mxCellOverlay}
    * @memberof XGraph
    */
-  createOverlay(image, tooltip): mxCellOverlay {
+  createOverlay(image, tooltip): any {
     const overlay = new mxCellOverlay(image, tooltip);
     overlay.addListener(mxEvent.CLICK, (_sender, _evt) => {
       mxUtils.alert(`${tooltip}\nLast update: ${new Date()}`);

@@ -70,7 +70,7 @@ export default class FlowChartingPlugin {
    * @return string
    * @memberof FlowChartingPlugin
    */
-  private getRepo(): string {
+  getRepo(): string {
     let url = '';
     this.data.info.links.forEach((link: { name: string; url: string }) => {
       if (link.name === 'Documentation') {
@@ -86,7 +86,7 @@ export default class FlowChartingPlugin {
    * @return *
    * @memberof FlowChartingPlugin
    */
-  private loadJson(): any {
+  loadJson(): any {
     const data: any = require('./plugin.json');
     return data;
   }
@@ -304,7 +304,7 @@ class Log {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  logLevel = 2;
+  logLevel = 0;
   logDisplay = true;
   constructor() {}
 
@@ -333,7 +333,7 @@ class Log {
    */
   async debug(title: string, obj: any | undefined) {
     if (this.toDisplay(Log.DEBUG)) {
-      // console.debug(`GF DEBUG : ${title}`, obj);
+      console.debug(`GF DEBUG : ${title}`, obj);
     }
   }
 

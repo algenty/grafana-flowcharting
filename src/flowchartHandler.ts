@@ -7,7 +7,7 @@ import Metric from './metric_class';
  * Class FlowchartHandler
  */
 export default class FlowchartHandler {
-  $scope!: ng.IScope;
+  $scope: ng.IScope;
   $elem: any; //TODO: elem ?
   ctrl: any; //TODO: ctrl ?
   flowcharts: Flowchart[] = [];
@@ -172,9 +172,9 @@ export default class FlowchartHandler {
    */
   createContainer(): HTMLDivElement {
     //TODO: Convert to createDocument
-    const $container = $(`<div id="flowchart_${GFP.utils.uniqueID()}" style="margin:auto;position:relative,width:100%;height:100%"></div>`);
+    const $container:any = $(`<div id="flowchart_${GFP.utils.uniqueID()}" style="margin:auto;position:relative,width:100%;height:100%"></div>`);
     this.$elem.html($container);
-    return $container[0] as HTMLDivElement;
+    return $container[0];
   }
 
   /**
@@ -200,7 +200,7 @@ export default class FlowchartHandler {
    *
    * @memberof FlowchartHandler
    */
-   render() {
+   async render() {
     // not repeat render if mouse down
     const id = GFP.utils.uniqueID();
     GFP.perf.start('PERF : Render ' + id);
@@ -238,6 +238,7 @@ export default class FlowchartHandler {
       }
       // this.refresh();
     }
+    // await GFP.utils.sleep(1000);
     this.ctrl.renderingCompleted();
     GFP.perf.stop('PERF : Render ' + id);
   }
@@ -491,7 +492,7 @@ export default class FlowchartHandler {
    * @param {MessageEvent} event
    * @memberof FlowchartHandler
    */
-  private listenMessage(event: any) {
+  listenMessage(event: any) {
     if (event.data === 'ready') {
       // send xml
       // if (event.source) {

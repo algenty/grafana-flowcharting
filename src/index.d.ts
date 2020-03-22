@@ -2,6 +2,8 @@ declare var GFP: FlowChartingPlugin;
 type mxCell = any;
 type mxMouseEvent = any;
 
+
+
 namespace gf {
   interface TSelectString {
     text: string;
@@ -194,7 +196,6 @@ namespace gf {
 
   // mxGraph API
   declare var mxCellHighlight: any,
-    mxCellOverlay: any,
     mxEvent: any,
     mxClient: any,
     mxUtils: any,
@@ -202,6 +203,8 @@ namespace gf {
     mxConstants: any,
     mxRectangle: any,
     mxUrlConverter: any;
+
+  declare type mxCellOverlay = any;
 
   // For mapping object
   interface TIOnMappingObj {
@@ -256,4 +259,4 @@ namespace gf {
     GFP: FlowChartingPlugin;
     ctrl: any; //TODO: define type
   }
-}
+};
