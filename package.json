@@ -45,6 +45,7 @@
     "chartist": "^0.11.4",
     "color-normalize": "^1.5.0",
     "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-lodash": "^6.0.0",
     "express": "^4.16.4",
     "grafana-sdk-mocks": "grafana/grafana-sdk-mocks",
@@ -70,6 +71,7 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-jsdoc": "^21.0.0",
     "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^2.0.1",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.2"
   }

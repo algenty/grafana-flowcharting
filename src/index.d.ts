@@ -2,8 +2,6 @@ declare var GFP: FlowChartingPlugin;
 type mxCell = any;
 type mxMouseEvent = any;
 
-
-
 namespace gf {
   interface TSelectString {
     text: string;
