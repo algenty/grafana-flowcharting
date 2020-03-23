@@ -70,8 +70,9 @@ export default class Rule {
       //textPattern: '/.*/',
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
       thresholds: [],
-      stringWarning: '',
-      stringCritical: '',
+      stringThresholds: [],
+      //stringWarning: '',
+      //stringCritical: '',
       invert: false,
       overlayIcon: false,
       tooltip: false,
@@ -210,12 +211,20 @@ export default class Rule {
       });
       // this.data.thresholds = obj.thresholds.slice(0);
     }
+
+    if(!!obj.stringThresholds) {
+      this.data.stringThresholds = obj.stringThresholds.slice(0); 
+    }
+
     if (!!obj.stringWarning) {
-      this.data.stringWarning = obj.stringWarning;
+      //this.data.stringWarning = obj.stringWarning;
+      this.data.stringThresholds[0] = obj.stringWarning;
     }
     if (!!obj.stringCritical) {
-      this.data.stringCritical = obj.stringCritical;
+      //this.data.stringCritical = obj.stringCritical;
+      this.data.stringThresholds[1] = obj.stringCritical;
     }
+
     if (!!obj.invert) {
       this.data.invert = obj.invert;
     }
@@ -876,9 +885,10 @@ export default class Rule {
    * @memberof Rule
    */
   getThresholdLevel(value: any): number {
+    // NUMBER
     if (this.data.type === 'number') {
       let thresholdLevel = 0;
-      let thresholds = this.data.thresholds.slice(0);
+      let thresholds = this.data.thresholds;
 
       if (thresholds === undefined || thresholds.length === 0) {
         return -1;
@@ -897,21 +907,27 @@ export default class Rule {
         thresholdLevel = l - thresholdLevel;
       }
       return thresholdLevel;
-    } else if (this.data.type === 'string') {
-      if (GFP.utils.matchString(value, this.data.stringWarning)) {
-        return 1;
+    }
+    // STRING
+    if (this.data.type === 'string') {
+      let thresholdLevel = 0;
+      let thresholds = this.data.stringThresholds;
+      if (thresholds === undefined || thresholds.length === 0) {
+        return -1;
       }
-      if (GFP.utils.matchString(this.data.stringCritical, this.data.stringWarning)) {
-        return 2;
+      let l = thresholds.length;
+      for (let index = 0; index < l; index++) {
+        const t = thresholds[index];
+        if (GFP.utils.matchString(value, t)) {
+          thresholdLevel = index + 1;
+          break;
+        }
       }
-      const formatedValue = this.getFormattedValue(value);
-      if (GFP.utils.matchString(formatedValue, this.data.stringWarning)) {
-        return 1;
+
+      if (!this.data.invert) {
+        thresholdLevel = l - thresholdLevel;
       }
-      if (GFP.utils.matchString(formatedValue, this.data.stringCritical)) {
-        return 2;
-      }
-      return 0;
+      return thresholdLevel;
     }
     return 0;
   }

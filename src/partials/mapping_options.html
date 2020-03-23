@@ -269,24 +269,39 @@
                   </div>
                 </td>
                 <td>
-                  <label class="gf-form-label width-8" style="margin-right: 2px;" ng-if="$index === 0">Base
+                  <label class="gf-form-label width-8" style="margin-right: 2px;" ng-if="$index === 0 && rule.data.type === 'number'">Base
                   </label>
-                    <input 
-                      ng-if="$index > 0 && rule.data.type === 'number'"
-                      type="number"
-                      class="gf-form-input width-8"
-                      ng-model="rule.data.thresholds[$index-1]" 
-                      placeholder="value"
-                      bs-tooltip="'Specify a value for apply color when value is egual or upper'"
-                      ng-blur="editor.onRulesChange()"  
-                    />
+                  <label class="gf-form-label width-8" style="margin-right: 2px;" ng-if="$index === 0 && rule.data.type === 'string'">Default
+                  </label>
+                  <input 
+                    ng-if="$index > 0 && rule.data.type === 'number'"
+                    type="number"
+                    class="gf-form-input width-8"
+                    ng-model="rule.data.thresholds[$index-1]" 
+                    placeholder="value"
+                    bs-tooltip="'Specify a value for apply color when value is egual or upper'"
+                    ng-blur="editor.onRulesChange()"  
+                  />
+                  <input 
+                    ng-if="$index > 0 && rule.data.type === 'string'"
+                    type="text"
+                    class="gf-form-input width-8"
+                    ng-model="rule.data.stringThresholds[$index-1]" 
+                    placeholder="pattern"
+                    bs-tooltip="'Specify a pattern regex for apply color'"
+                    ng-blur="editor.onRulesChange()"  
+                  />
                 </td>
                 <td></td>
               </tr>
             </tboddy>
             <tfoot>
               <tr>
-                <td></td>
+                <td>
+                  <div class="gf-form-label">
+                    <a class="pointer" ng-click="rule.invertColorOrder();editor.onRulesChange()">Invert</a>
+                  </div>
+                </td>
               </tr>
             </tfoot>
           </table>
@@ -301,7 +316,7 @@
             <input type="text" class="gf-form-input width-10" ng-model="rule.data.thresholds" placeholder="50,80"
               ng-blur="editor.onRulesChange()" array-join />
           </div> -->
-          <div class="gf-form" ng-if="rule.data.type === 'string'">
+          <!-- <div class="gf-form" ng-if="rule.data.type === 'string'">
             <label class="gf-form-label width-10">Warning
               <info-popover mode="right-normal">
                 <span ng-bind-html="GFP.popover('Regular expression to define Warning level.', 'MAPPING#Thresholds')">
@@ -310,8 +325,8 @@
             </label>
             <input type="text" class="gf-form-input width-10" ng-model="rule.data.stringWarning" placeholder="WARN"
               ng-blur="editor.onRulesChange()" />
-          </div>
-          <div class="gf-form" ng-if="rule.data.type === 'string'">
+          </div> -->
+          <!-- <div class="gf-form" ng-if="rule.data.type === 'string'">
             <label class="gf-form-label width-10">Critical
               <info-popover mode="right-normal">
                 <span ng-bind-html="GFP.popover('Regular expression to define Error level.', 'MAPPING#Thresholds')">
@@ -320,8 +335,8 @@
             </label>
             <input type="text" class="gf-form-input width-10" ng-model="rule.data.stringCritical" placeholder="ERROR"
               ng-blur="editor.onRulesChange()" />
-          </div>
-          <div class="gf-form">
+          </div> -->
+          <!-- <div class="gf-form">
             <label class="gf-form-label width-10">Colors
               <info-popover mode="right-normal">
                 <span ng-bind-html="GFP.popover('Select a color and opacity for each state.', 'MAPPING#Thresholds')">
@@ -340,7 +355,7 @@
             <div class="gf-form-label">
               <a class="pointer" ng-click="rule.invertColorOrder();editor.onRulesChange()">Invert</a>
             </div>
-          </div>
+          </div> -->
           <gf-form-switch class="gf-form" label="Icon state" label-class="width-10" checked="rule.data.overlayIcon"
             on-change="editor.onRulesChange()">
           </gf-form-switch>

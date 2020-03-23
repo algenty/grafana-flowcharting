@@ -130,8 +130,9 @@ namespace gf {
     // textPattern: string;
     dateFormat: TDateFormat;
     thresholds: number[];
-    stringWarning: string;
-    stringCritical: string;
+    stringThresholds: string[];
+    //stringWarning: string;
+    //stringCritical: string;
     invert: boolean;
     overlayIcon: boolean;
     tooltip: boolean;
