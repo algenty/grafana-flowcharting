@@ -216,6 +216,7 @@ export class MappingOptionsCtrl {
     GFP.log.info('MappingOptionsCtrl.onRulesChange()');
     this.flowchartHandler.ruleChanged();
     this.render();
+    return true;
   }
 
   /**

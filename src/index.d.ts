@@ -193,14 +193,7 @@ namespace gf {
   }
 
   // mxGraph API
-  declare var mxCellHighlight: any,
-    mxEvent: any,
-    mxClient: any,
-    mxUtils: any,
-    mxCodec: any,
-    mxConstants: any,
-    mxRectangle: any,
-    mxUrlConverter: any;
+  declare var mxCellHighlight: any, mxEvent: any, mxClient: any, mxUtils: any, mxCodec: any, mxConstants: any, mxRectangle: any, mxUrlConverter: any;
 
   declare type mxCellOverlay = any;
 
@@ -258,5 +251,3 @@ namespace gf {
     ctrl: any;
   }
 }
-
-

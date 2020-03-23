@@ -201,7 +201,14 @@ export default class Rule {
       this.data.dateFormat = obj.dateFormat;
     }
     if (!!obj.thresholds) {
-      this.data.thresholds = obj.thresholds.slice(0);
+      this.data.thresholds = obj.thresholds.map((x: any) => {
+        let value = x;
+        if (typeof value === 'string') {
+          value = parseFloat(value);
+        }
+        return value;
+      });
+      // this.data.thresholds = obj.thresholds.slice(0);
     }
     if (!!obj.stringWarning) {
       this.data.stringWarning = obj.stringWarning;
@@ -447,10 +454,10 @@ export default class Rule {
    */
   addColor(index: number): this {
     let color = this.data.colors[index];
-    let value = 999;
+    let value = this.data.thresholds[index - 1];
     this.data.colors.splice(index, 0, color);
     this.data.thresholds.splice(index, 0, value);
-    GFP.log.debug('this',this);
+    GFP.log.debug('this', this);
     return this;
   }
 
@@ -462,12 +469,11 @@ export default class Rule {
    * @memberof Rule
    */
   removeColor(index: number): this {
-    debugger;
     if (index !== 0) {
-      this.data.thresholds.splice(index, 1);
+      this.data.thresholds.splice(index - 1, 1);
       this.data.colors.splice(index, 1);
     }
-    GFP.log.debug('this',this);
+    GFP.log.debug('this', this);
     return this;
   }
 
@@ -849,6 +855,7 @@ export default class Rule {
    * @memberof Rule
    */
   getColorForLevel(level: number): string {
+    GFP.log.debug('getColorForLevel level', level);
     let colors = [...this.data.colors];
     if (!this.data.invert) {
       colors = colors.reverse();
@@ -871,32 +878,23 @@ export default class Rule {
   getThresholdLevel(value: any): number {
     if (this.data.type === 'number') {
       let thresholdLevel = 0;
-      const thresholds = this.data.thresholds;
+      let thresholds = this.data.thresholds.slice(0);
 
       if (thresholds === undefined || thresholds.length === 0) {
         return -1;
       }
-      if (thresholds.length !== 2) {
-        return -1;
+
+      let l = thresholds.length;
+      for (let index = 0; index < l; index++) {
+        const t = thresholds[index];
+        if (value < t) {
+          break;
+        }
+        thresholdLevel = index + 1;
       }
 
-      // non invert
       if (!this.data.invert) {
-        thresholdLevel = 2;
-        if (value >= thresholds[0]) {
-          thresholdLevel = 1;
-        }
-        if (value >= thresholds[1]) {
-          thresholdLevel = 0;
-        }
-      } else {
-        thresholdLevel = 0;
-        if (value >= thresholds[0]) {
-          thresholdLevel = 1;
-        }
-        if (value >= thresholds[1]) {
-          thresholdLevel = 2;
-        }
+        thresholdLevel = l - thresholdLevel;
       }
       return thresholdLevel;
     } else if (this.data.type === 'string') {
@@ -1049,8 +1047,8 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-      // Adjust for scientific notation.
-      (match[2] ? +match[2] : 0)
+        // Adjust for scientific notation.
+        (match[2] ? +match[2] : 0)
     );
   }
 }

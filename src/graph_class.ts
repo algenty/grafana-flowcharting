@@ -53,11 +53,11 @@ export default class XGraph {
     this.container = container;
     this.type = type;
     this.onMapping = {
-      active : false,
-      $scope : null,
-      id : null,
-      object : null,
-    }
+      active: false,
+      $scope: null,
+      id: null,
+      object: null,
+    };
     // END ZOOM MouseWheele
     XGraph.initMxGgraph();
     if (type === 'xml') {
@@ -107,7 +107,7 @@ export default class XGraph {
    */
   static initMxGgraph() {
     // START PERFinitMxGgraph
-    const myWindow:any = window;
+    const myWindow: any = window;
     GFP.perf.start(`======> initMxGgraph`);
     if (XGraph.initialized) {
       GFP.perf.stop(`======> initMxGgraph`);

@@ -198,13 +198,13 @@
         <!-- Thresholds -->
         <div class="section gf-form-group" ng-if="['number', 'string'].indexOf(rule.data.type) !== -1">
           <h5 class="section-heading" ng-if="rule.data.invert">
-            Thresholds (Ok > Warn > Critical)
+            Thresholds (Ok > ... > Critical)
             <info-popover mode="right-normal"><span
                 ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
             </info-popover>
           </h5>
           <h5 class="section-heading" ng-if="!rule.data.invert">
-            Thresholds (Critical > Warn > Ok)
+            Thresholds (Critical > ... > Ok)
             <info-popover mode="right-normal"><span
                 ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
             </info-popover>
@@ -240,7 +240,7 @@
               </tr>
             </thead>
             <tboddy>
-              <tr ng-repeat="color in rule.getColors()">
+              <tr ng-repeat="color in rule.getColors() track by $index">
                 <td>
                   <div class="gf-form">
                     <label class="gf-form-label" style="margin-right: 4px;" ng-if="$index > 0">
@@ -261,20 +261,23 @@
                   </div>
                 </td>
                 <td>
-                  <span class="gf-form-label width-5">
-                    <color-picker color="rule.data.colors[$index]" onChange="editor.onColorChange($index, 0)">
-                    </color-picker>
-                  </span>
+                  <div class="gf-form">
+                    <span class="gf-form-label width-3">
+                      <color-picker color="rule.data.colors[$index]" onChange="editor.onColorChange($parent.$index, $index)">
+                      </color-picker>
+                    </span>
+                  </div>
                 </td>
                 <td>
                   <label class="gf-form-label width-8" style="margin-right: 2px;" ng-if="$index === 0">Base
                   </label>
                     <input 
                       ng-if="$index > 0 && rule.data.type === 'number'"
-                      type="text" 
-                      class="gf-form-input width-8" 
+                      type="number"
+                      class="gf-form-input width-8"
                       ng-model="rule.data.thresholds[$index-1]" 
-                      placeholder="Value"
+                      placeholder="value"
+                      bs-tooltip="'Specify a value for apply color when value is egual or upper'"
                       ng-blur="editor.onRulesChange()"  
                     />
                 </td>
@@ -287,7 +290,7 @@
               </tr>
             </tfoot>
           </table>
-          <div class="gf-form" ng-if="rule.data.type === 'number'">
+          <!-- <div class="gf-form" ng-if="rule.data.type === 'number'">
             <label class="gf-form-label width-10">Thresholds
               <info-popover mode="right-normal">
                 <span
@@ -297,7 +300,7 @@
             </label>
             <input type="text" class="gf-form-input width-10" ng-model="rule.data.thresholds" placeholder="50,80"
               ng-blur="editor.onRulesChange()" array-join />
-          </div>
+          </div> -->
           <div class="gf-form" ng-if="rule.data.type === 'string'">
             <label class="gf-form-label width-10">Warning
               <info-popover mode="right-normal">
