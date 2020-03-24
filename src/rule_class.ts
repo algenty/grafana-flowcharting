@@ -901,7 +901,7 @@ export default class Rule {
       let thresholds = this.data.thresholds;
 
       if (thresholds === undefined || thresholds.length === 0) {
-        return -1;
+        return 0;
       }
 
       let l = thresholds.length;

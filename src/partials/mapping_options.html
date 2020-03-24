@@ -213,13 +213,10 @@
             <thead>
               <tr>
                 <th>
-                  <label class="gf-form-label width-7" style="margin-right: 2px;">Buttons</label>
+                  <label class="gf-form-label width-5" style="margin-right: 2px;">Buttons</label>
                 </th>
                 <th>
-                  <label class="gf-form-label width-7" style="margin-right: 2px;">Color
-                    <info-popover mode="right-normal">
-                      <span ng-bind-html="GFP.popover('Select a color', 'MAPPING#Thresholds')"> </span>
-                    </info-popover>
+                  <label class="gf-form-label width-5" style="margin-right: 2px;">Color
                   </label>
                 </th>
                 <th>
@@ -249,25 +246,22 @@
                       <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete this colors'"
                         ng-click="rule.removeColor($index);editor.onRulesChange()"></i>
                     </label>
-                    <!-- <label class="gf-form-label" ng-if="!shape.isHidden()" style="margin-right: 4px;">
-                      <i class="fa fa-w fa-eye pointer" bs-tooltip="'Hide/Disable this color'"
-                        ng-click="color.hide();editor.onRulesChange()"></i>
-                    </label>
-                    <label class="gf-form-label" ng-if="color.isHidden()" style="margin-right: 4px;">
-                      <i class="fa fa-w fa-eye-slash pointer" bs-tooltip="'show selected object graph in rule'"
-                        ng-click="color.show();editor.onRulesChange()"></i>
-                    </label> -->
                     <label class="gf-form-label">
                       <i class="fa fa-plus pointer" ng-click="rule.addColor($index)" style="margin-right: 2px;"></i>
                     </label>
                   </div>
                 </td>
                 <td>
-                  <div class="gf-form width-2">
-                    <span class="gf-form-label width-3">
-                      <color-picker color="rule.data.colors[$index]" onChange="editor.onColorChange($parent.$index, $index)">
-                      </color-picker>
+                  <div class="gf-form">
+                    <span class="gf-form-label" style="margin-right: 4px;">
+                      <color-picker color="rule.data.colors[$index]" onChange="editor.onColorChange($parent.$index, $index)"></color-picker>
                     </span>
+                    <label class="gf-form-label  width-2" style="margin-right: 4px;" ng-if="$index > 0 && rule.data.type === 'number'">
+                      <i class="fa fa-w fa-angle-right" bs-tooltip="'Upper than'"></i>
+                    </label>
+                    <label class="gf-form-label  width-2" style="margin-right: 4px;" ng-if="$index > 0 && rule.data.type === 'string'" bs-tooltip="'Like'">
+                      <B>~</B>
+                    </label>
                   </div>
                 </td>
                 <td>
@@ -302,15 +296,18 @@
             </tboddy>
             <tfoot>
               <tr>
-                <td>
-                  <div class="gf-form-label">
+                <td colspan="3">
+                  <!-- <div class="gf-form-label">
                     <a class="pointer" ng-click="rule.invertColorOrder();editor.onRulesChange()">Invert</a>
-                  </div>
+                  </div> -->
+                  <gf-form-switch class="gf-form" label="Invert" label-class="width-7" checked="this.data.invert"
+                    on-change="rule.invertColorOrder();editor.onRulesChange()">
+                  </gf-form-switch>
                 </td>
               </tr>
               <tr>
-                <td>
-                  <gf-form-switch class="gf-form" label="Icon state" label-class="width-10" checked="rule.data.overlayIcon"
+                <td colspan="3">
+                  <gf-form-switch class="gf-form" label="Icon state" label-class="width-7" checked="rule.data.overlayIcon"
                     on-change="editor.onRulesChange()">
                   </gf-form-switch>
                 </td>
