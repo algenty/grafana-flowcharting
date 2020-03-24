@@ -215,14 +215,14 @@ export default class Rule {
     if (!!obj.stringThresholds) {
       this.data.stringThresholds = obj.stringThresholds.slice(0);
     }
-
+    
     if (!!obj.stringWarning) {
       //this.data.stringWarning = obj.stringWarning;
-      this.data.stringThresholds[0] = obj.stringWarning;
+      this.data.stringThresholds[1] = obj.stringWarning;
     }
     if (!!obj.stringCritical) {
       //this.data.stringCritical = obj.stringCritical;
-      this.data.stringThresholds[1] = obj.stringCritical;
+      this.data.stringThresholds[0] = obj.stringCritical;
     }
 
     if (!!obj.invert) {
