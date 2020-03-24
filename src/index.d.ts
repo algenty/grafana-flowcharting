@@ -233,6 +233,7 @@ namespace gf {
     scale: boolean;
     lock: boolean;
     allowDrawio: boolean;
+    enableAnim: boolean;
     tooltip: boolean;
     grid: boolean;
     bgColor: string | null;

@@ -198,13 +198,13 @@
         <!-- Thresholds -->
         <div class="section gf-form-group" ng-if="['number', 'string'].indexOf(rule.data.type) !== -1">
           <h5 class="section-heading" ng-if="rule.data.invert">
-            Thresholds (Ok > ... > Critical)
+            Thresholds ( 0 : Ok > ... > {{rule.getColorsNumber() - 1}} : Critical)
             <info-popover mode="right-normal"><span
                 ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
             </info-popover>
           </h5>
           <h5 class="section-heading" ng-if="!rule.data.invert">
-            Thresholds (Critical > ... > Ok)
+            Thresholds ({{rule.getColorsNumber() - 1}} : Critical > ... > 0 : Ok)
             <info-popover mode="right-normal"><span
                 ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
             </info-popover>
@@ -236,7 +236,9 @@
                     </info-popover>
                   </label>
                 </th>
-                <th></th>
+                <th>
+                  <label class="gf-form-label width-3" style="margin-right: 2px;">Lvl</label>
+                </th>
               </tr>
             </thead>
             <tboddy>
@@ -261,7 +263,7 @@
                   </div>
                 </td>
                 <td>
-                  <div class="gf-form">
+                  <div class="gf-form width-2">
                     <span class="gf-form-label width-3">
                       <color-picker color="rule.data.colors[$index]" onChange="editor.onColorChange($parent.$index, $index)">
                       </color-picker>
@@ -292,7 +294,10 @@
                     ng-blur="editor.onRulesChange()"  
                   />
                 </td>
-                <td></td>
+                <td>
+                  <label class="gf-form-label width-3" style="margin-right: 2px;">{{ ! rule.data.invert ? rule.getColorsNumber() - $index - 1 : $index}}
+                  </label>
+                </td>
               </tr>
             </tboddy>
             <tfoot>
@@ -301,6 +306,13 @@
                   <div class="gf-form-label">
                     <a class="pointer" ng-click="rule.invertColorOrder();editor.onRulesChange()">Invert</a>
                   </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <gf-form-switch class="gf-form" label="Icon state" label-class="width-10" checked="rule.data.overlayIcon"
+                    on-change="editor.onRulesChange()">
+                  </gf-form-switch>
                 </td>
               </tr>
             </tfoot>
@@ -356,9 +368,7 @@
               <a class="pointer" ng-click="rule.invertColorOrder();editor.onRulesChange()">Invert</a>
             </div>
           </div> -->
-          <gf-form-switch class="gf-form" label="Icon state" label-class="width-10" checked="rule.data.overlayIcon"
-            on-change="editor.onRulesChange()">
-          </gf-form-switch>
+
         </div>
 
         <!-- TOOLTIP -->

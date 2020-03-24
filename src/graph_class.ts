@@ -29,6 +29,7 @@ export default class XGraph {
   tooltip = true;
   lock = true;
   center = true;
+  animation = true;
   zoom = false;
   zoomFactor = 1.2;
   cumulativeZoomFactor = 1;
@@ -416,6 +417,11 @@ export default class XGraph {
       mxUrlConverter.prototype.baseUrl = null;
       mxUrlConverter.prototype.baseDomain = null;
     }
+    return this;
+  }
+
+  enableAnim(bool: boolean): this {
+    this.animation = bool;
     return this;
   }
 
@@ -827,8 +833,8 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  setStyleCell(mxcell: mxCell, style: gf.TStyleKey, color: string | null, animate = false): this {
-    if (animate) {
+  setStyleCell(mxcell: mxCell, style: gf.TStyleKey, color: string | null): this {
+    if (this.animation) {
       try {
         const endColor = this.getStyleCell(mxcell, style);
         const startColor = color;

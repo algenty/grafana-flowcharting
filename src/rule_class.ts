@@ -212,8 +212,8 @@ export default class Rule {
       // this.data.thresholds = obj.thresholds.slice(0);
     }
 
-    if(!!obj.stringThresholds) {
-      this.data.stringThresholds = obj.stringThresholds.slice(0); 
+    if (!!obj.stringThresholds) {
+      this.data.stringThresholds = obj.stringThresholds.slice(0);
     }
 
     if (!!obj.stringWarning) {
@@ -228,16 +228,16 @@ export default class Rule {
     if (!!obj.invert) {
       this.data.invert = obj.invert;
     }
-    if (!!obj.overlayIcon) {
+    if (!!obj.overlayIcon || obj.overlayIcon === false) {
       this.data.overlayIcon = obj.overlayIcon;
     }
-    if (!!obj.tooltip) {
+    if (!!obj.tooltip || obj.tooltip === false) {
       this.data.tooltip = obj.tooltip;
     }
     if (!!obj.tooltipLabel) {
       this.data.tooltipLabel = obj.tooltipLabel;
     }
-    if (!!obj.tooltipColors) {
+    if (!!obj.tooltipColors || obj.tooltipColors === false) {
       this.data.tooltipColors = obj.tooltipColors;
     }
     if (!!obj.tooltipOn) {
@@ -246,7 +246,7 @@ export default class Rule {
     if (!!obj.tpDirection) {
       this.data.tpDirection = obj.tpDirection;
     }
-    if (!!obj.tpGraph) {
+    if (!!obj.tpGraph || this.data.tpGraph === false) {
       this.data.tpGraph = obj.tpGraph !== undefined;
     }
     if (!!obj.tpGraphSize) {
@@ -505,6 +505,16 @@ export default class Rule {
    */
   getColors(): string[] {
     return this.data.colors;
+  }
+
+  /**
+   * Return number of colors
+   *
+   * @returns {number}
+   * @memberof Rule
+   */
+  getColorsNumber(): number {
+    return this.data.colors.length;
   }
 
   //

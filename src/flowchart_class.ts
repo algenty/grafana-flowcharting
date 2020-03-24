@@ -39,7 +39,7 @@ export default class Flowchart {
   import(obj: any): this {
     GFP.log.info(`flowchart[${this.data.name}].import()`);
     GFP.log.debug(`flowchart[${this.data.name}].import() obj`, obj);
-    if (!!obj.download) {
+    if (!!obj.download || this.data.download === false) {
       this.data.download = obj.download;
     }
     // 0.3.0
@@ -71,22 +71,25 @@ export default class Flowchart {
     if (!!obj.zoom) {
       this.data.zoom = obj.zoom;
     }
-    if (!!obj.center) {
+    if (!!obj.center || this.data.center === false) {
       this.data.center = obj.center;
     }
-    if (!!obj.scale) {
+    if (!!obj.scale || this.data.scale === false) {
       this.data.scale = obj.scale;
     }
-    if (!!obj.lock) {
+    if (!!obj.lock || this.data.lock === false) {
       this.data.lock = obj.lock;
     }
-    if (!!obj.allowDrawio) {
+    if (!!obj.allowDrawio || this.data.allowDrawio === false) {
       this.data.allowDrawio = obj.allowDrawio;
+    }
+    if (!!obj.enableAnim || obj.enableAnim === false) {
+      this.data.enableAnim = obj.enableAnim;
     }
     if (!!obj.tooltip) {
       this.data.tooltip = obj.tooltip;
     }
-    if (!!obj.grid) {
+    if (!!obj.grid || this.data.grid === false ) {
       this.data.grid = obj.grid;
     }
     if (!!obj.bgColor) {
@@ -122,6 +125,7 @@ export default class Flowchart {
       scale: true,
       lock: true,
       allowDrawio: false,
+      enableAnim: true,
       tooltip: true,
       grid: false,
       bgColor: null,
@@ -185,6 +189,11 @@ export default class Flowchart {
           this.xgraph.allowDrawio(true);
         } else {
           this.xgraph.allowDrawio(false);
+        }
+        if (this.data.enableAnim) {
+          this.xgraph.enableAnim(true);
+        } else {
+          this.xgraph.enableAnim(false);
         }
         this.setOptions();
         this.xgraph.drawGraph();
