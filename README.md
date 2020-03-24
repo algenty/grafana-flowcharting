@@ -31,17 +31,18 @@ See more example at draw.io
 
 ## [[0.7.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0-SNAPSHOT.zip) - 2019-03-19  
 ### Added  
-  - new conditions and design in rule for each mapping instead one by rule. 
-    - when : When condition applied
-    - what : which shape
+  - new conditions and design in rule for each mapping instead one by rule ([See example](https://algenty.github.io/flowcharting-repository/images/what_when_how.png))  
+    - when : When condition applied  
+    - what : which shape  
     - how : how to colorize shape 
+  - Multi colors for thresholds with type number and string ([See example](https://algenty.github.io/flowcharting-repository/images/multicolor_ani.png))
   - Update libs :
-    - draw.io : 12.8.6 (Kubernetes shapes and more)
-    - mxgraph : 4.1.0
+    - draw.io : 12.8.6 (Kubernetes shapes and more)  
+    - mxgraph : 4.1.0  
 ### Fixed  
   - Fix getNames for series [(issue #100)](https://github.com/algenty/grafana-flowcharting/issues/100)  
   - Fix colors when cloned rules [(issue #124)](https://github.com/algenty/grafana-flowcharting/issues/124)  
-  - Fix shapes from last versions of draw.io [(issue #124)](https://github.com/algenty/grafana-flowcharting/issues/125)  
+  - Fix shapes with last versions of draw.io [(issue #124)](https://github.com/algenty/grafana-flowcharting/issues/125)  
 
 ## [[0.6.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.1.zip) - 2020-01-15  
 ### Fixed
