@@ -29,12 +29,13 @@ See more example at draw.io
 
 # Changelog
 
-## [[0.7.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0-SNAPSHOT.zip) - 2019-03-19  
+## [[0.7.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0-SNAPSHOT.zip) - 2019-03-25  
 ### Added  
   - new conditions and design in rule for each mapping instead one by rule ([See example](https://algenty.github.io/flowcharting-repository/images/what_when_how.png))  
     - when : When condition applied  
     - what : which shape  
     - how : how to colorize shape 
+    - and more ...
   - Multi colors for thresholds with type number and string ([See example](https://algenty.github.io/flowcharting-repository/images/multicolor_ani.png))
   - Enable/disable animation like fade color for best performance or best render in 'Direct link rendered image'  
   - Update libs :
