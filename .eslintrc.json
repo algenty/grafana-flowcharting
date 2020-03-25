@@ -1,5 +1,6 @@
 {
     "parser": "babel-eslint",
+    //"extends": ["@grafana/eslint-config"],
     "env": {
         "browser": true,
         "es6": true,

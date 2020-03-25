@@ -300,7 +300,7 @@ class Perf {
 }
 
 class Log {
-  static DEBUG = 0;
+  static DEBUG = 2;
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
@@ -333,7 +333,7 @@ class Log {
    */
   async debug(title: string, obj: any | undefined) {
     if (this.toDisplay(Log.DEBUG)) {
-      console.debug(`GF DEBUG : ${title}`, obj);
+      // console.debug(`GF DEBUG : ${title}`, obj);
     }
   }
 

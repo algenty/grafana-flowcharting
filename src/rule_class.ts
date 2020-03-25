@@ -215,7 +215,7 @@ export default class Rule {
     if (!!obj.stringThresholds) {
       this.data.stringThresholds = obj.stringThresholds.slice(0);
     }
-    
+
     if (!!obj.stringWarning) {
       //this.data.stringWarning = obj.stringWarning;
       this.data.stringThresholds[1] = obj.stringWarning;

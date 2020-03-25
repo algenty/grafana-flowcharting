@@ -2,29 +2,29 @@ declare var GFP: FlowChartingPlugin;
 type mxCell = any;
 type mxMouseEvent = any;
 
-namespace gf {
-  interface TSelectString {
+declare module gf {
+  declare interface TSelectString {
     text: string;
     value: string;
   }
 
-  interface TSelectNumber {
+  declare interface TSelectNumber {
     text: string;
     value: number;
   }
 
-  interface TSelectBoolean {
+  declare interface TSelectBoolean {
     text: string;
     value: boolean;
   }
 
-  type TSourceType = 'xml' | 'csv'; // Source type
-  type TPropertieKey = 'id' | 'value'; //Type properties for finding cells
-  interface TSelectSource extends TSelectString {
+  declare type TSourceType = 'xml' | 'csv'; // Source type
+  declare type TPropertieKey = 'id' | 'value'; //Type properties for finding cells
+  declare interface TSelectSource extends TSelectString {
     value: TSourceType;
   }
 
-  interface TIFlowchartOptionsScope extends ng.IScope {
+  declare interface TIFlowchartOptionsScope extends ng.IScope {
     flowchartHandler: any;
     editor: FlowchartOptionsCtrl;
     GFP: FlowChartingPlugin;
@@ -32,9 +32,9 @@ namespace gf {
   }
 
   // Styles
-  type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
-  type TStyleKey = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
-  interface TIStylesString {
+  declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
+  declare type TStyleKey = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
+  declare interface TIStylesString {
     fillColor: string | null;
     strokeColor: string | null;
     fontColor: string | null;
@@ -42,7 +42,7 @@ namespace gf {
     imageBackground: string | null;
   }
 
-  interface TIStylesBoolean {
+  declare interface TIStylesBoolean {
     fillColor: boolean;
     strokeColor: boolean;
     fontColor: boolean;
@@ -50,7 +50,7 @@ namespace gf {
     imageBackground: boolean;
   }
 
-  interface TIStylesNumber {
+  declare interface TIStylesNumber {
     fillColor: number;
     strokeColor: number;
     fontColor: number;
@@ -58,54 +58,54 @@ namespace gf {
     imageBackground: number;
   }
 
-  interface TSelectStyle extends TSelectString {
+  declare interface TSelectStyle extends TSelectString {
     value: TStyleKey;
   }
 
   // ToolTip
-  type TDirection = 'v' | 'h';
-  type TGraphType = 'line' | 'bar';
-  type TGraphCoordinate = { x?: number; y: number };
-  type TGraphScale = 'linear' | 'log';
-  type TGraphSize = '100%' | '100px' | '200px' | '400px';
+  declare type TDirection = 'v' | 'h';
+  declare type TGraphType = 'line' | 'bar';
+  declare type TGraphCoordinate = { x?: number; y: number };
+  declare type TGraphScale = 'linear' | 'log';
+  declare type TGraphSize = '100%' | '100px' | '200px' | '400px';
 
-  interface TSelectGraphSize extends TSelectString {
+  declare interface TSelectGraphSize extends TSelectString {
     value: TGraphSize;
   }
-  interface TSelectGraphType extends TSelectString {
+  declare interface TSelectGraphType extends TSelectString {
     value: TGraphType;
   }
 
-  interface TSelectGraphScale extends TSelectString {
+  declare interface TSelectGraphScale extends TSelectString {
     value: TGraphScale;
   }
 
   // Range or value
-  type TTextType = 1 | 2;
-  interface TSelectText extends TSelectNumber {
+  declare type TTextType = 1 | 2;
+  declare interface TSelectText extends TSelectNumber {
     value: TTextType;
   }
 
   // Aggregation
-  type TAggregation = 'first' | 'current' | 'min' | 'max' | 'total' | 'avg' | 'count' | 'delta' | 'range' | 'diff';
-  interface TSelectAggregation extends TSelectString {
+  declare type TAggregation = 'first' | 'current' | 'min' | 'max' | 'total' | 'avg' | 'count' | 'delta' | 'range' | 'diff';
+  declare interface TSelectAggregation extends TSelectString {
     value: TAggregation;
   }
 
   // Metric
-  type TMetricType = 'table' | 'serie';
+  declare type TMetricType = 'table' | 'serie';
 
   // Rules
-  type TLinkOn = 'wc' | 'a';
-  type TTooltipOn = 'wc' | 'a';
-  type TColorOn = 'n' | 'wc' | 'a';
-  type TTextOn = 'n' | 'wmd' | 'wc' | 'co';
-  type TTextReplace = 'content' | 'pattern' | 'as' | 'anl';
-  type TDateFormat = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
-  interface TIRulesHandlerData {
+  declare type TLinkOn = 'wc' | 'a';
+  declare type TTooltipOn = 'wc' | 'a';
+  declare type TColorOn = 'n' | 'wc' | 'a';
+  declare type TTextOn = 'n' | 'wmd' | 'wc' | 'co';
+  declare type TTextReplace = 'content' | 'pattern' | 'as' | 'anl';
+  declare type TDateFormat = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
+  declare interface TIRulesHandlerData {
     rulesData: TIRuleData[];
   }
-  interface TIRuleData {
+  declare interface TIRuleData {
     order: number;
     pattern: string;
     metricType: TMetricType;
@@ -158,48 +158,56 @@ namespace gf {
     sanitize: boolean;
   }
 
-  interface TGFMapData {
+  declare interface TGFMapData {
     pattern: string;
     hidden: boolean;
   }
 
-  interface TShapeMapData extends TGFMapData {
+  declare interface TShapeMapData extends TGFMapData {
     style: TStyleKey;
     colorOn: TColorOn;
   }
 
-  interface TTextMapData extends TGFMapData {
+  declare interface TTextMapData extends TGFMapData {
     textReplace: TTextReplace;
     textPattern: string;
     textOn: TTextOn;
   }
 
-  interface TlinkMapData extends TGFMapData {
+  declare interface TlinkMapData extends TGFMapData {
     linkUrl: string;
     linkParams: boolean;
     linkOn: TLinkOn;
   }
 
-  interface TRangeMapData {
+  declare interface TRangeMapData {
     from?: string | null;
     to?: string | null;
     text: string | null;
     hidden: boolean;
   }
 
-  interface TValueMapData {
+  declare interface TValueMapData {
     value: string;
     text: string;
     hidden: boolean;
   }
 
   // mxGraph API
-  declare var mxCellHighlight: any, mxEvent: any, mxClient: any, mxUtils: any, mxCodec: any, mxConstants: any, mxRectangle: any, mxUrlConverter: any;
+  // mxGraph API
+  declare var mxCellHighlight: any;
+  declare var mxEvent: any;
+  declare var mxClient: any;
+  declare var mxUtils: any;
+  declare var mxCodec: any;
+  declare var mxConstants: any;
+  declare var mxRectangle: any;
+  declare var mxUrlConverter: any;
 
   declare type mxCellOverlay = any;
 
   // For mapping object
-  interface TIOnMappingObj {
+  declare interface TIOnMappingObj {
     active: boolean;
     object: GFMap | null;
     id: string | null;
@@ -207,13 +215,13 @@ namespace gf {
   }
 
   // Export of id and label
-  export interface TICellsIdLabel {
+  declare interface TICellsIdLabel {
     id: string[];
     value: string[]; // Label
   }
 
   // Inspect
-  interface TInspectOptionsScope extends ng.IScope {
+  declare interface TInspectOptionsScope extends ng.IScope {
     flowchartHandler: any;
     editor: InspectOptionsCtrl;
     GFP: FlowChartingPlugin;
@@ -221,7 +229,7 @@ namespace gf {
   }
 
   // Flowcharts
-  interface TFlowchartData {
+  declare interface TFlowchartData {
     name: string;
     xml: string;
     csv: string;
@@ -241,11 +249,11 @@ namespace gf {
     editorTheme: string;
   }
 
-  interface TFlowchartHandlerData {
+  declare interface TFlowchartHandlerData {
     flowcharts: TFlowchartData[];
   }
 
-  interface TMappingOptionsScope extends ng.IScope {
+  declare interface TMappingOptionsScope extends ng.IScope {
     rulesHandler: any;
     flowchartHandler: FlowchartHandler;
     editor: MappingOptionsCtrl;
