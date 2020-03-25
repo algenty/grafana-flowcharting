@@ -134,8 +134,9 @@ export default class State {
       const value = rule.getValueForMetric(metric);
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
-      const color = rule.getColorForLevel(level);
-
+      // const color = rule.getColorForLevel(level);
+      const color = rule.getColorForValue(value);
+      
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
       shapeMaps.forEach(shape => {

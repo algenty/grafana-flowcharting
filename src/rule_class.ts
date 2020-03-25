@@ -74,6 +74,7 @@ export default class Rule {
       //stringWarning: '',
       //stringCritical: '',
       invert: false,
+      gradient: false,
       overlayIcon: false,
       tooltip: false,
       tooltipLabel: '',
@@ -225,9 +226,14 @@ export default class Rule {
       this.data.stringThresholds[0] = obj.stringCritical;
     }
 
-    if (!!obj.invert) {
+    if (!!obj.invert || obj.invert === false) {
       this.data.invert = obj.invert;
     }
+
+    if (!!obj.gradient || obj.gradient === false) {
+      this.data.gradient = obj.gradient;
+    }
+
     if (!!obj.overlayIcon || obj.overlayIcon === false) {
       this.data.overlayIcon = obj.overlayIcon;
     }
@@ -445,7 +451,7 @@ export default class Rule {
     // ref[0] = ref[2];
     // ref[2] = copy;
     this.data.colors.reverse();
-    this.data.invert = !this.data.invert;
+    // this.data.invert = !this.data.invert;
     // if (this.data.invert) {
     //   this.data.invert = false;
     // } else {
@@ -478,10 +484,10 @@ export default class Rule {
    * @memberof Rule
    */
   removeColor(index: number): this {
-    if (index !== 0) {
+    // if (index !== 0) {
       this.data.thresholds.splice(index - 1, 1);
       this.data.colors.splice(index, 1);
-    }
+    // }
     GFP.log.debug('this', this);
     return this;
   }
@@ -513,7 +519,7 @@ export default class Rule {
    * @returns {number}
    * @memberof Rule
    */
-  getColorsNumber(): number {
+  getColorsCount(): number {
     return this.data.colors.length;
   }
 
@@ -853,17 +859,46 @@ export default class Rule {
    * @returns {string} html color
    * @memberof Rule
    */
-  getColorForValue(value: number): string | null {
-    if (!this.data.thresholds || this.data.thresholds.length === 0) {
-      return null;
+  getColorForValue(value: any): string {
+    if (!this.data.gradient || this.data.type != 'number') {
+      let level = this.getThresholdLevel(value);
+      return this.getColorForLevel(level);
     }
-
-    for (let i = this.data.thresholds.length; i > 0; i -= 1) {
-      if (value >= this.data.thresholds[i - 1]) {
-        return this.data.colors[i];
+    if (this.data.type === 'number') {
+      let colors = this.data.colors.slice(0);
+      let thresholds = this.data.thresholds;
+      if (!this.data.invert) {
+        colors = colors.reverse();
       }
+      let l = thresholds.length;
+      let cursor = 0;
+      for (let index = 0; index < l; index++) {
+        const t = thresholds[index];
+        if (value < t) {
+          break;
+        }
+        cursor = index;
+      }
+      // value Lower than min level
+      if (cursor === 0 && value <= thresholds[0]) {
+        return colors[0];
+      }
+      // value upper then max level
+      if (cursor === l - 1) {
+        return colors[cursor + 1];
+      }
+      // Or
+      let absoluteDistance = thresholds[cursor + 1] - thresholds[cursor];
+      let valueDistanceFromMin = value - thresholds[cursor];
+      let ratio = valueDistanceFromMin / absoluteDistance;
+      let color = GFP.utils.getRatioColor(ratio, colors[cursor + 1 ], colors[cursor + 2]);
+      GFP.log.debug('COLOR RATIO : ', ratio);
+      GFP.log.debug('COLOR BEG : ', colors[cursor + 1 ]);
+      GFP.log.debug('COLOR CUR : ', color);
+      GFP.log.debug('COLOR END : ', colors[cursor + 2 ]);
+      return color;
     }
-    return this.data.colors[0];
+    return '';
   }
 
   /**
@@ -875,7 +910,7 @@ export default class Rule {
    */
   getColorForLevel(level: number): string {
     GFP.log.debug('getColorForLevel level', level);
-    let colors = [...this.data.colors];
+    let colors = this.data.colors.slice(0);
     if (!this.data.invert) {
       colors = colors.reverse();
     }

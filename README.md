@@ -177,7 +177,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Variables support for downloaded source and compressed source
   - [ ] Multi graph with auto link when errors
   - [ ] Gradien Mode for color
-  - [ ] More than 3 colors
+  - [X] More than 3 colors
   - [X] Graph in tooltip
   - [X] Histogram
   - [ ] Merge Graphs
@@ -241,7 +241,7 @@ $ yarn build
 $ # Make zip file plugin in archives dir
 $ yarn build archive
 $ # for dev watching
-$ yarn build dev
+$ yarn dev
 ```
 
 ## Class diagram

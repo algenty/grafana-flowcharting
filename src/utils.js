@@ -90,15 +90,15 @@ module.exports = {
     }
 
     if (base64) {
-        data = atob(data);
+      data = atob(data);
     }
 
     if (deflate && data.length > 0) {
-        data = this.bytesToString(pako.inflateRaw(data));
+      data = this.bytesToString(pako.inflateRaw(data));
     }
 
     if (encode) {
-        data = decodeURIComponent(data);
+      data = decodeURIComponent(data);
     }
 
     return data;
@@ -209,6 +209,22 @@ module.exports = {
       this.log(3, 'Error in prettify', error);
       return text;
     }
+  },
+
+  getRatioColor(ratio, colorStart, colorEnd) {
+
+    // Get the smaller number to clamp at 0.999 max
+    ratio = Math.min(0.999, ratio);
+    // Get the larger number to clamp at 0.001 min
+    ratio = Math.max(0.001, ratio);
+    let start = colorconv(colorEnd, 'uint8');
+    let end = colorconv(colorStart, 'uint8');
+    let c = [];
+    c[0] = start[0] * ratio + (1 - ratio) * end[0];
+    c[1] = start[1] * ratio + (1 - ratio) * end[1];
+    c[2] = start[2] * ratio + (1 - ratio) * end[2];
+    c[3] = start[3] * ratio + (1 - ratio) * end[3];
+    return `rgba(${c[0]},${c[1]},${c[2]},${c[3]})`;
   },
 
   getStepColors(colorStart, colorEnd, colorCount) {
