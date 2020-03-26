@@ -29,7 +29,7 @@ See more example at draw.io
 
 # Changelog
 
-## [[0.7.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0-SNAPSHOT.zip) - 2019-03-25  
+## [[0.7.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0-SNAPSHOT.zip) - 2020-03-25  
 ### Added  
   - new conditions and design in rule for each mapping instead one by rule ([See example](https://algenty.github.io/flowcharting-repository/images/what_when_how.png))  
     - when : When condition applied  
