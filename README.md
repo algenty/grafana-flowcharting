@@ -37,6 +37,7 @@ See more example at draw.io
     - how : how to colorize shape 
     - and more ...
   - Multi colors for thresholds with type number and string ([See example](https://algenty.github.io/flowcharting-repository/images/multicolor_ani.png))
+  - Gradient color mode ([See example](https://algenty.github.io/flowcharting-repository/images/floorplan_gradient_gradient.gif))
   - Enable/disable animation like fade color for best performance or best render in 'Direct link rendered image'  
   - Update libs :
     - draw.io : 12.8.6 (Kubernetes shapes and more)  

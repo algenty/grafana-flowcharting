@@ -69,8 +69,8 @@ export default class Rule {
       //textReplace: 'content',
       //textPattern: '/.*/',
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
-      thresholds: [],
-      stringThresholds: [],
+      thresholds: [50,80],
+      stringThresholds: ["/.*/","/.*/"],
       //stringWarning: '',
       //stringCritical: '',
       invert: false,
@@ -468,10 +468,30 @@ export default class Rule {
    * @memberof Rule
    */
   addColor(index: number): this {
-    let color = this.data.colors[index];
-    let value = this.data.thresholds[index - 1];
-    this.data.colors.splice(index, 0, color);
-    this.data.thresholds.splice(index, 0, value);
+    const thresholds = this.data.thresholds;
+    const colors = this.data.colors;
+    const colorStart: string = colors[index];
+    let color: string;
+    let value: any;
+    if (index != colors.length - 1) {
+      let ratio = 0.5;
+      let colorEnd = colors[index + 1];
+      color = GFP.utils.getRatioColor(ratio, colorStart, colorEnd);
+      if (this.data.type === 'number') {
+        let absoluteDistance = thresholds[index] - thresholds[index - 1];
+        value = absoluteDistance / 2 + thresholds[index - 1];
+      } else {
+        value = this.data.stringThresholds[index - 1];
+      }
+    } else {
+      color = colorStart;
+    }
+    this.data.colors.splice(index + 1, 0, color);
+    if (this.data.type === 'number') {
+      this.data.thresholds.splice(index, 0, value);
+    } else if (this.data.type === 'string') {
+      this.data.stringThresholds.splice(index, 0, value);
+    }
     GFP.log.debug('this', this);
     return this;
   }
@@ -485,8 +505,8 @@ export default class Rule {
    */
   removeColor(index: number): this {
     // if (index !== 0) {
-      this.data.thresholds.splice(index - 1, 1);
-      this.data.colors.splice(index, 1);
+    this.data.thresholds.splice(index - 1, 1);
+    this.data.colors.splice(index, 1);
     // }
     GFP.log.debug('this', this);
     return this;
@@ -865,12 +885,14 @@ export default class Rule {
       return this.getColorForLevel(level);
     }
     if (this.data.type === 'number') {
-      let colors = this.data.colors.slice(0);
-      let thresholds = this.data.thresholds;
-      if (!this.data.invert) {
-        colors = colors.reverse();
-      }
+      const thresholds = this.data.thresholds;
+      const colors = this.data.colors;
       let l = thresholds.length;
+      // No Thresholds
+      if (thresholds === undefined || l === 0) {
+        return colors[0];
+      }
+
       let cursor = 0;
       for (let index = 0; index < l; index++) {
         const t = thresholds[index];
@@ -891,11 +913,11 @@ export default class Rule {
       let absoluteDistance = thresholds[cursor + 1] - thresholds[cursor];
       let valueDistanceFromMin = value - thresholds[cursor];
       let ratio = valueDistanceFromMin / absoluteDistance;
-      let color = GFP.utils.getRatioColor(ratio, colors[cursor + 1 ], colors[cursor + 2]);
+      let color = GFP.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
       GFP.log.debug('COLOR RATIO : ', ratio);
-      GFP.log.debug('COLOR BEG : ', colors[cursor + 1 ]);
+      GFP.log.debug('COLOR BEG : ', colors[cursor + 1]);
       GFP.log.debug('COLOR CUR : ', color);
-      GFP.log.debug('COLOR END : ', colors[cursor + 2 ]);
+      GFP.log.debug('COLOR END : ', colors[cursor + 2]);
       return color;
     }
     return '';
