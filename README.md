@@ -28,11 +28,11 @@ See more example at draw.io
 <https://github.com/algenty/grafana-flowcharting>
 
 # Sponsors and Funding
-Since the version 0.7.0 and after one year of work, I activated the sponsor button.
-Why ? Flowcharting stills free and open-source, but since the success of it, i spend many personal times and money (computer, Azure account ...).
-Also i donate money for project used by FlowCharting like chartist.
-Then if you like Grafana-FlowCharting, you used it for your enterprise or other, you want to contribute, click on Sponsor button or Financing the project with the link bellow.
-https://paypal.me/grafanaflowcharting
+Since the version 0.7.0 and after one year of work, I activated the sponsor button.  
+Why ? Flowcharting stills free and open-source, but since the success of it, i spend many personal times and money (computer, Azure account ...).  
+Also i donate money for project used by FlowCharting like chartist.  
+Then if you like Grafana-FlowCharting, you used it for your enterprise or other, you want to contribute, click on Sponsor button or Financing the project with the link bellow.  
+[https://paypal.me/grafanaflowcharting](https://paypal.me/grafanaflowcharting)
 
 Thanks a lot
 Arnaud
