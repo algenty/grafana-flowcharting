@@ -27,9 +27,19 @@ See more example at draw.io
 # Project site
 <https://github.com/algenty/grafana-flowcharting>
 
+# Sponsors and Funding
+Since the version 0.7.0 and after one year of work, I activated the sponsor button.  
+Why ? Flowcharting stills free and open-source, but since the success of it, i spend many personal times and money (computer, Azure account ...).  
+Also i donate money for project used by FlowCharting like chartist.  
+Then if you like Grafana-FlowCharting, you used it for your enterprise or other, you want to contribute, click on Sponsor button or Financing the project with the link bellow.  
+[https://paypal.me/grafanaflowcharting](https://paypal.me/grafanaflowcharting)
+
+Thanks a lot
+Arnaud
+
 # Changelog
 
-## [[0.7.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0-SNAPSHOT.zip) - 2020-03-25  
+## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
 ### Added  
   - new conditions and design in rule for each mapping instead one by rule ([See example](https://algenty.github.io/flowcharting-repository/images/what_when_how.png))  
     - when : When condition applied  
@@ -175,9 +185,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Shared graph crosshair
   - [ ] CSV source
   - [ ] Map/search shape by value
-  - [ ] Variables support for downloaded source and compressed source
+  - [X] Variables support for downloaded source and compressed source
   - [ ] Multi graph with auto link when errors
-  - [ ] Gradien Mode for color
+  - [X] Gradien Mode for color
   - [X] More than 3 colors
   - [X] Graph in tooltip
   - [X] Histogram
