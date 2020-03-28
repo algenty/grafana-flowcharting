@@ -1,4 +1,4 @@
-import moment from 'moment';
+//import moment from 'moment';
 import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
@@ -69,8 +69,8 @@ export default class Rule {
       //textReplace: 'content',
       //textPattern: '/.*/',
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
-      thresholds: [50,80],
-      stringThresholds: ["/.*/","/.*/"],
+      thresholds: [50, 80],
+      stringThresholds: ['/.*/', '/.*/'],
       //stringWarning: '',
       //stringCritical: '',
       invert: false,
@@ -473,7 +473,7 @@ export default class Rule {
     const colorStart: string = colors[index];
     let color: string;
     let value: any;
-    if (index != colors.length - 1) {
+    if (index !== colors.length - 1) {
       let ratio = 0.5;
       let colorEnd = colors[index + 1];
       color = GFP.utils.getRatioColor(ratio, colorStart, colorEnd);
@@ -880,7 +880,7 @@ export default class Rule {
    * @memberof Rule
    */
   getColorForValue(value: any): string {
-    if (!this.data.gradient || this.data.type != 'number') {
+    if (!this.data.gradient || this.data.type !== 'number') {
       let level = this.getThresholdLevel(value);
       return this.getColorForLevel(level);
     }
@@ -1094,11 +1094,14 @@ export default class Rule {
       if (_.isArray(value)) {
         value = value[0];
       }
-      const date = moment(value);
+      // const date = moment(value);
+      // return date.format(this.data.dateFormat);
+
       // if (this.dashboard.isTimezoneUtc()) {
       //     date = date.utc();
       // }
-      return date.format(this.data.dateFormat);
+      let d = grafana.getFormatedDate(value, this.data.dateFormat);
+      return d;
     }
     return value;
   }

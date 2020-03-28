@@ -47,7 +47,7 @@ export default class Metric {
    * @returns {gf.TGraphCoordinate[]}
    * @memberof Metric
    */
-  getData(column?: string): number[] | Array<{ x: number | Date; y: number }> {
+  getData(column?: string, log: boolean = false): number[] | Array<{ x: number | Date; y: number }> {
     return [];
   }
 
@@ -111,8 +111,11 @@ export class Serie extends Metric {
     }
   }
 
-  getData(): number[] | Array<{ x: number | Date; y: number }> {
+  getData(column: string = '', log: boolean = false): number[] | Array<{ x: number | Date; y: number }> {
     return this.metrics.flotpairs.map(d => {
+      if (!!log) {
+        return { x: d[0], y: Math.log10(d[1]) };
+      }
       return { x: d[0], y: d[1] };
     });
   }

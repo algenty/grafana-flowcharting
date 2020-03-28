@@ -39,6 +39,10 @@ Arnaud
 
 # Changelog
 
+## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-28  
+### Fix
+  - Log scale [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
+
 ## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
 ### Added  
   - new conditions and design in rule for each mapping instead one by rule ([See example](https://algenty.github.io/flowcharting-repository/images/what_when_how.png))  

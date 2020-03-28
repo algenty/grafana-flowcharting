@@ -353,7 +353,8 @@ class LineGraphTooltip extends GraphTooltip {
    */
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     if (this.metric) {
-      this.data.series[0]['data'] = this.metric.getData(this.column);
+      let log = this.scaleType === 'log' ? true : false;
+      this.data.series[0]['data'] = this.metric.getData(this.column, log);
     }
     const div = document.createElement('div');
     const color = this.color;
@@ -370,11 +371,6 @@ class LineGraphTooltip extends GraphTooltip {
     }
     if (this.high !== null) {
       this.chartistOptions.high = this.high;
-    }
-
-    if (this.scaleType !== null && this.scaleType !== undefined && this.scaleType === 'log') {
-      // this.chartistOptions.axisY.type = this.scaleType;
-      // NOT SUPPORTED AT THIS TIME
     }
 
     this.chart = new Chartist.Line(div, this.data, this.chartistOptions);
@@ -450,7 +446,8 @@ class BarGraphTooltip extends GraphTooltip {
    */
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     if (this.metric) {
-      this.data.series[0]['data'] = this.metric.getData(this.column);
+      let log = this.scaleType === 'log' ? true : false;
+      this.data.series[0]['data'] = this.metric.getData(this.column, log);
     }
     const div = document.createElement('div');
     const color = this.color;
@@ -467,10 +464,6 @@ class BarGraphTooltip extends GraphTooltip {
     }
     if (this.high !== null) {
       this.chartistOptions.high = this.high;
-    }
-
-    if (this.scaleType !== null && this.scaleType !== undefined && this.scaleType === 'log') {
-      // this.chartistOptions.axisY.type = this.scaleType;
     }
 
     this.chart = new Chartist.Bar(div, this.data, this.chartistOptions);

@@ -136,7 +136,7 @@ export default class State {
       const level = rule.getThresholdLevel(value);
       // const color = rule.getColorForLevel(level);
       const color = rule.getColorForValue(value);
-      
+
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
       shapeMaps.forEach(shape => {
@@ -176,7 +176,8 @@ export default class State {
                 .setColumn(rule.data.column)
                 .setMetric(metric)
                 .setSize(rule.data.tpGraphSize)
-                .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh);
+                .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh)
+                .setScale(rule.data.tpGraphScale);
             }
             // Date
             this.tooltipHandler.updateDate();
