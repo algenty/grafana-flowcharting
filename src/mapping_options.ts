@@ -219,6 +219,24 @@ export class MappingOptionsCtrl {
     return true;
   }
 
+  removeShapeMap(rule : Rule, index : number ) {
+    const shape = rule.getShapeMap(index);
+    this.unselectCell(rule.data.shapeProp,shape.data.pattern);
+    rule.removeShapeMap(index);
+  }
+
+  removeLinkMap(rule : Rule, index : number ) {
+    const lnk = rule.getLinkMap(index);
+    this.unselectCell(rule.data.shapeProp,lnk.data.pattern);
+    rule.removeLinkMap(index);
+  }
+
+  removeTextMap(rule : Rule, index : number ) {
+    const txt = rule.getTextMap(index);
+    this.unselectCell(rule.data.shapeProp,txt.data.pattern);
+    rule.removeTextMap(index);
+  }
+
   /**
    * Add Color
    *

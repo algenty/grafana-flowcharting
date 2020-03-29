@@ -29,19 +29,21 @@ See more example at draw.io
 
 # Sponsors and Funding
 Since the version 0.7.0 and after one year of work, I activated the sponsor button.  
-Why ? Flowcharting stills free and open-source, but since the success of it, i spend many personal times and money (computer, Azure account ...).  
+Why ? Flowcharting stills free and open-source, but since the success of it, i spent many personal times and money (computer, Azure account ...).  
 Also i donate money for project used by FlowCharting like chartist.  
-Then if you like Grafana-FlowCharting, you used it for your enterprise or other, you want to contribute, click on Sponsor button or Financing the project with the link bellow.  
-[https://paypal.me/grafanaflowcharting](https://paypal.me/grafanaflowcharting)
+Then if you like Grafana-FlowCharting, you used it for your enterprise or other, you want to contribute,  
+click on Sponsor button or Financing the project with the link bellow.  
+[https://paypal.me/grafanaflowcharting](https://paypal.me/grafanaflowcharting)  
 
-Thanks a lot
+Thanks a lot 
 Arnaud
 
 # Changelog
 
 ## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-28  
 ### Fix
-  - Log scale [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
+  - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
+  - shape stills select when deleting map.
 
 ## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
 ### Added  
