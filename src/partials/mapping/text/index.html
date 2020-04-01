@@ -1,0 +1,126 @@
+<div class="section gf-form-group">
+  <h5 class="section-heading">
+    Text Mappings
+    <info-popover mode="right-normal">
+      <span
+        ng-bind-html="GFP.popover('Select the text object to replace by value', 'MAPPING','fc_subway_example')">
+      </span>
+    </info-popover>
+  </h5>
+  <div class="gf-form">
+    <span class="gf-form-label width-7">By</span>
+    <div class="gf-form-select-wrapper">
+      <select class="gf-form-input width-13" ng-model="rule.data.textProp"
+        ng-options="c.value as c.text for c in editor.propTypes" ng-change="editor.onRulesChange()"></select>
+    </div>
+  </div>
+  <!-- Table -->
+  <table>
+    <thead>
+      <tr>
+        <th>
+          <label class="gf-form-label width-7" style="margin-right: 2px;">Buttons</label>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">What
+            <info-popover mode="right-normal">
+              <span ng-bind-html="GFP.popover('Enter shape Id or click on link button', 'MAPPING#what')">
+              </span>
+            </info-popover>
+          </label>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">When
+            <info-popover mode="right-normal">
+              <span
+                ng-bind-html="GFP.popover('Select condition to dislay value or text on shape.', 'MAPPING#text')">
+              </span>
+            </info-popover>
+          </label>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">How
+            <info-popover mode="right-normal">
+              <span
+                ng-bind-html="GFP.popover('Whitch part of text to replace', 'MAPPING','example_text_pattern')">
+              </span>
+            </info-popover>
+          </label>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">With
+            <info-popover mode="right-normal">
+              <span
+                ng-bind-html="GFP.popover('Enter pattern/regular expression (Only for substring method)', 'MAPPING#text','example_text_pattern')">
+              </span>
+            </info-popover></label>
+          </label>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="text in rule.getTextMaps()" ng-class="{'gf-form-disabled': text.data.hidden}"
+        ng-mouseleave="editor.unselectCell(rule.data.shapeProp,text.data.pattern)"
+        ng-mouseover="editor.selectCell(rule.data.shapeProp,text.data.pattern)">
+        <td>
+          <div class="gf-form">
+            <label class="gf-form-label" style="margin-right: 4px;">
+              <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete this mapping object'"
+                ng-click="editor.removeTextMap(rule,$index);editor.onRulesChange()"></i>
+            </label>
+            <label class="gf-form-label" ng-if="!text.isHidden()" style="margin-right: 4px;">
+              <i class="fa fa-w fa-eye pointer" bs-tooltip="'Hide selected object graph in rule'"
+                ng-click="text.hide();editor.onRulesChange()"></i>
+            </label>
+            <label class="gf-form-label" ng-if="text.isHidden()" style="margin-right: 4px;">
+              <i class="fa fa-w fa-eye-slash pointer" bs-tooltip="'show selected object graph in rule'"
+                ng-click="text.show();editor.onRulesChange()"></i>
+            </label>
+            <label class="gf-form-label" style="margin-right: 4px;"
+              ng-hide="flowchartHandler.isMapping(text)">
+              <i class="fa fa-link pointer" ng-click="flowchartHandler.setMap(text)"
+                bs-tooltip="'Select object/target in graph'"></i>
+            </label>
+            <label class="gf-form-label" style="margin-right: 4px;color:orange"
+              ng-show="flowchartHandler.isMapping(text)">
+              <i class="fa fa-unlink pointer" bs-tooltip="'Cancel link object graph selection'"
+                ng-click="flowchartHandler.unsetMap()"></i>
+            </label>
+          </div>
+        </td>
+        <td>
+          <input type="text" style="margin-right: 2px;" id="{{ text.getId() }}"
+            placeholder="id or regex of shape" class="gf-form-input width-8" ng-model="text.data.pattern"
+            bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+            bs-typeahead="editor.getCellNamesForShape" ng-blur="editor.onRulesChange()" data-min-length="0"
+            data-items="100" ng-model-onblur data-placement="right" />
+        </td>
+        <td>
+          <select class="gf-form-input width-8" ng-model="text.data.textOn"
+            ng-options="c.value as c.text for c in editor.textOn" ng-change="editor.onRulesChange()"></select>
+        </td>
+        <td>
+          <select class="gf-form-input width-8" style="margin-right: 2px;" ng-model="text.data.textReplace"
+            ng-options="c.value as c.text for c in editor.textReplace"
+            ng-change="editor.onRulesChange()"></select>
+        </td>
+        <td>
+          <input ng-if="text.data.textReplace == 'pattern' && rule.data.textOn != 'n'" type="text"
+            class="gf-form-input width-8" ng-model="rule.data.textPattern" ng-blur="editor.onRulesChange()"
+            placeholder="text or pattern to replace by value" />
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>
+          <div class="gf-form">
+            <label class="gf-form-label">
+              <i class="fa fa-plus pointer" ng-click="rule.addTextMap('')" style="margin-right: 2px;"></i>
+            </label>
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
