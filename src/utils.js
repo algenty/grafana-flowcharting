@@ -178,17 +178,18 @@ module.exports = {
     return new RegExp(match[1], match[2]);
   },
 
-  matchString(str, pattern) {
+  matchString(str, pattern, regex = true) {
     if (str === null || str === undefined || pattern === null || pattern === undefined || str.length === 0 || pattern.length === 0) {
-      // GFP.log.debug( `Match str=${str} pattern=${pattern}`, false);
       return false;
     }
     if (str === pattern) return true;
-    const regex = this.stringToJsRegex(pattern);
-    const matching = str.toString().match(regex);
-    if (matching) {
-      // GFP.log.debug( `Match str=${str} pattern=${pattern}`, true);
-      return true;
+    if (regex) {
+      const regex = this.stringToJsRegex(pattern);
+      const matching = str.toString().match(regex);
+      if (matching) {
+        return true;
+      }
+      return false;
     }
     return false;
   },

@@ -140,7 +140,7 @@ export default class State {
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
       shapeMaps.forEach(shape => {
-        if (!shape.isHidden() && shape.match(cellProp)) {
+        if (!shape.isHidden() && shape.match(cellProp,rule.data.shapeRegEx)) {
           this.matchedShape = true;
           this.matched = true;
           // tooltips

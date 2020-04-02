@@ -148,6 +148,7 @@ declare module gf {
     tpGraphHigh: number | null;
     tpGraphScale: TGraphScale;
     shapeProp: TPropertieKey;
+    shapeRegEx: boolean;
     shapeData: TShapeMapData[];
     textProp: TPropertieKey;
     textData: TTextMapData[];

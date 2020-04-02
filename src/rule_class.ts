@@ -88,6 +88,7 @@ export default class Rule {
       tpGraphHigh: null,
       tpGraphScale: 'linear',
       shapeProp: 'id',
+      shapeRegEx: true,
       shapeData: [],
       textProp: 'id',
       textData: [],
@@ -276,6 +277,10 @@ export default class Rule {
     if (!!obj.shapeProp) {
       this.data.shapeProp = obj.shapeProp;
     }
+    if (!!obj.shapeRegEx || obj.shapeRegEx === false) {
+      this.data.shapeRegEx = obj.shapeRegEx;
+    }
+
     this.data.shapeData = [];
 
     // For 0.2.0
@@ -733,7 +738,7 @@ export default class Rule {
   matchShape(pattern: string | null): boolean {
     let found = false;
     this.shapeMaps.forEach(element => {
-      if (element.match(pattern)) {
+      if (element.match(pattern,this.data.shapeRegEx)) {
         found = true;
       }
     });
@@ -746,7 +751,6 @@ export default class Rule {
   addTextMap(pattern: string): TextMap {
     const data = TextMap.getDefaultData();
     const m = new TextMap(pattern, data);
-    // m.import(data);
     this.textMaps.push(m);
     this.data.textData.push(data);
     return m;
@@ -1173,11 +1177,11 @@ export class GFMap {
    * @returns {boolean}
    * @memberof GFMap
    */
-  match(text: string | null): boolean {
+  match(text: string | null, regex = true): boolean {
     if (text === undefined || text === null || text.length === 0) {
       return false;
     }
-    return GFP.utils.matchString(text, this.data.pattern);
+    return GFP.utils.matchString(text, this.data.pattern,regex);
   }
 
   /**

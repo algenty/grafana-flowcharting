@@ -257,7 +257,7 @@ export default class FlowChartingPlugin {
 }
 
 class Perf {
-  enablePerf = false;
+  enablePerf = true;
   marky: any = null;
   stack: string[] = [];
   constructor() {}

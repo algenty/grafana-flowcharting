@@ -356,7 +356,7 @@ export function mappingOptionsTab($q, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `${GFP.getPartialPath()}/mapping_options.html`,
+    templateUrl: `${GFP.getPartialPath()}/mapping/index.html`,
     controller: MappingOptionsCtrl,
   };
 }

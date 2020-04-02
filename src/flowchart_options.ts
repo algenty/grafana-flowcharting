@@ -140,7 +140,7 @@ export function flowchartOptionsTab($q, $sce, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `${GFP.getPartialPath()}/flowchart_options.html`,
+    templateUrl: `${GFP.getPartialPath()}/flowchart/index.html`,
     controller: FlowchartOptionsCtrl,
   };
 }
