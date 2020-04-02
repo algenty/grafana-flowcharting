@@ -197,312 +197,34 @@
         </div>
 
         <!-- Thresholds -->
-        <div class="section gf-form-group" ng-if="['number', 'string'].indexOf(rule.data.type) !== -1">
-          <h5 class="section-heading" ng-if="rule.data.invert">
-            Thresholds ( 0 : Ok > ... > {{rule.getColorsCount() - 1}} : Critical)
-            <info-popover mode="right-normal"><span
-                ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
-            </info-popover>
-          </h5>
-          <h5 class="section-heading" ng-if="!rule.data.invert">
-            Thresholds ({{rule.getColorsCount() - 1}} : Critical > ... > 0 : Ok)
-            <info-popover mode="right-normal"><span
-                ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
-            </info-popover>
-          </h5>
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  <label class="gf-form-label width-5" style="margin-right: 2px;">Buttons</label>
-                </th>
-                <th>
-                  <label class="gf-form-label width-5" style="margin-right: 2px;">Color
-                  </label>
-                </th>
-                <th>
-                  <label class="gf-form-label width-8" style="margin-right: 2px;"
-                    ng-if="rule.data.type === 'number'">Number
-                    <info-popover mode="right-normal">
-                      <span ng-bind-html="GFP.popover('Apply color when value is egal or upper', 'MAPPING#Thresholds')">
-                      </span>
-                    </info-popover>
-                  </label>
-                  <label class="gf-form-label width-8" style="margin-right: 2px;"
-                    ng-if="rule.data.type === 'string'">Pattern
-                    <info-popover mode="right-normal">
-                      <span ng-bind-html="GFP.popover('Apply color when pattern is true', 'MAPPING#Thresholds')">
-                      </span>
-                    </info-popover>
-                  </label>
-                </th>
-                <th>
-                  <label class="gf-form-label width-3" style="margin-right: 2px;">Lvl</label>
-                </th>
-              </tr>
-            </thead>
-            <tboddy>
-              <tr ng-repeat="color in rule.getColors() track by $index">
-                <td>
-                  <div class="gf-form">
-                    <label class="gf-form-label" style="margin-right: 4px;" ng-if="rule.getColorsCount() > 1">
-                      <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete this colors'"
-                        ng-click="rule.removeColor($index);editor.onRulesChange()"></i>
-                    </label>
-                    <label class="gf-form-label">
-                      <i class="fa fa-plus pointer" ng-click="rule.addColor($index)" style="margin-right: 2px;"
-                        bs-tooltip="'Add a new color'"></i>
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div class="gf-form">
-                    <span class="gf-form-label" style="margin-right: 4px;">
-                      <color-picker color="rule.data.colors[$index]"
-                        onChange="editor.onColorChange($parent.$index, $index)"></color-picker>
-                    </span>
-                    <label class="gf-form-label  width-2" style="margin-right: 4px;"
-                      ng-if="$index > 0 && rule.data.type === 'number'">
-                      <i class="fa fa-w fa-angle-right" bs-tooltip="'Upper than'"></i>
-                    </label>
-                    <label class="gf-form-label  width-2" style="margin-right: 4px;"
-                      ng-if="$index > 0 && rule.data.type === 'string'" bs-tooltip="'Like'">
-                      <B>~</B>
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <label class="gf-form-label width-8" style="margin-right: 2px;"
-                    ng-if="$index === 0 && rule.data.type === 'number'">Base
-                  </label>
-                  <label class="gf-form-label width-8" style="margin-right: 2px;"
-                    ng-if="$index === 0 && rule.data.type === 'string'">Default
-                  </label>
-                  <input ng-if="$index > 0 && rule.data.type === 'number'" type="number" class="gf-form-input width-8"
-                    ng-model="rule.data.thresholds[$index-1]" placeholder="value"
-                    bs-tooltip="'Specify a value for apply color when value is egual or upper'"
-                    ng-blur="editor.onRulesChange()" />
-                  <input ng-if="$index > 0 && rule.data.type === 'string'" type="text" class="gf-form-input width-8"
-                    ng-model="rule.data.stringThresholds[$index-1]" placeholder="pattern"
-                    bs-tooltip="'Specify a pattern regex for apply color'" ng-blur="editor.onRulesChange()" />
-                </td>
-                <td>
-                  <label class="gf-form-label width-3"
-                    style="margin-right: 2px;">{{ ! rule.data.invert ? rule.getColorsCount() - $index - 1 : $index}}
-                  </label>
-                </td>
-              </tr>
-            </tboddy>
-            <tfoot>
-              <tr>
-                <td colspan="3">
-                  <gf-form-switch class="gf-form" label="Invert" label-class="width-8" checked="rule.data.invert"
-                    on-change="rule.invertColorOrder();editor.onRulesChange()" tooltip="Invert level state and color">
-                  </gf-form-switch>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="3">
-                  <gf-form-switch class="gf-form" label="Gradient" label-class="width-8" checked="rule.data.gradient"
-                    ng-if="rule.data.type === 'number'" on-change="editor.onRulesChange()"
-                    tooltip="Apply gradient color according to the value">
-                  </gf-form-switch>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="3">
-                  <gf-form-switch class="gf-form" label="Icon state" label-class="width-8"
-                    checked="rule.data.overlayIcon" on-change="editor.onRulesChange()"
-                    tooltip="Display a warning icon when state > 0">
-                  </gf-form-switch>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-          <!-- <div class="gf-form" ng-if="rule.data.type === 'number'">
-            <label class="gf-form-label width-10">Thresholds
-              <info-popover mode="right-normal">
-                <span
-                  ng-bind-html="GFP.popover('The threshold field accepts 2 comma-separated values which represent 3 ranges that correspond to the three colors directly to the right. ', 'MAPPING#Thresholds')">
-                </span>
-              </info-popover>
-            </label>
-            <input type="text" class="gf-form-input width-10" ng-model="rule.data.thresholds" placeholder="50,80"
-              ng-blur="editor.onRulesChange()" array-join />
-          </div> -->
-          <!-- <div class="gf-form" ng-if="rule.data.type === 'string'">
-            <label class="gf-form-label width-10">Warning
-              <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Regular expression to define Warning level.', 'MAPPING#Thresholds')">
-                </span>
-              </info-popover>
-            </label>
-            <input type="text" class="gf-form-input width-10" ng-model="rule.data.stringWarning" placeholder="WARN"
-              ng-blur="editor.onRulesChange()" />
-          </div> -->
-          <!-- <div class="gf-form" ng-if="rule.data.type === 'string'">
-            <label class="gf-form-label width-10">Critical
-              <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Regular expression to define Error level.', 'MAPPING#Thresholds')">
-                </span>
-              </info-popover>
-            </label>
-            <input type="text" class="gf-form-input width-10" ng-model="rule.data.stringCritical" placeholder="ERROR"
-              ng-blur="editor.onRulesChange()" />
-          </div> -->
-          <!-- <div class="gf-form">
-            <label class="gf-form-label width-10">Colors
-              <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Select a color and opacity for each state.', 'MAPPING#Thresholds')">
-                </span>
-              </info-popover>
-            </label>
-            <span class="gf-form-label">
-              <color-picker color="rule.data.colors[0]" onChange="editor.onColorChange($index, 0)"></color-picker>
-            </span>
-            <span class="gf-form-label">
-              <color-picker color="rule.data.colors[1]" onChange="editor.onColorChange($index, 1)"></color-picker>
-            </span>
-            <span class="gf-form-label">
-              <color-picker color="rule.data.colors[2]" onChange="editor.onColorChange($index, 2)"></color-picker>
-            </span>
-            <div class="gf-form-label">
-              <a class="pointer" ng-click="rule.invertColorOrder();editor.onRulesChange()">Invert</a>
-            </div>
-          </div> -->
-
-        </div>
+        <ng-include src="GFP.getPartialPath() + '/mapping/thresholds/index.html'">
+        </ng-include>
 
         <!-- TOOLTIP -->
-        <div class="section gf-form-group">
-          <h5 class="section-heading">
-            Tooltips
-            <info-popover mode="right-normal">
-              <span
-                ng-bind-html="GFP.popover('Add/change tooltip/popup with aggregated values in shapes defined in color mapping', 'MAPPING')">
-              </span>
-            </info-popover>
-          </h5>
-          <gf-form-switch class="gf-form" label-class="width-10" tooltip="Add tooltips metrics and graphs on shapes"
-            label="Display metrics" checked="rule.data.tooltip" on-change="editor.onRulesChange()">
-          </gf-form-switch>
-          <div class="gf-form" ng-if="rule.data.tooltip">
-            <label class="gf-form-label width-10">Label
-              <info-popover mode="right-normal"><span
-                  ng-bind-html="GFP.popover('Label of metric in popup', 'MAPPING#Tooltip')"></span>
-              </info-popover>
-            </label>
-            <input type="text" class="gf-form-input width-12" ng-model="rule.data.tooltipLabel"
-              ng-blur="editor.onRulesChange()" placeholder="auto" />
-          </div>
-          <div class="gf-form" ng-if="rule.data.tooltip">
-            <label class="gf-form-label width-10">When state is
-              <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Define condition to add values in tooltip', 'MAPPING')"> </span>
-              </info-popover>
-            </label>
-            <div class="gf-form-select-wrapper width-12">
-              <select class="gf-form-input" ng-model="rule.data.tooltipOn"
-                ng-options="c.value as c.text for c in editor.tooltipOn" ng-change="editor.onRulesChange()"></select>
-            </div>
-          </div>
-          <div class="gf-form" ng-if="rule.data.tooltip">
-            <label class="gf-form-label width-10">Direction
-              <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Define the sens of display', 'MAPPING', 'tooltip_direction_ani')">
-                </span>
-              </info-popover>
-            </label>
-            <div class="gf-form-select-wrapper width-12">
-              <select class="gf-form-input" ng-model="rule.data.tpDirection"
-                ng-options="c.value as c.text for c in editor.tpDirection" ng-change="editor.onRulesChange()"></select>
-            </div>
-          </div>
-          <gf-form-switch label="Color with state" class="gf-form" label-class="width-10"
-            tooltip="Color values in tooltip with state/thresholds colors" checked="rule.data.tooltipColors"
-            ng-if="rule.data.tooltip">
-          </gf-form-switch>
-        </div>
+        <ng-include src="GFP.getPartialPath() + '/mapping/tooltip/index.html'">
+        </ng-include>
 
         <!-- GRAPH TOOLTIP -->
-        <div class="section gf-form-group" ng-show="rule.data.tooltip">
-          <h5 class="section-heading">
-            Graph Tooltips
-            <info-popover mode="right-normal">
-              <span ng-bind-html="GFP.popover('Add Graph into the tooltip', 'MAPPING','tooltip_graph')"> </span>
-            </info-popover>
-          </h5>
-          <gf-form-switch class="gf-form" label-class="width-10" label="Display graph" checked="rule.data.tpGraph"
-            on-change="editor.onRulesChange()"></gf-form-switch>
-          <div class="gf-form" ng-if="rule.data.tpGraph">
-            <label class="gf-form-label width-10">Graph type
-              <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Select type of graph', 'MAPPING')"> </span>
-              </info-popover>
-            </label>
-            <div class="gf-form-select-wrapper width-12">
-              <select class="gf-form-input" ng-model="rule.data.tpGraphType"
-                ng-options="c.value as c.text for c in editor.tpGraphType" ng-change="editor.onRulesChange()"></select>
-            </div>
-          </div>
-          <div class="gf-form" ng-if="rule.data.tpGraph">
-            <label class="gf-form-label width-10">Graph Size
-              <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Select size of graph', 'MAPPING','graph_size')"> </span>
-              </info-popover>
-            </label>
-            <div class="gf-form-select-wrapper width-12">
-              <select class="gf-form-input" ng-model="rule.data.tpGraphSize"
-                ng-options="c.value as c.text for c in editor.tpGraphSize" ng-change="editor.onRulesChange()"></select>
-            </div>
-          </div>
-          <div class="gf-form" ng-if="rule.data.tpGraph">
-            <label class="gf-form-label width-6">Y-Min
-              <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Select the min for the scale', 'MAPPING')"> </span>
-              </info-popover>
-            </label>
-            <input type="number" class="gf-form-input width-5" ng-model="rule.data.tpGraphLow"
-              ng-blur="editor.onRulesChange()" placeholder="auto" data-placement="right" />
-            <label class="gf-form-label width-6">Y-Max
-              <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Select the max for the scale', 'MAPPING')"> </span>
-              </info-popover>
-            </label>
-            <input type="number" class="gf-form-input width-5" ng-model="rule.data.tpGraphHigh"
-              ng-blur="editor.onRulesChange()" placeholder="auto" data-placement="right" />
-          </div>
-          <div class="gf-form" ng-if="rule.data.tpGraph">
-            <label class="gf-form-label width-10">Scale type
-              <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Select scale type', 'MAPPING')"> </span>
-              </info-popover>
-            </label>
-            <div class="gf-form-select-wrapper width-12">
-              <select class="gf-form-input" ng-model="rule.data.tpGraphScale"
-                ng-options="c.value as c.text for c in editor.tpGraphScale" ng-change="editor.onRulesChange()"></select>
-            </div>
-          </div>
-        </div>
+        <ng-include src="GFP.getPartialPath() + '/mapping/graph/index.html'">
+        </ng-include>
 
         <!-- MAPPINGS -->
         <div class="editor-row">
           <!-- SHAPE MAPPING -->
-          <div ng-include="GFP.getPartialPath() + '/mapping/shape/index.html'">
-          </div>
+          <ng-include src="GFP.getPartialPath() + '/mapping/shape/index.html'">
+          </ng-include>
 
           <!-- TEXT MAPPING -->
-          <div ng-include="GFP.getPartialPath() + '/mapping/text/index.html'">
-          </div>
+          <ng-include src="GFP.getPartialPath() + '/mapping/text/index.html'">
+          </ng-include>
 
           <!-- LINK MAPPING -->
-          <div ng-include="GFP.getPartialPath() + '/mapping/link/index.html'">
-          </div>
+          <ng-include src="GFP.getPartialPath() + '/mapping/link/index.html'">
+          </ng-include>
 
           <!-- VALUE MAPPING & RANGE MAPPING -->
-          <div ng-include="GFP.getPartialPath() + '/mapping/valuemap/index.html'">
-          </div>
-
+          <ng-include src="GFP.getPartialPath() + '/mapping/valuemap/index.html'">
+          </ng-include>
         </div>
 
         <div class="clearfix"></div>
