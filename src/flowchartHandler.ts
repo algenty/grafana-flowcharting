@@ -40,7 +40,7 @@ export default class FlowchartHandler {
    */
   constructor($scope: ng.IScope, elem: any, ctrl: any, data: gf.TFlowchartHandlerData) {
     GFP.log.info('FlowchartHandler.constructor()');
-    GFP.log.debug('FlowchartHandler.constructor() data', data);
+    // GFP.log.debug('FlowchartHandler.constructor() data', data);
     FlowchartHandler.getDefaultGraph();
     this.$scope = $scope;
     this.$elem = elem.find('.flowchart-panel__chart');

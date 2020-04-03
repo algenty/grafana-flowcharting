@@ -505,7 +505,6 @@ export default class Rule {
     } else if (this.data.type === 'string') {
       this.data.stringThresholds.splice(index, 0, value);
     }
-    GFP.log.debug('this', this);
     return this;
   }
 
@@ -517,11 +516,8 @@ export default class Rule {
    * @memberof Rule
    */
   removeColor(index: number): this {
-    // if (index !== 0) {
     this.data.thresholds.splice(index - 1, 1);
     this.data.colors.splice(index, 1);
-    // }
-    GFP.log.debug('this', this);
     return this;
   }
 
@@ -926,10 +922,6 @@ export default class Rule {
       let valueDistanceFromMin = value - thresholds[cursor];
       let ratio = valueDistanceFromMin / absoluteDistance;
       let color = GFP.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
-      GFP.log.debug('COLOR RATIO : ', ratio);
-      GFP.log.debug('COLOR BEG : ', colors[cursor + 1]);
-      GFP.log.debug('COLOR CUR : ', color);
-      GFP.log.debug('COLOR END : ', colors[cursor + 2]);
       return color;
     }
     return '';
@@ -943,7 +935,6 @@ export default class Rule {
    * @memberof Rule
    */
   getColorForLevel(level: number): string {
-    GFP.log.debug('getColorForLevel level', level);
     let colors = this.data.colors.slice(0);
     if (!this.data.invert) {
       colors = colors.reverse();

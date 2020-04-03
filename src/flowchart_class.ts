@@ -23,7 +23,7 @@ export default class Flowchart {
 
   constructor(name: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {
     GFP.log.info(`flowchart[${name}].constructor()`);
-    GFP.log.debug(`flowchart[${name}].constructor() data`, data);
+    // GFP.log.debug(`flowchart[${name}].constructor() data`, data);
     this.data = data;
     this.data.name = name;
     this.container = container;
@@ -38,7 +38,7 @@ export default class Flowchart {
    */
   import(obj: any): this {
     GFP.log.info(`flowchart[${this.data.name}].import()`);
-    GFP.log.debug(`flowchart[${this.data.name}].import() obj`, obj);
+    // GFP.log.debug(`flowchart[${this.data.name}].import() obj`, obj);
     if (!!obj.download || this.data.download === false) {
       this.data.download = obj.download;
     }

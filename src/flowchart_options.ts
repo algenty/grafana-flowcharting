@@ -60,7 +60,6 @@ export class FlowchartOptionsCtrl {
   }
 
   checkSource_onSourceChange(source: string): boolean {
-    GFP.log.debug('');
     const bool = XGraph.isValidXml(source);
     this.errorSourceFlag = !bool;
     if (!bool) {

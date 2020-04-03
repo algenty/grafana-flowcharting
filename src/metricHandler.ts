@@ -26,7 +26,7 @@ export default class MetricHandler {
    */
   initData(dataList: any) {
     GFP.log.info('initData');
-    GFP.log.debug('initData', dataList);
+    // GFP.log.debug('initData', dataList);
     this.tables = [];
     this.series = [];
     this.metrics = [];
@@ -35,9 +35,9 @@ export default class MetricHandler {
       this.addMetric(dl);
     });
 
-    GFP.log.debug('tables : ', this.tables.length);
-    GFP.log.debug('series : ', this.series.length);
-    GFP.log.debug('metrics : ', this.metrics.length);
+    // GFP.log.debug('tables : ', this.tables.length);
+    // GFP.log.debug('series : ', this.series.length);
+    // GFP.log.debug('metrics : ', this.metrics.length);
   }
 
   /**
@@ -47,7 +47,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addMetric(data: any) {
-    GFP.log.debug('addMetric', data);
+    // GFP.log.debug('addMetric', data);
     if (data.type === 'table') {
       this.addTable(data);
     } else {
@@ -101,7 +101,7 @@ export default class MetricHandler {
     } else {
       names = this.metrics.map(m => m.getName());
     }
-    GFP.log.debug('getNames', names);
+    // GFP.log.debug('getNames', names);
     return names;
   }
 

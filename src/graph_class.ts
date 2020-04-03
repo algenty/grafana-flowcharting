@@ -917,7 +917,7 @@ export default class XGraph {
    */
   setMap(onMappingObj: gf.TIOnMappingObj) {
     GFP.log.info('XGraph.setMapping()');
-    GFP.log.debug('XGraph.setMapping() onMappingObject : ', onMappingObj);
+    // GFP.log.debug('XGraph.setMapping() onMappingObject : ', onMappingObj);
     this.onMapping = onMappingObj;
     if (this.onMapping.active === true) {
       this.container.style.cursor = 'crosshair';
@@ -982,8 +982,8 @@ export default class XGraph {
    */
   eventDbClick(evt: MouseEvent, mxcell: mxCell) {
     GFP.log.info('XGraph.eventDbClick()');
-    GFP.log.debug('XGraph.eventDbClick() evt', evt);
-    GFP.log.debug('XGraph.eventDbClick() cell', mxcell);
+    // GFP.log.debug('XGraph.eventDbClick() evt', evt);
+    // GFP.log.debug('XGraph.eventDbClick() cell', mxcell);
     GFP.log.info('XGraph.eventDbClick() container.getBoundingClientRect()', this.container.getBoundingClientRect());
     if (mxcell !== undefined) {
       this.lazyZoomCell(mxcell);
@@ -1003,7 +1003,6 @@ export default class XGraph {
     // GFP.log.debug('XGraph.eventMouseWheel() up', up);
     if (this.graph.isZoomWheelEvent(evt)) {
       if (up === null || up === undefined) {
-        GFP.log.debug('XGraph.eventMouseWheel() up', 'Not defined');
         if (evt.deltaY < 0) {
           up = true;
         } else {
