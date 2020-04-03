@@ -151,8 +151,10 @@ declare module gf {
     shapeRegEx: boolean;
     shapeData: TShapeMapData[];
     textProp: TPropertieKey;
+    textRegEx: boolean;
     textData: TTextMapData[];
     linkProp: TPropertieKey;
+    linkRegEx: boolean;
     linkData: TlinkMapData[];
     mappingType: number;
     valueData: TValueMapData[];

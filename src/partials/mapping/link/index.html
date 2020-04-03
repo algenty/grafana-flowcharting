@@ -5,11 +5,24 @@
 <div class="section gf-form-group">
   <h5 class="section-heading">Link Mappings</h5>
   <div class="gf-form">
-    <span class="gf-form-label width-7">By</span>
+    <span class="gf-form-label width-11">Identify by
+      <info-popover mode="right-normal">
+        <span ng-bind-html="GFP.popover('Select the type of data in field \'What\' ID (uniq) or LABEL', 'MAPPING')">
+        </span>
+      </info-popover>
+    </span>
+    <!-- ID INPUT -->
     <div class="gf-form-select-wrapper">
-      <select class="gf-form-input width-13" ng-model="rule.data.linkProp"
+      <select class="gf-form-input width-10" ng-model="rule.data.linkProp"
         ng-options="c.value as c.text for c in editor.propTypes" ng-change="editor.onRulesChange()"></select>
     </div>
+  </div>
+  <div class="gf-form">
+    <!-- ID Regular expression -->
+    <gf-form-switch class="gf-form" label="Regular exression" label-class="width-11"
+      checked="rule.data.linkRegEx" on-change="editor.onRulesChange()"
+      tooltip="Disable this option if you don't use regular expressions in field 'What' below to improve performance">
+    </gf-form-switch>
   </div>
   <!-- TABLE -->
   <table>

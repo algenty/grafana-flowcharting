@@ -91,8 +91,10 @@ export default class Rule {
       shapeRegEx: true,
       shapeData: [],
       textProp: 'id',
+      textRegEx: true,
       textData: [],
       linkProp: 'id',
+      linkRegEx: true,
       linkData: [],
       mappingType: 1,
       valueData: [],
@@ -308,6 +310,9 @@ export default class Rule {
 
     // TEXT
     this.data.textProp = obj.textProp || 'id';
+    if (!!obj.textRegEx || obj.textRegEx === false) {
+      this.data.textRegEx = obj.textRegEx;
+    }
     this.data.textData = [];
     // For 0.2.0
     maps = [];
@@ -336,6 +341,9 @@ export default class Rule {
 
     // LINK
     this.data.linkProp = obj.linkProp || 'id';
+    if (!!obj.linkRegEx || obj.linkRegEx === false) {
+      this.data.linkRegEx = obj.linkRegEx;
+    }
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
       obj.linkData.forEach((linkData: gf.TlinkMapData) => {
@@ -738,7 +746,7 @@ export default class Rule {
   matchShape(pattern: string | null): boolean {
     let found = false;
     this.shapeMaps.forEach(element => {
-      if (element.match(pattern,this.data.shapeRegEx)) {
+      if (element.match(pattern, this.data.shapeRegEx)) {
         found = true;
       }
     });
@@ -1137,8 +1145,8 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 }
@@ -1181,7 +1189,7 @@ export class GFMap {
     if (text === undefined || text === null || text.length === 0) {
       return false;
     }
-    return GFP.utils.matchString(text, this.data.pattern,regex);
+    return GFP.utils.matchString(text, this.data.pattern, regex);
   }
 
   /**

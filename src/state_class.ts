@@ -140,7 +140,7 @@ export default class State {
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
       shapeMaps.forEach(shape => {
-        if (!shape.isHidden() && shape.match(cellProp,rule.data.shapeRegEx)) {
+        if (!shape.isHidden() && shape.match(cellProp, rule.data.shapeRegEx)) {
           this.matchedShape = true;
           this.matched = true;
           // tooltips
@@ -207,7 +207,7 @@ export default class State {
       // TEXT
       cellProp = this.getCellProp(rule.data.textProp);
       textMaps.forEach(text => {
-        if (!text.isHidden() && text.match(cellProp)) {
+        if (!text.isHidden() && text.match(cellProp, rule.data.textRegEx)) {
           this.matchedText = true;
           this.matched = true;
           if (text.toLabelize(level)) {
@@ -228,7 +228,7 @@ export default class State {
       // LINK
       cellProp = this.getCellProp(rule.data.linkProp);
       linkMaps.forEach(link => {
-        if (!link.isHidden() && link.match(cellProp)) {
+        if (!link.isHidden() && link.match(cellProp, rule.data.linkRegEx)) {
           this.matchedLink = true;
           this.matched = true;
           if (this.globalLevel <= level) {
