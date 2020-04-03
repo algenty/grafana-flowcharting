@@ -55,7 +55,7 @@ export class MappingOptionsCtrl {
   ];
   propTypes: gf.TSelectString[] = [
     { text: 'Id', value: 'id' },
-    // { text: "Value", value: "value" }
+    { text: 'Label', value: 'value' },
   ];
   textPattern = '/.*/';
   metricTypes: gf.TSelectString[] = [
@@ -101,6 +101,7 @@ export class MappingOptionsCtrl {
     { text: 'Large', value: '400px' },
   ];
   getMetricNames: () => any[];
+  getCellNames: (prop: gf.TPropertieKey) => any[];
   getCellNamesForShape: () => any[];
   getCellNamesForText: () => any[];
   getCellNamesForLink: () => any[];
@@ -130,18 +131,27 @@ export class MappingOptionsCtrl {
       return this.metricHandler.getNames('serie');
     };
 
+    this.getCellNames = (prop: gf.TPropertieKey): string[] => {
+      GFP.log.info('MappingOptionsCtrl.getCellNamesForShape()');
+      const flowchart = this.flowchartHandler.getFlowchart();
+      const cells = flowchart.getNamesByProp(prop);
+      console.log("cells",cells);
+      return cells;
+    };
+
     this.getCellNamesForShape = (): string[] => {
       GFP.log.info('MappingOptionsCtrl.getCellNamesForShape()');
       const flowchart = this.flowchartHandler.getFlowchart();
-      const cells = flowchart.getNamesByProp('id');
-      return _.map(cells, t => t);
+      return flowchart.getNamesByProp('id');
     };
 
     this.getCellNamesForText = (): string[] => {
       GFP.log.info('MappingOptionsCtrl.getCellNamesForText()');
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp('id');
-      return _.map(cells, t => t);
+      console.log("cells",cells);
+      // return _.map(cells, t => t);
+      return cells;
     };
 
     this.getCellNamesForLink = (): string[] => {
@@ -219,21 +229,21 @@ export class MappingOptionsCtrl {
     return true;
   }
 
-  removeShapeMap(rule : Rule, index : number ) {
+  removeShapeMap(rule: Rule, index: number) {
     const shape = rule.getShapeMap(index);
-    this.unselectCell(rule.data.shapeProp,shape.data.pattern);
+    this.unselectCell(rule.data.shapeProp, shape.data.pattern);
     rule.removeShapeMap(index);
   }
 
-  removeLinkMap(rule : Rule, index : number ) {
+  removeLinkMap(rule: Rule, index: number) {
     const lnk = rule.getLinkMap(index);
-    this.unselectCell(rule.data.shapeProp,lnk.data.pattern);
+    this.unselectCell(rule.data.shapeProp, lnk.data.pattern);
     rule.removeLinkMap(index);
   }
 
-  removeTextMap(rule : Rule, index : number ) {
+  removeTextMap(rule: Rule, index: number) {
     const txt = rule.getTextMap(index);
-    this.unselectCell(rule.data.shapeProp,txt.data.pattern);
+    this.unselectCell(rule.data.shapeProp, txt.data.pattern);
     rule.removeTextMap(index);
   }
 

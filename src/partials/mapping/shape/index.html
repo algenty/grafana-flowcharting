@@ -95,7 +95,7 @@
           <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}"
             placeholder="id or regex of shape" class="gf-form-input width-8" ng-model="shape.data.pattern"
             bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-            bs-typeahead="editor.getCellNamesForShape" ng-blur="editor.onRulesChange()" data-min-length="0"
+            bs-typeahead="getCellNamesForShape" ng-blur="editor.onRulesChange()" data-min-length="0"
             data-items="100" ng-model-onblur data-placement="right" />
         </td>
         <td>
