@@ -1101,7 +1101,6 @@ export default class XGraph {
     _.each(mxcells, (mxcell: mxCell) => {
       this.unhighlightCell(mxcell);
     });
-
   }
 
   /**

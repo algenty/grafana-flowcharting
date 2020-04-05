@@ -132,23 +132,22 @@ export class MappingOptionsCtrl {
 
     this.getCellNames = (prop: gf.TPropertieKey = 'id'): string[] => {
       GFP.log.info('MappingOptionsCtrl.getCellNamesForShape()');
-      prop = (prop !== 'id' && prop !== 'value') ? 'id' : prop;
+      prop = prop !== 'id' && prop !== 'value' ? 'id' : prop;
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp(prop);
       const uniq = new Set(cells);
       let filter = [...uniq];
-      filter = filter.filter(e => e !== undefined && e.length > 0)
+      filter = filter.filter(e => e !== undefined && e.length > 0);
       return filter;
     };
 
     this.getCellNamesById = (): string[] => {
       return this.getCellNames('id');
-    }
+    };
 
     this.getCellNamesByValue = (): string[] => {
       return this.getCellNames('value');
-    }
-
+    };
 
     this.getVariables = () => {
       GFP.log.info('MappingOptionsCtrl.getVariables');
@@ -388,7 +387,6 @@ export class MappingOptionsCtrl {
   //   });
   //   return haveSbT;
   // }
-
 }
 
 /** @ngInject */
