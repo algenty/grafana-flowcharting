@@ -643,18 +643,15 @@ export default class XGraph {
   /**
    * Select cells in graph with pattern for id or value
    *
-   * @return {this}
    * @param {string} prop - "id"|"value"
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  selectMxCells(prop: gf.TPropertieKey, pattern: string): this {
+  async selectMxCells(prop: gf.TPropertieKey, pattern: string) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
-      // this.graph.setSelectionCells(mxcells);
       this.highlightCells(mxcells);
     }
-    return this;
   }
 
   /**
@@ -663,12 +660,11 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  unselectMxCells(prop: gf.TPropertieKey, pattern: string): this {
+  async unselectMxCells(prop: gf.TPropertieKey, pattern: string) {
     const mxcells = this.findMxCells(prop, pattern);
     if (mxcells) {
       this.unhighlightCells(mxcells);
     }
-    return this;
   }
 
   /**
@@ -692,20 +688,24 @@ export default class XGraph {
    *
    * @param {string} state (OK|WARN|ERROR)
    * @param {mxCell} mxcell
+   * @returns {this}
    * @memberof XGraph
    */
   addOverlay(state: string, mxcell: mxCell) {
     this.graph.addCellOverlay(mxcell, this.createOverlay(this.graph.warningImage, `State: ${state}`));
+    return this;
   }
 
   /**
    * Remove Warning icon
    *
    * @param {mxCell} mxcell
+   * @returns {this}
    * @memberof XGraph
    */
   removeOverlay(mxcell: mxCell) {
     this.graph.removeCellOverlays(mxcell);
+    return this;
   }
 
   /**
@@ -713,10 +713,12 @@ export default class XGraph {
    *
    * @param {mxCell} mxcell
    * @param {string} link - Url
+   * @returns {this}
    * @memberof XGraph
    */
   addLink(mxcell: mxCell, link) {
     this.graph.setLinkForCell(mxcell, link);
+    return this;
   }
 
   /**
@@ -999,8 +1001,6 @@ export default class XGraph {
    */
   eventMouseWheel(evt: WheelEvent, up: boolean) {
     GFP.log.info('XGraph.eventMouseWheel()');
-    // GFP.log.debug('XGraph.eventMouseWheel() evt', evt);
-    // GFP.log.debug('XGraph.eventMouseWheel() up', up);
     if (this.graph.isZoomWheelEvent(evt)) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {
@@ -1038,12 +1038,6 @@ export default class XGraph {
       }
     }
   }
-  // width(width: any, height: any) {
-  //   throw new Error('Method not implemented.');
-  // }
-  // height(width: any, height: any) {
-  //   throw new Error('Method not implemented.');
-  // }
 
   /**
    * Zoom/Unzoom on graph on center
@@ -1051,7 +1045,7 @@ export default class XGraph {
    * @param {number} factor - 1 = 100%
    * @memberof XGraph
    */
-  lazyZoomCenter(factor: number) {
+  async lazyZoomCenter(factor: number) {
     this.graph.zoomTo(factor, true);
   }
 
@@ -1063,11 +1057,8 @@ export default class XGraph {
    * @param {number} offsetY
    * @memberof XGraph
    */
-  lazyZoomPointer(factor: number, offsetX: number, offsetY: number) {
+  async lazyZoomPointer(factor: number, offsetX: number, offsetY: number) {
     GFP.log.info('XGraph.lazyZoomPointer()');
-    // GFP.log.debug('XGraph.lazyZoomPointer() factor', factor);
-    // GFP.log.debug('XGraph.lazyZoomPointer() offsetX', offsetX);
-    // GFP.log.debug('XGraph.lazyZoomPointer() offsetY', offsetY);
     let dx = offsetX * 2;
     let dy = offsetY * 2;
 
@@ -1094,7 +1085,7 @@ export default class XGraph {
    * @param {mxCell[]} cells
    * @memberof XGraph
    */
-  highlightCells(cells: mxCell[]) {
+  async highlightCells(cells: mxCell[] = this.getMxCells()) {
     for (let i = 0; i < cells.length; i++) {
       this.highlightCell(cells[i]);
     }
@@ -1106,10 +1097,11 @@ export default class XGraph {
    * @param {mxCell[]} cells
    * @memberof XGraph
    */
-  unhighlightCells(cells: mxCell[]) {
-    for (let i = 0; i < cells.length; i++) {
-      this.unhighlightCell(cells[i]);
-    }
+  async unhighlightCells(mxcells: mxCell[] = this.getMxCells()) {
+    _.each(mxcells, (mxcell: mxCell) => {
+      this.unhighlightCell(mxcell);
+    });
+
   }
 
   /**
@@ -1119,7 +1111,7 @@ export default class XGraph {
    * @returns
    * @memberof XGraph
    */
-  highlightCell(cell: mxCell) {
+  async highlightCell(cell: mxCell) {
     if (!cell.highlight) {
       const color = '#99ff33';
       const opacity = 100;
@@ -1145,7 +1137,7 @@ export default class XGraph {
    * @param {mxCell} cell
    * @memberof XGraph
    */
-  unhighlightCell(cell: mxCell) {
+  async unhighlightCell(cell: mxCell) {
     if (cell && cell.highlight) {
       const hl = cell.highlight;
       // Fades out the highlight after a duration
@@ -1153,7 +1145,6 @@ export default class XGraph {
         mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 500ms ease-in-out');
         hl.shape.node.style.opacity = 0;
       }
-
       // Destroys the highlight after the fade
       window.setTimeout(() => {
         hl.destroy();
@@ -1168,7 +1159,7 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  lazyZoomCell(mxcell: mxCell) {
+  async lazyZoomCell(mxcell: mxCell) {
     GFP.log.info('XGraph.lazyZoomCell() mxcell', mxcell);
     GFP.log.debug('XGraph.lazyZoomCell() mxcellState', this.graph.view.getState(mxcell));
     if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
@@ -1199,7 +1190,14 @@ export default class XGraph {
     return null;
   }
 
-  toggleVisible(mxcell, includeEdges) {
+  /**
+   * Change Cells to visible
+   *
+   * @param {*} mxcell
+   * @param {*} includeEdges
+   * @memberof XGraph
+   */
+  async toggleVisible(mxcell, includeEdges) {
     this.graph.toggleCells(!this.graph.getModel().isVisible(mxcell), [mxcell], includeEdges);
   }
 

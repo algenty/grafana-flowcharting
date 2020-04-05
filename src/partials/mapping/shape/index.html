@@ -61,7 +61,7 @@
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody ng-mouseleave="editor.unhighlightAllCells()">
       <tr ng-repeat="shape in rule.getShapeMaps()" ng-class="{'gf-form-disabled': shape.data.hidden}"
         ng-mouseleave="editor.unselectCell(rule.data.shapeProp,shape.data.pattern)"
         ng-mouseover="editor.selectCell(rule.data.shapeProp,shape.data.pattern)">

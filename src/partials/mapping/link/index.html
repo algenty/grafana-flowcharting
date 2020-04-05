@@ -64,7 +64,7 @@
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody ng-mouseleave="editor.unhighlightAllCells()">
       <tr ng-repeat="link in rule.getLinkMaps()" ng-class="{'gf-form-disabled': link.data.hidden}"
         ng-mouseleave="editor.unselectCell(rule.data.linkProp,link.data.pattern)"
         ng-mouseover="editor.selectCell(rule.data.linkProp,link.data.pattern)">

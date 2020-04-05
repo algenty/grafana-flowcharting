@@ -132,24 +132,20 @@ export class MappingOptionsCtrl {
 
     this.getCellNames = (prop: gf.TPropertieKey = 'id'): string[] => {
       GFP.log.info('MappingOptionsCtrl.getCellNamesForShape()');
-      console.log("before prop", prop);
       prop = (prop !== 'id' && prop !== 'value') ? 'id' : prop;
-      console.log("after prop", prop);
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp(prop);
-      console.log("cells", cells);
       const uniq = new Set(cells);
       let filter = [...uniq];
-      filter = filter.filter( e => e!== undefined && e.length > 0 ) 
-      console.log("filter", filter);
+      filter = filter.filter(e => e !== undefined && e.length > 0)
       return filter;
     };
 
-    this.getCellNamesById = (): string [] => {
+    this.getCellNamesById = (): string[] => {
       return this.getCellNames('id');
     }
 
-    this.getCellNamesByValue = (): string [] => {
+    this.getCellNamesByValue = (): string[] => {
       return this.getCellNames('value');
     }
 
@@ -260,7 +256,7 @@ export class MappingOptionsCtrl {
    * @param  {} prop
    * @param  {} value
    */
-  selectCell(prop: gf.TPropertieKey, value: string) {
+  async selectCell(prop: gf.TPropertieKey, value: string) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
@@ -273,7 +269,7 @@ export class MappingOptionsCtrl {
    *
    * @memberof MappingOptionsCtrl
    */
-  unselectCell(prop: gf.TPropertieKey, value: string) {
+  async unselectCell(prop: gf.TPropertieKey, value: string) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
@@ -281,6 +277,13 @@ export class MappingOptionsCtrl {
     }
   }
 
+  /**
+   * Disable/Enable rule
+   *
+   * @param {Rule} rule
+   * @param {boolean} bool
+   * @memberof MappingOptionsCtrl
+   */
   toggleShow(rule: Rule, bool: boolean) {
     rule.data.hidden = bool;
     this.onRulesChange();
@@ -292,10 +295,41 @@ export class MappingOptionsCtrl {
    * @param {*} rule
    * @memberof MappingOptionsCtrl
    */
-  highlightCells(rule: Rule) {
+  async highlightCells(rule: Rule) {
     rule.highlightCells();
   }
 
+  /**
+   * Turn Highlight off of cells in rule
+   *
+   * @param {*} rule
+   * @memberof MappingOptionsCtrl
+   */
+  async unhighlightCells(rule: Rule) {
+    rule.unhighlightCells();
+  }
+
+  /**
+   * Turn Highlight off all cells
+   *
+   * @param {*} rule
+   * @memberof MappingOptionsCtrl
+   */
+  async unhighlightAllCells() {
+    const flowchart = this.flowchartHandler.getFlowchart();
+    const xgraph = flowchart.getXGraph();
+    if (xgraph) {
+      xgraph.unhighlightCells();
+    }
+  }
+
+  /**
+   * Remove a rule
+   *
+   * @param {Rule} rule
+   * @param {boolean} [force]
+   * @memberof MappingOptionsCtrl
+   */
   removeRule(rule: Rule, force?: boolean) {
     if (rule.removeClick === 1 || force) {
       this.rulesHandler.removeRule(rule);
@@ -309,20 +343,33 @@ export class MappingOptionsCtrl {
     }, 2000);
   }
 
+  /**
+   * Clone a rule
+   *
+   * @param {Rule} rule
+   * @memberof MappingOptionsCtrl
+   */
   cloneRule(rule: Rule) {
     this.rulesHandler.cloneRule(rule);
     this.onRulesChange();
   }
 
-  getStyleRemove(rule: Rule) {
-    if (rule) {
-      if (rule.removeClick === 1) {
-        return 'color:brown';
-      }
-    }
-    return '';
-  }
+  // getStyleRemove(rule: Rule) {
+  //   if (rule) {
+  //     if (rule.removeClick === 1) {
+  //       return 'color:brown';
+  //     }
+  //   }
+  //   return '';
+  // }
 
+  /**
+   * Move rule up or down
+   *
+   * @param {Rule} rule
+   * @param {boolean} up
+   * @memberof MappingOptionsCtrl
+   */
   moveRule(rule: Rule, up: boolean) {
     if (up) {
       this.rulesHandler.moveRuleToUp(rule);
@@ -332,25 +379,16 @@ export class MappingOptionsCtrl {
     this.onRulesChange();
   }
 
-  haveSubstringsText(rule: Rule): boolean {
-    let haveSbT = false;
-    rule.getTextMaps().forEach(textMap => {
-      if (textMap.data.textReplace === 'pattern') {
-        haveSbT = true;
-      }
-    });
-    return haveSbT;
-  }
+  // haveSubstringsText(rule: Rule): boolean {
+  //   let haveSbT = false;
+  //   rule.getTextMaps().forEach(textMap => {
+  //     if (textMap.data.textReplace === 'pattern') {
+  //       haveSbT = true;
+  //     }
+  //   });
+  //   return haveSbT;
+  // }
 
-  /**
-   * Turn Highlight off of cells in rule
-   *
-   * @param {*} rule
-   * @memberof MappingOptionsCtrl
-   */
-  unhighlightCells(rule: Rule) {
-    rule.unhighlightCells();
-  }
 }
 
 /** @ngInject */
