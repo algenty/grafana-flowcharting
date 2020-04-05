@@ -632,7 +632,7 @@ export default class XGraph {
       });
     } else if (prop === 'value') {
       _.each(mxcells, (mxcell: mxCell) => {
-        if (GFP.utils.matchString(mxcell.getValue(), pattern)) {
+        if (GFP.utils.matchString(this.getLabel(mxcell), pattern)) {
           result.push(mxcell);
         }
       });

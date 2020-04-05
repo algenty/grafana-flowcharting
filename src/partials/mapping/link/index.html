@@ -19,8 +19,8 @@
   </div>
   <div class="gf-form">
     <!-- ID Regular expression -->
-    <gf-form-switch class="gf-form" label="Regular exression" label-class="width-11"
-      checked="rule.data.linkRegEx" on-change="editor.onRulesChange()"
+    <gf-form-switch class="gf-form" label="Regular exression" label-class="width-11" checked="rule.data.linkRegEx"
+      on-change="editor.onRulesChange()"
       tooltip="Disable this option if you don't use regular expressions in field 'What' below to improve performance">
     </gf-form-switch>
   </div>
@@ -42,8 +42,7 @@
         <th>
           <label class="gf-form-label width-8" style="margin-right: 2px;">When
             <info-popover mode="right-normal">
-              <span
-                ng-bind-html="GFP.popover('Select condition to dislay value or text on shape.', 'MAPPING#text')">
+              <span ng-bind-html="GFP.popover('Select condition to dislay value or text on shape.', 'MAPPING#text')">
               </span>
             </info-popover>
           </label>
@@ -83,8 +82,7 @@
               <i class="fa fa-w fa-eye-slash pointer" bs-tooltip="'show selected object graph in rule'"
                 ng-click="link.show();editor.onRulesChange()"></i>
             </label>
-            <label class="gf-form-label" style="margin-right: 4px;"
-              ng-hide="flowchartHandler.isMapping(link)">
+            <label class="gf-form-label" style="margin-right: 4px;" ng-hide="flowchartHandler.isMapping(link)">
               <i class="fa fa-link pointer" ng-click="flowchartHandler.setMap(link)"
                 bs-tooltip="'Link it on object graph'"></i>
             </label>
@@ -96,23 +94,28 @@
           </div>
         </td>
         <td>
-          <input type="link" id="{{ link.getId() }}" style="margin-right: 2px;"
-            placeholder="id or regex of shape/link name" class="gf-form-input width-8"
-            ng-model="link.data.pattern"
-            bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/link (see inspect tab)'"
-            bs-typeahead="editor.getCellNamesForLink" ng-blur="editor.onRulesChange()" ng-model-onblur
-            data-min-length="0" data-items="100" data-placement="right"
-            ng-mouseleave="editor.unselectCell(rule.data.linkProp,link.data.pattern)"
-            ng-mouseover="editor.selectCell(rule.data.linkProp,link.data.pattern)" />
+          <div class="gf-form">
+            <input type="link" id="{{ link.getId() }}" style="margin-right: 2px;"
+              placeholder="id or regex of shape/link name" class="gf-form-input width-8"
+              ng-if="rule.data.linkProp === 'id'" ng-model="link.data.pattern"
+              bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/link (see inspect tab)'"
+              bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" ng-model-onblur
+              data-min-length="0" data-items="100" data-placement="right" />
+            <input type="link" id="{{ link.getId() }}" style="margin-right: 2px;"
+              placeholder="id or regex of shape/link name" class="gf-form-input width-8"
+              ng-if="rule.data.linkProp === 'value'" ng-model="link.data.pattern"
+              bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/link (see inspect tab)'"
+              bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" ng-model-onblur
+              data-min-length="0" data-items="100" data-placement="right" />
+          </div>
         </td>
         <td>
           <select class="gf-form-input width-8" ng-model="link.data.linkOn"
             ng-options="c.value as c.text for c in editor.linkOn" ng-change="editor.onRulesChange()"></select>
         </td>
         <td>
-          <input type="text" style="margin-right: 2px;" class="gf-form-input width-10"
-            bs-tooltip="'Enter the URL link'" ng-model="link.data.linkUrl" ng-blur="editor.onRulesChange()"
-            data-placement="right" />
+          <input type="text" style="margin-right: 2px;" class="gf-form-input width-10" bs-tooltip="'Enter the URL link'"
+            ng-model="link.data.linkUrl" ng-blur="editor.onRulesChange()" data-placement="right" />
         </td>
         <td>
           <gf-form-switch class="gf-form width-7" style="width: 66px;" checked="link.data.linkParams">

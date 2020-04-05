@@ -102,9 +102,8 @@ export class MappingOptionsCtrl {
   ];
   getMetricNames: () => any[];
   getCellNames: (prop: gf.TPropertieKey) => any[];
-  getCellNamesForShape: () => any[];
-  getCellNamesForText: () => any[];
-  getCellNamesForLink: () => any[];
+  getCellNamesById: () => any[];
+  getCellNamesByValue: () => any[];
   getVariables: () => any;
 
   /** @ngInject */
@@ -131,35 +130,29 @@ export class MappingOptionsCtrl {
       return this.metricHandler.getNames('serie');
     };
 
-    this.getCellNames = (prop: gf.TPropertieKey): string[] => {
+    this.getCellNames = (prop: gf.TPropertieKey = 'id'): string[] => {
       GFP.log.info('MappingOptionsCtrl.getCellNamesForShape()');
+      console.log("before prop", prop);
+      prop = (prop !== 'id' && prop !== 'value') ? 'id' : prop;
+      console.log("after prop", prop);
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp(prop);
-      console.log("cells",cells);
-      return cells;
+      console.log("cells", cells);
+      const uniq = new Set(cells);
+      let filter = [...uniq];
+      filter = filter.filter( e => e!== undefined && e.length > 0 ) 
+      console.log("filter", filter);
+      return filter;
     };
 
-    this.getCellNamesForShape = (): string[] => {
-      GFP.log.info('MappingOptionsCtrl.getCellNamesForShape()');
-      const flowchart = this.flowchartHandler.getFlowchart();
-      return flowchart.getNamesByProp('id');
-    };
+    this.getCellNamesById = (): string [] => {
+      return this.getCellNames('id');
+    }
 
-    this.getCellNamesForText = (): string[] => {
-      GFP.log.info('MappingOptionsCtrl.getCellNamesForText()');
-      const flowchart = this.flowchartHandler.getFlowchart();
-      const cells = flowchart.getNamesByProp('id');
-      console.log("cells",cells);
-      // return _.map(cells, t => t);
-      return cells;
-    };
+    this.getCellNamesByValue = (): string [] => {
+      return this.getCellNames('value');
+    }
 
-    this.getCellNamesForLink = (): string[] => {
-      GFP.log.info('MappingOptionsCtrl.getCellNamesForLink()');
-      const flowchart = this.flowchartHandler.getFlowchart();
-      const cells = flowchart.getNamesByProp('id');
-      return _.map(cells, t => t);
-    };
 
     this.getVariables = () => {
       GFP.log.info('MappingOptionsCtrl.getVariables');

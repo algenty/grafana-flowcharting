@@ -28,22 +28,26 @@ See more example at draw.io
 <https://github.com/algenty/grafana-flowcharting>
 
 # Sponsors and Funding
-Since the version 0.7.0 and after one year of work, I activated the sponsor button.  
-Why ? Flowcharting stills free and open-source, but since the success of it, i spent many personal times and money (computer, Azure account ...).  
+Since the version 0.7.0 and after one year of work, I activated the sponsor button.    
+Why ? Flowcharting stills free and open-source, but since the success of it,   
+I spent many personal times and money (computer, Azure account ...).  
 Also i donate money for project used by FlowCharting like chartist.  
-Then if you like Grafana-FlowCharting, you used it for your enterprise or other, you want to contribute,  
+Then if you like Grafana-FlowCharting, you used it for your enterprise or other, you want to contribute,    
 click on Sponsor button or Financing the project with the link bellow.  
 [https://paypal.me/grafanaflowcharting](https://paypal.me/grafanaflowcharting)  
 
-Thanks a lot 
+Thanks a lot   
 Arnaud
 
 # Changelog
 
-## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-28  
+## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-04-04    
+### Add
+  - Add Identify by Value in field 'what' in rules
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
   - shape stills select when deleting map.
+  - select list (typeahead) in fields 'whats' and map values for string type in rules
 
 ## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
 ### Added  

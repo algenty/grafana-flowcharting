@@ -7,24 +7,21 @@
     <thead>
       <tr>
         <th>
-          <label class="gf-form-label width-7" style="margin-right: 2px;"
-            >Buttons
+          <label class="gf-form-label width-7" style="margin-right: 2px;">Buttons
             <info-popover mode="right-normal">
               <span ng-bind-html="GFP.popover('+ : Add line, X : Remove line', 'MAPPING#Map')"> </span>
             </info-popover>
           </label>
         </th>
         <th>
-          <label class="gf-form-label width-10" style="margin-right: 2px;"
-            >Value
+          <label class="gf-form-label width-10" style="margin-right: 2px;">Value
             <info-popover mode="right-normal">
               <span ng-bind-html="GFP.popover('Value string to replace', 'MAPPING#Map')"> </span>
             </info-popover>
           </label>
         </th>
         <th>
-          <label class="gf-form-label width-10" style="margin-right: 2px;"
-            >Text
+          <label class="gf-form-label width-10" style="margin-right: 2px;">Text
             <info-popover mode="right-normal">
               <span ng-bind-html="GFP.popover('Replace string with this text', 'MAPPING#Map')"> </span>
             </info-popover>
@@ -37,38 +34,22 @@
         <td>
           <div class="gf-form">
             <label class="gf-form-label" style="margin-right: 4px;">
-              <i
-                class="fa fa-w fa-remove pointer"
-                bs-tooltip="'Delete this mapping object'"
-                ng-click="rule.removeValueMap($index);editor.onRulesChange()"
-              ></i>
+              <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete this mapping object'"
+                ng-click="rule.removeValueMap($index);editor.onRulesChange()"></i>
             </label>
           </div>
         </td>
         <td>
-          <input
-            type="text"
-            class="gf-form-input max-width-10"
-            ng-model="map.data.value"
-            placeholder="Value"
-            ng-blur="editor.onRulesChange()"
-            ng-model-onblur
-          />
+          <input type="text" class="gf-form-input max-width-10" ng-model="map.data.value" placeholder="Value"
+            ng-blur="editor.onRulesChange()" ng-model-onblur />
         </td>
         <td>
-          <input
-            type="text"
-            class="gf-form-input max-width-10"
-            ng-model="map.data.text"
-            placeholder="Text"
-            bs-typeahead="editor.getVariables"
-            bs-tooltip="'Specify string or variables to replace values'"
-            data-min-length="0"
-            data-items="100"
-            data-placement="right"
-            ng-blur="editor.onRulesChange()"
-            ng-model-onblur
-          />
+          <div class="gf-form">
+            <input type="text" class="gf-form-input max-width-10" ng-model="map.data.text" placeholder="Text"
+              bs-typeahead="editor.getVariables" bs-tooltip="'Specify string or variables to replace values'"
+              data-min-length="0" data-items="100" data-placement="right" ng-blur="editor.onRulesChange()"
+              ng-model-onblur />
+          </div>
         </td>
       </tr>
     </tbody>
@@ -77,7 +58,8 @@
         <td>
           <div class="gf-form">
             <label class="gf-form-label">
-              <a class="pointer" ng-click="rule.addValueMap('','');editor.onRulesChange()"><i class="fa fa-plus"></i></a>
+              <a class="pointer" ng-click="rule.addValueMap('','');editor.onRulesChange()"><i
+                  class="fa fa-plus"></i></a>
             </label>
           </div>
         </td>

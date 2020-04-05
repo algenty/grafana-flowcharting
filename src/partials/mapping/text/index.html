@@ -2,8 +2,7 @@
   <h5 class="section-heading">
     Text Mappings
     <info-popover mode="right-normal">
-      <span
-        ng-bind-html="GFP.popover('Select the text object to replace by value', 'MAPPING','fc_subway_example')">
+      <span ng-bind-html="GFP.popover('Select the text object to replace by value', 'MAPPING','fc_subway_example')">
       </span>
     </info-popover>
   </h5>
@@ -22,8 +21,8 @@
   </div>
   <div class="gf-form">
     <!-- ID Regular expression -->
-    <gf-form-switch class="gf-form" label="Regular exression" label-class="width-11"
-      checked="rule.data.textRegEx" on-change="editor.onRulesChange()"
+    <gf-form-switch class="gf-form" label="Regular exression" label-class="width-11" checked="rule.data.textRegEx"
+      on-change="editor.onRulesChange()"
       tooltip="Disable this option if you don't use regular expressions in field 'What' below to improve performance">
     </gf-form-switch>
   </div>
@@ -45,8 +44,7 @@
         <th>
           <label class="gf-form-label width-8" style="margin-right: 2px;">When
             <info-popover mode="right-normal">
-              <span
-                ng-bind-html="GFP.popover('Select condition to dislay value or text on shape.', 'MAPPING#text')">
+              <span ng-bind-html="GFP.popover('Select condition to dislay value or text on shape.', 'MAPPING#text')">
               </span>
             </info-popover>
           </label>
@@ -54,8 +52,7 @@
         <th>
           <label class="gf-form-label width-8" style="margin-right: 2px;">How
             <info-popover mode="right-normal">
-              <span
-                ng-bind-html="GFP.popover('Whitch part of text to replace', 'MAPPING','example_text_pattern')">
+              <span ng-bind-html="GFP.popover('Whitch part of text to replace', 'MAPPING','example_text_pattern')">
               </span>
             </info-popover>
           </label>
@@ -73,8 +70,8 @@
     </thead>
     <tbody>
       <tr ng-repeat="text in rule.getTextMaps()" ng-class="{'gf-form-disabled': text.data.hidden}"
-        ng-mouseleave="editor.unselectCell(rule.data.shapeProp,text.data.pattern)"
-        ng-mouseover="editor.selectCell(rule.data.shapeProp,text.data.pattern)">
+        ng-mouseleave="editor.unselectCell(rule.data.textProp,text.data.pattern)"
+        ng-mouseover="editor.selectCell(rule.data.textProp,text.data.pattern)">
         <td>
           <div class="gf-form">
             <label class="gf-form-label" style="margin-right: 4px;">
@@ -89,8 +86,7 @@
               <i class="fa fa-w fa-eye-slash pointer" bs-tooltip="'show selected object graph in rule'"
                 ng-click="text.show();editor.onRulesChange()"></i>
             </label>
-            <label class="gf-form-label" style="margin-right: 4px;"
-              ng-hide="flowchartHandler.isMapping(text)">
+            <label class="gf-form-label" style="margin-right: 4px;" ng-hide="flowchartHandler.isMapping(text)">
               <i class="fa fa-link pointer" ng-click="flowchartHandler.setMap(text)"
                 bs-tooltip="'Select object/target in graph'"></i>
             </label>
@@ -102,31 +98,18 @@
           </div>
         </td>
         <td>
-          <!-- <input 
-            type="text" 
-            style="margin-right: 2px;" id="{{ text.getId() }}"
-            placeholder="id or regex of shape" class="gf-form-input width-8" ng-model="text.data.pattern"
-            bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-            bs-typeahead="editor.getMetricNames" 
-            ng-blur="editor.onRulesChange()" 
-            data-min-length="0"
-            data-items="100" 
-            ng-model-onblur 
-            data-placement="right" 
-          /> -->
-          <input
-          type="text"
-          placeholder="Name or regex of metric"
-          class="gf-form-input width-12"
-          ng-model="text.data.pattern"
-          bs-tooltip="'Specify regex using /my.*regex/ syntax'"
-          bs-typeahead="editor.getCellNamesForText"
-          ng-blur="editor.onRulesChange()"
-          ng-model-onblur
-          data-min-length="0"
-          data-items="100"
-          data-placement="right"
-          />
+          <div class="gf-form">
+            <input type="text" style="margin-right: 2px;" id="{{ text.getId() }}" placeholder="id or regex of shape"
+              class="gf-form-input width-8" ng-model="text.data.pattern" ng-if="rule.data.textProp === 'id'"
+              bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+              bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+              ng-model-onblur data-placement="right" />
+            <input type="text" style="margin-right: 2px;" id="{{ text.getId() }}" placeholder="id or regex of shape"
+              class="gf-form-input width-8" ng-model="text.data.pattern" ng-if="rule.data.textProp === 'value'"
+              bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+              bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+              ng-model-onblur data-placement="right" />
+          </div>
         </td>
         <td>
           <select class="gf-form-input width-8" ng-model="text.data.textOn"
@@ -134,8 +117,7 @@
         </td>
         <td>
           <select class="gf-form-input width-8" style="margin-right: 2px;" ng-model="text.data.textReplace"
-            ng-options="c.value as c.text for c in editor.textReplace"
-            ng-change="editor.onRulesChange()"></select>
+            ng-options="c.value as c.text for c in editor.textReplace" ng-change="editor.onRulesChange()"></select>
         </td>
         <td>
           <input ng-if="text.data.textReplace == 'pattern' && rule.data.textOn != 'n'" type="text"

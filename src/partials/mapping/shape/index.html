@@ -21,8 +21,8 @@
   </div>
   <div class="gf-form">
     <!-- ID Regular expression -->
-    <gf-form-switch class="gf-form" label="Regular exression" label-class="width-11"
-      checked="rule.data.shapeRegEx" on-change="editor.onRulesChange()"
+    <gf-form-switch class="gf-form" label="Regular exression" label-class="width-11" checked="rule.data.shapeRegEx"
+      on-change="editor.onRulesChange()"
       tooltip="Disable this option if you don't use regular expressions in field 'What' below to improve performance">
     </gf-form-switch>
   </div>
@@ -79,8 +79,7 @@
               <i class="fa fa-w fa-eye-slash pointer" bs-tooltip="'show selected object graph in rule'"
                 ng-click="shape.show();editor.onRulesChange()"></i>
             </label>
-            <label class="gf-form-label" style="margin-right: 4px;"
-              ng-hide="flowchartHandler.isMapping(shape)">
+            <label class="gf-form-label" style="margin-right: 4px;" ng-hide="flowchartHandler.isMapping(shape)">
               <i class="fa fa-link pointer" ng-click="flowchartHandler.setMap(shape)"
                 bs-tooltip="'Link it on object graph'"></i>
             </label>
@@ -92,16 +91,24 @@
           </div>
         </td>
         <td>
-          <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}"
-            placeholder="id or regex of shape" class="gf-form-input width-8" ng-model="shape.data.pattern"
-            bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-            bs-typeahead="getCellNamesForShape" ng-blur="editor.onRulesChange()" data-min-length="0"
-            data-items="100" ng-model-onblur data-placement="right" />
+          <div class="gf-form">
+            <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
+              class="gf-form-input width-8" ng-model="shape.data.pattern"
+              ng-if="rule.data.shapeProp === 'id'"
+              bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+              bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+              ng-model-onblur data-placement="right" />
+            <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
+              class="gf-form-input width-8" ng-model="shape.data.pattern"
+              ng-if="rule.data.shapeProp === 'value'"
+              bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+              bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+              ng-model-onblur data-placement="right" />
+          </div>
         </td>
         <td>
           <select class="gf-form-input width-8" ng-model="shape.data.colorOn"
-            ng-options="c.value as c.text for c in editor.colorOn"
-            ng-change="editor.onRulesChange()"></select>
+            ng-options="c.value as c.text for c in editor.colorOn" ng-change="editor.onRulesChange()"></select>
         </td>
         <td>
           <select class="gf-form-input width-8" ng-model="shape.data.style"
