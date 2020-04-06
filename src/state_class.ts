@@ -28,12 +28,14 @@ export default class State {
   matchedText = false;
   matchedLink = false;
   globalLevel = -1;
-  styleKeys: gf.TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
+  styleKeys: gf.TStyleKey[] = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground', 'shape'];
+  colorKeys: gf.TStyleColorKey[] = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
+  eventKeys: gf.TStyleEventKey[] = ['shape'];
   level: gf.TIStylesNumber;
   tooltipHandler: TooltipHandler | null = null;
-  currentColors: gf.TIStylesString;
-  originalColors: gf.TIStylesString;
-  originalStyle: string;
+  currentStyles: gf.TIStylesString;
+  originalStyles: gf.TIStylesString;
+  fullStylesString: string;
   originalText: string;
   currentText: string;
   originalLink: string | null;
@@ -59,9 +61,9 @@ export default class State {
     this.level = State.getDefaultLevelStyles();
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
-    this.currentColors = State.getDefaultValueStyles();
-    this.originalColors = State.getDefaultValueStyles();
-    this.originalStyle = mxcell.getStyle();
+    this.currentStyles = State.getDefaultValueStyles();
+    this.originalStyles = State.getDefaultValueStyles();
+    this.fullStylesString = mxcell.getStyle();
     this.originalText = this.xgraph.getLabelCell(mxcell);
     this.currentText = this.originalText;
     let link = this.xgraph.getLink(mxcell);
@@ -70,10 +72,10 @@ export default class State {
     }
     this.originalLink = link;
     this.currentLink = link;
-    this.styleKeys.forEach(style => {
-      const color: string | null = this.xgraph.getStyleCell(mxcell, style);
-      this.currentColors[style] = color;
-      this.originalColors[style] = color;
+    this.styleKeys.forEach((style) => {
+      const value: string | null = this.xgraph.getStyleCell(mxcell, style);
+      this.currentStyles[style] = value;
+      this.originalStyles[style] = value;
     });
   }
 
@@ -142,7 +144,7 @@ export default class State {
 
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
-      shapeMaps.forEach(shape => {
+      shapeMaps.forEach((shape) => {
         if (!shape.isHidden() && shape.match(cellProp, rule.data.shapeRegEx)) {
           this.matchedShape = true;
           this.matched = true;
@@ -209,7 +211,7 @@ export default class State {
 
       // TEXT
       cellProp = this.getCellProp(rule.data.textProp);
-      textMaps.forEach(text => {
+      textMaps.forEach((text) => {
         if (!text.isHidden() && text.match(cellProp, rule.data.textRegEx)) {
           this.matchedText = true;
           this.matched = true;
@@ -230,7 +232,7 @@ export default class State {
 
       // LINK
       cellProp = this.getCellProp(rule.data.linkProp);
-      linkMaps.forEach(link => {
+      linkMaps.forEach((link) => {
         if (!link.isHidden() && link.match(cellProp, rule.data.linkRegEx)) {
           this.matchedLink = true;
           this.matched = true;
@@ -268,7 +270,7 @@ export default class State {
     this.unsetTooltip();
     this.matched = false;
     this.matchedShape = false;
-    this.styleKeys.forEach(key => {
+    this.styleKeys.forEach((key) => {
       this.matchedStyle[key] = false;
     });
     this.matchedText = false;
@@ -323,7 +325,7 @@ export default class State {
    */
   setColorStyle(style: gf.TStyleColorKey, color: string): this {
     GFP.log.info('State.setColorStyle()');
-    this.currentColors[style] = color;
+    this.currentStyles[style] = color;
     return this;
   }
 
@@ -334,7 +336,7 @@ export default class State {
    * @memberof State
    */
   getColorStyle(style: gf.TStyleColorKey): string | null {
-    return this.currentColors[style];
+    return this.currentStyles[style];
   }
 
   /**
@@ -345,7 +347,7 @@ export default class State {
    * @memberof State
    */
   unsetColorStyle(style: gf.TStyleColorKey): this {
-    this.currentColors[style] = this.originalColors[style];
+    this.currentStyles[style] = this.originalStyles[style];
     return this;
   }
 
@@ -356,7 +358,7 @@ export default class State {
    * @memberof State
    */
   unsetColor(): this {
-    this.styleKeys.forEach(style => {
+    this.colorKeys.forEach((style) => {
       this.unsetColorStyle(style);
     });
     return this;
@@ -369,7 +371,7 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetLevelStyle(style: gf.TStyleColorKey): this {
+  unsetLevelStyle(style: gf.TStyleKey): this {
     this.level[style] = -1;
     return this;
   }
@@ -395,7 +397,7 @@ export default class State {
    * @memberof State
    */
   unsetLevel(): this {
-    this.styleKeys.forEach((style: gf.TStyleColorKey) => {
+    this.styleKeys.forEach((style: gf.TStyleKey) => {
       this.unsetLevelStyle(style);
     });
     this.globalLevel = -1;
@@ -410,7 +412,7 @@ export default class State {
    * @param {number} level
    * @memberof State
    */
-  setLevelStyle(style: gf.TStyleColorKey, level: number): this {
+  setLevelStyle(style: gf.TStyleKey, level: number): this {
     GFP.log.info('State.setLevelStyle()');
     this.level[style] = level;
     if (this.globalLevel < level) {
@@ -426,7 +428,7 @@ export default class State {
    * @returns {number}
    * @memberof State
    */
-  getLevelStyle(style: gf.TStyleColorKey): number {
+  getLevelStyle(style: gf.TStyleKey): number {
     return this.level[style];
   }
 
@@ -482,6 +484,36 @@ export default class State {
    */
   unsetText(): this {
     this.currentText = this.originalText;
+    return this;
+  }
+
+  // EVENTS
+
+  setEventStyle(style: gf.TStyleEventKey, value: string): this {
+    GFP.log.info('State.setColorStyle()');
+    this.currentStyles[style] = value;
+    return this;
+  }
+
+  getEventStyle(style: gf.TStyleEventKey): string | null {
+    return this.currentStyles[style];
+  }
+
+  unsetEventStyle(style: gf.TStyleEventKey): this {
+    this.currentStyles[style] = this.originalStyles[style];
+    return this;
+  }
+
+  /**
+   * Restore initial color of cell
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  unsetEvent(): this {
+    this.eventKeys.forEach((style) => {
+      this.unsetEventStyle(style);
+    });
     return this;
   }
 
@@ -557,7 +589,7 @@ export default class State {
    */
   applyShape(): this {
     this.changedShape = true;
-    this.applyStyle();
+    this.applyColor();
     this.applyIcon();
     return this;
   }
@@ -568,12 +600,12 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  applyStyle(): this {
-    this.styleKeys.forEach(key => {
+  applyColor(): this {
+    this.colorKeys.forEach((key) => {
       if (this.matchedStyle[key]) {
-        const color = this.currentColors[key];
+        const color = this.currentStyles[key];
         this.xgraph.setColorCell(this.mxcell, key, color);
-        if (color !== this.originalColors[key]) {
+        if (color !== this.originalStyles[key]) {
           this.changedStyle[key] = true;
         }
       }
@@ -630,8 +662,8 @@ export default class State {
    */
   resetStyle(): this {
     this.unsetColor();
-    this.xgraph.setStyles(this.mxcell, this.originalStyle);
-    this.styleKeys.forEach(key => {
+    this.xgraph.setStyles(this.mxcell, this.fullStylesString);
+    this.styleKeys.forEach((key) => {
       this.changedStyle[key] = false;
     });
     return this;

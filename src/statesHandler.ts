@@ -85,6 +85,15 @@ export default class StateHandler {
           found = true;
         }
       }
+
+      // EVENTS
+      if (!found) {
+        name = xgraph.getValuePropOfMxCell(rule.data.linkProp, mxcell);
+        if (rule.matchEvent(name)) {
+          result.set(id, state);
+          found = true;
+        }
+      }
     });
     return result;
   }

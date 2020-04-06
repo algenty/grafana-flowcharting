@@ -603,11 +603,11 @@ export default class XGraph {
     const cellIds: string[] = [];
     const model = this.graph.getModel();
     const cells = model.cells;
-    GFP.log.debug('cells',cells);
+    GFP.log.debug('cells', cells);
     GFP.log.debug('mxStencilRegistry', mxStencilRegistry);
     if (prop === 'id') {
       _.each(cells, (mxcell: mxCell) => {
-        GFP.log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id +"] : ", this.getStyleCell(mxcell, 'shape'));
+        GFP.log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', this.getStyleCell(mxcell, 'shape'));
         // this.graph.setCellStyles('shape','mxgraph.aws4.spot_instance',[mxcell]);
         cellIds.push(this.getId(mxcell));
       });
@@ -831,8 +831,6 @@ export default class XGraph {
     return null;
   }
 
-  
-
   /**
    * Apply color style on Cell
    *
@@ -880,8 +878,8 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  setStyleCell(mxcell: mxCell, style: any, value: string | null ): this {
-    if (value !== null ) {
+  setStyleCell(mxcell: mxCell, style: any, value: string | null): this {
+    if (value !== null) {
       this.graph.setCellStyles(style, value, [mxcell]);
     }
     return this;
@@ -935,7 +933,6 @@ export default class XGraph {
   getId(mxcell): string {
     return mxcell.getId();
   }
-
 
   /**
    * Active mapping option when user click on mapping

@@ -113,6 +113,9 @@
         <td>
           <!-- <select class="gf-form-input width-6" ng-model="event.data.eventOn"
             ng-options="c.value as c.text for c in editor.getLevels(rule)" ng-change="editor.onRulesChange()"></select> -->
+          <select convert-to-number class="gf-form-input width-6" ng-model="event.data.eventOn" ng-change="editor.onRulesChange()">
+            <option type="number" ng-repeat="color in rule.data.colors" ng-value="$index">{{$index}}</option>
+          </select>
         </td>
         <td>
           <select class="gf-form-input width-8" ng-model="event.data.style"

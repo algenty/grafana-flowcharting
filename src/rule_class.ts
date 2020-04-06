@@ -367,8 +367,6 @@ export default class Rule {
       });
     }
 
-
-
     this.data.mappingType = obj.mappingType || 1;
 
     // VALUES
@@ -1479,7 +1477,6 @@ class LinkMap extends GFMap {
   }
 }
 
-
 class EventMap extends GFMap {
   data: gf.TEventMapData;
   /**
@@ -1505,7 +1502,7 @@ class EventMap extends GFMap {
       pattern: '',
       hidden: false,
       style: 'shape',
-      EventOn: 0,
+      eventOn: 0,
       value: '',
     };
   }
@@ -1518,8 +1515,8 @@ class EventMap extends GFMap {
    * @memberof ShapeMap
    * 0.7.0 : Moved to shape
    */
-  toEvent(level: number): boolean {
-    return level === this.data.EventOn
+  toEventable(level: number): boolean {
+    return level === this.data.eventOn;
   }
 
   /**
@@ -1534,8 +1531,8 @@ class EventMap extends GFMap {
     if (!!obj.style) {
       this.data.style = obj.style;
     }
-    if (!!obj.EventOn) {
-      this.data.EventOn = obj.EventOn;
+    if (!!obj.eventOn) {
+      this.data.eventOn = obj.eventOn;
     }
     return this;
   }

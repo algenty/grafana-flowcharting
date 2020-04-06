@@ -32,9 +32,10 @@ declare module gf {
   }
 
   // Styles
-  declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground' | 'shape'];
-  declare type TStyleColorKey = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground' | 'shape';
+  declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground' , 'shape'];
+  declare type TStyleColorKey = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
   declare type TStyleEventKey = 'shape';
+  declare type TStyleKey = TStyleColorKey | TStyleEventKey;
   declare interface TIStylesString {
     fillColor: string | null;
     strokeColor: string | null;
@@ -43,6 +44,11 @@ declare module gf {
     imageBackground: string | null;
     shape: string | null;
   }
+  
+  declare interface TIEventString {
+    shape: string | null;
+  }
+
 
   declare interface TIStylesBoolean {
     fillColor: boolean;
@@ -181,7 +187,7 @@ declare module gf {
 
   declare interface TEventMapData extends TGFMapData {
     style: TStyleEventKey;
-    EventOn: number;
+    eventOn: number;
     value: string;
   }
 
@@ -228,7 +234,7 @@ declare module gf {
     active: boolean;
     object: GFMap | null;
     id: string | null;
-    prop : string | null;
+    prop: string | null;
     $scope: ng.IScope | null;
   }
 
