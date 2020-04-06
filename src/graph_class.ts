@@ -10,6 +10,7 @@ declare var mxConstants: any;
 declare var mxCellHighlight: any;
 declare var mxRectangle: any;
 declare var mxUtils: any;
+declare var mxStencilRegistry: any;
 
 // type mxCellOverlay = any;
 
@@ -57,6 +58,7 @@ export default class XGraph {
       active: false,
       $scope: null,
       id: null,
+      prop: null,
       object: null,
     };
     // END ZOOM MouseWheele
@@ -601,13 +603,17 @@ export default class XGraph {
     const cellIds: string[] = [];
     const model = this.graph.getModel();
     const cells = model.cells;
+    GFP.log.debug('cells',cells);
+    GFP.log.debug('mxStencilRegistry', mxStencilRegistry);
     if (prop === 'id') {
       _.each(cells, (mxcell: mxCell) => {
+        GFP.log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id +"] : ", this.getStyleCell(mxcell, 'shape'));
+        // this.graph.setCellStyles('shape','mxgraph.aws4.spot_instance',[mxcell]);
         cellIds.push(this.getId(mxcell));
       });
     } else if (prop === 'value') {
       _.each(cells, (mxcell: mxCell) => {
-        cellIds.push(this.getLabel(mxcell));
+        cellIds.push(this.getLabelCell(mxcell));
       });
     }
     return cellIds;
@@ -632,7 +638,7 @@ export default class XGraph {
       });
     } else if (prop === 'value') {
       _.each(mxcells, (mxcell: mxCell) => {
-        if (GFP.utils.matchString(this.getLabel(mxcell), pattern)) {
+        if (GFP.utils.matchString(this.getLabelCell(mxcell), pattern)) {
           result.push(mxcell);
         }
       });
@@ -812,12 +818,12 @@ export default class XGraph {
       return this.getId(mxcell);
     }
     if (prop === 'value') {
-      return this.getLabel(mxcell);
+      return this.getLabelCell(mxcell);
     }
     return null;
   }
 
-  getStyleCell(mxcell: mxCell, style: gf.TStyleKey): string | null {
+  getStyleCell(mxcell: mxCell, style: any): string | null {
     const state = this.graph.view.getState(mxcell);
     if (state) {
       return state.style[style];
@@ -825,17 +831,19 @@ export default class XGraph {
     return null;
   }
 
+  
+
   /**
-   * Apply style on Cell
+   * Apply color style on Cell
    *
    * @param {mxCell} mxcell
-   * @param {gf.TStyleKey} style
+   * @param {gf.TStyleColorKey} style
    * @param {(string | null)} color
    * @param {boolean} [animate=false]
    * @returns {this}
    * @memberof XGraph
    */
-  setStyleCell(mxcell: mxCell, style: gf.TStyleKey, color: string | null): this {
+  setColorCell(mxcell: mxCell, style: gf.TStyleColorKey, color: string | null): this {
     if (this.animation) {
       try {
         const endColor = this.getStyleCell(mxcell, style);
@@ -845,7 +853,8 @@ export default class XGraph {
         const self = this;
         function graduate(count, steps) {
           if (count < steps.length) {
-            self.graph.setCellStyles(style, steps[count], [mxcell]);
+            // self.graph.setCellStyles(style, steps[count], [mxcell]);
+            self.setStyleCell(mxcell, style, steps[count]);
             window.setTimeout(() => {
               graduate(count + 1, steps);
             }, 40);
@@ -854,10 +863,26 @@ export default class XGraph {
         graduate(count, steps);
       } catch (error) {
         GFP.log.error('Error on graduate color', error);
-        this.graph.setCellStyles(style, color, [mxcell]);
+        this.setStyleCell(mxcell, style, color);
       }
     } else {
-      this.graph.setCellStyles(style, color, [mxcell]);
+      this.setStyleCell(mxcell, style, color);
+    }
+    return this;
+  }
+
+  /**
+   * Change or apply style
+   *
+   * @param {mxCell} mxcell
+   * @param {gf.TStyleColorKey} style
+   * @param {(string | null)} value
+   * @returns {this}
+   * @memberof XGraph
+   */
+  setStyleCell(mxcell: mxCell, style: any, value: string | null ): this {
+    if (value !== null ) {
+      this.graph.setCellStyles(style, value, [mxcell]);
     }
     return this;
   }
@@ -880,22 +905,11 @@ export default class XGraph {
    * @returns {string} Label of current cell
    * @memberof XGraph
    */
-  getLabel(mxcell: mxCell): string {
+  getLabelCell(mxcell: mxCell): string {
     if (mxUtils.isNode(mxcell.value)) {
       return mxcell.value.getAttribute('label');
     }
     return mxcell.getValue(mxcell);
-  }
-
-  /**
-   * Return Id of mxCell
-   *
-   * @param {mxCell} mxcell
-   * @returns {string} Id of mxCell
-   * @memberof XGraph
-   */
-  getId(mxcell): string {
-    return mxcell.getId();
   }
 
   /**
@@ -910,6 +924,18 @@ export default class XGraph {
     this.graph.cellLabelChanged(mxcell, text, false);
     return this;
   }
+
+  /**
+   * Return Id of mxCell
+   *
+   * @param {mxCell} mxcell
+   * @returns {string} Id of mxCell
+   * @memberof XGraph
+   */
+  getId(mxcell): string {
+    return mxcell.getId();
+  }
+
 
   /**
    * Active mapping option when user click on mapping

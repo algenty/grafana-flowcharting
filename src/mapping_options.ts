@@ -53,10 +53,18 @@ export class MappingOptionsCtrl {
     { text: 'Append (Space) ', value: 'as' },
     { text: 'Append (New line) ', value: 'anl' },
   ];
+  
   propTypes: gf.TSelectString[] = [
     { text: 'Id', value: 'id' },
     { text: 'Label', value: 'value' },
   ];
+
+  EventType: gf.TSelectString[] = [
+    { text: 'Change shape', value: 'shape' },
+  ];
+
+
+
   textPattern = '/.*/';
   metricTypes: gf.TSelectString[] = [
     { text: 'Number', value: 'number' },
@@ -217,16 +225,19 @@ export class MappingOptionsCtrl {
     return true;
   }
 
+  getLevels(rule:Rule): gf.TSelectNumber[] {
+    let lvl : gf.TSelectNumber[] = [];
+    let count = rule.data.colors.length
+    for (let index = 0; index < count; index++) {
+      lvl.push({text :`${index}`,value:index})      
+    }
+    return lvl
+  }
+
   removeShapeMap(rule: Rule, index: number) {
     const shape = rule.getShapeMap(index);
     this.unselectCell(rule.data.shapeProp, shape.data.pattern);
     rule.removeShapeMap(index);
-  }
-
-  removeLinkMap(rule: Rule, index: number) {
-    const lnk = rule.getLinkMap(index);
-    this.unselectCell(rule.data.shapeProp, lnk.data.pattern);
-    rule.removeLinkMap(index);
   }
 
   removeTextMap(rule: Rule, index: number) {
@@ -234,6 +245,13 @@ export class MappingOptionsCtrl {
     this.unselectCell(rule.data.shapeProp, txt.data.pattern);
     rule.removeTextMap(index);
   }
+
+  removeEventMap(rule: Rule, index: number) {
+    const evt = rule.getEventMap(index);
+    this.unselectCell(rule.data.eventProp, evt.data.pattern);
+    rule.removeLinkMap(index);
+  }
+
 
   /**
    * Add Color

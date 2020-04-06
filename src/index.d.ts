@@ -19,7 +19,7 @@ declare module gf {
   }
 
   declare type TSourceType = 'xml' | 'csv'; // Source type
-  declare type TPropertieKey = 'id' | 'value'; //Type properties for finding cells
+  declare type TPropertieKey = 'id' | 'value' | 'form'; //Type properties for finding cells
   declare interface TSelectSource extends TSelectString {
     value: TSourceType;
   }
@@ -32,14 +32,16 @@ declare module gf {
   }
 
   // Styles
-  declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
-  declare type TStyleKey = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
+  declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground' | 'shape'];
+  declare type TStyleColorKey = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground' | 'shape';
+  declare type TStyleEventKey = 'shape';
   declare interface TIStylesString {
     fillColor: string | null;
     strokeColor: string | null;
     fontColor: string | null;
     imageBorder: string | null;
     imageBackground: string | null;
+    shape: string | null;
   }
 
   declare interface TIStylesBoolean {
@@ -48,6 +50,7 @@ declare module gf {
     fontColor: boolean;
     imageBorder: boolean;
     imageBackground: boolean;
+    shape: boolean;
   }
 
   declare interface TIStylesNumber {
@@ -56,10 +59,11 @@ declare module gf {
     fontColor: number;
     imageBorder: number;
     imageBackground: number;
+    shape: number;
   }
 
   declare interface TSelectStyle extends TSelectString {
-    value: TStyleKey;
+    value: TStyleColorKey;
   }
 
   // ToolTip
@@ -156,6 +160,9 @@ declare module gf {
     linkProp: TPropertieKey;
     linkRegEx: boolean;
     linkData: TlinkMapData[];
+    eventProp: TPropertieKey;
+    eventRegEx: boolean;
+    eventData: TeventMapData[];
     mappingType: number;
     valueData: TValueMapData[];
     rangeData: TRangeMapData[];
@@ -168,8 +175,14 @@ declare module gf {
   }
 
   declare interface TShapeMapData extends TGFMapData {
-    style: TStyleKey;
+    style: TStyleColorKey;
     colorOn: TColorOn;
+  }
+
+  declare interface TEventMapData extends TGFMapData {
+    style: TStyleEventKey;
+    EventOn: number;
+    value: string;
   }
 
   declare interface TTextMapData extends TGFMapData {
@@ -215,13 +228,15 @@ declare module gf {
     active: boolean;
     object: GFMap | null;
     id: string | null;
+    prop : string | null;
     $scope: ng.IScope | null;
   }
 
   // Export of id and label
-  declare interface TICellsIdLabel {
+  declare interface TICellsProp {
     id: string[];
     value: string[]; // Label
+    form: string[];
   }
 
   // Inspect

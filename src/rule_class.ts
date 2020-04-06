@@ -15,6 +15,7 @@ export default class Rule {
   shapeMaps: ShapeMap[] = [];
   textMaps: TextMap[] = [];
   linkMaps: LinkMap[] = [];
+  eventMaps: EventMap[] = [];
   valueMaps: ValueMap[] = [];
   rangeMaps: RangeMap[] = [];
   id: string;
@@ -59,20 +60,9 @@ export default class Rule {
       decimals: 2,
       colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
       reduce: true,
-      //style: 'fillColor',
-      //colorOn: 'a',
-      //link: false,
-      //linkOn: 'a',
-      //linkUrl: '',
-      //linkParams: false,
-      //textOn: 'wmd',
-      //textReplace: 'content',
-      //textPattern: '/.*/',
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
       thresholds: [50, 80],
       stringThresholds: ['/.*/', '/.*/'],
-      //stringWarning: '',
-      //stringCritical: '',
       invert: false,
       gradient: false,
       overlayIcon: false,
@@ -96,6 +86,9 @@ export default class Rule {
       linkProp: 'id',
       linkRegEx: true,
       linkData: [],
+      eventProp: 'id',
+      eventRegEx: false,
+      eventData: [],
       mappingType: 1,
       valueData: [],
       rangeData: [],
@@ -159,7 +152,7 @@ export default class Rule {
     }
 
     // 0.7.0
-    let style: gf.TStyleKey | undefined = undefined;
+    let style: gf.TStyleColorKey | undefined = undefined;
     if (!!obj.style) {
       style = obj.style;
     }
@@ -361,6 +354,21 @@ export default class Rule {
       });
     }
 
+    // EVENT
+    this.data.eventProp = obj.eventProp || 'id';
+    if (!!obj.eventRegEx || obj.eventRegEx === false) {
+      this.data.eventRegEx = obj.eventRegEx;
+    }
+    this.data.eventData = [];
+    if (obj.eventData !== undefined && obj.eventData != null && obj.eventData.length > 0) {
+      obj.eventData.forEach((eventData: gf.TEventMapData) => {
+        // 0.7.0
+        this.addEventMap('new').import(eventData);
+      });
+    }
+
+
+
     this.data.mappingType = obj.mappingType || 1;
 
     // VALUES
@@ -557,56 +565,6 @@ export default class Rule {
   //
 
   /**
-   * Return true or false for condition to colorize
-   *
-   * @param {number} level
-   * @returns {boolean}
-   * @memberof Rule
-   * 0.7.0 : Moved to shapeMap
-   */
-  // toColorize(level: number): boolean {
-  //   if (level === -1) {
-  //     return false;
-  //   }
-  //   if (this.data.colorOn === 'n') {
-  //     return false;
-  //   }
-  //   if (this.data.colorOn === 'a') {
-  //     return true;
-  //   }
-  //   if (this.data.colorOn === 'wc' && level >= 1) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
-  /**
-   * Return true or false for condition to change label
-   *
-   * @param {number} level
-   * @returns {boolean}
-   * @memberof Rule
-   */
-  // 0.7.0 Moved to textMap
-  // toLabelize(level: number): boolean {
-  //   // if (this.data.textOn === 'wmd' && level > 0) return true;
-  //   // if (this.data.textOn === 'wmd' && level === -1) return false;
-  //   if (this.data.textOn === 'wmd') {
-  //     return true;
-  //   }
-  //   if (this.data.textOn === 'n') {
-  //     return false;
-  //   }
-  //   if (this.data.textOn === 'wc' && level >= 1) {
-  //     return true;
-  //   }
-  //   if (this.data.textOn === 'co' && level >= 2) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
-  /**
    * Return true or false for condition to display icon warning
    *
    * @param {level} level
@@ -622,24 +580,6 @@ export default class Rule {
     }
     return false;
   }
-
-  /**
-   * Return true or false for condition to add/replace link
-   *
-   * @param {number} level
-   * @returns {boolean}
-   * @memberof Rule
-   */
-  // 0.7.0 : Moved to LinkMap
-  // toLinkable(level: number): boolean {
-  //   if (this.data.linkOn === 'a') {
-  //     return true;
-  //   }
-  //   if (this.data.linkOn === 'wc' && level >= 1) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
 
   /**
    * Return true or false for condition to display tooltip with values
@@ -776,6 +716,40 @@ export default class Rule {
   matchText(pattern: string | null): boolean {
     let found = false;
     this.textMaps.forEach(element => {
+      if (element.match(pattern)) {
+        found = true;
+      }
+    });
+    return found;
+  }
+
+  //
+  // Event MAPS
+  //
+  addEventMap(pattern: string): EventMap {
+    const data = EventMap.getDefaultData();
+    const m = new EventMap(pattern, data);
+    this.eventMaps.push(m);
+    this.data.eventData.push(data);
+    return m;
+  }
+
+  removeEventMap(index: number) {
+    this.data.eventData.splice(index, 1);
+    this.eventMaps.splice(index, 1);
+  }
+
+  getEventMap(index: number): EventMap {
+    return this.eventMaps[index];
+  }
+
+  getEventMaps(): EventMap[] {
+    return this.eventMaps;
+  }
+
+  matchEvent(pattern: string | null): boolean {
+    let found = false;
+    this.eventMaps.forEach(element => {
       if (element.match(pattern)) {
         found = true;
       }
@@ -1502,6 +1476,68 @@ class LinkMap extends GFMap {
       return true;
     }
     return false;
+  }
+}
+
+
+class EventMap extends GFMap {
+  data: gf.TEventMapData;
+  /**
+   * Creates an instance of EventMap.
+   * @param {string} pattern
+   * @param {gf.TEventMapData} data
+   * @memberof EventMap
+   */
+  constructor(pattern: string, data: gf.TEventMapData) {
+    super(pattern, data);
+    this.data = data;
+  }
+
+  /**
+   * Return default data
+   *
+   * @static
+   * @returns {gf.TShapeMapData}
+   * @memberof ShapeMap
+   */
+  static getDefaultData(): gf.TEventMapData {
+    return {
+      pattern: '',
+      hidden: false,
+      style: 'shape',
+      EventOn: 0,
+      value: '',
+    };
+  }
+
+  /**
+   * Return true or false for condition to colorize
+   *
+   * @param {number} level
+   * @returns {boolean}
+   * @memberof ShapeMap
+   * 0.7.0 : Moved to shape
+   */
+  toEvent(level: number): boolean {
+    return level === this.data.EventOn
+  }
+
+  /**
+   * Import data
+   *
+   * @param {*} obj
+   * @returns {this}
+   * @memberof ShapeMap
+   */
+  import(obj: any): this {
+    super.import(obj);
+    if (!!obj.style) {
+      this.data.style = obj.style;
+    }
+    if (!!obj.EventOn) {
+      this.data.EventOn = obj.EventOn;
+    }
+    return this;
   }
 }
 

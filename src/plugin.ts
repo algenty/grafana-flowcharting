@@ -304,7 +304,7 @@ class Log {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  logLevel = 2;
+  logLevel = Log.DEBUG;
   logDisplay = true;
   constructor() {}
 

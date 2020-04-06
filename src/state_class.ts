@@ -62,7 +62,7 @@ export default class State {
     this.currentColors = State.getDefaultValueStyles();
     this.originalColors = State.getDefaultValueStyles();
     this.originalStyle = mxcell.getStyle();
-    this.originalText = this.xgraph.getLabel(mxcell);
+    this.originalText = this.xgraph.getLabelCell(mxcell);
     this.currentText = this.originalText;
     let link = this.xgraph.getLink(mxcell);
     if (link === undefined) {
@@ -84,6 +84,7 @@ export default class State {
       fontColor: null,
       imageBorder: null,
       imageBackground: null,
+      shape: null,
     };
   }
 
@@ -94,6 +95,7 @@ export default class State {
       fontColor: -1,
       imageBorder: -1,
       imageBackground: -1,
+      shape: -1,
     };
   }
 
@@ -104,6 +106,7 @@ export default class State {
       fontColor: false,
       imageBorder: false,
       imageBackground: false,
+      shape: false,
     };
   }
 
@@ -318,7 +321,7 @@ export default class State {
    * @param {string} color - html color
    * @memberof State
    */
-  setColorStyle(style: gf.TStyleKey, color: string): this {
+  setColorStyle(style: gf.TStyleColorKey, color: string): this {
     GFP.log.info('State.setColorStyle()');
     this.currentColors[style] = color;
     return this;
@@ -327,10 +330,10 @@ export default class State {
   /**
    * Return color of style
    *
-   * @param {gf.TStyleKey} style
+   * @param {gf.TStyleColorKey} style
    * @memberof State
    */
-  getColorStyle(style: gf.TStyleKey): string | null {
+  getColorStyle(style: gf.TStyleColorKey): string | null {
     return this.currentColors[style];
   }
 
@@ -341,7 +344,7 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetColorStyle(style: gf.TStyleKey): this {
+  unsetColorStyle(style: gf.TStyleColorKey): this {
     this.currentColors[style] = this.originalColors[style];
     return this;
   }
@@ -366,7 +369,7 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetLevelStyle(style: gf.TStyleKey): this {
+  unsetLevelStyle(style: gf.TStyleColorKey): this {
     this.level[style] = -1;
     return this;
   }
@@ -392,7 +395,7 @@ export default class State {
    * @memberof State
    */
   unsetLevel(): this {
-    this.styleKeys.forEach((style: gf.TStyleKey) => {
+    this.styleKeys.forEach((style: gf.TStyleColorKey) => {
       this.unsetLevelStyle(style);
     });
     this.globalLevel = -1;
@@ -407,7 +410,7 @@ export default class State {
    * @param {number} level
    * @memberof State
    */
-  setLevelStyle(style: gf.TStyleKey, level: number): this {
+  setLevelStyle(style: gf.TStyleColorKey, level: number): this {
     GFP.log.info('State.setLevelStyle()');
     this.level[style] = level;
     if (this.globalLevel < level) {
@@ -423,7 +426,7 @@ export default class State {
    * @returns {number}
    * @memberof State
    */
-  getLevelStyle(style: gf.TStyleKey): number {
+  getLevelStyle(style: gf.TStyleColorKey): number {
     return this.level[style];
   }
 
@@ -569,7 +572,7 @@ export default class State {
     this.styleKeys.forEach(key => {
       if (this.matchedStyle[key]) {
         const color = this.currentColors[key];
-        this.xgraph.setStyleCell(this.mxcell, key, color);
+        this.xgraph.setColorCell(this.mxcell, key, color);
         if (color !== this.originalColors[key]) {
           this.changedStyle[key] = true;
         }

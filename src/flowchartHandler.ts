@@ -23,6 +23,7 @@ export default class FlowchartHandler {
     active: false,
     object: null,
     id: null,
+    prop : null,
     $scope: null,
   };
   mousedownTimeout = 0;
