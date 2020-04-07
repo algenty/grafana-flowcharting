@@ -1,4 +1,3 @@
-android.
 android.action_bar
 android.action_bar_landscape
 android.contact_badge_focused
@@ -48,7 +47,6 @@ android.textfield
 android.text_insertion_point
 android.time_picker
 android.time_picker_dark
-arrows.
 arrows.arrow_down
 arrows.arrow_left
 arrows.arrow_right
@@ -83,7 +81,6 @@ arrows.u_turn_down_arrow
 arrows.u_turn_left_arrow
 arrows.u_turn_right_arrow
 arrows.u_turn_up_arrow
-atlassian.
 atlassian.access
 atlassian.away
 atlassian.bug
@@ -110,7 +107,6 @@ atlassian.subtask
 atlassian.task
 atlassian.tech_task
 atlassian.x
-aws.compute.
 aws.compute.cloudwatch
 aws.compute.cloudwatch_alarm
 aws.compute.ec2
@@ -124,12 +120,10 @@ aws.compute.elastic_mapreduce
 aws.compute.elastic_mapreduce_auto_scaling
 aws.compute.elastic_mapreduce_cluster
 aws.compute.elastic_mapreduce_hdfs_cluster
-aws.content_delivery.
 aws.content_delivery.cloudfront
 aws.content_delivery.cloudfront_download_distribution
 aws.content_delivery.cloudfront_edge_location
 aws.content_delivery.cloudfront_streaming_distribution
-aws.database.
 aws.database.elasticache
 aws.database.rds
 aws.database.rds_db_instance
@@ -143,13 +137,11 @@ aws.database.simpledb_attributes
 aws.database.simpledb_domain
 aws.database.simpledb_item
 aws.database.simpledb_items
-aws.deployment_management.
 aws.deployment_management.aws_cloudformation
 aws.deployment_management.aws_cloudformation_stack
 aws.deployment_management.aws_cloudformation_template
 aws.deployment_management.aws_elastic_beanstalk
 aws.deployment_management.aws_elastic_beanstalk_applicaton
-aws.groups.
 aws.groups.auto_scaling_group
 aws.groups.availability_zone
 aws.groups.aws_cloud
@@ -168,7 +160,6 @@ aws.groups.elastic_beanstalk_container_icon
 aws.groups.virtual_private_cloud_icon
 aws.groups.vpc_subnet_icon
 aws.groups.rrect
-aws.messaging.
 aws.messaging.ses
 aws.messaging.ses_email
 aws.messaging.sns
@@ -178,11 +169,9 @@ aws.messaging.sns_topic
 aws.messaging.sqs
 aws.messaging.sqs_message
 aws.messaging.sqs_queue
-aws.misc.
 aws.misc.aws_cloud
 aws.misc.virtual_private_cloud
 aws.misc.vpc_subnet
-aws.networking.
 aws.networking.aws_direct_connect
 aws.networking.elastic_load_balancer
 aws.networking.route_53
@@ -194,7 +183,6 @@ aws.networking.vpc_internet_gateway
 aws.networking.vpc_router
 aws.networking.vpc_vpn_connection
 aws.networking.vpc_vpn_gateway
-aws.non_service_specific.
 aws.non_service_specific.aws_management_console
 aws.non_service_specific.client
 aws.non_service_specific.corporate_data_center
@@ -205,13 +193,11 @@ aws.non_service_specific.multimedia
 aws.non_service_specific.traditional_server
 aws.non_service_specific.user
 aws.non_service_specific.users
-aws.on_demand_workforce.
 aws.on_demand_workforce.mechanical_turk
 aws.on_demand_workforce.mechanical_turk_assignment_task
 aws.on_demand_workforce.mechanical_turk_hit
 aws.on_demand_workforce.mechanical_turk_requester
 aws.on_demand_workforce.mechanical_turk_workers
-aws.storage.
 aws.storage.aws_import_export
 aws.storage.ebs
 aws.storage.ebs_snapshot
@@ -220,11 +206,9 @@ aws.storage.s3
 aws.storage.s3_bucket
 aws.storage.s3_bucket_with_objects
 aws.storage.s3_object
-aws2.administration_and_security.
 aws2.administration_and_security.config
 aws2.administration_and_security.directory_service
 aws2.administration_and_security.trusted_advisor
-aws2.analytics.
 aws2.analytics.data_pipeline
 aws2.analytics.elasticsearch
 aws2.analytics.emr
@@ -235,7 +219,6 @@ aws2.analytics.kinesis_firehose
 aws2.analytics.kinesis_streams
 aws2.analytics.machine_learning
 aws2.analytics.quicksight
-aws2.app_services.
 aws2.app_services.api_gateway
 aws2.app_services.appstream
 aws2.app_services.cloudsearch
@@ -253,7 +236,6 @@ aws2.app_services.sqs_queue
 aws2.app_services.swf
 aws2.app_services.swf_decider
 aws2.app_services.swf_worker
-aws2.compute_and_networking.
 aws2.compute_and_networking.auto_scaling
 aws2.compute_and_networking.aws_direct_connect
 aws2.compute_and_networking.ec2
@@ -293,7 +275,6 @@ aws2.compute_and_networking.vpc_peering
 aws2.compute_and_networking.vpc_router
 aws2.compute_and_networking.vpc_vpn_connection
 aws2.compute_and_networking.vpc_vpn_gateway
-aws2.database.
 aws2.database.database_migration_service
 aws2.database.dynamodb
 aws2.database.dynamodb_attribute
@@ -328,7 +309,6 @@ aws2.database.redshift_dense_storage_node
 aws2.database.redshift_ssd_family_cluster
 aws2.database.simpledb
 aws2.database.simpledb_domain
-aws2.deployment_and_management.
 aws2.deployment_and_management.cloudformation
 aws2.deployment_and_management.cloudformation_stack
 aws2.deployment_and_management.cloudformation_template
@@ -360,16 +340,12 @@ aws2.deployment_and_management.opsworks_monitoring
 aws2.deployment_and_management.opsworks_permissions
 aws2.deployment_and_management.opsworks_resources
 aws2.deployment_and_management.opsworks_stack
-aws2.developer_tools.
 aws2.developer_tools.code_commit
 aws2.developer_tools.code_pipeline
-aws2.enterprise_applications.
 aws2.enterprise_applications.workdocs
 aws2.enterprise_applications.workmail
 aws2.enterprise_applications.workspaces
-aws2.game_development.
 aws2.game_development.gamelift
-aws2.internet_of_things.
 aws2.internet_of_things.action
 aws2.internet_of_things.actuator
 aws2.internet_of_things.aws-iot
@@ -404,9 +380,7 @@ aws2.internet_of_things.topic
 aws2.internet_of_things.travel
 aws2.internet_of_things.utility
 aws2.internet_of_things.windfarm
-aws2.management_tools.
 aws2.management_tools.service_catalog
-aws2.mobile_services.
 aws2.mobile_services.aws_mobile_hub
 aws2.mobile_services.cognito
 aws2.mobile_services.device_farm
@@ -415,13 +389,11 @@ aws2.mobile_services.sns
 aws2.mobile_services.sns_email_notification
 aws2.mobile_services.sns_http_notification
 aws2.mobile_services.sns_topic
-aws2.networking.
 aws2.networking.vpc_customer_gateway
 aws2.networking.vpc_endpoints
 aws2.networking.vpc_flowlogs
 aws2.networking.vpc_router
 aws2.networking.vpcnat_gateway
-aws2.non-service_specific.
 aws2.non-service_specific.client
 aws2.non-service_specific.cloud
 aws2.non-service_specific.corporate_data_center
@@ -437,13 +409,11 @@ aws2.non-service_specific.traditional_server
 aws2.non-service_specific.user
 aws2.non-service_specific.users
 aws2.non-service_specific.virtual_private_cloud
-aws2.on-demand_workforce.
 aws2.on-demand_workforce.mechanical_turk
 aws2.on-demand_workforce.mechanical_turk_assignment_task
 aws2.on-demand_workforce.mechanical_turk_human_intelligence_tasks
 aws2.on-demand_workforce.mechanical_turk_requester
 aws2.on-demand_workforce.mechanical_turk_workers
-aws2.sdks.
 aws2.sdks.android
 aws2.sdks.aws_toolkit_for_eclipse
 aws2.sdks.aws_toolkit_for_visual_studio
@@ -458,7 +428,6 @@ aws2.sdks.python
 aws2.sdks.ruby
 aws2.sdks.tools_for_windows_powershell
 aws2.sdks.xamarin
-aws2.security_and_identity.
 aws2.security_and_identity.acm
 aws2.security_and_identity.acm_certificate_manager
 aws2.security_and_identity.cloud_hsm
@@ -466,7 +435,6 @@ aws2.security_and_identity.directory_service
 aws2.security_and_identity.key_management_service
 aws2.security_and_identity.service_catalog
 aws2.security_and_identity.webapp_firewall
-aws2.storage_and_content_delivery.
 aws2.storage_and_content_delivery.aws_import_export
 aws2.storage_and_content_delivery.aws_storage_gateway
 aws2.storage_and_content_delivery.cloudfront
@@ -488,7 +456,6 @@ aws2.storage_and_content_delivery.snowball
 aws2.storage_and_content_delivery.storage_gateway_cached_volumn
 aws2.storage_and_content_delivery.storage_gateway_non-cached_volumn
 aws2.storage_and_content_delivery.storage_gateway_virtual_tape_library
-aws3.
 aws3.action
 aws3.actuator
 aws3.add_on
@@ -782,7 +749,6 @@ aws3.workmail
 aws3.workspaces
 aws3.x1_instance
 aws3.x_ray
-aws3d.
 aws3d.arrowhead
 aws3d.content
 aws3d.client
@@ -795,7 +761,6 @@ aws3d.mobile_worker
 aws3d.reference
 aws3d.snapshot1
 aws3d.spot
-aws4.
 aws4.a1_instance
 aws4.action
 aws4.actuator
@@ -1310,7 +1275,6 @@ aws4.x1_instance
 aws4.x1_instance2
 aws4.xray
 aws4.z1d_instance
-azure.
 azure.15
 azure.7
 azure.access_control
@@ -1400,7 +1364,6 @@ azure.web_role
 azure.web_roles
 azure.worker_role
 azure.worker_roles
-basic.
 basic.4_point_star
 basic.6_point_star
 basic.8_point_star
@@ -1431,12 +1394,10 @@ basic.tick
 basic.trapezoid
 basic.wave
 basic.x
-bootstrap.
 bootstrap.logo
 bootstrap.password
 bootstrap.rect
 bootstrap.user
-bpmn.
 bpmn.ad_hoc
 bpmn.business_rule_task
 bpmn.cancel_end
@@ -1476,7 +1437,6 @@ bpmn.terminate
 bpmn.timer_intermediate
 bpmn.timer_start
 bpmn.user_task
-cabinets.
 cabinets.auxiliary_contact_contactor_1_32a
 cabinets.auxiliary_contact_contactor_32_125a
 cabinets.cb_1p
@@ -1530,7 +1490,6 @@ cabinets.terminal_6_25mm2
 cabinets.terminal_6_25mm2_x10
 cabinets.terminal_75mm2
 cabinets.terminal_75mm2_x10
-cisco.buildings.
 cisco.buildings.branch_office
 cisco.buildings.end_office
 cisco.buildings.generic_building
@@ -1540,7 +1499,6 @@ cisco.buildings.small_business
 cisco.buildings.telecommuter_house
 cisco.buildings.telecommuter_house_pc
 cisco.buildings.university
-cisco.computers_and_peripherals.
 cisco.computers_and_peripherals.ibm_mainframe
 cisco.computers_and_peripherals.ibm_mini_as400
 cisco.computers_and_peripherals.ibm_tower
@@ -1561,7 +1519,6 @@ cisco.computers_and_peripherals.upc
 cisco.computers_and_peripherals.video_camera
 cisco.computers_and_peripherals.web_browser
 cisco.computers_and_peripherals.workstation
-cisco.controllers_and_modules.
 cisco.controllers_and_modules.10ge_fcoe
 cisco.controllers_and_modules.3174_(desktop)_cluster_controller
 cisco.controllers_and_modules.3x74_(floor)_cluster_controller
@@ -1570,13 +1527,11 @@ cisco.controllers_and_modules.firewall_service_module_(fwsm)
 cisco.controllers_and_modules.service_module
 cisco.controllers_and_modules.system_controller
 cisco.controllers_and_modules.virtual_switch_controller_(vsc3000)
-cisco.directors.
 cisco.directors.content_engine_(cache_director)
 cisco.directors.director-class_fibre_channel_director
 cisco.directors.distributed_director
 cisco.directors.localdirector
 cisco.directors.workgroup_director
-cisco.hubs_and_gateways.
 cisco.hubs_and_gateways.100baset_hub
 cisco.hubs_and_gateways.cisco_hub
 cisco.hubs_and_gateways.generic_gateway
@@ -1585,7 +1540,6 @@ cisco.hubs_and_gateways.mas_gateway
 cisco.hubs_and_gateways.small_hub
 cisco.hubs_and_gateways.universal_gateway
 cisco.hubs_and_gateways.vpn_gateway
-cisco.misc.
 cisco.misc.15200
 cisco.misc.6700_series
 cisco.misc.7500ars_(7513)
@@ -1714,7 +1668,6 @@ cisco.misc.vpn_concentrator
 cisco.misc.vss
 cisco.misc.wae
 cisco.misc.wism
-cisco.modems_and_phones.
 cisco.modems_and_phones.cable_modem
 cisco.modems_and_phones.cell_phone
 cisco.modems_and_phones.fax
@@ -1726,7 +1679,6 @@ cisco.modems_and_phones.phone-fax
 cisco.modems_and_phones.phone
 cisco.modems_and_phones.rf_modem
 cisco.modems_and_phones.softphone
-cisco.people.
 cisco.people.androgenous_person
 cisco.people.mac_woman
 cisco.people.man_woman
@@ -1735,7 +1687,6 @@ cisco.people.running_man
 cisco.people.sitting_woman
 cisco.people.standing_man
 cisco.people.standing_woman
-cisco.routers.
 cisco.routers.10700
 cisco.routers.atm_router
 cisco.routers.atm_tag_switch_router
@@ -1759,7 +1710,6 @@ cisco.routers.tdm_router
 cisco.routers.voice_router
 cisco.routers.wavelength_router
 cisco.routers.wireless_router
-cisco.security.
 cisco.security.centri_firewall
 cisco.security.cisco_security
 cisco.security.firewall
@@ -1770,7 +1720,6 @@ cisco.security.lock
 cisco.security.network_security
 cisco.security.pix_firewall
 cisco.security.router_firewall
-cisco.servers.
 cisco.servers.cisco_unified_presence_server
 cisco.servers.communications_server
 cisco.servers.directory_server
@@ -1788,7 +1737,6 @@ cisco.servers.storage_server
 cisco.servers.unity_server
 cisco.servers.voice_commserver
 cisco.servers.www_server
-cisco.storage.
 cisco.storage.cisco_file_engine
 cisco.storage.cloud
 cisco.storage.diskette
@@ -1798,7 +1746,6 @@ cisco.storage.file_cabinet
 cisco.storage.relational_database
 cisco.storage.tape_array
 cisco.storage.web_cluster
-cisco.switches.
 cisco.switches.atm_fast_gigabit_etherswitch
 cisco.switches.atm_switch
 cisco.switches.class_4_5_switch
@@ -1823,7 +1770,6 @@ cisco.switches.virtual_layer_switch
 cisco.switches.voice_atm_switch
 cisco.switches.voice_switch
 cisco.switches.workgroup_switch
-cisco.wireless.
 cisco.wireless.antenna
 cisco.wireless.ground_terminal
 cisco.wireless.radio_tower
@@ -1835,7 +1781,6 @@ cisco.wireless.wireless_bridge
 cisco.wireless.wireless_location_appliance
 cisco.wireless.wireless_transport
 cisco.wireless.wlan_controller
-cisco19.
 cisco19.3g_4g_indicator
 cisco19.6500_vss
 cisco19.6500_vss2
@@ -2034,7 +1979,6 @@ cisco19.wireless_router
 cisco19.workgroup_switch
 cisco19.workstation
 cisco19.x509_certificate
-cisco_safe.architecture.
 cisco_safe.architecture.aci_controller
 cisco_safe.architecture.aci_leaf_switch
 cisco_safe.architecture.aci_spine_switch
@@ -2069,7 +2013,6 @@ cisco_safe.architecture.web_security
 cisco_safe.architecture.wide_area_application_engine
 cisco_safe.architecture.wireless_access_point
 cisco_safe.architecture.wireless_lan_controller
-cisco_safe.capability.
 cisco_safe.capability.access_control_using_trustsec
 cisco_safe.capability.analysis_correlation
 cisco_safe.capability.anomaly_detection
@@ -2126,7 +2069,6 @@ cisco_safe.capability.web_security
 cisco_safe.capability.wireless_connection
 cisco_safe.capability.wireless_intrusion_detection_system
 cisco_safe.capability.wireless_intrusion_prevention_system
-cisco_safe.design.
 cisco_safe.design.access_point
 cisco_safe.design.aci_controller
 cisco_safe.design.aci_leaf_switch
@@ -2177,7 +2119,6 @@ cisco_safe.design.web_security
 cisco_safe.design.wireless_corporate_device
 cisco_safe.design.wireless_switch
 cisco_safe.design.wlan_controller
-cisco_safe.threat.
 cisco_safe.threat.threat_a1
 cisco_safe.threat.threat_a2
 cisco_safe.threat.threat_a3
@@ -2218,7 +2159,6 @@ cisco_safe.threat.threat_e5
 cisco_safe.threat.threat_e6
 cisco_safe.threat.threat_e7
 cisco_safe.threat.threat_e8
-citrix.
 citrix.1u_2u_server
 citrix.access_card
 citrix.branch_repeater
@@ -2316,7 +2256,6 @@ citrix.xenclient_synchronizer
 citrix.xendesktop_server
 citrix.xenmobile
 citrix.xenserver
-eip.
 eip.aggregator
 eip.channel_adapter
 eip.channel_purger
@@ -2353,7 +2292,6 @@ eip.splitter
 eip.test_message
 eip.transactional_client
 eip.wire_tap
-electrical.abstract.
 electrical.abstract.amplifier
 electrical.abstract.controlled_amplifier
 electrical.abstract.dac
@@ -2375,7 +2313,6 @@ electrical.abstract.sum
 electrical.abstract.summation_point
 electrical.abstract.thermistor_with_independent_integral_heater
 electrical.abstract.voltage_regulator
-electrical.capacitors.
 electrical.capacitors.capacitor_1
 electrical.capacitors.capacitor_2
 electrical.capacitors.capacitor_3
@@ -2392,7 +2329,6 @@ electrical.capacitors.trimmer_capacitor_1
 electrical.capacitors.trimmer_capacitor_2
 electrical.capacitors.variable_capacitor_1
 electrical.capacitors.variable_capacitor_2
-electrical.diodes.
 electrical.diodes.diode
 electrical.diodes.field_effect_diode
 electrical.diodes.four_layer_diode
@@ -2406,7 +2342,6 @@ electrical.diodes.varactor_-_varicap
 electrical.diodes.zener_diode_1
 electrical.diodes.zener_diode_2
 electrical.diodes.zener_diode_3
-electrical.electro-mechanical.
 electrical.electro-mechanical.2-way_switch
 electrical.electro-mechanical.2_position_switch
 electrical.electro-mechanical.3_position_switch
@@ -2473,7 +2408,6 @@ electrical.electro-mechanical.time_delay_break_2
 electrical.electro-mechanical.time_delay_make
 electrical.electro-mechanical.time_delay_make_2
 electrical.electro-mechanical.two_way_contact
-electrical.iec417.
 electrical.iec417.ac-ac_converter
 electrical.iec417.ac-dc_converter
 electrical.iec417.ad_converter
@@ -2519,14 +2453,12 @@ electrical.iec417.transformer
 electrical.iec417.trim
 electrical.iec417.up_converter
 electrical.iec417.var
-electrical.iec_logic_gates.
 electrical.iec_logic_gates.and
 electrical.iec_logic_gates.nand
 electrical.iec_logic_gates.nor
 electrical.iec_logic_gates.not
 electrical.iec_logic_gates.or
 electrical.iec_logic_gates.xor
-electrical.inductors.
 electrical.inductors.1_phase_induction_volt_reg
 electrical.inductors.adjustable_transformer
 electrical.inductors.choke
@@ -2566,13 +2498,11 @@ electrical.inductors.transformer_2
 electrical.inductors.triplex_induction_volt_reg
 electrical.inductors.variable_inductor
 electrical.inductors.variometer
-electrical.instruments.
 electrical.instruments.ampermeter
 electrical.instruments.galvanometer
 electrical.instruments.oscilloscope
 electrical.instruments.signal_generator
 electrical.instruments.voltmeter
-electrical.logic_gates.
 electrical.logic_gates.and
 electrical.logic_gates.bandpass_filter
 electrical.logic_gates.buffer
@@ -2595,7 +2525,6 @@ electrical.logic_gates.synchronous_rs_latch
 electrical.logic_gates.t_type_flip-flop
 electrical.logic_gates.xnor
 electrical.logic_gates.xor
-electrical.miscellaneous.
 electrical.miscellaneous.2_conductor_jack
 electrical.miscellaneous.2_conductor_plug
 electrical.miscellaneous.3_conductor_jack
@@ -2659,7 +2588,6 @@ electrical.miscellaneous.thermocouple
 electrical.miscellaneous.thermopile
 electrical.miscellaneous.transducer
 electrical.miscellaneous.transducer_2
-electrical.mosfets1.
 electrical.mosfets1.dual_gate_mosfet
 electrical.mosfets1.dual_gate_mosfet_n
 electrical.mosfets1.dual_gate_mosfet_p
@@ -2679,7 +2607,6 @@ electrical.mosfets1.p-channel_mosfet_3
 electrical.mosfets1.p-channel_mosfet_4
 electrical.mosfets1.p-channel_mosfet_5
 electrical.mosfets1.p-channel_mosfet_6
-electrical.mosfets2.
 electrical.mosfets2.dual_gate_mosfet
 electrical.mosfets2.n-channel_mosfet_1
 electrical.mosfets2.n-channel_mosfet_2
@@ -2695,7 +2622,6 @@ electrical.mosfets2.p-channel_mosfet_4
 electrical.mosfets2.p-channel_mosfet_5
 electrical.mosfets2.p-channel_mosfet_6
 electrical.mosfets2.pmos_fet
-electrical.op_amps.
 electrical.op_amps.comparator
 electrical.op_amps.differentiator
 electrical.op_amps.integrator
@@ -2706,7 +2632,6 @@ electrical.op_amps.regen_comparator
 electrical.op_amps.subtractor
 electrical.op_amps.summing_amplifier
 electrical.op_amps.unity_gain_follower
-electrical.opto_electronics.
 electrical.opto_electronics.7_segment_display
 electrical.opto_electronics.7_segment_display_with_dp
 electrical.opto_electronics.9_segment_display
@@ -2722,14 +2647,12 @@ electrical.opto_electronics.photo_resistor_1
 electrical.opto_electronics.photo_resistor_2
 electrical.opto_electronics.photo_resistor_3
 electrical.opto_electronics.solar_cell
-electrical.plc_ladder.
 electrical.plc_ladder.contact
 electrical.plc_ladder.not_contact
 electrical.plc_ladder.not_output_1
 electrical.plc_ladder.not_output_2
 electrical.plc_ladder.output_1
 electrical.plc_ladder.output_2
-electrical.power_semiconductors.
 electrical.power_semiconductors.bridge_rectifier_1
 electrical.power_semiconductors.bridge_rectifier_2
 electrical.power_semiconductors.bridge_rectifier_3
@@ -2751,7 +2674,6 @@ electrical.power_semiconductors.scr_2
 electrical.power_semiconductors.sidac
 electrical.power_semiconductors.triac_1
 electrical.power_semiconductors.triac_2
-electrical.radio.
 electrical.radio.aerial_-_antenna_1
 electrical.radio.aerial_-_antenna_2
 electrical.radio.buzzer
@@ -2763,7 +2685,6 @@ electrical.radio.headphones
 electrical.radio.loop_antenna
 electrical.radio.microphone_1
 electrical.radio.microphone_2
-electrical.resistors.
 electrical.resistors.attenuator
 electrical.resistors.magnetoresistor
 electrical.resistors.memristor_1
@@ -2787,7 +2708,6 @@ electrical.resistors.trimmer_resistor_1
 electrical.resistors.trimmer_resistor_2
 electrical.resistors.variable_resistor_1
 electrical.resistors.variable_resistor_2
-electrical.rot_mech.
 electrical.rot_mech.armature
 electrical.rot_mech.automatic_return
 electrical.rot_mech.blocking_device
@@ -2803,7 +2723,6 @@ electrical.rot_mech.mechanical_interlock
 electrical.rot_mech.rotation
 electrical.rot_mech.synchro
 electrical.rot_mech.winding_connection
-electrical.signal_sources.
 electrical.signal_sources.ac_source
 electrical.signal_sources.current_flow
 electrical.signal_sources.current_source
@@ -2822,7 +2741,6 @@ electrical.signal_sources.signal_ground
 electrical.signal_sources.vdd
 electrical.signal_sources.voltage
 electrical.signal_sources.vss2
-electrical.thermionic_devices.
 electrical.thermionic_devices.diode
 electrical.thermionic_devices.double_diode
 electrical.thermionic_devices.double_triode
@@ -2830,7 +2748,6 @@ electrical.thermionic_devices.pentode
 electrical.thermionic_devices.photocell
 electrical.thermionic_devices.tetrode
 electrical.thermionic_devices.triode
-electrical.transistors.
 electrical.transistors.complementary_unijunction
 electrical.transistors.darlington_pair
 electrical.transistors.n-channel_jfet_1
@@ -2848,7 +2765,6 @@ electrical.transistors.pnp_transistor_2
 electrical.transistors.pnp_transistor_3
 electrical.transistors.pnp_transistor_4
 electrical.transistors.unijunction
-electrical.transmission.
 electrical.transmission.2_line_bus
 electrical.transmission.3_line_bus
 electrical.transmission.4_line_bus
@@ -2861,7 +2777,6 @@ electrical.transmission.line_concentrator
 electrical.transmission.optical_fiber
 electrical.transmission.overground_enclosure
 electrical.transmission.terminal_3_phase
-electrical.waveforms.
 electrical.waveforms.data_changing
 electrical.waveforms.data_ending
 electrical.waveforms.data_invalid_1
@@ -2885,7 +2800,6 @@ electrical.waveforms.timing_mark_1
 electrical.waveforms.timing_mark_2
 electrical.waveforms.timing_mark_3
 electrical.waveforms.up_ramp
-floorplan.
 floorplan.bathtub
 floorplan.bed_double
 floorplan.bed_single
@@ -2924,7 +2838,6 @@ floorplan.table_5
 floorplan.toilet
 floorplan.water_cooler
 floorplan.workstation
-flowchart.
 flowchart.annotation_1
 flowchart.annotation_2
 flowchart.card
@@ -2959,7 +2872,6 @@ flowchart.stored_data
 flowchart.summing_function
 flowchart.terminator
 flowchart.transfer
-gcp.big_data.
 gcp.big_data.bigquery
 gcp.big_data.cloud_dataflow
 gcp.big_data.cloud_datalab
@@ -2968,7 +2880,6 @@ gcp.big_data.cloud_dataproc
 gcp.big_data.cloud_pubsub
 gcp.big_data.data_studio
 gcp.big_data.genomics
-gcp.compute.
 gcp.compute.app_engine
 gcp.compute.cloud_functions
 gcp.compute.compute_engine
@@ -2976,24 +2887,20 @@ gcp.compute.container_engine
 gcp.compute.container_optimized_os
 gcp.compute.container_registry
 gcp.compute.gpu
-gcp.developer_tools.
 gcp.developer_tools.cloud_tools_for_powershell
 gcp.developer_tools.cloud_tools_for_visual_studio
 gcp.developer_tools.deployment_manager
-gcp.extras.
 gcp.extras.blue_hexagon
 gcp.extras.generic_gcp
 gcp.extras.google_cloud_platform
 gcp.extras.google_cloud_platform_lockup
 gcp.extras.prediction_api
-gcp.identity_and_security.
 gcp.identity_and_security.beyondcorp
 gcp.identity_and_security.cloud_data_loss_prevention_api
 gcp.identity_and_security.cloud_iam
 gcp.identity_and_security.cloud_identity_aware_proxy
 gcp.identity_and_security.cloud_platform_security
 gcp.identity_and_security.security_key_enforcement
-gcp.machine_learning.
 gcp.machine_learning.cloud_machine_learning
 gcp.machine_learning.cloud_video_intelligence_api
 gcp.machine_learning.jobs_api
@@ -3001,7 +2908,6 @@ gcp.machine_learning.natural_language_api
 gcp.machine_learning.speech_api
 gcp.machine_learning.translation_api
 gcp.machine_learning.vision_api
-gcp.management_tools.
 gcp.management_tools.cloud_apis
 gcp.management_tools.cloud_endpoints
 gcp.management_tools.debugger
@@ -3011,7 +2917,6 @@ gcp.management_tools.logging
 gcp.management_tools.monitoring
 gcp.management_tools.stackdriver
 gcp.management_tools.trace
-gcp.networking.
 gcp.networking.cloud_cdn
 gcp.networking.cloud_dns
 gcp.networking.cloud_external_ip_addresses
@@ -3024,18 +2929,15 @@ gcp.networking.cloud_router
 gcp.networking.cloud_routes
 gcp.networking.cloud_virtual_network
 gcp.networking.cloud_vpn
-gcp.product_cards.
 gcp.product_cards.close
 gcp.product_cards.disk
 gcp.product_cards.standard_machine
-gcp.storage_databases.
 gcp.storage_databases.cloud_bigtable
 gcp.storage_databases.cloud_datastore
 gcp.storage_databases.cloud_spanner
 gcp.storage_databases.cloud_sql
 gcp.storage_databases.cloud_storage
 gcp.storage_databases.persistent_disk
-gcp2.
 gcp2.a7_power
 gcp2.admin_connected
 gcp2.admob
@@ -3333,7 +3235,6 @@ gcp2.vpn
 gcp2.vpn_gateway
 gcp2.webcam
 gcp2.website
-gmdl.
 gmdl.attachment
 gmdl.attractions
 gmdl.back
@@ -3438,7 +3339,6 @@ gmdl.webpage
 gmdl.wifi
 gmdl.wind
 gmdl.x
-ibm.
 ibm.classictag
 ibm.cloudtag
 ibm.enterprisetag
@@ -3447,7 +3347,6 @@ ibm.regiontag
 ibm.subnettag
 ibm.vpctag
 ibm.zonetag
-ios7.icons.
 ios7.icons.add
 ios7.icons.alarm_clock
 ios7.icons.back
@@ -3559,7 +3458,6 @@ ios7.icons.volume_2
 ios7.icons.wallet
 ios7.icons.wifi
 ios7.icons.window
-ios7.misc.
 ios7.misc.add
 ios7.misc.adjust
 ios7.misc.bluetooth
@@ -3613,7 +3511,6 @@ ios7.misc.volume_down
 ios7.misc.volume_up
 ios7.misc.vpn
 ios7.misc.wifi
-kubernetes.
 kubernetes.api
 kubernetes.c_c_m
 kubernetes.c_m
@@ -3654,7 +3551,6 @@ kubernetes.sts
 kubernetes.svc
 kubernetes.user
 kubernetes.vol
-lean_mapping.
 lean_mapping.finished_goods_to_customer
 lean_mapping.go_see_production_scheduling
 lean_mapping.kaizen_lightening_burst
@@ -3668,7 +3564,6 @@ lean_mapping.verbal
 lean_mapping.airplane_7
 lean_mapping.manual_info_flow
 lean_mapping.electronic_info_flow
-mockup.advertising.
 mockup.advertising.3-1_rec
 mockup.advertising.banner_468x60
 mockup.advertising.button_120x90
@@ -3686,12 +3581,10 @@ mockup.advertising.square_pop-up_250x250
 mockup.advertising.vertical_banner_120x240
 mockup.advertising.vertical_rec_240x400
 mockup.advertising.wide_sky_160x600
-mockup.calendars.
 mockup.calendars.calendar_1
 mockup.calendars.calendar_2
 mockup.calendars.calendar_2_months_vertical
 mockup.calendars.calendar_2_months_horizontal
-mockup.carousel.
 mockup.carousel.carousel_1
 mockup.carousel.status_display_1
 mockup.carousel.next-prev
@@ -3704,13 +3597,11 @@ mockup.carousel.carousel_6
 mockup.carousel.carousel_7
 mockup.carousel.prev
 mockup.carousel.status_display_2
-mockup.charts_and_tables.
 mockup.charts_and_tables.bar_chart
 mockup.charts_and_tables.table
 mockup.charts_and_tables.graph
 mockup.charts_and_tables.bar_graph
 mockup.charts_and_tables.piechart
-mockup.controls.
 mockup.controls.horizontal_slidebar
 mockup.controls.on-off_button_4
 mockup.controls.knob_1
@@ -3723,7 +3614,6 @@ mockup.controls.vertical_slidebar
 mockup.controls.on-off_button_1
 mockup.controls.on-off_button_2
 mockup.controls.on-off_button_3
-mockup.form_elements.
 mockup.form_elements.alert_textbox
 mockup.form_elements.city_state_postal_code
 mockup.form_elements.date
@@ -3735,7 +3625,6 @@ mockup.form_elements.radio_button_off
 mockup.form_elements.radio_button_on
 mockup.form_elements.checkbox_off
 mockup.form_elements.checkbox_on
-mockup.menus_and_buttons.
 mockup.menus_and_buttons.primary_and_secondary_1
 mockup.menus_and_buttons.primary_and_secondary_2
 mockup.menus_and_buttons.edit
@@ -3751,7 +3640,6 @@ mockup.menus_and_buttons.font_style_selector_3
 mockup.menus_and_buttons.drop_down_menu
 mockup.menus_and_buttons.font_selector
 mockup.menus_and_buttons.line_width_selector
-mockup.misc.
 mockup.misc.critical_icon
 mockup.misc.cursor_arrow
 mockup.misc.cursor_hand
@@ -3774,14 +3662,12 @@ mockup.misc.star_rating
 mockup.misc.vertical_splitter
 mockup.misc.video
 mockup.misc.warning_icon
-mockup.tabs.
 mockup.tabs.horizontal_tabs_1
 mockup.tabs.horizontal_tabs_2
 mockup.tabs.vertical_tabs_1
 mockup.tabs.vertical_tabs_2
 mockup.tabs.vertical_tabs_3
 mockup.tabs.vertical_tabs_4
-mscae.cloud.
 mscae.cloud.active_directory
 mscae.cloud.active_directory_b2b
 mscae.cloud.active_directory_b2c
@@ -3908,7 +3794,6 @@ mscae.cloud.webhooks
 mscae.cloud.webjobs
 mscae.cloud.worker_pools
 mscae.cloud.work_account
-mscae.deprecated.
 mscae.deprecated.application
 mscae.deprecated.application_gateway
 mscae.deprecated.azure
@@ -3922,7 +3807,6 @@ mscae.deprecated.data_services
 mscae.deprecated.poster_arrow
 mscae.deprecated.sql_data_warehouse
 mscae.deprecated.sql_server_stretch_db
-mscae.enterprise.
 mscae.enterprise.ad_fs
 mscae.enterprise.android_phone
 mscae.enterprise.application
@@ -3997,7 +3881,6 @@ mscae.enterprise.windows_server
 mscae.enterprise.wireless_connection
 mscae.enterprise.workstation_client
 mscae.enterprise.xml_web_service
-mscae.general.
 mscae.general.audio
 mscae.general.bug
 mscae.general.cable_settop_tv_box
@@ -4019,7 +3902,6 @@ mscae.general.tasks
 mscae.general.task_list
 mscae.general.tunnel
 mscae.general.video
-mscae.general_symbols.
 mscae.general_symbols.attachments
 mscae.general_symbols.clock_time
 mscae.general_symbols.ellipses
@@ -4030,7 +3912,6 @@ mscae.general_symbols.premium_star
 mscae.general_symbols.slider_bar_horz
 mscae.general_symbols.slider_bar_vert
 mscae.general_symbols.waiting
-mscae.intune.
 mscae.intune.account_portal
 mscae.intune.administration
 mscae.intune.alerts
@@ -4075,7 +3956,6 @@ mscae.intune.terms_and_conditions
 mscae.intune.update
 mscae.intune.user_group
 mscae.intune.user_management
-mscae.oms.
 mscae.oms.alerts
 mscae.oms.app_with_changes
 mscae.oms.assessments
@@ -4096,7 +3976,6 @@ mscae.oms.solutions
 mscae.oms.system_update
 mscae.oms.track_changes
 mscae.oms.wire_data
-mscae.opsmanager.
 mscae.opsmanager.advanced_group_policy_management
 mscae.opsmanager.applications
 mscae.opsmanager.application_virtualization
@@ -4115,7 +3994,6 @@ mscae.opsmanager.runtime
 mscae.opsmanager.service_manager
 mscae.opsmanager.ssd
 mscae.opsmanager.virtual_machine_manager
-mscae.other.
 mscae.other.access
 mscae.other.bi_product_icon
 mscae.other.cortana
@@ -4132,7 +4010,6 @@ mscae.other.windows
 mscae.other.word
 mscae.other.xbox
 mscae.other.xbox_one
-mscae.system_center.
 mscae.system_center.admin_console
 mscae.system_center.central_administration_site_sql
 mscae.system_center.cloud_distribution_point
@@ -4142,7 +4019,6 @@ mscae.system_center.primary_site
 mscae.system_center.roles
 mscae.system_center.secondary_site
 mscae.system_center.software_update_point
-mscae.vm.
 mscae.vm.active_directory
 mscae.vm.active_directory_multi
 mscae.vm.application_server
@@ -4160,7 +4036,6 @@ mscae.vm.web_server
 mscae.vm.web_server_multi
 mscae.vm.windows_server
 mscae.vm.windows_server_multi
-networks.
 networks.biometric_reader
 networks.business_center
 networks.cloud
@@ -4218,7 +4093,6 @@ networks.virus
 networks.web_server
 networks.wireless_hub
 networks.wireless_modem
-office.clouds.
 office.clouds.azure
 office.clouds.cloud
 office.clouds.cloud_disaster
@@ -4231,7 +4105,6 @@ office.clouds.online_user
 office.clouds.private_cloud
 office.clouds.public_cloud
 office.clouds.public_im_cloud_service
-office.communications.
 office.communications.3rd_party_call_center_solution
 office.communications.3rd_party_integration
 office.communications.3rd_party_service
@@ -4302,7 +4175,6 @@ office.communications.voice_workload
 office.communications.voip_gateway
 office.communications.watcher_node
 office.communications.xmpp_service
-office.concepts.
 office.concepts.address_book
 office.concepts.anti_spam
 office.concepts.application_android
@@ -4408,7 +4280,6 @@ office.concepts.web_services
 office.concepts.whats_new
 office.concepts.writing_pen
 office.concepts.writing_pencil
-office.databases.
 office.databases.address_book_store
 office.databases.application_store
 office.databases.database
@@ -4433,7 +4304,6 @@ office.databases.mailbox_database
 office.databases.monitoring_store
 office.databases.unified_contact_store
 office.databases.web_store
-office.devices.
 office.devices.bluetooth
 office.devices.cd_dvd
 office.devices.cell_phone_android_proportional
@@ -4482,7 +4352,6 @@ office.devices.webcam_hd
 office.devices.workstation
 office.devices.workstation_pc
 office.devices.workstation_visual_studio
-office.security.
 office.security.active_directory
 office.security.address_book_policies
 office.security.certificate
@@ -4516,7 +4385,6 @@ office.security.token_service
 office.security.trusted_application_server
 office.security.um_mailbox_policy
 office.security.universal_security_group
-office.servers.
 office.servers.3rd_party_mail_server
 office.servers.active_directory_federation_services_proxy
 office.servers.active_directory_federation_services_server
@@ -4600,7 +4468,6 @@ office.servers.web_server_green
 office.servers.web_server_orange
 office.servers.windows_router
 office.servers.windows_server
-office.services.
 office.services.3rd_party_service
 office.services.access_services
 office.services.business_connectivity_services
@@ -4627,7 +4494,6 @@ office.services.verification_service
 office.services.web_services
 office.services.word_automation_services
 office.services.xmpp_service
-office.sites.
 office.sites.access_services
 office.sites.blog_site
 office.sites.business_connectivity_services
@@ -4645,7 +4511,6 @@ office.sites.website
 office.sites.website_public
 office.sites.wiki_site
 office.sites.word_automation_services
-office.users.
 office.users.administrator
 office.users.approver
 office.users.call_center_agent
@@ -4677,7 +4542,6 @@ office.users.user_external
 office.users.user_services
 office.users.user_store
 office.users.writer
-pid.agitators.
 pid.agitators.agitator,_stirrer
 pid.agitators.agitator_(anchor)
 pid.agitators.agitator_(cross-beam)
@@ -4688,14 +4552,12 @@ pid.agitators.agitator_(helical)
 pid.agitators.agitator_(impeller)
 pid.agitators.agitator_(propeller)
 pid.agitators.agitator_(turbine)
-pid.apparatus_elements.
 pid.apparatus_elements.manhole
 pid.apparatus_elements.socket,_connection_nozzle
 pid.apparatus_elements.support_bracket
 pid.apparatus_elements.support_leg
 pid.apparatus_elements.support_ring
 pid.apparatus_elements.support_skirt
-pid.centrifuges.
 pid.centrifuges.centrifuge,_decanter_(screw,_solid_shell)
 pid.centrifuges.centrifuge_(high_speed)
 pid.centrifuges.centrifuge_(perforated_shell)
@@ -4704,7 +4566,6 @@ pid.centrifuges.centrifuge_(screw,_perforated_shell)
 pid.centrifuges.centrifuge_(separator_disc)
 pid.centrifuges.centrifuge_(skimmer)
 pid.centrifuges.centrifuge_(solid_shell)
-pid.compressors.
 pid.compressors.ac_air_compressor
 pid.compressors.centrifugal_compressor
 pid.compressors.centrifugal_compressor_-_turbine_driven
@@ -4714,7 +4575,6 @@ pid.compressors.liquid_ring_compressor
 pid.compressors.reciprocating_compressor
 pid.compressors.reciprocating_compressor_2
 pid.compressors.rotary_compressor
-pid.compressors_-_iso.
 pid.compressors_-_iso.blower,_fan
 pid.compressors_-_iso.compressor,_vacuum_pump
 pid.compressors_-_iso.compressor_(centrifugal)
@@ -4726,7 +4586,6 @@ pid.compressors_-_iso.compressor_(roller_vane)
 pid.compressors_-_iso.compressor_(rotary)
 pid.compressors_-_iso.compressor_(screw)
 pid.compressors_-_iso.compressor_(turbo)
-pid.crushers_grinding.
 pid.crushers_grinding.crusher
 pid.crushers_grinding.crusher_(cone)
 pid.crushers_grinding.crusher_(hammer)
@@ -4739,7 +4598,6 @@ pid.crushers_grinding.mill,_pulverizer_(hammer)
 pid.crushers_grinding.mill,_pulverizer_(impact)
 pid.crushers_grinding.mill_(roller)
 pid.crushers_grinding.mill_(vibration)
-pid.driers.
 pid.driers.drier
 pid.driers.drier_(fluidized_bed)
 pid.driers.drier_(roller_conveyor_belt)
@@ -4748,7 +4606,6 @@ pid.driers.heat_consumer
 pid.driers.rotary_drum_drier,_tumbling_drier
 pid.driers.spray_drier
 pid.driers.turbo_drier,_disc_drier,_moving_shelf_drier
-pid.engines.
 pid.engines.electric_motor
 pid.engines.electric_motor_(ac)
 pid.engines.electric_motor_(dc)
@@ -4757,13 +4614,11 @@ pid.engines.generator
 pid.engines.generator_(ac)
 pid.engines.generator_(dc)
 pid.engines.turbine
-pid.feeders.
 pid.feeders.feeder_(rotary_table)
 pid.feeders.proportional_feeder
 pid.feeders.proportional_feeder_(metering)
 pid.feeders.proportional_feeder_(rotary_valve)
 pid.feeders.spray_nozzle
-pid.filters.
 pid.filters.filter
 pid.filters.gas_filter
 pid.filters.gas_filter_(bag,_candle,_cartridge)
@@ -4780,7 +4635,6 @@ pid.filters.liquid_filter_(rotary,_drum_or_disc)
 pid.filters.liquid_filter_(rotary,_drum_or_disc,_scraper)
 pid.filters.press_filter
 pid.filters.suction_filter
-pid.fittings.
 pid.fittings.blind_disc
 pid.fittings.breakthrough
 pid.fittings.clamped_flange_coupling
@@ -4810,7 +4664,6 @@ pid.fittings.strainer_(cone)
 pid.fittings.vent
 pid.fittings.viewing_glass
 pid.fittings.viewing_glass_(lighting)
-pid.flow_sensors.
 pid.flow_sensors.averging_pitot_tube
 pid.flow_sensors.coriolis
 pid.flow_sensors.flow_nozzle
@@ -4827,7 +4680,6 @@ pid.flow_sensors.venturi
 pid.flow_sensors.vortex
 pid.flow_sensors.wedge
 pid.flow_sensors.weir
-pid.heat_exchangers.
 pid.heat_exchangers.condenser
 pid.heat_exchangers.double_pipe_heat_exchanger
 pid.heat_exchangers.electric_heater
@@ -4851,7 +4703,6 @@ pid.heat_exchangers.spiral_heat_exchanger
 pid.heat_exchangers.thin-film_evaporator
 pid.heat_exchangers.u-tube_heat_exchanger
 pid.heat_exchangers.u_shaped_tubes_heat_exchanger
-pid.instruments.
 pid.instruments.analyzer_transmitter
 pid.instruments.flow_element
 pid.instruments.flow_indicator
@@ -4876,7 +4727,6 @@ pid.instruments.temperature_element
 pid.instruments.temperature_indicator
 pid.instruments.temperature_recorder
 pid.instruments.temperature_transmitter
-pid.misc.
 pid.misc.aerator_with_sparger
 pid.misc.air_cooler
 pid.misc.air_filter
@@ -4951,12 +4801,10 @@ pid.misc.stack,_chimney
 pid.misc.steam_trap
 pid.misc.tank_car,_tank_wagon
 pid.misc.viewing_glass
-pid.mixers.
 pid.mixers.in-line_rotary_mixer
 pid.mixers.in-line_static_mixer
 pid.mixers.kneader
 pid.mixers.mixing_path
-pid.piping.
 pid.piping.basket_strainer
 pid.piping.blank
 pid.piping.breather
@@ -4994,7 +4842,6 @@ pid.piping.temporary_strainer
 pid.piping.vent_silencer
 pid.piping.welded_connection
 pid.piping.y-type_strainer
-pid.pumps.
 pid.pumps.cavity_pump
 pid.pumps.centrifugal_pump_1
 pid.pumps.centrifugal_pump_2
@@ -5013,7 +4860,6 @@ pid.pumps.sump_pump
 pid.pumps.turbine
 pid.pumps.vacuum_pump
 pid.pumps.vertical_pump
-pid.pumps_-_din.
 pid.pumps_-_din.centrifugal
 pid.pumps_-_din.diaphragm
 pid.pumps_-_din.eccentric_worm
@@ -5024,7 +4870,6 @@ pid.pumps_-_din.liquid_jet
 pid.pumps_-_din.reciprocating
 pid.pumps_-_din.rotary_piston
 pid.pumps_-_din.screw
-pid.pumps_-_iso.
 pid.pumps_-_iso.jet_pump_(liquid)
 pid.pumps_-_iso.pump_(centrifugal)
 pid.pumps_-_iso.pump_(diaphragm)
@@ -5034,7 +4879,6 @@ pid.pumps_-_iso.pump_(positive_displacement)
 pid.pumps_-_iso.pump_(progressive_cavity)
 pid.pumps_-_iso.pump_(reciprocating_piston)
 pid.pumps_-_iso.pump_(screw)
-pid.separators.
 pid.separators.gravity_separator,_settling_chamber
 pid.separators.impact_separator
 pid.separators.separator,_sifter
@@ -5048,7 +4892,6 @@ pid.separators.separator_(wet_scrubber)
 pid.separators.solidifier_(closed)
 pid.separators.solidifier_(open)
 pid.separators.spray_scrubber
-pid.shaping_machines.
 pid.shaping_machines.extruder_(piston)
 pid.shaping_machines.extruder_(screw)
 pid.shaping_machines.pelletizing_disc
@@ -5056,7 +4899,6 @@ pid.shaping_machines.press_(piston)
 pid.shaping_machines.press_(roller)
 pid.shaping_machines.shaping_machine_(horizontal)
 pid.shaping_machines.shaping_machine_(vertical)
-pid.valves.
 pid.valves.angle
 pid.valves.back_pressure_regulator_1
 pid.valves.back_pressure_regulator_2
@@ -5089,7 +4931,6 @@ pid.valves.safety_psv_1
 pid.valves.safety_psv_2
 pid.valves.solenoid_valve_closed
 pid.valves.three-way_valve
-pid.vessels.
 pid.vessels.bag
 pid.vessels.bag_(iso)
 pid.vessels.barrel,_drum
@@ -5153,11 +4994,9 @@ pid.vessels.vessel_(dome)
 pid.vessels.vessel_(full-tube_heating-cooling_coil)
 pid.vessels.vessel_(pit)
 pid.vessels.vessel_(semi-tube_heating-cooling_coil)
-rack.apc.
 rack.apc.apc_smart_ups_1000-3000_va_2u
 rack.apc.apc_smart_ups_5000_va_5u
 rack.apc.apc_smart_ups_750_va_1u
-rack.cisco.
 rack.cisco.cisco_1905_serial_integrated_services_router
 rack.cisco.cisco_1921_integrated_services_router
 rack.cisco.cisco_1941_series_integrated_services_router
@@ -5259,7 +5098,6 @@ rack.cisco.cisco_wave_8541
 rack.cisco.cisco_web_security_appliance_s170
 rack.cisco.cisco_web_security_appliance_s370
 rack.cisco.cisco_web_security_appliance_s670
-rack.dell.
 rack.dell.dell_poweredge_1u
 rack.dell.dell_poweredge_2u
 rack.dell.dell_poweredge_4u
@@ -5293,7 +5131,6 @@ rack.dell.poweredge_r840
 rack.dell.poweredge_r940
 rack.dell.poweredge_r940xa
 rack.dell.poweredge_xr2
-rack.f5.
 rack.f5.arx_1000
 rack.f5.arx_1500
 rack.f5.arx_2000
@@ -5319,7 +5156,6 @@ rack.f5.firepass_4100
 rack.f5.viprion_2400
 rack.f5.viprion_4400
 rack.f5.viprion_4800
-rack.general.
 rack.general.12u_rack_19_standard
 rack.general.1u_rack_server
 rack.general.1u
@@ -5346,7 +5182,6 @@ rack.general.server_2
 rack.general.server_3
 rack.general.switches_1
 rack.general.switches_2
-rack.hp.
 rack.hp.hp_6125g_ethernet_blade_switch
 rack.hp.hp_bladesystem_c3000_enclosure
 rack.hp.hp_bladesystem_c7000_enclosure
@@ -5366,7 +5201,6 @@ rack.hp.hp_proliant_dl560_g8
 rack.hp.hp_proliant_sl230s_g8
 rack.hp.hp_proliant_sl250s_g8
 rack.hp.hp_virtual_connect_flex-10-10d
-rack.ibm.
 rack.ibm.ibm_11000va_ups
 rack.ibm.ibm_1500-2200va_ups
 rack.ibm.ibm_1754_local_console_manager
@@ -5388,7 +5222,6 @@ rack.ibm.ibm_x3750
 rack.ibm.ibm_x3755_m3
 rack.ibm.ibm_x3850_x5
 rack.ibm.ibm_x3950_x5
-rack.oracle.
 rack.oracle.netra_blade_x3-2b_server
 rack.oracle.netra_cp3260_atca_blade_server
 rack.oracle.netra_cp3270_atca_blade_server
@@ -5426,7 +5259,6 @@ rack.oracle.sunfire_x2100
 rack.oracle.sunfire_x4100
 rack.oracle.sunfire_x4500
 rack.oracle.sunfire_x4600
-signs.animals.
 signs.animals.bear_1
 signs.animals.bear_2
 signs.animals.deer_1
@@ -5442,7 +5274,6 @@ signs.animals.sloth
 signs.animals.snake
 signs.animals.stable
 signs.animals.teddy_bear
-signs.food.
 signs.food.bar
 signs.food.cans_and_bottles
 signs.food.coffee
@@ -5453,7 +5284,6 @@ signs.food.food_truck
 signs.food.knife
 signs.food.restaurant_1
 signs.food.restaurant_2
-signs.healthcare.
 signs.healthcare.alternative_medicine
 signs.healthcare.anesthesia
 signs.healthcare.assistive_listening_system
@@ -5504,7 +5334,6 @@ signs.healthcare.ultrasound
 signs.healthcare.wheelchair_accessible_1
 signs.healthcare.wheelchair_accessible_2
 signs.healthcare.wheelchair_accessible_3
-signs.nature.
 signs.nature.earth
 signs.nature.jupiter
 signs.nature.maple_leaf
@@ -5522,7 +5351,6 @@ signs.nature.sun_4
 signs.nature.tsunami
 signs.nature.uranus
 signs.nature.venus
-signs.people.
 signs.people.baby_1
 signs.people.baby_2
 signs.people.changing_station
@@ -5542,7 +5370,6 @@ signs.people.waiting_room_2
 signs.people.walking
 signs.people.woman_1
 signs.people.woman_2
-signs.safety.
 signs.safety.biohazard
 signs.safety.caution
 signs.safety.chemical_weapon
@@ -5563,14 +5390,12 @@ signs.safety.radiation
 signs.safety.slip_hazard
 signs.safety.store_right_up_1
 signs.safety.store_right_up_2
-signs.science.
 signs.science.laboratory
 signs.science.magnet
 signs.science.microscope
 signs.science.nuclear_1
 signs.science.nuclear_2
 signs.science.windmill
-signs.sports.
 signs.sports.amphiteater
 signs.sports.archery
 signs.sports.baseball
@@ -5651,7 +5476,6 @@ signs.sports.waterskiing
 signs.sports.whale_viewing
 signs.sports.windsurfing
 signs.sports.wood_gathering
-signs.tech.
 signs.tech.at_1
 signs.tech.at_2
 signs.tech.camera_1
@@ -5675,7 +5499,6 @@ signs.tech.telephone_5
 signs.tech.usb
 signs.tech.video_camera
 signs.tech.washing_machine
-signs.transportation.
 signs.transportation.4_wheeler
 signs.transportation.airbag
 signs.transportation.airplane_1
@@ -5751,7 +5574,6 @@ signs.transportation.truck_6
 signs.transportation.truck_7
 signs.transportation.uneven_road
 signs.transportation.vehicle_ferry
-signs.travel.
 signs.travel.arriving_flights
 signs.travel.arrow_east
 signs.travel.arrow_ne
@@ -5801,7 +5623,6 @@ signs.travel.ticket_machine
 signs.travel.ticket_purchase
 signs.travel.tunnel
 signs.travel.upstairs
-sitemap.
 sitemap.about_us
 sitemap.audio
 sitemap.biography
@@ -5852,7 +5673,6 @@ sitemap.upload
 sitemap.user
 sitemap.video
 sitemap.warning
-veeam.2d.
 veeam.2d.1ftvm
 veeam.2d.1ftvm_error
 veeam.2d.1ftvm_running
@@ -5988,7 +5808,6 @@ veeam.2d.wan_accelerator
 veeam.2d.web_console
 veeam.2d.web_ui
 veeam.2d.workstation
-veeam.3d.
 veeam.3d.1ftvm
 veeam.3d.1ftvm_error
 veeam.3d.1ftvm_running
@@ -6056,7 +5875,6 @@ veeam.3d.vm_windows
 veeam.3d.vnic
 veeam.3d.wan_accelerator
 veeam.3d.workstation
-veeam.
 veeam.active
 veeam.active_directory
 veeam.advanced_refs_integration
@@ -6188,7 +6006,6 @@ veeam.vsphere_server
 veeam.windows_linux_server
 veeam.windows_repository
 veeam.zipped
-veeam2.
 veeam2.1u_server
 veeam2.agent
 veeam2.ahv_host
@@ -6436,7 +6253,6 @@ veeam2.windows_vm
 veeam2.wireguard
 veeam2.workstation
 veeam2.zipped
-vvd.
 vvd.administrator
 vvd.app
 vvd.appstack_volume
@@ -6531,7 +6347,6 @@ vvd.wavefront
 vvd.web_browser
 vvd.wi_fi
 vvd.writable_volume
-webicons.
 webicons.adfty
 webicons.adobe_pdf
 webicons.aim
@@ -6708,7 +6523,6 @@ webicons.yandex
 webicons.yelp
 webicons.yoolink
 webicons.youmob
-weblogos.
 weblogos.adfty
 weblogos.adobe_pdf
 weblogos.aim

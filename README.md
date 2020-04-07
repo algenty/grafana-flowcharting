@@ -24,6 +24,9 @@ See more example at draw.io
 # Documentation
 <https://algenty.github.io/flowcharting-repository/>
 
+# Demo site
+https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1
+
 # Project site
 <https://github.com/algenty/grafana-flowcharting>
 
@@ -50,9 +53,11 @@ Arnaud
   - shape stills select when deleting map.
   - select list (typeahead) in fields 'whats' and map values for string type in rules
   - Level State with range or value mapping.
-  - TODO : Scale in graph
+  - TODO : Scale in graph not correct
   - TODO : decimals when 0
   - TODO : Min and max range when empty
+  - TODO : With in text mapping is empty after clone or save/reload
+  - TODO : Lock saved in flowchart option [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/138) 
 
 ## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
 ### Added  
@@ -220,6 +225,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Having troubles with flowcharting ? Check out [issues](https://github.com/algenty/grafana-flowcharting/issues)
   - Email : <grafana.flowcharting@gmail.com>
   - Twitter : https://twitter.com/gf_flowcharting
+  - RSS feed news : http://algenty.github.io/flowcharting-repository/news.xml
 
 # Dependencies
 

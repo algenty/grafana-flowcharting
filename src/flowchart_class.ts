@@ -71,16 +71,17 @@ export default class Flowchart {
     if (!!obj.zoom) {
       this.data.zoom = obj.zoom;
     }
-    if (!!obj.center || this.data.center === false) {
+    if (!!obj.center || obj.center === false) {
       this.data.center = obj.center;
     }
-    if (!!obj.scale || this.data.scale === false) {
+    if (!!obj.scale || obj.scale === false) {
       this.data.scale = obj.scale;
     }
-    if (!!obj.lock || this.data.lock === false) {
+
+    if (!!obj.lock || obj.lock === false) {
       this.data.lock = obj.lock;
     }
-    if (!!obj.allowDrawio || this.data.allowDrawio === false) {
+    if (!!obj.allowDrawio || obj.allowDrawio === false) {
       this.data.allowDrawio = obj.allowDrawio;
     }
     if (!!obj.enableAnim || obj.enableAnim === false) {
