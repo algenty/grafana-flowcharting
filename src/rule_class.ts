@@ -953,6 +953,7 @@ export default class Rule {
     // STRING
     if (this.data.type === 'string') {
       let thresholdLevel = 0;
+      const formatedValue = this.getFormattedValue(value);
       let thresholds = this.data.stringThresholds;
       if (thresholds === undefined || thresholds.length === 0) {
         return -1;
@@ -960,7 +961,7 @@ export default class Rule {
       let l = thresholds.length;
       for (let index = 0; index < l; index++) {
         const t = thresholds[index];
-        if (GFP.utils.matchString(value, t)) {
+        if (GFP.utils.matchString(value, t) || GFP.utils.matchString(formatedValue, t)) {
           thresholdLevel = index + 1;
           break;
         }

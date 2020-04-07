@@ -43,11 +43,16 @@ Arnaud
 
 ## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-04-04    
 ### Add
-  - Add Identify by Value in field 'what' in rules
+  - Add Identify by Value in field 'what' in rules  
+  - Add option to disable regex for best perf  
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
   - shape stills select when deleting map.
   - select list (typeahead) in fields 'whats' and map values for string type in rules
+  - Level State with range or value mapping.
+  - TODO : Scale in graph
+  - TODO : decimals when 0
+  - TODO : Min and max range when empty
 
 ## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
 ### Added  
