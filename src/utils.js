@@ -185,11 +185,7 @@ module.exports = {
     if (str === pattern) return true;
     if (regex) {
       const regex = this.stringToJsRegex(pattern);
-      const matching = str.toString().match(regex);
-      if (matching) {
-        return true;
-      }
-      return false;
+      return str.toString().match(regex);
     }
     return false;
   },

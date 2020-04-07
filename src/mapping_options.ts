@@ -227,7 +227,6 @@ export class MappingOptionsCtrl {
     for (let index = 0; index < count; index++) {
       lvl.push({ text: `${index}`, value: index });
     }
-    debugger;
     return lvl;
   }
 

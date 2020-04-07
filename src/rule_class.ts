@@ -907,14 +907,16 @@ export default class Rule {
    * @memberof Rule
    */
   getColorForLevel(level: number): string {
-    let colors = this.data.colors.slice(0);
-    if (!this.data.invert) {
-      colors = colors.reverse();
-    }
-    if (level <= 0) {
+    const colors = this.data.colors;
+    if (level < 0) {
       return colors[0];
-    } else if (colors[level] !== undefined) {
-      return colors[level];
+    }
+    let l = level;
+    if (!this.data.invert) {
+      l = (this.data.colors.length - 1)  - level;
+    }
+    if (colors[l] !== undefined) {
+      return colors[l];
     }
     return colors[0];
   }
@@ -935,18 +937,17 @@ export default class Rule {
       if (thresholds === undefined || thresholds.length === 0) {
         return 0;
       }
-
       let l = thresholds.length;
       for (let index = 0; index < l; index++) {
         const t = thresholds[index];
         if (value < t) {
           break;
         }
-        thresholdLevel = index + 1;
+        thresholdLevel = index +1 ;
       }
 
       if (!this.data.invert) {
-        thresholdLevel = l - thresholdLevel;
+        thresholdLevel = (this.data.colors.length - 1)  - thresholdLevel;
       }
       return thresholdLevel;
     }
@@ -956,7 +957,7 @@ export default class Rule {
       const formatedValue = this.getFormattedValue(value);
       let thresholds = this.data.stringThresholds;
       if (thresholds === undefined || thresholds.length === 0) {
-        return -1;
+        return 0;
       }
       let l = thresholds.length;
       for (let index = 0; index < l; index++) {
@@ -968,7 +969,7 @@ export default class Rule {
       }
 
       if (!this.data.invert) {
-        thresholdLevel = l - thresholdLevel;
+        thresholdLevel = (this.data.colors.length - 1)  - thresholdLevel;
       }
       return thresholdLevel;
     }
