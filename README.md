@@ -55,9 +55,8 @@ Arnaud
   - Level State with range or value mapping.
   - Lock always true in flowchart option [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/138) 
   - TODO : Scale in graph not correct
-  - TODO : decimals when 0
-  - TODO : Min and max range when empty
-  - TODO : With in text mapping is empty after clone or save/reload
+  - Fix range value Min and Max range when 'from' or 'to' is empty
+  - Fix 'With' field in text mapping, empty after clone or save/reload
 
 ## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
 ### Added  

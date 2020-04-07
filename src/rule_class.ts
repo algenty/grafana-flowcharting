@@ -913,7 +913,7 @@ export default class Rule {
     }
     let l = level;
     if (!this.data.invert) {
-      l = (this.data.colors.length - 1)  - level;
+      l = (this.data.colors.length - 1) - level;
     }
     if (colors[l] !== undefined) {
       return colors[l];
@@ -943,11 +943,11 @@ export default class Rule {
         if (value < t) {
           break;
         }
-        thresholdLevel = index +1 ;
+        thresholdLevel = index + 1;
       }
 
       if (!this.data.invert) {
-        thresholdLevel = (this.data.colors.length - 1)  - thresholdLevel;
+        thresholdLevel = (this.data.colors.length - 1) - thresholdLevel;
       }
       return thresholdLevel;
     }
@@ -969,7 +969,7 @@ export default class Rule {
       }
 
       if (!this.data.invert) {
-        thresholdLevel = (this.data.colors.length - 1)  - thresholdLevel;
+        thresholdLevel = (this.data.colors.length - 1) - thresholdLevel;
       }
       return thresholdLevel;
     }
@@ -1110,8 +1110,8 @@ export default class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 }
@@ -1563,10 +1563,10 @@ class RangeMap {
    * @memberof RangeMap
    */
   import(obj: any): this {
-    this.data.from = obj.from || this.data.from || '';
-    this.data.to = obj.to || this.data.to || '';
-    this.data.text = obj.text || this.data.text || '';
-    this.data.hidden = obj.hidden || this.data.hidden || false;
+    this.data.from = !!obj.from ? obj.from : undefined; 
+    this.data.to = !!obj.to ? obj.to : undefined;
+    this.data.text = !!obj.text ? obj.text : undefined;
+    this.data.hidden = (!!obj.hidden || obj.hidden === false) ? obj.hidden : false;
     return this;
   }
 
@@ -1579,9 +1579,9 @@ class RangeMap {
    */
   static getDefaultData(): gf.TRangeMapData {
     return {
-      from: null,
-      to: null,
-      text: null,
+      from: undefined,
+      to: undefined,
+      text: undefined,
       hidden: false,
     };
   }
@@ -1594,15 +1594,25 @@ class RangeMap {
    * @memberof RangeMap
    */
   match(value: any): boolean {
-    if (this.data.from === 'null' && this.data.to === 'null') {
-      return true;
-    }
-    if (value === null) {
-      if (this.data.from === 'null' && this.data.to === 'null') {
-        return true;
+    if (!!value || value.length > 0) {
+      let v: number = Number(value);
+      if (this.data.from !== undefined && this.data.from.length > 0) {
+        let from = Number(this.data.from);
+        if (v >= from) {
+          if (this.data.to !== undefined && this.data.to.length > 0) {
+            let to = Number(this.data.to);
+            return (v < to); 
+          }
+          return true;
+        }
+        return false;
       }
-    }
-    if (Number(this.data.from) <= Number(value) && Number(this.data.to) >= Number(value)) {
+      // from is empty here
+      if (this.data.to !== undefined && this.data.to.length > 0) {
+        let to = Number(this.data.to);
+        return (v < to);
+      }
+      // from and to is empty
       return true;
     }
     return false;
@@ -1615,7 +1625,7 @@ class RangeMap {
    * @returns {(string | null)}
    * @memberof RangeMap
    */
-  getFormattedText(value: any): string | null {
+  getFormattedText(value: any): string | undefined {
     if (this.match(value)) {
       return this.data.text;
     }
@@ -1698,8 +1708,8 @@ class ValueMap {
    */
   static getDefaultdata() {
     return {
-      value: '',
-      text: '',
+      value: undefined,
+      text: undefined,
       hidden: false,
     };
   }
@@ -1712,8 +1722,8 @@ class ValueMap {
    * @memberof ValueMap
    */
   import(obj: any): this {
-    this.data.value = obj.value || this.data.value || '';
-    this.data.text = obj.text || this.data.text || '';
+    this.data.value = obj.value || this.data.value || undefined;
+    this.data.text = obj.text || this.data.text || undefined;
     this.data.hidden = obj.hidden || this.data.hidden || false;
     return this;
   }
@@ -1747,13 +1757,13 @@ class ValueMap {
    * @memberof ValueMap
    */
   getFormattedText(value: any): string {
-    if (value === null) {
-      if (this.data.value === 'null') {
-        return this.data.text;
+    if (value === null || value === undefined) {
+      if (this.data.value === 'null' || this.data.value === 'undefined') {
+        return !!this.data.text ? this.data.text : '';
       }
     }
     if (this.match(value)) {
-      return this.data.text;
+      return !!this.data.text ? this.data.text : '';
     }
     return `${value}`;
   }

@@ -203,15 +203,15 @@ declare module gf {
   }
 
   declare interface TRangeMapData {
-    from?: string | null;
-    to?: string | null;
-    text: string | null;
+    from: string | undefined;
+    to: string | undefined;
+    text: string | undefined;
     hidden: boolean;
   }
 
   declare interface TValueMapData {
-    value: string;
-    text: string;
+    value: string | undefined;
+    text: string | undefined;
     hidden: boolean;
   }
 
