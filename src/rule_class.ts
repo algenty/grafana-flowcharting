@@ -1536,6 +1536,9 @@ class EventMap extends GFMap {
     if (!!obj.eventOn) {
       this.data.eventOn = obj.eventOn;
     }
+    if (!!obj.value) {
+      this.data.value = obj.value;
+    }
     return this;
   }
 }

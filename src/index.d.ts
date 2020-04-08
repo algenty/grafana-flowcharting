@@ -32,9 +32,9 @@ declare module gf {
   }
 
   // Styles
-  declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground', 'shape'];
+  declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground', 'shape', 'visibility'];
   declare type TStyleColorKey = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
-  declare type TStyleEventKey = 'shape';
+  declare type TStyleEventKey = 'shape' | 'visibility';
   declare type TStyleKey = TStyleColorKey | TStyleEventKey;
   declare interface TIStylesString {
     fillColor: string | null;
@@ -43,10 +43,12 @@ declare module gf {
     imageBorder: string | null;
     imageBackground: string | null;
     shape: string | null;
+    visibility: string | null;
   }
 
   declare interface TIEventString {
     shape: string | null;
+    visibility: string | null;
   }
 
   declare interface TIStylesBoolean {
@@ -56,6 +58,7 @@ declare module gf {
     imageBorder: boolean;
     imageBackground: boolean;
     shape: boolean;
+    visibility: boolean;
   }
 
   declare interface TIStylesNumber {
@@ -65,6 +68,7 @@ declare module gf {
     imageBorder: number;
     imageBackground: number;
     shape: number;
+    visibility: number;
   }
 
   declare interface TSelectStyle extends TSelectString {

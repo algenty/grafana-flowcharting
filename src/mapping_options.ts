@@ -59,7 +59,10 @@ export class MappingOptionsCtrl {
     { text: 'Label', value: 'value' },
   ];
 
-  EventType: gf.TSelectString[] = [{ text: 'Change shape', value: 'shape' }];
+  EventType: gf.TSelectString[] = [
+    { text: 'Change shape', value: 'shape' },
+    { text: 'Visibility', value: 'visibility' },
+  ];
 
   textPattern = '/.*/';
   metricTypes: gf.TSelectString[] = [

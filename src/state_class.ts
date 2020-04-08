@@ -21,16 +21,18 @@ export default class State {
   changedShape = false;
   changedStyle: gf.TIStylesBoolean;
   changedText = false;
+  changedEvent = false;
   changedLink = false;
   matched = false;
   matchedShape = false;
   matchedStyle: gf.TIStylesBoolean;
   matchedText = false;
   matchedLink = false;
+  matchedEvent = false;
   globalLevel = -1;
-  styleKeys: gf.TStyleKey[] = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground', 'shape'];
   colorKeys: gf.TStyleColorKey[] = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
-  eventKeys: gf.TStyleEventKey[] = ['shape'];
+  eventKeys: gf.TStyleEventKey[] = ['shape','visibility'];
+  styleKeys: gf.TStyleKey[] = [...this.colorKeys,...this.eventKeys];
   level: gf.TIStylesNumber;
   tooltipHandler: TooltipHandler | null = null;
   currentStyles: gf.TIStylesString;
@@ -77,6 +79,7 @@ export default class State {
       this.currentStyles[style] = value;
       this.originalStyles[style] = value;
     });
+    console.debug("originalStyles",this.originalStyles);
   }
 
   static getDefaultValueStyles(): gf.TIStylesString {
@@ -87,6 +90,7 @@ export default class State {
       imageBorder: null,
       imageBackground: null,
       shape: null,
+      visibility: null,
     };
   }
 
@@ -98,6 +102,7 @@ export default class State {
       imageBorder: -1,
       imageBackground: -1,
       shape: -1,
+      visibility: -1,
     };
   }
 
@@ -109,6 +114,7 @@ export default class State {
       imageBorder: false,
       imageBackground: false,
       shape: false,
+      visibility: false,
     };
   }
 
@@ -136,6 +142,7 @@ export default class State {
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
       const linkMaps = rule.getLinkMaps();
+      const eventMaps = rule.getEventMaps();
       const value = rule.getValueForMetric(metric);
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
@@ -229,6 +236,28 @@ export default class State {
         }
       });
 
+      // EVENTS
+      cellProp = this.getCellProp(rule.data.eventProp);
+      eventMaps.forEach(event => {
+        if (!event.isHidden() && event.match(cellProp, rule.data.eventRegEx)) {
+          this.matchedEvent = true;
+          this.matched = true;
+          if (event.toEventable(level)) {
+            this.setEventStyle(event.data.style, event.data.value);
+            this.matchedStyle[event.data.style] = true;
+          } else if (this.changedEvent) {
+            if (this.changedStyle[event.data.style]) {
+              this.unsetEventStyle(event.data.style);
+            }
+          }
+          if (level >= rule.highestLevel) {
+            rule.highestLevel = level;
+            rule.highestFormattedValue = FormattedValue;
+            rule.highestColor = color;
+          }
+        }
+      });
+
       // LINK
       cellProp = this.getCellProp(rule.data.linkProp);
       linkMaps.forEach(link => {
@@ -263,7 +292,7 @@ export default class State {
     GFP.log.info('State.unsetState()');
     this.unsetLevel();
     // this.unsetColor(); Replace by reset
-    this.resetStyle();
+    this.resetColorStyle();
     this.unsetText();
     this.unsetLink();
     this.unsetTooltip();
@@ -613,6 +642,25 @@ export default class State {
   }
 
   /**
+   * Qpplu events
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  applyEvent(): this {
+    this.eventKeys.forEach(key => {
+      if (this.matchedStyle[key]) {
+        const value = this.currentStyles[key];
+        this.xgraph.setStyleCell(this.mxcell, key, value);
+        if (value !== this.originalStyles[key]) {
+          this.changedStyle[key] = true;
+        }
+      }
+    });
+    return this;
+  }
+
+  /**
    * Apply icon warning
    *
    * @returns {this}
@@ -637,8 +685,20 @@ export default class State {
    */
   resetShape(): this {
     this.changedShape = false;
-    this.resetStyle();
+    this.resetColorStyle();
     this.resetIcon();
+    return this;
+  }
+
+  /**
+   * reset Events
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  resetEvent(): this {
+    this.changedEvent = false;
+    this.resetEventStyle();
     return this;
   }
 
@@ -659,10 +719,25 @@ export default class State {
    *
    * @memberof State
    */
-  resetStyle(): this {
+  resetColorStyle(): this {
     this.unsetColor();
     this.xgraph.setStyles(this.mxcell, this.fullStylesString);
-    this.styleKeys.forEach(key => {
+    this.colorKeys.forEach(key => {
+      this.changedStyle[key] = false;
+    });
+    return this;
+  }
+
+  /**
+   * Reset style for events
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  resetEventStyle(): this {
+    this.unsetEvent();
+    this.xgraph.setStyles(this.mxcell, this.fullStylesString);
+    this.eventKeys.forEach(key => {
       this.changedStyle[key] = false;
     });
     return this;
@@ -758,6 +833,13 @@ export default class State {
         this.resetText();
       }
 
+      // EVENTS
+      if (this.matchedEvent) {
+        this.applyEvent();
+      } else if (this.changedEvent) {
+        this.resetEvent();
+      }
+
       // LINKS
       if (this.matchedLink) {
         this.applyLink();
@@ -779,6 +861,7 @@ export default class State {
   reset(): this {
     this.resetShape();
     this.resetText();
+    this.resetEvent();
     this.resetLink();
     this.changed = false;
     return this;
@@ -795,9 +878,11 @@ export default class State {
       this.unsetLevel();
       this.unsetTooltip();
       this.unsetText();
+      this.unsetEvent();
       this.matched = false;
       this.matchedShape = false;
       this.matchedText = false;
+      this.matchedEvent = false;
       this.matchedLink = false;
     }
     return this;
