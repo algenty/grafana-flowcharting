@@ -61,7 +61,7 @@ export class MappingOptionsCtrl {
 
   EventType: gf.TSelectString[] = [
     { text: 'Change shape', value: 'shape' },
-    { text: 'Visibility', value: 'visibility' },
+    { text: 'Change visibility', value: 'overflow' },
   ];
 
   textPattern = '/.*/';

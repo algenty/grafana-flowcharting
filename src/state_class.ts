@@ -31,8 +31,8 @@ export default class State {
   matchedEvent = false;
   globalLevel = -1;
   colorKeys: gf.TStyleColorKey[] = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
-  eventKeys: gf.TStyleEventKey[] = ['shape','visibility'];
-  styleKeys: gf.TStyleKey[] = [...this.colorKeys,...this.eventKeys];
+  eventKeys: gf.TStyleEventKey[] = ['shape', 'overflow'];
+  styleKeys: gf.TStyleKey[] = [...this.colorKeys, ...this.eventKeys];
   level: gf.TIStylesNumber;
   tooltipHandler: TooltipHandler | null = null;
   currentStyles: gf.TIStylesString;
@@ -79,7 +79,7 @@ export default class State {
       this.currentStyles[style] = value;
       this.originalStyles[style] = value;
     });
-    console.debug("originalStyles",this.originalStyles);
+    console.debug('originalStyles', this.originalStyles);
   }
 
   static getDefaultValueStyles(): gf.TIStylesString {
@@ -90,7 +90,7 @@ export default class State {
       imageBorder: null,
       imageBackground: null,
       shape: null,
-      visibility: null,
+      overflow: null,
     };
   }
 
@@ -102,7 +102,7 @@ export default class State {
       imageBorder: -1,
       imageBackground: -1,
       shape: -1,
-      visibility: -1,
+      overflow: -1,
     };
   }
 
@@ -114,7 +114,7 @@ export default class State {
       imageBorder: false,
       imageBackground: false,
       shape: false,
-      visibility: false,
+      overflow: false,
     };
   }
 
@@ -146,7 +146,7 @@ export default class State {
       const value = rule.getValueForMetric(metric);
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
-      const color = (rule.data.gradient && rule.data.type === 'number') ? rule.getColorForValue(value) : rule.getColorForLevel(level);
+      const color = rule.data.gradient && rule.data.type === 'number' ? rule.getColorForValue(value) : rule.getColorForLevel(level);
 
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
@@ -243,11 +243,11 @@ export default class State {
           this.matchedEvent = true;
           this.matched = true;
           if (event.toEventable(level)) {
-            this.setEventStyle(event.data.style, event.data.value);
+            this.setEvent(event.data.style, event.data.value);
             this.matchedStyle[event.data.style] = true;
           } else if (this.changedEvent) {
             if (this.changedStyle[event.data.style]) {
-              this.unsetEventStyle(event.data.style);
+              this.unsetEvent(event.data.style);
             }
           }
           if (level >= rule.highestLevel) {
@@ -515,35 +515,62 @@ export default class State {
     return this;
   }
 
+  // --------------------------------------------------------------------
   // EVENTS
+  // --------------------------------------------------------------------
 
-  setEventStyle(style: gf.TStyleEventKey, value: string): this {
+  setEvent(action: gf.TStyleEventKey, value: string): this {
     GFP.log.info('State.setColorStyle()');
-    this.currentStyles[style] = value;
+    this.currentStyles[action] = value;
     return this;
   }
 
-  getEventStyle(style: gf.TStyleEventKey): string | null {
-    return this.currentStyles[style];
+  getEvent(action: gf.TStyleEventKey): string | null {
+    return this.currentStyles[action];
   }
 
-  unsetEventStyle(style: gf.TStyleEventKey): this {
-    this.currentStyles[style] = this.originalStyles[style];
+  unsetEvent(action?: gf.TStyleEventKey): this {
+    if (action !== undefined) {
+      this.currentStyles[action] = this.originalStyles[action];
+    } else {
+      this.eventKeys.forEach(style => {
+        this.currentStyles[style] = this.originalStyles[style];
+      });
+    }
     return this;
   }
 
   /**
-   * Restore initial color of cell
+   * Apply events
    *
    * @returns {this}
    * @memberof State
    */
-  unsetEvent(): this {
-    this.eventKeys.forEach(style => {
-      this.unsetEventStyle(style);
+  applyEvent(): this {
+    this.eventKeys.forEach(key => {
+      if (this.matchedStyle[key]) {
+        const value = this.currentStyles[key];
+        this.xgraph.setStyleCell(this.mxcell, key, value);
+        if (value !== this.originalStyles[key]) {
+          this.changedStyle[key] = true;
+        }
+      }
     });
     return this;
   }
+
+  /**
+   * Restore initial event of cell
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  // unsetEvent(): this {
+  //   this.eventKeys.forEach(style => {
+  //     this.unsetEventStyle(style);
+  //   });
+  //   return this;
+  // }
 
   /**
    * Assign new link
@@ -634,25 +661,6 @@ export default class State {
         const color = this.currentStyles[key];
         this.xgraph.setColorCell(this.mxcell, key, color);
         if (color !== this.originalStyles[key]) {
-          this.changedStyle[key] = true;
-        }
-      }
-    });
-    return this;
-  }
-
-  /**
-   * Qpplu events
-   *
-   * @returns {this}
-   * @memberof State
-   */
-  applyEvent(): this {
-    this.eventKeys.forEach(key => {
-      if (this.matchedStyle[key]) {
-        const value = this.currentStyles[key];
-        this.xgraph.setStyleCell(this.mxcell, key, value);
-        if (value !== this.originalStyles[key]) {
           this.changedStyle[key] = true;
         }
       }
