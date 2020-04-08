@@ -918,3 +918,86 @@ export default class State {
     return this;
   }
 }
+
+class GFState {
+  changed = false;
+  matched = false;
+  xgraph: XGraph;
+  mxcell: mxCell;
+  keys: string[] = [];
+  originalValue = new Map();
+  currentValue = new Map();
+
+  constructor(xgraph: XGraph, mxcell : mxCell) {
+    this.xgraph = xgraph;
+    this.mxcell = mxcell;
+    this.init();
+  }
+
+  init() {}
+
+  addValue(key: string, value) {
+    this.originalValue.set(key, value);
+  }
+
+  getOriginalValue(key: string): string {
+    return this.originalValue.get(key);
+  }
+
+  getCurrentValue(key: string): string {
+    return this.originalValue.get(key);
+  }
+
+  get(key:string):string {
+    return this.get
+  } 
+
+  set() {
+    return this;
+  }
+
+  unset(key?:string): this {
+    if(!!key) {
+      this.currentValue.set(key, this.originalValue.get(key));
+    }
+    else {
+      this.keys.forEach(key => {
+        this.currentValue.set(key, this.originalValue.get(key));
+      });
+    }
+    return this;
+  }
+
+  reset(): this {
+    this.unset();
+    this.changed = false;
+    return this;
+  }
+
+  apply(): this {
+    return this;
+  }
+
+  prepare(): this {
+    if (this.changed) {
+      this.unset();
+      this.changed = false;
+    }
+    return this;
+  }
+}
+
+class EventState extends GFState {
+  eventKeys: gf.TStyleEventKey[] = ['shape', 'overflow'];
+  constructor(xgraph :XGraph,mxcell:mxCell) {
+    super(xgraph,mxcell);
+    this.init();
+  }
+
+  init() {
+    this.eventKeys.forEach(key => {
+      const value = this.xgraph.getStyleCell(this.mxcell, key);
+      this.addValue(key,value);
+    });
+  }
+}
