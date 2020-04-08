@@ -21,9 +21,10 @@ export default class Rule {
   id: string;
   removeClick = 2;
   states: Map<string, State>;
-  highestLevel = -1;
-  highestColor = '';
-  highestFormattedValue = '';
+  highestLevel:number = -1;
+  highestColor:string = '';
+  highestFormattedValue:string = '';
+  highestValue:any = undefined;
 
   /**
    * Creates an instance of Rule.
