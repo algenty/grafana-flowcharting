@@ -925,19 +925,24 @@ class GFState {
   xgraph: XGraph;
   mxcell: mxCell;
   keys: string[] = [];
+  matchedKey = new Map();
   originalValue = new Map();
   currentValue = new Map();
+  currentLevel = new Map();
 
-  constructor(xgraph: XGraph, mxcell : mxCell) {
+  constructor(xgraph: XGraph, mxcell: mxCell) {
     this.xgraph = xgraph;
     this.mxcell = mxcell;
     this.init();
   }
 
-  init() {}
+  init() { }
 
   addValue(key: string, value) {
     this.originalValue.set(key, value);
+    this.currentValue.set(key, value);
+    this.currentLevel.set(key, -1);
+    this.matchedKey.set(key, false);
   }
 
   getOriginalValue(key: string): string {
@@ -948,24 +953,45 @@ class GFState {
     return this.originalValue.get(key);
   }
 
-  get(key:string):string {
-    return this.get
-  } 
+  get(key: string): string {
+    return this.originalValue.get(key);
+  }
 
-  set() {
+  set(key: string, value: string, level: number) {
+    const currLevel = this.getCurrentLevel(key);
+    if (currLevel <= level) {
+      this.currentLevel.set(key,level);
+      this.currentValue.set(key, value);
+      this.match(key, level);
+    }
     return this;
   }
 
-  unset(key?:string): this {
-    if(!!key) {
+  getCurrentLevel(key: string) {
+    return this.currentValue.get(key);
+  }
+
+  unset(key?: string): this {
+    if (!!key) {
       this.currentValue.set(key, this.originalValue.get(key));
+      this.matchedKey.set(key, false);
     }
     else {
       this.keys.forEach(key => {
         this.currentValue.set(key, this.originalValue.get(key));
+        this.matchedKey.set(key, false);
       });
     }
     return this;
+  }
+
+  match(key: string, level: number): this {
+    this.matchedKey.set(key, true);
+    return this;
+  }
+
+  isMatched(key): boolean {
+    return this.matchedKey.get(key);
   }
 
   reset(): this {
@@ -989,15 +1015,15 @@ class GFState {
 
 class EventState extends GFState {
   eventKeys: gf.TStyleEventKey[] = ['shape', 'overflow'];
-  constructor(xgraph :XGraph,mxcell:mxCell) {
-    super(xgraph,mxcell);
+  constructor(xgraph: XGraph, mxcell: mxCell) {
+    super(xgraph, mxcell);
     this.init();
   }
 
   init() {
     this.eventKeys.forEach(key => {
       const value = this.xgraph.getStyleCell(this.mxcell, key);
-      this.addValue(key,value);
+      this.addValue(key, value);
     });
   }
 }
