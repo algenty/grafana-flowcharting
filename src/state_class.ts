@@ -18,31 +18,34 @@ export default class State {
   edit: boolean | undefined; // if modified in inspector
   xgraph: XGraph;
   changed = false;
-  changedShape = false;
-  changedStyle: gf.TIStylesBoolean;
+  // changedShape = false;
+  // changedStyle: gf.TIStylesBoolean;
   // changedText = false;
   // changedEvent = false;
   // changedLink = false;
   matched = false;
-  matchedShape = false;
-  matchedStyle: gf.TIStylesBoolean;
+  // matchedShape = false;
+  // matchedStyle: gf.TIStylesBoolean;
   // matchedText = false;
   // matchedLink = false;
   // matchedEvent = false;
   // 0.8.0
+  shapeState: ShapeState;
+  tooltipState: TooltipState;
+  iconState: IconState;
   eventState: EventState;
   textState: TextState;
   linkState: LinkState;
   globalLevel = -1;
-  colorKeys: gf.TStyleColorKey[] = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
+  // colorKeys: gf.TStyleColorKey[] = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
   // eventKeys: gf.TStyleEventKey[] = ['shape', 'overflow'];
   // styleKeys: gf.TStyleKey[] = [...this.colorKeys, ...this.eventKeys];
-  styleKeys: gf.TStyleKey[] = [...this.colorKeys];
-  level: gf.TIStylesNumber;
+  // styleKeys: gf.TStyleKey[] = [...this.colorKeys];
+  // level: gf.TIStylesNumber;
   tooltipHandler: TooltipHandler | null = null;
-  currentStyles: gf.TIStylesString;
-  originalStyles: gf.TIStylesString;
-  fullStylesString: string;
+  // currentStyles: gf.TIStylesString;
+  // originalStyles: gf.TIStylesString;
+  // fullStylesString: string;
   originalText: string;
   // currentText: string;
   // originalLink: string | null;
@@ -61,21 +64,24 @@ export default class State {
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
+    this.shapeState = new ShapeState(xgraph, mxcell);
+    this.tooltipState = new TooltipState(xgraph, mxcell);
+    this.iconState = new IconState(xgraph, mxcell);
     this.eventState = new EventState(xgraph, mxcell);
     this.textState = new TextState(xgraph, mxcell);
     this.linkState = new LinkState(xgraph, mxcell);
 
     // If Cell is modified
-    this.changedStyle = State.getDefaultFlagStyles();
+    // this.changedStyle = State.getDefaultFlagStyles();
 
     // If state is target
-    this.matchedStyle = State.getDefaultFlagStyles();
-    this.level = State.getDefaultLevelStyles();
+    // this.matchedStyle = State.getDefaultFlagStyles();
+    // this.level = State.getDefaultLevelStyles();
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
-    this.currentStyles = State.getDefaultValueStyles();
-    this.originalStyles = State.getDefaultValueStyles();
-    this.fullStylesString = mxcell.getStyle();
+    // this.currentStyles = State.getDefaultValueStyles();
+    // this.originalStyles = State.getDefaultValueStyles();
+    // this.fullStylesString = mxcell.getStyle();
     this.originalText = this.xgraph.getLabelCell(mxcell);
     // this.currentText = this.originalText;
     // let link = this.xgraph.getLink(mxcell);
@@ -84,49 +90,49 @@ export default class State {
     // }
     // this.originalLink = link;
     // this.currentLink = link;
-    this.styleKeys.forEach(style => {
-      const value: string | null = this.xgraph.getStyleCell(mxcell, style);
-      this.currentStyles[style] = value;
-      this.originalStyles[style] = value;
-    });
-    console.debug('originalStyles', this.originalStyles);
+    // this.styleKeys.forEach(style => {
+    //   const value: string | null = this.xgraph.getStyleCell(mxcell, style);
+    //   this.currentStyles[style] = value;
+    //   this.originalStyles[style] = value;
+    // });
+    // console.debug('originalStyles', this.originalStyles);
   }
 
-  static getDefaultValueStyles(): gf.TIStylesString {
-    return {
-      fillColor: null,
-      strokeColor: null,
-      fontColor: null,
-      imageBorder: null,
-      imageBackground: null,
-      shape: null,
-      overflow: null,
-    };
-  }
+  // static getDefaultValueStyles(): gf.TIStylesString {
+  //   return {
+  //     fillColor: null,
+  //     strokeColor: null,
+  //     fontColor: null,
+  //     imageBorder: null,
+  //     imageBackground: null,
+  //     shape: null,
+  //     overflow: null,
+  //   };
+  // }
 
-  static getDefaultLevelStyles(): gf.TIStylesNumber {
-    return {
-      fillColor: -1,
-      strokeColor: -1,
-      fontColor: -1,
-      imageBorder: -1,
-      imageBackground: -1,
-      shape: -1,
-      overflow: -1,
-    };
-  }
+  // static getDefaultLevelStyles(): gf.TIStylesNumber {
+  //   return {
+  //     fillColor: -1,
+  //     strokeColor: -1,
+  //     fontColor: -1,
+  //     imageBorder: -1,
+  //     imageBackground: -1,
+  //     shape: -1,
+  //     overflow: -1,
+  //   };
+  // }
 
-  static getDefaultFlagStyles(): gf.TIStylesBoolean {
-    return {
-      fillColor: false,
-      strokeColor: false,
-      fontColor: false,
-      imageBorder: false,
-      imageBackground: false,
-      shape: false,
-      overflow: false,
-    };
-  }
+  // static getDefaultFlagStyles(): gf.TIStylesBoolean {
+  //   return {
+  //     fillColor: false,
+  //     strokeColor: false,
+  //     fontColor: false,
+  //     imageBorder: false,
+  //     imageBackground: false,
+  //     shape: false,
+  //     overflow: false,
+  //   };
+  // }
 
   /**
    * Call applyState() asynchronously
@@ -159,72 +165,112 @@ export default class State {
       const color = rule.data.gradient && rule.data.type === 'number' ? rule.getColorForValue(value) : rule.getColorForLevel(level);
 
       // SHAPE
+      // let cellProp = this.getCellProp(rule.data.shapeProp);
+      // shapeMaps.forEach(shape => {
+      //   if (!shape.isHidden() && shape.match(cellProp, rule.data.shapeRegEx)) {
+      //     this.matchedShape = true;
+      //     this.matched = true;
+      //     // tooltips
+      //     if (rule.toTooltipize(level)) {
+      //       // Metrics
+      //       if (this.tooltipHandler === null || this.tooltipHandler === undefined) {
+      //         this.tooltipHandler = new TooltipHandler(this.mxcell);
+      //       }
+      //       let tpColor: string | null = null;
+      //       let label: string = rule.data.tooltipLabel;
+      //       if (label === null || label.length === 0) {
+      //         if (rule.data.metricType === 'serie') {
+      //           label = metric.getName();
+      //         }
+      //         if (rule.data.metricType === 'table') {
+      //           label = rule.data.column;
+      //         }
+      //       }
+      //       if (rule.data.tooltipColors) {
+      //         tpColor = color;
+      //       }
+      //       const metricToolip = this.tooltipHandler
+      //         .addMetric()
+      //         .setLabel(label)
+      //         .setValue(FormattedValue)
+      //         .setColor(tpColor)
+      //         .setDirection(rule.data.tpDirection);
+      //       // Graph
+      //       if (rule.data.tpGraph) {
+      //         const graph = metricToolip.addGraph(rule.data.tpGraphType);
+      //         graph
+      //           .setColor(tpColor)
+      //           .setColumn(rule.data.column)
+      //           .setMetric(metric)
+      //           .setSize(rule.data.tpGraphSize)
+      //           .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh)
+      //           .setScale(rule.data.tpGraphScale);
+      //       }
+      //       // Date
+      //       this.tooltipHandler.updateDate();
+      //     }
+
+      //     // Color Shape
+      //     if (this.globalLevel <= level) {
+      //       this.setLevelStyle(shape.data.style, level);
+      //       if (shape.toColorize(level)) {
+      //         this.setColorStyle(shape.data.style, color);
+      //         this.matchedStyle[shape.data.style] = true;
+      //       } else if (this.changedShape) {
+      //         if (this.changedStyle[shape.data.style]) {
+      //           this.unsetColorStyle(shape.data.style);
+      //         }
+      //       }
+      //       this.overlayIcon = rule.toIconize(level);
+      //       if (level >= rule.highestLevel) {
+      //         rule.highestLevel = level;
+      //         rule.highestFormattedValue = FormattedValue;
+      //         rule.highestColor = color;
+      //       }
+      //     }
+      //   }
+      // });
+
+      // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
       shapeMaps.forEach(shape => {
-        if (!shape.isHidden() && shape.match(cellProp, rule.data.shapeRegEx)) {
-          this.matchedShape = true;
+        const k = shape.data.style;
+        GFP.log.debug('SHAPE - event', shape);
+        GFP.log.debug('SHAPE - value', value);
+        GFP.log.debug('SHAPE - level', level);
+        GFP.log.debug('SHAPE - !shape.isHidden()', !shape.isHidden());
+        GFP.log.debug('SHAPE - shape.match(cellProp, rule.data.eventRegEx)', shape.match(cellProp, rule.data.eventRegEx));
+        GFP.log.debug('SHAPE - shape.toColorize(level)', shape.toColorize(level));
+        GFP.log.debug('SHAPE - Global conditions', !shape.isHidden() && shape.match(cellProp, rule.data.eventRegEx) && shape.toColorize(level));
+        if (!shape.isHidden() && shape.match(cellProp, rule.data.shapeRegEx) && shape.toColorize(level)) {
           this.matched = true;
-          // tooltips
+          const v = color;
+          this.shapeState.set(k, v, level);
+          // TOOLTIP
           if (rule.toTooltipize(level)) {
-            // Metrics
-            if (this.tooltipHandler === null || this.tooltipHandler === undefined) {
-              this.tooltipHandler = new TooltipHandler(this.mxcell);
-            }
-            let tpColor: string | null = null;
-            let label: string = rule.data.tooltipLabel;
-            if (label === null || label.length === 0) {
-              if (rule.data.metricType === 'serie') {
-                label = metric.getName();
-              }
-              if (rule.data.metricType === 'table') {
-                label = rule.data.column;
-              }
-            }
-            if (rule.data.tooltipColors) {
-              tpColor = color;
-            }
-            const metricToolip = this.tooltipHandler
-              .addMetric()
-              .setLabel(label)
-              .setValue(FormattedValue)
-              .setColor(tpColor)
-              .setDirection(rule.data.tpDirection);
-            // Graph
-            if (rule.data.tpGraph) {
-              const graph = metricToolip.addGraph(rule.data.tpGraphType);
-              graph
-                .setColor(tpColor)
-                .setColumn(rule.data.column)
-                .setMetric(metric)
-                .setSize(rule.data.tpGraphSize)
-                .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh)
-                .setScale(rule.data.tpGraphScale);
-            }
-            // Date
-            this.tooltipHandler.updateDate();
+            this.tooltipState.set('tooltip', true, level);
+            this.tooltipState.setTooltip(rule, metric, color, FormattedValue);
           }
-
-          // Color Shape
-          if (this.globalLevel <= level) {
-            this.setLevelStyle(shape.data.style, level);
-            if (shape.toColorize(level)) {
-              this.setColorStyle(shape.data.style, color);
-              this.matchedStyle[shape.data.style] = true;
-            } else if (this.changedShape) {
-              if (this.changedStyle[shape.data.style]) {
-                this.unsetColorStyle(shape.data.style);
-              }
-            }
-            this.overlayIcon = rule.toIconize(level);
-            if (level >= rule.highestLevel) {
-              rule.highestLevel = level;
-              rule.highestFormattedValue = FormattedValue;
-              rule.highestColor = color;
-            }
+          // ICONS
+          if (rule.toIconize(level)) {
+            this.iconState.set('icon',true,level);
+          }
+          rule.toIconize(level);
+          if (level >= rule.highestLevel) {
+            rule.highestLevel = level;
+            rule.highestValue = value;
+            rule.highestFormattedValue = FormattedValue;
+            rule.highestColor = color;
+          }
+        } else if (this.shapeState.isChanged(k) && !this.shapeState.isMatched(k)) {
+          GFP.log.debug('SHAPE - Unset it');
+          this.shapeState.unset(k);
+          if(!this.shapeState.isMatched()) {
+            this.tooltipState.unset();
+            this.iconState.unset();
           }
         }
       });
-
 
       // TEXT
       cellProp = this.getCellProp(rule.data.textProp);
@@ -233,14 +279,14 @@ export default class State {
         if (!text.isHidden() && text.match(cellProp, rule.data.textRegEx) && text.toLabelize(level)) {
           this.matched = true;
           const v = GFP.replaceWithText(FormattedValue);
-          this.textState.set(k, v, level)
+          this.textState.set(k, v, level);
           if (level >= rule.highestLevel) {
             rule.highestLevel = level;
             rule.highestValue = value;
             rule.highestFormattedValue = FormattedValue;
             rule.highestColor = color;
           }
-        } else if (this.textState.isChanged()) {
+        } else if (this.textState.isChanged() && !this.textState.isMatched(k)) {
           this.textState.unset();
         }
       });
@@ -249,13 +295,13 @@ export default class State {
       cellProp = this.getCellProp(rule.data.eventProp);
       eventMaps.forEach(event => {
         const k = event.data.style;
-        GFP.log.debug("EVENT - event", event);
-        GFP.log.debug("EVENT - value", value);
-        GFP.log.debug("EVENT - level", level);
-        GFP.log.debug("EVENT - !event.isHidden()", !event.isHidden());
-        GFP.log.debug("EVENT - event.match(cellProp, rule.data.eventRegEx)", event.match(cellProp, rule.data.eventRegEx));
-        GFP.log.debug("EVENT - event.toEventable(level)", event.toEventable(level));
-        GFP.log.debug("EVENT - Global conditions", !event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level));
+        GFP.log.debug('EVENT - event', event);
+        GFP.log.debug('EVENT - value', value);
+        GFP.log.debug('EVENT - level', level);
+        GFP.log.debug('EVENT - !event.isHidden()', !event.isHidden());
+        GFP.log.debug('EVENT - event.match(cellProp, rule.data.eventRegEx)', event.match(cellProp, rule.data.eventRegEx));
+        GFP.log.debug('EVENT - event.toEventable(level)', event.toEventable(level));
+        GFP.log.debug('EVENT - Global conditions', !event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level));
         if (!event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level)) {
           this.matched = true;
           const v = event.data.value;
@@ -267,7 +313,7 @@ export default class State {
             rule.highestColor = color;
           }
         } else if (this.eventState.isChanged(k) && !this.eventState.isMatched(k)) {
-          GFP.log.debug("EVENT - Unset it");
+          GFP.log.debug('EVENT - Unset it');
           this.eventState.unset(k);
         }
       });
@@ -299,7 +345,7 @@ export default class State {
         if (!link.isHidden() && link.match(cellProp, rule.data.linkRegEx) && link.toLinkable(level)) {
           this.matched = true;
           const v = GFP.replaceWithText(link.getLink());
-          this.linkState.set(k, v, level)
+          this.linkState.set(k, v, level);
           if (level >= rule.highestLevel) {
             rule.highestLevel = level;
             rule.highestValue = value;
@@ -310,7 +356,6 @@ export default class State {
           this.linkState.unset();
         }
       });
-
     }
     return this;
   }
@@ -324,19 +369,21 @@ export default class State {
    */
   unsetState(): this {
     GFP.log.info('State.unsetState()');
-    this.unsetLevel();
+    // this.unsetLevel();
     // this.unsetColor(); Replace by reset
-    this.resetColorStyle();
+    // this.resetColorStyle();
     this.eventState.unset();
     this.textState.unset();
     this.linkState.unset();
+    this.tooltipState.unset();
+    this.iconState.unset();
     // this.unsetLink();
-    this.unsetTooltip();
+    // this.unsetTooltip();
     this.matched = false;
-    this.matchedShape = false;
-    this.styleKeys.forEach(key => {
-      this.matchedStyle[key] = false;
-    });
+    // this.matchedShape = false;
+    // this.styleKeys.forEach(key => {
+    //   this.matchedStyle[key] = false;
+    // });
     return this;
   }
 
@@ -346,9 +393,9 @@ export default class State {
    * @returns {boolean}
    * @memberof State
    */
-  isMatched(): boolean {
-    return this.matched;
-  }
+  // isMatched(): boolean {
+  //   return this.matched;
+  // }
 
   /**
    * Flag to indicate state is changed, need apply state
@@ -356,9 +403,9 @@ export default class State {
    * @returns {boolean}
    * @memberof State
    */
-  isChanged(): boolean {
-    return this.changed;
-  }
+  // isChanged(): boolean {
+  //   return this.changed;
+  // }
 
   /**
    *
@@ -385,11 +432,11 @@ export default class State {
    * @param {string} color - html color
    * @memberof State
    */
-  setColorStyle(style: gf.TStyleColorKey, color: string): this {
-    GFP.log.info('State.setColorStyle()');
-    this.currentStyles[style] = color;
-    return this;
-  }
+  // setColorStyle(style: gf.TStyleColorKey, color: string): this {
+  //   GFP.log.info('State.setColorStyle()');
+  //   this.currentStyles[style] = color;
+  //   return this;
+  // }
 
   /**
    * Return color of style
@@ -397,9 +444,9 @@ export default class State {
    * @param {gf.TStyleColorKey} style
    * @memberof State
    */
-  getColorStyle(style: gf.TStyleColorKey): string | null {
-    return this.currentStyles[style];
-  }
+  // getColorStyle(style: gf.TStyleColorKey): string | null {
+  //   return this.currentStyles[style];
+  // }
 
   /**
    * Reset color with initial color
@@ -408,10 +455,10 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetColorStyle(style: gf.TStyleColorKey): this {
-    this.currentStyles[style] = this.originalStyles[style];
-    return this;
-  }
+  // unsetColorStyle(style: gf.TStyleColorKey): this {
+  //   this.currentStyles[style] = this.originalStyles[style];
+  //   return this;
+  // }
 
   /**
    * Restore initial color of cell
@@ -419,12 +466,12 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  unsetColor(): this {
-    this.colorKeys.forEach(style => {
-      this.unsetColorStyle(style);
-    });
-    return this;
-  }
+  // unsetColor(): this {
+  //   this.colorKeys.forEach(style => {
+  //     this.unsetColorStyle(style);
+  //   });
+  //   return this;
+  // }
 
   /**
    * Reset default level (-1) for the style
@@ -433,24 +480,10 @@ export default class State {
    * @param {string} style - fillcolor|fontcolor|stroke
    * @memberof State
    */
-  unsetLevelStyle(style: gf.TStyleKey): this {
-    this.level[style] = -1;
-    return this;
-  }
-
-  /**
-   * Reset tooltip
-   *
-   * @returns {this}
-   * @memberof State
-   */
-  unsetTooltip(): this {
-    if (this.tooltipHandler !== null) {
-      this.tooltipHandler.destroy();
-    }
-    this.tooltipHandler = null;
-    return this;
-  }
+  // unsetLevelStyle(style: gf.TStyleKey): this {
+  //   this.level[style] = -1;
+  //   return this;
+  // }
 
   /**
    * Reset level to -1 for all style
@@ -458,13 +491,13 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  unsetLevel(): this {
-    this.styleKeys.forEach((style: gf.TStyleKey) => {
-      this.unsetLevelStyle(style);
-    });
-    this.globalLevel = -1;
-    return this;
-  }
+  // unsetLevel(): this {
+  //   this.styleKeys.forEach((style: gf.TStyleKey) => {
+  //     this.unsetLevelStyle(style);
+  //   });
+  //   this.globalLevel = -1;
+  //   return this;
+  // }
 
   /**
    * Attribute a level for a style
@@ -474,14 +507,14 @@ export default class State {
    * @param {number} level
    * @memberof State
    */
-  setLevelStyle(style: gf.TStyleKey, level: number): this {
-    GFP.log.info('State.setLevelStyle()');
-    this.level[style] = level;
-    if (this.globalLevel < level) {
-      this.globalLevel = level;
-    }
-    return this;
-  }
+  // setLevelStyle(style: gf.TStyleKey, level: number): this {
+  //   GFP.log.info('State.setLevelStyle()');
+  //   this.level[style] = level;
+  //   if (this.globalLevel < level) {
+  //     this.globalLevel = level;
+  //   }
+  //   return this;
+  // }
 
   /**
    * Retrun the level for a style
@@ -490,9 +523,9 @@ export default class State {
    * @returns {number}
    * @memberof State
    */
-  getLevelStyle(style: gf.TStyleKey): number {
-    return this.level[style];
-  }
+  // getLevelStyle(style: gf.TStyleKey): number {
+  //   return this.level[style];
+  // }
 
   /**
    * Get the highest/global level
@@ -593,7 +626,6 @@ export default class State {
   //   return this;
   // }
 
-
   /**
    * reset Events
    *
@@ -629,6 +661,8 @@ export default class State {
   //   return this;
   // }
 
+  // TOOLTIP
+
   /**
    * Add metric to tooltip of shape
    *
@@ -648,6 +682,20 @@ export default class State {
     if (this.tooltipHandler) {
       this.tooltipHandler.updateDate();
     }
+    return this;
+  }
+
+  /**
+   * Reset tooltip
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  unsetTooltip(): this {
+    if (this.tooltipHandler !== null) {
+      this.tooltipHandler.destroy();
+    }
+    this.tooltipHandler = null;
     return this;
   }
 
@@ -676,12 +724,12 @@ export default class State {
    *
    * @memberof State
    */
-  applyShape(): this {
-    this.changedShape = true;
-    this.applyColor();
-    this.applyIcon();
-    return this;
-  }
+  // applyShape(): this {
+  //   this.changedShape = true;
+  //   this.applyColor();
+  //   this.applyIcon();
+  //   return this;
+  // }
 
   /**
    * Apply Styles to shape
@@ -689,18 +737,18 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  applyColor(): this {
-    this.colorKeys.forEach(key => {
-      if (this.matchedStyle[key]) {
-        const color = this.currentStyles[key];
-        this.xgraph.setColorCell(this.mxcell, key, color);
-        if (color !== this.originalStyles[key]) {
-          this.changedStyle[key] = true;
-        }
-      }
-    });
-    return this;
-  }
+  // applyColor(): this {
+  //   this.colorKeys.forEach(key => {
+  //     if (this.matchedStyle[key]) {
+  //       const color = this.currentStyles[key];
+  //       this.xgraph.setColorCell(this.mxcell, key, color);
+  //       if (color !== this.originalStyles[key]) {
+  //         this.changedStyle[key] = true;
+  //       }
+  //     }
+  //   });
+  //   return this;
+  // }
 
   /**
    * Apply icon warning
@@ -725,13 +773,12 @@ export default class State {
    * @returns {this}
    * @memberof State
    */
-  resetShape(): this {
-    this.changedShape = false;
-    this.resetColorStyle();
-    this.resetIcon();
-    return this;
-  }
-
+  // resetShape(): this {
+  //   this.changedShape = false;
+  //   this.resetColorStyle();
+  //   this.resetIcon();
+  //   return this;
+  // }
 
   /**
    * Remove icon from shape
@@ -750,14 +797,14 @@ export default class State {
    *
    * @memberof State
    */
-  resetColorStyle(): this {
-    this.unsetColor();
-    this.xgraph.setStyles(this.mxcell, this.fullStylesString);
-    this.colorKeys.forEach(key => {
-      this.changedStyle[key] = false;
-    });
-    return this;
-  }
+  // resetColorStyle(): this {
+  //   this.unsetColor();
+  //   this.xgraph.setStyles(this.mxcell, this.fullStylesString);
+  //   this.colorKeys.forEach(key => {
+  //     this.changedStyle[key] = false;
+  //   });
+  //   return this;
+  // }
 
   /**
    * Reset style for events
@@ -851,11 +898,31 @@ export default class State {
       this.applyTooltip();
 
       // SHAPES
-      if (this.matchedShape) {
-        this.applyShape();
-      } else if (this.changedShape) {
-        this.resetShape();
+      // if (this.matchedShape) {
+      //   this.applyShape();
+      // } else if (this.changedShape) {
+      //   this.resetShape();
+      // }
+      if (this.shapeState.isMatched()) {
+        this.shapeState.apply();
+      } else if (this.shapeState.isChanged()) {
+        this.shapeState.reset();
       }
+
+      // TOOLTIP
+      if (this.tooltipState.isMatched()) {
+        this.tooltipState.apply();
+      } else if (this.tooltipState.isChanged()) {
+        this.tooltipState.reset();
+      }
+
+      // ICON
+      if (this.iconState.isMatched()) {
+        this.iconState.apply();
+      } else if (this.iconState.isChanged()) {
+        this.iconState.reset();
+      }
+
 
       // TEXTS
       if (this.textState.isMatched()) {
@@ -865,8 +932,8 @@ export default class State {
       }
 
       // EVENTS
-      GFP.log.debug("EVENT(apply) - this.eventState.isMatched()", this.eventState.isMatched())
-      GFP.log.debug("EVENT(apply) - this.eventState.isChanged()", this.eventState.isChanged())
+      GFP.log.debug('EVENT(apply) - this.eventState.isMatched()', this.eventState.isMatched());
+      GFP.log.debug('EVENT(apply) - this.eventState.isChanged()', this.eventState.isChanged());
       // debugger
       if (this.eventState.isMatched()) {
         this.eventState.apply();
@@ -880,7 +947,6 @@ export default class State {
       } else if (this.linkState.isChanged()) {
         this.linkState.reset();
       }
-
     } else if (this.changed) {
       this.reset();
     }
@@ -894,7 +960,10 @@ export default class State {
    * @memberof State
    */
   reset(): this {
-    this.resetShape();
+    // this.resetShape();
+    this.shapeState.reset();
+    this.tooltipState.reset();
+    this.iconState.reset();
     // this.resetText();
     this.textState.reset();
     // this.resetEvent();
@@ -913,20 +982,23 @@ export default class State {
    */
   prepare(): this {
     if (this.changed) {
-      this.unsetLevel();
-      this.unsetTooltip();
+      // this.unsetLevel();
+      // this.unsetTooltip();
       // this.unsetText();
-      this.textState.unset();
+      // this.textState.unset();
       // this.unsetEvent();
-      this.eventState.unset();
-      this.matched = false;
-      this.matchedShape = false;
+      // this.eventState.unset();
+      // this.matchedShape = false;
       // this.matchedText = false;
       // this.matchedEvent = false;
+      this.shapeState.prepare();
+      this.tooltipState.prepare();
+      this.iconState.prepare();
       this.textState.prepare();
       this.eventState.prepare();
       this.linkState.prepare();
       // this.matchedLink = false;
+      this.matched = false;
     }
     return this;
   }
@@ -973,7 +1045,7 @@ class GFState {
     this.init();
   }
 
-  init() { }
+  init() {}
 
   addValue(key: string, value: any) {
     this.originalValue.set(key, value);
@@ -984,11 +1056,11 @@ class GFState {
     this.changedKey.set(key, false);
   }
 
-  getOriginalValue(key: string): string | undefined {
+  getOriginalValue(key: string): any | undefined {
     return this.originalValue.get(key);
   }
 
-  getMatchValue(key: string): string | undefined {
+  getMatchValue(key: string): any | undefined {
     return this.matchValue.get(key);
   }
 
@@ -996,7 +1068,7 @@ class GFState {
   //   return this.lastValue.get(key);
   // }
 
-  set(key: string, value: string, level: number): this {
+  set(key: string, value: any, level: number): this {
     let matchLevel = this.getMatchLevel(key);
     if (matchLevel === undefined) {
       GFP.warn('Set Event with key undefined', key);
@@ -1071,7 +1143,7 @@ class GFState {
     } else {
       this.keys.forEach(key => {
         this.reset(key);
-      })
+      });
       this.changed = false;
       this.matched = false;
     }
@@ -1085,7 +1157,6 @@ class GFState {
     }
     return this;
   }
-
 }
 
 class EventState extends GFState {
@@ -1100,7 +1171,7 @@ class EventState extends GFState {
       const value = this.xgraph.getStyleCell(this.mxcell, key);
       this.addValue(key, value);
     });
-    GFP.log.debug("Original Event", this.originalValue);
+    GFP.log.debug('Original Event', this.originalValue);
   }
 
   apply(key?: gf.TStyleEventKey): this {
@@ -1138,7 +1209,6 @@ class EventState extends GFState {
     }
     return this;
   }
-
 }
 
 class TextState extends GFState {
@@ -1151,7 +1221,7 @@ class TextState extends GFState {
   init() {
     const value = this.xgraph.getLabelCell(this.mxcell);
     this.addValue('label', value);
-    GFP.log.debug("Original Text", this.originalValue);
+    GFP.log.debug('Original Text', this.originalValue);
   }
 
   apply(key?: string): this {
@@ -1201,7 +1271,7 @@ class LinkState extends GFState {
   init() {
     const value = this.xgraph.getLink(this.mxcell);
     this.addValue('link', value);
-    GFP.log.debug("Original Link", this.originalValue);
+    GFP.log.debug('Original Link', this.originalValue);
   }
 
   apply(key?: string): this {
@@ -1229,6 +1299,186 @@ class LinkState extends GFState {
         value = null;
       }
       this.xgraph.addLink(this.mxcell, value);
+      super.reset(key);
+    } else {
+      this.keys.forEach(key => {
+        this.reset(key);
+      });
+      this.changed = false;
+      this.matched = false;
+    }
+    return this;
+  }
+}
+
+class ShapeState extends GFState {
+  keys: gf.TStyleColorKey[] = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground'];
+  fullStylesString: string;
+  constructor(xgraph: XGraph, mxcell: mxCell) {
+    super(xgraph, mxcell);
+    this.fullStylesString = mxcell.getStyle();
+    this.init();
+  }
+
+  init() {
+    this.keys.forEach(key => {
+      const value = this.xgraph.getStyleCell(this.mxcell, key);
+      this.addValue(key, value);
+    });
+    this.mxcell.GF_tooltipHandler = null;
+    GFP.log.debug('Original Event', this.originalValue);
+  }
+
+  apply(key?: gf.TStyleColorKey): this {
+    if (key !== undefined) {
+      if (this.isMatched(key)) {
+        let value: any = this.getMatchValue(key);
+        if (value === undefined) {
+          value = null;
+        }
+        this.xgraph.setStyleCell(this.mxcell, key, value);
+        super.apply(key);
+      }
+    } else {
+      this.keys.forEach(key => {
+        this.apply(key);
+      });
+    }
+    return this;
+  }
+
+  reset(key?: gf.TStyleColorKey): this {
+    if (key !== undefined) {
+      let value: any = this.getOriginalValue(key);
+      if (value === undefined) {
+        value = null;
+      }
+      this.xgraph.setStyleCell(this.mxcell, key, value);
+      super.reset(key);
+    } else {
+      this.xgraph.setStyles(this.mxcell, this.fullStylesString);
+      super.reset();
+      this.changed = false;
+      this.matched = false;
+    }
+    return this;
+  }
+}
+
+class TooltipState extends GFState {
+  keys: string[] = ['tooltip'];
+  tooltipHandler: TooltipHandler | undefined;
+  constructor(xgraph: XGraph, mxcell: mxCell) {
+    super(xgraph, mxcell);
+    this.init();
+  }
+
+  init() {
+    this.addValue('tooltip', false);
+    this.tooltipHandler = undefined;
+    this.mxcell.GF_tooltipHandler = null;
+  }
+
+  setTooltip(rule: Rule, metric: Metric, color: string, value: string) {
+    let tpColor: string | null = null;
+    let label: string = rule.data.tooltipLabel;
+    if (this.tooltipHandler === null || this.tooltipHandler === undefined) {
+      this.tooltipHandler = new TooltipHandler(this.mxcell);
+    }
+    if (label === null || label.length === 0) {
+      if (rule.data.metricType === 'serie') {
+        label = metric.getName();
+      }
+      if (rule.data.metricType === 'table') {
+        label = rule.data.column;
+      }
+    }
+    if (rule.data.tooltipColors) {
+      tpColor = color;
+    }
+    // METRIC
+    const metricToolip = this.tooltipHandler
+      .addMetric()
+      .setLabel(label)
+      .setValue(value)
+      .setColor(tpColor)
+      .setDirection(rule.data.tpDirection);
+    // GRAPH
+    if (rule.data.tpGraph) {
+      const graph = metricToolip.addGraph(rule.data.tpGraphType);
+      graph
+        .setColor(tpColor)
+        .setColumn(rule.data.column)
+        .setMetric(metric)
+        .setSize(rule.data.tpGraphSize)
+        .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh)
+        .setScale(rule.data.tpGraphScale);
+    }
+    // Date
+    this.tooltipHandler.updateDate();
+  }
+
+  apply(key?: string): this {
+    if (key !== undefined && key === 'tooltip') {
+      if (this.isMatched(key) && this.getMatchValue(key) === true) {
+        if (this.tooltipHandler != null && this.tooltipHandler.isChecked()) {
+          this.mxcell.GF_tooltipHandler = this.tooltipHandler;
+        }
+        super.apply(key);
+      }
+    } else {
+      this.keys.forEach(key => {
+        this.apply(key);
+      });
+    }
+    return this;
+  }
+
+  reset(key?: string): this {
+    if (key !== undefined && key === 'tooltip') {
+      this.mxcell.GF_tooltipHandler = null;
+      if (this.tooltipHandler) this.tooltipHandler.destroy();
+      this.tooltipHandler = undefined;
+      super.reset(key);
+    } else {
+      this.keys.forEach(key => {
+        this.reset(key);
+      });
+      this.changed = false;
+      this.matched = false;
+    }
+    return this;
+  }
+}
+
+class IconState extends GFState {
+  keys: string[] = ['icon'];
+  constructor(xgraph: XGraph, mxcell: mxCell) {
+    super(xgraph, mxcell);
+    this.init();
+  }
+
+  init() {
+    this.addValue('icon', false);
+  }
+
+  apply(key?: string): this {
+    if (key !== undefined && key === 'tooltip') {
+      if (this.isMatched(key) && this.getMatchValue(key) === true) {
+        this.xgraph.addOverlay(`WARNING/ERROR`, this.mxcell);
+        super.apply(key);
+      }
+    } else {
+      this.keys.forEach(key => {
+        this.apply(key);
+      });
+    }
+    return this;
+  }
+
+  reset(key?: string): this {
+    if (key !== undefined && key === 'icon') {
+      this.xgraph.removeOverlay(this.mxcell);
       super.reset(key);
     } else {
       this.keys.forEach(key => {
