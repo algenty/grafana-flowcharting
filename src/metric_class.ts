@@ -7,7 +7,11 @@ import _ from 'lodash';
  * @export
  * @class Metric
  */
-export default class Metric {
+export class Metric {
+  static METRICTYPES: {text:string,value:gf.TMetricType}[] = [
+    { text: 'Series', value: 'serie' },
+    { text: 'Table', value: 'table' },
+  ];
   type = 'unknow';
   scopedVars: any;
   metrics: any = {};

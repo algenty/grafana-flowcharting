@@ -36,40 +36,40 @@ declare module gf {
   declare type TStyleColorKey = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
   declare type TStyleEventKey = 'shape' | 'overflow';
   declare type TStyleKey = TStyleColorKey | TStyleEventKey;
-  declare interface TIStylesString {
-    fillColor: string | null;
-    strokeColor: string | null;
-    fontColor: string | null;
-    imageBorder: string | null;
-    imageBackground: string | null;
-    shape: string | null;
-    overflow: string | null;
-  }
+  // declare interface TIStylesString {
+  //   fillColor: string | null;
+  //   strokeColor: string | null;
+  //   fontColor: string | null;
+  //   imageBorder: string | null;
+  //   imageBackground: string | null;
+  //   shape: string | null;
+  //   overflow: string | null;
+  // }
 
-  declare interface TIEventString {
-    shape: string | null;
-    overflow: string | null;
-  }
+  // declare interface TIEventString {
+  //   shape: string | null;
+  //   overflow: string | null;
+  // }
 
-  declare interface TIStylesBoolean {
-    fillColor: boolean;
-    strokeColor: boolean;
-    fontColor: boolean;
-    imageBorder: boolean;
-    imageBackground: boolean;
-    shape: boolean;
-    overflow: boolean;
-  }
+  // declare interface TIStylesBoolean {
+  //   fillColor: boolean;
+  //   strokeColor: boolean;
+  //   fontColor: boolean;
+  //   imageBorder: boolean;
+  //   imageBackground: boolean;
+  //   shape: boolean;
+  //   overflow: boolean;
+  // }
 
-  declare interface TIStylesNumber {
-    fillColor: number;
-    strokeColor: number;
-    fontColor: number;
-    imageBorder: number;
-    imageBackground: number;
-    shape: number;
-    overflow: number;
-  }
+  // declare interface TIStylesNumber {
+  //   fillColor: number;
+  //   strokeColor: number;
+  //   fontColor: number;
+  //   imageBorder: number;
+  //   imageBackground: number;
+  //   shape: number;
+  //   overflow: number;
+  // }
 
   declare interface TSelectStyle extends TSelectString {
     value: TStyleColorKey;
@@ -113,7 +113,8 @@ declare module gf {
   declare type TTooltipOn = 'wc' | 'a';
   declare type TColorOn = 'n' | 'wc' | 'a';
   declare type TTextOn = 'n' | 'wmd' | 'wc' | 'co';
-  declare type TTextReplace = 'content' | 'pattern' | 'as' | 'anl';
+  declare type TValueType = 'number' | 'string' | 'date';
+  declare type TTextMethods = 'content' | 'pattern' | 'as' | 'anl';
   declare type TDateFormat = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
   declare interface TIRulesHandlerData {
     rulesData: TIRuleData[];
@@ -195,7 +196,7 @@ declare module gf {
   }
 
   declare interface TTextMapData extends TGFMapData {
-    textReplace: TTextReplace;
+    textReplace: TTextMethods;
     textPattern: string;
     textOn: TTextOn;
   }

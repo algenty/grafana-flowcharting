@@ -1,7 +1,7 @@
 import XGraph from './graph_class';
-import Rule from 'rule_class';
-import Metric from './metric_class';
-import TooltipHandler from './tooltipHandler';
+import {Rule} from './rule_class';
+import {Metric} from './metric_class';
+import {TooltipHandler} from './tooltipHandler';
 
 /**
  * Class for state of one cell

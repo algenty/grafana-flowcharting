@@ -1,7 +1,7 @@
-import Flowchart from './flowchart_class';
-import Rule, { GFMap } from './rule_class';
+import Flowchart from 'flowchart_class';
+import { Rule, GFMap } from 'rule_class';
 import _ from 'lodash';
-import Metric from './metric_class';
+import {Metric} from './metric_class';
 
 /**
  * Class FlowchartHandler

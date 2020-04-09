@@ -2,7 +2,7 @@
 import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
-import Metric from 'metric_class';
+import {Metric} from 'metric_class';
 
 /**
  * Rule definition
@@ -10,8 +10,17 @@ import Metric from 'metric_class';
  * @export
  * @class Rule
  */
-export default class Rule {
+export class Rule {
   data: gf.TIRuleData;
+  static TOOLTIPON : {text:string , value: gf.TTooltipOn}[] = [
+    { text: 'Warning / Critical', value: 'wc' },
+    { text: 'Always', value: 'a' },
+  ];
+  static VALUETYPES:{text:string,value:gf.TValueType}[] = [
+    { text: 'Number', value: 'number' },
+    { text: 'String', value: 'string' },
+    { text: 'Date', value: 'date' },
+  ];
   shapeMaps: ShapeMap[] = [];
   textMaps: TextMap[] = [];
   linkMaps: LinkMap[] = [];
@@ -185,7 +194,7 @@ export default class Rule {
     }
 
     // 0.7.0
-    let textReplace: gf.TTextReplace | undefined = undefined;
+    let textReplace: gf.TTextMethods | undefined = undefined;
     let textPattern: string | undefined = undefined;
     if (!!obj.textReplace) {
       textReplace = obj.textReplace;
@@ -1229,8 +1238,22 @@ export class GFMap {
  * @class ShapeMap
  * @extends GFMap
  */
-class ShapeMap extends GFMap {
+export class ShapeMap extends GFMap {
   data: gf.TShapeMapData;
+  static APPLYON: {text:string,value:gf.TColorOn}[] = [
+    { text: 'Never', value: 'n' },
+    { text: 'Warning / Critical', value: 'wc' },
+    { text: 'Always', value: 'a' },
+  ];
+
+  static STYLES: {text:string, value:gf.TStyleColorKey}[] = [
+    { text: 'Stroke', value: 'strokeColor' },
+    { text: 'Fill', value: 'fillColor' },
+    { text: 'Text', value: 'fontColor' },
+    { text: 'Background (image)', value: 'imageBackground' },
+    { text: 'Border (image)', value: 'imageBorder' },
+  ];
+
   /**
    * Creates an instance of ShapeMap.
    * @param {string} pattern
@@ -1306,8 +1329,20 @@ class ShapeMap extends GFMap {
  * @class TextMap
  * @extends GFMap
  */
-class TextMap extends GFMap {
+export class TextMap extends GFMap {
   data: gf.TTextMapData;
+  static APPLYON:{text:string,value:gf.TTextOn} [] = [
+    { text: 'Never', value: 'n' },
+    { text: 'When Metric Displayed', value: 'wmd' },
+    { text: 'Warning / Critical', value: 'wc' },
+    { text: 'Critical Only', value: 'co' },
+  ];
+  static METHODS:{text:string,value:gf.TTextMethods}[] = [
+    { text: 'All content', value: 'content' },
+    { text: 'Substring', value: 'pattern' },
+    { text: 'Append (Space) ', value: 'as' },
+    { text: 'Append (New line) ', value: 'anl' },
+  ];
   constructor(pattern: string, data: gf.TTextMapData) {
     super(pattern, data);
     this.data = data;
@@ -1411,8 +1446,13 @@ class TextMap extends GFMap {
  * @class LinkMap
  * @extends GFMap
  */
-class LinkMap extends GFMap {
+export class LinkMap extends GFMap {
   data: gf.TlinkMapData;
+  static APPLYON: {text:string,value:gf.TLinkOn}[] = [
+    { text: 'Warning / Critical', value: 'wc' },
+    { text: 'Always', value: 'a' },
+  ];
+
   constructor(pattern: string, data: gf.TlinkMapData) {
     super(pattern, data);
     this.data = data;
@@ -1480,8 +1520,12 @@ class LinkMap extends GFMap {
   }
 }
 
-class EventMap extends GFMap {
+export class EventMap extends GFMap {
   data: gf.TEventMapData;
+  static METHODS: {text:string,value:gf.TStyleEventKey}[] = [
+    { text: 'Change shape', value: 'shape' },
+    { text: 'Change visibility', value: 'overflow' },
+  ];
   /**
    * Creates an instance of EventMap.
    * @param {string} pattern

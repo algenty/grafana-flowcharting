@@ -1,5 +1,5 @@
 import Chartist from 'chartist';
-import Metric from './metric_class';
+import {Metric} from './metric_class';
 
 /**
  *
@@ -7,7 +7,7 @@ import Metric from './metric_class';
  * @export
  * @class TooltipHandler
  */
-export default class TooltipHandler {
+export class TooltipHandler {
   timeFormat = 'YYYY-MM-DD HH:mm:ss';
   mxcell: mxCell;
   checked = false;
@@ -229,8 +229,16 @@ export class MetricTooltip {
  *
  * @class GraphTooltip
  */
-class GraphTooltip {
+export class GraphTooltip {
   color = '#8c8980';
+  static GRAPHTYPES:{text:string,value:gf.TGraphType}[] = [
+    { text: 'Line', value: 'line' },
+    { text: 'Histogram', value: 'bar' },
+  ];
+  static GRAPHSCALETYPES:{text:string,value:gf.TGraphScale}[] = [
+    { text: 'Linear', value: 'linear' },
+    { text: 'Logarithmic', value: 'log' },
+  ];
   type: gf.TGraphType = 'line';
   data: Chartist.IChartistData = {
     series: [

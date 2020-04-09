@@ -50,6 +50,7 @@ Arnaud
   - Add option to disable regex for best perf  
   - TODO : Add perf stat by rule
   - TODO : Add list options in static  
+  - TODO : Fix tooltips and icons
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
   - shape stills select when deleting map.

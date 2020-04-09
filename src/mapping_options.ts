@@ -1,9 +1,11 @@
 import FlowchartHandler from './flowchartHandler';
 import RulesHandler from 'rulesHandler';
-import Rule from 'rule_class';
+import {Rule,LinkMap,ShapeMap,TextMap,EventMap} from 'rule_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
 import MetricHandler from './metricHandler';
+import {Metric} from './metric_class';
+import {GraphTooltip} from "./tooltipHandler";
 
 export class MappingOptionsCtrl {
   $scope: gf.TMappingOptionsScope;
@@ -13,63 +15,25 @@ export class MappingOptionsCtrl {
   rulesHandler: RulesHandler;
   metricHandler: MetricHandler;
   unitFormats: any;
-  style: gf.TSelectStyle[] = [
-    { text: 'Stroke', value: 'strokeColor' },
-    { text: 'Fill', value: 'fillColor' },
-    { text: 'Text', value: 'fontColor' },
-    { text: 'Background (image)', value: 'imageBackground' },
-    { text: 'Border (image)', value: 'imageBorder' },
-  ];
-  metricType: gf.TSelectString[] = [
-    { text: 'Series', value: 'serie' },
-    { text: 'Table', value: 'table' },
-  ];
-  colorOn: gf.TSelectString[] = [
-    { text: 'Never', value: 'n' },
-    { text: 'Warning / Critical', value: 'wc' },
-    { text: 'Always', value: 'a' },
-  ];
-  linkOn: gf.TSelectString[] = [
-    { text: 'Warning / Critical', value: 'wc' },
-    { text: 'Always', value: 'a' },
-  ];
-  tooltipOn: gf.TSelectString[] = [
-    { text: 'Warning / Critical', value: 'wc' },
-    { text: 'Always', value: 'a' },
-  ];
+  style= ShapeMap.STYLES;
+  metricType: gf.TSelectString[] = Metric.METRICTYPES
+  colorOn = ShapeMap.APPLYON;
+  linkOn = LinkMap.APPLYON;
+  tooltipOn = Rule.TOOLTIPON;
+  textOn = TextMap.APPLYON;
+  textReplace = TextMap.METHODS;
+  EventType: gf.TSelectString[] = EventMap.METHODS
   tpDirection: gf.TSelectString[] = [
     { text: 'Vertical', value: 'v' },
     { text: 'Horizontal ', value: 'h' },
   ];
-  textOn: gf.TSelectString[] = [
-    { text: 'Never', value: 'n' },
-    { text: 'When Metric Displayed', value: 'wmd' },
-    { text: 'Warning / Critical', value: 'wc' },
-    { text: 'Critical Only', value: 'co' },
-  ];
-  textReplace: gf.TSelectString[] = [
-    { text: 'All content', value: 'content' },
-    { text: 'Substring', value: 'pattern' },
-    { text: 'Append (Space) ', value: 'as' },
-    { text: 'Append (New line) ', value: 'anl' },
-  ];
-
   propTypes: gf.TSelectString[] = [
     { text: 'Id', value: 'id' },
     { text: 'Label', value: 'value' },
   ];
 
-  EventType: gf.TSelectString[] = [
-    { text: 'Change shape', value: 'shape' },
-    { text: 'Change visibility', value: 'overflow' },
-  ];
-
   textPattern = '/.*/';
-  metricTypes: gf.TSelectString[] = [
-    { text: 'Number', value: 'number' },
-    { text: 'String', value: 'string' },
-    { text: 'Date', value: 'date' },
-  ];
+  metricTypes = Rule.VALUETYPES;
   dateFormats: gf.TSelectString[] = [
     { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
     { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
@@ -93,14 +57,8 @@ export class MappingOptionsCtrl {
     { text: 'Value to text', value: 1 },
     { text: 'Range to text', value: 2 },
   ];
-  tpGraphType: gf.TSelectGraphType[] = [
-    { text: 'Line', value: 'line' },
-    { text: 'Histogram', value: 'bar' },
-  ];
-  tpGraphScale: gf.TSelectGraphScale[] = [
-    { text: 'Linear', value: 'linear' },
-    { text: 'Logarithmic', value: 'log' },
-  ];
+  tpGraphType: gf.TSelectGraphType[] = GraphTooltip.GRAPHTYPES;
+  tpGraphScale = GraphTooltip.GRAPHSCALETYPES;
   tpGraphSize: gf.TSelectGraphSize[] = [
     { text: 'Adjustable', value: '100%' },
     { text: 'Small', value: '100px' },
@@ -115,6 +73,7 @@ export class MappingOptionsCtrl {
 
   /** @ngInject */
   constructor($scope: gf.TMappingOptionsScope) {
+    debugger
     $scope.editor = this;
     $scope.GFP = GFP;
     this.$scope = $scope;
