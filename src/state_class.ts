@@ -249,6 +249,13 @@ export default class State {
       cellProp = this.getCellProp(rule.data.eventProp);
       eventMaps.forEach(event => {
         const k = event.data.style;
+        GFP.log.debug("EVENT - event", event);
+        GFP.log.debug("EVENT - value", value);
+        GFP.log.debug("EVENT - level", level);
+        GFP.log.debug("EVENT - !event.isHidden()", !event.isHidden());
+        GFP.log.debug("EVENT - event.match(cellProp, rule.data.eventRegEx)", event.match(cellProp, rule.data.eventRegEx));
+        GFP.log.debug("EVENT - event.toEventable(level)", event.toEventable(level));
+        GFP.log.debug("EVENT - Global conditions", !event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level));
         if (!event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level)) {
           this.matched = true;
           const v = event.data.value;
@@ -259,7 +266,8 @@ export default class State {
             rule.highestFormattedValue = FormattedValue;
             rule.highestColor = color;
           }
-        } else if (this.eventState.isChanged(k)) {
+        } else if (this.eventState.isChanged(k) && !this.eventState.isMatched(k)) {
+          GFP.log.debug("EVENT - Unset it");
           this.eventState.unset(k);
         }
       });
@@ -298,7 +306,7 @@ export default class State {
             rule.highestFormattedValue = FormattedValue;
             rule.highestColor = color;
           }
-        } else if (this.linkState.isChanged()) {
+        } else if (this.linkState.isChanged() && !this.linkState.isMatched(k)) {
           this.linkState.unset();
         }
       });
@@ -857,6 +865,9 @@ export default class State {
       }
 
       // EVENTS
+      GFP.log.debug("EVENT(apply) - this.eventState.isMatched()", this.eventState.isMatched())
+      GFP.log.debug("EVENT(apply) - this.eventState.isChanged()", this.eventState.isChanged())
+      // debugger
       if (this.eventState.isMatched()) {
         this.eventState.apply();
       } else if (this.eventState.isChanged()) {

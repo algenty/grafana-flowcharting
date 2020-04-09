@@ -359,7 +359,7 @@ class Log {
    */
   async info(title: string, obj?: any) {
     if (this.toDisplay(Log.INFO)) {
-      // console.info(`GF INFO : ${title}`, obj);
+      //console.info(`GF INFO : ${title}`, obj);
     }
   }
 

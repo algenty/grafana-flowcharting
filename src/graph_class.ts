@@ -10,7 +10,7 @@ declare var mxConstants: any;
 declare var mxCellHighlight: any;
 declare var mxRectangle: any;
 declare var mxUtils: any;
-declare var mxStencilRegistry: any;
+// declare var mxStencilRegistry: any;
 
 // type mxCellOverlay = any;
 
@@ -603,8 +603,8 @@ export default class XGraph {
     const cellIds: string[] = [];
     const model = this.graph.getModel();
     const cells = model.cells;
-    GFP.log.debug('cells', cells);
-    GFP.log.debug('mxStencilRegistry', mxStencilRegistry);
+    // GFP.log.debug('cells', cells);
+    // GFP.log.debug('mxStencilRegistry', mxStencilRegistry);
     if (prop === 'id') {
       _.each(cells, (mxcell: mxCell) => {
         GFP.log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', this.getStyleCell(mxcell, 'shape'));
