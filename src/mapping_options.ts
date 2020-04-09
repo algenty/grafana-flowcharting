@@ -241,8 +241,14 @@ export class MappingOptionsCtrl {
 
   removeTextMap(rule: Rule, index: number) {
     const txt = rule.getTextMap(index);
-    this.unselectCell(rule.data.shapeProp, txt.data.pattern);
+    this.unselectCell(rule.data.textProp, txt.data.pattern);
     rule.removeTextMap(index);
+  }
+
+  removeLinkMap(rule: Rule, index: number) {
+    const lnk = rule.getLinkMap(index);
+    this.unselectCell(rule.data.linkProp, lnk.data.pattern);
+    rule.removeLinkMap(index);
   }
 
   removeEventMap(rule: Rule, index: number) {

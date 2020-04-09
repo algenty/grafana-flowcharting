@@ -298,7 +298,7 @@ export default class Rule {
         if (!!colorOn) {
           shapeData.colorOn = colorOn;
         }
-        this.addShapeMap('new').import(shapeData);
+        this.addShapeMap('').import(shapeData);
       });
     }
 
@@ -329,7 +329,7 @@ export default class Rule {
           textData.textOn = textOn;
         }
 
-        this.addTextMap('new').import(textData);
+        this.addTextMap('').import(textData);
       });
     }
 
@@ -351,7 +351,7 @@ export default class Rule {
         if (!!linkOn) {
           linkData.linkOn = linkOn;
         }
-        this.addLinkMap('new').import(linkData);
+        this.addLinkMap('').import(linkData);
       });
     }
 
@@ -364,7 +364,7 @@ export default class Rule {
     if (obj.eventData !== undefined && obj.eventData != null && obj.eventData.length > 0) {
       obj.eventData.forEach((eventData: gf.TEventMapData) => {
         // 0.7.0
-        this.addEventMap('new').import(eventData);
+        this.addEventMap('').import(eventData);
       });
     }
 

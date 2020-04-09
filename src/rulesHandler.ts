@@ -48,7 +48,7 @@ export default class RulesHandler {
       }
 
       tmpRules.forEach(ruleData => {
-        this.addRule('new')
+        this.addRule('')
           .import(ruleData)
           .setOrder(index);
         index += 1;

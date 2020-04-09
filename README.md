@@ -55,6 +55,7 @@ Arnaud
   - Level State with range or value mapping.
   - Lock always true in flowchart option [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/138) 
   - TODO : Scale in graph not correct
+  - Fix Remove link
   - Fix range value Min and Max range when 'from' or 'to' is empty
   - Fix 'With' field in text mapping, empty after clone or save/reload
 
