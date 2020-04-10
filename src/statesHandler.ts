@@ -1,7 +1,7 @@
 import State from './state_class';
-import {Rule} from './rule_class';
+import { Rule } from './rule_class';
 import _ from 'lodash';
-import {Metric} from './metric_class';
+import { Metric } from './metric_class';
 import XGraph from 'graph_class';
 
 /**

@@ -1,5 +1,5 @@
 import Chartist from 'chartist';
-import {Metric} from './metric_class';
+import { Metric } from './metric_class';
 
 /**
  *

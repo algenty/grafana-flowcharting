@@ -35,8 +35,9 @@ declare module gf {
   declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground', 'shape', 'overflow'];
   declare type TStyleColorKeys = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
   declare type TStyleColorList = { text: string; value: TStyleColor.Keys }[];
-  declare type TStyleEventKey = 'shape' | 'overflow';
-  declare type TStyleKey = TStyleColor.Keys | TStyleEventKey;
+  declare type TStyleEventKeys = 'shape' | 'rotation' | 'visibility' | 'fontSize' | 'blink';
+  declare type TStyleEventList = { text: string; value: TStyleEventKeys }[];
+  declare type TStyleKey = TStyleColor.Keys | TStyleEventKeys;
 
   declare interface TSelectStyle extends TSelectString {
     value: TStyleColor.Keys;
@@ -163,7 +164,7 @@ declare module gf {
   }
 
   declare interface TEventMapData extends TGFMapData {
-    style: TStyleEventKey;
+    style: TStyleEventKeys;
     eventOn: number;
     value: string;
   }
@@ -228,6 +229,7 @@ declare module gf {
     editor: InspectOptionsCtrl;
     GFP: FlowChartingPlugin;
     ctrl: any; //TODO: define type
+    testData: any;
   }
 
   // Flowcharts

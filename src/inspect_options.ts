@@ -6,6 +6,7 @@ export class InspectOptionsCtrl {
   enable = false; // enable inspector or not
   $scope: gf.TInspectOptionsScope;
   ctrl: any; //TODO: define type
+  testData: any;
   panel: any; //TODO: define type
   logDisplayOption: gf.TSelectBoolean[] = [
     { text: 'True', value: true },
@@ -27,6 +28,12 @@ export class InspectOptionsCtrl {
   constructor($scope: gf.TInspectOptionsScope) {
     $scope.editor = this;
     $scope.GFP = GFP;
+    this.testData = {
+      id: '',
+      key: '',
+      value: '',
+    };
+    $scope.testData = this.testData;
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
@@ -109,6 +116,26 @@ export class InspectOptionsCtrl {
 
   unselectCell(state: State) {
     state.unhighlightCell();
+  }
+
+  execute() {
+    const flowchart = this.flowchartHandler.getFlowchart();
+    const xgraph = flowchart.getXGraph();
+    if (xgraph) {
+      const graph = xgraph.graph;
+      const model = graph.getModel();
+      const mxcell = model.getCell(this.testData.id);
+      // eslint-disable-next-line no-eval
+      let value: any = undefined;
+      try {
+        value = eval(this.testData.value);
+      } catch (error) {
+        value = this.testData.value;
+      }
+      console.log('Value : ', value);
+      graph.setCellStyles(this.testData.style, value, [mxcell]);
+      console.log(mxcell);
+    }
   }
 }
 

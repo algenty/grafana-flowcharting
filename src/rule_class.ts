@@ -104,9 +104,12 @@ export class Rule {
     { text: 'Background (image)', value: 'imageBackground' },
     { text: 'Border (image)', value: 'imageBorder' },
   ];
-  static EVENTMETHODS: { text: string; value: gf.TStyleEventKey }[] = [
-    { text: 'Change shape', value: 'shape' },
-    { text: 'Change visibility', value: 'overflow' },
+  static EVENTMETHODS: { text: string; value: gf.TStyleEventKeys }[] = [
+    { text: 'Change Shape (text)', value: 'shape' },
+    { text: 'Rotate Shape (0-360)', value: 'rotation' },
+    { text: 'Hide Shape (0|1)', value: 'visibility' },
+    { text: 'Font Size (numeric)', value: 'fontSize' },
+    { text: 'Blink shape (frequence ms)', value: 'blink' },
   ];
 
   shapeMaps: ShapeMap[] = [];

@@ -1,4 +1,4 @@
-import {Rule} from 'rule_class';
+import { Rule } from 'rule_class';
 import _ from 'lodash';
 
 /**

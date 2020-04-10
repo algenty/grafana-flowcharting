@@ -8,7 +8,6 @@ import _ from 'lodash';
  * @class Metric
  */
 export class Metric {
-
   type = 'unknow';
   scopedVars: any;
   metrics: any = {};

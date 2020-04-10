@@ -1,10 +1,10 @@
 import XGraph from 'graph_class';
 import StateHandler from 'statesHandler';
 import State from 'state_class';
-import {Rule} from 'rule_class';
+import { Rule } from 'rule_class';
 
 import FlowchartHandler from 'flowchartHandler';
-import {Metric} from 'metric_class';
+import { Metric } from 'metric_class';
 
 /**
  * Flowchart handler

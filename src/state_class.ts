@@ -556,7 +556,7 @@ class GFState {
  * @extends {GFState}
  */
 class EventState extends GFState {
-  keys: gf.TStyleEventKey[] = Rule.EVENTMETHODS.map(x => x.value);
+  keys: gf.TStyleEventKeys[] = Rule.EVENTMETHODS.map(x => x.value);
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);
     this.init();
@@ -570,7 +570,7 @@ class EventState extends GFState {
     GFP.log.debug('Original Event', this.originalValue);
   }
 
-  apply(key?: gf.TStyleEventKey): this {
+  apply(key?: gf.TStyleEventKeys): this {
     if (key !== undefined) {
       if (this.isMatched(key)) {
         let value: any = this.getMatchValue(key);
@@ -588,7 +588,7 @@ class EventState extends GFState {
     return this;
   }
 
-  reset(key?: gf.TStyleEventKey): this {
+  reset(key?: gf.TStyleEventKeys): this {
     if (key !== undefined) {
       let value: any = this.getOriginalValue(key);
       if (value === undefined) {
