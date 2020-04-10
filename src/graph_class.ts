@@ -835,13 +835,13 @@ export default class XGraph {
    * Apply color style on Cell
    *
    * @param {mxCell} mxcell
-   * @param {gf.TStyleColorKey} style
+   * @param {gf.TStyleColor.Keys} style
    * @param {(string | null)} color
    * @param {boolean} [animate=false]
    * @returns {this}
    * @memberof XGraph
    */
-  setColorCell(mxcell: mxCell, style: gf.TStyleColorKey, color: string | null): this {
+  setColorCell(mxcell: mxCell, style: gf.TStyleColorKeys, color: string | null): this {
     if (this.animation) {
       try {
         const endColor = this.getStyleCell(mxcell, style);
@@ -873,7 +873,7 @@ export default class XGraph {
    * Change or apply style
    *
    * @param {mxCell} mxcell
-   * @param {gf.TStyleColorKey} style
+   * @param {gf.TStyleColor.Keys} style
    * @param {(string | null)} value
    * @returns {this}
    * @memberof XGraph

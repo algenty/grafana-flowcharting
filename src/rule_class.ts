@@ -2,7 +2,7 @@
 import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
-import {Metric} from 'metric_class';
+import { Metric } from 'metric_class';
 
 /**
  * Rule definition
@@ -12,15 +12,103 @@ import {Metric} from 'metric_class';
  */
 export class Rule {
   data: gf.TIRuleData;
-  static TOOLTIPON : {text:string , value: gf.TTooltipOn}[] = [
+  // CONDITIONS
+  static TOOLTIPON: gf.TTooltipOnList = [
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
-  static VALUETYPES:{text:string,value:gf.TValueType}[] = [
+  static COLORON: gf.TColorOnList = [
+    { text: 'Never', value: 'n' },
+    { text: 'Warning / Critical', value: 'wc' },
+    { text: 'Always', value: 'a' },
+  ];
+  static TEXTON: gf.TTextOnList = [
+    { text: 'Never', value: 'n' },
+    { text: 'When Metric Displayed', value: 'wmd' },
+    { text: 'Warning / Critical', value: 'wc' },
+    { text: 'Critical Only', value: 'co' },
+  ];
+  static LINKON: gf.TLinkOnList = [
+    { text: 'Warning / Critical', value: 'wc' },
+    { text: 'Always', value: 'a' },
+  ];
+
+  // TYPES
+  static VALUETYPES: gf.TValueTypeList = [
     { text: 'Number', value: 'number' },
     { text: 'String', value: 'string' },
     { text: 'Date', value: 'date' },
   ];
+  static METRICTYPES: gf.TMetricTypeList = [
+    { text: 'Series', value: 'serie' },
+    { text: 'Table', value: 'table' },
+  ];
+  static IDENTIFYTYPES: { text: string; value: gf.TPropertieKey }[] = [
+    { text: 'Id', value: 'id' },
+    { text: 'Label', value: 'value' },
+  ];
+  static AGGREGATIONTYPES: gf.TAggregationList = [
+    { text: 'First', value: 'first' },
+    { text: 'Last', value: 'current' },
+    { text: 'Min', value: 'min' },
+    { text: 'Max', value: 'max' },
+    { text: 'Sum', value: 'total' },
+    { text: 'Avg', value: 'avg' },
+    { text: 'Count', value: 'count' },
+    { text: 'Delta', value: 'delta' },
+    { text: 'Range', value: 'range' },
+    { text: 'Diff', value: 'diff' },
+  ];
+  static GRAPHTYPES: gf.TGraphTypeList = [
+    { text: 'Line', value: 'line' },
+    { text: 'Histogram', value: 'bar' },
+  ];
+  static GRAPHSCALETYPES: gf.TGraphScaleList = [
+    { text: 'Linear', value: 'linear' },
+    { text: 'Logarithmic', value: 'log' },
+  ];
+  static GRAPHSIZETYPES: gf.TGraphSizeList = [
+    { text: 'Adjustable', value: '100%' },
+    { text: 'Small', value: '100px' },
+    { text: 'Medium', value: '200px' },
+    { text: 'Large', value: '400px' },
+  ];
+  static TOOLTIPDIRECTIONTYPE: gf.TDirectionList = [
+    { text: 'Vertical', value: 'v' },
+    { text: 'Horizontal ', value: 'h' },
+  ];
+  static DATEFORMATTYPES: gf.TDateFormatList = [
+    { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
+    { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
+    { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
+    { text: 'MMMM D, YYYY LT', value: 'MMMM D, YYYY LT' },
+    { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
+  ];
+
+  static VALUEMAPPINGTYPES: gf.TValueMappingList = [
+    { text: 'Value to text', value: 1 },
+    { text: 'Range to text', value: 2 },
+  ];
+
+  // METHODS
+  static TEXTMETHODS: { text: string; value: gf.TTextMethods }[] = [
+    { text: 'All content', value: 'content' },
+    { text: 'Substring', value: 'pattern' },
+    { text: 'Append (Space) ', value: 'as' },
+    { text: 'Append (New line) ', value: 'anl' },
+  ];
+  static COLORMETHODS: { text: string; value: gf.TStyleColorKeys }[] = [
+    { text: 'Stroke', value: 'strokeColor' },
+    { text: 'Fill', value: 'fillColor' },
+    { text: 'Text', value: 'fontColor' },
+    { text: 'Background (image)', value: 'imageBackground' },
+    { text: 'Border (image)', value: 'imageBorder' },
+  ];
+  static EVENTMETHODS: { text: string; value: gf.TStyleEventKey }[] = [
+    { text: 'Change shape', value: 'shape' },
+    { text: 'Change visibility', value: 'overflow' },
+  ];
+
   shapeMaps: ShapeMap[] = [];
   textMaps: TextMap[] = [];
   linkMaps: LinkMap[] = [];
@@ -30,10 +118,10 @@ export class Rule {
   id: string;
   removeClick = 2;
   states: Map<string, State>;
-  highestLevel:number = -1;
-  highestColor:string = '';
-  highestFormattedValue:string = '';
-  highestValue:any = undefined;
+  highestLevel: number = -1;
+  highestColor: string = '';
+  highestFormattedValue: string = '';
+  highestValue: any = undefined;
 
   /**
    * Creates an instance of Rule.
@@ -156,13 +244,13 @@ export class Rule {
     }
 
     // 0.7.0
-    let colorOn: gf.TColorOn | undefined = undefined;
+    let colorOn: gf.TColorOnKeys | undefined = undefined;
     if (!!obj.colorOn) {
       colorOn = obj.colorOn;
     }
 
     // 0.7.0
-    let style: gf.TStyleColorKey | undefined = undefined;
+    let style: gf.TStyleColorKeys | undefined = undefined;
     if (!!obj.style) {
       style = obj.style;
     }
@@ -182,13 +270,13 @@ export class Rule {
     }
 
     // 0.7.0
-    let linkOn: gf.TLinkOn | undefined = undefined;
+    let linkOn: gf.TLinkOnKeys | undefined = undefined;
     if (!!obj.linkOn) {
       linkOn = obj.linkOn;
     }
 
     // 0.7.0
-    let textOn: gf.TTextOn | undefined = undefined;
+    let textOn: gf.TTextOnKeys | undefined = undefined;
     if (!!obj.textOn) {
       textOn = obj.textOn;
     }
@@ -923,7 +1011,7 @@ export class Rule {
     }
     let l = level;
     if (!this.data.invert) {
-      l = (this.data.colors.length - 1) - level;
+      l = this.data.colors.length - 1 - level;
     }
     if (colors[l] !== undefined) {
       return colors[l];
@@ -957,7 +1045,7 @@ export class Rule {
       }
 
       if (!this.data.invert) {
-        thresholdLevel = (this.data.colors.length - 1) - thresholdLevel;
+        thresholdLevel = this.data.colors.length - 1 - thresholdLevel;
       }
       return thresholdLevel;
     }
@@ -979,7 +1067,7 @@ export class Rule {
       }
 
       if (!this.data.invert) {
-        thresholdLevel = (this.data.colors.length - 1) - thresholdLevel;
+        thresholdLevel = this.data.colors.length - 1 - thresholdLevel;
       }
       return thresholdLevel;
     }
@@ -1120,8 +1208,8 @@ export class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-      // Adjust for scientific notation.
-      (match[2] ? +match[2] : 0)
+        // Adjust for scientific notation.
+        (match[2] ? +match[2] : 0)
     );
   }
 }
@@ -1240,19 +1328,6 @@ export class GFMap {
  */
 export class ShapeMap extends GFMap {
   data: gf.TShapeMapData;
-  static APPLYON: {text:string,value:gf.TColorOn}[] = [
-    { text: 'Never', value: 'n' },
-    { text: 'Warning / Critical', value: 'wc' },
-    { text: 'Always', value: 'a' },
-  ];
-
-  static STYLES: {text:string, value:gf.TStyleColorKey}[] = [
-    { text: 'Stroke', value: 'strokeColor' },
-    { text: 'Fill', value: 'fillColor' },
-    { text: 'Text', value: 'fontColor' },
-    { text: 'Background (image)', value: 'imageBackground' },
-    { text: 'Border (image)', value: 'imageBorder' },
-  ];
 
   /**
    * Creates an instance of ShapeMap.
@@ -1331,18 +1406,7 @@ export class ShapeMap extends GFMap {
  */
 export class TextMap extends GFMap {
   data: gf.TTextMapData;
-  static APPLYON:{text:string,value:gf.TTextOn} [] = [
-    { text: 'Never', value: 'n' },
-    { text: 'When Metric Displayed', value: 'wmd' },
-    { text: 'Warning / Critical', value: 'wc' },
-    { text: 'Critical Only', value: 'co' },
-  ];
-  static METHODS:{text:string,value:gf.TTextMethods}[] = [
-    { text: 'All content', value: 'content' },
-    { text: 'Substring', value: 'pattern' },
-    { text: 'Append (Space) ', value: 'as' },
-    { text: 'Append (New line) ', value: 'anl' },
-  ];
+
   constructor(pattern: string, data: gf.TTextMapData) {
     super(pattern, data);
     this.data = data;
@@ -1448,10 +1512,6 @@ export class TextMap extends GFMap {
  */
 export class LinkMap extends GFMap {
   data: gf.TlinkMapData;
-  static APPLYON: {text:string,value:gf.TLinkOn}[] = [
-    { text: 'Warning / Critical', value: 'wc' },
-    { text: 'Always', value: 'a' },
-  ];
 
   constructor(pattern: string, data: gf.TlinkMapData) {
     super(pattern, data);
@@ -1522,10 +1582,7 @@ export class LinkMap extends GFMap {
 
 export class EventMap extends GFMap {
   data: gf.TEventMapData;
-  static METHODS: {text:string,value:gf.TStyleEventKey}[] = [
-    { text: 'Change shape', value: 'shape' },
-    { text: 'Change visibility', value: 'overflow' },
-  ];
+
   /**
    * Creates an instance of EventMap.
    * @param {string} pattern
@@ -1611,10 +1668,10 @@ class RangeMap {
    * @memberof RangeMap
    */
   import(obj: any): this {
-    this.data.from = !!obj.from ? obj.from : undefined; 
+    this.data.from = !!obj.from ? obj.from : undefined;
     this.data.to = !!obj.to ? obj.to : undefined;
     this.data.text = !!obj.text ? obj.text : undefined;
-    this.data.hidden = (!!obj.hidden || obj.hidden === false) ? obj.hidden : false;
+    this.data.hidden = !!obj.hidden || obj.hidden === false ? obj.hidden : false;
     return this;
   }
 
@@ -1649,7 +1706,7 @@ class RangeMap {
         if (v >= from) {
           if (this.data.to !== undefined && this.data.to.length > 0) {
             let to = Number(this.data.to);
-            return (v < to); 
+            return v < to;
           }
           return true;
         }
@@ -1658,7 +1715,7 @@ class RangeMap {
       // from is empty here
       if (this.data.to !== undefined && this.data.to.length > 0) {
         let to = Number(this.data.to);
-        return (v < to);
+        return v < to;
       }
       // from and to is empty
       return true;

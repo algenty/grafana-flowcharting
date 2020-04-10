@@ -1,11 +1,9 @@
 import FlowchartHandler from './flowchartHandler';
 import RulesHandler from 'rulesHandler';
-import {Rule,LinkMap,ShapeMap,TextMap,EventMap} from 'rule_class';
+import { Rule } from 'rule_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
 import MetricHandler from './metricHandler';
-import {Metric} from './metric_class';
-import {GraphTooltip} from "./tooltipHandler";
 
 export class MappingOptionsCtrl {
   $scope: gf.TMappingOptionsScope;
@@ -15,56 +13,24 @@ export class MappingOptionsCtrl {
   rulesHandler: RulesHandler;
   metricHandler: MetricHandler;
   unitFormats: any;
-  style= ShapeMap.STYLES;
-  metricType: gf.TSelectString[] = Metric.METRICTYPES
-  colorOn = ShapeMap.APPLYON;
-  linkOn = LinkMap.APPLYON;
+  style = Rule.COLORMETHODS;
+  metricType: gf.TSelectString[] = Rule.METRICTYPES;
+  colorOn = Rule.COLORON;
+  linkOn = Rule.LINKON;
   tooltipOn = Rule.TOOLTIPON;
-  textOn = TextMap.APPLYON;
-  textReplace = TextMap.METHODS;
-  EventType: gf.TSelectString[] = EventMap.METHODS
-  tpDirection: gf.TSelectString[] = [
-    { text: 'Vertical', value: 'v' },
-    { text: 'Horizontal ', value: 'h' },
-  ];
-  propTypes: gf.TSelectString[] = [
-    { text: 'Id', value: 'id' },
-    { text: 'Label', value: 'value' },
-  ];
-
+  textOn = Rule.TEXTON;
+  textReplace = Rule.TEXTMETHODS;
+  EventType: gf.TSelectString[] = Rule.EVENTMETHODS;
+  tpDirection: gf.TSelectString[] = Rule.TOOLTIPDIRECTIONTYPE;
+  propTypes: gf.TSelectString[] = Rule.IDENTIFYTYPES;
   textPattern = '/.*/';
   metricTypes = Rule.VALUETYPES;
-  dateFormats: gf.TSelectString[] = [
-    { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
-    { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
-    { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
-    { text: 'MMMM D, YYYY LT', value: 'MMMM D, YYYY LT' },
-    { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
-  ];
-  aggregationTypes: gf.TSelectAggregation[] = [
-    { text: 'First', value: 'first' },
-    { text: 'Last', value: 'current' },
-    { text: 'Min', value: 'min' },
-    { text: 'Max', value: 'max' },
-    { text: 'Sum', value: 'total' },
-    { text: 'Avg', value: 'avg' },
-    { text: 'Count', value: 'count' },
-    { text: 'Delta', value: 'delta' },
-    { text: 'Range', value: 'range' },
-    { text: 'Diff', value: 'diff' },
-  ];
-  mappingTypes: gf.TSelectText[] = [
-    { text: 'Value to text', value: 1 },
-    { text: 'Range to text', value: 2 },
-  ];
-  tpGraphType: gf.TSelectGraphType[] = GraphTooltip.GRAPHTYPES;
-  tpGraphScale = GraphTooltip.GRAPHSCALETYPES;
-  tpGraphSize: gf.TSelectGraphSize[] = [
-    { text: 'Adjustable', value: '100%' },
-    { text: 'Small', value: '100px' },
-    { text: 'Medium', value: '200px' },
-    { text: 'Large', value: '400px' },
-  ];
+  dateFormats: gf.TSelectString[] = Rule.DATEFORMATTYPES;
+  aggregationTypes = Rule.AGGREGATIONTYPES;
+  mappingTypes = Rule.VALUEMAPPINGTYPES;
+  tpGraphType = Rule.GRAPHTYPES;
+  tpGraphScale = Rule.GRAPHSCALETYPES;
+  tpGraphSize = Rule.GRAPHSIZETYPES;
   getMetricNames: () => any[];
   getCellNames: (prop: gf.TPropertieKey) => any[];
   getCellNamesById: () => any[];
@@ -73,7 +39,6 @@ export class MappingOptionsCtrl {
 
   /** @ngInject */
   constructor($scope: gf.TMappingOptionsScope) {
-    debugger
     $scope.editor = this;
     $scope.GFP = GFP;
     this.$scope = $scope;
@@ -85,12 +50,7 @@ export class MappingOptionsCtrl {
     this.rulesHandler = this.panelCtrl.rulesHandler;
     this.metricHandler = this.panelCtrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();
-    this.tpGraphSize = [
-      { text: 'Adjustable', value: '100%' },
-      { text: 'Small', value: '100px' },
-      { text: 'Medium', value: '200px' },
-      { text: 'Large', value: '400px' },
-    ];
+    this.tpGraphSize = Rule.GRAPHSIZETYPES;
 
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');

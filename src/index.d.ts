@@ -33,120 +33,93 @@ declare module gf {
 
   // Styles
   declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground', 'shape', 'overflow'];
-  declare type TStyleColorKey = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
+  declare type TStyleColorKeys = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
+  declare type TStyleColorList = { text: string; value: TStyleColor.Keys }[];
   declare type TStyleEventKey = 'shape' | 'overflow';
-  declare type TStyleKey = TStyleColorKey | TStyleEventKey;
-  // declare interface TIStylesString {
-  //   fillColor: string | null;
-  //   strokeColor: string | null;
-  //   fontColor: string | null;
-  //   imageBorder: string | null;
-  //   imageBackground: string | null;
-  //   shape: string | null;
-  //   overflow: string | null;
-  // }
-
-  // declare interface TIEventString {
-  //   shape: string | null;
-  //   overflow: string | null;
-  // }
-
-  // declare interface TIStylesBoolean {
-  //   fillColor: boolean;
-  //   strokeColor: boolean;
-  //   fontColor: boolean;
-  //   imageBorder: boolean;
-  //   imageBackground: boolean;
-  //   shape: boolean;
-  //   overflow: boolean;
-  // }
-
-  // declare interface TIStylesNumber {
-  //   fillColor: number;
-  //   strokeColor: number;
-  //   fontColor: number;
-  //   imageBorder: number;
-  //   imageBackground: number;
-  //   shape: number;
-  //   overflow: number;
-  // }
+  declare type TStyleKey = TStyleColor.Keys | TStyleEventKey;
 
   declare interface TSelectStyle extends TSelectString {
-    value: TStyleColorKey;
+    value: TStyleColor.Keys;
   }
 
   // ToolTip
-  declare type TDirection = 'v' | 'h';
-  declare type TGraphType = 'line' | 'bar';
-  declare type TGraphCoordinate = { x?: number; y: number };
-  declare type TGraphScale = 'linear' | 'log';
-  declare type TGraphSize = '100%' | '100px' | '200px' | '400px';
-
-  declare interface TSelectGraphSize extends TSelectString {
-    value: TGraphSize;
+  declare type TDirectionKeys = 'v' | 'h';
+  declare type TDirectionList = { text: string; value: TDirectionKeys }[];
+  declare type TGraphTypeKeys = 'line' | 'bar';
+  declare type TGraphTypeList = { text: string; value: TGraphTypeKeys }[];
+  declare interface TGraphTypeInt extends TSelectString {
+    value: TGraphTypeKeys;
   }
-  declare interface TSelectGraphType extends TSelectString {
-    value: TGraphType;
+  declare type TGraphCoordinate = { x?: number; y: number };
+  declare type TGraphScaleKeys = 'linear' | 'log';
+  declare type TGraphScaleList = { text: string; value: TGraphScaleKeys }[];
+  declare type TGraphSizeKeys = '100%' | '100px' | '200px' | '400px';
+  declare type TGraphSizeList = { text: string; value: TGraphSizeKeys }[];
+  declare interface TGraphSizeInt extends TSelectString {
+    value: TGraphSizeKeys;
   }
 
   declare interface TSelectGraphScale extends TSelectString {
-    value: TGraphScale;
+    value: TGraphScaleKeys;
   }
 
   // Range or value
-  declare type TTextType = 1 | 2;
-  declare interface TSelectText extends TSelectNumber {
-    value: TTextType;
+  declare type TValueMappingKeys = 1 | 2;
+  declare type TValueMappingList = { text: string; value: TValueMappingKeys }[];
+  declare interface TValueMappingInt extends TSelectNumber {
+    value: TValueMappingKeys;
   }
 
   // Aggregation
-  declare type TAggregation = 'first' | 'current' | 'min' | 'max' | 'total' | 'avg' | 'count' | 'delta' | 'range' | 'diff';
+  declare type TAggregationKeys = 'first' | 'current' | 'min' | 'max' | 'total' | 'avg' | 'count' | 'delta' | 'range' | 'diff';
+  declare type TAggregationList = { text: string; value: TAggregationKeys }[];
   declare interface TSelectAggregation extends TSelectString {
-    value: TAggregation;
+    value: TAggregationKeys;
   }
 
   // Metric
-  declare type TMetricType = 'table' | 'serie';
+  declare type TMetricTypeKeys = 'table' | 'serie';
+  declare type TMetricTypeList = { text: string; value: TMetricTypeKeys }[];
 
   // Rules
-  declare type TLinkOn = 'wc' | 'a';
+  declare type TLinkOnKeys = 'wc' | 'a';
+  declare type TLinkOnList = { text: string; value: TLinkOnKeys }[];
+
   declare type TTooltipOn = 'wc' | 'a';
-  declare type TColorOn = 'n' | 'wc' | 'a';
-  declare type TTextOn = 'n' | 'wmd' | 'wc' | 'co';
-  declare type TValueType = 'number' | 'string' | 'date';
+  declare type TTooltipOnList = { text: string; value: TTooltipOn }[];
+
+  declare type TColorOnKeys = 'n' | 'wc' | 'a';
+  declare type TColorOnList = { text: string; value: TColorOnKeys }[];
+
+  declare type TTextOnKeys = 'n' | 'wmd' | 'wc' | 'co';
+  declare type TTextOnList = { text: string; value: TTextOnKeys }[];
+
+  declare type TValueTypeKeys = 'number' | 'string' | 'date';
+  declare type TValueTypeList = { text: string; value: TValueTypeKeys }[];
+
   declare type TTextMethods = 'content' | 'pattern' | 'as' | 'anl';
-  declare type TDateFormat = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
+  declare type TDateFormatKeys = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
+  declare type TDateFormatList = { text: string; value: TDateFormatKeys }[];
   declare interface TIRulesHandlerData {
     rulesData: TIRuleData[];
   }
   declare interface TIRuleData {
     order: number;
     pattern: string;
-    metricType: TMetricType;
+    metricType: TMetricTypeKeys;
     alias: string;
     refId: string;
     column: string;
-    aggregation: TAggregation;
+    aggregation: TAggregationKeys;
     unit: string;
     type: string;
     hidden: boolean;
     decimals: number;
     colors: string[];
     reduce: boolean;
-    //style: TStyleKeyDisable;
-    //colorOn: TColorOn;
-    //link: boolean;
-    //linkOn: TLinkOn;
-    //linkUrl: string;
-    //linkParams: boolean;
-    //textOn: TTextOn;
-    // textReplace: TTextReplace;
-    // textPattern: string;
-    dateFormat: TDateFormat;
+    dateFormat: TDateFormatKeys;
     thresholds: number[];
     stringThresholds: string[];
-    //stringWarning: string;
-    //stringCritical: string;
     invert: boolean;
     gradient: boolean;
     overlayIcon: boolean;
@@ -154,13 +127,13 @@ declare module gf {
     tooltipLabel: string;
     tooltipColors: boolean;
     tooltipOn: TTooltipOn;
-    tpDirection: TDirection;
+    tpDirection: TDirectionKeys;
     tpGraph: boolean;
-    tpGraphSize: TGraphSize;
-    tpGraphType: TGraphType;
+    tpGraphSize: TGraphSizeKeys;
+    tpGraphType: TGraphTypeKeys;
     tpGraphLow: number | null;
     tpGraphHigh: number | null;
-    tpGraphScale: TGraphScale;
+    tpGraphScale: TGraphScaleKeys;
     shapeProp: TPropertieKey;
     shapeRegEx: boolean;
     shapeData: TShapeMapData[];
@@ -185,8 +158,8 @@ declare module gf {
   }
 
   declare interface TShapeMapData extends TGFMapData {
-    style: TStyleColorKey;
-    colorOn: TColorOn;
+    style: TStyleColor.Keys;
+    colorOn: TColorOnKeys;
   }
 
   declare interface TEventMapData extends TGFMapData {
@@ -198,13 +171,13 @@ declare module gf {
   declare interface TTextMapData extends TGFMapData {
     textReplace: TTextMethods;
     textPattern: string;
-    textOn: TTextOn;
+    textOn: TTextOnKeys;
   }
 
   declare interface TlinkMapData extends TGFMapData {
     linkUrl: string;
     linkParams: boolean;
-    linkOn: TLinkOn;
+    linkOn: TLinkOnKeys;
   }
 
   declare interface TRangeMapData {

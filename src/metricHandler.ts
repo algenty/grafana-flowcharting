@@ -88,11 +88,11 @@ export default class MetricHandler {
   /**
    * get Names of metrics (serie or table or both if type is undefined)
    *
-   * @param {gf.TMetricType} [type]
+   * @param {gf.TMetricTypeKeys} [type]
    * @returns {string[]}
    * @memberof MetricHandler
    */
-  getNames(type?: gf.TMetricType): string[] {
+  getNames(type?: gf.TMetricTypeKeys): string[] {
     let names: string[] = [];
     if (type === 'serie') {
       names = this.series.map(m => m.getName());
@@ -108,11 +108,11 @@ export default class MetricHandler {
   /**
    * get Metrics, series or tables or both if type is undefined
    *
-   * @param {gf.TMetricType} [type]
+   * @param {gf.TMetricTypeKeys} [type]
    * @returns {Metric[]}
    * @memberof MetricHandler
    */
-  getMetrics(type?: gf.TMetricType): Metric[] {
+  getMetrics(type?: gf.TMetricTypeKeys): Metric[] {
     if (type === 'serie') {
       return this.series;
     }
@@ -125,11 +125,11 @@ export default class MetricHandler {
   /**
    * Define if have tables or serie
    *
-   * @param {gf.TMetricType} [type]
+   * @param {gf.TMetricTypeKeys} [type]
    * @returns {boolean}
    * @memberof MetricHandler
    */
-  isTypeOf(type?: gf.TMetricType): boolean {
+  isTypeOf(type?: gf.TMetricTypeKeys): boolean {
     if (type === 'serie') {
       return this.series.length > 0;
     }
@@ -143,11 +143,11 @@ export default class MetricHandler {
    * Get metrics with this name Serie or table or both
    *
    * @param {string} name
-   * @param {gf.TMetricType} [type]
+   * @param {gf.TMetricTypeKeys} [type]
    * @returns {Metric[]}
    * @memberof MetricHandler
    */
-  findMetrics(name: string, type?: gf.TMetricType): Metric[] {
+  findMetrics(name: string, type?: gf.TMetricTypeKeys): Metric[] {
     let metrics: Metric[] = [];
     if (type) {
       if (type === 'table') {
@@ -166,11 +166,11 @@ export default class MetricHandler {
    * Get column name for a metric
    *
    * @param {string} metricName
-   * @param {gf.TMetricType} [type]
+   * @param {gf.TMetricTypeKeys} [type]
    * @returns {string[]}
    * @memberof MetricHandler
    */
-  getColumnsName(metricName: string, type?: gf.TMetricType): string[] {
+  getColumnsName(metricName: string, type?: gf.TMetricTypeKeys): string[] {
     const metrics = this.findMetrics(metricName, type);
     let columns: string[] = [];
     metrics.forEach(m => {

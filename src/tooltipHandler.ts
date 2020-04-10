@@ -131,7 +131,7 @@ export class MetricTooltip {
   graphs: Set<GraphTooltip>;
   label: string;
   value: string;
-  direction: gf.TDirection = 'v';
+  direction: gf.TDirectionKeys = 'v';
   div: HTMLDivElement | undefined;
   constructor() {
     this.color = '#8c8980';
@@ -157,7 +157,7 @@ export class MetricTooltip {
     return this;
   }
 
-  setDirection(direction: gf.TDirection): this {
+  setDirection(direction: gf.TDirectionKeys): this {
     this.direction = direction;
     return this;
   }
@@ -205,7 +205,7 @@ export class MetricTooltip {
     return div;
   }
 
-  addGraph(type: gf.TGraphType): GraphTooltip {
+  addGraph(type: gf.TGraphTypeKeys): GraphTooltip {
     let graph: GraphTooltip;
     switch (type) {
       case 'line':
@@ -231,15 +231,8 @@ export class MetricTooltip {
  */
 export class GraphTooltip {
   color = '#8c8980';
-  static GRAPHTYPES:{text:string,value:gf.TGraphType}[] = [
-    { text: 'Line', value: 'line' },
-    { text: 'Histogram', value: 'bar' },
-  ];
-  static GRAPHSCALETYPES:{text:string,value:gf.TGraphScale}[] = [
-    { text: 'Linear', value: 'linear' },
-    { text: 'Logarithmic', value: 'log' },
-  ];
-  type: gf.TGraphType = 'line';
+
+  type: gf.TGraphTypeKeys = 'line';
   data: Chartist.IChartistData = {
     series: [
       {
@@ -249,11 +242,11 @@ export class GraphTooltip {
   };
   name: string | undefined;
   column: string | undefined;
-  size: gf.TGraphSize = '100%';
+  size: gf.TGraphSizeKeys = '100%';
   metric: Metric | undefined;
   low: number | null = null;
   high: number | null = null;
-  scaleType: gf.TGraphScale = 'linear';
+  scaleType: gf.TGraphScaleKeys = 'linear';
   div: HTMLDivElement | undefined;
   chart: any;
   parentDiv: HTMLDivElement | undefined;
@@ -273,12 +266,12 @@ export class GraphTooltip {
     return this;
   }
 
-  setType(type: gf.TGraphType): this {
+  setType(type: gf.TGraphTypeKeys): this {
     this.type = type;
     return this;
   }
 
-  setSize(size: gf.TGraphSize): this {
+  setSize(size: gf.TGraphSizeKeys): this {
     this.size = size;
     return this;
   }
@@ -294,7 +287,7 @@ export class GraphTooltip {
     return this;
   }
 
-  setScale(type: gf.TGraphScale) {
+  setScale(type: gf.TGraphScaleKeys) {
     this.scaleType = type;
   }
 

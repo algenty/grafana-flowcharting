@@ -8,10 +8,7 @@ import _ from 'lodash';
  * @class Metric
  */
 export class Metric {
-  static METRICTYPES: {text:string,value:gf.TMetricType}[] = [
-    { text: 'Series', value: 'serie' },
-    { text: 'Table', value: 'table' },
-  ];
+
   type = 'unknow';
   scopedVars: any;
   metrics: any = {};
@@ -35,12 +32,12 @@ export class Metric {
   /**
    * Get value of metric for an aggregation
    *
-   * @param {gf.TAggregation} aggregator
+   * @param {gf.TAggregationKeys} aggregator
    * @param {string} [column]
    * @returns {(string | number | null)}
    * @memberof Metric
    */
-  getValue(aggregator: gf.TAggregation, column?: string): string | number | null {
+  getValue(aggregator: gf.TAggregationKeys, column?: string): string | number | null {
     return null;
   }
 
@@ -97,12 +94,12 @@ export class Serie extends Metric {
   /**
    * Get value of serie for an aggregation
    *
-   * @param {gf.TAggregation} aggregator
+   * @param {gf.TAggregationKeys} aggregator
    * @param {string} [column]
    * @returns {(string | number | null)}
    * @memberof Metric
    */
-  getValue(aggregator: gf.TAggregation): number | string | null {
+  getValue(aggregator: gf.TAggregationKeys): number | string | null {
     try {
       let value = this.metrics.stats[aggregator];
       if (value === undefined || value === null) {
@@ -326,12 +323,12 @@ export class Table extends Metric {
   /**
    * Get value of table for an aggregation
    *
-   * @param {gf.TAggregation} aggregator
+   * @param {gf.TAggregationKeys} aggregator
    * @param {string} [column]
    * @returns {(string | number | null)}
    * @memberof Metric
    */
-  getValue(aggregator: gf.TAggregation, column: string): string | number | null {
+  getValue(aggregator: gf.TAggregationKeys, column: string): string | number | null {
     try {
       let value = this.metrics.stats[column][aggregator];
       if (value === undefined || value === null) {
