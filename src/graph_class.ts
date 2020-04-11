@@ -607,7 +607,7 @@ export default class XGraph {
       });
     } else if (prop === 'value') {
       _.each(cells, (mxcell: mxCell) => {
-        cellIds.push(this.getLabel(mxcell));
+        cellIds.push(this.getLabelCell(mxcell));
       });
     }
     return cellIds;
@@ -632,7 +632,7 @@ export default class XGraph {
       });
     } else if (prop === 'value') {
       _.each(mxcells, (mxcell: mxCell) => {
-        if (GFP.utils.matchString(mxcell.getValue(), pattern)) {
+        if (GFP.utils.matchString(this.getLabelCell(mxcell), pattern)) {
           result.push(mxcell);
         }
       });
@@ -810,7 +810,7 @@ export default class XGraph {
       return this.getId(mxcell);
     }
     if (prop === 'value') {
-      return this.getLabel(mxcell);
+      return this.getLabelCell(mxcell);
     }
     return null;
   }
@@ -878,7 +878,7 @@ export default class XGraph {
    * @returns {string} Label of current cell
    * @memberof XGraph
    */
-  getLabel(mxcell: mxCell): string {
+  getLabelCell(mxcell: mxCell): string {
     if (mxUtils.isNode(mxcell.value)) {
       return mxcell.value.getAttribute('label');
     }
