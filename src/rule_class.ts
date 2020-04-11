@@ -68,8 +68,8 @@ export default class Rule {
       //textReplace: 'content',
       //textPattern: '/.*/',
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
-      thresholds: [50,80],
-      stringThresholds: ["/.*/","/.*/"],
+      thresholds: [50, 80],
+      stringThresholds: ['/.*/', '/.*/'],
       //stringWarning: '',
       //stringCritical: '',
       invert: false,
@@ -1520,7 +1520,7 @@ class RangeMap {
   import(obj: any): this {
     this.data.from = !!obj.from ? obj.from : undefined;
     this.data.to = !!obj.to ? obj.to : undefined;
-    this.data.text = !!obj.text ? obj.text : undefined
+    this.data.text = !!obj.text ? obj.text : undefined;
     this.data.hidden = !!obj.hidden || obj.hidden === false ? obj.hidden : false;
     return this;
   }
@@ -1572,7 +1572,6 @@ class RangeMap {
     }
     return false;
   }
-
 
   /**
    * Return Formatted value
@@ -1704,7 +1703,7 @@ class ValueMap {
     }
     return GFP.utils.matchString(value.toString(), this.data.value);
   }
-  
+
   /**
    * Get formatted value
    *
