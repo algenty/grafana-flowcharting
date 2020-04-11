@@ -851,7 +851,6 @@ export default class XGraph {
         const self = this;
         function graduate(count, steps) {
           if (count < steps.length) {
-            // self.graph.setCellStyles(style, steps[count], [mxcell]);
             self.setStyleCell(mxcell, style, steps[count]);
             window.setTimeout(() => {
               graduate(count + 1, steps);

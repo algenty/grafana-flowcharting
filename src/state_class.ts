@@ -732,7 +732,7 @@ class ShapeState extends GFState {
         if (value === undefined) {
           value = null;
         }
-        this.xgraph.setStyleCell(this.mxcell, key, value);
+        this.xgraph.setColorCell(this.mxcell, key, value);
         super.apply(key);
       }
     } else {
@@ -749,7 +749,7 @@ class ShapeState extends GFState {
       if (value === undefined) {
         value = null;
       }
-      this.xgraph.setStyleCell(this.mxcell, key, value);
+      this.xgraph.setColorCell(this.mxcell, key, value);
       super.reset(key);
     } else {
       this.xgraph.setStyles(this.mxcell, this.fullStylesString);

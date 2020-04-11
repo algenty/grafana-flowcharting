@@ -90,7 +90,7 @@ export default class Flowchart {
     if (!!obj.tooltip) {
       this.data.tooltip = obj.tooltip;
     }
-    if (!!obj.grid || this.data.grid === false) {
+    if (!!obj.grid || obj.grid === false) {
       this.data.grid = obj.grid;
     }
     if (!!obj.bgColor) {
