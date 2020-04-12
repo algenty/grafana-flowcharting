@@ -2,7 +2,7 @@ import XGraph from './graph_class';
 import { Rule } from './rule_class';
 import { Metric } from './metric_class';
 import { TooltipHandler } from './tooltipHandler';
-import { GFCONSTANT } from 'constant_class';
+import { GFCONSTANT, GFUtils, GFVariables } from 'globals_class';
 
 /**
  * Class for state of one cell
@@ -26,6 +26,7 @@ export default class State {
   eventState: EventState;
   textState: TextState;
   linkState: LinkState;
+  variables: GFVariables;
   globalLevel = -1;
   tooltipHandler: TooltipHandler | null = null;
   originalText: string;
@@ -47,6 +48,7 @@ export default class State {
     this.eventState = new EventState(xgraph, mxcell);
     this.textState = new TextState(xgraph, mxcell);
     this.linkState = new LinkState(xgraph, mxcell);
+    this.variables = GFUtils.getLocalVars();
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
     this.originalText = this.xgraph.getLabelCell(mxcell);
@@ -82,6 +84,9 @@ export default class State {
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
       const color = rule.data.gradient && rule.data.type === 'number' ? rule.getColorForValue(value) : rule.getColorForLevel(level);
+      this.variables.set('_rule',rule.data.pattern);
+      this.variables.set('_value',value);
+      this.variables.set('_level',level);
 
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
@@ -114,7 +119,7 @@ export default class State {
             rule.highestFormattedValue = FormattedValue;
             rule.highestColor = color;
           }
-        } 
+        }
         // else if (this.shapeState.isChanged(k) && !this.shapeState.isMatched(k)) {
         //   GFP.log.debug('SHAPE - Unset it');
         //   this.shapeState.unset(k);
@@ -322,7 +327,6 @@ export default class State {
       //   this.linkState.reset();
       // }
       this.linkState.apply();
-
     } else if (this.changed) {
       this.reset();
     }
@@ -394,8 +398,6 @@ export default class State {
  * @class GFState
  */
 class GFState {
-  // changed = false;
-  // matched = false;
   xgraph: XGraph;
   mxcell: mxCell;
   keys: string[] = [];
@@ -409,10 +411,10 @@ class GFState {
   constructor(xgraph: XGraph, mxcell: mxCell) {
     this.xgraph = xgraph;
     this.mxcell = mxcell;
-    this.init();
+    this.init_core();
   }
 
-  init() { }
+  init_core() {}
 
   addValue(key: string, value: any) {
     this.originalValue.set(key, value);
@@ -421,7 +423,7 @@ class GFState {
     this.matchLevel.set(key, -1);
     this.matchedKey.set(key, false);
     this.changedKey.set(key, false);
-    GFP.log.debug("GFState.addValue from " + this.constructor.name + " [" + this.mxcell.id + "] KEY=" + key + " VALUE=" + value);
+    GFP.log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
   }
 
   getOriginalValue(key: string): any | undefined {
@@ -450,12 +452,17 @@ class GFState {
   apply(key?: string): this {
     if (key !== undefined) {
       if (this.isMatched(key)) {
-        GFP.log.debug("GFState.apply from " + this.constructor.name + " [" + this.mxcell.id + "] MATCHED KEY=" + key);
+        GFP.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] MATCHED KEY=' + key);
+        let value = this.getMatchValue(key);
+        try {
+          this.apply_core(key, value);
+        } catch (error) {
+          GFP.log.error('Error on reset for key ' + key, error);
+        }
         this.changedKey.set(key, true);
-        this.matchedKey.set(key,false);
-      }
-      else if (this.isChanged(key)) {
-        GFP.log.debug("GFState.apply from " + this.constructor.name + " [" + this.mxcell.id + "] CHANGED KEY=" + key);
+        this.matchedKey.set(key, false);
+      } else if (this.isChanged(key)) {
+        GFP.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] CHANGED KEY=' + key);
         this.reset(key);
       }
     } else {
@@ -465,6 +472,8 @@ class GFState {
     }
     return this;
   }
+
+  apply_core(key: any, value: any) {}
 
   isMatched(key?: string): boolean {
     if (key !== undefined) {
@@ -503,8 +512,15 @@ class GFState {
 
   reset(key?: string): this {
     if (key !== undefined) {
+      GFP.log.debug('GFState.reset from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key);
       this.unset(key);
-      GFP.log.debug("GFState.reset from " + this.constructor.name + " [" + this.mxcell.id + "] KEY=" + key);
+      let value = this.getOriginalValue(key);
+      try {
+        // debugger
+        this.reset_core(key, value);
+      } catch (error) {
+        GFP.log.error('Error on reset for key ' + key, error);
+      }
       this.changedKey.set(key, false);
       this.matchedKey.set(key, false);
     } else {
@@ -514,6 +530,8 @@ class GFState {
     }
     return this;
   }
+
+  reset_core(key: any, value: any) {}
 
   prepare(): this {
     if (this.isChanged()) {
@@ -530,53 +548,32 @@ class GFState {
  * @extends {GFState}
  */
 class EventState extends GFState {
-  keys: gf.TStyleEventKeys[] = GFCONSTANT.EVENTMETHODS.map(x => x.value);
+  keys: gf.TStyleEventKeys[] = [];
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);
-    this.init();
+    this.init_core();
   }
 
-  init() {
+  init_core() {
+    this.keys = GFCONSTANT.EVENTMETHODS.map(x => x.value);
     this.keys.forEach(key => {
       const value = this.xgraph.getStyleCell(this.mxcell, key);
       this.addValue(key, value);
     });
   }
 
-  apply(key?: gf.TStyleEventKeys): this {
-    if (key !== undefined) {
-      if (this.isMatched(key)) {
-        let value: any = this.getMatchValue(key);
-        if (value === undefined) {
-          value = null;
-        }
-        this.xgraph.setStyleCell(this.mxcell, key, value);
-        super.apply(key);
-      } else if (this.isChanged(key)) {
-        this.reset(key);
-      }
-    } else {
-      this.keys.forEach(key => {
-        this.apply(key);
-      });
+  apply_core(key: gf.TStyleEventKeys, value: any) {
+    if (value === undefined) {
+      value = null;
     }
-    return this;
+    this.xgraph.setStyleCell(this.mxcell, key, value);
   }
 
-  reset(key?: gf.TStyleEventKeys): this {
-    if (key !== undefined) {
-      let value: any = this.getOriginalValue(key);
-      if (value === undefined) {
-        value = null;
-      }
-      this.xgraph.setStyleCell(this.mxcell, key, value);
-      super.reset(key);
-    } else {
-      this.keys.forEach(key => {
-        this.reset(key);
-      });
+  reset_core(key: gf.TStyleEventKeys, value: any) {
+    if (value === undefined) {
+      value = null;
     }
-    return this;
+    this.xgraph.setStyleCell(this.mxcell, key, value);
   }
 }
 
@@ -584,48 +581,20 @@ class TextState extends GFState {
   keys: string[] = ['label'];
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);
-    this.init();
+    this.init_core();
   }
 
-  init() {
+  init_core() {
     const value = this.xgraph.getLabelCell(this.mxcell);
     this.addValue('label', value);
   }
 
-  apply(key?: string): this {
-    if (key !== undefined) {
-      if (this.isMatched(key)) {
-        let value: any = this.getMatchValue(key);
-        if (value === undefined) {
-          value = null;
-        }
-        this.xgraph.setLabelCell(this.mxcell, value);
-        super.apply(key);
-      }
-    } else {
-      this.keys.forEach(key => {
-        this.apply(key);
-      });
-      super.apply();
-    }
-    return this;
+  apply_core(key: string, value: any) {
+    this.xgraph.setLabelCell(this.mxcell, value);
   }
 
-  reset(key?: string): this {
-    if (key !== undefined) {
-      let value: any = this.getOriginalValue(key);
-      if (value === undefined) {
-        value = null;
-      }
-      this.xgraph.setLabelCell(this.mxcell, value);
-      super.reset(key);
-    } else {
-      this.keys.forEach(key => {
-        this.reset(key);
-      });
-      super.reset();
-    }
-    return this;
+  reset_core(key: string, value: any) {
+    this.xgraph.setLabelCell(this.mxcell, value);
   }
 }
 
@@ -633,61 +602,39 @@ class LinkState extends GFState {
   keys: string[] = ['link'];
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);
-    this.init();
+    this.init_core();
   }
 
-  init() {
+  init_core() {
     const value = this.xgraph.getLink(this.mxcell);
     this.addValue('link', value);
-    GFP.log.debug('Original Link', this.originalValue);
   }
 
-  apply(key?: string): this {
-    if (key !== undefined) {
-      if (this.isMatched(key)) {
-        let value: any = this.getMatchValue(key);
-        if (value === undefined) {
-          value = null;
-        }
-        this.xgraph.addLink(this.mxcell, value);
-        super.apply(key);
-      }
+  apply_core(key: string, value: any) {
+    this.xgraph.addLink(this.mxcell, value);
+  }
+
+  reset_core(key: string, value: any) {
+    if (value === undefined || value === null || value.length === 0) {
+      this.xgraph.removeLink(this.mxcell);
     } else {
-      this.keys.forEach(key => {
-        this.apply(key);
-      });
-    }
-    return this;
-  }
-
-  reset(key?: string): this {
-    if (key !== undefined) {
-      let value: any = this.getOriginalValue(key);
-      if (value === undefined) {
-        value = null;
-      }
       this.xgraph.addLink(this.mxcell, value);
-      super.reset(key);
-    } else {
-      this.keys.forEach(key => {
-        this.reset(key);
-      });
     }
-    return this;
   }
 }
 
 class ShapeState extends GFState {
-  keys: gf.TStyleColorKeys[] = GFCONSTANT.COLORMETHODS.map(x => x.value);
-  fullStylesString: string;
+  keys: gf.TStyleColorKeys[] = [];
+  fullStylesString: string | undefined;
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);
-    this.fullStylesString = mxcell.getStyle();
-    this.init();
+    this.init_core();
   }
 
-  init() {
+  init_core() {
     GFP.log.info('ShapeState [' + this.mxcell.id + ']');
+    this.keys = GFCONSTANT.COLORMETHODS.map(x => x.value);
+    this.fullStylesString = this.mxcell.getStyle();
     this.keys.forEach(key => {
       const value = this.xgraph.getStyleCell(this.mxcell, key);
       this.addValue(key, value);
@@ -696,25 +643,11 @@ class ShapeState extends GFState {
     this.mxcell.GF_tooltipHandler = null;
   }
 
-  apply(key?: gf.TStyleColorKeys): this {
-    if (key !== undefined) {
-      if (this.isMatched(key)) {
-        let value: any = this.getMatchValue(key);
-        if (value === undefined) {
-          value = null;
-        }
-        this.xgraph.setColorCell(this.mxcell, key, value);
-        super.apply(key);
-      }
-      else if (this.isChanged(key)) {
-        this.reset(key);
-      }
-    } else {
-      this.keys.forEach(key => {
-        this.apply(key);
-      });
+  apply_core(key: gf.TStyleColorKeys, value: any) {
+    if (value === undefined) {
+      value = null;
     }
-    return this;
+    this.xgraph.setColorCell(this.mxcell, key, value);
   }
 
   reset(key?: gf.TStyleColorKeys): this {
@@ -726,7 +659,9 @@ class ShapeState extends GFState {
       this.xgraph.setColorCell(this.mxcell, key, value);
       super.reset(key);
     } else {
-      this.xgraph.setStyles(this.mxcell, this.fullStylesString);
+      if (!!this.fullStylesString) {
+        this.xgraph.setStyles(this.mxcell, this.fullStylesString);
+      }
       super.reset();
     }
     return this;
@@ -736,12 +671,12 @@ class ShapeState extends GFState {
 class TooltipState extends GFState {
   keys: string[] = ['tooltip'];
   tooltipHandler: TooltipHandler | undefined;
-  constructor(xgraph: XGraph, mxcell: mxCell) {
-    super(xgraph, mxcell);
-    this.init();
-  }
+  // constructor(xgraph: XGraph, mxcell: mxCell) {
+  //   super(xgraph, mxcell);
+  //   this.init();
+  // }
 
-  init() {
+  init_core() {
     this.addValue('tooltip', false);
     this.tooltipHandler = undefined;
     this.mxcell.GF_tooltipHandler = null;
@@ -839,12 +774,11 @@ class IconState extends GFState {
   apply(key?: string): this {
     if (key !== undefined && key === 'icon') {
       if (this.isMatched(key) && this.getMatchValue(key) === true) {
-        if (! this.isChanged(key)) {
+        if (!this.isChanged(key)) {
           this.xgraph.addOverlay(`WARNING/ERROR`, this.mxcell);
         }
         super.apply(key);
-      }
-      else if (this.isChanged(key)) {
+      } else if (this.isChanged(key)) {
         this.reset(key);
       }
     } else {

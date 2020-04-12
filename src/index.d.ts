@@ -102,6 +102,8 @@ declare module gf {
   declare type TTextMethodList = { text: string; value: TTextMethodKeys }[];
   declare type TDateFormatKeys = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
   declare type TDateFormatList = { text: string; value: TDateFormatKeys }[];
+
+  declare type TVariableKeys = 'rule' | 'level' | 'value' ;
   declare interface TIRulesHandlerData {
     rulesData: TIRuleData[];
   }

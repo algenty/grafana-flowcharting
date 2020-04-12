@@ -1,7 +1,7 @@
 import FlowchartHandler from './flowchartHandler';
 import RulesHandler from 'rulesHandler';
 import { Rule } from 'rule_class';
-import { GFCONSTANT } from 'constant_class';
+import { GFCONSTANT } from 'globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
 import MetricHandler from './metricHandler';
