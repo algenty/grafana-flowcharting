@@ -22,7 +22,10 @@ See more example at draw.io
 <https://algenty.github.io/flowcharting-repository/STARTED.html>
 
 # Documentation
-<https://algenty.github.io/flowcharting-repository/>
+<https://algenty.github.io/flowcharting-repository/>  
+
+# Demo site
+https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1  
 
 # Demo site
 https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1
