@@ -48,6 +48,7 @@ Arnaud
 ### Add
   - Add Identify by Value in field 'what' in rules  
   - Add option to disable regex for best perf  
+  - Add 2 new color modes in Color mapping section : "Label background" and "Label borber" 
   - TODO : Add perf stat by rule
   - TODO : icons
   - TODO : Add variables

@@ -112,7 +112,6 @@ export default class StateHandler {
     });
   }
 
-
   /**
    * Return array of state
    *
@@ -173,9 +172,11 @@ export default class StateHandler {
    * Restore initial status and prepare states object
    */
   prepare(): this {
+    GFP.perf.start('statesHandler.prepare');
     this.states.forEach(state => {
       state.prepare();
     });
+    GFP.perf.stop('statesHandler.prepare');
     return this;
   }
 

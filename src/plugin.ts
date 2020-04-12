@@ -257,7 +257,7 @@ export default class FlowChartingPlugin {
 }
 
 class Perf {
-  enablePerf = true;
+  enablePerf = false;
   marky: any = null;
   stack: string[] = [];
   constructor() {}
@@ -304,7 +304,7 @@ class Log {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  logLevel = Log.ERROR;
+  logLevel = Log.DEBUG;
   logDisplay = true;
   constructor() {}
 

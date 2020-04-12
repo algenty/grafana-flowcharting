@@ -12,106 +12,6 @@ import { Metric } from 'metric_class';
  */
 export class Rule {
   data: gf.TIRuleData;
-  // CONDITIONS
-  static TOOLTIPON: gf.TTooltipOnList = [
-    { text: 'Warning / Critical', value: 'wc' },
-    { text: 'Always', value: 'a' },
-  ];
-  static COLORON: gf.TColorOnList = [
-    { text: 'Never', value: 'n' },
-    { text: 'Warning / Critical', value: 'wc' },
-    { text: 'Always', value: 'a' },
-  ];
-  static TEXTON: gf.TTextOnList = [
-    { text: 'Never', value: 'n' },
-    { text: 'When Metric Displayed', value: 'wmd' },
-    { text: 'Warning / Critical', value: 'wc' },
-    { text: 'Critical Only', value: 'co' },
-  ];
-  static LINKON: gf.TLinkOnList = [
-    { text: 'Warning / Critical', value: 'wc' },
-    { text: 'Always', value: 'a' },
-  ];
-
-  // TYPES
-  static VALUETYPES: gf.TValueTypeList = [
-    { text: 'Number', value: 'number' },
-    { text: 'String', value: 'string' },
-    { text: 'Date', value: 'date' },
-  ];
-  static METRICTYPES: gf.TMetricTypeList = [
-    { text: 'Series', value: 'serie' },
-    { text: 'Table', value: 'table' },
-  ];
-  static IDENTIFYTYPES: { text: string; value: gf.TPropertieKey }[] = [
-    { text: 'Id', value: 'id' },
-    { text: 'Label', value: 'value' },
-  ];
-  static AGGREGATIONTYPES: gf.TAggregationList = [
-    { text: 'First', value: 'first' },
-    { text: 'Last', value: 'current' },
-    { text: 'Min', value: 'min' },
-    { text: 'Max', value: 'max' },
-    { text: 'Sum', value: 'total' },
-    { text: 'Avg', value: 'avg' },
-    { text: 'Count', value: 'count' },
-    { text: 'Delta', value: 'delta' },
-    { text: 'Range', value: 'range' },
-    { text: 'Diff', value: 'diff' },
-  ];
-  static GRAPHTYPES: gf.TGraphTypeList = [
-    { text: 'Line', value: 'line' },
-    { text: 'Histogram', value: 'bar' },
-  ];
-  static GRAPHSCALETYPES: gf.TGraphScaleList = [
-    { text: 'Linear', value: 'linear' },
-    { text: 'Logarithmic', value: 'log' },
-  ];
-  static GRAPHSIZETYPES: gf.TGraphSizeList = [
-    { text: 'Adjustable', value: '100%' },
-    { text: 'Small', value: '100px' },
-    { text: 'Medium', value: '200px' },
-    { text: 'Large', value: '400px' },
-  ];
-  static TOOLTIPDIRECTIONTYPE: gf.TDirectionList = [
-    { text: 'Vertical', value: 'v' },
-    { text: 'Horizontal ', value: 'h' },
-  ];
-  static DATEFORMATTYPES: gf.TDateFormatList = [
-    { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
-    { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
-    { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
-    { text: 'MMMM D, YYYY LT', value: 'MMMM D, YYYY LT' },
-    { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
-  ];
-
-  static VALUEMAPPINGTYPES: gf.TValueMappingList = [
-    { text: 'Value to text', value: 1 },
-    { text: 'Range to text', value: 2 },
-  ];
-
-  // METHODS
-  static TEXTMETHODS: { text: string; value: gf.TTextMethods }[] = [
-    { text: 'All content', value: 'content' },
-    { text: 'Substring', value: 'pattern' },
-    { text: 'Append (Space) ', value: 'as' },
-    { text: 'Append (New line) ', value: 'anl' },
-  ];
-  static COLORMETHODS: { text: string; value: gf.TStyleColorKeys }[] = [
-    { text: 'Stroke', value: 'strokeColor' },
-    { text: 'Fill', value: 'fillColor' },
-    { text: 'Text', value: 'fontColor' },
-    { text: 'Background (image)', value: 'imageBackground' },
-    { text: 'Border (image)', value: 'imageBorder' },
-  ];
-  static EVENTMETHODS: { text: string; value: gf.TStyleEventKeys }[] = [
-    { text: 'Change Shape (text)', value: 'shape' },
-    { text: 'Rotate Shape (0-360)', value: 'rotation' },
-    { text: 'Hide Shape (0|1)', value: 'visibility' },
-    { text: 'Font Size (numeric)', value: 'fontSize' },
-    { text: 'Blink shape (frequence ms)', value: 'blink' },
-  ];
-
   shapeMaps: ShapeMap[] = [];
   textMaps: TextMap[] = [];
   linkMaps: LinkMap[] = [];
@@ -125,7 +25,7 @@ export class Rule {
   highestColor: string = '';
   highestFormattedValue: string = '';
   highestValue: any = undefined;
-  execTimes : number = 0;
+  execTimes: number = 0;
 
   /**
    * Creates an instance of Rule.
@@ -286,7 +186,7 @@ export class Rule {
     }
 
     // 0.7.0
-    let textReplace: gf.TTextMethods | undefined = undefined;
+    let textReplace: gf.TTextMethodKeys | undefined = undefined;
     let textPattern: string | undefined = undefined;
     if (!!obj.textReplace) {
       textReplace = obj.textReplace;

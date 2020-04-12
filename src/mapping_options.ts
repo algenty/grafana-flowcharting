@@ -1,6 +1,7 @@
 import FlowchartHandler from './flowchartHandler';
 import RulesHandler from 'rulesHandler';
 import { Rule } from 'rule_class';
+import { GFCONSTANT } from 'constant_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
 import MetricHandler from './metricHandler';
@@ -13,24 +14,24 @@ export class MappingOptionsCtrl {
   rulesHandler: RulesHandler;
   metricHandler: MetricHandler;
   unitFormats: any;
-  style = Rule.COLORMETHODS;
-  metricType: gf.TSelectString[] = Rule.METRICTYPES;
-  colorOn = Rule.COLORON;
-  linkOn = Rule.LINKON;
-  tooltipOn = Rule.TOOLTIPON;
-  textOn = Rule.TEXTON;
-  textReplace = Rule.TEXTMETHODS;
-  EventType: gf.TSelectString[] = Rule.EVENTMETHODS;
-  tpDirection: gf.TSelectString[] = Rule.TOOLTIPDIRECTIONTYPE;
-  propTypes: gf.TSelectString[] = Rule.IDENTIFYTYPES;
+  style = GFCONSTANT.COLORMETHODS;
+  metricType: gf.TSelectString[] = GFCONSTANT.METRIC_TYPES;
+  colorOn = GFCONSTANT.COLOR_APPLYON;
+  linkOn = GFCONSTANT.LINK_APPLYON;
+  tooltipOn = GFCONSTANT.TOOLTIP_APPLYON;
+  textOn = GFCONSTANT.TEXT_APPLYON;
+  textReplace = GFCONSTANT.TEXTMETHODS;
+  EventType: gf.TSelectString[] = GFCONSTANT.EVENTMETHODS;
+  tpDirection: gf.TSelectString[] = GFCONSTANT.TOOLTIP_DIRECTION_TYPES;
+  propTypes: gf.TSelectString[] = GFCONSTANT.IDENT_TYPES;
   textPattern = '/.*/';
-  metricTypes = Rule.VALUETYPES;
-  dateFormats: gf.TSelectString[] = Rule.DATEFORMATTYPES;
-  aggregationTypes = Rule.AGGREGATIONTYPES;
-  mappingTypes = Rule.VALUEMAPPINGTYPES;
-  tpGraphType = Rule.GRAPHTYPES;
-  tpGraphScale = Rule.GRAPHSCALETYPES;
-  tpGraphSize = Rule.GRAPHSIZETYPES;
+  metricTypes = GFCONSTANT.VALUE_TYPES;
+  dateFormats: gf.TSelectString[] = GFCONSTANT.VALUE_DATEFORMAT_TYPES;
+  aggregationTypes = GFCONSTANT.AGGREGATION_TYPES;
+  mappingTypes = GFCONSTANT.VALUEMAPPINGTYPES;
+  tpGraphType = GFCONSTANT.TOOLTIP_GRAPH_TYPES;
+  tpGraphScale = GFCONSTANT.TOOLTIP_GRAPH_SCALE_TYPES;
+  tpGraphSize = GFCONSTANT.TOOLTIP_GRAPH_SIZE_TYPES;
   getMetricNames: () => any[];
   getCellNames: (prop: gf.TPropertieKey) => any[];
   getCellNamesById: () => any[];
@@ -50,7 +51,7 @@ export class MappingOptionsCtrl {
     this.rulesHandler = this.panelCtrl.rulesHandler;
     this.metricHandler = this.panelCtrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();
-    this.tpGraphSize = Rule.GRAPHSIZETYPES;
+    this.tpGraphSize = GFCONSTANT.TOOLTIP_GRAPH_SIZE_TYPES;
 
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');

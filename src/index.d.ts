@@ -36,7 +36,7 @@ declare module gf {
   declare type TStyleColorKeys = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
   declare type TStyleColorList = { text: string; value: TStyleColor.Keys }[];
   declare type TStyleEventKeys = 'shape' | 'rotation' | 'visibility' | 'fontSize' | 'blink';
-  declare type TStyleEventList = { text: string; value: TStyleEventKeys }[];
+  declare type TStyleEventList = { text: string; value: TStyleEventKeys, type : 'number' | 'text' }[];
   declare type TStyleKey = TStyleColor.Keys | TStyleEventKeys;
 
   declare interface TSelectStyle extends TSelectString {
@@ -98,7 +98,8 @@ declare module gf {
   declare type TValueTypeKeys = 'number' | 'string' | 'date';
   declare type TValueTypeList = { text: string; value: TValueTypeKeys }[];
 
-  declare type TTextMethods = 'content' | 'pattern' | 'as' | 'anl';
+  declare type TTextMethodKeys = 'content' | 'pattern' | 'as' | 'anl';
+  declare type TTextMethodList = { text: string; value: TTextMethodKeys }[];
   declare type TDateFormatKeys = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
   declare type TDateFormatList = { text: string; value: TDateFormatKeys }[];
   declare interface TIRulesHandlerData {
@@ -170,7 +171,7 @@ declare module gf {
   }
 
   declare interface TTextMapData extends TGFMapData {
-    textReplace: TTextMethods;
+    textReplace: TTextMethodKeys;
     textPattern: string;
     textOn: TTextOnKeys;
   }
