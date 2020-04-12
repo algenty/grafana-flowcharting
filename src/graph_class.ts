@@ -878,9 +878,9 @@ export default class XGraph {
    * @memberof XGraph
    */
   setStyleCell(mxcell: mxCell, style: any, value: string | null): this {
-    if (value !== null) {
+    // if (value !== null) {
       this.graph.setCellStyles(style, value, [mxcell]);
-    }
+    // }
     return this;
   }
 

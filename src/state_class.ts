@@ -149,13 +149,13 @@ export default class State {
       cellProp = this.getCellProp(rule.data.eventProp);
       eventMaps.forEach(event => {
         const k = event.data.style;
-        GFP.log.debug('EVENT - event', event);
-        GFP.log.debug('EVENT - value', value);
-        GFP.log.debug('EVENT - level', level);
-        GFP.log.debug('EVENT - !event.isHidden()', !event.isHidden());
-        GFP.log.debug('EVENT - event.match(cellProp, rule.data.eventRegEx)', event.match(cellProp, rule.data.eventRegEx));
-        GFP.log.debug('EVENT - event.toEventable(level)', event.toEventable(level));
-        GFP.log.debug('EVENT - Global conditions', !event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level));
+        // GFP.log.debug('EVENT - event', event);
+        // GFP.log.debug('EVENT - value', value);
+        // GFP.log.debug('EVENT - level', level);
+        // GFP.log.debug('EVENT - !event.isHidden()', !event.isHidden());
+        // GFP.log.debug('EVENT - event.match(cellProp, rule.data.eventRegEx)', event.match(cellProp, rule.data.eventRegEx));
+        // GFP.log.debug('EVENT - event.toEventable(level)', event.toEventable(level));
+        // GFP.log.debug('EVENT - Global conditions', !event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level));
         if (!event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level)) {
           this.matched = true;
           const v = event.data.value;
@@ -552,6 +552,8 @@ class EventState extends GFState {
         }
         this.xgraph.setStyleCell(this.mxcell, key, value);
         super.apply(key);
+      } else if (this.isChanged(key)) {
+        this.reset(key);
       }
     } else {
       this.keys.forEach(key => {
@@ -837,8 +839,13 @@ class IconState extends GFState {
   apply(key?: string): this {
     if (key !== undefined && key === 'icon') {
       if (this.isMatched(key) && this.getMatchValue(key) === true) {
-        this.xgraph.addOverlay(`WARNING/ERROR`, this.mxcell);
+        if (! this.isChanged(key)) {
+          this.xgraph.addOverlay(`WARNING/ERROR`, this.mxcell);
+        }
         super.apply(key);
+      }
+      else if (this.isChanged(key)) {
+        this.reset(key);
       }
     } else {
       this.keys.forEach(key => {
