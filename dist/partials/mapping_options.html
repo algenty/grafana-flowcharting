@@ -713,8 +713,8 @@
                       ng-change="editor.onRulesChange()"></select>
                   </td>
                   <td>
-                    <input ng-if="text.data.textReplace == 'pattern' && rule.data.textOn != 'n'" type="text"
-                      class="gf-form-input width-8" ng-model="rule.data.textPattern" ng-blur="editor.onRulesChange()"
+                    <input ng-if="text.data.textReplace == 'pattern' && text.data.textOn != 'n'" type="text"
+                      class="gf-form-input width-8" ng-model="text.data.textPattern" ng-blur="editor.onRulesChange()"
                       placeholder="text or pattern to replace by value" />
                   </td>
                 </tr>
