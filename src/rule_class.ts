@@ -125,6 +125,7 @@ export class Rule {
   highestColor: string = '';
   highestFormattedValue: string = '';
   highestValue: any = undefined;
+  execTimes : number = 0;
 
   /**
    * Creates an instance of Rule.

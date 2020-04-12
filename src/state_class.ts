@@ -107,6 +107,7 @@ export default class State {
    */
   setState(rule: Rule, metric: Metric): this {
     GFP.log.info('State.setState()');
+    let beginPref = performance.now();
     if (!rule.isHidden() && rule.matchMetric(metric)) {
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
@@ -223,6 +224,8 @@ export default class State {
         }
       });
     }
+    let endPerf = performance.now();
+    rule.execTimes += (endPerf - beginPref);
     return this;
   }
 

@@ -112,9 +112,12 @@ export default class StateHandler {
     });
   }
 
+
   /**
    * Return array of state
-   * @returns {Array} Array of state object
+   *
+   * @returns Map<States>
+   * @memberof StateHandler
    */
   getStates() {
     return this.states;
@@ -188,6 +191,8 @@ export default class StateHandler {
       rule.highestLevel = -1;
       rule.highestFormattedValue = '';
       rule.highestColor = '';
+      rule.highestValue = '';
+      rule.execTimes = 0;
       if (rule.states === undefined || rule.states.size === 0) {
         rule.states = this.getStatesForRule(rule);
       }
