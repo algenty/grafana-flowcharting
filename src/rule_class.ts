@@ -1,4 +1,3 @@
-import moment from 'moment';
 import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
@@ -69,8 +68,8 @@ export default class Rule {
       //textReplace: 'content',
       //textPattern: '/.*/',
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
-      thresholds: [50,80],
-      stringThresholds: ["/.*/","/.*/"],
+      thresholds: [50, 80],
+      stringThresholds: ['/.*/', '/.*/'],
       //stringWarning: '',
       //stringCritical: '',
       invert: false,
@@ -297,7 +296,7 @@ export default class Rule {
         if (!!colorOn) {
           shapeData.colorOn = colorOn;
         }
-        this.addShapeMap('new').import(shapeData);
+        this.addShapeMap('').import(shapeData);
       });
     }
 
@@ -325,7 +324,7 @@ export default class Rule {
           textData.textOn = textOn;
         }
 
-        this.addTextMap('new').import(textData);
+        this.addTextMap('').import(textData);
       });
     }
 
@@ -344,7 +343,7 @@ export default class Rule {
         if (!!linkOn) {
           linkData.linkOn = linkOn;
         }
-        this.addLinkMap('new').import(linkData);
+        this.addLinkMap('').import(linkData);
       });
     }
 
@@ -354,7 +353,7 @@ export default class Rule {
     this.data.valueData = [];
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
       obj.valueData.forEach((valueData: gf.TValueMapData) => {
-        this.addValueMap('value', 'text').import(valueData);
+        this.addValueMap('', '').import(valueData);
       });
     }
 
@@ -362,7 +361,7 @@ export default class Rule {
     this.data.rangeData = [];
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
       obj.rangeData.forEach(rangeData => {
-        this.addRangeMap('from', 'to', 'text').import(rangeData);
+        this.addRangeMap('', '', '').import(rangeData);
       });
     }
     this.data.sanitize = obj.sanitize || false;
@@ -473,7 +472,7 @@ export default class Rule {
     const colorStart: string = colors[index];
     let color: string;
     let value: any;
-    if (index != colors.length - 1) {
+    if (index !== colors.length - 1) {
       let ratio = 0.5;
       let colorEnd = colors[index + 1];
       color = GFP.utils.getRatioColor(ratio, colorStart, colorEnd);
@@ -880,7 +879,7 @@ export default class Rule {
    * @memberof Rule
    */
   getColorForValue(value: any): string {
-    if (!this.data.gradient || this.data.type != 'number') {
+    if (!this.data.gradient || this.data.type !== 'number') {
       let level = this.getThresholdLevel(value);
       return this.getColorForLevel(level);
     }
@@ -914,10 +913,6 @@ export default class Rule {
       let valueDistanceFromMin = value - thresholds[cursor];
       let ratio = valueDistanceFromMin / absoluteDistance;
       let color = GFP.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
-      GFP.log.debug('COLOR RATIO : ', ratio);
-      GFP.log.debug('COLOR BEG : ', colors[cursor + 1]);
-      GFP.log.debug('COLOR CUR : ', color);
-      GFP.log.debug('COLOR END : ', colors[cursor + 2]);
       return color;
     }
     return '';
@@ -1094,11 +1089,12 @@ export default class Rule {
       if (_.isArray(value)) {
         value = value[0];
       }
-      const date = moment(value);
+      // const date = moment(value);
       // if (this.dashboard.isTimezoneUtc()) {
       //     date = date.utc();
       // }
-      return date.format(this.data.dateFormat);
+      // return date.format(this.data.dateFormat);
+      return grafana.getFormatedDate(value, this.data.dateFormat);
     }
     return value;
   }
@@ -1522,10 +1518,10 @@ class RangeMap {
    * @memberof RangeMap
    */
   import(obj: any): this {
-    this.data.from = obj.from || this.data.from || '';
-    this.data.to = obj.to || this.data.to || '';
-    this.data.text = obj.text || this.data.text || '';
-    this.data.hidden = obj.hidden || this.data.hidden || false;
+    this.data.from = !!obj.from ? obj.from : undefined;
+    this.data.to = !!obj.to ? obj.to : undefined;
+    this.data.text = !!obj.text ? obj.text : undefined;
+    this.data.hidden = !!obj.hidden || obj.hidden === false ? obj.hidden : false;
     return this;
   }
 
@@ -1553,15 +1549,25 @@ class RangeMap {
    * @memberof RangeMap
    */
   match(value: any): boolean {
-    if (this.data.from === 'null' && this.data.to === 'null') {
-      return true;
-    }
-    if (value === null) {
-      if (this.data.from === 'null' && this.data.to === 'null') {
-        return true;
+    if (!!value || value.length > 0) {
+      let v: number = Number(value);
+      if (this.data.from !== null && this.data.from !== undefined && this.data.from.length > 0) {
+        let from = Number(this.data.from);
+        if (v >= from) {
+          if (this.data.to !== null && this.data.to !== undefined && this.data.to.length > 0) {
+            let to = Number(this.data.to);
+            return v < to;
+          }
+          return true;
+        }
+        return false;
       }
-    }
-    if (Number(this.data.from) <= Number(value) && Number(this.data.to) >= Number(value)) {
+      // from is empty here
+      if (this.data.to !== null && this.data.to !== undefined && this.data.to.length > 0) {
+        let to = Number(this.data.to);
+        return v < to;
+      }
+      // from and to is empty
       return true;
     }
     return false;

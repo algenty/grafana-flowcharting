@@ -4,7 +4,7 @@
 
 Flowcharting is a plugin for grafana. It aims to display complexe diagram draws with [draw.io](https://draw.io/) like Visio. Few examples :
   * Technical architecture schema (Legacy, Cloud, Azure, AWS, GCP, Kubernetes, Terraform)
-  * Diagrams (network, electric, flows ...)
+  * Diagrams (network, electric, flows, rack ...)
   * Organic plans
   * Floorplans
   * UML plan 
@@ -24,20 +24,35 @@ See more example at draw.io
 # Documentation
 <https://algenty.github.io/flowcharting-repository/>
 
+# Demo site
+https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1
+
 # Project site
 <https://github.com/algenty/grafana-flowcharting>
 
 # Sponsors and Funding
-Since the version 0.7.0 and after one year of work, I activated the sponsor button.  
-Why ? Flowcharting stills free and open-source, but since the success of it, i spend many personal times and money (computer, Azure account ...).  
+Since the version 0.7.0 and after one year of work, I activated the sponsor button.    
+Why ? Flowcharting stills free and open-source, but since the success of it,   
+I spent many personal times and money (computer, Azure account ...).  
 Also i donate money for project used by FlowCharting like chartist.  
-Then if you like Grafana-FlowCharting, you used it for your enterprise or other, you want to contribute, click on Sponsor button or Financing the project with the link bellow.  
-[https://paypal.me/grafanaflowcharting](https://paypal.me/grafanaflowcharting)
+Then if you like Grafana-FlowCharting, you used it for your enterprise or other, you want to contribute,    
+click on Sponsor button or Financing the project with the link bellow.  
+[https://paypal.me/grafanaflowcharting](https://paypal.me/grafanaflowcharting)  
 
-Thanks a lot
+Thanks a lot   
 Arnaud
 
 # Changelog
+
+## [[0.7.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-04-11  
+### Fixed  
+  - shape stills select when deleting map.
+  - select list (typeahead) in fields 'whats' and map values for string type in rules
+  - Level State with range or value mapping.
+  - Lock always true in flowchart option [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/138) 
+  - Fix Remove link
+  - Fix range value Min and Max range when 'from' or 'to' is empty
+  - Fix 'With' field in text mapping, empty after clone or save/reload
 
 ## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
 ### Added  

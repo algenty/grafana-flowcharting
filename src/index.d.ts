@@ -134,7 +134,7 @@ declare module gf {
     //stringWarning: string;
     //stringCritical: string;
     invert: boolean;
-    gradient:boolean;
+    gradient: boolean;
     overlayIcon: boolean;
     tooltip: boolean;
     tooltipLabel: string;

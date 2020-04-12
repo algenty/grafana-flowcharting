@@ -157,6 +157,24 @@ export class MappingOptionsCtrl {
     };
   }
 
+  removeShapeMap(rule: Rule, index: number) {
+    const shape = rule.getShapeMap(index);
+    this.unselectCell(rule.data.shapeProp, shape.data.pattern);
+    rule.removeShapeMap(index);
+  }
+
+  removeTextMap(rule: Rule, index: number) {
+    const txt = rule.getTextMap(index);
+    this.unselectCell(rule.data.textProp, txt.data.pattern);
+    rule.removeTextMap(index);
+  }
+
+  removeLinkMap(rule: Rule, index: number) {
+    const lnk = rule.getLinkMap(index);
+    this.unselectCell(rule.data.linkProp, lnk.data.pattern);
+    rule.removeLinkMap(index);
+  }
+
   isFirstRule(index: number): boolean {
     if (index === 0) {
       return true;

@@ -3,7 +3,7 @@ import kbn from 'grafana/app/core/utils/kbn';
 import TimeSeries from 'grafana/app/core/time_series2';
 import _ from 'lodash';
 import { loadPluginCss } from 'grafana/app/plugins/sdk';
-
+import { dateTime } from '@grafana/data';
 
 var grafana = {
   // formatValue(value, unit, decimals) {
@@ -32,8 +32,10 @@ var grafana = {
       alias: seriesData.target,
       unit: seriesData.unit,
     });
-  }
-
+  },
+  getFormatedDate(value, format) {
+    return dateTime(value).format(format);
+  },
 };
 
 export default grafana;

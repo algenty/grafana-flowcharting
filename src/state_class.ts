@@ -62,7 +62,7 @@ export default class State {
     this.currentColors = State.getDefaultValueStyles();
     this.originalColors = State.getDefaultValueStyles();
     this.originalStyle = mxcell.getStyle();
-    this.originalText = this.xgraph.getLabel(mxcell);
+    this.originalText = this.xgraph.getLabelCell(mxcell);
     this.currentText = this.originalText;
     let link = this.xgraph.getLink(mxcell);
     if (link === undefined) {
@@ -136,7 +136,7 @@ export default class State {
       const level = rule.getThresholdLevel(value);
       // const color = rule.getColorForLevel(level);
       const color = rule.getColorForValue(value);
-      
+
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
       shapeMaps.forEach(shape => {
