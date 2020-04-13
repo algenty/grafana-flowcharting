@@ -879,7 +879,7 @@ export default class XGraph {
    */
   setStyleCell(mxcell: mxCell, style: any, value: string | null): this {
     // if (value !== null) {
-      this.graph.setCellStyles(style, value, [mxcell]);
+    this.graph.setCellStyles(style, value, [mxcell]);
     // }
     return this;
   }
@@ -1174,6 +1174,81 @@ export default class XGraph {
     }
   }
 
+  async blinkCell(cell: mxCell, ms: number) {
+    if (!cell.blink) {
+      // console.log("blinkCell")
+      const self = this;
+      const bl_on = function() {
+        // console.log("bl_on")
+        const color = '#f5f242';
+        const opacity = 100;
+        const state = self.graph.view.getState(cell);
+
+        if (state != null) {
+          const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+          const hl = new mxCellHighlight(self.graph, color, sw, false);
+
+          if (opacity != null) {
+            hl.opacity = opacity;
+          }
+
+          hl.highlight(state);
+          cell.blink_on = hl;
+          cell.blink_ms = ms;
+          window.setTimeout(() => {
+            bl_off();
+          }, ms);
+        }
+      };
+      const bl_off = function() {
+        if (cell && cell.blink_on) {
+          // console.log("bl_off")
+          const hl = cell.blink_on;
+          // Fades out the highlight after a duration
+          if (hl.shape != null) {
+            mxUtils.setPrefixedStyle(hl.shape.node.style, `transition`, `all ${ms}ms ease-in-out`);
+            hl.shape.node.style.opacity = 0;
+          }
+          // Destroys the highlight after the fade
+          window.setTimeout(() => {
+            hl.destroy();
+          }, ms);
+          cell.blink_on = null;
+        }
+      };
+      cell.blink = window.setInterval(() => {
+        console.log('setInterval');
+        bl_on();
+        // bl_off();
+      }, ms * 3);
+    }
+  }
+
+  async unblinkCell(cell: mxCell) {
+    if (cell && cell.blink) {
+      // console.log("unblinkCell")
+      window.clearInterval(cell.blink);
+      if (cell.blink_on) {
+        const hl = cell.blink_on;
+        if (hl.shape != null) {
+          hl.shape.node.style.opacity = 0;
+          hl.destroy();
+          cell.blink_on = null;
+          cell.blink_ms = 0;
+        }
+      }
+      cell.blink = null;
+    }
+  }
+
+  isBlinkCell(mxcell: mxCell): boolean {
+    return !!mxcell.blink;
+  }
+
+  getBlinkCellMs(mxcell: mxCell): number {
+    return !!mxcell.blink ? mxcell.blink_ms : 0;
+  }
+
   /**
    * Zoom cell on full panel
    *
@@ -1218,8 +1293,16 @@ export default class XGraph {
    * @param {*} includeEdges
    * @memberof XGraph
    */
-  async toggleVisible(mxcell, includeEdges) {
-    this.graph.toggleCells(!this.graph.getModel().isVisible(mxcell), [mxcell], includeEdges);
+  // async toggleVisible(mxcell, includeEdges) {
+  //   this.graph.toggleCells(!this.graph.getModel().isVisible(mxcell), [mxcell], includeEdges);
+  // }
+
+  toggleVisibleCell(mxcell: mxCell, visible: boolean, includeEdges: boolean) {
+    this.graph.toggleCells(visible, [mxcell], true);
+  }
+
+  isVisibleCell(mxcell: mxCell): boolean {
+    return this.graph.isCellVisible(mxcell);
   }
 
   static compress(source: string): string {

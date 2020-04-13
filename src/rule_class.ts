@@ -851,6 +851,10 @@ export class Rule {
     return this;
   }
 
+  getExectedTime(): string {
+    return typeof this.execTimes === 'number' ? `${this.execTimes.toFixed(2)} ms` : `${this.execTimes} ms`;
+  }
+
   //
   // Format value
   //

@@ -94,36 +94,70 @@ export class GFCONSTANT {
     { text: 'Image border', value: 'imageBorder' },
   ];
   static EVENTMETHODS: gf.TStyleEventList = [
-    { text: 'Change Shape (text)', value: 'shape', type: 'text' },
-    { text: 'Rotate Shape (0-360)', value: 'rotation', type: 'number' },
-    { text: 'Hide Shape (0|1)', value: 'visibility', type: 'number' },
-    { text: 'Font Size (numeric)', value: 'fontSize', type: 'number' },
-    { text: 'Blink shape (frequence ms)', value: 'blink', type: 'number' },
+    { text: 'Shape : Change form (text)', value: 'shape', type: 'text' },
+    { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number' },
+    { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number' },
+    { text: 'Shape : Visibility (0|1)', value: 'visibility', type: 'number' },
+    { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number' },
+    { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number' },
+    { text: 'Label : Replace text (text)', value: 'text', type: 'text' },
+    { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number' },
+    { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number' },
   ];
 }
 
 export class GFVariables {
   private variables: Map<string, any>;
+  // private type : 'local'|'glogal' = 'local';
   constructor() {
     this.variables = new Map();
   }
 
-  set(key: string, value: any): this {
+  /**
+   * set or redefine varaible
+   *
+   * @param {string} key
+   * @param {*} value
+   * @returns {this}
+   * @memberof GFVariables
+   */
+  set(key: gf.TVariableKeys, value: any): this {
     this.variables.set(key, value);
     return this;
   }
 
-  get(key: string): any {
+  /**
+   * Get variable value
+   *
+   * @param {string} key
+   * @returns {*}
+   * @memberof GFVariables
+   */
+  get(key : gf.TVariableKeys): any {
     return this.variables.get(key);
   }
 
+  /**
+   * Clear all variable
+   *
+   * @returns {this}
+   * @memberof GFVariables
+   */
   clear(): this {
     this.variables.clear();
     return this;
   }
 
+  /**
+   * Replace text with variables
+   *
+   * @param {string} text
+   * @returns {string}
+   * @memberof GFVariables
+   */
   replaceText(text: string): string {
     try {
+      text = GFP.replaceWithText(text);
       for (let [key, value] of this.variables) {
         text = text.replace('${' + key + '}',value);
       }
@@ -133,6 +167,13 @@ export class GFVariables {
     return text;
   }
 
+  /**
+   * Replace and eval text with variables
+   *
+   * @param {string} text
+   * @returns {string}
+   * @memberof GFVariables
+   */
   eval(text:string):string {
       let t = this.replaceText(text);
       try {
@@ -152,6 +193,9 @@ export class GFUtils {
   }
 
   static getGlobalVars(): GFVariables {
+    if (!!GFUtils.GLOBAL_VARS) {
+      GFUtils.GLOBAL_VARS = new GFVariables();
+    } 
     return GFUtils.GLOBAL_VARS;
   }
 }

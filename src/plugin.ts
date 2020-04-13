@@ -266,6 +266,10 @@ class Perf {
     this.enablePerf = bool;
   }
 
+  isEnable(): boolean {
+    return this.enablePerf;
+  }
+
   start(name?: string) {
     if (this.enablePerf) {
       try {
@@ -304,7 +308,7 @@ class Log {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  logLevel = Log.DEBUG;
+  logLevel = Log.WARN;
   logDisplay = true;
   constructor() {}
 

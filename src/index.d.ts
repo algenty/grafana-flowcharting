@@ -35,8 +35,8 @@ declare module gf {
   declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground', 'shape', 'overflow'];
   declare type TStyleColorKeys = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
   declare type TStyleColorList = { text: string; value: TStyleColor.Keys }[];
-  declare type TStyleEventKeys = 'shape' | 'rotation' | 'visibility' | 'fontSize' | 'blink';
-  declare type TStyleEventList = { text: string; value: TStyleEventKeys, type : 'number' | 'text' }[];
+  declare type TStyleEventKeys = 'shape' | 'rotation' | 'visibility' | 'fontSize' | 'blink' | 'barPos' | 'text' | 'opacity' | 'textOpacity';
+  declare type TStyleEventList = { text: string; value: TStyleEventKeys; type: 'number' | 'text' }[];
   declare type TStyleKey = TStyleColor.Keys | TStyleEventKeys;
 
   declare interface TSelectStyle extends TSelectString {
@@ -103,7 +103,7 @@ declare module gf {
   declare type TDateFormatKeys = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
   declare type TDateFormatList = { text: string; value: TDateFormatKeys }[];
 
-  declare type TVariableKeys = 'rule' | 'level' | 'value' ;
+  declare type TVariableKeys = '_rule' | '_level' | '_value' | '_color' | '_formated';
   declare interface TIRulesHandlerData {
     rulesData: TIRuleData[];
   }
