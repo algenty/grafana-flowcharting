@@ -2,6 +2,7 @@ import FlowchartHandler from 'flowchartHandler';
 
 import XGraph from 'graph_class';
 import Flowchart from 'flowchart_class';
+import { GFUtils } from 'globals_class';
 
 export class FlowchartOptionsCtrl {
   $scope: gf.TIFlowchartOptionsScope;
@@ -54,7 +55,7 @@ export class FlowchartOptionsCtrl {
    * @memberof FlowchartOptionsCtrl
    */
   onOptionChange() {
-    GFP.log.info('FlowchartOptionsCtrl.onOptionChange()');
+    GFUtils.log.info('FlowchartOptionsCtrl.onOptionChange()');
     this.flowchartHandler.optionChanged();
     this.render();
   }

@@ -40,7 +40,7 @@ mxTooltipHandler.prototype.hideTooltip = function() {
 };
 
 Graph.prototype.getTooltipForCell = function (cell) {
-  GFP.log.info('Graph.prototype.getTooltipForCell()');
+  //GFP.log.info('Graph.prototype.getTooltipForCell()');
   let hasTips = false;
   let div = document.createElement('div');
   if (mxUtils.isNode(cell.value)) {

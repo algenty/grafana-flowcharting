@@ -57,18 +57,18 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRefresh() {
-    GFP.log.info( 'FlowchartCtrl.onRefresh()');
+    // GFP.log.info( 'FlowchartCtrl.onRefresh()');
     this.onRender();
   }
 
   onVarChanged() {
-    GFP.log.info( 'FlowchartCtrl.onVarChanged()');
+    // GFP.log.info( 'FlowchartCtrl.onVarChanged()');
     this.flowchartHandler.sourceChanged();
     this.flowchartHandler.render();
   }
 
   onRender() {
-    GFP.log.info( 'FlowchartCtrl.onRender()');
+    // GFP.log.info( 'FlowchartCtrl.onRender()');
   }
 
   onDataReceived(dataList) {
@@ -96,7 +96,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
-    GFP.log.info( 'FlowchartCtrl.link()');
+    // GFP.log.info( 'FlowchartCtrl.link()');
     GFP.perf.start(`${this.constructor.name}.link()`);
 
     // DATA

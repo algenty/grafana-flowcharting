@@ -1,6 +1,7 @@
 // import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
 import { Metric, Serie, Table } from './metric_class';
+import { GFUtils } from 'globals_class';
 
 /**
  * Data Series/Tables handler
@@ -25,8 +26,8 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   initData(dataList: any) {
-    GFP.log.info('initData');
-    // GFP.log.debug('initData', dataList);
+    GFUtils.log.info('initData');
+    // GFUtils.log.debug('initData', dataList);
     this.tables = [];
     this.series = [];
     this.metrics = [];
@@ -35,9 +36,9 @@ export default class MetricHandler {
       this.addMetric(dl);
     });
 
-    // GFP.log.debug('tables : ', this.tables.length);
-    // GFP.log.debug('series : ', this.series.length);
-    // GFP.log.debug('metrics : ', this.metrics.length);
+    // GFUtils.log.debug('tables : ', this.tables.length);
+    // GFUtils.log.debug('series : ', this.series.length);
+    // GFUtils.log.debug('metrics : ', this.metrics.length);
   }
 
   /**
@@ -47,7 +48,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addMetric(data: any) {
-    // GFP.log.debug('addMetric', data);
+    // GFUtils.log.debug('addMetric', data);
     if (data.type === 'table') {
       this.addTable(data);
     } else {
@@ -63,7 +64,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addTable(data: any): Table {
-    GFP.log.info('addTable');
+    GFUtils.log.info('addTable');
     const table = new Table(data);
     this.tables.push(table);
     this.metrics.push(table);
@@ -78,7 +79,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addSerie(data: any): Serie {
-    GFP.log.info('addSerie');
+    GFUtils.log.info('addSerie');
     const serie = new Serie(data);
     this.series.push(serie);
     this.metrics.push(serie);
@@ -101,7 +102,7 @@ export default class MetricHandler {
     } else {
       names = this.metrics.map(m => m.getName());
     }
-    // GFP.log.debug('getNames', names);
+    // GFUtils.log.debug('getNames', names);
     return names;
   }
 

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { GFUtils } from 'globals_class';
 declare var Graph: any;
 
 declare var mxEvent: any;
@@ -51,7 +52,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   constructor(container: HTMLDivElement, type: gf.TSourceType, definition: string) {
-    GFP.log.info('XGraph.constructor()');
+    GFUtils.log.info('XGraph.constructor()');
     this.container = container;
     this.type = type;
     this.onMapping = {
@@ -96,7 +97,7 @@ export default class XGraph {
       g.destroy();
       return true;
     } catch (error) {
-      GFP.log.error('isValidXml', error);
+      GFUtils.log.error('isValidXml', error);
       return false;
     }
   }
@@ -265,7 +266,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   initGraph(): this {
-    GFP.log.info('XGraph.initGraph()');
+    GFUtils.log.info('XGraph.initGraph()');
     GFP.perf.start(`${this.constructor.name}.initGraph()`);
     this.graph = new Graph(this.container);
 
@@ -303,7 +304,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   drawGraph(): this {
-    GFP.log.info('XGraph.drawGraph()');
+    GFUtils.log.info('XGraph.drawGraph()');
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
@@ -311,7 +312,7 @@ export default class XGraph {
       const codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, this.graph.getModel());
     } catch (error) {
-      GFP.log.error('Error in draw', error);
+      GFUtils.log.error('Error in draw', error);
     } finally {
       this.graph.getModel().endUpdate();
       this.cells['id'] = this.getCurrentCells('id');
@@ -327,7 +328,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   applyGraph(): this {
-    GFP.log.info('XGraph.refreshGraph()');
+    GFUtils.log.info('XGraph.refreshGraph()');
     if (!this.scale) {
       this.zoomGraph(this.zoomPercent);
     } else {
@@ -513,7 +514,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   zoomGraph(percent: string): this {
-    GFP.log.info('XGraph.zoomGraph()');
+    GFUtils.log.info('XGraph.zoomGraph()');
     if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
       const ratio: number = Number(percent.replace('%', '')) / 100;
       this.graph.zoomTo(ratio, true);
@@ -582,7 +583,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   setXmlGraph(xmlGraph: string): this {
-    GFP.log.info('XGraph.setXmlGraph()');
+    GFUtils.log.info('XGraph.setXmlGraph()');
     if (GFP.utils.isencoded(xmlGraph)) {
       this.xmlGraph = GFP.utils.decode(xmlGraph, true, true, true);
     } else {
@@ -603,11 +604,11 @@ export default class XGraph {
     const cellIds: string[] = [];
     const model = this.graph.getModel();
     const cells = model.cells;
-    // GFP.log.debug('cells', cells);
-    // GFP.log.debug('mxStencilRegistry', mxStencilRegistry);
+    // GFUtils.log.debug('cells', cells);
+    // GFUtils.log.debug('mxStencilRegistry', mxStencilRegistry);
     if (prop === 'id') {
       _.each(cells, (mxcell: mxCell) => {
-        GFP.log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', this.getStyleCell(mxcell, 'shape'));
+        GFUtils.log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', this.getStyleCell(mxcell, 'shape'));
         // this.graph.setCellStyles('shape','mxgraph.aws4.spot_instance',[mxcell]);
         cellIds.push(this.getId(mxcell));
       });
@@ -779,7 +780,7 @@ export default class XGraph {
         cell.id = newId;
       });
     } else {
-      GFP.log.warn(`Cell ${oldId} not found`);
+      GFUtils.log.warn(`Cell ${oldId} not found`);
     }
     return this;
   }
@@ -859,7 +860,7 @@ export default class XGraph {
         }
         graduate(count, steps);
       } catch (error) {
-        GFP.log.error('Error on graduate color', error);
+        GFUtils.log.error('Error on graduate color', error);
         this.setStyleCell(mxcell, style, color);
       }
     } else {
@@ -940,8 +941,8 @@ export default class XGraph {
    * @memberof XGraph
    */
   setMap(onMappingObj: gf.TIOnMappingObj) {
-    GFP.log.info('XGraph.setMapping()');
-    // GFP.log.debug('XGraph.setMapping() onMappingObject : ', onMappingObj);
+    GFUtils.log.info('XGraph.setMapping()');
+    // GFUtils.log.debug('XGraph.setMapping() onMappingObject : ', onMappingObj);
     this.onMapping = onMappingObj;
     if (this.onMapping.active === true) {
       this.container.style.cursor = 'crosshair';
@@ -955,7 +956,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   unsetMap() {
-    GFP.log.info('XGraph.unsetMapping()');
+    GFUtils.log.info('XGraph.unsetMapping()');
     this.onMapping.active = false;
     this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
@@ -975,7 +976,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventClick(me: mxMouseEvent) {
-    GFP.log.info('XGraph.eventClick()');
+    GFUtils.log.info('XGraph.eventClick()');
 
     if (this.onMapping.active) {
       const state = me.getState();
@@ -1005,10 +1006,10 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventDbClick(evt: MouseEvent, mxcell: mxCell) {
-    GFP.log.info('XGraph.eventDbClick()');
-    // GFP.log.debug('XGraph.eventDbClick() evt', evt);
-    // GFP.log.debug('XGraph.eventDbClick() cell', mxcell);
-    GFP.log.info('XGraph.eventDbClick() container.getBoundingClientRect()', this.container.getBoundingClientRect());
+    GFUtils.log.info('XGraph.eventDbClick()');
+    // GFUtils.log.debug('XGraph.eventDbClick() evt', evt);
+    // GFUtils.log.debug('XGraph.eventDbClick() cell', mxcell);
+    GFUtils.log.info('XGraph.eventDbClick() container.getBoundingClientRect()', this.container.getBoundingClientRect());
     if (mxcell !== undefined) {
       this.lazyZoomCell(mxcell);
     }
@@ -1022,7 +1023,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventMouseWheel(evt: WheelEvent, up: boolean) {
-    GFP.log.info('XGraph.eventMouseWheel()');
+    GFUtils.log.info('XGraph.eventMouseWheel()');
     if (this.graph.isZoomWheelEvent(evt)) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {
@@ -1080,7 +1081,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   async lazyZoomPointer(factor: number, offsetX: number, offsetY: number) {
-    GFP.log.info('XGraph.lazyZoomPointer()');
+    GFUtils.log.info('XGraph.lazyZoomPointer()');
     let dx = offsetX * 2;
     let dy = offsetY * 2;
 
@@ -1174,12 +1175,13 @@ export default class XGraph {
     }
   }
 
+  // BLINK
   async blinkCell(cell: mxCell, ms: number) {
     if (!cell.blink) {
       // console.log("blinkCell")
       const self = this;
       const bl_on = function() {
-        // console.log("bl_on")
+        console.log("bl_on")
         const color = '#f5f242';
         const opacity = 100;
         const state = self.graph.view.getState(cell);
@@ -1202,7 +1204,7 @@ export default class XGraph {
       };
       const bl_off = function() {
         if (cell && cell.blink_on) {
-          // console.log("bl_off")
+          console.log("bl_off")
           const hl = cell.blink_on;
           // Fades out the highlight after a duration
           if (hl.shape != null) {
@@ -1245,8 +1247,51 @@ export default class XGraph {
     return !!mxcell.blink;
   }
 
-  getBlinkCellMs(mxcell: mxCell): number {
+  geBlinkMxCell(mxcell: mxCell): number {
     return !!mxcell.blink ? mxcell.blink_ms : 0;
+  }
+
+  // COLLAPSE
+  isCollapsedCell(mxcell:mxCell):boolean {
+    return this.graph.isCellCollapsed(mxcell);
+  }
+
+  collapseCell(mxcell:mxCell) {
+    if(!this.isCollapsedCell(mxcell)) {
+      this.graph.foldCells(true, false, [mxcell], null, null);
+    }
+  }
+
+  expandCell(mxcell:mxCell) {
+    if(this.isCollapsedCell(mxcell)) {
+      this.graph.foldCells(false, false, [mxcell], null, null);
+    }
+  }
+
+  toggleFoldCell(mxcell:mxCell) {
+    const collapse:boolean = !this.isCollapsedCell(mxcell);
+    this.graph.foldCells(collapse, false, [mxcell], null, null);
+  }
+
+  // VISIBLE
+  toggleVisibleCell(mxcell: mxCell, visible: boolean, includeEdges: boolean) {
+    this.graph.toggleCells(visible, [mxcell], true);
+  }
+
+  async hideCell(mxcell:mxCell) {
+    if (this.isVisibleCell(mxcell)) {
+      this.graph.toggleCells(true, [mxcell], true);
+    }
+  }
+
+  async showCell(mxcell:mxCell) {
+    if (!this.isVisibleCell(mxcell)) {
+      this.graph.toggleCells(false, [mxcell], true);
+    }
+  }
+
+  isVisibleCell(mxcell: mxCell): boolean {
+    return this.graph.isCellVisible(mxcell);
   }
 
   /**
@@ -1256,8 +1301,8 @@ export default class XGraph {
    * @memberof XGraph
    */
   async lazyZoomCell(mxcell: mxCell) {
-    GFP.log.info('XGraph.lazyZoomCell() mxcell', mxcell);
-    GFP.log.debug('XGraph.lazyZoomCell() mxcellState', this.graph.view.getState(mxcell));
+    GFUtils.log.info('XGraph.lazyZoomCell() mxcell', mxcell);
+    GFUtils.log.debug('XGraph.lazyZoomCell() mxcellState', this.graph.view.getState(mxcell));
     if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
       const state = this.graph.view.getState(mxcell);
       if (state !== null) {
@@ -1278,10 +1323,10 @@ export default class XGraph {
       if (req.getStatus() >= 200 && req.getStatus() <= 299) {
         return req.getText();
       } else {
-        GFP.log.error('Cannot load ' + url, req.getStatus());
+        GFUtils.log.error('Cannot load ' + url, req.getStatus());
       }
     } catch (error) {
-      GFP.log.error('Cannot load ' + url, error);
+      GFUtils.log.error('Cannot load ' + url, error);
     }
     return null;
   }
@@ -1297,13 +1342,7 @@ export default class XGraph {
   //   this.graph.toggleCells(!this.graph.getModel().isVisible(mxcell), [mxcell], includeEdges);
   // }
 
-  toggleVisibleCell(mxcell: mxCell, visible: boolean, includeEdges: boolean) {
-    this.graph.toggleCells(visible, [mxcell], true);
-  }
 
-  isVisibleCell(mxcell: mxCell): boolean {
-    return this.graph.isCellVisible(mxcell);
-  }
 
   static compress(source: string): string {
     return Graph.compress(source, true);

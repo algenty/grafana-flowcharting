@@ -38,7 +38,7 @@ export default class State {
    * @memberof State
    */
   constructor(mxcell: mxCell, xgraph: XGraph) {
-    GFP.log.info('State.constructor()');
+    GFUtils.log.info('State.constructor()');
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
@@ -73,7 +73,7 @@ export default class State {
    * @memberof State
    */
   setState(rule: Rule, metric: Metric): this {
-    GFP.log.info('State.setState()');
+    GFUtils.log.info('State.setState()');
     let beginPref = performance.now();
     if (!rule.isHidden() && rule.matchMetric(metric)) {
       const shapeMaps = rule.getShapeMaps();
@@ -146,7 +146,7 @@ export default class State {
           if (event.toEventable(level)) {
             this.matched = true;
             const v = this.variables.eval(event.data.value);
-            GFP.log.debug('this.variables.eval(event.data.value);', v);
+            GFUtils.log.debug('this.variables.eval(event.data.value);', v);
             this.eventState.set(k, v, level);
           }
           if (level >= rule.highestLevel) {
@@ -190,7 +190,7 @@ export default class State {
    * @memberof State
    */
   unsetState(): this {
-    GFP.log.info('State.unsetState()');
+    GFUtils.log.info('State.unsetState()');
     this.eventState.unset();
     this.textState.unset();
     this.linkState.unset();
@@ -254,7 +254,7 @@ export default class State {
    * @memberof State
    */
   applyState(): this {
-    GFP.log.info('State.applyState()');
+    GFUtils.log.info('State.applyState()');
     if (this.matched || this.changed) {
       this.changed = true;
 
@@ -369,7 +369,7 @@ class GFState {
     this.matchLevel.set(key, -1);
     this.matchedKey.set(key, false);
     this.changedKey.set(key, false);
-    GFP.log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
+    GFUtils.log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
   }
 
   getOriginalValue(key: string): any | undefined {
@@ -398,17 +398,17 @@ class GFState {
   apply(key?: string): this {
     if (key !== undefined) {
       if (this.isMatched(key)) {
-        GFP.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] MATCHED KEY=' + key);
+        GFUtils.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] MATCHED KEY=' + key);
         let value = this.getMatchValue(key);
         try {
           this.apply_core(key, value);
         } catch (error) {
-          GFP.log.error('Error on reset for key ' + key, error);
+          GFUtils.log.error('Error on reset for key ' + key, error);
         }
         this.changedKey.set(key, true);
         this.matchedKey.set(key, false);
       } else if (this.isChanged(key)) {
-        GFP.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] CHANGED KEY=' + key);
+        GFUtils.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] CHANGED KEY=' + key);
         this.reset(key);
       }
     } else {
@@ -458,14 +458,14 @@ class GFState {
 
   reset(key?: string): this {
     if (key !== undefined) {
-      GFP.log.debug('GFState.reset from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key);
+      GFUtils.log.debug('GFState.reset from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key);
       this.unset(key);
       let value = this.getOriginalValue(key);
       try {
         // debugger
         this.reset_core(key, value);
       } catch (error) {
-        GFP.log.error('Error on reset for key ' + key, error);
+        GFUtils.log.error('Error on reset for key ' + key, error);
       }
       this.changedKey.set(key, false);
       this.matchedKey.set(key, false);
@@ -532,8 +532,21 @@ class EventState extends GFState {
         this.xgraph.setLabelCell(this.mxcell, value);
         break;
       case 'visibility':
-        let v: boolean = value === '0' ? true : false;
-        this.xgraph.toggleVisibleCell(this.mxcell, v, true);
+        value = String(value);
+        if(value === '0') {
+          this.xgraph.hideCell(this.mxcell);
+        } else if (value === '1') {
+          this.xgraph.showCell(this.mxcell);
+        }
+        break;
+
+      case 'fold':
+        value = String(value);
+        if(value === '0') {
+          this.xgraph.collapseCell(this.mxcell);
+        } else if (value === '1') {
+          this.xgraph.expandCell(this.mxcell);
+        }
         break;
 
       case 'blink':
@@ -560,8 +573,12 @@ class EventState extends GFState {
         return this.xgraph.isVisibleCell(this.mxcell) === false ? '0' : '1';
         break;
 
+      case 'fold':
+        return this.xgraph.isCollapsedCell(this.mxcell) === true ? '0' : '1';
+        break;
+
       case 'blink':
-        return this.xgraph.getBlinkCellMs(this.mxcell);
+        return this.xgraph.geBlinkMxCell(this.mxcell);
         break;
 
       default:
@@ -626,13 +643,13 @@ class ShapeState extends GFState {
   }
 
   init_core() {
-    GFP.log.info('ShapeState [' + this.mxcell.id + ']');
+    GFUtils.log.info('ShapeState [' + this.mxcell.id + ']');
     this.keys = GFCONSTANT.COLORMETHODS.map(x => x.value);
     this.fullStylesString = this.mxcell.getStyle();
     this.keys.forEach(key => {
       const value = this.xgraph.getStyleCell(this.mxcell, key);
       this.addValue(key, value);
-      GFP.log.debug('ShapeState [' + this.mxcell.id + '] Add value : ' + key, value);
+      GFUtils.log.debug('ShapeState [' + this.mxcell.id + '] Add value : ' + key, value);
     });
     this.mxcell.GF_tooltipHandler = null;
   }

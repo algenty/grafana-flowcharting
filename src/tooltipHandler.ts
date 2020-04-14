@@ -1,5 +1,6 @@
 import Chartist from 'chartist';
 import { Metric } from './metric_class';
+import { GFUtils } from 'globals_class';
 
 /**
  *
@@ -215,7 +216,7 @@ export class MetricTooltip {
         graph = new BarGraphTooltip();
         break;
       default:
-        GFP.log.error('Graph type unknow', type);
+        GFUtils.log.error('Graph type unknow', type);
         graph = new BarGraphTooltip();
         break;
     }
@@ -376,7 +377,7 @@ class LineGraphTooltip extends GraphTooltip {
 
     this.chart = new Chartist.Line(div, this.data, this.chartistOptions);
     this.chart.on('draw', (data: any) => {
-      // GFP.log.info( 'Chartis.on() context ', data);
+      // GFUtils.log.info( 'Chartis.on() context ', data);
       if (data.type === 'line' || data.type === 'area') {
         if (data.type === 'line') {
           data.element.attr({

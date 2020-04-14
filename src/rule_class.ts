@@ -3,6 +3,7 @@ import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
 import { Metric } from 'metric_class';
+import { GFUtils } from 'globals_class';
 
 /**
  * Rule definition
@@ -761,7 +762,7 @@ export class Rule {
   // LINK MAPS
   //
   addLinkMap(pattern: string): LinkMap {
-    GFP.log.info('Rule.addLinkMap()');
+    GFUtils.log.info('Rule.addLinkMap()');
     const data = LinkMap.getDefaultData();
     const m = new LinkMap(pattern, data);
     m.import(data);
@@ -995,7 +996,7 @@ export class Rule {
         const value = metric.getValue(this.data.aggregation, this.data.column);
         return value;
       } catch (error) {
-        GFP.log.error('datapoint for metric is null', error);
+        GFUtils.log.error('datapoint for metric is null', error);
         return null;
       }
     }

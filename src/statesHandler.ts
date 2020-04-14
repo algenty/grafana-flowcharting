@@ -3,6 +3,7 @@ import { Rule } from './rule_class';
 import _ from 'lodash';
 import { Metric } from './metric_class';
 import XGraph from 'graph_class';
+import { GFUtils } from 'globals_class';
 
 /**
  * States Handler class
@@ -20,7 +21,7 @@ export default class StateHandler {
    * @memberof StateHandler
    */
   constructor(xgraph: XGraph) {
-    GFP.log.info('StateHandler.constructor()');
+    GFUtils.log.info('StateHandler.constructor()');
     this.states = new Map();
     this.xgraph = xgraph;
     this.initStates(this.xgraph);
@@ -34,7 +35,7 @@ export default class StateHandler {
    * @memberof StateHandler
    */
   initStates(xgraph: XGraph): this {
-    GFP.log.info('StateHandler.initStates()');
+    GFUtils.log.info('StateHandler.initStates()');
     this.xgraph = xgraph;
     this.states.clear();
     const mxcells = xgraph.getMxCells();
@@ -52,7 +53,7 @@ export default class StateHandler {
    * @memberof StateHandler
    */
   getStatesForRule(rule: Rule) {
-    GFP.log.info('StateHandler.getStatesForRule()');
+    GFUtils.log.info('StateHandler.getStatesForRule()');
     const result = new Map();
     let name: string | null;
     const xgraph = this.xgraph;
@@ -106,7 +107,7 @@ export default class StateHandler {
    * @memberof StateHandler
    */
   updateStates(rules: Rule[]) {
-    GFP.log.info('StateHandler.updateStates()');
+    GFUtils.log.info('StateHandler.updateStates()');
     rules.forEach(rule => {
       rule.states = this.getStatesForRule(rule);
     });
@@ -186,7 +187,7 @@ export default class StateHandler {
    * @param  {Array<Metric>} metrics - Array of serie object
    */
   setStates(rules: Rule[], metrics: Metric[]): this {
-    GFP.log.info('StateHandler.setStates()');
+    GFUtils.log.info('StateHandler.setStates()');
     this.prepare();
     rules.forEach(rule => {
       rule.highestLevel = -1;
@@ -210,7 +211,7 @@ export default class StateHandler {
    * Apply color and text
    */
   applyStates(): this {
-    GFP.log.info('StateHandler.applyStates()');
+    GFUtils.log.info('StateHandler.applyStates()');
     this.states.forEach(state => {
       state.async_applyState();
     });

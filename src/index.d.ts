@@ -35,7 +35,7 @@ declare module gf {
   declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground', 'shape', 'overflow'];
   declare type TStyleColorKeys = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
   declare type TStyleColorList = { text: string; value: TStyleColor.Keys }[];
-  declare type TStyleEventKeys = 'shape' | 'rotation' | 'visibility' | 'fontSize' | 'blink' | 'barPos' | 'text' | 'opacity' | 'textOpacity';
+  declare type TStyleEventKeys = 'shape' | 'rotation' | 'visibility' | 'fontSize' | 'blink' | 'barPos' | 'text' | 'opacity' | 'textOpacity' | 'fold';
   declare type TStyleEventList = { text: string; value: TStyleEventKeys; type: 'number' | 'text' }[];
   declare type TStyleKey = TStyleColor.Keys | TStyleEventKeys;
 

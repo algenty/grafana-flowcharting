@@ -97,8 +97,9 @@ export class GFCONSTANT {
     { text: 'Shape : Change form (text)', value: 'shape', type: 'text' },
     { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number' },
     { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number' },
-    { text: 'Shape : Visibility (0|1)', value: 'visibility', type: 'number' },
+    { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number' },
     { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number' },
+    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number' },
     { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number' },
     { text: 'Label : Replace text (text)', value: 'text', type: 'text' },
     { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number' },
@@ -185,17 +186,141 @@ export class GFVariables {
   }
 }
 
+class GFLog {
+  static DEBUG = 0;
+  static INFO = 1;
+  static WARN = 2;
+  static ERROR = 3;
+  private static logLevel = GFLog.ERROR;
+  private static logDisplay = false;
+  constructor() {
+
+  }
+
+  /**
+   * If message must be displayed
+   *
+   * @param {number} level (DEBUG : 0, INFO : 1, WARN:2, ERROR:3)
+   * @returns {boolean}
+   * @memberof Log
+   */
+  private static toDisplay(level: number): boolean {
+    if (GFLog.logDisplay !== undefined && GFLog.logDisplay === true) {
+      if (GFLog.logLevel !== undefined && level >= GFLog.logLevel) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Display debug message in console
+   *
+   * @param {string} title
+   * @param {((any | undefined))} obj
+   * @memberof Log
+   */
+  async debug(...args) {
+    if (GFLog.toDisplay(GFLog.DEBUG)) {
+      const title = args.shift();
+      console.debug(`GF DEBUG : ${title}`, ...args);
+    }
+  }
+
+  /**
+   * Display warn message in console
+   *
+   * @param {string} title
+   * @param {((any | undefined))} obj
+   * @memberof Log
+   */
+  async warn(...args) {
+    if (GFLog.toDisplay(GFLog.WARN)) {
+      const title = args.shift();
+      console.warn(`GF WARN : ${title}`, ...args);
+    }
+  }
+
+  /**
+   * Display info message in console
+   *
+   * @param {string} title
+   * @param {((any | undefined))} obj
+   * @memberof Log
+   */
+  async info(...args) {
+    if (GFLog.toDisplay(GFLog.INFO)) {
+      const title = args.shift();
+      console.info(`GF INFO : ${title}`, ...args);
+    }
+  }
+  
+  /**
+   * Display error message in console
+   *
+   * @param {string} title
+   * @param {((any | undefined))} obj
+   * @memberof Log
+   */
+  async error(...args) {
+    if (GFLog.toDisplay(GFLog.ERROR)) {
+      const title = args.shift();
+      console.error(`GF ERROR : ${title}`, ...args);
+    }
+  }
+}
+
 export class GFUtils {
-  static GLOBAL_VARS: GFVariables = new GFVariables();
+  private static _globalvars: GFVariables = new GFVariables();
+  static log: GFLog = new GFLog();
+  /**
+   * Create and get local variables container
+   *
+   * @static
+   * @returns {GFVariables}
+   * @memberof GFUtils
+   */
   static getLocalVars(): GFVariables {
     let _v = new GFVariables();
     return _v;
   }
 
-  static getGlobalVars(): GFVariables {
-    if (!!GFUtils.GLOBAL_VARS) {
-      GFUtils.GLOBAL_VARS = new GFVariables();
-    } 
-    return GFUtils.GLOBAL_VARS;
+  /**
+   * Get global variables container
+   *
+   * @static
+   * @returns {GFVariables}
+   * @memberof GFUtils
+   */
+  private static getGlobalVars(): GFVariables {
+    if (GFUtils._globalvars === undefined) {
+      GFUtils._globalvars = new GFVariables();
+    }
+    return GFUtils._globalvars;
+  }
+
+  /**
+   * Get global variable value
+   *
+   * @static
+   * @param {*} key
+   * @returns {*}
+   * @memberof GFUtils
+   */
+  static getVariable(key:any):any {
+    return GFUtils.getGlobalVars().get(key);
+  }
+  
+  /**
+   * set global variable with value
+   *
+   * @static
+   * @param {*} key
+   * @param {*} value
+   * @memberof GFUtils
+   */
+  static setVariable(key:any, value:any) {
+    GFUtils.getGlobalVars().set(key,value);
   }
 }
+

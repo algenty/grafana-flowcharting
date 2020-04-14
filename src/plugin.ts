@@ -1,3 +1,5 @@
+import { GFUtils } from 'globals_class';
+
 declare var GFP: FlowChartingPlugin;
 /**
  * Global Manager of plugin
@@ -16,6 +18,7 @@ export default class FlowChartingPlugin {
 
   constructor(contextRoot: string, templateSrv: any) {
     this.contextRoot = contextRoot;
+    GFUtils.setVariable('contextroot',contextRoot);
     this.data = this.loadJson();
     this.repo = this.getRepo();
     this.perf = new Perf();
