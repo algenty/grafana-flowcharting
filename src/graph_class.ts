@@ -1180,7 +1180,7 @@ export default class XGraph {
     if (!cell.blink) {
       // console.log("blinkCell")
       const self = this;
-      const bl_on = function() {
+      const bl_on = function () {
         console.log("bl_on")
         const color = '#f5f242';
         const opacity = 100;
@@ -1202,7 +1202,7 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function() {
+      const bl_off = function () {
         if (cell && cell.blink_on) {
           console.log("bl_off")
           const hl = cell.blink_on;
@@ -1252,24 +1252,24 @@ export default class XGraph {
   }
 
   // COLLAPSE
-  isCollapsedCell(mxcell:mxCell):boolean {
+  isCollapsedCell(mxcell: mxCell): boolean {
     return this.graph.isCellCollapsed(mxcell);
   }
 
-  collapseCell(mxcell:mxCell) {
-    if(!this.isCollapsedCell(mxcell)) {
+  collapseCell(mxcell: mxCell) {
+    if (!this.isCollapsedCell(mxcell)) {
       this.graph.foldCells(true, false, [mxcell], null, null);
     }
   }
 
-  expandCell(mxcell:mxCell) {
-    if(this.isCollapsedCell(mxcell)) {
+  expandCell(mxcell: mxCell) {
+    if (this.isCollapsedCell(mxcell)) {
       this.graph.foldCells(false, false, [mxcell], null, null);
     }
   }
 
-  toggleFoldCell(mxcell:mxCell) {
-    const collapse:boolean = !this.isCollapsedCell(mxcell);
+  toggleFoldCell(mxcell: mxCell) {
+    const collapse: boolean = !this.isCollapsedCell(mxcell);
     this.graph.foldCells(collapse, false, [mxcell], null, null);
   }
 
@@ -1278,13 +1278,13 @@ export default class XGraph {
     this.graph.toggleCells(visible, [mxcell], true);
   }
 
-  async hideCell(mxcell:mxCell) {
+  async hideCell(mxcell: mxCell) {
     if (this.isVisibleCell(mxcell)) {
       this.graph.toggleCells(true, [mxcell], true);
     }
   }
 
-  async showCell(mxcell:mxCell) {
+  async showCell(mxcell: mxCell) {
     if (!this.isVisibleCell(mxcell)) {
       this.graph.toggleCells(false, [mxcell], true);
     }
@@ -1292,6 +1292,23 @@ export default class XGraph {
 
   isVisibleCell(mxcell: mxCell): boolean {
     return this.graph.isCellVisible(mxcell);
+  }
+
+  // WIDTH AND HEIGHT
+  async resizeCell(mxcell: mxCell, width: number | undefined, height: number | undefined) {
+    const geo = this.graph.model.getGeometry(mxcell);
+    if (geo !== null) {
+      const h = (height !== undefined) ? Math.abs(height) : geo.height;
+      const y = (height !== undefined && height < 0) ? geo.y + geo.height + height : geo.y;
+      const w = (width !== undefined) ? Math.abs(width) : geo.width;
+      const x = (width !== undefined && width < 0) ? geo.x + geo.width + width : geo.x;
+      const rec = new mxRectangle(x, y, w, h);
+      this.graph.resizeCell(mxcell, rec, true);
+    }
+  }
+
+  getSizeCell(mxcell):{x:number,y:number,width : number,height:number} {
+    return this.graph.model.getGeometry(mxcell);
   }
 
   /**

@@ -133,8 +133,10 @@ export class InspectOptionsCtrl {
         value = this.testData.value;
       }
       console.log('Value : ', value);
-      graph.setCellStyles(this.testData.style, value, [mxcell]);
-      console.log(mxcell);
+      // graph.setCellStyles(this.testData.style, value, [mxcell]);
+      console.log("before", mxcell);
+      xgraph.resizeCell(mxcell,value,undefined);
+      console.log("after", mxcell);
     }
   }
 }
