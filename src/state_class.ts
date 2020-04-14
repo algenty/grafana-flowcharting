@@ -125,7 +125,8 @@ export default class State {
         if (!text.isHidden() && text.match(cellProp, rule.data.textRegEx) && text.toLabelize(level)) {
           if (text.toLabelize(level)) {
             this.matched = true;
-            const v = this.variables.replaceText(FormattedValue);
+            const textScoped  = this.variables.replaceText(FormattedValue);
+            const v = text.getReplaceText(this.textState.getMatchValue(k),textScoped);
             this.textState.set(k, v, level);
           }
           if (level >= rule.highestLevel) {

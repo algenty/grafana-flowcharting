@@ -58,6 +58,7 @@ Arnaud
   - TODO : Restore default style in event not work : DONE
   - TODO : Verify replace var grafana
   - TODO : Verify substring text mapping : didn't work
+  - TODO : Progressif change style when numeric
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
   - shape stills select when deleting map.
