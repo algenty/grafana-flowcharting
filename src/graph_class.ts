@@ -1180,8 +1180,8 @@ export default class XGraph {
     if (!cell.blink) {
       // console.log("blinkCell")
       const self = this;
-      const bl_on = function () {
-        console.log("bl_on")
+      const bl_on = function() {
+        console.log('bl_on');
         const color = '#f5f242';
         const opacity = 100;
         const state = self.graph.view.getState(cell);
@@ -1202,9 +1202,9 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function () {
+      const bl_off = function() {
         if (cell && cell.blink_on) {
-          console.log("bl_off")
+          console.log('bl_off');
           const hl = cell.blink_on;
           // Fades out the highlight after a duration
           if (hl.shape != null) {
@@ -1295,20 +1295,37 @@ export default class XGraph {
   }
 
   // WIDTH AND HEIGHT
-  async resizeCell(mxcell: mxCell, width: number | undefined, height: number | undefined) {
+  async resizeCell(mxcell: mxCell, width: number | undefined, height: number | undefined, origine?: mxGeometry) {
     const geo = this.graph.model.getGeometry(mxcell);
-    if (geo !== null) {
-      const h = (height !== undefined) ? Math.abs(height) : geo.height;
-      const y = (height !== undefined && height < 0) ? geo.y + geo.height + height : geo.y;
-      const w = (width !== undefined) ? Math.abs(width) : geo.width;
-      const x = (width !== undefined && width < 0) ? geo.x + geo.width + width : geo.x;
-      const rec = new mxRectangle(x, y, w, h);
-      this.graph.resizeCell(mxcell, rec, true);
+    if (geo !== null && width !== undefined) {
+      let _x = origine !== undefined ? origine.x : geo.x;
+      let _y = origine !== undefined ? origine.y : geo.y;
+      let _h = height !== undefined ? Math.abs(height) : origine !== undefined ? origine.height : geo.height;
+      let _w = width !== undefined ? Math.abs(width) : origine !== undefined ? origine.width : geo.width;
+      _y = height !== undefined && height < 0 ? _y + _h + height : _y;
+      console.log('_x : ' + _x);
+      console.log('width : ' + width);
+      console.log('width !== undefined : ' + width !== undefined);
+      console.log('width < 0 : ' + (width < 0));
+      console.log('width !== undefined && width < 0 : ' + (width !== undefined && width < 0));
+      console.log('_x + _w + width : ' + (_x + _w + width));
+      _x = width !== undefined && width < 0 ? _x + _w + width : _x;
+      console.log('_x  : ' + (_x));
+      const _rec = new mxRectangle(_x, _y, _w, _h);
+      // console.log('x=' + x + ' _x=' + _x);
+      // console.log('y=' + y + ' _y=' + _y);
+      // console.log('width=' + width + ' _width=' + _w);
+      this.graph.resizeCell(mxcell, _rec, true);
     }
   }
 
-  getSizeCell(mxcell):{x:number,y:number,width : number,height:number} {
+  getSizeCell(mxcell: mxCell): mxGeometry {
     return this.graph.model.getGeometry(mxcell);
+  }
+
+  async resetSizeCell(mxcell: mxCell, mxgeo: mxGeometry) {
+    const rec = new mxRectangle(mxgeo.x, mxgeo.y, mxgeo.width, mxgeo.height);
+    this.graph.resizeCell(mxcell, rec, true);
   }
 
   /**
@@ -1358,8 +1375,6 @@ export default class XGraph {
   // async toggleVisible(mxcell, includeEdges) {
   //   this.graph.toggleCells(!this.graph.getModel().isVisible(mxcell), [mxcell], includeEdges);
   // }
-
-
 
   static compress(source: string): string {
     return Graph.compress(source, true);

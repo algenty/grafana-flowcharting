@@ -125,8 +125,8 @@ export default class State {
         if (!text.isHidden() && text.match(cellProp, rule.data.textRegEx) && text.toLabelize(level)) {
           if (text.toLabelize(level)) {
             this.matched = true;
-            const textScoped  = this.variables.replaceText(FormattedValue);
-            const v = text.getReplaceText(this.textState.getMatchValue(k),textScoped);
+            const textScoped = this.variables.replaceText(FormattedValue);
+            const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
             this.textState.set(k, v, level);
           }
           if (level >= rule.highestLevel) {
@@ -495,6 +495,14 @@ class GFState {
  */
 class EventState extends GFState {
   keys: gf.TStyleEventKeys[] = [];
+  geo:
+    | {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      }
+    | undefined = undefined;
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);
     this.init_core();
@@ -502,6 +510,7 @@ class EventState extends GFState {
 
   init_core() {
     this.keys = GFCONSTANT.EVENTMETHODS.map(x => x.value);
+    this.geo = this.xgraph.getSizeCell(this.mxcell);
     this.keys.forEach(key => {
       const value = this._get(key);
       this.addValue(key, value);
@@ -531,9 +540,10 @@ class EventState extends GFState {
         value = String(value);
         this.xgraph.setLabelCell(this.mxcell, value);
         break;
+
       case 'visibility':
         value = String(value);
-        if(value === '0') {
+        if (value === '0') {
           this.xgraph.hideCell(this.mxcell);
         } else if (value === '1') {
           this.xgraph.showCell(this.mxcell);
@@ -542,10 +552,44 @@ class EventState extends GFState {
 
       case 'fold':
         value = String(value);
-        if(value === '0') {
+        if (value === '0') {
           this.xgraph.collapseCell(this.mxcell);
         } else if (value === '1') {
           this.xgraph.expandCell(this.mxcell);
+        }
+        break;
+
+      case 'height':
+        if (this.geo !== undefined) {
+          let height = Number(value);
+          console.log('value=' + value);
+          if (this.isMatched('height')) {
+            let width = this.isMatched('width') ? Number(this.getMatchValue('width')) : undefined;
+            this.xgraph.resizeCell(this.mxcell, width, height, this.geo);
+            this.unset('width');
+          } else {
+            if (!this.isMatched('width')) {
+              this.xgraph.resetSizeCell(this.mxcell, this.geo);
+              this.unset('width');
+            }
+          }
+        }
+        break;
+
+      case 'width':
+        if (this.geo !== undefined) {
+          console.log('value=' + value);
+          let width = Number(value);
+          if (this.isMatched('width')) {
+            let height = this.isMatched('height') ? Number(this.getMatchValue('height')) : undefined;
+            this.xgraph.resizeCell(this.mxcell, width, height, this.geo);
+            this.unset('width');
+          } else {
+            if (!this.isMatched('height')) {
+              this.xgraph.resetSizeCell(this.mxcell, this.geo);
+              this.unset('height');
+            }
+          }
         }
         break;
 
@@ -571,6 +615,16 @@ class EventState extends GFState {
 
       case 'visibility':
         return this.xgraph.isVisibleCell(this.mxcell) === false ? '0' : '1';
+        break;
+
+      case 'height':
+        // this.geo = this.xgraph.getSizeCell(this.mxcell);
+        return this.geo !== undefined ? this.geo.height : undefined;
+        break;
+
+      case 'width':
+        // this.geo = this.xgraph.getSizeCell(this.mxcell);
+        return this.geo !== undefined ? this.geo.width : undefined;
         break;
 
       case 'fold':

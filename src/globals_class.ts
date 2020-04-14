@@ -98,6 +98,9 @@ export class GFCONSTANT {
     { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number' },
     { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number' },
     { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number' },
+    { text: 'Shape : Change height (number)', value: 'height', type: 'number' },
+    { text: 'Shape : Change width (number)', value: 'width', type: 'number' },
+    { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number' },
     { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number' },
     { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number' },
     { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number' },
@@ -191,7 +194,7 @@ class GFLog {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  private static logLevel = GFLog.ERROR;
+  private static logLevel = GFLog.DEBUG;
   private static logDisplay = false;
   constructor() {
 
