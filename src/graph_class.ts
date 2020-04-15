@@ -1180,7 +1180,7 @@ export default class XGraph {
     if (!cell.blink) {
       // console.log("blinkCell")
       const self = this;
-      const bl_on = function () {
+      const bl_on = function() {
         // console.log('bl_on');
         const color = '#f5f242';
         const opacity = 100;
@@ -1202,7 +1202,7 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function () {
+      const bl_off = function() {
         if (cell && cell.blink_on) {
           // console.log('bl_off');
           const hl = cell.blink_on;

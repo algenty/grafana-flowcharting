@@ -48,7 +48,7 @@ export default class State {
     this.eventState = new EventState(xgraph, mxcell);
     this.textState = new TextState(xgraph, mxcell);
     this.linkState = new LinkState(xgraph, mxcell);
-    this.variables = GFUtils.getLocalVars();
+    this.variables = GFUtils.createLocalVars();
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
     this.originalText = this.xgraph.getLabelCell(mxcell);

@@ -21,20 +21,20 @@ export class GFCONSTANT {
   ];
 
   // TYPES
-  static VALUE_TYPES: gf.TValueTypeList = [
+  static readonly VALUE_TYPES: gf.TValueTypeList = [
     { text: 'Number', value: 'number' },
     { text: 'String', value: 'string' },
     { text: 'Date', value: 'date' },
   ];
-  static METRIC_TYPES: gf.TMetricTypeList = [
+  static readonly METRIC_TYPES: gf.TMetricTypeList = [
     { text: 'Series', value: 'serie' },
     { text: 'Table', value: 'table' },
   ];
-  static IDENT_TYPES: { text: string; value: gf.TPropertieKey }[] = [
+  static readonly IDENT_TYPES: { text: string; value: gf.TPropertieKey }[] = [
     { text: 'Id', value: 'id' },
     { text: 'Label', value: 'value' },
   ];
-  static AGGREGATION_TYPES: gf.TAggregationList = [
+  static readonly AGGREGATION_TYPES: gf.TAggregationList = [
     { text: 'First', value: 'first' },
     { text: 'Last', value: 'current' },
     { text: 'Min', value: 'min' },
@@ -46,25 +46,25 @@ export class GFCONSTANT {
     { text: 'Range', value: 'range' },
     { text: 'Diff', value: 'diff' },
   ];
-  static TOOLTIP_GRAPH_TYPES: gf.TGraphTypeList = [
+  static readonly TOOLTIP_GRAPH_TYPES: gf.TGraphTypeList = [
     { text: 'Line', value: 'line' },
     { text: 'Histogram', value: 'bar' },
   ];
-  static TOOLTIP_GRAPH_SCALE_TYPES: gf.TGraphScaleList = [
+  static readonly TOOLTIP_GRAPH_SCALE_TYPES: gf.TGraphScaleList = [
     { text: 'Linear', value: 'linear' },
     { text: 'Logarithmic', value: 'log' },
   ];
-  static TOOLTIP_GRAPH_SIZE_TYPES: gf.TGraphSizeList = [
+  static readonly TOOLTIP_GRAPH_SIZE_TYPES: gf.TGraphSizeList = [
     { text: 'Adjustable', value: '100%' },
     { text: 'Small', value: '100px' },
     { text: 'Medium', value: '200px' },
     { text: 'Large', value: '400px' },
   ];
-  static TOOLTIP_DIRECTION_TYPES: gf.TDirectionList = [
+  static readonly TOOLTIP_DIRECTION_TYPES: gf.TDirectionList = [
     { text: 'Vertical', value: 'v' },
     { text: 'Horizontal ', value: 'h' },
   ];
-  static VALUE_DATEFORMAT_TYPES: gf.TDateFormatList = [
+  static readonly VALUE_DATEFORMAT_TYPES: gf.TDateFormatList = [
     { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
     { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
     { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
@@ -72,19 +72,19 @@ export class GFCONSTANT {
     { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
   ];
 
-  static VALUEMAPPINGTYPES: gf.TValueMappingList = [
+  static readonly VALUEMAPPINGTYPES: gf.TValueMappingList = [
     { text: 'Value to text', value: 1 },
     { text: 'Range to text', value: 2 },
   ];
 
   // METHODS
-  static TEXTMETHODS: gf.TTextMethodList = [
+  static readonly TEXTMETHODS: gf.TTextMethodList = [
     { text: 'All content', value: 'content' },
     { text: 'Substring', value: 'pattern' },
     { text: 'Append (Space) ', value: 'as' },
     { text: 'Append (New line) ', value: 'anl' },
   ];
-  static COLORMETHODS: gf.TStyleColorList = [
+  static readonly COLORMETHODS: gf.TStyleColorList = [
     { text: 'Shape Stroke/Border', value: 'strokeColor' },
     { text: 'Shape Fill', value: 'fillColor' },
     { text: 'Label font color', value: 'fontColor' },
@@ -93,7 +93,7 @@ export class GFCONSTANT {
     { text: 'Image background', value: 'imageBackground' },
     { text: 'Image border', value: 'imageBorder' },
   ];
-  static EVENTMETHODS: gf.TStyleEventList = [
+  static readonly EVENTMETHODS: gf.TStyleEventList = [
     { text: 'Shape : Change form (text)', value: 'shape', type: 'text' },
     { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number' },
     { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number' },
@@ -108,13 +108,25 @@ export class GFCONSTANT {
     { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number' },
     { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number' },
   ];
+
+  static readonly LOCALVARIABLENAMES: gf.TVariableList = [
+    { text: 'Name of the rule', value: '_rule' },
+    { text: 'Current color according to the thresholds', value: '_color' },
+    { text: 'Current raw value according to the aggregation', value: '_value' },
+    { text: 'Current level according to the thresholds', value: '_level' },
+    { text: 'Current formated value accordingto the type', value: '_formated' },
+  ]
+
 }
 
 export class GFVariables {
-  private variables: Map<string, any>;
-  // private type : 'local'|'glogal' = 'local';
+  protected _variables: Map<string, any>;
   constructor() {
-    this.variables = new Map();
+    this._variables = new Map();
+  }
+
+  static getFullLocalVarNames():string[] {
+    return GFCONSTANT.LOCALVARIABLENAMES.map( x=> '${' + x.value + '}');
   }
 
   /**
@@ -126,7 +138,7 @@ export class GFVariables {
    * @memberof GFVariables
    */
   set(key: gf.TVariableKeys, value: any): this {
-    this.variables.set(key, value);
+    this._variables.set(key, value);
     return this;
   }
 
@@ -137,18 +149,42 @@ export class GFVariables {
    * @returns {*}
    * @memberof GFVariables
    */
-  get(key : gf.TVariableKeys): any {
-    return this.variables.get(key);
+  get(key: gf.TVariableKeys): any {
+    return this._variables.get(key);
   }
 
   /**
-   * Clear all variable
+   * Return the name of variables without ${}
+   *
+   * @returns {string[]}
+   * @memberof GFVariables
+   */
+  keys(): string[] {
+    return Array.from(this._variables.keys());
+  }
+
+  /**
+   * Return all local declared variables and grafana variables 
+   *
+   * @returns {string[]}
+   * @memberof GFVariables
+   */
+  getFullVarsNames(): string[] {
+    return GFUtils.getGrafanaVars().concat(this.getLocalVarsNames());
+  }
+
+  getLocalVarsNames(): string[] {
+    return this.keys().map(x => '${' + x + '}')
+  }
+
+  /**
+   * Clear all variables
    *
    * @returns {this}
    * @memberof GFVariables
    */
   clear(): this {
-    this.variables.clear();
+    this._variables.clear();
     return this;
   }
 
@@ -161,9 +197,10 @@ export class GFVariables {
    */
   replaceText(text: string): string {
     try {
-      text = GFP.replaceWithText(text);
-      for (let [key, value] of this.variables) {
-        text = text.replace('${' + key + '}',value);
+      let templateSrv = GFUtils.getVar('templatesrv');
+      text = templateSrv !== undefined ? templateSrv.replaceWithText(text) : text;
+      for (let [key, value] of this._variables) {
+        text = text.replace('${' + key + '}', value);
       }
     } catch (error) {
       return text;
@@ -178,14 +215,14 @@ export class GFVariables {
    * @returns {string}
    * @memberof GFVariables
    */
-  eval(text:string):string {
-      let t = this.replaceText(text);
-      try {
-          text = eval(t);
-      } catch (error) {
-          return t; 
-      }
-      return text;
+  eval(text: string): string {
+    let t = this.replaceText(text);
+    try {
+      text = eval(t);
+    } catch (error) {
+      return t;
+    }
+    return text;
   }
 }
 
@@ -257,7 +294,7 @@ class GFLog {
       console.info(`GF INFO : ${title}`, ...args);
     }
   }
-  
+
   /**
    * Display error message in console
    *
@@ -283,7 +320,7 @@ export class GFUtils {
    * @returns {GFVariables}
    * @memberof GFUtils
    */
-  static getLocalVars(): GFVariables {
+  static createLocalVars(): GFVariables {
     let _v = new GFVariables();
     return _v;
   }
@@ -302,6 +339,11 @@ export class GFUtils {
     return GFUtils._globalvars;
   }
 
+  static getGrafanaVars(): string[] {
+    const ctrl = GFUtils.getVar('ctrl');
+    return ctrl !== undefined ? ctrl.getVariables() : [];
+  }
+
   /**
    * Get global variable value
    *
@@ -310,10 +352,10 @@ export class GFUtils {
    * @returns {*}
    * @memberof GFUtils
    */
-  static getVariable(key:any):any {
+  static getVar(key: any): any {
     return GFUtils.getGlobalVars().get(key);
   }
-  
+
   /**
    * set global variable with value
    *
@@ -322,8 +364,12 @@ export class GFUtils {
    * @param {*} value
    * @memberof GFUtils
    */
-  static setVariable(key:any, value:any) {
-    GFUtils.getGlobalVars().set(key,value);
+  static setVar(key: any, value: any) {
+    GFUtils.getGlobalVars().set(key, value);
+  }
+
+  static getFullAuthorizedVarNames():string[] {
+    return GFVariables.getFullLocalVarNames().concat(GFUtils.getGrafanaVars());
   }
 }
 

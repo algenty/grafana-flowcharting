@@ -135,7 +135,7 @@ export class InspectOptionsCtrl {
       // console.log('Value : ', value);
       // graph.setCellStyles(this.testData.style, value, [mxcell]);
       // console.log("before", mxcell);
-      xgraph.resizeCell(mxcell,value,undefined);
+      xgraph.resizeCell(mxcell, value, undefined);
       // console.log("after", mxcell);
     }
   }

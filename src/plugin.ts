@@ -18,7 +18,8 @@ export default class FlowChartingPlugin {
 
   constructor(contextRoot: string, templateSrv: any) {
     this.contextRoot = contextRoot;
-    GFUtils.setVariable('contextroot',contextRoot);
+    GFUtils.setVar('contextroot', contextRoot);
+    GFUtils.setVar('templatesrv', templateSrv);
     this.data = this.loadJson();
     this.repo = this.getRepo();
     this.perf = new Perf();
@@ -37,19 +38,17 @@ export default class FlowChartingPlugin {
   static init($scope: any, templateSrv: any): FlowChartingPlugin {
     let plugin, contextRoot;
     if ($scope === undefined) {
-      // console.warn('$scope is undefined, use __dirname instead');
       contextRoot = __dirname;
       if (contextRoot.length > 0) {
         plugin = new FlowChartingPlugin(contextRoot, templateSrv);
       } else {
         contextRoot = FlowChartingPlugin.defaultContextRoot;
-        // console.warn('__dirname is empty, user default', contextRoot);
         plugin = new FlowChartingPlugin(contextRoot, templateSrv);
       }
     } else {
       contextRoot = $scope.$root.appSubUrl + FlowChartingPlugin.defaultContextRoot;
-      // console.info('Context-root for plugin is', contextRoot);
       plugin = new FlowChartingPlugin(contextRoot, templateSrv);
+      GFUtils.setVar('ctrl', $scope.ctrl);
     }
     window.GFP = plugin;
     return plugin;

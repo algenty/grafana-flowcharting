@@ -52,7 +52,6 @@ export class MappingOptionsCtrl {
     this.metricHandler = this.panelCtrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();
     this.tpGraphSize = GFCONSTANT.TOOLTIP_GRAPH_SIZE_TYPES;
-
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');
     };
@@ -77,8 +76,9 @@ export class MappingOptionsCtrl {
     };
 
     this.getVariables = () => {
-      GFUtils.log.info('MappingOptionsCtrl.getVariables');
-      return this.panelCtrl.getVariables();
+      // GFUtils.log.info('MappingOptionsCtrl.getVariables');
+      // return this.panelCtrl.getVariables();
+      return GFUtils.getFullAuthorizedVarNames();
     };
   }
 
@@ -320,15 +320,6 @@ export class MappingOptionsCtrl {
     this.onRulesChange();
   }
 
-  // haveSubstringsText(rule: Rule): boolean {
-  //   let haveSbT = false;
-  //   rule.getTextMaps().forEach(textMap => {
-  //     if (textMap.data.textReplace === 'pattern') {
-  //       haveSbT = true;
-  //     }
-  //   });
-  //   return haveSbT;
-  // }
 }
 
 /** @ngInject */

@@ -11,7 +11,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   /**@ngInject*/
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
-    FlowChartingPlugin.init($scope,templateSrv);
+    FlowChartingPlugin.init($scope, templateSrv);
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.version = GFP.getVersion();
@@ -44,7 +44,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
     this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-    if($scope.$root.onAppEvent) $scope.$root.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
+    if ($scope.$root.onAppEvent) $scope.$root.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
   }
 
   //
@@ -150,6 +150,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       return _.map(this.templateSrv.variables, variable => `\${${variable.name}}`);
     }
     return null;
+  }
+
+  $onDestroy() {
+    console.log('$onDestroy()');
   }
 
 }

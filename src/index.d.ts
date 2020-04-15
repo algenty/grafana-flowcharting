@@ -117,6 +117,7 @@ declare module gf {
   declare type TDateFormatList = { text: string; value: TDateFormatKeys }[];
 
   declare type TVariableKeys = '_rule' | '_level' | '_value' | '_color' | '_formated';
+  declare type TVariableList = { text: string; value: TVariableKeys }[];
   declare interface TIRulesHandlerData {
     rulesData: TIRuleData[];
   }
