@@ -146,7 +146,6 @@ export default class State {
           if (event.toEventable(level)) {
             this.matched = true;
             const v = this.variables.eval(event.data.value);
-            GFUtils.log.debug('this.variables.eval(event.data.value);', v);
             this.eventState.set(k, v, level);
           }
           if (level >= rule.highestLevel) {
@@ -562,7 +561,6 @@ class EventState extends GFState {
       case 'height':
         if (this.geo !== undefined) {
           let height = Number(value);
-          console.log('value=' + value);
           if (this.isMatched('height')) {
             let width = this.isMatched('width') ? Number(this.getMatchValue('width')) : undefined;
             this.xgraph.resizeCell(this.mxcell, width, height, this.geo);
@@ -578,7 +576,6 @@ class EventState extends GFState {
 
       case 'width':
         if (this.geo !== undefined) {
-          console.log('value=' + value);
           let width = Number(value);
           if (this.isMatched('width')) {
             let height = this.isMatched('height') ? Number(this.getMatchValue('height')) : undefined;

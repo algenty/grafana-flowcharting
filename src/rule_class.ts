@@ -1529,7 +1529,7 @@ export class EventMap extends GFMap {
    * 0.7.0 : Moved to shape
    */
   toEventable(level: number): boolean {
-    return level === this.data.eventOn;
+    return this.data.eventOn === -1 || level === this.data.eventOn;
   }
 
   /**

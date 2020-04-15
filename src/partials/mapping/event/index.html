@@ -50,7 +50,7 @@
             </info-popover>
         </th>
         <th>
-          <label class="gf-form-label width-8" style="margin-right: 2px;">Action
+          <label class="gf-form-label width-10" style="margin-right: 2px;">Action
             <info-popover mode="right-normal">
               <span ng-bind-html="GFP.popover('Select action type', 'MAPPING#Thresholds')">
               </span>
@@ -112,12 +112,14 @@
         </td>
         <td>
           <select convert-to-number class="gf-form-input width-6" ng-model="event.data.eventOn" ng-change="editor.onRulesChange()">
+            <option type="number" ng-value="-1">All</option>
             <option type="number" ng-repeat="color in rule.data.colors" ng-value="$index">{{$index}}</option>
           </select>
         </td>
         <td>
-          <select class="gf-form-input width-8" ng-model="event.data.style"
-            ng-options="c.value as c.text for c in editor.EventType" ng-change="editor.onRulesChange()"></select>
+          <select class="gf-form-input width-10" ng-model="event.data.style"
+            ng-options="c.value as c.text for c in editor.EventType" ng-change="editor.onRulesChange()">
+          </select>
         </td>
         <td>
           <div class="gf-form">
