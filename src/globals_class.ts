@@ -115,8 +115,7 @@ export class GFCONSTANT {
     { text: 'Current raw value according to the aggregation', value: '_value' },
     { text: 'Current level according to the thresholds', value: '_level' },
     { text: 'Current formated value accordingto the type', value: '_formated' },
-  ]
-
+  ];
 }
 
 export class GFVariables {
@@ -125,8 +124,8 @@ export class GFVariables {
     this._variables = new Map();
   }
 
-  static getFullLocalVarNames():string[] {
-    return GFCONSTANT.LOCALVARIABLENAMES.map( x=> '${' + x.value + '}');
+  static getFullLocalVarNames(): string[] {
+    return GFCONSTANT.LOCALVARIABLENAMES.map(x => '${' + x.value + '}');
   }
 
   /**
@@ -164,7 +163,7 @@ export class GFVariables {
   }
 
   /**
-   * Return all local declared variables and grafana variables 
+   * Return all local declared variables and grafana variables
    *
    * @returns {string[]}
    * @memberof GFVariables
@@ -174,7 +173,7 @@ export class GFVariables {
   }
 
   getLocalVarsNames(): string[] {
-    return this.keys().map(x => '${' + x + '}')
+    return this.keys().map(x => '${' + x + '}');
   }
 
   /**
@@ -233,9 +232,7 @@ class GFLog {
   static ERROR = 3;
   private static logLevel = GFLog.DEBUG;
   private static logDisplay = false;
-  constructor() {
-
-  }
+  constructor() {}
 
   /**
    * If message must be displayed
@@ -368,8 +365,39 @@ export class GFUtils {
     GFUtils.getGlobalVars().set(key, value);
   }
 
-  static getFullAuthorizedVarNames():string[] {
+  static getFullAuthorizedVarNames(): string[] {
     return GFVariables.getFullLocalVarNames().concat(GFUtils.getGrafanaVars());
   }
-}
 
+  static setInterval(fc: CallableFunction, timer: number): number {
+    let interval: Set<any> = GFUtils.getVar('interval');
+    if (interval === undefined) {
+      interval = new Set();
+      GFUtils.setVar('interval', interval);
+    }
+    const newInterval = window.setInterval(fc, timer);
+    interval.add(newInterval);
+    return newInterval;
+  }
+
+  static clearInterval(key: number) {
+    let interval: Set<any> = GFUtils.getVar('interval');
+    if (interval !== undefined) {
+      try {
+        window.clearInterval(key);
+      } catch (error) {
+        GFUtils.log.warn('Failed to clear interval thread', key, error);
+      }
+      interval.delete(key);
+    }
+  }
+
+  static destroy() {
+    console.log('GFUtils.destroy');
+    let interval: Set<any> = GFUtils.getVar('interval');
+    if (interval !== undefined) {
+      interval.forEach( x => GFUtils.clearInterval(x));
+      interval.clear();
+    }
+  }
+}
