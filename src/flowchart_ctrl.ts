@@ -9,8 +9,24 @@ import MetricHandler from './metricHandler';
 import { GFUtils } from './globals_class';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
+  $rootScope: any;
+  $scope: any;
+  version: any;
+  templateSrv: any;
+  changedSource: boolean;
+  changedData: boolean;
+  changedOptions: boolean;
+  rulesHandler: undefined;
+  flowchartHandler: undefined;
+  metricHandler: undefined;
+  panelDefaults: { newFlag: boolean; format: string; valueName: string; rulesData: gf.TIRulesHandlerData; flowchartsData: gf.TFlowchartHandlerData; };
+  panel:any
+  containerDivId: string;
+  events: any;
+  dashboard: any;
+  static templateUrl: string;
   /**@ngInject*/
-  constructor($scope, $injector, $rootScope, templateSrv) {
+  constructor($scope: any, $injector: any, $rootScope: any, templateSrv: any) {
     super($scope, $injector);
     FlowChartingPlugin.init($scope, templateSrv);
     this.$rootScope = $rootScope;
@@ -56,6 +72,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Mapping', mappingOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
   }
+  addEditorTab(arg0: string, flowchartOptionsTab: ($q: any, $sce: any, uiSegmentSrv: any) => { restrict: string; scope: boolean; templateUrl: string; controller: typeof import("./flowchart_options").FlowchartOptionsCtrl; }, arg2: number) {
+    throw new Error("Method not implemented.");
+  }
 
   onRefresh() {
     // GFP.log.info( 'FlowchartCtrl.onRefresh()');
@@ -80,6 +99,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
     GFP.perf.stop('onDataReceived');
     this.render();
+  }
+  render() {
+    throw new Error("Method not implemented.");
   }
 
   onDataError() {
@@ -140,10 +162,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       modalClass: 'modal--narrow',
     });
   }
+  publishAppEvent(arg0: string, arg1: { templateHtml: string; scope: any; modalClass: string; }) {
+    throw new Error("Method not implemented.");
+  }
 
   setUnitFormat(subItem) {
     this.panel.format = subItem.value;
     this.refresh();
+  }
+  refresh() {
+    throw new Error("Method not implemented.");
   }
 
   getVariables() {
@@ -157,7 +185,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     console.log('$onDestroy()');
     GFUtils.destroy();
   }
-
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };
