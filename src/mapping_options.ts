@@ -78,7 +78,7 @@ export class MappingOptionsCtrl {
     this.getVariables = () => {
       // GFUtils.log.info('MappingOptionsCtrl.getVariables');
       // return this.panelCtrl.getVariables();
-      return GFUtils.getFullAuthorizedVarNames();
+      return GFUtils.getFullAvailableVarNames();
     };
   }
 

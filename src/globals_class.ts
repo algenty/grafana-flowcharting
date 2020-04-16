@@ -124,6 +124,13 @@ export class GFVariables {
     this._variables = new Map();
   }
 
+  /**
+   * Get the full available vars names
+   *
+   * @static
+   * @returns {string[]}
+   * @memberof GFVariables
+   */
   static getFullLocalVarNames(): string[] {
     return GFCONSTANT.LOCALVARIABLENAMES.map(x => '${' + x.value + '}');
   }
@@ -172,6 +179,12 @@ export class GFVariables {
     return GFUtils.getGrafanaVars().concat(this.getLocalVarsNames());
   }
 
+  /**
+   * Get the full names of declared local vars
+   *
+   * @returns {string[]}
+   * @memberof GFVariables
+   */
   getLocalVarsNames(): string[] {
     return this.keys().map(x => '${' + x + '}');
   }
@@ -365,10 +378,26 @@ export class GFUtils {
     GFUtils.getGlobalVars().set(key, value);
   }
 
-  static getFullAuthorizedVarNames(): string[] {
+  /**
+   * Get available variable name
+   *
+   * @static
+   * @returns {string[]}
+   * @memberof GFUtils
+   */
+  static getFullAvailableVarNames(): string[] {
     return GFVariables.getFullLocalVarNames().concat(GFUtils.getGrafanaVars());
   }
 
+  /**
+   * Add a new Intervall (window.setInterval)
+   *
+   * @static
+   * @param {CallableFunction} fc
+   * @param {number} timer
+   * @returns {number}
+   * @memberof GFUtils
+   */
   static setInterval(fc: CallableFunction, timer: number): number {
     let interval: Set<any> = GFUtils.getVar('interval');
     if (interval === undefined) {
@@ -380,6 +409,13 @@ export class GFUtils {
     return newInterval;
   }
 
+  /**
+   * Add/clear a  Intervall (window.clearInterval)
+   *
+   * @static
+   * @param {number} key
+   * @memberof GFUtils
+   */
   static clearInterval(key: number) {
     let interval: Set<any> = GFUtils.getVar('interval');
     if (interval !== undefined) {
@@ -393,7 +429,6 @@ export class GFUtils {
   }
 
   static destroy() {
-    console.log('GFUtils.destroy');
     let interval: Set<any> = GFUtils.getVar('interval');
     if (interval !== undefined) {
       interval.forEach( x => GFUtils.clearInterval(x));

@@ -154,7 +154,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   $onDestroy() {
-    console.log('$onDestroy()');
     GFUtils.destroy();
   }
 
