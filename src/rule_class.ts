@@ -1117,8 +1117,8 @@ export class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-      // Adjust for scientific notation.
-      (match[2] ? +match[2] : 0)
+        // Adjust for scientific notation.
+        (match[2] ? +match[2] : 0)
     );
   }
 }
@@ -1515,6 +1515,7 @@ export class EventMap extends GFMap {
   constructor(pattern: string, data: gf.TEventMapData) {
     super(pattern, data);
     this.data = data;
+    GFUtils.loadFile('shapestext', 'shapes2.txt');
   }
 
   /**
@@ -1541,21 +1542,32 @@ export class EventMap extends GFMap {
   }
 
   getTypeahead(): string[] {
-    const elt = EventMap.methods.find(x => x.value === this.data.style);
+    const self = this;
+    const elt = EventMap.methods.find(x => x.value === self.data.style);
     if (elt !== undefined) {
       if (!!elt.typeahead) {
         return elt.typeahead.split('|');
       }
     }
-    return [Math.random()+""];
+    if (this.data.style === 'shape') {
+      return EventMap.getFormNames();
+    }
+    return [];
   }
 
-
-  static getFormNames(): string {
-    GFUtils.loadFile('shapeform', 'shapes2.txt')
-      .then(() => console.log(GFUtils.getVar('shapeform'))
-      );
-    return '';
+  static getFormNames(): string[] {
+    GFUtils.loadFile('shapestext', 'shapes2.txt');
+    let shapesArray: string[] = GFUtils.getVar('shapesarray');
+    if (shapesArray === undefined) {
+      const shapes: string = GFUtils.getVar('shapestext');
+      if (shapes !== undefined) {
+        shapesArray = shapes.split(/\n/);
+        GFUtils.setVar('shapesarray', shapesArray);
+        return shapesArray;
+      }
+      return [];
+    }
+    return shapesArray;
   }
 
   /**

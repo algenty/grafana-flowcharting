@@ -38,6 +38,8 @@ export class MappingOptionsCtrl {
   getCellNamesById: () => any[];
   getCellNamesByValue: () => any[];
   getVariables: () => any;
+  // getEventValues: () => any;
+  getEventValues: string[];
 
   /** @ngInject */
   constructor($scope: gf.TMappingOptionsScope) {
@@ -77,10 +79,13 @@ export class MappingOptionsCtrl {
     };
 
     this.getVariables = () => {
-      // GFUtils.log.info('MappingOptionsCtrl.getVariables');
-      // return this.panelCtrl.getVariables();
       return GFUtils.getFullAvailableVarNames();
     };
+
+    // this.getEventValues = () => {
+    //   return [];
+    // };
+    this.getEventValues = [];
   }
 
   isFirstRule(index: number): boolean {
@@ -316,14 +321,13 @@ export class MappingOptionsCtrl {
     this.onRulesChange();
   }
 
-  // 
+  //
   // Events
   //
-
-  dynamicPlaceHolderEvent(event : EventMap) {
-
+  onEventValue(event: EventMap) {
+    console.log('onEventValue');
+    this.getEventValues = event.getTypeahead();
   }
-
 }
 
 /** @ngInject */
