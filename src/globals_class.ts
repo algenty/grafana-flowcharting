@@ -94,19 +94,19 @@ export class GFCONSTANT {
     { text: 'Image border', value: 'imageBorder' },
   ];
   static readonly EVENTMETHODS: gf.TStyleEventList = [
-    { text: 'Shape : Change form (text)', value: 'shape', type: 'text' },
-    { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number' },
-    { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number' },
-    { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number' },
-    { text: 'Shape : Change height (number)', value: 'height', type: 'number' },
-    { text: 'Shape : Change width (number)', value: 'width', type: 'number' },
-    { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number' },
-    { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number' },
-    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number' },
-    { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number' },
-    { text: 'Label : Replace text (text)', value: 'text', type: 'text' },
-    { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number' },
-    { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number' },
+    { text: 'Shape : Change form (text)', value: 'shape', type: 'text', placeholder: 'Shape name' },
+    { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number', placeholder: '0-360' },
+    { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number', placeholder: 'Number in ms' },
+    { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number', placeholder: '0 or 1' , typeahead: "0|1"},
+    { text: 'Shape : Change height (number)', value: 'height', type: 'number', placeholder: 'Number of px' },
+    { text: 'Shape : Change width (number)', value: 'width', type: 'number', placeholder: 'Number of px' },
+    { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number', placeholder: '0 or 1' },
+    { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number', placeholder: '0-100' },
+    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number', placeholder: '0 or 1' },
+    { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number', placeholder: '0-100' },
+    { text: 'Label : Replace text (text)', value: 'text', type: 'text', placeholder: 'Text' },
+    { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number', placeholder: 'Number' },
+    { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number', placeholder: '0-100' },
   ];
 
   static readonly LOCALVARIABLENAMES: gf.TVariableList = [
@@ -131,7 +131,7 @@ export class GFVariables {
    * @returns {string[]}
    * @memberof GFVariables
    */
-  static getFullLocalVarNames(): string[] {
+  static getAvailableLocalVarNames(): string[] {
     return GFCONSTANT.LOCALVARIABLENAMES.map(x => '${' + x.value + '}');
   }
 
@@ -176,7 +176,7 @@ export class GFVariables {
    * @memberof GFVariables
    */
   getFullVarsNames(): string[] {
-    return GFUtils.getGrafanaVars().concat(this.getLocalVarsNames());
+    return GFUtils.getGrafanaVars().concat(this.getVarsNames());
   }
 
   /**
@@ -185,7 +185,7 @@ export class GFVariables {
    * @returns {string[]}
    * @memberof GFVariables
    */
-  getLocalVarsNames(): string[] {
+  getVarsNames(): string[] {
     return this.keys().map(x => '${' + x + '}');
   }
 
@@ -245,7 +245,7 @@ class GFLog {
   static ERROR = 3;
   private static logLevel = GFLog.DEBUG;
   private static logDisplay = false;
-  constructor() {}
+  constructor() { }
 
   /**
    * If message must be displayed
@@ -386,7 +386,7 @@ export class GFUtils {
    * @memberof GFUtils
    */
   static getFullAvailableVarNames(): string[] {
-    return GFVariables.getFullLocalVarNames().concat(GFUtils.getGrafanaVars());
+    return GFVariables.getAvailableLocalVarNames().concat(GFUtils.getGrafanaVars());
   }
 
   /**
@@ -428,10 +428,42 @@ export class GFUtils {
     }
   }
 
+  static async loadFile(varName: string, fileName: string) {
+    console.log("ici")
+    let v = GFUtils.getVar(varName);
+    if (v === undefined) {
+      const filePath = `${GFUtils.getStaticPath()}/${fileName}`;
+      if (!!window.fetch) {
+        // exécuter ma requête fetch ici
+        fetch(filePath)
+          .then(response => {
+            if (response.ok) {
+              console.log("ici 2")
+              response.text()
+                .then(text => GFUtils.setVar(varName, text))
+                .catch(error => GFUtils.log.error('Error when download file', filePath, error));
+            }
+          })
+          .catch(error => GFUtils.log.error('Error when download file', filePath, error));
+      } else {
+        // Faire quelque chose avec XMLHttpRequest?
+      }
+
+    }
+  }
+
+  static getRootPath(): string {
+    return GFUtils.getVar('contextroot')
+  }
+
+  static getStaticPath(): string {
+    return `${GFUtils.getRootPath()}static`;
+  }
+
   static destroy() {
     let interval: Set<any> = GFUtils.getVar('interval');
     if (interval !== undefined) {
-      interval.forEach( x => GFUtils.clearInterval(x));
+      interval.forEach(x => GFUtils.clearInterval(x));
       interval.clear();
     }
   }

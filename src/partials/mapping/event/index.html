@@ -123,9 +123,10 @@
         </td>
         <td>
           <div class="gf-form">
-            <input type="text" style="margin-right: 2px;" placeholder="Shape form"
+            <input type="text" style="margin-right: 2px;" placeholder="{{event.getPlaceHolder()}}"
               class="gf-form-input width-8" ng-model="event.data.value" 
               bs-tooltip="'Specify value for this action'"
+              bs-typeahead='["1","2"]'
               ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
               ng-model-onblur data-placement="right" />
           </div>

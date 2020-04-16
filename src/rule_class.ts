@@ -3,7 +3,7 @@ import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
 import { Metric } from 'metric_class';
-import { GFUtils } from 'globals_class';
+import { GFUtils, GFCONSTANT } from 'globals_class';
 
 /**
  * Rule definition
@@ -1117,8 +1117,8 @@ export class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 }
@@ -1126,6 +1126,7 @@ export class Rule {
 export class GFMap {
   data: gf.TGFMapData;
   id: string;
+  static methods: any[] = [];
   constructor(pattern, data: gf.TGFMapData) {
     this.data = data;
     this.data.pattern = pattern;
@@ -1148,6 +1149,18 @@ export class GFMap {
       this.data.hidden = obj.hidden;
     }
     return this;
+  }
+
+  static getDefaultMethods() {
+    return this.methods;
+  }
+
+  static getDefaultPlaceHolder(value: string): string | undefined {
+    const elt = this.methods.find(x => x.value === value);
+    if (elt !== undefined) {
+      return elt.placeholder;
+    }
+    return undefined;
   }
 
   /**
@@ -1491,6 +1504,7 @@ export class LinkMap extends GFMap {
 
 export class EventMap extends GFMap {
   data: gf.TEventMapData;
+  static methods = GFCONSTANT.EVENTMETHODS;
 
   /**
    * Creates an instance of EventMap.
@@ -1518,6 +1532,30 @@ export class EventMap extends GFMap {
       eventOn: 0,
       value: '',
     };
+  }
+
+  getPlaceHolder(): string {
+    const ph = EventMap.getDefaultPlaceHolder(this.data.style);
+    // EventMap.getFormNames();
+    return ph !== undefined ? ph : '';
+  }
+
+  getTypeahead(): string[] {
+    const elt = EventMap.methods.find(x => x.value === this.data.style);
+    if (elt !== undefined) {
+      if (!!elt.typeahead) {
+        return elt.typeahead.split('|');
+      }
+    }
+    return [Math.random()+""];
+  }
+
+
+  static getFormNames(): string {
+    GFUtils.loadFile('shapeform', 'shapes2.txt')
+      .then(() => console.log(GFUtils.getVar('shapeform'))
+      );
+    return '';
   }
 
   /**

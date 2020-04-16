@@ -1,6 +1,6 @@
 import FlowchartHandler from './flowchartHandler';
 import RulesHandler from 'rulesHandler';
-import { Rule } from 'rule_class';
+import { Rule, EventMap } from 'rule_class';
 import { GFCONSTANT, GFUtils } from 'globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
@@ -21,7 +21,8 @@ export class MappingOptionsCtrl {
   tooltipOn = GFCONSTANT.TOOLTIP_APPLYON;
   textOn = GFCONSTANT.TEXT_APPLYON;
   textReplace = GFCONSTANT.TEXTMETHODS;
-  EventType: gf.TSelectString[] = GFCONSTANT.EVENTMETHODS;
+  // EventType: gf.TSelectString[] = GFCONSTANT.EVENTMETHODS;
+  EventType = EventMap.getDefaultMethods();
   tpDirection: gf.TSelectString[] = GFCONSTANT.TOOLTIP_DIRECTION_TYPES;
   propTypes: gf.TSelectString[] = GFCONSTANT.IDENT_TYPES;
   textPattern = '/.*/';
@@ -264,6 +265,10 @@ export class MappingOptionsCtrl {
     }
   }
 
+  //
+  // RULE
+  //
+
   /**
    * Remove a rule
    *
@@ -295,15 +300,6 @@ export class MappingOptionsCtrl {
     this.onRulesChange();
   }
 
-  // getStyleRemove(rule: Rule) {
-  //   if (rule) {
-  //     if (rule.removeClick === 1) {
-  //       return 'color:brown';
-  //     }
-  //   }
-  //   return '';
-  // }
-
   /**
    * Move rule up or down
    *
@@ -318,6 +314,14 @@ export class MappingOptionsCtrl {
       this.rulesHandler.moveRuleToDown(rule);
     }
     this.onRulesChange();
+  }
+
+  // 
+  // Events
+  //
+
+  dynamicPlaceHolderEvent(event : EventMap) {
+
   }
 
 }
