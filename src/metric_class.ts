@@ -1,6 +1,6 @@
 import grafana from './grafana_func';
 import _ from 'lodash';
-import { GFUtils } from 'globals_class';
+import { GFGlobal } from 'globals_class';
 
 /**
  * Metric parent
@@ -24,7 +24,7 @@ export class Metric {
    */
   getName(): string {
     if (this.name === undefined || this.name === null) {
-      GFUtils.log.error('Metric => getName : Name is null');
+      GFGlobal.log.error('Metric => getName : Name is null');
     }
     return this.name;
   }
@@ -107,7 +107,7 @@ export class Serie extends Metric {
       }
       return value;
     } catch (error) {
-      GFUtils.log.error('datapoint for serie is null', error);
+      GFGlobal.log.error('datapoint for serie is null', error);
       return null;
     }
   }
@@ -336,7 +336,7 @@ export class Table extends Metric {
       }
       return value;
     } catch (error) {
-      GFUtils.log.error('datapoint for table is null', error);
+      GFGlobal.log.error('datapoint for table is null', error);
       return null;
     }
   }

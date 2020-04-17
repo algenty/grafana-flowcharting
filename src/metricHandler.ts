@@ -1,7 +1,7 @@
 // import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
 import { Metric, Serie, Table } from './metric_class';
-import { GFUtils } from 'globals_class';
+import { GFGlobal } from 'globals_class';
 
 /**
  * Data Series/Tables handler
@@ -26,8 +26,8 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   initData(dataList: any) {
-    GFUtils.log.info('initData');
-    // GFUtils.log.debug('initData', dataList);
+    GFGlobal.log.info('initData');
+    // GFGlobal.log.debug('initData', dataList);
     this.tables = [];
     this.series = [];
     this.metrics = [];
@@ -36,9 +36,9 @@ export default class MetricHandler {
       this.addMetric(dl);
     });
 
-    // GFUtils.log.debug('tables : ', this.tables.length);
-    // GFUtils.log.debug('series : ', this.series.length);
-    // GFUtils.log.debug('metrics : ', this.metrics.length);
+    // GFGlobal.log.debug('tables : ', this.tables.length);
+    // GFGlobal.log.debug('series : ', this.series.length);
+    // GFGlobal.log.debug('metrics : ', this.metrics.length);
   }
 
   /**
@@ -48,7 +48,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addMetric(data: any) {
-    // GFUtils.log.debug('addMetric', data);
+    // GFGlobal.log.debug('addMetric', data);
     if (data.type === 'table') {
       this.addTable(data);
     } else {
@@ -64,7 +64,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addTable(data: any): Table {
-    GFUtils.log.info('addTable');
+    GFGlobal.log.info('addTable');
     const table = new Table(data);
     this.tables.push(table);
     this.metrics.push(table);
@@ -79,7 +79,7 @@ export default class MetricHandler {
    * @memberof MetricHandler
    */
   addSerie(data: any): Serie {
-    GFUtils.log.info('addSerie');
+    GFGlobal.log.info('addSerie');
     const serie = new Serie(data);
     this.series.push(serie);
     this.metrics.push(serie);
@@ -102,7 +102,7 @@ export default class MetricHandler {
     } else {
       names = this.metrics.map(m => m.getName());
     }
-    // GFUtils.log.debug('getNames', names);
+    // GFGlobal.log.debug('getNames', names);
     return names;
   }
 

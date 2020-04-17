@@ -2,7 +2,7 @@ import XGraph from './graph_class';
 import { Rule } from './rule_class';
 import { Metric } from './metric_class';
 import { TooltipHandler } from './tooltipHandler';
-import { GFCONSTANT, GFUtils, GFVariables } from 'globals_class';
+import { GFCONSTANT, GFGlobal, GFVariables } from 'globals_class';
 
 /**
  * Class for state of one cell
@@ -38,7 +38,7 @@ export default class State {
    * @memberof State
    */
   constructor(mxcell: mxCell, xgraph: XGraph) {
-    GFUtils.log.info('State.constructor()');
+    GFGlobal.log.info('State.constructor()');
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
@@ -48,7 +48,7 @@ export default class State {
     this.eventState = new EventState(xgraph, mxcell);
     this.textState = new TextState(xgraph, mxcell);
     this.linkState = new LinkState(xgraph, mxcell);
-    this.variables = GFUtils.createLocalVars();
+    this.variables = GFGlobal.createLocalVars();
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
     this.originalText = this.xgraph.getLabelCell(mxcell);
@@ -73,7 +73,7 @@ export default class State {
    * @memberof State
    */
   setState(rule: Rule, metric: Metric): this {
-    GFUtils.log.info('State.setState()');
+    GFGlobal.log.info('State.setState()');
     let beginPref = performance.now();
     if (!rule.isHidden() && rule.matchMetric(metric)) {
       const shapeMaps = rule.getShapeMaps();
@@ -189,7 +189,7 @@ export default class State {
    * @memberof State
    */
   unsetState(): this {
-    GFUtils.log.info('State.unsetState()');
+    GFGlobal.log.info('State.unsetState()');
     this.eventState.unset();
     this.textState.unset();
     this.linkState.unset();
@@ -253,7 +253,7 @@ export default class State {
    * @memberof State
    */
   applyState(): this {
-    GFUtils.log.info('State.applyState()');
+    GFGlobal.log.info('State.applyState()');
     if (this.matched || this.changed) {
       this.changed = true;
       this.shapeState.apply();
@@ -358,7 +358,7 @@ class GFState {
     this.matchLevel.set(key, -1);
     this.matchedKey.set(key, false);
     this.changedKey.set(key, false);
-    GFUtils.log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
+    GFGlobal.log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
   }
 
   getOriginalValue(key: string): any | undefined {
@@ -387,17 +387,17 @@ class GFState {
   apply(key?: string): this {
     if (key !== undefined) {
       if (this.isMatched(key)) {
-        GFUtils.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] MATCHED KEY=' + key);
+        GFGlobal.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] MATCHED KEY=' + key);
         let value = this.getMatchValue(key);
         try {
           this.apply_core(key, value);
         } catch (error) {
-          GFUtils.log.error('Error on reset for key ' + key, error);
+          GFGlobal.log.error('Error on reset for key ' + key, error);
         }
         this.changedKey.set(key, true);
         this.matchedKey.set(key, false);
       } else if (this.isChanged(key)) {
-        GFUtils.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] CHANGED KEY=' + key);
+        GFGlobal.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] CHANGED KEY=' + key);
         this.reset(key);
       }
     } else {
@@ -447,14 +447,14 @@ class GFState {
 
   reset(key?: string): this {
     if (key !== undefined) {
-      GFUtils.log.debug('GFState.reset from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key);
+      GFGlobal.log.debug('GFState.reset from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key);
       this.unset(key);
       let value = this.getOriginalValue(key);
       try {
         // debugger
         this.reset_core(key, value);
       } catch (error) {
-        GFUtils.log.error('Error on reset for key ' + key, error);
+        GFGlobal.log.error('Error on reset for key ' + key, error);
       }
       this.changedKey.set(key, false);
       this.matchedKey.set(key, false);
@@ -684,13 +684,13 @@ class ShapeState extends GFState {
   }
 
   init_core() {
-    GFUtils.log.info('ShapeState [' + this.mxcell.id + ']');
+    GFGlobal.log.info('ShapeState [' + this.mxcell.id + ']');
     this.keys = GFCONSTANT.COLORMETHODS.map(x => x.value);
     this.fullStylesString = this.mxcell.getStyle();
     this.keys.forEach(key => {
       const value = this.xgraph.getStyleCell(this.mxcell, key);
       this.addValue(key, value);
-      GFUtils.log.debug('ShapeState [' + this.mxcell.id + '] Add value : ' + key, value);
+      GFGlobal.log.debug('ShapeState [' + this.mxcell.id + '] Add value : ' + key, value);
     });
     this.mxcell.GF_tooltipHandler = null;
   }

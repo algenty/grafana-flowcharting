@@ -175,7 +175,7 @@ export class GFVariables {
    * @memberof GFVariables
    */
   getFullVarsNames(): string[] {
-    return GFUtils.getGrafanaVars().concat(this.getVarsNames());
+    return GFGlobal.getGrafanaVars().concat(this.getVarsNames());
   }
 
   /**
@@ -208,7 +208,7 @@ export class GFVariables {
    */
   replaceText(text: string): string {
     try {
-      let templateSrv = GFUtils.getVar('templatesrv');
+      let templateSrv = GFGlobal.getVar('templatesrv');
       text = templateSrv !== undefined ? templateSrv.replaceWithText(text) : text;
       for (let [key, value] of this._variables) {
         text = text.replace('${' + key + '}', value);
@@ -319,15 +319,23 @@ class GFLog {
   }
 }
 
-export class GFUtils {
+export class GFGlobal {
   private static _globalvars: GFVariables = new GFVariables();
   static log: GFLog = new GFLog();
+  static utils: {
+    decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string,
+    encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string,
+    loadJS: (fname: string) => void,
+    sleep: (ms: number, mess?: string) => void,
+    uniqueID: () => string,
+  } = require('./utils_raw');
+
   /**
    * Create and get local variables container
    *
    * @static
    * @returns {GFVariables}
-   * @memberof GFUtils
+   * @memberof GFGlobal
    */
   static createLocalVars(): GFVariables {
     let _v = new GFVariables();
@@ -339,17 +347,17 @@ export class GFUtils {
    *
    * @static
    * @returns {GFVariables}
-   * @memberof GFUtils
+   * @memberof GFGlobal
    */
   private static getGlobalVars(): GFVariables {
-    if (GFUtils._globalvars === undefined) {
-      GFUtils._globalvars = new GFVariables();
+    if (GFGlobal._globalvars === undefined) {
+      GFGlobal._globalvars = new GFVariables();
     }
-    return GFUtils._globalvars;
+    return GFGlobal._globalvars;
   }
 
   static getGrafanaVars(): string[] {
-    const ctrl = GFUtils.getVar('ctrl');
+    const ctrl = GFGlobal.getVar('ctrl');
     return ctrl !== undefined ? ctrl.getVariables() : [];
   }
 
@@ -359,10 +367,10 @@ export class GFUtils {
    * @static
    * @param {*} key
    * @returns {*}
-   * @memberof GFUtils
+   * @memberof GFGlobal
    */
   static getVar(key: any): any {
-    return GFUtils.getGlobalVars().get(key);
+    return GFGlobal.getGlobalVars().get(key);
   }
 
   /**
@@ -371,10 +379,10 @@ export class GFUtils {
    * @static
    * @param {*} key
    * @param {*} value
-   * @memberof GFUtils
+   * @memberof GFGlobal
    */
   static setVar(key: any, value: any) {
-    GFUtils.getGlobalVars().set(key, value);
+    GFGlobal.getGlobalVars().set(key, value);
   }
 
   /**
@@ -382,10 +390,10 @@ export class GFUtils {
    *
    * @static
    * @returns {string[]}
-   * @memberof GFUtils
+   * @memberof GFGlobal
    */
   static getFullAvailableVarNames(): string[] {
-    return GFVariables.getAvailableLocalVarNames().concat(GFUtils.getGrafanaVars());
+    return GFVariables.getAvailableLocalVarNames().concat(GFGlobal.getGrafanaVars());
   }
 
   /**
@@ -395,13 +403,13 @@ export class GFUtils {
    * @param {CallableFunction} fc
    * @param {number} timer
    * @returns {number}
-   * @memberof GFUtils
+   * @memberof GFGlobal
    */
   static setInterval(fc: CallableFunction, timer: number): number {
-    let interval: Set<any> = GFUtils.getVar('interval');
+    let interval: Set<any> = GFGlobal.getVar('interval');
     if (interval === undefined) {
       interval = new Set();
-      GFUtils.setVar('interval', interval);
+      GFGlobal.setVar('interval', interval);
     }
     const newInterval = window.setInterval(fc, timer);
     interval.add(newInterval);
@@ -413,24 +421,24 @@ export class GFUtils {
    *
    * @static
    * @param {number} key
-   * @memberof GFUtils
+   * @memberof GFGlobal
    */
   static clearInterval(key: number) {
-    let interval: Set<any> = GFUtils.getVar('interval');
+    let interval: Set<any> = GFGlobal.getVar('interval');
     if (interval !== undefined) {
       try {
         window.clearInterval(key);
       } catch (error) {
-        GFUtils.log.warn('Failed to clear interval thread', key, error);
+        GFGlobal.log.warn('Failed to clear interval thread', key, error);
       }
       interval.delete(key);
     }
   }
 
   static async loadFile(varName: string, fileName: string) {
-    let v = GFUtils.getVar(varName);
+    let v = GFGlobal.getVar(varName);
     if (v === undefined) {
-      const filePath = `${GFUtils.getStaticPath()}/${fileName}`;
+      const filePath = `${GFGlobal.getStaticPath()}/${fileName}`;
       if (!!window.fetch) {
         // exécuter ma requête fetch ici
         fetch(filePath)
@@ -438,11 +446,11 @@ export class GFUtils {
             if (response.ok) {
               console.log(`${fileName} loaded with success`)
               response.text()
-                .then(text => GFUtils.setVar(varName, text))
-                .catch(error => GFUtils.log.error('Error when download text file', filePath, error));
+                .then(text => GFGlobal.setVar(varName, text))
+                .catch(error => GFGlobal.log.error('Error when download text file', filePath, error));
             }
           })
-          .catch(error => GFUtils.log.error('Error when download file', filePath, error));
+          .catch(error => GFGlobal.log.error('Error when download file', filePath, error));
       } else {
         // Faire quelque chose avec XMLHttpRequest?
       }
@@ -451,17 +459,17 @@ export class GFUtils {
   }
 
   static getRootPath(): string {
-    return GFUtils.getVar('contextroot')
+    return GFGlobal.getVar('contextroot')
   }
 
   static getStaticPath(): string {
-    return `${GFUtils.getRootPath()}static`;
+    return `${GFGlobal.getRootPath()}static`;
   }
 
   static destroy() {
-    let interval: Set<any> = GFUtils.getVar('interval');
+    let interval: Set<any> = GFGlobal.getVar('interval');
     if (interval !== undefined) {
-      interval.forEach(x => GFUtils.clearInterval(x));
+      interval.forEach(x => GFGlobal.clearInterval(x));
       interval.clear();
     }
   }

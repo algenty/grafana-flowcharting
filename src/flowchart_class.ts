@@ -5,7 +5,7 @@ import { Rule } from 'rule_class';
 
 import FlowchartHandler from 'flowchartHandler';
 import { Metric } from 'metric_class';
-import { GFUtils } from 'globals_class';
+import { GFGlobal } from 'globals_class';
 
 /**
  * Flowchart handler
@@ -23,8 +23,8 @@ export default class Flowchart {
   states: Map<string, State> | undefined;
 
   constructor(name: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {
-    GFUtils.log.info(`flowchart[${name}].constructor()`);
-    // GFUtils.log.debug(`flowchart[${name}].constructor() data`, data);
+    GFGlobal.log.info(`flowchart[${name}].constructor()`);
+    // GFGlobal.log.debug(`flowchart[${name}].constructor() data`, data);
     this.data = data;
     this.data.name = name;
     this.container = container;
@@ -38,8 +38,8 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   import(obj: any): this {
-    GFUtils.log.info(`flowchart[${this.data.name}].import()`);
-    // GFUtils.log.debug(`flowchart[${this.data.name}].import() obj`, obj);
+    GFGlobal.log.info(`flowchart[${this.data.name}].import()`);
+    // GFGlobal.log.debug(`flowchart[${this.data.name}].import() obj`, obj);
     if (!!obj.download || this.data.download === false) {
       this.data.download = obj.download;
     }
@@ -162,10 +162,10 @@ export default class Flowchart {
             state.unsetState();
           });
         } else {
-          GFUtils.log.warn('States not defined for this rule');
+          GFGlobal.log.warn('States not defined for this rule');
         }
       } else {
-        GFUtils.log.error('updateStates => this.stateHandler undefined');
+        GFGlobal.log.error('updateStates => this.stateHandler undefined');
       }
     });
     return this;
@@ -178,7 +178,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   init(): this {
-    GFUtils.log.info(`flowchart[${this.data.name}].init()`);
+    GFGlobal.log.info(`flowchart[${this.data.name}].init()`);
     try {
       if (this.xgraph === undefined) {
         this.xgraph = new XGraph(this.container, this.data.type, this.getContent());
@@ -215,10 +215,10 @@ export default class Flowchart {
         }
         this.stateHandler = new StateHandler(this.xgraph);
       } else {
-        GFUtils.log.error('XML Graph not defined');
+        GFGlobal.log.error('XML Graph not defined');
       }
     } catch (error) {
-      GFUtils.log.error('Unable to initialize graph', error);
+      GFGlobal.log.error('Unable to initialize graph', error);
     }
     return this;
   }
@@ -251,12 +251,12 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   setStates(rules: Rule[], metrics: Metric[]): this {
-    GFUtils.log.info(`flowchart[${this.data.name}].setStates()`);
+    GFGlobal.log.info(`flowchart[${this.data.name}].setStates()`);
     if (rules === undefined) {
-      GFUtils.log.warn("Rules shoudn't be null");
+      GFGlobal.log.warn("Rules shoudn't be null");
     }
     if (metrics === undefined) {
-      GFUtils.log.warn("Metrics shoudn't be null");
+      GFGlobal.log.warn("Metrics shoudn't be null");
     }
     if (this.stateHandler) {
       this.stateHandler.setStates(rules, metrics);
@@ -286,7 +286,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   applyStates(): this {
-    GFUtils.log.info(`flowchart[${this.data.name}].applyStates()`);
+    GFGlobal.log.info(`flowchart[${this.data.name}].applyStates()`);
     if (this.stateHandler) {
       this.stateHandler.applyStates();
     }
@@ -299,7 +299,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   applyOptions() {
-    GFUtils.log.info(`flowchart[${this.data.name}].refresh()`);
+    GFGlobal.log.info(`flowchart[${this.data.name}].refresh()`);
     if (this.xgraph) {
       this.xgraph.applyGraph();
     }
@@ -323,14 +323,14 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   redraw(xmlGraph?: string) {
-    GFUtils.log.info(`flowchart[${this.data.name}].redraw()`);
+    GFGlobal.log.info(`flowchart[${this.data.name}].redraw()`);
     if (xmlGraph !== undefined) {
       this.data.xml = xmlGraph;
       if (this.xgraph) {
         this.xgraph.setXmlGraph(this.getXml(true));
       }
     } else {
-      GFUtils.log.warn('XML Content not defined');
+      GFGlobal.log.warn('XML Content not defined');
       if (this.xgraph) {
         this.xgraph.setXmlGraph(this.getXml(true));
       }
@@ -344,7 +344,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   reload() {
-    GFUtils.log.info(`flowchart[${this.data.name}].reload()`);
+    GFGlobal.log.info(`flowchart[${this.data.name}].reload()`);
     if (this.xgraph !== undefined && this.xgraph !== null) {
       this.xgraph.destroyGraph();
       this.xgraph = undefined;
@@ -473,7 +473,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   applyScale(bool: boolean): this {
-    GFUtils.log.info('Flowchart.scale()');
+    GFGlobal.log.info('Flowchart.scale()');
     if (bool !== undefined) {
       this.data.scale = bool;
     }
@@ -520,7 +520,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   getXml(replaceVarBool: boolean): string {
-    GFUtils.log.info(`flowchart[${this.data.name}].getXml()`);
+    GFGlobal.log.info(`flowchart[${this.data.name}].getXml()`);
     if (!replaceVarBool) {
       return this.data.xml;
     }
@@ -535,7 +535,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   getCsv(replaceVarBool: boolean): string {
-    GFUtils.log.info(`flowchart[${this.data.name}].getXml()`);
+    GFGlobal.log.info(`flowchart[${this.data.name}].getXml()`);
     if (!replaceVarBool) {
       return this.data.csv;
     }
@@ -563,7 +563,7 @@ export default class Flowchart {
    * @memberof Flowchart
    */
   getContent(): string {
-    GFUtils.log.info(`flowchart[${this.data.name}].getContent()`);
+    GFGlobal.log.info(`flowchart[${this.data.name}].getContent()`);
     if (this.data.download) {
       const url = this.templateSrv.replaceWithText(this.data.url);
       const content = this.loadContent(url);
@@ -580,7 +580,7 @@ export default class Flowchart {
         return this.getCsv(true);
       }
     }
-    GFUtils.log.error('type unknow', this.data.type);
+    GFGlobal.log.error('type unknow', this.data.type);
     return '';
   }
 
@@ -694,7 +694,7 @@ export default class Flowchart {
   }
 
   setMap(onMappingObj: gf.TIOnMappingObj) {
-    GFUtils.log.info(`flowchart[${this.data.name}].setMap()`);
+    GFGlobal.log.info(`flowchart[${this.data.name}].setMap()`);
     const container = this.getContainer();
     if (this.xgraph) {
       this.xgraph.setMap(onMappingObj);

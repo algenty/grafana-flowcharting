@@ -1,7 +1,7 @@
 import FlowchartHandler from './flowchartHandler';
 import RulesHandler from 'rulesHandler';
 import { Rule, EventMap } from 'rule_class';
-import { GFCONSTANT, GFUtils } from 'globals_class';
+import { GFCONSTANT, GFGlobal } from 'globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
 import MetricHandler from './metricHandler';
@@ -60,7 +60,7 @@ export class MappingOptionsCtrl {
     };
 
     this.getCellNames = (prop: gf.TPropertieKey = 'id'): string[] => {
-      GFUtils.log.info('MappingOptionsCtrl.getCellNamesForShape()');
+      GFGlobal.log.info('MappingOptionsCtrl.getCellNamesForShape()');
       prop = prop !== 'id' && prop !== 'value' ? 'id' : prop;
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp(prop);
@@ -79,7 +79,7 @@ export class MappingOptionsCtrl {
     };
 
     this.getVariables = () => {
-      return GFUtils.getFullAvailableVarNames();
+      return GFGlobal.getFullAvailableVarNames();
     };
 
     // this.getEventValues = () => {
@@ -144,7 +144,7 @@ export class MappingOptionsCtrl {
   }
 
   onRulesChange() {
-    GFUtils.log.info('MappingOptionsCtrl.onRulesChange()');
+    GFGlobal.log.info('MappingOptionsCtrl.onRulesChange()');
     this.flowchartHandler.ruleChanged();
     this.render();
     return true;

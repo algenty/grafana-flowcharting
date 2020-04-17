@@ -2,7 +2,7 @@ import Flowchart from 'flowchart_class';
 import { Rule, GFMap } from 'rule_class';
 import _ from 'lodash';
 import { Metric } from './metric_class';
-import { GFUtils } from 'globals_class';
+import { GFGlobal } from 'globals_class';
 
 /**
  * Class FlowchartHandler
@@ -41,8 +41,8 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   constructor($scope: ng.IScope, elem: any, ctrl: any, data: gf.TFlowchartHandlerData) {
-    GFUtils.log.info('FlowchartHandler.constructor()');
-    // GFUtils.log.debug('FlowchartHandler.constructor() data', data);
+    GFGlobal.log.info('FlowchartHandler.constructor()');
+    // GFGlobal.log.debug('FlowchartHandler.constructor() data', data);
     FlowchartHandler.getDefaultGraph();
     this.$scope = $scope;
     this.$elem = elem.find('.flowchart-panel__chart');
@@ -82,7 +82,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   import(obj: any): this {
-    GFUtils.log.info('FlowchartHandler.import()');
+    GFGlobal.log.info('FlowchartHandler.import()');
     this.flowcharts = [];
     if (obj !== undefined && obj !== null) {
       // For version 0.5.0 and under
@@ -187,7 +187,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   addFlowchart(name: string): Flowchart {
-    GFUtils.log.info('FlowchartHandler.addFlowchart()');
+    GFGlobal.log.info('FlowchartHandler.addFlowchart()');
     const container = this.createContainer();
     const data = Flowchart.getDefaultData();
     const flowchart = new Flowchart(name, container, this.ctrl, data);
@@ -296,7 +296,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   applyOptions(): this {
-    GFUtils.log.info(`FlowchartHandler.applyOptions()`);
+    GFGlobal.log.info(`FlowchartHandler.applyOptions()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.applyOptions();
     });
@@ -419,7 +419,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   draw(): this {
-    GFUtils.log.info(`FlowchartHandler.draw()`);
+    GFGlobal.log.info(`FlowchartHandler.draw()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.redraw();
     });
@@ -433,7 +433,7 @@ export default class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   load(): this {
-    GFUtils.log.info(`FlowchartHandler.load()`);
+    GFGlobal.log.info(`FlowchartHandler.load()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.reload();
     });

@@ -3,7 +3,7 @@ import grafana from 'grafana_func';
 import State from './state_class';
 import _ from 'lodash';
 import { Metric } from 'metric_class';
-import { GFUtils, GFCONSTANT } from 'globals_class';
+import { GFGlobal, GFCONSTANT } from 'globals_class';
 
 /**
  * Rule definition
@@ -763,7 +763,7 @@ export class Rule {
   // LINK MAPS
   //
   addLinkMap(pattern: string): LinkMap {
-    GFUtils.log.info('Rule.addLinkMap()');
+    GFGlobal.log.info('Rule.addLinkMap()');
     const data = LinkMap.getDefaultData();
     const m = new LinkMap(pattern, data);
     m.import(data);
@@ -1007,7 +1007,7 @@ export class Rule {
         const value = metric.getValue(this.data.aggregation, this.data.column);
         return value;
       } catch (error) {
-        GFUtils.log.error('datapoint for metric is null', error);
+        GFGlobal.log.error('datapoint for metric is null', error);
         return null;
       }
     }
@@ -1526,7 +1526,7 @@ export class EventMap extends GFMap {
   constructor(pattern: string, data: gf.TEventMapData) {
     super(pattern, data);
     this.data = data;
-    GFUtils.loadFile('shapestext', 'shapes2.txt');
+    GFGlobal.loadFile('shapestext', 'shapes2.txt');
   }
 
   /**
@@ -1554,7 +1554,7 @@ export class EventMap extends GFMap {
 
   getTypeahead(): string[] {
     const self = this;
-    let result = GFUtils.getFullAvailableVarNames();
+    let result = GFGlobal.getFullAvailableVarNames();
     const elt: gf.TStyleEventElt | undefined = EventMap.methods.find(x => x.value === self.data.style);
     if (elt !== undefined && elt.typeahead !== undefined) {
         result = result.concat(elt.typeahead.split('|'));
@@ -1566,13 +1566,13 @@ export class EventMap extends GFMap {
   }
 
   static getFormNames(): string[] {
-    GFUtils.loadFile('shapestext', 'shapes2.txt');
-    let shapesArray: string[] = GFUtils.getVar('shapesarray');
+    GFGlobal.loadFile('shapestext', 'shapes2.txt');
+    let shapesArray: string[] = GFGlobal.getVar('shapesarray');
     if (shapesArray === undefined) {
-      const shapes: string = GFUtils.getVar('shapestext');
+      const shapes: string = GFGlobal.getVar('shapestext');
       if (shapes !== undefined) {
         shapesArray = shapes.split(/\n/);
-        GFUtils.setVar('shapesarray', shapesArray);
+        GFGlobal.setVar('shapesarray', shapesArray);
         return shapesArray;
       }
       return [];

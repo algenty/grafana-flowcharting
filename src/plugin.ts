@@ -1,4 +1,4 @@
-import { GFUtils } from 'globals_class';
+import { GFGlobal } from 'globals_class';
 
 declare var GFP: FlowChartingPlugin;
 /**
@@ -18,14 +18,14 @@ export default class FlowChartingPlugin {
 
   constructor(contextRoot: string, templateSrv: any) {
     this.contextRoot = contextRoot;
-    GFUtils.setVar('contextroot', contextRoot);
-    GFUtils.setVar('templatesrv', templateSrv);
+    GFGlobal.setVar('contextroot', contextRoot);
+    GFGlobal.setVar('templatesrv', templateSrv);
     this.data = this.loadJson();
     this.repo = this.getRepo();
     this.perf = new Perf();
     this.log = new Log();
     this.templateSrv = templateSrv;
-    this.utils = require('./utils');
+    this.utils = require('./utils_raw');
   }
 
   /**
@@ -48,7 +48,7 @@ export default class FlowChartingPlugin {
     } else {
       contextRoot = $scope.$root.appSubUrl + FlowChartingPlugin.defaultContextRoot;
       plugin = new FlowChartingPlugin(contextRoot, templateSrv);
-      GFUtils.setVar('ctrl', $scope.ctrl);
+      GFGlobal.setVar('ctrl', $scope.ctrl);
     }
     window.GFP = plugin;
     return plugin;

@@ -6,7 +6,7 @@ import { inspectOptionsTab } from './inspect_options';
 import RulesHandler from './rulesHandler';
 import FlowchartHandler from './flowchartHandler';
 import MetricHandler from './metricHandler';
-import { GFUtils } from './globals_class';
+import { GFGlobal } from './globals_class';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
   /**@ngInject*/
@@ -154,7 +154,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   $onDestroy() {
-    GFUtils.destroy();
+    GFGlobal.destroy();
   }
 
 }
