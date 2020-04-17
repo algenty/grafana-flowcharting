@@ -1,21 +1,38 @@
+import _ from 'lodash';
 export class GFCONSTANT {
+  // CONFIG
+  static readonly CONF_FILE_SHAPES = 'shapes.txt';
+
+  // GLOBAL VARIABLE
+  static readonly VAR_STG_SHAPES = 'shapestext';
+  static readonly VAR_TBL_SHAPES = 'shapesarray';
+  static readonly VAR_STG_CTXROOT = 'contextroot';
+  static readonly VAR_OBJ_TEMPLATESRV = 'templatesrv';
+  static readonly VAR_OBJ_CTRL = 'ctrl';
+  static readonly VAR_MAP_INTERVAL = 'interval';
+  static readonly VAR_STR_RULENAME: gf.TVariableKeys = '_rule';
+  static readonly VAR_NUM_LEVEL: gf.TVariableKeys = '_level';
+  static readonly VAR_NUM_VALUE: gf.TVariableKeys = '_value';
+  static readonly VAR_STR_FORMATED: gf.TVariableKeys = '_formated';
+  static readonly VAR_STR_COLOR: gf.TVariableKeys = '_color';
+
   // CONDITIONS
-  static TOOLTIP_APPLYON: gf.TTooltipOnList = [
+  static readonly TOOLTIP_APPLYON: gf.TTooltipOnList = [
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
-  static COLOR_APPLYON: gf.TColorOnList = [
+  static readonly COLOR_APPLYON: gf.TColorOnList = [
     { text: 'Never', value: 'n' },
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
-  static TEXT_APPLYON: gf.TTextOnList = [
+  static readonly TEXT_APPLYON: gf.TTextOnList = [
     { text: 'Never', value: 'n' },
     { text: 'When Metric Displayed', value: 'wmd' },
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Critical Only', value: 'co' },
   ];
-  static LINK_APPLYON: gf.TLinkOnList = [
+  static readonly LINK_APPLYON: gf.TLinkOnList = [
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
@@ -80,7 +97,7 @@ export class GFCONSTANT {
   // METHODS
   static readonly TEXTMETHODS: gf.TTextMethodList = [
     { text: 'All content', value: 'content' },
-    { text: 'Substring', value: 'pattern' },
+    { text: 'Substring', value: 'pattern' , placeholder : '/RegEx/'},
     { text: 'Append (Space) ', value: 'as' },
     { text: 'Append (New line) ', value: 'anl' },
   ];
@@ -100,20 +117,20 @@ export class GFCONSTANT {
     { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number', placeholder: '0 or 1', typeahead: '0|1' },
     { text: 'Shape : Change height (number)', value: 'height', type: 'number', placeholder: 'Number of px' },
     { text: 'Shape : Change width (number)', value: 'width', type: 'number', placeholder: 'Number of px' },
-    { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number', placeholder: '0-100' , default : 100},
-    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number', placeholder: '0 or 1', typeahead: '0|1', default : "1" },
+    { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number', placeholder: '0-100', default: 100 },
+    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number', placeholder: '0 or 1', typeahead: '0|1', default: "1" },
     { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number', placeholder: '0-100' },
     { text: 'Label : Replace text (text)', value: 'text', type: 'text', placeholder: 'Text' },
     { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number', placeholder: 'Number' },
-    { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number', placeholder: '0-100', default : 100 },
+    { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number', placeholder: '0-100', default: 100 },
   ];
 
   static readonly LOCALVARIABLENAMES: gf.TVariableList = [
-    { text: 'Name of the rule', value: '_rule' },
-    { text: 'Current color according to the thresholds', value: '_color' },
-    { text: 'Current raw value according to the aggregation', value: '_value' },
-    { text: 'Current level according to the thresholds', value: '_level' },
-    { text: 'Current formated value accordingto the type', value: '_formated' },
+    { text: 'Name of the rule', value: GFCONSTANT.VAR_STR_RULENAME },
+    { text: 'Current color according to the thresholds', value: GFCONSTANT.VAR_STR_COLOR },
+    { text: 'Current raw value according to the aggregation', value: GFCONSTANT.VAR_NUM_VALUE },
+    { text: 'Current level according to the thresholds', value: GFCONSTANT.VAR_NUM_LEVEL },
+    { text: 'Current formated value accordingto the type', value: GFCONSTANT.VAR_STR_FORMATED },
   ];
 }
 
@@ -208,7 +225,7 @@ export class GFVariables {
    */
   replaceText(text: string): string {
     try {
-      let templateSrv = GFGlobal.getVar('templatesrv');
+      let templateSrv = GFGlobal.getVar(GFCONSTANT.VAR_OBJ_TEMPLATESRV);
       text = templateSrv !== undefined ? templateSrv.replaceWithText(text) : text;
       for (let [key, value] of this._variables) {
         text = text.replace('${' + key + '}', value);
@@ -244,7 +261,7 @@ class GFLog {
   static ERROR = 3;
   private static logLevel = GFLog.DEBUG;
   private static logDisplay = false;
-  constructor() {}
+  constructor() { }
 
   /**
    * If message must be displayed
@@ -357,8 +374,11 @@ export class GFGlobal {
   }
 
   static getGrafanaVars(): string[] {
-    const ctrl = GFGlobal.getVar('ctrl');
-    return ctrl !== undefined ? ctrl.getVariables() : [];
+    const templateSrv = GFGlobal.getVar(GFCONSTANT.VAR_OBJ_TEMPLATESRV);
+    if (templateSrv !== undefined && templateSrv !== null) {
+      return _.map(templateSrv.variables, variable => `\${${variable.name}}`);
+    }
+    return [];
   }
 
   /**
@@ -420,10 +440,10 @@ export class GFGlobal {
    * @memberof GFGlobal
    */
   static setInterval(fc: CallableFunction, timer: number): number {
-    let interval: Set<any> = GFGlobal.getVar('interval');
+    let interval: Set<any> = GFGlobal.getVar(GFCONSTANT.VAR_MAP_INTERVAL);
     if (interval === undefined) {
       interval = new Set();
-      GFGlobal.setVar('interval', interval);
+      GFGlobal.setVar(GFCONSTANT.VAR_MAP_INTERVAL, interval);
     }
     const newInterval = window.setInterval(fc, timer);
     interval.add(newInterval);
@@ -438,7 +458,7 @@ export class GFGlobal {
    * @memberof GFGlobal
    */
   static clearInterval(key: number) {
-    let interval: Set<any> = GFGlobal.getVar('interval');
+    let interval: Set<any> = GFGlobal.getVar(GFCONSTANT.VAR_MAP_INTERVAL);
     if (interval !== undefined) {
       try {
         window.clearInterval(key);
@@ -473,7 +493,7 @@ export class GFGlobal {
   }
 
   static getRootPath(): string {
-    return GFGlobal.getVar('contextroot');
+    return GFGlobal.getVar(GFCONSTANT.VAR_STG_CTXROOT);
   }
 
   static getStaticPath(): string {

@@ -131,27 +131,27 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     GFP.perf.stop(`${this.constructor.name}.link()`);
   }
 
-  exportSVG() {
-    const scope = this.$scope.$new(true);
-    scope.panel = 'table';
-    this.publishAppEvent('show-modal', {
-      templateHtml: '<export-data-modal panel="panel" data="tableData"></export-data-modal>',
-      scope,
-      modalClass: 'modal--narrow',
-    });
-  }
+  // exportSVG() {
+  //   const scope = this.$scope.$new(true);
+  //   scope.panel = 'table';
+  //   this.publishAppEvent('show-modal', {
+  //     templateHtml: '<export-data-modal panel="panel" data="tableData"></export-data-modal>',
+  //     scope,
+  //     modalClass: 'modal--narrow',
+  //   });
+  // }
 
-  setUnitFormat(subItem) {
-    this.panel.format = subItem.value;
-    this.refresh();
-  }
+  // setUnitFormat(subItem) {
+  //   this.panel.format = subItem.value;
+  //   this.refresh();
+  // }
 
-  getVariables() {
-    if (this.templateSrv !== undefined && this.templateSrv !== null) {
-      return _.map(this.templateSrv.variables, variable => `\${${variable.name}}`);
-    }
-    return null;
-  }
+  // getVariables() {
+  //   if (this.templateSrv !== undefined && this.templateSrv !== null) {
+  //     return _.map(this.templateSrv.variables, variable => `\${${variable.name}}`);
+  //   }
+  //   return null;
+  // }
 
   $onDestroy() {
     GFGlobal.destroy();

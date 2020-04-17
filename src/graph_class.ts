@@ -886,18 +886,15 @@ export default class XGraph {
   async setStyleAnimCell(mxcell: mxCell, style: any, endValue: string | null, beginValue?: string) {
     if (this.animation && endValue !== null) {
       try {
-        // console.log('style: ' + style + ', beginValue: ' + beginValue + ', endValue: ' + endValue + '');
         const end = Number(endValue);
         const begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
         if (end !== begin) {
           const steps = GFGlobal.getIntervalCounter(begin, end, 5);
-          // console.log('steps', steps);
           const l = steps.length;
           let count = 0;
           const self = this;
           function graduate(count, steps) {
             if (count < l) {
-              // console.log(style + ' [ ' + count + ' ] : ' + steps[count]);
               self.setStyleCell(mxcell, style, steps[count]);
               window.setTimeout(() => {
                 graduate(count + 1, steps);
@@ -1207,7 +1204,6 @@ export default class XGraph {
   // BLINK
   async blinkCell(cell: mxCell, ms: number) {
     if (!cell.blink) {
-      // console.log("blinkCell")
       const self = this;
       const bl_on = function () {
         const color = '#f5f242';
@@ -1254,8 +1250,6 @@ export default class XGraph {
 
   async unblinkCell(cell: mxCell) {
     if (cell && cell.blink) {
-      // console.log("unblinkCell")
-      // window.clearInterval(cell.blink);
       GFGlobal.clearInterval(cell.blink);
       if (cell.blink_on) {
         const hl = cell.blink_on;

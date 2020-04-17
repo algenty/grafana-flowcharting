@@ -1119,8 +1119,8 @@ export class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 }
@@ -1525,7 +1525,7 @@ export class EventMap extends GFMap {
   constructor(pattern: string, data: gf.TEventMapData) {
     super(pattern, data);
     this.data = data;
-    GFGlobal.loadFile('shapestext', 'shapes2.txt');
+    GFGlobal.loadFile(GFCONSTANT.VAR_STG_SHAPES, GFCONSTANT.CONF_FILE_SHAPES);
   }
 
   /**
@@ -1564,19 +1564,19 @@ export class EventMap extends GFMap {
     return result;
   }
 
-  getValueByDefault() : string {
+  getValueByDefault(): string {
     const vbd = EventMap.getDefaultValue(this.data.style);
     return vbd !== undefined ? vbd : '';
   }
 
   static getFormNames(): string[] {
-    GFGlobal.loadFile('shapestext', 'shapes2.txt');
-    let shapesArray: string[] = GFGlobal.getVar('shapesarray');
+    GFGlobal.loadFile(GFCONSTANT.VAR_STG_SHAPES, GFCONSTANT.CONF_FILE_SHAPES);
+    let shapesArray: string[] = GFGlobal.getVar(GFCONSTANT.VAR_TBL_SHAPES);
     if (shapesArray === undefined) {
-      const shapes: string = GFGlobal.getVar('shapestext');
+      const shapes: string = GFGlobal.getVar(GFCONSTANT.VAR_STG_SHAPES);
       if (shapes !== undefined) {
         shapesArray = shapes.split(/\n/);
-        GFGlobal.setVar('shapesarray', shapesArray);
+        GFGlobal.setVar(GFCONSTANT.VAR_TBL_SHAPES, shapesArray);
         return shapesArray;
       }
       return [];

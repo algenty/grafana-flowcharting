@@ -74,7 +74,6 @@ export default class State {
    */
   setState(rule: Rule, metric: Metric): this {
     GFGlobal.log.info('State.setState()');
-    console.log('State.setState()');
     let beginPref = performance.now();
     if (!rule.isHidden() && rule.matchMetric(metric)) {
       const shapeMaps = rule.getShapeMaps();
@@ -85,11 +84,11 @@ export default class State {
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
       const color = rule.data.gradient && rule.data.type === 'number' ? rule.getColorForValue(value) : rule.getColorForLevel(level);
-      this.variables.set('_rule', rule.data.pattern);
-      this.variables.set('_value', value);
-      this.variables.set('_formated', value);
-      this.variables.set('_level', level);
-      this.variables.set('_color', color);
+      this.variables.set(GFCONSTANT.VAR_STR_RULENAME, rule.data.pattern);
+      this.variables.set(GFCONSTANT.VAR_NUM_VALUE, value);
+      this.variables.set(GFCONSTANT.VAR_STR_FORMATED, value);
+      this.variables.set(GFCONSTANT.VAR_NUM_LEVEL, level);
+      this.variables.set(GFCONSTANT.VAR_STR_COLOR, color);
 
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
@@ -350,7 +349,7 @@ class GFState {
     this.init_core();
   }
 
-  init_core() {}
+  init_core() { }
 
   addValue(key: string, value: any) {
     this.originalValue.set(key, value);
@@ -409,7 +408,7 @@ class GFState {
     return this;
   }
 
-  apply_core(key: any, value: any) {}
+  apply_core(key: any, value: any) { }
 
   isMatched(key?: string): boolean {
     if (key !== undefined) {
@@ -467,7 +466,7 @@ class GFState {
     return this;
   }
 
-  reset_core(key: any, value: any) {}
+  reset_core(key: any, value: any) { }
 
   prepare(): this {
     if (this.isChanged()) {
@@ -487,11 +486,11 @@ class EventState extends GFState {
   keys: gf.TStyleEventKeys[] = [];
   geo:
     | {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-      }
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }
     | undefined = undefined;
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);
@@ -508,7 +507,6 @@ class EventState extends GFState {
   }
 
   async apply_core(key: gf.TStyleEventKeys, value: any) {
-    console.log('apply_core');
     if (value === undefined) {
       value = null;
     }
@@ -516,7 +514,6 @@ class EventState extends GFState {
   }
 
   async reset_core(key: gf.TStyleEventKeys, value: any) {
-    console.log('reset_core');
     if (value === undefined) {
       value = null;
     }
@@ -589,7 +586,6 @@ class EventState extends GFState {
       case 'textOpacity':
       case 'rotation':
         beginValue = this._get(key);
-        // console.log('Current value for ' + key + ' : ' + beginValue);
         beginValue = beginValue === undefined ? EventMap.getDefaultValue(key) : beginValue;
         this.xgraph.setStyleAnimCell(this.mxcell, key, value, beginValue);
         break;
@@ -619,12 +615,10 @@ class EventState extends GFState {
         break;
 
       case 'height':
-        // this.geo = this.xgraph.getSizeCell(this.mxcell);
         return this.geo !== undefined ? this.geo.height : undefined;
         break;
 
       case 'width':
-        // this.geo = this.xgraph.getSizeCell(this.mxcell);
         return this.geo !== undefined ? this.geo.width : undefined;
         break;
 
