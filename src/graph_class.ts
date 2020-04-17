@@ -710,7 +710,7 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  removeOverlay(mxcell: mxCell):this {
+  removeOverlay(mxcell: mxCell): this {
     this.graph.removeCellOverlays(mxcell);
     return this;
   }
@@ -723,7 +723,7 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  addLink(mxcell: mxCell, link):this {
+  addLink(mxcell: mxCell, link): this {
     this.graph.setLinkForCell(mxcell, link);
     return this;
   }
@@ -879,10 +879,39 @@ export default class XGraph {
    * @memberof XGraph
    */
   setStyleCell(mxcell: mxCell, style: any, value: string | null): this {
-    // if (value !== null) {
     this.graph.setCellStyles(style, value, [mxcell]);
-    // }
     return this;
+  }
+
+  async setStyleAnimCell(mxcell: mxCell, style: any, endValue: string | null, beginValue?: string) {
+    if (this.animation && endValue !== null) {
+      try {
+        console.log('style: ' + style + ', beginValue: ' + beginValue + ', endValue: ' + endValue + '');
+        const end = Number(endValue);
+        const begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
+        if (end !== begin) {
+          const steps = GFGlobal.getIntervalCounter(begin, end, 5);
+          console.log('steps', steps);
+          const l = steps.length;
+          let count = 0;
+          const self = this;
+          function graduate(count, steps) {
+            if (count < l) {
+              console.log(style + ' [ ' + count + ' ] : ' + steps[count]);
+              self.setStyleCell(mxcell, style, steps[count]);
+              window.setTimeout(() => {
+                graduate(count + 1, steps);
+              }, 50);
+            }
+          }
+          graduate(count, steps);
+        }
+      } catch (error) {
+        this.graph.setCellStyles(style, endValue, [mxcell]);
+      }
+    } else {
+      this.graph.setCellStyles(style, endValue, [mxcell]);
+    }
   }
 
   /**

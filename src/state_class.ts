@@ -74,6 +74,7 @@ export default class State {
    */
   setState(rule: Rule, metric: Metric): this {
     GFGlobal.log.info('State.setState()');
+    console.log('State.setState()');
     let beginPref = performance.now();
     if (!rule.isHidden() && rule.matchMetric(metric)) {
       const shapeMaps = rule.getShapeMaps();
@@ -507,6 +508,7 @@ class EventState extends GFState {
   }
 
   async apply_core(key: gf.TStyleEventKeys, value: any) {
+    console.log('apply_core');
     if (value === undefined) {
       value = null;
     }
@@ -514,6 +516,7 @@ class EventState extends GFState {
   }
 
   async reset_core(key: gf.TStyleEventKeys, value: any) {
+    console.log('reset_core');
     if (value === undefined) {
       value = null;
     }
@@ -524,6 +527,7 @@ class EventState extends GFState {
     if (value === undefined) {
       value = null;
     }
+    let beginValue: any = undefined;
     switch (key) {
       case 'text':
         value = String(value);
@@ -578,6 +582,17 @@ class EventState extends GFState {
             }
           }
         }
+        break;
+      case 'barPos':
+      case 'fontSize':
+      case 'opacity':
+      case 'textOpacity':
+      case 'rotation':
+        beginValue = this._get(key);
+        console.log('Current value for ' + key + ' : ' + beginValue);
+        beginValue = this._get(key);
+        beginValue = beginValue === undefined ? 0 : beginValue;
+        this.xgraph.setStyleAnimCell(this.mxcell, key, value, beginValue);
         break;
 
       case 'blink':

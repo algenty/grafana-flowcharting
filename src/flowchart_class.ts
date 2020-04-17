@@ -252,6 +252,7 @@ export default class Flowchart {
    */
   setStates(rules: Rule[], metrics: Metric[]): this {
     GFGlobal.log.info(`flowchart[${this.data.name}].setStates()`);
+    console.log(`flowchart[${this.data.name}].setStates()`);
     if (rules === undefined) {
       GFGlobal.log.warn("Rules shoudn't be null");
     }

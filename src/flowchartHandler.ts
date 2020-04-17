@@ -357,6 +357,7 @@ export default class FlowchartHandler {
    */
   setStates(rules: Rule[], metrics: any[]): this {
     GFP.perf.start(`${this.constructor.name}.setStates()`);
+    console.log(`${this.constructor.name}.setStates()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.setStates(rules, metrics);
     });

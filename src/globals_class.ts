@@ -95,17 +95,17 @@ export class GFCONSTANT {
   ];
   static readonly EVENTMETHODS: gf.TStyleEventList = [
     { text: 'Shape : Change form (text)', value: 'shape', type: 'text', placeholder: 'Shape name' },
-    { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number', placeholder: '0-360' },
-    { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number', placeholder: 'Number in ms' },
-    { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number', placeholder: '0 or 1', typeahead: "0|1" },
+    { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number', placeholder: '0-360', default: 0 },
+    { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number', placeholder: 'Number in ms', default: 500 },
+    { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number', placeholder: '0 or 1', typeahead: '0|1' },
     { text: 'Shape : Change height (number)', value: 'height', type: 'number', placeholder: 'Number of px' },
     { text: 'Shape : Change width (number)', value: 'width', type: 'number', placeholder: 'Number of px' },
-    { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number', placeholder: '0-100' },
-    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number', placeholder: '0 or 1', typeahead: "0|1" },
+    { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number', placeholder: '0-100' , default : 100},
+    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number', placeholder: '0 or 1', typeahead: '0|1', default : "1" },
     { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number', placeholder: '0-100' },
     { text: 'Label : Replace text (text)', value: 'text', type: 'text', placeholder: 'Text' },
     { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number', placeholder: 'Number' },
-    { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number', placeholder: '0-100' },
+    { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number', placeholder: '0-100', default : 100 },
   ];
 
   static readonly LOCALVARIABLENAMES: gf.TVariableList = [
@@ -244,7 +244,7 @@ class GFLog {
   static ERROR = 3;
   private static logLevel = GFLog.DEBUG;
   private static logDisplay = false;
-  constructor() { }
+  constructor() {}
 
   /**
    * If message must be displayed
@@ -323,11 +323,11 @@ export class GFGlobal {
   private static _globalvars: GFVariables = new GFVariables();
   static log: GFLog = new GFLog();
   static utils: {
-    decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string,
-    encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string,
-    loadJS: (fname: string) => void,
-    sleep: (ms: number, mess?: string) => void,
-    uniqueID: () => string,
+    decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
+    encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
+    loadJS: (fname: string) => void;
+    sleep: (ms: number, mess?: string) => void;
+    uniqueID: () => string;
   } = require('./utils_raw');
 
   /**
@@ -396,14 +396,13 @@ export class GFGlobal {
     return GFVariables.getAvailableLocalVarNames().concat(GFGlobal.getGrafanaVars());
   }
 
-  static getIntervalCounter(begin : number, end: number, method :gf.TCounterKeys = 'linear') : number[] {
-    const countElt = 10;
-    let result:number[] = []
+  static getIntervalCounter(begin: number, end: number, count: number, method: gf.TCounterKeys = 'linear'): number[] {
+    let result: number[] = [];
     const distance = end - begin;
-    const step = Math.round(distance / countElt);
-    let current= begin;
-    let index = 0
-    for (index = 0; index < countElt; index++) {
+    const step = Math.round(distance / count);
+    let current = begin;
+    let index = 0;
+    for (index = 0; index < count; index++) {
       current += step;
       result.push(current);
     }
@@ -459,8 +458,9 @@ export class GFGlobal {
         fetch(filePath)
           .then(response => {
             if (response.ok) {
-              console.log(`${fileName} loaded with success`)
-              response.text()
+              console.log(`${fileName} loaded with success`);
+              response
+                .text()
                 .then(text => GFGlobal.setVar(varName, text))
                 .catch(error => GFGlobal.log.error('Error when download text file', filePath, error));
             }
@@ -469,12 +469,11 @@ export class GFGlobal {
       } else {
         // Faire quelque chose avec XMLHttpRequest?
       }
-
     }
   }
 
   static getRootPath(): string {
-    return GFGlobal.getVar('contextroot')
+    return GFGlobal.getVar('contextroot');
   }
 
   static getStaticPath(): string {

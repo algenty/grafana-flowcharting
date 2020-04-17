@@ -946,8 +946,6 @@ export class Rule {
         return 0;
       }
 
-      console.log('thresholds',thresholds)
-      
       let l = thresholds.length;
       for (let index = 0; index < l; index++) {
         const t = thresholds[index];
@@ -971,24 +969,17 @@ export class Rule {
         return 0;
       }
       let l = thresholds.length;
-      console.log('thresholds',thresholds)
-      console.log('thresholds.length',l)
       for (let index = 0; index < l; index++) {
-        console.log('index',index)
         const t = thresholds[index];
-        console.log('thresholds[index]',t)
         if (GFP.utils.matchString(value, t) || GFP.utils.matchString(formatedValue, t)) {
-          console.log('matchString',true)
           thresholdLevel = index + 1;
           break;
         }
       }
-      console.log('after for thresholdLevel',thresholdLevel)
-      
+
       if (!this.data.invert) {
         thresholdLevel = this.data.colors.length - 1 - thresholdLevel;
       }
-      console.log('before return thresholdLevel',thresholdLevel)
       return thresholdLevel;
     }
     return 0;
@@ -1128,8 +1119,8 @@ export class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-      // Adjust for scientific notation.
-      (match[2] ? +match[2] : 0)
+        // Adjust for scientific notation.
+        (match[2] ? +match[2] : 0)
     );
   }
 }
@@ -1557,7 +1548,7 @@ export class EventMap extends GFMap {
     let result = GFGlobal.getFullAvailableVarNames();
     const elt: gf.TStyleEventElt | undefined = EventMap.methods.find(x => x.value === self.data.style);
     if (elt !== undefined && elt.typeahead !== undefined) {
-        result = result.concat(elt.typeahead.split('|'));
+      result = result.concat(elt.typeahead.split('|'));
     }
     if (this.data.style === 'shape') {
       result = EventMap.getFormNames().concat(result);
