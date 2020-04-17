@@ -1,5 +1,5 @@
 import XGraph from './graph_class';
-import { Rule } from './rule_class';
+import { Rule, EventMap } from './rule_class';
 import { Metric } from './metric_class';
 import { TooltipHandler } from './tooltipHandler';
 import { GFCONSTANT, GFGlobal, GFVariables } from 'globals_class';
@@ -589,9 +589,8 @@ class EventState extends GFState {
       case 'textOpacity':
       case 'rotation':
         beginValue = this._get(key);
-        console.log('Current value for ' + key + ' : ' + beginValue);
-        beginValue = this._get(key);
-        beginValue = beginValue === undefined ? 0 : beginValue;
+        // console.log('Current value for ' + key + ' : ' + beginValue);
+        beginValue = beginValue === undefined ? EventMap.getDefaultValue(key) : beginValue;
         this.xgraph.setStyleAnimCell(this.mxcell, key, value, beginValue);
         break;
 

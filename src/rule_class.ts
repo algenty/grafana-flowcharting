@@ -1165,6 +1165,14 @@ export class GFMap {
     return undefined;
   }
 
+  static getDefaultValue(value: string): string | undefined {
+    const elt = this.methods.find(x => x.value === value);
+    if (elt !== undefined) {
+      return elt.default;
+    }
+    return undefined;
+  }
+
   /**
    * Return if text match pattern
    *
@@ -1554,6 +1562,11 @@ export class EventMap extends GFMap {
       result = EventMap.getFormNames().concat(result);
     }
     return result;
+  }
+
+  getValueByDefault() : string {
+    const vbd = EventMap.getDefaultValue(this.data.style);
+    return vbd !== undefined ? vbd : '';
   }
 
   static getFormNames(): string[] {

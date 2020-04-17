@@ -886,18 +886,18 @@ export default class XGraph {
   async setStyleAnimCell(mxcell: mxCell, style: any, endValue: string | null, beginValue?: string) {
     if (this.animation && endValue !== null) {
       try {
-        console.log('style: ' + style + ', beginValue: ' + beginValue + ', endValue: ' + endValue + '');
+        // console.log('style: ' + style + ', beginValue: ' + beginValue + ', endValue: ' + endValue + '');
         const end = Number(endValue);
         const begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
         if (end !== begin) {
           const steps = GFGlobal.getIntervalCounter(begin, end, 5);
-          console.log('steps', steps);
+          // console.log('steps', steps);
           const l = steps.length;
           let count = 0;
           const self = this;
           function graduate(count, steps) {
             if (count < l) {
-              console.log(style + ' [ ' + count + ' ] : ' + steps[count]);
+              // console.log(style + ' [ ' + count + ' ] : ' + steps[count]);
               self.setStyleCell(mxcell, style, steps[count]);
               window.setTimeout(() => {
                 graduate(count + 1, steps);
@@ -1209,7 +1209,7 @@ export default class XGraph {
     if (!cell.blink) {
       // console.log("blinkCell")
       const self = this;
-      const bl_on = function() {
+      const bl_on = function () {
         const color = '#f5f242';
         const opacity = 100;
         const state = self.graph.view.getState(cell);
@@ -1230,7 +1230,7 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function() {
+      const bl_off = function () {
         if (cell && cell.blink_on) {
           const hl = cell.blink_on;
           // Fades out the highlight after a duration
@@ -1333,10 +1333,31 @@ export default class XGraph {
       _y = height !== undefined && height < 0 ? _y + height + _oh : _y;
       let _h = height !== undefined ? Math.abs(height) : origine !== undefined ? origine.height : geo.height;
       let _w = width !== undefined ? Math.abs(width) : origine !== undefined ? origine.width : geo.width;
-      const _rec = new mxRectangle(_x, _y, _w, _h);
-      this.graph.resizeCell(mxcell, _rec, true);
+      if (this.animation) {
+        const steps_x = GFGlobal.getIntervalCounter(geo.x, _x, 5);
+        const steps_y = GFGlobal.getIntervalCounter(geo.y, _y, 5);
+        const steps_w = GFGlobal.getIntervalCounter(geo.width, _w, 5);
+        const steps_h = GFGlobal.getIntervalCounter(geo.height, _h, 5);
+        const l = steps_x.length;
+        let count = 0;
+        const self = this;
+        function graduate(count, steps_x, steps_y, steps_w, steps_h) {
+          if (count < l) {
+            window.setTimeout(() => {
+              const _rec = new mxRectangle(steps_x[count], steps_y[count], steps_w[count], steps_h[count]);
+              self.graph.resizeCell(mxcell, _rec, true);
+              graduate(count + 1, steps_x, steps_y, steps_w, steps_h);
+            }, 50);
+          }
+        }
+        graduate(count, steps_x, steps_y, steps_w, steps_h);
+      } else {
+        const _rec = new mxRectangle(_x, _y, _w, _h);
+        this.graph.resizeCell(mxcell, _rec, true);
+      }
     }
   }
+
 
   getSizeCell(mxcell: mxCell): mxGeometry {
     return this.graph.model.getGeometry(mxcell);
