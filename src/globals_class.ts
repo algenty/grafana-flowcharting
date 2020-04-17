@@ -97,7 +97,7 @@ export class GFCONSTANT {
   // METHODS
   static readonly TEXTMETHODS: gf.TTextMethodList = [
     { text: 'All content', value: 'content' },
-    { text: 'Substring', value: 'pattern' , placeholder : '/RegEx/'},
+    { text: 'Substring', value: 'pattern', placeholder: '/RegEx/' },
     { text: 'Append (Space) ', value: 'as' },
     { text: 'Append (New line) ', value: 'anl' },
   ];
