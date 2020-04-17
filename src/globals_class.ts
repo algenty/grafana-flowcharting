@@ -396,6 +396,21 @@ export class GFGlobal {
     return GFVariables.getAvailableLocalVarNames().concat(GFGlobal.getGrafanaVars());
   }
 
+  static getIntervalCounter(begin : number, end: number, method :gf.TCounterKeys = 'linear') : number[] {
+    const countElt = 10;
+    let result:number[] = []
+    const distance = end - begin;
+    const step = Math.round(distance / countElt);
+    let current= begin;
+    let index = 0
+    for (index = 0; index < countElt; index++) {
+      current += step;
+      result.push(current);
+    }
+    result[index] = end;
+    return result;
+  }
+
   /**
    * Add a new Intervall (window.setInterval)
    *

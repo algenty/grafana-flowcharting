@@ -67,7 +67,8 @@ declare module gf {
   }
   declare type TGraphCoordinate = { x?: number, y: number };
   declare type TGraphScaleKeys = 'linear' | 'log';
-  declare type TGraphScaleList = { text: string, value: TGraphScaleKeys }[];
+  declare type TGraphScaleElt = { text: string, value: TGraphScaleKeys };
+  declare type TGraphScaleList = TGraphScaleElt[];
   declare type TGraphSizeKeys = '100%' | '100px' | '200px' | '400px';
   declare type TGraphSizeList = { text: string, value: TGraphSizeKeys }[];
   declare interface TGraphSizeInt extends TSelectString {
@@ -77,6 +78,11 @@ declare module gf {
   declare interface TSelectGraphScale extends TSelectString {
     value: TGraphScaleKeys;
   }
+
+  declare type TCounterKeys = 'linear'| 'progressive';
+  declare type TCounterElt = { text: string, value: TCounterKeys };
+  declare type TCounterList = TCounterElt[];
+
 
   // Range or value
   declare type TValueMappingKeys = 1 | 2;

@@ -842,7 +842,7 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  setColorCell(mxcell: mxCell, style: gf.TStyleColorKeys, color: string | null): this {
+  setColorAnimCell(mxcell: mxCell, style: gf.TStyleColorKeys, color: string | null): this {
     if (this.animation) {
       try {
         const endColor = this.getStyleCell(mxcell, style);

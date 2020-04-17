@@ -699,14 +699,14 @@ class ShapeState extends GFState {
     if (value === undefined) {
       value = null;
     }
-    this.xgraph.setColorCell(this.mxcell, key, value);
+    this.xgraph.setColorAnimCell(this.mxcell, key, value);
   }
 
   async reset_core(key: gf.TStyleColorKeys, value: any) {
     if (value === undefined) {
       value = null;
     }
-    this.xgraph.setColorCell(this.mxcell, key, value);
+    this.xgraph.setColorAnimCell(this.mxcell, key, value);
   }
 
   // reset(key?: gf.TStyleColorKeys): this {
