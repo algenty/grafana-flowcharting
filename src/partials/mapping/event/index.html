@@ -127,6 +127,8 @@
               class="gf-form-input width-8" ng-model="event.data.value" 
               bs-tooltip="'Specify value for this action'"
               bs-typeahead="editor.getEventValues"
+              data-min-length="0"
+              data-items="100"
               ng-focus="editor.onEventValue(event)"
               ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
               ng-model-onblur data-placement="right" />

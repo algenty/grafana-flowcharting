@@ -50,14 +50,11 @@ Arnaud
   - Add option to disable regex for best perf  
   - Add 2 new color modes in Color mapping section : "Label background" and "Label borber" 
   - Add perf stat on rule title
-  - TODO : icons : DONE
   - New custom variables for fiels (Text Mapping 'with', Link Mapping 'Url' and Event Mapping 'Value')
   - TODO : Fix inspect
   - TODO : Remove 
   - TODO : FIX Mapping id/value
-  - TODO : Restore default style in event not work : DONE
   - TODO : Verify replace var grafana
-  - TODO : Verify substring text mapping : didn't work
   - TODO : Progressif change style when numeric
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
@@ -66,7 +63,6 @@ Arnaud
   - Level State with range or value mapping.
   - Lock always true in flowchart option [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/138) 
   - TODO : Scale in graph not correct
-  - TODO : Fix default color in string type
   - Fix Remove link
   - Fix range value Min and Max range when 'from' or 'to' is empty
   - Fix 'With' field in text mapping, empty after clone or save/reload
@@ -200,28 +196,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 1.0 Next/Requested enhancements
   - [ ] Custom libs.
   - [X] Internat draw.io website [(issue #43)](https://github.com/algenty/grafana-flowcharting/issues/43)  
-  - [X] Display tooltip (done in 0.4.0)
+  - [X] Display tooltip (0.4.0)
   - [ ] Export SVG, png,  options
-  - [X] Add data in tooltip (done in 0.4.0)
-  - [X] Use variables/templates in graph (done in 0.4.0)
-  - [X] Add custom stencils/libs from draw.io (done in 0.4.0)
+  - [X] Add data in tooltip (0.4.0)
+  - [X] Use variables/templates in graph (0.4.0)
+  - [X] Add custom stencils/libs from draw.io (0.4.0)
   - [X] Progressive change color like gauge
   - [ ] Support light theme
   - [ ] Annotation
   - [X] Tooltips on text and arrow/line
-  - [X] Url source download (done in 0.4.0)
+  - [X] Url source download (0.4.0)
   - [ ] Special rule according level (hide, show, change form, move, infront, in back, attributes,  ...)
-  - [ ] Custom variables like ${_label},${_value}, ${_alias}, ${_rule}, ${_level} ...
-  - [X] Variable support in link (done in 0.5.0)
-  - [X] Zoom/Unzoom (done in 0.4.0)
+  - [X] Custom variables like ${_label},${_value}, ${_alias}, ${_rule}, ${_level} ... (0.8.0)
+  - [X] Variable support in link (0.5.0)
+  - [X] Zoom/Unzoom (0.4.0)
   - [ ] Shared graph crosshair
   - [ ] CSV source
-  - [ ] Map/search shape by value
+  - [X] Map/search shape by value
   - [X] Variables support for downloaded source and compressed source
   - [ ] Multi graph with auto link when errors
-  - [X] Gradien Mode for color
-  - [X] More than 3 colors
-  - [X] Graph in tooltip
+  - [X] Gradien Mode for color (0.7.0)
+  - [X] More than 3 colors (0.7.0)
+  - [X] Graph in tooltip (0.6.0)
   - [X] Histogram
   - [ ] Merge Graphs
   - [X] carriage return after new rule in tooltips option
@@ -229,8 +225,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Inspector on series
   - [X] New style for image : imageBackground, imageBorder
   - [X] Support cloud images from draw.io
-  - [X] Support images from draw.io (done in 0.5.0)
-  - [X] Add append mode on text with CR or space (done in 0.5.0)
+  - [X] Support images from draw.io (0.5.0)
+  - [X] Add append mode on text with CR or space (0.5.0)
 
 # Support or Contact
 

@@ -325,7 +325,6 @@ export class MappingOptionsCtrl {
   // Events
   //
   onEventValue(event: EventMap) {
-    console.log('onEventValue');
     this.getEventValues = event.getTypeahead();
   }
 }

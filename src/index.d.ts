@@ -49,7 +49,8 @@ declare module gf {
     | 'fold'
     | 'height'
     | 'width';
-  declare type TStyleEventList = { text: string, value: TStyleEventKeys, type: 'number' | 'text', placeholder: string , typeahead?:string }[];
+  declare type TStyleEventElt = { text: string, value: TStyleEventKeys, type: 'number' | 'text', placeholder: string , typeahead?:string };
+  declare type TStyleEventList = TStyleEventElt[];
   declare type TStyleKey = TStyleColor.Keys | TStyleEventKeys;
 
   declare interface TSelectStyle extends TSelectString {

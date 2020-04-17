@@ -97,12 +97,11 @@ export class GFCONSTANT {
     { text: 'Shape : Change form (text)', value: 'shape', type: 'text', placeholder: 'Shape name' },
     { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number', placeholder: '0-360' },
     { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number', placeholder: 'Number in ms' },
-    { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number', placeholder: '0 or 1' , typeahead: "0|1"},
+    { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number', placeholder: '0 or 1', typeahead: "0|1" },
     { text: 'Shape : Change height (number)', value: 'height', type: 'number', placeholder: 'Number of px' },
     { text: 'Shape : Change width (number)', value: 'width', type: 'number', placeholder: 'Number of px' },
-    { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number', placeholder: '0 or 1' },
     { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number', placeholder: '0-100' },
-    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number', placeholder: '0 or 1' ,typeahead: "0|1"},
+    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number', placeholder: '0 or 1', typeahead: "0|1" },
     { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number', placeholder: '0-100' },
     { text: 'Label : Replace text (text)', value: 'text', type: 'text', placeholder: 'Text' },
     { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number', placeholder: 'Number' },
@@ -379,7 +378,7 @@ export class GFUtils {
   }
 
   /**
-   * Get available variable name
+   * Get all available variables name
    *
    * @static
    * @returns {string[]}
@@ -429,7 +428,6 @@ export class GFUtils {
   }
 
   static async loadFile(varName: string, fileName: string) {
-    console.log("loadFile :", fileName)
     let v = GFUtils.getVar(varName);
     if (v === undefined) {
       const filePath = `${GFUtils.getStaticPath()}/${fileName}`;
@@ -438,9 +436,10 @@ export class GFUtils {
         fetch(filePath)
           .then(response => {
             if (response.ok) {
+              console.log(`${fileName} loaded with success`)
               response.text()
                 .then(text => GFUtils.setVar(varName, text))
-                .catch(error => GFUtils.log.error('Error when download file', filePath, error));
+                .catch(error => GFUtils.log.error('Error when download text file', filePath, error));
             }
           })
           .catch(error => GFUtils.log.error('Error when download file', filePath, error));

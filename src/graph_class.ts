@@ -1181,7 +1181,6 @@ export default class XGraph {
       // console.log("blinkCell")
       const self = this;
       const bl_on = function() {
-        console.log('bl_on');
         const color = '#f5f242';
         const opacity = 100;
         const state = self.graph.view.getState(cell);
@@ -1204,7 +1203,6 @@ export default class XGraph {
       };
       const bl_off = function() {
         if (cell && cell.blink_on) {
-          console.log('bl_off');
           const hl = cell.blink_on;
           // Fades out the highlight after a duration
           if (hl.shape != null) {

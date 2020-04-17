@@ -256,23 +256,11 @@ export default class State {
     GFUtils.log.info('State.applyState()');
     if (this.matched || this.changed) {
       this.changed = true;
-
-      // SHAPE
       this.shapeState.apply();
-
-      // TOOLTIP
       this.tooltipState.apply();
-
-      // ICON
       this.iconState.apply();
-
-      // TEXTS
       this.textState.apply();
-
-      // EVENTS
       this.eventState.apply();
-
-      // LINKS
       this.linkState.apply();
     }
     return this;
@@ -291,6 +279,7 @@ export default class State {
     this.textState.reset();
     this.eventState.reset();
     this.linkState.reset();
+    this.variables.clear();
     this.changed = false;
     return this;
   }
@@ -309,6 +298,7 @@ export default class State {
       this.textState.prepare();
       this.eventState.prepare();
       this.linkState.prepare();
+      this.variables.clear();
       this.matched = false;
     }
     return this;
