@@ -1,4 +1,4 @@
-import State from './state_class';
+import { State } from './state_class';
 import { Rule } from './rule_class';
 import _ from 'lodash';
 import { Metric } from './metric_class';

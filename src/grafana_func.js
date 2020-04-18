@@ -1,10 +1,10 @@
 // import { getValueFormat } from '@grafana/data';
 import kbn from 'grafana/app/core/utils/kbn';
 import TimeSeries from 'grafana/app/core/time_series2';
+// import { TimeSeries } from '@grafana/data';
 import _ from 'lodash';
 import { loadPluginCss } from 'grafana/app/plugins/sdk';
 import { dateTime } from '@grafana/data';
-
 
 var grafana = {
   // formatValue(value, unit, decimals) {

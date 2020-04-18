@@ -1,0 +1,12 @@
+// import { GFState } from '../src/state_class';
+
+// describe('States', () => {
+//   const xgraph: any = undefined;
+//   const mxcell: any = undefined;
+//   describe('GFState', () => {
+//     const gf = new GFState(xgraph, mxcell);
+//     test('should be new', () => {
+//       expect(gf).not.toBeNaN();
+//     });
+//   });
+// });

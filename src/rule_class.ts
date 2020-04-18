@@ -1,6 +1,6 @@
 //import moment from 'moment';
 import grafana from 'grafana_func';
-import State from './state_class';
+import {State} from './state_class';
 import _ from 'lodash';
 import { Metric } from 'metric_class';
 import { GFGlobal, GFCONSTANT } from 'globals_class';

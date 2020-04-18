@@ -1,5 +1,5 @@
 import FlowchartHandler from './flowchartHandler';
-import State from 'state_class';
+import { State } from 'state_class';
 import MetricHandler from './metricHandler';
 
 export class InspectOptionsCtrl {

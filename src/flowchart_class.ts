@@ -1,6 +1,6 @@
 import XGraph from 'graph_class';
 import StateHandler from 'statesHandler';
-import State from 'state_class';
+import { State } from 'state_class';
 import { Rule } from 'rule_class';
 
 import FlowchartHandler from 'flowchartHandler';

@@ -10,7 +10,7 @@ import { GFCONSTANT, GFGlobal, GFVariables } from 'globals_class';
  * @export
  * @class State
  */
-export default class State {
+export class State {
   mxcell: mxCell; // mxCell State
   cellId: string; // cell ID in mxcell
   newcellId: string | undefined; // for inspect mode
@@ -332,7 +332,7 @@ export default class State {
  *
  * @class GFState
  */
-class GFState {
+export class GFState {
   xgraph: XGraph;
   mxcell: mxCell;
   keys: string[] = [];
@@ -349,7 +349,7 @@ class GFState {
     this.init_core();
   }
 
-  init_core() { }
+  init_core() {}
 
   addValue(key: string, value: any) {
     this.originalValue.set(key, value);
@@ -408,7 +408,7 @@ class GFState {
     return this;
   }
 
-  apply_core(key: any, value: any) { }
+  apply_core(key: any, value: any) {}
 
   isMatched(key?: string): boolean {
     if (key !== undefined) {
@@ -466,7 +466,7 @@ class GFState {
     return this;
   }
 
-  reset_core(key: any, value: any) { }
+  reset_core(key: any, value: any) {}
 
   prepare(): this {
     if (this.isChanged()) {
@@ -486,11 +486,11 @@ class EventState extends GFState {
   keys: gf.TStyleEventKeys[] = [];
   geo:
     | {
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    }
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      }
     | undefined = undefined;
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);
