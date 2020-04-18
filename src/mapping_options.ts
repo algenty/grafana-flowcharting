@@ -82,9 +82,6 @@ export class MappingOptionsCtrl {
       return GFGlobal.getFullAvailableVarNames();
     };
 
-    // this.getEventValues = () => {
-    //   return [];
-    // };
     this.getEventValues = [];
   }
 

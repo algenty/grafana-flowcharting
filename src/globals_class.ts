@@ -1,7 +1,7 @@
 import _ from 'lodash';
 export class GFCONSTANT {
   // CONFIG
-  static readonly CONF_FILE_SHAPES = 'shapes.txt';
+  static readonly CONF_FILE_SHAPES = '/static/shapes.txt';
 
   // GLOBAL VARIABLE
   static readonly VAR_STG_SHAPES = 'shapestext';
@@ -161,6 +161,11 @@ export class GFVariables {
    */
   set(key: gf.TVariableKeys, value: any): this {
     this._variables.set(key, value);
+    return this;
+  }
+
+  unset(key: gf.TVariableKeys):this {
+    this._variables.delete(key);
     return this;
   }
 
@@ -337,7 +342,7 @@ class GFLog {
 }
 
 export class GFGlobal {
-  private static _globalvars: GFVariables = new GFVariables();
+  static _globalvars: GFVariables = new GFVariables();
   static log: GFLog = new GFLog();
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
@@ -405,6 +410,10 @@ export class GFGlobal {
     GFGlobal.getGlobalVars().set(key, value);
   }
 
+  static unsetVar(key:any) {
+    GFGlobal.getGlobalVars().unset(key);
+  }
+
   /**
    * Get all available variables name
    *
@@ -469,25 +478,38 @@ export class GFGlobal {
     }
   }
 
-  static async loadFile(varName: string, fileName: string) {
+  /**
+   * Load a file into variables
+   *
+   * @static
+   * @param {string} varName
+   * @param {string} fileName
+   * @memberof GFGlobal
+   */
+  static async loadLocalFile(varName: string, fileName: string) {
     let v = GFGlobal.getVar(varName);
     if (v === undefined) {
-      const filePath = `${GFGlobal.getStaticPath()}/${fileName}`;
-      if (!!window.fetch) {
-        // exécuter ma requête fetch ici
-        fetch(filePath)
-          .then(response => {
-            if (response.ok) {
-              console.log(`${fileName} loaded with success`);
-              response
-                .text()
-                .then(text => GFGlobal.setVar(varName, text))
-                .catch(error => GFGlobal.log.error('Error when download text file', filePath, error));
-            }
-          })
-          .catch(error => GFGlobal.log.error('Error when download file', filePath, error));
+      const contextroot = GFGlobal.getVar(GFCONSTANT.VAR_STG_CTXROOT);
+      if (contextroot !== undefined) {
+        const filePath = `${contextroot}/${fileName}`;
+        if (!!window.fetch) {
+          // exécuter ma requête fetch ici
+          fetch(filePath)
+            .then(response => {
+              if (response.ok) {
+                console.log(`${filePath} loaded with success`);
+                response
+                  .text()
+                  .then(text => GFGlobal.setVar(varName, text))
+                  .catch(error => GFGlobal.log.error('Error when download text file', filePath, error));
+              }
+            })
+            .catch(error => GFGlobal.log.error('Error when download file', filePath, error));
+        } else {
+          // Faire quelque chose avec XMLHttpRequest?
+        }
       } else {
-        // Faire quelque chose avec XMLHttpRequest?
+        console.log("Contexroot : ", contextroot);
       }
     }
   }

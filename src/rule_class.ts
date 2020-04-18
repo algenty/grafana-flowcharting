@@ -1515,6 +1515,7 @@ export class LinkMap extends GFMap {
 export class EventMap extends GFMap {
   data: gf.TEventMapData;
   static methods = GFCONSTANT.EVENTMETHODS;
+  static shapes: string[] = EventMap.getFormNames();
 
   /**
    * Creates an instance of EventMap.
@@ -1525,7 +1526,7 @@ export class EventMap extends GFMap {
   constructor(pattern: string, data: gf.TEventMapData) {
     super(pattern, data);
     this.data = data;
-    GFGlobal.loadFile(GFCONSTANT.VAR_STG_SHAPES, GFCONSTANT.CONF_FILE_SHAPES);
+    // GFGlobal.loadFile(GFCONSTANT.VAR_STG_SHAPES, GFCONSTANT.CONF_FILE_SHAPES);
   }
 
   /**
@@ -1547,7 +1548,6 @@ export class EventMap extends GFMap {
 
   getPlaceHolder(): string {
     const ph = EventMap.getDefaultPlaceHolder(this.data.style);
-    // EventMap.getFormNames();
     return ph !== undefined ? ph : '';
   }
 
@@ -1559,7 +1559,8 @@ export class EventMap extends GFMap {
       result = result.concat(elt.typeahead.split('|'));
     }
     if (this.data.style === 'shape') {
-      result = EventMap.getFormNames().concat(result);
+      const shapes = EventMap.getFormNames();
+      Array.prototype.push.apply(result,shapes);
     }
     return result;
   }
@@ -1570,18 +1571,23 @@ export class EventMap extends GFMap {
   }
 
   static getFormNames(): string[] {
-    GFGlobal.loadFile(GFCONSTANT.VAR_STG_SHAPES, GFCONSTANT.CONF_FILE_SHAPES);
-    let shapesArray: string[] = GFGlobal.getVar(GFCONSTANT.VAR_TBL_SHAPES);
-    if (shapesArray === undefined) {
-      const shapes: string = GFGlobal.getVar(GFCONSTANT.VAR_STG_SHAPES);
-      if (shapes !== undefined) {
-        shapesArray = shapes.split(/\n/);
-        GFGlobal.setVar(GFCONSTANT.VAR_TBL_SHAPES, shapesArray);
-        return shapesArray;
-      }
-      return [];
+    if (EventMap.shapes === undefined) {
+      EventMap.shapes = []
     }
-    return shapesArray;
+
+    if (EventMap.shapes !== undefined && EventMap.shapes.length > 0) {
+      return EventMap.shapes;
+    }
+    GFGlobal.loadLocalFile(GFCONSTANT.VAR_STG_SHAPES, GFCONSTANT.CONF_FILE_SHAPES);
+    const shapesText: string = GFGlobal.getVar(GFCONSTANT.VAR_STG_SHAPES);
+    if (shapesText !== undefined) {
+      if (EventMap.shapes.length == 0) {
+        EventMap.shapes = EventMap.shapes.concat(shapesText.split(/\n/));
+        GFGlobal.unsetVar(GFCONSTANT.VAR_STG_SHAPES);
+        return EventMap.shapes;
+      }
+    }
+    return EventMap.shapes;
   }
 
   /**

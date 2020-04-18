@@ -18,7 +18,8 @@ export default class FlowChartingPlugin {
 
   constructor(contextRoot: string, templateSrv: any) {
     this.contextRoot = contextRoot;
-    GFGlobal.setVar(GFCONSTANT.VAR_STG_CTXROOT, contextRoot);
+    console.log("Init vars");
+    GFGlobal.setVar(GFCONSTANT.VAR_STG_CTXROOT, contextRoot)
     GFGlobal.setVar(GFCONSTANT.VAR_OBJ_TEMPLATESRV, templateSrv);
     this.data = this.loadJson();
     this.repo = this.getRepo();
@@ -51,6 +52,7 @@ export default class FlowChartingPlugin {
       GFGlobal.setVar(GFCONSTANT.VAR_OBJ_CTRL, $scope.ctrl);
     }
     window.GFP = plugin;
+    console.log("Global Vars",GFGlobal._globalvars)
     return plugin;
   }
 
