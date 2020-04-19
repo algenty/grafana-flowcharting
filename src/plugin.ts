@@ -278,10 +278,10 @@ class Perf {
     if (this.enablePerf) {
       try {
         if (this.marky == null) {
-          this.marky = GFP.utils.getMarky();
+          this.marky = GFGlobal.utils.getMarky();
         }
         if (name == null) {
-          name = `GFP ${GFP.utils.uniqueID()}`;
+          name = `GFP ${GFGlobal.utils.uniqueID()}`;
         }
         this.stack.push(name);
         this.marky.mark(name);

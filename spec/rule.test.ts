@@ -205,12 +205,12 @@ describe('Rule', () => {
         });
     });
     
-    describe.skip('Text replace', () => {
+    describe('Text replace', () => {
         const data = Rule.getDefaultData();
         const rule = new Rule('/.*/', data);
         const text = 'This is my value';
         const patternText = '/value/';
-        const formattedValue = rule.getFormattedValue(12.34);
+        const formattedValue = '12.34';
         const tm = rule.addTextMap('');
         test('All content', () => {
             expect(tm.getReplaceText(text, formattedValue)).toBe('12.34');

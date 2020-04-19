@@ -2,6 +2,7 @@ const pako = require('pako');
 const vkbeautify = require('vkbeautify');
 const colorconv = require('color-normalize');
 const marky = require('marky');
+const safeEval = require('safe-eval');
 
 // sources :
 // https://jgraph.github.io/drawio-tools/tools/convert.html
@@ -62,12 +63,14 @@ module.exports = {
   isencoded(data) {
     try {
       const node = this.parseXml(data).documentElement;
-      if (node != null && node.nodeName == 'mxfile') {
+      if (node != null && node.nodeName === 'mxfile') {
         const diagrams = node.getElementsByTagName('diagram');
         if (diagrams.length > 0) {
           return true;
         }
-      } else return data.indexOf('mxGraphModel') == -1;
+      } else {
+        return data.indexOf('mxGraphModel') === -1;
+      }
     } catch (error) {
       return true;
     }
@@ -78,7 +81,7 @@ module.exports = {
     try {
       const node = this.parseXml(data).documentElement;
 
-      if (node != null && node.nodeName == 'mxfile') {
+      if (node != null && node.nodeName === 'mxfile') {
         const diagrams = node.getElementsByTagName('diagram');
 
         if (diagrams.length > 0) {
@@ -158,7 +161,9 @@ module.exports = {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
     await delay(ms);
-    if (mess) console.log(mess);
+    if (mess) {
+      console.log(mess);
+    }
   },
 
   uniqueID() {
@@ -182,7 +187,9 @@ module.exports = {
     if (str === null || str === undefined || pattern === null || pattern === undefined || str.length === 0 || pattern.length === 0) {
       return false;
     }
-    if (str === pattern) return true;
+    if (str === pattern) {
+      return true;
+    }
     if (regex) {
       const regex = this.stringToJsRegex(pattern);
       return str.toString().match(regex);
@@ -209,7 +216,6 @@ module.exports = {
   },
 
   getRatioColor(ratio, colorStart, colorEnd) {
-
     // Get the smaller number to clamp at 0.999 max
     ratio = Math.min(0.999, ratio);
     // Get the larger number to clamp at 0.001 min
@@ -271,33 +277,45 @@ module.exports = {
         eval.call(window, req.getText());
         console.info('eval.call succesfully', fname);
       }
-    }
-    catch (e) {
+    } catch (e) {
       if (window.console != null) {
         console.error('Error eval.call:', fname, e);
       }
     }
   },
 
-  loadJS_2(fnames) {
-    let fetchs = []
+  async loadJS_2(fnames) {
+    let fetchs = [];
     fnames.forEach(fn => {
       fetchs.push(
-        fetch(fn).then((response) => {
-          return response.text();
-        }).then((text) => {
-          try {
+        fetch(fn)
+          .then(response => {
+            return response.text();
+          })
+          .then(text => {
+            try {
             eval.call(window, text);
-            console.info(`${fn} eval with success`);
-          } catch (error) {
-            console.error(`Unable to eval ${fn}`);
-          }
-        }).catch((error) => {
-          console.error(`Unable to load ${fn}`, error);
-        })
-      )
+              console.info(`${fn} eval with success`);
+            } catch (error) {
+              console.error(`Unable to eval ${fn}`);
+            }
+          })
+          .catch(error => {
+            console.error(`Unable to load ${fn}`, error);
+          })
+      );
     });
     return Promise.all(fetchs);
+  },
+
+  evalIt(code) {
+    let result = code;
+    try {
+      result = safeEval(code);
+    } catch (error) {
+      result = code;
+    }
+    return result;
   },
 
   getfileContent(url) {
@@ -306,8 +324,8 @@ module.exports = {
       const response = await fetch(url);
       const result = await response.text();
       console.log(getfileContent, url, result);
-    }
+    };
     request();
     return result;
-  }
+  },
 };

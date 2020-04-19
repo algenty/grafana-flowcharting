@@ -668,23 +668,23 @@ export class Flowchart {
   }
 
   minify() {
-    this.data.xml = GFP.utils.minify(this.data.xml);
+    this.data.xml = GFGlobal.utils.minify(this.data.xml);
   }
 
   prettify() {
-    this.data.xml = GFP.utils.prettify(this.data.xml);
+    this.data.xml = GFGlobal.utils.prettify(this.data.xml);
   }
 
   decode() {
-    if (GFP.utils.isencoded(this.data.xml)) {
-      this.data.xml = GFP.utils.decode(this.data.xml, true, true, true);
+    if (GFGlobal.utils.isencoded(this.data.xml)) {
+      this.data.xml = GFGlobal.utils.decode(this.data.xml, true, true, true);
       // this.data.xml = XGraph.decompress(this.data.xml);
     }
   }
 
   encode() {
-    if (!GFP.utils.isencoded(this.data.xml)) {
-      this.data.xml = GFP.utils.encode(this.data.xml, true, true, true);
+    if (!GFGlobal.utils.isencoded(this.data.xml)) {
+      this.data.xml = GFGlobal.utils.encode(this.data.xml, true, true, true);
       // this.data.xml = XGraph.compress(this.data.xml);
     }
   }

@@ -62,6 +62,7 @@
     "lodash": "^4.17.15",
     "marky": "^1.2.1",
     "mxgraph": "^4.0.4",
+    "safe-eval": "^0.4.1",
     "vkbeautify": "^0.99.3"
   },
   "dependencies": {

@@ -250,12 +250,7 @@ export class GFVariables {
    */
   eval(text: string): string {
     let t = this.replaceText(text);
-    try {
-      text = eval(t);
-    } catch (error) {
-      return t;
-    }
-    return text;
+    return GFGlobal.utils.evalIt(t);
   }
 }
 
@@ -353,6 +348,12 @@ export class GFGlobal {
     getRatioColor: (ratio: number, colorStart: string, colorEnd: string) => string;
     matchString: (str: string, pattern: string | undefined, regex?: boolean) => boolean;
     stringToJsRegex: (str: string) => RegExp;
+    isencoded: (data: string) => boolean;
+    minify: (text: string) => string;
+    prettify: (text: string) => string;
+    getMarky: () => any;
+    getStepColors: (colorStart: string, colorEnd: string, colorCount: number) => string[];
+    evalIt: (code: string) => string;
   } = require('./utils_raw');
 
   /**

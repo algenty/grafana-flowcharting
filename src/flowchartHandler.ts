@@ -174,7 +174,7 @@ export class FlowchartHandler {
    */
   createContainer(): HTMLDivElement {
     //TODO: Convert to createDocument
-    const $container: any = $(`<div id="flowchart_${GFP.utils.uniqueID()}" style="margin:auto;position:relative,width:100%;height:100%"></div>`);
+    const $container: any = $(`<div id="flowchart_${GFGlobal.utils.uniqueID()}" style="margin:auto;position:relative,width:100%;height:100%"></div>`);
     this.$elem.html($container);
     return $container[0];
   }
@@ -204,7 +204,7 @@ export class FlowchartHandler {
    */
   async render() {
     // not repeat render if mouse down
-    const id = GFP.utils.uniqueID();
+    const id = GFGlobal.utils.uniqueID();
     GFP.perf.start('PERF : Render ' + id);
     if (!this.mousedown) {
       let optionsFlag = true;
@@ -240,7 +240,6 @@ export class FlowchartHandler {
       }
       // this.refresh();
     }
-    // await GFP.utils.sleep(1000);
     this.ctrl.renderingCompleted();
     GFP.perf.stop('PERF : Render ' + id);
   }

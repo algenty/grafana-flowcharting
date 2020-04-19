@@ -65,8 +65,8 @@ export default class XGraph {
     // END ZOOM MouseWheele
     XGraph.initMxGgraph();
     if (type === 'xml') {
-      if (GFP.utils.isencoded(definition)) {
-        this.xmlGraph = GFP.utils.decode(definition, true, true, true);
+      if (GFGlobal.utils.isencoded(definition)) {
+        this.xmlGraph = GFGlobal.utils.decode(definition, true, true, true);
       } else {
         this.xmlGraph = definition;
       }
@@ -86,8 +86,8 @@ export default class XGraph {
     try {
       const div = document.createElement('div');
       const g = new Graph(div);
-      if (GFP.utils.isencoded(source)) {
-        source = GFP.utils.decode(source, true, true, true);
+      if (GFGlobal.utils.isencoded(source)) {
+        source = GFGlobal.utils.decode(source, true, true, true);
       }
       const xmlDoc = mxUtils.parseXml(source);
       const codec = new mxCodec(xmlDoc);
@@ -240,11 +240,11 @@ export default class XGraph {
     // GFP.utils.loadJS(`${GFP.getLibsPath()}/sanitizer.min.js`);
 
     // Load Draw.io libs
-    GFP.utils.loadJS(`${GFP.getLibsPath()}/viewer.min.js`);
+    GFGlobal.utils.loadJS(`${GFP.getLibsPath()}/viewer.min.js`);
     // require('./libs/viewer.min');
 
     // Shapes
-    GFP.utils.loadJS(`${GFP.getLibsPath()}/shapes.min.js`);
+    GFGlobal.utils.loadJS(`${GFP.getLibsPath()}/shapes.min.js`);
     // require('./libs/shapes.min');
 
     // Stencils
@@ -584,8 +584,8 @@ export default class XGraph {
    */
   setXmlGraph(xmlGraph: string): this {
     GFGlobal.log.info('XGraph.setXmlGraph()');
-    if (GFP.utils.isencoded(xmlGraph)) {
-      this.xmlGraph = GFP.utils.decode(xmlGraph, true, true, true);
+    if (GFGlobal.utils.isencoded(xmlGraph)) {
+      this.xmlGraph = GFGlobal.utils.decode(xmlGraph, true, true, true);
     } else {
       this.xmlGraph = xmlGraph;
     }
@@ -633,13 +633,13 @@ export default class XGraph {
     const result: any[] = [];
     if (prop === 'id') {
       _.each(mxcells, (mxcell: mxCell) => {
-        if (GFP.utils.matchString(mxcell.id, pattern)) {
+        if (GFGlobal.utils.matchString(mxcell.id, pattern)) {
           result.push(mxcell);
         }
       });
     } else if (prop === 'value') {
       _.each(mxcells, (mxcell: mxCell) => {
-        if (GFP.utils.matchString(this.getLabelCell(mxcell), pattern)) {
+        if (GFGlobal.utils.matchString(this.getLabelCell(mxcell), pattern)) {
           result.push(mxcell);
         }
       });
@@ -843,22 +843,27 @@ export default class XGraph {
    * @memberof XGraph
    */
   setColorAnimCell(mxcell: mxCell, style: gf.TStyleColorKeys, color: string | null): this {
-    if (this.animation) {
+    if (this.animation && color !== null) {
       try {
         const endColor = this.getStyleCell(mxcell, style);
-        const startColor = color;
-        const steps = GFP.utils.getStepColors(startColor, endColor, 5);
-        const count = 0;
-        const self = this;
-        function graduate(count, steps) {
-          if (count < steps.length) {
-            self.setStyleCell(mxcell, style, steps[count]);
-            window.setTimeout(() => {
-              graduate(count + 1, steps);
-            }, 40);
+        if(endColor !== null) {
+          const startColor = color;
+          const steps = GFGlobal.utils.getStepColors(startColor, endColor, 5);
+          const count = 0;
+          const self = this;
+          function graduate(count, steps) {
+            if (count < steps.length) {
+              self.setStyleCell(mxcell, style, steps[count]);
+              window.setTimeout(() => {
+                graduate(count + 1, steps);
+              }, 40);
+            }
           }
+          graduate(count, steps);
         }
-        graduate(count, steps);
+        else {
+          this.setStyleCell(mxcell, style, color);
+        }
       } catch (error) {
         GFGlobal.log.error('Error on graduate color', error);
         this.setStyleCell(mxcell, style, color);
