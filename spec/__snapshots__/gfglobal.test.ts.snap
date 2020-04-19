@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`GFGlobal Variables Should be not null 1`] = `
+GFVariables {
+  "_variables": Map {},
+}
+`;
+
 exports[`GFGlobal Variables Static should  1`] = `
 Array [
   "\${_rule}",

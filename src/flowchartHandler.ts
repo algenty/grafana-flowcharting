@@ -1,4 +1,4 @@
-import Flowchart from 'flowchart_class';
+import { Flowchart } from 'flowchart_class';
 import { Rule, GFMap } from 'rule_class';
 import _ from 'lodash';
 import { Metric } from './metric_class';
@@ -7,7 +7,7 @@ import { GFGlobal } from 'globals_class';
 /**
  * Class FlowchartHandler
  */
-export default class FlowchartHandler {
+export class FlowchartHandler {
   $scope: ng.IScope;
   $elem: any; //TODO: elem ?
   ctrl: any; //TODO: ctrl ?

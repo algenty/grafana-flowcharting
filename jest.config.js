@@ -1,5 +1,10 @@
 module.exports = {
   verbose: true,
+  globals: {
+    'ts-jest': {
+      tsConfig: 'tsconfig.jest.json',
+    },
+  },
   roots: ['./spec'],
   moduleDirectories: ['node_modules', 'public', 'src'],
   modulePaths: ['./node_modules', './public', './src'],
@@ -12,6 +17,9 @@ module.exports = {
   },
   moduleNameMapper: {
     underscore$: 'lodash',
+    'grafana/app/core/utils/kbn': '<rootDir>/spec/__mocks__/kbn.ts',
+    'grafana/app/plugins/sdk': '<rootDir>/spec/__mocks__/sdk.ts',
+    'grafana/app/core/time_series2': '<rootDir>/spec/__mocks__/time_series2.ts',
   },
   // transformIgnorePatterns: ['./public/.*', './node_modules/.*', './dist/.*'],
   testRegex: '(\\.|/)(test)\\.(jsx?|tsx?)$',

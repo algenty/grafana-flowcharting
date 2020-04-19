@@ -164,7 +164,7 @@ export class GFVariables {
     return this;
   }
 
-  unset(key: gf.TVariableKeys):this {
+  unset(key: gf.TVariableKeys): this {
     this._variables.delete(key);
     return this;
   }
@@ -350,6 +350,9 @@ export class GFGlobal {
     loadJS: (fname: string) => void;
     sleep: (ms: number, mess?: string) => void;
     uniqueID: () => string;
+    getRatioColor: (ratio: number, colorStart: string, colorEnd: string) => string;
+    matchString: (str: string, pattern: string | undefined, regex?: boolean) => boolean;
+    stringToJsRegex: (str: string) => RegExp;
   } = require('./utils_raw');
 
   /**
@@ -410,7 +413,7 @@ export class GFGlobal {
     GFGlobal.getGlobalVars().set(key, value);
   }
 
-  static unsetVar(key:any) {
+  static unsetVar(key: any) {
     GFGlobal.getGlobalVars().unset(key);
   }
 
@@ -509,7 +512,7 @@ export class GFGlobal {
           // Faire quelque chose avec XMLHttpRequest?
         }
       } else {
-        console.log("Contexroot : ", contextroot);
+        GFGlobal.log.warn("Contexroot : ", contextroot);
       }
     }
   }

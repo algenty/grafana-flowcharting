@@ -1,9 +1,9 @@
 import XGraph from 'graph_class';
-import StateHandler from 'statesHandler';
+import { StateHandler } from 'statesHandler';
 import { State } from 'state_class';
 import { Rule } from 'rule_class';
 
-import FlowchartHandler from 'flowchartHandler';
+import { FlowchartHandler } from 'flowchartHandler';
 import { Metric } from 'metric_class';
 import { GFGlobal } from 'globals_class';
 
@@ -13,7 +13,7 @@ import { GFGlobal } from 'globals_class';
  * @export
  * @class Flowchart
  */
-export default class Flowchart {
+export class Flowchart {
   data: gf.TFlowchartData;
   container: HTMLDivElement;
   xgraph: XGraph | undefined = undefined;

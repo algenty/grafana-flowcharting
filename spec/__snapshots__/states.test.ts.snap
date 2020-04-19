@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`States GFState should be new 1`] = `
+GFState {
+  "changedKey": Map {},
+  "keys": Array [],
+  "matchLevel": Map {},
+  "matchValue": Map {},
+  "matchedKey": Map {},
+  "mxcell": Object {
+    "id": "1234",
+  },
+  "originalValue": Map {},
+  "xgraph": undefined,
+}
+`;

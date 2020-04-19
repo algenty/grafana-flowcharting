@@ -8,7 +8,7 @@ import { GFGlobal } from 'globals_class';
  * @export
  * @class RulesHandler
  */
-export default class RulesHandler {
+export class RulesHandler {
   rules: Rule[];
   data: gf.TIRulesHandlerData;
   activeRuleIndex = 0;

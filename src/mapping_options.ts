@@ -1,10 +1,10 @@
-import FlowchartHandler from './flowchartHandler';
-import RulesHandler from 'rulesHandler';
+import { FlowchartHandler } from './flowchartHandler';
+import { RulesHandler } from 'rulesHandler';
 import { Rule, EventMap } from 'rule_class';
 import { GFCONSTANT, GFGlobal } from 'globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
-import MetricHandler from './metricHandler';
+import { MetricHandler } from './metricHandler';
 
 export class MappingOptionsCtrl {
   $scope: gf.TMappingOptionsScope;
@@ -61,7 +61,7 @@ export class MappingOptionsCtrl {
 
     this.getCellNames = (prop: gf.TPropertieKey = 'id'): string[] => {
       GFGlobal.log.info('MappingOptionsCtrl.getCellNamesForShape()');
-      prop = prop !== 'id' && prop !== 'value' ? 'id' : prop;
+      // prop = prop !== 'id' && prop !== 'value' ? 'id' : prop;
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp(prop);
       const uniq = new Set(cells);

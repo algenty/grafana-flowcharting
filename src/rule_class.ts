@@ -1,6 +1,6 @@
 //import moment from 'moment';
 import grafana from 'grafana_func';
-import {State} from './state_class';
+import { State } from './state_class';
 import _ from 'lodash';
 import { Metric } from 'metric_class';
 import { GFGlobal, GFCONSTANT } from 'globals_class';
@@ -37,7 +37,7 @@ export class Rule {
   constructor(pattern: string, data: gf.TIRuleData) {
     this.data = data;
     this.data.pattern = pattern;
-    this.id = GFP.utils.uniqueID();
+    this.id = GFGlobal.utils.uniqueID();
     this.states = new Map();
   }
 
@@ -483,6 +483,18 @@ export class Rule {
   }
 
   /**
+   * Invert threshold
+   *
+   * @returns {this}
+   * @memberof Rule
+   */
+  invertThesholds(): this {
+    this.invertColorOrder();
+    this.data.invert = !this.data.invert;
+    return this;
+  }
+
+  /**
    *
    *
    * @param {number} index
@@ -498,7 +510,8 @@ export class Rule {
     if (index !== colors.length - 1) {
       let ratio = 0.5;
       let colorEnd = colors[index + 1];
-      color = GFP.utils.getRatioColor(ratio, colorStart, colorEnd);
+      // color = GFP.utils.getRatioColor(ratio, colorStart, colorEnd);
+      color = GFGlobal.utils.getRatioColor(ratio, colorStart, colorEnd);
       if (this.data.type === 'number') {
         let absoluteDistance = thresholds[index] - thresholds[index - 1];
         value = absoluteDistance / 2 + thresholds[index - 1];
@@ -615,7 +628,7 @@ export class Rule {
    */
   matchMetric(metric: Metric): boolean {
     if (this.data.metricType === 'serie' && metric.type === 'serie') {
-      return GFP.utils.matchString(metric.getName(), this.data.pattern);
+      return GFGlobal.utils.matchString(metric.getName(), this.data.pattern);
     }
     if (this.data.metricType === 'table' && metric.type === 'table') {
       return metric.getName() === this.data.refId;
@@ -798,7 +811,7 @@ export class Rule {
   //
   // STRING VALUE MAPS
   //
-  addValueMap(value: string, text: string): ValueMap {
+  addValueMap(value: any, text: string): ValueMap {
     const data: gf.TValueMapData = ValueMap.getDefaultdata();
     const m = new ValueMap(value, text, data);
     this.valueMaps.push(m);
@@ -901,7 +914,8 @@ export class Rule {
       let absoluteDistance = thresholds[cursor + 1] - thresholds[cursor];
       let valueDistanceFromMin = value - thresholds[cursor];
       let ratio = valueDistanceFromMin / absoluteDistance;
-      let color = GFP.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
+      // let color = GFP.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
+      let color = GFGlobal.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
       return color;
     }
     return '';
@@ -971,7 +985,7 @@ export class Rule {
       let l = thresholds.length;
       for (let index = 0; index < l; index++) {
         const t = thresholds[index];
-        if (GFP.utils.matchString(value, t) || GFP.utils.matchString(formatedValue, t)) {
+        if (GFGlobal.utils.matchString(value, t) || GFGlobal.utils.matchString(formatedValue, t)) {
           thresholdLevel = index + 1;
           break;
         }
@@ -1132,7 +1146,7 @@ export class GFMap {
   constructor(pattern, data: gf.TGFMapData) {
     this.data = data;
     this.data.pattern = pattern;
-    this.id = GFP.utils.uniqueID();
+    this.id = GFGlobal.utils.uniqueID();
     // this.import(data);
   }
 
@@ -1184,7 +1198,7 @@ export class GFMap {
     if (text === undefined || text === null || text.length === 0) {
       return false;
     }
-    return GFP.utils.matchString(text, this.data.pattern, regex);
+    return GFGlobal.utils.matchString(text, this.data.pattern, regex);
   }
 
   /**
@@ -1421,7 +1435,7 @@ export class TextMap extends GFMap {
       return FormattedValue;
     }
     if (this.data.textReplace === 'pattern') {
-      const regexVal = GFP.utils.stringToJsRegex(this.data.textPattern);
+      const regexVal = GFGlobal.utils.stringToJsRegex(this.data.textPattern);
       if (text.toString().match(regexVal)) {
         return text.toString().replace(regexVal, FormattedValue);
       }
@@ -1560,7 +1574,7 @@ export class EventMap extends GFMap {
     }
     if (this.data.style === 'shape') {
       const shapes = EventMap.getFormNames();
-      Array.prototype.push.apply(result,shapes);
+      Array.prototype.push.apply(result, shapes);
     }
     return result;
   }
@@ -1830,7 +1844,7 @@ class ValueMap {
     if (!_.isString(value) && Number(this.data.value) === Number(value)) {
       return true;
     }
-    return GFP.utils.matchString(value.toString(), this.data.value);
+    return GFGlobal.utils.matchString(value.toString(), this.data.value);
   }
 
   /**

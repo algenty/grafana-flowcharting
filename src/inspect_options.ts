@@ -1,6 +1,6 @@
-import FlowchartHandler from './flowchartHandler';
+import { FlowchartHandler } from './flowchartHandler';
 import { State } from 'state_class';
-import MetricHandler from './metricHandler';
+import { MetricHandler } from './metricHandler';
 
 export class InspectOptionsCtrl {
   enable = false; // enable inspector or not

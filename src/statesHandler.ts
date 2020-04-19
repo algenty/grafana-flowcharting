@@ -11,7 +11,7 @@ import { GFGlobal } from 'globals_class';
  * @export
  * @class StateHandler
  */
-export default class StateHandler {
+export class StateHandler {
   states: Map<string, State>;
   xgraph: XGraph;
   edited = false;

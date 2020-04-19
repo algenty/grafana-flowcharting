@@ -1,7 +1,7 @@
-import FlowchartHandler from 'flowchartHandler';
+import { FlowchartHandler } from 'flowchartHandler';
 
 import XGraph from 'graph_class';
-import Flowchart from 'flowchart_class';
+import { Flowchart } from 'flowchart_class';
 import { GFGlobal } from 'globals_class';
 
 export class FlowchartOptionsCtrl {

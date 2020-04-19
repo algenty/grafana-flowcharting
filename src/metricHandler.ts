@@ -9,7 +9,7 @@ import { GFGlobal } from 'globals_class';
  * @export
  * @class MetricHandler
  */
-export default class MetricHandler {
+export class MetricHandler {
   panel: any;
   $scope: ng.IScope;
   tables: Table[] = [];

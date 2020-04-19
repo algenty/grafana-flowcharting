@@ -6,7 +6,7 @@ declare var GFP: FlowChartingPlugin;
  * @export
  * @class FlowChartingPlugin
  */
-export default class FlowChartingPlugin {
+export class FlowChartingPlugin {
   contextRoot: string;
   data: any;
   repo: string;
