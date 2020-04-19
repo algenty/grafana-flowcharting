@@ -18,7 +18,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
-  panelDefaults: { newFlag: boolean; format: string; valueName: string; rulesData: gf.TIRulesHandlerData; flowchartsData: gf.TFlowchartHandlerData; };
+  panelDefaults: { newFlag: boolean; format: string; valueName: string; rulesData: gf.TIRulesHandlerData; flowchartsData: gf.TFlowchartHandlerData };
   containerDivId: string;
   static templateUrl: string;
   /**@ngInject*/
@@ -57,7 +57,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
     this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-    if ($scope.$root.onAppEvent) $scope.$root.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
+    if ($scope.$root.onAppEvent) {
+      $scope.$root.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
+    }
   }
 
   //
@@ -90,7 +92,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     GFP.perf.start('onDataReceived');
     if (!!this.metricHandler) {
       this.metricHandler.initData(dataList);
-      if (!!this.flowchartHandler){
+      if (!!this.flowchartHandler) {
         this.flowchartHandler.dataChanged();
       }
     }
@@ -126,8 +128,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (this.panel.version === undefined && this.panel.styles !== undefined) {
       this.rulesHandler.import(this.panel.styles);
       delete this.panel.styles;
-    } else this.rulesHandler.import(this.panel.rulesData);
-    if (this.panel.newFlag && this.rulesHandler.countRules() === 0) this.rulesHandler.addRule('.*');
+    } else {
+      this.rulesHandler.import(this.panel.rulesData);
+    }
+    if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
+      this.rulesHandler.addRule('.*');
+    }
     this.panel.rulesData = newRulesData;
 
     // FLOWCHART
@@ -137,8 +143,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (this.panel.version === undefined && this.panel.flowchart !== undefined) {
       this.flowchartHandler.import([this.panel.flowchart]);
       delete this.panel.flowchart;
-    } else this.flowchartHandler.import(this.panel.flowchartsData);
-    if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) this.flowchartHandler.addFlowchart('Main');
+    } else {
+      this.flowchartHandler.import(this.panel.flowchartsData);
+    }
+    if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
+      this.flowchartHandler.addFlowchart('Main');
+    }
     this.panel.flowchartsData = newFlowchartsData;
 
     // Versions
@@ -172,7 +182,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   $onDestroy() {
     GFGlobal.destroy();
   }
-
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };

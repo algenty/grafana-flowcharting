@@ -340,7 +340,7 @@ export class GFState {
   changedKey: Map<string, boolean> = new Map();
   originalValue: Map<string, any> = new Map();
   matchValue: Map<string, any> = new Map();
-  static readonly DEFAULTLEVEL = -1;
+  static readonly DEFAULTLEVEL: number = -1;
   // lastValue: Map<string, any> = new Map(); To not apply the same value
   matchLevel: Map<string, number> = new Map();
 
@@ -353,9 +353,9 @@ export class GFState {
   init_core() {}
 
   addValue(key: string, value: any) {
-    if(this.keys.includes(key) !== true) {
-      GFGlobal.log.warn('GFState.addValue()',key, 'not found');
-      this.keys.push(key);  
+    if (this.keys.includes(key) !== true) {
+      GFGlobal.log.warn('GFState.addValue()', key, 'not found');
+      this.keys.push(key);
     }
     this.originalValue.set(key, value);
     this.matchValue.set(key, value);
@@ -437,13 +437,13 @@ export class GFState {
     return changed;
   }
 
-  getLevel(key?: string):number {
+  getLevel(key?: string): number {
     if (key !== undefined) {
-      let level = this.matchLevel.get(key); 
+      let level = this.matchLevel.get(key);
       return level !== undefined ? level : GFState.DEFAULTLEVEL;
     }
     let level = GFState.DEFAULTLEVEL;
-    this.keys.forEach( key => level = Math.max(this.getLevel(key)))
+    this.keys.forEach(key => (level = Math.max(this.getLevel(key))));
     return level;
   }
 
