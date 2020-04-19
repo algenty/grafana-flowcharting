@@ -340,7 +340,7 @@ export class GFState {
   changedKey: Map<string, boolean> = new Map();
   originalValue: Map<string, any> = new Map();
   matchValue: Map<string, any> = new Map();
-  static readonly DEFAULTLEVEL: number = -1;
+  static DEFAULTLEVEL: number = -1;
   // lastValue: Map<string, any> = new Map(); To not apply the same value
   matchLevel: Map<string, number> = new Map();
 

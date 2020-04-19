@@ -846,7 +846,7 @@ export default class XGraph {
     if (this.animation && color !== null) {
       try {
         const endColor = this.getStyleCell(mxcell, style);
-        if(endColor !== null) {
+        if (endColor !== null) {
           const startColor = color;
           const steps = GFGlobal.utils.getStepColors(startColor, endColor, 5);
           const count = 0;
@@ -860,8 +860,7 @@ export default class XGraph {
             }
           }
           graduate(count, steps);
-        }
-        else {
+        } else {
           this.setStyleCell(mxcell, style, color);
         }
       } catch (error) {
@@ -1210,7 +1209,7 @@ export default class XGraph {
   async blinkCell(cell: mxCell, ms: number) {
     if (!cell.blink) {
       const self = this;
-      const bl_on = function () {
+      const bl_on = function() {
         const color = '#f5f242';
         const opacity = 100;
         const state = self.graph.view.getState(cell);
@@ -1231,7 +1230,7 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function () {
+      const bl_off = function() {
         if (cell && cell.blink_on) {
           const hl = cell.blink_on;
           // Fades out the highlight after a duration
@@ -1356,7 +1355,6 @@ export default class XGraph {
       }
     }
   }
-
 
   getSizeCell(mxcell: mxCell): mxGeometry {
     return this.graph.model.getGeometry(mxcell);

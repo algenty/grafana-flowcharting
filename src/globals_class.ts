@@ -1,57 +1,57 @@
 import _ from 'lodash';
 export class GFCONSTANT {
   // CONFIG
-  static readonly CONF_FILE_SHAPES = '/static/shapes.txt';
+  static CONF_FILE_SHAPES = '/static/shapes.txt';
 
   // GLOBAL VARIABLE
-  static readonly VAR_STG_SHAPES = 'shapestext';
-  static readonly VAR_TBL_SHAPES = 'shapesarray';
-  static readonly VAR_STG_CTXROOT = 'contextroot';
-  static readonly VAR_OBJ_TEMPLATESRV = 'templatesrv';
-  static readonly VAR_OBJ_CTRL = 'ctrl';
-  static readonly VAR_MAP_INTERVAL = 'interval';
-  static readonly VAR_STR_RULENAME: gf.TVariableKeys = '_rule';
-  static readonly VAR_NUM_LEVEL: gf.TVariableKeys = '_level';
-  static readonly VAR_NUM_VALUE: gf.TVariableKeys = '_value';
-  static readonly VAR_STR_FORMATED: gf.TVariableKeys = '_formated';
-  static readonly VAR_STR_COLOR: gf.TVariableKeys = '_color';
+  static VAR_STG_SHAPES = 'shapestext';
+  static VAR_TBL_SHAPES = 'shapesarray';
+  static VAR_STG_CTXROOT = 'contextroot';
+  static VAR_OBJ_TEMPLATESRV = 'templatesrv';
+  static VAR_OBJ_CTRL = 'ctrl';
+  static VAR_MAP_INTERVAL = 'interval';
+  static VAR_STR_RULENAME: gf.TVariableKeys = '_rule';
+  static VAR_NUM_LEVEL: gf.TVariableKeys = '_level';
+  static VAR_NUM_VALUE: gf.TVariableKeys = '_value';
+  static VAR_STR_FORMATED: gf.TVariableKeys = '_formated';
+  static VAR_STR_COLOR: gf.TVariableKeys = '_color';
 
   // CONDITIONS
-  static readonly TOOLTIP_APPLYON: gf.TTooltipOnList = [
+  static TOOLTIP_APPLYON: gf.TTooltipOnList = [
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
-  static readonly COLOR_APPLYON: gf.TColorOnList = [
+  static COLOR_APPLYON: gf.TColorOnList = [
     { text: 'Never', value: 'n' },
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
-  static readonly TEXT_APPLYON: gf.TTextOnList = [
+  static TEXT_APPLYON: gf.TTextOnList = [
     { text: 'Never', value: 'n' },
     { text: 'When Metric Displayed', value: 'wmd' },
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Critical Only', value: 'co' },
   ];
-  static readonly LINK_APPLYON: gf.TLinkOnList = [
+  static LINK_APPLYON: gf.TLinkOnList = [
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
 
   // TYPES
-  static readonly VALUE_TYPES: gf.TValueTypeList = [
+  static VALUE_TYPES: gf.TValueTypeList = [
     { text: 'Number', value: 'number' },
     { text: 'String', value: 'string' },
     { text: 'Date', value: 'date' },
   ];
-  static readonly METRIC_TYPES: gf.TMetricTypeList = [
+  static METRIC_TYPES: gf.TMetricTypeList = [
     { text: 'Series', value: 'serie' },
     { text: 'Table', value: 'table' },
   ];
-  static readonly IDENT_TYPES: { text: string; value: gf.TPropertieKey }[] = [
+  static IDENT_TYPES: { text: string; value: gf.TPropertieKey }[] = [
     { text: 'Id', value: 'id' },
     { text: 'Label', value: 'value' },
   ];
-  static readonly AGGREGATION_TYPES: gf.TAggregationList = [
+  static AGGREGATION_TYPES: gf.TAggregationList = [
     { text: 'First', value: 'first' },
     { text: 'Last', value: 'current' },
     { text: 'Min', value: 'min' },
@@ -63,25 +63,25 @@ export class GFCONSTANT {
     { text: 'Range', value: 'range' },
     { text: 'Diff', value: 'diff' },
   ];
-  static readonly TOOLTIP_GRAPH_TYPES: gf.TGraphTypeList = [
+  static TOOLTIP_GRAPH_TYPES: gf.TGraphTypeList = [
     { text: 'Line', value: 'line' },
     { text: 'Histogram', value: 'bar' },
   ];
-  static readonly TOOLTIP_GRAPH_SCALE_TYPES: gf.TGraphScaleList = [
+  static TOOLTIP_GRAPH_SCALE_TYPES: gf.TGraphScaleList = [
     { text: 'Linear', value: 'linear' },
     { text: 'Logarithmic', value: 'log' },
   ];
-  static readonly TOOLTIP_GRAPH_SIZE_TYPES: gf.TGraphSizeList = [
+  static TOOLTIP_GRAPH_SIZE_TYPES: gf.TGraphSizeList = [
     { text: 'Adjustable', value: '100%' },
     { text: 'Small', value: '100px' },
     { text: 'Medium', value: '200px' },
     { text: 'Large', value: '400px' },
   ];
-  static readonly TOOLTIP_DIRECTION_TYPES: gf.TDirectionList = [
+  static TOOLTIP_DIRECTION_TYPES: gf.TDirectionList = [
     { text: 'Vertical', value: 'v' },
     { text: 'Horizontal ', value: 'h' },
   ];
-  static readonly VALUE_DATEFORMAT_TYPES: gf.TDateFormatList = [
+  static VALUE_DATEFORMAT_TYPES: gf.TDateFormatList = [
     { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
     { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
     { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
@@ -89,19 +89,19 @@ export class GFCONSTANT {
     { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
   ];
 
-  static readonly VALUEMAPPINGTYPES: gf.TValueMappingList = [
+  static VALUEMAPPINGTYPES: gf.TValueMappingList = [
     { text: 'Value to text', value: 1 },
     { text: 'Range to text', value: 2 },
   ];
 
   // METHODS
-  static readonly TEXTMETHODS: gf.TTextMethodList = [
+  static TEXTMETHODS: gf.TTextMethodList = [
     { text: 'All content', value: 'content' },
     { text: 'Substring', value: 'pattern', placeholder: '/RegEx/' },
     { text: 'Append (Space) ', value: 'as' },
     { text: 'Append (New line) ', value: 'anl' },
   ];
-  static readonly COLORMETHODS: gf.TStyleColorList = [
+  static COLORMETHODS: gf.TStyleColorList = [
     { text: 'Shape Stroke/Border', value: 'strokeColor' },
     { text: 'Shape Fill', value: 'fillColor' },
     { text: 'Label font color', value: 'fontColor' },
@@ -110,7 +110,7 @@ export class GFCONSTANT {
     { text: 'Image background', value: 'imageBackground' },
     { text: 'Image border', value: 'imageBorder' },
   ];
-  static readonly EVENTMETHODS: gf.TStyleEventList = [
+  static EVENTMETHODS: gf.TStyleEventList = [
     { text: 'Shape : Change form (text)', value: 'shape', type: 'text', placeholder: 'Shape name' },
     { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number', placeholder: '0-360', default: 0 },
     { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number', placeholder: 'Number in ms', default: 500 },
@@ -118,14 +118,14 @@ export class GFCONSTANT {
     { text: 'Shape : Change height (number)', value: 'height', type: 'number', placeholder: 'Number of px' },
     { text: 'Shape : Change width (number)', value: 'width', type: 'number', placeholder: 'Number of px' },
     { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number', placeholder: '0-100', default: 100 },
-    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number', placeholder: '0 or 1', typeahead: '0|1', default: "1" },
+    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number', placeholder: '0 or 1', typeahead: '0|1', default: '1' },
     { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number', placeholder: '0-100' },
     { text: 'Label : Replace text (text)', value: 'text', type: 'text', placeholder: 'Text' },
     { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number', placeholder: 'Number' },
     { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number', placeholder: '0-100', default: 100 },
   ];
 
-  static readonly LOCALVARIABLENAMES: gf.TVariableList = [
+  static LOCALVARIABLENAMES: gf.TVariableList = [
     { text: 'Name of the rule', value: GFCONSTANT.VAR_STR_RULENAME },
     { text: 'Current color according to the thresholds', value: GFCONSTANT.VAR_STR_COLOR },
     { text: 'Current raw value according to the aggregation', value: GFCONSTANT.VAR_NUM_VALUE },
@@ -135,7 +135,7 @@ export class GFCONSTANT {
 }
 
 export class GFVariables {
-  protected _variables: Map<string, any>;
+  _variables: Map<string, any>;
   constructor() {
     this._variables = new Map();
   }
@@ -259,9 +259,9 @@ class GFLog {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  private static logLevel = GFLog.DEBUG;
-  private static logDisplay = false;
-  constructor() { }
+  static logLevel = GFLog.DEBUG;
+  static logDisplay = false;
+  constructor() {}
 
   /**
    * If message must be displayed
@@ -270,7 +270,7 @@ class GFLog {
    * @returns {boolean}
    * @memberof Log
    */
-  private static toDisplay(level: number): boolean {
+  static toDisplay(level: number): boolean {
     if (GFLog.logDisplay !== undefined && GFLog.logDisplay === true) {
       if (GFLog.logLevel !== undefined && level >= GFLog.logLevel) {
         return true;
@@ -375,7 +375,7 @@ export class GFGlobal {
    * @returns {GFVariables}
    * @memberof GFGlobal
    */
-  private static getGlobalVars(): GFVariables {
+  static getGlobalVars(): GFVariables {
     if (GFGlobal._globalvars === undefined) {
       GFGlobal._globalvars = new GFVariables();
     }
@@ -513,7 +513,7 @@ export class GFGlobal {
           // Faire quelque chose avec XMLHttpRequest?
         }
       } else {
-        GFGlobal.log.warn("Contexroot : ", contextroot);
+        GFGlobal.log.warn('Contexroot : ', contextroot);
       }
     }
   }

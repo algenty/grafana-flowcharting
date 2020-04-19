@@ -1133,8 +1133,8 @@ export class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-      // Adjust for scientific notation.
-      (match[2] ? +match[2] : 0)
+        // Adjust for scientific notation.
+        (match[2] ? +match[2] : 0)
     );
   }
 }
@@ -1586,7 +1586,7 @@ export class EventMap extends GFMap {
 
   static getFormNames(): string[] {
     if (EventMap.shapes === undefined) {
-      EventMap.shapes = []
+      EventMap.shapes = [];
     }
 
     if (EventMap.shapes !== undefined && EventMap.shapes.length > 0) {
@@ -1595,7 +1595,7 @@ export class EventMap extends GFMap {
     GFGlobal.loadLocalFile(GFCONSTANT.VAR_STG_SHAPES, GFCONSTANT.CONF_FILE_SHAPES);
     const shapesText: string = GFGlobal.getVar(GFCONSTANT.VAR_STG_SHAPES);
     if (shapesText !== undefined) {
-      if (EventMap.shapes.length == 0) {
+      if (EventMap.shapes.length === 0) {
         EventMap.shapes = EventMap.shapes.concat(shapesText.split(/\n/));
         GFGlobal.unsetVar(GFCONSTANT.VAR_STG_SHAPES);
         return EventMap.shapes;
@@ -1692,12 +1692,18 @@ class RangeMap {
    * @memberof RangeMap
    */
   match(value: any): boolean {
-    if (!!value || value.length > 0) {
+    if ((value !== undefined && typeof value === 'string' && value.length > 0) || (value !== undefined && typeof value === 'number')) {
       let v: number = Number(value);
-      if (this.data.from !== undefined && this.data.from.length > 0) {
+      if (
+        (this.data.from !== undefined && typeof value === 'string' && this.data.from.length > 0) ||
+        (this.data.from !== undefined && typeof value === 'number')
+      ) {
         let from = Number(this.data.from);
         if (v >= from) {
-          if (this.data.to !== undefined && this.data.to.length > 0) {
+          if (
+            (this.data.to !== undefined && typeof this.data.to === 'string' && this.data.to.length > 0) ||
+            (this.data.from !== undefined && typeof this.data.to === 'number')
+          ) {
             let to = Number(this.data.to);
             return v < to;
           }
@@ -1706,7 +1712,10 @@ class RangeMap {
         return false;
       }
       // from is empty here
-      if (this.data.to !== undefined && this.data.to.length > 0) {
+      if (
+        (this.data.to !== undefined && typeof this.data.to === 'string' && this.data.to.length > 0) ||
+        (this.data.from !== undefined && typeof this.data.to === 'number')
+      ) {
         let to = Number(this.data.to);
         return v < to;
       }

@@ -2,14 +2,14 @@ import { Rule } from '../src/rule_class';
 
 describe('Rule', () => {
     const data = Rule.getDefaultData();
-    
+
     describe('New', () => {
         const rule = new Rule('/.*/', data);
         test('Should be equals', () => {
             expect(rule.getData()).toMatchSnapshot();
         });
     });
-    
+
     describe('Level', () => {
         const rule = new Rule('/.*/', data);
         test('In order', () => {
@@ -19,7 +19,7 @@ describe('Rule', () => {
             expect(rule.getThresholdLevel(60)).toBe(1);
             expect(rule.getThresholdLevel(90)).toBe(0);
         });
-    
+
         test('Invert', () => {
             rule.invertThesholds();
             expect(rule.data.invert).toBeTruthy();
@@ -28,7 +28,7 @@ describe('Rule', () => {
             expect(rule.getThresholdLevel(90)).toBe(2);
         });
     });
-    
+
     describe('Colors', () => {
         const rule = new Rule('/.*/', data);
         rule.data.thresholds = [50, 80];
@@ -44,11 +44,11 @@ describe('Rule', () => {
             expect(rule.getColorForValue(90)).toBe('rgba(50, 172, 45, 0.97)');
         });
     });
-    
+
     // describe.skip('Colorize', () => {
     //     const rule = new Rule('/.*/', data);
     //     rule.data.thresholds = [50, 80];
-    
+
     //     test('toColorize always ERR should be true', () => {
     //         rule.data.colorOn = 'a';
     //         expect(rule.toColorize(25)).toBeTruthy();
@@ -61,7 +61,7 @@ describe('Rule', () => {
     //         rule.data.colorOn = 'a';
     //         expect(rule.toColorize(90)).toBeTruthy();
     //     });
-    
+
     //     test('toColorize Warn/err ERR should be true', () => {
     //         rule.data.colorOn = 'wc';
     //         expect(rule.toColorize(25)).toBeTruthy();
@@ -75,7 +75,7 @@ describe('Rule', () => {
     //         expect(rule.toColorize(90)).toBeFalsy();
     //     });
     // });
-    
+
     describe('Shape', () => {
         const pattern = '/.*Toto.*/';
         test('addshape & remove', () => {
@@ -87,7 +87,7 @@ describe('Rule', () => {
             expect(rule.getShapeMaps().length).toBe(0);
             expect(rule.data.shapeData.length).toBe(0);
         });
-    
+
         test('Match on one', () => {
             const rule = new Rule('/.*/', data);
             rule.addShapeMap(pattern);
@@ -95,7 +95,7 @@ describe('Rule', () => {
             sm.match('Toto');
             expect(sm.match('Toto')).toBeTruthy();
         });
-    
+
         test('Match on all', () => {
             const rule = new Rule('/.*/', data);
             rule.addShapeMap(pattern);
@@ -103,10 +103,10 @@ describe('Rule', () => {
             expect(rule.matchShape('Tata')).toBeFalsy();
         });
     });
-    
+
     describe('Text', () => {
         const pattern = '/.*Toto.*/';
-    
+
         test('addshape & remove', () => {
             const rule = new Rule('/.*/', data);
             rule.addTextMap(pattern);
@@ -114,14 +114,14 @@ describe('Rule', () => {
             rule.removeTextMap(0);
             expect(rule.getTextMaps().length).toBe(0);
         });
-    
+
         test('Match on one', () => {
             const rule = new Rule('/.*/', data);
             rule.addTextMap(pattern);
             const sm = rule.getTextMap(0);
             expect(sm.match('Toto')).toBeTruthy();
         });
-    
+
         test('Match on all', () => {
             const rule = new Rule('/.*/', data);
             rule.addTextMap(pattern);
@@ -129,7 +129,7 @@ describe('Rule', () => {
             expect(rule.matchText('Tata')).toBeFalsy();
         });
     });
-    
+
     describe('Link', () => {
         const pattern = '/.*Toto.*/';
         test('addshape & remove', () => {
@@ -140,14 +140,14 @@ describe('Rule', () => {
             rule.removeLinkMap(0);
             expect(rule.getLinkMaps().length).toBe(0);
         });
-    
+
         test('Match on one', () => {
             const rule = new Rule('/.*/', data);
             rule.addLinkMap(pattern);
             const sm = rule.getLinkMap(0);
             expect(sm.match('Toto')).toBeTruthy();
         });
-    
+
         test('Match on all', () => {
             const rule = new Rule('/.*/', data);
             rule.addLinkMap(pattern);
@@ -155,7 +155,7 @@ describe('Rule', () => {
             expect(rule.matchLink('Tata')).toBeFalsy();
         });
     });
-    
+
     describe('ValueMap', () => {
         test('addshape & remove', () => {
             const rule = new Rule('/.*/', data);
@@ -167,7 +167,7 @@ describe('Rule', () => {
             expect(rule.getValueMaps().length).toBe(2);
             expect(rule.data.valueData.length).toBe(2);
         });
-    
+
         test('Mapping values', () => {
             const rule = new Rule('/.*/', data);
             rule.data.mappingType = 1;
@@ -179,8 +179,8 @@ describe('Rule', () => {
             expect(rule.getFormattedValue(3)).toBe('3');
         });
     });
-    
-    describe.skip('RangeMap', () => {
+
+    describe('RangeMap', () => {
         test('addshape & remove', () => {
             const rule = new Rule('/.*/', data);
             rule.data.mappingType = 2;
@@ -192,7 +192,7 @@ describe('Rule', () => {
             expect(rule.getRangeMaps().length).toBe(2);
             expect(rule.data.rangeData.length).toBe(2);
         });
-    
+
         test('Mapping values', () => {
             const rule = new Rule('/.*/', data);
             rule.data.mappingType = 2;
@@ -203,8 +203,23 @@ describe('Rule', () => {
             expect(rule.getFormattedValue(7)).toBe('Between 6 and 10');
             expect(rule.getFormattedValue(12)).toBe('12');
         });
+
+        //TODO: Fix It
+        test.skip('Mapping values upper and lower', () => {
+            const rule = new Rule('/.*/', data);
+            rule.data.mappingType = 2;
+            rule.data.type = 'string';
+            rule.addRangeMap(undefined, 33, 'Lower than 33');
+            rule.addRangeMap(33, 66, 'Between 33 and 66');
+            rule.addRangeMap(66, undefined, 'Upper than 66');
+            expect(rule.getFormattedValue(10)).toBe('Lower than 33');
+            expect(rule.getFormattedValue(50)).toBe('Between 33 and 66');
+            expect(rule.getFormattedValue(80)).toBe('Upper than 66');
+        });
+
+
     });
-    
+
     describe('Text replace', () => {
         const data = Rule.getDefaultData();
         const rule = new Rule('/.*/', data);

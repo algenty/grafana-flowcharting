@@ -125,7 +125,7 @@ declare module gf {
   declare type TValueTypeList = { text: string; value: TValueTypeKeys }[];
 
   declare type TTextMethodKeys = 'content' | 'pattern' | 'as' | 'anl';
-  declare type TTextMethodElt = { text: string; value: TTextMethodKeys ; placeholder ?: string};
+  declare type TTextMethodElt = { text: string; value: TTextMethodKeys; placeholder?: string };
   declare type TTextMethodList = TTextMethodElt[];
   declare type TDateFormatKeys = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
   declare type TDateFormatList = { text: string; value: TDateFormatKeys }[];

@@ -118,27 +118,27 @@ export class InspectOptionsCtrl {
     state.unhighlightCell();
   }
 
-  execute() {
-    const flowchart = this.flowchartHandler.getFlowchart();
-    const xgraph = flowchart.getXGraph();
-    if (xgraph) {
-      const graph = xgraph.graph;
-      const model = graph.getModel();
-      const mxcell = model.getCell(this.testData.id);
-      // eslint-disable-next-line no-eval
-      let value: any = undefined;
-      try {
-        value = eval(this.testData.value);
-      } catch (error) {
-        value = this.testData.value;
-      }
-      // console.log('Value : ', value);
-      // graph.setCellStyles(this.testData.style, value, [mxcell]);
-      // console.log("before", mxcell);
-      xgraph.resizeCell(mxcell, value, undefined);
-      // console.log("after", mxcell);
-    }
-  }
+  // execute() {
+  //   const flowchart = this.flowchartHandler.getFlowchart();
+  //   const xgraph = flowchart.getXGraph();
+  //   if (xgraph) {
+  //     const graph = xgraph.graph;
+  //     const model = graph.getModel();
+  //     const mxcell = model.getCell(this.testData.id);
+  //     // eslint-disable-next-line no-eval
+  //     let value: any = undefined;
+  //     try {
+  //       value = eval(this.testData.value);
+  //     } catch (error) {
+  //       value = this.testData.value;
+  //     }
+  //     // console.log('Value : ', value);
+  //     // graph.setCellStyles(this.testData.style, value, [mxcell]);
+  //     // console.log("before", mxcell);
+  //     xgraph.resizeCell(mxcell, value, undefined);
+  //     // console.log("after", mxcell);
+  //   }
+  // }
 }
 
 /** @ngInject */

@@ -18,8 +18,8 @@ export class FlowChartingPlugin {
 
   constructor(contextRoot: string, templateSrv: any) {
     this.contextRoot = contextRoot;
-    console.log("Init vars");
-    GFGlobal.setVar(GFCONSTANT.VAR_STG_CTXROOT, contextRoot)
+    console.log('Init vars');
+    GFGlobal.setVar(GFCONSTANT.VAR_STG_CTXROOT, contextRoot);
     GFGlobal.setVar(GFCONSTANT.VAR_OBJ_TEMPLATESRV, templateSrv);
     this.data = this.loadJson();
     this.repo = this.getRepo();
@@ -52,7 +52,7 @@ export class FlowChartingPlugin {
       GFGlobal.setVar(GFCONSTANT.VAR_OBJ_CTRL, $scope.ctrl);
     }
     window.GFP = plugin;
-    console.log("Global Vars",GFGlobal._globalvars)
+    console.log('Global Vars', GFGlobal._globalvars);
     return plugin;
   }
 
@@ -264,7 +264,7 @@ class Perf {
   enablePerf = false;
   marky: any = null;
   stack: string[] = [];
-  constructor() { }
+  constructor() {}
 
   enable(bool: boolean): void {
     this.enablePerf = bool;
@@ -314,7 +314,7 @@ class Log {
   static ERROR = 3;
   logLevel = Log.WARN;
   logDisplay = true;
-  constructor() { }
+  constructor() {}
 
   /**
    * If message must be displayed

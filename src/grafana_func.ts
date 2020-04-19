@@ -37,8 +37,7 @@ var grafana = {
 
   getFormatedDate(value, format) {
     return dateTime(value).format(format);
-  }
-
+  },
 };
 
 export default grafana;
