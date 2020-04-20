@@ -1306,24 +1306,21 @@ export default class XGraph {
   }
 
   // VISIBLE
-  toggleVisibleCell(mxcell: mxCell, visible: boolean, includeEdges: boolean) {
-    this.graph.toggleCells(visible, [mxcell], true);
-  }
 
   async hideCell(mxcell: mxCell) {
     if (this.isVisibleCell(mxcell)) {
-      this.graph.toggleCells(true, [mxcell], true);
+      this.graph.model.setVisible(mxcell, false);
     }
   }
 
   async showCell(mxcell: mxCell) {
     if (!this.isVisibleCell(mxcell)) {
-      this.graph.toggleCells(false, [mxcell], true);
+      this.graph.model.setVisible(mxcell, true);
     }
   }
 
   isVisibleCell(mxcell: mxCell): boolean {
-    return this.graph.isCellVisible(mxcell);
+    return this.graph.model.isVisible(mxcell);
   }
 
   // WIDTH AND HEIGHT

@@ -365,7 +365,7 @@ export class GFTrace {
     }
     return undefined;
   }
-  static after(uniqId) {
+  static async after(uniqId) {
     if (GFTrace.enable) {
       const trace = GFTrace.trc.get(uniqId);
       if (trace) {
@@ -376,13 +376,13 @@ export class GFTrace {
     }
   }
 
-  static clear() {
+  static async clear() {
     if (GFTrace.enable) {
       GFTrace.trc.clear();
     }
   }
 
-  static resume() {
+  static async resume() {
     if (GFTrace.enable) {
       let tb: any[] = [];
       GFTrace.trc.forEach(value => {
