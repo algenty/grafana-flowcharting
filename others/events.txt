@@ -83,3 +83,6 @@ setVisible(cell, visible)
 to front
 to back
 change url image
+
+
+g.model.setVisible(c, !g.model.isVisible(c));
