@@ -2,7 +2,7 @@ import { Flowchart } from 'flowchart_class';
 import { Rule, GFMap } from 'rule_class';
 import _ from 'lodash';
 import { Metric } from './metric_class';
-import { GFGlobal } from 'globals_class';
+import { GFGlobal, GFTrace } from 'globals_class';
 
 /**
  * Class FlowchartHandler
@@ -42,7 +42,6 @@ export class FlowchartHandler {
    */
   constructor($scope: ng.IScope, elem: any, ctrl: any, data: gf.TFlowchartHandlerData) {
     GFGlobal.log.info('FlowchartHandler.constructor()');
-    // GFGlobal.log.debug('FlowchartHandler.constructor() data', data);
     FlowchartHandler.getDefaultGraph();
     this.$scope = $scope;
     this.$elem = elem.find('.flowchart-panel__chart');
@@ -203,6 +202,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   async render() {
+    const trc = GFTrace.before(this.constructor.name + '.' + 'render()');
     // not repeat render if mouse down
     const id = GFGlobal.utils.uniqueID();
     GFP.perf.start('PERF : Render ' + id);
@@ -241,6 +241,8 @@ export class FlowchartHandler {
       // this.refresh();
     }
     this.ctrl.renderingCompleted();
+    GFTrace.after(trc);
+    GFTrace.resume();
     GFP.perf.stop('PERF : Render ' + id);
   }
 
@@ -295,10 +297,11 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   applyOptions(): this {
-    GFGlobal.log.info(`FlowchartHandler.applyOptions()`);
+    const trc = GFTrace.before(this.constructor.name + '.' + 'applyOptions()');
     this.flowcharts.forEach(flowchart => {
       flowchart.applyOptions();
     });
+    GFTrace.after(trc);
     return this;
   }
 
@@ -310,7 +313,9 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   async_refreshStates(rules: Rule[], metrics: Metric[]) {
+    const trc = GFTrace.before(this.constructor.name + '.' + 'async_refreshStates()');
     this.refreshStates(rules, metrics);
+    GFTrace.after(trc);
   }
 
   /**
@@ -322,14 +327,14 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   refreshStates(rules: Rule[], metrics: Metric[]): this {
-    GFP.perf.start(`${this.constructor.name}.refreshStates()`);
+    const trc = GFTrace.before(this.constructor.name + '.' + 'refreshStates()');
     if (this.changeRuleFlag) {
       this.updateStates(rules);
       this.changeRuleFlag = false;
     }
     this.setStates(rules, metrics);
     this.applyStates();
-    GFP.perf.stop(`${this.constructor.name}.refreshStates()`);
+    GFTrace.after(trc);
     return this;
   }
 
@@ -355,11 +360,11 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   setStates(rules: Rule[], metrics: any[]): this {
-    GFP.perf.start(`${this.constructor.name}.setStates()`);
+    const trc = GFTrace.before(this.constructor.name + '.' + 'setStates()');
     this.flowcharts.forEach(flowchart => {
       flowchart.setStates(rules, metrics);
     });
-    GFP.perf.stop(`${this.constructor.name}.setStates()`);
+    GFTrace.after(trc);
     return this;
   }
 
@@ -371,11 +376,11 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   updateStates(rules: Rule[]): this {
-    GFP.perf.start(`${this.constructor.name}.updateStates()`);
+    const trc = GFTrace.before(this.constructor.name + '.' + 'updateStates()');
     this.flowcharts.forEach(flowchart => {
       flowchart.updateStates(rules);
     });
-    GFP.perf.stop(`${this.constructor.name}.updateStates()`);
+    GFTrace.after(trc);
     return this;
   }
 
@@ -386,7 +391,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   applyStates(): this {
-    GFP.perf.start(`${this.constructor.name}.applyStates()`);
+    const trc = GFTrace.before(this.constructor.name + '.' + 'applyStates()');
     new Promise(() => {
       this.flowcharts.forEach(flowchart => {
         flowchart.applyStates();
@@ -394,7 +399,7 @@ export class FlowchartHandler {
     }).then(() => {
       this.refresh();
     });
-    GFP.perf.stop(`${this.constructor.name}.applyStates()`);
+    GFTrace.after(trc);
     return this;
   }
 
@@ -405,9 +410,11 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   setOptions(): this {
+    const trc = GFTrace.before(this.constructor.name + '.' + 'setOptions()');
     this.flowcharts.forEach(flowchart => {
       flowchart.setOptions();
     });
+    GFTrace.after(trc);
     return this;
   }
 

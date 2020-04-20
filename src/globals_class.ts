@@ -2,6 +2,10 @@ import _ from 'lodash';
 export class GFCONSTANT {
   // CONFIG
   static CONF_FILE_SHAPES = '/static/shapes.txt';
+  static CONF_COLORS_STEPS = 5;
+  static CONF_COLORS_MS = 50;
+  static CONF_ANIMS_STEP = 5;
+  static CONF_ANIMS_MS = 50;
 
   // GLOBAL VARIABLE
   static VAR_STG_SHAPES = 'shapestext';
@@ -259,7 +263,7 @@ class GFLog {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  static logLevel = GFLog.DEBUG;
+  static logLevel = GFLog.WARN;
   static logDisplay = false;
   constructor() {}
 
@@ -332,6 +336,60 @@ class GFLog {
     if (GFLog.toDisplay(GFLog.ERROR)) {
       const title = args.shift();
       console.error(`GF ERROR : ${title}`, ...args);
+    }
+  }
+}
+
+export class GFTrace {
+  static enable = false;
+  static trc = new Map();
+  static fn = new Map();
+  static indent = 0;
+  // constructor(name) {}
+
+  static before(fn): string | undefined {
+    if (this.enable) {
+      const trace = {
+        Name: fn,
+        Id: GFGlobal.utils.uniqueID(),
+        Args: undefined,
+        Return: undefined,
+        Before: Date.now(),
+        End: undefined,
+        ExecTime: undefined,
+        Indent: GFTrace.indent,
+      };
+      this.trc.set(trace.Id, trace);
+      GFTrace.indent++;
+      return trace.Id;
+    }
+    return undefined;
+  }
+  static after(uniqId) {
+    if (GFTrace.enable) {
+      const trace = GFTrace.trc.get(uniqId);
+      if (trace) {
+        trace.End = Date.now();
+        GFTrace.indent--;
+        trace.ExecTime = trace.End - trace.Before;
+      }
+    }
+  }
+
+  static clear() {
+    if (GFTrace.enable) {
+      GFTrace.trc.clear();
+    }
+  }
+
+  static resume() {
+    if (GFTrace.enable) {
+      let tb: any[] = [];
+      GFTrace.trc.forEach(value => {
+        tb.push(value);
+      });
+      console.table(tb, ['Indent', 'Name', 'ExecTime']);
+      GFTrace.trc.clear();
     }
   }
 }

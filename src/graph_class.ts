@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { GFGlobal } from 'globals_class';
+import { GFGlobal, GFCONSTANT, GFTrace } from 'globals_class';
 declare var Graph: any;
 
 declare var mxEvent: any;
@@ -266,8 +266,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   initGraph(): this {
-    GFGlobal.log.info('XGraph.initGraph()');
-    GFP.perf.start(`${this.constructor.name}.initGraph()`);
+    const trc = GFTrace.before(this.constructor.name + '.' + 'initGraph()');
     this.graph = new Graph(this.container);
 
     // /!\ What is setPannig
@@ -293,7 +292,7 @@ export default class XGraph {
 
     // DB CLICK
     this.graph.dblClick = this.eventDbClick.bind(this);
-    GFP.perf.stop(`${this.constructor.name}.initGraph()`);
+    GFTrace.after(trc);
     return this;
   }
 
@@ -304,7 +303,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   drawGraph(): this {
-    GFGlobal.log.info('XGraph.drawGraph()');
+    const trc = GFTrace.before(this.constructor.name + '.' + 'drawGraph()');
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
@@ -318,6 +317,7 @@ export default class XGraph {
       this.cells['id'] = this.getCurrentCells('id');
       this.cells['value'] = this.getCurrentCells('value');
     }
+    GFTrace.after(trc);
     return this;
   }
 
@@ -328,7 +328,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   applyGraph(): this {
-    GFGlobal.log.info('XGraph.refreshGraph()');
+    const trc = GFTrace.before(this.constructor.name + '.' + 'applyGraph()');
     if (!this.scale) {
       this.zoomGraph(this.zoomPercent);
     } else {
@@ -345,6 +345,7 @@ export default class XGraph {
     this.gridGraph(this.grid);
     this.bgGraph(this.bgColor);
     this.refresh();
+    GFTrace.after(trc);
     return this;
   }
 
@@ -355,7 +356,9 @@ export default class XGraph {
    * @memberof XGraph
    */
   refresh(): this {
+    const trc = GFTrace.before(this.constructor.name + '.' + 'refresh()');
     this.graph.refresh();
+    GFTrace.after(trc);
     return this;
   }
 
@@ -436,6 +439,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   centerGraph(bool: boolean): this {
+    const trc = GFTrace.before(this.constructor.name + '.' + 'centerGraph()');
     this.graph.centerZoom = false;
     if (bool) {
       this.graph.center(true, true);
@@ -443,6 +447,7 @@ export default class XGraph {
       this.graph.center(false, false);
     }
     this.center = bool;
+    GFTrace.after(trc);
     return this;
   }
 
@@ -454,12 +459,14 @@ export default class XGraph {
    * @memberof XGraph
    */
   scaleGraph(bool: boolean): this {
+    const trc = GFTrace.before(this.constructor.name + '.' + 'scaleGraph()');
     if (bool) {
       this.unzoomGraph();
       this.graph.fit();
       this.graph.view.rendering = true;
     }
     this.scale = bool;
+    GFTrace.after(trc);
     return this;
   }
 
@@ -848,7 +855,7 @@ export default class XGraph {
         const endColor = this.getStyleCell(mxcell, style);
         if (endColor !== null) {
           const startColor = color;
-          const steps = GFGlobal.utils.getStepColors(startColor, endColor, 5);
+          const steps = GFGlobal.utils.getStepColors(startColor, endColor, GFCONSTANT.CONF_COLORS_STEPS);
           const count = 0;
           const self = this;
           function graduate(count, steps) {
@@ -856,7 +863,7 @@ export default class XGraph {
               self.setStyleCell(mxcell, style, steps[count]);
               window.setTimeout(() => {
                 graduate(count + 1, steps);
-              }, 40);
+              }, GFCONSTANT.CONF_COLORS_MS);
             }
           }
           graduate(count, steps);
@@ -893,7 +900,7 @@ export default class XGraph {
         const end = Number(endValue);
         const begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
         if (end !== begin) {
-          const steps = GFGlobal.getIntervalCounter(begin, end, 5);
+          const steps = GFGlobal.getIntervalCounter(begin, end, GFCONSTANT.CONF_ANIMS_STEP);
           const l = steps.length;
           let count = 0;
           const self = this;
@@ -902,7 +909,7 @@ export default class XGraph {
               self.setStyleCell(mxcell, style, steps[count]);
               window.setTimeout(() => {
                 graduate(count + 1, steps);
-              }, 50);
+              }, GFCONSTANT.CONF_ANIMS_MS);
             }
           }
           graduate(count, steps);
@@ -1332,10 +1339,10 @@ export default class XGraph {
       let _h = height !== undefined ? Math.abs(height) : origine !== undefined ? origine.height : geo.height;
       let _w = width !== undefined ? Math.abs(width) : origine !== undefined ? origine.width : geo.width;
       if (this.animation) {
-        const steps_x = GFGlobal.getIntervalCounter(geo.x, _x, 5);
-        const steps_y = GFGlobal.getIntervalCounter(geo.y, _y, 5);
-        const steps_w = GFGlobal.getIntervalCounter(geo.width, _w, 5);
-        const steps_h = GFGlobal.getIntervalCounter(geo.height, _h, 5);
+        const steps_x = GFGlobal.getIntervalCounter(geo.x, _x, GFCONSTANT.CONF_ANIMS_STEP);
+        const steps_y = GFGlobal.getIntervalCounter(geo.y, _y, GFCONSTANT.CONF_ANIMS_STEP);
+        const steps_w = GFGlobal.getIntervalCounter(geo.width, _w, GFCONSTANT.CONF_ANIMS_STEP);
+        const steps_h = GFGlobal.getIntervalCounter(geo.height, _h, GFCONSTANT.CONF_ANIMS_STEP);
         const l = steps_x.length;
         let count = 0;
         const self = this;
@@ -1345,7 +1352,7 @@ export default class XGraph {
               const _rec = new mxRectangle(steps_x[count], steps_y[count], steps_w[count], steps_h[count]);
               self.graph.resizeCell(mxcell, _rec, true);
               graduate(count + 1, steps_x, steps_y, steps_w, steps_h);
-            }, 50);
+            }, GFCONSTANT.CONF_ANIMS_MS);
           }
         }
         graduate(count, steps_x, steps_y, steps_w, steps_h);

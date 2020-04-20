@@ -26,11 +26,11 @@ describe('GFGlobal', () => {
 
   describe('Secure Eval', () => {
     test('Math', () => {
-      expect(GFGlobal.utils.evalIt("Math.random()*101")).toBeGreaterThan(0);
-      expect(GFGlobal.utils.evalIt("Math.random()*101")).toBeLessThanOrEqual(100);
+      expect(GFGlobal.utils.evalIt('Math.random()*101')).toBeGreaterThan(0);
+      expect(GFGlobal.utils.evalIt('Math.random()*101')).toBeLessThanOrEqual(100);
     });
     test('Simple operation', () => {
-      expect(GFGlobal.utils.evalIt("2+2")).toBe(4);      
+      expect(GFGlobal.utils.evalIt('2+2')).toBe(4);
     });
   });
 

@@ -30,7 +30,14 @@ Object {
   "reduce": true,
   "refId": "A",
   "sanitize": false,
-  "shapeData": Array [],
+  "shapeData": Array [
+    Object {
+      "colorOn": "a",
+      "hidden": false,
+      "pattern": "/.*Toto.*/",
+      "style": "fillColor",
+    },
+  ],
   "shapeProp": "id",
   "shapeRegEx": true,
   "stringThresholds": Array [

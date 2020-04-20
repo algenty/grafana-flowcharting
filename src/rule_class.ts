@@ -1714,7 +1714,7 @@ class RangeMap {
       // from is empty here
       if (
         (this.data.to !== undefined && typeof this.data.to === 'string' && this.data.to.length > 0) ||
-        (this.data.from !== undefined && typeof this.data.to === 'number')
+        (this.data.to !== undefined && typeof this.data.to === 'number')
       ) {
         let to = Number(this.data.to);
         return v < to;

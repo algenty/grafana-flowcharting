@@ -5,7 +5,7 @@ import { Rule } from 'rule_class';
 
 import { FlowchartHandler } from 'flowchartHandler';
 import { Metric } from 'metric_class';
-import { GFGlobal } from 'globals_class';
+import { GFGlobal, GFTrace } from 'globals_class';
 
 /**
  * Flowchart handler
@@ -154,6 +154,7 @@ export class Flowchart {
    * @memberof Flowchart
    */
   updateStates(rules: Rule[]): this {
+    const trc = GFTrace.before(this.constructor.name + '.' + 'updateStates()');
     rules.forEach(rule => {
       if (this.stateHandler !== undefined) {
         rule.states = this.stateHandler.getStatesForRule(rule);
@@ -168,6 +169,7 @@ export class Flowchart {
         GFGlobal.log.error('updateStates => this.stateHandler undefined');
       }
     });
+    GFTrace.after(trc);
     return this;
   }
 
@@ -270,6 +272,7 @@ export class Flowchart {
    * @memberof Flowchart
    */
   setOptions(): this {
+    const trc = GFTrace.before(this.constructor.name + '.' + 'setOptions()');
     this.setScale(this.data.scale);
     this.setCenter(this.data.center);
     this.setGrid(this.data.grid);
@@ -277,6 +280,7 @@ export class Flowchart {
     this.setLock(this.data.lock);
     this.setZoom(this.data.zoom);
     this.setBgColor(this.data.bgColor);
+    GFTrace.after(trc);
     return this;
   }
 
@@ -299,10 +303,11 @@ export class Flowchart {
    * @memberof Flowchart
    */
   applyOptions() {
-    GFGlobal.log.info(`flowchart[${this.data.name}].refresh()`);
+    const trc = GFTrace.before(this.constructor.name + '.' + 'applyOptions()');
     if (this.xgraph) {
       this.xgraph.applyGraph();
     }
+    GFTrace.after(trc);
   }
 
   /**
