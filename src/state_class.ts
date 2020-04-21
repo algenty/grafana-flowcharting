@@ -2,7 +2,7 @@ import XGraph from './graph_class';
 import { Rule, EventMap } from './rule_class';
 import { Metric } from './metric_class';
 import { TooltipHandler } from './tooltipHandler';
-import { GFCONSTANT, GFGlobal, GFVariables } from 'globals_class';
+import { _GF, GFVariables } from 'globals_class';
 
 /**
  * Class for state of one cell
@@ -38,7 +38,7 @@ export class State {
    * @memberof State
    */
   constructor(mxcell: mxCell, xgraph: XGraph) {
-    GFGlobal.log.info('State.constructor()');
+    _GF.log.info('State.constructor()');
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
@@ -48,7 +48,7 @@ export class State {
     this.eventState = new EventState(xgraph, mxcell);
     this.textState = new TextState(xgraph, mxcell);
     this.linkState = new LinkState(xgraph, mxcell);
-    this.variables = GFGlobal.createLocalVars();
+    this.variables = _GF.createLocalVars();
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
     this.originalText = this.xgraph.getLabelCell(mxcell);
@@ -73,7 +73,7 @@ export class State {
    * @memberof State
    */
   setState(rule: Rule, metric: Metric): this {
-    GFGlobal.log.info('State.setState()');
+    _GF.log.info('State.setState()');
     let beginPref = performance.now();
     if (!rule.isHidden() && rule.matchMetric(metric)) {
       const shapeMaps = rule.getShapeMaps();
@@ -84,11 +84,11 @@ export class State {
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
       const color = rule.data.gradient && rule.data.type === 'number' ? rule.getColorForValue(value) : rule.getColorForLevel(level);
-      this.variables.set(GFCONSTANT.VAR_STR_RULENAME, rule.data.pattern);
-      this.variables.set(GFCONSTANT.VAR_NUM_VALUE, value);
-      this.variables.set(GFCONSTANT.VAR_STR_FORMATED, value);
-      this.variables.set(GFCONSTANT.VAR_NUM_LEVEL, level);
-      this.variables.set(GFCONSTANT.VAR_STR_COLOR, color);
+      this.variables.set(_GF.CONSTANTS.VAR_STR_RULENAME, rule.data.pattern);
+      this.variables.set(_GF.CONSTANTS.VAR_NUM_VALUE, value);
+      this.variables.set(_GF.CONSTANTS.VAR_STR_FORMATED, value);
+      this.variables.set(_GF.CONSTANTS.VAR_NUM_LEVEL, level);
+      this.variables.set(_GF.CONSTANTS.VAR_STR_COLOR, color);
 
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
@@ -189,7 +189,7 @@ export class State {
    * @memberof State
    */
   unsetState(): this {
-    GFGlobal.log.info('State.unsetState()');
+    _GF.log.info('State.unsetState()');
     this.eventState.unset();
     this.textState.unset();
     this.linkState.unset();
@@ -253,7 +253,7 @@ export class State {
    * @memberof State
    */
   applyState(): this {
-    GFGlobal.log.info('State.applyState()');
+    _GF.log.info('State.applyState()');
     if (this.matched || this.changed) {
       this.changed = true;
       this.shapeState.apply();
@@ -354,7 +354,7 @@ export class GFState {
 
   addValue(key: string, value: any) {
     if (this.keys.includes(key) !== true) {
-      GFGlobal.log.warn('GFState.addValue()', key, 'not found');
+      _GF.log.warn('GFState.addValue()', key, 'not found');
       this.keys.push(key);
     }
     this.originalValue.set(key, value);
@@ -363,7 +363,7 @@ export class GFState {
     this.matchLevel.set(key, GFState.DEFAULTLEVEL);
     this.matchedKey.set(key, false);
     this.changedKey.set(key, false);
-    GFGlobal.log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
+    _GF.log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
   }
 
   getOriginalValue(key: string): any | undefined {
@@ -392,17 +392,17 @@ export class GFState {
   apply(key?: string): this {
     if (key !== undefined) {
       if (this.isMatched(key)) {
-        GFGlobal.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] MATCHED KEY=' + key);
+        _GF.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] MATCHED KEY=' + key);
         let value = this.getMatchValue(key);
         try {
           this.apply_core(key, value);
         } catch (error) {
-          GFGlobal.log.error('Error on reset for key ' + key, error);
+          _GF.log.error('Error on reset for key ' + key, error);
         }
         this.changedKey.set(key, true);
         this.matchedKey.set(key, false);
       } else if (this.isChanged(key)) {
-        GFGlobal.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] CHANGED KEY=' + key);
+        _GF.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] CHANGED KEY=' + key);
         this.reset(key);
       }
     } else {
@@ -462,14 +462,14 @@ export class GFState {
 
   reset(key?: string): this {
     if (key !== undefined) {
-      GFGlobal.log.debug('GFState.reset from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key);
+      _GF.log.debug('GFState.reset from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key);
       this.unset(key);
       let value = this.getOriginalValue(key);
       try {
         // debugger
         this.reset_core(key, value);
       } catch (error) {
-        GFGlobal.log.error('Error on reset for key ' + key, error);
+        _GF.log.error('Error on reset for key ' + key, error);
       }
       this.changedKey.set(key, false);
       this.matchedKey.set(key, false);
@@ -513,7 +513,7 @@ class EventState extends GFState {
   }
 
   init_core() {
-    this.keys = GFCONSTANT.EVENTMETHODS.map(x => x.value);
+    this.keys = _GF.CONSTANTS.EVENTMETHODS.map(x => x.value);
     this.geo = this.xgraph.getSizeCell(this.mxcell);
     this.keys.forEach(key => {
       const value = this._get(key);
@@ -707,13 +707,13 @@ class ShapeState extends GFState {
   }
 
   init_core() {
-    GFGlobal.log.info('ShapeState [' + this.mxcell.id + ']');
-    this.keys = GFCONSTANT.COLORMETHODS.map(x => x.value);
+    _GF.log.info('ShapeState [' + this.mxcell.id + ']');
+    this.keys = _GF.CONSTANTS.COLORMETHODS.map(x => x.value);
     this.fullStylesString = this.mxcell.getStyle();
     this.keys.forEach(key => {
       const value = this.xgraph.getStyleCell(this.mxcell, key);
       this.addValue(key, value);
-      GFGlobal.log.debug('ShapeState [' + this.mxcell.id + '] Add value : ' + key, value);
+      _GF.log.debug('ShapeState [' + this.mxcell.id + '] Add value : ' + key, value);
     });
     this.mxcell.GF_tooltipHandler = null;
   }

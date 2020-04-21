@@ -83,6 +83,16 @@ setVisible(cell, visible)
 to front
 to back
 change url image
-
+flipH
+flipV
+ARROW_CLASSIC	Constant for classic arrow markers.
+ARROW_CLASSIC_THIN	Constant for thin classic arrow markers.
+ARROW_BLOCK	Constant for block arrow markers.
+ARROW_BLOCK_THIN	Constant for thin block arrow markers.
+ARROW_OPEN	Constant for open arrow markers.
+ARROW_OPEN_THIN	Constant for thin open arrow markers.
+ARROW_OVAL	Constant for oval arrow markers.
+ARROW_DIAMOND	Constant for diamond arrow markers.
+ARROW_DIAMOND_THIN
 
 g.model.setVisible(c, !g.model.isVisible(c));

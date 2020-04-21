@@ -8990,6 +8990,11 @@ mute-stream@0.0.8:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
+mxgraph-type-definitions@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/mxgraph-type-definitions/-/mxgraph-type-definitions-1.0.1.tgz#6c7e2a27640d6ccb4703d84012a9f4d8c3fa81c8"
+  integrity sha512-1bJgE9oOUF0bahsu2S9keJjfi+NfPreWg4h0IZ5TGmctEE3JDR7LdaIJIDBys5djrSyZq5Gf2U2QHNiYwNyb/w==
+
 mxgraph@^4.0.4:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/mxgraph/-/mxgraph-4.0.6.tgz#759d4761ec20470b86a0926865bf87dada99b0b4"

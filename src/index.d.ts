@@ -48,7 +48,8 @@ declare module gf {
     | 'textOpacity'
     | 'fold'
     | 'height'
-    | 'width';
+    | 'width'
+    | 'image';
   declare type TStyleEventElt = {
     text: string;
     value: TStyleEventKeys;

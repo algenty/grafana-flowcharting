@@ -3,7 +3,7 @@ import grafana from 'grafana_func';
 import { State } from './state_class';
 import _ from 'lodash';
 import { Metric } from 'metric_class';
-import { GFGlobal, GFCONSTANT } from 'globals_class';
+import { _GF } from 'globals_class';
 
 /**
  * Rule definition
@@ -37,7 +37,7 @@ export class Rule {
   constructor(pattern: string, data: gf.TIRuleData) {
     this.data = data;
     this.data.pattern = pattern;
-    this.id = GFGlobal.utils.uniqueID();
+    this.id = _GF.utils.uniqueID();
     this.states = new Map();
   }
 
@@ -511,7 +511,7 @@ export class Rule {
       let ratio = 0.5;
       let colorEnd = colors[index + 1];
       // color = GFP.utils.getRatioColor(ratio, colorStart, colorEnd);
-      color = GFGlobal.utils.getRatioColor(ratio, colorStart, colorEnd);
+      color = _GF.utils.getRatioColor(ratio, colorStart, colorEnd);
       if (this.data.type === 'number') {
         let absoluteDistance = thresholds[index] - thresholds[index - 1];
         value = absoluteDistance / 2 + thresholds[index - 1];
@@ -628,7 +628,7 @@ export class Rule {
    */
   matchMetric(metric: Metric): boolean {
     if (this.data.metricType === 'serie' && metric.type === 'serie') {
-      return GFGlobal.utils.matchString(metric.getName(), this.data.pattern);
+      return _GF.utils.matchString(metric.getName(), this.data.pattern);
     }
     if (this.data.metricType === 'table' && metric.type === 'table') {
       return metric.getName() === this.data.refId;
@@ -776,7 +776,7 @@ export class Rule {
   // LINK MAPS
   //
   addLinkMap(pattern: string): LinkMap {
-    GFGlobal.log.info('Rule.addLinkMap()');
+    _GF.log.info('Rule.addLinkMap()');
     const data = LinkMap.getDefaultData();
     const m = new LinkMap(pattern, data);
     m.import(data);
@@ -915,7 +915,7 @@ export class Rule {
       let valueDistanceFromMin = value - thresholds[cursor];
       let ratio = valueDistanceFromMin / absoluteDistance;
       // let color = GFP.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
-      let color = GFGlobal.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
+      let color = _GF.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
       return color;
     }
     return '';
@@ -985,7 +985,7 @@ export class Rule {
       let l = thresholds.length;
       for (let index = 0; index < l; index++) {
         const t = thresholds[index];
-        if (GFGlobal.utils.matchString(value, t) || GFGlobal.utils.matchString(formatedValue, t)) {
+        if (_GF.utils.matchString(value, t) || _GF.utils.matchString(formatedValue, t)) {
           thresholdLevel = index + 1;
           break;
         }
@@ -1012,7 +1012,7 @@ export class Rule {
         const value = metric.getValue(this.data.aggregation, this.data.column);
         return value;
       } catch (error) {
-        GFGlobal.log.error('datapoint for metric is null', error);
+        _GF.log.error('datapoint for metric is null', error);
         return null;
       }
     }
@@ -1146,7 +1146,7 @@ export class GFMap {
   constructor(pattern, data: gf.TGFMapData) {
     this.data = data;
     this.data.pattern = pattern;
-    this.id = GFGlobal.utils.uniqueID();
+    this.id = _GF.utils.uniqueID();
     // this.import(data);
   }
 
@@ -1198,7 +1198,7 @@ export class GFMap {
     if (text === undefined || text === null || text.length === 0) {
       return false;
     }
-    return GFGlobal.utils.matchString(text, this.data.pattern, regex);
+    return _GF.utils.matchString(text, this.data.pattern, regex);
   }
 
   /**
@@ -1435,7 +1435,7 @@ export class TextMap extends GFMap {
       return FormattedValue;
     }
     if (this.data.textReplace === 'pattern') {
-      const regexVal = GFGlobal.utils.stringToJsRegex(this.data.textPattern);
+      const regexVal = _GF.utils.stringToJsRegex(this.data.textPattern);
       if (text.toString().match(regexVal)) {
         return text.toString().replace(regexVal, FormattedValue);
       }
@@ -1528,7 +1528,7 @@ export class LinkMap extends GFMap {
 
 export class EventMap extends GFMap {
   data: gf.TEventMapData;
-  static methods = GFCONSTANT.EVENTMETHODS;
+  static methods = _GF.CONSTANTS.EVENTMETHODS;
   static shapes: string[] = EventMap.getFormNames();
 
   /**
@@ -1540,7 +1540,7 @@ export class EventMap extends GFMap {
   constructor(pattern: string, data: gf.TEventMapData) {
     super(pattern, data);
     this.data = data;
-    // GFGlobal.loadFile(GFCONSTANT.VAR_STG_SHAPES, GFCONSTANT.CONF_FILE_SHAPES);
+    // GFGlobal.loadFile(_GF.CONSTANTS.VAR_STG_SHAPES, _GF.CONSTANTS.CONF_FILE_SHAPES);
   }
 
   /**
@@ -1567,7 +1567,7 @@ export class EventMap extends GFMap {
 
   getTypeahead(): string[] {
     const self = this;
-    let result = GFGlobal.getFullAvailableVarNames();
+    let result = _GF.getFullAvailableVarNames();
     const elt: gf.TStyleEventElt | undefined = EventMap.methods.find(x => x.value === self.data.style);
     if (elt !== undefined && elt.typeahead !== undefined) {
       result = result.concat(elt.typeahead.split('|'));
@@ -1592,12 +1592,12 @@ export class EventMap extends GFMap {
     if (EventMap.shapes !== undefined && EventMap.shapes.length > 0) {
       return EventMap.shapes;
     }
-    GFGlobal.loadLocalFile(GFCONSTANT.VAR_STG_SHAPES, GFCONSTANT.CONF_FILE_SHAPES);
-    const shapesText: string = GFGlobal.getVar(GFCONSTANT.VAR_STG_SHAPES);
+    _GF.loadLocalFile(_GF.CONSTANTS.VAR_STG_SHAPES, _GF.CONSTANTS.CONF_FILE_SHAPES);
+    const shapesText: string = _GF.getVar(_GF.CONSTANTS.VAR_STG_SHAPES);
     if (shapesText !== undefined) {
       if (EventMap.shapes.length === 0) {
         EventMap.shapes = EventMap.shapes.concat(shapesText.split(/\n/));
-        GFGlobal.unsetVar(GFCONSTANT.VAR_STG_SHAPES);
+        _GF.unsetVar(_GF.CONSTANTS.VAR_STG_SHAPES);
         return EventMap.shapes;
       }
     }
@@ -1853,7 +1853,7 @@ class ValueMap {
     if (!_.isString(value) && Number(this.data.value) === Number(value)) {
       return true;
     }
-    return GFGlobal.utils.matchString(value.toString(), this.data.value);
+    return _GF.utils.matchString(value.toString(), this.data.value);
   }
 
   /**

@@ -3,7 +3,7 @@ import { Rule } from './rule_class';
 import _ from 'lodash';
 import { Metric } from './metric_class';
 import XGraph from 'graph_class';
-import { GFGlobal } from 'globals_class';
+import { _GF } from 'globals_class';
 
 /**
  * States Handler class
@@ -21,7 +21,7 @@ export class StateHandler {
    * @memberof StateHandler
    */
   constructor(xgraph: XGraph) {
-    GFGlobal.log.info('StateHandler.constructor()');
+    _GF.log.info('StateHandler.constructor()');
     this.states = new Map();
     this.xgraph = xgraph;
     this.initStates(this.xgraph);
@@ -35,7 +35,7 @@ export class StateHandler {
    * @memberof StateHandler
    */
   initStates(xgraph: XGraph): this {
-    GFGlobal.log.info('StateHandler.initStates()');
+    _GF.log.info('StateHandler.initStates()');
     this.xgraph = xgraph;
     this.states.clear();
     const mxcells = xgraph.getMxCells();
@@ -53,7 +53,7 @@ export class StateHandler {
    * @memberof StateHandler
    */
   getStatesForRule(rule: Rule) {
-    GFGlobal.log.info('StateHandler.getStatesForRule()');
+    _GF.log.info('StateHandler.getStatesForRule()');
     const result = new Map();
     let name: string | null;
     const xgraph = this.xgraph;
@@ -107,7 +107,7 @@ export class StateHandler {
    * @memberof StateHandler
    */
   updateStates(rules: Rule[]) {
-    GFGlobal.log.info('StateHandler.updateStates()');
+    _GF.log.info('StateHandler.updateStates()');
     rules.forEach(rule => {
       rule.states = this.getStatesForRule(rule);
     });
@@ -173,11 +173,11 @@ export class StateHandler {
    * Restore initial status and prepare states object
    */
   prepare(): this {
-    GFP.perf.start('statesHandler.prepare');
+    const trc = _GF.trace.before(this.constructor.name + '.' + 'prepare()');
     this.states.forEach(state => {
       state.prepare();
     });
-    GFP.perf.stop('statesHandler.prepare');
+    trc.after();
     return this;
   }
 
@@ -187,7 +187,7 @@ export class StateHandler {
    * @param  {Array<Metric>} metrics - Array of serie object
    */
   setStates(rules: Rule[], metrics: Metric[]): this {
-    GFGlobal.log.info('StateHandler.setStates()');
+    _GF.log.info('StateHandler.setStates()');
     this.prepare();
     rules.forEach(rule => {
       rule.highestLevel = -1;
@@ -211,7 +211,7 @@ export class StateHandler {
    * Apply color and text
    */
   applyStates(): this {
-    GFGlobal.log.info('StateHandler.applyStates()');
+    _GF.log.info('StateHandler.applyStates()');
     this.states.forEach(state => {
       state.async_applyState();
     });
@@ -224,8 +224,8 @@ export class StateHandler {
    * @memberof StateHandler
    */
   async async_applyStates() {
-    GFP.perf.start('async_applyStates');
+    const trc = _GF.trace.before(this.constructor.name + '.' + 'render()');
     this.applyStates();
-    GFP.perf.stop('async_applyStates');
+    trc.after();
   }
 }

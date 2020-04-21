@@ -1,7 +1,7 @@
 // import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
 import { Metric, Serie, Table } from './metric_class';
-import { GFGlobal } from 'globals_class';
+import { _GF } from 'globals_class';
 
 /**
  * Data Series/Tables handler
@@ -26,7 +26,7 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   initData(dataList: any) {
-    GFGlobal.log.info('initData');
+    _GF.log.info('initData');
     // GFGlobal.log.debug('initData', dataList);
     this.tables = [];
     this.series = [];
@@ -64,7 +64,7 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   addTable(data: any): Table {
-    GFGlobal.log.info('addTable');
+    _GF.log.info('addTable');
     const table = new Table(data);
     this.tables.push(table);
     this.metrics.push(table);
@@ -79,7 +79,7 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   addSerie(data: any): Serie {
-    GFGlobal.log.info('addSerie');
+    _GF.log.info('addSerie');
     const serie = new Serie(data);
     this.series.push(serie);
     this.metrics.push(serie);

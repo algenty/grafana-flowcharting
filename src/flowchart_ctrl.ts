@@ -6,7 +6,7 @@ import { inspectOptionsTab } from 'inspect_options';
 import { RulesHandler } from 'rulesHandler';
 import { FlowchartHandler } from 'flowchartHandler';
 import { MetricHandler } from 'metricHandler';
-import { GFGlobal } from 'globals_class';
+import { _GF } from 'globals_class';
 import _ from 'lodash';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
@@ -72,12 +72,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRefresh() {
-    // GFP.log.info( 'FlowchartCtrl.onRefresh()');
     this.onRender();
   }
 
   onVarChanged() {
-    // GFP.log.info( 'FlowchartCtrl.onVarChanged()');
     if (this.flowchartHandler !== undefined) {
       this.flowchartHandler.sourceChanged();
       this.flowchartHandler.render();
@@ -89,15 +87,15 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-    GFP.perf.start('onDataReceived');
+    const trc = _GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
     if (!!this.metricHandler) {
       this.metricHandler.initData(dataList);
       if (!!this.flowchartHandler) {
         this.flowchartHandler.dataChanged();
       }
     }
-    GFP.perf.stop('onDataReceived');
     this.render();
+    trc.after();
   }
 
   onDataError() {
@@ -115,8 +113,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
-    // GFP.log.info( 'FlowchartCtrl.link()');
-    GFP.perf.start(`${this.constructor.name}.link()`);
+    const trc = _GF.trace.before(this.constructor.name + '.' + 'link()');
 
     // DATA
     this.metricHandler = new MetricHandler(this.$scope);
@@ -154,7 +151,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // Versions
     this.panel.newFlag = false;
     this.panel.version = this.version;
-    GFP.perf.stop(`${this.constructor.name}.link()`);
+    trc.after();
   }
 
   // exportSVG() {
@@ -180,7 +177,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // }
 
   $onDestroy() {
-    GFGlobal.destroy();
+    _GF.destroy();
   }
 }
 

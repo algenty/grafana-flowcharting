@@ -1,6 +1,6 @@
-import { GFGlobal, GFCONSTANT } from 'globals_class';
+import { _GF } from 'globals_class';
 
-declare var GFP: FlowChartingPlugin;
+// declare var GFP: FlowChartingPlugin;
 /**
  * Global Manager of plugin
  * @export
@@ -10,20 +10,20 @@ export class FlowChartingPlugin {
   contextRoot: string;
   data: any;
   repo: string;
-  perf: Perf;
-  log: Log;
+  // perf: Perf;
+  // log: Log;
   utils: any;
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   templateSrv: any;
 
   constructor(contextRoot: string, templateSrv: any) {
     this.contextRoot = contextRoot;
-    GFGlobal.setVar(GFCONSTANT.VAR_STG_CTXROOT, contextRoot);
-    GFGlobal.setVar(GFCONSTANT.VAR_OBJ_TEMPLATESRV, templateSrv);
+    _GF.setVar(_GF.CONSTANTS.VAR_STG_CTXROOT, contextRoot);
+    _GF.setVar(_GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
     this.data = this.loadJson();
     this.repo = this.getRepo();
-    this.perf = new Perf();
-    this.log = new Log();
+    // this.perf = new Perf();
+    // this.log = new Log();
     this.templateSrv = templateSrv;
     this.utils = require('./utils_raw');
   }
@@ -48,7 +48,7 @@ export class FlowChartingPlugin {
     } else {
       contextRoot = $scope.$root.appSubUrl + FlowChartingPlugin.defaultContextRoot;
       plugin = new FlowChartingPlugin(contextRoot, templateSrv);
-      GFGlobal.setVar(GFCONSTANT.VAR_OBJ_CTRL, $scope.ctrl);
+      _GF.setVar(_GF.CONSTANTS.VAR_OBJ_CTRL, $scope.ctrl);
     }
     window.GFP = plugin;
     return plugin;
@@ -258,127 +258,127 @@ export class FlowChartingPlugin {
   }
 }
 
-class Perf {
-  enablePerf = false;
-  marky: any = null;
-  stack: string[] = [];
-  constructor() {}
+// class Perf {
+//   enablePerf = false;
+//   marky: any = null;
+//   stack: string[] = [];
+//   constructor() {}
 
-  enable(bool: boolean): void {
-    this.enablePerf = bool;
-  }
+//   enable(bool: boolean): void {
+//     this.enablePerf = bool;
+//   }
 
-  isEnable(): boolean {
-    return this.enablePerf;
-  }
+//   isEnable(): boolean {
+//     return this.enablePerf;
+//   }
 
-  start(name?: string) {
-    if (this.enablePerf) {
-      try {
-        if (this.marky == null) {
-          this.marky = GFGlobal.utils.getMarky();
-        }
-        if (name == null) {
-          name = `GFP ${GFGlobal.utils.uniqueID()}`;
-        }
-        this.stack.push(name);
-        this.marky.mark(name);
-      } catch (error) {
-        GFP.log.warn('Unable to start perf', error);
-      }
-    }
-  }
+//   start(name?: string) {
+//     if (this.enablePerf) {
+//       try {
+//         if (this.marky == null) {
+//           this.marky = GFGlobal.utils.getMarky();
+//         }
+//         if (name == null) {
+//           name = `GFP ${GFGlobal.utils.uniqueID()}`;
+//         }
+//         this.stack.push(name);
+//         this.marky.mark(name);
+//       } catch (error) {
+//         GFP.log.warn('Unable to start perf', error);
+//       }
+//     }
+//   }
 
-  stop(name: string | undefined): PerformanceEntry | undefined | void {
-    if (this.enablePerf) {
-      try {
-        if (name === undefined) {
-          name = this.stack.shift();
-        }
-        const entry: PerformanceEntry = this.marky.stop(name);
-        console.log('Perfomance of ' + name, entry);
-        return entry;
-      } catch (error) {
-        GFP.log.warn('Unable to stop perf', error);
-      }
-    }
-  }
-}
+//   stop(name: string | undefined): PerformanceEntry | undefined | void {
+//     if (this.enablePerf) {
+//       try {
+//         if (name === undefined) {
+//           name = this.stack.shift();
+//         }
+//         const entry: PerformanceEntry = this.marky.stop(name);
+//         console.log('Perfomance of ' + name, entry);
+//         return entry;
+//       } catch (error) {
+//         GFP.log.warn('Unable to stop perf', error);
+//       }
+//     }
+//   }
+// }
 
-class Log {
-  static DEBUG = 0;
-  static INFO = 1;
-  static WARN = 2;
-  static ERROR = 3;
-  logLevel = Log.WARN;
-  logDisplay = true;
-  constructor() {}
+// class Log {
+//   static DEBUG = 0;
+//   static INFO = 1;
+//   static WARN = 2;
+//   static ERROR = 3;
+//   logLevel = Log.WARN;
+//   logDisplay = true;
+//   constructor() {}
 
-  /**
-   * If message must be displayed
-   *
-   * @param {number} level (DEBUG : 0, INFO : 1, WARN:2, ERROR:3)
-   * @returns {boolean}
-   * @memberof Log
-   */
-  toDisplay(level: number): boolean {
-    if (this.logDisplay !== undefined && this.logDisplay === true) {
-      if (this.logLevel !== undefined && level >= this.logLevel) {
-        return true;
-      }
-    }
-    return false;
-  }
+//   /**
+//    * If message must be displayed
+//    *
+//    * @param {number} level (DEBUG : 0, INFO : 1, WARN:2, ERROR:3)
+//    * @returns {boolean}
+//    * @memberof Log
+//    */
+//   toDisplay(level: number): boolean {
+//     if (this.logDisplay !== undefined && this.logDisplay === true) {
+//       if (this.logLevel !== undefined && level >= this.logLevel) {
+//         return true;
+//       }
+//     }
+//     return false;
+//   }
 
-  /**
-   * Display debug message in console
-   *
-   * @param {string} title
-   * @param {((any | undefined))} obj
-   * @memberof Log
-   */
-  async debug(title: string, obj: any | undefined) {
-    if (this.toDisplay(Log.DEBUG)) {
-      console.debug(`GF DEBUG : ${title}`, obj);
-    }
-  }
+//   /**
+//    * Display debug message in console
+//    *
+//    * @param {string} title
+//    * @param {((any | undefined))} obj
+//    * @memberof Log
+//    */
+//   async debug(title: string, obj: any | undefined) {
+//     if (this.toDisplay(Log.DEBUG)) {
+//       console.debug(`GF DEBUG : ${title}`, obj);
+//     }
+//   }
 
-  /**
-   * Display warn message in console
-   *
-   * @param {string} title
-   * @param {((any | undefined))} obj
-   * @memberof Log
-   */
-  async warn(title: string, obj?: any) {
-    if (this.toDisplay(Log.WARN)) {
-      console.warn(`GF WARN : ${title}`, obj);
-    }
-  }
+//   /**
+//    * Display warn message in console
+//    *
+//    * @param {string} title
+//    * @param {((any | undefined))} obj
+//    * @memberof Log
+//    */
+//   async warn(title: string, obj?: any) {
+//     if (this.toDisplay(Log.WARN)) {
+//       console.warn(`GF WARN : ${title}`, obj);
+//     }
+//   }
 
-  /**
-   * Display info message in console
-   *
-   * @param {string} title
-   * @param {((any | undefined))} obj
-   * @memberof Log
-   */
-  async info(title: string, obj?: any) {
-    if (this.toDisplay(Log.INFO)) {
-      //console.info(`GF INFO : ${title}`, obj);
-    }
-  }
+//   /**
+//    * Display info message in console
+//    *
+//    * @param {string} title
+//    * @param {((any | undefined))} obj
+//    * @memberof Log
+//    */
+//   async info(title: string, obj?: any) {
+//     if (this.toDisplay(Log.INFO)) {
+//       //console.info(`GF INFO : ${title}`, obj);
+//     }
+//   }
 
-  /**
-   * Display error message in console
-   *
-   * @param {string} title
-   * @param {((any | undefined))} obj
-   * @memberof Log
-   */
-  async error(title: string, obj?: any) {
-    if (this.toDisplay(Log.ERROR)) {
-      console.error(`GF ERROR : ${title}`, obj);
-    }
-  }
-}
+//   /**
+//    * Display error message in console
+//    *
+//    * @param {string} title
+//    * @param {((any | undefined))} obj
+//    * @memberof Log
+//    */
+//   async error(title: string, obj?: any) {
+//     if (this.toDisplay(Log.ERROR)) {
+//       console.error(`GF ERROR : ${title}`, obj);
+//     }
+//   }
+// }

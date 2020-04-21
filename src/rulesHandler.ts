@@ -1,6 +1,6 @@
 import { Rule } from 'rule_class';
 import _ from 'lodash';
-import { GFGlobal } from 'globals_class';
+import { _GF } from 'globals_class';
 
 /**
  * Rules Handler
@@ -18,7 +18,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   constructor(data: gf.TIRulesHandlerData) {
-    GFGlobal.log.info('RulesHandler.constructor()');
+    _GF.log.info('RulesHandler.constructor()');
     this.rules = [];
     this.data = data;
     // this.import(this.data);
@@ -32,7 +32,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   import(obj: any): this {
-    GFGlobal.log.info('RuleHandler.import()');
+    _GF.log.info('RuleHandler.import()');
     this.rules = [];
     let index = 1;
     if (obj !== undefined && obj !== null) {
