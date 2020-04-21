@@ -54,9 +54,8 @@ Arnaud
   - Add Event Mapping
   - TODO : Fix inspect
   - TODO : FIX Mapping id/value
-  - TODO : Verify replace var grafana
-  - TODO : Fix Range test
   - TODO : Fix blink
+  - TODO : Optimize with only needed key
   - Add Progressif change style when numeric
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
