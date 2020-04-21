@@ -239,11 +239,28 @@ export default class XGraph {
     // GFP.utils.loadJS(`${GFP.getLibsPath()}/sanitizer.min.js`);
 
     // Load Draw.io libs
+    // let viewer = _GF.getVar(_GF.CONSTANTS.VAR_STR_VIEWERJS)
+    // if (viewer !== undefined) {
+    //   _GF.utils.evalRaw(viewer);
+    //   _GF.unsetVar(_GF.CONSTANTS.VAR_STR_VIEWERJS);
+    //   console.log(_GF.CONSTANTS.VAR_STR_VIEWERJS + ' loaded with fetch');
+    // }
+    // else {
     _GF.utils.loadJS(`${GFP.getLibsPath()}/viewer.min.js`);
+    //   console.log(_GF.CONSTANTS.VAR_STR_VIEWERJS+ ' loaded with XMLRequest');
+    // }
     // require('./libs/viewer.min');
 
     // Shapes
+    // let shapes = _GF.getVar(_GF.CONSTANTS.VAR_STR_SHAPESJS);
+    // if (shapes) {
+    //   _GF.utils.evalRaw(shapes);
+    //   _GF.unsetVar(_GF.CONSTANTS.VAR_STR_SHAPESJS);
+    //   console.log(_GF.CONSTANTS.VAR_STR_SHAPESJS + ' loaded with fetch');
+    // } else {
     _GF.utils.loadJS(`${GFP.getLibsPath()}/shapes.min.js`);
+    // console.log(_GF.CONSTANTS.VAR_STR_SHAPESJS+ ' loaded with XMLRequest');
+    // }
     // require('./libs/shapes.min');
 
     // Stencils
@@ -1215,7 +1232,7 @@ export default class XGraph {
   async blinkCell(cell: mxCell, ms: number) {
     if (!cell.blink) {
       const self = this;
-      const bl_on = function() {
+      const bl_on = function () {
         // console.log('bl_on');
         const color = '#f5f242';
         const opacity = 100;
@@ -1237,7 +1254,7 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function() {
+      const bl_off = function () {
         if (cell && cell.blink_on) {
           // console.log('bl_off');
           const hl = cell.blink_on;

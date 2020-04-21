@@ -266,46 +266,43 @@ module.exports = {
     }
   },
 
-  // getMarky() {
-  //   return marky;
-  // },
-
   loadJS(fname) {
     try {
-      var req = mxUtils.load(fname);
-      if (req != null && req.getStatus() >= 200 && req.getStatus() <= 299) {
-        eval.call(window, req.getText());
-        console.info('eval.call succesfully', fname);
+      var code = this.loadFile(fname)
+      if (code) {
+        this.evalRaw(code);
+        console.info('LoadJS called succesfully', fname);
       }
     } catch (e) {
       if (window.console != null) {
-        console.error('Error eval.call:', fname, e);
+        console.error('LoadJS failed:', fname, e);
       }
     }
   },
 
-  async loadJS_2(fnames) {
-    let fetchs = [];
-    fnames.forEach(fn => {
-      fetchs.push(
-        fetch(fn)
-          .then(response => {
-            return response.text();
-          })
-          .then(text => {
-            try {
-            eval.call(window, text);
-              console.info(`${fn} eval with success`);
-            } catch (error) {
-              console.error(`Unable to eval ${fn}`);
-            }
-          })
-          .catch(error => {
-            console.error(`Unable to load ${fn}`, error);
-          })
-      );
-    });
-    return Promise.all(fetchs);
+  loadFile(fname) {
+    try {
+      var req = mxUtils.load(fname);
+      if (req != null && req.getStatus() >= 200 && req.getStatus() <= 299) {
+        console.info('loadFile called succesfully', fname);
+        return req.getText();
+      }
+    } catch (e) {
+      if (window.console != null) {
+        console.error('Error loadFile:', fname, e);
+      }
+    }
+  },
+
+  evalRaw(code) {
+    try {
+      eval.call(window, code);
+      console.info('eval.call succesfully');
+    } catch (e) {
+      if (window.console != null) {
+        console.error('Error eval.call : ', e);
+      }
+    }
   },
 
   evalIt(code) {

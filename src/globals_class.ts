@@ -2,14 +2,18 @@ import _ from 'lodash';
 class GFCONSTANT {
   // CONFIG
   CONF_FILE_SHAPES = '/static/shapes.txt';
+  CONF_FILE_VIEWERJS = '/lib/drawio/viewer.min.js';
+  CONF_FILE_SHAPESJS = '/lib/drawio/shapes.min.js';
   CONF_COLORS_STEPS = 5;
-  CONF_COLORS_MS = 50;
+  CONF_COLORS_MS = 40;
   CONF_ANIMS_STEP = 5;
-  CONF_ANIMS_MS = 50;
+  CONF_ANIMS_MS = 40;
 
   // GLOBAL VARIABLE
   VAR_STG_SHAPES = 'shapestext';
   VAR_TBL_SHAPES = 'shapesarray';
+  VAR_STR_VIEWERJS = 'viewer.min.js';
+  VAR_STR_SHAPESJS = 'shapes.min.js';
   VAR_STG_CTXROOT = 'contextroot';
   VAR_OBJ_TEMPLATESRV = 'templatesrv';
   VAR_OBJ_CTRL = 'ctrl';
@@ -266,7 +270,7 @@ class GFLog {
   static ERROR = 3;
   static logLevel = GFLog.WARN;
   static logDisplay = false;
-  constructor() {}
+  constructor() { }
 
   /**
    * If message must be displayed
@@ -342,21 +346,21 @@ class GFLog {
 }
 
 class GFTrace {
-  static enable = true;
+  static enable = false;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;
   trace:
     | {
-        Name: string;
-        Id: string;
-        Args: any;
-        Return: any;
-        Before: number;
-        End: number | undefined;
-        ExecTime: number | undefined;
-        Indent: number;
-      }
+      Name: string;
+      Id: string;
+      Args: any;
+      Return: any;
+      Before: number;
+      End: number | undefined;
+      ExecTime: number | undefined;
+      Indent: number;
+    }
     | undefined;
 
   constructor(fn?: string) {
@@ -380,14 +384,14 @@ class GFTrace {
   ):
     | GFTrace
     | {
-        after: () => void;
-      } {
+      after: () => void;
+    } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       return t;
     }
-    return { after: () => {} };
+    return { after: () => { } };
   }
 
   async after() {
@@ -439,6 +443,8 @@ export class _GF {
     getMarky: () => any;
     getStepColors: (colorStart: string, colorEnd: string, colorCount: number) => string[];
     evalIt: (code: string) => string;
+    loadFile: (fname: string) => string;
+    evalRaw: (code) => void;
   } = require('./utils_raw');
 
   /**
@@ -586,16 +592,22 @@ export class _GF {
           fetch(filePath)
             .then(response => {
               if (response.ok) {
-                console.log(`${filePath} loaded with success`);
                 response
                   .text()
-                  .then(text => _GF.setVar(varName, text))
-                  .catch(error => _GF.log.error('Error when download text file', filePath, error));
+                  .then(text => {
+                    _GF.log.info('loadLocalFile called succesfully', fileName);
+                    _GF.setVar(varName, text);
+                  })
+                  .catch(error => _GF.log.error('Error when download text file', fileName, error));
               }
             })
-            .catch(error => _GF.log.error('Error when download file', filePath, error));
+            .catch(error => _GF.log.error('Error when download file', fileName, error));
         } else {
           // Faire quelque chose avec XMLHttpRequest?
+          const txt = _GF.utils.loadFile(fileName);
+          if (txt) {
+            _GF.setVar(varName, _GF.utils.loadFile(fileName));
+          }
         }
       } else {
         _GF.log.warn('Contexroot : ', contextroot);
