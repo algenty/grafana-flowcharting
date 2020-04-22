@@ -26,8 +26,8 @@ export class FlowchartOptionsCtrl {
     $scope.GFP = GFP;
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
-    this.flowchartHandler = this.ctrl.flowchartHandler;
     this.panel = this.ctrl.panel;
+    this.flowchartHandler = this.ctrl.flowchartHandler;
   }
 
   /**

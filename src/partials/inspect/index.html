@@ -65,7 +65,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="state in flowchartHandler.getFlowchart().getStateHandler().getStatesForInspect()"
+						<tr ng-repeat="state in editor.flowchartHandler.getFlowchart().getStateHandler().getStatesForInspect()"
 							ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
 							<td>
 								<div class="flowchartTable-editor" ng-dblclick="editor.onEdit(state)">
@@ -87,7 +87,7 @@
 								<div class="flowchartTable-editor"
 									bs-tooltip="'Font : ' + state.getStyle('fontColor') + ', Fill : ' + state.getStyle('fillColor') + ', Stroke : ' + state.getStyle('strokeColor')"
 									style="display:table-cell;vertical-align:middle;">
-									{{state.getTextLevel()}}
+									{{state.getLevel()}}
 								</div>
 							</td>
 							<td>
@@ -123,13 +123,15 @@
 							<td style='text-align:center;'>
 								<div class="flowchartTable-editor">
 									<div>
-										<div style="display:inline-block" ng-show="state.matchedShape" bs-tooltip="'Mapping on shape'"><i
-												class="fa fa-cube"></i><i class="fa fa-fw"></i></div>
-										<div style="display:inline-block" ng-show="state.matchedText" bs-tooltip="'Mapping on text'"><i
+										<div style="display:inline-block" ng-show="state.shapeState.isChanged()" bs-tooltip="'Mapping on Color'"><i
+												class="fa fa-paint-brush"></i><i class="fa fa-fw"></i></div>
+										<div style="display:inline-block" ng-show="state.textState.isChanged()" bs-tooltip="'Mapping on text'"><i
 												class="fa fa-paragraph"></i><i class="fa fa-fw"></i></div>
-										<div style="display:inline-block" ng-show="state.matchedLink" bs-tooltip="'Mapping on Link'"><i
+										<div style="display:inline-block" ng-show="state.linkState.isChanged()" bs-tooltip="'Mapping on Link'"><i
 												class="fa fa-chain"></i><i class="fa fa-fw"></i></div>
-											<div style="display:inline-block" ng-show="state.changed" bs-tooltip="'Colorized or Valorized or Linked'"><i
+										<div style="display:inline-block" ng-show="state.eventState.isChanged()" bs-tooltip="'Mapping on Animation'"><i
+												class="fa fa-film"></i><i class="fa fa-fw"></i></div>
+										<div style="display:inline-block" ng-show="state.changed" bs-tooltip="'Mapped and Changed'"><i
 												class="fa fa-check-circle"></i><i class="fa fa-fw"></i></div>
 									</div>
 								</div>
@@ -144,7 +146,7 @@
 			<button class="btn btn-danger btn-small" ng-click="editor.reset()" style="margin-right: 5px;">
 				<i class="fa fa-power-off"></i> Reinit graph and color
 			</button>
-			<button ng-show="flowchartHandler.getFlowchart().getStateHandler().edited" class="btn btn-secondary btn-small"
+			<button ng-show="editor.flowchartHandler.getFlowchart().getStateHandler().edited" class="btn btn-secondary btn-small"
 				ng-click="editor.apply()" style="margin-right: 5px;">
 				<i class="fa fa-save"></i> Apply changes
 			</button>

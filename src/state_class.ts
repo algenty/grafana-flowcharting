@@ -95,27 +95,26 @@ export class State {
       // SHAPE
       let cellProp = this.getCellProp(rule.data.shapeProp);
       shapeMaps.forEach(shape => {
-        const k = shape.data.style;
+        let k = shape.data.style;
         if (!shape.isHidden() && shape.match(cellProp, rule.data.shapeRegEx)) {
-          const v = color;
+          let v: any = color;
           this.matched = true;
+          this.globalLevel = level > this.globalLevel ? level : this.globalLevel;
           if (shape.toColorize(level)) {
-            this.shapeState.set(k, v, level);
+            this.shapeState.set(k, v, level) && this.status.set(k, v);
           }
           // TOOLTIP
           if (rule.toTooltipize(level)) {
-            this.tooltipState.set('tooltip', true, level);
+            k = 'tooltip';
+            v = true;
+            this.tooltipState.set('tooltip', true, level) && this.status.set(k, v);
             this.tooltipState.setTooltip(rule, metric, v, FormattedValue);
           }
           // ICONS
           if (rule.toIconize(level)) {
-            this.iconState.set('icon', true, level);
-          }
-          if (level >= rule.highestLevel) {
-            rule.highestLevel = level;
-            rule.highestValue = value;
-            rule.highestFormattedValue = FormattedValue;
-            rule.highestColor = color;
+            k = 'icon';
+            v = true;
+            this.iconState.set('icon', true, level) && this.status.set(k, v);
           }
         }
       });
@@ -127,15 +126,10 @@ export class State {
         if (!text.isHidden() && text.match(cellProp, rule.data.textRegEx) && text.toLabelize(level)) {
           if (text.toLabelize(level)) {
             this.matched = true;
+            this.globalLevel = level > this.globalLevel ? level : this.globalLevel;
             const textScoped = this.variables.replaceText(FormattedValue);
             const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
-            this.textState.set(k, v, level);
-          }
-          if (level >= rule.highestLevel) {
-            rule.highestLevel = level;
-            rule.highestValue = value;
-            rule.highestFormattedValue = FormattedValue;
-            rule.highestColor = color;
+            this.textState.set(k, v, level) && this.status.set(k, v);
           }
         }
       });
@@ -147,14 +141,9 @@ export class State {
         if (!event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level)) {
           if (event.toEventable(level)) {
             this.matched = true;
+            this.globalLevel = level > this.globalLevel ? level : this.globalLevel;
             const v = this.variables.eval(event.data.value);
-            this.eventState.set(k, v, level);
-          }
-          if (level >= rule.highestLevel) {
-            rule.highestLevel = level;
-            rule.highestValue = value;
-            rule.highestFormattedValue = FormattedValue;
-            rule.highestColor = color;
+            this.eventState.set(k, v, level) && this.status.set(k, v);
           }
         }
       });
@@ -166,17 +155,19 @@ export class State {
         if (!link.isHidden() && link.match(cellProp, rule.data.linkRegEx)) {
           if (link.toLinkable(level)) {
             this.matched = true;
+            this.globalLevel = level > this.globalLevel ? level : this.globalLevel;
             const v = this.variables.replaceText(link.getLink());
-            this.linkState.set(k, v, level);
-          }
-          if (level >= rule.highestLevel) {
-            rule.highestLevel = level;
-            rule.highestValue = value;
-            rule.highestFormattedValue = FormattedValue;
-            rule.highestColor = color;
+            this.linkState.set(k, v, level) && this.status.set(k, v);
           }
         }
       });
+
+      if (level >= rule.highestLevel && this.matched) {
+        rule.highestLevel = level;
+        rule.highestValue = value;
+        rule.highestFormattedValue = FormattedValue;
+        rule.highestColor = color;
+      }
     }
     let endPerf = performance.now();
     rule.execTimes += endPerf - beginPref;
@@ -297,6 +288,7 @@ export class State {
     this.linkState.reset();
     this.variables.clear();
     this.status.clear();
+    this.globalLevel = -1;
     this.changed = false;
     return this;
   }
@@ -317,6 +309,7 @@ export class State {
       this.linkState.prepare();
       this.variables.clear();
       this.status.clear();
+      this.globalLevel = -1;
       this.matched = false;
     }
     return this;

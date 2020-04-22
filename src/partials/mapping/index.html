@@ -1,5 +1,5 @@
 <div class="edit-tab-content">
-  <div class="editor-row" ng-repeat="rule in rulesHandler.getRules()">
+  <div class="editor-row" ng-repeat="rule in editor.rulesHandler.getRules()">
     <div ng-init="editor.initType(rule)">
       <!-- HEADER of style -->
       <div class="rule-item" ng-mouseover="editor.highlightCells(rule)" ng-mouseleave="editor.unhighlightCells(rule)">
@@ -246,7 +246,7 @@
 
   <div class="editor-row">
     <div class="gf-form-button-row">
-      <button class="btn btn-inverse" ng-click="rulesHandler.addRule('/.*/')"><i class="fa fa-plus"></i>&nbsp;Add
+      <button class="btn btn-inverse" ng-click="editor.rulesHandler.addRule('/.*/')"><i class="fa fa-plus"></i>&nbsp;Add
         Rule</button>
     </div>
   </div>
