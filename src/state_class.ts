@@ -27,6 +27,7 @@ export class State {
   textState: TextState;
   linkState: LinkState;
   variables: GFVariables;
+  status: Map<string, any>;
   globalLevel = -1;
   tooltipHandler: TooltipHandler | null = null;
   originalText: string;
@@ -49,6 +50,7 @@ export class State {
     this.textState = new TextState(xgraph, mxcell);
     this.linkState = new LinkState(xgraph, mxcell);
     this.variables = _GF.createLocalVars();
+    this.status = new Map();
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
     this.originalText = this.xgraph.getLabelCell(mxcell);
@@ -226,6 +228,20 @@ export class State {
     return this.globalLevel;
   }
 
+  getStyle(key: string): string {
+    console.log('State.getStyle(key: string)');
+    let style: string | null | undefined = this.status.get(key);
+    if (style !== undefined && style !== null) {
+      return style;
+    }
+    style = this.xgraph.getStyleCell(this.mxcell, key);
+    if (style === null) {
+      style = '';
+    }
+    this.status.set(key, style);
+    return style;
+  }
+
   /**
    * Return true if is a shape/vertex
    *
@@ -280,6 +296,7 @@ export class State {
     this.eventState.reset();
     this.linkState.reset();
     this.variables.clear();
+    this.status.clear();
     this.changed = false;
     return this;
   }
@@ -299,6 +316,7 @@ export class State {
       this.eventState.prepare();
       this.linkState.prepare();
       this.variables.clear();
+      this.status.clear();
       this.matched = false;
     }
     return this;
@@ -354,7 +372,7 @@ export class GFState {
 
   addValue(key: string, value: any) {
     if (this.keys.includes(key) !== true) {
-      _GF.log.warn('GFState.addValue()', key, 'not found');
+      // _GF.log.warn('GFState.addValue()', key, 'not found');
       this.keys.push(key);
     }
     this.originalValue.set(key, value);
@@ -374,19 +392,28 @@ export class GFState {
     return this.matchValue.get(key);
   }
 
-  set(key: string, value: any, level: number): this {
+  /**
+   * Insert key and value if >= level
+   *
+   * @param {string} key
+   * @param {*} value
+   * @param {number} level
+   * @returns {boolean} true if applied
+   * @memberof GFState
+   */
+  set(key: string, value: any, level: number): boolean {
     let matchLevel = this.matchLevel.get(key);
     if (matchLevel === undefined) {
       this.addValue(key, value);
-      this.set(key, value, level);
-      return this;
+      return this.set(key, value, level);
     }
     if (matchLevel <= level) {
       this.matchLevel.set(key, level);
       this.matchedKey.set(key, true);
       this.matchValue.set(key, value);
+      return true;
     }
-    return this;
+    return false;
   }
 
   apply(key?: string): this {

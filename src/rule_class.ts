@@ -1529,7 +1529,8 @@ export class LinkMap extends GFMap {
 export class EventMap extends GFMap {
   data: gf.TEventMapData;
   static methods = _GF.CONSTANTS.EVENTMETHODS;
-  static shapes: string[] = EventMap.getFormNames();
+  // static shapes: string[] = EventMap.getFormNames();
+  static shapes: string[] = [];
 
   /**
    * Creates an instance of EventMap.
@@ -1571,6 +1572,7 @@ export class EventMap extends GFMap {
     const elt: gf.TStyleEventElt | undefined = EventMap.methods.find(x => x.value === self.data.style);
     if (elt !== undefined && elt.typeahead !== undefined) {
       result = result.concat(elt.typeahead.split('|'));
+      return result;
     }
     if (this.data.style === 'shape') {
       const shapes = EventMap.getFormNames();
@@ -1585,19 +1587,20 @@ export class EventMap extends GFMap {
   }
 
   static getFormNames(): string[] {
-    if (EventMap.shapes === undefined) {
-      EventMap.shapes = [];
-    }
+    // if (EventMap.shapes === undefined) {
+    //   EventMap.shapes = [];
+    // }
 
-    if (EventMap.shapes !== undefined && EventMap.shapes.length > 0) {
+    if (EventMap.shapes.length > 0) {
       return EventMap.shapes;
     }
-    _GF.loadLocalFile(_GF.CONSTANTS.VAR_STG_SHAPES, _GF.CONSTANTS.CONF_FILE_SHAPES);
-    const shapesText: string = _GF.getVar(_GF.CONSTANTS.VAR_STG_SHAPES);
+    // _GF.loadLocalFile(_GF.CONSTANTS.VAR_STG_SHAPES, _GF.CONSTANTS.CONF_FILE_SHAPES);
+    // const shapesText: string = _GF.getVar(_GF.CONSTANTS.VAR_STG_SHAPES);
+    const shapesText = _GF.utils.loadFile(_GF.getVar(_GF.CONSTANTS.VAR_STG_CTXROOT) + _GF.CONSTANTS.CONF_FILE_SHAPES);
     if (shapesText !== undefined) {
       if (EventMap.shapes.length === 0) {
         EventMap.shapes = EventMap.shapes.concat(shapesText.split(/\n/));
-        _GF.unsetVar(_GF.CONSTANTS.VAR_STG_SHAPES);
+        // _GF.unsetVar(_GF.CONSTANTS.VAR_STG_SHAPES);
         return EventMap.shapes;
       }
     }

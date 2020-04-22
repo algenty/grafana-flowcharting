@@ -1,9 +1,9 @@
 import _ from 'lodash';
 class GFCONSTANT {
   // CONFIG
-  CONF_FILE_SHAPES = '/static/shapes.txt';
-  CONF_FILE_VIEWERJS = '/lib/drawio/viewer.min.js';
-  CONF_FILE_SHAPESJS = '/lib/drawio/shapes.min.js';
+  CONF_FILE_SHAPES = 'static/shapes.txt';
+  CONF_FILE_VIEWERJS = 'libs/viewer.min.js';
+  CONF_FILE_SHAPESJS = 'libs/shapes.min.js';
   CONF_COLORS_STEPS = 5;
   CONF_COLORS_MS = 40;
   CONF_ANIMS_STEP = 5;
@@ -269,8 +269,8 @@ class GFLog {
   static WARN = 2;
   static ERROR = 3;
   static logLevel = GFLog.WARN;
-  static logDisplay = false;
-  constructor() { }
+  static logDisplay = true;
+  constructor() {}
 
   /**
    * If message must be displayed
@@ -346,21 +346,21 @@ class GFLog {
 }
 
 class GFTrace {
-  static enable = false;
+  static enable = true;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;
   trace:
     | {
-      Name: string;
-      Id: string;
-      Args: any;
-      Return: any;
-      Before: number;
-      End: number | undefined;
-      ExecTime: number | undefined;
-      Indent: number;
-    }
+        Name: string;
+        Id: string;
+        Args: any;
+        Return: any;
+        Before: number;
+        End: number | undefined;
+        ExecTime: number | undefined;
+        Indent: number;
+      }
     | undefined;
 
   constructor(fn?: string) {
@@ -384,18 +384,17 @@ class GFTrace {
   ):
     | GFTrace
     | {
-      after: () => void;
-    } {
+        after: () => void;
+      } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       return t;
     }
-    return { after: () => { } };
+    return { after: () => {} };
   }
 
   async after() {
-    // if (this.trace !== undefined && this.trace.Name === "FlowchartCtrl.onDataReceived()") debugger;
     if (GFTrace.enable && this.trace !== undefined) {
       if (this.trace) {
         this.trace.End = Date.now();
@@ -467,6 +466,7 @@ export class _GF {
    * @memberof GFGlobal
    */
   static getGlobalVars(): GFVariables {
+    // console.log('getGlobalVars()',_GF._globalvars)
     if (_GF._globalvars === undefined) {
       _GF._globalvars = new GFVariables();
     }
@@ -595,24 +595,27 @@ export class _GF {
                 response
                   .text()
                   .then(text => {
-                    _GF.log.info('loadLocalFile called succesfully', fileName);
+                    _GF.log.info('loadLocalFile called succesfully', filePath);
                     _GF.setVar(varName, text);
+                    return text;
                   })
-                  .catch(error => _GF.log.error('Error when download text file', fileName, error));
+                  .catch(error => _GF.log.error('Error when download text file', filePath, error));
               }
             })
-            .catch(error => _GF.log.error('Error when download file', fileName, error));
+            .catch(error => _GF.log.error('Error when download file', filePath, error));
         } else {
           // Faire quelque chose avec XMLHttpRequest?
           const txt = _GF.utils.loadFile(fileName);
           if (txt) {
             _GF.setVar(varName, _GF.utils.loadFile(fileName));
+            return txt;
           }
         }
       } else {
-        _GF.log.warn('Contexroot : ', contextroot);
+        _GF.log.warn('loadLocalFile Contexroot : ', contextroot);
       }
     }
+    return false;
   }
 
   static getRootPath(): string {

@@ -261,7 +261,7 @@ declare module gf {
     editor: InspectOptionsCtrl;
     GFP: FlowChartingPlugin;
     ctrl: any; //TODO: define type
-    testData: any;
+    // testData: any;
   }
 
   // Flowcharts
@@ -290,8 +290,8 @@ declare module gf {
   }
 
   declare interface TMappingOptionsScope extends ng.IScope {
-    rulesHandler: any;
-    flowchartHandler: FlowchartHandler;
+    // rulesHandler: any;
+    // flowchartHandler: FlowchartHandler;
     editor: MappingOptionsCtrl;
     GFP: FlowChartingPlugin;
     ctrl: any;

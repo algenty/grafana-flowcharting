@@ -48,16 +48,30 @@ export class FlowChartingPlugin {
     } else {
       contextRoot = $scope.$root.appSubUrl + FlowChartingPlugin.defaultContextRoot;
       plugin = new FlowChartingPlugin(contextRoot, templateSrv);
-      _GF.setVar(_GF.CONSTANTS.VAR_OBJ_CTRL, $scope.ctrl);
     }
     _GF.setVar(_GF.CONSTANTS.VAR_STG_CTXROOT, contextRoot);
-    // console.log("Trying to load" + _GF.CONSTANTS.CONF_FILE_VIEWERJS);
-    // _GF.loadLocalFile(_GF.CONSTANTS.VAR_STR_VIEWERJS, _GF.CONSTANTS.CONF_FILE_VIEWERJS);
-    // console.log("Trying to load" + _GF.CONSTANTS.CONF_FILE_SHAPESJS);
-    // _GF.loadLocalFile(_GF.CONSTANTS.VAR_STR_SHAPESJS, _GF.CONSTANTS.CONF_FILE_SHAPESJS);
+
+    // (async () => {
+    //   await FlowChartingPlugin.loadLocalFile();
+    // })();
     window.GFP = plugin;
     return plugin;
   }
+
+  // static async loadLocalFile() {
+  //   Promise.all([
+  //     _GF.loadLocalFile(_GF.CONSTANTS.VAR_STR_VIEWERJS, _GF.CONSTANTS.CONF_FILE_VIEWERJS),
+  //     _GF.loadLocalFile(_GF.CONSTANTS.VAR_STR_SHAPESJS, _GF.CONSTANTS.CONF_FILE_SHAPESJS),
+  //   ])
+  //     .then(() => {
+  //       console.log('All JS File loaded');
+  //       return true;
+  //     })
+  //     .catch(err => {
+  //       console.log('Load files JS failed');
+  //       return false;
+  //     });
+  // }
 
   /**
    * Get templateSrv from dashboard

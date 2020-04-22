@@ -8,7 +8,7 @@ import { MetricHandler } from './metricHandler';
 
 export class MappingOptionsCtrl {
   $scope: gf.TMappingOptionsScope;
-  panelCtrl: any;
+  ctrl: any;
   panel: any;
   flowchartHandler: FlowchartHandler;
   rulesHandler: RulesHandler;
@@ -46,13 +46,13 @@ export class MappingOptionsCtrl {
     $scope.editor = this;
     $scope.GFP = GFP;
     this.$scope = $scope;
-    this.panelCtrl = $scope.ctrl;
-    this.panel = this.panelCtrl.panel;
-    $scope.rulesHandler = this.panelCtrl.rulesHandler;
-    $scope.flowchartHandler = this.panelCtrl.flowchartHandler;
-    this.flowchartHandler = $scope.ctrl.flowchartHandler;
-    this.rulesHandler = this.panelCtrl.rulesHandler;
-    this.metricHandler = this.panelCtrl.metricHandler;
+    this.ctrl = $scope.ctrl;
+    this.panel = this.ctrl.panel;
+    this.rulesHandler = this.ctrl.rulesHandler;
+    this.flowchartHandler = this.ctrl.flowchartHandler;
+    // this.flowchartHandler = $scope.ctrl.flowchartHandler;
+    this.rulesHandler = this.ctrl.rulesHandler;
+    this.metricHandler = this.ctrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();
     this.tpGraphSize = _GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
     this.getMetricNames = (): string[] => {
@@ -132,7 +132,7 @@ export class MappingOptionsCtrl {
   }
 
   render() {
-    this.panelCtrl.render();
+    this.ctrl.render();
   }
 
   setUnitFormat(rule: Rule, subItem: any) {

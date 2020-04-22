@@ -85,14 +85,14 @@
               <i class="fa fa-w fa-eye-slash pointer" bs-tooltip="'show selected object graph in rule'"
                 ng-click="event.show();editor.onRulesChange()"></i>
             </label>
-            <label class="gf-form-label" style="margin-right: 4px;" ng-hide="flowchartHandler.isMapping(event)">
-              <i class="fa fa-link pointer" ng-click="flowchartHandler.setMap(event)"
+            <label class="gf-form-label" style="margin-right: 4px;" ng-hide="editor.flowchartHandler.isMapping(event)">
+              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(event)"
                 bs-tooltip="'Link it on object graph'"></i>
             </label>
             <label class="gf-form-label" style="margin-right: 4px;color:orange"
-              ng-show="flowchartHandler.isMapping(event)">
+              ng-show="editor.flowchartHandler.isMapping(event)">
               <i class="fa fa-unlink pointer" bs-tooltip="'Cancel link object graph selection'"
-                ng-click="flowchartHandler.unsetMap()"></i>
+                ng-click="editor.flowchartHandler.unsetMap()"></i>
             </label>
           </div>
         </td>

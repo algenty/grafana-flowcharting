@@ -85,37 +85,37 @@
 							</td>
 							<td>
 								<div class="flowchartTable-editor"
-									bs-tooltip="'Font : ' + state.getLevelStyle('fontColor') + ', Fill : ' + state.getLevelStyle('fillColor') + ', Stroke : ' + state.getLevelStyle('strokeColor')"
+									bs-tooltip="'Font : ' + state.getStyle('fontColor') + ', Fill : ' + state.getStyle('fillColor') + ', Stroke : ' + state.getStyle('strokeColor')"
 									style="display:table-cell;vertical-align:middle;">
 									{{state.getTextLevel()}}
 								</div>
 							</td>
 							<td>
 								<div class="flowchartTable-editor">
-									<div ng-show="state.getColorStyle('fontColor') !== null"
+									<div ng-show="state.getStyle('fontColor') !== null"
 										style="display:table-cell;vertical-align:middle;">
-										<div bs-tooltip="state.getColorStyle('fontColor')"
-												style="width: 16px;height: 16px; background-color: {{state.getColorStyle('fontColor')}};border: 1px solid rgb(228, 228, 228);" >
+										<div bs-tooltip="state.getStyle('fontColor')"
+												style="width: 16px;height: 16px; background-color: {{state.getStyle('fontColor')}};border: 1px solid rgb(228, 228, 228);" >
 										</div>
 									</div>
 								</div>
 							</td>
 							<td>
 								<div class="flowchartTable-editor">
-									<div ng-show="state.getColorStyle('fillColor') !== null"
+									<div ng-show="state.getStyle('fillColor') !== null"
 										style="display:table-cell;vertical-align:middle;">
-										<div bs-tooltip="state.getColorStyle('fillColor')"
-												style="width: 16px;height: 16px; background-color: {{state.getColorStyle('fillColor')}};border: 1px solid rgb(228, 228, 228);" >
+										<div bs-tooltip="state.getStyle('fillColor')"
+												style="width: 16px;height: 16px; background-color: {{state.getStyle('fillColor')}};border: 1px solid rgb(228, 228, 228);" >
 										</div>
 									</div>
 								</div>
 							</td>
 							<td>
 								<div class="flowchartTable-editor">
-									<div ng-show="state.getColorStyle('strokeColor') !== null"
+									<div ng-show="state.getStyle('strokeColor') !== null"
 										style="display:table-cell;vertical-align:middle;">
-										<div bs-tooltip="state.getColorStyle('strokeColor')"
-												style="width: 16px;height: 16px; background-color: {{state.getColorStyle('strokeColor')}};border: 1px solid rgb(228, 228, 228);" >
+										<div bs-tooltip="state.getStyle('strokeColor')"
+												style="width: 16px;height: 16px; background-color: {{state.getStyle('strokeColor')}};border: 1px solid rgb(228, 228, 228);" >
 										</div>
 									</div>
 								</div>
