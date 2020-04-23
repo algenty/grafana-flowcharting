@@ -76,8 +76,8 @@ export class State {
    */
   setState(rule: Rule, metric: Metric): this {
     _GF.log.info('State.setState()');
-    let beginPref = performance.now();
     if (!rule.isHidden() && rule.matchMetric(metric)) {
+      let beginPerf = Date.now();
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
       const linkMaps = rule.getLinkMaps();
@@ -168,9 +168,9 @@ export class State {
         rule.highestFormattedValue = FormattedValue;
         rule.highestColor = color;
       }
+      let endPerf = Date.now();
+      rule.execTimes += endPerf - beginPerf;
     }
-    let endPerf = performance.now();
-    rule.execTimes += endPerf - beginPref;
     return this;
   }
 
@@ -226,11 +226,11 @@ export class State {
    * @memberof State
    */
   getTextLevel(): string {
-    return this.globalLevel === - 1 ? '' : this.globalLevel.toString();
+    return this.globalLevel === -1 ? '' : this.globalLevel.toString();
   }
 
-  getStyle(key: string): string {
-    console.log('State.getStyle(key: string)');
+  getStatus(key: string): string {
+    // console.log('State.getStyle(key: string)');
     let style: string | null | undefined = this.status.get(key);
     if (style !== undefined && style !== null) {
       return style;
@@ -241,6 +241,10 @@ export class State {
     }
     this.status.set(key, style);
     return style;
+  }
+
+  haveStatus(key: string): boolean {
+    return this.status.has(key);
   }
 
   /**
@@ -371,7 +375,7 @@ export class GFState {
     this.init_core();
   }
 
-  init_core() { }
+  init_core() {}
 
   addValue(key: string, value: any) {
     if (this.keys.includes(key) !== true) {
@@ -443,7 +447,7 @@ export class GFState {
     return this;
   }
 
-  apply_core(key: any, value: any) { }
+  apply_core(key: any, value: any) {}
 
   isMatched(key?: string): boolean {
     if (key !== undefined) {
@@ -511,7 +515,7 @@ export class GFState {
     return this;
   }
 
-  reset_core(key: any, value: any) { }
+  reset_core(key: any, value: any) {}
 
   prepare(): this {
     if (this.isChanged()) {
@@ -531,11 +535,11 @@ class EventState extends GFState {
   keys: gf.TStyleEventKeys[] = [];
   geo:
     | {
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    }
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      }
     | undefined = undefined;
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);

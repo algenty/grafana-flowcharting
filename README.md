@@ -46,14 +46,15 @@ Arnaud
 
 ## [[0.8.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.0-snapshot.zip) - 2020-04-17    
 ### Add
-  - Add Identify by Value in field 'what' in rules  
-  - Add option to disable regex for best perf  
+  - Can Identify by Value in field 'what' in rules  
+  - Add option to disable regex/eval for best perf  
   - Add 2 new color modes in Color mapping section : "Label background" and "Label borber" 
   - Add perf stat on rule title
   - New custom variables for fields (Text Mapping 'with', Link Mapping 'Url' and Event Mapping 'Value')
   - New function :  Event Mapping
   - TODO : FIX Mapping id/value
   - TODO : Fix blink
+  - TODO : FIX Graph all animation
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
   - shape stills select when deleting map.

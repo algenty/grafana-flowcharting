@@ -27,7 +27,7 @@ export class InspectOptionsCtrl {
   /** @ngInject */
   constructor($scope: gf.TInspectOptionsScope) {
     $scope.editor = this;
-    // $scope.GFP = GFP;
+    $scope.GFP = GFP;
     // this.testData = {
     //   id: '',
     //   key: '',
