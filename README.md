@@ -51,7 +51,7 @@ Arnaud
   - Add 2 new color modes in Color mapping section : "Label background" and "Label borber" 
   - Add perf stat on rule title
   - New custom variables for fields (Text Mapping 'with', Link Mapping 'Url' and Event Mapping 'Value')
-  - New function :  Event Mapping 
+  - New function :  Event Mapping
   - TODO : FIX Mapping id/value
   - TODO : Fix blink
 ### Fix
