@@ -219,6 +219,16 @@ export class State {
     return this.globalLevel;
   }
 
+  /**
+   * Get Level in text
+   *
+   * @returns {number}
+   * @memberof State
+   */
+  getTextLevel(): string {
+    return this.globalLevel === - 1 ? '' : this.globalLevel.toString();
+  }
+
   getStyle(key: string): string {
     console.log('State.getStyle(key: string)');
     let style: string | null | undefined = this.status.get(key);
@@ -361,7 +371,7 @@ export class GFState {
     this.init_core();
   }
 
-  init_core() {}
+  init_core() { }
 
   addValue(key: string, value: any) {
     if (this.keys.includes(key) !== true) {
@@ -433,7 +443,7 @@ export class GFState {
     return this;
   }
 
-  apply_core(key: any, value: any) {}
+  apply_core(key: any, value: any) { }
 
   isMatched(key?: string): boolean {
     if (key !== undefined) {
@@ -501,7 +511,7 @@ export class GFState {
     return this;
   }
 
-  reset_core(key: any, value: any) {}
+  reset_core(key: any, value: any) { }
 
   prepare(): this {
     if (this.isChanged()) {
@@ -521,11 +531,11 @@ class EventState extends GFState {
   keys: gf.TStyleEventKeys[] = [];
   geo:
     | {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-      }
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }
     | undefined = undefined;
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);

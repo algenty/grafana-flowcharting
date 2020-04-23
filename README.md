@@ -51,19 +51,15 @@ Arnaud
   - Add 2 new color modes in Color mapping section : "Label background" and "Label borber" 
   - Add perf stat on rule title
   - New custom variables for fields (Text Mapping 'with', Link Mapping 'Url' and Event Mapping 'Value')
-  - Add Event Mapping
-  - TODO : Fix inspect
+  - New function :  Event Mapping 
   - TODO : FIX Mapping id/value
   - TODO : Fix blink
-  - TODO : Optimize with only needed key
-  - Add Progressif change style when numeric
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
   - shape stills select when deleting map.
   - select list (typeahead) in fields 'whats' and map values for string type in rules
   - Level State with range or value mapping.
   - Lock always true in flowchart option [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/138) 
-  - TODO : Scale in graph not correct
   - Fix Remove link
   - Fix range value Min and Max range when 'from' or 'to' is empty
   - Fix 'With' field in text mapping, empty after clone or save/reload
