@@ -23,8 +23,8 @@ export class FlowchartHandler {
   onMapping: gf.TIOnMappingObj = {
     active: false,
     object: null,
-    id: null,
-    prop: null,
+    value: null,
+    prop: 'id',
     $scope: null,
   };
   mousedownTimeout = 0;
@@ -449,12 +449,13 @@ export class FlowchartHandler {
    * @param {Object} objToMap
    * @memberof FlowchartHandler
    */
-  setMap(objToMap: GFMap): this {
+  setMap(objToMap: GFMap, prop:gf.TPropertieKey = 'id'): this {
     const flowchart = this.getFlowchart(this.currentFlowchart);
     this.onMapping.active = true;
     this.onMapping.object = objToMap;
-    this.onMapping.id = objToMap.getId();
+    this.onMapping.value = objToMap.getId();
     this.onMapping.$scope = this.$scope;
+    this.onMapping.prop = prop;
     flowchart.setMap(this.onMapping);
     return this;
   }
@@ -468,7 +469,7 @@ export class FlowchartHandler {
     const flowchart = this.getFlowchart(this.currentFlowchart);
     this.onMapping.active = false;
     this.onMapping.object = undefined;
-    this.onMapping.id = '';
+    this.onMapping.value = '';
     flowchart.unsetMap();
     return this;
   }

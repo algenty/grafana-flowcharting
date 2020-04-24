@@ -8,6 +8,7 @@ class GFCONSTANT {
   CONF_COLORS_MS = 40;
   CONF_ANIMS_STEP = 5;
   CONF_ANIMS_MS = 40;
+  CONF_BLINK_COLOR = '#f5f242';
 
   // GLOBAL VARIABLE
   VAR_STG_SHAPES = 'shapestext';
@@ -346,7 +347,7 @@ class GFLog {
 }
 
 class GFTrace {
-  static enable = false;
+  static enable = true;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;

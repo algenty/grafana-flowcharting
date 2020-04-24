@@ -243,8 +243,8 @@ declare module gf {
   declare interface TIOnMappingObj {
     active: boolean;
     object: GFMap | null;
-    id: string | null;
-    prop: string | null;
+    value: string | null;
+    prop: TPropertieKey;
     $scope: ng.IScope | null;
   }
 

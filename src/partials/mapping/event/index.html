@@ -86,7 +86,7 @@
                 ng-click="event.show();editor.onRulesChange()"></i>
             </label>
             <label class="gf-form-label" style="margin-right: 4px;" ng-hide="editor.flowchartHandler.isMapping(event)">
-              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(event)"
+              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(event, rule.data.eventProp)"
                 bs-tooltip="'Link it on object graph'"></i>
             </label>
             <label class="gf-form-label" style="margin-right: 4px;color:orange"
@@ -111,7 +111,8 @@
           </div>
         </td>
         <td>
-          <select convert-to-number class="gf-form-input width-6" ng-model="event.data.eventOn" ng-change="editor.onRulesChange()">
+          <select convert-to-number class="gf-form-input width-6" ng-model="event.data.eventOn"
+            ng-change="editor.onRulesChange()">
             <option type="number" ng-value="-1">All</option>
             <option type="number" ng-repeat="color in rule.data.colors" ng-value="$index">{{$index}}</option>
           </select>
@@ -124,14 +125,10 @@
         <td>
           <div class="gf-form">
             <input type="text" style="margin-right: 2px;" placeholder="{{event.getPlaceHolder()}}"
-              class="gf-form-input width-8" ng-model="event.data.value" 
-              bs-tooltip="'Specify value for this action'"
-              bs-typeahead="editor.getEventValues"
-              data-min-length="0"
-              data-items="100"
-              ng-focus="editor.onEventValue(event)"
-              ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
-              ng-model-onblur data-placement="right" />
+              class="gf-form-input width-8" ng-model="event.data.value" bs-tooltip="'Specify value for this action'"
+              bs-typeahead="editor.getEventValues" data-min-length="0" data-items="100"
+              ng-focus="editor.onEventValue(event)" ng-blur="editor.onRulesChange()" data-min-length="0"
+              data-items="100" ng-model-onblur data-placement="right" />
           </div>
         </td>
       </tr>

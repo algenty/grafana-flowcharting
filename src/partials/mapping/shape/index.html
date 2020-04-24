@@ -80,7 +80,7 @@
                 ng-click="shape.show();editor.onRulesChange()"></i>
             </label>
             <label class="gf-form-label" style="margin-right: 4px;" ng-hide="editor.flowchartHandler.isMapping(shape)">
-              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(shape)"
+              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)"
                 bs-tooltip="'Link it on object graph'"></i>
             </label>
             <label class="gf-form-label" style="margin-right: 4px;color:orange"
@@ -93,17 +93,15 @@
         <td>
           <div class="gf-form">
             <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
-              class="gf-form-input width-8" ng-model="shape.data.pattern"
-              ng-if="rule.data.shapeProp === 'id'"
+              class="gf-form-input width-8" ng-model="shape.data.pattern" ng-if="rule.data.shapeProp === 'id'"
               bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-              bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
-              ng-model-onblur data-placement="right" />
+              bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0"
+              data-items="100" ng-model-onblur data-placement="right" />
             <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
-              class="gf-form-input width-8" ng-model="shape.data.pattern"
-              ng-if="rule.data.shapeProp === 'value'"
+              class="gf-form-input width-8" ng-model="shape.data.pattern" ng-if="rule.data.shapeProp === 'value'"
               bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-              bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
-              ng-model-onblur data-placement="right" />
+              bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" data-min-length="0"
+              data-items="100" ng-model-onblur data-placement="right" />
           </div>
         </td>
         <td>

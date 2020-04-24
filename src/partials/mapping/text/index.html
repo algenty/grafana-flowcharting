@@ -87,7 +87,7 @@
                 ng-click="text.show();editor.onRulesChange()"></i>
             </label>
             <label class="gf-form-label" style="margin-right: 4px;" ng-hide="editor.flowchartHandler.isMapping(text)">
-              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(text)"
+              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(text, rule.data.textProp)"
                 bs-tooltip="'Select object/target in graph'"></i>
             </label>
             <label class="gf-form-label" style="margin-right: 4px;color:orange"

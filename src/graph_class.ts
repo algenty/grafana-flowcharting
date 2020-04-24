@@ -58,8 +58,8 @@ export default class XGraph {
     this.onMapping = {
       active: false,
       $scope: null,
-      id: null,
-      prop: null,
+      value: null,
+      prop: 'id',
       object: null,
     };
     // END ZOOM MouseWheele
@@ -248,7 +248,7 @@ export default class XGraph {
       console.log(_GF.CONSTANTS.VAR_STR_VIEWERJS + ' loaded with XMLRequest Method');
     }
     // require('./libs/viewer.min');
-    
+
     // Shapes
     let shapes = _GF.getVar(_GF.CONSTANTS.VAR_STR_SHAPESJS);
     if (shapes) {
@@ -993,7 +993,6 @@ export default class XGraph {
    */
   setMap(onMappingObj: gf.TIOnMappingObj) {
     _GF.log.info('XGraph.setMapping()');
-    // GFGlobal.log.debug('XGraph.setMapping() onMappingObject : ', onMappingObj);
     this.onMapping = onMappingObj;
     if (this.onMapping.active === true) {
       this.container.style.cursor = 'crosshair';
@@ -1032,12 +1031,13 @@ export default class XGraph {
     if (this.onMapping.active) {
       const state = me.getState();
       if (state) {
-        const id = state.cell.id;
+        const prop = this.onMapping.prop !== null ? this.onMapping.prop : 'id';
+        const value = this.getValuePropOfMxCell(prop, state.cell);
         if (this.onMapping.object) {
-          this.onMapping.object.data.pattern = id;
+          this.onMapping.object.data.pattern = value;
         }
-        if (this.onMapping.id) {
-          const elt = document.getElementById(this.onMapping.id);
+        if (this.onMapping.value) {
+          const elt = document.getElementById(this.onMapping.value);
           if (elt) {
             setTimeout(() => {
               elt.focus();
@@ -1230,7 +1230,7 @@ export default class XGraph {
   async blinkCell(cell: mxCell, ms: number) {
     if (!cell.blink) {
       const self = this;
-      const bl_on = function() {
+      const bl_on = function () {
         // console.log('bl_on');
         const color = '#f5f242';
         const opacity = 100;
@@ -1252,7 +1252,7 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function() {
+      const bl_off = function () {
         if (cell && cell.blink_on) {
           // console.log('bl_off');
           const hl = cell.blink_on;

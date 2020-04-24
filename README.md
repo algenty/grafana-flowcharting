@@ -52,9 +52,9 @@ Arnaud
   - Add perf stat on rule title
   - New custom variables for fields (Text Mapping 'with', Link Mapping 'Url' and Event Mapping 'Value')
   - New function :  Event Mapping
-  - TODO : FIX Mapping id/value
+  - TODO : Id by text not work
   - TODO : Fix blink
-  - TODO : FIX Graph all animation
+  - TODO : FIX tooltip Graph all animation
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
   - shape stills select when deleting map.

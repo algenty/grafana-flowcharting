@@ -89,7 +89,7 @@ export class StateHandler {
 
       // EVENTS
       if (!found) {
-        name = xgraph.getValuePropOfMxCell(rule.data.linkProp, mxcell);
+        name = xgraph.getValuePropOfMxCell(rule.data.eventProp, mxcell);
         if (rule.matchEvent(name)) {
           result.set(id, state);
           found = true;
@@ -187,7 +187,7 @@ export class StateHandler {
    * @param  {Array<Metric>} metrics - Array of serie object
    */
   setStates(rules: Rule[], metrics: Metric[]): this {
-    _GF.log.info('StateHandler.setStates()');
+    const trc = _GF.trace.before(this.constructor.name + '.' + 'setStates()');
     this.prepare();
     rules.forEach(rule => {
       rule.highestLevel = -1;
@@ -204,6 +204,7 @@ export class StateHandler {
         });
       });
     });
+    trc.after();
     return this;
   }
 
@@ -211,10 +212,11 @@ export class StateHandler {
    * Apply color and text
    */
   applyStates(): this {
-    _GF.log.info('StateHandler.applyStates()');
+    const trc = _GF.trace.before(this.constructor.name + '.' + 'setStates()');
     this.states.forEach(state => {
       state.async_applyState();
     });
+    trc.after();
     return this;
   }
 
@@ -224,8 +226,6 @@ export class StateHandler {
    * @memberof StateHandler
    */
   async async_applyStates() {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'render()');
     this.applyStates();
-    trc.after();
   }
 }
