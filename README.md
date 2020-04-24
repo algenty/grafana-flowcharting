@@ -52,7 +52,6 @@ Arnaud
   - Add perf stat on rule title
   - New custom variables for fields (Text Mapping 'with', Link Mapping 'Url' and Event Mapping 'Value')
   - New function :  Event Mapping
-  - TODO : Id by text not work
   - TODO : Fix blink
   - TODO : FIX tooltip Graph all animation
   - TODO : FIX tooltip color of graph

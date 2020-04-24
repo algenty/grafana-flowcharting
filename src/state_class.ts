@@ -807,6 +807,7 @@ class TooltipState extends GFState {
   async setTooltip(rule: Rule, metric: Metric, color: string, value: string) {
     let tpColor: string | null = null;
     let label: string = rule.data.tooltipLabel;
+    debugger
     if (this.tooltipHandler === null || this.tooltipHandler === undefined) {
       this.tooltipHandler = new TooltipHandler(this.mxcell);
     }
