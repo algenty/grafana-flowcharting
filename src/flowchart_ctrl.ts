@@ -96,6 +96,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
     this.render();
     trc.after();
+    _GF.trace.resume();
   }
 
   onDataError() {

@@ -55,6 +55,7 @@ Arnaud
   - TODO : Id by text not work
   - TODO : Fix blink
   - TODO : FIX tooltip Graph all animation
+  - TODO : FIX tooltip color of graph
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
   - shape stills select when deleting map.

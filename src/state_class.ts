@@ -182,13 +182,14 @@ export class State {
    * @memberof State
    */
   unsetState(): this {
-    _GF.log.info('State.unsetState()');
+    const trc = _GF.trace.before(this.constructor.name + '.' + 'unsetState()');
     this.eventState.unset();
     this.textState.unset();
     this.linkState.unset();
     this.tooltipState.unset();
     this.iconState.unset();
     this.matched = false;
+    trc.after();
     return this;
   }
 
@@ -274,7 +275,7 @@ export class State {
    * @memberof State
    */
   applyState(): this {
-    _GF.log.info('State.applyState()');
+    const trc = _GF.trace.before(this.constructor.name + '.' + 'applyState()');
     if (this.matched || this.changed) {
       this.changed = true;
       this.shapeState.apply();
@@ -284,6 +285,7 @@ export class State {
       this.eventState.apply();
       this.linkState.apply();
     }
+    trc.after();
     return this;
   }
 
@@ -294,6 +296,7 @@ export class State {
    * @memberof State
    */
   reset(): this {
+    const trc = _GF.trace.before(this.constructor.name + '.' + 'reset()');
     this.shapeState.reset();
     this.tooltipState.reset();
     this.iconState.reset();
@@ -304,6 +307,7 @@ export class State {
     this.status.clear();
     this.globalLevel = -1;
     this.changed = false;
+    trc.after();
     return this;
   }
 
@@ -314,6 +318,7 @@ export class State {
    * @memberof State
    */
   prepare(): this {
+    const trc = _GF.trace.before(this.constructor.name + '.' + 'prepare()');
     if (this.changed) {
       this.shapeState.prepare();
       this.tooltipState.prepare();
@@ -326,6 +331,7 @@ export class State {
       this.globalLevel = -1;
       this.matched = false;
     }
+    trc.after();
     return this;
   }
 

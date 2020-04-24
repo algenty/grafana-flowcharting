@@ -240,7 +240,6 @@ export class FlowchartHandler {
     }
     this.ctrl.renderingCompleted();
     trc.after();
-    _GF.trace.resume();
   }
 
   /**

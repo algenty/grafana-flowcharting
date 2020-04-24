@@ -271,7 +271,7 @@ class GFLog {
   static ERROR = 3;
   static logLevel = GFLog.WARN;
   static logDisplay = true;
-  constructor() {}
+  constructor() { }
 
   /**
    * If message must be displayed
@@ -347,21 +347,21 @@ class GFLog {
 }
 
 class GFTrace {
-  static enable = true;
+  static enable = false;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;
   trace:
     | {
-        Name: string;
-        Id: string;
-        Args: any;
-        Return: any;
-        Before: number;
-        End: number | undefined;
-        ExecTime: number | undefined;
-        Indent: number;
-      }
+      Name: string;
+      Id: string;
+      Args: any;
+      Return: any;
+      Before: number;
+      End: number | undefined;
+      ExecTime: number | undefined;
+      Indent: number;
+    }
     | undefined;
 
   constructor(fn?: string) {
@@ -385,22 +385,37 @@ class GFTrace {
   ):
     | GFTrace
     | {
-        after: () => void;
-      } {
+      after: () => void;
+    } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
+      GFTrace._inc(fn);
       return t;
     }
-    return { after: () => {} };
+    return { after: () => { } };
+  }
+
+  static _inc(fn) {
+    let f = GFTrace.fn.get(fn);
+    if (f === undefined) {
+      f = {
+        Calls: 0,
+        Function: fn,
+        TotalTimes: 0,
+      }
+    }
+    f.Calls++;
+    GFTrace.fn.set(fn, f);
   }
 
   async after() {
+    // console.log('trace', this.trace)
     if (GFTrace.enable && this.trace !== undefined) {
+      // if (this.trace.Name === 'FlowchartCtrl.onDataReceived()') debugger
       if (this.trace) {
         this.trace.End = Date.now();
         GFTrace.indent--;
-        this.trace.ExecTime = this.trace.End - this.trace.Before;
       }
     }
   }
@@ -414,11 +429,21 @@ class GFTrace {
   async resume() {
     if (GFTrace.enable) {
       let tb: any[] = [];
-      GFTrace.trc.forEach(value => {
-        tb.push(value);
+      let fn: any[] = [];
+      GFTrace.trc.forEach(trace => {
+        // if (trace.Name === 'FlowchartCtrl.onDataReceived()') debugger
+        trace.ExecTime = trace.End - trace.Before;
+        const f = GFTrace.fn.get(trace.Name);
+        f.TotalTimes += trace.ExecTime;
+        tb.push(trace);
       });
       console.table(tb, ['Indent', 'Name', 'ExecTime']);
+      GFTrace.fn.forEach(f => {
+        fn.push(f);
+      });
+      console.table(fn, ['Function', 'Calls', 'TotalTimes'])
       GFTrace.trc.clear();
+      GFTrace.fn.clear();
     }
   }
 }
