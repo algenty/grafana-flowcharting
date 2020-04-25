@@ -108,7 +108,7 @@ export class State {
             k = 'tooltip';
             v = true;
             this.tooltipState.set('tooltip', true, level) && this.status.set(k, v);
-            this.tooltipState.setTooltip(rule, metric, v, FormattedValue);
+            this.tooltipState.setTooltip(rule, metric, color, FormattedValue);
           }
           // ICONS
           if (rule.toIconize(level)) {
@@ -381,7 +381,7 @@ export class GFState {
     this.init_core();
   }
 
-  init_core() {}
+  init_core() { }
 
   addValue(key: string, value: any) {
     if (this.keys.includes(key) !== true) {
@@ -453,7 +453,7 @@ export class GFState {
     return this;
   }
 
-  apply_core(key: any, value: any) {}
+  apply_core(key: any, value: any) { }
 
   isMatched(key?: string): boolean {
     if (key !== undefined) {
@@ -506,7 +506,6 @@ export class GFState {
       this.unset(key);
       let value = this.getOriginalValue(key);
       try {
-        // debugger
         this.reset_core(key, value);
       } catch (error) {
         _GF.log.error('Error on reset for key ' + key, error);
@@ -521,7 +520,7 @@ export class GFState {
     return this;
   }
 
-  reset_core(key: any, value: any) {}
+  reset_core(key: any, value: any) { }
 
   prepare(): this {
     if (this.isChanged()) {
@@ -541,11 +540,11 @@ class EventState extends GFState {
   keys: gf.TStyleEventKeys[] = [];
   geo:
     | {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-      }
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }
     | undefined = undefined;
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);
@@ -807,7 +806,6 @@ class TooltipState extends GFState {
   async setTooltip(rule: Rule, metric: Metric, color: string, value: string) {
     let tpColor: string | null = null;
     let label: string = rule.data.tooltipLabel;
-    debugger
     if (this.tooltipHandler === null || this.tooltipHandler === undefined) {
       this.tooltipHandler = new TooltipHandler(this.mxcell);
     }

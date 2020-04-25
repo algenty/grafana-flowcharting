@@ -9,30 +9,28 @@
     <h5 class="section-heading">
       Graph inspect Id
       <info-popover mode="right-normal">
-        <span ng-bind-html="GFP.popover('List of all objects in graph with states', 'INSPECT','inspect_graph_table')"> </span>
+        <span ng-bind-html="GFP.popover('List of all objects in graph with states', 'INSPECT','inspect_graph_table')">
+        </span>
       </info-popover>
     </h5>
-    <gf-form-switch
-      class="gf-form"
-      label-class="width-14"
-      tooltip="Enable inspect mode to view/modify identity of shapes"
-      label="Enable"
-      checked="editor.enable"
-    >
+    <gf-form-switch class="gf-form" label-class="width-14"
+      tooltip="Enable inspect mode to view/modify identity of shapes" label="Enable" checked="editor.enable">
     </gf-form-switch>
+
     <!-- LINK MAPPING -->
     <ng-include src="GFP.getPartialPath() + '/inspect/states/index.html'" ng-if="editor.enable"> </ng-include>
     <hr />
+
+    <!-- METRICS MAPPING -->
+    <!-- <ng-include src="GFP.getPartialPath() + '/inspect/metrics/index.html'" ng-if="editor.enable"> </ng-include>
+    <hr /> -->
+
     <div class="gf-form">
       <button class="btn btn-danger btn-small" ng-click="editor.reset()" style="margin-right: 5px;">
         <i class="fa fa-power-off"></i> Reinit graph and color
       </button>
-      <button
-        ng-show="editor.flowchartHandler.getFlowchart().getStateHandler().edited"
-        class="btn btn-secondary btn-small"
-        ng-click="editor.apply()"
-        style="margin-right: 5px;"
-      >
+      <button ng-show="editor.flowchartHandler.getFlowchart().getStateHandler().edited"
+        class="btn btn-secondary btn-small" ng-click="editor.apply()" style="margin-right: 5px;">
         <i class="fa fa-save"></i> Apply changes
       </button>
     </div>
@@ -62,22 +60,14 @@
     <div class="section gf-form-group">
       <div class="gf-form">
         <span class="gf-form-label width-12">Display</span>
-        <select
-          class="gf-form-input"
-          ng-model="editor.logDisplay"
-          ng-options="c.value as c.text for c in editor.logDisplayOption"
-          ng-change="editor.onDebug()"
-        >
+        <select class="gf-form-input" ng-model="editor.logDisplay"
+          ng-options="c.value as c.text for c in editor.logDisplayOption" ng-change="editor.onDebug()">
         </select>
       </div>
       <div class="gf-form">
         <span class="gf-form-label width-12">Level</span>
-        <select
-          class="gf-form-input"
-          ng-model="editor.logLevel"
-          ng-options="c.value as c.text for c in editor.logLevelOption"
-          ng-change="editor.onDebug()"
-        >
+        <select class="gf-form-input" ng-model="editor.logLevel"
+          ng-options="c.value as c.text for c in editor.logLevelOption" ng-change="editor.onDebug()">
         </select>
       </div>
     </div>
