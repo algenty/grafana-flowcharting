@@ -161,7 +161,7 @@ export class GFVariables {
    * @memberof GFVariables
    */
   static getAvailableLocalVarNames(): string[] {
-    return _GF.CONSTANTS.LOCALVARIABLENAMES.map(x => '${' + x.value + '}');
+    return $GF.CONSTANTS.LOCALVARIABLENAMES.map(x => '${' + x.value + '}');
   }
 
   /**
@@ -210,7 +210,7 @@ export class GFVariables {
    * @memberof GFVariables
    */
   getFullVarsNames(): string[] {
-    return _GF.getGrafanaVars().concat(this.getVarsNames());
+    return $GF.getGrafanaVars().concat(this.getVarsNames());
   }
 
   /**
@@ -243,7 +243,7 @@ export class GFVariables {
    */
   replaceText(text: string): string {
     try {
-      let templateSrv = _GF.getVar(_GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
+      let templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
       text = templateSrv !== undefined ? templateSrv.replaceWithText(text) : text;
       for (let [key, value] of this._variables) {
         text = text.replace('${' + key + '}', value);
@@ -263,7 +263,7 @@ export class GFVariables {
    */
   eval(text: string): string {
     let t = this.replaceText(text);
-    return _GF.utils.evalIt(t);
+    return $GF.utils.evalIt(t);
   }
 }
 
@@ -274,7 +274,7 @@ class GFLog {
   static ERROR = 3;
   static logLevel = GFLog.WARN;
   static logDisplay = true;
-  constructor() { }
+  constructor() {}
 
   /**
    * If message must be displayed
@@ -356,22 +356,22 @@ class GFTrace {
   static indent = 0;
   trace:
     | {
-      Name: string;
-      Id: string;
-      Args: any;
-      Return: any;
-      Before: number;
-      End: number | undefined;
-      ExecTime: number | undefined;
-      Indent: number;
-    }
+        Name: string;
+        Id: string;
+        Args: any;
+        Return: any;
+        Before: number;
+        End: number | undefined;
+        ExecTime: number | undefined;
+        Indent: number;
+      }
     | undefined;
 
   constructor(fn?: string) {
     if (GFTrace.enable && fn !== undefined) {
       this.trace = {
         Name: fn,
-        Id: _GF.utils.uniqueID(),
+        Id: $GF.utils.uniqueID(),
         Args: undefined,
         Return: undefined,
         Before: Date.now(),
@@ -388,15 +388,15 @@ class GFTrace {
   ):
     | GFTrace
     | {
-      after: () => void;
-    } {
+        after: () => void;
+      } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       GFTrace._inc(fn);
       return t;
     }
-    return { after: () => { } };
+    return { after: () => {} };
   }
 
   static _inc(fn) {
@@ -406,7 +406,7 @@ class GFTrace {
         Calls: 0,
         Function: fn,
         TotalTimes: 0,
-      }
+      };
     }
     f.Calls++;
     GFTrace.fn.set(fn, f);
@@ -444,14 +444,14 @@ class GFTrace {
       GFTrace.fn.forEach(f => {
         fn.push(f);
       });
-      console.table(fn, ['Function', 'Calls', 'TotalTimes'])
+      console.table(fn, ['Function', 'Calls', 'TotalTimes']);
       GFTrace.trc.clear();
       GFTrace.fn.clear();
     }
   }
 }
 
-export class _GF {
+export class $GF {
   static _globalvars: GFVariables = new GFVariables();
   static log: GFLog = new GFLog();
   static CONSTANTS: GFCONSTANT = new GFCONSTANT();
@@ -498,14 +498,14 @@ export class _GF {
    */
   static getGlobalVars(): GFVariables {
     // console.log('getGlobalVars()',_GF._globalvars)
-    if (_GF._globalvars === undefined) {
-      _GF._globalvars = new GFVariables();
+    if ($GF._globalvars === undefined) {
+      $GF._globalvars = new GFVariables();
     }
-    return _GF._globalvars;
+    return $GF._globalvars;
   }
 
   static getGrafanaVars(): string[] {
-    const templateSrv = _GF.getVar(_GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
+    const templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
     if (templateSrv !== undefined && templateSrv !== null) {
       return _.map(templateSrv.variables, variable => `\${${variable.name}}`);
     }
@@ -521,7 +521,7 @@ export class _GF {
    * @memberof GFGlobal
    */
   static getVar(key: any): any {
-    return _GF.getGlobalVars().get(key);
+    return $GF.getGlobalVars().get(key);
   }
 
   /**
@@ -533,11 +533,11 @@ export class _GF {
    * @memberof GFGlobal
    */
   static setVar(key: any, value: any) {
-    _GF.getGlobalVars().set(key, value);
+    $GF.getGlobalVars().set(key, value);
   }
 
   static unsetVar(key: any) {
-    _GF.getGlobalVars().unset(key);
+    $GF.getGlobalVars().unset(key);
   }
 
   /**
@@ -548,7 +548,7 @@ export class _GF {
    * @memberof GFGlobal
    */
   static getFullAvailableVarNames(): string[] {
-    return GFVariables.getAvailableLocalVarNames().concat(_GF.getGrafanaVars());
+    return GFVariables.getAvailableLocalVarNames().concat($GF.getGrafanaVars());
   }
 
   static getIntervalCounter(begin: number, end: number, count: number, method: gf.TCounterKeys = 'linear'): number[] {
@@ -575,10 +575,10 @@ export class _GF {
    * @memberof GFGlobal
    */
   static setInterval(fc: CallableFunction, timer: number): number {
-    let interval: Set<any> = _GF.getVar(_GF.CONSTANTS.VAR_MAP_INTERVAL);
+    let interval: Set<any> = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
     if (interval === undefined) {
       interval = new Set();
-      _GF.setVar(_GF.CONSTANTS.VAR_MAP_INTERVAL, interval);
+      $GF.setVar($GF.CONSTANTS.VAR_MAP_INTERVAL, interval);
     }
     const newInterval = window.setInterval(fc, timer);
     interval.add(newInterval);
@@ -593,12 +593,12 @@ export class _GF {
    * @memberof GFGlobal
    */
   static clearInterval(key: number) {
-    let interval: Set<any> = _GF.getVar(_GF.CONSTANTS.VAR_MAP_INTERVAL);
+    let interval: Set<any> = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
     if (interval !== undefined) {
       try {
         window.clearInterval(key);
       } catch (error) {
-        _GF.log.warn('Failed to clear interval thread', key, error);
+        $GF.log.warn('Failed to clear interval thread', key, error);
       }
       interval.delete(key);
     }
@@ -613,9 +613,9 @@ export class _GF {
    * @memberof GFGlobal
    */
   static async loadLocalFile(varName: string, fileName: string) {
-    let v = _GF.getVar(varName);
+    let v = $GF.getVar(varName);
     if (v === undefined) {
-      const contextroot = _GF.getVar(_GF.CONSTANTS.VAR_STG_CTXROOT);
+      const contextroot = $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
       if (contextroot !== undefined) {
         const filePath = `${contextroot}/${fileName}`;
         if (!!window.fetch) {
@@ -626,77 +626,77 @@ export class _GF {
                 response
                   .text()
                   .then(text => {
-                    _GF.log.info('loadLocalFile called succesfully', filePath);
-                    _GF.setVar(varName, text);
+                    $GF.log.info('loadLocalFile called succesfully', filePath);
+                    $GF.setVar(varName, text);
                     return text;
                   })
-                  .catch(error => _GF.log.error('Error when download text file', filePath, error));
+                  .catch(error => $GF.log.error('Error when download text file', filePath, error));
               }
             })
-            .catch(error => _GF.log.error('Error when download file', filePath, error));
+            .catch(error => $GF.log.error('Error when download file', filePath, error));
         } else {
           // Faire quelque chose avec XMLHttpRequest?
-          const txt = _GF.utils.loadFile(fileName);
+          const txt = $GF.utils.loadFile(fileName);
           if (txt) {
-            _GF.setVar(varName, _GF.utils.loadFile(fileName));
+            $GF.setVar(varName, $GF.utils.loadFile(fileName));
             return txt;
           }
         }
       } else {
-        _GF.log.warn('loadLocalFile Contexroot : ', contextroot);
+        $GF.log.warn('loadLocalFile Contexroot : ', contextroot);
       }
     }
     return false;
   }
 
   static getRootPath(): string {
-    return _GF.getVar(_GF.CONSTANTS.VAR_STG_CTXROOT);
+    return $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
   }
 
   static getLibsPath(): string {
-    return `${_GF.getVar(_GF.CONSTANTS.VAR_STG_CTXROOT)}libs/`;
+    return `${$GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT)}libs/`;
   }
 
   static getDrawioPath(): string {
-    return `${_GF.getLibsPath()}drawio/`;
+    return `${$GF.getLibsPath()}drawio/`;
   }
 
   static getStaticPath(): string {
-    return `${_GF.getRootPath()}static/`;
+    return `${$GF.getRootPath()}static/`;
   }
 
   static getMxBasePath(): string {
-    return `${_GF.getDrawioPath()}mxgraph/`
+    return `${$GF.getDrawioPath()}mxgraph/`;
   }
 
   static getMxStylePath(): string {
-    return `${_GF.getDrawioPath()}styles/`;
+    return `${$GF.getDrawioPath()}styles/`;
   }
 
   static getShapesPath(): string {
-    return `${_GF.getDrawioPath()}/shapes`;
+    return `${$GF.getDrawioPath()}/shapes`;
   }
 
   static getStencilsPath(): string {
-    return `${_GF.getDrawioPath()}/stencils`;
+    return `${$GF.getDrawioPath()}/stencils`;
   }
 
   static getMxCssPath(): string {
-    return `${_GF.getDrawioPath()}styles/`;
+    return `${$GF.getDrawioPath()}styles/`;
   }
 
   static getMxResourcePath(): string {
-    return `${_GF.getMxBasePath()}css/`;
+    return `${$GF.getMxBasePath()}css/`;
   }
 
   static getMxImagePath(): string {
-    return `${_GF.getMxBasePath()}images/`;
+    return `${$GF.getMxBasePath()}images/`;
   }
 
   static destroy() {
-    let interval: Set<any> = _GF.getVar('interval');
+    let interval: Set<any> = $GF.getVar('interval');
     if (interval !== undefined) {
-      interval.forEach(x => _GF.clearInterval(x));
+      interval.forEach(x => $GF.clearInterval(x));
       interval.clear();
     }
   }

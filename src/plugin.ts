@@ -1,4 +1,4 @@
-import { _GF } from 'globals_class';
+import { $GF } from 'globals_class';
 
 // declare var GFP: FlowChartingPlugin;
 /**
@@ -18,8 +18,8 @@ export class FlowChartingPlugin {
 
   constructor(contextRoot: string, templateSrv: any) {
     this.contextRoot = contextRoot;
-    _GF.setVar(_GF.CONSTANTS.VAR_STG_CTXROOT, contextRoot);
-    _GF.setVar(_GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
+    $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, contextRoot);
+    $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
     this.data = this.loadJson();
     this.repo = this.getRepo();
     // this.perf = new Perf();
@@ -49,7 +49,7 @@ export class FlowChartingPlugin {
       contextRoot = $scope.$root.appSubUrl + FlowChartingPlugin.defaultContextRoot;
       plugin = new FlowChartingPlugin(contextRoot, templateSrv);
     }
-    _GF.setVar(_GF.CONSTANTS.VAR_STG_CTXROOT, contextRoot);
+    $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, contextRoot);
 
     // (async () => {
     //   await FlowChartingPlugin.loadLocalFile();

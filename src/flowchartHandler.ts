@@ -2,7 +2,7 @@ import { Flowchart } from 'flowchart_class';
 import { Rule, GFMap } from 'rule_class';
 import _ from 'lodash';
 import { Metric } from './metric_class';
-import { _GF } from 'globals_class';
+import { $GF } from 'globals_class';
 
 /**
  * Class FlowchartHandler
@@ -41,7 +41,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   constructor($scope: ng.IScope, elem: any, ctrl: any, data: gf.TFlowchartHandlerData) {
-    _GF.log.info('FlowchartHandler.constructor()');
+    $GF.log.info('FlowchartHandler.constructor()');
     FlowchartHandler.getDefaultGraph();
     this.$scope = $scope;
     this.$elem = elem.find('.flowchart-panel__chart');
@@ -81,7 +81,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   import(obj: any): this {
-    _GF.log.info('FlowchartHandler.import()');
+    $GF.log.info('FlowchartHandler.import()');
     this.flowcharts = [];
     if (obj !== undefined && obj !== null) {
       // For version 0.5.0 and under
@@ -173,7 +173,7 @@ export class FlowchartHandler {
    */
   createContainer(): HTMLDivElement {
     //TODO: Convert to createDocument
-    const $container: any = $(`<div id="flowchart_${_GF.utils.uniqueID()}" style="margin:auto;position:relative,width:100%;height:100%"></div>`);
+    const $container: any = $(`<div id="flowchart_${$GF.utils.uniqueID()}" style="margin:auto;position:relative,width:100%;height:100%"></div>`);
     this.$elem.html($container);
     return $container[0];
   }
@@ -186,7 +186,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   addFlowchart(name: string): Flowchart {
-    _GF.log.info('FlowchartHandler.addFlowchart()');
+    $GF.log.info('FlowchartHandler.addFlowchart()');
     const container = this.createContainer();
     const data = Flowchart.getDefaultData();
     const flowchart = new Flowchart(name, container, this.ctrl, data);
@@ -202,7 +202,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   async render() {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'render()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
     // not repeat render if mouse down
     if (!this.mousedown) {
       let optionsFlag = true;
@@ -293,7 +293,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   applyOptions(): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
     this.flowcharts.forEach(flowchart => {
       flowchart.applyOptions();
     });
@@ -309,7 +309,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   async_refreshStates(rules: Rule[], metrics: Metric[]) {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'async_refreshStates()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'async_refreshStates()');
     this.refreshStates(rules, metrics);
     trc.after();
   }
@@ -323,7 +323,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   refreshStates(rules: Rule[], metrics: Metric[]): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'refreshStates()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'refreshStates()');
     if (this.changeRuleFlag) {
       this.updateStates(rules);
       this.changeRuleFlag = false;
@@ -356,7 +356,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   setStates(rules: Rule[], metrics: any[]): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'setStates()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
     this.flowcharts.forEach(flowchart => {
       flowchart.setStates(rules, metrics);
     });
@@ -372,7 +372,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   updateStates(rules: Rule[]): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'updateStates()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'updateStates()');
     this.flowcharts.forEach(flowchart => {
       flowchart.updateStates(rules);
     });
@@ -387,7 +387,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   applyStates(): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'applyStates()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'applyStates()');
     new Promise(() => {
       this.flowcharts.forEach(flowchart => {
         flowchart.applyStates();
@@ -406,7 +406,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   setOptions(): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'setOptions()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setOptions()');
     this.flowcharts.forEach(flowchart => {
       flowchart.setOptions();
     });
@@ -421,7 +421,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   draw(): this {
-    _GF.log.info(`FlowchartHandler.draw()`);
+    $GF.log.info(`FlowchartHandler.draw()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.redraw();
     });
@@ -435,7 +435,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   load(): this {
-    _GF.log.info(`FlowchartHandler.load()`);
+    $GF.log.info(`FlowchartHandler.load()`);
     this.flowcharts.forEach(flowchart => {
       flowchart.reload();
     });
@@ -448,7 +448,7 @@ export class FlowchartHandler {
    * @param {Object} objToMap
    * @memberof FlowchartHandler
    */
-  setMap(objToMap: GFMap, prop:gf.TPropertieKey = 'id'): this {
+  setMap(objToMap: GFMap, prop: gf.TPropertieKey = 'id'): this {
     const flowchart = this.getFlowchart(this.currentFlowchart);
     this.onMapping.active = true;
     this.onMapping.object = objToMap;

@@ -6,7 +6,7 @@ import { inspectOptionsTab } from 'inspect_options';
 import { RulesHandler } from 'rulesHandler';
 import { FlowchartHandler } from 'flowchartHandler';
 import { MetricHandler } from 'metricHandler';
-import { _GF } from 'globals_class';
+import { $GF } from 'globals_class';
 import _ from 'lodash';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
@@ -87,7 +87,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
     if (!!this.metricHandler) {
       this.metricHandler.initData(dataList);
       if (!!this.flowchartHandler) {
@@ -96,7 +96,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
     this.render();
     trc.after();
-    _GF.trace.resume();
+    $GF.trace.resume();
   }
 
   onDataError() {
@@ -114,7 +114,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // FUNCTIONS
   //
   link(scope, elem, attrs, ctrl) {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'link()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
 
     // DATA
     this.metricHandler = new MetricHandler(this.$scope);
@@ -178,7 +178,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // }
 
   $onDestroy() {
-    _GF.destroy();
+    $GF.destroy();
   }
 }
 

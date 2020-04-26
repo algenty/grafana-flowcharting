@@ -333,8 +333,8 @@ module.exports = {
       success: data => {
         result = data;
       },
-      error: () => {
-        alert('Error when download ' + url);
+      error: error => {
+        console.log('Error when download ' + fname), error;
       },
     });
     return result;

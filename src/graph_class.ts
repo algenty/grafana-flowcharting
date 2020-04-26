@@ -1,6 +1,5 @@
 import _ from 'lodash';
-import { _GF } from 'globals_class';
-declare var Graph: any;
+import { $GF } from 'globals_class';
 
 declare var mxEvent: any;
 declare var mxClient: any;
@@ -53,7 +52,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   constructor(container: HTMLDivElement, type: gf.TSourceType, definition: string) {
-    _GF.log.info('XGraph.constructor()');
+    $GF.log.info('XGraph.constructor()');
     this.container = container;
     this.type = type;
     this.onMapping = {
@@ -66,8 +65,8 @@ export default class XGraph {
     // END ZOOM MouseWheele
     XGraph.initMxGgraph();
     if (type === 'xml') {
-      if (_GF.utils.isencoded(definition)) {
-        this.xmlGraph = _GF.utils.decode(definition, true, true, true);
+      if ($GF.utils.isencoded(definition)) {
+        this.xmlGraph = $GF.utils.decode(definition, true, true, true);
       } else {
         this.xmlGraph = definition;
       }
@@ -87,8 +86,8 @@ export default class XGraph {
     try {
       const div = document.createElement('div');
       const g = new Graph(div);
-      if (_GF.utils.isencoded(source)) {
-        source = _GF.utils.decode(source, true, true, true);
+      if ($GF.utils.isencoded(source)) {
+        source = $GF.utils.decode(source, true, true, true);
       }
       const xmlDoc = mxUtils.parseXml(source);
       const codec = new mxCodec(xmlDoc);
@@ -98,7 +97,7 @@ export default class XGraph {
       g.destroy();
       return true;
     } catch (error) {
-      _GF.log.error('isValidXml', error);
+      $GF.log.error('isValidXml', error);
       return false;
     }
   }
@@ -111,16 +110,16 @@ export default class XGraph {
    * @memberof XGraph
    */
   static initMxGgraph() {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'initMxGgraph()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'initMxGgraph()');
     let myWindow: any = window;
     if (!XGraph.initialized) {
       if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
-        let code = _GF.utils.$loadFile(`${_GF.getDrawioPath()}js/app.min.js`);
-        _GF.utils.evalRaw(code);
+        let code = $GF.utils.$loadFile(`${$GF.getDrawioPath()}js/app.min.js`);
+        $GF.utils.evalRaw(code);
         XGraph.postInitGlobalVars();
-        code = _GF.utils.$loadFile(`${_GF.getLibsPath()}/Graph_custom.js`);
-        _GF.utils.evalRaw(code);
+        code = $GF.utils.$loadFile(`${$GF.getLibsPath()}/Graph_custom.js`);
+        $GF.utils.evalRaw(code);
       }
       XGraph.initialized = true;
     }
@@ -128,41 +127,39 @@ export default class XGraph {
     trc.after();
   }
 
-
   static preInitGlobalVars() {
     const myWindow: any = window;
-    myWindow.BASE_PATH = _GF.getMxBasePath();
-    myWindow.RESOURCES_PATH = _GF.getMxResourcePath();
-    myWindow.RESOURCE_BASE = GFP.getMxResourcePath();
-    myWindow.STENCIL_PATH = _GF.getStencilsPath();
-    myWindow.SHAPES_PATH = _GF.getShapesPath();
-    myWindow.IMAGE_PATH = _GF.getMxImagePath();
-    myWindow.STYLE_PATH = _GF.getMxStylePath();
-    myWindow.CSS_PATH = _GF.getMxCssPath();
+    myWindow.BASE_PATH = $GF.getMxBasePath();
+    myWindow.RESOURCES_PATH = $GF.getMxResourcePath();
+    myWindow.RESOURCE_BASE = $GF.getMxResourcePath();
+    myWindow.STENCIL_PATH = $GF.getStencilsPath();
+    myWindow.SHAPES_PATH = $GF.getShapesPath();
+    myWindow.IMAGE_PATH = $GF.getMxImagePath();
+    myWindow.STYLE_PATH = $GF.getMxStylePath();
+    myWindow.CSS_PATH = $GF.getMxCssPath();
     myWindow.mxLanguages = ['en'];
-    myWindow.DRAWIO_BASE_URL = _GF.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
-    myWindow.DRAWIO_VIEWER_URL = _GF.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
+    myWindow.DRAWIO_BASE_URL = $GF.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
+    myWindow.DRAWIO_VIEWER_URL = $GF.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
     myWindow.DRAW_MATH_URL = 'math';
     myWindow.DRAWIO_CONFIG = null; // Replace with your custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
     const urlParams = new Object();
     myWindow.urlParams = urlParams;
-    urlParams['sync'] = 'none' // Disabled realtime
-    urlParams['lightbox'] = '1' // Uses lightbox in chromeless mode (larger zoom, no page visible, chromeless)
-    urlParams['nav'] = '1' // Enables folding in chromeless mode
-    urlParams['local'] = '1' // Uses device mode only
-    urlParams['embed'] = '1' // Runs in embed mode
-    myWindow.mxImageBasePath = _GF.getMxImagePath();
-    myWindow.mxBasePath = _GF.getMxBasePath();
+    urlParams['sync'] = 'none'; // Disabled realtime
+    urlParams['lightbox'] = '1'; // Uses lightbox in chromeless mode (larger zoom, no page visible, chromeless)
+    urlParams['nav'] = '1'; // Enables folding in chromeless mode
+    urlParams['local'] = '1'; // Uses device mode only
+    urlParams['embed'] = '1'; // Runs in embed mode
+    myWindow.mxImageBasePath = $GF.getMxImagePath();
+    myWindow.mxBasePath = $GF.getMxBasePath();
     myWindow.mxLoadStylesheets = true;
     myWindow.mxLanguage = 'en';
     myWindow.mxLoadResources = true;
-
   }
 
   static postInitGlobalVars() {
     const myWindow: any = window;
-    myWindow.mxClient.mxBasePath = _GF.getMxBasePath();
-    myWindow.mxClient.mxImageBasePath = _GF.getMxImagePath();
+    myWindow.mxClient.mxBasePath = $GF.getMxBasePath();
+    myWindow.mxClient.mxImageBasePath = $GF.getMxImagePath();
     myWindow.mxClient.mxLoadResources = true;
     myWindow.mxClient.mxLanguage = 'en';
     myWindow.mxClient.mxLoadStylesheets = true;
@@ -171,14 +168,13 @@ export default class XGraph {
     myWindow.ICONSEARCH_PATH = null;
   }
 
-
   /**
    * Graph initilisation and reset
    *
    * @memberof XGraph
    */
   initGraph(): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'initGraph()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'initGraph()');
     this.graph = new Graph(this.container);
 
     // /!\ What is setPannig
@@ -215,7 +211,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   drawGraph(): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'drawGraph()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'drawGraph()');
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
@@ -223,7 +219,7 @@ export default class XGraph {
       const codec = new mxCodec(xmlDoc);
       codec.decode(xmlDoc.documentElement, this.graph.getModel());
     } catch (error) {
-      _GF.log.error('Error in draw', error);
+      $GF.log.error('Error in draw', error);
     } finally {
       this.graph.getModel().endUpdate();
       this.cells['id'] = this.getCurrentCells('id');
@@ -240,7 +236,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   applyGraph(): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'applyGraph()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'applyGraph()');
     if (!this.scale) {
       this.zoomGraph(this.zoomPercent);
     } else {
@@ -268,7 +264,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   refresh(): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'refresh()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'refresh()');
     this.graph.refresh();
     trc.after();
     return this;
@@ -351,7 +347,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   centerGraph(bool: boolean): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'centerGraph()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'centerGraph()');
     this.graph.centerZoom = false;
     if (bool) {
       this.graph.center(true, true);
@@ -371,7 +367,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   scaleGraph(bool: boolean): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'scaleGraph()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'scaleGraph()');
     if (bool) {
       this.unzoomGraph();
       this.graph.fit();
@@ -433,7 +429,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   zoomGraph(percent: string): this {
-    _GF.log.info('XGraph.zoomGraph()');
+    $GF.log.info('XGraph.zoomGraph()');
     if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
       const ratio: number = Number(percent.replace('%', '')) / 100;
       this.graph.zoomTo(ratio, true);
@@ -502,9 +498,9 @@ export default class XGraph {
    * @memberof XGraph
    */
   setXmlGraph(xmlGraph: string): this {
-    _GF.log.info('XGraph.setXmlGraph()');
-    if (_GF.utils.isencoded(xmlGraph)) {
-      this.xmlGraph = _GF.utils.decode(xmlGraph, true, true, true);
+    $GF.log.info('XGraph.setXmlGraph()');
+    if ($GF.utils.isencoded(xmlGraph)) {
+      this.xmlGraph = $GF.utils.decode(xmlGraph, true, true, true);
     } else {
       this.xmlGraph = xmlGraph;
     }
@@ -527,7 +523,7 @@ export default class XGraph {
     // GFGlobal.log.debug('mxStencilRegistry', mxStencilRegistry);
     if (prop === 'id') {
       _.each(cells, (mxcell: mxCell) => {
-        _GF.log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', this.getStyleCell(mxcell, 'shape'));
+        $GF.log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', this.getStyleCell(mxcell, 'shape'));
         // this.graph.setCellStyles('shape','mxgraph.aws4.spot_instance',[mxcell]);
         cellIds.push(this.getId(mxcell));
       });
@@ -552,13 +548,13 @@ export default class XGraph {
     const result: any[] = [];
     if (prop === 'id') {
       _.each(mxcells, (mxcell: mxCell) => {
-        if (_GF.utils.matchString(mxcell.id, pattern)) {
+        if ($GF.utils.matchString(mxcell.id, pattern)) {
           result.push(mxcell);
         }
       });
     } else if (prop === 'value') {
       _.each(mxcells, (mxcell: mxCell) => {
-        if (_GF.utils.matchString(this.getLabelCell(mxcell), pattern)) {
+        if ($GF.utils.matchString(this.getLabelCell(mxcell), pattern)) {
           result.push(mxcell);
         }
       });
@@ -699,7 +695,7 @@ export default class XGraph {
         cell.id = newId;
       });
     } else {
-      _GF.log.warn(`Cell ${oldId} not found`);
+      $GF.log.warn(`Cell ${oldId} not found`);
     }
     return this;
   }
@@ -767,7 +763,7 @@ export default class XGraph {
         const endColor = this.getStyleCell(mxcell, style);
         if (endColor !== null) {
           const startColor = color;
-          const steps = _GF.utils.getStepColors(startColor, endColor, _GF.CONSTANTS.CONF_COLORS_STEPS);
+          const steps = $GF.utils.getStepColors(startColor, endColor, $GF.CONSTANTS.CONF_COLORS_STEPS);
           const count = 0;
           const self = this;
           function graduate(count, steps) {
@@ -775,7 +771,7 @@ export default class XGraph {
               self.setStyleCell(mxcell, style, steps[count]);
               window.setTimeout(() => {
                 graduate(count + 1, steps);
-              }, _GF.CONSTANTS.CONF_COLORS_MS);
+              }, $GF.CONSTANTS.CONF_COLORS_MS);
             }
           }
           graduate(count, steps);
@@ -783,7 +779,7 @@ export default class XGraph {
           this.setStyleCell(mxcell, style, color);
         }
       } catch (error) {
-        _GF.log.error('Error on graduate color', error);
+        $GF.log.error('Error on graduate color', error);
         this.setStyleCell(mxcell, style, color);
       }
     } else {
@@ -812,7 +808,7 @@ export default class XGraph {
         const end = Number(endValue);
         const begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
         if (end !== begin) {
-          const steps = _GF.getIntervalCounter(begin, end, _GF.CONSTANTS.CONF_ANIMS_STEP);
+          const steps = $GF.getIntervalCounter(begin, end, $GF.CONSTANTS.CONF_ANIMS_STEP);
           const l = steps.length;
           let count = 0;
           const self = this;
@@ -821,7 +817,7 @@ export default class XGraph {
               self.setStyleCell(mxcell, style, steps[count]);
               window.setTimeout(() => {
                 graduate(count + 1, steps);
-              }, _GF.CONSTANTS.CONF_ANIMS_MS);
+              }, $GF.CONSTANTS.CONF_ANIMS_MS);
             }
           }
           graduate(count, steps);
@@ -890,7 +886,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   setMap(onMappingObj: gf.TIOnMappingObj) {
-    _GF.log.info('XGraph.setMapping()');
+    $GF.log.info('XGraph.setMapping()');
     this.onMapping = onMappingObj;
     if (this.onMapping.active === true) {
       this.container.style.cursor = 'crosshair';
@@ -904,7 +900,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   unsetMap() {
-    _GF.log.info('XGraph.unsetMapping()');
+    $GF.log.info('XGraph.unsetMapping()');
     this.onMapping.active = false;
     this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
@@ -924,7 +920,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventClick(me: mxMouseEvent) {
-    _GF.log.info('XGraph.eventClick()');
+    $GF.log.info('XGraph.eventClick()');
 
     if (this.onMapping.active) {
       const state = me.getState();
@@ -955,10 +951,10 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventDbClick(evt: MouseEvent, mxcell: mxCell) {
-    _GF.log.info('XGraph.eventDbClick()');
+    $GF.log.info('XGraph.eventDbClick()');
     // GFGlobal.log.debug('XGraph.eventDbClick() evt', evt);
     // GFGlobal.log.debug('XGraph.eventDbClick() cell', mxcell);
-    _GF.log.info('XGraph.eventDbClick() container.getBoundingClientRect()', this.container.getBoundingClientRect());
+    $GF.log.info('XGraph.eventDbClick() container.getBoundingClientRect()', this.container.getBoundingClientRect());
     if (mxcell !== undefined) {
       this.lazyZoomCell(mxcell);
     }
@@ -972,7 +968,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventMouseWheel(evt: WheelEvent, up: boolean) {
-    _GF.log.info('XGraph.eventMouseWheel()');
+    $GF.log.info('XGraph.eventMouseWheel()');
     if (this.graph.isZoomWheelEvent(evt)) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {
@@ -1030,7 +1026,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   async lazyZoomPointer(factor: number, offsetX: number, offsetY: number) {
-    _GF.log.info('XGraph.lazyZoomPointer()');
+    $GF.log.info('XGraph.lazyZoomPointer()');
     let dx = offsetX * 2;
     let dy = offsetY * 2;
 
@@ -1128,7 +1124,7 @@ export default class XGraph {
   async blinkCell(cell: mxCell, ms: number) {
     if (!cell.blink) {
       const self = this;
-      const bl_on = function () {
+      const bl_on = function() {
         // console.log('bl_on');
         const color = '#f5f242';
         const opacity = 100;
@@ -1150,7 +1146,7 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function () {
+      const bl_off = function() {
         if (cell && cell.blink_on) {
           // console.log('bl_off');
           const hl = cell.blink_on;
@@ -1169,13 +1165,13 @@ export default class XGraph {
       // cell.blink = window.setInterval(() => {
       //   bl_on();
       // }, ms * 3);
-      cell.blink = _GF.setInterval(bl_on, ms * 3);
+      cell.blink = $GF.setInterval(bl_on, ms * 3);
     }
   }
 
   async unblinkCell(cell: mxCell) {
     if (cell && cell.blink) {
-      _GF.clearInterval(cell.blink);
+      $GF.clearInterval(cell.blink);
       if (cell.blink_on) {
         const hl = cell.blink_on;
         if (hl.shape != null) {
@@ -1250,10 +1246,10 @@ export default class XGraph {
       let _h = height !== undefined ? Math.abs(height) : origine !== undefined ? origine.height : geo.height;
       let _w = width !== undefined ? Math.abs(width) : origine !== undefined ? origine.width : geo.width;
       if (this.animation) {
-        const steps_x = _GF.getIntervalCounter(geo.x, _x, _GF.CONSTANTS.CONF_ANIMS_STEP);
-        const steps_y = _GF.getIntervalCounter(geo.y, _y, _GF.CONSTANTS.CONF_ANIMS_STEP);
-        const steps_w = _GF.getIntervalCounter(geo.width, _w, _GF.CONSTANTS.CONF_ANIMS_STEP);
-        const steps_h = _GF.getIntervalCounter(geo.height, _h, _GF.CONSTANTS.CONF_ANIMS_STEP);
+        const steps_x = $GF.getIntervalCounter(geo.x, _x, $GF.CONSTANTS.CONF_ANIMS_STEP);
+        const steps_y = $GF.getIntervalCounter(geo.y, _y, $GF.CONSTANTS.CONF_ANIMS_STEP);
+        const steps_w = $GF.getIntervalCounter(geo.width, _w, $GF.CONSTANTS.CONF_ANIMS_STEP);
+        const steps_h = $GF.getIntervalCounter(geo.height, _h, $GF.CONSTANTS.CONF_ANIMS_STEP);
         const l = steps_x.length;
         let count = 0;
         const self = this;
@@ -1263,7 +1259,7 @@ export default class XGraph {
               const _rec = new mxRectangle(steps_x[count], steps_y[count], steps_w[count], steps_h[count]);
               self.graph.resizeCell(mxcell, _rec, true);
               graduate(count + 1, steps_x, steps_y, steps_w, steps_h);
-            }, _GF.CONSTANTS.CONF_ANIMS_MS);
+            }, $GF.CONSTANTS.CONF_ANIMS_MS);
           }
         }
         graduate(count, steps_x, steps_y, steps_w, steps_h);
@@ -1290,8 +1286,8 @@ export default class XGraph {
    * @memberof XGraph
    */
   async lazyZoomCell(mxcell: mxCell) {
-    _GF.log.info('XGraph.lazyZoomCell() mxcell', mxcell);
-    _GF.log.debug('XGraph.lazyZoomCell() mxcellState', this.graph.view.getState(mxcell));
+    $GF.log.info('XGraph.lazyZoomCell() mxcell', mxcell);
+    $GF.log.debug('XGraph.lazyZoomCell() mxcellState', this.graph.view.getState(mxcell));
     if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
       const state = this.graph.view.getState(mxcell);
       if (state !== null) {
@@ -1312,10 +1308,10 @@ export default class XGraph {
       if (req.getStatus() >= 200 && req.getStatus() <= 299) {
         return req.getText();
       } else {
-        _GF.log.error('Cannot load ' + url, req.getStatus());
+        $GF.log.error('Cannot load ' + url, req.getStatus());
       }
     } catch (error) {
-      _GF.log.error('Cannot load ' + url, error);
+      $GF.log.error('Cannot load ' + url, error);
     }
     return null;
   }

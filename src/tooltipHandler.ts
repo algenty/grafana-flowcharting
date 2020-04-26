@@ -1,6 +1,6 @@
 import Chartist from 'chartist';
 import { Metric } from './metric_class';
-import { _GF } from 'globals_class';
+import { $GF } from 'globals_class';
 
 /**
  *
@@ -216,7 +216,7 @@ export class MetricTooltip {
         graph = new BarGraphTooltip();
         break;
       default:
-        _GF.log.error('Graph type unknow', type);
+        $GF.log.error('Graph type unknow', type);
         graph = new BarGraphTooltip();
         break;
     }

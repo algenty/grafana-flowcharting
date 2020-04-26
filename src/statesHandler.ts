@@ -3,7 +3,7 @@ import { Rule } from './rule_class';
 import _ from 'lodash';
 import { Metric } from './metric_class';
 import XGraph from 'graph_class';
-import { _GF } from 'globals_class';
+import { $GF } from 'globals_class';
 
 /**
  * States Handler class
@@ -21,7 +21,7 @@ export class StateHandler {
    * @memberof StateHandler
    */
   constructor(xgraph: XGraph) {
-    _GF.log.info('StateHandler.constructor()');
+    $GF.log.info('StateHandler.constructor()');
     this.states = new Map();
     this.xgraph = xgraph;
     this.initStates(this.xgraph);
@@ -35,7 +35,7 @@ export class StateHandler {
    * @memberof StateHandler
    */
   initStates(xgraph: XGraph): this {
-    _GF.log.info('StateHandler.initStates()');
+    $GF.log.info('StateHandler.initStates()');
     this.xgraph = xgraph;
     this.states.clear();
     const mxcells = xgraph.getMxCells();
@@ -53,7 +53,7 @@ export class StateHandler {
    * @memberof StateHandler
    */
   getStatesForRule(rule: Rule) {
-    _GF.log.info('StateHandler.getStatesForRule()');
+    $GF.log.info('StateHandler.getStatesForRule()');
     const result = new Map();
     let name: string | null;
     const xgraph = this.xgraph;
@@ -107,7 +107,7 @@ export class StateHandler {
    * @memberof StateHandler
    */
   updateStates(rules: Rule[]) {
-    _GF.log.info('StateHandler.updateStates()');
+    $GF.log.info('StateHandler.updateStates()');
     rules.forEach(rule => {
       rule.states = this.getStatesForRule(rule);
     });
@@ -173,7 +173,7 @@ export class StateHandler {
    * Restore initial status and prepare states object
    */
   prepare(): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'prepare()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
     this.states.forEach(state => {
       state.prepare();
     });
@@ -187,7 +187,7 @@ export class StateHandler {
    * @param  {Array<Metric>} metrics - Array of serie object
    */
   setStates(rules: Rule[], metrics: Metric[]): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'setStates()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
     this.prepare();
     rules.forEach(rule => {
       rule.highestLevel = -1;
@@ -212,7 +212,7 @@ export class StateHandler {
    * Apply color and text
    */
   applyStates(): this {
-    const trc = _GF.trace.before(this.constructor.name + '.' + 'setStates()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
     this.states.forEach(state => {
       state.async_applyState();
     });

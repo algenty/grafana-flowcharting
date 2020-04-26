@@ -10,7 +10,7 @@ module.exports = {
   modulePaths: ['./node_modules', './public', './src'],
   // globalSetup: '<rootDir>/spec/globalSetup.js',
   // globalTeardown: '<rootDir>/spec/globalTeardown.js',
-  // setupFiles: ['<rootDir>/spec/setup-jest.js'],
+  setupFiles: ['<rootDir>/spec/setup-jest.js'],
   transform: {
     '^.+\\.jsx?$': 'babel-jest',
     '^.+\\.tsx?$': 'ts-jest',

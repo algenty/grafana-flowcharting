@@ -1,7 +1,7 @@
 import { FlowchartHandler } from './flowchartHandler';
 import { RulesHandler } from 'rulesHandler';
 import { Rule, EventMap } from 'rule_class';
-import { _GF } from 'globals_class';
+import { $GF } from 'globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
 import { MetricHandler } from './metricHandler';
@@ -14,25 +14,25 @@ export class MappingOptionsCtrl {
   rulesHandler: RulesHandler;
   metricHandler: MetricHandler;
   unitFormats: any;
-  style = _GF.CONSTANTS.COLORMETHODS;
-  metricType: gf.TSelectString[] = _GF.CONSTANTS.METRIC_TYPES;
-  colorOn = _GF.CONSTANTS.COLOR_APPLYON;
-  linkOn = _GF.CONSTANTS.LINK_APPLYON;
-  tooltipOn = _GF.CONSTANTS.TOOLTIP_APPLYON;
-  textOn = _GF.CONSTANTS.TEXT_APPLYON;
-  textReplace = _GF.CONSTANTS.TEXTMETHODS;
+  style = $GF.CONSTANTS.COLORMETHODS;
+  metricType: gf.TSelectString[] = $GF.CONSTANTS.METRIC_TYPES;
+  colorOn = $GF.CONSTANTS.COLOR_APPLYON;
+  linkOn = $GF.CONSTANTS.LINK_APPLYON;
+  tooltipOn = $GF.CONSTANTS.TOOLTIP_APPLYON;
+  textOn = $GF.CONSTANTS.TEXT_APPLYON;
+  textReplace = $GF.CONSTANTS.TEXTMETHODS;
   // EventType: gf.TSelectString[] = _GF.CONSTANTS.EVENTMETHODS;
   EventType = EventMap.getDefaultMethods();
-  tpDirection: gf.TSelectString[] = _GF.CONSTANTS.TOOLTIP_DIRECTION_TYPES;
-  propTypes: gf.TSelectString[] = _GF.CONSTANTS.IDENT_TYPES;
+  tpDirection: gf.TSelectString[] = $GF.CONSTANTS.TOOLTIP_DIRECTION_TYPES;
+  propTypes: gf.TSelectString[] = $GF.CONSTANTS.IDENT_TYPES;
   textPattern = '/.*/';
-  metricTypes = _GF.CONSTANTS.VALUE_TYPES;
-  dateFormats: gf.TSelectString[] = _GF.CONSTANTS.VALUE_DATEFORMAT_TYPES;
-  aggregationTypes = _GF.CONSTANTS.AGGREGATION_TYPES;
-  mappingTypes = _GF.CONSTANTS.VALUEMAPPINGTYPES;
-  tpGraphType = _GF.CONSTANTS.TOOLTIP_GRAPH_TYPES;
-  tpGraphScale = _GF.CONSTANTS.TOOLTIP_GRAPH_SCALE_TYPES;
-  tpGraphSize = _GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
+  metricTypes = $GF.CONSTANTS.VALUE_TYPES;
+  dateFormats: gf.TSelectString[] = $GF.CONSTANTS.VALUE_DATEFORMAT_TYPES;
+  aggregationTypes = $GF.CONSTANTS.AGGREGATION_TYPES;
+  mappingTypes = $GF.CONSTANTS.VALUEMAPPINGTYPES;
+  tpGraphType = $GF.CONSTANTS.TOOLTIP_GRAPH_TYPES;
+  tpGraphScale = $GF.CONSTANTS.TOOLTIP_GRAPH_SCALE_TYPES;
+  tpGraphSize = $GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
   getMetricNames: () => any[];
   getCellNames: (prop: gf.TPropertieKey) => any[];
   getCellNamesById: () => any[];
@@ -54,13 +54,13 @@ export class MappingOptionsCtrl {
     this.rulesHandler = this.ctrl.rulesHandler;
     this.metricHandler = this.ctrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();
-    this.tpGraphSize = _GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
+    this.tpGraphSize = $GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');
     };
 
     this.getCellNames = (prop: gf.TPropertieKey = 'id'): string[] => {
-      _GF.log.info('MappingOptionsCtrl.getCellNamesForShape()');
+      $GF.log.info('MappingOptionsCtrl.getCellNamesForShape()');
       // prop = prop !== 'id' && prop !== 'value' ? 'id' : prop;
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp(prop);
@@ -79,7 +79,7 @@ export class MappingOptionsCtrl {
     };
 
     this.getVariables = () => {
-      return _GF.getFullAvailableVarNames();
+      return $GF.getFullAvailableVarNames();
     };
 
     this.getEventValues = [];
@@ -141,7 +141,7 @@ export class MappingOptionsCtrl {
   }
 
   onRulesChange() {
-    _GF.log.info('MappingOptionsCtrl.onRulesChange()');
+    $GF.log.info('MappingOptionsCtrl.onRulesChange()');
     this.flowchartHandler.ruleChanged();
     this.render();
     return true;
