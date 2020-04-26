@@ -86,9 +86,9 @@ export class State {
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
       const color = rule.data.gradient && rule.data.type === 'number' ? rule.getColorForValue(value) : rule.getColorForLevel(level);
-      this.variables.set(_GF.CONSTANTS.VAR_STR_RULENAME, rule.data.pattern);
+      this.variables.set(_GF.CONSTANTS.VAR_STR_RULENAME, rule.data.alias);
       this.variables.set(_GF.CONSTANTS.VAR_NUM_VALUE, value);
-      this.variables.set(_GF.CONSTANTS.VAR_STR_FORMATED, value);
+      this.variables.set(_GF.CONSTANTS.VAR_STR_FORMATED, FormattedValue);
       this.variables.set(_GF.CONSTANTS.VAR_NUM_LEVEL, level);
       this.variables.set(_GF.CONSTANTS.VAR_STR_COLOR, color);
 

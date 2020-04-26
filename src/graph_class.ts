@@ -112,29 +112,22 @@ export default class XGraph {
    */
   static initMxGgraph() {
     const trc = _GF.trace.before(this.constructor.name + '.' + 'initMxGgraph()');
-    // let myWindow: any = window;
-    if (XGraph.initialized ) {
-      trc.after();
-      return;
+    let myWindow: any = window;
+    if (!XGraph.initialized) {
+      if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
+        XGraph.preInitGlobalVars();
+        let code = _GF.utils.$loadFile(`${_GF.getDrawioPath()}js/app.min.js`);
+        _GF.utils.evalRaw(code);
+        XGraph.postInitGlobalVars();
+        code = _GF.utils.$loadFile(`${_GF.getLibsPath()}/Graph_custom.js`);
+        _GF.utils.evalRaw(code);
+      }
+      XGraph.initialized = true;
     }
 
-    XGraph.preInitGlobalVars();
-    let code = _GF.utils.$loadFile(`${_GF.getDrawioPath()}js/app.min.js`);
-    _GF.utils.evalRaw(code);
-    XGraph.postInitGlobalVars();
-    code = _GF.utils.$loadFile(`${_GF.getLibsPath()}/Graph_custom.js`);
-    _GF.utils.evalRaw(code);
-
-
-    XGraph.initialized = true;
-    // STOP PERF
     trc.after();
   }
 
-  // static initFiles() {
-  //   XGraph.mxscript('js/app.min.js');
-  //   XGraph.mxscript('js/PreConfig.js');
-  // }
 
   static preInitGlobalVars() {
     const myWindow: any = window;
@@ -154,7 +147,15 @@ export default class XGraph {
     const urlParams = new Object();
     myWindow.urlParams = urlParams;
     urlParams['sync'] = 'none' // Disabled realtime
-    urlParams['lightbox'] = '1' // ??
+    urlParams['lightbox'] = '1' // Uses lightbox in chromeless mode (larger zoom, no page visible, chromeless)
+    urlParams['nav'] = '1' // Enables folding in chromeless mode
+    urlParams['local'] = '1' // Uses device mode only
+    urlParams['embed'] = '1' // Runs in embed mode
+    myWindow.mxImageBasePath = _GF.getMxImagePath();
+    myWindow.mxBasePath = _GF.getMxBasePath();
+    myWindow.mxLoadStylesheets = true;
+    myWindow.mxLanguage = 'en';
+    myWindow.mxLoadResources = true;
 
   }
 

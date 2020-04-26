@@ -666,7 +666,7 @@ export class _GF {
   }
 
   static getMxBasePath(): string {
-    return `${_GF.getLibsPath()}mxgraph/javascript/dist/`
+    return `${_GF.getDrawioPath()}mxgraph/`
   }
 
   static getMxStylePath(): string {
@@ -686,7 +686,7 @@ export class _GF {
   }
 
   static getMxResourcePath(): string {
-    return `${_GF.getMxBasePath()}resources/`;
+    return `${_GF.getMxBasePath()}css/`;
   }
 
   static getMxImagePath(): string {

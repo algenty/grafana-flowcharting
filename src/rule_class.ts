@@ -252,7 +252,7 @@ export class Rule {
       this.data.tpDirection = obj.tpDirection;
     }
     if (!!obj.tpGraph || this.data.tpGraph === false) {
-      this.data.tpGraph = obj.tpGraph !== undefined;
+      this.data.tpGraph = obj.tpGraph;
     }
     if (!!obj.tpGraphSize) {
       this.data.tpGraphSize = obj.tpGraphSize;
@@ -1133,8 +1133,8 @@ export class Rule {
       0,
       // Number of digits right of decimal point.
       (match[1] ? match[1].length : 0) -
-        // Adjust for scientific notation.
-        (match[2] ? +match[2] : 0)
+      // Adjust for scientific notation.
+      (match[2] ? +match[2] : 0)
     );
   }
 }
