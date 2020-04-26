@@ -11,6 +11,7 @@ declare var mxConstants: any;
 declare var mxCellHighlight: any;
 declare var mxRectangle: any;
 declare var mxUtils: any;
+declare var Graph: any;
 // declare var mxStencilRegistry: any;
 
 // type mxCellOverlay = any;
@@ -111,168 +112,64 @@ export default class XGraph {
    */
   static initMxGgraph() {
     const trc = _GF.trace.before(this.constructor.name + '.' + 'initMxGgraph()');
-    const myWindow: any = window;
-    if (XGraph.initialized) {
+    // let myWindow: any = window;
+    if (XGraph.initialized ) {
       trc.after();
       return;
     }
 
-    myWindow.mxLanguages = myWindow.mxLanguages || ['en'];
+    XGraph.preInitGlobalVars();
+    let code = _GF.utils.$loadFile(`${_GF.getDrawioPath()}js/app.min.js`);
+    _GF.utils.evalRaw(code);
+    XGraph.postInitGlobalVars();
+    code = _GF.utils.$loadFile(`${_GF.getLibsPath()}/Graph_custom.js`);
+    _GF.utils.evalRaw(code);
 
-    const mxgraph = require('mxgraph')({
-      mxImageBasePath: GFP.getMxImagePath(),
-      mxBasePath: GFP.getMxBasePath(),
-      mxLoadStylesheets: false,
-      mxLanguage: 'en',
-      mxLoadResources: false,
-    });
-
-    myWindow.BASE_PATH = myWindow.BASE_PATH || GFP.getMxBasePath();
-    myWindow.RESOURCES_PATH = myWindow.BASE_PATH || GFP.getMxResourcePath(); //`${myWindow.BASE_PATH}resources`;
-    myWindow.RESOURCE_BASE = myWindow.RESOURCE_BASE || GFP.getMxResourcePath(); //`${myWindow.RESOURCES_PATH}/grapheditor`;
-    myWindow.STENCIL_PATH = myWindow.STENCIL_PATH || GFP.getStencilsPath();
-    myWindow.SHAPES_PATH = myWindow.SHAPES_PATH || GFP.getShapesPath();
-    myWindow.IMAGE_PATH = myWindow.IMAGE_PATH || GFP.getMxImagePath(); //`${myWindow.BASE_PATH}images`;
-    myWindow.STYLE_PATH = myWindow.STYLE_PATH || GFP.getMxStylePath(); //`${myWindow.BASE_PATH}styles`;
-    myWindow.CSS_PATH = myWindow.CSS_PATH || GFP.getMxCssPath(); //`${myWindow.BASE_PATH}styles`;
-    myWindow.mxLanguages = myWindow.mxLanguages || ['en'];
-
-    // Put to global vars to work
-    myWindow.mxActor = myWindow.mxActor || mxgraph.mxActor;
-    myWindow.mxArrow = myWindow.mxArrow || mxgraph.mxArrow;
-    myWindow.mxArrowConnector = myWindow.mxArrowConnector || mxgraph.mxArrowConnector;
-    myWindow.mxCell = myWindow.mxCell || mxgraph.mxCell;
-    myWindow.mxCellEditor = myWindow.mxCellEditor || mxgraph.mxCellEditor;
-    myWindow.mxCellHighlight = myWindow.mxCellHighlight || mxgraph.mxCellHighlight;
-    myWindow.mxCellOverlay = myWindow.mxCellOverlay || mxgraph.mxCellOverlay;
-    myWindow.mxCellRenderer = myWindow.mxCellRenderer || mxgraph.mxCellRenderer;
-    myWindow.mxCellState = myWindow.mxCellState || mxgraph.mxCellState;
-    myWindow.mxClient = myWindow.mxClient || mxgraph.mxClient;
-    myWindow.mxClient.mxBasePath = GFP.getMxBasePath();
-    myWindow.mxClient.mxImageBasePath = GFP.getMxImagePath();
-    myWindow.mxClient.mxLoadResources = true;
-    myWindow.mxClient.mxLanguage = 'en';
-    myWindow.mxClient.mxLoadStylesheets = true;
-    myWindow.mxCloud = myWindow.mxCloud || mxgraph.mxCloud;
-    myWindow.mxCodec = myWindow.mxCodec || mxgraph.mxCodec;
-    myWindow.mxCompactTreeLayout = myWindow.mxCompactTreeLayout || mxgraph.mxCompactTreeLayout;
-    myWindow.mxConnectionConstraint = myWindow.mxConnectionConstraint || mxgraph.mxConnectionConstraint;
-    myWindow.mxConnectionHandler = myWindow.mxConnectionHandler || mxgraph.mxConnectionHandler;
-    myWindow.mxConnector = myWindow.mxConnector || mxgraph.mxConnector;
-    myWindow.mxConstants = myWindow.mxConstants || mxgraph.mxConstants;
-    myWindow.mxConstraintHandler = myWindow.mxConstraintHandler || mxgraph.mxConstraintHandler;
-    myWindow.mxCylinder = myWindow.mxCylinder || mxgraph.mxCylinder;
-    myWindow.mxDefaultKeyHandler = myWindow.mxDefaultKeyHandler || mxgraph.mxDefaultKeyHandler;
-    myWindow.mxDefaultPopupMenu = myWindow.mxDefaultPopupMenu || mxgraph.mxDefaultPopupMenu;
-    myWindow.mxDefaultToolbar = myWindow.mxDefaultToolbar || mxgraph.mxDefaultToolbar;
-    myWindow.mxDivResizer = myWindow.mxDivResizer || mxgraph.mxDivResizer;
-    myWindow.mxDoubleEllipse = myWindow.mxDoubleEllipse || mxgraph.mxDoubleEllipse;
-    myWindow.mxDragSource = myWindow.mxDragSource || mxgraph.mxDragSource;
-    myWindow.mxEdgeStyle = myWindow.mxEdgeStyle || mxgraph.mxEdgeStyle;
-    myWindow.mxEdgeHandler = myWindow.mxEdgeHandler || mxgraph.mxEdgeHandler;
-    myWindow.mxEditor = myWindow.mxEditor || mxgraph.mxEditor;
-    myWindow.mxElbowEdgeHandler = myWindow.mxElbowEdgeHandler || mxgraph.mxElbowEdgeHandler;
-    myWindow.mxEllipse = myWindow.mxEllipse || mxgraph.mxEllipse;
-    myWindow.mxEvent = myWindow.mxEvent || mxgraph.mxEvent;
-    myWindow.mxEventObject = myWindow.mxEventObject || mxgraph.mxEventObject;
-    myWindow.mxFile = myWindow.mxFile || mxgraph.mxFile;
-    myWindow.mxGeometry = myWindow.mxGeometry || mxgraph.mxGeometry;
-    myWindow.mxGraph = myWindow.mxGraph || mxgraph.mxGraph;
-    myWindow.mxGraphHandler = myWindow.mxGraphHandler || mxgraph.mxGraphHandler;
-    myWindow.mxGraphModel = myWindow.mxGraphModel || mxgraph.mxGraphModel;
-    myWindow.mxGraphView = myWindow.mxGraphView || mxgraph.mxGraphView;
-    myWindow.mxGuide = myWindow.mxGuide || mxgraph.mxGuide;
-    myWindow.mxHexagon = myWindow.mxHexagon || mxgraph.mxHexagon;
-    myWindow.mxHandle = myWindow.mxHandle || mxgraph.mxHandle;
-    myWindow.mxHierarchicalLayout = myWindow.mxHierarchicalLayout || mxgraph.mxHierarchicalLayout;
-    myWindow.mxImage = myWindow.mxImage || mxgraph.mxImage;
-    myWindow.mxImageShape = myWindow.mxImageShape || mxgraph.mxImageShape;
-    myWindow.mxKeyHandler = myWindow.mxKeyHandler || mxgraph.mxKeyHandler;
-    myWindow.mxLabel = myWindow.mxLabel || mxgraph.mxLabel;
-    myWindow.mxLayoutManager = myWindow.mxLayoutManager || mxgraph.mxLayoutManager;
-    myWindow.mxLine = myWindow.mxLine || mxgraph.mxLine;
-    myWindow.mxMarker = myWindow.mxMarker || mxgraph.mxMarker;
-    myWindow.mxOutline = myWindow.mxOutline || mxgraph.mxOutline;
-    myWindow.mxPanningHandler = myWindow.mxPanningHandler || mxgraph.mxPanningHandler;
-    myWindow.mxPerimeter = myWindow.mxPerimeter || mxgraph.mxPerimeter;
-    myWindow.mxPoint = myWindow.mxPoint || mxgraph.mxPoint;
-    myWindow.mxPolyline = myWindow.mxPolyline || mxgraph.mxPolyline;
-    myWindow.mxPopupMenu = myWindow.mxPopupMenu || mxgraph.mxPopupMenu;
-    myWindow.mxPopupMenuHandler = myWindow.mxPopupMenuHandler || mxgraph.mxPopupMenuHandler;
-    myWindow.mxPrintPreview = myWindow.mxPrintPreview || mxgraph.mxPrintPreview;
-    myWindow.mxRectangle = myWindow.mxRectangle || mxgraph.mxRectangle;
-    myWindow.mxRectangleShape = myWindow.mxRectangleShape || mxgraph.mxRectangleShape;
-    myWindow.mxResources = myWindow.mxResources || mxgraph.mxResources;
-    myWindow.mxRhombus = myWindow.mxRhombus || mxgraph.mxRhombus;
-    myWindow.mxRubberband = myWindow.mxRubberband || mxgraph.mxRubberband;
-    myWindow.mxShape = myWindow.mxShape || mxgraph.mxShape;
-    myWindow.mxStackLayout = myWindow.mxStackLayout || mxgraph.mxStackLayout;
-    myWindow.mxStencil = myWindow.mxStencil || mxgraph.mxStencil;
-    myWindow.mxStencilRegistry = myWindow.mxStencilRegistry || mxgraph.mxStencilRegistry;
-    myWindow.mxStylesheet = myWindow.mxStylesheet || mxgraph.mxStylesheet;
-    myWindow.mxStyleRegistry = myWindow.mxStyleRegistry || mxgraph.mxStyleRegistry;
-    myWindow.mxSvgCanvas2D = myWindow.mxSvgCanvas2D || mxgraph.mxSvgCanvas2D;
-    myWindow.mxSwimlane = myWindow.mxSwimlane || mxgraph.mxSwimlane;
-    myWindow.mxText = myWindow.mxText || mxgraph.mxText;
-    myWindow.mxToolbar = myWindow.mxToolbar || mxgraph.mxToolbar;
-    myWindow.mxTooltip = myWindow.mxTooltip || mxgraph.mxTooltip;
-    myWindow.mxTooltipHandler = myWindow.mxTooltipHandler || mxgraph.mxTooltipHandler;
-    myWindow.mxTriangle = myWindow.mxTriangle || mxgraph.mxTriangle;
-    myWindow.mxUndoManager = myWindow.mxUndoManager || mxgraph.mxUndoManager;
-    myWindow.mxUrlConverter = myWindow.mxUrlConverter || mxgraph.mxUrlConverter;
-    myWindow.mxUtils = myWindow.mxUtils || mxgraph.mxUtils;
-    myWindow.mxValueChange = myWindow.mxValueChange || mxgraph.mxValueChange;
-    myWindow.mxVertexHandler = myWindow.mxVertexHandler || mxgraph.mxVertexHandler;
-
-    // Async load not work
-    // const loadfiles = [
-    //   `${GFP.getLibsPath()}/sanitizer.min.js`,
-    //   `${GFP.getLibsPath()}/viewer.min.js`,
-    //   `${GFP.getLibsPath()}/shapes.min.js`,
-    //   `${GFP.getLibsPath()}/stencils.min.js`,
-    //   `${GFP.getLibsPath()}/Graph_custom.js`,
-    // ];
-    // await GFP.utils.loadJS_2(loadfiles);
-
-    //Load libs for Draw.io
-    require('./libs/sanitizer.min');
-    // GFP.utils.loadJS(`${GFP.getLibsPath()}/sanitizer.min.js`);
-    // Load Draw.io libs
-    let viewer = _GF.getVar(_GF.CONSTANTS.VAR_STR_VIEWERJS);
-    if (viewer !== undefined) {
-      _GF.utils.evalRaw(viewer);
-      _GF.unsetVar(_GF.CONSTANTS.VAR_STR_VIEWERJS);
-      console.log(_GF.CONSTANTS.VAR_STR_VIEWERJS + ' loaded with Fetch method');
-    } else {
-      _GF.utils.loadJS(`${GFP.getLibsPath()}/viewer.min.js`);
-      console.log(_GF.CONSTANTS.VAR_STR_VIEWERJS + ' loaded with XMLRequest Method');
-    }
-    // require('./libs/viewer.min');
-
-    // Shapes
-    let shapes = _GF.getVar(_GF.CONSTANTS.VAR_STR_SHAPESJS);
-    if (shapes) {
-      _GF.utils.evalRaw(shapes);
-      _GF.unsetVar(_GF.CONSTANTS.VAR_STR_SHAPESJS);
-      console.log(_GF.CONSTANTS.VAR_STR_SHAPESJS + ' loaded with Fetch method');
-    } else {
-      _GF.utils.loadJS(`${GFP.getLibsPath()}/shapes.min.js`);
-      console.log(_GF.CONSTANTS.VAR_STR_SHAPESJS + ' loaded with XMLRequest Method');
-    }
-    // require('./libs/shapes.min');
-
-    // Stencils
-    // GFP.utils.loadJS(`${GFP.getLibsPath()}/stencils.min.js`);
-    require('./libs/stencils.min');
-
-    // Specifics function for Flowcharting
-    require('./libs/Graph_custom');
-    // GFP.utils.loadJS(`${GFP.getLibsPath()}/Graph_custom.js`);
 
     XGraph.initialized = true;
     // STOP PERF
     trc.after();
   }
+
+  // static initFiles() {
+  //   XGraph.mxscript('js/app.min.js');
+  //   XGraph.mxscript('js/PreConfig.js');
+  // }
+
+  static preInitGlobalVars() {
+    const myWindow: any = window;
+    myWindow.BASE_PATH = _GF.getMxBasePath();
+    myWindow.RESOURCES_PATH = _GF.getMxResourcePath();
+    myWindow.RESOURCE_BASE = GFP.getMxResourcePath();
+    myWindow.STENCIL_PATH = _GF.getStencilsPath();
+    myWindow.SHAPES_PATH = _GF.getShapesPath();
+    myWindow.IMAGE_PATH = _GF.getMxImagePath();
+    myWindow.STYLE_PATH = _GF.getMxStylePath();
+    myWindow.CSS_PATH = _GF.getMxCssPath();
+    myWindow.mxLanguages = ['en'];
+    myWindow.DRAWIO_BASE_URL = _GF.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
+    myWindow.DRAWIO_VIEWER_URL = _GF.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
+    myWindow.DRAW_MATH_URL = 'math';
+    myWindow.DRAWIO_CONFIG = null; // Replace with your custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
+    const urlParams = new Object();
+    myWindow.urlParams = urlParams;
+    urlParams['sync'] = 'none' // Disabled realtime
+    urlParams['lightbox'] = '1' // ??
+
+  }
+
+  static postInitGlobalVars() {
+    const myWindow: any = window;
+    myWindow.mxClient.mxBasePath = _GF.getMxBasePath();
+    myWindow.mxClient.mxImageBasePath = _GF.getMxImagePath();
+    myWindow.mxClient.mxLoadResources = true;
+    myWindow.mxClient.mxLanguage = 'en';
+    myWindow.mxClient.mxLoadStylesheets = true;
+    myWindow.VSD_CONVERT_URL = null;
+    myWindow.EMF_CONVERT_URL = null;
+    myWindow.ICONSEARCH_PATH = null;
+  }
+
 
   /**
    * Graph initilisation and reset

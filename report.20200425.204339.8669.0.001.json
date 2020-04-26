@@ -1,0 +1,285 @@
+
+{
+  "header": {
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20200425.204339.8669.0.001.json",
+    "dumpEventTime": "2020-04-25T20:43:39Z",
+    "dumpEventTimeStamp": "1587840219858",
+    "processId": 8669,
+    "cwd": "/home/arnaud/workspace/grafana-flowcharting",
+    "commandLine": [
+      "/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node",
+      "/home/arnaud/.vscode-server/extensions/dbaeumer.vscode-eslint-2.1.5/server/out/eslintServer.js",
+      "--node-ipc",
+      "--clientProcessId=7045"
+    ],
+    "nodejsVersion": "v12.4.0",
+    "glibcVersionRuntime": "2.27",
+    "glibcVersionCompiler": "2.17",
+    "wordSize": 64,
+    "arch": "x64",
+    "platform": "linux",
+    "componentVersions": {
+      "node": "12.4.0",
+      "v8": "7.4.288.27-node.18",
+      "uv": "1.29.1",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.15.0",
+      "modules": "72",
+      "nghttp2": "1.38.0",
+      "napi": "4",
+      "llhttp": "1.1.3",
+      "http_parser": "2.8.0",
+      "openssl": "1.1.1b",
+      "cldr": "35.1",
+      "icu": "64.2",
+      "tz": "2019a",
+      "unicode": "12.1"
+    },
+    "release": {
+      "name": "node",
+      "headersUrl": "https://nodejs.org/download/release/v12.4.0/node-v12.4.0-headers.tar.gz",
+      "sourceUrl": "https://nodejs.org/download/release/v12.4.0/node-v12.4.0.tar.gz"
+    },
+    "osName": "Linux",
+    "osRelease": "4.4.0-18362-Microsoft",
+    "osVersion": "#476-Microsoft Fri Nov 01 16:53:00 PST 2019",
+    "osMachine": "x86_64",
+    "host": "DESKTOP-8LSJPIK"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+    {
+      "pc": "0x0000000000aadaf5",
+      "symbol": "report::TriggerNodeReport(v8::Isolate*, node::Environment*, char const*, char const*, std::string const&, v8::Local<v8::String>) [/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node]"
+    },
+    {
+      "pc": "0x000000000098fec3",
+      "symbol": "node::OnFatalError(char const*, char const*) [/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node]"
+    },
+    {
+      "pc": "0x0000000000b1552e",
+      "symbol": "v8::Utils::ReportOOMFailure(v8::internal::Isolate*, char const*, bool) [/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node]"
+    },
+    {
+      "pc": "0x0000000000b158a9",
+      "symbol": "v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, bool) [/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node]"
+    },
+    {
+      "pc": "0x0000000000f20105",
+      "symbol": " [/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node]"
+    },
+    {
+      "pc": "0x0000000000f2aa6b",
+      "symbol": "v8::internal::Heap::PerformGarbageCollection(v8::internal::GarbageCollector, v8::GCCallbackFlags) [/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node]"
+    },
+    {
+      "pc": "0x0000000000f2b787",
+      "symbol": "v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags) [/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node]"
+    },
+    {
+      "pc": "0x0000000000f2e225",
+      "symbol": "v8::internal::Heap::AllocateRawWithRetryOrFail(int, v8::internal::AllocationType, v8::internal::AllocationAlignment) [/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node]"
+    },
+    {
+      "pc": "0x0000000000ef9250",
+      "symbol": "v8::internal::Factory::NewFillerObject(int, bool, v8::internal::AllocationSpace) [/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node]"
+    },
+    {
+      "pc": "0x00000000011cb0ce",
+      "symbol": "v8::internal::Runtime_AllocateInNewSpace(int, unsigned long*, v8::internal::Isolate*) [/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node]"
+    },
+    {
+      "pc": "0x0000000001a93942",
+      "symbol": " [/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node]"
+    }
+  ],
+  "javascriptHeap": {
+    "totalMemory": 2151399424,
+    "totalCommittedMemory": 2148370456,
+    "usedMemory": 2140867248,
+    "availableMemory": 53323704,
+    "memoryLimit": 2197815296,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 524288,
+        "committedMemory": 32024,
+        "capacity": 523976,
+        "used": 31712,
+        "available": 492264
+      },
+      "new_space": {
+        "memorySize": 2097152,
+        "committedMemory": 1194080,
+        "capacity": 1047952,
+        "used": 145064,
+        "available": 902888
+      },
+      "old_space": {
+        "memorySize": 1968300032,
+        "committedMemory": 1967057384,
+        "capacity": 1965614144,
+        "used": 1961149416,
+        "available": 4464728
+      },
+      "code_space": {
+        "memorySize": 1212416,
+        "committedMemory": 1044000,
+        "capacity": 998496,
+        "used": 998496,
+        "available": 0
+      },
+      "map_space": {
+        "memorySize": 2101248,
+        "committedMemory": 1878680,
+        "capacity": 1504240,
+        "used": 1504240,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 176541696,
+        "committedMemory": 176541696,
+        "capacity": 176487760,
+        "used": 176487760,
+        "available": 0
+      },
+      "code_large_object_space": {
+        "memorySize": 622592,
+        "committedMemory": 622592,
+        "capacity": 550560,
+        "used": 550560,
+        "available": 0
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 1047952,
+        "used": 0,
+        "available": 1047952
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 81.9688,
+    "kernelCpuSeconds": 4.14062,
+    "cpuConsumptionPercent": 246.027,
+    "maxRss": 2288713728,
+    "pageFaults": {
+      "IORequired": 0,
+      "IONotRequired": 882403
+    },
+    "fsActivity": {
+      "reads": 0,
+      "writes": 0
+    }
+  },
+  "uvthreadResourceUsage": {
+    "userCpuSeconds": 30.7969,
+    "kernelCpuSeconds": 1.84375,
+    "cpuConsumptionPercent": 93.2589,
+    "fsActivity": {
+      "reads": 0,
+      "writes": 0
+    }
+  },
+  "libuv": [
+  ],
+  "environmentVariables": {
+    "USER": "arnaud",
+    "VSCODE_WSL_EXT_LOCATION": "/mnt/c/Users/dosy07/.vscode/extensions/ms-vscode-remote.remote-wsl-0.44.2",
+    "SHLVL": "0",
+    "HOME": "/home/arnaud",
+    "OLDPWD": "/mnt/c/Users/dosy07/.vscode/extensions/ms-vscode-remote.remote-wsl-0.44.2",
+    "WSL_DISTRO_NAME": "Ubuntu-18.04",
+    "LOGNAME": "arnaud",
+    "NAME": "DESKTOP-8LSJPIK",
+    "_": "/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/node",
+    "TERM": "xterm-256color",
+    "PATH": "/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Program Files/AdoptOpenJDK/jre-11.0.6.10-hotspot/bin:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/PuTTY/:/mnt/c/Program Files/Microsoft VS Code/bin:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/tools/Calibre2/:/mnt/c/Users/dosy07/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/dosy07/AppData/Local/hyper/app-3.0.2/resources/bin:/mnt/c/Users/dosy07/AppData/Local/GitHubDesktop/bin",
+    "VSCODE_AGENT_FOLDER": "/home/arnaud/.vscode-server",
+    "LANG": "C.UTF-8",
+    "SHELL": "/usr/bin/zsh",
+    "PWD": "/mnt/c/Users/dosy07/.vscode/extensions/ms-vscode-remote.remote-wsl-0.44.2",
+    "HOSTTYPE": "x86_64",
+    "WSLENV": "VSCODE_WSL_EXT_LOCATION/up:ELECTRON_RUN_AS_NODE/w:",
+    "VSCODE_INJECT_NODE_MODULE_LOOKUP_PATH": "/home/arnaud/.vscode-server/bin/ff915844119ce9485abfe8aa9076ec76b5300ddd/remote/node_modules",
+    "VSCODE_LOGS": "/home/arnaud/.vscode-server/data/logs/20200425T191813",
+    "ZSH": "/home/arnaud/.oh-my-zsh",
+    "PAGER": "less",
+    "LESS": "-R",
+    "LSCOLORS": "Gxfxcxdxbxegedabagacad",
+    "LS_COLORS": "rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:",
+    "AMD_ENTRYPOINT": "vs/server/remoteExtensionHostProcess",
+    "PIPE_LOGGING": "true",
+    "VERBOSE_LOGGING": "true",
+    "VSCODE_EXTHOST_WILL_SEND_SOCKET": "true",
+    "VSCODE_HANDLES_UNCAUGHT_ERRORS": "true",
+    "VSCODE_LOG_STACK": "false",
+    "VSCODE_NLS_CONFIG": "{\"locale\":\"en\",\"availableLanguages\":{}}",
+    "VSCODE_IPC_HOOK_CLI": "/tmp/vscode-ipc-b5f885a3-3099-414e-b4c2-6e1a43da658e.sock",
+    "APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL": "true",
+    "CI": "true",
+    "ELECTRON_RUN_AS_NODE": "1",
+    "ELECTRON_NO_ASAR": "1"
+  },
+  "userLimits": {
+    "core_file_size_blocks": {
+      "soft": 0,
+      "hard": "unlimited"
+    },
+    "data_seg_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "file_size_blocks": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_locked_memory_bytes": {
+      "soft": 65536,
+      "hard": 65536
+    },
+    "max_memory_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "open_files": {
+      "soft": 65536,
+      "hard": 65536
+    },
+    "stack_size_bytes": {
+      "soft": 8388608,
+      "hard": 8388608
+    },
+    "cpu_time_seconds": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_user_processes": {
+      "soft": 7823,
+      "hard": 7823
+    },
+    "virtual_memory_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    }
+  },
+  "sharedObjects": [
+    "linux-vdso.so.1",
+    "/lib/x86_64-linux-gnu/libdl.so.2",
+    "/lib/x86_64-linux-gnu/librt.so.1",
+    "/usr/lib/x86_64-linux-gnu/libstdc++.so.6",
+    "/lib/x86_64-linux-gnu/libm.so.6",
+    "/lib/x86_64-linux-gnu/libgcc_s.so.1",
+    "/lib/x86_64-linux-gnu/libpthread.so.0",
+    "/lib/x86_64-linux-gnu/libc.so.6",
+    "/lib64/ld-linux-x86-64.so.2"
+  ]
+}

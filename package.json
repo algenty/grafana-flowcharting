@@ -61,7 +61,7 @@
     "load-grunt-tasks": "^5.1.0",
     "lodash": "^4.17.15",
     "marky": "^1.2.1",
-    "mxgraph": "^4.0.4",
+    "mxgraph": "^4.1.1",
     "mxgraph-type-definitions": "^1.0.1",
     "safe-eval": "^0.4.1",
     "vkbeautify": "^0.99.3"
@@ -73,6 +73,7 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-angularjs-annotate": "^0.10.0",
     "eslint": "^6.8.0",
+    "local-web-server": "^4.0.0",
     "ts-loader": "^6.2.1",
     "tslint-config-airbnb": "^5.11.2",
     "typescript": "^3.7.2"

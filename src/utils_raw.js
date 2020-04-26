@@ -266,6 +266,36 @@ module.exports = {
     }
   },
 
+  addScript(src) {
+    var s = document.createElement('script');
+    s.setAttribute('type', 'text/javascript');
+    s.setAttribute('src', src);
+    var r = false;
+
+    // if (id != null) {
+    //   s.setAttribute('id', id);
+    // }
+
+    // if (dataAppKey != null) {
+    //   s.setAttribute('data-app-key', dataAppKey);
+    // }
+
+    // if (window.onLoad != null) {
+    //   s.onload = s.onreadystatechange = function () {
+    //     if (!r && (!this.readyState || this.readyState === 'complete')) {
+    //       r = true;
+    //       onLoad();
+    //     }
+    //   };
+    // }
+
+    var t = document.getElementsByTagName('script')[0];
+
+    if (t != null) {
+      t.parentNode.insertBefore(s, t);
+    }
+  },
+
   loadJS(fname) {
     try {
       var code = this.loadFile(fname)
@@ -292,6 +322,22 @@ module.exports = {
         console.error('Error loadFile:', fname, e);
       }
     }
+  },
+
+  $loadFile(fname) {
+    let result;
+    $.ajax({
+      type: 'GET',
+      url: fname,
+      async: false,
+      success: data => {
+        result = data;
+      },
+      error: () => {
+        alert('Error when download ' + url);
+      },
+    });
+    return result;
   },
 
   evalRaw(code) {

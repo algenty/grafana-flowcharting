@@ -2,8 +2,11 @@ import _ from 'lodash';
 class GFCONSTANT {
   // CONFIG
   CONF_FILE_SHAPES = 'static/shapes.txt';
-  CONF_FILE_VIEWERJS = 'libs/viewer.min.js';
-  CONF_FILE_SHAPESJS = 'libs/shapes.min.js';
+  CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
+  CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
+  CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
+  CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
+  CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
   CONF_COLORS_STEPS = 5;
   CONF_COLORS_MS = 40;
   CONF_ANIMS_STEP = 5;
@@ -347,7 +350,7 @@ class GFLog {
 }
 
 class GFTrace {
-  static enable = false;
+  static enable = true;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;
@@ -469,7 +472,9 @@ export class _GF {
     getStepColors: (colorStart: string, colorEnd: string, colorCount: number) => string[];
     evalIt: (code: string) => string;
     loadFile: (fname: string) => string;
-    evalRaw: (code) => void;
+    $loadFile: (fname: string) => string;
+    evalRaw: (code: string) => void;
+    addScript: (src: string) => void;
   } = require('./utils_raw');
 
   /**
@@ -648,8 +653,44 @@ export class _GF {
     return _GF.getVar(_GF.CONSTANTS.VAR_STG_CTXROOT);
   }
 
+  static getLibsPath(): string {
+    return `${_GF.getVar(_GF.CONSTANTS.VAR_STG_CTXROOT)}libs/`;
+  }
+
+  static getDrawioPath(): string {
+    return `${_GF.getLibsPath()}drawio/`;
+  }
+
   static getStaticPath(): string {
-    return `${_GF.getRootPath()}static`;
+    return `${_GF.getRootPath()}static/`;
+  }
+
+  static getMxBasePath(): string {
+    return `${_GF.getLibsPath()}mxgraph/javascript/dist/`
+  }
+
+  static getMxStylePath(): string {
+    return `${_GF.getDrawioPath()}styles/`;
+  }
+
+  static getShapesPath(): string {
+    return `${_GF.getDrawioPath()}/shapes`;
+  }
+
+  static getStencilsPath(): string {
+    return `${_GF.getDrawioPath()}/stencils`;
+  }
+
+  static getMxCssPath(): string {
+    return `${_GF.getDrawioPath()}styles/`;
+  }
+
+  static getMxResourcePath(): string {
+    return `${_GF.getMxBasePath()}resources/`;
+  }
+
+  static getMxImagePath(): string {
+    return `${_GF.getMxBasePath()}images/`;
   }
 
   static destroy() {

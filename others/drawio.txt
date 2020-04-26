@@ -1,0 +1,2 @@
+draw.io conf :
+https://desk.draw.io/support/solutions/articles/16000058316
