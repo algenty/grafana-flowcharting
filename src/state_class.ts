@@ -39,7 +39,7 @@ export class State {
    * @memberof State
    */
   constructor(mxcell: mxCell, xgraph: XGraph) {
-    $GF.log.info('State.constructor()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
     this.mxcell = mxcell;
     this.cellId = mxcell.id;
     this.xgraph = xgraph;
@@ -54,6 +54,7 @@ export class State {
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
     this.originalText = this.xgraph.getLabelCell(mxcell);
+    trc.after();
   }
 
   /**
@@ -75,7 +76,7 @@ export class State {
    * @memberof State
    */
   setState(rule: Rule, metric: Metric): this {
-    $GF.log.info('State.setState()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setState()');
     if (!rule.isHidden() && rule.matchMetric(metric)) {
       let beginPerf = Date.now();
       const shapeMaps = rule.getShapeMaps();
@@ -171,6 +172,7 @@ export class State {
       let endPerf = Date.now();
       rule.execTimes += endPerf - beginPerf;
     }
+    trc.after();
     return this;
   }
 
@@ -231,7 +233,6 @@ export class State {
   }
 
   getStatus(key: string): string {
-    // console.log('State.getStyle(key: string)');
     let style: string | null | undefined = this.status.get(key);
     if (style !== undefined && style !== null) {
       return style;

@@ -26,14 +26,19 @@ HTMLCanvasElement.prototype.toDataURL = () => {
 
 describe.skip('DOM', () => {
   describe('Xgraph', () => {
-    const div = document.createElement('div');
-    const xgraph = new XGraph(div, 'xml', xmlGraph);
+
     test('should not null', () => {
+      const div = document.createElement('div');
+      const xgraph = new XGraph(div, 'xml', xmlGraph);
       expect(xgraph).not.toBeUndefined();
     });
 
     test('inspect ', () => {
-      expect(xgraph.getCurrentCells('id')).toBe("");
+      const div = document.createElement('div');
+      const xgraph = new XGraph(div, 'xml', xmlGraph);
+      const cells = xgraph.getCurrentCells('id'); 
+      expect(cells.includes("100")).toBe(true);
+      expect(cells.includes("200")).toBe(true);
     });
   });
 });
