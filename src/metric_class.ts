@@ -291,7 +291,7 @@ export class Table extends Metric {
           result.push([currentTime, currentValue]);
         }
       } catch (error) {
-        GFP.error('Unable to aggregate data', error);
+        $GF.log.error('Unable to aggregate data', error);
       }
 
       if (table.stats[currName].max === -Number.MAX_VALUE) {

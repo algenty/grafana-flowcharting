@@ -14,7 +14,6 @@ mxTooltipHandler.prototype.show = function(tip, x, y) {
       this.div.appendChild(tip);
     }
     this.$div.place_tt(x + 20, y);
-    // GFP.log.debug('mxTooltipHandler.prototype.show div',this.div.innerHTML)
     this.div.style.visibility = '';
     mxUtils.fit(this.div);
 };
@@ -40,7 +39,6 @@ mxTooltipHandler.prototype.hideTooltip = function() {
 };
 
 Graph.prototype.getTooltipForCell = function (cell) {
-  //GFP.log.info('Graph.prototype.getTooltipForCell()');
   let hasTips = false;
   let div = document.createElement('div');
   if (mxUtils.isNode(cell.value)) {

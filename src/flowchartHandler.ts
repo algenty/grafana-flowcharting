@@ -114,7 +114,7 @@ export class FlowchartHandler {
   static getDefaultGraph(): string {
     const result = FlowchartHandler.defaultXml;
     if (!result) {
-      const url = `${GFP.getStaticPath()}/defaultGraph.drawio`;
+      const url = `${$GF.getStaticPath()}/defaultGraph.drawio`;
       $.ajax({
         type: 'GET',
         url: url,

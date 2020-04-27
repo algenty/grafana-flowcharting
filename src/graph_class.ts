@@ -417,7 +417,7 @@ export default class XGraph {
    */
   gridGraph(bool: boolean): this {
     if (bool) {
-      this.container.style.backgroundImage = `url('${GFP.getMxImagePath}/grid.gif')`;
+      this.container.style.backgroundImage = `url('${$GF.getMxImagePath()}/grid.gif')`;
     } else {
       this.container.style.backgroundImage = '';
     }

@@ -674,11 +674,15 @@ export class $GF {
   }
 
   static getShapesPath(): string {
-    return `${$GF.getDrawioPath()}/shapes`;
+    return `${$GF.getDrawioPath()}/shapes/`;
+  }
+
+  static getPartialPath(): string {
+    return `${$GF.getRootPath()}partials/`;
   }
 
   static getStencilsPath(): string {
-    return `${$GF.getDrawioPath()}/stencils`;
+    return `${$GF.getDrawioPath()}/stencils/`;
   }
 
   static getMxCssPath(): string {
