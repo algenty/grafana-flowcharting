@@ -252,6 +252,8 @@ export default class XGraph {
     }
     this.gridGraph(this.grid);
     this.bgGraph(this.bgColor);
+    this.graph.foldingEnabled = true;
+    this.graph.cellRenderer.forceControlClickHandler = true;
     this.refresh();
     trc.after();
     return this;
@@ -1124,7 +1126,7 @@ export default class XGraph {
   async blinkCell(cell: mxCell, ms: number) {
     if (!cell.blink) {
       const self = this;
-      const bl_on = function() {
+      const bl_on = function () {
         // console.log('bl_on');
         const color = '#f5f242';
         const opacity = 100;
@@ -1146,7 +1148,7 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function() {
+      const bl_off = function () {
         if (cell && cell.blink_on) {
           // console.log('bl_off');
           const hl = cell.blink_on;

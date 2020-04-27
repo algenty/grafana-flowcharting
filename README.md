@@ -49,7 +49,8 @@ Arnaud
   - Can Identify by Value in field 'what' in rules  
   - Add option to disable regex/eval for best perf  
   - Add 2 new color modes in Color mapping section : "Label background" and "Label borber" 
-  - Add perf stat on rule title
+  - Add perf stats on rules title
+  - Foldable container without disable lock.
   - New custom variables for fields (Text Mapping 'with', Link Mapping 'Url' and Event Mapping 'Value')
   - New function :  Event Mapping
   - TODO : Fix blink
