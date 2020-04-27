@@ -771,32 +771,15 @@ class ShapeState extends GFState {
     }
     this.xgraph.setColorAnimCell(this.mxcell, key, value);
   }
-
-  // reset(key?: gf.TStyleColorKeys): this {
-  //   if (key !== undefined) {
-  //     let value: any = this.getOriginalValue(key);
-  //     if (value === undefined) {
-  //       value = null;
-  //     }
-  //     this.xgraph.setColorCell(this.mxcell, key, value);
-  //     super.reset(key);
-  //   } else {
-  //     if (!!this.fullStylesString) {
-  //       this.xgraph.setStyles(this.mxcell, this.fullStylesString);
-  //     }
-  //     super.reset();
-  //   }
-  //   return this;
-  // }
 }
 
 class TooltipState extends GFState {
   keys: string[] = ['tooltip'];
   tooltipHandler: TooltipHandler | undefined;
-  // constructor(xgraph: XGraph, mxcell: mxCell) {
-  //   super(xgraph, mxcell);
-  //   this.init();
-  // }
+  constructor(xgraph: XGraph, mxcell: mxCell) {
+    super(xgraph, mxcell);
+    this.init_core();
+  }
 
   init_core() {
     this.addValue('tooltip', false);

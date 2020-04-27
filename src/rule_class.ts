@@ -117,6 +117,7 @@ export class Rule {
    * @memberof Rule
    */
   import(obj: any): this {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'import()');
     if (!!obj.unit) {
       this.data.unit = obj.unit;
     }
@@ -388,6 +389,7 @@ export class Rule {
       });
     }
     this.data.sanitize = obj.sanitize || false;
+    trc.after();
     return this;
   }
 
@@ -1094,12 +1096,7 @@ export class Rule {
       if (_.isArray(value)) {
         value = value[0];
       }
-      // const date = moment(value);
-      // return date.format(this.data.dateFormat);
 
-      // if (this.dashboard.isTimezoneUtc()) {
-      //     date = date.utc();
-      // }
       let d = grafana.getFormatedDate(value, this.data.dateFormat);
       return d;
     }

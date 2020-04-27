@@ -115,7 +115,8 @@ export default class XGraph {
     if (!XGraph.initialized) {
       if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
-        let code = $GF.utils.$loadFile(`${$GF.getDrawioPath()}js/app.min.js`);
+        // let code = $GF.utils.$loadFile(`${$GF.getDrawioPath()}js/app.min.js`);
+        let code = $GF.utils.$loadFile(`${$GF.getDrawioPath()}js/viewer.min.js`);
         $GF.utils.evalRaw(code);
         XGraph.postInitGlobalVars();
         code = $GF.utils.$loadFile(`${$GF.getLibsPath()}/Graph_custom.js`);
@@ -387,6 +388,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   fitGraph(): this {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'fitGraph()');
     const margin = 2;
     const max = 3;
 
@@ -402,6 +404,7 @@ export default class XGraph {
       (margin + cw - w * s) / (2 * s) - bounds.x / this.graph.view.scale,
       (margin + ch - h * s) / (2 * s) - bounds.y / this.graph.view.scale
     );
+    trc.after();
     return this;
   }
 
@@ -414,7 +417,6 @@ export default class XGraph {
    */
   gridGraph(bool: boolean): this {
     if (bool) {
-      // eslint-disable-next-line no-undef
       this.container.style.backgroundImage = `url('${GFP.getMxImagePath}/grid.gif')`;
     } else {
       this.container.style.backgroundImage = '';
@@ -431,7 +433,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   zoomGraph(percent: string): this {
-    $GF.log.info('XGraph.zoomGraph()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'zoomGraph()');
     if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
       const ratio: number = Number(percent.replace('%', '')) / 100;
       this.graph.zoomTo(ratio, true);
@@ -440,6 +442,7 @@ export default class XGraph {
       this.unzoomGraph();
     }
     this.zoom = true;
+    trc.after();
     return this;
   }
 
@@ -500,13 +503,14 @@ export default class XGraph {
    * @memberof XGraph
    */
   setXmlGraph(xmlGraph: string): this {
-    $GF.log.info('XGraph.setXmlGraph()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setXmlGraph()');
     if ($GF.utils.isencoded(xmlGraph)) {
       this.xmlGraph = $GF.utils.decode(xmlGraph, true, true, true);
     } else {
       this.xmlGraph = xmlGraph;
     }
     this.drawGraph();
+    trc.after();
     return this;
   }
 
@@ -518,15 +522,13 @@ export default class XGraph {
    * @memberof XGraph
    */
   getCurrentCells(prop: gf.TPropertieKey): string[] {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'getCurrentCells()');
     const cellIds: string[] = [];
     const model = this.graph.getModel();
     const cells = model.cells;
-    // GFGlobal.log.debug('cells', cells);
-    // GFGlobal.log.debug('mxStencilRegistry', mxStencilRegistry);
     if (prop === 'id') {
       _.each(cells, (mxcell: mxCell) => {
         $GF.log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', this.getStyleCell(mxcell, 'shape'));
-        // this.graph.setCellStyles('shape','mxgraph.aws4.spot_instance',[mxcell]);
         cellIds.push(this.getId(mxcell));
       });
     } else if (prop === 'value') {
@@ -534,6 +536,7 @@ export default class XGraph {
         cellIds.push(this.getLabelCell(mxcell));
       });
     }
+    trc.after();
     return cellIds;
   }
 
@@ -546,6 +549,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   findMxCells(prop: gf.TPropertieKey, pattern: string): mxCell[] {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'findMxCells()');
     const mxcells = this.getMxCells();
     const result: any[] = [];
     if (prop === 'id') {
@@ -561,6 +565,7 @@ export default class XGraph {
         }
       });
     }
+    trc.after();
     return result;
   }
 
@@ -922,8 +927,6 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventClick(me: mxMouseEvent) {
-    $GF.log.info('XGraph.eventClick()');
-
     if (this.onMapping.active) {
       const state = me.getState();
       if (state) {
@@ -1219,18 +1222,37 @@ export default class XGraph {
 
   // VISIBLE
 
+  /**
+   * Hide cell/shape
+   *
+   * @param {mxCell} mxcell
+   * @memberof XGraph
+   */
   async hideCell(mxcell: mxCell) {
     if (this.isVisibleCell(mxcell)) {
       this.graph.model.setVisible(mxcell, false);
     }
   }
 
+  /**
+   * Show/unhide cell/shape
+   *
+   * @param {mxCell} mxcell
+   * @memberof XGraph
+   */
   async showCell(mxcell: mxCell) {
     if (!this.isVisibleCell(mxcell)) {
       this.graph.model.setVisible(mxcell, true);
     }
   }
 
+  /**
+   * Cell is visible ?
+   *
+   * @param {mxCell} mxcell
+   * @returns {boolean}
+   * @memberof XGraph
+   */
   isVisibleCell(mxcell: mxCell): boolean {
     return this.graph.model.isVisible(mxcell);
   }
