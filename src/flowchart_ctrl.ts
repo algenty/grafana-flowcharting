@@ -1,4 +1,3 @@
-import { FlowChartingPlugin } from 'plugin';
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import { mappingOptionsTab } from 'mapping_options';
 import { flowchartOptionsTab } from 'flowchart_options';
@@ -24,11 +23,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   /**@ngInject*/
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
-    FlowChartingPlugin.init($scope, templateSrv);
     $GF.init($scope, templateSrv);
     this.$rootScope = $rootScope;
     this.$scope = $scope;
-    this.version = GFP.getVersion();
+    this.version = $GF.plugin.getVersion();
     this.templateSrv = templateSrv;
     this.changedSource = true;
     this.changedData = true;
@@ -84,7 +82,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    // GFP.log.info( 'FlowchartCtrl.onRender()');
+
   }
 
   onDataReceived(dataList) {

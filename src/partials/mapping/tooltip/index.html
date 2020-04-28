@@ -3,7 +3,7 @@
       Tooltips
       <info-popover mode="right-normal">
         <span
-          ng-bind-html="GFP.popover('Add/change tooltip/popup with aggregated values in shapes defined in color mapping', 'MAPPING')">
+          ng-bind-html="$GF.popover('Add/change tooltip/popup with aggregated values in shapes defined in color mapping', 'MAPPING')">
         </span>
       </info-popover>
     </h5>
@@ -13,7 +13,7 @@
     <div class="gf-form" ng-if="rule.data.tooltip">
       <label class="gf-form-label width-10">Label
         <info-popover mode="right-normal"><span
-            ng-bind-html="GFP.popover('Label of metric in popup', 'MAPPING#Tooltip')"></span>
+            ng-bind-html="$GF.popover('Label of metric in popup', 'MAPPING#Tooltip')"></span>
         </info-popover>
       </label>
       <input type="text" class="gf-form-input width-12" ng-model="rule.data.tooltipLabel"
@@ -22,7 +22,7 @@
     <div class="gf-form" ng-if="rule.data.tooltip">
       <label class="gf-form-label width-10">When state is
         <info-popover mode="right-normal">
-          <span ng-bind-html="GFP.popover('Define condition to add values in tooltip', 'MAPPING')"> </span>
+          <span ng-bind-html="$GF.popover('Define condition to add values in tooltip', 'MAPPING')"> </span>
         </info-popover>
       </label>
       <div class="gf-form-select-wrapper width-12">
@@ -33,7 +33,7 @@
     <div class="gf-form" ng-if="rule.data.tooltip">
       <label class="gf-form-label width-10">Direction
         <info-popover mode="right-normal">
-          <span ng-bind-html="GFP.popover('Define the sens of display', 'MAPPING', 'tooltip_direction_ani')">
+          <span ng-bind-html="$GF.popover('Define the sens of display', 'MAPPING', 'tooltip_direction_ani')">
           </span>
         </info-popover>
       </label>

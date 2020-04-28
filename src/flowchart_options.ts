@@ -23,7 +23,7 @@ export class FlowchartOptionsCtrl {
   /* @ngInject */
   constructor($scope: gf.TIFlowchartOptionsScope) {
     $scope.editor = this;
-    $scope.GFP = GFP;
+    $scope.$GF = $GF.me();
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;

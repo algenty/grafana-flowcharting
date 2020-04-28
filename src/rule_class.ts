@@ -512,7 +512,6 @@ export class Rule {
     if (index !== colors.length - 1) {
       let ratio = 0.5;
       let colorEnd = colors[index + 1];
-      // color = GFP.utils.getRatioColor(ratio, colorStart, colorEnd);
       color = $GF.utils.getRatioColor(ratio, colorStart, colorEnd);
       if (this.data.type === 'number') {
         let absoluteDistance = thresholds[index] - thresholds[index - 1];
@@ -916,7 +915,6 @@ export class Rule {
       let absoluteDistance = thresholds[cursor + 1] - thresholds[cursor];
       let valueDistanceFromMin = value - thresholds[cursor];
       let ratio = valueDistanceFromMin / absoluteDistance;
-      // let color = GFP.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
       let color = $GF.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
       return color;
     }

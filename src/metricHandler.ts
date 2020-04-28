@@ -1,4 +1,3 @@
-// import FlowChartingPlugin from './plugin';
 import _ from 'lodash';
 import { Metric, Serie, Table } from './metric_class';
 import { $GF } from 'globals_class';

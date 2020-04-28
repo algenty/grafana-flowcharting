@@ -2,13 +2,13 @@
     <h5 class="section-heading" ng-if="rule.data.invert">
       Thresholds ( 0 : Ok > ... > {{rule.getColorsCount() - 1}} : Critical)
       <info-popover mode="right-normal"><span
-          ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
+          ng-bind-html="$GF.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
       </info-popover>
     </h5>
     <h5 class="section-heading" ng-if="!rule.data.invert">
       Thresholds ({{rule.getColorsCount() - 1}} : Critical > ... > 0 : Ok)
       <info-popover mode="right-normal"><span
-          ng-bind-html="GFP.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
+          ng-bind-html="$GF.popover('Define states according to value and direction (invert).', 'MAPPING#Thresholds')"></span>
       </info-popover>
     </h5>
     <table>
@@ -25,14 +25,14 @@
             <label class="gf-form-label width-8" style="margin-right: 2px;"
               ng-if="rule.data.type === 'number'">Number
               <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Apply color when value is egal or upper', 'MAPPING#Thresholds')">
+                <span ng-bind-html="$GF.popover('Apply color when value is egal or upper', 'MAPPING#Thresholds')">
                 </span>
               </info-popover>
             </label>
             <label class="gf-form-label width-8" style="margin-right: 2px;"
               ng-if="rule.data.type === 'string'">Pattern
               <info-popover mode="right-normal">
-                <span ng-bind-html="GFP.popover('Apply color when pattern is true', 'MAPPING#Thresholds')">
+                <span ng-bind-html="$GF.popover('Apply color when pattern is true', 'MAPPING#Thresholds')">
                 </span>
               </info-popover>
             </label>

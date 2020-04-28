@@ -2,13 +2,13 @@
   <div class="section gf-form-group" style="width:100%;">
     <h5 class="section-heading">
       Flowchart Edition
-      <info-popover mode="right-normal"><span ng-bind-html="GFP.popover('Define you flowchart', 'README')"></span> </info-popover>
+      <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Define you flowchart', 'README')"></span> </info-popover>
     </h5>
     <div class="gf-form">
       <span class="gf-form-label width-12">
         Current flowchart
         <info-popover mode="right-normal"
-          ><span ng-bind-html="GFP.popover('Current flowchart', 'DEFINITION_XML#Type','DEFINITION_XML')"></span>
+          ><span ng-bind-html="$GF.popover('Current flowchart', 'DEFINITION_XML#Type','DEFINITION_XML')"></span>
         </info-popover>
       </span>
       <div class="gf-form-select-wrapper width-12">
@@ -22,7 +22,7 @@
       <div class="section gf-form-group" style="width:100%;">
         <h5 class="section-heading">
           Definition
-          <info-popover mode="right-normal"><span ng-bind-html="GFP.popover('Definition of graph', 'DEFINITION_XML#Type')"></span></info-popover>
+          <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Definition of graph', 'DEFINITION_XML#Type')"></span></info-popover>
         </h5>
         <!-- Flowchart Definition -->
         <div class="gf-form">
@@ -39,7 +39,7 @@
           <label class="gf-form-label width-12"
             >Editor Url & Theme
             <info-popover mode="right-normal"
-              ><span ng-bind-html="GFP.popover('Address and theme of editor when click on button edit draw', 'FLOWCHART#address')"></span>
+              ><span ng-bind-html="$GF.popover('Address and theme of editor when click on button edit draw', 'FLOWCHART#address')"></span>
             </info-popover>
           </label>
           <input type="text" class="gf-form-input width-30" ng-model="flowchart.data.editorUrl" placeholder="https://draw.io" />
@@ -52,7 +52,7 @@
             Source Type
             <info-popover mode="right-normal"
               ><span
-                ng-bind-html="GFP.popover('Source of mxgraph definition (Xml definition, Url with xml result)', 'DEFINITION_XML#Type','DEFINITION_XML')"
+                ng-bind-html="$GF.popover('Source of mxgraph definition (Xml definition, Url with xml result)', 'DEFINITION_XML#Type','DEFINITION_XML')"
               ></span>
             </info-popover>
           </span>
@@ -91,7 +91,7 @@
             Source Content
             <info-popover mode="right-normal"
               ><span
-                ng-bind-html="GFP.popover('mxgraph model, edit on draw.io and select Extra menu > Edit Diagram', 'DEFINITION_XML#Type','DEFINITION_XML')"
+                ng-bind-html="$GF.popover('mxgraph model, edit on draw.io and select Extra menu > Edit Diagram', 'DEFINITION_XML#Type','DEFINITION_XML')"
               ></span>
             </info-popover>
           </span>
@@ -114,7 +114,7 @@
             <button class="btn btn-secondary btn-small" ng-click="editor.edit($index)">
               <i class="fa fa-edit pointer"></i> Edit Draw
               <info-popover mode="right-normal"
-                ><span ng-bind-html="GFP.popover('Open Graph in draw.io', 'DEFINITION_XML#Buttons','EDIT_EXAMPLE')"></span>
+                ><span ng-bind-html="$GF.popover('Open Graph in draw.io', 'DEFINITION_XML#Buttons','EDIT_EXAMPLE')"></span>
               </info-popover>
             </button>
           </div>
@@ -125,7 +125,7 @@
               />
               Prettify
               <info-popover mode="right-normal"
-                ><span ng-bind-html="GFP.popover('Format XML code to display or modify', 'DEFINITION_XML#Buttons')"></span>
+                ><span ng-bind-html="$GF.popover('Format XML code to display or modify', 'DEFINITION_XML#Buttons')"></span>
               </info-popover>
             </button>
           </div>
@@ -141,7 +141,7 @@
             <button class="btn btn-secondary btn-small" ng-click="flowchart.encode()">
               <i class="fas fa-compress-arrows-alt pointer"></i> Compress/Encode
               <info-popover mode="right-normal"
-                ><span ng-bind-html="GFP.popover('Zip XML definition for big XML', 'DEFINITION_XML#Buttons')"></span>
+                ><span ng-bind-html="$GF.popover('Zip XML definition for big XML', 'DEFINITION_XML#Buttons')"></span>
               </info-popover>
             </button>
           </div>
@@ -149,7 +149,7 @@
             <button class="btn btn-secondary btn-small" ng-click="flowchart.decode()">
               <i class="fas expand-arrows-alt pointer"></i> Extract/Decode
               <info-popover mode="right-normal"
-                ><span ng-bind-html="GFP.popover('Extract xml from content when compressed', 'DEFINITION_XML#Buttons')"></span>
+                ><span ng-bind-html="$GF.popover('Extract xml from content when compressed', 'DEFINITION_XML#Buttons')"></span>
               </info-popover>
             </button>
           </div>
@@ -163,7 +163,7 @@
         <h5 class="section-heading">
           Display
           <info-popover mode="right-normal"
-            ><span ng-bind-html="GFP.popover('Change display graph options', 'ADVANCED_XML#Buttons','ADVANCED_XML2')"></span>
+            ><span ng-bind-html="$GF.popover('Change display graph options', 'ADVANCED_XML#Buttons','ADVANCED_XML2')"></span>
           </info-popover>
         </h5>
         <gf-form-switch class="gf-form" label="Scale" label-class="width-12" checked="flowchart.data.scale" on-change="editor.onOptionChange()">
@@ -184,7 +184,7 @@
             Zoom
             <info-popover mode="right-normal"
               ><span
-                ng-bind-html="GFP.popover('Zoom graph, if scale is unchecked. if < 100% : reduce graph, >100% increase graph', 'DEFINITION_XML#Buttons','ADVANCED_XML2')"
+                ng-bind-html="$GF.popover('Zoom graph, if scale is unchecked. if < 100% : reduce graph, >100% increase graph', 'DEFINITION_XML#Buttons','ADVANCED_XML2')"
               ></span>
             </info-popover>
           </span>
@@ -203,7 +203,7 @@
         <h5 class="section-heading">
           Others options
           <info-popover mode="right-normal"
-            ><span ng-bind-html="GFP.popover('Change options in graph', 'ADVANCED_XML#Buttons','ADVANCED_XML2')"></span>
+            ><span ng-bind-html="$GF.popover('Change options in graph', 'ADVANCED_XML#Buttons','ADVANCED_XML2')"></span>
           </info-popover>
         </h5>
         <!-- Lock -->

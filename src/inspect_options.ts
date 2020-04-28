@@ -1,58 +1,28 @@
 import { FlowchartHandler } from './flowchartHandler';
 import { State } from 'state_class';
+import { $GF } from 'globals_class';
 // import { MetricHandler } from './metricHandler';
 
 export class InspectOptionsCtrl {
   enable = false; // enable inspector or not
-  // $scope: gf.TInspectOptionsScope;
   ctrl: any; //TODO: define type
-  // testData: any;
-  // panel: any; //TODO: define type
-  // logDisplayOption: gf.TSelectBoolean[] = [
-  //   { text: 'True', value: true },
-  //   { text: 'False', value: false },
-  // ];
-  // logLevelOption: gf.TSelectNumber[] = [
-  //   { text: 'DEBUG', value: 0 },
-  //   { text: 'INFO', value: 1 },
-  //   { text: 'WARNING', value: 2 },
-  //   { text: 'ERROR', value: 3 },
-  // ];
-  // logLevel: number;
-  // logDisplay: boolean;
   flowchartHandler: FlowchartHandler;
-  // metricHandler: MetricHandler;
   panel: any;
-  // colors: any; //TODO: define style
+
   /** @ngInject */
   constructor($scope: gf.TInspectOptionsScope) {
     $scope.editor = this;
-    $scope.GFP = GFP;
-    // this.testData = {
-    //   id: '',
-    //   key: '',
-    //   value: '',
-    // };
-    // $scope.testData = this.testData;
-    // this.$scope = $scope;
+    $scope.$GF = $GF.me();
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
-    // this.logLevel = GFP.log.logLevel;
-    // this.logDisplay = GFP.log.logDisplay;
     this.flowchartHandler = this.ctrl.flowchartHandler;
-    // this.metricHandler = this.ctrl.metricHandler;
-    // $scope.flowchartHandler = this.ctrl.flowchartHandler;
+ 
   }
 
   render() {
     this.panel.render();
   }
 
-  // onColorChange(styleIndex, colorIndex) {
-  //   return newColor => {
-  //     this.colors[colorIndex] = newColor;
-  //   };
-  // }
 
   // onDebug() {
   //   GFP.log.logLevel = this.logLevel;
@@ -147,7 +117,7 @@ export function inspectOptionsTab($q, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `${GFP.getPartialPath()}/inspect/index.html`,
+    templateUrl: `${$GF.plugin.getPartialPath()}inspect/index.html`,
     controller: InspectOptionsCtrl,
   };
 }

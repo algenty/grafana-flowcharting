@@ -9,7 +9,7 @@
     <h5 class="section-heading">
       Graph inspect Id
       <info-popover mode="right-normal">
-        <span ng-bind-html="GFP.popover('List of all objects in graph with states', 'INSPECT','inspect_graph_table')">
+        <span ng-bind-html="$GF.popover('List of all objects in graph with states', 'INSPECT','inspect_graph_table')">
         </span>
       </info-popover>
     </h5>
@@ -18,11 +18,11 @@
     </gf-form-switch>
 
     <!-- LINK MAPPING -->
-    <ng-include src="GFP.getPartialPath() + '/inspect/states/index.html'" ng-if="editor.enable"> </ng-include>
+    <ng-include src="$GF.plugin.getPartialPath() + 'inspect/states/index.html'" ng-if="editor.enable"> </ng-include>
     <hr />
 
     <!-- METRICS MAPPING -->
-    <!-- <ng-include src="GFP.getPartialPath() + '/inspect/metrics/index.html'" ng-if="editor.enable"> </ng-include>
+    <!-- <ng-include src="$GF.plugin.getPartialPath() + '/inspect/metrics/index.html'" ng-if="editor.enable"> </ng-include>
     <hr /> -->
 
     <div class="gf-form">
@@ -73,5 +73,5 @@
     </div>
   </div>
   <!-- TEST STYLE -->
-  <!-- <ng-include src="GFP.getPartialPath() + '/inspect/styles.html'"> </ng-include> -->
+  <!-- <ng-include src="$GF.plugin.getPartialPath() + '/inspect/styles.html'"> </ng-include> -->
 </div>

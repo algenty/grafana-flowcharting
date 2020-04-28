@@ -363,7 +363,6 @@ class GFPlugin {
   static data:any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   static contextRoot:string;
-  static urlDoc:string;
   constructor() {
   }
 
@@ -389,15 +388,12 @@ class GFPlugin {
       this.contextRoot = $scope.$root.appSubUrl + this.defaultContextRoot;
     }
     $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
-    if(this.data !== undefined) {
-      this.urlDoc = this._getRepo();
-    }
     return plug;
   }
 
-  static _getRepo(): string {
+  getRepo(): string {
     let url = '';
-    this.data.info.links.forEach((link: { name: string; url: string }) => {
+    GFPlugin.data.info.links.forEach((link: { name: string; url: string }) => {
       if (link.name === 'Documentation') {
         url = link.url;
       }
@@ -808,6 +804,39 @@ export class $GF {
       }
     }
     return false;
+  }
+    /**
+   * Return Html for popup with links to documentation
+   *
+   * @param {string} text
+   * @param {string} tagBook
+   * @param {string} [tagImage]
+   * @returns {string}
+   * @memberof $GF
+   */
+  static popover(text: string, tagBook: string, tagImage?: string): string {
+    const url = $GF.plugin.getMxResourcePath()
+    const images = `${this.plugin.getRepo()}images/`;
+    const textEncoded = String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+    const desc = `${textEncoded}`;
+    let book = '';
+    let image = '';
+    if (tagBook) {
+      book = `<a href="${url}${tagBook}" target="_blank"><i class="fa fa-book fa-fw"></i>Help</a>`;
+    }
+    if (tagImage) {
+      image = `<a href="${images}${tagImage}.png" target="_blank"><i class="fa fa-image fa-fw"></i>Example</a>`;
+    }
+    return `
+    <div id="popover" style="display:flex;flex-wrap:wrap;width: 100%;">
+      <div style="flex:1;height:100px;margin-bottom: 20px;">${desc}</div>
+      <div style="flex:1;height:100px;margin-bottom: 20px;">${book}</div>
+      <div style="flex-basis: 100%;height:100px;margin-bottom:20px;">${image}</div>
+    </div>`;
   }
 
   static destroy() {

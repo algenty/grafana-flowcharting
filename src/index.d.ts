@@ -1,4 +1,4 @@
-declare var GFP: FlowChartingPlugin;
+//declare var GFP: FlowChartingPlugin;
 type mxCell = any;
 type mxMouseEvent = any;
 type mxGeometry = { x: number; y: number; width: number; height: number };
@@ -28,7 +28,7 @@ declare module gf {
   declare interface TIFlowchartOptionsScope extends ng.IScope {
     flowchartHandler: any;
     editor: FlowchartOptionsCtrl;
-    GFP: FlowChartingPlugin;
+    "$GF": $GF;
     ctrl: any;
   }
 
@@ -259,7 +259,7 @@ declare module gf {
   declare interface TInspectOptionsScope extends ng.IScope {
     flowchartHandler: any;
     editor: InspectOptionsCtrl;
-    GFP: FlowChartingPlugin;
+    "$GF": $GF;
     ctrl: any; //TODO: define type
     // testData: any;
   }
@@ -293,7 +293,7 @@ declare module gf {
     // rulesHandler: any;
     // flowchartHandler: FlowchartHandler;
     editor: MappingOptionsCtrl;
-    GFP: FlowChartingPlugin;
+    "$GF": $GF;
     ctrl: any;
   }
 }
