@@ -25,6 +25,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
     FlowChartingPlugin.init($scope, templateSrv);
+    $GF.init($scope, templateSrv);
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.version = GFP.getVersion();

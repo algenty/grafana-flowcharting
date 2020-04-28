@@ -116,10 +116,10 @@ export default class XGraph {
       if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
         // let code = $GF.utils.$loadFile(`${$GF.getDrawioPath()}js/app.min.js`);
-        let code = $GF.utils.$loadFile(`${$GF.getDrawioPath()}js/viewer.min.js`);
+        let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
         $GF.utils.evalRaw(code);
         XGraph.postInitGlobalVars();
-        code = $GF.utils.$loadFile(`${$GF.getLibsPath()}/Graph_custom.js`);
+        code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
         $GF.utils.evalRaw(code);
       }
       XGraph.initialized = true;
@@ -130,17 +130,17 @@ export default class XGraph {
 
   static preInitGlobalVars() {
     const myWindow: any = window;
-    myWindow.BASE_PATH = $GF.getMxBasePath();
-    myWindow.RESOURCES_PATH = $GF.getMxResourcePath();
-    myWindow.RESOURCE_BASE = $GF.getMxResourcePath();
-    myWindow.STENCIL_PATH = $GF.getStencilsPath();
-    myWindow.SHAPES_PATH = $GF.getShapesPath();
-    myWindow.IMAGE_PATH = $GF.getMxImagePath();
-    myWindow.STYLE_PATH = $GF.getMxStylePath();
-    myWindow.CSS_PATH = $GF.getMxCssPath();
+    myWindow.BASE_PATH = $GF.plugin.getMxBasePath();
+    myWindow.RESOURCES_PATH = $GF.plugin.getMxResourcePath();
+    myWindow.RESOURCE_BASE = $GF.plugin.getMxResourcePath();
+    myWindow.STENCIL_PATH = $GF.plugin.getStencilsPath();
+    myWindow.SHAPES_PATH = $GF.plugin.getShapesPath();
+    myWindow.IMAGE_PATH = $GF.plugin.getMxImagePath();
+    myWindow.STYLE_PATH = $GF.plugin.getMxStylePath();
+    myWindow.CSS_PATH = $GF.plugin.getMxCssPath();
     myWindow.mxLanguages = ['en'];
-    myWindow.DRAWIO_BASE_URL = $GF.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
-    myWindow.DRAWIO_VIEWER_URL = $GF.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
+    myWindow.DRAWIO_BASE_URL = $GF.plugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
+    myWindow.DRAWIO_VIEWER_URL = $GF.plugin.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
     myWindow.DRAW_MATH_URL = 'math';
     myWindow.DRAWIO_CONFIG = null; // Replace with your custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
     const urlParams = new Object();
@@ -150,8 +150,8 @@ export default class XGraph {
     urlParams['nav'] = '1'; // Enables folding in chromeless mode
     urlParams['local'] = '1'; // Uses device mode only
     urlParams['embed'] = '1'; // Runs in embed mode
-    myWindow.mxImageBasePath = $GF.getMxImagePath();
-    myWindow.mxBasePath = $GF.getMxBasePath();
+    myWindow.mxImageBasePath = $GF.plugin.getMxImagePath();
+    myWindow.mxBasePath = $GF.plugin.getMxBasePath();
     myWindow.mxLoadStylesheets = true;
     myWindow.mxLanguage = 'en';
     myWindow.mxLoadResources = true;
@@ -159,8 +159,8 @@ export default class XGraph {
 
   static postInitGlobalVars() {
     const myWindow: any = window;
-    myWindow.mxClient.mxBasePath = $GF.getMxBasePath();
-    myWindow.mxClient.mxImageBasePath = $GF.getMxImagePath();
+    myWindow.mxClient.mxBasePath = $GF.plugin.getMxBasePath();
+    myWindow.mxClient.mxImageBasePath = $GF.plugin.getMxImagePath();
     myWindow.mxClient.mxLoadResources = true;
     myWindow.mxClient.mxLanguage = 'en';
     myWindow.mxClient.mxLoadStylesheets = true;
@@ -417,7 +417,7 @@ export default class XGraph {
    */
   gridGraph(bool: boolean): this {
     if (bool) {
-      this.container.style.backgroundImage = `url('${$GF.getMxImagePath()}/grid.gif')`;
+      this.container.style.backgroundImage = `url('${$GF.plugin.getMxImagePath()}/grid.gif')`;
     } else {
       this.container.style.backgroundImage = '';
     }

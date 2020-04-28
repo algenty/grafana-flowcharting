@@ -1,7 +1,13 @@
 import _ from 'lodash';
 class GFCONSTANT {
   // CONFIG
-  CONF_FILE_SHAPES = 'static/shapes.txt';
+  CONF_PATH_LIBS = 'libs/';
+  CONF_PATH_DRAWIO = 'libs/drawio/';
+  CONF_PATH_STATIC = 'static/';
+  CONF_PATH_PARTIALS = 'partials/';
+  CONF_PATH_STYLES = 'styles/';
+  CONF_FILE_PLUGINJSON = './plugin.json';
+  CONF_FILE_SHAPESTXT = 'static/shapes.txt';
   CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
   CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
   CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
@@ -276,6 +282,10 @@ class GFLog {
   static logDisplay = true;
   constructor() {}
 
+  static init():GFLog {
+    return new GFLog();
+  }
+
   /**
    * If message must be displayed
    *
@@ -349,6 +359,143 @@ class GFLog {
   }
 }
 
+class GFPlugin {
+  static data:any = require('./plugin.json');
+  static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
+  static contextRoot:string;
+  static urlDoc:string;
+  constructor() {
+  }
+
+  /**
+   * init GFPlugin
+   *
+   * @static
+   * @param {*} $scope
+   * @param {*} templateSrv
+   * @returns {GFPlugin}
+   * @memberof GFPlugin
+   */
+  static init($scope : any, templateSrv : any):GFPlugin {
+    let plug = new GFPlugin();
+    this.contextRoot = GFPlugin.defaultContextRoot;
+    if ($scope === undefined) {
+      this.contextRoot = __dirname;
+      if (this.contextRoot.length > 0) {
+        $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
+        $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
+      }
+    } else {
+      this.contextRoot = $scope.$root.appSubUrl + this.defaultContextRoot;
+    }
+    $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
+    if(this.data !== undefined) {
+      this.urlDoc = this._getRepo();
+    }
+    return plug;
+  }
+
+  static _getRepo(): string {
+    let url = '';
+    this.data.info.links.forEach((link: { name: string; url: string }) => {
+      if (link.name === 'Documentation') {
+        url = link.url;
+      }
+    });
+    return url;
+  }
+
+  /**
+   * Get version of plugin
+   *
+   * @returns {string}
+   * @memberof GFPlugin
+   */
+  getVersion(): string {
+    return GFPlugin.data.info.version;
+  }
+
+  /**
+   * Get root path
+   *
+   * @returns {string}
+   * @memberof GFPlugin
+   */
+  getRootPath(): string {
+    return $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
+  }
+
+  /**
+   * Get libs path
+   *
+   * @returns {string}
+   * @memberof GFPlugin
+   */
+  getLibsPath(): string {
+    return `${$GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT)}libs/`;
+  }
+
+  /**
+   * Get Draw.io libs path
+   *
+   * @returns {string}
+   * @memberof GFPlugin
+   */
+  getDrawioPath(): string {
+    return `${this.getLibsPath()}drawio/`;
+  }
+
+  /**
+   * Get statics path
+   *
+   * @returns {string}
+   * @memberof GFPlugin
+   */
+  getStaticPath(): string {
+    return `${this.getRootPath()}static/`;
+  }
+
+  /**
+   * Get mxBasePath
+   * mxBasePath: Specifies the path in mxClient.basePath.
+   *
+   * @returns {string}
+   * @memberof GFPlugin
+   */
+  getMxBasePath(): string {
+    return `${this.getDrawioPath()}mxgraph/`;
+  }
+
+  getMxStylePath(): string {
+    return `${this.getDrawioPath()}styles/`;
+  }
+
+  getShapesPath(): string {
+    return `${this.getDrawioPath()}/shapes/`;
+  }
+
+  getPartialPath(): string {
+    return `${this.getRootPath()}partials/`;
+  }
+
+  getStencilsPath(): string {
+    return `${this.getDrawioPath()}/stencils/`;
+  }
+
+  getMxCssPath(): string {
+    return `${this.getDrawioPath()}styles/`;
+  }
+
+  getMxResourcePath(): string {
+    return `${this.getMxBasePath()}css/`;
+  }
+
+  getMxImagePath(): string {
+    return `${this.getMxBasePath()}images/`;
+  }
+
+}
+
 class GFTrace {
   static enable = true;
   static trc = new Map();
@@ -381,6 +528,10 @@ class GFTrace {
       };
       GFTrace.trc.set(this.trace.Id, this.trace);
     }
+  }
+
+  static init():GFTrace {
+    return new GFTrace();
   }
 
   before(
@@ -453,9 +604,10 @@ class GFTrace {
 
 export class $GF {
   static _globalvars: GFVariables = new GFVariables();
-  static log: GFLog = new GFLog();
   static CONSTANTS: GFCONSTANT = new GFCONSTANT();
-  static trace: GFTrace = new GFTrace();
+  static log: GFLog = GFLog.init();
+  static trace: GFTrace = GFTrace.init();
+  static plugin: GFPlugin;
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
@@ -476,6 +628,15 @@ export class $GF {
     evalRaw: (code: string) => void;
     addScript: (src: string) => void;
   } = require('./utils_raw');
+
+  static init($scope: any, templateSrv: any):$GF {
+    this.plugin = GFPlugin.init($scope,templateSrv);
+    return this;
+  }
+  
+  static me():$GF {
+    return this;
+  }
 
   /**
    * Create and get local variables container
@@ -647,54 +808,6 @@ export class $GF {
       }
     }
     return false;
-  }
-
-  static getRootPath(): string {
-    return $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
-  }
-
-  static getLibsPath(): string {
-    return `${$GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT)}libs/`;
-  }
-
-  static getDrawioPath(): string {
-    return `${$GF.getLibsPath()}drawio/`;
-  }
-
-  static getStaticPath(): string {
-    return `${$GF.getRootPath()}static/`;
-  }
-
-  static getMxBasePath(): string {
-    return `${$GF.getDrawioPath()}mxgraph/`;
-  }
-
-  static getMxStylePath(): string {
-    return `${$GF.getDrawioPath()}styles/`;
-  }
-
-  static getShapesPath(): string {
-    return `${$GF.getDrawioPath()}/shapes/`;
-  }
-
-  static getPartialPath(): string {
-    return `${$GF.getRootPath()}partials/`;
-  }
-
-  static getStencilsPath(): string {
-    return `${$GF.getDrawioPath()}/stencils/`;
-  }
-
-  static getMxCssPath(): string {
-    return `${$GF.getDrawioPath()}styles/`;
-  }
-
-  static getMxResourcePath(): string {
-    return `${$GF.getMxBasePath()}css/`;
-  }
-
-  static getMxImagePath(): string {
-    return `${$GF.getMxBasePath()}images/`;
   }
 
   static destroy() {

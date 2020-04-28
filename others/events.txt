@@ -86,6 +86,7 @@ change url image
 flipH
 flipV
 Zoom/unzoom
+Add text to tooltip
 ARROW_CLASSIC	Constant for classic arrow markers.
 ARROW_CLASSIC_THIN	Constant for thin classic arrow markers.
 ARROW_BLOCK	Constant for block arrow markers.
