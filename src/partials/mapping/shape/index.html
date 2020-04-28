@@ -2,14 +2,14 @@
   <h5 class="section-heading">
     Color/Tooltip Mappings
     <info-popover mode="right-normal">
-      <span ng-bind-html="$GF.popover('Select the objects to colorize', 'MAPPING','fc_subway_example')">
+      <span ng-bind-html="$GF.popover('Select the objects to colorize', 'SHAPES','fc_subway_example')">
       </span>
     </info-popover>
   </h5>
   <div class="gf-form">
     <span class="gf-form-label width-11">Identify by
       <info-popover mode="right-normal">
-        <span ng-bind-html="$GF.popover('Select the type of data in field \'What\' ID (uniq) or LABEL', 'MAPPING')">
+        <span ng-bind-html="$GF.popover('Select the type of data in field \'What\' ID (uniq) or LABEL', 'SHAPES')">
         </span>
       </info-popover>
     </span>
@@ -37,7 +37,7 @@
         <th>
           <label class="gf-form-label width-8" style="margin-right: 2px;">What
             <info-popover mode="right-normal">
-              <span ng-bind-html="$GF.popover('Enter shape Id or click on link button', 'MAPPING#what')">
+              <span ng-bind-html="$GF.popover('Enter shape Id or click on link button', 'SHAPES')">
               </span>
             </info-popover>
           </label>
@@ -46,7 +46,7 @@
           <label class="gf-form-label width-8" style="margin-right: 2px;">When
             <info-popover mode="right-normal">
               <span
-                ng-bind-html="$GF.popover('Select condition to apply color and tooltip on shape.', 'MAPPING#Color On')">
+                ng-bind-html="$GF.popover('Select condition to apply color and tooltip on shape.', 'SHAPES')">
               </span>
             </info-popover>
         </th>
@@ -54,7 +54,7 @@
           <label class="gf-form-label width-8" style="margin-right: 2px;">How
             <info-popover mode="right-normal">
               <span
-                ng-bind-html="$GF.popover('Fill to color content, Stroke for outline or arrows, Text for text.', 'MAPPING#Thresholds', 'colormode_ani')">
+                ng-bind-html="$GF.popover('Fill to color content, Stroke for outline or arrows, Text for text.', 'SHAPES', 'colormode_ani')">
               </span>
             </info-popover>
           </label>

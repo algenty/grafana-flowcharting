@@ -82,7 +82,6 @@ setVisible(cell, visible)
 
 to front
 to back
-change url image
 flipH
 flipV
 Zoom/unzoom

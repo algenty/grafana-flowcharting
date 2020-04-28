@@ -815,7 +815,7 @@ export class $GF {
    * @memberof $GF
    */
   static popover(text: string, tagBook: string, tagImage?: string): string {
-    const url = $GF.plugin.getMxResourcePath()
+    const url = $GF.plugin.getRepo()
     const images = `${this.plugin.getRepo()}images/`;
     const textEncoded = String(text)
       .replace(/&/g, '&amp;')
