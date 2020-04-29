@@ -140,8 +140,9 @@ export default class XGraph {
     myWindow.CSS_PATH = $GF.plugin.getMxCssPath();
     myWindow.mxLanguages = ['en'];
     myWindow.DRAWIO_BASE_URL = $GF.plugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
+    myWindow.DRAW_MATH_URL = $GF.plugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
     myWindow.DRAWIO_VIEWER_URL = $GF.plugin.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
-    myWindow.DRAW_MATH_URL = 'math';
+    myWindow.DRAW_MATH_URL = $GF.plugin.getDrawioPath() + 'math/';
     myWindow.DRAWIO_CONFIG = null; // Replace with your custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
     const urlParams = new Object();
     myWindow.urlParams = urlParams;
