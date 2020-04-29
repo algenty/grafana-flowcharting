@@ -1,13 +1,18 @@
 import { FlowchartHandler } from './flowchartHandler';
 import { State } from 'state_class';
 import { $GF } from 'globals_class';
+import { StateHandler } from 'statesHandler';
+import _ from 'lodash';
 // import { MetricHandler } from './metricHandler';
 
 export class InspectOptionsCtrl {
   enable = false; // enable inspector or not
   ctrl: any; //TODO: define type
   flowchartHandler: FlowchartHandler;
+  stateHandler: StateHandler|undefined;
   panel: any;
+  column: string = 'cellId';
+  sens: 'asc'|'desc' = 'asc';
 
   /** @ngInject */
   constructor($scope: gf.TInspectOptionsScope) {
@@ -16,7 +21,8 @@ export class InspectOptionsCtrl {
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
- 
+    this.stateHandler = this.flowchartHandler.getFlowchart().getStateHandler();
+
   }
 
   render() {
@@ -86,6 +92,14 @@ export class InspectOptionsCtrl {
 
   unselectCell(state: State) {
     state.unhighlightCell();
+  }
+
+  getStates(): State[] {
+    if (this.stateHandler) {
+      const states = this.stateHandler.getStatesForInspect();
+      return _.orderBy(states, [this.column,'cellId'],[this.sens])
+    }
+    return []
   }
 
   // execute() {

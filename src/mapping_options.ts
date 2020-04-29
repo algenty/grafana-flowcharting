@@ -21,7 +21,6 @@ export class MappingOptionsCtrl {
   tooltipOn = $GF.CONSTANTS.TOOLTIP_APPLYON;
   textOn = $GF.CONSTANTS.TEXT_APPLYON;
   textReplace = $GF.CONSTANTS.TEXTMETHODS;
-  // EventType: gf.TSelectString[] = _GF.CONSTANTS.EVENTMETHODS;
   EventType = EventMap.getDefaultMethods();
   tpDirection: gf.TSelectString[] = $GF.CONSTANTS.TOOLTIP_DIRECTION_TYPES;
   propTypes: gf.TSelectString[] = $GF.CONSTANTS.IDENT_TYPES;
@@ -50,7 +49,6 @@ export class MappingOptionsCtrl {
     this.panel = this.ctrl.panel;
     this.rulesHandler = this.ctrl.rulesHandler;
     this.flowchartHandler = this.ctrl.flowchartHandler;
-    // this.flowchartHandler = $scope.ctrl.flowchartHandler;
     this.rulesHandler = this.ctrl.rulesHandler;
     this.metricHandler = this.ctrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();

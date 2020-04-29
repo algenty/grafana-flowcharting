@@ -1,0 +1,473 @@
+<div class="panel-content panel-content--no-padding table-panel-content">
+    <div class="panel-height-helper">
+        <plugin-component type="panel" class="panel-height-helper">
+            <panel-plugin-table dashboard="dashboard" panel="panel" class="panel-height-helper"
+                style="font-size: 100%;">
+                <grafana-panel ctrl="ctrl" class="panel-height-helper">
+                    <ng-transclude class="panel-height-helper">
+                        <div class="table-panel-container">
+                            <div class="table-panel-header-bg" ng-show="ctrl.table.rows.length"></div>
+                            <div class="table-panel-scroll" ng-show="ctrl.table.rows.length" style="max-height: 276px;">
+                                <table class="table-panel-table">
+                                    <thead>
+                                        <tr>
+                                            <!---->
+                                            <!---->
+                                            <th ng-repeat="col in ctrl.table.columns" ng-if="!col.hidden">
+                                                <div class="table-panel-table-header-inner pointer"
+                                                    ng-click="ctrl.toggleColumnSort(col, $index)">
+                                                    Time
+                                                    <!----><span class="table-panel-table-header-controls"
+                                                        ng-if="col.sort">
+                                                        <i class="fa fa-caret-down" ng-show="col.desc"></i>
+                                                        <i class="fa fa-caret-up ng-hide" ng-hide="col.desc"></i>
+                                                    </span>
+                                                    <!---->
+                                                </div>
+                                            </th>
+                                            <!---->
+                                            <!---->
+                                            <!---->
+                                            <th ng-repeat="col in ctrl.table.columns" ng-if="!col.hidden">
+                                                <div class="table-panel-table-header-inner pointer"
+                                                    ng-click="ctrl.toggleColumnSort(col, $index)">
+                                                    A-series
+                                                    <!---->
+                                                </div>
+                                            </th>
+                                            <!---->
+                                            <!---->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="table-panel-width-hack">Time</div>2020-04-24 16:53:36
+                                            </td>
+                                            <td style="text-align:right">
+                                                <div class="table-panel-width-hack">A-series</div>73.89
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:53:21</td>
+                                            <td style="text-align:right">74.17</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:53:06</td>
+                                            <td style="text-align:right">74.58</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:52:51</td>
+                                            <td style="text-align:right">74.53</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:52:36</td>
+                                            <td style="text-align:right">74.49</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:52:21</td>
+                                            <td style="text-align:right">74.85</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:52:06</td>
+                                            <td style="text-align:right">74.67</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:51:51</td>
+                                            <td style="text-align:right">74.86</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:51:36</td>
+                                            <td style="text-align:right">74.89</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:51:21</td>
+                                            <td style="text-align:right">74.89</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:51:06</td>
+                                            <td style="text-align:right">74.77</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:50:51</td>
+                                            <td style="text-align:right">74.81</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:50:36</td>
+                                            <td style="text-align:right">74.75</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:50:21</td>
+                                            <td style="text-align:right">75.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:50:06</td>
+                                            <td style="text-align:right">75.29</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:49:51</td>
+                                            <td style="text-align:right">75.01</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:49:36</td>
+                                            <td style="text-align:right">75.07</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:49:21</td>
+                                            <td style="text-align:right">75.42</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:49:06</td>
+                                            <td style="text-align:right">75.75</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:48:51</td>
+                                            <td style="text-align:right">75.72</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:48:36</td>
+                                            <td style="text-align:right">75.91</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:48:21</td>
+                                            <td style="text-align:right">75.58</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:48:06</td>
+                                            <td style="text-align:right">75.27</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:47:51</td>
+                                            <td style="text-align:right">75.51</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:47:36</td>
+                                            <td style="text-align:right">75.48</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:47:21</td>
+                                            <td style="text-align:right">75.54</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:47:06</td>
+                                            <td style="text-align:right">75.68</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:46:51</td>
+                                            <td style="text-align:right">75.89</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:46:36</td>
+                                            <td style="text-align:right">75.95</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:46:21</td>
+                                            <td style="text-align:right">75.58</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:46:06</td>
+                                            <td style="text-align:right">75.42</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:45:51</td>
+                                            <td style="text-align:right">75.69</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:45:36</td>
+                                            <td style="text-align:right">75.66</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:45:21</td>
+                                            <td style="text-align:right">75.83</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:45:06</td>
+                                            <td style="text-align:right">75.80</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:44:51</td>
+                                            <td style="text-align:right">76.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:44:36</td>
+                                            <td style="text-align:right">76.36</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:44:21</td>
+                                            <td style="text-align:right">76.13</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:44:06</td>
+                                            <td style="text-align:right">76.20</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:43:51</td>
+                                            <td style="text-align:right">75.90</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:43:36</td>
+                                            <td style="text-align:right">76.26</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:43:21</td>
+                                            <td style="text-align:right">76.21</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:43:06</td>
+                                            <td style="text-align:right">75.76</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:42:51</td>
+                                            <td style="text-align:right">75.41</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:42:36</td>
+                                            <td style="text-align:right">75.18</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:42:21</td>
+                                            <td style="text-align:right">75.66</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:42:06</td>
+                                            <td style="text-align:right">75.44</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:41:51</td>
+                                            <td style="text-align:right">75.93</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:41:36</td>
+                                            <td style="text-align:right">75.49</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:41:21</td>
+                                            <td style="text-align:right">75.17</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:41:06</td>
+                                            <td style="text-align:right">74.70</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:40:51</td>
+                                            <td style="text-align:right">75.19</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:40:36</td>
+                                            <td style="text-align:right">74.98</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:40:21</td>
+                                            <td style="text-align:right">75.38</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:40:06</td>
+                                            <td style="text-align:right">75.23</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:39:51</td>
+                                            <td style="text-align:right">74.98</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:39:36</td>
+                                            <td style="text-align:right">74.60</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:39:21</td>
+                                            <td style="text-align:right">74.99</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:39:06</td>
+                                            <td style="text-align:right">75.44</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:38:51</td>
+                                            <td style="text-align:right">75.71</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:38:36</td>
+                                            <td style="text-align:right">75.86</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:38:21</td>
+                                            <td style="text-align:right">75.37</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:38:06</td>
+                                            <td style="text-align:right">75.81</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:37:51</td>
+                                            <td style="text-align:right">75.72</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:37:36</td>
+                                            <td style="text-align:right">75.26</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:37:21</td>
+                                            <td style="text-align:right">75.22</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:37:06</td>
+                                            <td style="text-align:right">75.23</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:36:51</td>
+                                            <td style="text-align:right">75.49</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:36:36</td>
+                                            <td style="text-align:right">75.80</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:36:21</td>
+                                            <td style="text-align:right">75.78</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:36:06</td>
+                                            <td style="text-align:right">76.11</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:35:51</td>
+                                            <td style="text-align:right">75.98</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:35:36</td>
+                                            <td style="text-align:right">76.34</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:35:21</td>
+                                            <td style="text-align:right">76.45</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:35:06</td>
+                                            <td style="text-align:right">76.37</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:34:51</td>
+                                            <td style="text-align:right">76.12</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:34:36</td>
+                                            <td style="text-align:right">75.93</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:34:21</td>
+                                            <td style="text-align:right">76.04</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:34:06</td>
+                                            <td style="text-align:right">75.70</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:33:51</td>
+                                            <td style="text-align:right">75.36</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:33:36</td>
+                                            <td style="text-align:right">75.48</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:33:21</td>
+                                            <td style="text-align:right">75.63</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:33:06</td>
+                                            <td style="text-align:right">76.01</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:32:51</td>
+                                            <td style="text-align:right">76.05</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:32:36</td>
+                                            <td style="text-align:right">76.42</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:32:21</td>
+                                            <td style="text-align:right">76.03</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:32:06</td>
+                                            <td style="text-align:right">75.78</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:31:51</td>
+                                            <td style="text-align:right">75.71</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:31:36</td>
+                                            <td style="text-align:right">76.10</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:31:21</td>
+                                            <td style="text-align:right">76.46</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:31:06</td>
+                                            <td style="text-align:right">76.54</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:30:51</td>
+                                            <td style="text-align:right">76.33</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:30:36</td>
+                                            <td style="text-align:right">75.94</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:30:21</td>
+                                            <td style="text-align:right">76.38</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:30:06</td>
+                                            <td style="text-align:right">76.62</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:29:51</td>
+                                            <td style="text-align:right">77.02</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:29:36</td>
+                                            <td style="text-align:right">77.47</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:29:21</td>
+                                            <td style="text-align:right">77.43</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:29:06</td>
+                                            <td style="text-align:right">77.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2020-04-24 16:28:51</td>
+                                            <td style="text-align:right">76.55</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="datapoints-warning ng-hide" ng-show="ctrl.table.rows.length===0">
+                            <span class="small">
+                                No data to show <i class="grafana-tip fa fa-question-circle"
+                                    bs-tooltip="'Nothing returned by data query'" data-original-title="" title=""></i>
+                            </span>
+                        </div>
+                        <div class="table-panel-footer">
+                            <ul>
+                                <li><a class="table-panel-page-link pointer ">9</a></li>
+                                <li><a class="table-panel-page-link pointer ">10</a></li>
+                                <li><a class="table-panel-page-link pointer ">11</a></li>
+                                <li><a class="table-panel-page-link pointer active">12</a></li>
+                                <li><a class="table-panel-page-link pointer ">13</a></li>
+                                <li><a class="table-panel-page-link pointer ">14</a></li>
+                                <li><a class="table-panel-page-link pointer ">15</a></li>
+                            </ul>
+                        </div>
+                    </ng-transclude>
+                </grafana-panel>
+            </panel-plugin-table>
+        </plugin-component>
+    </div>
+</div>
