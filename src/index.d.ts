@@ -28,7 +28,7 @@ declare module gf {
   declare interface TIFlowchartOptionsScope extends ng.IScope {
     flowchartHandler: any;
     editor: FlowchartOptionsCtrl;
-    "$GF": $GF;
+    $GF: $GF;
     ctrl: any;
   }
 
@@ -259,7 +259,7 @@ declare module gf {
   declare interface TInspectOptionsScope extends ng.IScope {
     flowchartHandler: any;
     editor: InspectOptionsCtrl;
-    "$GF": $GF;
+    $GF: $GF;
     ctrl: any; //TODO: define type
     // testData: any;
   }
@@ -293,7 +293,7 @@ declare module gf {
     // rulesHandler: any;
     // flowchartHandler: FlowchartHandler;
     editor: MappingOptionsCtrl;
-    "$GF": $GF;
+    $GF: $GF;
     ctrl: any;
   }
 }

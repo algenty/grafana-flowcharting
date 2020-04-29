@@ -282,7 +282,7 @@ class GFLog {
   static logDisplay = true;
   constructor() {}
 
-  static init():GFLog {
+  static init(): GFLog {
     return new GFLog();
   }
 
@@ -360,11 +360,10 @@ class GFLog {
 }
 
 class GFPlugin {
-  static data:any = require('./plugin.json');
+  static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
-  static contextRoot:string;
-  constructor() {
-  }
+  static contextRoot: string;
+  constructor() {}
 
   /**
    * init GFPlugin
@@ -375,7 +374,7 @@ class GFPlugin {
    * @returns {GFPlugin}
    * @memberof GFPlugin
    */
-  static init($scope : any, templateSrv : any):GFPlugin {
+  static init($scope: any, templateSrv: any): GFPlugin {
     let plug = new GFPlugin();
     this.contextRoot = GFPlugin.defaultContextRoot;
     if ($scope === undefined) {
@@ -489,7 +488,6 @@ class GFPlugin {
   getMxImagePath(): string {
     return `${this.getMxBasePath()}images/`;
   }
-
 }
 
 class GFTrace {
@@ -526,7 +524,7 @@ class GFTrace {
     }
   }
 
-  static init():GFTrace {
+  static init(): GFTrace {
     return new GFTrace();
   }
 
@@ -625,12 +623,12 @@ export class $GF {
     addScript: (src: string) => void;
   } = require('./utils_raw');
 
-  static init($scope: any, templateSrv: any):$GF {
-    this.plugin = GFPlugin.init($scope,templateSrv);
+  static init($scope: any, templateSrv: any): $GF {
+    this.plugin = GFPlugin.init($scope, templateSrv);
     return this;
   }
-  
-  static me():$GF {
+
+  static me(): $GF {
     return this;
   }
 
@@ -805,7 +803,7 @@ export class $GF {
     }
     return false;
   }
-    /**
+  /**
    * Return Html for popup with links to documentation
    *
    * @param {string} text
@@ -815,7 +813,7 @@ export class $GF {
    * @memberof $GF
    */
   static popover(text: string, tagBook: string, tagImage?: string): string {
-    const url = $GF.plugin.getRepo()
+    const url = $GF.plugin.getRepo();
     const images = `${this.plugin.getRepo()}images/`;
     const textEncoded = String(text)
       .replace(/&/g, '&amp;')

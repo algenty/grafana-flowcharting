@@ -9,10 +9,10 @@ export class InspectOptionsCtrl {
   enable = false; // enable inspector or not
   ctrl: any; //TODO: define type
   flowchartHandler: FlowchartHandler;
-  stateHandler: StateHandler|undefined;
+  stateHandler: StateHandler | undefined;
   panel: any;
   column: string = 'cellId';
-  sens: 'asc'|'desc' = 'asc';
+  sens: 'asc' | 'desc' = 'asc';
 
   /** @ngInject */
   constructor($scope: gf.TInspectOptionsScope) {
@@ -22,13 +22,11 @@ export class InspectOptionsCtrl {
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.stateHandler = this.flowchartHandler.getFlowchart().getStateHandler();
-
   }
 
   render() {
     this.panel.render();
   }
-
 
   // onDebug() {
   //   GFP.log.logLevel = this.logLevel;
@@ -97,9 +95,9 @@ export class InspectOptionsCtrl {
   getStates(): State[] {
     if (this.stateHandler) {
       const states = this.stateHandler.getStatesForInspect();
-      return _.orderBy(states, [this.column,'cellId'],[this.sens])
+      return _.orderBy(states, [this.column, 'cellId'], [this.sens]);
     }
-    return []
+    return [];
   }
 
   // execute() {
