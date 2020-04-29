@@ -6,17 +6,16 @@ import _ from 'lodash';
 // import { MetricHandler } from './metricHandler';
 
 declare interface TColumn {
-  id: string,
-  desc: string,
-  sort: 'asc' | 'desc',
-  select: boolean,
+  id: string;
+  desc: string;
+  sort: 'asc' | 'desc';
+  select: boolean;
 }
 
 declare interface TTable {
-  data: State[],
-  columns: TColumn[],
+  data: State[];
+  columns: TColumn[];
 }
-
 
 export class InspectOptionsCtrl {
   enable = false; // enable inspector or not
@@ -76,7 +75,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
       ],
-    }
+    };
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
@@ -164,7 +163,7 @@ export class InspectOptionsCtrl {
         return state.cellId;
         break;
       case 'level':
-        return state.getTextLevel()
+        return state.getTextLevel();
         break;
       case 'label':
         return state.getCellProp('value');
@@ -174,7 +173,6 @@ export class InspectOptionsCtrl {
         return null;
         break;
     }
-
   }
 
   // execute() {
