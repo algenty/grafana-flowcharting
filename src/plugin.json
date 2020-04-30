@@ -26,12 +26,16 @@
         "url": "https://github.com/algenty/grafana-flowcharting"
       },
       {
-        "name": "Apache License",
-        "url": "https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE"
-      },
-      {
         "name": "Documentation",
         "url": "https://algenty.github.io/flowcharting-repository/"
+      },
+      {
+        "name": "Demo",
+        "url": "https://algenty.github.io/flowcharting-repository/"
+      },
+      {
+        "name": "Apache License",
+        "url": "https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE"
       }
     ],
     "version": "0.8.0",
