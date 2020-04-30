@@ -1,0 +1,123 @@
+<div class="section gf-form-group" ng-if="['number', 'string'].indexOf(rule.data.type) !== -1">
+    <h5 class="section-heading" ng-if="rule.data.invert">
+      Thresholds ( 0 : Ok > ... > {{rule.getColorsCount() - 1}} : Critical)
+      <info-popover mode="right-normal"><span
+          ng-bind-html="$GF.popover('Define states according to value and direction (invert).', 'THRESHOLDS')"></span>
+      </info-popover>
+    </h5>
+    <h5 class="section-heading" ng-if="!rule.data.invert">
+      Thresholds ({{rule.getColorsCount() - 1}} : Critical > ... > 0 : Ok)
+      <info-popover mode="right-normal"><span
+          ng-bind-html="$GF.popover('Define states according to value and direction (invert).', 'THRESHOLDS')"></span>
+      </info-popover>
+    </h5>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <label class="gf-form-label width-5" style="margin-right: 2px;">Buttons</label>
+          </th>
+          <th>
+            <label class="gf-form-label width-5" style="margin-right: 2px;">Color
+            </label>
+          </th>
+          <th>
+            <label class="gf-form-label width-8" style="margin-right: 2px;"
+              ng-if="rule.data.type === 'number'">Number
+              <info-popover mode="right-normal">
+                <span ng-bind-html="$GF.popover('Apply color when value is egal or upper', 'THRESHOLDS')">
+                </span>
+              </info-popover>
+            </label>
+            <label class="gf-form-label width-8" style="margin-right: 2px;"
+              ng-if="rule.data.type === 'string'">Pattern
+              <info-popover mode="right-normal">
+                <span ng-bind-html="$GF.popover('Apply color when pattern is true', 'THRESHOLDS')">
+                </span>
+              </info-popover>
+            </label>
+          </th>
+          <th>
+            <label class="gf-form-label width-3" style="margin-right: 2px;">Lvl</label>
+          </th>
+        </tr>
+      </thead>
+      <tboddy>
+        <tr ng-repeat="color in rule.getColors() track by $index">
+          <td>
+            <div class="gf-form">
+              <label class="gf-form-label" style="margin-right: 4px;" ng-if="rule.getColorsCount() > 1">
+                <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete this colors'"
+                  ng-click="rule.removeColor($index);editor.onRulesChange()"></i>
+              </label>
+              <label class="gf-form-label">
+                <i class="fa fa-plus pointer" ng-click="rule.addColor($index)" style="margin-right: 2px;"
+                  bs-tooltip="'Add a new color'"></i>
+              </label>
+            </div>
+          </td>
+          <td>
+            <div class="gf-form">
+              <span class="gf-form-label" style="margin-right: 4px;">
+                <color-picker color="rule.data.colors[$index]"
+                  onChange="editor.onColorChange($parent.$index, $index)"></color-picker>
+              </span>
+              <label class="gf-form-label  width-2" style="margin-right: 4px;"
+                ng-if="$index > 0 && rule.data.type === 'number'">
+                <i class="fa fa-w fa-angle-right" bs-tooltip="'Upper than'"></i>
+              </label>
+              <label class="gf-form-label  width-2" style="margin-right: 4px;"
+                ng-if="$index > 0 && rule.data.type === 'string'" bs-tooltip="'Like'">
+                <B>~</B>
+              </label>
+            </div>
+          </td>
+          <td>
+            <label class="gf-form-label width-8" style="margin-right: 2px;"
+              ng-if="$index === 0 && rule.data.type === 'number'">Base
+            </label>
+            <label class="gf-form-label width-8" style="margin-right: 2px;"
+              ng-if="$index === 0 && rule.data.type === 'string'">Default
+            </label>
+            <input ng-if="$index > 0 && rule.data.type === 'number'" type="number" class="gf-form-input width-8"
+              ng-model="rule.data.thresholds[$index-1]" placeholder="value"
+              bs-tooltip="'Specify a value for apply color when value is egual or upper'"
+              ng-blur="editor.onRulesChange()" />
+            <input ng-if="$index > 0 && rule.data.type === 'string'" type="text" class="gf-form-input width-8"
+              ng-model="rule.data.stringThresholds[$index-1]" placeholder="pattern"
+              bs-tooltip="'Specify a pattern regex for apply color'" ng-blur="editor.onRulesChange()" />
+          </td>
+          <td>
+            <label class="gf-form-label width-3"
+              style="margin-right: 2px;">{{ ! rule.data.invert ? rule.getColorsCount() - $index - 1 : $index}}
+            </label>
+          </td>
+        </tr>
+      </tboddy>
+      <tfoot>
+        <tr>
+          <td colspan="3">
+            <gf-form-switch class="gf-form" label="Invert" label-class="width-8" checked="rule.data.invert"
+              on-change="rule.invertColorOrder();editor.onRulesChange()" tooltip="Invert level state and color">
+            </gf-form-switch>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <gf-form-switch class="gf-form" label="Gradient" label-class="width-8" checked="rule.data.gradient"
+              ng-if="rule.data.type === 'number'" on-change="editor.onRulesChange()"
+              tooltip="Apply gradient color according to the value">
+            </gf-form-switch>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <gf-form-switch class="gf-form" label="Icon state" label-class="width-8"
+              checked="rule.data.overlayIcon" on-change="editor.onRulesChange()"
+              tooltip="Display a warning icon when state > 0">
+            </gf-form-switch>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>

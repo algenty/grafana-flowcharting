@@ -1,0 +1,80 @@
+<!--
+  RANGE MAPPING WHEN type = "string" and mappingType = 2
+-->
+
+<div class="gf-form-group" ng-if="rule.data.mappingType==2">
+  <table>
+    <thead>
+      <tr>
+        <th>
+          <label class="gf-form-label width-7" style="margin-right: 2px;">Buttons
+            <info-popover mode="right-normal">
+              <span ng-bind-html="$GF.popover('+ : Add line, X : Remove line', 'MAPPING#what')"> </span>
+            </info-popover>
+          </label>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">From
+            <info-popover mode="right-normal">
+              <span ng-bind-html="$GF.popover('Min of value', 'MAPPING#Map')"> </span>
+            </info-popover>
+          </label>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">To
+            <info-popover mode="right-normal">
+              <span ng-bind-html="$GF.popover('Max of value', 'MAPPING#Map')"> </span>
+            </info-popover>
+          </label>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">Value
+            <info-popover mode="right-normal">
+              <span ng-bind-html="$GF.popover('Value string to replace', 'MAPPING#Map')"> </span>
+            </info-popover>
+          </label>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="rangeMap in rule.getRangeMaps()">
+        <td>
+          <div class="gf-form">
+            <label class="gf-form-label" style="margin-right: 4px;">
+              <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete this mapping object'"
+                ng-click="rule.removeRangeMap($index);editor.onRulesChange()"></i>
+            </label>
+          </div>
+        </td>
+        <td>
+          <input type="text" ng-model="rangeMap.data.from" class="gf-form-input max-width-8"
+            ng-blur="editor.onRulesChange()" ng-model-onblur placeholder="min" />
+        </td>
+        <td>
+          <input type="text" ng-model="rangeMap.data.to" class="gf-form-input max-width-8"
+            ng-blur="editor.onRulesChange()" ng-model-onblur placeholder="max" />
+        </td>
+        <td>
+          <div class="gf-form">
+            <input type="text" ng-model="rangeMap.data.text" class="gf-form-input max-width-8"
+              bs-typeahead="editor.getVariables" bs-tooltip="'Specify string or variables to replace values'"
+              data-min-length="0" data-items="100" data-placement="right" ng-blur="editor.onRulesChange()"
+              ng-model-onblur placeholder="replace with" />
+          </div>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>
+          <div class="gf-form">
+            <label class="gf-form-label">
+              <a class="pointer" ng-click="rule.addRangeMap('','','');editor.onRulesChange()"><i
+                  class="fa fa-plus"></i></a>
+            </label>
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

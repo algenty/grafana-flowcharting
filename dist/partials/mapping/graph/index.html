@@ -1,0 +1,59 @@
+<div class="section gf-form-group" ng-show="rule.data.tooltip">
+    <h5 class="section-heading">
+      Graph Tooltips
+      <info-popover mode="right-normal">
+        <span ng-bind-html="$GF.popover('Add Graph into the tooltip', 'TOOLTIPS','tooltip_graph')"> </span>
+      </info-popover>
+    </h5>
+    <gf-form-switch class="gf-form" label-class="width-10" label="Display graph" checked="rule.data.tpGraph"
+      on-change="editor.onRulesChange()"></gf-form-switch>
+    <div class="gf-form" ng-if="rule.data.tpGraph">
+      <label class="gf-form-label width-10">Graph type
+        <info-popover mode="right-normal">
+          <span ng-bind-html="$GF.popover('Select type of graph', 'TOOLTIPS')"> </span>
+        </info-popover>
+      </label>
+      <div class="gf-form-select-wrapper width-12">
+        <select class="gf-form-input" ng-model="rule.data.tpGraphType"
+          ng-options="c.value as c.text for c in editor.tpGraphType" ng-change="editor.onRulesChange()"></select>
+      </div>
+    </div>
+    <div class="gf-form" ng-if="rule.data.tpGraph">
+      <label class="gf-form-label width-10">Graph Size
+        <info-popover mode="right-normal">
+          <span ng-bind-html="$GF.popover('Select size of graph', 'TOOLTIPS','graph_size')"> </span>
+        </info-popover>
+      </label>
+      <div class="gf-form-select-wrapper width-12">
+        <select class="gf-form-input" ng-model="rule.data.tpGraphSize"
+          ng-options="c.value as c.text for c in editor.tpGraphSize" ng-change="editor.onRulesChange()"></select>
+      </div>
+    </div>
+    <div class="gf-form" ng-if="rule.data.tpGraph">
+      <label class="gf-form-label width-6">Y-Min
+        <info-popover mode="right-normal">
+          <span ng-bind-html="$GF.popover('Select the min for the scale', 'TOOLTIPS')"> </span>
+        </info-popover>
+      </label>
+      <input type="number" class="gf-form-input width-5" ng-model="rule.data.tpGraphLow"
+        ng-blur="editor.onRulesChange()" placeholder="auto" data-placement="right" />
+      <label class="gf-form-label width-6">Y-Max
+        <info-popover mode="right-normal">
+          <span ng-bind-html="$GF.popover('Select the max for the scale', 'TOOLTIPS')"> </span>
+        </info-popover>
+      </label>
+      <input type="number" class="gf-form-input width-5" ng-model="rule.data.tpGraphHigh"
+        ng-blur="editor.onRulesChange()" placeholder="auto" data-placement="right" />
+    </div>
+    <div class="gf-form" ng-if="rule.data.tpGraph">
+      <label class="gf-form-label width-10">Scale type
+        <info-popover mode="right-normal">
+          <span ng-bind-html="$GF.popover('Select scale type', 'TOOLTIPS')"> </span>
+        </info-popover>
+      </label>
+      <div class="gf-form-select-wrapper width-12">
+        <select class="gf-form-input" ng-model="rule.data.tpGraphScale"
+          ng-options="c.value as c.text for c in editor.tpGraphScale" ng-change="editor.onRulesChange()"></select>
+      </div>
+    </div>
+  </div>

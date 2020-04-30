@@ -1,0 +1,77 @@
+<div class="edit-tab-content">
+  <div class="editor-row">
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Inspector</h5>
+    </div>
+  </div>
+  <!-- STATES -->
+  <div class="editor-row">
+    <h5 class="section-heading">
+      Graph inspect Id
+      <info-popover mode="right-normal">
+        <span ng-bind-html="$GF.popover('List of all objects in graph with states', 'INSPECT','inspect_graph_table')">
+        </span>
+      </info-popover>
+    </h5>
+    <gf-form-switch class="gf-form" label-class="width-14"
+      tooltip="Enable inspect mode to view/modify identity of shapes" label="Enable" checked="editor.enable">
+    </gf-form-switch>
+
+    <!-- STATES MAPPING -->
+    <ng-include src="$GF.plugin.getPartialPath() + 'inspect/states/index.html'" ng-if="editor.enable"> </ng-include>
+    <hr />
+
+    <!-- METRICS MAPPING -->
+    <!-- <ng-include src="$GF.plugin.getPartialPath() + '/inspect/metrics/index.html'" ng-if="editor.enable"> </ng-include>
+    <hr /> -->
+
+    <div class="gf-form">
+      <button class="btn btn-danger btn-small" ng-click="editor.reset()" style="margin-right: 5px;">
+        <i class="fa fa-power-off"></i> Reinit graph and color
+      </button>
+      <button ng-show="editor.flowchartHandler.getFlowchart().getStateHandler().edited"
+        class="btn btn-secondary btn-small" ng-click="editor.apply()" style="margin-right: 5px;">
+        <i class="fa fa-save"></i> Apply changes
+      </button>
+    </div>
+  </div>
+  <br />
+  <hr />
+  <!-- PANEL JSON -->
+  <!-- <div class="editor-row">
+		<h5 class="section-heading">Data panel</h5>
+		<div class="section gf-form-group" style="width:100%;">
+			<div class="gf-form gf-form--v-stretch">
+				<span class="gf-form-label width-12">
+					Data Panel
+				</span>
+				<textarea class="gf-form-input width:95% ng-pristine ng-valid ng-empty ng-touched" rows="10"
+					placeholder="Json Data panel " style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;"
+					ng-change="editor.onSourceChange()" ng-model="editor.json" ng-readonly="all">
+				</textarea>
+			</div>
+		</div>
+	</div> -->
+  <!-- <br /> -->
+  <!-- <hr> -->
+  <!-- DEBUG -->
+  <div class="editor-row">
+    <h5 class="section-heading">Debug Mode</h5>
+    <div class="section gf-form-group">
+      <div class="gf-form">
+        <span class="gf-form-label width-12">Display</span>
+        <select class="gf-form-input" ng-model="editor.logDisplay"
+          ng-options="c.value as c.text for c in editor.logDisplayOption" ng-change="editor.onDebug()">
+        </select>
+      </div>
+      <div class="gf-form">
+        <span class="gf-form-label width-12">Level</span>
+        <select class="gf-form-input" ng-model="editor.logLevel"
+          ng-options="c.value as c.text for c in editor.logLevelOption" ng-change="editor.onDebug()">
+        </select>
+      </div>
+    </div>
+  </div>
+  <!-- TEST STYLE -->
+  <!-- <ng-include src="$GF.plugin.getPartialPath() + '/inspect/styles.html'"> </ng-include> -->
+</div>

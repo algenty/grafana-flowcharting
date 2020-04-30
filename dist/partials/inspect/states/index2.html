@@ -1,0 +1,48 @@
+<div class="panel-content panel-content--no-padding table-panel-content">
+    <div class="panel-height-helper">
+        <div class="table-panel-container">
+            <div class="table-panel-header-bg" ng-show="editor.table.columns.length"></div>
+            <div class="table-panel-scroll" ng-show="editor.table.columns.length" style="max-height: 276px;">
+                <table class="table-panel-table">
+                    <thead>
+                        <tr>
+                            <th ng-repeat="col in editor.state.columns">
+                                <div class="table-panel-table-header-inner pointer"
+                                    ng-click="">
+                                    {{col.desc}}
+                                    <span class="table-panel-table-header-controls" ng-if="col.sort">
+                                        <i class="fa fa-caret-down" ng-show="col.desc"></i>
+                                        <i class="fa fa-caret-up ng-hide" ng-hide="col.desc"></i>
+                                    </span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="state in editor.state.data">
+                            <td ng-repeat="col in editor.state.columns">{{editor.getStateValue(state,col)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="datapoints-warning ng-hide" ng-show="editor.state.columns.length===0">
+                <span class="small">
+                    No data to show <i class="grafana-tip fa fa-question-circle"
+                        bs-tooltip="'Nothing returned by data query'" data-original-title="" title=""></i>
+                </span>
+            </div>
+            <div class="table-panel-footer">
+                <ul>
+                    <li><a class="table-panel-page-link pointer ">9</a></li>
+                    <li><a class="table-panel-page-link pointer ">10</a></li>
+                    <li><a class="table-panel-page-link pointer ">11</a></li>
+                    <li><a class="table-panel-page-link pointer active">12</a></li>
+                    <li><a class="table-panel-page-link pointer ">13</a></li>
+                    <li><a class="table-panel-page-link pointer ">14</a></li>
+                    <li><a class="table-panel-page-link pointer ">15</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
