@@ -59,7 +59,7 @@
     "grunt-contrib-compress": "^1.6.0",
     "grunt-git": "^1.0.14",
     "invariant": "^2.2.4",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "load-grunt-tasks": "^5.1.0",
     "lodash": "^4.17.15",
     "marky": "^1.2.1",
