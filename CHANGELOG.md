@@ -1,5 +1,35 @@
 # Changelog
 
+## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.0.zip) - 2020-05-02  
+### Add
+  - Add Identification by Value/lable in field 'what' in rules (experimental)  
+  - Upgrade Draw.io libs (13.0.1)
+  - Add option to disable regex/eval for more efficient.  
+  - Add 2 new color modes in Color mapping section :  
+    - "Label background"  
+    - "Label borber"  
+  - Add Execution times stats to optimize rules.  
+  - Foldable container without disable lock.  
+  - Add New custom variables for supported fields (Text Mapping 'with', Link Mapping 'Url' and Event Mapping 'Value'):  
+    - ${_value} : raw value  
+    - ${_formatted} : formatted value  
+    - ${_level} : current level  
+    - ${_rule} : name of current rule  
+  - Add New Feature :  Events / Animations Mapping, according the level ([See example](https://algenty.github.io/flowcharting-repository/images/all_events_ani.png))  
+    - Change shapes form  
+    - Change size, opacity, rotation, ...   
+    - Hide/Blink shapes  
+    - And [more...](https://algenty.github.io/flowcharting-repository/EVENTS)
+### Fix
+  - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
+  - shape stills select when deleting map.
+  - select list (typeahead) in fields 'whats' and map values for string type in rules
+  - Level State with range or value mapping.
+  - Lock always true in flowchart option [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/138) 
+  - Fix Remove link
+  - Fix range value Min and Max range when 'from' or 'to' is empty
+  - Fix 'With' field in text mapping, empty after clone or save/reload
+
 ## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
 ### Added  
   - new conditions and design in rule for each mapping instead one by rule ([See example](https://algenty.github.io/flowcharting-repository/images/what_when_how.png))  
