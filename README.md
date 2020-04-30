@@ -18,14 +18,14 @@ Draw your artwork and monitor it.
  
 See more example at draw.io  
 
+# Demo site
+<https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1>
+
 # Getting started
 <https://algenty.github.io/flowcharting-repository/STARTED.html>
 
 # Documentation
 <https://algenty.github.io/flowcharting-repository/>
-
-# Demo site
-https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1
 
 # Project site
 <https://github.com/algenty/grafana-flowcharting>
@@ -44,20 +44,26 @@ Arnaud
 
 # Changelog
 
-## [[0.8.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.0-snapshot.zip) - 2020-04-17    
+## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.0.zip) - 2020-05-02  
 ### Add
-  - Can Identify by Value in field 'what' in rules  
-  - Add option to disable regex/eval for best perf  
-  - Add 2 new color modes in Color mapping section : "Label background" and "Label borber" 
-  - Add perf stats on rules title
-  - Foldable container without disable lock.
-  - New custom variables for fields (Text Mapping 'with', Link Mapping 'Url' and Event Mapping 'Value')
-  - New function :  Event Mapping
-  - TODO : Fix blink
-  - TODO : FIX tooltip Graph all animation
-  - TODO : FIX tooltip color of graph
-  - TODO : Test multi panel
-  - TODO : Test url download image
+  - Add Identification by Value/lable in field 'what' in rules (experimental)  
+  - Upgrade Draw.io libs (13.0.1)
+  - Add option to disable regex/eval for more efficient.  
+  - Add 2 new color modes in Color mapping section :  
+    - "Label background"  
+    - "Label borber"  
+  - Add Execution times stats to optimize rules.  
+  - Foldable container without disable lock.  
+  - Add New custom variables for supported fields (Text Mapping 'with', Link Mapping 'Url' and Event Mapping 'Value'):  
+    - ${_value} : raw value  
+    - ${_formatted} : formatted value  
+    - ${_level} : current level  
+    - ${_rule} : name of current rule  
+  - Add New Feature :  Events / Animations Mapping, according the level ([See example](https://algenty.github.io/flowcharting-repository/images/all_events_ani.png))  
+    - Change shapes form  
+    - Change size, opacity, rotation, ...   
+    - Hide/Blink shapes  
+    - And [more...](https://algenty.github.io/flowcharting-repository/EVENTS)
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
   - shape stills select when deleting map.
@@ -148,43 +154,6 @@ Arnaud
   - Fix error for BPNM shapes [(Issue #51)](https://github.com/algenty/grafana-flowcharting/issues/51)
   - Fix display when center and scale are checked on flowchart options.
   - Fix Zoom with mouse wheel for firefox and Edge.
-
-## [[0.4.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0.zip) - 2019-09-26
-### Added
-  - Draw.io editor ([see example](https://algenty.github.io/flowcharting-repository/images/openEditor_ani.gif))
-    - Open draw.io with dark theme for better rendering  
-    - Display waiting screen when loading xml definition.  
-  - Upgrading libraries  
-    - mxGraph 4.0.4  
-    - draw.io 11.2.8  
-  - Graph definition  
-    - Adding download function to download source by http on load. ([See example](https://algenty.github.io/flowcharting-repository/images/download_ani.gif))
-  - Metric
-    - Adding string support for state (See example)
-  - Zoom [(issue #19)](https://github.com/algenty/grafana-flowcharting/issues/19) ([See example](https://algenty.github.io/flowcharting-repository/images/zoom2_ani.gif))
-    - On the mouse pointer : Ctrl + Mouse
-    - Hold right button to move diagram.
-    - double click on shape to zoom on.
-    - Escape key to restore.
-  - Tooltip/popup support ([see example](https://algenty.github.io/flowcharting-repository/images/tooltip2_ani.gif))
-    - Grafana style css and date
-    - Adding metrics with color according levels
-    - Adding colors on metrics in tooltip
-    - Adding date of change
-    - Adding label input for metric
-  - Variables/templates support, accept variable like ${} ([See example](https://algenty.github.io/flowcharting-repository/images/variable_ani.gif)) 
-    - In xml definition
-    - In text mapping when type in sring for "Range to text" and "Value to text"
-    - In link ovewrite
-  - full shapes from draw.io included ([See example](https://algenty.github.io/flowcharting-repository/images/shapes_ani.gif))
-  - Some optimizations on render and display.
-
-### Fixed  
-  - Optimization when refresh/render [(issue #15)](https://github.com/algenty/grafana-flowcharting/issues/15)  
-  - No decimal fixed when 0 [(issue #23)](https://github.com/algenty/grafana-flowcharting/issues/23)
-  - Text substring and color [(issues #29)](https://github.com/algenty/grafana-flowcharting/issues/29)
-  - Fix formatted text when label is html [(issues #21)](https://github.com/algenty/grafana-flowcharting/issues/29)
-  - Work around a bug since Grafana 6+ [(issues 19426 grafana)](https://github.com/grafana/grafana/issues/19426)
 
 # Annex
 All notable changes to this project will be documented in this file.
