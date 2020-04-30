@@ -7,6 +7,7 @@ class GFCONSTANT {
   CONF_PATH_PARTIALS = 'partials/';
   CONF_PATH_STYLES = 'styles/';
   CONF_FILE_PLUGINJSON = './plugin.json';
+  CONF_FILE_DEFAULTGRAPH = 'static/defaultGraph.drawio';
   CONF_FILE_SHAPESTXT = 'static/shapes.txt';
   CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
   CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
@@ -488,6 +489,7 @@ class GFPlugin {
   getMxImagePath(): string {
     return `${this.getMxBasePath()}images/`;
   }
+
 }
 
 class GFTrace {
