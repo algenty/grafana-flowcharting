@@ -382,11 +382,11 @@ class GFPlugin {
       this.contextRoot = __dirname;
       if (this.contextRoot.length > 0) {
         $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
-        $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
       }
     } else {
       this.contextRoot = $scope.$root.appSubUrl + this.defaultContextRoot;
     }
+    $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
     $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
     return plug;
   }
@@ -559,9 +559,7 @@ class GFTrace {
   }
 
   async after() {
-    // console.log('trace', this.trace)
     if (GFTrace.enable && this.trace !== undefined) {
-      // if (this.trace.Name === 'FlowchartCtrl.onDataReceived()') debugger
       if (this.trace) {
         this.trace.End = Date.now();
         GFTrace.indent--;
@@ -580,7 +578,6 @@ class GFTrace {
       let tb: any[] = [];
       let fn: any[] = [];
       GFTrace.trc.forEach(trace => {
-        // if (trace.Name === 'FlowchartCtrl.onDataReceived()') debugger
         trace.ExecTime = trace.End - trace.Before;
         const f = GFTrace.fn.get(trace.Name);
         f.TotalTimes += trace.ExecTime;

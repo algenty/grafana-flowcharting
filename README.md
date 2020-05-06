@@ -44,6 +44,10 @@ Arnaud
 
 # Changelog
 
+## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11
+### Fix
+  - Fixed : Dashboard variables
+
 ## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.0.zip) - 2020-05-02  
 ### Add
   - Add Identification by Value/lable in field 'what' in rules (experimental)  
@@ -69,7 +73,7 @@ Arnaud
   - shape stills select when deleting map.
   - select list (typeahead) in fields 'whats' and map values for string type in rules
   - Level State with range or value mapping.
-  - Lock always true in flowchart option [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/138) 
+  - Lock always true in flowchart option [(issue #138)](https://github.com/algenty/grafana-flowcharting/issues/138) 
   - Fix Remove link
   - Fix range value Min and Max range when 'from' or 'to' is empty
   - Fix 'With' field in text mapping, empty after clone or save/reload
