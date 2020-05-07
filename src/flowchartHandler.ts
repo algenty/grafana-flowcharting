@@ -530,7 +530,7 @@ export class FlowchartHandler {
   openDrawEditor(name?: string) {
     const urlEditor = this.getFlowchart(name).getUrlEditor();
     const theme = this.getFlowchart(name).getThemeEditor();
-    const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}`;
+    const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&src=grafana`;
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;
     window.addEventListener('message', this.listenMessage.bind(this), false);

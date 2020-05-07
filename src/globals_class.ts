@@ -462,18 +462,42 @@ class GFPlugin {
     return `${this.getDrawioPath()}mxgraph/`;
   }
 
+  /**
+   * Return Style path
+   *
+   * @returns {string}
+   * @memberof GFPlugin
+   */
   getMxStylePath(): string {
     return `${this.getDrawioPath()}styles/`;
   }
 
+  /**
+   * Return shapes xml path for draw.io
+   *
+   * @returns {string}
+   * @memberof GFPlugin
+   */
   getShapesPath(): string {
     return `${this.getDrawioPath()}/shapes/`;
   }
 
+  /**
+   * Return partial path
+   *
+   * @returns {string}
+   * @memberof GFPlugin
+   */
   getPartialPath(): string {
     return `${this.getRootPath()}partials/`;
   }
 
+  /**
+   * Return stencils js path for draw.io
+   *
+   * @returns {string}
+   * @memberof GFPlugin
+   */
   getStencilsPath(): string {
     return `${this.getDrawioPath()}/stencils/`;
   }
@@ -491,8 +515,13 @@ class GFPlugin {
   }
 }
 
+/**
+ * Trace Perf class
+ *
+ * @class GFTrace
+ */
 class GFTrace {
-  static enable = false;
+  static enable = true;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;
