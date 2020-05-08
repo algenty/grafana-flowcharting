@@ -67,7 +67,7 @@ Arnaud
     - Change shapes form  
     - Change size, opacity, rotation, ...   
     - Hide/Blink shapes  
-    - And [more...](https://algenty.github.io/flowcharting-repository/EVENTS)
+    - And [more...](https://algenty.github.io/flowcharting-repository/EVENTS)  
 ### Fix
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
   - shape stills select when deleting map.

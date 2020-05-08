@@ -132,3 +132,5 @@ ARROW_DIAMOND_THIN
 			}
 
 g.model.setVisible(c, !g.model.isVisible(c));
+
+https://drawio-app.com/import-from-csv-to-drawio/

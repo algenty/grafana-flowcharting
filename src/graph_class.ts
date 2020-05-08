@@ -11,6 +11,7 @@ declare var mxCellHighlight: any;
 declare var mxRectangle: any;
 declare var mxUtils: any;
 declare var Graph: any;
+// declare var EditorUi:any;
 // declare var mxStencilRegistry: any;
 
 // type mxCellOverlay = any;
@@ -115,9 +116,15 @@ export default class XGraph {
     if (!XGraph.initialized) {
       if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
-        // let code = $GF.utils.$loadFile(`${$GF.getDrawioPath()}js/app.min.js`);
+        // let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/app.min.js`);
         let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
         $GF.utils.evalRaw(code);
+        // const shapes = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/shapes.min.js`);
+        // const stencils = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/stencils.min.js`);
+        // const extentions = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/extensions.min.js`);
+        // $GF.utils.evalRaw(shapes);
+        // $GF.utils.evalRaw(stencils);
+        // $GF.utils.evalRaw(extentions);
         XGraph.postInitGlobalVars();
         code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
         $GF.utils.evalRaw(code);
@@ -213,6 +220,9 @@ export default class XGraph {
    * @memberof XGraph
    */
   drawGraph(): this {
+    // const csv = $GF.utils.$loadFile($GF.plugin.getRootPath() + 'static/defaultGraph.csv');
+    // this.graph.importCsv(csv);
+    // return this;
     const trc = $GF.trace.before(this.constructor.name + '.' + 'drawGraph()');
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();

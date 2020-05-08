@@ -5,7 +5,7 @@ import { inspectOptionsTab } from 'inspect_options';
 import { RulesHandler } from 'rulesHandler';
 import { FlowchartHandler } from 'flowchartHandler';
 import { MetricHandler } from 'metricHandler';
-import { PanelEvents } from "@grafana/data";
+import { PanelEvents } from '@grafana/data';
 import { $GF } from 'globals_class';
 import _ from 'lodash';
 
