@@ -44,10 +44,12 @@ Arnaud
 
 # Changelog
 
-## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11
+## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
+### Add
+  - New plugin logo for Grafana V7 ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/agenty-flowcharting.png?raw=true)) 
 ### Fix
   - Fixed : Dashboard variables.  
-  - Optimize perf and size.  
+  - Optimize perf and size (7 Mo instead 15 Mo).  
 
 ## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.0.zip) - 2020-05-02  
 ### Add
