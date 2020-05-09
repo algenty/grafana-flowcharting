@@ -45,14 +45,16 @@ Arnaud
 # Changelog
 
 ## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
-### Add
-  - New plugin logo for Grafana V7 ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/agenty-flowcharting.png?raw=true)) 
-### Fix
+### Added
+  - New plugin logo for Grafana V7 ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/agenty-flowcharting.png?raw=true))  
+  
+### Fixed
   - Fixed : Dashboard variables.  
   - Optimize perf and size (7 Mo instead 15 Mo).  
-
+  
 ## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.0.zip) - 2020-05-02  
-### Add
+  
+### Added
   - Add Identification by Value/lable in field 'what' in rules (experimental)  
   - Upgrade Draw.io libs (13.0.1)
   - Add option to disable regex/eval for more efficient.  
@@ -71,7 +73,8 @@ Arnaud
     - Change size, opacity, rotation, ...   
     - Hide/Blink shapes  
     - And [more...](https://algenty.github.io/flowcharting-repository/EVENTS)  
-### Fix
+  
+### Fixed
   - Log scale, thanks Dennis [(issue #68)](https://github.com/algenty/grafana-flowcharting/issues/68)  
   - shape stills select when deleting map.
   - select list (typeahead) in fields 'whats' and map values for string type in rules
@@ -80,8 +83,9 @@ Arnaud
   - Fix Remove link
   - Fix range value Min and Max range when 'from' or 'to' is empty
   - Fix 'With' field in text mapping, empty after clone or save/reload
-
+  
 ## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
+  
 ### Added  
   - new conditions and design in rule for each mapping instead one by rule ([See example](https://algenty.github.io/flowcharting-repository/images/what_when_how.png))  
     - when : When condition applied  
@@ -94,6 +98,7 @@ Arnaud
   - Update libs :
     - draw.io : 12.8.6 (Kubernetes shapes and more)  
     - mxgraph : 4.1.0  
+  
 ### Fixed  
   - Fix getNames for series [(issue #100)](https://github.com/algenty/grafana-flowcharting/issues/100)  
   - Fix colors when cloned rules [(issue #124)](https://github.com/algenty/grafana-flowcharting/issues/124)  
@@ -105,8 +110,9 @@ Arnaud
   - Fix endless loading when edit graph [(issue #102)](https://github.com/algenty/grafana-flowcharting/issues/102)
   - Fix error on edit mode for timeserie [(issue #100)](https://github.com/algenty/grafana-flowcharting/issues/100)
   - Fix "Apply button" in inspect mode [(issue #104)](https://github.com/algenty/grafana-flowcharting/issues/104)
-
+  
 ## [[0.6.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0.zip) - 2019-12-21  
+  
 ### Added  
   - Experimental implementation for table type data (Mysql, Postgres, Zabbix, Streaming, loki and other ...)
   - Some optimization on : 
@@ -123,14 +129,16 @@ Arnaud
   - Better Zoom for firefox and IE/edge.
   - Add controls on edit mode for XML and URL.
   - Regular expression for String type value implemented to define level state.
+  
 ### Fixed
   - Fix download url on first load.
   - Fix value null for string [(issue #65)](https://github.com/algenty/grafana-flowcharting/issues/65)
   - Fix bug "subways" Editor [(issue #73)](https://github.com/algenty/grafana-flowcharting/issues/73)
   - Fix date on 2 digit in tooltip [(issue #77)](https://github.com/algenty/grafana-flowcharting/issues/73)
   - Fix minors bug.
-
+  
 ## [[0.5.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0.zip) - 2019-10-17
+  
 ### Added  
   - 2 new modes for "Update text value" ([See example](https://algenty.github.io/flowcharting-repository/images/append_mode_ani.png))
     - Append (Space) : Concat metrics with a space as a separator
@@ -148,7 +156,7 @@ Arnaud
     - Size of graph ([See example](https://algenty.github.io/flowcharting-repository/images/graph_size.png))
   - Define the orientation in  tooltip for each metrics/graph in tooltips : horizontal or vertical ([See example](https://algenty.github.io/flowcharting-repository/images/tooltip_direction_ani.png))
   - Some optimizations, Display is twice as fast on load.  
-
+  
 ### Fixed  
   - Fix color to reset when "Color on" is "Always/Critical" and metric is OK  
   - Fix border to empty instead black when "color mode" is "Fill" [(issue #24)](https://github.com/algenty/grafana-flowcharting/issues/24)  
@@ -183,7 +191,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Annotation
   - [X] Tooltips on text and arrow/line
   - [X] Url source download (0.4.0)
-  - [ ] Special rule according level (hide, show, change form, move, infront, in back, attributes,  ...)
+  - [X] Special rule according level (hide, show, change form, move, infront, in back, attributes,  ...)
   - [X] Custom variables like ${_label},${_value}, ${_alias}, ${_rule}, ${_level} ... (0.8.0)
   - [X] Variable support in link (0.5.0)
   - [X] Zoom/Unzoom (0.4.0)
@@ -199,7 +207,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [ ] Merge Graphs
   - [X] carriage return after new rule in tooltips option
   - [X] Filter for null values in graph
-  - [ ] Inspector on series
   - [X] New style for image : imageBackground, imageBorder
   - [X] Support cloud images from draw.io
   - [X] Support images from draw.io (0.5.0)
