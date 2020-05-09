@@ -10,6 +10,7 @@ import { $GF } from 'globals_class';
 export class FlowchartHandler {
   $scope: ng.IScope;
   $elem: any; //TODO: elem ?
+  parentDiv: HTMLDivElement;
   ctrl: any; //TODO: ctrl ?
   flowcharts: Flowchart[] = [];
   currentFlowchart = 'Main'; // name of current Flowchart
@@ -45,6 +46,7 @@ export class FlowchartHandler {
     FlowchartHandler.getDefaultGraph();
     this.$scope = $scope;
     this.$elem = elem.find('.flowchart-panel__chart');
+    this.parentDiv = this.$elem[0];
     this.ctrl = ctrl;
     this.data = data;
 
@@ -172,10 +174,28 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   createContainer(): HTMLDivElement {
-    //TODO: Convert to createDocument
-    const $container: any = $(`<div id="flowchart_${$GF.utils.uniqueID()}" style="margin:auto;position:relative,width:100%;height:100%"></div>`);
-    this.$elem.html($container);
-    return $container[0];
+    const div = document.createElement('div');
+    div.style.margin = 'auto';
+    div.style.position = 'relative';
+    div.style.width = '100%';
+    div.style.height = '100%';
+    div.style.touchAction = 'none';
+    div.style.border = 'none';
+    div.style.cursor = 'default';
+    div.style.right = '0px';
+    div.style.left = '0px';
+    div.style.bottom = '0px';
+    div.style.top = '0px';
+    // div.style.overflow = 'none';
+    this.parentDiv.appendChild(div);
+    return div;
+
+    // const $container: any = $(`<div class="geDiagramContainer" id="flowchart_${$GF.utils.uniqueID()}" style="right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; cursor: default; overflow: auto;"></div>`);
+    // const $container: any = $(`<div class="geDiagramContainer" id="flowchart_${$GF.utils.uniqueID()}" style="margin: auto; position: relative; width: 100%; height: 100%; touch-action: none;border: none;cursor: default"></div>`);
+    // GOOD : const $container: any = $(`<div class="geDiagramContainer" id="flowchart_${$GF.utils.uniqueID()}" style="margin:auto;position:relative;width:100%;height:100%" style="right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; cursor: default; overflow: auto;"></div>`);
+    // const $container: any = $(`<div class="geDiagramContainer" id="flowchart_${$GF.utils.uniqueID()}" tabindex="0" style="right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; overflow: auto; cursor: default;">`);
+    // this.$elem.html($container);
+    // return $container[0];
   }
 
   /**
@@ -186,13 +206,14 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   addFlowchart(name: string): Flowchart {
-    $GF.log.info('FlowchartHandler.addFlowchart()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'addFlowchart()');
     const container = this.createContainer();
     const data = Flowchart.getDefaultData();
     const flowchart = new Flowchart(name, container, this.ctrl, data);
     flowchart.init();
     this.data.flowcharts.push(data);
     this.flowcharts.push(flowchart);
+    trc.after();
     return flowchart;
   }
 
@@ -530,7 +551,7 @@ export class FlowchartHandler {
   openDrawEditor(name?: string) {
     const urlEditor = this.getFlowchart(name).getUrlEditor();
     const theme = this.getFlowchart(name).getThemeEditor();
-    const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}`;
+    const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&src=grafana`;
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;
     window.addEventListener('message', this.listenMessage.bind(this), false);

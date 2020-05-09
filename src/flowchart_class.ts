@@ -23,8 +23,6 @@ export class Flowchart {
   states: Map<string, State> | undefined;
 
   constructor(name: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {
-    $GF.log.info(`flowchart[${name}].constructor()`);
-    // GFGlobal.log.debug(`flowchart[${name}].constructor() data`, data);
     this.data = data;
     this.data.name = name;
     this.container = container;

@@ -38,8 +38,8 @@
         "url": "https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE"
       }
     ],
-    "version": "0.8.0",
-    "updated": "2019-04-13",
+    "version": "0.8.1",
+    "updated": "2019-05-11",
     "logos": {
       "small": "img/agenty-flowcharting.svg",
       "large": "img/agenty-flowcharting.svg"

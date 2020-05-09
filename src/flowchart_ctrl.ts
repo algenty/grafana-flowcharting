@@ -5,6 +5,7 @@ import { inspectOptionsTab } from 'inspect_options';
 import { RulesHandler } from 'rulesHandler';
 import { FlowchartHandler } from 'flowchartHandler';
 import { MetricHandler } from 'metricHandler';
+import { PanelEvents } from '@grafana/data';
 import { $GF } from 'globals_class';
 import _ from 'lodash';
 
@@ -47,12 +48,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.containerDivId = `container_${this.panel.graphId}`;
 
     // events
-    this.events.on('render', this.onRender.bind(this));
-    this.events.on('refresh', this.onRefresh.bind(this));
-    this.events.on('data-received', this.onDataReceived.bind(this));
-    this.events.on('data-error', this.onDataError.bind(this));
-    this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
-    this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
+    this.events.on(PanelEvents.render, this.onRender.bind(this));
+    this.events.on(PanelEvents.refresh, this.onRefresh.bind(this));
+    this.events.on(PanelEvents.dataReceived, this.onDataReceived.bind(this));
+    this.events.on(PanelEvents.dataError, this.onDataError.bind(this));
+    this.events.on(PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
+    this.events.on(PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
     // this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
     this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
