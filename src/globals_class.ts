@@ -521,7 +521,7 @@ class GFPlugin {
  * @class GFTrace
  */
 class GFTrace {
-  static enable = true;
+  static enable = false;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;
