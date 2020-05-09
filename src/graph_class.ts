@@ -213,9 +213,6 @@ export default class XGraph {
    * @memberof XGraph
    */
   drawGraph(): this {
-    // const csv = $GF.utils.$loadFile($GF.plugin.getRootPath() + 'static/defaultGraph.csv');
-    // this.graph.importCsv(csv);
-    // return this;
     const trc = $GF.trace.before(this.constructor.name + '.' + 'drawGraph()');
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
@@ -961,8 +958,6 @@ export default class XGraph {
    */
   eventDbClick(evt: MouseEvent, mxcell: mxCell) {
     $GF.log.info('XGraph.eventDbClick()');
-    // GFGlobal.log.debug('XGraph.eventDbClick() evt', evt);
-    // GFGlobal.log.debug('XGraph.eventDbClick() cell', mxcell);
     $GF.log.info('XGraph.eventDbClick() container.getBoundingClientRect()', this.container.getBoundingClientRect());
     if (mxcell !== undefined) {
       this.lazyZoomCell(mxcell);

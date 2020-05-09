@@ -46,7 +46,8 @@ Arnaud
 
 ## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11
 ### Fix
-  - Fixed : Dashboard variables
+  - Fixed : Dashboard variables.
+  - Optimize perf and size.
 
 ## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.0.zip) - 2020-05-02  
 ### Add

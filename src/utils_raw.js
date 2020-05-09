@@ -1,7 +1,6 @@
 const pako = require('pako');
 const vkbeautify = require('vkbeautify');
 const colorconv = require('color-normalize');
-// const marky = require('marky');
 const safeEval = require('safe-eval');
 
 // sources :
