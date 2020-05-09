@@ -124,7 +124,6 @@ export default class XGraph {
       }
       XGraph.initialized = true;
     }
-
     trc.after();
   }
 
