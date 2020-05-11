@@ -18,7 +18,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
-  panelDefaults: { newFlag: boolean; format: string; valueName: string; rulesData: gf.TIRulesHandlerData; flowchartsData: gf.TFlowchartHandlerData };
+  panelDefaults: {
+    newFlag: boolean;
+    format: string;
+    valueName: string;
+    rulesData: gf.TIRulesHandlerData;
+    flowchartsData: gf.TFlowchartHandlerData;
+  };
   containerDivId: string;
   static templateUrl: string;
   /**@ngInject*/

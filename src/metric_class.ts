@@ -82,13 +82,24 @@ export class Serie extends Metric {
     super(dataList);
     this.type = 'serie';
     this.metrics = this.seriesHandler(dataList);
+    this.addCustomStats();
     this.name = this.metrics.alias;
   }
 
   seriesHandler(seriesData) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'seriesHandler()');
     const series = grafana.getTimeSeries(seriesData);
     series.flotpairs = series.getFlotPairs(this.nullPointMode);
+    trc.after();
     return series;
+  }
+
+  addCustomStats() {
+    try {
+      this.metrics.stats['last_time'] = this.metrics.flotpairs[this.metrics.flotpairs.length - 1][0];
+    } catch (error) {
+      $GF.log.error("Unable to add custom stats",error);
+    }
   }
 
   /**
@@ -147,6 +158,7 @@ export class Table extends Metric {
   }
 
   tableHandler(tableData: any) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'tableHandler()');
     const table: any = {
       datapoints: [],
       columnNames: {},
@@ -175,6 +187,7 @@ export class Table extends Metric {
       table.datapoints.push(datapoint);
     });
     this.metrics.flotpairs = this.getFlotPairs(this.nullPointMode, table);
+    trc.after();
     return table;
   }
 
@@ -189,6 +202,7 @@ export class Table extends Metric {
   }
 
   getFlotPairs(fillStyle: string, table: any) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'getFlotPairs()');
     const result: any[] = [];
     const ignoreNulls = fillStyle === 'connected';
     const nullAsZero = fillStyle === 'null as zero';
@@ -294,6 +308,10 @@ export class Table extends Metric {
         $GF.log.error('Unable to aggregate data', error);
       }
 
+      if(currentTime) {
+        table.stats[currName].last_time = currentTime;
+      }
+
       if (table.stats[currName].max === -Number.MAX_VALUE) {
         table.stats[currName].max = null;
       }
@@ -317,6 +335,7 @@ export class Table extends Metric {
 
       table.stats[currName].count = result.length;
     }
+    trc.after();
     return result;
   }
 

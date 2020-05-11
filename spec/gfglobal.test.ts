@@ -27,7 +27,7 @@ describe('$GF', () => {
   describe('Secure Eval', () => {
     test('Math', () => {
       expect($GF.utils.evalIt('Math.random()*101')).toBeGreaterThan(0);
-      expect($GF.utils.evalIt('Math.random()*101')).toBeLessThanOrEqual(100);
+      expect($GF.utils.evalIt('Math.random()*101')).toBeLessThanOrEqual(101);
     });
     test('Simple operation', () => {
       expect($GF.utils.evalIt('2+2')).toBe(4);

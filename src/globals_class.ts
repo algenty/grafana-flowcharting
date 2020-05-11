@@ -81,6 +81,7 @@ class GFCONSTANT {
     { text: 'Delta', value: 'delta' },
     { text: 'Range', value: 'range' },
     { text: 'Diff', value: 'diff' },
+    { text: 'Time of last point', value: 'last_time' },
   ];
   TOOLTIP_GRAPH_TYPES: gf.TGraphTypeList = [
     { text: 'Line', value: 'line' },
@@ -137,7 +138,14 @@ class GFCONSTANT {
     { text: 'Shape : Change height (number)', value: 'height', type: 'number', placeholder: 'Number of px' },
     { text: 'Shape : Change width (number)', value: 'width', type: 'number', placeholder: 'Number of px' },
     { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number', placeholder: '0-100', default: 100 },
-    { text: 'Shape : Collapse/Expande (0|1)', value: 'fold', type: 'number', placeholder: '0 or 1', typeahead: '0|1', default: '1' },
+    {
+      text: 'Shape : Collapse/Expande (0|1)',
+      value: 'fold',
+      type: 'number',
+      placeholder: '0 or 1',
+      typeahead: '0|1',
+      default: '1',
+    },
     { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number', placeholder: '0-100' },
     { text: 'Label : Replace text (text)', value: 'text', type: 'text', placeholder: 'Text' },
     { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number', placeholder: 'Number' },
@@ -281,7 +289,7 @@ class GFLog {
   static ERROR = 3;
   static logLevel = GFLog.WARN;
   static logDisplay = true;
-  constructor() {}
+  constructor() { }
 
   static init(): GFLog {
     return new GFLog();
@@ -364,7 +372,7 @@ class GFPlugin {
   static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   static contextRoot: string;
-  constructor() {}
+  constructor() { }
 
   /**
    * init GFPlugin
@@ -521,21 +529,21 @@ class GFPlugin {
  * @class GFTrace
  */
 class GFTrace {
-  static enable = false;
+  static enable = true;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;
   trace:
     | {
-        Name: string;
-        Id: string;
-        Args: any;
-        Return: any;
-        Before: number;
-        End: number | undefined;
-        ExecTime: number | undefined;
-        Indent: number;
-      }
+      Name: string;
+      Id: string;
+      Args: any;
+      Return: any;
+      Before: number;
+      End: number | undefined;
+      ExecTime: number | undefined;
+      Indent: number;
+    }
     | undefined;
 
   constructor(fn?: string) {
@@ -563,15 +571,15 @@ class GFTrace {
   ):
     | GFTrace
     | {
-        after: () => void;
-      } {
+      after: () => void;
+    } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       GFTrace._inc(fn);
       return t;
     }
-    return { after: () => {} };
+    return { after: () => { } };
   }
 
   static _inc(fn) {

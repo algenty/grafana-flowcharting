@@ -44,6 +44,14 @@ Arnaud
 
 # Changelog
 
+## [[0.9.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0.zip) - 2020-05-11 
+### Added
+  - Aggregation : Time of last point  
+
+  
+### Fixed
+  - Fixed : Flowchart grid display    
+  
 ## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
 ### Added
   - New plugin logo for Grafana V7 ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/agenty-flowcharting.png?raw=true))  

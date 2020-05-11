@@ -25,8 +25,7 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   initData(dataList: any) {
-    $GF.log.info('initData');
-    // GFGlobal.log.debug('initData', dataList);
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
     this.tables = [];
     this.series = [];
     this.metrics = [];
@@ -34,10 +33,7 @@ export class MetricHandler {
     dataList.forEach(dl => {
       this.addMetric(dl);
     });
-
-    // GFGlobal.log.debug('tables : ', this.tables.length);
-    // GFGlobal.log.debug('series : ', this.series.length);
-    // GFGlobal.log.debug('metrics : ', this.metrics.length);
+    trc.after();
   }
 
   /**
@@ -47,12 +43,13 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   addMetric(data: any) {
-    // GFGlobal.log.debug('addMetric', data);
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'addMetric()');
     if (data.type === 'table') {
       this.addTable(data);
     } else {
       this.addSerie(data);
     }
+    trc.after();
   }
 
   /**
@@ -63,10 +60,11 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   addTable(data: any): Table {
-    $GF.log.info('addTable');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'addTable()');
     const table = new Table(data);
     this.tables.push(table);
     this.metrics.push(table);
+    trc.after();
     return table;
   }
 
@@ -78,10 +76,11 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   addSerie(data: any): Serie {
-    $GF.log.info('addSerie');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'addSerie()');
     const serie = new Serie(data);
     this.series.push(serie);
     this.metrics.push(serie);
+    trc.after();
     return serie;
   }
 

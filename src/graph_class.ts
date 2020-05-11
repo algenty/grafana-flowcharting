@@ -417,7 +417,7 @@ export default class XGraph {
    */
   gridGraph(bool: boolean): this {
     if (bool) {
-      this.container.style.backgroundImage = `url('${$GF.plugin.getMxImagePath()}/grid.gif')`;
+      this.container.style.backgroundImage = "url('data:image/gif;base64,R0lGODlhCgAKAJEAAAAAAP///8zMzP///yH5BAEAAAMALAAAAAAKAAoAAAIJ1I6py+0Po2wFADs=')";
     } else {
       this.container.style.backgroundImage = '';
     }
@@ -765,6 +765,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   setColorAnimCell(mxcell: mxCell, style: gf.TStyleColorKeys, color: string | null): this {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setColorAnimCell()');
     if (this.animation && color) {
       try {
         const endColor = this.getStyleCell(mxcell, style);
@@ -792,6 +793,7 @@ export default class XGraph {
     } else {
       this.setStyleCell(mxcell, style, color);
     }
+    trc.after();
     return this;
   }
 
@@ -810,6 +812,7 @@ export default class XGraph {
   }
 
   async setStyleAnimCell(mxcell: mxCell, style: any, endValue: string | null, beginValue?: string) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
     if (this.animation && endValue !== null) {
       try {
         const end = Number(endValue);
@@ -835,6 +838,7 @@ export default class XGraph {
     } else {
       this.graph.setCellStyles(style, endValue, [mxcell]);
     }
+    trc.after();
   }
 
   /**
@@ -1029,7 +1033,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   async lazyZoomPointer(factor: number, offsetX: number, offsetY: number) {
-    $GF.log.info('XGraph.lazyZoomPointer()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'lazyZoomPointer()');
     let dx = offsetX * 2;
     let dy = offsetY * 2;
 
@@ -1048,6 +1052,7 @@ export default class XGraph {
       dy *= f;
     }
     this.graph.view.scaleAndTranslate(scale, this.graph.view.translate.x + dx, this.graph.view.translate.y + dy);
+    trc.after();
   }
 
   /**
@@ -1257,6 +1262,7 @@ export default class XGraph {
 
   // WIDTH AND HEIGHT
   async resizeCell(mxcell: mxCell, width: number | undefined, height: number | undefined, origine?: mxGeometry) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
     const geo = this.graph.model.getGeometry(mxcell);
     if (geo !== null) {
       let _x = origine !== undefined ? origine.x : geo.x;
@@ -1290,6 +1296,7 @@ export default class XGraph {
         this.graph.resizeCell(mxcell, _rec, true);
       }
     }
+    trc.after();
   }
 
   getSizeCell(mxcell: mxCell): mxGeometry {
@@ -1308,6 +1315,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   async lazyZoomCell(mxcell: mxCell) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'lazyZoomCell()');
     if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
       const state = this.graph.view.getState(mxcell);
       if (state !== null) {
@@ -1320,13 +1328,15 @@ export default class XGraph {
         this.cumulativeZoomFactor = this.graph.view.scale;
       }
     }
+    trc.after();
   }
 
   // async lazyZoomCell(mxcell: mxCell) {
   //   if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
   //     let state = this.graph.view.getState(mxcell);
-  //     let _x, _y, _w, _h;
   //     if (state !== null) {
+  //       let _x, _y, _w, _h;
+  //       let dist_x, dist_y, dist_w, dist_h;
   //       _x = state.x;
   //       _y = state.y;
   //       _w = state.width;
@@ -1334,29 +1344,47 @@ export default class XGraph {
   //       console.log('Curr Cell x=' + _x + ' y=' + _y + ' w=' + _w + ' h=' + _h)
   //       if (this.animation) {
   //         let step_x, step_y, step_w, step_h;
-  //         const bounds = this.graph.view.getGraphBounds();
+  //         let bounds = this.graph.view.getGraphBounds();
+  //         step_x = bounds.x;
+  //         step_y = bounds.y;
+  //         step_w = bounds.width;
+  //         step_h = bounds.height;
+  //         dist_x = ((_x - step_x) / 2)
+  //         dist_y = ((_y - step_y) / 2)
+  //         dist_w = ((_w - step_w) / 2)
+  //         dist_h = ((_h - step_h) / 2)
   //         console.log('Curr bounds x=' + bounds.x + ' y=' + bounds.y + ' w=' + bounds.width + ' h=' + bounds.height)
-  //         step_x = _x - (_x - bounds.x) / 2;
-  //         step_y = _y - (_y - bounds.y) / 2;
-  //         step_w = _w - (_w - bounds.width) / 2;
-  //         step_h = _h - (_h - bounds.height) / 2;
+  //         step_x = _x - dist_x;
+  //         step_y = _y - dist_y;
+  //         step_w = _w - dist_w;
+  //         step_h = _h - dist_h;
   //         const l = $GF.CONSTANTS.CONF_ANIMS_STEP;
   //         const count = 0;
   //         const self = this;
   //         function graduate(count, step_x, step_y, step_w, step_h) {
-  //           console.log('Steps x=' + step_x + ' y=' + step_y + ' w=' + step_w + ' h=' + step_h)
+  //           debugger
+  //           console.log('Steps x=' + step_x + ' y=' + step_y + ' w=' + step_w + ' h=' + step_h);
   //           if (count < l) {
   //             window.setTimeout(() => {
   //               const rect = new mxRectangle(step_x, step_y, step_w, step_h);
   //               self.graph.zoomToRect(rect);
   //               self.cumulativeZoomFactor = self.graph.view.scale;
-  //               const bounds = self.graph.view.getGraphBounds();
+  //               bounds = self.graph.view.getGraphBounds();
   //               console.log('Curr Cell x=' + _x + ' y=' + _y + ' w=' + _w + ' h=' + _h)
   //               console.log('Curr bounds x=' + bounds.x + ' y=' + bounds.y + ' w=' + bounds.width + ' h=' + bounds.height)
-  //               step_x = _x - (_x - bounds.x) / 2;
-  //               step_y = _y - (_y - bounds.y) / 2;
-  //               step_w = _w - (_w - bounds.width) / 2;
-  //               step_h = _h - (_h - bounds.height) / 2;
+  //               console.log('graph.view',self.graph.view);
+  //               step_x = bounds.x;
+  //               step_y = bounds.y;
+  //               step_w = bounds.width;
+  //               step_h = bounds.height;
+  //               dist_x /= count +1 ;
+  //               dist_y /= count +1;
+  //               dist_w /= count +1;
+  //               dist_h /= count +1;
+  //               step_x = _x - dist_x;
+  //               step_y = _y - dist_y;
+  //               step_w = _w - dist_w;
+  //               step_h = _h - dist_h;
   //               graduate(count + 1, step_x, step_y, step_w, step_h);
   //             }, $GF.CONSTANTS.CONF_ANIMS_MS);
   //           }
@@ -1371,7 +1399,7 @@ export default class XGraph {
   //   }
   // }
 
-  static loadXml(url): string | null {
+  static loadXml(url:string): string | null {
     try {
       const req: any = mxUtils.load(url);
       if (req.getStatus() >= 200 && req.getStatus() <= 299) {
@@ -1384,17 +1412,6 @@ export default class XGraph {
     }
     return null;
   }
-
-  /**
-   * Change Cells to visible
-   *
-   * @param {*} mxcell
-   * @param {*} includeEdges
-   * @memberof XGraph
-   */
-  // async toggleVisible(mxcell, includeEdges) {
-  //   this.graph.toggleCells(!this.graph.getModel().isVisible(mxcell), [mxcell], includeEdges);
-  // }
 
   static compress(source: string): string {
     return Graph.compress(source, true);

@@ -442,10 +442,11 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   draw(): this {
-    $GF.log.info(`FlowchartHandler.draw()`);
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
     this.flowcharts.forEach(flowchart => {
       flowchart.redraw();
     });
+    trc.after();
     return this;
   }
 
@@ -456,10 +457,11 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   load(): this {
-    $GF.log.info(`FlowchartHandler.load()`);
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
     this.flowcharts.forEach(flowchart => {
       flowchart.reload();
     });
+    trc.after();
     return this;
   }
 

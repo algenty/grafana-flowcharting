@@ -1,4 +1,5 @@
 import Chartist from 'chartist';
+// import ctAreaGradient from 'chartist-plugin-gradient';
 import { Metric } from './metric_class';
 import { $GF } from 'globals_class';
 
@@ -251,7 +252,7 @@ export class GraphTooltip {
   div: HTMLDivElement | undefined;
   chart: any;
   parentDiv: HTMLDivElement | undefined;
-  constructor() {}
+  constructor() { }
 
   getDiv(div: HTMLDivElement): HTMLDivElement | undefined {
     return this.div;
@@ -360,6 +361,7 @@ class LineGraphTooltip extends GraphTooltip {
     }
     const div = document.createElement('div');
     const color = this.color;
+    // const svg = '<svg style="width:0;height:0;position:absolute;" aria-hidden="true" focusable="false">  <linearGradient id="my-cool-gradient" x2="1" y2="1">    <stop offset="0%" stop-color="#447799" />    <stop offset="50%" stop-color="#224488" />    <stop offset="100%" stop-color="#112266" />  </linearGradient></svg>';
     this.div = div;
     if (parentDiv !== undefined) {
       parentDiv.appendChild(div);
@@ -377,7 +379,6 @@ class LineGraphTooltip extends GraphTooltip {
 
     this.chart = new Chartist.Line(div, this.data, this.chartistOptions);
     this.chart.on('draw', (data: any) => {
-      // GFGlobal.log.info( 'Chartis.on() context ', data);
       if (data.type === 'line' || data.type === 'area') {
         if (data.type === 'line') {
           data.element.attr({

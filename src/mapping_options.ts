@@ -58,8 +58,6 @@ export class MappingOptionsCtrl {
     };
 
     this.getCellNames = (prop: gf.TPropertieKey = 'id'): string[] => {
-      $GF.log.info('MappingOptionsCtrl.getCellNamesForShape()');
-      // prop = prop !== 'id' && prop !== 'value' ? 'id' : prop;
       const flowchart = this.flowchartHandler.getFlowchart();
       const cells = flowchart.getNamesByProp(prop);
       const uniq = new Set(cells);

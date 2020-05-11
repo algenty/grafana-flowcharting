@@ -33,7 +33,15 @@ declare module gf {
   }
 
   // Styles
-  declare type TStyleArray = ['fillColor', 'strokeColor', 'fontColor', 'imageBorder', 'imageBackground', 'shape', 'overflow'];
+  declare type TStyleArray = [
+    'fillColor',
+    'strokeColor',
+    'fontColor',
+    'imageBorder',
+    'imageBackground',
+    'shape',
+    'overflow'
+  ];
   declare type TStyleColorKeys = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
   declare type TStyleColorList = { text: string; value: TStyleColor.Keys }[];
   declare type TStyleEventKeys =
@@ -99,7 +107,18 @@ declare module gf {
   }
 
   // Aggregation
-  declare type TAggregationKeys = 'first' | 'current' | 'min' | 'max' | 'total' | 'avg' | 'count' | 'delta' | 'range' | 'diff';
+  declare type TAggregationKeys =
+    | 'first'
+    | 'current'
+    | 'min'
+    | 'max'
+    | 'total'
+    | 'avg'
+    | 'count'
+    | 'delta'
+    | 'range'
+    | 'diff'
+    | 'last_time';
   declare type TAggregationList = { text: string; value: TAggregationKeys }[];
   declare interface TSelectAggregation extends TSelectString {
     value: TAggregationKeys;
@@ -128,7 +147,12 @@ declare module gf {
   declare type TTextMethodKeys = 'content' | 'pattern' | 'as' | 'anl';
   declare type TTextMethodElt = { text: string; value: TTextMethodKeys; placeholder?: string };
   declare type TTextMethodList = TTextMethodElt[];
-  declare type TDateFormatKeys = 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm:ss.SSS' | 'MM/DD/YY h:mm:ss a' | 'MMMM D, YYYY LT' | 'YYYY-MM-DD';
+  declare type TDateFormatKeys =
+    | 'YYYY-MM-DD HH:mm:ss'
+    | 'YYYY-MM-DD HH:mm:ss.SSS'
+    | 'MM/DD/YY h:mm:ss a'
+    | 'MMMM D, YYYY LT'
+    | 'YYYY-MM-DD';
   declare type TDateFormatList = { text: string; value: TDateFormatKeys }[];
 
   declare type TVariableKeys = '_rule' | '_level' | '_value' | '_color' | '_formated';
