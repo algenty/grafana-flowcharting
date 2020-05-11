@@ -252,7 +252,7 @@ export class GraphTooltip {
   div: HTMLDivElement | undefined;
   chart: any;
   parentDiv: HTMLDivElement | undefined;
-  constructor() { }
+  constructor() {}
 
   getDiv(div: HTMLDivElement): HTMLDivElement | undefined {
     return this.div;

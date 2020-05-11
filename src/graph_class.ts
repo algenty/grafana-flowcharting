@@ -417,7 +417,8 @@ export default class XGraph {
    */
   gridGraph(bool: boolean): this {
     if (bool) {
-      this.container.style.backgroundImage = "url('data:image/gif;base64,R0lGODlhCgAKAJEAAAAAAP///8zMzP///yH5BAEAAAMALAAAAAAKAAoAAAIJ1I6py+0Po2wFADs=')";
+      this.container.style.backgroundImage =
+        "url('data:image/gif;base64,R0lGODlhCgAKAJEAAAAAAP///8zMzP///yH5BAEAAAMALAAAAAAKAAoAAAIJ1I6py+0Po2wFADs=')";
     } else {
       this.container.style.backgroundImage = '';
     }
@@ -1399,7 +1400,7 @@ export default class XGraph {
   //   }
   // }
 
-  static loadXml(url:string): string | null {
+  static loadXml(url: string): string | null {
     try {
       const req: any = mxUtils.load(url);
       if (req.getStatus() >= 200 && req.getStatus() <= 299) {

@@ -98,7 +98,7 @@ export class Serie extends Metric {
     try {
       this.metrics.stats['last_time'] = this.metrics.flotpairs[this.metrics.flotpairs.length - 1][0];
     } catch (error) {
-      $GF.log.error("Unable to add custom stats",error);
+      $GF.log.error('Unable to add custom stats', error);
     }
   }
 
@@ -308,7 +308,7 @@ export class Table extends Metric {
         $GF.log.error('Unable to aggregate data', error);
       }
 
-      if(currentTime) {
+      if (currentTime) {
         table.stats[currName].last_time = currentTime;
       }
 
