@@ -9,13 +9,8 @@ export class FlowchartOptionsCtrl {
   ctrl: any; //TODO: redefine any
   flowchartHandler: FlowchartHandler;
   panel: any;
-  sourceTypes: gf.TSelectSource[] = [{ text: 'XML Content', value: 'xml' }];
-  themes: gf.TSelectString[] = [
-    { text: 'Dark', value: 'dark' },
-    { text: 'Light', value: 'kennedy' },
-    { text: 'Mobile', value: 'minimal' },
-    { text: 'Atlas', value: 'atlas' },
-  ];
+  sourceTypes = $GF.CONSTANTS.SOURCE_TYPES;
+  themes = $GF.CONSTANTS.DIOTHEME_TYPES;
   errorSourceFlag = false;
   errorSourceMsg = '';
   errorDownloadFlag = false;

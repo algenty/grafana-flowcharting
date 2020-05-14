@@ -19,11 +19,8 @@ declare module gf {
     value: boolean;
   }
 
-  declare type TSourceType = 'xml' | 'csv'; // Source type
   declare type TPropertieKey = 'id' | 'value' | 'form'; //Type properties for finding cells
-  declare interface TSelectSource extends TSelectString {
-    value: TSourceType;
-  }
+  declare type TPropertieList = { text: string; value: TPropertieKey }[];
 
   declare interface TIFlowchartOptionsScope extends ng.IScope {
     flowchartHandler: any;
@@ -96,8 +93,12 @@ declare module gf {
   }
 
   declare type TCounterKeys = 'linear' | 'progressive';
-  declare type TCounterElt = { text: string; value: TCounterKeys };
-  declare type TCounterList = TCounterElt[];
+  declare type TCounterList = { text: string; value: TCounterKeys };
+  declare type TCounterList = TCounterList[];
+
+  declare type TDioThemeKeys = 'dark' | 'kennedy' | 'minimal' | 'atlas';
+  declare type TDioThemeElt = { text: string; value: TDioThemeKeys };
+  declare type TDioThemeList = TDioThemeElt[];
 
   // Range or value
   declare type TValueMappingKeys = 1 | 2;
@@ -124,6 +125,10 @@ declare module gf {
     value: TAggregationKeys;
   }
 
+  // Source graph
+  declare type TSourceTypeKeys = 'xml' | 'csv';
+  declare type TSourceTypeList = { text: string; value: TSourceTypeKeys }[];
+
   // Metric
   declare type TMetricTypeKeys = 'table' | 'serie';
   declare type TMetricTypeList = { text: string; value: TMetricTypeKeys }[];
@@ -139,10 +144,12 @@ declare module gf {
   declare type TColorOnList = { text: string; value: TColorOnKeys }[];
 
   declare type TTextOnKeys = 'n' | 'wmd' | 'wc' | 'co';
-  declare type TTextOnList = { text: string; value: TTextOnKeys }[];
+  declare type TTextOnElt = { text: string; value: TTextOnKeys };
+  declare type TTextOnList = TTextOnElt[];
 
   declare type TValueTypeKeys = 'number' | 'string' | 'date';
-  declare type TValueTypeList = { text: string; value: TValueTypeKeys }[];
+  declare type TValueTypeElt = { text: string; value: TValueTypeKeys };
+  declare type TValueTypeList = TValueTypeElt[];
 
   declare type TTextMethodKeys = 'content' | 'pattern' | 'as' | 'anl';
   declare type TTextMethodElt = { text: string; value: TTextMethodKeys; placeholder?: string };
@@ -294,7 +301,7 @@ declare module gf {
     xml: string;
     csv: string;
     download: boolean;
-    type: TSourceType;
+    type: gf.TSourceTypeKeys;
     url: string;
     zoom: string;
     center: boolean;

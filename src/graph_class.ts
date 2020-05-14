@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { $GF } from 'globals_class';
+import * as Drawio  from './libs/Drawio_custom'
 
 declare var mxEvent: any;
 declare var mxClient: any;
@@ -26,7 +27,8 @@ export default class XGraph {
   static initialized = false;
   container: HTMLDivElement;
   xmlGraph = '';
-  type: gf.TSourceType = 'xml';
+  csvGraph = '';
+  type: gf.TSourceTypeKeys = 'xml';
   graph: any = undefined;
   scale = true;
   tooltip = true;
@@ -52,8 +54,7 @@ export default class XGraph {
    * @param {string} definition
    * @memberof XGraph
    */
-  constructor(container: HTMLDivElement, type: gf.TSourceType, definition: string) {
-    $GF.log.info('XGraph.constructor()');
+  constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string) {
     this.container = container;
     this.type = type;
     this.onMapping = {
@@ -71,6 +72,9 @@ export default class XGraph {
       } else {
         this.xmlGraph = definition;
       }
+    }
+    if (type === 'csv') {
+      this.csvGraph = definition;
     }
     this.initGraph();
   }
@@ -216,15 +220,20 @@ export default class XGraph {
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
-      const xmlDoc = mxUtils.parseXml(this.xmlGraph);
-      const codec = new mxCodec(xmlDoc);
-      codec.decode(xmlDoc.documentElement, this.graph.getModel());
+      if (this.type === 'xml') {
+        const xmlDoc = mxUtils.parseXml(this.xmlGraph);
+        const codec = new mxCodec(xmlDoc);
+        codec.decode(xmlDoc.documentElement, this.graph.getModel());
+      }
+      if (this.type === 'csv') {
+        Drawio.importCsv(this.graph,this.csvGraph)
+      }
     } catch (error) {
       $GF.log.error('Error in draw', error);
     } finally {
-      this.graph.getModel().endUpdate();
       this.cells['id'] = this.getCurrentCells('id');
       this.cells['value'] = this.getCurrentCells('value');
+      this.graph.getModel().endUpdate();
     }
     trc.after();
     return this;

@@ -115,8 +115,8 @@ export class Flowchart {
   static getDefaultData(): gf.TFlowchartData {
     return {
       name: 'name',
-      xml: FlowchartHandler.getDefaultGraph(),
-      csv: '',
+      xml: FlowchartHandler.getDefaultDioGraph(),
+      csv: FlowchartHandler.getDefaultCsvGraph(),
       download: false,
       type: 'xml',
       url: 'http://<YourUrl>/<Your XML/drawio file/api>',

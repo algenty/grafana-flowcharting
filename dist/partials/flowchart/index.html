@@ -103,6 +103,19 @@
             style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;"
             ng-change="editor.checkSource_onSourceChange(flowchart.data.xml)"
             ng-model="flowchart.data.xml"
+            ng-if="flowchart.data.type === 'xml'" 
+            ng-model-onBlur
+          >
+          </textarea>
+          <textarea
+            name="options.source.csv.input"
+            class="gf-form-input width:95% ng-pristine ng-valid ng-empty ng-touched"
+            rows="10"
+            placeholder="This text should respect csv draw.io syntax&#10;See https://drawio-app.com/import-from-csv-to-drawio for more information"
+            style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;"
+            ng-change="editor.checkSource_onSourceChange(flowchart.data.xml)"
+            ng-model="flowchart.data.csv"
+            ng-if="flowchart.data.type === 'csv'" 
             ng-model-onBlur
           >
           </textarea>

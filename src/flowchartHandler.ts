@@ -21,6 +21,7 @@ export class FlowchartHandler {
   changeDataFlag = false; // Data changed
   changeRuleFlag = false; // rules changed
   static defaultXml: string;
+  static defaultCsv: string;
   onMapping: gf.TIOnMappingObj = {
     active: false,
     object: null,
@@ -42,8 +43,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   constructor($scope: ng.IScope, elem: any, ctrl: any, data: gf.TFlowchartHandlerData) {
-    $GF.log.info('FlowchartHandler.constructor()');
-    FlowchartHandler.getDefaultGraph();
+    FlowchartHandler.getDefaultDioGraph();
     this.$scope = $scope;
     this.$elem = elem.find('.flowchart-panel__chart');
     this.parentDiv = this.$elem[0];
@@ -113,16 +113,44 @@ export class FlowchartHandler {
    * @returns {string}
    * @memberof FlowchartHandler
    */
-  static getDefaultGraph(): string {
-    const result = FlowchartHandler.defaultXml;
+  static getDefaultDioGraph(): string {
+    let result = FlowchartHandler.defaultXml;
     if (!result) {
-      const url = `${$GF.plugin.getRootPath()}${$GF.CONSTANTS.CONF_FILE_DEFAULTGRAPH}`;
+      const url = `${$GF.plugin.getRootPath()}${$GF.CONSTANTS.CONF_FILE_DEFAULTDIO}`;
       $.ajax({
         type: 'GET',
         url: url,
         async: false,
         success: data => {
           FlowchartHandler.defaultXml = data;
+          result = data;
+        },
+        error: () => {
+          alert('Error when download ' + url);
+        },
+      });
+    }
+    return result;
+  }
+
+    /**
+   * Return default xml source graph
+   *
+   * @static
+   * @returns {string}
+   * @memberof FlowchartHandler
+   */
+  static getDefaultCsvGraph(): string {
+    let result = FlowchartHandler.defaultCsv;
+    if (!result) {
+      const url = `${$GF.plugin.getRootPath()}${$GF.CONSTANTS.CONF_FILE_DEFAULTCSV}`;
+      $.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        success: data => {
+          FlowchartHandler.defaultCsv = data;
+          result = data;
         },
         error: () => {
           alert('Error when download ' + url);

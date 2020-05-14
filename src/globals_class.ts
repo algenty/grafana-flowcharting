@@ -7,7 +7,8 @@ class GFCONSTANT {
   CONF_PATH_PARTIALS = 'partials/';
   CONF_PATH_STYLES = 'styles/';
   CONF_FILE_PLUGINJSON = './plugin.json';
-  CONF_FILE_DEFAULTGRAPH = 'static/defaultGraph.drawio';
+  CONF_FILE_DEFAULTDIO = 'static/defaultGraph.drawio';
+  CONF_FILE_DEFAULTCSV = 'static/defaultGraph.csv';
   CONF_FILE_SHAPESTXT = 'static/shapes.txt';
   CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
   CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
@@ -65,6 +66,16 @@ class GFCONSTANT {
   METRIC_TYPES: gf.TMetricTypeList = [
     { text: 'Series', value: 'serie' },
     { text: 'Table', value: 'table' },
+  ];
+  SOURCE_TYPES: gf.TSourceTypeList = [
+    { text: 'XML', value: 'xml' },
+    { text: 'CSV', value: 'csv' },
+  ];
+  DIOTHEME_TYPES: gf.TDioThemeList = [
+    { text: 'Dark', value: 'dark' },
+    { text: 'Kennedy', value: 'kennedy' },
+    { text: 'Minimal', value: 'minimal' },
+    { text: 'atlas', value: 'atlas' },
   ];
   IDENT_TYPES: { text: string; value: gf.TPropertieKey }[] = [
     { text: 'Id', value: 'id' },
