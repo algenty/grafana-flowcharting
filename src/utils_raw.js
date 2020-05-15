@@ -1,4 +1,5 @@
 const pako = require('pako');
+const Color = require('color');
 const vkbeautify = require('vkbeautify');
 const colorconv = require('color-normalize');
 const safeEval = require('safe-eval');
@@ -214,47 +215,52 @@ module.exports = {
     }
   },
 
-  getRatioColor(ratio, colorStart, colorEnd) {
-    // Get the smaller number to clamp at 0.999 max
-    ratio = Math.min(0.999, ratio);
-    // Get the larger number to clamp at 0.001 min
-    ratio = Math.max(0.001, ratio);
-    let start = colorconv(colorEnd, 'uint8');
-    let end = colorconv(colorStart, 'uint8');
-    let c = [];
-    c[0] = start[0] * ratio + (1 - ratio) * end[0];
-    c[1] = start[1] * ratio + (1 - ratio) * end[1];
-    c[2] = start[2] * ratio + (1 - ratio) * end[2];
-    c[3] = start[3] * ratio + (1 - ratio) * end[3];
-    return `rgba(${c[0]},${c[1]},${c[2]},${c[3]})`;
-  },
+  // getRatioColor(ratio, colorStart, colorEnd) {
+  //   // Get the smaller number to clamp at 0.999 max
+  //   ratio = Math.min(0.999, ratio);
+  //   // Get the larger number to clamp at 0.001 min
+  //   ratio = Math.max(0.001, ratio);
+  //   let start = colorconv(colorEnd, 'uint8');
+  //   let end = colorconv(colorStart, 'uint8');
+  //   let c = [];
+  //   c[0] = Math.round(start[0] * ratio + (1 - ratio) * end[0]);
+  //   c[1] = Math.round(start[1] * ratio + (1 - ratio) * end[1]);
+  //   c[2] = Math.round(start[2] * ratio + (1 - ratio) * end[2]);
+  //   c[3] = start[3] * ratio + (1 - ratio) * end[3];
+  //   return `rgba(${c[0]},${c[1]},${c[2]},${c[3]})`;
+  // },
 
-  getStepColors(colorStart, colorEnd, colorCount) {
-    // The beginning of your gradient
-    let start = colorconv(colorStart, 'uint8');
-    let end = colorconv(colorEnd, 'uint8');
-    // The number of colors to compute
-    var len = colorCount;
+  // getStepColors(colorStart, colorEnd, colorCount) {
+  //   // The beginning of your gradient
+  //   let start = colorconv(colorStart, 'uint8');
+  //   console.log('colorconv start', colorStart);
+  //   console.log('Color start', Color(colorStart).array());
+  //   let end = colorconv(colorEnd, 'uint8');
+  //   console.log('colorconv end', colorEnd);
+  //   console.log('Color end', Color(colorEnd).array());
+    
+  //   // The number of colors to compute
+  //   var len = colorCount;
 
-    //Alpha blending amount
-    var alpha = 0.0;
+  //   //Alpha blending amount
+  //   var alpha = 0.0;
 
-    var saida = [];
+  //   var saida = [];
 
-    for (i = 0; i < len; i++) {
-      var c = [];
-      alpha += 1.0 / len;
+  //   for (i = 0; i < len; i++) {
+  //     var c = [];
+  //     alpha += 1.0 / len;
 
-      c[0] = start[0] * alpha + (1 - alpha) * end[0];
-      c[1] = start[1] * alpha + (1 - alpha) * end[1];
-      c[2] = start[2] * alpha + (1 - alpha) * end[2];
-      c[3] = start[3] * alpha + (1 - alpha) * end[3];
+  //     c[0] = Math.round(start[0] * alpha + (1 - alpha) * end[0]);
+  //     c[1] = Math.round(start[1] * alpha + (1 - alpha) * end[1]);
+  //     c[2] = Math.round(start[2] * alpha + (1 - alpha) * end[2]);
+  //     c[3] = start[3] * alpha + (1 - alpha) * end[3];
 
-      saida.push(`rgba(${c[0]},${c[1]},${c[2]},${c[3]})`);
-    }
+  //     saida.push(Color(`rgba(${c[0]},${c[1]},${c[2]},${c[3]})`).hex());
+  //   }
 
-    return saida;
-  },
+  //   return saida;
+  // },
 
   prettifyJSON(text) {
     try {
@@ -300,7 +306,7 @@ module.exports = {
       var code = this.loadFile(fname)
       if (code) {
         this.evalRaw(code);
-        console.info('LoadJS called succesfully', fname);
+        // console.info('LoadJS called succesfully', fname);
       }
     } catch (e) {
       if (window.console != null) {
@@ -313,7 +319,7 @@ module.exports = {
     try {
       var req = mxUtils.load(fname);
       if (req != null && req.getStatus() >= 200 && req.getStatus() <= 299) {
-        console.info('loadFile called succesfully', fname);
+        // console.info('loadFile called succesfully', fname);
         return req.getText();
       }
     } catch (e) {
@@ -342,7 +348,7 @@ module.exports = {
   evalRaw(code) {
     try {
       eval.call(window, code);
-      console.info('eval.call succesfully');
+      // console.info('eval.call succesfully');
     } catch (e) {
       if (window.console != null) {
         console.error('Error eval.call : ', e);

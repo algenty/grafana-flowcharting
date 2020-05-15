@@ -17,7 +17,8 @@ Defines the key for the noLabel style.  If this is true then no label is visible
 STYLE_DASHED Pointillé
 STYLE_DASHED: 'dashed'
 Defines the key for the dashed style.  Use 0 (default) for non-dashed or 1 for dashed.  Value is “dashed”.
-	
+
+gradientDirection	
 
 to front
 to back
@@ -74,3 +75,6 @@ g.model.setVisible(c, !g.model.isVisible(c));
 
 # Links
 https://jgraph.github.io/mxgraph/docs/manual.html
+
+# Colors
+https://gka.github.io/chroma.js/

@@ -105,8 +105,8 @@ module.exports = {
 
                 // Delayed after optional layout
                 var afterInsert = function () {
-                    graph.setSelectionCells(select);
-                    graph.scrollCellToVisible(graph.getSelectionCell());
+                    // graph.setSelectionCells(select);
+                    // graph.scrollCellToVisible(graph.getSelectionCell());
                 };
 
                 // Computes unscaled, untranslated graph bounds
@@ -586,7 +586,6 @@ module.exports = {
                 finally {
                     graph.model.endUpdate();
                 }
-
                 if (afterInsert != null) {
                     afterInsert();
                 }

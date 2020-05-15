@@ -48,6 +48,7 @@ Arnaud
 ### Added
   - CSV Format (https://drawio-app.com/import-from-csv-to-drawio/)
   - Aggregation : Time of last point  
+  - Gradient Color (TODO : Fix When no gradient)
 
   
 ### Fixed

@@ -117,23 +117,24 @@ export class FlowchartHandler {
     let result = FlowchartHandler.defaultXml;
     if (!result) {
       const url = `${$GF.plugin.getRootPath()}${$GF.CONSTANTS.CONF_FILE_DEFAULTDIO}`;
-      $.ajax({
-        type: 'GET',
-        url: url,
-        async: false,
-        success: data => {
-          FlowchartHandler.defaultXml = data;
-          result = data;
-        },
-        error: () => {
-          alert('Error when download ' + url);
-        },
-      });
+      result = $GF.utils.$loadFile(url);
+      // $.ajax({
+      //   type: 'GET',
+      //   url: url,
+      //   async: false,
+      //   success: data => {
+      //     FlowchartHandler.defaultXml = data;
+      //     result = data;
+      //   },
+      //   error: () => {
+      //     alert('Error when download ' + url);
+      //   },
+      // });
     }
     return result;
   }
 
-    /**
+  /**
    * Return default xml source graph
    *
    * @static
@@ -144,18 +145,19 @@ export class FlowchartHandler {
     let result = FlowchartHandler.defaultCsv;
     if (!result) {
       const url = `${$GF.plugin.getRootPath()}${$GF.CONSTANTS.CONF_FILE_DEFAULTCSV}`;
-      $.ajax({
-        type: 'GET',
-        url: url,
-        async: false,
-        success: data => {
-          FlowchartHandler.defaultCsv = data;
-          result = data;
-        },
-        error: () => {
-          alert('Error when download ' + url);
-        },
-      });
+      result = $GF.utils.$loadFile(url);
+      // $.ajax({
+      //   type: 'GET',
+      //   url: url,
+      //   async: false,
+      //   success: data => {
+      //     FlowchartHandler.defaultCsv = data;
+      //     result = data;
+      //   },
+      //   error: () => {
+      //     alert('Error when download ' + url);
+      //   },
+      // });
     }
     return result;
   }

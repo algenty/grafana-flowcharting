@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { $GF } from 'globals_class';
-import * as Drawio  from './libs/Drawio_custom'
+import * as Drawio from './libs/Drawio_custom';
+import chroma from 'chroma-js';
 
 declare var mxEvent: any;
 declare var mxClient: any;
@@ -64,6 +65,8 @@ export default class XGraph {
       prop: 'id',
       object: null,
     };
+
+
     // END ZOOM MouseWheele
     XGraph.initMxGgraph();
     if (type === 'xml') {
@@ -77,6 +80,13 @@ export default class XGraph {
       this.csvGraph = definition;
     }
     this.initGraph();
+    if ($GF.DEBUG) {
+      console.log("DEBUG ON");
+      this.graph.addListener(mxEvent.CLICK, (_sender, _evt) => {
+        console.log("DEBUG CLICK");
+        this.eventDebug(_evt);
+      });
+    }
   }
 
   /**
@@ -226,7 +236,8 @@ export default class XGraph {
         codec.decode(xmlDoc.documentElement, this.graph.getModel());
       }
       if (this.type === 'csv') {
-        Drawio.importCsv(this.graph,this.csvGraph)
+        Drawio.importCsv(this.graph, this.csvGraph);
+        this.refresh();
       }
     } catch (error) {
       $GF.log.error('Error in draw', error);
@@ -778,14 +789,16 @@ export default class XGraph {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setColorAnimCell()');
     if (this.animation && color) {
       try {
-        const endColor = this.getStyleCell(mxcell, style);
-        if (endColor) {
-          const startColor = color;
-          const steps = $GF.utils.getStepColors(startColor, endColor, $GF.CONSTANTS.CONF_COLORS_STEPS);
-          const count = 0;
+        const startColor = this.getStyleCell(mxcell, style);
+        if (startColor) {
+          const endColor = color;
+          // const steps = $GF.utils.getStepColors(startColor, endColor, $GF.CONSTANTS.CONF_COLORS_STEPS);
+          const steps = chroma.scale([startColor,endColor]).mode('lrgb').colors($GF.CONSTANTS.CONF_COLORS_STEPS + 1);
+          const count = 1;
           const self = this;
+          const lg = steps.length;
           function graduate(count, steps) {
-            if (count < steps.length) {
+            if (count < lg) {
               self.setStyleCell(mxcell, style, steps[count]);
               window.setTimeout(() => {
                 graduate(count + 1, steps);
@@ -794,13 +807,18 @@ export default class XGraph {
           }
           graduate(count, steps);
         } else {
-          this.setStyleCell(mxcell, style, color);
+          // let hex = Color(color).hex();
+          let hex = chroma(color).hex();
+          this.setStyleCell(mxcell, style, hex);
         }
       } catch (error) {
         $GF.log.error('Error on graduate color', error);
         this.setStyleCell(mxcell, style, color);
       }
     } else {
+      if(color !== null) {
+        color =chroma(color).hex();
+      }
       this.setStyleCell(mxcell, style, color);
     }
     trc.after();
@@ -962,6 +980,14 @@ export default class XGraph {
     }
   }
 
+  eventDebug(me: mxMouseEvent) {
+    console.log("DEBUG mxMouseEvent", me);
+    // const state = me.getState();
+    // if (state) {
+    //   console.log("DEBUG state",state);
+    // }
+  }
+
   /**
    * Event for double click on graph
    *
@@ -970,8 +996,6 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventDbClick(evt: MouseEvent, mxcell: mxCell) {
-    $GF.log.info('XGraph.eventDbClick()');
-    $GF.log.info('XGraph.eventDbClick() container.getBoundingClientRect()', this.container.getBoundingClientRect());
     if (mxcell !== undefined) {
       this.lazyZoomCell(mxcell);
     }
@@ -985,7 +1009,6 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventMouseWheel(evt: WheelEvent, up: boolean) {
-    $GF.log.info('XGraph.eventMouseWheel()');
     if (this.graph.isZoomWheelEvent(evt)) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {
@@ -1142,7 +1165,7 @@ export default class XGraph {
   async blinkCell(cell: mxCell, ms: number) {
     if (!cell.blink) {
       const self = this;
-      const bl_on = function() {
+      const bl_on = function () {
         // console.log('bl_on');
         const color = '#f5f242';
         const opacity = 100;
@@ -1164,7 +1187,7 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function() {
+      const bl_off = function () {
         if (cell && cell.blink_on) {
           // console.log('bl_off');
           const hl = cell.blink_on;

@@ -15,8 +15,8 @@ class GFCONSTANT {
   CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
   CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
   CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
-  CONF_COLORS_STEPS = 5;
-  CONF_COLORS_MS = 40;
+  CONF_COLORS_STEPS = 8;
+  CONF_COLORS_MS = 30;
   CONF_ANIMS_STEP = 5;
   CONF_ANIMS_MS = 40;
   CONF_BLINK_COLOR = '#f5f242';
@@ -73,8 +73,8 @@ class GFCONSTANT {
   ];
   DIOTHEME_TYPES: gf.TDioThemeList = [
     { text: 'Dark', value: 'dark' },
-    { text: 'Kennedy', value: 'kennedy' },
-    { text: 'Minimal', value: 'minimal' },
+    { text: 'Light', value: 'kennedy' },
+    { text: 'Mobile', value: 'minimal' },
     { text: 'atlas', value: 'atlas' },
   ];
   IDENT_TYPES: { text: string; value: gf.TPropertieKey }[] = [
@@ -135,6 +135,7 @@ class GFCONSTANT {
   COLORMETHODS: gf.TStyleColorList = [
     { text: 'Shape Stroke/Border', value: 'strokeColor' },
     { text: 'Shape Fill', value: 'fillColor' },
+    { text: 'Shape Gradient', value: 'gradientColor' },
     { text: 'Label font color', value: 'fontColor' },
     { text: 'Label background color', value: 'labelBackgroundColor' },
     { text: 'Label border color', value: 'labelBorderColor' },
@@ -648,20 +649,21 @@ export class $GF {
   static log: GFLog = GFLog.init();
   static trace: GFTrace = GFTrace.init();
   static plugin: GFPlugin;
+  static DEBUG = true;
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     loadJS: (fname: string) => void;
     sleep: (ms: number, mess?: string) => void;
     uniqueID: () => string;
-    getRatioColor: (ratio: number, colorStart: string, colorEnd: string) => string;
+    // getRatioColor: (ratio: number, colorStart: string, colorEnd: string) => string;
     matchString: (str: string, pattern: string | undefined, regex?: boolean) => boolean;
     stringToJsRegex: (str: string) => RegExp;
     isencoded: (data: string) => boolean;
     minify: (text: string) => string;
     prettify: (text: string) => string;
     getMarky: () => any;
-    getStepColors: (colorStart: string, colorEnd: string, colorCount: number) => string[];
+    // getStepColors: (colorStart: string, colorEnd: string, colorCount: number) => string[];
     evalIt: (code: string) => string;
     loadFile: (fname: string) => string;
     $loadFile: (fname: string) => string;

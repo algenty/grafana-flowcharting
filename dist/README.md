@@ -46,7 +46,9 @@ Arnaud
 
 ## [[0.9.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0.zip) - 2020-05-11 
 ### Added
+  - CSV Format (https://drawio-app.com/import-from-csv-to-drawio/)
   - Aggregation : Time of last point  
+  - Gradient Color (TODO : Fix When no gradient)
 
   
 ### Fixed

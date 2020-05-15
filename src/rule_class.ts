@@ -4,6 +4,7 @@ import { State } from './state_class';
 import _ from 'lodash';
 import { Metric } from 'metric_class';
 import { $GF } from 'globals_class';
+import chroma from 'chroma-js';
 
 /**
  * Rule definition
@@ -510,9 +511,11 @@ export class Rule {
     let color: string;
     let value: any;
     if (index !== colors.length - 1) {
-      let ratio = 0.5;
+      const ratio = 0.5;
       let colorEnd = colors[index + 1];
-      color = $GF.utils.getRatioColor(ratio, colorStart, colorEnd);
+      // color = $GF.utils.getRatioColor(ratio, colorStart, colorEnd);
+      let f = chroma.scale([colorStart,colorEnd]).mode('lrgb');
+      color = f(ratio).hex();
       if (this.data.type === 'number') {
         let absoluteDistance = thresholds[index] - thresholds[index - 1];
         value = absoluteDistance / 2 + thresholds[index - 1];
@@ -915,7 +918,8 @@ export class Rule {
       let absoluteDistance = thresholds[cursor + 1] - thresholds[cursor];
       let valueDistanceFromMin = value - thresholds[cursor];
       let ratio = valueDistanceFromMin / absoluteDistance;
-      let color = $GF.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
+      // let color = $GF.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
+      let color = chroma.scale([colors[cursor + 1], colors[cursor + 2]]).mode('lrgb')(ratio).hex();
       return color;
     }
     return '';

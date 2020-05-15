@@ -34,13 +34,15 @@ declare module gf {
     'fillColor',
     'strokeColor',
     'fontColor',
+    'gradientColor',
     'imageBorder',
     'imageBackground',
     'shape',
     'overflow'
   ];
-  declare type TStyleColorKeys = 'fillColor' | 'strokeColor' | 'fontColor' | 'imageBorder' | 'imageBackground';
-  declare type TStyleColorList = { text: string; value: TStyleColor.Keys }[];
+  declare type TStyleColorKeys = 'fillColor' | 'strokeColor' | 'gradientColor' | 'fontColor' | 'labelBackgroundColor' | 'labelBorderColor' | 'imageBorder' | 'imageBackground';
+  declare type TStyleColorElt = { text: string; value: TStyleColor.Keys };
+  declare type TStyleColorList = TStyleColorElt[];
   declare type TStyleEventKeys =
     | 'shape'
     | 'rotation'
@@ -93,8 +95,8 @@ declare module gf {
   }
 
   declare type TCounterKeys = 'linear' | 'progressive';
-  declare type TCounterList = { text: string; value: TCounterKeys };
-  declare type TCounterList = TCounterList[];
+  declare type TCounterElt = { text: string; value: TCounterKeys };
+  declare type TCounterList = TCounterElt[];
 
   declare type TDioThemeKeys = 'dark' | 'kennedy' | 'minimal' | 'atlas';
   declare type TDioThemeElt = { text: string; value: TDioThemeKeys };
