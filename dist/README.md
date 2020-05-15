@@ -44,15 +44,18 @@ Arnaud
 
 # Changelog
 
-## [[0.9.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0.zip) - 2020-05-11 
+## [[0.9.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0-SNAPSHOT.zip) - 2020-05-16 
 ### Added
-  - CSV Format (https://drawio-app.com/import-from-csv-to-drawio/)
+  - CSV Format support for flowchart source (https://drawio-app.com/import-from-csv-to-drawio/)
   - Aggregation : Time of last point  
-  - Gradient Color (TODO : Fix When no gradient)
-
+  - New fill Method : Gradient ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/gradients_color_ani2.gif?raw=true))  
+  - Best render animated color with chroma-js.
+  - New Events/Animations Mapping :
+    * Gradient direction  
+    * Arrow start and end connector  
   
 ### Fixed
-  - Fixed : Flowchart grid display    
+  - Fixed : Flowchart grid display     
   
 ## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
 ### Added
@@ -189,7 +192,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 # Cooming soon/Roadmap
 
 ## 1.0 Next/Requested enhancements
-  - [ ] Custom libs.
   - [X] Internat draw.io website [(issue #43)](https://github.com/algenty/grafana-flowcharting/issues/43)  
   - [X] Display tooltip (0.4.0)
   - [ ] Export SVG, png,  options
@@ -206,7 +208,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Variable support in link (0.5.0)
   - [X] Zoom/Unzoom (0.4.0)
   - [ ] Shared graph crosshair
-  - [ ] CSV source
+  - [X] CSV source
   - [X] Map/search shape by value
   - [X] Variables support for downloaded source and compressed source
   - [ ] Multi graph with auto link when errors

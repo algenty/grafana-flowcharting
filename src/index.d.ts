@@ -40,7 +40,15 @@ declare module gf {
     'shape',
     'overflow'
   ];
-  declare type TStyleColorKeys = 'fillColor' | 'strokeColor' | 'gradientColor' | 'fontColor' | 'labelBackgroundColor' | 'labelBorderColor' | 'imageBorder' | 'imageBackground';
+  declare type TStyleColorKeys =
+    | 'fillColor'
+    | 'strokeColor'
+    | 'gradientColor'
+    | 'fontColor'
+    | 'labelBackgroundColor'
+    | 'labelBorderColor'
+    | 'imageBorder'
+    | 'imageBackground';
   declare type TStyleColorElt = { text: string; value: TStyleColor.Keys };
   declare type TStyleColorList = TStyleColorElt[];
   declare type TStyleEventKeys =
@@ -56,7 +64,10 @@ declare module gf {
     | 'fold'
     | 'height'
     | 'width'
-    | 'image';
+    | 'image'
+    | 'endArrow'
+    | 'startArrow'
+    | 'gradientDirection';
   declare type TStyleEventElt = {
     text: string;
     value: TStyleEventKeys;

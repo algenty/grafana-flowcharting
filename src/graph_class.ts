@@ -66,7 +66,6 @@ export default class XGraph {
       object: null,
     };
 
-
     // END ZOOM MouseWheele
     XGraph.initMxGgraph();
     if (type === 'xml') {
@@ -81,9 +80,9 @@ export default class XGraph {
     }
     this.initGraph();
     if ($GF.DEBUG) {
-      console.log("DEBUG ON");
+      console.log('DEBUG ON');
       this.graph.addListener(mxEvent.CLICK, (_sender, _evt) => {
-        console.log("DEBUG CLICK");
+        console.log('DEBUG CLICK');
         this.eventDebug(_evt);
       });
     }
@@ -793,7 +792,10 @@ export default class XGraph {
         if (startColor) {
           const endColor = color;
           // const steps = $GF.utils.getStepColors(startColor, endColor, $GF.CONSTANTS.CONF_COLORS_STEPS);
-          const steps = chroma.scale([startColor,endColor]).mode('lrgb').colors($GF.CONSTANTS.CONF_COLORS_STEPS + 1);
+          const steps = chroma
+            .scale([startColor, endColor])
+            .mode('lrgb')
+            .colors($GF.CONSTANTS.CONF_COLORS_STEPS + 1);
           const count = 1;
           const self = this;
           const lg = steps.length;
@@ -816,8 +818,8 @@ export default class XGraph {
         this.setStyleCell(mxcell, style, color);
       }
     } else {
-      if(color !== null) {
-        color =chroma(color).hex();
+      if (color !== null) {
+        color = chroma(color).hex();
       }
       this.setStyleCell(mxcell, style, color);
     }
@@ -981,7 +983,7 @@ export default class XGraph {
   }
 
   eventDebug(me: mxMouseEvent) {
-    console.log("DEBUG mxMouseEvent", me);
+    console.log('DEBUG mxMouseEvent', me);
     // const state = me.getState();
     // if (state) {
     //   console.log("DEBUG state",state);
@@ -1165,7 +1167,7 @@ export default class XGraph {
   async blinkCell(cell: mxCell, ms: number) {
     if (!cell.blink) {
       const self = this;
-      const bl_on = function () {
+      const bl_on = function() {
         // console.log('bl_on');
         const color = '#f5f242';
         const opacity = 100;
@@ -1187,7 +1189,7 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function () {
+      const bl_off = function() {
         if (cell && cell.blink_on) {
           // console.log('bl_off');
           const hl = cell.blink_on;

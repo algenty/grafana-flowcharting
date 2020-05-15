@@ -19917,7 +19917,7 @@ var GFCONSTANT = function GFCONSTANT() {
   this.CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
   this.CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
   this.CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
-  this.CONF_COLORS_STEPS = 8;
+  this.CONF_COLORS_STEPS = 6;
   this.CONF_COLORS_MS = 30;
   this.CONF_ANIMS_STEP = 5;
   this.CONF_ANIMS_MS = 40;
@@ -20186,6 +20186,13 @@ var GFCONSTANT = function GFCONSTANT() {
     placeholder: '0-100',
     "default": 100
   }, {
+    text: 'Shape : Gradient direction',
+    value: 'gradientDirection',
+    type: 'text',
+    placeholder: 'Direction name',
+    "default": 'south',
+    typeahead: 'south|east|north|west'
+  }, {
     text: 'Shape : Collapse/Expande (0|1)',
     value: 'fold',
     type: 'number',
@@ -20197,6 +20204,23 @@ var GFCONSTANT = function GFCONSTANT() {
     value: 'barPos',
     type: 'number',
     placeholder: '0-100'
+  }, {
+    text: 'Arrow : Replace text (text)',
+    value: 'text',
+    type: 'text',
+    placeholder: 'Text'
+  }, {
+    text: 'Arrow : change start marker (text)',
+    value: 'startArrow',
+    type: 'text',
+    placeholder: 'Marker',
+    typeahead: 'none|classic|classicThin|block|blockThin|open|openThin|oval|diamond|diamondThin|openAsync|async|box|halfCircle|dash|cross|circlePlus|circle|ERone|ERmandOne|ERoneToMany|ERzeroToOne'
+  }, {
+    text: 'Arrow : change end marker (text)',
+    value: 'endArrow',
+    type: 'text',
+    placeholder: 'Marker',
+    typeahead: 'none|classic|classicThin|block|blockThin|open|openThin|oval|diamond|diamondThin|openAsync|async|box|halfCircle|dash|cross|circlePlus|circle|ERone|ERmandOne|ERoneToMany|ERzeroToOne'
   }, {
     text: 'Label : Replace text (text)',
     value: 'text',
@@ -20736,7 +20760,7 @@ var GFTrace = function () {
   return GFTrace;
 }();
 
-GFTrace.enable = true;
+GFTrace.enable = false;
 GFTrace.trc = new Map();
 GFTrace.fn = new Map();
 GFTrace.indent = 0;
@@ -21103,9 +21127,9 @@ var XGraph = function () {
     this.initGraph();
 
     if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].DEBUG) {
-      console.log("DEBUG ON");
+      console.log('DEBUG ON');
       this.graph.addListener(mxEvent.CLICK, function (_sender, _evt) {
-        console.log("DEBUG CLICK");
+        console.log('DEBUG CLICK');
 
         _this.eventDebug(_evt);
       });
@@ -21744,7 +21768,7 @@ var XGraph = function () {
   }, {
     key: "eventDebug",
     value: function eventDebug(me) {
-      console.log("DEBUG mxMouseEvent", me);
+      console.log('DEBUG mxMouseEvent', me);
     }
   }, {
     key: "eventDbClick",

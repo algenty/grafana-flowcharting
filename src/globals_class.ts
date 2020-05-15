@@ -15,7 +15,7 @@ class GFCONSTANT {
   CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
   CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
   CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
-  CONF_COLORS_STEPS = 8;
+  CONF_COLORS_STEPS = 6;
   CONF_COLORS_MS = 30;
   CONF_ANIMS_STEP = 5;
   CONF_ANIMS_MS = 40;
@@ -150,6 +150,7 @@ class GFCONSTANT {
     { text: 'Shape : Change height (number)', value: 'height', type: 'number', placeholder: 'Number of px' },
     { text: 'Shape : Change width (number)', value: 'width', type: 'number', placeholder: 'Number of px' },
     { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number', placeholder: '0-100', default: 100 },
+    { text: 'Shape : Gradient direction', value: 'gradientDirection', type: 'text', placeholder: 'Direction name', default: 'south', typeahead: 'south|east|north|west' },
     {
       text: 'Shape : Collapse/Expande (0|1)',
       value: 'fold',
@@ -159,6 +160,9 @@ class GFCONSTANT {
       default: '1',
     },
     { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number', placeholder: '0-100' },
+    { text: 'Arrow : Replace text (text)', value: 'text', type: 'text', placeholder: 'Text' },
+    { text: 'Arrow : change start marker (text)', value: 'startArrow', type: 'text', placeholder: 'Marker', typeahead: 'none|classic|classicThin|block|blockThin|open|openThin|oval|diamond|diamondThin|openAsync|async|box|halfCircle|dash|cross|circlePlus|circle|ERone|ERmandOne|ERoneToMany|ERzeroToOne' },
+    { text: 'Arrow : change end marker (text)', value: 'endArrow', type: 'text', placeholder: 'Marker', typeahead: 'none|classic|classicThin|block|blockThin|open|openThin|oval|diamond|diamondThin|openAsync|async|box|halfCircle|dash|cross|circlePlus|circle|ERone|ERmandOne|ERoneToMany|ERzeroToOne' },
     { text: 'Label : Replace text (text)', value: 'text', type: 'text', placeholder: 'Text' },
     { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number', placeholder: 'Number' },
     { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number', placeholder: '0-100', default: 100 },
@@ -541,7 +545,7 @@ class GFPlugin {
  * @class GFTrace
  */
 class GFTrace {
-  static enable = true;
+  static enable = false;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;

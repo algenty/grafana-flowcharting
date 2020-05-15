@@ -514,7 +514,7 @@ export class Rule {
       const ratio = 0.5;
       let colorEnd = colors[index + 1];
       // color = $GF.utils.getRatioColor(ratio, colorStart, colorEnd);
-      let f = chroma.scale([colorStart,colorEnd]).mode('lrgb');
+      let f = chroma.scale([colorStart, colorEnd]).mode('lrgb');
       color = f(ratio).hex();
       if (this.data.type === 'number') {
         let absoluteDistance = thresholds[index] - thresholds[index - 1];
@@ -919,7 +919,10 @@ export class Rule {
       let valueDistanceFromMin = value - thresholds[cursor];
       let ratio = valueDistanceFromMin / absoluteDistance;
       // let color = $GF.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
-      let color = chroma.scale([colors[cursor + 1], colors[cursor + 2]]).mode('lrgb')(ratio).hex();
+      let color = chroma
+        .scale([colors[cursor + 1], colors[cursor + 2]])
+        .mode('lrgb')(ratio)
+        .hex();
       return color;
     }
     return '';
