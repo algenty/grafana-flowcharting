@@ -51,8 +51,9 @@ Arnaud
   - New fill Method : Gradient ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/gradients_color_ani2.gif?raw=true))  
   - Best render animated color with chroma-js.
   - New Events/Animations Mapping :
-    * Gradient direction  
-    * Arrow start and end connector  
+    * Change Gradient direction  
+    * Change Arrow start and end connectors  
+  - New homepage schema
   
 ### Fixed
   - Fixed : Flowchart grid display     
