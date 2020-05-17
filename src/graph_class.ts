@@ -79,11 +79,19 @@ export default class XGraph {
       this.csvGraph = definition;
     }
     this.initGraph();
+    const self = this;
     if ($GF.DEBUG) {
       console.log('DEBUG ON');
       this.graph.addListener(mxEvent.CLICK, (_sender, _evt) => {
         console.log('DEBUG CLICK');
         this.eventDebug(_evt);
+        if (_evt.properties.cell) {
+          const id = _evt.properties.cell.id;
+          const state = $GF.getVar(`STATE_${id}`);
+          console.log('DEBUG GF STATE', state);
+          const view = self.graph.view;
+          console.log('DEBUG CELL STATE', view.getState(_evt.properties.cell))
+        }
       });
     }
   }
@@ -1167,7 +1175,7 @@ export default class XGraph {
   async blinkCell(cell: mxCell, ms: number) {
     if (!cell.blink) {
       const self = this;
-      const bl_on = function() {
+      const bl_on = function () {
         // console.log('bl_on');
         const color = '#f5f242';
         const opacity = 100;
@@ -1189,7 +1197,7 @@ export default class XGraph {
           }, ms);
         }
       };
-      const bl_off = function() {
+      const bl_off = function () {
         if (cell && cell.blink_on) {
           // console.log('bl_off');
           const hl = cell.blink_on;
@@ -1295,8 +1303,45 @@ export default class XGraph {
     return this.graph.model.isVisible(mxcell);
   }
 
+  async resizeCell(mxcell: mxCell, percent: number, origine?: mxGeometry) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
+    const geo = this.graph.model.getGeometry(mxcell);
+    if (geo !== null) {
+      let _x = origine !== undefined ? origine.x : geo.x;
+      let _ow = origine !== undefined ? origine.width : geo.x;
+      let _y = origine !== undefined ? origine.y : geo.y;
+      let _oh = origine !== undefined ? origine.height : geo.y;
+      let _w = _ow * (percent / 100);
+      let _h = _oh * (percent / 100);
+      _x = _x - (_w - _ow) / 2;
+      _y = _y - (_h - _oh) / 2;
+      if (this.animation) {
+        const steps_x = $GF.getIntervalCounter(geo.x, _x, $GF.CONSTANTS.CONF_ANIMS_STEP);
+        const steps_y = $GF.getIntervalCounter(geo.y, _y, $GF.CONSTANTS.CONF_ANIMS_STEP);
+        const steps_w = $GF.getIntervalCounter(geo.width, _w, $GF.CONSTANTS.CONF_ANIMS_STEP);
+        const steps_h = $GF.getIntervalCounter(geo.height, _h, $GF.CONSTANTS.CONF_ANIMS_STEP);
+        const l = steps_x.length;
+        let count = 0;
+        const self = this;
+        function graduate(count, steps_x, steps_y, steps_w, steps_h) {
+          if (count < l) {
+            window.setTimeout(() => {
+              const _rec = new mxRectangle(steps_x[count], steps_y[count], steps_w[count], steps_h[count]);
+              self.graph.resizeCell(mxcell, _rec, true);
+              graduate(count + 1, steps_x, steps_y, steps_w, steps_h);
+            }, $GF.CONSTANTS.CONF_ANIMS_MS);
+          }
+        }
+        graduate(count, steps_x, steps_y, steps_w, steps_h);
+      } else {
+        const _rec = new mxRectangle(_x, _y, _w, _h);
+        this.graph.resizeCell(mxcell, _rec, true);
+      }
+    }
+    trc.after();
+  }
   // WIDTH AND HEIGHT
-  async resizeCell(mxcell: mxCell, width: number | undefined, height: number | undefined, origine?: mxGeometry) {
+  async changeSizeCell(mxcell: mxCell, width: number | undefined, height: number | undefined, origine?: mxGeometry) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
     const geo = this.graph.model.getGeometry(mxcell);
     if (geo !== null) {

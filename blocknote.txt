@@ -22,8 +22,6 @@ gradientDirection
 
 to front
 to back
-flipH
-flipV
 Zoom/unzoom
 Add text to tooltip
 

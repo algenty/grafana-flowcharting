@@ -47,12 +47,14 @@ Arnaud
 ## [[0.9.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0-SNAPSHOT.zip) - 2020-05-16 
 ### Added
   - CSV Format support for flowchart source (https://drawio-app.com/import-from-csv-to-drawio/)
-  - Aggregation : Time of last point  
+  - New aggregation : Time of last point  
   - New fill Method : Gradient ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/gradients_color_ani2.gif?raw=true))  
-  - Best render animated color with chroma-js.
+  - Best render animated color with chroma-js
   - New Events/Animations Mapping :
     * Change Gradient direction  
     * Change Arrow start and end connectors  
+    * Flip shape horizontally or vertically  
+    * Resize shape in percent   
   - New homepage schema
   
 ### Fixed
@@ -196,6 +198,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Internat draw.io website [(issue #43)](https://github.com/algenty/grafana-flowcharting/issues/43)  
   - [X] Display tooltip (0.4.0)
   - [ ] Export SVG, png,  options
+  - [ ] Google font
   - [X] Add data in tooltip (0.4.0)
   - [X] Use variables/templates in graph (0.4.0)
   - [X] Add custom stencils/libs from draw.io (0.4.0)
@@ -209,15 +212,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Variable support in link (0.5.0)
   - [X] Zoom/Unzoom (0.4.0)
   - [ ] Shared graph crosshair
-  - [X] CSV source
-  - [X] Map/search shape by value
+  - [X] CSV source (0.9.0)
+  - [X] Map/search shape by value (0.8.0)
   - [X] Variables support for downloaded source and compressed source
   - [ ] Multi graph with auto link when errors
   - [X] Gradien Mode for color (0.7.0)
   - [X] More than 3 colors (0.7.0)
   - [X] Graph in tooltip (0.6.0)
   - [X] Histogram
-  - [ ] Merge Graphs
   - [X] carriage return after new rule in tooltips option
   - [X] Filter for null values in graph
   - [X] New style for image : imageBackground, imageBorder
@@ -244,6 +246,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [vkbeautify] - Pretty prints and minifies XML/JSON/SQL/CSV
 * [sanitizer] - Caja's HTML Sanitizer
 * [chartist] - Graph for tooltip
+* [chroma-js] - Calculate interpolate colors
 
 ## Build dependencies
 
@@ -276,7 +279,7 @@ grafana-cli plugins install agenty-flowcharting-panel
 $ git clone https://github.com/algenty/grafana-flowcharting
 $ yarn build
 $ # Make zip file plugin in archives dir
-$ yarn build archive
+$ yarn archive
 $ # for dev watching
 $ yarn dev
 ```

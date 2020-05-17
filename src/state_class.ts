@@ -383,7 +383,7 @@ export class GFState {
     this.init_core();
   }
 
-  init_core() {}
+  init_core() { }
 
   addValue(key: string, value: any) {
     if (this.keys.includes(key) !== true) {
@@ -457,7 +457,7 @@ export class GFState {
     return this;
   }
 
-  apply_core(key: any, value: any) {}
+  apply_core(key: any, value: any) { }
 
   isMatched(key?: string): boolean {
     if (key !== undefined) {
@@ -524,7 +524,7 @@ export class GFState {
     return this;
   }
 
-  reset_core(key: any, value: any) {}
+  reset_core(key: any, value: any) { }
 
   prepare(): this {
     if (this.isChanged()) {
@@ -544,11 +544,11 @@ class EventState extends GFState {
   keys: gf.TStyleEventKeys[] = [];
   geo:
     | {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-      }
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+    }
     | undefined = undefined;
   constructor(xgraph: XGraph, mxcell: mxCell) {
     super(xgraph, mxcell);
@@ -612,7 +612,7 @@ class EventState extends GFState {
           let height = Number(value);
           if (this.isMatched('height')) {
             let width = this.isMatched('width') ? Number(this.getMatchValue('width')) : undefined;
-            this.xgraph.resizeCell(this.mxcell, width, height, this.geo);
+            this.xgraph.changeSizeCell(this.mxcell, width, height, this.geo);
             this.unset('width');
           } else {
             if (!this.isMatched('width')) {
@@ -628,7 +628,7 @@ class EventState extends GFState {
           let width = Number(value);
           if (this.isMatched('width')) {
             let height = this.isMatched('height') ? Number(this.getMatchValue('height')) : undefined;
-            this.xgraph.resizeCell(this.mxcell, width, height, this.geo);
+            this.xgraph.changeSizeCell(this.mxcell, width, height, this.geo);
             this.unset('width');
           } else {
             if (!this.isMatched('height')) {
@@ -638,6 +638,14 @@ class EventState extends GFState {
           }
         }
         break;
+
+      case 'size':
+        if (this.geo !== undefined) {
+          let percent = Number(value);
+          this.xgraph.resizeCell(this.mxcell, percent, this.geo);
+        }
+        break;
+
       case 'barPos':
       case 'fontSize':
       case 'opacity':
@@ -678,6 +686,10 @@ class EventState extends GFState {
 
       case 'width':
         return this.geo !== undefined ? this.geo.width : undefined;
+        break;
+
+      case 'size':
+        return 100;
         break;
 
       case 'fold':

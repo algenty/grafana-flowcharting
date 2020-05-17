@@ -21,7 +21,6 @@ export class StateHandler {
    * @memberof StateHandler
    */
   constructor(xgraph: XGraph) {
-    $GF.log.info('StateHandler.constructor()');
     this.states = new Map();
     this.xgraph = xgraph;
     this.initStates(this.xgraph);
@@ -35,13 +34,14 @@ export class StateHandler {
    * @memberof StateHandler
    */
   initStates(xgraph: XGraph): this {
-    $GF.log.info('StateHandler.initStates()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'initStates()');
     this.xgraph = xgraph;
     this.states.clear();
     const mxcells = xgraph.getMxCells();
     _.each(mxcells, mxcell => {
       this.addState(mxcell);
     });
+    trc.after();
     return this;
   }
 
@@ -53,7 +53,7 @@ export class StateHandler {
    * @memberof StateHandler
    */
   getStatesForRule(rule: Rule) {
-    $GF.log.info('StateHandler.getStatesForRule()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'getStatesForRule()');
     const result = new Map();
     let name: string | null;
     const xgraph = this.xgraph;
@@ -96,6 +96,7 @@ export class StateHandler {
         }
       }
     });
+    trc.after();
     return result;
   }
 
@@ -154,8 +155,13 @@ export class StateHandler {
    * @memberof StateHandler
    */
   addState(mxcell: mxCell): State {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'addState()');
     const state = new State(mxcell, this.xgraph);
     this.states.set(mxcell.id, state);
+    if($GF.DEBUG) {
+      $GF.setVar(`STATE_${state.cellId}`,state);
+    }
+    trc.after();  
     return state;
   }
 
@@ -212,7 +218,7 @@ export class StateHandler {
    * Apply color and text
    */
   applyStates(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'applyStates()');
     this.states.forEach(state => {
       state.async_applyState();
     });

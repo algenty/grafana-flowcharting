@@ -64,9 +64,12 @@ declare module gf {
     | 'fold'
     | 'height'
     | 'width'
+    | 'size'
     | 'image'
     | 'endArrow'
     | 'startArrow'
+    | 'flipH'
+    | 'flipV'
     | 'gradientDirection';
   declare type TStyleEventElt = {
     text: string;

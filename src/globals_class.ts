@@ -147,8 +147,9 @@ class GFCONSTANT {
     { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number', placeholder: '0-360', default: 0 },
     { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number', placeholder: 'Number in ms', default: 500 },
     { text: 'Shape : Hide/Show (0|1)', value: 'visibility', type: 'number', placeholder: '0 or 1', typeahead: '0|1' },
-    { text: 'Shape : Change height (number)', value: 'height', type: 'number', placeholder: 'Number of px' },
-    { text: 'Shape : Change width (number)', value: 'width', type: 'number', placeholder: 'Number of px' },
+    { text: 'Shape : Height (number)', value: 'height', type: 'number', placeholder: 'Number of px' },
+    { text: 'Shape : Width (number)', value: 'width', type: 'number', placeholder: 'Number of px' },
+    { text: 'Shape : Resize (percent)', value: 'size', type: 'number', placeholder: 'percent' },
     { text: 'Shape : Opacity (0-100)', value: 'opacity', type: 'number', placeholder: '0-100', default: 100 },
     {
       text: 'Shape : Gradient direction',
@@ -167,7 +168,8 @@ class GFCONSTANT {
       default: '1',
     },
     { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number', placeholder: '0-100' },
-    { text: 'Arrow : Replace text (text)', value: 'text', type: 'text', placeholder: 'Text' },
+    { text: 'Shape : Flip horizontally (0|1)', value: 'flipH', type: 'number', placeholder: '0 or 1', typeahead: '0|1' },
+    { text: 'Shape : Flip vertically (0|1)', value: 'flipV', type: 'number', placeholder: '0 or 1', typeahead: '0|1' },
     {
       text: 'Arrow : change start marker (text)',
       value: 'startArrow',
@@ -326,7 +328,7 @@ class GFLog {
   static ERROR = 3;
   static logLevel = GFLog.WARN;
   static logDisplay = true;
-  constructor() {}
+  constructor() { }
 
   static init(): GFLog {
     return new GFLog();
@@ -409,7 +411,7 @@ class GFPlugin {
   static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   static contextRoot: string;
-  constructor() {}
+  constructor() { }
 
   /**
    * init GFPlugin
@@ -566,21 +568,21 @@ class GFPlugin {
  * @class GFTrace
  */
 class GFTrace {
-  static enable = false;
+  static enable = true;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;
   trace:
     | {
-        Name: string;
-        Id: string;
-        Args: any;
-        Return: any;
-        Before: number;
-        End: number | undefined;
-        ExecTime: number | undefined;
-        Indent: number;
-      }
+      Name: string;
+      Id: string;
+      Args: any;
+      Return: any;
+      Before: number;
+      End: number | undefined;
+      ExecTime: number | undefined;
+      Indent: number;
+    }
     | undefined;
 
   constructor(fn?: string) {
@@ -608,15 +610,15 @@ class GFTrace {
   ):
     | GFTrace
     | {
-        after: () => void;
-      } {
+      after: () => void;
+    } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       GFTrace._inc(fn);
       return t;
     }
-    return { after: () => {} };
+    return { after: () => { } };
   }
 
   static _inc(fn) {
@@ -674,7 +676,7 @@ export class $GF {
   static log: GFLog = GFLog.init();
   static trace: GFTrace = GFTrace.init();
   static plugin: GFPlugin;
-  static DEBUG = false;
+  static DEBUG = true;
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
@@ -725,7 +727,6 @@ export class $GF {
    * @memberof GFGlobal
    */
   static getGlobalVars(): GFVariables {
-    // console.log('getGlobalVars()',_GF._globalvars)
     if ($GF._globalvars === undefined) {
       $GF._globalvars = new GFVariables();
     }
