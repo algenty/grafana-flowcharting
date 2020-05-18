@@ -765,11 +765,11 @@ class ShapeState extends GFState {
     $GF.log.info('ShapeState [' + this.mxcell.id + ']');
     this.keys = $GF.CONSTANTS.COLORMETHODS.map(x => x.value);
     this.fullStylesString = this.mxcell.getStyle();
-    this.keys.forEach(key => {
-      const value = this.xgraph.getStyleCell(this.mxcell, key);
-      this.addValue(key, value);
-      $GF.log.debug('ShapeState [' + this.mxcell.id + '] Add value : ' + key, value);
-    });
+    // this.keys.forEach(key => {
+    //   const value = this.xgraph.getStyleCell(this.mxcell, key);
+    //   this.addValue(key, value);
+    //   $GF.log.debug('ShapeState [' + this.mxcell.id + '] Add value : ' + key, value);
+    // });
     this.mxcell.GF_tooltipHandler = null;
   }
 

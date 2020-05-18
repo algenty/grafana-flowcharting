@@ -32,3 +32,6 @@ https://jgraph.github.io/mxgraph/docs/manual.html
 https://gka.github.io/chroma.js/
 
 # Animation
+
+# Chartist gradient
+https://codepen.io/junglist/pen/MbPgXd
