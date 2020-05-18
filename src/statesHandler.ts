@@ -158,10 +158,10 @@ export class StateHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addState()');
     const state = new State(mxcell, this.xgraph);
     this.states.set(mxcell.id, state);
-    if($GF.DEBUG) {
-      $GF.setVar(`STATE_${state.cellId}`,state);
+    if ($GF.DEBUG) {
+      $GF.setVar(`STATE_${state.cellId}`, state);
     }
-    trc.after();  
+    trc.after();
     return state;
   }
 

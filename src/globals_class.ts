@@ -168,7 +168,13 @@ class GFCONSTANT {
       default: '1',
     },
     { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number', placeholder: '0-100' },
-    { text: 'Shape : Flip horizontally (0|1)', value: 'flipH', type: 'number', placeholder: '0 or 1', typeahead: '0|1' },
+    {
+      text: 'Shape : Flip horizontally (0|1)',
+      value: 'flipH',
+      type: 'number',
+      placeholder: '0 or 1',
+      typeahead: '0|1',
+    },
     { text: 'Shape : Flip vertically (0|1)', value: 'flipV', type: 'number', placeholder: '0 or 1', typeahead: '0|1' },
     {
       text: 'Arrow : change start marker (text)',
@@ -328,7 +334,7 @@ class GFLog {
   static ERROR = 3;
   static logLevel = GFLog.WARN;
   static logDisplay = true;
-  constructor() { }
+  constructor() {}
 
   static init(): GFLog {
     return new GFLog();
@@ -411,7 +417,7 @@ class GFPlugin {
   static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   static contextRoot: string;
-  constructor() { }
+  constructor() {}
 
   /**
    * init GFPlugin
@@ -568,21 +574,21 @@ class GFPlugin {
  * @class GFTrace
  */
 class GFTrace {
-  static enable = true;
+  static enable = false;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;
   trace:
     | {
-      Name: string;
-      Id: string;
-      Args: any;
-      Return: any;
-      Before: number;
-      End: number | undefined;
-      ExecTime: number | undefined;
-      Indent: number;
-    }
+        Name: string;
+        Id: string;
+        Args: any;
+        Return: any;
+        Before: number;
+        End: number | undefined;
+        ExecTime: number | undefined;
+        Indent: number;
+      }
     | undefined;
 
   constructor(fn?: string) {
@@ -610,15 +616,15 @@ class GFTrace {
   ):
     | GFTrace
     | {
-      after: () => void;
-    } {
+        after: () => void;
+      } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       GFTrace._inc(fn);
       return t;
     }
-    return { after: () => { } };
+    return { after: () => {} };
   }
 
   static _inc(fn) {
@@ -676,7 +682,7 @@ export class $GF {
   static log: GFLog = GFLog.init();
   static trace: GFTrace = GFTrace.init();
   static plugin: GFPlugin;
-  static DEBUG = true;
+  static DEBUG = false;
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
