@@ -64,6 +64,7 @@ Arnaud
     * Flip shape horizontally or vertically  
     * Resize shape in percent ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/resize_ani.gif?raw=true))  
   - New homepage schema
+  - Support external fonts like google fonts
   
 ### Fixed
   - Fixed : Flowchart grid display     

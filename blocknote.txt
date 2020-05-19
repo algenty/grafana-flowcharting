@@ -35,3 +35,4 @@ https://gka.github.io/chroma.js/
 
 # Chartist gradient
 https://codepen.io/junglist/pen/MbPgXd
+https://fvsch.com/svg-gradient-fill/

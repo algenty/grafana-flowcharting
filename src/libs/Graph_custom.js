@@ -38,6 +38,8 @@ mxTooltipHandler.prototype.hideTooltip = function () {
   }
 };
 
+mxTooltipHandler.prototype.delay = 200;
+
 Graph.prototype.getTooltipForCell = function (cell) {
   let hasTips = false;
   let div = document.createElement('div');

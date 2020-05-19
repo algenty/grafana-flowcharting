@@ -13,6 +13,7 @@ declare var mxCellHighlight: any;
 declare var mxRectangle: any;
 declare var mxUtils: any;
 declare var Graph: any;
+declare var mxTooltipHandler: any;
 // declare var EditorUi:any;
 // declare var mxStencilRegistry: any;
 
@@ -141,6 +142,7 @@ export default class XGraph {
         $GF.utils.evalRaw(code);
         XGraph.postInitGlobalVars();
         code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
+        mxTooltipHandler.prototype.delay = $GF.CONSTANTS.CONF_TOOLTIPS_DELAY;
         $GF.utils.evalRaw(code);
       }
       XGraph.initialized = true;
@@ -241,6 +243,7 @@ export default class XGraph {
         const xmlDoc = mxUtils.parseXml(this.xmlGraph);
         const codec = new mxCodec(xmlDoc);
         codec.decode(xmlDoc.documentElement, this.graph.getModel());
+        this.loadExtFont();
       }
       if (this.type === 'csv') {
         Drawio.importCsv(this.graph, this.csvGraph);
@@ -255,6 +258,30 @@ export default class XGraph {
     }
     trc.after();
     return this;
+  }
+
+  loadExtFont() {
+    let extFonts = this.graph.getModel().extFonts;
+    if (extFonts)
+    {
+      try
+      {
+        extFonts = extFonts.split('|').map(function(ef)
+        {
+          var parts = ef.split('^');
+          return {name: parts[0], url: parts[1]};
+        });
+        
+        for (var i = 0; i < extFonts.length; i++)
+        {
+          this.graph.addExtFont(extFonts[i].name, extFonts[i].url);
+        }
+      }
+      catch(e)
+      {
+        $GF.log.error('ExtFonts format error:',e.message);
+      }
+    }
   }
 
   /**
@@ -827,7 +854,11 @@ export default class XGraph {
       }
     } else {
       if (color !== null) {
-        color = chroma(color).hex();
+        try {
+          color = chroma(color).hex();
+        } catch (error) {
+          $GF.log.error('Invalid Color',color);
+        }
       }
       this.setStyleCell(mxcell, style, color);
     }

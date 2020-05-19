@@ -15,6 +15,7 @@ class GFCONSTANT {
   CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
   CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
   CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
+  CONF_TOOLTIPS_DELAY = 200;
   CONF_COLORS_STEPS = 6;
   CONF_COLORS_MS = 30;
   CONF_ANIMS_STEP = 5;
