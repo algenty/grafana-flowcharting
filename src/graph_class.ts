@@ -262,24 +262,18 @@ export default class XGraph {
 
   loadExtFont() {
     let extFonts = this.graph.getModel().extFonts;
-    if (extFonts)
-    {
-      try
-      {
-        extFonts = extFonts.split('|').map(function(ef)
-        {
+    if (extFonts) {
+      try {
+        extFonts = extFonts.split('|').map(function(ef) {
           var parts = ef.split('^');
-          return {name: parts[0], url: parts[1]};
+          return { name: parts[0], url: parts[1] };
         });
-        
-        for (var i = 0; i < extFonts.length; i++)
-        {
+
+        for (var i = 0; i < extFonts.length; i++) {
           this.graph.addExtFont(extFonts[i].name, extFonts[i].url);
         }
-      }
-      catch(e)
-      {
-        $GF.log.error('ExtFonts format error:',e.message);
+      } catch (e) {
+        $GF.log.error('ExtFonts format error:', e.message);
       }
     }
   }
@@ -857,7 +851,7 @@ export default class XGraph {
         try {
           color = chroma(color).hex();
         } catch (error) {
-          $GF.log.error('Invalid Color',color);
+          $GF.log.error('Invalid Color', color);
         }
       }
       this.setStyleCell(mxcell, style, color);
