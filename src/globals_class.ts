@@ -84,7 +84,9 @@ class GFCONSTANT {
   ];
   AGGREGATION_TYPES: gf.TAggregationList = [
     { text: 'First', value: 'first' },
+    { text: 'First (not null)', value: 'first_notnull' },
     { text: 'Last', value: 'current' },
+    { text: 'Last (not null)', value: 'current_notnull' },
     { text: 'Min', value: 'min' },
     { text: 'Max', value: 'max' },
     { text: 'Sum', value: 'total' },

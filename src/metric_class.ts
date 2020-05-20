@@ -95,11 +95,37 @@ export class Serie extends Metric {
   }
 
   addCustomStats() {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'addCustomStats()');
     try {
-      this.metrics.stats['last_time'] = this.metrics.flotpairs[this.metrics.flotpairs.length - 1][0];
+      let lg = this.metrics.flotpairs.length;
+      // LAST TIME
+      this.metrics.stats['last_time'] = this.metrics.flotpairs[lg - 1][0];
+      // LAST
+      this.metrics.stats['current'] = this.metrics.flotpairs[lg - 1][1];
+      // LAST NOT NULL
+      this.metrics.stats['current_notnull'] = null;
+      let idx = lg - 1;
+      while ((this.metrics.flotpairs[idx][1] === null || this.metrics.flotpairs[idx][1] === undefined) && idx >= 0) {
+        idx -= 1;
+      }
+      if (idx >= 0) {
+        this.metrics.stats['current_notnull'] = this.metrics.flotpairs[idx][1];
+      }
+      // FIRST
+      this.metrics.stats['first'] = this.metrics.flotpairs[0][1];
+      // FIRST NOT NULL
+      this.metrics.stats['first_notnull'] = null;
+      idx = 0;
+      while ((this.metrics.flotpairs[idx][1] === null || this.metrics.flotpairs[idx][1] === undefined) && idx < lg) {
+        idx += 1;
+      }
+      if (idx < lg) {
+        this.metrics.stats['first_notnull'] = this.metrics.flotpairs[idx][1];
+      }
     } catch (error) {
       $GF.log.error('Unable to add custom stats', error);
     }
+    trc.after();
   }
 
   /**
@@ -221,7 +247,9 @@ export class Table extends Metric {
       table.stats[currName].logmin = Number.MAX_VALUE;
       table.stats[currName].avg = null;
       table.stats[currName].current = null;
+      table.stats[currName].current_notnull = null;
       table.stats[currName].first = null;
+      table.stats[currName].first_notnull = null;
       table.stats[currName].delta = 0;
       table.stats[currName].diff = null;
       table.stats[currName].range = null;

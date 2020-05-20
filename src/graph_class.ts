@@ -242,8 +242,12 @@ export default class XGraph {
       if (this.type === 'xml') {
         const xmlDoc = mxUtils.parseXml(this.xmlGraph);
         const codec = new mxCodec(xmlDoc);
+        this.graph.model.clear();
+        this.graph.view.scale = 1;
         codec.decode(xmlDoc.documentElement, this.graph.getModel());
         this.loadExtFont();
+        this.graph.updateCssTransform();
+        this.graph.selectUnlockedLayer();
       }
       if (this.type === 'csv') {
         Drawio.importCsv(this.graph, this.csvGraph);
@@ -260,8 +264,9 @@ export default class XGraph {
     return this;
   }
 
-  loadExtFont() {
-    let extFonts = this.graph.getModel().extFonts;
+  async loadExtFont() {
+    const model = this.graph.getModel();
+    let extFonts = model.extFonts;
     if (extFonts) {
       try {
         extFonts = extFonts.split('|').map(function(ef) {

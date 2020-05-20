@@ -126,7 +126,9 @@ declare module gf {
   // Aggregation
   declare type TAggregationKeys =
     | 'first'
+    | 'first_notnull'
     | 'current'
+    | 'current_notnull'
     | 'min'
     | 'max'
     | 'total'
