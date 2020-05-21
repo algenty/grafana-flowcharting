@@ -13,12 +13,12 @@ Draw.io can create many types of diagrams :
   * Workflows (Jenkins, Ansible Tower, OpenShift, ...)  
 
 Draw your artwork, feed it live data and define in flowcharting how the data will interact with the diagram.
-  * Monitor state and performance
-  * Interact with the diagram
-  * Change the displayed objects based on data or state
-  * Add links to objects
-  * Make full use of variables to modify shapes, colours, links, download paths and more.
-  * Support for regular expressions for matching and substitutions
+  * Monitor state and performance  
+  * Interact with the diagram  
+  * Change the displayed objects based on data or state  
+  * Add links to objects  
+  * Make full use of variables to modify shapes, colours, links, download paths and more.  
+  * Support for regular expressions for matching and substitutions  
 
 ## Use cases
   - Technical schema example  
