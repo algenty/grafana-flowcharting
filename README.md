@@ -39,12 +39,12 @@ See more example at draw.io
 <https://github.com/algenty/grafana-flowcharting>
 
 # Sponsors and Funding
-Since version 0.7.0 was release and after a years worth of work, I activated the sponsor button.    
+Since version 0.7.0 was released and after a years worth of work, I activated the sponsor button.    
 Why? Flowcharting is free and open-source, it has become successful but it does require effort to develop and maintain.   
-I spend a lot of personal time and money (computer, Azure account ...).  
+I am spending a lot of personal time and money (computer, Azure account ...).  
 Also i donated money to projects used by FlowCharting like chartist.  
-So if you like Grafana-FlowCharting, you use it for your enterprise, professionally or personally, you want to contribute,    
-click on the Sponsor button to help finance the project with the link below.  
+So if you like Grafana-FlowCharting and use it for your enterprise, professionally or personally.    
+Click on the Sponsor button to help finance the project with the link below.  
 [https://paypal.me/grafanaflowcharting](https://paypal.me/grafanaflowcharting)  
 
 Thanks a lot   
@@ -57,7 +57,7 @@ Arnaud
   - CSV Format support for flowchart source (https://drawio-app.com/import-from-csv-to-drawio/)
   - New aggregation : Time of last point  
   - New fill Method : Gradient ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/gradients_color_ani2.gif?raw=true))  
-  - Best render animated color with chroma-js
+  - Better rendering of color animation with chroma-js
   - New Events/Animations Mapping :
     * Change Gradient direction  
     * Change Arrow start and end connectors  
