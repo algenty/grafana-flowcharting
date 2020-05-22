@@ -23,7 +23,6 @@ declare module gf {
   declare type TPropertieList = { text: string; value: TPropertieKey }[];
 
   declare interface TIFlowchartOptionsScope extends ng.IScope {
-    flowchartHandler: any;
     editor: FlowchartOptionsCtrl;
     $GF: $GF;
     ctrl: any;
@@ -339,8 +338,6 @@ declare module gf {
   }
 
   declare interface TMappingOptionsScope extends ng.IScope {
-    // rulesHandler: any;
-    // flowchartHandler: FlowchartHandler;
     editor: MappingOptionsCtrl;
     $GF: $GF;
     ctrl: any;

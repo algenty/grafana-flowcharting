@@ -15,7 +15,7 @@ export class FlowchartOptionsCtrl {
   errorSourceMsg = '';
   errorDownloadFlag = false;
   errorDownloadMsg = '';
-  /* @ngInject */
+  /** @ngInject */
   constructor($scope: gf.TIFlowchartOptionsScope) {
     $scope.editor = this;
     $scope.$GF = $GF.me();
@@ -23,6 +23,7 @@ export class FlowchartOptionsCtrl {
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
+
   }
 
   /**
@@ -53,6 +54,10 @@ export class FlowchartOptionsCtrl {
     $GF.log.info('FlowchartOptionsCtrl.onOptionChange()');
     this.flowchartHandler.optionChanged();
     this.render();
+  }
+
+  onColorChange() {
+    this.onOptionChange();
   }
 
   checkSource_onSourceChange(source: string): boolean {

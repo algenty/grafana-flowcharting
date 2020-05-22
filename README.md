@@ -57,6 +57,9 @@ Arnaud
   - CSV Format support for flowchart source (https://drawio-app.com/import-from-csv-to-drawio/)
   - New aggregation : Time of last point  
   - New fill Method : Gradient ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/gradients_color_ani2.gif?raw=true))  
+  - Graph hover support ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/floorplan_graphhover.gif?raw=true))  
+  - TODO : Graph over for table
+  - TODO : Fix center and restore state
   - Better rendering of color animation with chroma-js
   - New Events/Animations Mapping :
     * Change Gradient direction  
@@ -67,7 +70,8 @@ Arnaud
   - Support external fonts like google fonts ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/google_fonts.png?raw=true))
   
 ### Fixed
-  - Fixed : Flowchart grid display     
+  - Fixed : Flowchart grid display  
+  - Fixed : background fields   
   
 ## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
 ### Added

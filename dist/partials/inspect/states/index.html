@@ -123,3 +123,12 @@
     </table>
   </div>
 </div>
+<div class="gf-form">
+  <button class="btn btn-danger btn-small" ng-click="editor.reset()" style="margin-right: 5px;">
+    <i class="fa fa-power-off"></i> Reinit graph and color
+  </button>
+  <button ng-show="editor.flowchartHandler.getFlowchart().getStateHandler().edited"
+    class="btn btn-secondary btn-small" ng-click="editor.apply()" style="margin-right: 5px;">
+    <i class="fa fa-save"></i> Apply changes
+  </button>
+</div>

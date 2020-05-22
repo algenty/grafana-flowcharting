@@ -19,6 +19,7 @@ export class FlowchartHandler {
   changeSourceFlag = false; // Source changed
   changeOptionFlag = true; // Options changed
   changeDataFlag = false; // Data changed
+  changeGraphHoverFlag = false; // Graph Hover
   changeRuleFlag = false; // rules changed
   static defaultXml: string;
   static defaultCsv: string;
@@ -272,7 +273,7 @@ export class FlowchartHandler {
         optionsFlag = true;
       }
       // RULES or DATAS
-      if (self.changeRuleFlag || self.changeDataFlag) {
+      if (self.changeRuleFlag || self.changeDataFlag || self.changeGraphHoverFlag) {
         const rules = self.ctrl.rulesHandler.getRules();
         const metrics = self.ctrl.metricHandler.getMetrics();
 
@@ -280,6 +281,7 @@ export class FlowchartHandler {
         self.async_refreshStates(rules, metrics);
         self.changeDataFlag = false;
         optionsFlag = false;
+        self.changeGraphHoverFlag = false;
       }
       // OTHER : Resize, OnLoad
       if (optionsFlag || self.firstLoad) {
@@ -334,6 +336,17 @@ export class FlowchartHandler {
    */
   dataChanged(): this {
     this.changeDataFlag = true;
+    return this;
+  }
+
+  /**
+   * Flag data Graph-Hover change
+   *
+   * @returns {this}
+   * @memberof FlowchartHandler
+   */
+  graphHoverChanged(): this {
+    this.changeGraphHoverFlag = true;
     return this;
   }
 

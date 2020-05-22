@@ -16,6 +16,7 @@ class GFCONSTANT {
   CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
   CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
   CONF_TOOLTIPS_DELAY = 200;
+  CONF_GRAPHHOVER_DELAY = 50;
   CONF_COLORS_STEPS = 6;
   CONF_COLORS_MS = 30;
   CONF_ANIMS_STEP = 5;
@@ -28,8 +29,10 @@ class GFCONSTANT {
   VAR_STR_VIEWERJS = 'viewer.min.js';
   VAR_STR_SHAPESJS = 'shapes.min.js';
   VAR_STG_CTXROOT = 'contextroot';
+  VAR_NUM_GHTIMESTAMP = 'graph-hover-timestamp';
   VAR_OBJ_TEMPLATESRV = 'templatesrv';
   VAR_OBJ_CTRL = 'ctrl';
+  VAR_OBJ_DASHBOARD = 'dashboard';
   VAR_MAP_INTERVAL = 'interval';
   VAR_STR_RULENAME: gf.TVariableKeys = '_rule';
   VAR_NUM_LEVEL: gf.TVariableKeys = '_level';
@@ -420,7 +423,7 @@ class GFPlugin {
   static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   static contextRoot: string;
-  constructor() {}
+  constructor() { }
 
   /**
    * init GFPlugin
@@ -431,7 +434,7 @@ class GFPlugin {
    * @returns {GFPlugin}
    * @memberof GFPlugin
    */
-  static init($scope: any, templateSrv: any): GFPlugin {
+  static init($scope: any, templateSrv: any, dashboard: any): GFPlugin {
     let plug = new GFPlugin();
     this.contextRoot = GFPlugin.defaultContextRoot;
     if ($scope === undefined) {
@@ -444,6 +447,7 @@ class GFPlugin {
     }
     $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
     $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
+    $GF.setVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD, dashboard);
     return plug;
   }
 
@@ -583,15 +587,15 @@ class GFTrace {
   static indent = 0;
   trace:
     | {
-        Name: string;
-        Id: string;
-        Args: any;
-        Return: any;
-        Before: number;
-        End: number | undefined;
-        ExecTime: number | undefined;
-        Indent: number;
-      }
+      Name: string;
+      Id: string;
+      Args: any;
+      Return: any;
+      Before: number;
+      End: number | undefined;
+      ExecTime: number | undefined;
+      Indent: number;
+    }
     | undefined;
 
   constructor(fn?: string) {
@@ -619,15 +623,15 @@ class GFTrace {
   ):
     | GFTrace
     | {
-        after: () => void;
-      } {
+      after: () => void;
+    } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       GFTrace._inc(fn);
       return t;
     }
-    return { after: () => {} };
+    return { after: () => { } };
   }
 
   static _inc(fn) {
@@ -658,6 +662,18 @@ class GFTrace {
     }
   }
 
+  enable() {
+    GFTrace.enable = true;
+  }
+
+  disable() {
+    GFTrace.enable = false;
+  }
+
+  isEnabled() {
+    return GFTrace.enable;
+  }
+
   async resume() {
     if (GFTrace.enable) {
       let tb: any[] = [];
@@ -685,6 +701,8 @@ export class $GF {
   static log: GFLog = GFLog.init();
   static trace: GFTrace = GFTrace.init();
   static plugin: GFPlugin;
+  static graphHover = false;
+  static GHTimeStamp = 0;
   static DEBUG = false;
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
@@ -707,8 +725,8 @@ export class $GF {
     addScript: (src: string) => void;
   } = require('./utils_raw');
 
-  static init($scope: any, templateSrv: any): $GF {
-    this.plugin = GFPlugin.init($scope, templateSrv);
+  static init($scope: any, templateSrv: any, dashboard: any): $GF {
+    this.plugin = GFPlugin.init($scope, templateSrv, dashboard);
     return this;
   }
 
@@ -886,6 +904,40 @@ export class $GF {
     }
     return false;
   }
+
+  static setGraphHover(timestamp: number) {
+    if (this.isGraphHoverEnabled()) {
+      this.graphHover = true;
+      this.GHTimeStamp = timestamp;
+      // this.setVar($GF.CONSTANTS.VAR_NUM_GHTIMESTAMP, timestamp);
+      // console.log('this.graphHover',this.graphHover);
+    }
+  }
+
+  static unsetGraphHover() {
+    this.graphHover = false;
+    this.GHTimeStamp = 0;
+    // console.log('this.graphHover',this.graphHover);
+  }
+
+  static hasGraphHover(): boolean {
+    return this.graphHover;
+  }
+
+  static isGraphHoverEnabled(): boolean {
+    return true;
+    // const dashboard = this.getVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD);
+    // return (dashboard !== undefined && dashboard.sharedTooltipModeEnabled());
+  }
+
+  static getGraphHover(): number|undefined {
+    if (this.hasGraphHover()) {
+      // return this.getVar($GF.CONSTANTS.VAR_NUM_GHTIMESTAMP);
+      return this.GHTimeStamp;
+    }
+    return undefined;
+  }
+
   /**
    * Return Html for popup with links to documentation
    *

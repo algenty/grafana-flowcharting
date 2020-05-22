@@ -14,7 +14,7 @@ export class Metric {
   metrics: any = {};
   name = '';
   nullPointMode = 'connected';
-  constructor(dataList: any) {}
+  constructor(dataList: any) { }
 
   /**
    * Get name of metric
@@ -38,6 +38,10 @@ export class Metric {
    * @memberof Metric
    */
   getValue(aggregator: gf.TAggregationKeys, column?: string): string | number | null {
+    return null;
+  }
+
+  findValue(timestamp: number, column?: string): string | number | null {
     return null;
   }
 
@@ -136,17 +140,65 @@ export class Serie extends Metric {
    * @returns {(string | number | null)}
    * @memberof Metric
    */
-  getValue(aggregator: gf.TAggregationKeys): number | string | null {
+  getValue(aggregator: gf.TAggregationKeys): string | number | null {
     try {
-      let value = this.metrics.stats[aggregator];
-      if (value === undefined || value === null) {
-        value = this.metrics.datapoints[this.metrics.datapoints.length - 1][0];
+      if ($GF.hasGraphHover()) {
+        const timestamp = $GF.getGraphHover();
+        const value = timestamp !== undefined ? this.findValue(timestamp) : null;
+        // console.log('getValue graph-over', value);
+        return value;
       }
-      return value;
+      return this.metrics.stats[aggregator];
+      // if (value === undefined || value === null) {
+      //   value = this.metrics.datapoints[this.metrics.datapoints.length - 1][0];
+      // }
     } catch (error) {
       $GF.log.error('datapoint for serie is null', error);
       return null;
     }
+  }
+
+  /**
+   * find a value by a timestamp
+   *
+   * @param {number} timestamp
+   * @returns {(string | number | null)}
+   * @memberof Serie
+   */
+  findValue(timestamp: number): string | number | null {
+    let low = 0;
+    let high = this.metrics.flotpairs.length - 1;
+    let found = false;
+    timestamp = Math.round(timestamp); 
+    // console.log('findValue timstamp',timestamp)
+    while (!found) {
+      // console.log('low',low);
+      // console.log('high',high);
+      let middle = low + Math.round((high - low) / 2);
+      // console.log('middle',middle);
+      // console.log('diff',timestamp - this.metrics.flotpairs[middle][0]);
+      if (this.metrics.flotpairs[middle][0] === timestamp) {
+        return this.metrics.flotpairs[middle][1];
+      }
+      if (low < middle && middle < high) {
+        if ( timestamp > this.metrics.flotpairs[middle][0]) {
+          low = middle;
+          // console.log('timestamp > this.metrics.flotpairs[middle][0]',timestamp > this.metrics.flotpairs[middle][0]);
+          
+        }
+        if ( timestamp < this.metrics.flotpairs[middle][0] ) {
+          high = middle;
+          // console.log('timestamp < this.metrics.flotpairs[middle][0]',timestamp < this.metrics.flotpairs[middle][0]);
+          
+        }
+      } else {
+        if (this.metrics.flotpairs[middle][0] > timestamp && middle >= 1) {
+          return this.metrics.flotpairs[middle - 1][1];
+        }
+        return this.metrics.flotpairs[middle][1];
+      }
+    }
+    return null;
   }
 
   getData(column: string = '', log: boolean = false): number[] | Array<{ x: number | Date; y: number }> {
@@ -378,9 +430,9 @@ export class Table extends Metric {
   getValue(aggregator: gf.TAggregationKeys, column: string): string | number | null {
     try {
       let value = this.metrics.stats[column][aggregator];
-      if (value === undefined || value === null) {
-        value = this.metrics.datapoints[this.metrics.datapoints.length - 1][column];
-      }
+      // if (value === undefined || value === null) {
+      //   value = this.metrics.datapoints[this.metrics.datapoints.length - 1][column];
+      // }
       return value;
     } catch (error) {
       $GF.log.error('datapoint for table is null', error);

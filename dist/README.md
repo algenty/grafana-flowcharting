@@ -13,12 +13,12 @@ Draw.io can create many types of diagrams :
   * Workflows (Jenkins, Ansible Tower, OpenShift, ...)  
 
 Draw your artwork, feed it live data and define in flowcharting how the data will interact with the diagram.
-  * Monitor state and performance
-  * Interact with the diagram
-  * Change the displayed objects based on data or state
-  * Add links to objects
-  * Make full use of variables to modify shapes, colours, links, download paths and more.
-  * Support for regular expressions for matching and substitutions
+  * Monitor state and performance  
+  * Interact with the diagram  
+  * Change the displayed objects based on data or state  
+  * Add links to objects  
+  * Make full use of variables to modify shapes, colours, links, download paths and more.  
+  * Support for regular expressions for matching and substitutions  
 
 ## Use cases
   - Technical schema example  
@@ -39,12 +39,12 @@ See more example at draw.io
 <https://github.com/algenty/grafana-flowcharting>
 
 # Sponsors and Funding
-Since version 0.7.0 was release and after a years worth of work, I activated the sponsor button.    
+Since version 0.7.0 was released and after a years worth of work, I activated the sponsor button.    
 Why? Flowcharting is free and open-source, it has become successful but it does require effort to develop and maintain.   
-I spend a lot of personal time and money (computer, Azure account ...).  
+I am spending a lot of personal time and money (computer, Azure account ...).  
 Also i donated money to projects used by FlowCharting like chartist.  
-So if you like Grafana-FlowCharting, you use it for your enterprise, professionally or personally, you want to contribute,    
-click on the Sponsor button to help finance the project with the link below.  
+So if you like Grafana-FlowCharting and use it for your enterprise, professionally or personally.    
+Click on the Sponsor button to help finance the project with the link below.  
 [https://paypal.me/grafanaflowcharting](https://paypal.me/grafanaflowcharting)  
 
 Thanks a lot   
@@ -57,17 +57,21 @@ Arnaud
   - CSV Format support for flowchart source (https://drawio-app.com/import-from-csv-to-drawio/)
   - New aggregation : Time of last point  
   - New fill Method : Gradient ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/gradients_color_ani2.gif?raw=true))  
-  - Best render animated color with chroma-js
+  - Graph hover support ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/floorplan_graphhover.gif?raw=true))  
+  - TODO : Graph over for table
+  - TODO : Fix center and restore state
+  - Better rendering of color animation with chroma-js
   - New Events/Animations Mapping :
     * Change Gradient direction  
-    * Change Arrow start and end connectors  
+    * Change Arrow start and end connectors ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/connectors_color_ani2.gif?raw=true))  
     * Flip shape horizontally or vertically  
     * Resize shape in percent ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/resize_ani.gif?raw=true))  
   - New homepage schema
-  - Support external fonts like google fonts
+  - Support external fonts like google fonts ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/google_fonts.png?raw=true))
   
 ### Fixed
-  - Fixed : Flowchart grid display     
+  - Fixed : Flowchart grid display  
+  - Fixed : background fields   
   
 ## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
 ### Added

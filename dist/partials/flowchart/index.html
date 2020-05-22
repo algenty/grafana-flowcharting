@@ -187,9 +187,10 @@
         </gf-form-switch>
         <div class="gf-form">
           <label class="gf-form-label width-12">Bg Color</label>
-          <span class="width-10">
+          <span>
             <spectrum-picker class="gf-form-input" ng-model="flowchart.data.bgColor" ng-change="editor.onOptionChange()"> </spectrum-picker>
           </span>
+          <input type="text" class="gf-form-input width-8" ng-model="flowchart.data.bgColor" placeholder="#000000" />
         </div>
         <!--zoom-->
         <div class="gf-form" ng-if="!flowchart.data.scale">

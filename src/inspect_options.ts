@@ -24,11 +24,13 @@ export class InspectOptionsCtrl {
   stateHandler: StateHandler | undefined;
   state: TTable;
   panel: any;
+  traceEnable: boolean = $GF.trace.isEnabled();
 
   /** @ngInject */
   constructor($scope: gf.TInspectOptionsScope) {
     $scope.editor = this;
     $scope.$GF = $GF.me();
+
     this.state = {
       data: this.getStates(),
       columns: [
@@ -157,6 +159,7 @@ export class InspectOptionsCtrl {
     }
     return [];
   }
+
   getStateValue(state: State, col: string): string | null {
     switch (col) {
       case 'cellId':
@@ -172,6 +175,14 @@ export class InspectOptionsCtrl {
       default:
         return null;
         break;
+    }
+  }
+
+  tracePerf() {
+    if (this.traceEnable) {
+      $GF.trace.enable();
+    } else {
+      $GF.trace.disable();
     }
   }
 

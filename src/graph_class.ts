@@ -820,7 +820,7 @@ export default class XGraph {
    */
   setColorAnimCell(mxcell: mxCell, style: gf.TStyleColorKeys, color: string | null): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setColorAnimCell()');
-    if (this.animation && color) {
+    if (this.animation && color && !$GF.hasGraphHover()) {
       try {
         const startColor = this.getStyleCell(mxcell, style);
         if (startColor) {
@@ -881,7 +881,7 @@ export default class XGraph {
 
   async setStyleAnimCell(mxcell: mxCell, style: any, endValue: string | null, beginValue?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
-    if (this.animation && endValue !== null) {
+    if (this.animation && endValue !== null && !$GF.hasGraphHover()) {
       try {
         const end = Number(endValue);
         const begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
@@ -1345,7 +1345,7 @@ export default class XGraph {
       let _h = _oh * (percent / 100);
       _x = _x - (_w - _ow) / 2;
       _y = _y - (_h - _oh) / 2;
-      if (this.animation) {
+      if (this.animation && !$GF.hasGraphHover()) {
         const steps_x = $GF.getIntervalCounter(geo.x, _x, $GF.CONSTANTS.CONF_ANIMS_STEP);
         const steps_y = $GF.getIntervalCounter(geo.y, _y, $GF.CONSTANTS.CONF_ANIMS_STEP);
         const steps_w = $GF.getIntervalCounter(geo.width, _w, $GF.CONSTANTS.CONF_ANIMS_STEP);
@@ -1383,7 +1383,7 @@ export default class XGraph {
       _y = height !== undefined && height < 0 ? _y + height + _oh : _y;
       let _h = height !== undefined ? Math.abs(height) : origine !== undefined ? origine.height : geo.height;
       let _w = width !== undefined ? Math.abs(width) : origine !== undefined ? origine.width : geo.width;
-      if (this.animation) {
+      if (this.animation && !$GF.hasGraphHover()) {
         const steps_x = $GF.getIntervalCounter(geo.x, _x, $GF.CONSTANTS.CONF_ANIMS_STEP);
         const steps_y = $GF.getIntervalCounter(geo.y, _y, $GF.CONSTANTS.CONF_ANIMS_STEP);
         const steps_w = $GF.getIntervalCounter(geo.width, _w, $GF.CONSTANTS.CONF_ANIMS_STEP);

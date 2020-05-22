@@ -53,6 +53,7 @@ export class MappingOptionsCtrl {
     this.metricHandler = this.ctrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();
     this.tpGraphSize = $GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
+    
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');
     };

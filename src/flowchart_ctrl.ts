@@ -1,4 +1,5 @@
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
+import appEvents from 'grafana/app/core/app_events';
 import { mappingOptionsTab } from 'mapping_options';
 import { flowchartOptionsTab } from 'flowchart_options';
 import { inspectOptionsTab } from 'inspect_options';
@@ -18,6 +19,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
+  GHTimeout = 0;
+  GHPlanified = false;
+  GHApplied = false;
+  GHTimeStamp = 0;
   panelDefaults: {
     newFlag: boolean;
     format: string;
@@ -30,7 +35,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   /**@ngInject*/
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
-    $GF.init($scope, templateSrv);
+    $GF.init($scope, templateSrv, this.dashboard);
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.version = $GF.plugin.getVersion();
@@ -62,9 +67,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on(PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
     // this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
     this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
+    appEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
+    appEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
     if ($scope.$root.onAppEvent) {
       $scope.$root.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
+      // $scope.$root.onAppEvent('graph-hover', this.onVarChanged.bind(this), $scope);
     }
   }
 
@@ -76,6 +84,67 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Mapping', mappingOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
   }
+
+  onGraphHover(event: any) {
+    // console.log('onGraphHover')
+    if (!this.dashboard.sharedTooltipModeEnabled()) {
+      return;
+    }
+
+    if (this.flowchartHandler !== undefined) {
+      this.flowchartHandler.graphHoverChanged();
+      this.waitForGraphOver(event.pos.x);
+    }
+  }
+
+  clearCrosshair(event: any) {
+    // console.log('graph-hover-clear');
+    if (this.flowchartHandler !== undefined && (this.GHApplied || this.GHPlanified)) {
+      this.unplanifyGraphOver();
+      this.flowchartHandler.graphHoverChanged();
+      this.render();
+    }
+  }
+
+  waitForGraphOver(timestamp: number) {
+    if (this.GHPlanified) {
+      this.unplanifyGraphOver();
+    }
+    if (!this.GHPlanified) {
+      this.planifyGraphOver(timestamp);
+    }
+  }
+
+  unplanifyGraphOver() {
+    // console.log('unplanifyGraphOver');
+    if (this.GHTimeout !== 0) {
+      window.clearInterval(this.GHTimeout);
+    }
+    this.GHPlanified = false;
+    this.GHTimeout = 0;
+    $GF.unsetGraphHover();
+  }
+
+  planifyGraphOver(timestamp: number) {
+    // console.log('planifyGraphOver');
+    this.GHPlanified = true;
+    $GF.setGraphHover(timestamp);
+    this.GHTimeStamp = timestamp;
+    const self = this;
+    this.GHTimeout = window.setTimeout(() => {
+      // console.log('Render Graph-over');
+      $GF.setGraphHover(timestamp);
+      self.render();
+      $GF.unsetGraphHover();
+      self.GHPlanified = false;
+      self.GHTimeStamp = 0;
+      self.GHTimeout = 0;
+      self.GHApplied = true;
+    },
+      $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY
+    );
+  }
+
 
   onRefresh() {
     this.onRender();
