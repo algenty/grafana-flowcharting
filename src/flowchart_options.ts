@@ -23,7 +23,6 @@ export class FlowchartOptionsCtrl {
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
-
   }
 
   /**

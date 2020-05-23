@@ -140,11 +140,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       self.GHTimeStamp = 0;
       self.GHTimeout = 0;
       self.GHApplied = true;
-    },
-      $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY
-    );
+    }, $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY);
   }
-
 
   onRefresh() {
     this.onRender();

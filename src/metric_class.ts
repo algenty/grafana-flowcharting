@@ -14,7 +14,7 @@ export class Metric {
   metrics: any = {};
   name = '';
   nullPointMode = 'connected';
-  constructor(dataList: any) { }
+  constructor(dataList: any) {}
 
   /**
    * Get name of metric
@@ -169,7 +169,7 @@ export class Serie extends Metric {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'findValue()');
     let low = 0;
     let high = this.metrics.flotpairs.length - 1;
-    let found = ! (high > 0);
+    let found = !(high > 0);
     timestamp = Math.round(timestamp);
     let value = null;
     while (!found) {
@@ -179,10 +179,10 @@ export class Serie extends Metric {
         found = true;
       }
       if (!found && low < middle && middle < high) {
-        if ( timestamp > this.metrics.flotpairs[middle][0]) {
+        if (timestamp > this.metrics.flotpairs[middle][0]) {
           low = middle;
         }
-        if ( timestamp < this.metrics.flotpairs[middle][0] ) {
+        if (timestamp < this.metrics.flotpairs[middle][0]) {
           high = middle;
         }
       } else {
@@ -447,7 +447,7 @@ export class Table extends Metric {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'findValue()');
     let low = 0;
     let high = this.metrics.flotpairs.length - 1;
-    let found = ! (high > 0);
+    let found = !(high > 0);
     timestamp = Math.round(timestamp);
     let value = null;
     while (!found) {
@@ -457,10 +457,10 @@ export class Table extends Metric {
         found = true;
       }
       if (!found && low < middle && middle < high) {
-        if ( timestamp > this.metrics.flotpairs[middle][0]) {
+        if (timestamp > this.metrics.flotpairs[middle][0]) {
           low = middle;
         }
-        if ( timestamp < this.metrics.flotpairs[middle][0] ) {
+        if (timestamp < this.metrics.flotpairs[middle][0]) {
           high = middle;
         }
       } else {
