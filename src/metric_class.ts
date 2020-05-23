@@ -14,7 +14,7 @@ export class Metric {
   metrics: any = {};
   name = '';
   nullPointMode = 'connected';
-  constructor(dataList: any) {}
+  constructor(dataList: any) { }
 
   /**
    * Get name of metric
@@ -142,16 +142,14 @@ export class Serie extends Metric {
    */
   getValue(aggregator: gf.TAggregationKeys): string | number | null {
     try {
+      let value: string | number | null = null;
       if ($GF.hasGraphHover()) {
         const timestamp = $GF.getGraphHover();
-        const value = timestamp !== undefined ? this.findValue(timestamp) : null;
-        // console.log('getValue graph-over', value);
-        return value;
+        value = timestamp !== undefined ? this.findValue(timestamp) : null;
+      } else {
+        value =  this.metrics.stats[aggregator];
       }
-      return this.metrics.stats[aggregator];
-      // if (value === undefined || value === null) {
-      //   value = this.metrics.datapoints[this.metrics.datapoints.length - 1][0];
-      // }
+      return value;
     } catch (error) {
       $GF.log.error('datapoint for serie is null', error);
       return null;
@@ -188,8 +186,9 @@ export class Serie extends Metric {
       } else {
         if (this.metrics.flotpairs[middle][0] > timestamp && middle >= 1) {
           value = this.metrics.flotpairs[middle - 1][1];
+        } else {
+          value = this.metrics.flotpairs[middle][1];
         }
-        value = this.metrics.flotpairs[middle][1];
         found = true;
       }
     }
@@ -425,10 +424,13 @@ export class Table extends Metric {
    */
   getValue(aggregator: gf.TAggregationKeys, column: string): string | number | null {
     try {
-      let value = this.metrics.stats[column][aggregator];
-      // if (value === undefined || value === null) {
-      //   value = this.metrics.datapoints[this.metrics.datapoints.length - 1][column];
-      // }
+      let value: string | number | null = null;
+      if ($GF.hasGraphHover()) {
+        const timestamp = $GF.getGraphHover();
+        value = timestamp !== undefined ? this.findValue(timestamp, column) : null;
+      } else {
+        value = this.metrics.stats[column][aggregator];
+      }
       return value;
     } catch (error) {
       $GF.log.error('datapoint for table is null', error);
@@ -446,28 +448,29 @@ export class Table extends Metric {
   findValue(timestamp: number, column: string): string | number | null {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'findValue()');
     let low = 0;
-    let high = this.metrics.flotpairs.length - 1;
+    let high = this.metrics.datapoints.length - 1;
     let found = !(high > 0);
     timestamp = Math.round(timestamp);
     let value = null;
     while (!found) {
       let middle = low + Math.round((high - low) / 2);
-      if (this.metrics.flotpairs[middle][0] === timestamp) {
-        value = this.metrics.flotpairs[middle][1];
+      if (this.metrics.datapoints[middle][this.metrics.timeColumn] === timestamp) {
+        value = this.metrics.datapoints[middle][column];
         found = true;
       }
       if (!found && low < middle && middle < high) {
-        if (timestamp > this.metrics.flotpairs[middle][0]) {
+        if (timestamp > this.metrics.datapoints[middle][this.metrics.timeColumn]) {
           low = middle;
         }
-        if (timestamp < this.metrics.flotpairs[middle][0]) {
+        if (timestamp < this.metrics.datapoints[middle][this.metrics.timeColumn]) {
           high = middle;
         }
       } else {
-        if (this.metrics.flotpairs[middle][0] > timestamp && middle >= 1) {
-          value = this.metrics.flotpairs[middle - 1][1];
+        if (this.metrics.datapoints[middle][this.metrics.timeColumn] > timestamp && middle >= 1) {
+          value = this.metrics.datapoints[middle - 1][column];
+        } else {
+          value = this.metrics.datapoints[middle][column];
         }
-        value = this.metrics.flotpairs[middle][1];
         found = true;
       }
     }
@@ -475,6 +478,13 @@ export class Table extends Metric {
     return value;
   }
 
+  /**
+   * Return the index of a column
+   *
+   * @param {string} column
+   * @returns {(number | null)}
+   * @memberof Table
+   */
   getColumnIndex(column: string): number | null {
     for (const idx in this.tableColumnOptions) {
       if (column === this.tableColumnOptions[idx]) {
@@ -484,6 +494,12 @@ export class Table extends Metric {
     return null;
   }
 
+  /**
+   * Return name of columns
+   *
+   * @returns {string[]}
+   * @memberof Table
+   */
   getColumnsName(): string[] {
     const result: string[] = [];
     for (const idx in this.tableColumnOptions) {
@@ -492,6 +508,13 @@ export class Table extends Metric {
     return result;
   }
 
+  /**
+   * Return formated data for tooltips graph
+   *
+   * @param {string} column
+   * @returns {(number[] | Array<{ x: number | Date; y: number }>)}
+   * @memberof Table
+   */
   getData(column: string): number[] | Array<{ x: number | Date; y: number }> {
     if (this.metrics.timeColumn) {
       return this.metrics.datapoints.map(d => {

@@ -136,7 +136,8 @@ declare module gf {
     | 'delta'
     | 'range'
     | 'diff'
-    | 'last_time';
+    | 'last_time'
+    | 'graph-hover';
   declare type TAggregationList = { text: string; value: TAggregationKeys }[];
   declare interface TSelectAggregation extends TSelectString {
     value: TAggregationKeys;

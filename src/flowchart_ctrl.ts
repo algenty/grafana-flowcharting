@@ -1,5 +1,6 @@
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import appEvents from 'grafana/app/core/app_events';
+import grafana from 'grafana_func';
 import { mappingOptionsTab } from 'mapping_options';
 import { flowchartOptionsTab } from 'flowchart_options';
 import { inspectOptionsTab } from 'inspect_options';

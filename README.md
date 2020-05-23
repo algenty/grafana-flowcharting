@@ -58,8 +58,6 @@ Arnaud
   - New aggregation : Time of last point  
   - New fill Method : Gradient ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/gradients_color_ani2.gif?raw=true))  
   - Graph hover support ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/floorplan_graphhover.gif?raw=true))  
-  - TODO : Graph over for table
-  - TODO : Fix center and restore state
   - Better rendering of color animation with chroma-js
   - New Events/Animations Mapping :
     * Modify Gradient direction  
@@ -211,7 +209,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Internat draw.io website [(issue #43)](https://github.com/algenty/grafana-flowcharting/issues/43)  
   - [X] Display tooltip (0.4.0)
   - [ ] Export SVG, png,  options
-  - [ ] Google font
+  - [X] Google font
   - [X] Add data in tooltip (0.4.0)
   - [X] Use variables/templates in graph (0.4.0)
   - [X] Add custom stencils/libs from draw.io (0.4.0)
@@ -224,7 +222,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - [X] Custom variables like ${_label},${_value}, ${_alias}, ${_rule}, ${_level} ... (0.8.0)
   - [X] Variable support in link (0.5.0)
   - [X] Zoom/Unzoom (0.4.0)
-  - [ ] Shared graph crosshair
+  - [X] Shared graph crosshair
   - [X] CSV source (0.9.0)
   - [X] Map/search shape by value (0.8.0)
   - [X] Variables support for downloaded source and compressed source
