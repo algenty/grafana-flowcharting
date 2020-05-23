@@ -62,8 +62,8 @@ Arnaud
   - TODO : Fix center and restore state
   - Better rendering of color animation with chroma-js
   - New Events/Animations Mapping :
-    * Change Gradient direction  
-    * Change Arrow start and end connectors ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/connectors_color_ani2.gif?raw=true))  
+    * Modify Gradient direction  
+    * Modify Arrow start and end connectors ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/connectors_color_ani2.gif?raw=true))  
     * Flip shape horizontally or vertically  
     * Resize shape in percent ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/resize_ani.gif?raw=true))  
   - New homepage schema
@@ -71,7 +71,7 @@ Arnaud
   
 ### Fixed
   - Fixed : Flowchart grid display  
-  - Fixed : background fields   
+  - Fixed : background color field   
   
 ## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
 ### Added

@@ -166,39 +166,35 @@ export class Serie extends Metric {
    * @memberof Serie
    */
   findValue(timestamp: number): string | number | null {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'findValue()');
     let low = 0;
     let high = this.metrics.flotpairs.length - 1;
-    let found = false;
-    timestamp = Math.round(timestamp); 
-    // console.log('findValue timstamp',timestamp)
+    let found = ! (high > 0);
+    timestamp = Math.round(timestamp);
+    let value = null;
     while (!found) {
-      // console.log('low',low);
-      // console.log('high',high);
       let middle = low + Math.round((high - low) / 2);
-      // console.log('middle',middle);
-      // console.log('diff',timestamp - this.metrics.flotpairs[middle][0]);
       if (this.metrics.flotpairs[middle][0] === timestamp) {
-        return this.metrics.flotpairs[middle][1];
+        value = this.metrics.flotpairs[middle][1];
+        found = true;
       }
-      if (low < middle && middle < high) {
+      if (!found && low < middle && middle < high) {
         if ( timestamp > this.metrics.flotpairs[middle][0]) {
           low = middle;
-          // console.log('timestamp > this.metrics.flotpairs[middle][0]',timestamp > this.metrics.flotpairs[middle][0]);
-          
         }
         if ( timestamp < this.metrics.flotpairs[middle][0] ) {
           high = middle;
-          // console.log('timestamp < this.metrics.flotpairs[middle][0]',timestamp < this.metrics.flotpairs[middle][0]);
-          
         }
       } else {
         if (this.metrics.flotpairs[middle][0] > timestamp && middle >= 1) {
-          return this.metrics.flotpairs[middle - 1][1];
+          value = this.metrics.flotpairs[middle - 1][1];
         }
-        return this.metrics.flotpairs[middle][1];
+        value = this.metrics.flotpairs[middle][1];
+        found = true;
       }
     }
-    return null;
+    trc.after();
+    return value;
   }
 
   getData(column: string = '', log: boolean = false): number[] | Array<{ x: number | Date; y: number }> {
@@ -438,6 +434,45 @@ export class Table extends Metric {
       $GF.log.error('datapoint for table is null', error);
       return null;
     }
+  }
+
+  /**
+   * find a value by a timestamp
+   *
+   * @param {number} timestamp
+   * @returns {(string | number | null)}
+   * @memberof Serie
+   */
+  findValue(timestamp: number, column: string): string | number | null {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'findValue()');
+    let low = 0;
+    let high = this.metrics.flotpairs.length - 1;
+    let found = ! (high > 0);
+    timestamp = Math.round(timestamp);
+    let value = null;
+    while (!found) {
+      let middle = low + Math.round((high - low) / 2);
+      if (this.metrics.flotpairs[middle][0] === timestamp) {
+        value = this.metrics.flotpairs[middle][1];
+        found = true;
+      }
+      if (!found && low < middle && middle < high) {
+        if ( timestamp > this.metrics.flotpairs[middle][0]) {
+          low = middle;
+        }
+        if ( timestamp < this.metrics.flotpairs[middle][0] ) {
+          high = middle;
+        }
+      } else {
+        if (this.metrics.flotpairs[middle][0] > timestamp && middle >= 1) {
+          value = this.metrics.flotpairs[middle - 1][1];
+        }
+        value = this.metrics.flotpairs[middle][1];
+        found = true;
+      }
+    }
+    trc.after();
+    return value;
   }
 
   getColumnIndex(column: string): number | null {

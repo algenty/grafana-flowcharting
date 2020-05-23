@@ -17,10 +17,10 @@ class GFCONSTANT {
   CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
   CONF_TOOLTIPS_DELAY = 200;
   CONF_GRAPHHOVER_DELAY = 50;
-  CONF_COLORS_STEPS = 6;
-  CONF_COLORS_MS = 30;
+  CONF_COLORS_STEPS = 5;
+  CONF_COLORS_MS = 50;
   CONF_ANIMS_STEP = 5;
-  CONF_ANIMS_MS = 40;
+  CONF_ANIMS_MS = 50;
   CONF_BLINK_COLOR = '#f5f242';
 
   // GLOBAL VARIABLE
@@ -659,6 +659,7 @@ class GFTrace {
   async clear() {
     if (GFTrace.enable) {
       GFTrace.trc.clear();
+      GFTrace.fn.clear();
     }
   }
 
@@ -689,8 +690,7 @@ class GFTrace {
         fn.push(f);
       });
       console.table(fn, ['Function', 'Calls', 'TotalTimes']);
-      GFTrace.trc.clear();
-      GFTrace.fn.clear();
+      this.clear();
     }
   }
 }

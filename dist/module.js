@@ -17253,10 +17253,10 @@ var GFCONSTANT = function GFCONSTANT() {
   this.CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
   this.CONF_TOOLTIPS_DELAY = 200;
   this.CONF_GRAPHHOVER_DELAY = 50;
-  this.CONF_COLORS_STEPS = 6;
-  this.CONF_COLORS_MS = 30;
+  this.CONF_COLORS_STEPS = 5;
+  this.CONF_COLORS_MS = 50;
   this.CONF_ANIMS_STEP = 5;
-  this.CONF_ANIMS_MS = 40;
+  this.CONF_ANIMS_MS = 50;
   this.CONF_BLINK_COLOR = '#f5f242';
   this.VAR_STG_SHAPES = 'shapestext';
   this.VAR_TBL_SHAPES = 'shapesarray';
@@ -18046,6 +18046,7 @@ var GFTrace = function () {
               case 0:
                 if (GFTrace.enable) {
                   GFTrace.trc.clear();
+                  GFTrace.fn.clear();
                 }
 
               case 1:
@@ -18094,8 +18095,7 @@ var GFTrace = function () {
                     fn.push(f);
                   });
                   console.table(fn, ['Function', 'Calls', 'TotalTimes']);
-                  GFTrace.trc.clear();
-                  GFTrace.fn.clear();
+                  this.clear();
                 }
 
               case 1:
@@ -18103,7 +18103,7 @@ var GFTrace = function () {
                 return _context7.stop();
             }
           }
-        }, _callee7);
+        }, _callee7, this);
       }));
     }
   }], [{
@@ -19050,11 +19050,16 @@ var XGraph = function () {
       return null;
     }
   }, {
+    key: "isAnimated",
+    value: function isAnimated() {
+      return this.animation;
+    }
+  }, {
     key: "setColorAnimCell",
     value: function setColorAnimCell(mxcell, style, color) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setColorAnimCell()');
 
-      if (this.animation && color && !globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].hasGraphHover()) {
+      if (this.isAnimated() && color) {
         try {
           var startColor = this.getStyleCell(mxcell, style);
 
@@ -19114,7 +19119,7 @@ var XGraph = function () {
               case 0:
                 trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
 
-                if (this.animation && endValue !== null && !globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].hasGraphHover()) {
+                if (this.isAnimated() && endValue !== null) {
                   try {
                     end = Number(endValue);
                     begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
@@ -19646,7 +19651,7 @@ var XGraph = function () {
                   _x = _x - (_w - _ow) / 2;
                   _y = _y - (_h - _oh) / 2;
 
-                  if (this.animation && !globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].hasGraphHover()) {
+                  if (this.isAnimated()) {
                     _graduate = function _graduate(count, steps_x, steps_y, steps_w, steps_h) {
                       if (count < _l) {
                         window.setTimeout(function () {
@@ -19707,7 +19712,7 @@ var XGraph = function () {
                   _h = height !== undefined ? Math.abs(height) : origine !== undefined ? origine.height : geo.height;
                   _w = width !== undefined ? Math.abs(width) : origine !== undefined ? origine.width : geo.width;
 
-                  if (this.animation && !globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].hasGraphHover()) {
+                  if (this.isAnimated()) {
                     _graduate2 = function _graduate2(count, steps_x, steps_y, steps_w, steps_h) {
                       if (count < _l2) {
                         window.setTimeout(function () {
@@ -21371,19 +21376,22 @@ var Serie = function (_Metric) {
   }, {
     key: "findValue",
     value: function findValue(timestamp) {
+      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'findValue()');
       var low = 0;
       var high = this.metrics.flotpairs.length - 1;
-      var found = false;
+      var found = !(high > 0);
       timestamp = Math.round(timestamp);
+      var value = null;
 
       while (!found) {
         var middle = low + Math.round((high - low) / 2);
 
         if (this.metrics.flotpairs[middle][0] === timestamp) {
-          return this.metrics.flotpairs[middle][1];
+          value = this.metrics.flotpairs[middle][1];
+          found = true;
         }
 
-        if (low < middle && middle < high) {
+        if (!found && low < middle && middle < high) {
           if (timestamp > this.metrics.flotpairs[middle][0]) {
             low = middle;
           }
@@ -21393,14 +21401,16 @@ var Serie = function (_Metric) {
           }
         } else {
           if (this.metrics.flotpairs[middle][0] > timestamp && middle >= 1) {
-            return this.metrics.flotpairs[middle - 1][1];
+            value = this.metrics.flotpairs[middle - 1][1];
           }
 
-          return this.metrics.flotpairs[middle][1];
+          value = this.metrics.flotpairs[middle][1];
+          found = true;
         }
       }
 
-      return null;
+      trc.after();
+      return value;
     }
   }, {
     key: "getData",
@@ -21654,6 +21664,45 @@ var Table = function (_Metric2) {
         globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('datapoint for table is null', error);
         return null;
       }
+    }
+  }, {
+    key: "findValue",
+    value: function findValue(timestamp, column) {
+      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'findValue()');
+      var low = 0;
+      var high = this.metrics.flotpairs.length - 1;
+      var found = !(high > 0);
+      timestamp = Math.round(timestamp);
+      var value = null;
+
+      while (!found) {
+        var middle = low + Math.round((high - low) / 2);
+
+        if (this.metrics.flotpairs[middle][0] === timestamp) {
+          value = this.metrics.flotpairs[middle][1];
+          found = true;
+        }
+
+        if (!found && low < middle && middle < high) {
+          if (timestamp > this.metrics.flotpairs[middle][0]) {
+            low = middle;
+          }
+
+          if (timestamp < this.metrics.flotpairs[middle][0]) {
+            high = middle;
+          }
+        } else {
+          if (this.metrics.flotpairs[middle][0] > timestamp && middle >= 1) {
+            value = this.metrics.flotpairs[middle - 1][1];
+          }
+
+          value = this.metrics.flotpairs[middle][1];
+          found = true;
+        }
+      }
+
+      trc.after();
+      return value;
     }
   }, {
     key: "getColumnIndex",
