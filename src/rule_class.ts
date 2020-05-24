@@ -1059,7 +1059,7 @@ export class Rule {
     // Number
     if (this.data.type === 'number') {
       if (!_.isFinite(value)) {
-        return 'Invalid Number';
+        return 'null';
       }
       if (value === null || value === void 0) {
         return '-';

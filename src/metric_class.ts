@@ -449,7 +449,7 @@ export class Table extends Metric {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'findValue()');
     let low = 0;
     let high = this.metrics.datapoints.length - 1;
-    let found = !(high > 0);
+    let found = !(high > 0 && this.metrics.datapoints[low][this.metrics.timeColumn] < timestamp );
     timestamp = Math.round(timestamp);
     let value = null;
     while (!found) {

@@ -1006,10 +1006,15 @@ export class $GF {
   }
 
   static destroy() {
-    let interval: Set<any> = $GF.getVar('interval');
+    let interval: Set<any> = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
     if (interval !== undefined) {
       interval.forEach(x => $GF.clearUniqInterval(x));
       interval.clear();
+    }
+    let timeout: Set<any> = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
+    if (timeout !== undefined) {
+      timeout.forEach(x => $GF.clearUniqTimeOut(x));
+      timeout.clear();
     }
   }
 }

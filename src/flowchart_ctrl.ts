@@ -104,6 +104,7 @@ class FlowchartCtrl extends grafana.MetricsPanelCtrl {
   clearCrosshair(event: any) {
     if (this.flowchartHandler !== undefined && this.GHApplied) {
       const id = 'graph-hover';
+      this.GHApplied = false;
       $GF.clearUniqTimeOut(id);
       $GF.unsetGraphHover();
       this.flowchartHandler.graphHoverChanged();

@@ -16897,6 +16897,7 @@ var FlowchartCtrl = function (_grafana$MetricsPanel) {
     value: function clearCrosshair(event) {
       if (this.flowchartHandler !== undefined && this.GHApplied) {
         var id = 'graph-hover';
+        this.GHApplied = false;
         globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].clearUniqTimeOut(id);
         globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].unsetGraphHover();
         this.flowchartHandler.graphHoverChanged();
@@ -18383,13 +18384,22 @@ var $GF = function () {
   }, {
     key: "destroy",
     value: function destroy() {
-      var interval = $GF.getVar('interval');
+      var interval = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
 
       if (interval !== undefined) {
         interval.forEach(function (x) {
           return $GF.clearUniqInterval(x);
         });
         interval.clear();
+      }
+
+      var timeout = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
+
+      if (timeout !== undefined) {
+        timeout.forEach(function (x) {
+          return $GF.clearUniqTimeOut(x);
+        });
+        timeout.clear();
       }
     }
   }]);
@@ -21707,7 +21717,7 @@ var Table = function (_Metric2) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'findValue()');
       var low = 0;
       var high = this.metrics.datapoints.length - 1;
-      var found = !(high > 0);
+      var found = !(high > 0 && this.metrics.datapoints[low][this.metrics.timeColumn] < timestamp);
       timestamp = Math.round(timestamp);
       var value = null;
 
@@ -22751,7 +22761,7 @@ var Rule = function () {
     value: function getFormattedValue(value) {
       if (this.data.type === 'number') {
         if (!lodash__WEBPACK_IMPORTED_MODULE_1___default.a.isFinite(value)) {
-          return 'Invalid Number';
+          return 'null';
         }
 
         if (value === null || value === void 0) {
