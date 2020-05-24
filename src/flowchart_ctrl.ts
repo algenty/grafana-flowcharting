@@ -1,5 +1,3 @@
-import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
-import appEvents from 'grafana/app/core/app_events';
 import grafana from 'grafana_func';
 import { mappingOptionsTab } from 'mapping_options';
 import { flowchartOptionsTab } from 'flowchart_options';
@@ -7,11 +5,11 @@ import { inspectOptionsTab } from 'inspect_options';
 import { RulesHandler } from 'rulesHandler';
 import { FlowchartHandler } from 'flowchartHandler';
 import { MetricHandler } from 'metricHandler';
-import { PanelEvents } from '@grafana/data';
+// import { PanelEvents } from '@grafana/data';
 import { $GF } from 'globals_class';
 import _ from 'lodash';
 
-class FlowchartCtrl extends MetricsPanelCtrl {
+class FlowchartCtrl extends grafana.MetricsPanelCtrl {
   $rootScope: any;
   version: any;
   changedSource: boolean;
@@ -60,21 +58,21 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.containerDivId = `container_${this.panel.graphId}`;
 
     // events
-    this.events.on(PanelEvents.render, this.onRender.bind(this));
-    this.events.on(PanelEvents.refresh, this.onRefresh.bind(this));
-    this.events.on(PanelEvents.dataReceived, this.onDataReceived.bind(this));
-    this.events.on(PanelEvents.dataError, this.onDataError.bind(this));
-    this.events.on(PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
-    this.events.on(PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
+    this.events.on(grafana.PanelEvents.render, this.onRender.bind(this));
+    this.events.on(grafana.PanelEvents.refresh, this.onRefresh.bind(this));
+    this.events.on(grafana.PanelEvents.dataReceived, this.onDataReceived.bind(this));
+    this.events.on(grafana.PanelEvents.dataError, this.onDataError.bind(this));
+    this.events.on(grafana.PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
+    this.events.on(grafana.PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
     // this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
-    this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
-    appEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
-    appEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
+    // this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
+    grafana.appEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
+    grafana.appEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-    if ($scope.$root.onAppEvent) {
-      $scope.$root.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-      // $scope.$root.onAppEvent('graph-hover', this.onVarChanged.bind(this), $scope);
-    }
+    // if ($scope.$root.onAppEvent) {
+    //   $scope.$root.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
+    //   // $scope.$root.onAppEvent('graph-hover', this.onVarChanged.bind(this), $scope);
+    // }
   }
 
   //

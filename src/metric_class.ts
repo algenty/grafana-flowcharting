@@ -14,7 +14,7 @@ export class Metric {
   metrics: any = {};
   name = '';
   nullPointMode = 'connected';
-  constructor(dataList: any) { }
+  constructor(dataList: any) {}
 
   /**
    * Get name of metric
@@ -147,7 +147,7 @@ export class Serie extends Metric {
         const timestamp = $GF.getGraphHover();
         value = timestamp !== undefined ? this.findValue(timestamp) : null;
       } else {
-        value =  this.metrics.stats[aggregator];
+        value = this.metrics.stats[aggregator];
       }
       return value;
     } catch (error) {

@@ -20,6 +20,7 @@ module.exports = {
     'grafana/app/core/utils/kbn': '<rootDir>/spec/__mocks__/kbn.ts',
     'grafana/app/plugins/sdk': '<rootDir>/spec/__mocks__/sdk.ts',
     'grafana/app/core/time_series2': '<rootDir>/spec/__mocks__/time_series2.ts',
+    'grafana/app/core/app_events': '<rootDir>/spec/__mocks__/app_events.ts',
   },
   // transformIgnorePatterns: ['./public/.*', './node_modules/.*', './dist/.*'],
   testRegex: '(\\.|/)(test)\\.(jsx?|tsx?)$',
