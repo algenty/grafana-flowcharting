@@ -18,10 +18,7 @@ class FlowchartCtrl extends grafana.MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
-  GHTimeout = 0;
-  GHPlanified = false;
   GHApplied = false;
-  GHTimeStamp = 0;
   panelDefaults: {
     newFlag: boolean;
     format: string;
@@ -85,61 +82,33 @@ class FlowchartCtrl extends grafana.MetricsPanelCtrl {
   }
 
   onGraphHover(event: any) {
-    // console.log('onGraphHover')
-    if (!this.dashboard.sharedTooltipModeEnabled()) {
-      return;
-    }
-
-    if (this.flowchartHandler !== undefined) {
-      this.flowchartHandler.graphHoverChanged();
-      this.waitForGraphOver(event.pos.x);
+    const self = this;
+    const flowchartHandler = this.flowchartHandler
+    if (this.dashboard.sharedTooltipModeEnabled() && flowchartHandler !== undefined) {
+      const timestamp = event.pos.x;
+      const id = 'graph-hover';
+      $GF.clearUniqTimeOut(id);
+      const setGraphHover = () =>{
+        $GF.setGraphHover(timestamp);
+        flowchartHandler.graphHoverChanged();
+        self.render();
+        self.GHApplied = true;
+        $GF.clearUniqTimeOut(id);
+      }
+      $GF.setUniqTimeOut(setGraphHover,$GF.CONSTANTS.CONF_GRAPHHOVER_DELAY,id);
+    } else if(self.GHApplied) {
+      $GF.unsetGraphHover();
     }
   }
 
   clearCrosshair(event: any) {
-    // console.log('graph-hover-clear');
-    if (this.flowchartHandler !== undefined && (this.GHApplied || this.GHPlanified)) {
-      this.unplanifyGraphOver();
+    if (this.flowchartHandler !== undefined && this.GHApplied) {
+      const id = 'graph-hover';
+      $GF.clearUniqTimeOut(id);
+      $GF.unsetGraphHover();
       this.flowchartHandler.graphHoverChanged();
       this.render();
     }
-  }
-
-  waitForGraphOver(timestamp: number) {
-    if (this.GHPlanified) {
-      this.unplanifyGraphOver();
-    }
-    if (!this.GHPlanified) {
-      this.planifyGraphOver(timestamp);
-    }
-  }
-
-  unplanifyGraphOver() {
-    // console.log('unplanifyGraphOver');
-    if (this.GHTimeout !== 0) {
-      window.clearInterval(this.GHTimeout);
-    }
-    this.GHPlanified = false;
-    this.GHTimeout = 0;
-    $GF.unsetGraphHover();
-  }
-
-  planifyGraphOver(timestamp: number) {
-    // console.log('planifyGraphOver');
-    this.GHPlanified = true;
-    $GF.setGraphHover(timestamp);
-    this.GHTimeStamp = timestamp;
-    const self = this;
-    this.GHTimeout = window.setTimeout(() => {
-      // console.log('Render Graph-over');
-      $GF.setGraphHover(timestamp);
-      self.render();
-      $GF.unsetGraphHover();
-      self.GHPlanified = false;
-      self.GHTimeStamp = 0;
-      self.GHTimeout = 0;
-      self.GHApplied = true;
-    }, $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY);
   }
 
   onRefresh() {

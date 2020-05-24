@@ -945,8 +945,6 @@ export class $GF {
     if (this.isGraphHoverEnabled()) {
       this.graphHover = true;
       this.GHTimeStamp = timestamp;
-      // this.setVar($GF.CONSTANTS.VAR_NUM_GHTIMESTAMP, timestamp);
-      // console.log('this.graphHover',this.graphHover);
     }
   }
 
@@ -957,13 +955,12 @@ export class $GF {
   }
 
   static hasGraphHover(): boolean {
-    return this.graphHover;
+    return this.graphHover && this.isGraphHoverEnabled();
   }
 
   static isGraphHoverEnabled(): boolean {
-    return true;
-    // const dashboard = this.getVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD);
-    // return (dashboard !== undefined && dashboard.sharedTooltipModeEnabled());
+    const dashboard = this.getVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD);
+    return (dashboard !== undefined && dashboard.sharedTooltipModeEnabled());
   }
 
   static getGraphHover(): number | undefined {
