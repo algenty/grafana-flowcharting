@@ -83,20 +83,20 @@ class FlowchartCtrl extends grafana.MetricsPanelCtrl {
 
   onGraphHover(event: any) {
     const self = this;
-    const flowchartHandler = this.flowchartHandler
+    const flowchartHandler = this.flowchartHandler;
     if (this.dashboard.sharedTooltipModeEnabled() && flowchartHandler !== undefined) {
       const timestamp = event.pos.x;
       const id = 'graph-hover';
       $GF.clearUniqTimeOut(id);
-      const setGraphHover = () =>{
+      const setGraphHover = () => {
         $GF.setGraphHover(timestamp);
         flowchartHandler.graphHoverChanged();
         self.render();
         self.GHApplied = true;
         $GF.clearUniqTimeOut(id);
-      }
-      $GF.setUniqTimeOut(setGraphHover,$GF.CONSTANTS.CONF_GRAPHHOVER_DELAY,id);
-    } else if(self.GHApplied) {
+      };
+      $GF.setUniqTimeOut(setGraphHover, $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY, id);
+    } else if (self.GHApplied) {
       $GF.unsetGraphHover();
     }
   }

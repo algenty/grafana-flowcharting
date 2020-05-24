@@ -960,7 +960,7 @@ export class $GF {
 
   static isGraphHoverEnabled(): boolean {
     const dashboard = this.getVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD);
-    return (dashboard !== undefined && dashboard.sharedTooltipModeEnabled());
+    return dashboard !== undefined && dashboard.sharedTooltipModeEnabled();
   }
 
   static getGraphHover(): number | undefined {
