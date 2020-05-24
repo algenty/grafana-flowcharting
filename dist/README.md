@@ -69,7 +69,8 @@ Arnaud
   
 ### Fixed
   - Fixed : Flowchart grid display  
-  - Fixed : background color field   
+  - Fixed : background color field  
+  - Fixed : Blink event  
   
 ## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
 ### Added

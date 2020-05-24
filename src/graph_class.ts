@@ -269,7 +269,7 @@ export default class XGraph {
     let extFonts = model.extFonts;
     if (extFonts) {
       try {
-        extFonts = extFonts.split('|').map(function (ef) {
+        extFonts = extFonts.split('|').map(function(ef) {
           var parts = ef.split('^');
           return { name: parts[0], url: parts[1] };
         });
@@ -1294,7 +1294,7 @@ export default class XGraph {
       const id = `blink_${mxcell.id}`;
       // Cancel Previous anim
       $GF.clearUniqTimeOut(id);
-      const bl_on = function () {
+      const bl_on = function() {
         const color = '#f5f242';
         const opacity = 100;
         const state = self.graph.view.getState(mxcell);
@@ -1313,7 +1313,7 @@ export default class XGraph {
           $GF.setUniqTimeOut(bl_off, ms, id);
         }
       };
-      const bl_off = function () {
+      const bl_off = function() {
         if (mxcell && mxcell.blink) {
           // console.log('bl_off');
           const hl = mxcell.blink_on;
