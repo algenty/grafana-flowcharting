@@ -34,6 +34,7 @@ class GFCONSTANT {
   VAR_OBJ_CTRL = 'ctrl';
   VAR_OBJ_DASHBOARD = 'dashboard';
   VAR_MAP_INTERVAL = 'interval';
+  VAR_MAP_TIMEOUT = 'timeout';
   VAR_STR_RULENAME: gf.TVariableKeys = '_rule';
   VAR_NUM_LEVEL: gf.TVariableKeys = '_level';
   VAR_NUM_VALUE: gf.TVariableKeys = '_value';
@@ -340,7 +341,7 @@ class GFLog {
   static ERROR = 3;
   static logLevel = GFLog.WARN;
   static logDisplay = true;
-  constructor() {}
+  constructor() { }
 
   static init(): GFLog {
     return new GFLog();
@@ -423,7 +424,7 @@ class GFPlugin {
   static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   static contextRoot: string;
-  constructor() {}
+  constructor() { }
 
   /**
    * init GFPlugin
@@ -587,15 +588,15 @@ class GFTrace {
   static indent = 0;
   trace:
     | {
-        Name: string;
-        Id: string;
-        Args: any;
-        Return: any;
-        Before: number;
-        End: number | undefined;
-        ExecTime: number | undefined;
-        Indent: number;
-      }
+      Name: string;
+      Id: string;
+      Args: any;
+      Return: any;
+      Before: number;
+      End: number | undefined;
+      ExecTime: number | undefined;
+      Indent: number;
+    }
     | undefined;
 
   constructor(fn?: string) {
@@ -623,15 +624,15 @@ class GFTrace {
   ):
     | GFTrace
     | {
-        after: () => void;
-      } {
+      after: () => void;
+    } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       GFTrace._inc(fn);
       return t;
     }
-    return { after: () => {} };
+    return { after: () => { } };
   }
 
   static _inc(fn) {
@@ -821,6 +822,38 @@ export class $GF {
     return result;
   }
 
+  static setUniqTimeOut(fc: CallableFunction, timer: number, id?: string): string {
+    let timeout: Map<string, number> = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
+    if (timeout === undefined) {
+      timeout = new Map();
+      $GF.setVar($GF.CONSTANTS.VAR_MAP_TIMEOUT, timeout);
+    }
+    if (id !== undefined) {
+      this.clearUniqTimeOut(id);
+    }
+    const thread = window.setTimeout(fc, timer);
+    id = id === undefined ? thread.toString() : id;
+    timeout.set(id, thread);
+    return id;
+  }
+
+  static clearUniqTimeOut(id: string) {
+    const timeout: Map<string, number> = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
+    if (timeout !== undefined) {
+      try {
+        const tm = timeout.get(id);
+        if (tm !== undefined) {
+          timeout.delete(id);
+          window.clearTimeout(tm);
+        }
+      } catch (error) {
+        $GF.log.warn('Failed to clear timeout thread', id, error);
+      }
+    }
+  }
+
+
+
   /**
    * Add a new Intervall (window.setInterval)
    *
@@ -830,33 +863,38 @@ export class $GF {
    * @returns {number}
    * @memberof GFGlobal
    */
-  static setInterval(fc: CallableFunction, timer: number): number {
-    let interval: Set<any> = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
+  static setUniqInterval(fc: CallableFunction, timer: number, id ?: string): string {
+    let interval: Map<string, number> = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
     if (interval === undefined) {
-      interval = new Set();
+      interval = new Map();
       $GF.setVar($GF.CONSTANTS.VAR_MAP_INTERVAL, interval);
     }
-    const newInterval = window.setInterval(fc, timer);
-    interval.add(newInterval);
-    return newInterval;
+    if (id !== undefined) {
+      this.clearUniqInterval(id);
+    }
+    const thread = window.setInterval(fc, timer);
+    id = id === undefined ? thread.toString() : id;
+    interval.set(id, thread);
+    return id;
   }
 
   /**
    * Add/clear a  Intervall (window.clearInterval)
    *
    * @static
-   * @param {number} key
+   * @param {string} id
    * @memberof GFGlobal
    */
-  static clearInterval(key: number) {
-    let interval: Set<any> = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
+  static clearUniqInterval(id: string) {
+    let interval: Map<string, number> = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
     if (interval !== undefined) {
       try {
-        window.clearInterval(key);
+        const int = interval.get(id);
+        interval.delete(id);
+        window.clearInterval(int);
       } catch (error) {
-        $GF.log.warn('Failed to clear interval thread', key, error);
+        $GF.log.warn('Failed to clear interval thread', id, error);
       }
-      interval.delete(key);
     }
   }
 
@@ -975,7 +1013,7 @@ export class $GF {
   static destroy() {
     let interval: Set<any> = $GF.getVar('interval');
     if (interval !== undefined) {
-      interval.forEach(x => $GF.clearInterval(x));
+      interval.forEach(x => $GF.clearUniqInterval(x));
       interval.clear();
     }
   }

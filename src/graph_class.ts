@@ -829,7 +829,6 @@ export default class XGraph {
         const startColor = this.getStyleCell(mxcell, style);
         if (startColor) {
           const endColor = color;
-          // const steps = $GF.utils.getStepColors(startColor, endColor, $GF.CONSTANTS.CONF_COLORS_STEPS);
           const steps = chroma
             .scale([startColor, endColor])
             .mode('lrgb')
@@ -1250,13 +1249,13 @@ export default class XGraph {
       // cell.blink = window.setInterval(() => {
       //   bl_on();
       // }, ms * 3);
-      cell.blink = $GF.setInterval(bl_on, ms * 3);
+      cell.blink = $GF.setUniqInterval(bl_on, ms * 3);
     }
   }
 
   async unblinkCell(cell: mxCell) {
     if (cell && cell.blink) {
-      $GF.clearInterval(cell.blink);
+      $GF.clearUniqInterval(cell.blink);
       if (cell.blink_on) {
         const hl = cell.blink_on;
         if (hl.shape != null) {
