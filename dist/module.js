@@ -19095,18 +19095,21 @@ var XGraph = function () {
     key: "setColorAnimCell",
     value: function setColorAnimCell(mxcell, style, color) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setColorAnimCell()');
+      var id = "".concat(style, "_").concat(mxcell.id);
+      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
 
       if (this.isAnimated() && color) {
         try {
           var startColor = this.getStyleCell(mxcell, style);
 
           if (startColor) {
-            var graduate = function graduate(count, steps) {
+            var graduate = function graduate() {
               if (count < lg) {
                 self.setStyleCell(mxcell, style, steps[count]);
-                window.setTimeout(function () {
-                  graduate(count + 1, steps);
-                }, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_COLORS_MS);
+                count += 1;
+                globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(graduate, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_COLORS_MS, id);
+              } else {
+                globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
               }
             };
 
@@ -19115,7 +19118,7 @@ var XGraph = function () {
             var count = 1;
             var self = this;
             var lg = steps.length;
-            graduate(count, steps);
+            graduate();
           } else {
             var hex = chroma_js__WEBPACK_IMPORTED_MODULE_4___default()(color).hex();
             this.setStyleCell(mxcell, style, hex);
@@ -19149,7 +19152,7 @@ var XGraph = function () {
     key: "setStyleAnimCell",
     value: function setStyleAnimCell(mxcell, style, endValue, beginValue) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee4() {
-        var trc, end, begin, graduate, steps, l, count, self;
+        var trc, end, begin, graduate, id, steps, lg, count, self;
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
@@ -19162,20 +19165,23 @@ var XGraph = function () {
                     begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
 
                     if (end !== begin) {
-                      graduate = function graduate(count, steps) {
-                        if (count < l) {
-                          self.setStyleCell(mxcell, style, steps[count]);
-                          window.setTimeout(function () {
-                            graduate(count + 1, steps);
-                          }, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS);
+                      graduate = function graduate() {
+                        if (count < lg) {
+                          self.setStyleCell(mxcell, style, steps[count].toString());
+                          count += 1;
+                          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(graduate, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS, id);
+                        } else {
+                          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
                         }
                       };
 
+                      id = "".concat(style, "_").concat(mxcell.id);
+                      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
                       steps = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(begin, end, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                      l = steps.length;
+                      lg = steps.length;
                       count = 0;
                       self = this;
-                      graduate(count, steps);
+                      graduate();
                     }
                   } catch (error) {
                     this.graph.setCellStyles(style, endValue, [mxcell]);
@@ -19459,15 +19465,15 @@ var XGraph = function () {
     }
   }, {
     key: "unhighlightCell",
-    value: function unhighlightCell(cell) {
+    value: function unhighlightCell(mxcell) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee10() {
         var hl;
         return regeneratorRuntime.wrap(function _callee10$(_context10) {
           while (1) {
             switch (_context10.prev = _context10.next) {
               case 0:
-                if (cell && cell.highlight) {
-                  hl = cell.highlight;
+                if (mxcell && mxcell.highlight) {
+                  hl = mxcell.highlight;
 
                   if (hl.shape != null) {
                     mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 500ms ease-in-out');
@@ -19477,7 +19483,7 @@ var XGraph = function () {
                   window.setTimeout(function () {
                     hl.destroy();
                   }, 500);
-                  cell.highlight = null;
+                  mxcell.highlight = null;
                 }
 
               case 1:
@@ -19490,22 +19496,25 @@ var XGraph = function () {
     }
   }, {
     key: "blinkCell",
-    value: function blinkCell(cell, ms) {
+    value: function blinkCell(mxcell, ms) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee11() {
-        var _self, bl_on, bl_off;
+        var _self, _id, bl_on, bl_off;
 
         return regeneratorRuntime.wrap(function _callee11$(_context11) {
           while (1) {
             switch (_context11.prev = _context11.next) {
               case 0:
-                if (!cell.blink) {
+                if (!mxcell.blink) {
+                  mxcell.blink = true;
                   _self = this;
+                  _id = "blink_".concat(mxcell.id);
+                  globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id);
 
                   bl_on = function bl_on() {
                     var color = '#f5f242';
                     var opacity = 100;
 
-                    var state = _self.graph.view.getState(cell);
+                    var state = _self.graph.view.getState(mxcell);
 
                     if (state != null) {
                       var sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
@@ -19516,31 +19525,28 @@ var XGraph = function () {
                       }
 
                       hl.highlight(state);
-                      cell.blink_on = hl;
-                      cell.blink_ms = ms;
-                      window.setTimeout(function () {
-                        bl_off();
-                      }, ms);
+                      mxcell.blink_on = hl;
+                      mxcell.blink_ms = ms;
+                      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(bl_off, ms, _id);
                     }
                   };
 
                   bl_off = function bl_off() {
-                    if (cell && cell.blink_on) {
-                      var hl = cell.blink_on;
+                    if (mxcell && mxcell.blink) {
+                      var hl = mxcell.blink_on;
 
                       if (hl.shape != null) {
                         mxUtils.setPrefixedStyle(hl.shape.node.style, "transition", "all ".concat(ms, "ms ease-in-out"));
                         hl.shape.node.style.opacity = 0;
                       }
 
-                      window.setTimeout(function () {
-                        hl.destroy();
-                        cell.blink_on = null;
-                      }, ms);
+                      hl.destroy();
+                      mxcell.blink_on = null;
+                      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(bl_on, ms, _id);
                     }
                   };
 
-                  cell.blink = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqInterval(bl_on, ms * 3);
+                  bl_on();
                 }
 
               case 1:
@@ -19553,31 +19559,33 @@ var XGraph = function () {
     }
   }, {
     key: "unblinkCell",
-    value: function unblinkCell(cell) {
+    value: function unblinkCell(mxcell) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee12() {
-        var hl;
+        var id, hl;
         return regeneratorRuntime.wrap(function _callee12$(_context12) {
           while (1) {
             switch (_context12.prev = _context12.next) {
               case 0:
-                if (cell && cell.blink) {
-                  globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqInterval(cell.blink);
+                id = "blink_".concat(mxcell.id);
 
-                  if (cell.blink_on) {
-                    hl = cell.blink_on;
+                if (mxcell.blink) {
+                  if (mxcell.blink_on) {
+                    hl = mxcell.blink_on;
 
                     if (hl.shape != null) {
                       hl.shape.node.style.opacity = 0;
                       hl.destroy();
-                      cell.blink_on = null;
-                      cell.blink_ms = 0;
+                      mxcell.blink_on = null;
+                      mxcell.blink_ms = 0;
                     }
                   }
 
-                  cell.blink = null;
+                  mxcell.blink = null;
                 }
 
-              case 1:
+                globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
+
+              case 3:
               case "end":
                 return _context12.stop();
             }
@@ -19669,7 +19677,7 @@ var XGraph = function () {
     key: "resizeCell",
     value: function resizeCell(mxcell, percent, origine) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee15() {
-        var trc, geo, _x, _ow, _y, _oh, _w, _h, _graduate, steps_x, steps_y, steps_w, steps_h, _l, count, _self2, _rec;
+        var trc, geo, _id2, _x, _ow, _y, _oh, _w, _h, _graduate, steps_x, steps_y, steps_w, steps_h, _lg, _count, _self2, _rec;
 
         return regeneratorRuntime.wrap(function _callee15$(_context15) {
           while (1) {
@@ -19679,6 +19687,8 @@ var XGraph = function () {
                 geo = this.graph.model.getGeometry(mxcell);
 
                 if (geo !== null) {
+                  _id2 = "resize_".concat(mxcell.id);
+                  globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id2);
                   _x = origine !== undefined ? origine.x : geo.x;
                   _ow = origine !== undefined ? origine.width : geo.x;
                   _y = origine !== undefined ? origine.y : geo.y;
@@ -19689,15 +19699,16 @@ var XGraph = function () {
                   _y = _y - (_h - _oh) / 2;
 
                   if (this.isAnimated()) {
-                    _graduate = function _graduate(count, steps_x, steps_y, steps_w, steps_h) {
-                      if (count < _l) {
-                        window.setTimeout(function () {
-                          var _rec = new mxRectangle(steps_x[count], steps_y[count], steps_w[count], steps_h[count]);
+                    _graduate = function _graduate() {
+                      if (_count < _lg) {
+                        var _rec = new mxRectangle(steps_x[_count], steps_y[_count], steps_w[_count], steps_h[_count]);
 
-                          _self2.graph.resizeCell(mxcell, _rec, true);
+                        _self2.graph.resizeCell(mxcell, _rec, true);
 
-                          _graduate(count + 1, steps_x, steps_y, steps_w, steps_h);
-                        }, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS);
+                        _count += 1;
+                        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(_graduate, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS, _id2);
+                      } else {
+                        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id2);
                       }
                     };
 
@@ -19705,11 +19716,11 @@ var XGraph = function () {
                     steps_y = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.y, _y, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
                     steps_w = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.width, _w, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
                     steps_h = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.height, _h, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    _l = steps_x.length;
-                    count = 0;
+                    _lg = steps_x.length;
+                    _count = 0;
                     _self2 = this;
 
-                    _graduate(count, steps_x, steps_y, steps_w, steps_h);
+                    _graduate();
                   } else {
                     _rec = new mxRectangle(_x, _y, _w, _h);
                     this.graph.resizeCell(mxcell, _rec, true);
@@ -19730,7 +19741,7 @@ var XGraph = function () {
     key: "changeSizeCell",
     value: function changeSizeCell(mxcell, width, height, origine) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee16() {
-        var trc, geo, _x, _ow, _y, _oh, _h, _w, _graduate2, steps_x, steps_y, steps_w, steps_h, _l2, count, _self3, _rec;
+        var trc, geo, _id3, _x, _ow, _y, _oh, _h, _w, _graduate2, _steps_x, _steps_y, _steps_w, _steps_h, _lg2, _count2, _self3, _rec;
 
         return regeneratorRuntime.wrap(function _callee16$(_context16) {
           while (1) {
@@ -19740,6 +19751,8 @@ var XGraph = function () {
                 geo = this.graph.model.getGeometry(mxcell);
 
                 if (geo !== null) {
+                  _id3 = "resize_".concat(mxcell.id);
+                  globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id3);
                   _x = origine !== undefined ? origine.x : geo.x;
                   _ow = origine !== undefined ? origine.width : geo.x;
                   _y = origine !== undefined ? origine.y : geo.y;
@@ -19750,27 +19763,28 @@ var XGraph = function () {
                   _w = width !== undefined ? Math.abs(width) : origine !== undefined ? origine.width : geo.width;
 
                   if (this.isAnimated()) {
-                    _graduate2 = function _graduate2(count, steps_x, steps_y, steps_w, steps_h) {
-                      if (count < _l2) {
-                        window.setTimeout(function () {
-                          var _rec = new mxRectangle(steps_x[count], steps_y[count], steps_w[count], steps_h[count]);
+                    _graduate2 = function _graduate2() {
+                      if (_count2 < _lg2) {
+                        var _rec = new mxRectangle(_steps_x[_count2], _steps_y[_count2], _steps_w[_count2], _steps_h[_count2]);
 
-                          _self3.graph.resizeCell(mxcell, _rec, true);
+                        _self3.graph.resizeCell(mxcell, _rec, true);
 
-                          _graduate2(count + 1, steps_x, steps_y, steps_w, steps_h);
-                        }, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS);
+                        _count2 += 1;
+                        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(_graduate2, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS, _id3);
+                      } else {
+                        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id3);
                       }
                     };
 
-                    steps_x = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.x, _x, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    steps_y = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.y, _y, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    steps_w = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.width, _w, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    steps_h = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.height, _h, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    _l2 = steps_x.length;
-                    count = 0;
+                    _steps_x = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.x, _x, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                    _steps_y = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.y, _y, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                    _steps_w = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.width, _w, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                    _steps_h = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.height, _h, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                    _lg2 = _steps_x.length;
+                    _count2 = 0;
                     _self3 = this;
 
-                    _graduate2(count, steps_x, steps_y, steps_w, steps_h);
+                    _graduate2();
                   } else {
                     _rec = new mxRectangle(_x, _y, _w, _h);
                     this.graph.resizeCell(mxcell, _rec, true);
