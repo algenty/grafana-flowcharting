@@ -59,7 +59,6 @@ Arnaud
   - New fill Method : Gradient ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/gradients_color_ani2.gif?raw=true))  
   - Graph hover support ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/floorplan_graphhover.gif?raw=true))  
   - Better rendering of color animation with chroma-js
-  - TODO Fix Table graph-hover
   - New Events/Animations Mapping :
     * Modify Gradient direction  
     * Modify Arrow start and end connectors ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/connectors_color_ani2.gif?raw=true))  
@@ -72,6 +71,7 @@ Arnaud
   - Fixed : Flowchart grid display  
   - Fixed : background color field  
   - Fixed : Blink event  
+  - Fixed : Data is null
   
 ## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
 ### Added
