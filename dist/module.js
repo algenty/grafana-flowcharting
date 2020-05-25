@@ -16255,15 +16255,13 @@ var Flowchart = function () {
       globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].init()"));
 
       try {
+        var content = this.getContent();
+
         if (this.xgraph === undefined) {
-          this.xgraph = new graph_class__WEBPACK_IMPORTED_MODULE_0__["default"](this.container, this.data.type, this.getContent());
+          this.xgraph = new graph_class__WEBPACK_IMPORTED_MODULE_0__["default"](this.container, this.data.type, content);
         }
 
-        if (this.data.xml !== undefined && this.data.xml !== null) {
-          if (this.data.download) {
-            this.xgraph.setXmlGraph(this.getContent());
-          }
-
+        if (content !== undefined && content !== null) {
           if (this.data.allowDrawio) {
             this.xgraph.allowDrawio(true);
           } else {
@@ -16299,7 +16297,7 @@ var Flowchart = function () {
 
           this.stateHandler = new statesHandler__WEBPACK_IMPORTED_MODULE_1__["StateHandler"](this.xgraph);
         } else {
-          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('XML Graph not defined');
+          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('Source content empty Graph not defined');
         }
       } catch (error) {
         globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('Unable to initialize graph', error);
@@ -16566,8 +16564,6 @@ var Flowchart = function () {
   }, {
     key: "getContent",
     value: function getContent() {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].getContent()"));
-
       if (this.data.download) {
         var url = this.templateSrv.replaceWithText(this.data.url);
         var content = this.loadContent(url);
@@ -17105,11 +17101,19 @@ var FlowchartOptionsCtrl = function () {
             _this.$scope.$applyAsync();
           } else {
             response.text().then(function (text) {
-              var bool = graph_class__WEBPACK_IMPORTED_MODULE_0__["default"].isValidXml(text);
-              _this.errorSourceFlag = !bool;
+              var fc = _this.flowchartHandler.getFlowchart();
 
-              if (_this.errorSourceFlag) {
-                _this.errorSourceMsg = 'Response is an invalid Xml definition';
+              if (fc.data.type === 'xml') {
+                var bool = graph_class__WEBPACK_IMPORTED_MODULE_0__["default"].isValidXml(text);
+                _this.errorSourceFlag = !bool;
+
+                if (_this.errorSourceFlag) {
+                  _this.errorSourceMsg = 'Response is an invalid Xml definition';
+                } else {
+                  _this.errorDownloadMsg = '';
+
+                  _this.onSourceChange();
+                }
               } else {
                 _this.errorDownloadMsg = '';
 

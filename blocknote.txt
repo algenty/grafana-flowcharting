@@ -35,8 +35,34 @@ https://gka.github.io/chroma.js/
 https://codepen.io/junglist/pen/MbPgXd
 https://fvsch.com/svg-gradient-fill/
 
+# Animation class
+https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=connectors-in-draw.io.html&p=flow#Uhttps%3A%2F%2Fdrive.google.com%2Fa%2Fseibert-media.net%2Fuc%3Fid%3D1kgy30z0qgXFuMkz7SiQfh_Y99RELgWHa%26export%3Ddownload
+.mxEdgeFlow {
+    animation: mxEdgeFlow 0.5s linear;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-fill-mode: none;
+    animation-play-state: running;
+    animation-name: mxEdgeFlow;
+    animation-iteration-count: infinite;
+}
+
+.mxEdgeFlow {
+animation: mxEdgeFlow 0.5s linear;
+animation-iteration-count: infinite;
+}
+@keyframes mxEdgeFlow {
+to {
+stroke-dashoffset: -16;
+}
+}
+
+
 # TODO :
 Fix CSV save : Done
-FIX Middle CSV
+FIX Middle CSV : Done
 FIX Red for null value
 FIX When data is for null value

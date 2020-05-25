@@ -86,10 +86,16 @@ export class FlowchartOptionsCtrl {
             this.$scope.$applyAsync();
           } else {
             response.text().then(text => {
-              const bool = XGraph.isValidXml(text);
-              this.errorSourceFlag = !bool;
-              if (this.errorSourceFlag) {
-                this.errorSourceMsg = 'Response is an invalid Xml definition';
+              const fc = this.flowchartHandler.getFlowchart();
+              if (fc.data.type === 'xml') {
+                const bool = XGraph.isValidXml(text);
+                this.errorSourceFlag = !bool;
+                if (this.errorSourceFlag) {
+                  this.errorSourceMsg = 'Response is an invalid Xml definition';
+                } else {
+                  this.errorDownloadMsg = '';
+                  this.onSourceChange();
+                }
               } else {
                 this.errorDownloadMsg = '';
                 this.onSourceChange();

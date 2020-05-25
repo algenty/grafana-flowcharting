@@ -184,13 +184,14 @@ export class Flowchart {
   init(): this {
     $GF.log.info(`flowchart[${this.data.name}].init()`);
     try {
+      const content = this.getContent();
       if (this.xgraph === undefined) {
-        this.xgraph = new XGraph(this.container, this.data.type, this.getContent());
-      }
-      if (this.data.xml !== undefined && this.data.xml !== null) {
-        if (this.data.download) {
-          this.xgraph.setXmlGraph(this.getContent());
-        }
+        this.xgraph = new XGraph(this.container, this.data.type, content);
+      } 
+      if (content !== undefined && content !== null) {
+        // if (this.data.download) {
+        //   this.xgraph.setXmlGraph(this.getContent());
+        // }
         if (this.data.allowDrawio) {
           this.xgraph.allowDrawio(true);
         } else {
@@ -219,7 +220,7 @@ export class Flowchart {
         }
         this.stateHandler = new StateHandler(this.xgraph);
       } else {
-        $GF.log.error('XML Graph not defined');
+        $GF.log.error('Source content empty Graph not defined');
       }
     } catch (error) {
       $GF.log.error('Unable to initialize graph', error);
@@ -570,7 +571,6 @@ export class Flowchart {
    * @memberof Flowchart
    */
   getContent(): string {
-    $GF.log.info(`flowchart[${this.data.name}].getContent()`);
     if (this.data.download) {
       const url = this.templateSrv.replaceWithText(this.data.url);
       const content = this.loadContent(url);
