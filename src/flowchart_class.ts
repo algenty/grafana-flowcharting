@@ -37,7 +37,6 @@ export class Flowchart {
    */
   import(obj: any): this {
     $GF.log.info(`flowchart[${this.data.name}].import()`);
-    // GFGlobal.log.debug(`flowchart[${this.data.name}].import() obj`, obj);
     if (!!obj.download || this.data.download === false) {
       this.data.download = obj.download;
     }
@@ -63,6 +62,11 @@ export class Flowchart {
     }
     if (!!obj.xml) {
       this.data.xml = obj.xml;
+    }
+
+    // 0.9.0
+    if (!!obj.csv) {
+      this.data.csv = obj.csv;
     }
     if (!!obj.url) {
       this.data.url = obj.url;

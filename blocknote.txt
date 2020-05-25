@@ -31,8 +31,10 @@ https://jgraph.github.io/mxgraph/docs/manual.html
 # Colors
 https://gka.github.io/chroma.js/
 
-# Animation
-
 # Chartist gradient
 https://codepen.io/junglist/pen/MbPgXd
 https://fvsch.com/svg-gradient-fill/
+
+# TODO :
+Fix CSV save
+FIX Middle CSV
