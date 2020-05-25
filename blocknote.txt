@@ -36,5 +36,7 @@ https://codepen.io/junglist/pen/MbPgXd
 https://fvsch.com/svg-gradient-fill/
 
 # TODO :
-Fix CSV save
+Fix CSV save : Done
 FIX Middle CSV
+FIX Red for null value
+FIX When data is for null value

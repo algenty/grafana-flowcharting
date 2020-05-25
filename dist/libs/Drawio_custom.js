@@ -9,28 +9,9 @@ module.exports = {
                 throw e;
             }
             finally {
-                // Animates the changes in the graph model except
-                // for Camino, where animation is too slow
-                if ((navigator.userAgent == null ||
-                    navigator.userAgent.indexOf('Camino') < 0)) {
-                    // New API for animating graph layout results asynchronously
-                    var morph = new mxMorphing(graph);
-                    morph.addListener(mxEvent.DONE, mxUtils.bind(this, function () {
-                        graph.getModel().endUpdate();
-
-                        if (post != null) {
-                            post();
-                        }
-                    }));
-
-                    morph.startAnimation();
-                }
-                else {
-                    graph.getModel().endUpdate();
-
-                    if (post != null) {
-                        post();
-                    }
+                graph.getModel().endUpdate();
+                if (post != null) {
+                    post();
                 }
             }
         }
@@ -449,7 +430,6 @@ module.exports = {
                             }
                         }
                     }
-
                     // Removes ignored attributes after processing above
                     if (ignore != null) {
                         for (var i = 0; i < allCells.length; i++) {
@@ -485,7 +465,6 @@ module.exports = {
                                 }
                             }
                         };
-
                         if (layout.charAt(0) == '[') {
                             // Required for layouts to work with new cells
                             var temp = afterInsert;
@@ -580,8 +559,6 @@ module.exports = {
                             afterInsert = null;
                         }
                     }
-
-                    // this.hideDialog();
                 }
                 finally {
                     graph.model.endUpdate();

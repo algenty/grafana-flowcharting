@@ -1,6 +1,6 @@
-## See more information for syntax at https://drawio-app.com/import-from-csv-to-drawio/
+## See more information for the syntax at https://drawio-app.com/import-from-csv-to-drawio/
 ##
-## Example CSV import. Use ## for comments and # for configuration. Paste CSV below.
+## Example CSV. Use ## for comments and # for configuration.
 ## The following names are reserved and should not be used (or ignored):
 ## id, tooltip, placeholder(s), link and label (see below)
 ##
