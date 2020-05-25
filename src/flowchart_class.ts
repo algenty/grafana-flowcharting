@@ -187,7 +187,7 @@ export class Flowchart {
       const content = this.getContent();
       if (this.xgraph === undefined) {
         this.xgraph = new XGraph(this.container, this.data.type, content);
-      } 
+      }
       if (content !== undefined && content !== null) {
         // if (this.data.download) {
         //   this.xgraph.setXmlGraph(this.getContent());
@@ -599,7 +599,8 @@ export class Flowchart {
    * @memberof Flowchart
    */
   loadContent(url: string): string | null {
-    return XGraph.loadXml(url);
+    // return XGraph.loadXml(url);
+    return $GF.utils.$loadFile(url);
   }
 
   renameId(oldId: string, newId: string): this {

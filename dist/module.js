@@ -16589,7 +16589,7 @@ var Flowchart = function () {
   }, {
     key: "loadContent",
     value: function loadContent(url) {
-      return graph_class__WEBPACK_IMPORTED_MODULE_0__["default"].loadXml(url);
+      return globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.$loadFile(url);
     }
   }, {
     key: "renameId",
