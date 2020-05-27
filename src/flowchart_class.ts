@@ -182,7 +182,6 @@ export class Flowchart {
    * @memberof Flowchart
    */
   init(): this {
-    $GF.log.info(`flowchart[${this.data.name}].init()`);
     try {
       const content = this.getContent();
       if (this.xgraph === undefined) {
@@ -330,18 +329,12 @@ export class Flowchart {
    * @param {*} xmlGraph
    * @memberof Flowchart
    */
-  redraw(xmlGraph?: string) {
-    $GF.log.info(`flowchart[${this.data.name}].redraw()`);
-    if (xmlGraph !== undefined) {
-      this.data.xml = xmlGraph;
-      if (this.xgraph) {
-        this.xgraph.setXmlGraph(this.getXml(true));
-      }
-    } else {
-      $GF.log.warn('XML Content not defined');
-      if (this.xgraph) {
-        this.xgraph.setXmlGraph(this.getXml(true));
-      }
+  redraw(content?: string) {
+    if (content !== undefined) {
+      this.setContent(content);
+    }
+    if (this.xgraph !== undefined) {
+      this.xgraph.setContent(this.getContent());
     }
     this.applyOptions();
   }
@@ -352,7 +345,6 @@ export class Flowchart {
    * @memberof Flowchart
    */
   reload() {
-    $GF.log.info(`flowchart[${this.data.name}].reload()`);
     if (this.xgraph !== undefined && this.xgraph !== null) {
       this.xgraph.destroyGraph();
       this.xgraph = undefined;
@@ -481,7 +473,6 @@ export class Flowchart {
    * @memberof Flowchart
    */
   applyScale(bool: boolean): this {
-    $GF.log.info('Flowchart.scale()');
     if (bool !== undefined) {
       this.data.scale = bool;
     }
@@ -527,8 +518,7 @@ export class Flowchart {
    * @returns {string}
    * @memberof Flowchart
    */
-  getXml(replaceVarBool: boolean): string {
-    $GF.log.info(`flowchart[${this.data.name}].getXml()`);
+  getXml(replaceVarBool: boolean = true): string {
     if (!replaceVarBool) {
       return this.data.xml;
     }
@@ -542,12 +532,28 @@ export class Flowchart {
    * @returns {string}
    * @memberof Flowchart
    */
-  getCsv(replaceVarBool: boolean): string {
-    $GF.log.info(`flowchart[${this.data.name}].getXml()`);
+  getCsv(replaceVarBool: boolean = true): string {
     if (!replaceVarBool) {
       return this.data.csv;
     }
     return this.templateSrv.replaceWithText(this.data.csv);
+  }
+
+  /**
+   * Get data source according type
+   *
+   * @param {boolean} [replaceVarBool=true]
+   * @returns
+   * @memberof Flowchart
+   */
+  getSource(replaceVarBool: boolean = true) {
+    if (this.data.type === 'xml') {
+      return this.getXml(replaceVarBool);
+    }
+    if (this.data.type === 'csv') {
+      return this.getCsv(replaceVarBool);
+    }
+    return '';
   }
 
   /**
@@ -567,28 +573,43 @@ export class Flowchart {
   /**
    * Get Source of graph (csv|xml) or get content from url
    *
+   * @param {boolean} replaceVarBool
    * @returns
    * @memberof Flowchart
    */
-  getContent(): string {
+  getContent(replaceVarBool: boolean = true): string {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'getContent()');
+    let content: string | null = '';
     if (this.data.download) {
       const url = this.templateSrv.replaceWithText(this.data.url);
-      const content = this.loadContent(url);
+      content = this.loadContent(url);
       if (content !== null) {
-        return content;
-      } else {
-        return '';
-      }
+        if (replaceVarBool) {
+          content = this.templateSrv.replaceWithText(content);
+        }
+      } 
     } else {
-      if (this.data.type === 'xml') {
-        return this.getXml(true);
-      }
-      if (this.data.type === 'csv') {
-        return this.getCsv(true);
-      }
+      content = this.getSource(replaceVarBool);
     }
-    $GF.log.error('type unknow', this.data.type);
-    return '';
+    trc.after();
+    return content === null ? '' : content;
+  }
+
+  /**
+   * Set the data source
+   *
+   * @param {string} content
+   * @returns {this}
+   * @memberof Flowchart
+   */
+  setContent(content: string): this {
+    if (this.data.type === 'xml') {
+      this.data.xml = content;
+    }
+    if (this.data.type === 'csv') {
+      this.data.csv = content;
+    }
+    return this;
   }
 
   /**
@@ -599,7 +620,6 @@ export class Flowchart {
    * @memberof Flowchart
    */
   loadContent(url: string): string | null {
-    // return XGraph.loadXml(url);
     return $GF.utils.$loadFile(url);
   }
 
@@ -620,7 +640,7 @@ export class Flowchart {
     if (this.xgraph) {
       this.data.xml = this.xgraph.getXmlModel();
     }
-    this.redraw(this.data.xml);
+    this.redraw();
     return this;
   }
 
@@ -675,6 +695,11 @@ export class Flowchart {
     return this;
   }
 
+  setCsv(csv: string): this {
+    this.data.csv = csv;
+    return this;
+  }
+
   minify() {
     this.data.xml = $GF.utils.minify(this.data.xml);
   }
@@ -702,7 +727,6 @@ export class Flowchart {
   }
 
   setMap(onMappingObj: gf.TIOnMappingObj) {
-    $GF.log.info(`flowchart[${this.data.name}].setMap()`);
     const container = this.getContainer();
     if (this.xgraph) {
       this.xgraph.setMap(onMappingObj);

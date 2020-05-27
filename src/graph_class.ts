@@ -68,7 +68,7 @@ export default class XGraph {
     };
 
     // END ZOOM MouseWheele
-    XGraph.initMxGgraph();
+    XGraph.initMxGraph();
     if (type === 'xml') {
       if ($GF.utils.isencoded(definition)) {
         this.xmlGraph = $GF.utils.decode(definition, true, true, true);
@@ -132,7 +132,7 @@ export default class XGraph {
    * @returns
    * @memberof XGraph
    */
-  static initMxGgraph() {
+  static initMxGraph() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initMxGgraph()');
     let myWindow: any = window;
     if (!XGraph.initialized) {
@@ -550,18 +550,23 @@ export default class XGraph {
   }
 
   /**
-   * Assign xml definition and redraw graph
+   * Assign source definition and redraw graph
    *
    * @param {string} xmlGraph
    * @returns {this}
    * @memberof XGraph
    */
-  setXmlGraph(xmlGraph: string): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setXmlGraph()');
-    if ($GF.utils.isencoded(xmlGraph)) {
-      this.xmlGraph = $GF.utils.decode(xmlGraph, true, true, true);
-    } else {
-      this.xmlGraph = xmlGraph;
+  setContent(content: string): this {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setContent()');
+    if (this.type === 'xml') {
+      if ($GF.utils.isencoded(content)) {
+        this.xmlGraph = $GF.utils.decode(content, true, true, true);
+      } else {
+        this.xmlGraph = content;
+      }
+    }
+    if (this.type === 'csv') {
+      this.csvGraph = content;
     }
     this.drawGraph();
     trc.after();

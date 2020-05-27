@@ -16252,8 +16252,6 @@ var Flowchart = function () {
   }, {
     key: "init",
     value: function init() {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].init()"));
-
       try {
         var content = this.getContent();
 
@@ -16379,21 +16377,13 @@ var Flowchart = function () {
     }
   }, {
     key: "redraw",
-    value: function redraw(xmlGraph) {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].redraw()"));
+    value: function redraw(content) {
+      if (content !== undefined) {
+        this.setContent(content);
+      }
 
-      if (xmlGraph !== undefined) {
-        this.data.xml = xmlGraph;
-
-        if (this.xgraph) {
-          this.xgraph.setXmlGraph(this.getXml(true));
-        }
-      } else {
-        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.warn('XML Content not defined');
-
-        if (this.xgraph) {
-          this.xgraph.setXmlGraph(this.getXml(true));
-        }
+      if (this.xgraph !== undefined) {
+        this.xgraph.setContent(this.getContent());
       }
 
       this.applyOptions();
@@ -16401,8 +16391,6 @@ var Flowchart = function () {
   }, {
     key: "reload",
     value: function reload() {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].reload()"));
-
       if (this.xgraph !== undefined && this.xgraph !== null) {
         this.xgraph.destroyGraph();
         this.xgraph = undefined;
@@ -16497,8 +16485,6 @@ var Flowchart = function () {
   }, {
     key: "applyScale",
     value: function applyScale(bool) {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info('Flowchart.scale()');
-
       if (bool !== undefined) {
         this.data.scale = bool;
       }
@@ -16531,8 +16517,8 @@ var Flowchart = function () {
     }
   }, {
     key: "getXml",
-    value: function getXml(replaceVarBool) {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].getXml()"));
+    value: function getXml() {
+      var replaceVarBool = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
       if (!replaceVarBool) {
         return this.data.xml;
@@ -16542,14 +16528,29 @@ var Flowchart = function () {
     }
   }, {
     key: "getCsv",
-    value: function getCsv(replaceVarBool) {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].getXml()"));
+    value: function getCsv() {
+      var replaceVarBool = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
       if (!replaceVarBool) {
         return this.data.csv;
       }
 
       return this.templateSrv.replaceWithText(this.data.csv);
+    }
+  }, {
+    key: "getSource",
+    value: function getSource() {
+      var replaceVarBool = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+      if (this.data.type === 'xml') {
+        return this.getXml(replaceVarBool);
+      }
+
+      if (this.data.type === 'csv') {
+        return this.getCsv(replaceVarBool);
+      }
+
+      return '';
     }
   }, {
     key: "getUrlEditor",
@@ -16564,27 +16565,38 @@ var Flowchart = function () {
   }, {
     key: "getContent",
     value: function getContent() {
+      var replaceVarBool = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+      var trc = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].trace.before(this.constructor.name + '.' + 'getContent()');
+      var content = '';
+
       if (this.data.download) {
         var url = this.templateSrv.replaceWithText(this.data.url);
-        var content = this.loadContent(url);
+        content = this.loadContent(url);
 
         if (content !== null) {
-          return content;
-        } else {
-          return '';
+          if (replaceVarBool) {
+            content = this.templateSrv.replaceWithText(content);
+          }
         }
       } else {
-        if (this.data.type === 'xml') {
-          return this.getXml(true);
-        }
-
-        if (this.data.type === 'csv') {
-          return this.getCsv(true);
-        }
+        content = this.getSource(replaceVarBool);
       }
 
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('type unknow', this.data.type);
-      return '';
+      trc.after();
+      return content === null ? '' : content;
+    }
+  }, {
+    key: "setContent",
+    value: function setContent(content) {
+      if (this.data.type === 'xml') {
+        this.data.xml = content;
+      }
+
+      if (this.data.type === 'csv') {
+        this.data.csv = content;
+      }
+
+      return this;
     }
   }, {
     key: "loadContent",
@@ -16607,7 +16619,7 @@ var Flowchart = function () {
         this.data.xml = this.xgraph.getXmlModel();
       }
 
-      this.redraw(this.data.xml);
+      this.redraw();
       return this;
     }
   }, {
@@ -16678,6 +16690,12 @@ var Flowchart = function () {
       return this;
     }
   }, {
+    key: "setCsv",
+    value: function setCsv(csv) {
+      this.data.csv = csv;
+      return this;
+    }
+  }, {
     key: "minify",
     value: function minify() {
       this.data.xml = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.minify(this.data.xml);
@@ -16709,7 +16727,6 @@ var Flowchart = function () {
   }, {
     key: "setMap",
     value: function setMap(onMappingObj) {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].setMap()"));
       var container = this.getContainer();
 
       if (this.xgraph) {
@@ -18101,7 +18118,7 @@ var GFTrace = function () {
   return GFTrace;
 }();
 
-GFTrace.enable = false;
+GFTrace.enable = true;
 GFTrace.trc = new Map();
 GFTrace.fn = new Map();
 GFTrace.indent = 0;
@@ -18545,7 +18562,7 @@ var XGraph = function () {
       prop: 'id',
       object: null
     };
-    XGraph.initMxGgraph();
+    XGraph.initMxGraph();
 
     if (type === 'xml') {
       if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.isencoded(definition)) {
@@ -18869,14 +18886,20 @@ var XGraph = function () {
       return this.xmlGraph;
     }
   }, {
-    key: "setXmlGraph",
-    value: function setXmlGraph(xmlGraph) {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setXmlGraph()');
+    key: "setContent",
+    value: function setContent(content) {
+      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setContent()');
 
-      if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.isencoded(xmlGraph)) {
-        this.xmlGraph = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.decode(xmlGraph, true, true, true);
-      } else {
-        this.xmlGraph = xmlGraph;
+      if (this.type === 'xml') {
+        if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.isencoded(content)) {
+          this.xmlGraph = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.decode(content, true, true, true);
+        } else {
+          this.xmlGraph = content;
+        }
+      }
+
+      if (this.type === 'csv') {
+        this.csvGraph = content;
       }
 
       this.drawGraph();
@@ -19876,8 +19899,8 @@ var XGraph = function () {
       }
     }
   }, {
-    key: "initMxGgraph",
-    value: function initMxGgraph() {
+    key: "initMxGraph",
+    value: function initMxGraph() {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'initMxGgraph()');
       var myWindow = window;
 
