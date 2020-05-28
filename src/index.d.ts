@@ -69,6 +69,7 @@ declare module gf {
     | 'startArrow'
     | 'flipH'
     | 'flipV'
+    | 'class_mxEdgeFlow'
     | 'gradientDirection';
   declare type TStyleEventElt = {
     text: string;

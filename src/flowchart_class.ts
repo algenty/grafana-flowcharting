@@ -587,7 +587,7 @@ export class Flowchart {
         if (replaceVarBool) {
           content = this.templateSrv.replaceWithText(content);
         }
-      } 
+      }
     } else {
       content = this.getSource(replaceVarBool);
     }

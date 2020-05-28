@@ -199,6 +199,7 @@ class GFCONSTANT {
       typeahead:
         'none|classic|classicThin|block|blockThin|open|openThin|oval|diamond|diamondThin|openAsync|async|box|halfCircle|dash|cross|circlePlus|circle|ERone|ERmandOne|ERoneToMany|ERzeroToOne',
     },
+    { text: 'Arrow : Anime flow (frequence ms)', value: 'class_mxEdgeFlow', type: 'number', placeholder: 'Number in ms' },
     { text: 'Label : Replace text (text)', value: 'text', type: 'text', placeholder: 'Text' },
     { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number', placeholder: 'Number' },
     { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number', placeholder: '0-100', default: 100 },
@@ -341,7 +342,7 @@ class GFLog {
   static ERROR = 3;
   static logLevel = GFLog.WARN;
   static logDisplay = true;
-  constructor() {}
+  constructor() { }
 
   static init(): GFLog {
     return new GFLog();
@@ -424,7 +425,7 @@ class GFPlugin {
   static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   static contextRoot: string;
-  constructor() {}
+  constructor() { }
 
   /**
    * init GFPlugin
@@ -582,21 +583,21 @@ class GFPlugin {
  * @class GFTrace
  */
 class GFTrace {
-  static enable = true;
+  static enable = false;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;
   trace:
     | {
-        Name: string;
-        Id: string;
-        Args: any;
-        Return: any;
-        Before: number;
-        End: number | undefined;
-        ExecTime: number | undefined;
-        Indent: number;
-      }
+      Name: string;
+      Id: string;
+      Args: any;
+      Return: any;
+      Before: number;
+      End: number | undefined;
+      ExecTime: number | undefined;
+      Indent: number;
+    }
     | undefined;
 
   constructor(fn?: string) {
@@ -624,15 +625,15 @@ class GFTrace {
   ):
     | GFTrace
     | {
-        after: () => void;
-      } {
+      after: () => void;
+    } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       GFTrace._inc(fn);
       return t;
     }
-    return { after: () => {} };
+    return { after: () => { } };
   }
 
   static _inc(fn) {

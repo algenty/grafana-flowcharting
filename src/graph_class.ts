@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { after } from 'lodash';
 import { $GF } from 'globals_class';
 import * as Drawio from './libs/Drawio_custom';
 import chroma from 'chroma-js';
@@ -1006,8 +1006,36 @@ export default class XGraph {
    * @param {string} styles
    * @memberof XGraph
    */
-  setStyles(mxcell: mxCell, styles: string) {
+  setStyles(mxcell: mxCell, styles: string):this {
     this.graph.getModel().setStyle(mxcell, styles);
+    return this;
+  }
+
+  setClassCell(mxcell: mxCell, className: string):this {
+    let currentClass:string = mxcell.getAttribute('class');
+    const classes = currentClass.split(' ');
+    if (!classes.includes(className)) {
+      classes.push(className);
+      currentClass = classes.join(' ');
+      mxcell.setAttribute('class',currentClass);
+    } 
+    return this;
+  }
+
+  unsetClassCell(mxcell: mxCell, className: string):this {
+    let currentClass:string = mxcell.getAttribute('class');
+    let classes = currentClass.split(' ');
+    if(classes.includes(className)) {
+      classes = classes.filter(c => c !== className);
+      if (classes.length > 0) {
+        currentClass = classes.join(' ');
+        mxcell.setAttribute('class',currentClass);
+      }
+      else { 
+        mxcell.removeAttribute('class');
+      }
+    }
+    return this;
   }
 
   /**
