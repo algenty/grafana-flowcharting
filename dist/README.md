@@ -52,14 +52,14 @@ Arnaud
 
 # Changelog
 
-## [[0.9.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0-SNAPSHOT.zip) - 2020-05-31  
+## [[0.9.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0.zip) - 2020-05-31  
 ### Added
   - CSV Format support for flowchart source (https://drawio-app.com/import-from-csv-to-drawio/)
   - New aggregation : Time of last point  
   - New fill Method : Gradient ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/gradients_color_ani2.gif?raw=true))  
   - Graph hover support ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/floorplan_graphhover.gif?raw=true))  
   - Better rendering of color animation with chroma-js
-  - New Events/Animations Mapping :
+  - New Events/Animations Mapping :  
     * Modify Gradient direction  
     * Modify Arrow start and end connectors ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/connectors_color_ani2.gif?raw=true))  
     * Flip shape horizontally or vertically  
@@ -67,13 +67,12 @@ Arnaud
     * Flow animation (experimental, not work with a shadow on arrow)  
   - New homepage schema
   - Support external fonts like google fonts ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/google_fonts.png?raw=true))  
-  - New anonymizer feature in inspect section ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/anonymize_ani.gif?raw=true))  
+  - New anonymizer feature in inspect section to share the diagrams without sensible data ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/anonymize_ani.gif?raw=true))  
   
 ### Fixed
   - Fixed : Flowchart grid display  
-  - Fixed : background color field  
+  - Fixed : background color field in edit mode  
   - Fixed : Blink event  
-  - Fixed : Data is null
   - Fixed : Overflow on grafana v7 [(issue #172)](https://github.com/algenty/grafana-flowcharting/issues/172)   
   
 ## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
