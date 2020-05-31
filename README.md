@@ -56,18 +56,18 @@ Arnaud
 ### Added
   - CSV Format support for flowchart source (https://drawio-app.com/import-from-csv-to-drawio/)
   - New aggregation : Time of last point  
-  - New fill Method : Gradient ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/gradients_color_ani2.gif?raw=true))  
-  - Graph hover support ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/floorplan_graphhover.gif?raw=true))  
+  - New fill Method : Gradient ([See example](https://algenty.github.io/flowcharting-repository/images/gradients_color_ani2.gif?raw=true))  
+  - Graph hover support ([See example](https://algenty.github.io/flowcharting-repository/images/floorplan_graphhover.gif?raw=true))  
   - Better rendering of color animation with chroma-js
   - New Events/Animations Mapping :  
     * Modify Gradient direction  
-    * Modify Arrow start and end connectors ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/connectors_color_ani2.gif?raw=true))  
+    * Modify Arrow start and end connectors ([See example](https://algenty.github.io/flowcharting-repository/images/connectors_color_ani2.gif?raw=true))  
     * Flip shape horizontally or vertically  
-    * Resize shape in percent ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/resize_ani.gif?raw=true))  
+    * Resize shape in percent ([See example](https://algenty.github.io/flowcharting-repository/images/resize_ani.gif?raw=true))  
     * Flow animation (experimental, not work with a shadow on arrow)  
   - New homepage schema
-  - Support external fonts like google fonts ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/google_fonts.png?raw=true))  
-  - New anonymizer feature in inspect section to share the diagrams without sensible data ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/anonymize_ani.gif?raw=true))  
+  - Support external fonts like google fonts ([See example](https://algenty.github.io/flowcharting-repository/images/google_fonts.png?raw=true))  
+  - New anonymizer feature in inspect section to share the diagrams without sensible data ([See example](https://algenty.github.io/flowcharting-repository/images/anonymize_ani.gif?raw=true))  
   
 ### Fixed
   - Fixed : Flowchart grid display  
