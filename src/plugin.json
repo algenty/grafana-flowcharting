@@ -3,7 +3,7 @@
   "name": "FlowCharting",
   "id": "agenty-flowcharting-panel",
   "info": {
-    "description": "Flowcharting is a Grafana plugin. Use it to display complexe diagrams using the online graphing library with draw.io",
+    "description": "Flowcharting is a Grafana plugin. Use it to display complexe diagrams using the online graphing library draw.io like a vsio",
     "author": {
       "name": "Arnaud GENTY",
       "url": "https://github.com/algenty/grafana-flowcharting"
@@ -39,7 +39,7 @@
       }
     ],
     "version": "0.9.0",
-    "updated": "2019-05-11",
+    "updated": "2019-05-31",
     "logos": {
       "small": "img/agenty-flowcharting.svg",
       "large": "img/agenty-flowcharting.svg"
