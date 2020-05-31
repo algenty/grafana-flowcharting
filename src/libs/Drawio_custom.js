@@ -572,4 +572,131 @@ module.exports = {
             console.log(e);
         }
     },
+    anonymize(graph) {
+        const div = document.createElement('div');
+        const model = graph.model;
+        const ignoredAnonymizedChars = '\n\t`~!@#$%^&*()_+{}|:"<>?-=[]\;\'.\/,\n\t';
+        const anonymizeString = (text, zeros) => {
+            var result = [];
+
+            for (let i = 0; i < text.length; i++) {
+                const c = text.charAt(i);
+                if (ignoredAnonymizedChars.indexOf(c) >= 0) {
+                    result.push(c);
+                }
+                else if (!isNaN(parseInt(c))) {
+                    result.push((zeros) ? '0' : Math.round(Math.random() * 9));
+                }
+                else if (c.toLowerCase() != c) {
+                    result.push(String.fromCharCode(65 + Math.round(Math.random() * 25)));
+                }
+                else if (c.toUpperCase() != c) {
+                    result.push(String.fromCharCode(97 + Math.round(Math.random() * 25)));
+                }
+                else if (/\s/.test(c)) {
+                    result.push(' ');
+                }
+                else {
+                    result.push('?');
+                }
+            }
+            return result.join('');
+        };
+        const replaceTextContent = (elt) => {
+            if (elt.nodeValue != null) {
+                elt.nodeValue = anonymizeString(elt.nodeValue);
+            }
+
+            if (elt.nodeType == mxConstants.NODETYPE_ELEMENT) {
+                let tmp = elt.firstChild;
+
+                while (tmp != null) {
+                    replaceTextContent(tmp);
+                    tmp = tmp.nextSibling;
+                }
+            }
+        };
+        const anonymizeHtml = (html) => {
+            div.innerHTML = html;
+
+            replaceTextContent(div);
+
+            return div.innerHTML;
+        };
+
+        model.beginUpdate();
+        try {
+            // Queue used to fix ancestor placeholders
+            const queue = [];
+
+            for (var id in model.cells) {
+                var cell = model.cells[id];
+                var label = graph.getLabel(cell);
+
+                if (graph.isHtmlLabel(cell)) {
+                    label = anonymizeHtml(label);
+                }
+                else {
+                    label = anonymizeString(label);
+                }
+
+                queue.push({ cell: cell, label: label });
+            }
+
+            for (var i = 0; i < queue.length; i++) {
+                model.setValue(queue[i].cell, queue[i].label);
+            }
+
+        }
+        finally {
+            model.endUpdate();
+        }
+
+    },
+    addExtFont(fontName, fontUrl, dontRemember) {
+        // KNOWN: Font not added when pasting cells with custom fonts
+        if (fontName && fontUrl) {
+            var fontId = 'extFont_' + fontName;
+
+            if (document.getElementById(fontId) == null) {
+                if (fontUrl.indexOf(Editor.GOOGLE_FONTS) == 0) {
+                    mxClient.link('stylesheet', fontUrl, null, fontId);
+                }
+                else {
+                    var head = document.getElementsByTagName('head')[0];
+
+                    // KNOWN: Should load fonts synchronously
+                    var style = document.createElement('style');
+
+                    style.appendChild(document.createTextNode('@font-face {\n' +
+                        '\tfont-family: "' + fontName + '";\n' +
+                        '\tsrc: url("' + fontUrl + '");\n' +
+                        '}'));
+
+                    style.setAttribute('id', fontId);
+                    var head = document.getElementsByTagName('head')[0];
+                    head.appendChild(style);
+                }
+            }
+
+            if (!dontRemember) {
+                if (this.extFonts == null) {
+                    this.extFonts = [];
+                }
+
+                var extFonts = this.extFonts, notFound = true;
+
+                for (var i = 0; i < extFonts.length; i++) {
+                    if (extFonts[i].name == fontName) {
+                        notFound = false;
+                        break;
+                    }
+                }
+
+                if (notFound) {
+                    this.extFonts.push({ name: fontName, url: fontUrl });
+                }
+            }
+        }
+    },
 }

@@ -764,3 +764,14 @@ div.tooltip-date {
 .ct-chart .ct-series.ct-series-a .ct-line {
   stroke: rgb(34, 230, 27);
 }
+
+.mxEdgeFlow {
+  animation: mxEdgeFlow 0.5s linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes mxEdgeFlow {
+  to {
+  stroke-dashoffset: -16;
+  }
+}

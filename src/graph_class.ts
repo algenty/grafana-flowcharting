@@ -1,4 +1,4 @@
-import _, { after } from 'lodash';
+import _ from 'lodash';
 import { $GF } from 'globals_class';
 import * as Drawio from './libs/Drawio_custom';
 import chroma from 'chroma-js';
@@ -123,6 +123,10 @@ export default class XGraph {
       $GF.log.error('isValidXml', error);
       return false;
     }
+  }
+
+  async anonymize() {
+    Drawio.anonymize(this.graph);
   }
 
   /**
@@ -275,6 +279,7 @@ export default class XGraph {
         });
 
         for (var i = 0; i < extFonts.length; i++) {
+          // Drawio.addExtFont(extFonts[i].name, extFonts[i].url);
           this.graph.addExtFont(extFonts[i].name, extFonts[i].url);
         }
       } catch (e) {
@@ -1006,33 +1011,56 @@ export default class XGraph {
    * @param {string} styles
    * @memberof XGraph
    */
-  setStyles(mxcell: mxCell, styles: string):this {
+  setStyles(mxcell: mxCell, styles: string): this {
     this.graph.getModel().setStyle(mxcell, styles);
     return this;
   }
 
-  setClassCell(mxcell: mxCell, className: string):this {
-    let currentClass:string = mxcell.getAttribute('class');
-    const classes = currentClass.split(' ');
-    if (!classes.includes(className)) {
-      classes.push(className);
-      currentClass = classes.join(' ');
-      mxcell.setAttribute('class',currentClass);
-    } 
+  setClassCell(mxcell: mxCell, className: string): this {
+    var state = this.graph.view.getState(mxcell);
+    if (state && state.shape !== null) {
+      const paths = state.shape.node.getElementsByTagName('path');
+      if (paths.length > 1) {
+        let currentClass: string = paths[1].getAttribute('class');
+        let classes: string[] = [];
+        if (currentClass !== null && currentClass !== undefined) {
+          classes = currentClass.split(' ');
+        }
+        if (!classes.includes(className)) {
+          classes.push(className);
+          currentClass = classes.join(' ');
+          paths[1].setAttribute('class', currentClass);
+          if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
+            paths[1].setAttribute('stroke-dasharray', '8');
+          }
+        }
+      }
+    }
     return this;
   }
 
-  unsetClassCell(mxcell: mxCell, className: string):this {
-    let currentClass:string = mxcell.getAttribute('class');
-    let classes = currentClass.split(' ');
-    if(classes.includes(className)) {
-      classes = classes.filter(c => c !== className);
-      if (classes.length > 0) {
-        currentClass = classes.join(' ');
-        mxcell.setAttribute('class',currentClass);
-      }
-      else { 
-        mxcell.removeAttribute('class');
+  unsetClassCell(mxcell: mxCell, className: string): this {
+    var state = this.graph.view.getState(mxcell);
+    if (state && state.shape !== null) {
+      const paths = state.shape.node.getElementsByTagName('path');
+      if (paths.length > 1) {
+        let currentClass: string = paths[1].getAttribute('class');
+        let classes: string[] = [];
+        if (currentClass !== null && currentClass !== undefined) {
+          classes = currentClass.split(' ');
+        }
+        if (classes.includes(className)) {
+          classes = classes.filter(c => c !== className);
+          if (classes.length > 1) {
+            currentClass = classes.join(' ');
+            paths[1].setAttribute('class', currentClass);
+          } else {
+            paths[1].removeAttribute('class');
+          }
+          if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
+            paths[1].removeAttribute('stroke-dasharray');
+          }
+        }
       }
     }
     return this;

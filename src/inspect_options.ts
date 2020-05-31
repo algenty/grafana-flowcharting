@@ -186,27 +186,13 @@ export class InspectOptionsCtrl {
     }
   }
 
-  // execute() {
-  //   const flowchart = this.flowchartHandler.getFlowchart();
-  //   const xgraph = flowchart.getXGraph();
-  //   if (xgraph) {
-  //     const graph = xgraph.graph;
-  //     const model = graph.getModel();
-  //     const mxcell = model.getCell(this.testData.id);
-  //     // eslint-disable-next-line no-eval
-  //     let value: any = undefined;
-  //     try {
-  //       value = eval(this.testData.value);
-  //     } catch (error) {
-  //       value = this.testData.value;
-  //     }
-  //     // console.log('Value : ', value);
-  //     // graph.setCellStyles(this.testData.style, value, [mxcell]);
-  //     // console.log("before", mxcell);
-  //     xgraph.resizeCell(mxcell, value, undefined);
-  //     // console.log("after", mxcell);
-  //   }
-  // }
+  anonymize() {
+    const fc = this.flowchartHandler.getFlowchart();
+    const xg = fc.getXGraph();
+    if (xg) {
+      xg.anonymize();
+    }
+  }
 }
 
 /** @ngInject */

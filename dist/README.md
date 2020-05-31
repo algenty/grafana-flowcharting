@@ -52,7 +52,7 @@ Arnaud
 
 # Changelog
 
-## [[0.9.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0-SNAPSHOT.zip) - 2020-05-16 
+## [[0.9.0 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0-SNAPSHOT.zip) - 2020-05-31  
 ### Added
   - CSV Format support for flowchart source (https://drawio-app.com/import-from-csv-to-drawio/)
   - New aggregation : Time of last point  
@@ -64,15 +64,17 @@ Arnaud
     * Modify Arrow start and end connectors ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/connectors_color_ani2.gif?raw=true))  
     * Flip shape horizontally or vertically  
     * Resize shape in percent ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/resize_ani.gif?raw=true))  
+    * Flow animation (experimental, not work with a shadow on arrow)  
   - New homepage schema
-  - Support external fonts like google fonts ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/google_fonts.png?raw=true))
-  - TODO : Fix saved CSV
+  - Support external fonts like google fonts ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/google_fonts.png?raw=true))  
+  - New anonymizer feature in inspect section ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/anonymize_ani.gif?raw=true))  
   
 ### Fixed
   - Fixed : Flowchart grid display  
   - Fixed : background color field  
   - Fixed : Blink event  
   - Fixed : Data is null
+  - Fixed : Overflow on grafana v7 [(issue #172)](https://github.com/algenty/grafana-flowcharting/issues/172)   
   
 ## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
 ### Added

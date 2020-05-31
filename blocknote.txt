@@ -18,7 +18,6 @@ STYLE_DASHED Pointillé
 STYLE_DASHED: 'dashed'
 Defines the key for the dashed style.  Use 0 (default) for non-dashed or 1 for dashed.  Value is “dashed”.
 
-gradientDirection	
 
 to front
 to back
@@ -36,6 +35,12 @@ https://codepen.io/junglist/pen/MbPgXd
 https://fvsch.com/svg-gradient-fill/
 
 # Animation class
+Pour changer de flowchart :
+https://codepen.io/djdabe/pen/QMoRrW
+https://www.minimamente.com/project/magic/
+https://animista.net/
+
+
 https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&title=connectors-in-draw.io.html&p=flow#Uhttps%3A%2F%2Fdrive.google.com%2Fa%2Fseibert-media.net%2Fuc%3Fid%3D1kgy30z0qgXFuMkz7SiQfh_Y99RELgWHa%26export%3Ddownload
 .mxEdgeFlow {
     animation: mxEdgeFlow 0.5s linear;
@@ -50,6 +55,7 @@ https://www.draw.io/?lightbox=1&highlight=0000ff&edit=_blank&layers=1&nav=1&titl
     animation-iteration-count: infinite;
 }
 
+https://jgraph.github.io/mxgraph/javascript/examples/animation.html
 .mxEdgeFlow {
 animation: mxEdgeFlow 0.5s linear;
 animation-iteration-count: infinite;
@@ -64,5 +70,12 @@ stroke-dashoffset: -16;
 # TODO :
 Fix CSV save : Done
 FIX Middle CSV : Done
-FIX Red for null value
-FIX When data is for null value
+FIX Red for null value : DONE
+FIX When data is for null value : Done
+UPDATE CSS LIGHT
+Anonimizer
+
+# Base64 converter svg to base64 : 
+https://yoksel.github.io/url-encoder/
+https://base64.guru/converter/encode/text
+<img src="data:image/svg+xml;base64,TEXT"
