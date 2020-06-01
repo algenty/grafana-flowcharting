@@ -63,9 +63,10 @@ export class FlowchartOptionsCtrl {
     const bool = XGraph.isValidXml(source);
     this.errorSourceFlag = !bool;
     if (!bool) {
-      this.errorSourceMsg = 'Invalid Xml definition';
+      $GF.message.setMessage('Invalid Xml definition', 'error');
     } else {
-      this.errorSourceMsg = '';
+      debugger
+      $GF.message.clearMessage();
       this.onSourceChange();
       this.$scope.$applyAsync();
     }

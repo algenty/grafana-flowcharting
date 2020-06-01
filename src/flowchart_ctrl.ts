@@ -61,15 +61,9 @@ class FlowchartCtrl extends grafana.MetricsPanelCtrl {
     this.events.on(grafana.PanelEvents.dataError, this.onDataError.bind(this));
     this.events.on(grafana.PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
     this.events.on(grafana.PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
-    // this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
-    // this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
     grafana.appEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
     grafana.appEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-    // if ($scope.$root.onAppEvent) {
-    //   $scope.$root.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-    //   // $scope.$root.onAppEvent('graph-hover', this.onVarChanged.bind(this), $scope);
-    // }
   }
 
   //
@@ -154,6 +148,11 @@ class FlowchartCtrl extends grafana.MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
+
+    // $GF Containers
+    const $section = elem.find('#flowcharting-section');
+    const parent = $section[0];
+    $GF.setMessageDiv(parent);
 
     // DATA
     this.metricHandler = new MetricHandler(this.$scope);

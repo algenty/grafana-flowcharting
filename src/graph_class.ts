@@ -58,6 +58,7 @@ export default class XGraph {
    */
   constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string) {
     this.container = container;
+    this.container.style.display = 'hidden';
     this.type = type;
     this.onMapping = {
       active: false,
@@ -254,8 +255,13 @@ export default class XGraph {
         this.graph.selectUnlockedLayer();
       }
       if (this.type === 'csv') {
-        Drawio.importCsv(this.graph, this.csvGraph);
-        this.refresh();
+        try {
+          Drawio.importCsv(this.graph, this.csvGraph);
+          this.refresh();
+        } catch (error) {
+          $GF.log.error('Bad CSV format', error);
+          $GF.message.setMessage('Bad CSV format');
+        }
       }
     } catch (error) {
       $GF.log.error('Error in draw', error);
@@ -263,6 +269,7 @@ export default class XGraph {
       this.cells['id'] = this.getCurrentCells('id');
       this.cells['value'] = this.getCurrentCells('value');
       this.graph.getModel().endUpdate();
+      this.container.style.display = '';
     }
     trc.after();
     return this;
@@ -273,7 +280,7 @@ export default class XGraph {
     let extFonts = model.extFonts;
     if (extFonts) {
       try {
-        extFonts = extFonts.split('|').map(function(ef) {
+        extFonts = extFonts.split('|').map(function (ef) {
           var parts = ef.split('^');
           return { name: parts[0], url: parts[1] };
         });
@@ -1355,7 +1362,7 @@ export default class XGraph {
       const id = `blink_${mxcell.id}`;
       // Cancel Previous anim
       $GF.clearUniqTimeOut(id);
-      const bl_on = function() {
+      const bl_on = function () {
         const color = '#f5f242';
         const opacity = 100;
         const state = self.graph.view.getState(mxcell);
@@ -1374,7 +1381,7 @@ export default class XGraph {
           $GF.setUniqTimeOut(bl_off, ms, id);
         }
       };
-      const bl_off = function() {
+      const bl_off = function () {
         if (mxcell && mxcell.blink) {
           // console.log('bl_off');
           const hl = mxcell.blink_on;

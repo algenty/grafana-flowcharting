@@ -21,6 +21,7 @@ class GFCONSTANT {
   CONF_COLORS_MS = 50;
   CONF_ANIMS_STEP = 5;
   CONF_ANIMS_MS = 50;
+  CONF_GFMESSAGE_MS = 5000;
   CONF_BLINK_COLOR = '#f5f242';
 
   // GLOBAL VARIABLE
@@ -582,6 +583,78 @@ class GFPlugin {
   }
 }
 
+class GFMessage {
+  static container: HTMLDivElement;
+  static message: HTMLSpanElement;
+  static ERROR_MESSAGE = 'error';
+  static ERROR_COLOR = 'red';
+  static INFO_MESSAGE = 'info';
+  static INFO_COLOR = 'white';
+  static WARNING_MESSAGE = 'warning';
+  static WARNING_COLOR = 'yellow';
+
+  constructor(parent:HTMLElement) {
+    // GFMessage.container = document.createElement('div');
+    // parent.appendChild(GFMessage.container);
+    // GFMessage.container.outerHTML = `
+    // <div id="message-panel"
+    //   style="display:none;z-index: 2;position: absolute; box-sizing: border-box; border-radius: 20px; height: 40px;width: 33%;white-space: nowrap; background-color: rgba(0, 0, 0, 0.4);top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">
+    //   <div style="margin: 0;position: absolute;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">
+    //     <span id="message-text"></span>
+    //   </div>
+    // </div>
+    // `;
+    const container = parent.querySelector<HTMLDivElement>("div#flowcharting-message");
+    if (container !== null) {
+      GFMessage.container = container;
+      const span = container.querySelector<HTMLSpanElement>('#message-text');
+      if(span === null) {
+        GFMessage.message = document.createElement('span');
+        GFMessage.container.appendChild(GFMessage.message);
+      } else {
+        GFMessage.message = span;
+      }
+      
+    }
+  }
+
+  static init(parentDiv:HTMLElement): GFMessage {
+    return new GFMessage(parentDiv);
+  }
+
+  async setMessage(message:string, type:string = GFMessage.INFO_MESSAGE) {
+    if(GFMessage.container && GFMessage.message) {
+      GFMessage.message.innerHTML = message;
+      switch (type) {
+        case GFMessage.INFO_MESSAGE:
+          GFMessage.message.style.color = GFMessage.INFO_COLOR;
+          break;
+        case GFMessage.ERROR_MESSAGE:
+          GFMessage.message.style.color = GFMessage.ERROR_COLOR;
+          break;
+        case GFMessage.WARNING_MESSAGE:
+          GFMessage.message.style.color = GFMessage.WARNING_COLOR;
+          break;
+      
+        default:
+          GFMessage.message.style.color = GFMessage.INFO_COLOR;
+          break;
+      }
+      GFMessage.container.style.display = '';
+      $GF.setUniqTimeOut(this.clearMessage,$GF.CONSTANTS.CONF_GFMESSAGE_MS,'flowcharting-message');
+    }
+  }
+
+  clearMessage() {
+    if(GFMessage.container && GFMessage.message) {
+      GFMessage.container.style.display = 'none';
+      GFMessage.message.innerHTML = '';
+    }
+    $GF.clearUniqTimeOut('flowcharting-message');
+  }
+
+}
+
 /**
  * Trace Perf class
  *
@@ -707,6 +780,7 @@ export class $GF {
   static CONSTANTS: GFCONSTANT = new GFCONSTANT();
   static log: GFLog = GFLog.init();
   static trace: GFTrace = GFTrace.init();
+  static message : GFMessage;
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
@@ -739,6 +813,10 @@ export class $GF {
 
   static me(): $GF {
     return this;
+  }
+
+  static setMessageDiv(html: HTMLElement) {
+    this.message = GFMessage.init(html);
   }
 
   /**

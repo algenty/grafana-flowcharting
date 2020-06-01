@@ -582,7 +582,9 @@ export class Flowchart {
     let content: string | null = '';
     if (this.data.download) {
       const url = this.templateSrv.replaceWithText(this.data.url);
+      $GF.message.setMessage('Loading content defition','info');
       content = this.loadContent(url);
+      $GF.message.clearMessage();
       if (content !== null) {
         if (replaceVarBool) {
           content = this.templateSrv.replaceWithText(content);

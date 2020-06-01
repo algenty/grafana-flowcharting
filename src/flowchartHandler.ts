@@ -119,18 +119,6 @@ export class FlowchartHandler {
     if (!result) {
       const url = `${$GF.plugin.getRootPath()}${$GF.CONSTANTS.CONF_FILE_DEFAULTDIO}`;
       result = $GF.utils.$loadFile(url);
-      // $.ajax({
-      //   type: 'GET',
-      //   url: url,
-      //   async: false,
-      //   success: data => {
-      //     FlowchartHandler.defaultXml = data;
-      //     result = data;
-      //   },
-      //   error: () => {
-      //     alert('Error when download ' + url);
-      //   },
-      // });
     }
     return result;
   }
@@ -147,18 +135,6 @@ export class FlowchartHandler {
     if (!result) {
       const url = `${$GF.plugin.getRootPath()}${$GF.CONSTANTS.CONF_FILE_DEFAULTCSV}`;
       result = $GF.utils.$loadFile(url);
-      // $.ajax({
-      //   type: 'GET',
-      //   url: url,
-      //   async: false,
-      //   success: data => {
-      //     FlowchartHandler.defaultCsv = data;
-      //     result = data;
-      //   },
-      //   error: () => {
-      //     alert('Error when download ' + url);
-      //   },
-      // });
     }
     return result;
   }
