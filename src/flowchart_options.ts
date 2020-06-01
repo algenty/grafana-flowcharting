@@ -65,7 +65,6 @@ export class FlowchartOptionsCtrl {
     if (!bool) {
       $GF.message.setMessage('Invalid Xml definition', 'error');
     } else {
-      debugger
       $GF.message.clearMessage();
       this.onSourceChange();
       this.$scope.$applyAsync();

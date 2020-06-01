@@ -143,12 +143,14 @@ export default class XGraph {
     if (!XGraph.initialized) {
       if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
+        $GF.message.setMessage('Initialize draw.io libraries','info');
         let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
         $GF.utils.evalRaw(code);
         XGraph.postInitGlobalVars();
         code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
         mxTooltipHandler.prototype.delay = $GF.CONSTANTS.CONF_TOOLTIPS_DELAY;
         $GF.utils.evalRaw(code);
+        $GF.message.clearMessage();
       }
       XGraph.initialized = true;
     }

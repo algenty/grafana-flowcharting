@@ -17093,7 +17093,6 @@ var FlowchartOptionsCtrl = function () {
       if (!bool) {
         globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage('Invalid Xml definition', 'error');
       } else {
-        debugger;
         globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.clearMessage();
         this.onSourceChange();
         this.$scope.$applyAsync();
@@ -20110,12 +20109,14 @@ var XGraph = function () {
       if (!XGraph.initialized) {
         if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
           XGraph.preInitGlobalVars();
+          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Initialize draw.io libraries', 'info');
           var code = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.$loadFile("".concat(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath(), "js/viewer.min.js"));
           globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.evalRaw(code);
           XGraph.postInitGlobalVars();
           code = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.$loadFile("".concat(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getLibsPath(), "/Graph_custom.js"));
           mxTooltipHandler.prototype.delay = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_TOOLTIPS_DELAY;
           globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.evalRaw(code);
+          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.clearMessage();
         }
 
         XGraph.initialized = true;
