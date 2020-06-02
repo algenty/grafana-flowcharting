@@ -205,7 +205,7 @@ export default class XGraph {
     //     urlParams['ui'] = 'dark';
     //     break;
     // }
-    // urlParams['ui'] = 'dark';
+    urlParams['ui'] = 'min';
     myWindow.mxImageBasePath = $GF.plugin.getMxImagePath();
     myWindow.mxBasePath = $GF.plugin.getMxBasePath();
     myWindow.mxLoadStylesheets = true;

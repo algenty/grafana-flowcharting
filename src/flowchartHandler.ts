@@ -13,7 +13,8 @@ export class FlowchartHandler {
   parentDiv: HTMLDivElement;
   ctrl: any; //TODO: ctrl ?
   flowcharts: Flowchart[] = [];
-  currentFlowchart = 'Main'; // name of current Flowchart
+  currentFlowchartName = 'Main'; // name of current Flowchart
+  currentFlowchart : Flowchart|undefined;
   data: gf.TFlowchartHandlerData;
   firstLoad = true; // First load
   changeSourceFlag = false; // Source changed
@@ -33,6 +34,7 @@ export class FlowchartHandler {
   mousedownTimeout = 0;
   mousedown = 0;
   onEdit = false; // editor open or not
+  postedId:string|undefined = undefined; // Current ID on edit mode 
   editorWindow: Window | null = null; // Window draw.io editor
 
   /**
@@ -149,6 +151,17 @@ export class FlowchartHandler {
   getFlowchart(name?: string): Flowchart {
     //TODO: When multi flowchart
     return this.flowcharts[0];
+  }
+
+  getFlowchartById(id: string): Flowchart|undefined {
+    const fcs = this.getFlowcharts();
+    for (let index = 0; index < fcs.length; index++) {
+      const fc = fcs[index];
+      if (fc.id === id) {
+        return fc;
+      }
+    }
+    return undefined
   }
 
   /**
@@ -491,7 +504,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   setMap(objToMap: GFMap, prop: gf.TPropertieKey = 'id'): this {
-    const flowchart = this.getFlowchart(this.currentFlowchart);
+    const flowchart = this.getFlowchart(this.currentFlowchartName);
     this.onMapping.active = true;
     this.onMapping.object = objToMap;
     this.onMapping.value = objToMap.getId();
@@ -507,7 +520,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   unsetMap(): this {
-    const flowchart = this.getFlowchart(this.currentFlowchart);
+    const flowchart = this.getFlowchart(this.currentFlowchartName);
     this.onMapping.active = false;
     this.onMapping.object = undefined;
     this.onMapping.value = '';
@@ -540,26 +553,41 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   listenMessage(event: any) {
-    if (event.data === 'ready') {
+    if (event.data !== undefined && event.data.length > 0 && event.data.substring(0,3) === 'fc-') {
+      const id = event.data.substring(3);
+      const fc = this.getFlowchartById(id);
+      this.currentFlowchart = fc;
       // send xml
       // if (event.source) {
       //   if (!(event.source instanceof MessagePort) && !(event.source instanceof ServiceWorker)) {
-      event.source.postMessage(this.getFlowchart(this.currentFlowchart).data.xml, event.origin);
+      if (fc !== undefined) {
+        $GF.message.setMessage('Sending current data to draw.io editor', 'info');
+        event.source.postMessage(fc.data.xml, event.origin);
+        this.postedId = fc.id;
+      }
       //   }
       // }
     } else {
-      if (this.onEdit && event.data !== undefined && event.data.length > 0) {
-        this.getFlowchart(this.currentFlowchart).redraw(event.data);
-        this.sourceChanged();
-        this.$scope.$apply();
-        this.render();
+      if (this.onEdit && event.data !== undefined && event.data.length > 0 && event.data.substring(0,3) !== 'fc-' &&this.currentFlowchart !== undefined) {
+        if(this.postedId !== undefined) {
+          const fc = this.getFlowchartById(this.postedId);
+          if (fc !== undefined) {
+            $GF.message.setMessage('Received data from draw.io editor, refresh in progress', 'info');         
+            fc.redraw(event.data);
+            this.sourceChanged();
+            this.$scope.$apply();
+            this.render();
+          }
+        }
       }
       if ((this.onEdit && event.data !== undefined) || event.data.length === 0) {
         if (this.editorWindow) {
           this.editorWindow.close();
         }
         this.onEdit = false;
+        this.postedId = undefined;
         window.removeEventListener('message', this.listenMessage.bind(this), false);
+        $GF.message.setMessage('Draw.io editor closed', 'info'); 
       }
     }
   }
@@ -570,11 +598,13 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   openDrawEditor(name?: string) {
-    const urlEditor = this.getFlowchart(name).getUrlEditor();
+    const fc = this.getFlowchart(name);
+    const urlEditor = fc.getUrlEditor();
     const theme = this.getFlowchart(name).getThemeEditor();
-    const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&src=grafana`;
+    const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&ready=fc-${fc.id}&src=grafana`;
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;
+    $GF.message.setMessage(`Opening current flowchart on draw.io editor`, 'info');
     window.addEventListener('message', this.listenMessage.bind(this), false);
   }
 

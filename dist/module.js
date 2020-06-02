@@ -16282,7 +16282,7 @@ var FlowchartHandler = function () {
     _classCallCheck(this, FlowchartHandler);
 
     this.flowcharts = [];
-    this.currentFlowchart = 'Main';
+    this.currentFlowchartName = 'Main';
     this.firstLoad = true;
     this.changeSourceFlag = false;
     this.changeOptionFlag = true;
@@ -16299,6 +16299,7 @@ var FlowchartHandler = function () {
     this.mousedownTimeout = 0;
     this.mousedown = 0;
     this.onEdit = false;
+    this.postedId = undefined;
     this.editorWindow = null;
     FlowchartHandler.getDefaultDioGraph();
     this.$scope = $scope;
@@ -16360,6 +16361,21 @@ var FlowchartHandler = function () {
     key: "getFlowchart",
     value: function getFlowchart(name) {
       return this.flowcharts[0];
+    }
+  }, {
+    key: "getFlowchartById",
+    value: function getFlowchartById(id) {
+      var fcs = this.getFlowcharts();
+
+      for (var index = 0; index < fcs.length; index++) {
+        var fc = fcs[index];
+
+        if (fc.id === id) {
+          return fc;
+        }
+      }
+
+      return undefined;
     }
   }, {
     key: "getFlowcharts",
@@ -16601,7 +16617,7 @@ var FlowchartHandler = function () {
     key: "setMap",
     value: function setMap(objToMap) {
       var prop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'id';
-      var flowchart = this.getFlowchart(this.currentFlowchart);
+      var flowchart = this.getFlowchart(this.currentFlowchartName);
       this.onMapping.active = true;
       this.onMapping.object = objToMap;
       this.onMapping.value = objToMap.getId();
@@ -16613,7 +16629,7 @@ var FlowchartHandler = function () {
   }, {
     key: "unsetMap",
     value: function unsetMap() {
-      var flowchart = this.getFlowchart(this.currentFlowchart);
+      var flowchart = this.getFlowchart(this.currentFlowchartName);
       this.onMapping.active = false;
       this.onMapping.object = undefined;
       this.onMapping.value = '';
@@ -16636,14 +16652,31 @@ var FlowchartHandler = function () {
   }, {
     key: "listenMessage",
     value: function listenMessage(event) {
-      if (event.data === 'ready') {
-        event.source.postMessage(this.getFlowchart(this.currentFlowchart).data.xml, event.origin);
+      if (event.data !== undefined && event.data.length > 0 && event.data.substring(0, 3) === 'fc-') {
+        var id = event.data.substring(3);
+        var fc = this.getFlowchartById(id);
+        this.currentFlowchart = fc;
+
+        if (fc !== undefined) {
+          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Sending current data to draw.io editor', 'info');
+          event.source.postMessage(fc.data.xml, event.origin);
+          this.postedId = fc.id;
+        }
       } else {
-        if (this.onEdit && event.data !== undefined && event.data.length > 0) {
-          this.getFlowchart(this.currentFlowchart).redraw(event.data);
-          this.sourceChanged();
-          this.$scope.$apply();
-          this.render();
+        if (this.onEdit && event.data !== undefined && event.data.length > 0 && event.data.substring(0, 3) !== 'fc-' && this.currentFlowchart !== undefined) {
+          if (this.postedId !== undefined) {
+            var _fc = this.getFlowchartById(this.postedId);
+
+            if (_fc !== undefined) {
+              globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Received data from draw.io editor, refresh in progress', 'info');
+
+              _fc.redraw(event.data);
+
+              this.sourceChanged();
+              this.$scope.$apply();
+              this.render();
+            }
+          }
         }
 
         if (this.onEdit && event.data !== undefined || event.data.length === 0) {
@@ -16652,18 +16685,22 @@ var FlowchartHandler = function () {
           }
 
           this.onEdit = false;
+          this.postedId = undefined;
           window.removeEventListener('message', this.listenMessage.bind(this), false);
+          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Draw.io editor closed', 'info');
         }
       }
     }
   }, {
     key: "openDrawEditor",
     value: function openDrawEditor(name) {
-      var urlEditor = this.getFlowchart(name).getUrlEditor();
+      var fc = this.getFlowchart(name);
+      var urlEditor = fc.getUrlEditor();
       var theme = this.getFlowchart(name).getThemeEditor();
-      var urlParams = "".concat(urlEditor, "?embed=1&spin=1&libraries=1&ui=").concat(theme, "&src=grafana");
+      var urlParams = "".concat(urlEditor, "?embed=1&spin=1&libraries=1&ui=").concat(theme, "&ready=fc-").concat(fc.id, "&src=grafana");
       this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
       this.onEdit = true;
+      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage("Opening current flowchart on draw.io editor", 'info');
       window.addEventListener('message', this.listenMessage.bind(this), false);
     }
   }, {
@@ -16744,6 +16781,7 @@ var Flowchart = function () {
     this.data.name = name;
     this.container = container;
     this.templateSrv = ctrl.templateSrv;
+    this.id = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.uniqueID();
   }
 
   _createClass(Flowchart, [{
@@ -19177,7 +19215,7 @@ $GF.log = GFLog.init();
 $GF.trace = GFTrace.init();
 $GF.graphHover = false;
 $GF.GHTimeStamp = 0;
-$GF.DEBUG = true;
+$GF.DEBUG = false;
 $GF.utils = __webpack_require__(/*! ./utils_raw */ "./utils_raw.js");
 /* WEBPACK VAR INJECTION */}.call(this, "/"))
 
@@ -20780,6 +20818,7 @@ var XGraph = function () {
       urlParams['nav'] = '1';
       urlParams['local'] = '1';
       urlParams['embed'] = '1';
+      urlParams['ui'] = 'min';
       myWindow.mxImageBasePath = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxImagePath();
       myWindow.mxBasePath = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxBasePath();
       myWindow.mxLoadStylesheets = true;

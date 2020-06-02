@@ -82,3 +82,13 @@ https://base64.guru/converter/encode/text
 
 # Draw.io parameters
 https://desk.draw.io/support/solutions/articles/16000042546-supported-url-parameters
+
+
+# Test and libs
+https://www.percona.com/blog/2020/06/02/intro-to-grafana-plugin-development/
+
+# TODO
+Add gradient to graph (D3JS ?)
+Fade on message/notification
+Update toolkit
+multi Diagrams

@@ -21,12 +21,14 @@ export class Flowchart {
   // ctrl: any;
   templateSrv: any;
   states: Map<string, State> | undefined;
+  id : string;
 
   constructor(name: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {
     this.data = data;
     this.data.name = name;
     this.container = container;
     this.templateSrv = ctrl.templateSrv;
+    this.id = $GF.utils.uniqueID();
   }
 
   /**
