@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { $GF } from 'globals_class';
-import * as Drawio from './libs/Drawio_custom';
+import * as Drawio from 'drawio_custom';
 import chroma from 'chroma-js';
 
 declare var mxEvent: any;
@@ -126,6 +126,11 @@ export default class XGraph {
     }
   }
 
+  /**
+   * Anonymize Graph
+   *
+   * @memberof XGraph
+   */
   async anonymize() {
     Drawio.anonymize(this.graph);
   }
@@ -143,7 +148,7 @@ export default class XGraph {
     if (!XGraph.initialized) {
       if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
-        $GF.message.setMessage('Initialize draw.io libraries','info');
+        $GF.message.setMessage('Initialize draw.io libraries', 'info');
         let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
         $GF.utils.evalRaw(code);
         XGraph.postInitGlobalVars();
@@ -157,6 +162,12 @@ export default class XGraph {
     trc.after();
   }
 
+  /**
+   * Init Vars for mxGraph
+   *
+   * @static
+   * @memberof XGraph
+   */
   static preInitGlobalVars() {
     const myWindow: any = window;
     myWindow.BASE_PATH = $GF.plugin.getMxBasePath();
@@ -180,6 +191,21 @@ export default class XGraph {
     urlParams['nav'] = '1'; // Enables folding in chromeless mode
     urlParams['local'] = '1'; // Uses device mode only
     urlParams['embed'] = '1'; // Runs in embed mode
+    // const theme = $GF.getTheme();
+    // switch (theme) {
+    //   case 'dark':
+    //     urlParams['ui'] = 'dark';
+    //     break;
+
+    //   case 'light':
+    //     urlParams['ui'] = 'kennedy';
+    //     break;
+
+    //   default:
+    //     urlParams['ui'] = 'dark';
+    //     break;
+    // }
+    // urlParams['ui'] = 'dark';
     myWindow.mxImageBasePath = $GF.plugin.getMxImagePath();
     myWindow.mxBasePath = $GF.plugin.getMxBasePath();
     myWindow.mxLoadStylesheets = true;

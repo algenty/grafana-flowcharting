@@ -51,6 +51,12 @@ Thanks a lot
 Arnaud
 
 # Changelog
+  
+## [[1.0.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-1.0.0.zip) - 2020-06-01  
+### Added
+  - New message handler in edit mode.
+
+### Fixed
 
 ## [[0.9.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0.zip) - 2020-05-31  
 ### Added

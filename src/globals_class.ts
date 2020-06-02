@@ -348,7 +348,7 @@ class GFLog {
   static ERROR = 3;
   static logLevel = GFLog.WARN;
   static logDisplay = true;
-  constructor() {}
+  constructor() { }
 
   static init(): GFLog {
     return new GFLog();
@@ -431,7 +431,7 @@ class GFPlugin {
   static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   static contextRoot: string;
-  constructor() {}
+  constructor() { }
 
   /**
    * init GFPlugin
@@ -593,7 +593,7 @@ class GFMessage {
   static WARNING_MESSAGE = 'warning';
   static WARNING_COLOR = 'yellow';
 
-  constructor(parent:HTMLElement) {
+  constructor(parent: HTMLElement) {
     // GFMessage.container = document.createElement('div');
     // parent.appendChild(GFMessage.container);
     // GFMessage.container.outerHTML = `
@@ -608,22 +608,22 @@ class GFMessage {
     if (container !== null) {
       GFMessage.container = container;
       const span = container.querySelector<HTMLSpanElement>('#message-text');
-      if(span === null) {
+      if (span === null) {
         GFMessage.message = document.createElement('span');
         GFMessage.container.appendChild(GFMessage.message);
       } else {
         GFMessage.message = span;
       }
-      
+
     }
   }
 
-  static init(parentDiv:HTMLElement): GFMessage {
+  static init(parentDiv: HTMLElement): GFMessage {
     return new GFMessage(parentDiv);
   }
 
-  async setMessage(message:string, type:string = GFMessage.INFO_MESSAGE) {
-    if(GFMessage.container && GFMessage.message) {
+  async setMessage(message: string, type: string = GFMessage.INFO_MESSAGE) {
+    if (GFMessage.container && GFMessage.message) {
       GFMessage.message.innerHTML = message;
       switch (type) {
         case GFMessage.INFO_MESSAGE:
@@ -635,18 +635,18 @@ class GFMessage {
         case GFMessage.WARNING_MESSAGE:
           GFMessage.message.style.color = GFMessage.WARNING_COLOR;
           break;
-      
+
         default:
           GFMessage.message.style.color = GFMessage.INFO_COLOR;
           break;
       }
       GFMessage.container.style.display = '';
-      $GF.setUniqTimeOut(this.clearMessage,$GF.CONSTANTS.CONF_GFMESSAGE_MS,'flowcharting-message');
+      $GF.setUniqTimeOut(this.clearMessage, $GF.CONSTANTS.CONF_GFMESSAGE_MS, 'flowcharting-message');
     }
   }
 
   clearMessage() {
-    if(GFMessage.container && GFMessage.message) {
+    if (GFMessage.container && GFMessage.message) {
       GFMessage.container.style.display = 'none';
       GFMessage.message.innerHTML = '';
     }
@@ -667,15 +667,15 @@ class GFTrace {
   static indent = 0;
   trace:
     | {
-        Name: string;
-        Id: string;
-        Args: any;
-        Return: any;
-        Before: number;
-        End: number | undefined;
-        ExecTime: number | undefined;
-        Indent: number;
-      }
+      Name: string;
+      Id: string;
+      Args: any;
+      Return: any;
+      Before: number;
+      End: number | undefined;
+      ExecTime: number | undefined;
+      Indent: number;
+    }
     | undefined;
 
   constructor(fn?: string) {
@@ -703,15 +703,15 @@ class GFTrace {
   ):
     | GFTrace
     | {
-        after: () => void;
-      } {
+      after: () => void;
+    } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       GFTrace._inc(fn);
       return t;
     }
-    return { after: () => {} };
+    return { after: () => { } };
   }
 
   static _inc(fn) {
@@ -780,11 +780,11 @@ export class $GF {
   static CONSTANTS: GFCONSTANT = new GFCONSTANT();
   static log: GFLog = GFLog.init();
   static trace: GFTrace = GFTrace.init();
-  static message : GFMessage;
+  static message: GFMessage;
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
-  static DEBUG = false;
+  static DEBUG = true;
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
@@ -808,6 +808,12 @@ export class $GF {
 
   static init($scope: any, templateSrv: any, dashboard: any): $GF {
     this.plugin = GFPlugin.init($scope, templateSrv, dashboard);
+    if (this.DEBUG) {
+      console.log('DEBUG Scope', $scope);
+      console.log('DEBUG TemplateSrv', templateSrv);
+      console.log('DEBUG Theme', dashboard.style);
+      console.log('DEBUG dashboard', dashboard);
+    }
     return this;
   }
 
@@ -815,8 +821,28 @@ export class $GF {
     return this;
   }
 
+  /**
+   * Recover Meassage div in module.html
+   *
+   * @static
+   * @param {HTMLElement} html
+   * @memberof $GF
+   */
   static setMessageDiv(html: HTMLElement) {
     this.message = GFMessage.init(html);
+  }
+
+  /**
+   * Return the theme
+   *
+   * @static
+   * @returns {string}
+   * @memberof $GF
+   */
+  static getTheme():string {
+      let templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
+      let theme = templateSrv !== undefined ? templateSrv.style : 'dark';
+      return theme;
   }
 
   /**

@@ -188,9 +188,6 @@ export class Flowchart {
         this.xgraph = new XGraph(this.container, this.data.type, content);
       }
       if (content !== undefined && content !== null) {
-        // if (this.data.download) {
-        //   this.xgraph.setXmlGraph(this.getContent());
-        // }
         if (this.data.allowDrawio) {
           this.xgraph.allowDrawio(true);
         } else {
@@ -218,10 +215,13 @@ export class Flowchart {
           this.xgraph.lockGraph(true);
         }
         this.stateHandler = new StateHandler(this.xgraph);
+        $GF.message.clearMessage();
       } else {
+        $GF.message.setMessage('Source content empty Graph not defined', 'error');
         $GF.log.error('Source content empty Graph not defined');
       }
     } catch (error) {
+      $GF.message.setMessage('Unable to initialize graph', 'error');
       $GF.log.error('Unable to initialize graph', error);
     }
     return this;

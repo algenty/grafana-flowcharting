@@ -79,3 +79,6 @@ Anonimizer
 https://yoksel.github.io/url-encoder/
 https://base64.guru/converter/encode/text
 <img src="data:image/svg+xml;base64,TEXT"
+
+# Draw.io parameters
+https://desk.draw.io/support/solutions/articles/16000042546-supported-url-parameters
