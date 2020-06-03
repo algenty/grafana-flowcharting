@@ -336,6 +336,8 @@ declare module gf {
   }
 
   declare interface TFlowchartHandlerData {
+    editorUrl: string;
+    editorTheme: string;
     flowcharts: TFlowchartData[];
   }
 

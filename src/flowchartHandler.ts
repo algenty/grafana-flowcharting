@@ -74,6 +74,8 @@ export class FlowchartHandler {
 
   static getDefaultData(): gf.TFlowchartHandlerData {
     return {
+      editorUrl: 'https://www.draw.io',
+      editorTheme: 'kennedy',
       flowcharts: [],
     };
   }
