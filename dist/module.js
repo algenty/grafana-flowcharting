@@ -16330,7 +16330,6 @@ var FlowchartHandler = function () {
     value: function _import(obj) {
       var _this2 = this;
 
-      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.info('FlowchartHandler.import()');
       this.flowcharts = [];
 
       if (obj !== undefined && obj !== null) {
@@ -19215,7 +19214,7 @@ $GF.log = GFLog.init();
 $GF.trace = GFTrace.init();
 $GF.graphHover = false;
 $GF.GHTimeStamp = 0;
-$GF.DEBUG = false;
+$GF.DEBUG = true;
 $GF.utils = __webpack_require__(/*! ./utils_raw */ "./utils_raw.js");
 /* WEBPACK VAR INJECTION */}.call(this, "/"))
 

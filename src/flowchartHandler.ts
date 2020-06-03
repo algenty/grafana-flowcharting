@@ -86,7 +86,6 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   import(obj: any): this {
-    $GF.log.info('FlowchartHandler.import()');
     this.flowcharts = [];
     if (obj !== undefined && obj !== null) {
       // For version 0.5.0 and under
@@ -209,13 +208,6 @@ export class FlowchartHandler {
     // div.style.overflow = 'none';
     this.parentDiv.appendChild(div);
     return div;
-
-    // const $container: any = $(`<div class="geDiagramContainer" id="flowchart_${$GF.utils.uniqueID()}" style="right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; cursor: default; overflow: auto;"></div>`);
-    // const $container: any = $(`<div class="geDiagramContainer" id="flowchart_${$GF.utils.uniqueID()}" style="margin: auto; position: relative; width: 100%; height: 100%; touch-action: none;border: none;cursor: default"></div>`);
-    // GOOD : const $container: any = $(`<div class="geDiagramContainer" id="flowchart_${$GF.utils.uniqueID()}" style="margin:auto;position:relative;width:100%;height:100%" style="right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; cursor: default; overflow: auto;"></div>`);
-    // const $container: any = $(`<div class="geDiagramContainer" id="flowchart_${$GF.utils.uniqueID()}" tabindex="0" style="right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; overflow: auto; cursor: default;">`);
-    // this.$elem.html($container);
-    // return $container[0];
   }
 
   /**
