@@ -57,6 +57,7 @@ Arnaud
   - New message handler in edit mode.
 
 ### Fixed
+  - Fix zoom on text without witdth and height.
 
 ## [[0.9.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0.zip) - 2020-05-31  
 ### Added

@@ -14,7 +14,7 @@ export class FlowchartHandler {
   ctrl: any; //TODO: ctrl ?
   flowcharts: Flowchart[] = [];
   currentFlowchartName = 'Main'; // name of current Flowchart
-  currentFlowchart : Flowchart|undefined;
+  currentFlowchart: Flowchart | undefined;
   data: gf.TFlowchartHandlerData;
   firstLoad = true; // First load
   changeSourceFlag = false; // Source changed
@@ -34,7 +34,7 @@ export class FlowchartHandler {
   mousedownTimeout = 0;
   mousedown = 0;
   onEdit = false; // editor open or not
-  postedId:string|undefined = undefined; // Current ID on edit mode 
+  postedId: string | undefined = undefined; // Current ID on edit mode
   editorWindow: Window | null = null; // Window draw.io editor
 
   /**
@@ -152,7 +152,7 @@ export class FlowchartHandler {
     return this.flowcharts[0];
   }
 
-  getFlowchartById(id: string): Flowchart|undefined {
+  getFlowchartById(id: string): Flowchart | undefined {
     const fcs = this.getFlowcharts();
     for (let index = 0; index < fcs.length; index++) {
       const fc = fcs[index];
@@ -160,7 +160,7 @@ export class FlowchartHandler {
         return fc;
       }
     }
-    return undefined
+    return undefined;
   }
 
   /**
@@ -545,7 +545,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   listenMessage(event: any) {
-    if (event.data !== undefined && event.data.length > 0 && event.data.substring(0,3) === 'fc-') {
+    if (event.data !== undefined && event.data.length > 0 && event.data.substring(0, 3) === 'fc-') {
       const id = event.data.substring(3);
       const fc = this.getFlowchartById(id);
       this.currentFlowchart = fc;
@@ -560,11 +560,17 @@ export class FlowchartHandler {
       //   }
       // }
     } else {
-      if (this.onEdit && event.data !== undefined && event.data.length > 0 && event.data.substring(0,3) !== 'fc-' &&this.currentFlowchart !== undefined) {
-        if(this.postedId !== undefined) {
+      if (
+        this.onEdit &&
+        event.data !== undefined &&
+        event.data.length > 0 &&
+        event.data.substring(0, 3) !== 'fc-' &&
+        this.currentFlowchart !== undefined
+      ) {
+        if (this.postedId !== undefined) {
           const fc = this.getFlowchartById(this.postedId);
           if (fc !== undefined) {
-            $GF.message.setMessage('Received data from draw.io editor, refresh in progress', 'info');         
+            $GF.message.setMessage('Received data from draw.io editor, refresh in progress', 'info');
             fc.redraw(event.data);
             this.sourceChanged();
             this.$scope.$apply();
@@ -579,7 +585,7 @@ export class FlowchartHandler {
         this.onEdit = false;
         this.postedId = undefined;
         window.removeEventListener('message', this.listenMessage.bind(this), false);
-        $GF.message.setMessage('Draw.io editor closed', 'info'); 
+        $GF.message.setMessage('Draw.io editor closed', 'info');
       }
     }
   }

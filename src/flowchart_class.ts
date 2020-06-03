@@ -21,7 +21,7 @@ export class Flowchart {
   // ctrl: any;
   templateSrv: any;
   states: Map<string, State> | undefined;
-  id : string;
+  id: string;
 
   constructor(name: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {
     this.data = data;
@@ -584,7 +584,7 @@ export class Flowchart {
     let content: string | null = '';
     if (this.data.download) {
       const url = this.templateSrv.replaceWithText(this.data.url);
-      $GF.message.setMessage('Loading content defition','info');
+      $GF.message.setMessage('Loading content defition', 'info');
       content = this.loadContent(url);
       $GF.message.clearMessage();
       if (content !== null) {

@@ -308,7 +308,7 @@ export default class XGraph {
     let extFonts = model.extFonts;
     if (extFonts) {
       try {
-        extFonts = extFonts.split('|').map(function (ef) {
+        extFonts = extFonts.split('|').map(function(ef) {
           var parts = ef.split('^');
           return { name: parts[0], url: parts[1] };
         });
@@ -1390,7 +1390,7 @@ export default class XGraph {
       const id = `blink_${mxcell.id}`;
       // Cancel Previous anim
       $GF.clearUniqTimeOut(id);
-      const bl_on = function () {
+      const bl_on = function() {
         const color = '#f5f242';
         const opacity = 100;
         const state = self.graph.view.getState(mxcell);
@@ -1409,7 +1409,7 @@ export default class XGraph {
           $GF.setUniqTimeOut(bl_off, ms, id);
         }
       };
-      const bl_off = function () {
+      const bl_off = function() {
         if (mxcell && mxcell.blink) {
           // console.log('bl_off');
           const hl = mxcell.blink_on;
@@ -1695,11 +1695,17 @@ export default class XGraph {
     if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
       const state = this.graph.view.getState(mxcell);
       if (state !== null) {
-        const x = state.x;
-        const y = state.y;
-        const width = state.width;
-        const height = state.height;
-        const rect = new mxRectangle(x, y, width, height);
+        let rect: any;
+        if (state.width !== undefined && state.width > 0 && state.height !== undefined && state.height > 0) {
+          // const x = state.x;
+          // const y = state.y;
+          // const width = state.width;
+          // const height = state.height;
+          // rect = new mxRectangle(x, y, width, height);
+          rect = state.shape.bounds;
+        } else {
+          rect = state.text.boundingBox;
+        }
         this.graph.zoomToRect(rect);
         this.cumulativeZoomFactor = this.graph.view.scale;
       }

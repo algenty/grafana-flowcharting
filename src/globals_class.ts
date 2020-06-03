@@ -348,7 +348,7 @@ class GFLog {
   static ERROR = 3;
   static logLevel = GFLog.WARN;
   static logDisplay = true;
-  constructor() { }
+  constructor() {}
 
   static init(): GFLog {
     return new GFLog();
@@ -431,7 +431,7 @@ class GFPlugin {
   static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   static contextRoot: string;
-  constructor() { }
+  constructor() {}
 
   /**
    * init GFPlugin
@@ -604,7 +604,7 @@ class GFMessage {
     //   </div>
     // </div>
     // `;
-    const container = parent.querySelector<HTMLDivElement>("div#flowcharting-message");
+    const container = parent.querySelector<HTMLDivElement>('div#flowcharting-message');
     if (container !== null) {
       GFMessage.container = container;
       const span = container.querySelector<HTMLSpanElement>('#message-text');
@@ -614,7 +614,6 @@ class GFMessage {
       } else {
         GFMessage.message = span;
       }
-
     }
   }
 
@@ -652,7 +651,6 @@ class GFMessage {
     }
     $GF.clearUniqTimeOut('flowcharting-message');
   }
-
 }
 
 /**
@@ -667,15 +665,15 @@ class GFTrace {
   static indent = 0;
   trace:
     | {
-      Name: string;
-      Id: string;
-      Args: any;
-      Return: any;
-      Before: number;
-      End: number | undefined;
-      ExecTime: number | undefined;
-      Indent: number;
-    }
+        Name: string;
+        Id: string;
+        Args: any;
+        Return: any;
+        Before: number;
+        End: number | undefined;
+        ExecTime: number | undefined;
+        Indent: number;
+      }
     | undefined;
 
   constructor(fn?: string) {
@@ -703,15 +701,15 @@ class GFTrace {
   ):
     | GFTrace
     | {
-      after: () => void;
-    } {
+        after: () => void;
+      } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       GFTrace._inc(fn);
       return t;
     }
-    return { after: () => { } };
+    return { after: () => {} };
   }
 
   static _inc(fn) {
@@ -784,7 +782,7 @@ export class $GF {
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
-  static DEBUG = true;
+  static DEBUG = false;
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
@@ -839,10 +837,10 @@ export class $GF {
    * @returns {string}
    * @memberof $GF
    */
-  static getTheme():string {
-      let templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
-      let theme = templateSrv !== undefined ? templateSrv.style : 'dark';
-      return theme;
+  static getTheme(): string {
+    let templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
+    let theme = templateSrv !== undefined ? templateSrv.style : 'dark';
+    return theme;
   }
 
   /**
