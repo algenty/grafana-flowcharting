@@ -52,6 +52,7 @@ export class FlowchartHandler {
     this.parentDiv = this.$elem[0];
     this.ctrl = ctrl;
     this.data = data;
+    this.currentFlowchartName = this.data.main;
 
     // Events Render
     ctrl.events.on('render', () => {
@@ -76,6 +77,7 @@ export class FlowchartHandler {
     return {
       editorUrl: 'https://www.draw.io',
       editorTheme: 'kennedy',
+      main: 'main',
       flowcharts: [],
     };
   }

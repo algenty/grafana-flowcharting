@@ -16307,6 +16307,7 @@ var FlowchartHandler = function () {
     this.parentDiv = this.$elem[0];
     this.ctrl = ctrl;
     this.data = data;
+    this.currentFlowchartName = this.data.main;
     ctrl.events.on('render', function () {
       _this.render();
     });
@@ -16715,6 +16716,7 @@ var FlowchartHandler = function () {
       return {
         editorUrl: 'https://www.draw.io',
         editorTheme: 'kennedy',
+        main: 'main',
         flowcharts: []
       };
     }
@@ -17416,7 +17418,7 @@ var Flowchart = function () {
         center: true,
         scale: true,
         lock: true,
-        allowDrawio: false,
+        allowDrawio: true,
         enableAnim: true,
         tooltip: true,
         grid: false,

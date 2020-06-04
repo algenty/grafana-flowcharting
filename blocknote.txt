@@ -92,3 +92,4 @@ Add gradient to graph (D3JS ?)
 Fade on message/notification
 Update toolkit
 multi Diagrams
+Add sparkline

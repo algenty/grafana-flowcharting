@@ -130,7 +130,7 @@ export class Flowchart {
       center: true,
       scale: true,
       lock: true,
-      allowDrawio: false,
+      allowDrawio: true,
       enableAnim: true,
       tooltip: true,
       grid: false,
