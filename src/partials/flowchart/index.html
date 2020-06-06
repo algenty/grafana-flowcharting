@@ -5,7 +5,7 @@
       <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Define you flowchart', 'README')"></span>
       </info-popover>
     </h5>
-    <div class="gf-form" ng-if="!flowchart.data.download">
+    <div class="gf-form">
       <label class="gf-form-label width-12">Editor Url & Theme
         <info-popover mode="right-normal"><span
             ng-bind-html="$GF.popover('Address and theme of editor when click on button edit draw', 'FLOWCHART#address')"></span>
@@ -33,7 +33,7 @@
         </info-popover>
       </span>
       <div class="gf-form-select-wrapper width-12">
-        <select class="gf-form-input" ng-model="editor.flowchartHandler.currentFlowchart"
+        <select class="gf-form-input" ng-model="editor.flowchartHandler.currentFlowchartName"
           ng-options="f as f for f in editor.getNames()"></select>
       </div>
     </div>

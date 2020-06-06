@@ -22,6 +22,7 @@ export class FlowchartHandler {
   changeDataFlag = false; // Data changed
   changeGraphHoverFlag = false; // Graph Hover
   changeRuleFlag = false; // rules changed
+  newMode = false; // Mode if new flowchart
   static defaultXml: string;
   static defaultCsv: string;
   onMapping: gf.TIOnMappingObj = {
