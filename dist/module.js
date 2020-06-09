@@ -16344,7 +16344,7 @@ var FlowchartHandler = function () {
           tmpFc = obj.flowcharts;
         }
 
-        if (tmpFc.length <= 1) {
+        if (tmpFc.length === 1) {
           this.data.main = tmpFc[0].name;
           this.currentFlowchartName = this.data.main;
           this.data.editorTheme = tmpFc[0].editorTheme;
@@ -16442,6 +16442,11 @@ var FlowchartHandler = function () {
     key: "getCurrentFlowchart",
     value: function getCurrentFlowchart() {
       return this.currentFlowchart;
+    }
+  }, {
+    key: "getCurrentFlowchartName",
+    value: function getCurrentFlowchartName() {
+      return this.getCurrentFlowchart().getName();
     }
   }, {
     key: "createContainer",
@@ -16779,7 +16784,7 @@ var FlowchartHandler = function () {
       return {
         editorUrl: 'https://www.draw.io',
         editorTheme: 'kennedy',
-        main: 'main',
+        main: 'Main',
         flowcharts: []
       };
     }
@@ -17907,6 +17912,7 @@ var FlowchartOptionsCtrl = function () {
     key: "selectFlowchart",
     value: function selectFlowchart() {
       this.flowchartHandler.setCurrentFlowchart(this.currentFlowchartName);
+      debugger;
       this.currentFlowchart = this.flowchartHandler.getCurrentFlowchart();
 
       if (this.currentFlowchart) {
@@ -19425,7 +19431,7 @@ $GF.log = GFLog.init();
 $GF.trace = GFTrace.init();
 $GF.graphHover = false;
 $GF.GHTimeStamp = 0;
-$GF.DEBUG = false;
+$GF.DEBUG = true;
 $GF.utils = __webpack_require__(/*! ./utils_raw */ "./utils_raw.js");
 /* WEBPACK VAR INJECTION */}.call(this, "/"))
 

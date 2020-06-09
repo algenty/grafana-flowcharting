@@ -91,6 +91,7 @@ export class FlowchartOptionsCtrl {
 
   selectFlowchart() {
     this.flowchartHandler.setCurrentFlowchart(this.currentFlowchartName);
+    debugger
     this.currentFlowchart = this.flowchartHandler.getCurrentFlowchart();
     if(this.currentFlowchart) {
       $GF.message.setMessage(this.currentFlowchart.getName());

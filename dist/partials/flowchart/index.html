@@ -48,7 +48,7 @@
           bs-tooltip="'Add new flowchart'"></i>
       </label>
       <label class="gf-form-label" style="margin-right: 4px;"
-        ng-if="edit.flowchartHandler.countFlowcharts() > 1 && editor.editMode === false">
+        ng-if="editor.flowchartHandler.countFlowcharts() > 1 && editor.editMode === false && editor.flowchartHandler.getCurrentFlowchartName() !== 'Main'">
         <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete current flowchart'"
           ng-click="editor.removeFlochart()"></i>
       </label>

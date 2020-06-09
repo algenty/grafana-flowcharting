@@ -79,7 +79,7 @@ export class FlowchartHandler {
     return {
       editorUrl: 'https://www.draw.io',
       editorTheme: 'kennedy',
-      main: 'main',
+      main: 'Main',
       flowcharts: [],
     };
   }
@@ -103,7 +103,7 @@ export class FlowchartHandler {
       }
 
       // For 0.9.0 and under
-      if (tmpFc.length <= 1) {
+      if (tmpFc.length === 1) {
         this.data.main = tmpFc[0].name;
         this.currentFlowchartName = this.data.main;
         this.data.editorTheme = tmpFc[0].editorTheme;
@@ -122,7 +122,6 @@ export class FlowchartHandler {
         this.data.flowcharts.push(newData);
       });
       this.currentFlowchart = this.getFlowchart(this.data.main);
-
     }
     return this;
   }
@@ -253,6 +252,10 @@ export class FlowchartHandler {
    */
   getCurrentFlowchart():Flowchart|undefined {
     return this.currentFlowchart;
+  }
+
+  getCurrentFlowchartName():string {
+    return this.getCurrentFlowchart().getName();
   }
 
   /**
