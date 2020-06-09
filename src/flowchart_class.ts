@@ -357,6 +357,34 @@ export class Flowchart {
   }
 
   /**
+   * Destroy this flowchart correctly
+   *
+   * @memberof Flowchart
+   */
+  destroy() {
+    this.toBack();
+    if (this.xgraph !== undefined && this.xgraph !== null) {
+      this.xgraph.destroyGraph();
+      this.xgraph = undefined;
+    }
+    this.container.remove();
+  }
+
+  /**
+   * Set the name
+   *
+   * @param {string} name
+   * @memberof Flowchart
+   */
+  setName(name: string) {
+    this.data.name = name;
+  }
+
+  getName(): string {
+    return this.data.name;
+  }
+
+  /**
    * Set paramater lock
    *
    * @param {boolean} bool
@@ -744,4 +772,17 @@ export class Flowchart {
       this.xgraph.unsetMap();
     }
   }
+
+  async toFront() {
+    this.container.style.display = '';
+  }
+
+  async toBack() {
+    this.container.style.display = 'none';
+  }
+
+  isVisible(): boolean {
+    return this.container.style.display !== 'none';
+  }
+
 }

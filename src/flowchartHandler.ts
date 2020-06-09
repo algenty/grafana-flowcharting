@@ -23,6 +23,7 @@ export class FlowchartHandler {
   changeGraphHoverFlag = false; // Graph Hover
   changeRuleFlag = false; // rules changed
   newMode = false; // Mode if new flowchart
+  sequenceNumber = 0; // Sequence Number for a name
   static defaultXml: string;
   static defaultCsv: string;
   onMapping: gf.TIOnMappingObj = {
@@ -100,6 +101,17 @@ export class FlowchartHandler {
       } else {
         tmpFc = obj.flowcharts;
       }
+
+      // For 0.9.0 and under
+      if (tmpFc.length <= 1) {
+        this.data.main = tmpFc[0].name;
+        this.currentFlowchartName = this.data.main;
+        this.data.editorTheme = tmpFc[0].editorTheme;
+        this.data.editorUrl = tmpFc[0].editorUrl;
+      }
+      this.data.editorTheme = !!obj.editorTheme ? obj.editorTheme : this.data.editorTheme;
+      this.data.editorUrl = !!obj.editorUrl ? obj.editorUrl : this.data.editorUrl;
+
       // import data
       tmpFc.forEach((fcData: gf.TFlowchartData) => {
         const container = this.createContainer();
@@ -109,6 +121,8 @@ export class FlowchartHandler {
         this.flowcharts.push(fc);
         this.data.flowcharts.push(newData);
       });
+      this.currentFlowchart = this.getFlowchart(this.data.main);
+
     }
     return this;
   }
@@ -152,9 +166,18 @@ export class FlowchartHandler {
    * @returns {Flowchart}
    * @memberof FlowchartHandler
    */
-  getFlowchart(name?: string): Flowchart {
-    //TODO: When multi flowchart
-    return this.flowcharts[0];
+  getFlowchart(name ?: string): Flowchart {
+    if (name) {
+      const lg = this.flowcharts.length
+      for (let i = 0; i < lg; i++) {
+        const fc = this.flowcharts[i];
+        if (fc.getName() === name) {
+          return fc;
+        }
+      }      
+    }
+    const current = this.getCurrentFlowchart();
+    return current !== undefined ? current : this.flowcharts[0];
   }
 
   getFlowchartById(id: string): Flowchart | undefined {
@@ -189,6 +212,47 @@ export class FlowchartHandler {
       return this.flowcharts.length;
     }
     return 0;
+  }
+
+  /**
+   * get a temp name
+   *
+   * @returns {string}
+   * @memberof FlowchartHandler
+   */
+  getFlowchartTmpName(): string {
+    if (this.sequenceNumber === 0) {
+      this.sequenceNumber = this.countFlowcharts();
+    }
+    return `Flowchart-${this.sequenceNumber++}`;
+  }
+
+  /**
+   * Define current flowchart to display
+   *
+   * @param {string} name
+   * @returns {(Flowchart|undefined)}
+   * @memberof FlowchartHandler
+   */
+  setCurrentFlowchart(name: string):Flowchart|undefined {
+    if (this.currentFlowchart !== undefined && this.currentFlowchart.getName() !== name) {
+      const fc = this.getFlowchart(name);
+      this.currentFlowchart.toBack();
+      this.currentFlowchart = fc;
+      this.currentFlowchartName = name;
+      this.currentFlowchart.toFront();
+    }
+    return this.currentFlowchart;
+  }
+
+  /**
+   * get Current Flowchart
+   *
+   * @returns {(Flowchart|undefined)}
+   * @memberof FlowchartHandler
+   */
+  getCurrentFlowchart():Flowchart|undefined {
+    return this.currentFlowchart;
   }
 
   /**
@@ -233,6 +297,23 @@ export class FlowchartHandler {
     trc.after();
     return flowchart;
   }
+
+  /**
+   * Remove a flowchart
+   *
+   * @param {string} name
+   * @memberof FlowchartHandler
+   */
+  removeFlowchart(name: string) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'removeFlowchart()');
+    const fc = this.getFlowchart(name);
+    const index = this.flowcharts.indexOf(fc);
+    this.flowcharts.splice(index, 1);
+    this.data.flowcharts.splice(index, 1);
+    fc.destroy();
+    trc.after();
+  }
+
 
   /**
    * Render for draw
@@ -600,7 +681,7 @@ export class FlowchartHandler {
    *
    * @memberof FlowchartHandler
    */
-  openDrawEditor(name?: string) {
+  openDrawEditor(name ?: string ) {
     const fc = this.getFlowchart(name);
     const urlEditor = fc.getUrlEditor();
     const theme = this.getFlowchart(name).getThemeEditor();

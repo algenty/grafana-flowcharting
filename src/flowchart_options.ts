@@ -15,6 +15,10 @@ export class FlowchartOptionsCtrl {
   errorSourceMsg = '';
   errorDownloadFlag = false;
   errorDownloadMsg = '';
+  editMode = false;
+  currentFlowchart:Flowchart|undefined;
+  newName = '';
+  currentFlowchartName = 'Main'
   /** @ngInject */
   constructor($scope: gf.TIFlowchartOptionsScope) {
     $scope.editor = this;
@@ -23,6 +27,7 @@ export class FlowchartOptionsCtrl {
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
+    this.currentFlowchart = this.flowchartHandler.getFlowchart();
   }
 
   /**
@@ -72,6 +77,62 @@ export class FlowchartOptionsCtrl {
     return bool;
   }
 
+  addFlowchart() {
+    this.editMode = true;
+    this.currentFlowchart = this.flowchartHandler.addFlowchart(this.flowchartHandler.getFlowchartTmpName());
+    this.flowchartHandler.setCurrentFlowchart(this.currentFlowchart.getName());
+    $GF.message.setMessage(this.currentFlowchart.getName());
+    this.newName = this.currentFlowchart.getName();
+  }
+
+  removeFlowchart() {
+    
+  }
+
+  selectFlowchart() {
+    this.flowchartHandler.setCurrentFlowchart(this.currentFlowchartName);
+    this.currentFlowchart = this.flowchartHandler.getCurrentFlowchart();
+    if(this.currentFlowchart) {
+      $GF.message.setMessage(this.currentFlowchart.getName());
+      this.currentFlowchartName = this.currentFlowchart.getName();
+    }
+  }
+
+  cancelFlowchart() {
+    this.editMode = false;
+    const canceled = this.currentFlowchart;
+    this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart('Main');
+    if (canceled) {    
+      this.flowchartHandler.removeFlowchart(canceled.getName());
+      if (this.currentFlowchart) {
+        this.currentFlowchartName = this.currentFlowchart.getName();
+      }
+    }
+  }
+
+  isValideFlowchart():boolean {
+    const fcs = this.flowchartHandler.getFlowchartNames();
+    if (this.newName === undefined) {
+      return false;
+    }
+    if (this.newName.length === 0) {
+      return false;
+    }
+    if(fcs.includes(this.newName) && this.currentFlowchart && this.newName !== this.currentFlowchart.getName()) {
+      $GF.message.setMessage(`Flowchart with name "${this.newName}" already exist`,'error');
+      return false;
+    }
+    return true;
+  }
+
+  validateFlowchart() {
+    this.editMode = false;
+    if (this.currentFlowchart) {
+      this.currentFlowchart.setName(this.newName);
+    }
+    this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart(this.newName);
+  }
+
   checkUrl_onSourceChange(url: string): boolean {
     this.errorDownloadFlag = false;
     // this.errorDownloadMsg = '';
@@ -87,8 +148,8 @@ export class FlowchartOptionsCtrl {
             this.$scope.$applyAsync();
           } else {
             response.text().then(text => {
-              const fc = this.flowchartHandler.getFlowchart();
-              if (fc.data.type === 'xml') {
+              const fc = this.flowchartHandler.getCurrentFlowchart();
+              if (fc && fc.data.type === 'xml') {
                 const bool = XGraph.isValidXml(text);
                 this.errorSourceFlag = !bool;
                 if (this.errorSourceFlag) {
@@ -142,7 +203,11 @@ export class FlowchartOptionsCtrl {
   }
 
   getCurrentFlowchart(): Flowchart[] {
-    return [this.flowchartHandler.getFlowchart()];
+    const current = this.flowchartHandler.getCurrentFlowchart();
+    if (current) {
+      return [current];
+    }
+    return [this.flowchartHandler.flowcharts[0]];
   }
 }
 
