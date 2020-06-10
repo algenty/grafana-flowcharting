@@ -16,9 +16,9 @@ export class FlowchartOptionsCtrl {
   errorDownloadFlag = false;
   errorDownloadMsg = '';
   editMode = false;
-  currentFlowchart:Flowchart|undefined;
+  currentFlowchart: Flowchart | undefined;
   newName = '';
-  currentFlowchartName = 'Main'
+  currentFlowchartName = 'Main';
   /** @ngInject */
   constructor($scope: gf.TIFlowchartOptionsScope) {
     $scope.editor = this;
@@ -56,8 +56,8 @@ export class FlowchartOptionsCtrl {
    * @memberof FlowchartOptionsCtrl
    */
   onOptionChange() {
-    $GF.log.info('FlowchartOptionsCtrl.onOptionChange()');
-    this.flowchartHandler.optionChanged();
+    const name = this.flowchartHandler.getCurrentFlowchartName();
+    this.flowchartHandler.flagOptionChanged(name);
     this.render();
   }
 
@@ -88,9 +88,9 @@ export class FlowchartOptionsCtrl {
 
   removeFlowchart() {
     const current = this.flowchartHandler.getCurrentFlowchart();
-    if(current !== undefined && current.getName() !== 'Main') {
+    if (current !== undefined && current.getName() !== 'Main') {
       this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart();
-      this.currentFlowchartName  = this.flowchartHandler.getCurrentFlowchartName();
+      this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
       $GF.message.setMessage(this.currentFlowchartName);
       this.flowchartHandler.removeFlowchart(current.getName());
     }
@@ -99,7 +99,7 @@ export class FlowchartOptionsCtrl {
   selectFlowchart() {
     this.flowchartHandler.setCurrentFlowchart(this.currentFlowchartName);
     this.currentFlowchart = this.flowchartHandler.getCurrentFlowchart();
-    if(this.currentFlowchart) {
+    if (this.currentFlowchart) {
       this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
       $GF.message.setMessage(this.currentFlowchartName);
     }
@@ -109,7 +109,7 @@ export class FlowchartOptionsCtrl {
     this.editMode = false;
     const canceled = this.currentFlowchart;
     this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart('Main');
-    if (canceled) {    
+    if (canceled) {
       this.flowchartHandler.removeFlowchart(canceled.getName());
       if (this.currentFlowchart) {
         this.currentFlowchartName = this.currentFlowchart.getName();
@@ -118,7 +118,7 @@ export class FlowchartOptionsCtrl {
     $GF.message.setMessage(this.currentFlowchartName);
   }
 
-  isValideFlowchart():boolean {
+  isValideFlowchart(): boolean {
     const fcs = this.flowchartHandler.getFlowchartNames();
     if (this.newName === undefined) {
       return false;
@@ -126,8 +126,8 @@ export class FlowchartOptionsCtrl {
     if (this.newName.length === 0) {
       return false;
     }
-    if(fcs.includes(this.newName) && this.currentFlowchart && this.newName !== this.currentFlowchart.getName()) {
-      $GF.message.setMessage(`Flowchart with name "${this.newName}" already exist`,'error');
+    if (fcs.includes(this.newName) && this.currentFlowchart && this.newName !== this.currentFlowchart.getName()) {
+      $GF.message.setMessage(`Flowchart with name "${this.newName}" already exist`, 'error');
       return false;
     }
     return true;

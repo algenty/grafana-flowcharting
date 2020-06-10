@@ -1,7 +1,7 @@
 import { FlowchartCtrl } from './flowchart_ctrl';
 // import { loadPluginCss } from '@grafana/runtime';
 import grafana from './grafana_func';
-
+debugger
 grafana.loadCss();
 
 // loadPluginCss({

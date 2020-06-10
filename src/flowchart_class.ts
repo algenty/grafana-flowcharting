@@ -774,7 +774,7 @@ export class Flowchart {
   }
 
   toFront() {
-    this.container.className = "GF_show";
+    this.container.className = 'GF_show';
   }
 
   toBack() {
@@ -784,5 +784,4 @@ export class Flowchart {
   isVisible(): boolean {
     return this.container.className !== 'GF_hide';
   }
-
 }

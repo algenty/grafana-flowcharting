@@ -14860,7 +14860,7 @@ module.exports = function safeEval (code, context, opts) {
 /*!******************************************!*\
   !*** ../node_modules/tslib/tslib.es6.js ***!
   \******************************************/
-/*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __exportStar, __values, __read, __spread, __spreadArrays, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault */
+/*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __createBinding, __exportStar, __values, __read, __spread, __spreadArrays, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault, __classPrivateFieldGet, __classPrivateFieldSet */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14873,6 +14873,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__metadata", function() { return __metadata; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__awaiter", function() { return __awaiter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__generator", function() { return __generator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__createBinding", function() { return __createBinding; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__exportStar", function() { return __exportStar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__values", function() { return __values; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__read", function() { return __read; });
@@ -14885,19 +14886,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__makeTemplateObject", function() { return __makeTemplateObject; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importStar", function() { return __importStar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importDefault", function() { return __importDefault; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldGet", function() { return __classPrivateFieldGet; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldSet", function() { return __classPrivateFieldSet; });
 /*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
+Copyright (c) Microsoft Corporation.
 
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
 
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 /* global Reflect, Promise */
 
@@ -14953,10 +14956,11 @@ function __metadata(metadataKey, metadataValue) {
 }
 
 function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 }
@@ -14989,19 +14993,25 @@ function __generator(thisArg, body) {
     }
 }
 
+function __createBinding(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}
+
 function __exportStar(m, exports) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 
 function __values(o) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
     if (m) return m.call(o);
-    return {
+    if (o && typeof o.length === "number") return {
         next: function () {
             if (o && i >= o.length) o = void 0;
             return { value: o && o[i++], done: !o };
         }
     };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 }
 
 function __read(o, n) {
@@ -15080,6 +15090,21 @@ function __importStar(mod) {
 
 function __importDefault(mod) {
     return (mod && mod.__esModule) ? mod : { default: mod };
+}
+
+function __classPrivateFieldGet(receiver, privateMap) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to get private field on non-instance");
+    }
+    return privateMap.get(receiver);
+}
+
+function __classPrivateFieldSet(receiver, privateMap, value) {
+    if (!privateMap.has(receiver)) {
+        throw new TypeError("attempted to set private field on non-instance");
+    }
+    privateMap.set(receiver, value);
+    return value;
 }
 
 
@@ -16285,7 +16310,7 @@ var FlowchartHandler = function () {
     this.currentFlowchartName = 'Main';
     this.firstLoad = true;
     this.changeSourceFlag = [];
-    this.changeOptionFlag = true;
+    this.changeOptionFlag = [];
     this.changeDataFlag = false;
     this.changeGraphHoverFlag = false;
     this.changeRuleFlag = false;
@@ -16528,9 +16553,12 @@ var FlowchartHandler = function () {
                     optionsFlag = true;
                   }
 
-                  if (self.changeOptionFlag) {
+                  if (self.isOptionChanged()) {
+                    this.changeOptionFlag.forEach(function (name) {
+                      self.setOptions(name);
+                    });
                     self.setOptions();
-                    self.changeOptionFlag = false;
+                    self.changeOptionFlag = [];
                     optionsFlag = true;
                   }
 
@@ -16592,10 +16620,34 @@ var FlowchartHandler = function () {
       return this.changeSourceFlag.includes(name);
     }
   }, {
-    key: "optionChanged",
-    value: function optionChanged() {
-      this.changeOptionFlag = true;
+    key: "flagOptionChanged",
+    value: function flagOptionChanged(name) {
+      var _this4 = this;
+
+      if (name !== undefined) {
+        if (!this.changeOptionFlag.includes(name)) {
+          this.changeOptionFlag.push(name);
+        }
+      } else {
+        this.flowcharts.forEach(function (flowchart) {
+          var name = flowchart.getName();
+
+          if (!_this4.changeOptionFlag.includes(name)) {
+            _this4.changeOptionFlag.push(name);
+          }
+        });
+      }
+
       return this;
+    }
+  }, {
+    key: "isOptionChanged",
+    value: function isOptionChanged(name) {
+      if (name === undefined) {
+        return this.changeOptionFlag.length > 0;
+      }
+
+      return this.changeOptionFlag.includes(name);
     }
   }, {
     key: "ruleChanged",
@@ -16678,27 +16730,41 @@ var FlowchartHandler = function () {
   }, {
     key: "applyStates",
     value: function applyStates() {
-      var _this4 = this;
+      var _this5 = this;
 
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'applyStates()');
       new Promise(function () {
-        _this4.flowcharts.forEach(function (flowchart) {
+        _this5.flowcharts.forEach(function (flowchart) {
           flowchart.applyStates();
         });
       }).then(function () {
-        _this4.refresh();
+        _this5.refresh();
       });
       trc.after();
       return this;
     }
   }, {
     key: "setOptions",
-    value: function setOptions() {
+    value: function setOptions(name) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setOptions()');
-      this.flowcharts.forEach(function (flowchart) {
+
+      if (name === undefined) {
+        this.flowcharts.forEach(function (flowchart) {
+          flowchart.setOptions();
+        });
+      } else {
+        var flowchart = this.getFlowchart(name);
         flowchart.setOptions();
-      });
+      }
+
       trc.after();
+      return this;
+    }
+  }, {
+    key: "setCurrentOptions",
+    value: function setCurrentOptions() {
+      var name = this.getCurrentFlowchartName();
+      this.setOptions(name);
       return this;
     }
   }, {
@@ -17551,7 +17617,7 @@ var Flowchart = function () {
   }, {
     key: "toFront",
     value: function toFront() {
-      this.container.className = "GF_show";
+      this.container.className = 'GF_show';
     }
   }, {
     key: "toBack",
@@ -17614,7 +17680,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var globals_class__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! globals_class */ "./globals_class.ts");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! lodash */ "lodash");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_8__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -17622,15 +17688,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
 
@@ -17647,12 +17717,14 @@ var FlowchartCtrl = function (_grafana$MetricsPanel) {
 
   _inherits(FlowchartCtrl, _grafana$MetricsPanel);
 
+  var _super = _createSuper(FlowchartCtrl);
+
   function FlowchartCtrl($scope, $injector, $rootScope, templateSrv) {
     var _this;
 
     _classCallCheck(this, FlowchartCtrl);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(FlowchartCtrl).call(this, $scope, $injector));
+    _this = _super.call(this, $scope, $injector);
     _this.GHApplied = false;
     globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].init($scope, templateSrv, _this.dashboard);
     _this.$rootScope = $rootScope;
@@ -17898,8 +17970,8 @@ var FlowchartOptionsCtrl = function () {
   }, {
     key: "onOptionChange",
     value: function onOptionChange() {
-      globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].log.info('FlowchartOptionsCtrl.onOptionChange()');
-      this.flowchartHandler.optionChanged();
+      var name = this.flowchartHandler.getCurrentFlowchartName();
+      this.flowchartHandler.flagOptionChanged(name);
       this.render();
     }
   }, {
@@ -18115,13 +18187,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "lodash");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
@@ -18578,12 +18656,12 @@ var GFVariables = function () {
       try {
         var templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
         text = templateSrv !== undefined ? templateSrv.replaceWithText(text) : text;
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+
+        var _iterator = _createForOfIteratorHelper(this._variables),
+            _step;
 
         try {
-          for (var _iterator = this._variables[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
             var _step$value = _slicedToArray(_step.value, 2),
                 key = _step$value[0],
                 value = _step$value[1];
@@ -18591,18 +18669,9 @@ var GFVariables = function () {
             text = text.replace('${' + key + '}', value);
           }
         } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
+          _iterator.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-              _iterator["return"]();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
+          _iterator.f();
         }
       } catch (error) {
         return text;
@@ -18629,842 +18698,861 @@ var GFVariables = function () {
 }();
 
 var GFLog = function () {
-  function GFLog() {
-    _classCallCheck(this, GFLog);
-  }
-
-  _createClass(GFLog, [{
-    key: "debug",
-    value: function debug() {
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee() {
-        var _console, title;
-
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                if (GFLog.toDisplay(GFLog.DEBUG)) {
-                  title = args.shift();
-
-                  (_console = console).debug.apply(_console, ["GF DEBUG : ".concat(title)].concat(args));
-                }
-
-              case 1:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }));
+  var GFLog = function () {
+    function GFLog() {
+      _classCallCheck(this, GFLog);
     }
-  }, {
-    key: "warn",
-    value: function warn() {
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
-      }
 
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee2() {
-        var _console2, title;
-
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                if (GFLog.toDisplay(GFLog.WARN)) {
-                  title = args.shift();
-
-                  (_console2 = console).warn.apply(_console2, ["GF WARN : ".concat(title)].concat(args));
-                }
-
-              case 1:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }));
-    }
-  }, {
-    key: "info",
-    value: function info() {
-      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
-      }
-
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee3() {
-        var _console3, title;
-
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                if (GFLog.toDisplay(GFLog.INFO)) {
-                  title = args.shift();
-
-                  (_console3 = console).info.apply(_console3, ["GF INFO : ".concat(title)].concat(args));
-                }
-
-              case 1:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }));
-    }
-  }, {
-    key: "error",
-    value: function error() {
-      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
-      }
-
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee4() {
-        var _console4, title;
-
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                if (GFLog.toDisplay(GFLog.ERROR)) {
-                  title = args.shift();
-
-                  (_console4 = console).error.apply(_console4, ["GF ERROR : ".concat(title)].concat(args));
-                }
-
-              case 1:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4);
-      }));
-    }
-  }], [{
-    key: "init",
-    value: function init() {
-      return new GFLog();
-    }
-  }, {
-    key: "toDisplay",
-    value: function toDisplay(level) {
-      if (GFLog.logDisplay !== undefined && GFLog.logDisplay === true) {
-        if (GFLog.logLevel !== undefined && level >= GFLog.logLevel) {
-          return true;
+    _createClass(GFLog, [{
+      key: "debug",
+      value: function debug() {
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
         }
+
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee() {
+          var _console, title;
+
+          return regeneratorRuntime.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  if (GFLog.toDisplay(GFLog.DEBUG)) {
+                    title = args.shift();
+
+                    (_console = console).debug.apply(_console, ["GF DEBUG : ".concat(title)].concat(args));
+                  }
+
+                case 1:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee);
+        }));
       }
+    }, {
+      key: "warn",
+      value: function warn() {
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
 
-      return false;
-    }
-  }]);
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee2() {
+          var _console2, title;
 
+          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+            while (1) {
+              switch (_context2.prev = _context2.next) {
+                case 0:
+                  if (GFLog.toDisplay(GFLog.WARN)) {
+                    title = args.shift();
+
+                    (_console2 = console).warn.apply(_console2, ["GF WARN : ".concat(title)].concat(args));
+                  }
+
+                case 1:
+                case "end":
+                  return _context2.stop();
+              }
+            }
+          }, _callee2);
+        }));
+      }
+    }, {
+      key: "info",
+      value: function info() {
+        for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+          args[_key3] = arguments[_key3];
+        }
+
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee3() {
+          var _console3, title;
+
+          return regeneratorRuntime.wrap(function _callee3$(_context3) {
+            while (1) {
+              switch (_context3.prev = _context3.next) {
+                case 0:
+                  if (GFLog.toDisplay(GFLog.INFO)) {
+                    title = args.shift();
+
+                    (_console3 = console).info.apply(_console3, ["GF INFO : ".concat(title)].concat(args));
+                  }
+
+                case 1:
+                case "end":
+                  return _context3.stop();
+              }
+            }
+          }, _callee3);
+        }));
+      }
+    }, {
+      key: "error",
+      value: function error() {
+        for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+          args[_key4] = arguments[_key4];
+        }
+
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee4() {
+          var _console4, title;
+
+          return regeneratorRuntime.wrap(function _callee4$(_context4) {
+            while (1) {
+              switch (_context4.prev = _context4.next) {
+                case 0:
+                  if (GFLog.toDisplay(GFLog.ERROR)) {
+                    title = args.shift();
+
+                    (_console4 = console).error.apply(_console4, ["GF ERROR : ".concat(title)].concat(args));
+                  }
+
+                case 1:
+                case "end":
+                  return _context4.stop();
+              }
+            }
+          }, _callee4);
+        }));
+      }
+    }], [{
+      key: "init",
+      value: function init() {
+        return new GFLog();
+      }
+    }, {
+      key: "toDisplay",
+      value: function toDisplay(level) {
+        if (GFLog.logDisplay !== undefined && GFLog.logDisplay === true) {
+          if (GFLog.logLevel !== undefined && level >= GFLog.logLevel) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+    }]);
+
+    return GFLog;
+  }();
+
+  GFLog.DEBUG = 0;
+  GFLog.INFO = 1;
+  GFLog.WARN = 2;
+  GFLog.ERROR = 3;
+  GFLog.logLevel = GFLog.WARN;
+  GFLog.logDisplay = true;
   return GFLog;
 }();
 
-GFLog.DEBUG = 0;
-GFLog.INFO = 1;
-GFLog.WARN = 2;
-GFLog.ERROR = 3;
-GFLog.logLevel = GFLog.WARN;
-GFLog.logDisplay = true;
-
 var GFPlugin = function () {
-  function GFPlugin() {
-    _classCallCheck(this, GFPlugin);
-  }
+  var GFPlugin = function () {
+    function GFPlugin() {
+      _classCallCheck(this, GFPlugin);
+    }
 
-  _createClass(GFPlugin, [{
-    key: "getRepo",
-    value: function getRepo() {
-      var url = '';
-      GFPlugin.data.info.links.forEach(function (link) {
-        if (link.name === 'Documentation') {
-          url = link.url;
-        }
-      });
-      return url;
-    }
-  }, {
-    key: "getVersion",
-    value: function getVersion() {
-      return GFPlugin.data.info.version;
-    }
-  }, {
-    key: "getRootPath",
-    value: function getRootPath() {
-      return $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
-    }
-  }, {
-    key: "getLibsPath",
-    value: function getLibsPath() {
-      return "".concat($GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT), "libs/");
-    }
-  }, {
-    key: "getDrawioPath",
-    value: function getDrawioPath() {
-      return "".concat(this.getLibsPath(), "drawio/");
-    }
-  }, {
-    key: "getStaticPath",
-    value: function getStaticPath() {
-      return "".concat(this.getRootPath(), "static/");
-    }
-  }, {
-    key: "getMxBasePath",
-    value: function getMxBasePath() {
-      return "".concat(this.getDrawioPath(), "mxgraph/");
-    }
-  }, {
-    key: "getMxStylePath",
-    value: function getMxStylePath() {
-      return "".concat(this.getDrawioPath(), "styles/");
-    }
-  }, {
-    key: "getShapesPath",
-    value: function getShapesPath() {
-      return "".concat(this.getDrawioPath(), "/shapes/");
-    }
-  }, {
-    key: "getPartialPath",
-    value: function getPartialPath() {
-      return "".concat(this.getRootPath(), "partials/");
-    }
-  }, {
-    key: "getStencilsPath",
-    value: function getStencilsPath() {
-      return "".concat(this.getDrawioPath(), "/stencils/");
-    }
-  }, {
-    key: "getMxCssPath",
-    value: function getMxCssPath() {
-      return "".concat(this.getDrawioPath(), "styles/");
-    }
-  }, {
-    key: "getMxResourcePath",
-    value: function getMxResourcePath() {
-      return "".concat(this.getMxBasePath(), "css/");
-    }
-  }, {
-    key: "getMxImagePath",
-    value: function getMxImagePath() {
-      return "".concat(this.getMxBasePath(), "images/");
-    }
-  }], [{
-    key: "init",
-    value: function init($scope, templateSrv, dashboard) {
-      var plug = new GFPlugin();
-      this.contextRoot = GFPlugin.defaultContextRoot;
-
-      if ($scope === undefined) {
-        this.contextRoot = __dirname;
-
-        if (this.contextRoot.length > 0) {
-          $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
-        }
-      } else {
-        this.contextRoot = $scope.$root.appSubUrl + this.defaultContextRoot;
+    _createClass(GFPlugin, [{
+      key: "getRepo",
+      value: function getRepo() {
+        var url = '';
+        GFPlugin.data.info.links.forEach(function (link) {
+          if (link.name === 'Documentation') {
+            url = link.url;
+          }
+        });
+        return url;
       }
+    }, {
+      key: "getVersion",
+      value: function getVersion() {
+        return GFPlugin.data.info.version;
+      }
+    }, {
+      key: "getRootPath",
+      value: function getRootPath() {
+        return $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
+      }
+    }, {
+      key: "getLibsPath",
+      value: function getLibsPath() {
+        return "".concat($GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT), "libs/");
+      }
+    }, {
+      key: "getDrawioPath",
+      value: function getDrawioPath() {
+        return "".concat(this.getLibsPath(), "drawio/");
+      }
+    }, {
+      key: "getStaticPath",
+      value: function getStaticPath() {
+        return "".concat(this.getRootPath(), "static/");
+      }
+    }, {
+      key: "getMxBasePath",
+      value: function getMxBasePath() {
+        return "".concat(this.getDrawioPath(), "mxgraph/");
+      }
+    }, {
+      key: "getMxStylePath",
+      value: function getMxStylePath() {
+        return "".concat(this.getDrawioPath(), "styles/");
+      }
+    }, {
+      key: "getShapesPath",
+      value: function getShapesPath() {
+        return "".concat(this.getDrawioPath(), "/shapes/");
+      }
+    }, {
+      key: "getPartialPath",
+      value: function getPartialPath() {
+        return "".concat(this.getRootPath(), "partials/");
+      }
+    }, {
+      key: "getStencilsPath",
+      value: function getStencilsPath() {
+        return "".concat(this.getDrawioPath(), "/stencils/");
+      }
+    }, {
+      key: "getMxCssPath",
+      value: function getMxCssPath() {
+        return "".concat(this.getDrawioPath(), "styles/");
+      }
+    }, {
+      key: "getMxResourcePath",
+      value: function getMxResourcePath() {
+        return "".concat(this.getMxBasePath(), "css/");
+      }
+    }, {
+      key: "getMxImagePath",
+      value: function getMxImagePath() {
+        return "".concat(this.getMxBasePath(), "images/");
+      }
+    }], [{
+      key: "init",
+      value: function init($scope, templateSrv, dashboard) {
+        var plug = new GFPlugin();
+        this.contextRoot = GFPlugin.defaultContextRoot;
 
-      $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
-      $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
-      $GF.setVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD, dashboard);
-      return plug;
-    }
-  }]);
+        if ($scope === undefined) {
+          this.contextRoot = __dirname;
 
+          if (this.contextRoot.length > 0) {
+            $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
+          }
+        } else {
+          this.contextRoot = $scope.$root.appSubUrl + this.defaultContextRoot;
+        }
+
+        $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
+        $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
+        $GF.setVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD, dashboard);
+        return plug;
+      }
+    }]);
+
+    return GFPlugin;
+  }();
+
+  GFPlugin.data = __webpack_require__(/*! ./plugin.json */ "./plugin.json");
+  GFPlugin.defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   return GFPlugin;
 }();
 
-GFPlugin.data = __webpack_require__(/*! ./plugin.json */ "./plugin.json");
-GFPlugin.defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
-
 var GFMessage = function () {
-  function GFMessage(parent) {
-    _classCallCheck(this, GFMessage);
+  var GFMessage = function () {
+    function GFMessage(parent) {
+      _classCallCheck(this, GFMessage);
 
-    var container = parent.querySelector('div#flowcharting-message');
+      var container = parent.querySelector('div#flowcharting-message');
 
-    if (container !== null) {
-      GFMessage.container = container;
-      var span = container.querySelector('#message-text');
+      if (container !== null) {
+        GFMessage.container = container;
+        var span = container.querySelector('#message-text');
 
-      if (span === null) {
-        GFMessage.message = document.createElement('span');
-        GFMessage.container.appendChild(GFMessage.message);
-      } else {
-        GFMessage.message = span;
+        if (span === null) {
+          GFMessage.message = document.createElement('span');
+          GFMessage.container.appendChild(GFMessage.message);
+        } else {
+          GFMessage.message = span;
+        }
       }
     }
-  }
 
-  _createClass(GFMessage, [{
-    key: "setMessage",
-    value: function setMessage(message) {
-      var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GFMessage.INFO_MESSAGE;
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee5() {
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                return _context5.abrupt("return");
+    _createClass(GFMessage, [{
+      key: "setMessage",
+      value: function setMessage(message) {
+        var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GFMessage.INFO_MESSAGE;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee5() {
+          return regeneratorRuntime.wrap(function _callee5$(_context5) {
+            while (1) {
+              switch (_context5.prev = _context5.next) {
+                case 0:
+                  return _context5.abrupt("return");
 
-              case 6:
-                GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 14);
+                case 6:
+                  GFMessage.message.style.color = GFMessage.INFO_COLOR;
+                  return _context5.abrupt("break", 14);
 
-              case 8:
-                GFMessage.message.style.color = GFMessage.ERROR_COLOR;
-                return _context5.abrupt("break", 14);
+                case 8:
+                  GFMessage.message.style.color = GFMessage.ERROR_COLOR;
+                  return _context5.abrupt("break", 14);
 
-              case 10:
-                GFMessage.message.style.color = GFMessage.WARNING_COLOR;
-                return _context5.abrupt("break", 14);
+                case 10:
+                  GFMessage.message.style.color = GFMessage.WARNING_COLOR;
+                  return _context5.abrupt("break", 14);
 
-              case 12:
-                GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 14);
+                case 12:
+                  GFMessage.message.style.color = GFMessage.INFO_COLOR;
+                  return _context5.abrupt("break", 14);
 
-              case 14:
-                GFMessage.container.style.display = '';
-                $GF.setUniqTimeOut(this.clearMessage, $GF.CONSTANTS.CONF_GFMESSAGE_MS, 'flowcharting-message');
+                case 14:
+                  GFMessage.container.style.display = '';
+                  $GF.setUniqTimeOut(this.clearMessage, $GF.CONSTANTS.CONF_GFMESSAGE_MS, 'flowcharting-message');
 
-              case 16:
-              case "end":
-                return _context5.stop();
+                case 16:
+                case "end":
+                  return _context5.stop();
+              }
             }
-          }
-        }, _callee5, this);
-      }));
-    }
-  }, {
-    key: "clearMessage",
-    value: function clearMessage() {
-      return;
-
-      if (GFMessage.container && GFMessage.message) {
-        GFMessage.container.style.display = 'none';
-        GFMessage.message.innerHTML = '';
+          }, _callee5, this);
+        }));
       }
+    }, {
+      key: "clearMessage",
+      value: function clearMessage() {
+        return;
 
-      $GF.clearUniqTimeOut('flowcharting-message');
-    }
-  }], [{
-    key: "init",
-    value: function init(parentDiv) {
-      return new GFMessage(parentDiv);
-    }
-  }]);
+        if (GFMessage.container && GFMessage.message) {
+          GFMessage.container.style.display = 'none';
+          GFMessage.message.innerHTML = '';
+        }
 
+        $GF.clearUniqTimeOut('flowcharting-message');
+      }
+    }], [{
+      key: "init",
+      value: function init(parentDiv) {
+        return new GFMessage(parentDiv);
+      }
+    }]);
+
+    return GFMessage;
+  }();
+
+  GFMessage.ERROR_MESSAGE = 'error';
+  GFMessage.ERROR_COLOR = 'red';
+  GFMessage.INFO_MESSAGE = 'info';
+  GFMessage.INFO_COLOR = 'white';
+  GFMessage.WARNING_MESSAGE = 'warning';
+  GFMessage.WARNING_COLOR = 'yellow';
   return GFMessage;
 }();
 
-GFMessage.ERROR_MESSAGE = 'error';
-GFMessage.ERROR_COLOR = 'red';
-GFMessage.INFO_MESSAGE = 'info';
-GFMessage.INFO_COLOR = 'white';
-GFMessage.WARNING_MESSAGE = 'warning';
-GFMessage.WARNING_COLOR = 'yellow';
-
 var GFTrace = function () {
-  function GFTrace(fn) {
-    _classCallCheck(this, GFTrace);
+  var GFTrace = function () {
+    function GFTrace(fn) {
+      _classCallCheck(this, GFTrace);
 
-    if (GFTrace.enable && fn !== undefined) {
-      this.trace = {
-        Name: fn,
-        Id: $GF.utils.uniqueID(),
-        Args: undefined,
-        Return: undefined,
-        Before: Date.now(),
-        End: undefined,
-        ExecTime: undefined,
-        Indent: GFTrace.indent
-      };
-      GFTrace.trc.set(this.trace.Id, this.trace);
-    }
-  }
-
-  _createClass(GFTrace, [{
-    key: "before",
-    value: function before(fn) {
       if (GFTrace.enable && fn !== undefined) {
-        var t = new GFTrace(fn);
-        GFTrace.indent++;
-
-        GFTrace._inc(fn);
-
-        return t;
+        this.trace = {
+          Name: fn,
+          Id: $GF.utils.uniqueID(),
+          Args: undefined,
+          Return: undefined,
+          Before: Date.now(),
+          End: undefined,
+          ExecTime: undefined,
+          Indent: GFTrace.indent
+        };
+        GFTrace.trc.set(this.trace.Id, this.trace);
       }
+    }
 
-      return {
-        after: function after() {}
-      };
-    }
-  }, {
-    key: "after",
-    value: function after() {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee6() {
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                if (GFTrace.enable && this.trace !== undefined) {
-                  if (this.trace) {
-                    this.trace.End = Date.now();
-                    GFTrace.indent--;
-                  }
-                }
+    _createClass(GFTrace, [{
+      key: "before",
+      value: function before(fn) {
+        if (GFTrace.enable && fn !== undefined) {
+          var t = new GFTrace(fn);
+          GFTrace.indent++;
 
-              case 1:
-              case "end":
-                return _context6.stop();
-            }
-          }
-        }, _callee6, this);
-      }));
-    }
-  }, {
-    key: "clear",
-    value: function clear() {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee7() {
-        return regeneratorRuntime.wrap(function _callee7$(_context7) {
-          while (1) {
-            switch (_context7.prev = _context7.next) {
-              case 0:
-                if (GFTrace.enable) {
-                  GFTrace.trc.clear();
-                  GFTrace.fn.clear();
-                }
+          GFTrace._inc(fn);
 
-              case 1:
-              case "end":
-                return _context7.stop();
-            }
-          }
-        }, _callee7);
-      }));
-    }
-  }, {
-    key: "enable",
-    value: function enable() {
-      GFTrace.enable = true;
-    }
-  }, {
-    key: "disable",
-    value: function disable() {
-      GFTrace.enable = false;
-    }
-  }, {
-    key: "isEnabled",
-    value: function isEnabled() {
-      return GFTrace.enable;
-    }
-  }, {
-    key: "resume",
-    value: function resume() {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee8() {
-        var tb, fn;
-        return regeneratorRuntime.wrap(function _callee8$(_context8) {
-          while (1) {
-            switch (_context8.prev = _context8.next) {
-              case 0:
-                if (GFTrace.enable) {
-                  tb = [];
-                  fn = [];
-                  GFTrace.trc.forEach(function (trace) {
-                    trace.ExecTime = trace.End - trace.Before;
-                    var f = GFTrace.fn.get(trace.Name);
-                    f.TotalTimes += trace.ExecTime;
-                    tb.push(trace);
-                  });
-                  console.table(tb, ['Indent', 'Name', 'ExecTime']);
-                  GFTrace.fn.forEach(function (f) {
-                    fn.push(f);
-                  });
-                  console.table(fn, ['Function', 'Calls', 'TotalTimes']);
-                  this.clear();
-                }
+          return t;
+        }
 
-              case 1:
-              case "end":
-                return _context8.stop();
-            }
-          }
-        }, _callee8, this);
-      }));
-    }
-  }], [{
-    key: "init",
-    value: function init() {
-      return new GFTrace();
-    }
-  }, {
-    key: "_inc",
-    value: function _inc(fn) {
-      var f = GFTrace.fn.get(fn);
-
-      if (f === undefined) {
-        f = {
-          Calls: 0,
-          Function: fn,
-          TotalTimes: 0
+        return {
+          after: function after() {}
         };
       }
+    }, {
+      key: "after",
+      value: function after() {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee6() {
+          return regeneratorRuntime.wrap(function _callee6$(_context6) {
+            while (1) {
+              switch (_context6.prev = _context6.next) {
+                case 0:
+                  if (GFTrace.enable && this.trace !== undefined) {
+                    if (this.trace) {
+                      this.trace.End = Date.now();
+                      GFTrace.indent--;
+                    }
+                  }
 
-      f.Calls++;
-      GFTrace.fn.set(fn, f);
-    }
-  }]);
+                case 1:
+                case "end":
+                  return _context6.stop();
+              }
+            }
+          }, _callee6, this);
+        }));
+      }
+    }, {
+      key: "clear",
+      value: function clear() {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee7() {
+          return regeneratorRuntime.wrap(function _callee7$(_context7) {
+            while (1) {
+              switch (_context7.prev = _context7.next) {
+                case 0:
+                  if (GFTrace.enable) {
+                    GFTrace.trc.clear();
+                    GFTrace.fn.clear();
+                  }
 
+                case 1:
+                case "end":
+                  return _context7.stop();
+              }
+            }
+          }, _callee7);
+        }));
+      }
+    }, {
+      key: "enable",
+      value: function enable() {
+        GFTrace.enable = true;
+      }
+    }, {
+      key: "disable",
+      value: function disable() {
+        GFTrace.enable = false;
+      }
+    }, {
+      key: "isEnabled",
+      value: function isEnabled() {
+        return GFTrace.enable;
+      }
+    }, {
+      key: "resume",
+      value: function resume() {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee8() {
+          var tb, fn;
+          return regeneratorRuntime.wrap(function _callee8$(_context8) {
+            while (1) {
+              switch (_context8.prev = _context8.next) {
+                case 0:
+                  if (GFTrace.enable) {
+                    tb = [];
+                    fn = [];
+                    GFTrace.trc.forEach(function (trace) {
+                      trace.ExecTime = trace.End - trace.Before;
+                      var f = GFTrace.fn.get(trace.Name);
+                      f.TotalTimes += trace.ExecTime;
+                      tb.push(trace);
+                    });
+                    console.table(tb, ['Indent', 'Name', 'ExecTime']);
+                    GFTrace.fn.forEach(function (f) {
+                      fn.push(f);
+                    });
+                    console.table(fn, ['Function', 'Calls', 'TotalTimes']);
+                    this.clear();
+                  }
+
+                case 1:
+                case "end":
+                  return _context8.stop();
+              }
+            }
+          }, _callee8, this);
+        }));
+      }
+    }], [{
+      key: "init",
+      value: function init() {
+        return new GFTrace();
+      }
+    }, {
+      key: "_inc",
+      value: function _inc(fn) {
+        var f = GFTrace.fn.get(fn);
+
+        if (f === undefined) {
+          f = {
+            Calls: 0,
+            Function: fn,
+            TotalTimes: 0
+          };
+        }
+
+        f.Calls++;
+        GFTrace.fn.set(fn, f);
+      }
+    }]);
+
+    return GFTrace;
+  }();
+
+  GFTrace.enable = false;
+  GFTrace.trc = new Map();
+  GFTrace.fn = new Map();
+  GFTrace.indent = 0;
   return GFTrace;
 }();
 
-GFTrace.enable = false;
-GFTrace.trc = new Map();
-GFTrace.fn = new Map();
-GFTrace.indent = 0;
 var $GF = function () {
-  function $GF() {
-    _classCallCheck(this, $GF);
-  }
+  var $GF = function () {
+    function $GF() {
+      _classCallCheck(this, $GF);
+    }
 
-  _createClass($GF, null, [{
-    key: "init",
-    value: function init($scope, templateSrv, dashboard) {
-      this.plugin = GFPlugin.init($scope, templateSrv, dashboard);
+    _createClass($GF, null, [{
+      key: "init",
+      value: function init($scope, templateSrv, dashboard) {
+        this.plugin = GFPlugin.init($scope, templateSrv, dashboard);
 
-      if (this.DEBUG) {
-        console.log('DEBUG Scope', $scope);
-        console.log('DEBUG TemplateSrv', templateSrv);
-        console.log('DEBUG Theme', dashboard.style);
-        console.log('DEBUG dashboard', dashboard);
+        if (this.DEBUG) {
+          console.log('DEBUG Scope', $scope);
+          console.log('DEBUG TemplateSrv', templateSrv);
+          console.log('DEBUG Theme', dashboard.style);
+          console.log('DEBUG dashboard', dashboard);
+        }
+
+        return this;
       }
-
-      return this;
-    }
-  }, {
-    key: "me",
-    value: function me() {
-      return this;
-    }
-  }, {
-    key: "setMessageDiv",
-    value: function setMessageDiv(html) {
-      this.message = GFMessage.init(html);
-    }
-  }, {
-    key: "getTheme",
-    value: function getTheme() {
-      var templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
-      var theme = templateSrv !== undefined ? templateSrv.style : 'dark';
-      return theme;
-    }
-  }, {
-    key: "createLocalVars",
-    value: function createLocalVars() {
-      var _v = new GFVariables();
-
-      return _v;
-    }
-  }, {
-    key: "getGlobalVars",
-    value: function getGlobalVars() {
-      if ($GF._globalvars === undefined) {
-        $GF._globalvars = new GFVariables();
+    }, {
+      key: "me",
+      value: function me() {
+        return this;
       }
-
-      return $GF._globalvars;
-    }
-  }, {
-    key: "getGrafanaVars",
-    value: function getGrafanaVars() {
-      var templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
-
-      if (templateSrv !== undefined && templateSrv !== null) {
-        return lodash__WEBPACK_IMPORTED_MODULE_1___default.a.map(templateSrv.variables, function (variable) {
-          return "${".concat(variable.name, "}");
-        });
+    }, {
+      key: "setMessageDiv",
+      value: function setMessageDiv(html) {
+        this.message = GFMessage.init(html);
       }
-
-      return [];
-    }
-  }, {
-    key: "getVar",
-    value: function getVar(key) {
-      return $GF.getGlobalVars().get(key);
-    }
-  }, {
-    key: "setVar",
-    value: function setVar(key, value) {
-      $GF.getGlobalVars().set(key, value);
-    }
-  }, {
-    key: "unsetVar",
-    value: function unsetVar(key) {
-      $GF.getGlobalVars().unset(key);
-    }
-  }, {
-    key: "getFullAvailableVarNames",
-    value: function getFullAvailableVarNames() {
-      return GFVariables.getAvailableLocalVarNames().concat($GF.getGrafanaVars());
-    }
-  }, {
-    key: "getIntervalCounter",
-    value: function getIntervalCounter(begin, end, count) {
-      var method = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'linear';
-      var result = [];
-      var distance = end - begin;
-      var step = Math.round(distance / count);
-      var current = begin;
-      var index = 0;
-
-      for (index = 0; index < count; index++) {
-        current += step;
-        result.push(current);
+    }, {
+      key: "getTheme",
+      value: function getTheme() {
+        var templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
+        var theme = templateSrv !== undefined ? templateSrv.style : 'dark';
+        return theme;
       }
+    }, {
+      key: "createLocalVars",
+      value: function createLocalVars() {
+        var _v = new GFVariables();
 
-      result[index] = end;
-      return result;
-    }
-  }, {
-    key: "setUniqTimeOut",
-    value: function setUniqTimeOut(fc, timer, id) {
-      var timeout = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
-
-      if (timeout === undefined) {
-        timeout = new Map();
-        $GF.setVar($GF.CONSTANTS.VAR_MAP_TIMEOUT, timeout);
+        return _v;
       }
+    }, {
+      key: "getGlobalVars",
+      value: function getGlobalVars() {
+        if ($GF._globalvars === undefined) {
+          $GF._globalvars = new GFVariables();
+        }
 
-      if (id !== undefined) {
-        this.clearUniqTimeOut(id);
+        return $GF._globalvars;
       }
+    }, {
+      key: "getGrafanaVars",
+      value: function getGrafanaVars() {
+        var templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
 
-      var thread = window.setTimeout(fc, timer);
-      id = id === undefined ? thread.toString() : id;
-      timeout.set(id, thread);
-      return id;
-    }
-  }, {
-    key: "clearUniqTimeOut",
-    value: function clearUniqTimeOut(id) {
-      var timeout = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
+        if (templateSrv !== undefined && templateSrv !== null) {
+          return lodash__WEBPACK_IMPORTED_MODULE_1___default.a.map(templateSrv.variables, function (variable) {
+            return "${".concat(variable.name, "}");
+          });
+        }
 
-      if (timeout !== undefined) {
-        try {
-          var tm = timeout.get(id);
+        return [];
+      }
+    }, {
+      key: "getVar",
+      value: function getVar(key) {
+        return $GF.getGlobalVars().get(key);
+      }
+    }, {
+      key: "setVar",
+      value: function setVar(key, value) {
+        $GF.getGlobalVars().set(key, value);
+      }
+    }, {
+      key: "unsetVar",
+      value: function unsetVar(key) {
+        $GF.getGlobalVars().unset(key);
+      }
+    }, {
+      key: "getFullAvailableVarNames",
+      value: function getFullAvailableVarNames() {
+        return GFVariables.getAvailableLocalVarNames().concat($GF.getGrafanaVars());
+      }
+    }, {
+      key: "getIntervalCounter",
+      value: function getIntervalCounter(begin, end, count) {
+        var method = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'linear';
+        var result = [];
+        var distance = end - begin;
+        var step = Math.round(distance / count);
+        var current = begin;
+        var index = 0;
 
-          if (tm !== undefined) {
-            timeout["delete"](id);
-            window.clearTimeout(tm);
+        for (index = 0; index < count; index++) {
+          current += step;
+          result.push(current);
+        }
+
+        result[index] = end;
+        return result;
+      }
+    }, {
+      key: "setUniqTimeOut",
+      value: function setUniqTimeOut(fc, timer, id) {
+        var timeout = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
+
+        if (timeout === undefined) {
+          timeout = new Map();
+          $GF.setVar($GF.CONSTANTS.VAR_MAP_TIMEOUT, timeout);
+        }
+
+        if (id !== undefined) {
+          this.clearUniqTimeOut(id);
+        }
+
+        var thread = window.setTimeout(fc, timer);
+        id = id === undefined ? thread.toString() : id;
+        timeout.set(id, thread);
+        return id;
+      }
+    }, {
+      key: "clearUniqTimeOut",
+      value: function clearUniqTimeOut(id) {
+        var timeout = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
+
+        if (timeout !== undefined) {
+          try {
+            var tm = timeout.get(id);
+
+            if (tm !== undefined) {
+              timeout["delete"](id);
+              window.clearTimeout(tm);
+            }
+          } catch (error) {
+            $GF.log.warn('Failed to clear timeout thread', id, error);
           }
-        } catch (error) {
-          $GF.log.warn('Failed to clear timeout thread', id, error);
         }
       }
-    }
-  }, {
-    key: "setUniqInterval",
-    value: function setUniqInterval(fc, timer, id) {
-      var interval = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
+    }, {
+      key: "setUniqInterval",
+      value: function setUniqInterval(fc, timer, id) {
+        var interval = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
 
-      if (interval === undefined) {
-        interval = new Map();
-        $GF.setVar($GF.CONSTANTS.VAR_MAP_INTERVAL, interval);
+        if (interval === undefined) {
+          interval = new Map();
+          $GF.setVar($GF.CONSTANTS.VAR_MAP_INTERVAL, interval);
+        }
+
+        if (id !== undefined) {
+          this.clearUniqInterval(id);
+        }
+
+        var thread = window.setInterval(fc, timer);
+        id = id === undefined ? thread.toString() : id;
+        interval.set(id, thread);
+        return id;
       }
+    }, {
+      key: "clearUniqInterval",
+      value: function clearUniqInterval(id) {
+        var interval = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
 
-      if (id !== undefined) {
-        this.clearUniqInterval(id);
-      }
+        if (interval !== undefined) {
+          try {
+            var _int = interval.get(id);
 
-      var thread = window.setInterval(fc, timer);
-      id = id === undefined ? thread.toString() : id;
-      interval.set(id, thread);
-      return id;
-    }
-  }, {
-    key: "clearUniqInterval",
-    value: function clearUniqInterval(id) {
-      var interval = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
-
-      if (interval !== undefined) {
-        try {
-          var _int = interval.get(id);
-
-          interval["delete"](id);
-          window.clearInterval(_int);
-        } catch (error) {
-          $GF.log.warn('Failed to clear interval thread', id, error);
+            interval["delete"](id);
+            window.clearInterval(_int);
+          } catch (error) {
+            $GF.log.warn('Failed to clear interval thread', id, error);
+          }
         }
       }
-    }
-  }, {
-    key: "loadLocalFile",
-    value: function loadLocalFile(varName, fileName) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee9() {
-        var v, contextroot, filePath, txt;
-        return regeneratorRuntime.wrap(function _callee9$(_context9) {
-          while (1) {
-            switch (_context9.prev = _context9.next) {
-              case 0:
-                v = $GF.getVar(varName);
+    }, {
+      key: "loadLocalFile",
+      value: function loadLocalFile(varName, fileName) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee9() {
+          var v, contextroot, filePath, txt;
+          return regeneratorRuntime.wrap(function _callee9$(_context9) {
+            while (1) {
+              switch (_context9.prev = _context9.next) {
+                case 0:
+                  v = $GF.getVar(varName);
 
-                if (!(v === undefined)) {
-                  _context9.next = 16;
-                  break;
-                }
-
-                contextroot = $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
-
-                if (!(contextroot !== undefined)) {
-                  _context9.next = 15;
-                  break;
-                }
-
-                filePath = "".concat(contextroot, "/").concat(fileName);
-
-                if (!window.fetch) {
-                  _context9.next = 9;
-                  break;
-                }
-
-                fetch(filePath).then(function (response) {
-                  if (response.ok) {
-                    response.text().then(function (text) {
-                      $GF.log.info('loadLocalFile called succesfully', filePath);
-                      $GF.setVar(varName, text);
-                      return text;
-                    })["catch"](function (error) {
-                      return $GF.log.error('Error when download text file', filePath, error);
-                    });
+                  if (!(v === undefined)) {
+                    _context9.next = 16;
+                    break;
                   }
-                })["catch"](function (error) {
-                  return $GF.log.error('Error when download file', filePath, error);
-                });
-                _context9.next = 13;
-                break;
 
-              case 9:
-                txt = $GF.utils.loadFile(fileName);
+                  contextroot = $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
 
-                if (!txt) {
+                  if (!(contextroot !== undefined)) {
+                    _context9.next = 15;
+                    break;
+                  }
+
+                  filePath = "".concat(contextroot, "/").concat(fileName);
+
+                  if (!window.fetch) {
+                    _context9.next = 9;
+                    break;
+                  }
+
+                  fetch(filePath).then(function (response) {
+                    if (response.ok) {
+                      response.text().then(function (text) {
+                        $GF.log.info('loadLocalFile called succesfully', filePath);
+                        $GF.setVar(varName, text);
+                        return text;
+                      })["catch"](function (error) {
+                        return $GF.log.error('Error when download text file', filePath, error);
+                      });
+                    }
+                  })["catch"](function (error) {
+                    return $GF.log.error('Error when download file', filePath, error);
+                  });
                   _context9.next = 13;
                   break;
-                }
 
-                $GF.setVar(varName, $GF.utils.loadFile(fileName));
-                return _context9.abrupt("return", txt);
+                case 9:
+                  txt = $GF.utils.loadFile(fileName);
 
-              case 13:
-                _context9.next = 16;
-                break;
+                  if (!txt) {
+                    _context9.next = 13;
+                    break;
+                  }
 
-              case 15:
-                $GF.log.warn('loadLocalFile Contexroot : ', contextroot);
+                  $GF.setVar(varName, $GF.utils.loadFile(fileName));
+                  return _context9.abrupt("return", txt);
 
-              case 16:
-                return _context9.abrupt("return", false);
+                case 13:
+                  _context9.next = 16;
+                  break;
 
-              case 17:
-              case "end":
-                return _context9.stop();
+                case 15:
+                  $GF.log.warn('loadLocalFile Contexroot : ', contextroot);
+
+                case 16:
+                  return _context9.abrupt("return", false);
+
+                case 17:
+                case "end":
+                  return _context9.stop();
+              }
             }
-          }
-        }, _callee9);
-      }));
-    }
-  }, {
-    key: "setGraphHover",
-    value: function setGraphHover(timestamp) {
-      if (this.isGraphHoverEnabled()) {
-        this.graphHover = true;
-        this.GHTimeStamp = timestamp;
+          }, _callee9);
+        }));
       }
-    }
-  }, {
-    key: "unsetGraphHover",
-    value: function unsetGraphHover() {
-      this.graphHover = false;
-      this.GHTimeStamp = 0;
-    }
-  }, {
-    key: "hasGraphHover",
-    value: function hasGraphHover() {
-      return this.graphHover && this.isGraphHoverEnabled();
-    }
-  }, {
-    key: "isGraphHoverEnabled",
-    value: function isGraphHoverEnabled() {
-      var dashboard = this.getVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD);
-      return dashboard !== undefined && dashboard.sharedTooltipModeEnabled();
-    }
-  }, {
-    key: "getGraphHover",
-    value: function getGraphHover() {
-      if (this.hasGraphHover()) {
-        return this.GHTimeStamp;
+    }, {
+      key: "setGraphHover",
+      value: function setGraphHover(timestamp) {
+        if (this.isGraphHoverEnabled()) {
+          this.graphHover = true;
+          this.GHTimeStamp = timestamp;
+        }
       }
-
-      return undefined;
-    }
-  }, {
-    key: "popover",
-    value: function popover(text, tagBook, tagImage) {
-      var url = $GF.plugin.getRepo();
-      var images = "".concat(this.plugin.getRepo(), "images/");
-      var textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-      var desc = "".concat(textEncoded);
-      var book = '';
-      var image = '';
-
-      if (tagBook) {
-        book = "<a href=\"".concat(url).concat(tagBook, "\" target=\"_blank\"><i class=\"fa fa-book fa-fw\"></i>Help</a>");
+    }, {
+      key: "unsetGraphHover",
+      value: function unsetGraphHover() {
+        this.graphHover = false;
+        this.GHTimeStamp = 0;
       }
-
-      if (tagImage) {
-        image = "<a href=\"".concat(images).concat(tagImage, ".png\" target=\"_blank\"><i class=\"fa fa-image fa-fw\"></i>Example</a>");
+    }, {
+      key: "hasGraphHover",
+      value: function hasGraphHover() {
+        return this.graphHover && this.isGraphHoverEnabled();
       }
-
-      return "\n    <div id=\"popover\" style=\"display:flex;flex-wrap:wrap;width: 100%;\">\n      <div style=\"flex:1;height:100px;margin-bottom: 20px;\">".concat(desc, "</div>\n      <div style=\"flex:1;height:100px;margin-bottom: 20px;\">").concat(book, "</div>\n      <div style=\"flex-basis: 100%;height:100px;margin-bottom:20px;\">").concat(image, "</div>\n    </div>");
-    }
-  }, {
-    key: "destroy",
-    value: function destroy() {
-      var interval = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
-
-      if (interval !== undefined) {
-        interval.forEach(function (x) {
-          return $GF.clearUniqInterval(x);
-        });
-        interval.clear();
+    }, {
+      key: "isGraphHoverEnabled",
+      value: function isGraphHoverEnabled() {
+        var dashboard = this.getVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD);
+        return dashboard !== undefined && dashboard.sharedTooltipModeEnabled();
       }
+    }, {
+      key: "getGraphHover",
+      value: function getGraphHover() {
+        if (this.hasGraphHover()) {
+          return this.GHTimeStamp;
+        }
 
-      var timeout = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
-
-      if (timeout !== undefined) {
-        timeout.forEach(function (x) {
-          return $GF.clearUniqTimeOut(x);
-        });
-        timeout.clear();
+        return undefined;
       }
-    }
-  }]);
+    }, {
+      key: "popover",
+      value: function popover(text, tagBook, tagImage) {
+        var url = $GF.plugin.getRepo();
+        var images = "".concat(this.plugin.getRepo(), "images/");
+        var textEncoded = String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        var desc = "".concat(textEncoded);
+        var book = '';
+        var image = '';
 
+        if (tagBook) {
+          book = "<a href=\"".concat(url).concat(tagBook, "\" target=\"_blank\"><i class=\"fa fa-book fa-fw\"></i>Help</a>");
+        }
+
+        if (tagImage) {
+          image = "<a href=\"".concat(images).concat(tagImage, ".png\" target=\"_blank\"><i class=\"fa fa-image fa-fw\"></i>Example</a>");
+        }
+
+        return "\n    <div id=\"popover\" style=\"display:flex;flex-wrap:wrap;width: 100%;\">\n      <div style=\"flex:1;height:100px;margin-bottom: 20px;\">".concat(desc, "</div>\n      <div style=\"flex:1;height:100px;margin-bottom: 20px;\">").concat(book, "</div>\n      <div style=\"flex-basis: 100%;height:100px;margin-bottom:20px;\">").concat(image, "</div>\n    </div>");
+      }
+    }, {
+      key: "destroy",
+      value: function destroy() {
+        var interval = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
+
+        if (interval !== undefined) {
+          interval.forEach(function (x) {
+            return $GF.clearUniqInterval(x);
+          });
+          interval.clear();
+        }
+
+        var timeout = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
+
+        if (timeout !== undefined) {
+          timeout.forEach(function (x) {
+            return $GF.clearUniqTimeOut(x);
+          });
+          timeout.clear();
+        }
+      }
+    }]);
+
+    return $GF;
+  }();
+
+  $GF._globalvars = new GFVariables();
+  $GF.CONSTANTS = new GFCONSTANT();
+  $GF.log = GFLog.init();
+  $GF.trace = GFTrace.init();
+  $GF.graphHover = false;
+  $GF.GHTimeStamp = 0;
+  $GF.DEBUG = true;
+  $GF.utils = __webpack_require__(/*! ./utils_raw */ "./utils_raw.js");
   return $GF;
 }();
-$GF._globalvars = new GFVariables();
-$GF.CONSTANTS = new GFCONSTANT();
-$GF.log = GFLog.init();
-$GF.trace = GFTrace.init();
-$GF.graphHover = false;
-$GF.GHTimeStamp = 0;
-$GF.DEBUG = true;
-$GF.utils = __webpack_require__(/*! ./utils_raw */ "./utils_raw.js");
+
+
 /* WEBPACK VAR INJECTION */}.call(this, "/"))
 
 /***/ }),
@@ -19533,7 +19621,6 @@ var grafana = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return XGraph; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "lodash");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
@@ -19555,1570 +19642,1574 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var XGraph = function () {
-  function XGraph(container, type, definition) {
-    var _this = this;
+  var XGraph = function () {
+    function XGraph(container, type, definition) {
+      var _this = this;
 
-    _classCallCheck(this, XGraph);
+      _classCallCheck(this, XGraph);
 
-    this.xmlGraph = '';
-    this.csvGraph = '';
-    this.type = 'xml';
-    this.graph = undefined;
-    this.scale = true;
-    this.tooltip = true;
-    this.lock = true;
-    this.center = true;
-    this.animation = true;
-    this.zoom = false;
-    this.zoomFactor = 1.2;
-    this.cumulativeZoomFactor = 1;
-    this.grid = false;
-    this.bgColor = null;
-    this.zoomPercent = '1';
-    this.cells = {
-      id: [],
-      value: []
-    };
-    this.container = container;
-    this.type = type;
-    this.onMapping = {
-      active: false,
-      $scope: null,
-      value: null,
-      prop: 'id',
-      object: null
-    };
-    XGraph.initMxGraph();
+      this.xmlGraph = '';
+      this.csvGraph = '';
+      this.type = 'xml';
+      this.graph = undefined;
+      this.scale = true;
+      this.tooltip = true;
+      this.lock = true;
+      this.center = true;
+      this.animation = true;
+      this.zoom = false;
+      this.zoomFactor = 1.2;
+      this.cumulativeZoomFactor = 1;
+      this.grid = false;
+      this.bgColor = null;
+      this.zoomPercent = '1';
+      this.cells = {
+        id: [],
+        value: []
+      };
+      this.container = container;
+      this.type = type;
+      this.onMapping = {
+        active: false,
+        $scope: null,
+        value: null,
+        prop: 'id',
+        object: null
+      };
+      XGraph.initMxGraph();
 
-    if (type === 'xml') {
-      if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.isencoded(definition)) {
-        this.xmlGraph = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.decode(definition, true, true, true);
-      } else {
-        this.xmlGraph = definition;
+      if (type === 'xml') {
+        if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.isencoded(definition)) {
+          this.xmlGraph = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.decode(definition, true, true, true);
+        } else {
+          this.xmlGraph = definition;
+        }
+      }
+
+      if (type === 'csv') {
+        this.csvGraph = definition;
+      }
+
+      this.initGraph();
+      var self = this;
+
+      if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].DEBUG) {
+        console.log('DEBUG ON');
+        this.graph.addListener(mxEvent.CLICK, function (_sender, _evt) {
+          console.log('DEBUG CLICK');
+
+          _this.eventDebug(_evt);
+
+          if (_evt.properties.cell) {
+            var id = _evt.properties.cell.id;
+            var state = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar("STATE_".concat(id));
+            console.log('DEBUG GF STATE', state);
+            var view = self.graph.view;
+            console.log('DEBUG CELL STATE', view.getState(_evt.properties.cell));
+          }
+        });
       }
     }
 
-    if (type === 'csv') {
-      this.csvGraph = definition;
-    }
+    _createClass(XGraph, [{
+      key: "anonymize",
+      value: function anonymize() {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee() {
+          return regeneratorRuntime.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  drawio_custom__WEBPACK_IMPORTED_MODULE_3__["anonymize"](this.graph);
 
-    this.initGraph();
-    var self = this;
+                case 1:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee, this);
+        }));
+      }
+    }, {
+      key: "initGraph",
+      value: function initGraph() {
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'initGraph()');
+        this.graph = new Graph(this.container);
+        this.graph.setPanning(true);
+        this.clickBackup = this.graph.click;
+        this.dbclickBackup = this.graph.dblClick;
+        mxEvent.addMouseWheelListener(mxUtils.bind(this, this.eventMouseWheel), this.container);
 
-    if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].DEBUG) {
-      console.log('DEBUG ON');
-      this.graph.addListener(mxEvent.CLICK, function (_sender, _evt) {
-        console.log('DEBUG CLICK');
-
-        _this.eventDebug(_evt);
-
-        if (_evt.properties.cell) {
-          var id = _evt.properties.cell.id;
-          var state = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar("STATE_".concat(id));
-          console.log('DEBUG GF STATE', state);
-          var view = self.graph.view;
-          console.log('DEBUG CELL STATE', view.getState(_evt.properties.cell));
+        if (mxClient.IS_IE || mxClient.IS_EDGE) {
+          mxEvent.addListener(this.container, 'wheel', mxUtils.bind(this, this.eventMouseWheel));
         }
-      });
-    }
-  }
 
-  _createClass(XGraph, [{
-    key: "anonymize",
-    value: function anonymize() {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee() {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                drawio_custom__WEBPACK_IMPORTED_MODULE_3__["anonymize"](this.graph);
+        mxEvent.addListener(document, 'keydown', mxUtils.bind(this, this.eventKey));
+        this.container.addEventListener('contextmenu', function (e) {
+          return e.preventDefault();
+        });
+        this.graph.dblClick = this.eventDbClick.bind(this);
+        trc.after();
+        return this;
+      }
+    }, {
+      key: "drawGraph",
+      value: function drawGraph() {
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'drawGraph()');
+        this.graph.getModel().beginUpdate();
+        this.graph.getModel().clear();
 
-              case 1:
-              case "end":
-                return _context.stop();
+        try {
+          if (this.type === 'xml') {
+            var xmlDoc = mxUtils.parseXml(this.xmlGraph);
+            var codec = new mxCodec(xmlDoc);
+            this.graph.model.clear();
+            this.graph.view.scale = 1;
+            codec.decode(xmlDoc.documentElement, this.graph.getModel());
+            this.loadExtFont();
+            this.graph.updateCssTransform();
+            this.graph.selectUnlockedLayer();
+          }
+
+          if (this.type === 'csv') {
+            try {
+              drawio_custom__WEBPACK_IMPORTED_MODULE_3__["importCsv"](this.graph, this.csvGraph);
+              this.refresh();
+            } catch (error) {
+              globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Bad CSV format', error);
+              globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Bad CSV format');
             }
           }
-        }, _callee, this);
-      }));
-    }
-  }, {
-    key: "initGraph",
-    value: function initGraph() {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'initGraph()');
-      this.graph = new Graph(this.container);
-      this.graph.setPanning(true);
-      this.clickBackup = this.graph.click;
-      this.dbclickBackup = this.graph.dblClick;
-      mxEvent.addMouseWheelListener(mxUtils.bind(this, this.eventMouseWheel), this.container);
+        } catch (error) {
+          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Error in draw', error);
+        } finally {
+          this.cells['id'] = this.getCurrentCells('id');
+          this.cells['value'] = this.getCurrentCells('value');
+          this.graph.getModel().endUpdate();
+        }
 
-      if (mxClient.IS_IE || mxClient.IS_EDGE) {
-        mxEvent.addListener(this.container, 'wheel', mxUtils.bind(this, this.eventMouseWheel));
+        trc.after();
+        return this;
       }
+    }, {
+      key: "loadExtFont",
+      value: function loadExtFont() {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee2() {
+          var model, extFonts, i;
+          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+            while (1) {
+              switch (_context2.prev = _context2.next) {
+                case 0:
+                  model = this.graph.getModel();
+                  extFonts = model.extFonts;
 
-      mxEvent.addListener(document, 'keydown', mxUtils.bind(this, this.eventKey));
-      this.container.addEventListener('contextmenu', function (e) {
-        return e.preventDefault();
-      });
-      this.graph.dblClick = this.eventDbClick.bind(this);
-      trc.after();
-      return this;
-    }
-  }, {
-    key: "drawGraph",
-    value: function drawGraph() {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'drawGraph()');
-      this.graph.getModel().beginUpdate();
-      this.graph.getModel().clear();
+                  if (extFonts) {
+                    try {
+                      extFonts = extFonts.split('|').map(function (ef) {
+                        var parts = ef.split('^');
+                        return {
+                          name: parts[0],
+                          url: parts[1]
+                        };
+                      });
 
-      try {
+                      for (i = 0; i < extFonts.length; i++) {
+                        this.graph.addExtFont(extFonts[i].name, extFonts[i].url);
+                      }
+                    } catch (e) {
+                      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('ExtFonts format error:', e.message);
+                    }
+                  }
+
+                case 3:
+                case "end":
+                  return _context2.stop();
+              }
+            }
+          }, _callee2, this);
+        }));
+      }
+    }, {
+      key: "applyGraph",
+      value: function applyGraph() {
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'applyGraph()');
+
+        if (!this.scale) {
+          this.zoomGraph(this.zoomPercent);
+        } else {
+          this.unzoomGraph();
+        }
+
+        this.tooltipGraph(this.tooltip);
+        this.lockGraph(this.lock);
+
+        if (this.scale && this.center) {
+          this.fitGraph();
+        } else {
+          this.scaleGraph(this.scale);
+          this.centerGraph(this.center);
+        }
+
+        this.gridGraph(this.grid);
+        this.bgGraph(this.bgColor);
+        this.graph.foldingEnabled = true;
+        this.graph.cellRenderer.forceControlClickHandler = true;
+        this.refresh();
+        trc.after();
+        return this;
+      }
+    }, {
+      key: "refresh",
+      value: function refresh() {
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'refresh()');
+        this.graph.refresh();
+        trc.after();
+        return this;
+      }
+    }, {
+      key: "destroyGraph",
+      value: function destroyGraph() {
+        this.graph.destroy();
+        this.graph = undefined;
+        return this;
+      }
+    }, {
+      key: "lockGraph",
+      value: function lockGraph(bool) {
+        if (bool) {
+          this.graph.setEnabled(false);
+        } else {
+          this.graph.setEnabled(true);
+        }
+
+        this.lock = bool;
+        return this;
+      }
+    }, {
+      key: "tooltipGraph",
+      value: function tooltipGraph(bool) {
+        if (bool) {
+          this.graph.setTooltips(true);
+        } else {
+          this.graph.setTooltips(false);
+        }
+
+        this.tooltip = bool;
+        return this;
+      }
+    }, {
+      key: "allowDrawio",
+      value: function allowDrawio(bool) {
+        if (bool) {
+          mxUrlConverter.prototype.baseUrl = 'http://draw.io/';
+          mxUrlConverter.prototype.baseDomain = '';
+        } else {
+          mxUrlConverter.prototype.baseUrl = null;
+          mxUrlConverter.prototype.baseDomain = null;
+        }
+
+        return this;
+      }
+    }, {
+      key: "enableAnim",
+      value: function enableAnim(bool) {
+        this.animation = bool;
+        return this;
+      }
+    }, {
+      key: "centerGraph",
+      value: function centerGraph(bool) {
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'centerGraph()');
+        this.graph.centerZoom = false;
+
+        if (bool) {
+          this.graph.center(true, true);
+        } else {
+          this.graph.center(false, false);
+        }
+
+        this.center = bool;
+        trc.after();
+        return this;
+      }
+    }, {
+      key: "scaleGraph",
+      value: function scaleGraph(bool) {
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'scaleGraph()');
+
+        if (bool) {
+          this.unzoomGraph();
+          this.graph.fit();
+          this.graph.view.rendering = true;
+        }
+
+        this.scale = bool;
+        trc.after();
+        return this;
+      }
+    }, {
+      key: "fitGraph",
+      value: function fitGraph() {
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'fitGraph()');
+        var margin = 2;
+        var max = 3;
+        var bounds = this.graph.getGraphBounds();
+        var cw = this.graph.container.clientWidth - margin;
+        var ch = this.graph.container.clientHeight - margin;
+        var w = bounds.width / this.graph.view.scale;
+        var h = bounds.height / this.graph.view.scale;
+        var s = Math.min(max, Math.min(cw / w, ch / h));
+        this.graph.view.scaleAndTranslate(s, (margin + cw - w * s) / (2 * s) - bounds.x / this.graph.view.scale, (margin + ch - h * s) / (2 * s) - bounds.y / this.graph.view.scale);
+        trc.after();
+        return this;
+      }
+    }, {
+      key: "gridGraph",
+      value: function gridGraph(bool) {
+        if (bool) {
+          this.container.style.backgroundImage = "url('data:image/gif;base64,R0lGODlhCgAKAJEAAAAAAP///8zMzP///yH5BAEAAAMALAAAAAAKAAoAAAIJ1I6py+0Po2wFADs=')";
+        } else {
+          this.container.style.backgroundImage = '';
+        }
+
+        this.grid = bool;
+        return this;
+      }
+    }, {
+      key: "zoomGraph",
+      value: function zoomGraph(percent) {
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'zoomGraph()');
+
+        if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
+          var ratio = Number(percent.replace('%', '')) / 100;
+          this.graph.zoomTo(ratio, true);
+          this.zoomPercent = percent;
+        } else {
+          this.unzoomGraph();
+        }
+
+        this.zoom = true;
+        trc.after();
+        return this;
+      }
+    }, {
+      key: "unzoomGraph",
+      value: function unzoomGraph() {
+        this.zoom = false;
+        this.graph.zoomActual();
+        return this;
+      }
+    }, {
+      key: "bgGraph",
+      value: function bgGraph(bgColor) {
+        var $div = $(this.container);
+
+        if (bgColor) {
+          this.bgColor = bgColor;
+          $div.css('background-color', bgColor);
+        } else {
+          $div.css('background-color', '');
+        }
+
+        return this;
+      }
+    }, {
+      key: "getMxGraph",
+      value: function getMxGraph() {
+        return this.graph;
+      }
+    }, {
+      key: "getxmlGraph",
+      value: function getxmlGraph() {
+        return this.xmlGraph;
+      }
+    }, {
+      key: "setContent",
+      value: function setContent(content) {
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setContent()');
+
         if (this.type === 'xml') {
-          var xmlDoc = mxUtils.parseXml(this.xmlGraph);
-          var codec = new mxCodec(xmlDoc);
-          this.graph.model.clear();
-          this.graph.view.scale = 1;
-          codec.decode(xmlDoc.documentElement, this.graph.getModel());
-          this.loadExtFont();
-          this.graph.updateCssTransform();
-          this.graph.selectUnlockedLayer();
+          if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.isencoded(content)) {
+            this.xmlGraph = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.decode(content, true, true, true);
+          } else {
+            this.xmlGraph = content;
+          }
         }
 
         if (this.type === 'csv') {
-          try {
-            drawio_custom__WEBPACK_IMPORTED_MODULE_3__["importCsv"](this.graph, this.csvGraph);
-            this.refresh();
-          } catch (error) {
-            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Bad CSV format', error);
-            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Bad CSV format');
-          }
+          this.csvGraph = content;
         }
-      } catch (error) {
-        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Error in draw', error);
-      } finally {
-        this.cells['id'] = this.getCurrentCells('id');
-        this.cells['value'] = this.getCurrentCells('value');
-        this.graph.getModel().endUpdate();
+
+        this.drawGraph();
+        trc.after();
+        return this;
       }
+    }, {
+      key: "getCurrentCells",
+      value: function getCurrentCells(prop) {
+        var _this2 = this;
 
-      trc.after();
-      return this;
-    }
-  }, {
-    key: "loadExtFont",
-    value: function loadExtFont() {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee2() {
-        var model, extFonts, i;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                model = this.graph.getModel();
-                extFonts = model.extFonts;
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'getCurrentCells()');
+        var cellIds = [];
+        var model = this.graph.getModel();
+        var cells = model.cells;
 
-                if (extFonts) {
-                  try {
-                    extFonts = extFonts.split('|').map(function (ef) {
-                      var parts = ef.split('^');
-                      return {
-                        name: parts[0],
-                        url: parts[1]
-                      };
-                    });
+        if (prop === 'id') {
+          lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(cells, function (mxcell) {
+            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', _this2.getStyleCell(mxcell, 'shape'));
+            cellIds.push(_this2.getId(mxcell));
+          });
+        } else if (prop === 'value') {
+          lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(cells, function (mxcell) {
+            cellIds.push(_this2.getLabelCell(mxcell));
+          });
+        }
 
-                    for (i = 0; i < extFonts.length; i++) {
-                      this.graph.addExtFont(extFonts[i].name, extFonts[i].url);
-                    }
-                  } catch (e) {
-                    globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('ExtFonts format error:', e.message);
+        trc.after();
+        return cellIds;
+      }
+    }, {
+      key: "findMxCells",
+      value: function findMxCells(prop, pattern) {
+        var _this3 = this;
+
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'findMxCells()');
+        var mxcells = this.getMxCells();
+        var result = [];
+
+        if (prop === 'id') {
+          lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(mxcells, function (mxcell) {
+            if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.matchString(mxcell.id, pattern)) {
+              result.push(mxcell);
+            }
+          });
+        } else if (prop === 'value') {
+          lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(mxcells, function (mxcell) {
+            if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.matchString(_this3.getLabelCell(mxcell), pattern)) {
+              result.push(mxcell);
+            }
+          });
+        }
+
+        trc.after();
+        return result;
+      }
+    }, {
+      key: "selectMxCells",
+      value: function selectMxCells(prop, pattern) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee3() {
+          var mxcells;
+          return regeneratorRuntime.wrap(function _callee3$(_context3) {
+            while (1) {
+              switch (_context3.prev = _context3.next) {
+                case 0:
+                  mxcells = this.findMxCells(prop, pattern);
+
+                  if (mxcells) {
+                    this.highlightCells(mxcells);
                   }
-                }
 
-              case 3:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-    }
-  }, {
-    key: "applyGraph",
-    value: function applyGraph() {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'applyGraph()');
-
-      if (!this.scale) {
-        this.zoomGraph(this.zoomPercent);
-      } else {
-        this.unzoomGraph();
-      }
-
-      this.tooltipGraph(this.tooltip);
-      this.lockGraph(this.lock);
-
-      if (this.scale && this.center) {
-        this.fitGraph();
-      } else {
-        this.scaleGraph(this.scale);
-        this.centerGraph(this.center);
-      }
-
-      this.gridGraph(this.grid);
-      this.bgGraph(this.bgColor);
-      this.graph.foldingEnabled = true;
-      this.graph.cellRenderer.forceControlClickHandler = true;
-      this.refresh();
-      trc.after();
-      return this;
-    }
-  }, {
-    key: "refresh",
-    value: function refresh() {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'refresh()');
-      this.graph.refresh();
-      trc.after();
-      return this;
-    }
-  }, {
-    key: "destroyGraph",
-    value: function destroyGraph() {
-      this.graph.destroy();
-      this.graph = undefined;
-      return this;
-    }
-  }, {
-    key: "lockGraph",
-    value: function lockGraph(bool) {
-      if (bool) {
-        this.graph.setEnabled(false);
-      } else {
-        this.graph.setEnabled(true);
-      }
-
-      this.lock = bool;
-      return this;
-    }
-  }, {
-    key: "tooltipGraph",
-    value: function tooltipGraph(bool) {
-      if (bool) {
-        this.graph.setTooltips(true);
-      } else {
-        this.graph.setTooltips(false);
-      }
-
-      this.tooltip = bool;
-      return this;
-    }
-  }, {
-    key: "allowDrawio",
-    value: function allowDrawio(bool) {
-      if (bool) {
-        mxUrlConverter.prototype.baseUrl = 'http://draw.io/';
-        mxUrlConverter.prototype.baseDomain = '';
-      } else {
-        mxUrlConverter.prototype.baseUrl = null;
-        mxUrlConverter.prototype.baseDomain = null;
-      }
-
-      return this;
-    }
-  }, {
-    key: "enableAnim",
-    value: function enableAnim(bool) {
-      this.animation = bool;
-      return this;
-    }
-  }, {
-    key: "centerGraph",
-    value: function centerGraph(bool) {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'centerGraph()');
-      this.graph.centerZoom = false;
-
-      if (bool) {
-        this.graph.center(true, true);
-      } else {
-        this.graph.center(false, false);
-      }
-
-      this.center = bool;
-      trc.after();
-      return this;
-    }
-  }, {
-    key: "scaleGraph",
-    value: function scaleGraph(bool) {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'scaleGraph()');
-
-      if (bool) {
-        this.unzoomGraph();
-        this.graph.fit();
-        this.graph.view.rendering = true;
-      }
-
-      this.scale = bool;
-      trc.after();
-      return this;
-    }
-  }, {
-    key: "fitGraph",
-    value: function fitGraph() {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'fitGraph()');
-      var margin = 2;
-      var max = 3;
-      var bounds = this.graph.getGraphBounds();
-      var cw = this.graph.container.clientWidth - margin;
-      var ch = this.graph.container.clientHeight - margin;
-      var w = bounds.width / this.graph.view.scale;
-      var h = bounds.height / this.graph.view.scale;
-      var s = Math.min(max, Math.min(cw / w, ch / h));
-      this.graph.view.scaleAndTranslate(s, (margin + cw - w * s) / (2 * s) - bounds.x / this.graph.view.scale, (margin + ch - h * s) / (2 * s) - bounds.y / this.graph.view.scale);
-      trc.after();
-      return this;
-    }
-  }, {
-    key: "gridGraph",
-    value: function gridGraph(bool) {
-      if (bool) {
-        this.container.style.backgroundImage = "url('data:image/gif;base64,R0lGODlhCgAKAJEAAAAAAP///8zMzP///yH5BAEAAAMALAAAAAAKAAoAAAIJ1I6py+0Po2wFADs=')";
-      } else {
-        this.container.style.backgroundImage = '';
-      }
-
-      this.grid = bool;
-      return this;
-    }
-  }, {
-    key: "zoomGraph",
-    value: function zoomGraph(percent) {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'zoomGraph()');
-
-      if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
-        var ratio = Number(percent.replace('%', '')) / 100;
-        this.graph.zoomTo(ratio, true);
-        this.zoomPercent = percent;
-      } else {
-        this.unzoomGraph();
-      }
-
-      this.zoom = true;
-      trc.after();
-      return this;
-    }
-  }, {
-    key: "unzoomGraph",
-    value: function unzoomGraph() {
-      this.zoom = false;
-      this.graph.zoomActual();
-      return this;
-    }
-  }, {
-    key: "bgGraph",
-    value: function bgGraph(bgColor) {
-      var $div = $(this.container);
-
-      if (bgColor) {
-        this.bgColor = bgColor;
-        $div.css('background-color', bgColor);
-      } else {
-        $div.css('background-color', '');
-      }
-
-      return this;
-    }
-  }, {
-    key: "getMxGraph",
-    value: function getMxGraph() {
-      return this.graph;
-    }
-  }, {
-    key: "getxmlGraph",
-    value: function getxmlGraph() {
-      return this.xmlGraph;
-    }
-  }, {
-    key: "setContent",
-    value: function setContent(content) {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setContent()');
-
-      if (this.type === 'xml') {
-        if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.isencoded(content)) {
-          this.xmlGraph = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.decode(content, true, true, true);
-        } else {
-          this.xmlGraph = content;
-        }
-      }
-
-      if (this.type === 'csv') {
-        this.csvGraph = content;
-      }
-
-      this.drawGraph();
-      trc.after();
-      return this;
-    }
-  }, {
-    key: "getCurrentCells",
-    value: function getCurrentCells(prop) {
-      var _this2 = this;
-
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'getCurrentCells()');
-      var cellIds = [];
-      var model = this.graph.getModel();
-      var cells = model.cells;
-
-      if (prop === 'id') {
-        lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(cells, function (mxcell) {
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', _this2.getStyleCell(mxcell, 'shape'));
-          cellIds.push(_this2.getId(mxcell));
-        });
-      } else if (prop === 'value') {
-        lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(cells, function (mxcell) {
-          cellIds.push(_this2.getLabelCell(mxcell));
-        });
-      }
-
-      trc.after();
-      return cellIds;
-    }
-  }, {
-    key: "findMxCells",
-    value: function findMxCells(prop, pattern) {
-      var _this3 = this;
-
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'findMxCells()');
-      var mxcells = this.getMxCells();
-      var result = [];
-
-      if (prop === 'id') {
-        lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(mxcells, function (mxcell) {
-          if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.matchString(mxcell.id, pattern)) {
-            result.push(mxcell);
-          }
-        });
-      } else if (prop === 'value') {
-        lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(mxcells, function (mxcell) {
-          if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.matchString(_this3.getLabelCell(mxcell), pattern)) {
-            result.push(mxcell);
-          }
-        });
-      }
-
-      trc.after();
-      return result;
-    }
-  }, {
-    key: "selectMxCells",
-    value: function selectMxCells(prop, pattern) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee3() {
-        var mxcells;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                mxcells = this.findMxCells(prop, pattern);
-
-                if (mxcells) {
-                  this.highlightCells(mxcells);
-                }
-
-              case 2:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this);
-      }));
-    }
-  }, {
-    key: "unselectMxCells",
-    value: function unselectMxCells(prop, pattern) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee4() {
-        var mxcells;
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                mxcells = this.findMxCells(prop, pattern);
-
-                if (mxcells) {
-                  this.unhighlightCells(mxcells);
-                }
-
-              case 2:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4, this);
-      }));
-    }
-  }, {
-    key: "createOverlay",
-    value: function createOverlay(image, tooltip) {
-      var overlay = new mxCellOverlay(image, tooltip);
-      overlay.addListener(mxEvent.CLICK, function (_sender, _evt) {
-        mxUtils.alert("".concat(tooltip, "\nLast update: ").concat(new Date()));
-      });
-      return overlay;
-    }
-  }, {
-    key: "addOverlay",
-    value: function addOverlay(state, mxcell) {
-      this.graph.addCellOverlay(mxcell, this.createOverlay(this.graph.warningImage, "State: ".concat(state)));
-      return this;
-    }
-  }, {
-    key: "removeOverlay",
-    value: function removeOverlay(mxcell) {
-      this.graph.removeCellOverlays(mxcell);
-      return this;
-    }
-  }, {
-    key: "addLink",
-    value: function addLink(mxcell, link) {
-      this.graph.setLinkForCell(mxcell, link);
-      return this;
-    }
-  }, {
-    key: "getLink",
-    value: function getLink(mxcell) {
-      return this.graph.getLinkForCell(mxcell);
-    }
-  }, {
-    key: "removeLink",
-    value: function removeLink(mxcell) {
-      this.graph.setLinkForCell(mxcell, null);
-      return this;
-    }
-  }, {
-    key: "getOrignalCells",
-    value: function getOrignalCells(prop) {
-      if (prop === 'id' || prop === 'value') {
-        return this.cells[prop];
-      }
-
-      return [];
-    }
-  }, {
-    key: "renameId",
-    value: function renameId(oldId, newId) {
-      var cells = this.findMxCells('id', oldId);
-
-      if (cells !== undefined && cells.length > 0) {
-        cells.forEach(function (cell) {
-          cell.id = newId;
-        });
-      } else {
-        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.warn("Cell ".concat(oldId, " not found"));
-      }
-
-      return this;
-    }
-  }, {
-    key: "getXmlModel",
-    value: function getXmlModel() {
-      var encoder = new mxCodec();
-      var node = encoder.encode(this.graph.getModel());
-      return mxUtils.getXml(node);
-    }
-  }, {
-    key: "getMxCells",
-    value: function getMxCells() {
-      return this.graph.getModel().cells;
-    }
-  }, {
-    key: "getValuePropOfMxCell",
-    value: function getValuePropOfMxCell(prop, mxcell) {
-      if (prop === 'id') {
-        return this.getId(mxcell);
-      }
-
-      if (prop === 'value') {
-        return this.getLabelCell(mxcell);
-      }
-
-      return null;
-    }
-  }, {
-    key: "getStyleCell",
-    value: function getStyleCell(mxcell, style) {
-      var state = this.graph.view.getState(mxcell);
-
-      if (state) {
-        return state.style[style];
-      }
-
-      return null;
-    }
-  }, {
-    key: "isAnimated",
-    value: function isAnimated() {
-      return this.animation;
-    }
-  }, {
-    key: "setColorAnimCell",
-    value: function setColorAnimCell(mxcell, style, color) {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setColorAnimCell()');
-      var id = "".concat(style, "_").concat(mxcell.id);
-      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
-
-      if (this.isAnimated() && color) {
-        try {
-          var startColor = this.getStyleCell(mxcell, style);
-
-          if (startColor) {
-            var graduate = function graduate() {
-              if (count < lg) {
-                self.setStyleCell(mxcell, style, steps[count]);
-                count += 1;
-                globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(graduate, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_COLORS_MS, id);
-              } else {
-                globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
+                case 2:
+                case "end":
+                  return _context3.stop();
               }
-            };
-
-            var endColor = color;
-            var steps = chroma_js__WEBPACK_IMPORTED_MODULE_4___default.a.scale([startColor, endColor]).mode('lrgb').colors(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_COLORS_STEPS + 1);
-            var count = 1;
-            var self = this;
-            var lg = steps.length;
-            graduate();
-          } else {
-            var hex = chroma_js__WEBPACK_IMPORTED_MODULE_4___default()(color).hex();
-            this.setStyleCell(mxcell, style, hex);
-          }
-        } catch (error) {
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Error on graduate color', error);
-          this.setStyleCell(mxcell, style, color);
-        }
-      } else {
-        if (color !== null) {
-          try {
-            color = chroma_js__WEBPACK_IMPORTED_MODULE_4___default()(color).hex();
-          } catch (error) {
-            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Invalid Color', color);
-          }
-        }
-
-        this.setStyleCell(mxcell, style, color);
+            }
+          }, _callee3, this);
+        }));
       }
+    }, {
+      key: "unselectMxCells",
+      value: function unselectMxCells(prop, pattern) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee4() {
+          var mxcells;
+          return regeneratorRuntime.wrap(function _callee4$(_context4) {
+            while (1) {
+              switch (_context4.prev = _context4.next) {
+                case 0:
+                  mxcells = this.findMxCells(prop, pattern);
 
-      trc.after();
-      return this;
-    }
-  }, {
-    key: "setStyleCell",
-    value: function setStyleCell(mxcell, style, value) {
-      this.graph.setCellStyles(style, value, [mxcell]);
-      return this;
-    }
-  }, {
-    key: "setStyleAnimCell",
-    value: function setStyleAnimCell(mxcell, style, endValue, beginValue) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee5() {
-        var trc, end, begin, graduate, id, steps, lg, count, self;
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
-
-                if (this.isAnimated() && endValue !== null) {
-                  try {
-                    end = Number(endValue);
-                    begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
-
-                    if (end !== begin) {
-                      graduate = function graduate() {
-                        if (count < lg) {
-                          self.setStyleCell(mxcell, style, steps[count].toString());
-                          count += 1;
-                          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(graduate, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS, id);
-                        } else {
-                          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
-                        }
-                      };
-
-                      id = "".concat(style, "_").concat(mxcell.id);
-                      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
-                      steps = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(begin, end, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                      lg = steps.length;
-                      count = 0;
-                      self = this;
-                      graduate();
-                    }
-                  } catch (error) {
-                    this.graph.setCellStyles(style, endValue, [mxcell]);
+                  if (mxcells) {
+                    this.unhighlightCells(mxcells);
                   }
-                } else {
-                  this.graph.setCellStyles(style, endValue, [mxcell]);
-                }
 
-                trc.after();
-
-              case 3:
-              case "end":
-                return _context5.stop();
+                case 2:
+                case "end":
+                  return _context4.stop();
+              }
             }
-          }
-        }, _callee5, this);
-      }));
-    }
-  }, {
-    key: "setStyles",
-    value: function setStyles(mxcell, styles) {
-      this.graph.getModel().setStyle(mxcell, styles);
-      return this;
-    }
-  }, {
-    key: "setClassCell",
-    value: function setClassCell(mxcell, className) {
-      var state = this.graph.view.getState(mxcell);
-
-      if (state && state.shape !== null) {
-        var paths = state.shape.node.getElementsByTagName('path');
-
-        if (paths.length > 1) {
-          var currentClass = paths[1].getAttribute('class');
-          var classes = [];
-
-          if (currentClass !== null && currentClass !== undefined) {
-            classes = currentClass.split(' ');
-          }
-
-          if (!classes.includes(className)) {
-            classes.push(className);
-            currentClass = classes.join(' ');
-            paths[1].setAttribute('class', currentClass);
-
-            if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
-              paths[1].setAttribute('stroke-dasharray', '8');
-            }
-          }
+          }, _callee4, this);
+        }));
+      }
+    }, {
+      key: "createOverlay",
+      value: function createOverlay(image, tooltip) {
+        var overlay = new mxCellOverlay(image, tooltip);
+        overlay.addListener(mxEvent.CLICK, function (_sender, _evt) {
+          mxUtils.alert("".concat(tooltip, "\nLast update: ").concat(new Date()));
+        });
+        return overlay;
+      }
+    }, {
+      key: "addOverlay",
+      value: function addOverlay(state, mxcell) {
+        this.graph.addCellOverlay(mxcell, this.createOverlay(this.graph.warningImage, "State: ".concat(state)));
+        return this;
+      }
+    }, {
+      key: "removeOverlay",
+      value: function removeOverlay(mxcell) {
+        this.graph.removeCellOverlays(mxcell);
+        return this;
+      }
+    }, {
+      key: "addLink",
+      value: function addLink(mxcell, link) {
+        this.graph.setLinkForCell(mxcell, link);
+        return this;
+      }
+    }, {
+      key: "getLink",
+      value: function getLink(mxcell) {
+        return this.graph.getLinkForCell(mxcell);
+      }
+    }, {
+      key: "removeLink",
+      value: function removeLink(mxcell) {
+        this.graph.setLinkForCell(mxcell, null);
+        return this;
+      }
+    }, {
+      key: "getOrignalCells",
+      value: function getOrignalCells(prop) {
+        if (prop === 'id' || prop === 'value') {
+          return this.cells[prop];
         }
+
+        return [];
       }
+    }, {
+      key: "renameId",
+      value: function renameId(oldId, newId) {
+        var cells = this.findMxCells('id', oldId);
 
-      return this;
-    }
-  }, {
-    key: "unsetClassCell",
-    value: function unsetClassCell(mxcell, className) {
-      var state = this.graph.view.getState(mxcell);
-
-      if (state && state.shape !== null) {
-        var paths = state.shape.node.getElementsByTagName('path');
-
-        if (paths.length > 1) {
-          var currentClass = paths[1].getAttribute('class');
-          var classes = [];
-
-          if (currentClass !== null && currentClass !== undefined) {
-            classes = currentClass.split(' ');
-          }
-
-          if (classes.includes(className)) {
-            classes = classes.filter(function (c) {
-              return c !== className;
-            });
-
-            if (classes.length > 1) {
-              currentClass = classes.join(' ');
-              paths[1].setAttribute('class', currentClass);
-            } else {
-              paths[1].removeAttribute('class');
-            }
-
-            if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
-              paths[1].removeAttribute('stroke-dasharray');
-            }
-          }
+        if (cells !== undefined && cells.length > 0) {
+          cells.forEach(function (cell) {
+            cell.id = newId;
+          });
+        } else {
+          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.warn("Cell ".concat(oldId, " not found"));
         }
-      }
 
-      return this;
-    }
-  }, {
-    key: "getLabelCell",
-    value: function getLabelCell(mxcell) {
-      if (mxUtils.isNode(mxcell.value)) {
-        return mxcell.value.getAttribute('label');
+        return this;
       }
-
-      return mxcell.getValue(mxcell);
-    }
-  }, {
-    key: "setLabelCell",
-    value: function setLabelCell(mxcell, text) {
-      this.graph.cellLabelChanged(mxcell, text, false);
-      return this;
-    }
-  }, {
-    key: "getId",
-    value: function getId(mxcell) {
-      return mxcell.getId();
-    }
-  }, {
-    key: "setMap",
-    value: function setMap(onMappingObj) {
-      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.info('XGraph.setMapping()');
-      this.onMapping = onMappingObj;
-
-      if (this.onMapping.active === true) {
-        this.container.style.cursor = 'crosshair';
-        this.graph.click = this.eventClick.bind(this);
+    }, {
+      key: "getXmlModel",
+      value: function getXmlModel() {
+        var encoder = new mxCodec();
+        var node = encoder.encode(this.graph.getModel());
+        return mxUtils.getXml(node);
       }
-    }
-  }, {
-    key: "unsetMap",
-    value: function unsetMap() {
-      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.info('XGraph.unsetMapping()');
-      this.onMapping.active = false;
-      this.container.style.cursor = 'auto';
-      this.graph.click = this.clickBackup;
-
-      if (this.onMapping.$scope) {
-        this.onMapping.$scope.$applyAsync();
+    }, {
+      key: "getMxCells",
+      value: function getMxCells() {
+        return this.graph.getModel().cells;
       }
-    }
-  }, {
-    key: "eventClick",
-    value: function eventClick(me) {
-      if (this.onMapping.active) {
-        var state = me.getState();
+    }, {
+      key: "getValuePropOfMxCell",
+      value: function getValuePropOfMxCell(prop, mxcell) {
+        if (prop === 'id') {
+          return this.getId(mxcell);
+        }
+
+        if (prop === 'value') {
+          return this.getLabelCell(mxcell);
+        }
+
+        return null;
+      }
+    }, {
+      key: "getStyleCell",
+      value: function getStyleCell(mxcell, style) {
+        var state = this.graph.view.getState(mxcell);
 
         if (state) {
-          var prop = this.onMapping.prop !== null ? this.onMapping.prop : 'id';
-          var value = this.getValuePropOfMxCell(prop, state.cell);
-
-          if (this.onMapping.object) {
-            this.onMapping.object.data.pattern = value;
-          }
-
-          if (this.onMapping.value) {
-            var elt = document.getElementById(this.onMapping.value);
-
-            if (elt) {
-              setTimeout(function () {
-                elt.focus();
-              }, 100);
-            }
-          }
-
-          this.unsetMap();
+          return state.style[style];
         }
+
+        return null;
       }
-    }
-  }, {
-    key: "eventDebug",
-    value: function eventDebug(me) {
-      console.log('DEBUG mxMouseEvent', me);
-    }
-  }, {
-    key: "eventDbClick",
-    value: function eventDbClick(evt, mxcell) {
-      if (mxcell !== undefined) {
-        this.lazyZoomCell(mxcell);
+    }, {
+      key: "isAnimated",
+      value: function isAnimated() {
+        return this.animation;
       }
-    }
-  }, {
-    key: "eventMouseWheel",
-    value: function eventMouseWheel(evt, up) {
-      if (this.graph.isZoomWheelEvent(evt)) {
-        if (up === null || up === undefined) {
-          if (evt.deltaY < 0) {
-            up = true;
-          } else {
-            up = false;
-          }
-        }
+    }, {
+      key: "setColorAnimCell",
+      value: function setColorAnimCell(mxcell, style, color) {
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setColorAnimCell()');
+        var id = "".concat(style, "_").concat(mxcell.id);
+        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
 
-        var rect = this.container.getBoundingClientRect();
-        var x = evt.clientX - rect.left;
-        var y = evt.clientY - rect.top;
+        if (this.isAnimated() && color) {
+          try {
+            var startColor = this.getStyleCell(mxcell, style);
 
-        if (up) {
-          this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
-        } else {
-          this.cumulativeZoomFactor = this.cumulativeZoomFactor * 0.8;
-        }
-
-        this.lazyZoomPointer(this.cumulativeZoomFactor, x, y);
-        mxEvent.consume(evt);
-      }
-    }
-  }, {
-    key: "eventKey",
-    value: function eventKey(evt) {
-      if (!mxEvent.isConsumed(evt) && evt.keyCode === 27) {
-          this.cumulativeZoomFactor = 1;
-
-          if (this.graph) {
-            this.graph.zoomActual();
-            this.applyGraph();
-          }
-        }
-    }
-  }, {
-    key: "lazyZoomCenter",
-    value: function lazyZoomCenter(factor) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee6() {
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                this.graph.zoomTo(factor, true);
-
-              case 1:
-              case "end":
-                return _context6.stop();
-            }
-          }
-        }, _callee6, this);
-      }));
-    }
-  }, {
-    key: "lazyZoomPointer",
-    value: function lazyZoomPointer(factor, offsetX, offsetY) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee7() {
-        var trc, dx, dy, scale, f, _f;
-
-        return regeneratorRuntime.wrap(function _callee7$(_context7) {
-          while (1) {
-            switch (_context7.prev = _context7.next) {
-              case 0:
-                trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'lazyZoomPointer()');
-                dx = offsetX * 2;
-                dy = offsetY * 2;
-                factor = Math.max(0.01, Math.min(this.graph.view.scale * factor, 160)) / this.graph.view.scale;
-                factor = this.cumulativeZoomFactor / this.graph.view.scale;
-                scale = Math.round(this.graph.view.scale * factor * 100) / 100;
-                factor = scale / this.graph.view.scale;
-
-                if (factor > 1) {
-                  f = (factor - 1) / (scale * 2);
-                  dx *= -f;
-                  dy *= -f;
+            if (startColor) {
+              var graduate = function graduate() {
+                if (count < lg) {
+                  self.setStyleCell(mxcell, style, steps[count]);
+                  count += 1;
+                  globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(graduate, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_COLORS_MS, id);
                 } else {
-                  _f = (1 / factor - 1) / (this.graph.view.scale * 2);
-                  dx *= _f;
-                  dy *= _f;
+                  globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
                 }
+              };
 
-                this.graph.view.scaleAndTranslate(scale, this.graph.view.translate.x + dx, this.graph.view.translate.y + dy);
-                trc.after();
-
-              case 10:
-              case "end":
-                return _context7.stop();
+              var endColor = color;
+              var steps = chroma_js__WEBPACK_IMPORTED_MODULE_4___default.a.scale([startColor, endColor]).mode('lrgb').colors(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_COLORS_STEPS + 1);
+              var count = 1;
+              var self = this;
+              var lg = steps.length;
+              graduate();
+            } else {
+              var hex = chroma_js__WEBPACK_IMPORTED_MODULE_4___default()(color).hex();
+              this.setStyleCell(mxcell, style, hex);
+            }
+          } catch (error) {
+            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Error on graduate color', error);
+            this.setStyleCell(mxcell, style, color);
+          }
+        } else {
+          if (color !== null) {
+            try {
+              color = chroma_js__WEBPACK_IMPORTED_MODULE_4___default()(color).hex();
+            } catch (error) {
+              globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Invalid Color', color);
             }
           }
-        }, _callee7, this);
-      }));
-    }
-  }, {
-    key: "highlightCells",
-    value: function highlightCells() {
-      var cells = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getMxCells();
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee8() {
-        var i;
-        return regeneratorRuntime.wrap(function _callee8$(_context8) {
-          while (1) {
-            switch (_context8.prev = _context8.next) {
-              case 0:
-                for (i = 0; i < cells.length; i++) {
-                  this.highlightCell(cells[i]);
-                }
 
-              case 1:
-              case "end":
-                return _context8.stop();
-            }
-          }
-        }, _callee8, this);
-      }));
-    }
-  }, {
-    key: "unhighlightCells",
-    value: function unhighlightCells() {
-      var mxcells = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getMxCells();
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee9() {
-        var _this4 = this;
+          this.setStyleCell(mxcell, style, color);
+        }
 
-        return regeneratorRuntime.wrap(function _callee9$(_context9) {
-          while (1) {
-            switch (_context9.prev = _context9.next) {
-              case 0:
-                lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(mxcells, function (mxcell) {
-                  _this4.unhighlightCell(mxcell);
-                });
+        trc.after();
+        return this;
+      }
+    }, {
+      key: "setStyleCell",
+      value: function setStyleCell(mxcell, style, value) {
+        this.graph.setCellStyles(style, value, [mxcell]);
+        return this;
+      }
+    }, {
+      key: "setStyleAnimCell",
+      value: function setStyleAnimCell(mxcell, style, endValue, beginValue) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee5() {
+          var trc, end, begin, graduate, id, steps, lg, count, self;
+          return regeneratorRuntime.wrap(function _callee5$(_context5) {
+            while (1) {
+              switch (_context5.prev = _context5.next) {
+                case 0:
+                  trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
 
-              case 1:
-              case "end":
-                return _context9.stop();
-            }
-          }
-        }, _callee9);
-      }));
-    }
-  }, {
-    key: "highlightCell",
-    value: function highlightCell(cell) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee10() {
-        var color, opacity, state, sw, hl;
-        return regeneratorRuntime.wrap(function _callee10$(_context10) {
-          while (1) {
-            switch (_context10.prev = _context10.next) {
-              case 0:
-                if (!cell.highlight) {
-                  color = '#99ff33';
-                  opacity = 100;
-                  state = this.graph.view.getState(cell);
+                  if (this.isAnimated() && endValue !== null) {
+                    try {
+                      end = Number(endValue);
+                      begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
 
-                  if (state != null) {
-                    sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-                    hl = new mxCellHighlight(this.graph, color, sw, false);
+                      if (end !== begin) {
+                        graduate = function graduate() {
+                          if (count < lg) {
+                            self.setStyleCell(mxcell, style, steps[count].toString());
+                            count += 1;
+                            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(graduate, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS, id);
+                          } else {
+                            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
+                          }
+                        };
 
-                    if (opacity != null) {
-                      hl.opacity = opacity;
+                        id = "".concat(style, "_").concat(mxcell.id);
+                        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
+                        steps = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(begin, end, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                        lg = steps.length;
+                        count = 0;
+                        self = this;
+                        graduate();
+                      }
+                    } catch (error) {
+                      this.graph.setCellStyles(style, endValue, [mxcell]);
                     }
-
-                    hl.highlight(state);
-                    cell.highlight = hl;
-                  }
-                }
-
-              case 1:
-              case "end":
-                return _context10.stop();
-            }
-          }
-        }, _callee10, this);
-      }));
-    }
-  }, {
-    key: "unhighlightCell",
-    value: function unhighlightCell(mxcell) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee11() {
-        var hl;
-        return regeneratorRuntime.wrap(function _callee11$(_context11) {
-          while (1) {
-            switch (_context11.prev = _context11.next) {
-              case 0:
-                if (mxcell && mxcell.highlight) {
-                  hl = mxcell.highlight;
-
-                  if (hl.shape != null) {
-                    mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 500ms ease-in-out');
-                    hl.shape.node.style.opacity = 0;
+                  } else {
+                    this.graph.setCellStyles(style, endValue, [mxcell]);
                   }
 
-                  window.setTimeout(function () {
-                    hl.destroy();
-                  }, 500);
-                  mxcell.highlight = null;
-                }
+                  trc.after();
 
-              case 1:
-              case "end":
-                return _context11.stop();
+                case 3:
+                case "end":
+                  return _context5.stop();
+              }
+            }
+          }, _callee5, this);
+        }));
+      }
+    }, {
+      key: "setStyles",
+      value: function setStyles(mxcell, styles) {
+        this.graph.getModel().setStyle(mxcell, styles);
+        return this;
+      }
+    }, {
+      key: "setClassCell",
+      value: function setClassCell(mxcell, className) {
+        var state = this.graph.view.getState(mxcell);
+
+        if (state && state.shape !== null) {
+          var paths = state.shape.node.getElementsByTagName('path');
+
+          if (paths.length > 1) {
+            var currentClass = paths[1].getAttribute('class');
+            var classes = [];
+
+            if (currentClass !== null && currentClass !== undefined) {
+              classes = currentClass.split(' ');
+            }
+
+            if (!classes.includes(className)) {
+              classes.push(className);
+              currentClass = classes.join(' ');
+              paths[1].setAttribute('class', currentClass);
+
+              if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
+                paths[1].setAttribute('stroke-dasharray', '8');
+              }
             }
           }
-        }, _callee11);
-      }));
-    }
-  }, {
-    key: "blinkCell",
-    value: function blinkCell(mxcell, ms) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee12() {
-        var _self, _id, bl_on, bl_off;
+        }
 
-        return regeneratorRuntime.wrap(function _callee12$(_context12) {
-          while (1) {
-            switch (_context12.prev = _context12.next) {
-              case 0:
-                if (!mxcell.blink) {
-                  mxcell.blink = true;
-                  _self = this;
-                  _id = "blink_".concat(mxcell.id);
-                  globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id);
+        return this;
+      }
+    }, {
+      key: "unsetClassCell",
+      value: function unsetClassCell(mxcell, className) {
+        var state = this.graph.view.getState(mxcell);
 
-                  bl_on = function bl_on() {
-                    var color = '#f5f242';
-                    var opacity = 100;
+        if (state && state.shape !== null) {
+          var paths = state.shape.node.getElementsByTagName('path');
 
-                    var state = _self.graph.view.getState(mxcell);
+          if (paths.length > 1) {
+            var currentClass = paths[1].getAttribute('class');
+            var classes = [];
+
+            if (currentClass !== null && currentClass !== undefined) {
+              classes = currentClass.split(' ');
+            }
+
+            if (classes.includes(className)) {
+              classes = classes.filter(function (c) {
+                return c !== className;
+              });
+
+              if (classes.length > 1) {
+                currentClass = classes.join(' ');
+                paths[1].setAttribute('class', currentClass);
+              } else {
+                paths[1].removeAttribute('class');
+              }
+
+              if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
+                paths[1].removeAttribute('stroke-dasharray');
+              }
+            }
+          }
+        }
+
+        return this;
+      }
+    }, {
+      key: "getLabelCell",
+      value: function getLabelCell(mxcell) {
+        if (mxUtils.isNode(mxcell.value)) {
+          return mxcell.value.getAttribute('label');
+        }
+
+        return mxcell.getValue(mxcell);
+      }
+    }, {
+      key: "setLabelCell",
+      value: function setLabelCell(mxcell, text) {
+        this.graph.cellLabelChanged(mxcell, text, false);
+        return this;
+      }
+    }, {
+      key: "getId",
+      value: function getId(mxcell) {
+        return mxcell.getId();
+      }
+    }, {
+      key: "setMap",
+      value: function setMap(onMappingObj) {
+        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.info('XGraph.setMapping()');
+        this.onMapping = onMappingObj;
+
+        if (this.onMapping.active === true) {
+          this.container.style.cursor = 'crosshair';
+          this.graph.click = this.eventClick.bind(this);
+        }
+      }
+    }, {
+      key: "unsetMap",
+      value: function unsetMap() {
+        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.info('XGraph.unsetMapping()');
+        this.onMapping.active = false;
+        this.container.style.cursor = 'auto';
+        this.graph.click = this.clickBackup;
+
+        if (this.onMapping.$scope) {
+          this.onMapping.$scope.$applyAsync();
+        }
+      }
+    }, {
+      key: "eventClick",
+      value: function eventClick(me) {
+        if (this.onMapping.active) {
+          var state = me.getState();
+
+          if (state) {
+            var prop = this.onMapping.prop !== null ? this.onMapping.prop : 'id';
+            var value = this.getValuePropOfMxCell(prop, state.cell);
+
+            if (this.onMapping.object) {
+              this.onMapping.object.data.pattern = value;
+            }
+
+            if (this.onMapping.value) {
+              var elt = document.getElementById(this.onMapping.value);
+
+              if (elt) {
+                setTimeout(function () {
+                  elt.focus();
+                }, 100);
+              }
+            }
+
+            this.unsetMap();
+          }
+        }
+      }
+    }, {
+      key: "eventDebug",
+      value: function eventDebug(me) {
+        console.log('DEBUG mxMouseEvent', me);
+      }
+    }, {
+      key: "eventDbClick",
+      value: function eventDbClick(evt, mxcell) {
+        if (mxcell !== undefined) {
+          this.lazyZoomCell(mxcell);
+        }
+      }
+    }, {
+      key: "eventMouseWheel",
+      value: function eventMouseWheel(evt, up) {
+        if (this.graph.isZoomWheelEvent(evt)) {
+          if (up === null || up === undefined) {
+            if (evt.deltaY < 0) {
+              up = true;
+            } else {
+              up = false;
+            }
+          }
+
+          var rect = this.container.getBoundingClientRect();
+          var x = evt.clientX - rect.left;
+          var y = evt.clientY - rect.top;
+
+          if (up) {
+            this.cumulativeZoomFactor = this.cumulativeZoomFactor * 1.2;
+          } else {
+            this.cumulativeZoomFactor = this.cumulativeZoomFactor * 0.8;
+          }
+
+          this.lazyZoomPointer(this.cumulativeZoomFactor, x, y);
+          mxEvent.consume(evt);
+        }
+      }
+    }, {
+      key: "eventKey",
+      value: function eventKey(evt) {
+        if (!mxEvent.isConsumed(evt) && evt.keyCode === 27) {
+            this.cumulativeZoomFactor = 1;
+
+            if (this.graph) {
+              this.graph.zoomActual();
+              this.applyGraph();
+            }
+          }
+      }
+    }, {
+      key: "lazyZoomCenter",
+      value: function lazyZoomCenter(factor) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee6() {
+          return regeneratorRuntime.wrap(function _callee6$(_context6) {
+            while (1) {
+              switch (_context6.prev = _context6.next) {
+                case 0:
+                  this.graph.zoomTo(factor, true);
+
+                case 1:
+                case "end":
+                  return _context6.stop();
+              }
+            }
+          }, _callee6, this);
+        }));
+      }
+    }, {
+      key: "lazyZoomPointer",
+      value: function lazyZoomPointer(factor, offsetX, offsetY) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee7() {
+          var trc, dx, dy, scale, f, _f;
+
+          return regeneratorRuntime.wrap(function _callee7$(_context7) {
+            while (1) {
+              switch (_context7.prev = _context7.next) {
+                case 0:
+                  trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'lazyZoomPointer()');
+                  dx = offsetX * 2;
+                  dy = offsetY * 2;
+                  factor = Math.max(0.01, Math.min(this.graph.view.scale * factor, 160)) / this.graph.view.scale;
+                  factor = this.cumulativeZoomFactor / this.graph.view.scale;
+                  scale = Math.round(this.graph.view.scale * factor * 100) / 100;
+                  factor = scale / this.graph.view.scale;
+
+                  if (factor > 1) {
+                    f = (factor - 1) / (scale * 2);
+                    dx *= -f;
+                    dy *= -f;
+                  } else {
+                    _f = (1 / factor - 1) / (this.graph.view.scale * 2);
+                    dx *= _f;
+                    dy *= _f;
+                  }
+
+                  this.graph.view.scaleAndTranslate(scale, this.graph.view.translate.x + dx, this.graph.view.translate.y + dy);
+                  trc.after();
+
+                case 10:
+                case "end":
+                  return _context7.stop();
+              }
+            }
+          }, _callee7, this);
+        }));
+      }
+    }, {
+      key: "highlightCells",
+      value: function highlightCells() {
+        var cells = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getMxCells();
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee8() {
+          var i;
+          return regeneratorRuntime.wrap(function _callee8$(_context8) {
+            while (1) {
+              switch (_context8.prev = _context8.next) {
+                case 0:
+                  for (i = 0; i < cells.length; i++) {
+                    this.highlightCell(cells[i]);
+                  }
+
+                case 1:
+                case "end":
+                  return _context8.stop();
+              }
+            }
+          }, _callee8, this);
+        }));
+      }
+    }, {
+      key: "unhighlightCells",
+      value: function unhighlightCells() {
+        var mxcells = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getMxCells();
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee9() {
+          var _this4 = this;
+
+          return regeneratorRuntime.wrap(function _callee9$(_context9) {
+            while (1) {
+              switch (_context9.prev = _context9.next) {
+                case 0:
+                  lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(mxcells, function (mxcell) {
+                    _this4.unhighlightCell(mxcell);
+                  });
+
+                case 1:
+                case "end":
+                  return _context9.stop();
+              }
+            }
+          }, _callee9);
+        }));
+      }
+    }, {
+      key: "highlightCell",
+      value: function highlightCell(cell) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee10() {
+          var color, opacity, state, sw, hl;
+          return regeneratorRuntime.wrap(function _callee10$(_context10) {
+            while (1) {
+              switch (_context10.prev = _context10.next) {
+                case 0:
+                  if (!cell.highlight) {
+                    color = '#99ff33';
+                    opacity = 100;
+                    state = this.graph.view.getState(cell);
 
                     if (state != null) {
-                      var sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-                      var hl = new mxCellHighlight(_self.graph, color, sw, false);
+                      sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+                      hl = new mxCellHighlight(this.graph, color, sw, false);
 
                       if (opacity != null) {
                         hl.opacity = opacity;
                       }
 
                       hl.highlight(state);
-                      mxcell.blink_on = hl;
-                      mxcell.blink_ms = ms;
-                      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(bl_off, ms, _id);
+                      cell.highlight = hl;
                     }
-                  };
+                  }
 
-                  bl_off = function bl_off() {
-                    if (mxcell && mxcell.blink) {
-                      var hl = mxcell.blink_on;
-
-                      if (hl.shape != null) {
-                        mxUtils.setPrefixedStyle(hl.shape.node.style, "transition", "all ".concat(ms, "ms ease-in-out"));
-                        hl.shape.node.style.opacity = 0;
-                      }
-
-                      hl.destroy();
-                      mxcell.blink_on = null;
-                      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(bl_on, ms, _id);
-                    }
-                  };
-
-                  bl_on();
-                }
-
-              case 1:
-              case "end":
-                return _context12.stop();
+                case 1:
+                case "end":
+                  return _context10.stop();
+              }
             }
-          }
-        }, _callee12, this);
-      }));
-    }
-  }, {
-    key: "unblinkCell",
-    value: function unblinkCell(mxcell) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee13() {
-        var id, hl;
-        return regeneratorRuntime.wrap(function _callee13$(_context13) {
-          while (1) {
-            switch (_context13.prev = _context13.next) {
-              case 0:
-                id = "blink_".concat(mxcell.id);
-
-                if (mxcell.blink) {
-                  if (mxcell.blink_on) {
-                    hl = mxcell.blink_on;
+          }, _callee10, this);
+        }));
+      }
+    }, {
+      key: "unhighlightCell",
+      value: function unhighlightCell(mxcell) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee11() {
+          var hl;
+          return regeneratorRuntime.wrap(function _callee11$(_context11) {
+            while (1) {
+              switch (_context11.prev = _context11.next) {
+                case 0:
+                  if (mxcell && mxcell.highlight) {
+                    hl = mxcell.highlight;
 
                     if (hl.shape != null) {
+                      mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 500ms ease-in-out');
                       hl.shape.node.style.opacity = 0;
+                    }
+
+                    window.setTimeout(function () {
                       hl.destroy();
-                      mxcell.blink_on = null;
-                      mxcell.blink_ms = 0;
+                    }, 500);
+                    mxcell.highlight = null;
+                  }
+
+                case 1:
+                case "end":
+                  return _context11.stop();
+              }
+            }
+          }, _callee11);
+        }));
+      }
+    }, {
+      key: "blinkCell",
+      value: function blinkCell(mxcell, ms) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee12() {
+          var _self, _id, bl_on, bl_off;
+
+          return regeneratorRuntime.wrap(function _callee12$(_context12) {
+            while (1) {
+              switch (_context12.prev = _context12.next) {
+                case 0:
+                  if (!mxcell.blink) {
+                    mxcell.blink = true;
+                    _self = this;
+                    _id = "blink_".concat(mxcell.id);
+                    globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id);
+
+                    bl_on = function bl_on() {
+                      var color = '#f5f242';
+                      var opacity = 100;
+
+                      var state = _self.graph.view.getState(mxcell);
+
+                      if (state != null) {
+                        var sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+                        var hl = new mxCellHighlight(_self.graph, color, sw, false);
+
+                        if (opacity != null) {
+                          hl.opacity = opacity;
+                        }
+
+                        hl.highlight(state);
+                        mxcell.blink_on = hl;
+                        mxcell.blink_ms = ms;
+                        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(bl_off, ms, _id);
+                      }
+                    };
+
+                    bl_off = function bl_off() {
+                      if (mxcell && mxcell.blink) {
+                        var hl = mxcell.blink_on;
+
+                        if (hl.shape != null) {
+                          mxUtils.setPrefixedStyle(hl.shape.node.style, "transition", "all ".concat(ms, "ms ease-in-out"));
+                          hl.shape.node.style.opacity = 0;
+                        }
+
+                        hl.destroy();
+                        mxcell.blink_on = null;
+                        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(bl_on, ms, _id);
+                      }
+                    };
+
+                    bl_on();
+                  }
+
+                case 1:
+                case "end":
+                  return _context12.stop();
+              }
+            }
+          }, _callee12, this);
+        }));
+      }
+    }, {
+      key: "unblinkCell",
+      value: function unblinkCell(mxcell) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee13() {
+          var id, hl;
+          return regeneratorRuntime.wrap(function _callee13$(_context13) {
+            while (1) {
+              switch (_context13.prev = _context13.next) {
+                case 0:
+                  id = "blink_".concat(mxcell.id);
+
+                  if (mxcell.blink) {
+                    if (mxcell.blink_on) {
+                      hl = mxcell.blink_on;
+
+                      if (hl.shape != null) {
+                        hl.shape.node.style.opacity = 0;
+                        hl.destroy();
+                        mxcell.blink_on = null;
+                        mxcell.blink_ms = 0;
+                      }
                     }
+
+                    mxcell.blink = null;
                   }
 
-                  mxcell.blink = null;
-                }
+                  globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
 
-                globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(id);
-
-              case 3:
-              case "end":
-                return _context13.stop();
+                case 3:
+                case "end":
+                  return _context13.stop();
+              }
             }
-          }
-        }, _callee13);
-      }));
-    }
-  }, {
-    key: "isBlinkCell",
-    value: function isBlinkCell(mxcell) {
-      return !!mxcell.blink;
-    }
-  }, {
-    key: "geBlinkMxCell",
-    value: function geBlinkMxCell(mxcell) {
-      return !!mxcell.blink ? mxcell.blink_ms : 0;
-    }
-  }, {
-    key: "isCollapsedCell",
-    value: function isCollapsedCell(mxcell) {
-      return this.graph.isCellCollapsed(mxcell);
-    }
-  }, {
-    key: "collapseCell",
-    value: function collapseCell(mxcell) {
-      if (!this.isCollapsedCell(mxcell)) {
-        this.graph.foldCells(true, false, [mxcell], null, null);
+          }, _callee13);
+        }));
       }
-    }
-  }, {
-    key: "expandCell",
-    value: function expandCell(mxcell) {
-      if (this.isCollapsedCell(mxcell)) {
-        this.graph.foldCells(false, false, [mxcell], null, null);
+    }, {
+      key: "isBlinkCell",
+      value: function isBlinkCell(mxcell) {
+        return !!mxcell.blink;
       }
-    }
-  }, {
-    key: "toggleFoldCell",
-    value: function toggleFoldCell(mxcell) {
-      var collapse = !this.isCollapsedCell(mxcell);
-      this.graph.foldCells(collapse, false, [mxcell], null, null);
-    }
-  }, {
-    key: "hideCell",
-    value: function hideCell(mxcell) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee14() {
-        return regeneratorRuntime.wrap(function _callee14$(_context14) {
-          while (1) {
-            switch (_context14.prev = _context14.next) {
-              case 0:
-                if (this.isVisibleCell(mxcell)) {
-                  this.graph.model.setVisible(mxcell, false);
-                }
-
-              case 1:
-              case "end":
-                return _context14.stop();
-            }
-          }
-        }, _callee14, this);
-      }));
-    }
-  }, {
-    key: "showCell",
-    value: function showCell(mxcell) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee15() {
-        return regeneratorRuntime.wrap(function _callee15$(_context15) {
-          while (1) {
-            switch (_context15.prev = _context15.next) {
-              case 0:
-                if (!this.isVisibleCell(mxcell)) {
-                  this.graph.model.setVisible(mxcell, true);
-                }
-
-              case 1:
-              case "end":
-                return _context15.stop();
-            }
-          }
-        }, _callee15, this);
-      }));
-    }
-  }, {
-    key: "isVisibleCell",
-    value: function isVisibleCell(mxcell) {
-      return this.graph.model.isVisible(mxcell);
-    }
-  }, {
-    key: "resizeCell",
-    value: function resizeCell(mxcell, percent, origine) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee16() {
-        var trc, geo, _id2, _x, _ow, _y, _oh, _w, _h, _graduate, steps_x, steps_y, steps_w, steps_h, _lg, _count, _self2, _rec;
-
-        return regeneratorRuntime.wrap(function _callee16$(_context16) {
-          while (1) {
-            switch (_context16.prev = _context16.next) {
-              case 0:
-                trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'resizeCell()');
-                geo = this.graph.model.getGeometry(mxcell);
-
-                if (geo !== null) {
-                  _id2 = "resize_".concat(mxcell.id);
-                  globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id2);
-                  _x = origine !== undefined ? origine.x : geo.x;
-                  _ow = origine !== undefined ? origine.width : geo.x;
-                  _y = origine !== undefined ? origine.y : geo.y;
-                  _oh = origine !== undefined ? origine.height : geo.y;
-                  _w = _ow * (percent / 100);
-                  _h = _oh * (percent / 100);
-                  _x = _x - (_w - _ow) / 2;
-                  _y = _y - (_h - _oh) / 2;
-
-                  if (this.isAnimated()) {
-                    _graduate = function _graduate() {
-                      if (_count < _lg) {
-                        var _rec = new mxRectangle(steps_x[_count], steps_y[_count], steps_w[_count], steps_h[_count]);
-
-                        _self2.graph.resizeCell(mxcell, _rec, true);
-
-                        _count += 1;
-                        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(_graduate, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS, _id2);
-                      } else {
-                        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id2);
-                      }
-                    };
-
-                    steps_x = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.x, _x, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    steps_y = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.y, _y, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    steps_w = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.width, _w, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    steps_h = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.height, _h, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    _lg = steps_x.length;
-                    _count = 0;
-                    _self2 = this;
-
-                    _graduate();
-                  } else {
-                    _rec = new mxRectangle(_x, _y, _w, _h);
-                    this.graph.resizeCell(mxcell, _rec, true);
+    }, {
+      key: "geBlinkMxCell",
+      value: function geBlinkMxCell(mxcell) {
+        return !!mxcell.blink ? mxcell.blink_ms : 0;
+      }
+    }, {
+      key: "isCollapsedCell",
+      value: function isCollapsedCell(mxcell) {
+        return this.graph.isCellCollapsed(mxcell);
+      }
+    }, {
+      key: "collapseCell",
+      value: function collapseCell(mxcell) {
+        if (!this.isCollapsedCell(mxcell)) {
+          this.graph.foldCells(true, false, [mxcell], null, null);
+        }
+      }
+    }, {
+      key: "expandCell",
+      value: function expandCell(mxcell) {
+        if (this.isCollapsedCell(mxcell)) {
+          this.graph.foldCells(false, false, [mxcell], null, null);
+        }
+      }
+    }, {
+      key: "toggleFoldCell",
+      value: function toggleFoldCell(mxcell) {
+        var collapse = !this.isCollapsedCell(mxcell);
+        this.graph.foldCells(collapse, false, [mxcell], null, null);
+      }
+    }, {
+      key: "hideCell",
+      value: function hideCell(mxcell) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee14() {
+          return regeneratorRuntime.wrap(function _callee14$(_context14) {
+            while (1) {
+              switch (_context14.prev = _context14.next) {
+                case 0:
+                  if (this.isVisibleCell(mxcell)) {
+                    this.graph.model.setVisible(mxcell, false);
                   }
-                }
 
-                trc.after();
-
-              case 4:
-              case "end":
-                return _context16.stop();
+                case 1:
+                case "end":
+                  return _context14.stop();
+              }
             }
-          }
-        }, _callee16, this);
-      }));
-    }
-  }, {
-    key: "changeSizeCell",
-    value: function changeSizeCell(mxcell, width, height, origine) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee17() {
-        var trc, geo, _id3, _x, _ow, _y, _oh, _h, _w, _graduate2, _steps_x, _steps_y, _steps_w, _steps_h, _lg2, _count2, _self3, _rec;
-
-        return regeneratorRuntime.wrap(function _callee17$(_context17) {
-          while (1) {
-            switch (_context17.prev = _context17.next) {
-              case 0:
-                trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'resizeCell()');
-                geo = this.graph.model.getGeometry(mxcell);
-
-                if (geo !== null) {
-                  _id3 = "resize_".concat(mxcell.id);
-                  globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id3);
-                  _x = origine !== undefined ? origine.x : geo.x;
-                  _ow = origine !== undefined ? origine.width : geo.x;
-                  _y = origine !== undefined ? origine.y : geo.y;
-                  _oh = origine !== undefined ? origine.height : geo.y;
-                  _x = width !== undefined && width < 0 ? _x + width + _ow : _x;
-                  _y = height !== undefined && height < 0 ? _y + height + _oh : _y;
-                  _h = height !== undefined ? Math.abs(height) : origine !== undefined ? origine.height : geo.height;
-                  _w = width !== undefined ? Math.abs(width) : origine !== undefined ? origine.width : geo.width;
-
-                  if (this.isAnimated()) {
-                    _graduate2 = function _graduate2() {
-                      if (_count2 < _lg2) {
-                        var _rec = new mxRectangle(_steps_x[_count2], _steps_y[_count2], _steps_w[_count2], _steps_h[_count2]);
-
-                        _self3.graph.resizeCell(mxcell, _rec, true);
-
-                        _count2 += 1;
-                        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(_graduate2, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS, _id3);
-                      } else {
-                        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id3);
-                      }
-                    };
-
-                    _steps_x = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.x, _x, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    _steps_y = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.y, _y, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    _steps_w = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.width, _w, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    _steps_h = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.height, _h, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
-                    _lg2 = _steps_x.length;
-                    _count2 = 0;
-                    _self3 = this;
-
-                    _graduate2();
-                  } else {
-                    _rec = new mxRectangle(_x, _y, _w, _h);
-                    this.graph.resizeCell(mxcell, _rec, true);
+          }, _callee14, this);
+        }));
+      }
+    }, {
+      key: "showCell",
+      value: function showCell(mxcell) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee15() {
+          return regeneratorRuntime.wrap(function _callee15$(_context15) {
+            while (1) {
+              switch (_context15.prev = _context15.next) {
+                case 0:
+                  if (!this.isVisibleCell(mxcell)) {
+                    this.graph.model.setVisible(mxcell, true);
                   }
-                }
 
-                trc.after();
-
-              case 4:
-              case "end":
-                return _context17.stop();
+                case 1:
+                case "end":
+                  return _context15.stop();
+              }
             }
-          }
-        }, _callee17, this);
-      }));
-    }
-  }, {
-    key: "getSizeCell",
-    value: function getSizeCell(mxcell) {
-      return this.graph.model.getGeometry(mxcell);
-    }
-  }, {
-    key: "resetSizeCell",
-    value: function resetSizeCell(mxcell, mxgeo) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee18() {
-        var rec;
-        return regeneratorRuntime.wrap(function _callee18$(_context18) {
-          while (1) {
-            switch (_context18.prev = _context18.next) {
-              case 0:
-                rec = new mxRectangle(mxgeo.x, mxgeo.y, mxgeo.width, mxgeo.height);
-                this.graph.resizeCell(mxcell, rec, true);
+          }, _callee15, this);
+        }));
+      }
+    }, {
+      key: "isVisibleCell",
+      value: function isVisibleCell(mxcell) {
+        return this.graph.model.isVisible(mxcell);
+      }
+    }, {
+      key: "resizeCell",
+      value: function resizeCell(mxcell, percent, origine) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee16() {
+          var trc, geo, _id2, _x, _ow, _y, _oh, _w, _h, _graduate, steps_x, steps_y, steps_w, steps_h, _lg, _count, _self2, _rec;
 
-              case 2:
-              case "end":
-                return _context18.stop();
-            }
-          }
-        }, _callee18, this);
-      }));
-    }
-  }, {
-    key: "lazyZoomCell",
-    value: function lazyZoomCell(mxcell) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee19() {
-        var trc, state, rect;
-        return regeneratorRuntime.wrap(function _callee19$(_context19) {
-          while (1) {
-            switch (_context19.prev = _context19.next) {
-              case 0:
-                trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'lazyZoomCell()');
+          return regeneratorRuntime.wrap(function _callee16$(_context16) {
+            while (1) {
+              switch (_context16.prev = _context16.next) {
+                case 0:
+                  trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'resizeCell()');
+                  geo = this.graph.model.getGeometry(mxcell);
 
-                if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
-                  state = this.graph.view.getState(mxcell);
+                  if (geo !== null) {
+                    _id2 = "resize_".concat(mxcell.id);
+                    globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id2);
+                    _x = origine !== undefined ? origine.x : geo.x;
+                    _ow = origine !== undefined ? origine.width : geo.x;
+                    _y = origine !== undefined ? origine.y : geo.y;
+                    _oh = origine !== undefined ? origine.height : geo.y;
+                    _w = _ow * (percent / 100);
+                    _h = _oh * (percent / 100);
+                    _x = _x - (_w - _ow) / 2;
+                    _y = _y - (_h - _oh) / 2;
 
-                  if (state !== null) {
-                    if (state.width !== undefined && state.width > 0 && state.height !== undefined && state.height > 0) {
-                      rect = state.shape.bounds;
+                    if (this.isAnimated()) {
+                      _graduate = function _graduate() {
+                        if (_count < _lg) {
+                          var _rec = new mxRectangle(steps_x[_count], steps_y[_count], steps_w[_count], steps_h[_count]);
+
+                          _self2.graph.resizeCell(mxcell, _rec, true);
+
+                          _count += 1;
+                          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(_graduate, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS, _id2);
+                        } else {
+                          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id2);
+                        }
+                      };
+
+                      steps_x = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.x, _x, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                      steps_y = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.y, _y, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                      steps_w = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.width, _w, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                      steps_h = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.height, _h, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                      _lg = steps_x.length;
+                      _count = 0;
+                      _self2 = this;
+
+                      _graduate();
                     } else {
-                      rect = state.text.boundingBox;
+                      _rec = new mxRectangle(_x, _y, _w, _h);
+                      this.graph.resizeCell(mxcell, _rec, true);
                     }
-
-                    this.graph.zoomToRect(rect);
-                    this.cumulativeZoomFactor = this.graph.view.scale;
                   }
-                }
 
-                trc.after();
+                  trc.after();
 
-              case 3:
-              case "end":
-                return _context19.stop();
+                case 4:
+                case "end":
+                  return _context16.stop();
+              }
             }
+          }, _callee16, this);
+        }));
+      }
+    }, {
+      key: "changeSizeCell",
+      value: function changeSizeCell(mxcell, width, height, origine) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee17() {
+          var trc, geo, _id3, _x, _ow, _y, _oh, _h, _w, _graduate2, _steps_x, _steps_y, _steps_w, _steps_h, _lg2, _count2, _self3, _rec;
+
+          return regeneratorRuntime.wrap(function _callee17$(_context17) {
+            while (1) {
+              switch (_context17.prev = _context17.next) {
+                case 0:
+                  trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'resizeCell()');
+                  geo = this.graph.model.getGeometry(mxcell);
+
+                  if (geo !== null) {
+                    _id3 = "resize_".concat(mxcell.id);
+                    globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id3);
+                    _x = origine !== undefined ? origine.x : geo.x;
+                    _ow = origine !== undefined ? origine.width : geo.x;
+                    _y = origine !== undefined ? origine.y : geo.y;
+                    _oh = origine !== undefined ? origine.height : geo.y;
+                    _x = width !== undefined && width < 0 ? _x + width + _ow : _x;
+                    _y = height !== undefined && height < 0 ? _y + height + _oh : _y;
+                    _h = height !== undefined ? Math.abs(height) : origine !== undefined ? origine.height : geo.height;
+                    _w = width !== undefined ? Math.abs(width) : origine !== undefined ? origine.width : geo.width;
+
+                    if (this.isAnimated()) {
+                      _graduate2 = function _graduate2() {
+                        if (_count2 < _lg2) {
+                          var _rec = new mxRectangle(_steps_x[_count2], _steps_y[_count2], _steps_w[_count2], _steps_h[_count2]);
+
+                          _self3.graph.resizeCell(mxcell, _rec, true);
+
+                          _count2 += 1;
+                          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].setUniqTimeOut(_graduate2, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_MS, _id3);
+                        } else {
+                          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].clearUniqTimeOut(_id3);
+                        }
+                      };
+
+                      _steps_x = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.x, _x, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                      _steps_y = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.y, _y, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                      _steps_w = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.width, _w, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                      _steps_h = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getIntervalCounter(geo.height, _h, globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_ANIMS_STEP);
+                      _lg2 = _steps_x.length;
+                      _count2 = 0;
+                      _self3 = this;
+
+                      _graduate2();
+                    } else {
+                      _rec = new mxRectangle(_x, _y, _w, _h);
+                      this.graph.resizeCell(mxcell, _rec, true);
+                    }
+                  }
+
+                  trc.after();
+
+                case 4:
+                case "end":
+                  return _context17.stop();
+              }
+            }
+          }, _callee17, this);
+        }));
+      }
+    }, {
+      key: "getSizeCell",
+      value: function getSizeCell(mxcell) {
+        return this.graph.model.getGeometry(mxcell);
+      }
+    }, {
+      key: "resetSizeCell",
+      value: function resetSizeCell(mxcell, mxgeo) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee18() {
+          var rec;
+          return regeneratorRuntime.wrap(function _callee18$(_context18) {
+            while (1) {
+              switch (_context18.prev = _context18.next) {
+                case 0:
+                  rec = new mxRectangle(mxgeo.x, mxgeo.y, mxgeo.width, mxgeo.height);
+                  this.graph.resizeCell(mxcell, rec, true);
+
+                case 2:
+                case "end":
+                  return _context18.stop();
+              }
+            }
+          }, _callee18, this);
+        }));
+      }
+    }, {
+      key: "lazyZoomCell",
+      value: function lazyZoomCell(mxcell) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee19() {
+          var trc, state, rect;
+          return regeneratorRuntime.wrap(function _callee19$(_context19) {
+            while (1) {
+              switch (_context19.prev = _context19.next) {
+                case 0:
+                  trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'lazyZoomCell()');
+
+                  if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
+                    state = this.graph.view.getState(mxcell);
+
+                    if (state !== null) {
+                      if (state.width !== undefined && state.width > 0 && state.height !== undefined && state.height > 0) {
+                        rect = state.shape.bounds;
+                      } else {
+                        rect = state.text.boundingBox;
+                      }
+
+                      this.graph.zoomToRect(rect);
+                      this.cumulativeZoomFactor = this.graph.view.scale;
+                    }
+                  }
+
+                  trc.after();
+
+                case 3:
+                case "end":
+                  return _context19.stop();
+              }
+            }
+          }, _callee19, this);
+        }));
+      }
+    }], [{
+      key: "isValidXml",
+      value: function isValidXml(source) {
+        try {
+          var div = document.createElement('div');
+          var g = new Graph(div);
+
+          if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.isencoded(source)) {
+            source = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.decode(source, true, true, true);
           }
-        }, _callee19, this);
-      }));
-    }
-  }], [{
-    key: "isValidXml",
-    value: function isValidXml(source) {
-      try {
-        var div = document.createElement('div');
-        var g = new Graph(div);
 
-        if (globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.isencoded(source)) {
-          source = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.decode(source, true, true, true);
+          var xmlDoc = mxUtils.parseXml(source);
+          var codec = new mxCodec(xmlDoc);
+          g.getModel().beginUpdate();
+          codec.decode(xmlDoc.documentElement, g.getModel());
+          g.getModel().endUpdate();
+          g.destroy();
+          return true;
+        } catch (error) {
+          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('isValidXml', error);
+          return false;
+        }
+      }
+    }, {
+      key: "initMxGraph",
+      value: function initMxGraph() {
+        var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'initMxGgraph()');
+        var myWindow = window;
+
+        if (!XGraph.initialized) {
+          if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
+            XGraph.preInitGlobalVars();
+            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Initialize draw.io libraries', 'info');
+            var code = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.$loadFile("".concat(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath(), "js/viewer.min.js"));
+            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.evalRaw(code);
+            XGraph.postInitGlobalVars();
+            code = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.$loadFile("".concat(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getLibsPath(), "/Graph_custom.js"));
+            mxTooltipHandler.prototype.delay = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_TOOLTIPS_DELAY;
+            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.evalRaw(code);
+            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.clearMessage();
+          }
+
+          XGraph.initialized = true;
         }
 
-        var xmlDoc = mxUtils.parseXml(source);
-        var codec = new mxCodec(xmlDoc);
-        g.getModel().beginUpdate();
-        codec.decode(xmlDoc.documentElement, g.getModel());
-        g.getModel().endUpdate();
-        g.destroy();
-        return true;
-      } catch (error) {
-        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('isValidXml', error);
-        return false;
+        trc.after();
       }
-    }
-  }, {
-    key: "initMxGraph",
-    value: function initMxGraph() {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'initMxGgraph()');
-      var myWindow = window;
+    }, {
+      key: "preInitGlobalVars",
+      value: function preInitGlobalVars() {
+        var myWindow = window;
+        myWindow.BASE_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxBasePath();
+        myWindow.RESOURCES_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxResourcePath();
+        myWindow.RESOURCE_BASE = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxResourcePath();
+        myWindow.STENCIL_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getStencilsPath();
+        myWindow.SHAPES_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getShapesPath();
+        myWindow.IMAGE_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxImagePath();
+        myWindow.STYLE_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxStylePath();
+        myWindow.CSS_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxCssPath();
+        myWindow.mxLanguages = ['en'];
+        myWindow.DRAWIO_BASE_URL = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath();
+        myWindow.DRAW_MATH_URL = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath();
+        myWindow.DRAWIO_VIEWER_URL = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath() + 'viewer.min.js';
+        myWindow.DRAW_MATH_URL = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath() + 'math/';
+        myWindow.DRAWIO_CONFIG = null;
+        var urlParams = new Object();
+        myWindow.urlParams = urlParams;
+        urlParams['sync'] = 'none';
+        urlParams['lightbox'] = '1';
+        urlParams['nav'] = '1';
+        urlParams['local'] = '1';
+        urlParams['embed'] = '1';
+        urlParams['ui'] = 'min';
+        myWindow.mxImageBasePath = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxImagePath();
+        myWindow.mxBasePath = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxBasePath();
+        myWindow.mxLoadStylesheets = true;
+        myWindow.mxLanguage = 'en';
+        myWindow.mxLoadResources = true;
+      }
+    }, {
+      key: "postInitGlobalVars",
+      value: function postInitGlobalVars() {
+        var myWindow = window;
+        myWindow.mxClient.mxBasePath = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxBasePath();
+        myWindow.mxClient.mxImageBasePath = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxImagePath();
+        myWindow.mxClient.mxLoadResources = true;
+        myWindow.mxClient.mxLanguage = 'en';
+        myWindow.mxClient.mxLoadStylesheets = true;
+        myWindow.VSD_CONVERT_URL = null;
+        myWindow.EMF_CONVERT_URL = null;
+        myWindow.ICONSEARCH_PATH = null;
+      }
+    }, {
+      key: "loadXml",
+      value: function loadXml(url) {
+        try {
+          var req = mxUtils.load(url);
 
-      if (!XGraph.initialized) {
-        if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
-          XGraph.preInitGlobalVars();
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Initialize draw.io libraries', 'info');
-          var code = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.$loadFile("".concat(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath(), "js/viewer.min.js"));
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.evalRaw(code);
-          XGraph.postInitGlobalVars();
-          code = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.$loadFile("".concat(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getLibsPath(), "/Graph_custom.js"));
-          mxTooltipHandler.prototype.delay = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_TOOLTIPS_DELAY;
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.evalRaw(code);
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.clearMessage();
+          if (req.getStatus() >= 200 && req.getStatus() <= 299) {
+            return req.getText();
+          } else {
+            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Cannot load ' + url, req.getStatus());
+          }
+        } catch (error) {
+          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Cannot load ' + url, error);
         }
 
-        XGraph.initialized = true;
+        return null;
       }
-
-      trc.after();
-    }
-  }, {
-    key: "preInitGlobalVars",
-    value: function preInitGlobalVars() {
-      var myWindow = window;
-      myWindow.BASE_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxBasePath();
-      myWindow.RESOURCES_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxResourcePath();
-      myWindow.RESOURCE_BASE = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxResourcePath();
-      myWindow.STENCIL_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getStencilsPath();
-      myWindow.SHAPES_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getShapesPath();
-      myWindow.IMAGE_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxImagePath();
-      myWindow.STYLE_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxStylePath();
-      myWindow.CSS_PATH = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxCssPath();
-      myWindow.mxLanguages = ['en'];
-      myWindow.DRAWIO_BASE_URL = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath();
-      myWindow.DRAW_MATH_URL = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath();
-      myWindow.DRAWIO_VIEWER_URL = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath() + 'viewer.min.js';
-      myWindow.DRAW_MATH_URL = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath() + 'math/';
-      myWindow.DRAWIO_CONFIG = null;
-      var urlParams = new Object();
-      myWindow.urlParams = urlParams;
-      urlParams['sync'] = 'none';
-      urlParams['lightbox'] = '1';
-      urlParams['nav'] = '1';
-      urlParams['local'] = '1';
-      urlParams['embed'] = '1';
-      urlParams['ui'] = 'min';
-      myWindow.mxImageBasePath = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxImagePath();
-      myWindow.mxBasePath = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxBasePath();
-      myWindow.mxLoadStylesheets = true;
-      myWindow.mxLanguage = 'en';
-      myWindow.mxLoadResources = true;
-    }
-  }, {
-    key: "postInitGlobalVars",
-    value: function postInitGlobalVars() {
-      var myWindow = window;
-      myWindow.mxClient.mxBasePath = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxBasePath();
-      myWindow.mxClient.mxImageBasePath = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getMxImagePath();
-      myWindow.mxClient.mxLoadResources = true;
-      myWindow.mxClient.mxLanguage = 'en';
-      myWindow.mxClient.mxLoadStylesheets = true;
-      myWindow.VSD_CONVERT_URL = null;
-      myWindow.EMF_CONVERT_URL = null;
-      myWindow.ICONSEARCH_PATH = null;
-    }
-  }, {
-    key: "loadXml",
-    value: function loadXml(url) {
-      try {
-        var req = mxUtils.load(url);
-
-        if (req.getStatus() >= 200 && req.getStatus() <= 299) {
-          return req.getText();
-        } else {
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Cannot load ' + url, req.getStatus());
-        }
-      } catch (error) {
-        globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Cannot load ' + url, error);
+    }, {
+      key: "compress",
+      value: function compress(source) {
+        return Graph.compress(source, true);
       }
+    }, {
+      key: "decompress",
+      value: function decompress(source) {
+        return Graph.decompress(source, true);
+      }
+    }]);
 
-      return null;
-    }
-  }, {
-    key: "compress",
-    value: function compress(source) {
-      return Graph.compress(source, true);
-    }
-  }, {
-    key: "decompress",
-    value: function decompress(source) {
-      return Graph.decompress(source, true);
-    }
-  }]);
+    return XGraph;
+  }();
 
+  XGraph.initialized = false;
   return XGraph;
 }();
 
-
-XGraph.initialized = false;
+/* harmony default export */ __webpack_exports__["default"] = (XGraph);
 
 /***/ }),
 
@@ -21358,13 +21449,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var grafana_func__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! grafana_func */ "./grafana_func.ts");
 mappingOptionsTab.$inject = ["$q", "uiSegmentSrv"];
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -21931,17 +22026,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "lodash");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var globals_class__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! globals_class */ "./globals_class.ts");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -21999,12 +22098,14 @@ var Metric = function () {
 var Serie = function (_Metric) {
   _inherits(Serie, _Metric);
 
+  var _super = _createSuper(Serie);
+
   function Serie(dataList) {
     var _this;
 
     _classCallCheck(this, Serie);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Serie).call(this, dataList));
+    _this = _super.call(this, dataList);
     _this.type = 'serie';
     _this.metrics = _this.seriesHandler(dataList);
 
@@ -22150,12 +22251,14 @@ var Serie = function (_Metric) {
 var Table = function (_Metric2) {
   _inherits(Table, _Metric2);
 
+  var _super2 = _createSuper(Table);
+
   function Table(dataList) {
     var _this2;
 
     _classCallCheck(this, Table);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(Table).call(this, dataList));
+    _this2 = _super2.call(this, dataList);
     _this2.tableColumnOptions = {};
     _this2.tableColumn = '';
     _this2.allIsNull = true;
@@ -22482,6 +22585,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _grafana_func__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./grafana_func */ "./grafana_func.ts");
 
 
+debugger;
 _grafana_func__WEBPACK_IMPORTED_MODULE_1__["default"].loadCss();
 
 
@@ -22519,21 +22623,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var globals_class__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! globals_class */ "./globals_class.ts");
 /* harmony import */ var chroma_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! chroma-js */ "../node_modules/chroma-js/chroma.js");
 /* harmony import */ var chroma_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(chroma_js__WEBPACK_IMPORTED_MODULE_3__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -23586,127 +23694,136 @@ var Rule = function () {
 
   return Rule;
 }();
+
 var GFMap = function () {
-  function GFMap(pattern, data) {
-    _classCallCheck(this, GFMap);
+  var GFMap = function () {
+    function GFMap(pattern, data) {
+      _classCallCheck(this, GFMap);
 
-    this.data = data;
-    this.data.pattern = pattern;
-    this.id = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.uniqueID();
-  }
+      this.data = data;
+      this.data.pattern = pattern;
+      this.id = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.uniqueID();
+    }
 
-  _createClass(GFMap, [{
-    key: "import",
-    value: function _import(obj) {
-      if (!!obj.pattern) {
-        this.data.pattern = obj.pattern;
+    _createClass(GFMap, [{
+      key: "import",
+      value: function _import(obj) {
+        if (!!obj.pattern) {
+          this.data.pattern = obj.pattern;
+        }
+
+        if (!!obj.hidden) {
+          this.data.hidden = obj.hidden;
+        }
+
+        return this;
       }
+    }, {
+      key: "match",
+      value: function match(text) {
+        var regex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
-      if (!!obj.hidden) {
-        this.data.hidden = obj.hidden;
+        if (text === undefined || text === null || text.length === 0) {
+          return false;
+        }
+
+        return globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.matchString(text, this.data.pattern, regex);
       }
-
-      return this;
-    }
-  }, {
-    key: "match",
-    value: function match(text) {
-      var regex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-      if (text === undefined || text === null || text.length === 0) {
-        return false;
+    }, {
+      key: "getId",
+      value: function getId() {
+        return this.id;
       }
-
-      return globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.matchString(text, this.data.pattern, regex);
-    }
-  }, {
-    key: "getId",
-    value: function getId() {
-      return this.id;
-    }
-  }, {
-    key: "show",
-    value: function show() {
-      this.data.hidden = false;
-      return this;
-    }
-  }, {
-    key: "hide",
-    value: function hide() {
-      this.data.hidden = true;
-      return this;
-    }
-  }, {
-    key: "isHidden",
-    value: function isHidden() {
-      if (this.data.hidden === undefined) {
-        return false;
+    }, {
+      key: "show",
+      value: function show() {
+        this.data.hidden = false;
+        return this;
       }
-
-      return this.data.hidden;
-    }
-  }, {
-    key: "toVisible",
-    value: function toVisible() {
-      if (this.data.hidden) {
-        return false;
+    }, {
+      key: "hide",
+      value: function hide() {
+        this.data.hidden = true;
+        return this;
       }
+    }, {
+      key: "isHidden",
+      value: function isHidden() {
+        if (this.data.hidden === undefined) {
+          return false;
+        }
 
-      return true;
-    }
-  }, {
-    key: "export",
-    value: function _export() {
-      return {
-        pattern: this.data.pattern,
-        hidden: this.data.hidden
-      };
-    }
-  }], [{
-    key: "getDefaultMethods",
-    value: function getDefaultMethods() {
-      return this.methods;
-    }
-  }, {
-    key: "getDefaultPlaceHolder",
-    value: function getDefaultPlaceHolder(value) {
-      var elt = this.methods.find(function (x) {
-        return x.value === value;
-      });
-
-      if (elt !== undefined) {
-        return elt.placeholder;
+        return this.data.hidden;
       }
+    }, {
+      key: "toVisible",
+      value: function toVisible() {
+        if (this.data.hidden) {
+          return false;
+        }
 
-      return undefined;
-    }
-  }, {
-    key: "getDefaultValue",
-    value: function getDefaultValue(value) {
-      var elt = this.methods.find(function (x) {
-        return x.value === value;
-      });
-
-      if (elt !== undefined) {
-        return elt["default"];
+        return true;
       }
+    }, {
+      key: "export",
+      value: function _export() {
+        return {
+          pattern: this.data.pattern,
+          hidden: this.data.hidden
+        };
+      }
+    }], [{
+      key: "getDefaultMethods",
+      value: function getDefaultMethods() {
+        return this.methods;
+      }
+    }, {
+      key: "getDefaultPlaceHolder",
+      value: function getDefaultPlaceHolder(value) {
+        var elt = this.methods.find(function (x) {
+          return x.value === value;
+        });
 
-      return undefined;
-    }
-  }]);
+        if (elt !== undefined) {
+          return elt.placeholder;
+        }
 
+        return undefined;
+      }
+    }, {
+      key: "getDefaultValue",
+      value: function getDefaultValue(value) {
+        var elt = this.methods.find(function (x) {
+          return x.value === value;
+        });
+
+        if (elt !== undefined) {
+          return elt["default"];
+        }
+
+        return undefined;
+      }
+    }]);
+
+    return GFMap;
+  }();
+
+  GFMap.methods = [];
   return GFMap;
 }();
-GFMap.methods = [];
+
+
 var ShapeMap = function (_GFMap) {
   _inherits(ShapeMap, _GFMap);
+
+  var _super = _createSuper(ShapeMap);
 
   function ShapeMap(pattern, data) {
     var _this3;
 
     _classCallCheck(this, ShapeMap);
 
-    _this3 = _possibleConstructorReturn(this, _getPrototypeOf(ShapeMap).call(this, pattern, data));
+    _this3 = _super.call(this, pattern, data);
     _this3.data = data;
     return _this3;
   }
@@ -23764,12 +23881,14 @@ var ShapeMap = function (_GFMap) {
 var TextMap = function (_GFMap2) {
   _inherits(TextMap, _GFMap2);
 
+  var _super2 = _createSuper(TextMap);
+
   function TextMap(pattern, data) {
     var _this4;
 
     _classCallCheck(this, TextMap);
 
-    _this4 = _possibleConstructorReturn(this, _getPrototypeOf(TextMap).call(this, pattern, data));
+    _this4 = _super2.call(this, pattern, data);
     _this4.data = data;
     return _this4;
   }
@@ -23859,12 +23978,14 @@ var TextMap = function (_GFMap2) {
 var LinkMap = function (_GFMap3) {
   _inherits(LinkMap, _GFMap3);
 
+  var _super3 = _createSuper(LinkMap);
+
   function LinkMap(pattern, data) {
     var _this5;
 
     _classCallCheck(this, LinkMap);
 
-    _this5 = _possibleConstructorReturn(this, _getPrototypeOf(LinkMap).call(this, pattern, data));
+    _this5 = _super3.call(this, pattern, data);
     _this5.data = data;
     return _this5;
   }
@@ -23925,111 +24046,120 @@ var LinkMap = function (_GFMap3) {
 
   return LinkMap;
 }(GFMap);
-var EventMap = function (_GFMap4) {
-  _inherits(EventMap, _GFMap4);
 
-  function EventMap(pattern, data) {
-    var _this6;
+var EventMap = function () {
+  var EventMap = function (_GFMap4) {
+    _inherits(EventMap, _GFMap4);
 
-    _classCallCheck(this, EventMap);
+    var _super4 = _createSuper(EventMap);
 
-    _this6 = _possibleConstructorReturn(this, _getPrototypeOf(EventMap).call(this, pattern, data));
-    _this6.data = data;
-    return _this6;
-  }
+    function EventMap(pattern, data) {
+      var _this6;
 
-  _createClass(EventMap, [{
-    key: "getPlaceHolder",
-    value: function getPlaceHolder() {
-      var ph = EventMap.getDefaultPlaceHolder(this.data.style);
-      return ph !== undefined ? ph : '';
+      _classCallCheck(this, EventMap);
+
+      _this6 = _super4.call(this, pattern, data);
+      _this6.data = data;
+      return _this6;
     }
-  }, {
-    key: "getTypeahead",
-    value: function getTypeahead() {
-      var self = this;
-      var result = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getFullAvailableVarNames();
-      var elt = EventMap.methods.find(function (x) {
-        return x.value === self.data.style;
-      });
 
-      if (elt !== undefined && elt.typeahead !== undefined) {
-        result = result.concat(elt.typeahead.split('|'));
+    _createClass(EventMap, [{
+      key: "getPlaceHolder",
+      value: function getPlaceHolder() {
+        var ph = EventMap.getDefaultPlaceHolder(this.data.style);
+        return ph !== undefined ? ph : '';
+      }
+    }, {
+      key: "getTypeahead",
+      value: function getTypeahead() {
+        var self = this;
+        var result = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getFullAvailableVarNames();
+        var elt = EventMap.methods.find(function (x) {
+          return x.value === self.data.style;
+        });
+
+        if (elt !== undefined && elt.typeahead !== undefined) {
+          result = result.concat(elt.typeahead.split('|'));
+          return result;
+        }
+
+        if (this.data.style === 'shape') {
+          var shapes = EventMap.getFormNames();
+          Array.prototype.push.apply(result, shapes);
+        }
+
         return result;
       }
-
-      if (this.data.style === 'shape') {
-        var shapes = EventMap.getFormNames();
-        Array.prototype.push.apply(result, shapes);
+    }, {
+      key: "getValueByDefault",
+      value: function getValueByDefault() {
+        var vbd = EventMap.getDefaultValue(this.data.style);
+        return vbd !== undefined ? vbd : '';
       }
-
-      return result;
-    }
-  }, {
-    key: "getValueByDefault",
-    value: function getValueByDefault() {
-      var vbd = EventMap.getDefaultValue(this.data.style);
-      return vbd !== undefined ? vbd : '';
-    }
-  }, {
-    key: "toEventable",
-    value: function toEventable(level) {
-      return this.data.eventOn === -1 || level === this.data.eventOn;
-    }
-  }, {
-    key: "import",
-    value: function _import(obj) {
-      _get(_getPrototypeOf(EventMap.prototype), "import", this).call(this, obj);
-
-      if (!!obj.style) {
-        this.data.style = obj.style;
+    }, {
+      key: "toEventable",
+      value: function toEventable(level) {
+        return this.data.eventOn === -1 || level === this.data.eventOn;
       }
+    }, {
+      key: "import",
+      value: function _import(obj) {
+        _get(_getPrototypeOf(EventMap.prototype), "import", this).call(this, obj);
 
-      if (!!obj.eventOn) {
-        this.data.eventOn = obj.eventOn;
+        if (!!obj.style) {
+          this.data.style = obj.style;
+        }
+
+        if (!!obj.eventOn) {
+          this.data.eventOn = obj.eventOn;
+        }
+
+        if (!!obj.value) {
+          this.data.value = obj.value;
+        }
+
+        return this;
       }
-
-      if (!!obj.value) {
-        this.data.value = obj.value;
+    }], [{
+      key: "getDefaultData",
+      value: function getDefaultData() {
+        return {
+          pattern: '',
+          hidden: false,
+          style: 'shape',
+          eventOn: 0,
+          value: ''
+        };
       }
-
-      return this;
-    }
-  }], [{
-    key: "getDefaultData",
-    value: function getDefaultData() {
-      return {
-        pattern: '',
-        hidden: false,
-        style: 'shape',
-        eventOn: 0,
-        value: ''
-      };
-    }
-  }, {
-    key: "getFormNames",
-    value: function getFormNames() {
-      if (EventMap.shapes.length > 0) {
-        return EventMap.shapes;
-      }
-
-      var shapesText = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.loadFile(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_STG_CTXROOT) + globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_FILE_SHAPESTXT);
-
-      if (shapesText !== undefined) {
-        if (EventMap.shapes.length === 0) {
-          EventMap.shapes = EventMap.shapes.concat(shapesText.split(/\n/));
+    }, {
+      key: "getFormNames",
+      value: function getFormNames() {
+        if (EventMap.shapes.length > 0) {
           return EventMap.shapes;
         }
+
+        var shapesText = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.loadFile(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_STG_CTXROOT) + globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_FILE_SHAPESTXT);
+
+        if (shapesText !== undefined) {
+          if (EventMap.shapes.length === 0) {
+            EventMap.shapes = EventMap.shapes.concat(shapesText.split(/\n/));
+            return EventMap.shapes;
+          }
+        }
+
+        return EventMap.shapes;
       }
+    }]);
 
-      return EventMap.shapes;
-    }
-  }]);
+    return EventMap;
+  }(GFMap);
 
+  EventMap.methods = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.EVENTMETHODS;
+  EventMap.shapes = [];
   return EventMap;
-}(GFMap);
-EventMap.methods = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.EVENTMETHODS;
-EventMap.shapes = [];
+}();
+
+
 
 var RangeMap = function () {
   function RangeMap(from, to, text, data) {
@@ -24447,17 +24577,21 @@ function _get2(target, property, receiver) { if (typeof Reflect !== "undefined" 
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -24765,236 +24899,245 @@ var State = function () {
 
   return State;
 }();
+
 var GFState = function () {
-  function GFState(xgraph, mxcell) {
-    _classCallCheck(this, GFState);
+  var GFState = function () {
+    function GFState(xgraph, mxcell) {
+      _classCallCheck(this, GFState);
 
-    this.keys = [];
-    this.matchedKey = new Map();
-    this.changedKey = new Map();
-    this.originalValue = new Map();
-    this.matchValue = new Map();
-    this.matchLevel = new Map();
-    this.xgraph = xgraph;
-    this.mxcell = mxcell;
-    this.init_core();
-  }
-
-  _createClass(GFState, [{
-    key: "init_core",
-    value: function init_core() {}
-  }, {
-    key: "addValue",
-    value: function addValue(key, value) {
-      if (!this.hasKey(key)) {
-        this.keys.push(key);
-      }
-
-      this.originalValue.set(key, value);
-      this.matchValue.set(key, value);
-      this.matchLevel.set(key, GFState.DEFAULTLEVEL);
-      this.matchedKey.set(key, false);
-      this.changedKey.set(key, false);
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
+      this.keys = [];
+      this.matchedKey = new Map();
+      this.changedKey = new Map();
+      this.originalValue = new Map();
+      this.matchValue = new Map();
+      this.matchLevel = new Map();
+      this.xgraph = xgraph;
+      this.mxcell = mxcell;
+      this.init_core();
     }
-  }, {
-    key: "hasKey",
-    value: function hasKey(key) {
-      return this.keys.includes(key);
-    }
-  }, {
-    key: "getOriginalValue",
-    value: function getOriginalValue(key) {
-      if (!this.hasKey(key)) {
-        this.originalValue.set(key, this.default_core(key));
-      }
 
-      return this.originalValue.get(key);
-    }
-  }, {
-    key: "getMatchValue",
-    value: function getMatchValue(key) {
-      if (!this.hasKey(key)) {
-        this.matchValue.set(key, this.getOriginalValue(key));
-      }
+    _createClass(GFState, [{
+      key: "init_core",
+      value: function init_core() {}
+    }, {
+      key: "addValue",
+      value: function addValue(key, value) {
+        if (!this.hasKey(key)) {
+          this.keys.push(key);
+        }
 
-      return this.matchValue.get(key);
-    }
-  }, {
-    key: "set",
-    value: function set(key, value, level) {
-      var matchLevel = this.matchLevel.get(key);
-
-      if (matchLevel === undefined) {
-        var defaultValue = this.default_core(key);
-        this.addValue(key, defaultValue);
-        return this.set(key, value, level);
-      }
-
-      if (matchLevel <= level) {
-        this.matchLevel.set(key, level);
-        this.matchedKey.set(key, true);
+        this.originalValue.set(key, value);
         this.matchValue.set(key, value);
-        return true;
+        this.matchLevel.set(key, GFState.DEFAULTLEVEL);
+        this.matchedKey.set(key, false);
+        this.changedKey.set(key, false);
+        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
       }
+    }, {
+      key: "hasKey",
+      value: function hasKey(key) {
+        return this.keys.includes(key);
+      }
+    }, {
+      key: "getOriginalValue",
+      value: function getOriginalValue(key) {
+        if (!this.hasKey(key)) {
+          this.originalValue.set(key, this.default_core(key));
+        }
 
-      return false;
-    }
-  }, {
-    key: "apply",
-    value: function apply(key) {
-      var _this2 = this;
+        return this.originalValue.get(key);
+      }
+    }, {
+      key: "getMatchValue",
+      value: function getMatchValue(key) {
+        if (!this.hasKey(key)) {
+          this.matchValue.set(key, this.getOriginalValue(key));
+        }
 
-      if (key !== undefined) {
-        if (this.isMatched(key)) {
-          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] MATCHED KEY=' + key);
-          var value = this.getMatchValue(key);
+        return this.matchValue.get(key);
+      }
+    }, {
+      key: "set",
+      value: function set(key, value, level) {
+        var matchLevel = this.matchLevel.get(key);
+
+        if (matchLevel === undefined) {
+          var defaultValue = this.default_core(key);
+          this.addValue(key, defaultValue);
+          return this.set(key, value, level);
+        }
+
+        if (matchLevel <= level) {
+          this.matchLevel.set(key, level);
+          this.matchedKey.set(key, true);
+          this.matchValue.set(key, value);
+          return true;
+        }
+
+        return false;
+      }
+    }, {
+      key: "apply",
+      value: function apply(key) {
+        var _this2 = this;
+
+        if (key !== undefined) {
+          if (this.isMatched(key)) {
+            globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] MATCHED KEY=' + key);
+            var value = this.getMatchValue(key);
+
+            try {
+              this.apply_core(key, value);
+            } catch (error) {
+              globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('Error on reset for key ' + key, error);
+            }
+
+            this.changedKey.set(key, true);
+            this.matchedKey.set(key, false);
+          } else if (this.isChanged(key)) {
+            globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] CHANGED KEY=' + key);
+            this.reset(key);
+          }
+        } else {
+          this.keys.forEach(function (key) {
+            _this2.apply(key);
+          });
+        }
+
+        return this;
+      }
+    }, {
+      key: "default_core",
+      value: function default_core(key) {
+        return null;
+      }
+    }, {
+      key: "apply_core",
+      value: function apply_core(key, value) {}
+    }, {
+      key: "isMatched",
+      value: function isMatched(key) {
+        var _this3 = this;
+
+        if (key !== undefined) {
+          return this.matchedKey.get(key) === true;
+        }
+
+        var matched = false;
+        this.keys.forEach(function (key) {
+          matched = _this3.isMatched(key) || matched;
+        });
+        return matched;
+      }
+    }, {
+      key: "isChanged",
+      value: function isChanged(key) {
+        var _this4 = this;
+
+        if (key !== undefined) {
+          return this.changedKey.get(key) === true;
+        }
+
+        var changed = false;
+        this.keys.forEach(function (key) {
+          changed = _this4.isChanged(key) ? true : changed;
+        });
+        return changed;
+      }
+    }, {
+      key: "getLevel",
+      value: function getLevel(key) {
+        var _this5 = this;
+
+        if (key !== undefined) {
+          var _level = this.matchLevel.get(key);
+
+          return _level !== undefined ? _level : GFState.DEFAULTLEVEL;
+        }
+
+        var level = GFState.DEFAULTLEVEL;
+        this.keys.forEach(function (key) {
+          return level = Math.max(_this5.getLevel(key));
+        });
+        return level;
+      }
+    }, {
+      key: "unset",
+      value: function unset(key) {
+        var _this6 = this;
+
+        if (key !== undefined) {
+          this.matchValue.set(key, this.originalValue.get(key));
+          this.matchedKey.set(key, false);
+          this.matchLevel.set(key, -1);
+        } else {
+          this.keys.forEach(function (key) {
+            _this6.unset(key);
+          });
+        }
+
+        return this;
+      }
+    }, {
+      key: "reset",
+      value: function reset(key) {
+        var _this7 = this;
+
+        if (key !== undefined) {
+          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.reset from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key);
+          this.unset(key);
+          var value = this.getOriginalValue(key);
 
           try {
-            this.apply_core(key, value);
+            this.reset_core(key, value);
           } catch (error) {
             globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('Error on reset for key ' + key, error);
           }
 
-          this.changedKey.set(key, true);
+          this.changedKey.set(key, false);
           this.matchedKey.set(key, false);
-        } else if (this.isChanged(key)) {
-          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] CHANGED KEY=' + key);
-          this.reset(key);
-        }
-      } else {
-        this.keys.forEach(function (key) {
-          _this2.apply(key);
-        });
-      }
-
-      return this;
-    }
-  }, {
-    key: "default_core",
-    value: function default_core(key) {
-      return null;
-    }
-  }, {
-    key: "apply_core",
-    value: function apply_core(key, value) {}
-  }, {
-    key: "isMatched",
-    value: function isMatched(key) {
-      var _this3 = this;
-
-      if (key !== undefined) {
-        return this.matchedKey.get(key) === true;
-      }
-
-      var matched = false;
-      this.keys.forEach(function (key) {
-        matched = _this3.isMatched(key) || matched;
-      });
-      return matched;
-    }
-  }, {
-    key: "isChanged",
-    value: function isChanged(key) {
-      var _this4 = this;
-
-      if (key !== undefined) {
-        return this.changedKey.get(key) === true;
-      }
-
-      var changed = false;
-      this.keys.forEach(function (key) {
-        changed = _this4.isChanged(key) ? true : changed;
-      });
-      return changed;
-    }
-  }, {
-    key: "getLevel",
-    value: function getLevel(key) {
-      var _this5 = this;
-
-      if (key !== undefined) {
-        var _level = this.matchLevel.get(key);
-
-        return _level !== undefined ? _level : GFState.DEFAULTLEVEL;
-      }
-
-      var level = GFState.DEFAULTLEVEL;
-      this.keys.forEach(function (key) {
-        return level = Math.max(_this5.getLevel(key));
-      });
-      return level;
-    }
-  }, {
-    key: "unset",
-    value: function unset(key) {
-      var _this6 = this;
-
-      if (key !== undefined) {
-        this.matchValue.set(key, this.originalValue.get(key));
-        this.matchedKey.set(key, false);
-        this.matchLevel.set(key, -1);
-      } else {
-        this.keys.forEach(function (key) {
-          _this6.unset(key);
-        });
-      }
-
-      return this;
-    }
-  }, {
-    key: "reset",
-    value: function reset(key) {
-      var _this7 = this;
-
-      if (key !== undefined) {
-        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.reset from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key);
-        this.unset(key);
-        var value = this.getOriginalValue(key);
-
-        try {
-          this.reset_core(key, value);
-        } catch (error) {
-          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('Error on reset for key ' + key, error);
+        } else {
+          this.keys.forEach(function (key) {
+            _this7.reset(key);
+          });
         }
 
-        this.changedKey.set(key, false);
-        this.matchedKey.set(key, false);
-      } else {
-        this.keys.forEach(function (key) {
-          _this7.reset(key);
-        });
+        return this;
       }
+    }, {
+      key: "reset_core",
+      value: function reset_core(key, value) {}
+    }, {
+      key: "prepare",
+      value: function prepare() {
+        if (this.isChanged()) {
+          this.unset();
+        }
 
-      return this;
-    }
-  }, {
-    key: "reset_core",
-    value: function reset_core(key, value) {}
-  }, {
-    key: "prepare",
-    value: function prepare() {
-      if (this.isChanged()) {
-        this.unset();
+        return this;
       }
+    }]);
 
-      return this;
-    }
-  }]);
+    return GFState;
+  }();
 
+  GFState.DEFAULTLEVEL = -1;
   return GFState;
 }();
-GFState.DEFAULTLEVEL = -1;
+
+
 
 var EventState = function (_GFState) {
   _inherits(EventState, _GFState);
+
+  var _super = _createSuper(EventState);
 
   function EventState(xgraph, mxcell) {
     var _this8;
 
     _classCallCheck(this, EventState);
 
-    _this8 = _possibleConstructorReturn(this, _getPrototypeOf(EventState).call(this, xgraph, mxcell));
+    _this8 = _super.call(this, xgraph, mxcell);
     _this8.keys = [];
     _this8.geo = undefined;
 
@@ -25225,12 +25368,14 @@ var EventState = function (_GFState) {
 var TextState = function (_GFState2) {
   _inherits(TextState, _GFState2);
 
+  var _super2 = _createSuper(TextState);
+
   function TextState(xgraph, mxcell) {
     var _this9;
 
     _classCallCheck(this, TextState);
 
-    _this9 = _possibleConstructorReturn(this, _getPrototypeOf(TextState).call(this, xgraph, mxcell));
+    _this9 = _super2.call(this, xgraph, mxcell);
     _this9.keys = [];
 
     _this9.init_core();
@@ -25290,12 +25435,14 @@ var TextState = function (_GFState2) {
 var LinkState = function (_GFState3) {
   _inherits(LinkState, _GFState3);
 
+  var _super3 = _createSuper(LinkState);
+
   function LinkState(xgraph, mxcell) {
     var _this10;
 
     _classCallCheck(this, LinkState);
 
-    _this10 = _possibleConstructorReturn(this, _getPrototypeOf(LinkState).call(this, xgraph, mxcell));
+    _this10 = _super3.call(this, xgraph, mxcell);
     _this10.keys = [];
 
     _this10.init_core();
@@ -25359,12 +25506,14 @@ var LinkState = function (_GFState3) {
 var ShapeState = function (_GFState4) {
   _inherits(ShapeState, _GFState4);
 
+  var _super4 = _createSuper(ShapeState);
+
   function ShapeState(xgraph, mxcell) {
     var _this11;
 
     _classCallCheck(this, ShapeState);
 
-    _this11 = _possibleConstructorReturn(this, _getPrototypeOf(ShapeState).call(this, xgraph, mxcell));
+    _this11 = _super4.call(this, xgraph, mxcell);
     _this11.keys = [];
 
     _this11.init_core();
@@ -25435,12 +25584,14 @@ var ShapeState = function (_GFState4) {
 var TooltipState = function (_GFState5) {
   _inherits(TooltipState, _GFState5);
 
+  var _super5 = _createSuper(TooltipState);
+
   function TooltipState(xgraph, mxcell) {
     var _this12;
 
     _classCallCheck(this, TooltipState);
 
-    _this12 = _possibleConstructorReturn(this, _getPrototypeOf(TooltipState).call(this, xgraph, mxcell));
+    _this12 = _super5.call(this, xgraph, mxcell);
     _this12.keys = ['tooltip'];
 
     _this12.init_core();
@@ -25562,12 +25713,14 @@ var TooltipState = function (_GFState5) {
 var IconState = function (_GFState6) {
   _inherits(IconState, _GFState6);
 
+  var _super6 = _createSuper(IconState);
+
   function IconState(xgraph, mxcell) {
     var _this15;
 
     _classCallCheck(this, IconState);
 
-    _this15 = _possibleConstructorReturn(this, _getPrototypeOf(IconState).call(this, xgraph, mxcell));
+    _this15 = _super6.call(this, xgraph, mxcell);
     _this15.keys = [];
 
     _this15.init();
@@ -25861,17 +26014,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var chartist__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! chartist */ "../node_modules/chartist/dist/chartist.js");
 /* harmony import */ var chartist__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(chartist__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var globals_class__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! globals_class */ "./globals_class.ts");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -26200,12 +26357,14 @@ var GraphTooltip = function () {
 var LineGraphTooltip = function (_GraphTooltip) {
   _inherits(LineGraphTooltip, _GraphTooltip);
 
+  var _super = _createSuper(LineGraphTooltip);
+
   function LineGraphTooltip() {
     var _this;
 
     _classCallCheck(this, LineGraphTooltip);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(LineGraphTooltip).call(this));
+    _this = _super.call(this);
     _this.type = 'line';
     _this.chartistOptions = {
       showPoint: false,
@@ -26298,12 +26457,14 @@ var LineGraphTooltip = function (_GraphTooltip) {
 var BarGraphTooltip = function (_GraphTooltip2) {
   _inherits(BarGraphTooltip, _GraphTooltip2);
 
+  var _super2 = _createSuper(BarGraphTooltip);
+
   function BarGraphTooltip() {
     var _this2;
 
     _classCallCheck(this, BarGraphTooltip);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(BarGraphTooltip).call(this));
+    _this2 = _super2.call(this);
     _this2.type = 'bar';
     _this2.chartistOptions = {
       axisX: {
@@ -26393,6 +26554,10 @@ var BarGraphTooltip = function (_GraphTooltip2) {
   \**********************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var pako = __webpack_require__(/*! pako */ "../node_modules/pako/index.js");
 
@@ -26546,31 +26711,33 @@ module.exports = {
     }
   },
   sleep: function sleep(ms, mess) {
-    var delay;
-    return regeneratorRuntime.async(function sleep$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            delay = function _ref(ms) {
-              return new Promise(function (resolve) {
-                return setTimeout(resolve, ms);
-              });
-            };
+    return _asyncToGenerator(regeneratorRuntime.mark(function _callee() {
+      var delay;
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              delay = function _delay(ms) {
+                return new Promise(function (resolve) {
+                  return setTimeout(resolve, ms);
+                });
+              };
 
-            _context.next = 3;
-            return regeneratorRuntime.awrap(delay(ms));
+              _context.next = 3;
+              return delay(ms);
 
-          case 3:
-            if (mess) {
-              console.log(mess);
-            }
+            case 3:
+              if (mess) {
+                console.log(mess);
+              }
 
-          case 4:
-          case "end":
-            return _context.stop();
+            case 4:
+            case "end":
+              return _context.stop();
+          }
         }
-      }
-    });
+      }, _callee);
+    }))();
   },
   uniqueID: function uniqueID() {
     function chr4() {
@@ -26715,31 +26882,37 @@ module.exports = {
   }(function (url) {
     var result;
 
-    var request = function request() {
-      var response, result;
-      return regeneratorRuntime.async(function request$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.next = 2;
-              return regeneratorRuntime.awrap(fetch(url));
+    var request = function () {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee2() {
+        var response, result;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return fetch(url);
 
-            case 2:
-              response = _context2.sent;
-              _context2.next = 5;
-              return regeneratorRuntime.awrap(response.text());
+              case 2:
+                response = _context2.sent;
+                _context2.next = 5;
+                return response.text();
 
-            case 5:
-              result = _context2.sent;
-              console.log(getfileContent, url, result);
+              case 5:
+                result = _context2.sent;
+                console.log(getfileContent, url, result);
 
-            case 7:
-            case "end":
-              return _context2.stop();
+              case 7:
+              case "end":
+                return _context2.stop();
+            }
           }
-        }
-      });
-    };
+        }, _callee2);
+      }));
+
+      return function request() {
+        return _ref.apply(this, arguments);
+      };
+    }();
 
     request();
     return result;
