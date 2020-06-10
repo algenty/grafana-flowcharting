@@ -773,16 +773,16 @@ export class Flowchart {
     }
   }
 
-  async toFront() {
-    this.container.style.display = '';
+  toFront() {
+    this.container.className = "GF_show";
   }
 
-  async toBack() {
-    this.container.style.display = 'none';
+  toBack() {
+    this.container.className = 'GF_hide';
   }
 
   isVisible(): boolean {
-    return this.container.style.display !== 'none';
+    return this.container.className !== 'GF_hide';
   }
 
 }

@@ -45,7 +45,8 @@ export class FlowchartOptionsCtrl {
    * @memberof FlowchartOptionsCtrl
    */
   onSourceChange() {
-    this.flowchartHandler.sourceChanged();
+    const name = this.flowchartHandler.getCurrentFlowchartName();
+    this.flowchartHandler.flagSourceChanged(name);
     this.render();
   }
 
@@ -86,16 +87,21 @@ export class FlowchartOptionsCtrl {
   }
 
   removeFlowchart() {
-    
+    const current = this.flowchartHandler.getCurrentFlowchart();
+    if(current !== undefined && current.getName() !== 'Main') {
+      this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart();
+      this.currentFlowchartName  = this.flowchartHandler.getCurrentFlowchartName();
+      $GF.message.setMessage(this.currentFlowchartName);
+      this.flowchartHandler.removeFlowchart(current.getName());
+    }
   }
 
   selectFlowchart() {
     this.flowchartHandler.setCurrentFlowchart(this.currentFlowchartName);
-    debugger
     this.currentFlowchart = this.flowchartHandler.getCurrentFlowchart();
     if(this.currentFlowchart) {
-      $GF.message.setMessage(this.currentFlowchart.getName());
-      this.currentFlowchartName = this.currentFlowchart.getName();
+      this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
+      $GF.message.setMessage(this.currentFlowchartName);
     }
   }
 
@@ -109,6 +115,7 @@ export class FlowchartOptionsCtrl {
         this.currentFlowchartName = this.currentFlowchart.getName();
       }
     }
+    $GF.message.setMessage(this.currentFlowchartName);
   }
 
   isValideFlowchart():boolean {
@@ -131,6 +138,7 @@ export class FlowchartOptionsCtrl {
     if (this.currentFlowchart) {
       this.currentFlowchart.setName(this.newName);
     }
+    this.currentFlowchartName = this.newName;
     this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart(this.newName);
   }
 

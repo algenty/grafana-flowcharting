@@ -93,3 +93,6 @@ Fade on message/notification
 Update toolkit
 multi Diagrams
 Add sparkline
+Add a refresh timer on donwload optionsFlag
+Add rename option on flowchart
+fade

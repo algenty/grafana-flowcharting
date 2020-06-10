@@ -58,7 +58,6 @@ export default class XGraph {
    */
   constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string) {
     this.container = container;
-    this.container.style.display = 'hidden';
     this.type = type;
     this.onMapping = {
       active: false,
@@ -297,7 +296,6 @@ export default class XGraph {
       this.cells['id'] = this.getCurrentCells('id');
       this.cells['value'] = this.getCurrentCells('value');
       this.graph.getModel().endUpdate();
-      this.container.style.display = '';
     }
     trc.after();
     return this;
@@ -976,35 +974,15 @@ export default class XGraph {
     return this;
   }
 
-  // async setStyleAnimCell(mxcell: mxCell, style: any, endValue: string | null, beginValue?: string) {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
-  //   if (this.isAnimated() && endValue !== null) {
-  //     try {
-  //       const end = Number(endValue);
-  //       const begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
-  //       if (end !== begin) {
-  //         const steps = $GF.getIntervalCounter(begin, end, $GF.CONSTANTS.CONF_ANIMS_STEP);
-  //         const l = steps.length;
-  //         let count = 0;
-  //         const self = this;
-  //         function graduate(count, steps) {
-  //           if (count < l) {
-  //             self.setStyleCell(mxcell, style, steps[count]);
-  //             window.setTimeout(() => {
-  //               graduate(count + 1, steps);
-  //             }, $GF.CONSTANTS.CONF_ANIMS_MS);
-  //           }
-  //         }
-  //         graduate(count, steps);
-  //       }
-  //     } catch (error) {
-  //       this.graph.setCellStyles(style, endValue, [mxcell]);
-  //     }
-  //   } else {
-  //     this.graph.setCellStyles(style, endValue, [mxcell]);
-  //   }
-  //   trc.after();
-  // }
+  /**
+   * Change style with steps to anime
+   *
+   * @param {mxCell} mxcell
+   * @param {*} style
+   * @param {(string | null)} endValue
+   * @param {string} [beginValue]
+   * @memberof XGraph
+   */
   async setStyleAnimCell(mxcell: mxCell, style: any, endValue: string | null, beginValue?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
     if (this.isAnimated() && endValue !== null) {

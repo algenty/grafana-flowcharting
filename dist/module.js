@@ -16284,7 +16284,7 @@ var FlowchartHandler = function () {
     this.flowcharts = [];
     this.currentFlowchartName = 'Main';
     this.firstLoad = true;
-    this.changeSourceFlag = false;
+    this.changeSourceFlag = [];
     this.changeOptionFlag = true;
     this.changeDataFlag = false;
     this.changeGraphHoverFlag = false;
@@ -16428,10 +16428,23 @@ var FlowchartHandler = function () {
   }, {
     key: "setCurrentFlowchart",
     value: function setCurrentFlowchart(name) {
-      if (this.currentFlowchart !== undefined && this.currentFlowchart.getName() !== name) {
-        var fc = this.getFlowchart(name);
+      if (name === undefined) {
+        this.currentFlowchart = this.getFlowchart('Main');
+        this.currentFlowchartName = this.currentFlowchart.getName();
+        this.currentFlowchart.toFront();
+        return this.currentFlowchart;
+      }
+
+      if (this.currentFlowchart === undefined) {
+        this.currentFlowchart = this.getFlowchart(name);
+        this.currentFlowchartName = this.currentFlowchart.getName();
+        this.currentFlowchart.toFront();
+        return this.currentFlowchart;
+      }
+
+      if (this.currentFlowchart.getName() !== name) {
         this.currentFlowchart.toBack();
-        this.currentFlowchart = fc;
+        this.currentFlowchart = this.getFlowchart(name);
         this.currentFlowchartName = name;
         this.currentFlowchart.toFront();
       }
@@ -16446,7 +16459,8 @@ var FlowchartHandler = function () {
   }, {
     key: "getCurrentFlowchartName",
     value: function getCurrentFlowchartName() {
-      return this.getCurrentFlowchart().getName();
+      var cf = this.getCurrentFlowchart();
+      return cf !== undefined ? cf.getName() : 'Main';
     }
   }, {
     key: "createContainer",
@@ -16505,9 +16519,11 @@ var FlowchartHandler = function () {
                   optionsFlag = true;
                   self = this;
 
-                  if (self.changeSourceFlag) {
-                    self.load();
-                    self.changeSourceFlag = false;
+                  if (self.isSourceChanged()) {
+                    this.changeSourceFlag.forEach(function (name) {
+                      self.load(name);
+                    });
+                    self.changeSourceFlag = [];
                     self.changeRuleFlag = true;
                     optionsFlag = true;
                   }
@@ -16546,10 +16562,34 @@ var FlowchartHandler = function () {
       }));
     }
   }, {
-    key: "sourceChanged",
-    value: function sourceChanged() {
-      this.changeSourceFlag = true;
+    key: "flagSourceChanged",
+    value: function flagSourceChanged(name) {
+      var _this3 = this;
+
+      if (name !== undefined) {
+        if (!this.changeSourceFlag.includes(name)) {
+          this.changeSourceFlag.push(name);
+        }
+      } else {
+        this.flowcharts.forEach(function (flowchart) {
+          var name = flowchart.getName();
+
+          if (!_this3.changeSourceFlag.includes(name)) {
+            _this3.changeSourceFlag.push(name);
+          }
+        });
+      }
+
       return this;
+    }
+  }, {
+    key: "isSourceChanged",
+    value: function isSourceChanged(name) {
+      if (name === undefined) {
+        return this.changeSourceFlag.length > 0;
+      }
+
+      return this.changeSourceFlag.includes(name);
     }
   }, {
     key: "optionChanged",
@@ -16638,15 +16678,15 @@ var FlowchartHandler = function () {
   }, {
     key: "applyStates",
     value: function applyStates() {
-      var _this3 = this;
+      var _this4 = this;
 
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'applyStates()');
       new Promise(function () {
-        _this3.flowcharts.forEach(function (flowchart) {
+        _this4.flowcharts.forEach(function (flowchart) {
           flowchart.applyStates();
         });
       }).then(function () {
-        _this3.refresh();
+        _this4.refresh();
       });
       trc.after();
       return this;
@@ -16673,12 +16713,26 @@ var FlowchartHandler = function () {
     }
   }, {
     key: "load",
-    value: function load() {
+    value: function load(name) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'draw()');
-      this.flowcharts.forEach(function (flowchart) {
+
+      if (name === undefined) {
+        this.flowcharts.forEach(function (flowchart) {
+          flowchart.reload();
+        });
+      } else {
+        var flowchart = this.getFlowchart(name);
         flowchart.reload();
-      });
+      }
+
       trc.after();
+      return this;
+    }
+  }, {
+    key: "loadCurrent",
+    value: function loadCurrent() {
+      var name = this.getCurrentFlowchartName();
+      this.load(name);
       return this;
     }
   }, {
@@ -16740,7 +16794,7 @@ var FlowchartHandler = function () {
 
               _fc.redraw(event.data);
 
-              this.sourceChanged();
+              this.flagSourceChanged();
               this.$scope.$apply();
               this.render();
             }
@@ -16829,17 +16883,15 @@ var FlowchartHandler = function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Flowchart", function() { return Flowchart; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
-/* harmony import */ var graph_class__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! graph_class */ "./graph_class.ts");
-/* harmony import */ var statesHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! statesHandler */ "./statesHandler.ts");
-/* harmony import */ var flowchartHandler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! flowchartHandler */ "./flowchartHandler.ts");
-/* harmony import */ var globals_class__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! globals_class */ "./globals_class.ts");
+/* harmony import */ var graph_class__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! graph_class */ "./graph_class.ts");
+/* harmony import */ var statesHandler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! statesHandler */ "./statesHandler.ts");
+/* harmony import */ var flowchartHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! flowchartHandler */ "./flowchartHandler.ts");
+/* harmony import */ var globals_class__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! globals_class */ "./globals_class.ts");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
 
 
 
@@ -16854,13 +16906,13 @@ var Flowchart = function () {
     this.data.name = name;
     this.container = container;
     this.templateSrv = ctrl.templateSrv;
-    this.id = globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].utils.uniqueID();
+    this.id = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.uniqueID();
   }
 
   _createClass(Flowchart, [{
     key: "import",
     value: function _import(obj) {
-      globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].log.info("flowchart[".concat(this.data.name, "].import()"));
+      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].import()"));
 
       if (!!obj.download || this.data.download === false) {
         this.data.download = obj.download;
@@ -16956,7 +17008,7 @@ var Flowchart = function () {
     value: function updateStates(rules) {
       var _this = this;
 
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].trace.before(this.constructor.name + '.' + 'updateStates()');
+      var trc = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].trace.before(this.constructor.name + '.' + 'updateStates()');
       rules.forEach(function (rule) {
         if (_this.stateHandler !== undefined) {
           rule.states = _this.stateHandler.getStatesForRule(rule);
@@ -16966,10 +17018,10 @@ var Flowchart = function () {
               state.unsetState();
             });
           } else {
-            globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].log.warn('States not defined for this rule');
+            globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.warn('States not defined for this rule');
           }
         } else {
-          globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].log.error('updateStates => this.stateHandler undefined');
+          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('updateStates => this.stateHandler undefined');
         }
       });
       trc.after();
@@ -16982,7 +17034,7 @@ var Flowchart = function () {
         var content = this.getContent();
 
         if (this.xgraph === undefined) {
-          this.xgraph = new graph_class__WEBPACK_IMPORTED_MODULE_1__["default"](this.container, this.data.type, content);
+          this.xgraph = new graph_class__WEBPACK_IMPORTED_MODULE_0__["default"](this.container, this.data.type, content);
         }
 
         if (content !== undefined && content !== null) {
@@ -17019,15 +17071,15 @@ var Flowchart = function () {
             this.xgraph.lockGraph(true);
           }
 
-          this.stateHandler = new statesHandler__WEBPACK_IMPORTED_MODULE_2__["StateHandler"](this.xgraph);
-          globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].message.clearMessage();
+          this.stateHandler = new statesHandler__WEBPACK_IMPORTED_MODULE_1__["StateHandler"](this.xgraph);
+          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.clearMessage();
         } else {
-          globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].message.setMessage('Source content empty Graph not defined', 'error');
-          globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].log.error('Source content empty Graph not defined');
+          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.setMessage('Source content empty Graph not defined', 'error');
+          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('Source content empty Graph not defined');
         }
       } catch (error) {
-        globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].message.setMessage('Unable to initialize graph', 'error');
-        globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].log.error('Unable to initialize graph', error);
+        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.setMessage('Unable to initialize graph', 'error');
+        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('Unable to initialize graph', error);
       }
 
       return this;
@@ -17045,14 +17097,14 @@ var Flowchart = function () {
   }, {
     key: "setStates",
     value: function setStates(rules, metrics) {
-      globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].log.info("flowchart[".concat(this.data.name, "].setStates()"));
+      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].setStates()"));
 
       if (rules === undefined) {
-        globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].log.warn("Rules shoudn't be null");
+        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.warn("Rules shoudn't be null");
       }
 
       if (metrics === undefined) {
-        globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].log.warn("Metrics shoudn't be null");
+        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.warn("Metrics shoudn't be null");
       }
 
       if (this.stateHandler) {
@@ -17064,7 +17116,7 @@ var Flowchart = function () {
   }, {
     key: "setOptions",
     value: function setOptions() {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].trace.before(this.constructor.name + '.' + 'setOptions()');
+      var trc = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].trace.before(this.constructor.name + '.' + 'setOptions()');
       this.setScale(this.data.scale);
       this.setCenter(this.data.center);
       this.setGrid(this.data.grid);
@@ -17078,7 +17130,7 @@ var Flowchart = function () {
   }, {
     key: "applyStates",
     value: function applyStates() {
-      globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].log.info("flowchart[".concat(this.data.name, "].applyStates()"));
+      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].applyStates()"));
 
       if (this.stateHandler) {
         this.stateHandler.applyStates();
@@ -17089,7 +17141,7 @@ var Flowchart = function () {
   }, {
     key: "applyOptions",
     value: function applyOptions() {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].trace.before(this.constructor.name + '.' + 'applyOptions()');
+      var trc = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].trace.before(this.constructor.name + '.' + 'applyOptions()');
 
       if (this.xgraph) {
         this.xgraph.applyGraph();
@@ -17317,14 +17369,14 @@ var Flowchart = function () {
     key: "getContent",
     value: function getContent() {
       var replaceVarBool = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].trace.before(this.constructor.name + '.' + 'getContent()');
+      var trc = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].trace.before(this.constructor.name + '.' + 'getContent()');
       var content = '';
 
       if (this.data.download) {
         var url = this.templateSrv.replaceWithText(this.data.url);
-        globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].message.setMessage('Loading content defition', 'info');
+        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.setMessage('Loading content defition', 'info');
         content = this.loadContent(url);
-        globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].message.clearMessage();
+        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.clearMessage();
 
         if (content !== null) {
           if (replaceVarBool) {
@@ -17354,7 +17406,7 @@ var Flowchart = function () {
   }, {
     key: "loadContent",
     value: function loadContent(url) {
-      return globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].utils.$loadFile(url);
+      return globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.$loadFile(url);
     }
   }, {
     key: "renameId",
@@ -17451,25 +17503,25 @@ var Flowchart = function () {
   }, {
     key: "minify",
     value: function minify() {
-      this.data.xml = globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].utils.minify(this.data.xml);
+      this.data.xml = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.minify(this.data.xml);
     }
   }, {
     key: "prettify",
     value: function prettify() {
-      this.data.xml = globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].utils.prettify(this.data.xml);
+      this.data.xml = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.prettify(this.data.xml);
     }
   }, {
     key: "decode",
     value: function decode() {
-      if (globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].utils.isencoded(this.data.xml)) {
-        this.data.xml = globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].utils.decode(this.data.xml, true, true, true);
+      if (globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.isencoded(this.data.xml)) {
+        this.data.xml = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.decode(this.data.xml, true, true, true);
       }
     }
   }, {
     key: "encode",
     value: function encode() {
-      if (!globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].utils.isencoded(this.data.xml)) {
-        this.data.xml = globals_class__WEBPACK_IMPORTED_MODULE_4__["$GF"].utils.encode(this.data.xml, true, true, true);
+      if (!globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.isencoded(this.data.xml)) {
+        this.data.xml = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.encode(this.data.xml, true, true, true);
       }
     }
   }, {
@@ -17499,51 +17551,25 @@ var Flowchart = function () {
   }, {
     key: "toFront",
     value: function toFront() {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee() {
-        return regeneratorRuntime.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                this.container.style.display = '';
-
-              case 1:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
+      this.container.className = "GF_show";
     }
   }, {
     key: "toBack",
     value: function toBack() {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee2() {
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                this.container.style.display = 'none';
-
-              case 1:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
+      this.container.className = 'GF_hide';
     }
   }, {
     key: "isVisible",
     value: function isVisible() {
-      return this.container.style.display !== 'none';
+      return this.container.className !== 'GF_hide';
     }
   }], [{
     key: "getDefaultData",
     value: function getDefaultData() {
       return {
         name: 'name',
-        xml: flowchartHandler__WEBPACK_IMPORTED_MODULE_3__["FlowchartHandler"].getDefaultDioGraph(),
-        csv: flowchartHandler__WEBPACK_IMPORTED_MODULE_3__["FlowchartHandler"].getDefaultCsvGraph(),
+        xml: flowchartHandler__WEBPACK_IMPORTED_MODULE_2__["FlowchartHandler"].getDefaultDioGraph(),
+        csv: flowchartHandler__WEBPACK_IMPORTED_MODULE_2__["FlowchartHandler"].getDefaultCsvGraph(),
         download: false,
         type: 'xml',
         url: 'http://<YourUrl>/<Your XML/drawio file/api>',
@@ -17724,7 +17750,7 @@ var FlowchartCtrl = function (_grafana$MetricsPanel) {
     key: "onVarChanged",
     value: function onVarChanged() {
       if (this.flowchartHandler !== undefined) {
-        this.flowchartHandler.sourceChanged();
+        this.flowchartHandler.flagSourceChanged();
         this.flowchartHandler.render();
       }
     }
@@ -17865,7 +17891,8 @@ var FlowchartOptionsCtrl = function () {
   }, {
     key: "onSourceChange",
     value: function onSourceChange() {
-      this.flowchartHandler.sourceChanged();
+      var name = this.flowchartHandler.getCurrentFlowchartName();
+      this.flowchartHandler.flagSourceChanged(name);
       this.render();
     }
   }, {
@@ -17907,17 +17934,25 @@ var FlowchartOptionsCtrl = function () {
     }
   }, {
     key: "removeFlowchart",
-    value: function removeFlowchart() {}
+    value: function removeFlowchart() {
+      var current = this.flowchartHandler.getCurrentFlowchart();
+
+      if (current !== undefined && current.getName() !== 'Main') {
+        this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart();
+        this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
+        globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage(this.currentFlowchartName);
+        this.flowchartHandler.removeFlowchart(current.getName());
+      }
+    }
   }, {
     key: "selectFlowchart",
     value: function selectFlowchart() {
       this.flowchartHandler.setCurrentFlowchart(this.currentFlowchartName);
-      debugger;
       this.currentFlowchart = this.flowchartHandler.getCurrentFlowchart();
 
       if (this.currentFlowchart) {
-        globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage(this.currentFlowchart.getName());
-        this.currentFlowchartName = this.currentFlowchart.getName();
+        this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
+        globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage(this.currentFlowchartName);
       }
     }
   }, {
@@ -17934,6 +17969,8 @@ var FlowchartOptionsCtrl = function () {
           this.currentFlowchartName = this.currentFlowchart.getName();
         }
       }
+
+      globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage(this.currentFlowchartName);
     }
   }, {
     key: "isValideFlowchart",
@@ -17964,6 +18001,7 @@ var FlowchartOptionsCtrl = function () {
         this.currentFlowchart.setName(this.newName);
       }
 
+      this.currentFlowchartName = this.newName;
       this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart(this.newName);
     }
   }, {
@@ -18873,37 +18911,29 @@ var GFMessage = function () {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                if (!(GFMessage.container && GFMessage.message)) {
-                  _context5.next = 15;
-                  break;
-                }
+                return _context5.abrupt("return");
 
-                GFMessage.message.innerHTML = message;
-                _context5.t0 = type;
-                _context5.next = _context5.t0 === GFMessage.INFO_MESSAGE ? 5 : _context5.t0 === GFMessage.ERROR_MESSAGE ? 7 : _context5.t0 === GFMessage.WARNING_MESSAGE ? 9 : 11;
-                break;
-
-              case 5:
+              case 6:
                 GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 13);
+                return _context5.abrupt("break", 14);
 
-              case 7:
+              case 8:
                 GFMessage.message.style.color = GFMessage.ERROR_COLOR;
-                return _context5.abrupt("break", 13);
+                return _context5.abrupt("break", 14);
 
-              case 9:
+              case 10:
                 GFMessage.message.style.color = GFMessage.WARNING_COLOR;
-                return _context5.abrupt("break", 13);
+                return _context5.abrupt("break", 14);
 
-              case 11:
+              case 12:
                 GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 13);
+                return _context5.abrupt("break", 14);
 
-              case 13:
+              case 14:
                 GFMessage.container.style.display = '';
                 $GF.setUniqTimeOut(this.clearMessage, $GF.CONSTANTS.CONF_GFMESSAGE_MS, 'flowcharting-message');
 
-              case 15:
+              case 16:
               case "end":
                 return _context5.stop();
             }
@@ -18914,6 +18944,8 @@ var GFMessage = function () {
   }, {
     key: "clearMessage",
     value: function clearMessage() {
+      return;
+
       if (GFMessage.container && GFMessage.message) {
         GFMessage.container.style.display = 'none';
         GFMessage.message.innerHTML = '';
@@ -19548,7 +19580,6 @@ var XGraph = function () {
       value: []
     };
     this.container = container;
-    this.container.style.display = 'hidden';
     this.type = type;
     this.onMapping = {
       active: false,
@@ -19666,7 +19697,6 @@ var XGraph = function () {
         this.cells['id'] = this.getCurrentCells('id');
         this.cells['value'] = this.getCurrentCells('value');
         this.graph.getModel().endUpdate();
-        this.container.style.display = '';
       }
 
       trc.after();

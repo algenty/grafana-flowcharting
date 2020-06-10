@@ -622,6 +622,7 @@ class GFMessage {
   }
 
   async setMessage(message: string, type: string = GFMessage.INFO_MESSAGE) {
+    return
     if (GFMessage.container && GFMessage.message) {
       GFMessage.message.innerHTML = message;
       switch (type) {
@@ -645,6 +646,7 @@ class GFMessage {
   }
 
   clearMessage() {
+    return
     if (GFMessage.container && GFMessage.message) {
       GFMessage.container.style.display = 'none';
       GFMessage.message.innerHTML = '';

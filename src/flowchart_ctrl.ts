@@ -112,7 +112,7 @@ class FlowchartCtrl extends grafana.MetricsPanelCtrl {
 
   onVarChanged() {
     if (this.flowchartHandler !== undefined) {
-      this.flowchartHandler.sourceChanged();
+      this.flowchartHandler.flagSourceChanged();
       this.flowchartHandler.render();
     }
   }

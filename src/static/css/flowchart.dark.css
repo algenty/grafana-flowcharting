@@ -784,3 +784,11 @@ div.tooltip-date {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
 }
+
+.GF_hide {
+  display: none !important;
+}
+
+.GF_show {
+  display : block;
+}

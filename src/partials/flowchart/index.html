@@ -50,7 +50,7 @@
       <label class="gf-form-label" style="margin-right: 4px;"
         ng-if="editor.flowchartHandler.countFlowcharts() > 1 && editor.editMode === false && editor.flowchartHandler.getCurrentFlowchartName() !== 'Main'">
         <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete current flowchart'"
-          ng-click="editor.removeFlochart()"></i>
+          ng-click="editor.removeFlowchart()"></i>
       </label>
       <label class="gf-form-label" style="margin-right: 4px;" ng-if="editor.editMode === true && editor.isValideFlowchart()">
         <i class="fa fa-w fa-check pointer" bs-tooltip="'Validate'" ng-click="editor.validateFlowchart()"></i>
