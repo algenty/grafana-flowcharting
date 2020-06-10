@@ -22585,7 +22585,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _grafana_func__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./grafana_func */ "./grafana_func.ts");
 
 
-debugger;
 _grafana_func__WEBPACK_IMPORTED_MODULE_1__["default"].loadCss();
 
 
