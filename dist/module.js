@@ -21062,6 +21062,7 @@ var XGraph = function () {
     value: function initMxGraph() {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'initMxGgraph()');
       var myWindow = window;
+      debugger;
 
       if (!XGraph.initialized) {
         if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
@@ -21070,9 +21071,8 @@ var XGraph = function () {
           globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.evalRaw(code);
           XGraph.postInitGlobalVars();
           code = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.$loadFile("".concat(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getLibsPath(), "/Graph_custom.js"));
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.evalRaw(code);
           mxTooltipHandler.prototype.delay = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_TOOLTIPS_DELAY;
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.clearMessage();
+          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.evalRaw(code);
         }
 
         XGraph.initialized = true;

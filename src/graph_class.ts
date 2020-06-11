@@ -14,10 +14,6 @@ declare var mxRectangle: any;
 declare var mxUtils: any;
 declare var Graph: any;
 declare var mxTooltipHandler: any;
-// declare var EditorUi:any;
-// declare var mxStencilRegistry: any;
-
-// type mxCellOverlay = any;
 
 /**
  * mxGraph interface class
@@ -144,20 +140,16 @@ export default class XGraph {
   static initMxGraph() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initMxGgraph()');
     let myWindow: any = window;
+    debugger
     if (!XGraph.initialized) {
       if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
-        // $GF.message.setMessage('Initialize draw.io libraries', 'info');
         let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
         $GF.utils.evalRaw(code);
-        // $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
-        // require('./libs/drawio/js/viewer.min');
         XGraph.postInitGlobalVars();
         code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
-        $GF.utils.evalRaw(code);
-        // $GF.utils.$evalFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
         mxTooltipHandler.prototype.delay = $GF.CONSTANTS.CONF_TOOLTIPS_DELAY;
-        $GF.message.clearMessage();
+        $GF.utils.evalRaw(code);
       }
       XGraph.initialized = true;
     }
@@ -1693,74 +1685,6 @@ export default class XGraph {
     }
     trc.after();
   }
-
-  // async lazyZoomCell(mxcell: mxCell) {
-  //   if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
-  //     let state = this.graph.view.getState(mxcell);
-  //     if (state !== null) {
-  //       let _x, _y, _w, _h;
-  //       let dist_x, dist_y, dist_w, dist_h;
-  //       _x = state.x;
-  //       _y = state.y;
-  //       _w = state.width;
-  //       _h = state.height;
-  //       console.log('Curr Cell x=' + _x + ' y=' + _y + ' w=' + _w + ' h=' + _h)
-  //       if (this.animation) {
-  //         let step_x, step_y, step_w, step_h;
-  //         let bounds = this.graph.view.getGraphBounds();
-  //         step_x = bounds.x;
-  //         step_y = bounds.y;
-  //         step_w = bounds.width;
-  //         step_h = bounds.height;
-  //         dist_x = ((_x - step_x) / 2)
-  //         dist_y = ((_y - step_y) / 2)
-  //         dist_w = ((_w - step_w) / 2)
-  //         dist_h = ((_h - step_h) / 2)
-  //         console.log('Curr bounds x=' + bounds.x + ' y=' + bounds.y + ' w=' + bounds.width + ' h=' + bounds.height)
-  //         step_x = _x - dist_x;
-  //         step_y = _y - dist_y;
-  //         step_w = _w - dist_w;
-  //         step_h = _h - dist_h;
-  //         const l = $GF.CONSTANTS.CONF_ANIMS_STEP;
-  //         const count = 0;
-  //         const self = this;
-  //         function graduate(count, step_x, step_y, step_w, step_h) {
-  //           debugger
-  //           console.log('Steps x=' + step_x + ' y=' + step_y + ' w=' + step_w + ' h=' + step_h);
-  //           if (count < l) {
-  //             window.setTimeout(() => {
-  //               const rect = new mxRectangle(step_x, step_y, step_w, step_h);
-  //               self.graph.zoomToRect(rect);
-  //               self.cumulativeZoomFactor = self.graph.view.scale;
-  //               bounds = self.graph.view.getGraphBounds();
-  //               console.log('Curr Cell x=' + _x + ' y=' + _y + ' w=' + _w + ' h=' + _h)
-  //               console.log('Curr bounds x=' + bounds.x + ' y=' + bounds.y + ' w=' + bounds.width + ' h=' + bounds.height)
-  //               console.log('graph.view',self.graph.view);
-  //               step_x = bounds.x;
-  //               step_y = bounds.y;
-  //               step_w = bounds.width;
-  //               step_h = bounds.height;
-  //               dist_x /= count +1 ;
-  //               dist_y /= count +1;
-  //               dist_w /= count +1;
-  //               dist_h /= count +1;
-  //               step_x = _x - dist_x;
-  //               step_y = _y - dist_y;
-  //               step_w = _w - dist_w;
-  //               step_h = _h - dist_h;
-  //               graduate(count + 1, step_x, step_y, step_w, step_h);
-  //             }, $GF.CONSTANTS.CONF_ANIMS_MS);
-  //           }
-  //         }
-  //         graduate(count, step_x, step_y, step_w, step_h);
-  //       } else {
-  //         const rect = new mxRectangle(_x, _y, _w, _h);
-  //         this.graph.zoomToRect(rect);
-  //         this.cumulativeZoomFactor = this.graph.view.scale;
-  //       }
-  //     }
-  //   }
-  // }
 
   static loadXml(url: string): string | null {
     try {
