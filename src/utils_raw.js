@@ -212,54 +212,6 @@ module.exports = {
       return text;
     }
   },
-
-  // getRatioColor(ratio, colorStart, colorEnd) {
-  //   // Get the smaller number to clamp at 0.999 max
-  //   ratio = Math.min(0.999, ratio);
-  //   // Get the larger number to clamp at 0.001 min
-  //   ratio = Math.max(0.001, ratio);
-  //   let start = colorconv(colorEnd, 'uint8');
-  //   let end = colorconv(colorStart, 'uint8');
-  //   let c = [];
-  //   c[0] = Math.round(start[0] * ratio + (1 - ratio) * end[0]);
-  //   c[1] = Math.round(start[1] * ratio + (1 - ratio) * end[1]);
-  //   c[2] = Math.round(start[2] * ratio + (1 - ratio) * end[2]);
-  //   c[3] = start[3] * ratio + (1 - ratio) * end[3];
-  //   return `rgba(${c[0]},${c[1]},${c[2]},${c[3]})`;
-  // },
-
-  // getStepColors(colorStart, colorEnd, colorCount) {
-  //   // The beginning of your gradient
-  //   let start = colorconv(colorStart, 'uint8');
-  //   console.log('colorconv start', colorStart);
-  //   console.log('Color start', Color(colorStart).array());
-  //   let end = colorconv(colorEnd, 'uint8');
-  //   console.log('colorconv end', colorEnd);
-  //   console.log('Color end', Color(colorEnd).array());
-    
-  //   // The number of colors to compute
-  //   var len = colorCount;
-
-  //   //Alpha blending amount
-  //   var alpha = 0.0;
-
-  //   var saida = [];
-
-  //   for (i = 0; i < len; i++) {
-  //     var c = [];
-  //     alpha += 1.0 / len;
-
-  //     c[0] = Math.round(start[0] * alpha + (1 - alpha) * end[0]);
-  //     c[1] = Math.round(start[1] * alpha + (1 - alpha) * end[1]);
-  //     c[2] = Math.round(start[2] * alpha + (1 - alpha) * end[2]);
-  //     c[3] = start[3] * alpha + (1 - alpha) * end[3];
-
-  //     saida.push(Color(`rgba(${c[0]},${c[1]},${c[2]},${c[3]})`).hex());
-  //   }
-
-  //   return saida;
-  // },
-
   prettifyJSON(text) {
     try {
       return vkbeautify.json(text);
@@ -274,24 +226,6 @@ module.exports = {
     s.setAttribute('type', 'text/javascript');
     s.setAttribute('src', src);
     var r = false;
-
-    // if (id != null) {
-    //   s.setAttribute('id', id);
-    // }
-
-    // if (dataAppKey != null) {
-    //   s.setAttribute('data-app-key', dataAppKey);
-    // }
-
-    // if (window.onLoad != null) {
-    //   s.onload = s.onreadystatechange = function () {
-    //     if (!r && (!this.readyState || this.readyState === 'complete')) {
-    //       r = true;
-    //       onLoad();
-    //     }
-    //   };
-    // }
-
     var t = document.getElementsByTagName('script')[0];
 
     if (t != null) {
@@ -341,6 +275,21 @@ module.exports = {
       },
     });
     return result;
+  },
+
+  $evalFile(fname) {
+    let result;
+    $.ajax({
+      type: 'GET',
+      url: fname,
+      async: false,
+      success: data => {
+        eval.call(window, data);
+      },
+      error: error => {
+        console.log('Error when download/eval ' + fname), error;
+      },
+    });
   },
 
   evalRaw(code) {

@@ -661,7 +661,7 @@ class GFMessage {
  * @class GFTrace
  */
 class GFTrace {
-  static enable = false;
+  static enable = true;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;
@@ -802,6 +802,7 @@ export class $GF {
     evalIt: (code: string) => string;
     loadFile: (fname: string) => string;
     $loadFile: (fname: string) => string;
+    $evalFile: (fname: string) => void;
     evalRaw: (code: string) => void;
     addScript: (src: string) => void;
   } = require('./utils_raw');
