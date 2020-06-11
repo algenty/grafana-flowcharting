@@ -5,12 +5,15 @@ import { inspectOptionsTab } from 'inspect_options';
 import { RulesHandler } from 'rulesHandler';
 import { FlowchartHandler } from 'flowchartHandler';
 import { MetricHandler } from 'metricHandler';
-// import { PanelEvents } from '@grafana/data';
+import { PanelEvents } from '@grafana/data';
+import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import { $GF } from 'globals_class';
 import _ from 'lodash';
 
-class FlowchartCtrl extends grafana.MetricsPanelCtrl {
+class FlowchartCtrl extends MetricsPanelCtrl {
   $rootScope: any;
+  $scope : any;
+  templateSrv : any;
   version: any;
   changedSource: boolean;
   changedData: boolean;
