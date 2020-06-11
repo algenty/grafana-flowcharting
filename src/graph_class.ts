@@ -2,7 +2,6 @@ import _ from 'lodash';
 import { $GF } from 'globals_class';
 import * as Drawio from 'drawio_custom';
 import chroma from 'chroma-js';
-import * as code from './libs/drawio/js/viewer.min';
 
 declare var mxEvent: any;
 declare var mxClient: any;
@@ -149,15 +148,15 @@ export default class XGraph {
       if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
         // $GF.message.setMessage('Initialize draw.io libraries', 'info');
-        // let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
-        $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
-        // $GF.utils.evalRaw(code);
+        let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
+        $GF.utils.evalRaw(code);
+        // $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
         // require('./libs/drawio/js/viewer.min');
         XGraph.postInitGlobalVars();
-        // code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
-        $GF.utils.$evalFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
-        mxTooltipHandler.prototype.delay = $GF.CONSTANTS.CONF_TOOLTIPS_DELAY;
+        code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
         $GF.utils.evalRaw(code);
+        // $GF.utils.$evalFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
+        mxTooltipHandler.prototype.delay = $GF.CONSTANTS.CONF_TOOLTIPS_DELAY;
         $GF.message.clearMessage();
       }
       XGraph.initialized = true;
