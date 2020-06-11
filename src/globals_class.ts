@@ -594,16 +594,7 @@ class GFMessage {
   static WARNING_COLOR = 'yellow';
 
   constructor(parent: HTMLElement) {
-    // GFMessage.container = document.createElement('div');
-    // parent.appendChild(GFMessage.container);
-    // GFMessage.container.outerHTML = `
-    // <div id="message-panel"
-    //   style="display:none;z-index: 2;position: absolute; box-sizing: border-box; border-radius: 20px; height: 40px;width: 33%;white-space: nowrap; background-color: rgba(0, 0, 0, 0.4);top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">
-    //   <div style="margin: 0;position: absolute;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">
-    //     <span id="message-text"></span>
-    //   </div>
-    // </div>
-    // `;
+    debugger
     const container = parent.querySelector<HTMLDivElement>('div#flowcharting-message');
     if (container !== null) {
       GFMessage.container = container;

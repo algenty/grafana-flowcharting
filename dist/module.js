@@ -18928,6 +18928,7 @@ var GFMessage = function () {
   function GFMessage(parent) {
     _classCallCheck(this, GFMessage);
 
+    debugger;
     var container = parent.querySelector('div#flowcharting-message');
 
     if (container !== null) {
@@ -21062,7 +21063,6 @@ var XGraph = function () {
     value: function initMxGraph() {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'initMxGgraph()');
       var myWindow = window;
-      debugger;
 
       if (!XGraph.initialized) {
         if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
