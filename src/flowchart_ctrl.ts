@@ -129,7 +129,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-  onRender() {}
+  onRender() { }
 
   onDataReceived(dataList) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
@@ -160,6 +160,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
+
+    // $GF Containers
+    const $section = elem.find('#flowcharting-section');
+    const parent = $section[0];
+    $GF.setMessageDiv(parent);
 
     // DATA
     this.metricHandler = new MetricHandler(this.$scope);

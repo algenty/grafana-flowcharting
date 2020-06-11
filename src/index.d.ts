@@ -144,20 +144,29 @@ declare module gf {
     value: TAggregationKeys;
   }
 
+  // Flowchart flag type
+  declare type TFlowchartFlagKeys = 'sources' | 'options' | 'rules' | 'datas' | 'graphHover';
+  declare type TFlowchartFlagElt = { text: string; value: TFlowchartFlagKeys };
+  declare type TFlowchartFlagList = TFlowchartFlagElt[];
+
   // Source graph
   declare type TSourceTypeKeys = 'xml' | 'csv';
-  declare type TSourceTypeList = { text: string; value: TSourceTypeKeys }[];
+  declare type TSourceTypeElt = { text: string; value: TSourceTypeKeys };
+  declare type TSourceTypeList = TSourceTypeElt[];
 
   // Metric
   declare type TMetricTypeKeys = 'table' | 'serie';
-  declare type TMetricTypeList = { text: string; value: TMetricTypeKeys }[];
+  declare type TMetricTypeElt = { text: string; value: TMetricTypeKeys };
+  declare type TMetricTypeList = TMetricTypeElt[];
 
   // Rules
   declare type TLinkOnKeys = 'wc' | 'a';
-  declare type TLinkOnList = { text: string; value: TLinkOnKeys }[];
+  declare type TLinkOnElt = { text: string; value: TLinkOnKeys };
+  declare type TLinkOnList = TLinkOnElt[];
 
-  declare type TTooltipOn = 'wc' | 'a';
-  declare type TTooltipOnList = { text: string; value: TTooltipOn }[];
+  declare type TTooltipOnKeys = 'wc' | 'a';
+  declare type TTooltipOnElt = { text: string; value: TTooltipOnKeys };
+  declare type TTooltipOnList = TTooltipOnElt[];
 
   declare type TColorOnKeys = 'n' | 'wc' | 'a';
   declare type TColorOnList = { text: string; value: TColorOnKeys }[];
@@ -209,7 +218,7 @@ declare module gf {
     tooltip: boolean;
     tooltipLabel: string;
     tooltipColors: boolean;
-    tooltipOn: TTooltipOn;
+    tooltipOn: TTooltipOnKeys;
     tpDirection: TDirectionKeys;
     tpGraph: boolean;
     tpGraphSize: TGraphSizeKeys;

@@ -46,7 +46,7 @@ export class FlowchartOptionsCtrl {
    */
   onSourceChange() {
     const name = this.flowchartHandler.getCurrentFlowchartName();
-    this.flowchartHandler.flagSourceChanged(name);
+    this.flowchartHandler.flagChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES, name);
     this.render();
   }
 
@@ -57,7 +57,7 @@ export class FlowchartOptionsCtrl {
    */
   onOptionChange() {
     const name = this.flowchartHandler.getCurrentFlowchartName();
-    this.flowchartHandler.flagOptionChanged(name);
+    this.flowchartHandler.flagChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
     this.render();
   }
 

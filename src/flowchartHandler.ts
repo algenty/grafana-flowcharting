@@ -17,8 +17,15 @@ export class FlowchartHandler {
   currentFlowchart: Flowchart | undefined;
   data: gf.TFlowchartHandlerData;
   firstLoad = true; // First load
-  changeSourceFlag: string[] = []; // Source changed
-  changeOptionFlag: string[] = []; // Options changed
+  flags = {
+    sources: new Set<string>(),
+    options: new Set<string>(),
+    rules: new Set<string>(),
+    datas: new Set<string>(),
+    graphHover: new Set<string>(),
+  };
+  changeSourceFlag: Set<string> = new Set<string>(); // Source changed
+  changeOptionFlag: Set<string> = new Set<string>(); // Options changed
   changeDataFlag = false; // Data changed
   changeGraphHoverFlag = false; // Graph Hover
   changeRuleFlag = false; // rules changed
@@ -347,21 +354,24 @@ export class FlowchartHandler {
       let optionsFlag = true;
       const self = this;
       // SOURCE
-      if (self.isSourceChanged()) {
+      if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES)) {
         this.changeSourceFlag.forEach(name => {
-          self.load(name);
+          if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES, name)) {
+            self.load(name);
+            self.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES, name);
+          }
         });
-        self.changeSourceFlag = [];
         self.changeRuleFlag = true;
         optionsFlag = true;
       }
       // OPTIONS
       if (self.isOptionChanged()) {
-        this.changeOptionFlag.forEach(name => {
-          self.setOptions(name);
+        this.changeSourceFlag.forEach(name => {
+          if (self.isOptionChanged(name)) {
+            self.setOptions(name);
+            self.aknowledgeOptionChanged(name);
+          }
         });
-        self.setOptions();
-        self.changeOptionFlag = [];
         optionsFlag = true;
       }
       // RULES or DATAS
@@ -393,21 +403,17 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  flagSourceChanged(name?: string): this {
-    if (name !== undefined) {
-      if (!this.changeSourceFlag.includes(name)) {
-        this.changeSourceFlag.push(name);
-      }
-    } else {
-      this.flowcharts.forEach(flowchart => {
-        const name = flowchart.getName();
-        if (!this.changeSourceFlag.includes(name)) {
-          this.changeSourceFlag.push(name);
-        }
-      });
-    }
-    return this;
-  }
+  // flagSourceChanged(name?: string): this {
+  //   if (name !== undefined) {
+  //     this.changeSourceFlag.add(name);
+  //   } else {
+  //     this.flowcharts.forEach(flowchart => {
+  //       const name = flowchart.getName();
+  //       this.changeSourceFlag.add(name);
+  //     });
+  //   }
+  //   return this;
+  // }
 
   /**
    * Indicate if source changed
@@ -416,12 +422,26 @@ export class FlowchartHandler {
    * @returns {boolean}
    * @memberof FlowchartHandler
    */
-  isSourceChanged(name?: string): boolean {
-    if (name === undefined) {
-      return this.changeSourceFlag.length > 0;
-    }
-    return this.changeSourceFlag.includes(name);
-  }
+  // isSourceChanged(name?: string): boolean {
+  //   if (name === undefined) {
+  //     return this.changeSourceFlag.size > 0;
+  //   }
+  //   return this.changeSourceFlag.has(name);
+  // }
+
+  /**
+   * Aknowledge source Change and applied
+   *
+   * @param {string} [name]
+   * @memberof FlowchartHandler
+   */
+  // aknowledgeSourceChanged(name ?:string): void {
+  //   if(name === undefined) {
+  //     this.changeSourceFlag.clear();
+  //   } else {
+  //     this.changeSourceFlag.delete(name);
+  //   }
+  // }
 
   /**
    * Flag options change
@@ -430,21 +450,17 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  flagOptionChanged(name?: string): this {
-    if (name !== undefined) {
-      if (!this.changeOptionFlag.includes(name)) {
-        this.changeOptionFlag.push(name);
-      }
-    } else {
-      this.flowcharts.forEach(flowchart => {
-        const name = flowchart.getName();
-        if (!this.changeOptionFlag.includes(name)) {
-          this.changeOptionFlag.push(name);
-        }
-      });
-    }
-    return this;
-  }
+  // flagOptionChanged(name?: string): this {
+  //   if (name !== undefined) {
+  //     this.changeOptionFlag.add(name);
+  //   } else {
+  //     this.flowcharts.forEach(flowchart => {
+  //       const name = flowchart.getName();
+  //       this.changeOptionFlag.add(name);
+  //     });
+  //   }
+  //   return this;
+  // }
 
   /**
    * Indicate if an option has changed
@@ -453,12 +469,26 @@ export class FlowchartHandler {
    * @returns {boolean}
    * @memberof FlowchartHandler
    */
-  isOptionChanged(name?: string): boolean {
-    if (name === undefined) {
-      return this.changeOptionFlag.length > 0;
-    }
-    return this.changeOptionFlag.includes(name);
-  }
+  // isOptionChanged(name?: string): boolean {
+  //   if (name === undefined) {
+  //     return this.changeOptionFlag.size > 0;
+  //   }
+  //   return this.changeOptionFlag.has(name);
+  // }
+
+  /**
+   * Aknowledge options change and applied
+   *
+   * @param {string} [name]
+   * @memberof FlowchartHandler
+   */
+  // aknowledgeOptionChanged(name ?:string): void {
+  //   if(name === undefined) {
+  //     this.changeOptionFlag.clear();
+  //   } else {
+  //     this.changeOptionFlag.delete(name);
+  //   }
+  // }
 
   /**
    * Flag rule change
@@ -506,6 +536,33 @@ export class FlowchartHandler {
     });
     trc.after();
     return this;
+  }
+
+  flagChange(type: gf.TFlowchartFlagKeys, name?: string): this {
+    if (name !== undefined) {
+      this.flags[type].add(name);
+    } else {
+      this.flowcharts.forEach(flowchart => {
+        const name = flowchart.getName();
+        this.flags[type].add(name);
+      });
+    }
+    return this;
+  }
+
+  isFlagedChange(type: gf.TFlowchartFlagKeys, name?: string): boolean {
+    if (name === undefined) {
+      return this.flags[type].size > 0;
+    }
+    return this.flags[type].has(name);
+  }
+
+  aknowledgeFlagChange(type: gf.TFlowchartFlagKeys, name?: string): void {
+    if (name === undefined) {
+      this.flags[type].clear();
+    } else {
+      this.flags[type].delete(name);
+    }
   }
 
   /**

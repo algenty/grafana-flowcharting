@@ -16284,8 +16284,15 @@ var FlowchartHandler = function () {
     this.flowcharts = [];
     this.currentFlowchartName = 'Main';
     this.firstLoad = true;
-    this.changeSourceFlag = [];
-    this.changeOptionFlag = [];
+    this.flags = {
+      sources: new Set(),
+      options: new Set(),
+      rules: new Set(),
+      datas: new Set(),
+      graphHover: new Set()
+    };
+    this.changeSourceFlag = new Set();
+    this.changeOptionFlag = new Set();
     this.changeDataFlag = false;
     this.changeGraphHoverFlag = false;
     this.changeRuleFlag = false;
@@ -16519,21 +16526,24 @@ var FlowchartHandler = function () {
                   optionsFlag = true;
                   self = this;
 
-                  if (self.isSourceChanged()) {
+                  if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES)) {
                     this.changeSourceFlag.forEach(function (name) {
-                      self.load(name);
+                      if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES, name)) {
+                        self.load(name);
+                        self.aknowledgeFlagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES, name);
+                      }
                     });
-                    self.changeSourceFlag = [];
                     self.changeRuleFlag = true;
                     optionsFlag = true;
                   }
 
                   if (self.isOptionChanged()) {
-                    this.changeOptionFlag.forEach(function (name) {
-                      self.setOptions(name);
+                    this.changeSourceFlag.forEach(function (name) {
+                      if (self.isOptionChanged(name)) {
+                        self.setOptions(name);
+                        self.aknowledgeOptionChanged(name);
+                      }
                     });
-                    self.setOptions();
-                    self.changeOptionFlag = [];
                     optionsFlag = true;
                   }
 
@@ -16565,66 +16575,6 @@ var FlowchartHandler = function () {
       }));
     }
   }, {
-    key: "flagSourceChanged",
-    value: function flagSourceChanged(name) {
-      var _this3 = this;
-
-      if (name !== undefined) {
-        if (!this.changeSourceFlag.includes(name)) {
-          this.changeSourceFlag.push(name);
-        }
-      } else {
-        this.flowcharts.forEach(function (flowchart) {
-          var name = flowchart.getName();
-
-          if (!_this3.changeSourceFlag.includes(name)) {
-            _this3.changeSourceFlag.push(name);
-          }
-        });
-      }
-
-      return this;
-    }
-  }, {
-    key: "isSourceChanged",
-    value: function isSourceChanged(name) {
-      if (name === undefined) {
-        return this.changeSourceFlag.length > 0;
-      }
-
-      return this.changeSourceFlag.includes(name);
-    }
-  }, {
-    key: "flagOptionChanged",
-    value: function flagOptionChanged(name) {
-      var _this4 = this;
-
-      if (name !== undefined) {
-        if (!this.changeOptionFlag.includes(name)) {
-          this.changeOptionFlag.push(name);
-        }
-      } else {
-        this.flowcharts.forEach(function (flowchart) {
-          var name = flowchart.getName();
-
-          if (!_this4.changeOptionFlag.includes(name)) {
-            _this4.changeOptionFlag.push(name);
-          }
-        });
-      }
-
-      return this;
-    }
-  }, {
-    key: "isOptionChanged",
-    value: function isOptionChanged(name) {
-      if (name === undefined) {
-        return this.changeOptionFlag.length > 0;
-      }
-
-      return this.changeOptionFlag.includes(name);
-    }
-  }, {
     key: "ruleChanged",
     value: function ruleChanged() {
       this.changeRuleFlag = true;
@@ -16651,6 +16601,41 @@ var FlowchartHandler = function () {
       });
       trc.after();
       return this;
+    }
+  }, {
+    key: "flagChange",
+    value: function flagChange(type, name) {
+      var _this3 = this;
+
+      if (name !== undefined) {
+        this.flags[type].add(name);
+      } else {
+        this.flowcharts.forEach(function (flowchart) {
+          var name = flowchart.getName();
+
+          _this3.flags[type].add(name);
+        });
+      }
+
+      return this;
+    }
+  }, {
+    key: "isFlagedChange",
+    value: function isFlagedChange(type, name) {
+      if (name === undefined) {
+        return this.flags[type].size > 0;
+      }
+
+      return this.flags[type].has(name);
+    }
+  }, {
+    key: "aknowledgeFlagChange",
+    value: function aknowledgeFlagChange(type, name) {
+      if (name === undefined) {
+        this.flags[type].clear();
+      } else {
+        this.flags[type]["delete"](name);
+      }
     }
   }, {
     key: "async_refreshStates",
@@ -16705,15 +16690,15 @@ var FlowchartHandler = function () {
   }, {
     key: "applyStates",
     value: function applyStates() {
-      var _this5 = this;
+      var _this4 = this;
 
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'applyStates()');
       new Promise(function () {
-        _this5.flowcharts.forEach(function (flowchart) {
+        _this4.flowcharts.forEach(function (flowchart) {
           flowchart.applyStates();
         });
       }).then(function () {
-        _this5.refresh();
+        _this4.refresh();
       });
       trc.after();
       return this;
@@ -17827,6 +17812,9 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].trace.before(this.constructor.name + '.' + 'link()');
+      var $section = elem.find('#flowcharting-section');
+      var parent = $section[0];
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setMessageDiv(parent);
       this.metricHandler = new metricHandler__WEBPACK_IMPORTED_MODULE_6__["MetricHandler"](this.$scope);
       var newRulesData = rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"].getDefaultData();
       this.rulesHandler = new rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"](newRulesData);
@@ -17933,14 +17921,14 @@ var FlowchartOptionsCtrl = function () {
     key: "onSourceChange",
     value: function onSourceChange() {
       var name = this.flowchartHandler.getCurrentFlowchartName();
-      this.flowchartHandler.flagSourceChanged(name);
+      this.flowchartHandler.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES, name);
       this.render();
     }
   }, {
     key: "onOptionChange",
     value: function onOptionChange() {
       var name = this.flowchartHandler.getCurrentFlowchartName();
-      this.flowchartHandler.flagOptionChanged(name);
+      this.flowchartHandler.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
       this.render();
     }
   }, {
@@ -18214,6 +18202,11 @@ var GFCONSTANT = function GFCONSTANT() {
   this.VAR_NUM_VALUE = '_value';
   this.VAR_STR_FORMATED = '_formated';
   this.VAR_STR_COLOR = '_color';
+  this.FLOWCHART_CHG_SOURCES = 'sources';
+  this.FLOWCHART_CHG_OPTIONS = 'options';
+  this.FLOWCHART_CHG_DATAS = 'datas';
+  this.FLOWCHART_CHG_RULES = 'rules';
+  this.FLOWCHART_CHG_GRAPHHOVER = 'graphHover';
   this.TOOLTIP_APPLYON = [{
     text: 'Warning / Critical',
     value: 'wc'
@@ -18928,7 +18921,6 @@ var GFMessage = function () {
   function GFMessage(parent) {
     _classCallCheck(this, GFMessage);
 
-    debugger;
     var container = parent.querySelector('div#flowcharting-message');
 
     if (container !== null) {
