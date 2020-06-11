@@ -1,19 +1,20 @@
-import grafana from 'grafana_func';
+import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
+// import { appEvents } from 'grafana/app/core/core';
 import { mappingOptionsTab } from 'mapping_options';
 import { flowchartOptionsTab } from 'flowchart_options';
 import { inspectOptionsTab } from 'inspect_options';
 import { RulesHandler } from 'rulesHandler';
 import { FlowchartHandler } from 'flowchartHandler';
 import { MetricHandler } from 'metricHandler';
-import { PanelEvents } from '@grafana/data';
-import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
+// import { PanelEvents } from '@grafana/data';
 import { $GF } from 'globals_class';
+import grafana from 'grafana_func';
 import _ from 'lodash';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
   $rootScope: any;
-  $scope : any;
-  templateSrv : any;
+  $scope: any;
+  templateSrv: any;
   version: any;
   changedSource: boolean;
   changedData: boolean;
@@ -66,6 +67,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on(grafana.PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
     // this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
     // this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
+    // grafana.PanelEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
+    // grafana.PanelEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
     grafana.appEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
     grafana.appEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
