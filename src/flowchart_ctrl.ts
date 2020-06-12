@@ -8,6 +8,7 @@ import { FlowchartHandler } from 'flowchartHandler';
 import { MetricHandler } from 'metricHandler';
 // import { PanelEvents } from '@grafana/data';
 import { $GF } from 'globals_class';
+import XGraph from 'graph_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
 
@@ -96,7 +97,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       $GF.clearUniqTimeOut(id);
       const setGraphHover = () => {
         $GF.setGraphHover(timestamp);
-        flowchartHandler.graphHoverChanged();
+        flowchartHandler.onGraphHoverChange();
         self.render();
         self.GHApplied = true;
         $GF.clearUniqTimeOut(id);
@@ -113,7 +114,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.GHApplied = false;
       $GF.clearUniqTimeOut(id);
       $GF.unsetGraphHover();
-      this.flowchartHandler.graphHoverChanged();
+      this.flowchartHandler.onGraphHoverChange();
       this.render();
     }
   }
@@ -124,7 +125,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onVarChanged() {
     if (this.flowchartHandler !== undefined) {
-      this.flowchartHandler.flagSourceChanged();
+      this.flowchartHandler.onSourceChange();
       this.flowchartHandler.render();
     }
   }
@@ -136,7 +137,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (!!this.metricHandler) {
       this.metricHandler.initData(dataList);
       if (!!this.flowchartHandler) {
-        this.flowchartHandler.dataChanged();
+        this.flowchartHandler.onDatasChange();
       }
     }
     this.render();
@@ -160,6 +161,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
+
+    // MxGraph Init
+    XGraph.initMxGraph();
 
     // $GF Containers
     const $section = elem.find('#flowcharting-section');

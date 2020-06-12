@@ -16494,6 +16494,7 @@ var FlowchartHandler = function () {
       flowchart.init();
       this.data.flowcharts.push(data);
       this.flowcharts.push(flowchart);
+      this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES, name);
       trc.after();
       return flowchart;
     }
@@ -16510,17 +16511,18 @@ var FlowchartHandler = function () {
     }
   }, {
     key: "render",
-    value: function render() {
+    value: function render(name) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee() {
-        var trc, optionsFlag, self, rules, metrics;
+        var trc, self, rules, metrics;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'render()');
+                console.log('Flags', this.flags);
+                debugger;
 
                 if (!this.mousedown) {
-                  optionsFlag = true;
                   self = this;
 
                   if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES)) {
@@ -16539,12 +16541,12 @@ var FlowchartHandler = function () {
                     rules = self.ctrl.rulesHandler.getRules();
                     metrics = self.ctrl.metricHandler.getMetrics();
                     self.async_refreshStates(rules, metrics);
-                    optionsFlag = false;
                   }
 
-                  if (optionsFlag || self.firstLoad) {
-                    self.applyOptions();
-                    optionsFlag = false;
+                  if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_APL_OPTIONS) || self.firstLoad) {
+                    this.getFlagNames(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_APL_OPTIONS).forEach(function (name) {
+                      self.applyOptions(name);
+                    });
                     self.firstLoad = false;
                   }
                 }
@@ -16552,7 +16554,7 @@ var FlowchartHandler = function () {
                 this.ctrl.renderingCompleted();
                 trc.after();
 
-              case 4:
+              case 6:
               case "end":
                 return _context.stop();
             }
@@ -16570,6 +16572,12 @@ var FlowchartHandler = function () {
     key: "onOptionsChange",
     value: function onOptionsChange(name) {
       this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
+      return this;
+    }
+  }, {
+    key: "onDatasChange",
+    value: function onDatasChange(name) {
+      this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_DATAS, name);
       return this;
     }
   }, {
@@ -17701,9 +17709,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var flowchartHandler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! flowchartHandler */ "./flowchartHandler.ts");
 /* harmony import */ var metricHandler__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! metricHandler */ "./metricHandler.ts");
 /* harmony import */ var globals_class__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! globals_class */ "./globals_class.ts");
-/* harmony import */ var grafana_func__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! grafana_func */ "./grafana_func.ts");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! lodash */ "lodash");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var graph_class__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! graph_class */ "./graph_class.ts");
+/* harmony import */ var grafana_func__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! grafana_func */ "./grafana_func.ts");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash */ "lodash");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_10__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -17721,6 +17730,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -17764,25 +17774,25 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       flowchartsData: flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"].getDefaultData()
     };
 
-    lodash__WEBPACK_IMPORTED_MODULE_9___default.a.defaults(_this.panel, _this.panelDefaults);
+    lodash__WEBPACK_IMPORTED_MODULE_10___default.a.defaults(_this.panel, _this.panelDefaults);
 
     _this.panel.graphId = "flowchart_".concat(_this.panel.id);
     _this.containerDivId = "container_".concat(_this.panel.graphId);
 
-    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].PanelEvents.render, _this.onRender.bind(_assertThisInitialized(_this)));
+    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].PanelEvents.render, _this.onRender.bind(_assertThisInitialized(_this)));
 
-    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].PanelEvents.refresh, _this.onRefresh.bind(_assertThisInitialized(_this)));
+    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].PanelEvents.refresh, _this.onRefresh.bind(_assertThisInitialized(_this)));
 
-    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].PanelEvents.dataReceived, _this.onDataReceived.bind(_assertThisInitialized(_this)));
+    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].PanelEvents.dataReceived, _this.onDataReceived.bind(_assertThisInitialized(_this)));
 
-    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].PanelEvents.dataError, _this.onDataError.bind(_assertThisInitialized(_this)));
+    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].PanelEvents.dataError, _this.onDataError.bind(_assertThisInitialized(_this)));
 
-    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].PanelEvents.dataSnapshotLoad, _this.onDataReceived.bind(_assertThisInitialized(_this)));
+    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].PanelEvents.dataSnapshotLoad, _this.onDataReceived.bind(_assertThisInitialized(_this)));
 
-    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].PanelEvents.editModeInitialized, _this.onInitEditMode.bind(_assertThisInitialized(_this)));
+    _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].PanelEvents.editModeInitialized, _this.onInitEditMode.bind(_assertThisInitialized(_this)));
 
-    grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].appEvents.on('graph-hover', _this.onGraphHover.bind(_assertThisInitialized(_this)), _this.$scope);
-    grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].appEvents.on('graph-hover-clear', _this.clearCrosshair.bind(_assertThisInitialized(_this)), _this.$scope);
+    grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].appEvents.on('graph-hover', _this.onGraphHover.bind(_assertThisInitialized(_this)), _this.$scope);
+    grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].appEvents.on('graph-hover-clear', _this.clearCrosshair.bind(_assertThisInitialized(_this)), _this.$scope);
 
     _this.dashboard.events.on('template-variable-value-updated', _this.onVarChanged.bind(_assertThisInitialized(_this)), $scope);
 
@@ -17809,7 +17819,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
         var setGraphHover = function setGraphHover() {
           globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setGraphHover(timestamp);
-          flowchartHandler.graphHoverChanged();
+          flowchartHandler.onGraphHoverChange();
           self.render();
           self.GHApplied = true;
           globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].clearUniqTimeOut(id);
@@ -17828,7 +17838,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
         this.GHApplied = false;
         globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].clearUniqTimeOut(id);
         globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].unsetGraphHover();
-        this.flowchartHandler.graphHoverChanged();
+        this.flowchartHandler.onGraphHoverChange();
         this.render();
       }
     }
@@ -17841,7 +17851,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     key: "onVarChanged",
     value: function onVarChanged() {
       if (this.flowchartHandler !== undefined) {
-        this.flowchartHandler.flagSourceChanged();
+        this.flowchartHandler.onSourceChange();
         this.flowchartHandler.render();
       }
     }
@@ -17857,7 +17867,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
         this.metricHandler.initData(dataList);
 
         if (!!this.flowchartHandler) {
-          this.flowchartHandler.dataChanged();
+          this.flowchartHandler.onDatasChange();
         }
       }
 
@@ -17874,6 +17884,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].trace.before(this.constructor.name + '.' + 'link()');
+      graph_class__WEBPACK_IMPORTED_MODULE_8__["default"].initMxGraph();
       var $section = elem.find('#flowcharting-section');
       var parent = $section[0];
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setMessageDiv(parent);
@@ -17992,11 +18003,6 @@ var FlowchartOptionsCtrl = function () {
       var name = this.flowchartHandler.getCurrentFlowchartName();
       this.flowchartHandler.onOptionsChange(name);
       this.render();
-    }
-  }, {
-    key: "onColorChange",
-    value: function onColorChange() {
-      this.onOptionChange();
     }
   }, {
     key: "checkSource_onSourceChange",
@@ -19228,7 +19234,7 @@ var GFTrace = function () {
   return GFTrace;
 }();
 
-GFTrace.enable = true;
+GFTrace.enable = false;
 GFTrace.trc = new Map();
 GFTrace.fn = new Map();
 GFTrace.indent = 0;
@@ -19567,7 +19573,7 @@ $GF.log = GFLog.init();
 $GF.trace = GFTrace.init();
 $GF.graphHover = false;
 $GF.GHTimeStamp = 0;
-$GF.DEBUG = true;
+$GF.DEBUG = false;
 $GF.utils = __webpack_require__(/*! ./utils_raw */ "./utils_raw.js");
 /* WEBPACK VAR INJECTION */}.call(this, "/"))
 
@@ -19646,11 +19652,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var drawio_custom__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(drawio_custom__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var chroma_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! chroma-js */ "../node_modules/chroma-js/chroma.js");
 /* harmony import */ var chroma_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(chroma_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var mxgraph_custom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! mxgraph_custom */ "./mxgraph_custom.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -21123,24 +21131,36 @@ var XGraph = function () {
   }, {
     key: "initMxGraph",
     value: function initMxGraph() {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'initMxGgraph()');
-      var myWindow = window;
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee20() {
+        var trc, myWindow;
+        return regeneratorRuntime.wrap(function _callee20$(_context20) {
+          while (1) {
+            switch (_context20.prev = _context20.next) {
+              case 0:
+                trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'initMxGgraph()');
+                myWindow = window;
 
-      if (!XGraph.initialized) {
-        if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
-          XGraph.preInitGlobalVars();
-          var code = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.$loadFile("".concat(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath(), "js/viewer.min.js"));
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.evalRaw(code);
-          XGraph.postInitGlobalVars();
-          code = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.$loadFile("".concat(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getLibsPath(), "/Graph_custom.js"));
-          mxTooltipHandler.prototype.delay = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_TOOLTIPS_DELAY;
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.evalRaw(code);
-        }
+                if (!XGraph.initialized) {
+                  if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
+                    XGraph.preInitGlobalVars();
+                    globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.$evalFile("".concat(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath(), "js/viewer.min.js"));
+                    Object(mxgraph_custom__WEBPACK_IMPORTED_MODULE_5__["customize"])();
+                    XGraph.postInitGlobalVars();
+                    mxTooltipHandler.prototype.delay = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_TOOLTIPS_DELAY;
+                  }
 
-        XGraph.initialized = true;
-      }
+                  XGraph.initialized = true;
+                }
 
-      trc.after();
+                trc.after();
+
+              case 4:
+              case "end":
+                return _context20.stop();
+            }
+          }
+        }, _callee20, this);
+      }));
     }
   }, {
     key: "preInitGlobalVars",
@@ -21872,13 +21892,12 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var MetricHandler = function () {
-  function MetricHandler($scope) {
+  function MetricHandler() {
     _classCallCheck(this, MetricHandler);
 
     this.tables = [];
     this.series = [];
     this.metrics = [];
-    this.$scope = $scope;
   }
 
   _createClass(MetricHandler, [{
@@ -22585,6 +22604,159 @@ __webpack_require__.r(__webpack_exports__);
 
 
 _grafana_func__WEBPACK_IMPORTED_MODULE_1__["default"].loadCss();
+
+
+/***/ }),
+
+/***/ "./mxgraph_custom.js":
+/*!***************************!*\
+  !*** ./mxgraph_custom.js ***!
+  \***************************/
+/*! exports provided: customize */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "customize", function() { return customize; });
+var customize = function customize() {
+  mxTooltipHandler.prototype.show = function (tip, x, y) {
+    if (this.destroyed) {
+      return;
+    }
+
+    if (tip === null) {
+      return;
+    }
+
+    if (tip.length === 0) {
+      return;
+    }
+
+    if (this.div == null) {
+      this.init();
+    }
+
+    if (!mxUtils.isNode(tip)) {
+      this.div.innerHTML = tip.replace(/\n/g, '<br>');
+    } else {
+      this.div.innerHTML = '';
+      this.div.appendChild(tip);
+    }
+
+    this.$div.place_tt(x + 20, y);
+    this.div.style.visibility = '';
+    mxUtils.fit(this.div);
+  };
+
+  mxTooltipHandler.prototype.init = function () {
+    if (this.div === null || this.div === undefined) {
+      this.$div = $('<div class="graph-tooltip">');
+      this.div = this.$div[0];
+      mxEvent.addGestureListeners(this.div, mxUtils.bind(this, function (evt) {
+        this.hideTooltip();
+      }));
+    }
+  };
+
+  mxTooltipHandler.prototype.hideTooltip = function () {
+    if (this.div != null) {
+      this.div.style.visibility = 'hidden';
+      this.div.innerHTML = '';
+    }
+  };
+
+  mxTooltipHandler.prototype.delay = 200;
+
+  Graph.prototype.getTooltipForCell = function (cell) {
+    var hasTips = false;
+    var div = document.createElement('div');
+
+    if (mxUtils.isNode(cell.value)) {
+      var tmp = cell.value.getAttribute('tooltip');
+
+      if (tmp != null) {
+        hasTips = true;
+
+        if (tmp !== null && this.isReplacePlaceholders(cell)) {
+          tmp = this.replacePlaceholders(cell, tmp);
+        }
+
+        var ttDiv = document.createElement('div');
+        ttDiv.className = 'tooltip-text';
+        ttDiv.innerHTML = this.sanitizeHtml(tmp);
+        div.appendChild(ttDiv);
+      }
+
+      var ignored = this.builtInProperties;
+      var attrs = cell.value.attributes;
+      var temp = [];
+      ignored.push('link');
+
+      for (var i = 0; i < attrs.length; i++) {
+        if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
+          temp.push({
+            name: attrs[i].nodeName,
+            value: attrs[i].nodeValue
+          });
+        }
+      }
+
+      temp.sort(function (a, b) {
+        if (a.name < b.name) {
+          return -1;
+        } else if (a.name > b.name) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
+      if (temp.length > 0) {
+        hasTips = true;
+        var attrDiv = document.createElement('div');
+        var attrString = '';
+
+        for (var _i = 0; _i < temp.length; _i++) {
+          if (temp[_i].name !== 'link' || !this.isCustomLink(temp[_i].value)) {
+            attrString += (temp[_i].name !== 'link' ? '<b>' + temp[_i].name + ':</b> ' : '') + mxUtils.htmlEntities(temp[_i].value) + '\n';
+          }
+        }
+
+        attrDiv.innerHTML = attrString;
+        div.appendChild(attrDiv);
+      }
+    }
+
+    if (cell.GF_tooltipHandler != null) {
+      var tooltipHandler = cell.GF_tooltipHandler;
+      var gfDiv = tooltipHandler.getDiv(div);
+
+      if (gfDiv !== null) {
+        hasTips = true;
+      }
+    }
+
+    if (hasTips) {
+      return div;
+    }
+
+    return '';
+  };
+
+  mxEvent.addMouseWheelListener = function (func, container) {
+    if (null != func) {
+      var c = function c(container) {
+        null == container && (container = window.event);
+        var c;
+        c = mxClient.IS_FF ? -container.detail / 2 : container.wheelDelta / 120;
+        0 !== c && func(container, 0 < c);
+      };
+
+      mxClient.IS_NS && null == document.documentMode ? mxEvent.addListener(mxClient.IS_GC && null != container ? container : window, mxClient.IS_SF || mxClient.IS_GC ? 'mousewheel' : 'DOMMouseScroll', c) : mxEvent.addListener(document, 'mousewheel', c);
+    }
+  };
+};
+
 
 
 /***/ }),

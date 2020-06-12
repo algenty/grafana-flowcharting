@@ -324,7 +324,7 @@ export class FlowchartHandler {
     flowchart.init();
     this.data.flowcharts.push(data);
     this.flowcharts.push(flowchart);
-    this.onSourceChange(name);
+    this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES, name);
     trc.after();
     return flowchart;
   }
@@ -350,11 +350,12 @@ export class FlowchartHandler {
    *
    * @memberof FlowchartHandler
    */
-  async render() {
+  async render(name?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
+    console.log('Flags',this.flags);
+    debugger
     // not repeat render if mouse down
     if (!this.mousedown) {
-      let optionsFlag = true;
       const self = this;
       // SOURCE
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES)) {
@@ -381,14 +382,14 @@ export class FlowchartHandler {
 
         // Change to async to optimize
         self.async_refreshStates(rules, metrics);
-        // self.changeDataFlag = false;
-        optionsFlag = false;
-        // self.changeGraphHoverFlag = false;
+
       }
       // OTHER : Resize, OnLoad
-      if (optionsFlag || self.firstLoad) {
-        self.applyOptions();
-        optionsFlag = false;
+      if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS) || self.firstLoad) {
+        this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS).forEach(name => {
+          self.applyOptions(name);
+        });
+        
         self.firstLoad = false;
       }
       // this.refresh();
@@ -421,6 +422,18 @@ export class FlowchartHandler {
   }
 
   /**
+   * Flag datas change
+   *
+   * @param {string} [name]
+   * @returns {this}
+   * @memberof FlowchartHandler
+   */
+  onDatasChange(name?: string): this {
+    this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS, name);
+    return this;
+  }
+
+  /**
    * Flag rule change
    *
    * @returns {this}
@@ -448,7 +461,7 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  applyOptions(name ?:string): this {
+  applyOptions(name?: string): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
     if (name === undefined) {
       this.flowcharts.forEach(flowchart => {
@@ -639,7 +652,7 @@ export class FlowchartHandler {
    */
   draw(name?: string): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
-    if(name === undefined) {
+    if (name === undefined) {
       this.flowcharts.forEach(flowchart => {
         const name = flowchart.getName();
         this.draw(name);
@@ -652,7 +665,7 @@ export class FlowchartHandler {
     return this;
   }
 
-  drawCurrent():this {
+  drawCurrent(): this {
     const name = this.getCurrentFlowchartName();
     this.draw(name);
     return this;

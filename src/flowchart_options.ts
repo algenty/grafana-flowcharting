@@ -61,9 +61,9 @@ export class FlowchartOptionsCtrl {
     this.render();
   }
 
-  onColorChange() {
-    this.onOptionChange();
-  }
+  // onColorChange() {
+  //   this.onOptionChange();
+  // }
 
   checkSource_onSourceChange(source: string): boolean {
     const bool = XGraph.isValidXml(source);

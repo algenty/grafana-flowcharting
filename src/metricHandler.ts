@@ -10,12 +10,15 @@ import { $GF } from 'globals_class';
  */
 export class MetricHandler {
   panel: any;
-  $scope: ng.IScope;
+  // $scope: ng.IScope;
   tables: Table[] = [];
   series: Serie[] = [];
   metrics: Array<Serie | Table> = [];
-  constructor($scope: ng.IScope) {
-    this.$scope = $scope;
+  // constructor($scope: ng.IScope) {
+  //   this.$scope = $scope;
+  // }
+  constructor() {
+
   }
 
   /**
