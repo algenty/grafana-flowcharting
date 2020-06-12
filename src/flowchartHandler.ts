@@ -23,12 +23,13 @@ export class FlowchartHandler {
     rules: new Set<string>(),
     datas: new Set<string>(),
     graphHover: new Set<string>(),
+    applyOptions: new Set<string>(),
   };
-  changeSourceFlag: Set<string> = new Set<string>(); // Source changed
-  changeOptionFlag: Set<string> = new Set<string>(); // Options changed
-  changeDataFlag = false; // Data changed
-  changeGraphHoverFlag = false; // Graph Hover
-  changeRuleFlag = false; // rules changed
+  // changeSourceFlag: Set<string> = new Set<string>(); // Source changed
+  // changeOptionFlag: Set<string> = new Set<string>(); // Options changed
+  // changeDataFlag = false; // Data changed
+  // changeGraphHoverFlag = false; // Graph Hover
+  // changeRuleFlag = false; // rules changed
   newMode = false; // Mode if new flowchart
   sequenceNumber = 0; // Sequence Number for a name
   static defaultXml: string;
@@ -355,27 +356,26 @@ export class FlowchartHandler {
       const self = this;
       // SOURCE
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES)) {
-        this.changeSourceFlag.forEach(name => {
-          if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES, name)) {
-            self.load(name);
-            self.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES, name);
-          }
+        this.getFlagNames($GF.CONSTANTS.FLOWCHART_CHG_SOURCES).forEach(name => {
+          self.load(name).setOptions(name);
+          self.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES, name);
+          self.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
+          self.flagChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS, name);
+          self.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS, name);
         });
-        self.changeRuleFlag = true;
-        optionsFlag = true;
       }
+
       // OPTIONS
-      if (self.isOptionChanged()) {
-        this.changeSourceFlag.forEach(name => {
-          if (self.isOptionChanged(name)) {
-            self.setOptions(name);
-            self.aknowledgeOptionChanged(name);
-          }
+      if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS)) {
+        this.getFlagNames($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS).forEach(name => {
+          self.setOptions(name);
+          self.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
+          self.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS, name);
         });
-        optionsFlag = true;
       }
+      
       // RULES or DATAS
-      if (self.changeRuleFlag || self.changeDataFlag || self.changeGraphHoverFlag) {
+      if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_RULES) || self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS) || self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER)) {
         const rules = self.ctrl.rulesHandler.getRules();
         const metrics = self.ctrl.metricHandler.getMetrics();
 
@@ -403,45 +403,11 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  // flagSourceChanged(name?: string): this {
-  //   if (name !== undefined) {
-  //     this.changeSourceFlag.add(name);
-  //   } else {
-  //     this.flowcharts.forEach(flowchart => {
-  //       const name = flowchart.getName();
-  //       this.changeSourceFlag.add(name);
-  //     });
-  //   }
-  //   return this;
-  // }
+  onSourceChange(name?: string): this {
+    this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES, name);
+    return this;
+  }
 
-  /**
-   * Indicate if source changed
-   *
-   * @param {string} [name]
-   * @returns {boolean}
-   * @memberof FlowchartHandler
-   */
-  // isSourceChanged(name?: string): boolean {
-  //   if (name === undefined) {
-  //     return this.changeSourceFlag.size > 0;
-  //   }
-  //   return this.changeSourceFlag.has(name);
-  // }
-
-  /**
-   * Aknowledge source Change and applied
-   *
-   * @param {string} [name]
-   * @memberof FlowchartHandler
-   */
-  // aknowledgeSourceChanged(name ?:string): void {
-  //   if(name === undefined) {
-  //     this.changeSourceFlag.clear();
-  //   } else {
-  //     this.changeSourceFlag.delete(name);
-  //   }
-  // }
 
   /**
    * Flag options change
@@ -450,45 +416,11 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  // flagOptionChanged(name?: string): this {
-  //   if (name !== undefined) {
-  //     this.changeOptionFlag.add(name);
-  //   } else {
-  //     this.flowcharts.forEach(flowchart => {
-  //       const name = flowchart.getName();
-  //       this.changeOptionFlag.add(name);
-  //     });
-  //   }
-  //   return this;
-  // }
+  onOptionsChange(name?: string): this {
+    this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
+    return this;
+  }
 
-  /**
-   * Indicate if an option has changed
-   *
-   * @param {string} [name]
-   * @returns {boolean}
-   * @memberof FlowchartHandler
-   */
-  // isOptionChanged(name?: string): boolean {
-  //   if (name === undefined) {
-  //     return this.changeOptionFlag.size > 0;
-  //   }
-  //   return this.changeOptionFlag.has(name);
-  // }
-
-  /**
-   * Aknowledge options change and applied
-   *
-   * @param {string} [name]
-   * @memberof FlowchartHandler
-   */
-  // aknowledgeOptionChanged(name ?:string): void {
-  //   if(name === undefined) {
-  //     this.changeOptionFlag.clear();
-  //   } else {
-  //     this.changeOptionFlag.delete(name);
-  //   }
-  // }
 
   /**
    * Flag rule change
@@ -496,19 +428,8 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  ruleChanged(): this {
-    this.changeRuleFlag = true;
-    return this;
-  }
-
-  /**
-   * Flag data change
-   *
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  dataChanged(): this {
-    this.changeDataFlag = true;
+  onRulesChange(name?: string): this {
+    this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_RULES, name);
     return this;
   }
 
@@ -518,8 +439,8 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  graphHoverChanged(): this {
-    this.changeGraphHoverFlag = true;
+  onGraphHoverChange(): this {
+    this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER, name);
     return this;
   }
 
@@ -563,6 +484,12 @@ export class FlowchartHandler {
     } else {
       this.flags[type].delete(name);
     }
+  }
+
+  getFlagNames(type: gf.TFlowchartFlagKeys): string[] {
+    let result: string[] = []
+    this.flags[type].forEach((value) => result.push(value));
+    return result;
   }
 
   /**

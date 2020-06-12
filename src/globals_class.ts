@@ -45,6 +45,7 @@ class GFCONSTANT {
   // FLOWCHART CHANGE KEY FLAG
   FLOWCHART_CHG_SOURCES:gf.TFlowchartFlagKeys = 'sources';
   FLOWCHART_CHG_OPTIONS:gf.TFlowchartFlagKeys = 'options';
+  FLOWCHART_APL_OPTIONS:gf.TFlowchartFlagKeys = 'applyOptions';
   FLOWCHART_CHG_DATAS:gf.TFlowchartFlagKeys = 'datas';
   FLOWCHART_CHG_RULES:gf.TFlowchartFlagKeys = 'rules';
   FLOWCHART_CHG_GRAPHHOVER:gf.TFlowchartFlagKeys = 'graphHover';
