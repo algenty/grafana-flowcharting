@@ -24,6 +24,7 @@ export class FlowchartHandler {
     datas: new Set<string>(),
     graphHover: new Set<string>(),
     applyOptions: new Set<string>(),
+    hiddenChange: new Set<string>(),
   };
   // changeSourceFlag: Set<string> = new Set<string>(); // Source changed
   // changeOptionFlag: Set<string> = new Set<string>(); // Options changed
@@ -323,6 +324,7 @@ export class FlowchartHandler {
     flowchart.init();
     this.data.flowcharts.push(data);
     this.flowcharts.push(flowchart);
+    this.onSourceChange(name);
     trc.after();
     return flowchart;
   }
@@ -358,10 +360,6 @@ export class FlowchartHandler {
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES)) {
         this.getFlagNames($GF.CONSTANTS.FLOWCHART_CHG_SOURCES).forEach(name => {
           self.load(name).setOptions(name);
-          self.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES, name);
-          self.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
-          self.flagChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS, name);
-          self.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS, name);
         });
       }
 
@@ -369,21 +367,23 @@ export class FlowchartHandler {
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS)) {
         this.getFlagNames($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS).forEach(name => {
           self.setOptions(name);
-          self.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
-          self.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS, name);
         });
       }
-      
+
       // RULES or DATAS
-      if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_RULES) || self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS) || self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER)) {
+      if (
+        self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_RULES) ||
+        self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS) ||
+        self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER)
+      ) {
         const rules = self.ctrl.rulesHandler.getRules();
         const metrics = self.ctrl.metricHandler.getMetrics();
 
         // Change to async to optimize
         self.async_refreshStates(rules, metrics);
-        self.changeDataFlag = false;
+        // self.changeDataFlag = false;
         optionsFlag = false;
-        self.changeGraphHoverFlag = false;
+        // self.changeGraphHoverFlag = false;
       }
       // OTHER : Resize, OnLoad
       if (optionsFlag || self.firstLoad) {
@@ -408,7 +408,6 @@ export class FlowchartHandler {
     return this;
   }
 
-
   /**
    * Flag options change
    *
@@ -420,7 +419,6 @@ export class FlowchartHandler {
     this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
     return this;
   }
-
 
   /**
    * Flag rule change
@@ -450,11 +448,21 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  applyOptions(): this {
+  applyOptions(name ?:string): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
-    this.flowcharts.forEach(flowchart => {
+    if (name === undefined) {
+      this.flowcharts.forEach(flowchart => {
+        const name = flowchart.getName();
+        this.applyOptions(name);
+      });
+    } else {
+      const flowchart = this.getFlowchart(name);
       flowchart.applyOptions();
-    });
+      this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
+      if (!flowchart.isVisible()) {
+        this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
+      }
+    }
     trc.after();
     return this;
   }
@@ -487,8 +495,8 @@ export class FlowchartHandler {
   }
 
   getFlagNames(type: gf.TFlowchartFlagKeys): string[] {
-    let result: string[] = []
-    this.flags[type].forEach((value) => result.push(value));
+    let result: string[] = [];
+    this.flags[type].forEach(value => result.push(value));
     return result;
   }
 
@@ -515,9 +523,9 @@ export class FlowchartHandler {
    */
   refreshStates(rules: Rule[], metrics: Metric[]): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'refreshStates()');
-    if (this.changeRuleFlag) {
+    if (this.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_RULES)) {
       this.updateStates(rules);
-      this.changeRuleFlag = false;
+      this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_RULES);
     }
     this.setStates(rules, metrics);
     this.applyStates();
@@ -600,11 +608,18 @@ export class FlowchartHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setOptions()');
     if (name === undefined) {
       this.flowcharts.forEach(flowchart => {
-        flowchart.setOptions();
+        const name = flowchart.getName();
+        this.setOptions(name);
       });
     } else {
       const flowchart = this.getFlowchart(name);
       flowchart.setOptions();
+      this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
+      this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS, name);
+      this.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS, name);
+      if (!flowchart.isVisible()) {
+        this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
+      }
     }
     trc.after();
     return this;
@@ -622,12 +637,24 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  draw(): this {
+  draw(name?: string): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
-    this.flowcharts.forEach(flowchart => {
+    if(name === undefined) {
+      this.flowcharts.forEach(flowchart => {
+        const name = flowchart.getName();
+        this.draw(name);
+      });
+    } else {
+      const flowchart = this.getFlowchart(name);
       flowchart.redraw();
-    });
+    }
     trc.after();
+    return this;
+  }
+
+  drawCurrent():this {
+    const name = this.getCurrentFlowchartName();
+    this.draw(name);
     return this;
   }
 
@@ -641,16 +668,26 @@ export class FlowchartHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
     if (name === undefined) {
       this.flowcharts.forEach(flowchart => {
-        flowchart.reload();
+        this.load(name);
       });
     } else {
       const flowchart = this.getFlowchart(name);
+      if (!flowchart.isVisible()) {
+        this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
+      }
       flowchart.reload();
+      this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES, name);
     }
     trc.after();
     return this;
   }
 
+  /**
+   * load current flowchart
+   *
+   * @returns {this}
+   * @memberof FlowchartHandler
+   */
   loadCurrent(): this {
     const name = this.getCurrentFlowchartName();
     this.load(name);
@@ -740,7 +777,7 @@ export class FlowchartHandler {
           if (fc !== undefined) {
             $GF.message.setMessage('Received data from draw.io editor, refresh in progress', 'info');
             fc.redraw(event.data);
-            this.flagSourceChanged();
+            this.onSourceChange(fc.getName());
             this.$scope.$apply();
             this.render();
           }

@@ -22,6 +22,7 @@ export class Flowchart {
   templateSrv: any;
   states: Map<string, State> | undefined;
   id: string;
+  visible = false;
 
   constructor(name: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {
     this.data = data;
@@ -612,7 +613,7 @@ export class Flowchart {
     let content: string | null = '';
     if (this.data.download) {
       const url = this.templateSrv.replaceWithText(this.data.url);
-      $GF.message.setMessage('Loading content defition', 'info');
+      $GF.message.setMessage(`Loading content definition for ${this.data.name}`, 'info');
       content = this.loadContent(url);
       $GF.message.clearMessage();
       if (content !== null) {
@@ -773,11 +774,16 @@ export class Flowchart {
     }
   }
 
-  toFront() {
+  toFront(forceRefresh:boolean = true) {
+    this.visible = true;
     this.container.className = 'GF_show';
+    if(forceRefresh) {
+      this.applyOptions();
+    }
   }
 
   toBack() {
+    this.visible = false;
     this.container.className = 'GF_hide';
   }
 

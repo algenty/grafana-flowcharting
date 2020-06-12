@@ -16289,13 +16289,10 @@ var FlowchartHandler = function () {
       options: new Set(),
       rules: new Set(),
       datas: new Set(),
-      graphHover: new Set()
+      graphHover: new Set(),
+      applyOptions: new Set(),
+      hiddenChange: new Set()
     };
-    this.changeSourceFlag = new Set();
-    this.changeOptionFlag = new Set();
-    this.changeDataFlag = false;
-    this.changeGraphHoverFlag = false;
-    this.changeRuleFlag = false;
     this.newMode = false;
     this.sequenceNumber = 0;
     this.onMapping = {
@@ -16527,33 +16524,22 @@ var FlowchartHandler = function () {
                   self = this;
 
                   if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES)) {
-                    this.changeSourceFlag.forEach(function (name) {
-                      if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES, name)) {
-                        self.load(name);
-                        self.aknowledgeFlagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES, name);
-                      }
+                    this.getFlagNames(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES).forEach(function (name) {
+                      self.load(name).setOptions(name);
                     });
-                    self.changeRuleFlag = true;
-                    optionsFlag = true;
                   }
 
-                  if (self.isOptionChanged()) {
-                    this.changeSourceFlag.forEach(function (name) {
-                      if (self.isOptionChanged(name)) {
-                        self.setOptions(name);
-                        self.aknowledgeOptionChanged(name);
-                      }
+                  if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_OPTIONS)) {
+                    this.getFlagNames(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_OPTIONS).forEach(function (name) {
+                      self.setOptions(name);
                     });
-                    optionsFlag = true;
                   }
 
-                  if (self.changeRuleFlag || self.changeDataFlag || self.changeGraphHoverFlag) {
+                  if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_RULES) || self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_DATAS) || self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_GRAPHHOVER)) {
                     rules = self.ctrl.rulesHandler.getRules();
                     metrics = self.ctrl.metricHandler.getMetrics();
                     self.async_refreshStates(rules, metrics);
-                    self.changeDataFlag = false;
                     optionsFlag = false;
-                    self.changeGraphHoverFlag = false;
                   }
 
                   if (optionsFlag || self.firstLoad) {
@@ -16575,37 +16561,59 @@ var FlowchartHandler = function () {
       }));
     }
   }, {
-    key: "ruleChanged",
-    value: function ruleChanged() {
-      this.changeRuleFlag = true;
+    key: "onSourceChange",
+    value: function onSourceChange(name) {
+      this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES, name);
       return this;
     }
   }, {
-    key: "dataChanged",
-    value: function dataChanged() {
-      this.changeDataFlag = true;
+    key: "onOptionsChange",
+    value: function onOptionsChange(name) {
+      this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
       return this;
     }
   }, {
-    key: "graphHoverChanged",
-    value: function graphHoverChanged() {
-      this.changeGraphHoverFlag = true;
+    key: "onRulesChange",
+    value: function onRulesChange(name) {
+      this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_RULES, name);
+      return this;
+    }
+  }, {
+    key: "onGraphHoverChange",
+    value: function onGraphHoverChange() {
+      this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_GRAPHHOVER, name);
       return this;
     }
   }, {
     key: "applyOptions",
-    value: function applyOptions() {
+    value: function applyOptions(name) {
+      var _this3 = this;
+
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'applyOptions()');
-      this.flowcharts.forEach(function (flowchart) {
+
+      if (name === undefined) {
+        this.flowcharts.forEach(function (flowchart) {
+          var name = flowchart.getName();
+
+          _this3.applyOptions(name);
+        });
+      } else {
+        var flowchart = this.getFlowchart(name);
         flowchart.applyOptions();
-      });
+        this.aknowledgeFlagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
+
+        if (!flowchart.isVisible()) {
+          this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
+        }
+      }
+
       trc.after();
       return this;
     }
   }, {
     key: "flagChange",
     value: function flagChange(type, name) {
-      var _this3 = this;
+      var _this4 = this;
 
       if (name !== undefined) {
         this.flags[type].add(name);
@@ -16613,7 +16621,7 @@ var FlowchartHandler = function () {
         this.flowcharts.forEach(function (flowchart) {
           var name = flowchart.getName();
 
-          _this3.flags[type].add(name);
+          _this4.flags[type].add(name);
         });
       }
 
@@ -16638,6 +16646,15 @@ var FlowchartHandler = function () {
       }
     }
   }, {
+    key: "getFlagNames",
+    value: function getFlagNames(type) {
+      var result = [];
+      this.flags[type].forEach(function (value) {
+        return result.push(value);
+      });
+      return result;
+    }
+  }, {
     key: "async_refreshStates",
     value: function async_refreshStates(rules, metrics) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'async_refreshStates()');
@@ -16649,9 +16666,9 @@ var FlowchartHandler = function () {
     value: function refreshStates(rules, metrics) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'refreshStates()');
 
-      if (this.changeRuleFlag) {
+      if (this.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_RULES)) {
         this.updateStates(rules);
-        this.changeRuleFlag = false;
+        this.aknowledgeFlagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_RULES);
       }
 
       this.setStates(rules, metrics);
@@ -16690,15 +16707,15 @@ var FlowchartHandler = function () {
   }, {
     key: "applyStates",
     value: function applyStates() {
-      var _this4 = this;
+      var _this5 = this;
 
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'applyStates()');
       new Promise(function () {
-        _this4.flowcharts.forEach(function (flowchart) {
+        _this5.flowcharts.forEach(function (flowchart) {
           flowchart.applyStates();
         });
       }).then(function () {
-        _this4.refresh();
+        _this5.refresh();
       });
       trc.after();
       return this;
@@ -16706,15 +16723,26 @@ var FlowchartHandler = function () {
   }, {
     key: "setOptions",
     value: function setOptions(name) {
+      var _this6 = this;
+
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'setOptions()');
 
       if (name === undefined) {
         this.flowcharts.forEach(function (flowchart) {
-          flowchart.setOptions();
+          var name = flowchart.getName();
+
+          _this6.setOptions(name);
         });
       } else {
         var flowchart = this.getFlowchart(name);
         flowchart.setOptions();
+        this.aknowledgeFlagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
+        this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_DATAS, name);
+        this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_APL_OPTIONS, name);
+
+        if (!flowchart.isVisible()) {
+          this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
+        }
       }
 
       trc.after();
@@ -16729,26 +16757,52 @@ var FlowchartHandler = function () {
     }
   }, {
     key: "draw",
-    value: function draw() {
+    value: function draw(name) {
+      var _this7 = this;
+
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'draw()');
-      this.flowcharts.forEach(function (flowchart) {
+
+      if (name === undefined) {
+        this.flowcharts.forEach(function (flowchart) {
+          var name = flowchart.getName();
+
+          _this7.draw(name);
+        });
+      } else {
+        var flowchart = this.getFlowchart(name);
         flowchart.redraw();
-      });
+      }
+
       trc.after();
+      return this;
+    }
+  }, {
+    key: "drawCurrent",
+    value: function drawCurrent() {
+      var name = this.getCurrentFlowchartName();
+      this.draw(name);
       return this;
     }
   }, {
     key: "load",
     value: function load(name) {
+      var _this8 = this;
+
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'draw()');
 
       if (name === undefined) {
         this.flowcharts.forEach(function (flowchart) {
-          flowchart.reload();
+          _this8.load(name);
         });
       } else {
         var flowchart = this.getFlowchart(name);
+
+        if (!flowchart.isVisible()) {
+          this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
+        }
+
         flowchart.reload();
+        this.aknowledgeFlagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES, name);
       }
 
       trc.after();
@@ -16820,7 +16874,7 @@ var FlowchartHandler = function () {
 
               _fc.redraw(event.data);
 
-              this.flagSourceChanged();
+              this.onSourceChange(_fc.getName());
               this.$scope.$apply();
               this.render();
             }
@@ -16928,6 +16982,7 @@ var Flowchart = function () {
     _classCallCheck(this, Flowchart);
 
     this.xgraph = undefined;
+    this.visible = false;
     this.data = data;
     this.data.name = name;
     this.container = container;
@@ -17400,7 +17455,7 @@ var Flowchart = function () {
 
       if (this.data.download) {
         var url = this.templateSrv.replaceWithText(this.data.url);
-        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.setMessage('Loading content defition', 'info');
+        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.setMessage("Loading content definition for ".concat(this.data.name), 'info');
         content = this.loadContent(url);
         globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.clearMessage();
 
@@ -17577,11 +17632,18 @@ var Flowchart = function () {
   }, {
     key: "toFront",
     value: function toFront() {
+      var forceRefresh = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+      this.visible = true;
       this.container.className = 'GF_show';
+
+      if (forceRefresh) {
+        this.applyOptions();
+      }
     }
   }, {
     key: "toBack",
     value: function toBack() {
+      this.visible = false;
       this.container.className = 'GF_hide';
     }
   }, {
@@ -17921,14 +17983,14 @@ var FlowchartOptionsCtrl = function () {
     key: "onSourceChange",
     value: function onSourceChange() {
       var name = this.flowchartHandler.getCurrentFlowchartName();
-      this.flowchartHandler.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES, name);
+      this.flowchartHandler.onSourceChange(name);
       this.render();
     }
   }, {
     key: "onOptionChange",
     value: function onOptionChange() {
       var name = this.flowchartHandler.getCurrentFlowchartName();
-      this.flowchartHandler.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
+      this.flowchartHandler.onOptionsChange(name);
       this.render();
     }
   }, {
@@ -18204,9 +18266,11 @@ var GFCONSTANT = function GFCONSTANT() {
   this.VAR_STR_COLOR = '_color';
   this.FLOWCHART_CHG_SOURCES = 'sources';
   this.FLOWCHART_CHG_OPTIONS = 'options';
+  this.FLOWCHART_APL_OPTIONS = 'applyOptions';
   this.FLOWCHART_CHG_DATAS = 'datas';
   this.FLOWCHART_CHG_RULES = 'rules';
   this.FLOWCHART_CHG_GRAPHHOVER = 'graphHover';
+  this.FLOWCHART_CHG_HIDDENCHANGE = 'hiddenChange';
   this.TOOLTIP_APPLYON = [{
     text: 'Warning / Critical',
     value: 'wc'
@@ -18945,29 +19009,37 @@ var GFMessage = function () {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                return _context5.abrupt("return");
+                if (!(GFMessage.container && GFMessage.message)) {
+                  _context5.next = 15;
+                  break;
+                }
 
-              case 6:
+                GFMessage.message.innerHTML = message;
+                _context5.t0 = type;
+                _context5.next = _context5.t0 === GFMessage.INFO_MESSAGE ? 5 : _context5.t0 === GFMessage.ERROR_MESSAGE ? 7 : _context5.t0 === GFMessage.WARNING_MESSAGE ? 9 : 11;
+                break;
+
+              case 5:
                 GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 14);
+                return _context5.abrupt("break", 13);
 
-              case 8:
+              case 7:
                 GFMessage.message.style.color = GFMessage.ERROR_COLOR;
-                return _context5.abrupt("break", 14);
+                return _context5.abrupt("break", 13);
 
-              case 10:
+              case 9:
                 GFMessage.message.style.color = GFMessage.WARNING_COLOR;
-                return _context5.abrupt("break", 14);
+                return _context5.abrupt("break", 13);
 
-              case 12:
+              case 11:
                 GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 14);
+                return _context5.abrupt("break", 13);
 
-              case 14:
+              case 13:
                 GFMessage.container.style.display = '';
                 $GF.setUniqTimeOut(this.clearMessage, $GF.CONSTANTS.CONF_GFMESSAGE_MS, 'flowcharting-message');
 
-              case 16:
+              case 15:
               case "end":
                 return _context5.stop();
             }
@@ -18978,8 +19050,6 @@ var GFMessage = function () {
   }, {
     key: "clearMessage",
     value: function clearMessage() {
-      return;
-
       if (GFMessage.container && GFMessage.message) {
         GFMessage.container.style.display = 'none';
         GFMessage.message.innerHTML = '';

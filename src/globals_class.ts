@@ -49,6 +49,7 @@ class GFCONSTANT {
   FLOWCHART_CHG_DATAS:gf.TFlowchartFlagKeys = 'datas';
   FLOWCHART_CHG_RULES:gf.TFlowchartFlagKeys = 'rules';
   FLOWCHART_CHG_GRAPHHOVER:gf.TFlowchartFlagKeys = 'graphHover';
+  FLOWCHART_CHG_HIDDENCHANGE:gf.TFlowchartFlagKeys = 'hiddenChange';
 
 
   // CONDITIONS
@@ -621,7 +622,6 @@ class GFMessage {
   }
 
   async setMessage(message: string, type: string = GFMessage.INFO_MESSAGE) {
-    return;
     if (GFMessage.container && GFMessage.message) {
       GFMessage.message.innerHTML = message;
       switch (type) {
@@ -645,7 +645,6 @@ class GFMessage {
   }
 
   clearMessage() {
-    return;
     if (GFMessage.container && GFMessage.message) {
       GFMessage.container.style.display = 'none';
       GFMessage.message.innerHTML = '';
