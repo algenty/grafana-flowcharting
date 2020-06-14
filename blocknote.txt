@@ -96,4 +96,5 @@ Add sparkline
 Add a refresh timer on donwload optionsFlag
 Add rename option on flowchart
 fade
-change layer event
+change layer event 
+Simplify editor

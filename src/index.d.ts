@@ -145,7 +145,14 @@ declare module gf {
   }
 
   // Flowchart flag type
-  declare type TFlowchartFlagKeys = 'sources' | 'options' | 'rules' | 'datas' | 'graphHover' | 'applyOptions' | 'hiddenChange';
+  declare type TFlowchartFlagKeys =
+    | 'sources'
+    | 'options'
+    | 'rules'
+    | 'datas'
+    | 'graphHover'
+    | 'applyOptions'
+    | 'hiddenChange';
   declare type TFlowchartFlagElt = { text: string; value: TFlowchartFlagKeys };
   declare type TFlowchartFlagList = TFlowchartFlagElt[];
 

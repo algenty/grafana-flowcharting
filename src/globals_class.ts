@@ -43,14 +43,13 @@ class GFCONSTANT {
   VAR_STR_COLOR: gf.TVariableKeys = '_color';
 
   // FLOWCHART CHANGE KEY FLAG
-  FLOWCHART_CHG_SOURCES:gf.TFlowchartFlagKeys = 'sources';
-  FLOWCHART_CHG_OPTIONS:gf.TFlowchartFlagKeys = 'options';
-  FLOWCHART_APL_OPTIONS:gf.TFlowchartFlagKeys = 'applyOptions';
-  FLOWCHART_CHG_DATAS:gf.TFlowchartFlagKeys = 'datas';
-  FLOWCHART_CHG_RULES:gf.TFlowchartFlagKeys = 'rules';
-  FLOWCHART_CHG_GRAPHHOVER:gf.TFlowchartFlagKeys = 'graphHover';
-  FLOWCHART_CHG_HIDDENCHANGE:gf.TFlowchartFlagKeys = 'hiddenChange';
-
+  FLOWCHART_CHG_SOURCES: gf.TFlowchartFlagKeys = 'sources';
+  FLOWCHART_CHG_OPTIONS: gf.TFlowchartFlagKeys = 'options';
+  FLOWCHART_APL_OPTIONS: gf.TFlowchartFlagKeys = 'applyOptions';
+  FLOWCHART_CHG_DATAS: gf.TFlowchartFlagKeys = 'datas';
+  FLOWCHART_CHG_RULES: gf.TFlowchartFlagKeys = 'rules';
+  FLOWCHART_CHG_GRAPHHOVER: gf.TFlowchartFlagKeys = 'graphHover';
+  FLOWCHART_CHG_HIDDENCHANGE: gf.TFlowchartFlagKeys = 'hiddenChange';
 
   // CONDITIONS
   TOOLTIP_APPLYON: gf.TTooltipOnList = [
@@ -358,7 +357,7 @@ class GFLog {
   static ERROR = 3;
   static logLevel = GFLog.WARN;
   static logDisplay = true;
-  constructor() { }
+  constructor() {}
 
   static init(): GFLog {
     return new GFLog();
@@ -441,7 +440,7 @@ class GFPlugin {
   static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   static contextRoot: string;
-  constructor() { }
+  constructor() {}
 
   /**
    * init GFPlugin
@@ -665,15 +664,15 @@ class GFTrace {
   static indent = 0;
   trace:
     | {
-      Name: string;
-      Id: string;
-      Args: any;
-      Return: any;
-      Before: number;
-      End: number | undefined;
-      ExecTime: number | undefined;
-      Indent: number;
-    }
+        Name: string;
+        Id: string;
+        Args: any;
+        Return: any;
+        Before: number;
+        End: number | undefined;
+        ExecTime: number | undefined;
+        Indent: number;
+      }
     | undefined;
 
   constructor(fn?: string) {
@@ -701,15 +700,15 @@ class GFTrace {
   ):
     | GFTrace
     | {
-      after: () => void;
-    } {
+        after: () => void;
+      } {
     if (GFTrace.enable && fn !== undefined) {
       const t = new GFTrace(fn);
       GFTrace.indent++;
       GFTrace._inc(fn);
       return t;
     }
-    return { after: () => { } };
+    return { after: () => {} };
   }
 
   static _inc(fn) {

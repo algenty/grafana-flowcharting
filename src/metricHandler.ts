@@ -17,9 +17,7 @@ export class MetricHandler {
   // constructor($scope: ng.IScope) {
   //   this.$scope = $scope;
   // }
-  constructor() {
-
-  }
+  constructor() {}
 
   /**
    * Init data with dataList

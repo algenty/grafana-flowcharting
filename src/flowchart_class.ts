@@ -775,7 +775,7 @@ export class Flowchart {
   }
 
   toFront(forceRefresh: boolean = true): this {
-    $GF.log.debug("toFront", this.data.name);
+    $GF.log.debug('toFront', this.data.name);
     this.visible = true;
     this.container.className = 'GF_show';
     if (forceRefresh) {
@@ -785,7 +785,7 @@ export class Flowchart {
   }
 
   toBack(): this {
-    $GF.log.debug("toBack", this.data.name);
+    $GF.log.debug('toBack', this.data.name);
     this.visible = false;
     this.container.className = 'GF_hide';
     return this;
