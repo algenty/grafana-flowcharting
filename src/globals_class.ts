@@ -356,7 +356,7 @@ class GFLog {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  static logLevel = GFLog.DEBUG;
+  static logLevel = GFLog.WARN;
   static logDisplay = true;
   constructor() { }
 
@@ -1060,7 +1060,6 @@ export class $GF {
   static unsetGraphHover() {
     this.graphHover = false;
     this.GHTimeStamp = 0;
-    // console.log('this.graphHover',this.graphHover);
   }
 
   static hasGraphHover(): boolean {

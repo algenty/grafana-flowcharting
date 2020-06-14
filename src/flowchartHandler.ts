@@ -355,10 +355,9 @@ removeFlowchart(name: string) {
  */
 async render(name ?: string) {
   const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
-  console.log('RENDER Flags', this.flags);
+  // console.log('RENDER Flags', this.flags);
   // not repeat render if mouse down
   if (!this.mousedown) {
-    console.log('RENDER this.mousedown', this.mousedown);
     this.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
     const self = this;
     // SOURCE
@@ -386,13 +385,20 @@ async render(name ?: string) {
 
       // Change to async to optimize
       self.async_refreshStates(rules, metrics);
-      this.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
+      this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
       this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS);
+      this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER);
 
     }
+    // Current visible
+    if(self.currentFlowchart !== undefined && !self.currentFlowchart.isVisible()) {
+      this.setCurrentFlowchart(self.currentFlowchart.getName());
+      this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
+    }
+    
     // OTHER : Resize, OnLoad
     if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS) || self.firstLoad) {
-      this.setCurrentFlowchart('Main');
+      // this.setCurrentFlowchart('Main');
       this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS).forEach(name => {
         self.applyOptions(name);
       });
@@ -468,6 +474,7 @@ onGraphHoverChange(): this {
  * @memberof FlowchartHandler
  */
 applyOptions(name ?: string): this {
+  $GF.log.debug(`${this.constructor.name}.applyOptions()`,name);
   const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
   if (name === undefined) {
     this.flowcharts.forEach(flowchart => {

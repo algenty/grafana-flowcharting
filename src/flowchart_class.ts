@@ -339,7 +339,7 @@ export class Flowchart {
     if (this.xgraph !== undefined) {
       this.xgraph.setContent(this.getContent());
     }
-    this.applyOptions();
+    // this.applyOptions();
   }
 
   /**

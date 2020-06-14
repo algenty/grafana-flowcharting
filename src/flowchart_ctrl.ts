@@ -204,7 +204,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.panel.flowchartsData = newFlowchartsData;
 
     // Position to main flowchart
-    this.flowchartHandler.setCurrentFlowchart('Main');
+    // this.flowchartHandler.setCurrentFlowchart('Main');
 
     // Versions
     this.panel.newFlag = false;

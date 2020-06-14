@@ -139,7 +139,7 @@ export class MappingOptionsCtrl {
 
   onRulesChange() {
     $GF.log.info('MappingOptionsCtrl.onRulesChange()');
-    this.flowchartHandler.ruleChanged();
+    this.flowchartHandler.onRulesChange();
     this.render();
     return true;
   }
