@@ -171,7 +171,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.setMessageDiv(parent);
 
     // DATA
-    this.metricHandler = new MetricHandler(this.$scope);
+    this.metricHandler = new MetricHandler();
 
     // RULES
     const newRulesData = RulesHandler.getDefaultData();
@@ -202,6 +202,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.addFlowchart('Main');
     }
     this.panel.flowchartsData = newFlowchartsData;
+
+    // Position to main flowchart
+    this.flowchartHandler.setCurrentFlowchart('Main');
 
     // Versions
     this.panel.newFlag = false;

@@ -258,7 +258,7 @@ export class Flowchart {
    * @memberof Flowchart
    */
   setStates(rules: Rule[], metrics: Metric[]): this {
-    $GF.log.info(`flowchart[${this.data.name}].setStates()`);
+    // $GF.log.info(`flowchart[${this.data.name}].setStates()`);
     if (rules === undefined) {
       $GF.log.warn("Rules shoudn't be null");
     }
@@ -295,7 +295,7 @@ export class Flowchart {
    * @memberof Flowchart
    */
   applyStates(): this {
-    $GF.log.info(`flowchart[${this.data.name}].applyStates()`);
+    // $GF.log.info(`flowchart[${this.data.name}].applyStates()`);
     if (this.stateHandler) {
       this.stateHandler.applyStates();
     }
@@ -774,20 +774,24 @@ export class Flowchart {
     }
   }
 
-  toFront(forceRefresh:boolean = true) {
+  toFront(forceRefresh: boolean = true): this {
+    $GF.log.debug("toFront", this.data.name);
     this.visible = true;
     this.container.className = 'GF_show';
-    if(forceRefresh) {
+    if (forceRefresh) {
       this.applyOptions();
     }
+    return this;
   }
 
-  toBack() {
+  toBack(): this {
+    $GF.log.debug("toBack", this.data.name);
     this.visible = false;
     this.container.className = 'GF_hide';
+    return this;
   }
 
   isVisible(): boolean {
-    return this.container.className !== 'GF_hide';
+    return this.visible;
   }
 }

@@ -396,9 +396,6 @@ export class GFState {
     this.matchLevel.set(key, GFState.DEFAULTLEVEL);
     this.matchedKey.set(key, false);
     this.changedKey.set(key, false);
-    $GF.log.debug(
-      'GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value
-    );
   }
 
   hasKey(key: string): boolean {
@@ -447,7 +444,6 @@ export class GFState {
   apply(key?: string): this {
     if (key !== undefined) {
       if (this.isMatched(key)) {
-        $GF.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] MATCHED KEY=' + key);
         let value = this.getMatchValue(key);
         try {
           this.apply_core(key, value);
@@ -457,7 +453,6 @@ export class GFState {
         this.changedKey.set(key, true);
         this.matchedKey.set(key, false);
       } else if (this.isChanged(key)) {
-        $GF.log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] CHANGED KEY=' + key);
         this.reset(key);
       }
     } else {
@@ -521,7 +516,6 @@ export class GFState {
 
   reset(key?: string): this {
     if (key !== undefined) {
-      $GF.log.debug('GFState.reset from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key);
       this.unset(key);
       let value = this.getOriginalValue(key);
       try {
@@ -811,7 +805,6 @@ class ShapeState extends GFState {
   }
 
   init_core() {
-    $GF.log.info('ShapeState [' + this.mxcell.id + ']');
     // this.keys = $GF.CONSTANTS.COLORMETHODS.map(x => x.value);
     // this.fullStylesString = this.mxcell.getStyle();
     // this.keys.forEach(key => {

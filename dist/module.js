@@ -16358,17 +16358,9 @@ var FlowchartHandler = function () {
         this.data.editorTheme = !!obj.editorTheme ? obj.editorTheme : this.data.editorTheme;
         this.data.editorUrl = !!obj.editorUrl ? obj.editorUrl : this.data.editorUrl;
         tmpFc.forEach(function (fcData) {
-          var container = _this2.createContainer();
-
-          var newData = flowchart_class__WEBPACK_IMPORTED_MODULE_1__["Flowchart"].getDefaultData();
-          var fc = new flowchart_class__WEBPACK_IMPORTED_MODULE_1__["Flowchart"](fcData.name, container, _this2.ctrl, newData);
-          fc["import"](fcData);
-
-          _this2.flowcharts.push(fc);
-
-          _this2.data.flowcharts.push(newData);
+          _this2.addFlowchart(fcData.name).toBack()["import"](fcData);
         });
-        this.currentFlowchart = this.getFlowchart(this.data.main);
+        this.currentFlowchart = this.getFlowchart('Main');
       }
 
       return this;
@@ -16432,6 +16424,8 @@ var FlowchartHandler = function () {
   }, {
     key: "setCurrentFlowchart",
     value: function setCurrentFlowchart(name) {
+      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.debug("setCurrentFlowchart", name);
+
       if (name === undefined) {
         this.currentFlowchart = this.getFlowchart('Main');
         this.currentFlowchartName = this.currentFlowchart.getName();
@@ -16442,17 +16436,16 @@ var FlowchartHandler = function () {
       if (this.currentFlowchart === undefined) {
         this.currentFlowchart = this.getFlowchart(name);
         this.currentFlowchartName = this.currentFlowchart.getName();
-        this.currentFlowchart.toFront();
         return this.currentFlowchart;
       }
 
       if (this.currentFlowchart.getName() !== name) {
         this.currentFlowchart.toBack();
-        this.currentFlowchart = this.getFlowchart(name);
-        this.currentFlowchartName = name;
-        this.currentFlowchart.toFront();
       }
 
+      this.currentFlowchart = this.getFlowchart(name);
+      this.currentFlowchartName = name;
+      this.currentFlowchart.toFront();
       return this.currentFlowchart;
     }
   }, {
@@ -16471,7 +16464,7 @@ var FlowchartHandler = function () {
     value: function createContainer() {
       var div = document.createElement('div');
       div.style.margin = 'auto';
-      div.style.position = 'relative';
+      div.style.position = 'absolute';
       div.style.width = '100%';
       div.style.height = '100%';
       div.style.touchAction = 'none';
@@ -16488,13 +16481,11 @@ var FlowchartHandler = function () {
     key: "addFlowchart",
     value: function addFlowchart(name) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'addFlowchart()');
-      var container = this.createContainer();
       var data = flowchart_class__WEBPACK_IMPORTED_MODULE_1__["Flowchart"].getDefaultData();
+      var container = this.createContainer();
       var flowchart = new flowchart_class__WEBPACK_IMPORTED_MODULE_1__["Flowchart"](name, container, this.ctrl, data);
-      flowchart.init();
-      this.data.flowcharts.push(data);
       this.flowcharts.push(flowchart);
-      this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES, name);
+      this.data.flowcharts.push(data);
       trc.after();
       return flowchart;
     }
@@ -16519,10 +16510,11 @@ var FlowchartHandler = function () {
             switch (_context.prev = _context.next) {
               case 0:
                 trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'render()');
-                console.log('Flags', this.flags);
-                debugger;
+                console.log('RENDER Flags', this.flags);
 
                 if (!this.mousedown) {
+                  console.log('RENDER this.mousedown', this.mousedown);
+                  this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_APL_OPTIONS);
                   self = this;
 
                   if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_SOURCES)) {
@@ -16541,9 +16533,12 @@ var FlowchartHandler = function () {
                     rules = self.ctrl.rulesHandler.getRules();
                     metrics = self.ctrl.metricHandler.getMetrics();
                     self.async_refreshStates(rules, metrics);
+                    this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_APL_OPTIONS);
+                    this.aknowledgeFlagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_DATAS);
                   }
 
                   if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_APL_OPTIONS) || self.firstLoad) {
+                    this.setCurrentFlowchart('Main');
                     this.getFlagNames(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_APL_OPTIONS).forEach(function (name) {
                       self.applyOptions(name);
                     });
@@ -16554,7 +16549,7 @@ var FlowchartHandler = function () {
                 this.ctrl.renderingCompleted();
                 trc.after();
 
-              case 6:
+              case 5:
               case "end":
                 return _context.stop();
             }
@@ -16623,6 +16618,8 @@ var FlowchartHandler = function () {
     value: function flagChange(type, name) {
       var _this4 = this;
 
+      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.debug("flagChange", type, name);
+
       if (name !== undefined) {
         this.flags[type].add(name);
       } else {
@@ -16647,6 +16644,8 @@ var FlowchartHandler = function () {
   }, {
     key: "aknowledgeFlagChange",
     value: function aknowledgeFlagChange(type, name) {
+      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.debug("aknowledgeFlagChange", type, name);
+
       if (name === undefined) {
         this.flags[type].clear();
       } else {
@@ -17186,8 +17185,6 @@ var Flowchart = function () {
   }, {
     key: "setStates",
     value: function setStates(rules, metrics) {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].setStates()"));
-
       if (rules === undefined) {
         globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.warn("Rules shoudn't be null");
       }
@@ -17219,8 +17216,6 @@ var Flowchart = function () {
   }, {
     key: "applyStates",
     value: function applyStates() {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].applyStates()"));
-
       if (this.stateHandler) {
         this.stateHandler.applyStates();
       }
@@ -17641,23 +17636,28 @@ var Flowchart = function () {
     key: "toFront",
     value: function toFront() {
       var forceRefresh = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug("toFront", this.data.name);
       this.visible = true;
       this.container.className = 'GF_show';
 
       if (forceRefresh) {
         this.applyOptions();
       }
+
+      return this;
     }
   }, {
     key: "toBack",
     value: function toBack() {
+      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug("toBack", this.data.name);
       this.visible = false;
       this.container.className = 'GF_hide';
+      return this;
     }
   }, {
     key: "isVisible",
     value: function isVisible() {
-      return this.container.className !== 'GF_hide';
+      return this.visible;
     }
   }], [{
     key: "getDefaultData",
@@ -17888,7 +17888,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       var $section = elem.find('#flowcharting-section');
       var parent = $section[0];
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setMessageDiv(parent);
-      this.metricHandler = new metricHandler__WEBPACK_IMPORTED_MODULE_6__["MetricHandler"](this.$scope);
+      this.metricHandler = new metricHandler__WEBPACK_IMPORTED_MODULE_6__["MetricHandler"]();
       var newRulesData = rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"].getDefaultData();
       this.rulesHandler = new rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"](newRulesData);
 
@@ -17919,6 +17919,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       }
 
       this.panel.flowchartsData = newFlowchartsData;
+      this.flowchartHandler.setCurrentFlowchart('Main');
       this.panel.newFlag = false;
       this.panel.version = this.version;
       trc.after();
@@ -18874,7 +18875,7 @@ GFLog.DEBUG = 0;
 GFLog.INFO = 1;
 GFLog.WARN = 2;
 GFLog.ERROR = 3;
-GFLog.logLevel = GFLog.WARN;
+GFLog.logLevel = GFLog.DEBUG;
 GFLog.logDisplay = true;
 
 var GFPlugin = function () {
@@ -20079,7 +20080,6 @@ var XGraph = function () {
 
       if (prop === 'id') {
         lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(cells, function (mxcell) {
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', _this2.getStyleCell(mxcell, 'shape'));
           cellIds.push(_this2.getId(mxcell));
         });
       } else if (prop === 'value') {
@@ -25069,7 +25069,6 @@ var GFState = function () {
       this.matchLevel.set(key, GFState.DEFAULTLEVEL);
       this.matchedKey.set(key, false);
       this.changedKey.set(key, false);
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
     }
   }, {
     key: "hasKey",
@@ -25121,7 +25120,6 @@ var GFState = function () {
 
       if (key !== undefined) {
         if (this.isMatched(key)) {
-          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] MATCHED KEY=' + key);
           var value = this.getMatchValue(key);
 
           try {
@@ -25133,7 +25131,6 @@ var GFState = function () {
           this.changedKey.set(key, true);
           this.matchedKey.set(key, false);
         } else if (this.isChanged(key)) {
-          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.apply from ' + this.constructor.name + ' [' + this.mxcell.id + '] CHANGED KEY=' + key);
           this.reset(key);
         }
       } else {
@@ -25222,7 +25219,6 @@ var GFState = function () {
       var _this7 = this;
 
       if (key !== undefined) {
-        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.reset from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key);
         this.unset(key);
         var value = this.getOriginalValue(key);
 
@@ -25649,7 +25645,6 @@ var ShapeState = function (_GFState4) {
   _createClass(ShapeState, [{
     key: "init_core",
     value: function init_core() {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info('ShapeState [' + this.mxcell.id + ']');
       this.mxcell.GF_tooltipHandler = null;
     }
   }, {
