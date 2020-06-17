@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { $GF } from 'globals_class';
 import * as Drawio from './libs/Drawio_custom';
+import { customize, evalCode } from 'mxgraph_custom';
 import chroma from 'chroma-js';
 
 declare var mxEvent: any;
@@ -142,12 +143,14 @@ export default class XGraph {
     if (!XGraph.initialized) {
       if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
-        let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
-        $GF.utils.evalRaw(code);
+        // let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
+        // $GF.utils.evalRaw(code);
+        evalCode();
         XGraph.postInitGlobalVars();
-        code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
+        // code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
+        // $GF.utils.evalRaw(code);
+        customize();
         mxTooltipHandler.prototype.delay = $GF.CONSTANTS.CONF_TOOLTIPS_DELAY;
-        $GF.utils.evalRaw(code);
       }
       XGraph.initialized = true;
     }

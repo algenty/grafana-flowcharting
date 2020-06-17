@@ -10,6 +10,7 @@ import { MetricHandler } from 'metricHandler';
 import { $GF } from 'globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
+import XGraph from 'graph_class';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
   $rootScope: any;
@@ -160,6 +161,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   link(scope, elem, attrs, ctrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
+
+    // Init mxGraph/draw.io libs
+    XGraph.initMxGraph();
 
     // DATA
     this.metricHandler = new MetricHandler(this.$scope);
