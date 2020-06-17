@@ -238,6 +238,27 @@ export class FlowchartHandler {
     return `Flowchart-${this.sequenceNumber++}`;
   }
 
+  isMultiFlowcharts():boolean {
+    return this.flowcharts.length > 1;
+  }
+
+  isCurrentfirst():boolean {
+    const index = this.getCurrentIndex();
+    return index === 0; 
+  }
+
+  isCurrentLast():boolean {
+    const index = this.getCurrentIndex();
+    return index === this.flowcharts.length - 1;
+  }
+
+  getCurrentIndex():number {
+    if(this.currentFlowchart) {
+      return this.flowcharts.indexOf(this.currentFlowchart);
+    }
+    return 0;
+  }
+
   /**
    * Define current flowchart to display
    *
@@ -266,6 +287,22 @@ export class FlowchartHandler {
     this.currentFlowchartName = name;
     this.currentFlowchart.toFront();
     return this.currentFlowchart;
+  }
+
+  setNextFlowchart() {
+    const index = this.getCurrentIndex();
+    if(index < (this.flowcharts.length - 1)) {
+      const name = this.flowcharts[index + 1].getName();
+      this.setCurrentFlowchart(name);
+    }
+  }
+
+  setPreviousFlowchart() {
+    const index = this.getCurrentIndex();
+    if(index !== 0) {
+      const name = this.flowcharts[index - 1].getName();
+      this.setCurrentFlowchart(name);
+    }
   }
 
   /**

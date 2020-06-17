@@ -39,6 +39,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.init($scope, templateSrv, this.dashboard);
     this.$rootScope = $rootScope;
     this.$scope = $scope;
+    $scope.editor = this;
     this.version = $GF.plugin.getVersion();
     this.templateSrv = templateSrv;
     this.changedSource = true;
@@ -211,6 +212,40 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.panel.version = this.version;
     trc.after();
   }
+
+  displayMultiCursor():boolean { 
+    if(this.flowchartHandler){
+      return this.flowchartHandler?.isMultiFlowcharts();
+    }
+    return false;
+  }
+
+  displayFirstCursor():boolean {
+    if(this.flowchartHandler){
+      return ! this.flowchartHandler?.isCurrentfirst();
+    }
+    return false;
+  }
+
+  displayLastCursor():boolean {
+    if(this.flowchartHandler){
+      return ! this.flowchartHandler?.isCurrentLast();
+    }
+    return false;
+  }
+
+  displayNextFlowchart() {
+    if(this.flowchartHandler){
+      this.flowchartHandler.setNextFlowchart()
+    }
+  }
+
+  displayPreviousFlowchart() {
+    if(this.flowchartHandler){
+      this.flowchartHandler.setPreviousFlowchart()
+    }
+  }
+
 
   // exportSVG() {
   //   const scope = this.$scope.$new(true);

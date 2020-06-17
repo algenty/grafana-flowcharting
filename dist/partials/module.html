@@ -15,6 +15,16 @@
       </div>
     </div>
 
+    <div id="flowcharting-navigation" ng-show="editor.displayMultiCursor();"
+      style="z-index: 2;position: absolute; box-sizing: border-box; border-radius: 20px; height: 20px;width: 50px;white-space: nowrap; background-color: rgba(0, 0, 0, 0.7);bottom: 1px;right: 5px;transform: translate(-50%, -50%);">
+      <div>
+        <div style="float:left;padding-left:10px;cursor: pointer;" ng-show="editor.displayFirstCursor()"
+          ng-click="editor.displayPreviousFlowchart()"><i class="fa fa-caret-left fa-lg"></i></div>
+        <div style="float:right;padding-right:10px;cursor: pointer;" ng-show="editor.displayLastCursor()"
+          ng-click="editor.displayNextFlowchart()"><i class="fa fa-caret-right fa-lg"></i></div>
+      </div>
+    </div>
+
     <div id="flowcharting-mapping" ng-show="ctrl.flowchartHandler.isMapping()"
       style="z-index: 2;position: absolute; box-sizing: border-box; border-radius: 20px; height: 40px;width: 33%;white-space: nowrap; background-color: rgba(0, 0, 0, 0.7);bottom: 1px;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">
       <div style="margin: 0;position: absolute;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">

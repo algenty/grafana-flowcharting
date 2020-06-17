@@ -98,3 +98,6 @@ Add rename option on flowchart
 fade
 change layer event 
 Simplify editor
+
+# effect
+https://pavenum.com/overlay-avec-hover-sur-une-image-en-html-css/
