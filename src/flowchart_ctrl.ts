@@ -213,39 +213,38 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     trc.after();
   }
 
-  displayMultiCursor():boolean { 
-    if(this.flowchartHandler){
+  displayMultiCursor(): boolean {
+    if (this.flowchartHandler) {
       return this.flowchartHandler?.isMultiFlowcharts();
     }
     return false;
   }
 
-  displayFirstCursor():boolean {
-    if(this.flowchartHandler){
-      return ! this.flowchartHandler?.isCurrentfirst();
+  displayFirstCursor(): boolean {
+    if (this.flowchartHandler) {
+      return !this.flowchartHandler?.isCurrentfirst();
     }
     return false;
   }
 
-  displayLastCursor():boolean {
-    if(this.flowchartHandler){
-      return ! this.flowchartHandler?.isCurrentLast();
+  displayLastCursor(): boolean {
+    if (this.flowchartHandler) {
+      return !this.flowchartHandler?.isCurrentLast();
     }
     return false;
   }
 
   displayNextFlowchart() {
-    if(this.flowchartHandler){
-      this.flowchartHandler.setNextFlowchart()
+    if (this.flowchartHandler) {
+      this.flowchartHandler.setNextFlowchart();
     }
   }
 
   displayPreviousFlowchart() {
-    if(this.flowchartHandler){
-      this.flowchartHandler.setPreviousFlowchart()
+    if (this.flowchartHandler) {
+      this.flowchartHandler.setPreviousFlowchart();
     }
   }
-
 
   // exportSVG() {
   //   const scope = this.$scope.$new(true);

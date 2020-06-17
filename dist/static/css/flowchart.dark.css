@@ -772,7 +772,7 @@ div.tooltip-date {
 
 @keyframes mxEdgeFlow {
   to {
-  stroke-dashoffset: -16;
+    stroke-dashoffset: -16;
   }
 }
 
@@ -785,10 +785,43 @@ div.tooltip-date {
   -webkit-user-select: none;
 }
 
-.GF_hide {
+/* .GF_hide {
   display: none !important;
 }
 
 .GF_show {
   display : block;
+} */
+
+.GF_flowchartHide {
+  opacity: 0;
+  z-index: 0;
+  transition: 0.3s ease;
+}
+
+.GF_flowchartShow {
+  opacity: 1;
+  z-index: 1;
+  transition: 0.3s ease;
+}
+
+.GF_navigation {
+  z-index: 2;
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 20px;
+  width: 50px;
+  white-space: nowrap;
+  background-color: rgba(0, 0, 0, 0.7);
+  opacity : 0.2;
+  bottom: 1px;
+  right: 5px;
+  transform: translate(-50%, -50%);
+  /* transition: 0.3s ease; */
+}
+
+.GF_navigation:hover {
+  opacity: 1;
+  transition: 0.3s ease;
 }

@@ -15,8 +15,7 @@
       </div>
     </div>
 
-    <div id="flowcharting-navigation" ng-show="editor.displayMultiCursor();"
-      style="z-index: 2;position: absolute; box-sizing: border-box; border-radius: 20px; height: 20px;width: 50px;white-space: nowrap; background-color: rgba(0, 0, 0, 0.7);bottom: 1px;right: 5px;transform: translate(-50%, -50%);">
+    <div id="flowcharting-navigation" class="GF_navigation" ng-show="editor.displayMultiCursor();">
       <div>
         <div style="float:left;padding-left:10px;cursor: pointer;" ng-show="editor.displayFirstCursor()"
           ng-click="editor.displayPreviousFlowchart()"><i class="fa fa-caret-left fa-lg"></i></div>

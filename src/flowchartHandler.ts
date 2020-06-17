@@ -1,6 +1,7 @@
 import { Flowchart } from 'flowchart_class';
 import { Rule, GFMap } from 'rule_class';
 import _ from 'lodash';
+const clonedeep = require('lodash.clonedeep')
 import { Metric } from './metric_class';
 import { $GF } from 'globals_class';
 
@@ -238,22 +239,22 @@ export class FlowchartHandler {
     return `Flowchart-${this.sequenceNumber++}`;
   }
 
-  isMultiFlowcharts():boolean {
+  isMultiFlowcharts(): boolean {
     return this.flowcharts.length > 1;
   }
 
-  isCurrentfirst():boolean {
+  isCurrentfirst(): boolean {
     const index = this.getCurrentIndex();
-    return index === 0; 
+    return index === 0;
   }
 
-  isCurrentLast():boolean {
+  isCurrentLast(): boolean {
     const index = this.getCurrentIndex();
     return index === this.flowcharts.length - 1;
   }
 
-  getCurrentIndex():number {
-    if(this.currentFlowchart) {
+  getCurrentIndex(): number {
+    if (this.currentFlowchart) {
       return this.flowcharts.indexOf(this.currentFlowchart);
     }
     return 0;
@@ -291,7 +292,7 @@ export class FlowchartHandler {
 
   setNextFlowchart() {
     const index = this.getCurrentIndex();
-    if(index < (this.flowcharts.length - 1)) {
+    if (index < this.flowcharts.length - 1) {
       const name = this.flowcharts[index + 1].getName();
       this.setCurrentFlowchart(name);
     }
@@ -299,7 +300,7 @@ export class FlowchartHandler {
 
   setPreviousFlowchart() {
     const index = this.getCurrentIndex();
-    if(index !== 0) {
+    if (index !== 0) {
       const name = this.flowcharts[index - 1].getName();
       this.setCurrentFlowchart(name);
     }
@@ -394,7 +395,7 @@ export class FlowchartHandler {
    */
   async render(name?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
-    // console.log('RENDER Flags', this.flags);
+    // console.log('RENDER Flags BEGIN', clonedeep(this.flags));
     // not repeat render if mouse down
     if (!this.mousedown) {
       this.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
@@ -405,6 +406,7 @@ export class FlowchartHandler {
           self.load(name).setOptions(name);
         });
       }
+      // console.log('RENDER Flags AFTER SOURCE', clonedeep(this.flags));
 
       // OPTIONS
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS)) {
@@ -412,6 +414,7 @@ export class FlowchartHandler {
           self.setOptions(name);
         });
       }
+      // console.log('RENDER Flags AFTER OPTIONS', clonedeep(this.flags));
 
       // RULES or DATAS
       if (
@@ -428,19 +431,28 @@ export class FlowchartHandler {
         this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS);
         this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER);
       }
+      // console.log('RENDER Flags AFTER DATAS', clonedeep(this.flags));
+
       // Current visible
       if (self.currentFlowchart !== undefined && !self.currentFlowchart.isVisible()) {
+        // console.log("!self.currentFlowchart.isVisible()",!self.currentFlowchart.isVisible());
         this.setCurrentFlowchart(self.currentFlowchart.getName());
         this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
       }
+      // console.log('RENDER Flags AFTER VISIBLES', clonedeep(this.flags));
 
       // OTHER : Resize, OnLoad
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS) || self.firstLoad) {
-        // this.setCurrentFlowchart('Main');
-        this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS).forEach(name => {
-          self.applyOptions(name);
-        });
-        self.firstLoad = false;
+        // console.log("Apply Options")
+        if(self.firstLoad) {
+          self.applyOptions();
+          self.firstLoad = false;
+        } else {
+          // console.log("Apply options on",this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS));
+          this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS).forEach(name => {
+            self.applyOptions(name);
+          });
+        }
       }
       // this.refresh();
     }
@@ -522,7 +534,7 @@ export class FlowchartHandler {
     } else {
       const flowchart = this.getFlowchart(name);
       flowchart.applyOptions();
-      this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
+      this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS, name);
       if (!flowchart.isVisible()) {
         this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
       }
@@ -681,7 +693,7 @@ export class FlowchartHandler {
       const flowchart = this.getFlowchart(name);
       flowchart.setOptions();
       this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS, name);
-      this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS, name);
+      // this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS, name);
       this.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS, name);
       if (!flowchart.isVisible()) {
         this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);

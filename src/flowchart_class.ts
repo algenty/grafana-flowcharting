@@ -774,10 +774,10 @@ export class Flowchart {
     }
   }
 
-  toFront(forceRefresh: boolean = true): this {
+  toFront(forceRefresh: boolean = false): this {
     $GF.log.debug('toFront', this.data.name);
     this.visible = true;
-    this.container.className = 'GF_show';
+    this.container.className = 'GF_flowchartShow';
     if (forceRefresh) {
       this.applyOptions();
     }
@@ -787,7 +787,7 @@ export class Flowchart {
   toBack(): this {
     $GF.log.debug('toBack', this.data.name);
     this.visible = false;
-    this.container.className = 'GF_hide';
+    this.container.className = 'GF_flowchartHide';
     return this;
   }
 
