@@ -67,14 +67,6 @@ stroke-dashoffset: -16;
 }
 
 
-# TODO :
-Fix CSV save : Done
-FIX Middle CSV : Done
-FIX Red for null value : DONE
-FIX When data is for null value : Done
-UPDATE CSS LIGHT
-Anonimizer
-
 # Base64 converter svg to base64 : 
 https://yoksel.github.io/url-encoder/
 https://base64.guru/converter/encode/text
@@ -101,3 +93,9 @@ Simplify editor
 
 # effect
 https://pavenum.com/overlay-avec-hover-sur-une-image-en-html-css/
+
+# Bug alignement :
+mxSvgCanvas2D.js 
+'display: flex; align-items: unsafe ' +
+by 
+'display: flex; align-self: unsafe ' +

@@ -150,7 +150,7 @@ export default class XGraph {
         evalCode();
         customize();
         XGraph.postInitGlobalVars();
-        // let code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
+        // $GF.utils.$evalFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
         // $GF.utils.evalRaw(code);
         mxTooltipHandler.prototype.delay = $GF.CONSTANTS.CONF_TOOLTIPS_DELAY;
       }
