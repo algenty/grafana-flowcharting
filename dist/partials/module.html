@@ -8,9 +8,8 @@
       </div>
     </div>
 
-    <div id="flowcharting-message"
-      style="display:none;z-index: 2;position: absolute; box-sizing: border-box; border-radius: 20px; height: 40px;width: 33%;white-space: nowrap; background-color: rgba(0, 0, 0, 0.7);top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">
-      <div style="margin: 0;position: absolute;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">
+    <div id="flowcharting-message" class="GF_console">
+      <div class="GF_message">
         <span id="message-text">This is a message</span>
       </div>
     </div>
@@ -24,8 +23,7 @@
       </div>
     </div>
 
-    <div id="flowcharting-mapping" ng-show="ctrl.flowchartHandler.isMapping()"
-      style="z-index: 2;position: absolute; box-sizing: border-box; border-radius: 20px; height: 40px;width: 33%;white-space: nowrap; background-color: rgba(0, 0, 0, 0.7);bottom: 1px;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">
+    <div id="flowcharting-mapping" ng-show="ctrl.flowchartHandler.isMapping()" class="GF_mapping">
       <div style="margin: 0;position: absolute;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">
         <span>Select Object to map</span>
         <button class="btn btn-danger btn-small" ng-click="ctrl.flowchartHandler.unsetMap()" style="margin: 10px;">

@@ -785,14 +785,6 @@ div.tooltip-date {
   -webkit-user-select: none;
 }
 
-/* .GF_hide {
-  display: none !important;
-}
-
-.GF_show {
-  display : block;
-} */
-
 .GF_flowchartHide {
   opacity: 0;
   z-index: 0;
@@ -814,14 +806,54 @@ div.tooltip-date {
   width: 50px;
   white-space: nowrap;
   background-color: rgba(0, 0, 0, 0.7);
-  opacity : 0.2;
+  opacity: 0.2;
   bottom: 1px;
   right: 5px;
   transform: translate(-50%, -50%);
-  /* transition: 0.3s ease; */
+  transition: 0.2s ease;
 }
 
 .GF_navigation:hover {
   opacity: 1;
-  transition: 0.3s ease;
+  transition: 0.2s ease;
+}
+
+.GF_console {
+  display: none;
+  z-index: 2;
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 40px;
+  width: 33%;
+  white-space: nowrap;
+  background-color: rgba(0, 0, 0, 0.7);
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.GF_message {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.GF_mapping {
+  z-index: 2;
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 40px;
+  width: 33%;
+  white-space: nowrap;
+  background-color: rgba(0, 0, 0, 0.7);
+  bottom: 1px;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
 }

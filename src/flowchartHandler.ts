@@ -1,7 +1,7 @@
 import { Flowchart } from 'flowchart_class';
 import { Rule, GFMap } from 'rule_class';
 import _ from 'lodash';
-const clonedeep = require('lodash.clonedeep')
+// const clonedeep = require('lodash.clonedeep')
 import { Metric } from './metric_class';
 import { $GF } from 'globals_class';
 
@@ -444,7 +444,7 @@ export class FlowchartHandler {
       // OTHER : Resize, OnLoad
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS) || self.firstLoad) {
         // console.log("Apply Options")
-        if(self.firstLoad) {
+        if (self.firstLoad) {
           self.applyOptions();
           self.firstLoad = false;
         } else {
