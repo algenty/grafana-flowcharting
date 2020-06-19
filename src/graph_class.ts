@@ -146,8 +146,8 @@ export default class XGraph {
         XGraph.preInitGlobalVars();
         // let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
         // $GF.utils.evalRaw(code);
-        // $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
-        evalCode();
+        $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
+        // evalCode();
         customize();
         XGraph.postInitGlobalVars();
         // $GF.utils.$evalFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
