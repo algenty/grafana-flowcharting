@@ -1,8 +1,8 @@
 <div style="display: flex;width:100%;height:100%;">
   <section style="width:100%;height:100%;" id="flowcharting-section">
     <div class="flowchart-panel"
-      style="right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; overflow: auto; cursor: default;z-index: 1;">
-      <div class="flowchart-panel__chart unselectable" id="agenty-grafana-flowcharting"
+      style="right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; overflow: auto; cursor: default;z-index: 1;-webkit-box-sizing:content-box;box-sizing:content-box;">
+      <div class="flowchart-panel__chart GF_unselectable" id="agenty-grafana-flowcharting"
         style="overflow: hidden;position:relative;">
 
       </div>
@@ -24,8 +24,7 @@
       </div>
     </div>
 
-    <div id="flowcharting-mapping" ng-show="ctrl.flowchartHandler.isMapping()"
-      style="z-index: 2;position: absolute; box-sizing: border-box; border-radius: 20px; height: 40px;width: 33%;white-space: nowrap; background-color: rgba(0, 0, 0, 0.7);bottom: 1px;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">
+    <div id="flowcharting-mapping" ng-show="ctrl.flowchartHandler.isMapping()" class="GF_mapping">
       <div style="margin: 0;position: absolute;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);">
         <span>Select Object to map</span>
         <button class="btn btn-danger btn-small" ng-click="ctrl.flowchartHandler.unsetMap()" style="margin: 10px;">

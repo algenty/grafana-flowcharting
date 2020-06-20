@@ -81,6 +81,7 @@ export class FlowchartOptionsCtrl {
   addFlowchart() {
     this.editMode = true;
     this.currentFlowchart = this.flowchartHandler.addFlowchart(this.flowchartHandler.getFlowchartTmpName());
+    this.currentFlowchart.init();
     this.flowchartHandler.setCurrentFlowchart(this.currentFlowchart.getName());
     $GF.message.setMessage(this.currentFlowchart.getName());
     this.newName = this.currentFlowchart.getName();
@@ -97,7 +98,7 @@ export class FlowchartOptionsCtrl {
   }
 
   selectFlowchart() {
-    this.flowchartHandler.setCurrentFlowchart(this.currentFlowchartName);
+    this.flowchartHandler.setCurrentFlowchart(this.flowchartHandler.currentFlowchartName);
     this.currentFlowchart = this.flowchartHandler.getCurrentFlowchart();
     if (this.currentFlowchart) {
       this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();

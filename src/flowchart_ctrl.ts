@@ -215,7 +215,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   displayMultiCursor(): boolean {
     if (this.flowchartHandler) {
-      return this.flowchartHandler?.isMultiFlowcharts();
+      return this.flowchartHandler.isMultiFlowcharts();
     }
     return false;
   }

@@ -1,7 +1,7 @@
 import { Flowchart } from 'flowchart_class';
 import { Rule, GFMap } from 'rule_class';
 import _ from 'lodash';
-const clonedeep = require('lodash.clonedeep')
+// const clonedeep = require('lodash.clonedeep')
 import { Metric } from './metric_class';
 import { $GF } from 'globals_class';
 
@@ -27,11 +27,6 @@ export class FlowchartHandler {
     applyOptions: new Set<string>(),
     hiddenChange: new Set<string>(),
   };
-  // changeSourceFlag: Set<string> = new Set<string>(); // Source changed
-  // changeOptionFlag: Set<string> = new Set<string>(); // Options changed
-  // changeDataFlag = false; // Data changed
-  // changeGraphHoverFlag = false; // Graph Hover
-  // changeRuleFlag = false; // rules changed
   newMode = false; // Mode if new flowchart
   sequenceNumber = 0; // Sequence Number for a name
   static defaultXml: string;
@@ -87,7 +82,7 @@ export class FlowchartHandler {
 
   static getDefaultData(): gf.TFlowchartHandlerData {
     return {
-      editorUrl: 'https://www.draw.io',
+      editorUrl: 'https://diagrams.new/',
       editorTheme: 'kennedy',
       main: 'Main',
       flowcharts: [],
@@ -124,15 +119,9 @@ export class FlowchartHandler {
 
       // import data
       tmpFc.forEach((fcData: gf.TFlowchartData) => {
-        // const container = this.createContainer();
-        // const newData = Flowchart.getDefaultData();
-        // const fc = new Flowchart(fcData.name, container, this.ctrl, newData);
         this.addFlowchart(fcData.name)
           .toBack()
           .import(fcData);
-        // fc.import(fcData);
-        // this.flowcharts.push(fc);
-        // this.data.flowcharts.push(newData);
       });
       this.currentFlowchart = this.getFlowchart('Main');
     }
