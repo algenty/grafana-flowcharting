@@ -17969,7 +17969,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       }
 
       if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
-        this.flowchartHandler.addFlowchart('Main');
+        this.flowchartHandler.addFlowchart('Main').init();
       }
 
       this.panel.flowchartsData = newFlowchartsData;

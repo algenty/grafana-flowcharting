@@ -200,7 +200,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.import(this.panel.flowchartsData);
     }
     if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
-      this.flowchartHandler.addFlowchart('Main');
+      this.flowchartHandler.addFlowchart('Main').init();
     }
     this.panel.flowchartsData = newFlowchartsData;
 

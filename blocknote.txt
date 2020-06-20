@@ -87,6 +87,10 @@ https://desk.draw.io/support/solutions/articles/16000042546-supported-url-parame
 # Test and libs
 https://www.percona.com/blog/2020/06/02/intro-to-grafana-plugin-development/
 
+# To fix
+editor url
+Editor theme
+
 # TODO
 Add gradient to graph (D3JS ?)
 Fade on message/notification
