@@ -16313,7 +16313,7 @@ var FlowchartHandler = function () {
     this.parentDiv = this.$elem[0];
     this.ctrl = ctrl;
     this.data = data;
-    this.currentFlowchartName = this.data.main;
+    this.currentFlowchartName = 'Main';
     ctrl.events.on('render', function () {
       _this.render();
     });
@@ -16349,16 +16349,30 @@ var FlowchartHandler = function () {
         }
 
         if (tmpFc.length === 1) {
-          this.data.main = tmpFc[0].name;
-          this.currentFlowchartName = this.data.main;
-          this.data.editorTheme = tmpFc[0].editorTheme;
-          this.data.editorUrl = tmpFc[0].editorUrl;
+          this.currentFlowchartName = 'Main';
+
+          if (tmpFc[0].editorTheme) {
+            this.data.editorTheme = tmpFc[0].editorTheme;
+          }
+
+          if (tmpFc[0].editorUrl) {
+            this.data.editorUrl = tmpFc[0].editorUrl;
+          }
+
+          if (tmpFc[0].allowDrawio || tmpFc[0].allowDrawio === false) {
+            this.data.allowDrawio = tmpFc[0].allowDrawio;
+          }
         }
 
         this.data.editorTheme = !!obj.editorTheme ? obj.editorTheme : this.data.editorTheme;
         this.data.editorUrl = !!obj.editorUrl ? obj.editorUrl : this.data.editorUrl;
+
+        if (obj.allowDrawio || obj.allowDrawio === false) {
+          this.data.allowDrawio = obj.allowDrawio;
+        }
+
         tmpFc.forEach(function (fcData) {
-          _this2.addFlowchart(fcData.name).toBack()["import"](fcData);
+          _this2.addFlowchart(fcData.name).toBack()["import"](fcData).allowDrawio(_this2.data.allowDrawio);
         });
         this.currentFlowchart = this.getFlowchart('Main');
       }
@@ -16980,8 +16994,8 @@ var FlowchartHandler = function () {
       return {
         editorUrl: 'https://www.draw.io',
         editorTheme: 'kennedy',
-        main: 'Main',
-        flowcharts: []
+        flowcharts: [],
+        allowDrawio: true
       };
     }
   }, {
@@ -17072,7 +17086,6 @@ var Flowchart = function () {
         this.data.center = obj.options.center;
         this.data.scale = obj.options.scale;
         this.data.lock = obj.options.lock;
-        this.data.allowDrawio = false;
         this.data.tooltip = obj.options.tooltip;
         this.data.grid = obj.options.grid;
         this.data.bgColor = obj.options.bgColor;
@@ -17110,10 +17123,6 @@ var Flowchart = function () {
         this.data.lock = obj.lock;
       }
 
-      if (!!obj.allowDrawio || obj.allowDrawio === false) {
-        this.data.allowDrawio = obj.allowDrawio;
-      }
-
       if (!!obj.enableAnim || obj.enableAnim === false) {
         this.data.enableAnim = obj.enableAnim;
       }
@@ -17128,14 +17137,6 @@ var Flowchart = function () {
 
       if (!!obj.bgColor) {
         this.data.bgColor = obj.bgColor;
-      }
-
-      if (!!obj.editorUrl) {
-        this.data.editorUrl = obj.editorUrl;
-      }
-
-      if (!!obj.editorTheme) {
-        this.data.editorTheme = obj.editorTheme;
       }
 
       this.init();
@@ -17181,12 +17182,6 @@ var Flowchart = function () {
         }
 
         if (content !== undefined && content !== null) {
-          if (this.data.allowDrawio) {
-            this.xgraph.allowDrawio(true);
-          } else {
-            this.xgraph.allowDrawio(false);
-          }
-
           if (this.data.enableAnim) {
             this.xgraph.enableAnim(true);
           } else {
@@ -17493,14 +17488,13 @@ var Flowchart = function () {
       return '';
     }
   }, {
-    key: "getUrlEditor",
-    value: function getUrlEditor() {
-      return this.data.editorUrl;
-    }
-  }, {
-    key: "getThemeEditor",
-    value: function getThemeEditor() {
-      return this.data.editorTheme;
+    key: "allowDrawio",
+    value: function allowDrawio(flag) {
+      if (this.xgraph) {
+        this.xgraph.allowDrawio(flag);
+      }
+
+      return this;
     }
   }, {
     key: "getContent",
@@ -17726,13 +17720,10 @@ var Flowchart = function () {
         center: true,
         scale: true,
         lock: true,
-        allowDrawio: true,
         enableAnim: true,
         tooltip: true,
         grid: false,
-        bgColor: null,
-        editorUrl: 'https://www.draw.io',
-        editorTheme: 'dark'
+        bgColor: null
       };
     }
   }]);

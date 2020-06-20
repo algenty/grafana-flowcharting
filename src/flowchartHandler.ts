@@ -64,7 +64,7 @@ export class FlowchartHandler {
     this.parentDiv = this.$elem[0];
     this.ctrl = ctrl;
     this.data = data;
-    this.currentFlowchartName = this.data.main;
+    this.currentFlowchartName = 'Main';
 
     // Events Render
     ctrl.events.on('render', () => {
@@ -89,8 +89,8 @@ export class FlowchartHandler {
     return {
       editorUrl: 'https://www.draw.io',
       editorTheme: 'kennedy',
-      main: 'Main',
       flowcharts: [],
+      allowDrawio: true,
     };
   }
 
@@ -105,7 +105,7 @@ export class FlowchartHandler {
     this.flowcharts = [];
     if (obj !== undefined && obj !== null) {
       // For version 0.5.0 and under
-      let tmpFc: gf.TFlowchartData[];
+      let tmpFc: any[];
       if (Array.isArray(obj)) {
         tmpFc = obj;
       } else {
@@ -114,25 +114,30 @@ export class FlowchartHandler {
 
       // For 0.9.0 and under
       if (tmpFc.length === 1) {
-        this.data.main = tmpFc[0].name;
-        this.currentFlowchartName = this.data.main;
-        this.data.editorTheme = tmpFc[0].editorTheme;
-        this.data.editorUrl = tmpFc[0].editorUrl;
+        this.currentFlowchartName = 'Main';
+        if (tmpFc[0].editorTheme) {
+          this.data.editorTheme = tmpFc[0].editorTheme;
+        }
+        if (tmpFc[0].editorUrl) {
+          this.data.editorUrl = tmpFc[0].editorUrl;
+        }
+        if (tmpFc[0].allowDrawio || tmpFc[0].allowDrawio === false) {
+          this.data.allowDrawio = tmpFc[0].allowDrawio;
+        }
       }
+
       this.data.editorTheme = !!obj.editorTheme ? obj.editorTheme : this.data.editorTheme;
       this.data.editorUrl = !!obj.editorUrl ? obj.editorUrl : this.data.editorUrl;
+      if (obj.allowDrawio || obj.allowDrawio === false) {
+        this.data.allowDrawio = obj.allowDrawio;
+      }
 
       // import data
       tmpFc.forEach((fcData: gf.TFlowchartData) => {
-        // const container = this.createContainer();
-        // const newData = Flowchart.getDefaultData();
-        // const fc = new Flowchart(fcData.name, container, this.ctrl, newData);
         this.addFlowchart(fcData.name)
           .toBack()
-          .import(fcData);
-        // fc.import(fcData);
-        // this.flowcharts.push(fc);
-        // this.data.flowcharts.push(newData);
+          .import(fcData)
+          .allowDrawio(this.data.allowDrawio);
       });
       this.currentFlowchart = this.getFlowchart('Main');
     }

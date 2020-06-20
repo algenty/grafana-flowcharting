@@ -342,19 +342,16 @@ declare module gf {
     center: boolean;
     scale: boolean;
     lock: boolean;
-    allowDrawio: boolean;
     enableAnim: boolean;
     tooltip: boolean;
     grid: boolean;
     bgColor: string | null;
-    editorUrl: string;
-    editorTheme: string;
   }
 
   declare interface TFlowchartHandlerData {
     editorUrl: string;
     editorTheme: string;
-    main: string;
+    allowDrawio: boolean;
     flowcharts: TFlowchartData[];
   }
 

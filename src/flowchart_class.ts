@@ -55,7 +55,6 @@ export class Flowchart {
       this.data.center = obj.options.center;
       this.data.scale = obj.options.scale;
       this.data.lock = obj.options.lock;
-      this.data.allowDrawio = false;
       this.data.tooltip = obj.options.tooltip;
       this.data.grid = obj.options.grid;
       this.data.bgColor = obj.options.bgColor;
@@ -87,9 +86,7 @@ export class Flowchart {
     if (!!obj.lock || obj.lock === false) {
       this.data.lock = obj.lock;
     }
-    if (!!obj.allowDrawio || obj.allowDrawio === false) {
-      this.data.allowDrawio = obj.allowDrawio;
-    }
+
     if (!!obj.enableAnim || obj.enableAnim === false) {
       this.data.enableAnim = obj.enableAnim;
     }
@@ -101,12 +98,6 @@ export class Flowchart {
     }
     if (!!obj.bgColor) {
       this.data.bgColor = obj.bgColor;
-    }
-    if (!!obj.editorUrl) {
-      this.data.editorUrl = obj.editorUrl;
-    }
-    if (!!obj.editorTheme) {
-      this.data.editorTheme = obj.editorTheme;
     }
     this.init();
     return this;
@@ -131,13 +122,10 @@ export class Flowchart {
       center: true,
       scale: true,
       lock: true,
-      allowDrawio: true,
       enableAnim: true,
       tooltip: true,
       grid: false,
       bgColor: null,
-      editorUrl: 'https://www.draw.io',
-      editorTheme: 'dark',
     };
   }
 
@@ -191,11 +179,6 @@ export class Flowchart {
         this.xgraph = new XGraph(this.container, this.data.type, content);
       }
       if (content !== undefined && content !== null) {
-        if (this.data.allowDrawio) {
-          this.xgraph.allowDrawio(true);
-        } else {
-          this.xgraph.allowDrawio(false);
-        }
         if (this.data.enableAnim) {
           this.xgraph.enableAnim(true);
         } else {
@@ -587,18 +570,11 @@ export class Flowchart {
     return '';
   }
 
-  /**
-   * Get Url editor
-   *
-   * @returns {string}
-   * @memberof Flowchart
-   */
-  getUrlEditor(): string {
-    return this.data.editorUrl;
-  }
-
-  getThemeEditor(): string {
-    return this.data.editorTheme;
+  allowDrawio(flag: boolean): this {
+    if (this.xgraph) {
+      this.xgraph.allowDrawio(flag);
+    }
+    return this;
   }
 
   /**
