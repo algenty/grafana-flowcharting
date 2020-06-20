@@ -16313,7 +16313,7 @@ var FlowchartHandler = function () {
     this.parentDiv = this.$elem[0];
     this.ctrl = ctrl;
     this.data = data;
-    this.currentFlowchartName = this.data.main;
+    this.currentFlowchartName = 'Main';
     ctrl.events.on('render', function () {
       _this.render();
     });
@@ -16349,10 +16349,19 @@ var FlowchartHandler = function () {
         }
 
         if (tmpFc.length === 1) {
-          this.data.main = tmpFc[0].name;
-          this.currentFlowchartName = this.data.main;
-          this.data.editorTheme = tmpFc[0].editorTheme;
-          this.data.editorUrl = tmpFc[0].editorUrl;
+          this.currentFlowchartName = tmpFc[0].name;
+
+          if (!!tmpFc[0].editorTheme && tmpFc[0].editorTheme.length > 1) {
+            this.data.editorTheme = tmpFc[0].editorTheme;
+          }
+
+          if (!!tmpFc[0].editorUrl && tmpFc[0].editorUrl.length > 1) {
+            this.data.editorUrl = tmpFc[0].editorUrl;
+          }
+
+          if (!!tmpFc[0].allowDrawio || tmpFc[0].allowDrawio === false) {
+            this.data.allowDrawio = obj.allowDrawio;
+          }
         }
 
         this.data.editorTheme = !!obj.editorTheme ? obj.editorTheme : this.data.editorTheme;
@@ -16959,8 +16968,8 @@ var FlowchartHandler = function () {
     key: "openDrawEditor",
     value: function openDrawEditor(name) {
       var fc = this.getFlowchart(name);
-      var urlEditor = fc.getUrlEditor();
-      var theme = this.getFlowchart(name).getThemeEditor();
+      var urlEditor = this.data.editorUrl;
+      var theme = this.data.editorTheme;
       var urlParams = "".concat(urlEditor, "?embed=1&spin=1&libraries=1&ui=").concat(theme, "&ready=fc-").concat(fc.id, "&src=grafana");
       this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
       this.onEdit = true;
@@ -16980,8 +16989,8 @@ var FlowchartHandler = function () {
       return {
         editorUrl: 'https://diagrams.new/',
         editorTheme: 'kennedy',
-        main: 'Main',
-        flowcharts: []
+        flowcharts: [],
+        allowDrawio: true
       };
     }
   }, {
@@ -17072,7 +17081,6 @@ var Flowchart = function () {
         this.data.center = obj.options.center;
         this.data.scale = obj.options.scale;
         this.data.lock = obj.options.lock;
-        this.data.allowDrawio = false;
         this.data.tooltip = obj.options.tooltip;
         this.data.grid = obj.options.grid;
         this.data.bgColor = obj.options.bgColor;
@@ -17110,10 +17118,6 @@ var Flowchart = function () {
         this.data.lock = obj.lock;
       }
 
-      if (!!obj.allowDrawio || obj.allowDrawio === false) {
-        this.data.allowDrawio = obj.allowDrawio;
-      }
-
       if (!!obj.enableAnim || obj.enableAnim === false) {
         this.data.enableAnim = obj.enableAnim;
       }
@@ -17128,14 +17132,6 @@ var Flowchart = function () {
 
       if (!!obj.bgColor) {
         this.data.bgColor = obj.bgColor;
-      }
-
-      if (!!obj.editorUrl) {
-        this.data.editorUrl = obj.editorUrl;
-      }
-
-      if (!!obj.editorTheme) {
-        this.data.editorTheme = obj.editorTheme;
       }
 
       this.init();
@@ -17181,12 +17177,6 @@ var Flowchart = function () {
         }
 
         if (content !== undefined && content !== null) {
-          if (this.data.allowDrawio) {
-            this.xgraph.allowDrawio(true);
-          } else {
-            this.xgraph.allowDrawio(false);
-          }
-
           if (this.data.enableAnim) {
             this.xgraph.enableAnim(true);
           } else {
@@ -17236,6 +17226,15 @@ var Flowchart = function () {
     key: "getXGraph",
     value: function getXGraph() {
       return this.xgraph;
+    }
+  }, {
+    key: "allowDrawio",
+    value: function allowDrawio(flag) {
+      if (this.xgraph !== undefined) {
+        this.xgraph.allowDrawio(flag);
+      }
+
+      return this;
     }
   }, {
     key: "setStates",
@@ -17493,16 +17492,6 @@ var Flowchart = function () {
       return '';
     }
   }, {
-    key: "getUrlEditor",
-    value: function getUrlEditor() {
-      return this.data.editorUrl;
-    }
-  }, {
-    key: "getThemeEditor",
-    value: function getThemeEditor() {
-      return this.data.editorTheme;
-    }
-  }, {
     key: "getContent",
     value: function getContent() {
       var replaceVarBool = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
@@ -17726,13 +17715,10 @@ var Flowchart = function () {
         center: true,
         scale: true,
         lock: true,
-        allowDrawio: true,
         enableAnim: true,
         tooltip: true,
         grid: false,
-        bgColor: null,
-        editorUrl: 'https://www.draw.io',
-        editorTheme: 'dark'
+        bgColor: null
       };
     }
   }]);

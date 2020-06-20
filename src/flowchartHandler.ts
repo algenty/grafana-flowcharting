@@ -59,7 +59,7 @@ export class FlowchartHandler {
     this.parentDiv = this.$elem[0];
     this.ctrl = ctrl;
     this.data = data;
-    this.currentFlowchartName = this.data.main;
+    this.currentFlowchartName = 'Main';
 
     // Events Render
     ctrl.events.on('render', () => {
@@ -84,8 +84,8 @@ export class FlowchartHandler {
     return {
       editorUrl: 'https://diagrams.new/',
       editorTheme: 'kennedy',
-      main: 'Main',
       flowcharts: [],
+      allowDrawio: true,
     };
   }
 
@@ -100,7 +100,7 @@ export class FlowchartHandler {
     this.flowcharts = [];
     if (obj !== undefined && obj !== null) {
       // For version 0.5.0 and under
-      let tmpFc: gf.TFlowchartData[];
+      let tmpFc: any[];
       if (Array.isArray(obj)) {
         tmpFc = obj;
       } else {
@@ -109,10 +109,21 @@ export class FlowchartHandler {
 
       // For 0.9.0 and under
       if (tmpFc.length === 1) {
-        this.data.main = tmpFc[0].name;
-        this.currentFlowchartName = this.data.main;
-        this.data.editorTheme = tmpFc[0].editorTheme;
-        this.data.editorUrl = tmpFc[0].editorUrl;
+        this.currentFlowchartName = tmpFc[0].name;
+        if (!!tmpFc[0].editorTheme && tmpFc[0].editorTheme.length > 1) {
+          this.data.editorTheme = tmpFc[0].editorTheme;
+        }
+        if (!!tmpFc[0].editorUrl && tmpFc[0].editorUrl.length > 1) {
+          this.data.editorUrl = tmpFc[0].editorUrl;
+        }
+        if (!!tmpFc[0].allowDrawio || tmpFc[0].allowDrawio === false) {
+          this.data.allowDrawio = obj.allowDrawio;
+        }
+      }
+
+
+      if (obj.allowDrawio || obj.allowDrawio === false) {
+        this.data.allowDrawio = obj.allowDrawio;
       }
       this.data.editorTheme = !!obj.editorTheme ? obj.editorTheme : this.data.editorTheme;
       this.data.editorUrl = !!obj.editorUrl ? obj.editorUrl : this.data.editorUrl;
@@ -121,7 +132,8 @@ export class FlowchartHandler {
       tmpFc.forEach((fcData: gf.TFlowchartData) => {
         this.addFlowchart(fcData.name)
           .toBack()
-          .import(fcData);
+          .import(fcData)
+          .allowDrawio(this.data.allowDrawio);
       });
       this.currentFlowchart = this.getFlowchart('Main');
     }
@@ -158,6 +170,12 @@ export class FlowchartHandler {
       result = $GF.utils.$loadFile(url);
     }
     return result;
+  }
+
+  allowDrawio(flag: boolean) {
+    this.flowcharts.forEach(flowchart => {
+      flowchart.allowDrawio(flag);
+    });
   }
 
   /**
@@ -433,7 +451,7 @@ export class FlowchartHandler {
       // OTHER : Resize, OnLoad
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS) || self.firstLoad) {
         // console.log("Apply Options")
-        if(self.firstLoad) {
+        if (self.firstLoad) {
           self.applyOptions();
           self.firstLoad = false;
         } else {
@@ -869,8 +887,8 @@ export class FlowchartHandler {
    */
   openDrawEditor(name?: string) {
     const fc = this.getFlowchart(name);
-    const urlEditor = fc.getUrlEditor();
-    const theme = this.getFlowchart(name).getThemeEditor();
+    const urlEditor = this.data.editorUrl;
+    const theme = this.data.editorTheme;
     const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&ready=fc-${fc.id}&src=grafana`;
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;
