@@ -87,7 +87,7 @@ export class FlowchartHandler {
 
   static getDefaultData(): gf.TFlowchartHandlerData {
     return {
-      editorUrl: 'https://www.draw.io',
+      editorUrl: 'https://diagrams.new/',
       editorTheme: 'kennedy',
       flowcharts: [],
       allowDrawio: true,
@@ -885,8 +885,8 @@ export class FlowchartHandler {
    */
   openDrawEditor(name?: string) {
     const fc = this.getFlowchart(name);
-    const urlEditor = fc.getUrlEditor();
-    const theme = this.getFlowchart(name).getThemeEditor();
+    const urlEditor = this.data.editorUrl;
+    const theme = this.data.editorTheme;
     const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&ready=fc-${fc.id}&src=grafana`;
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;

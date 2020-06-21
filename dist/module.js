@@ -16973,8 +16973,8 @@ var FlowchartHandler = function () {
     key: "openDrawEditor",
     value: function openDrawEditor(name) {
       var fc = this.getFlowchart(name);
-      var urlEditor = fc.getUrlEditor();
-      var theme = this.getFlowchart(name).getThemeEditor();
+      var urlEditor = this.data.editorUrl;
+      var theme = this.data.editorTheme;
       var urlParams = "".concat(urlEditor, "?embed=1&spin=1&libraries=1&ui=").concat(theme, "&ready=fc-").concat(fc.id, "&src=grafana");
       this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
       this.onEdit = true;
@@ -16992,7 +16992,7 @@ var FlowchartHandler = function () {
     key: "getDefaultData",
     value: function getDefaultData() {
       return {
-        editorUrl: 'https://www.draw.io',
+        editorUrl: 'https://diagrams.new/',
         editorTheme: 'kennedy',
         flowcharts: [],
         allowDrawio: true
