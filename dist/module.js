@@ -17929,10 +17929,12 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].trace.before(this.constructor.name + '.' + 'link()');
-      graph_class__WEBPACK_IMPORTED_MODULE_8__["default"].initMxGraph();
       var $section = elem.find('#flowcharting-section');
       var parent = $section[0];
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setMessageDiv(parent);
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Initialisation');
+      graph_class__WEBPACK_IMPORTED_MODULE_8__["default"].initMxGraph();
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Load configuration');
       this.metricHandler = new metricHandler__WEBPACK_IMPORTED_MODULE_6__["MetricHandler"]();
       var newRulesData = rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"].getDefaultData();
       this.rulesHandler = new rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"](newRulesData);
@@ -21234,8 +21236,8 @@ var XGraph = function () {
                 if (!XGraph.initialized) {
                   if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
                     XGraph.preInitGlobalVars();
-                    globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].utils.$evalFile("".concat(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].plugin.getDrawioPath(), "js/viewer.min.js"));
-                    Object(mxgraph_custom__WEBPACK_IMPORTED_MODULE_5__["customize"])();
+                    mxgraph_custom__WEBPACK_IMPORTED_MODULE_5__["evalCode"]();
+                    mxgraph_custom__WEBPACK_IMPORTED_MODULE_5__["customize"]();
                     XGraph.postInitGlobalVars();
                     mxTooltipHandler.prototype.delay = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.CONF_TOOLTIPS_DELAY;
                   }

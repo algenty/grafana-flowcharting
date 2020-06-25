@@ -163,14 +163,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   link(scope, elem, attrs, ctrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
 
-    // MxGraph Init
-    XGraph.initMxGraph();
-
     // $GF Containers
     const $section = elem.find('#flowcharting-section');
     const parent = $section[0];
     $GF.setMessageDiv(parent);
 
+    $GF.message.setMessage('Initialisation');
+    // MxGraph Init
+    XGraph.initMxGraph();
+
+    $GF.message.setMessage('Load configuration');
     // DATA
     this.metricHandler = new MetricHandler();
 

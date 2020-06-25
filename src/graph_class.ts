@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { $GF } from 'globals_class';
 import * as Drawio from 'drawio_custom';
 import chroma from 'chroma-js';
-import { customize, evalCode } from 'mxgraph_custom';
+import * as mxcustom from 'mxgraph_custom';
 
 declare var mxEvent: any;
 declare var mxClient: any;
@@ -146,9 +146,9 @@ export default class XGraph {
         XGraph.preInitGlobalVars();
         // let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
         // $GF.utils.evalRaw(code);
-        $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
-        // evalCode();
-        customize();
+        // $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
+        mxcustom.evalCode();
+        mxcustom.customize();
         XGraph.postInitGlobalVars();
         // $GF.utils.$evalFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
         // $GF.utils.evalRaw(code);
