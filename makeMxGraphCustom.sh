@@ -28,7 +28,7 @@ export { customize, evalCode };
 EOF
 }
 
-init
+#init
 updateViewer
 updateShapes
 makeJs
