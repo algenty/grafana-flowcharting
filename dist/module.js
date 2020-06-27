@@ -18138,7 +18138,7 @@ var FlowchartOptionsCtrl = function () {
   }, {
     key: "selectFlowchart",
     value: function selectFlowchart() {
-      this.flowchartHandler.setCurrentFlowchart(this.currentFlowchartName);
+      this.flowchartHandler.setCurrentFlowchart(this.flowchartHandler.currentFlowchartName);
       this.currentFlowchart = this.flowchartHandler.getCurrentFlowchart();
 
       if (this.currentFlowchart) {
@@ -18968,7 +18968,7 @@ GFLog.DEBUG = 0;
 GFLog.INFO = 1;
 GFLog.WARN = 2;
 GFLog.ERROR = 3;
-GFLog.logLevel = GFLog.WARN;
+GFLog.logLevel = GFLog.DEBUG;
 GFLog.logDisplay = true;
 
 var GFPlugin = function () {
@@ -19109,37 +19109,39 @@ var GFMessage = function () {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
+                debugger;
+
                 if (!(GFMessage.container && GFMessage.message)) {
-                  _context5.next = 15;
+                  _context5.next = 16;
                   break;
                 }
 
                 GFMessage.message.innerHTML = message;
                 _context5.t0 = type;
-                _context5.next = _context5.t0 === GFMessage.INFO_MESSAGE ? 5 : _context5.t0 === GFMessage.ERROR_MESSAGE ? 7 : _context5.t0 === GFMessage.WARNING_MESSAGE ? 9 : 11;
+                _context5.next = _context5.t0 === GFMessage.INFO_MESSAGE ? 6 : _context5.t0 === GFMessage.ERROR_MESSAGE ? 8 : _context5.t0 === GFMessage.WARNING_MESSAGE ? 10 : 12;
                 break;
 
-              case 5:
+              case 6:
                 GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 13);
+                return _context5.abrupt("break", 14);
 
-              case 7:
+              case 8:
                 GFMessage.message.style.color = GFMessage.ERROR_COLOR;
-                return _context5.abrupt("break", 13);
+                return _context5.abrupt("break", 14);
 
-              case 9:
+              case 10:
                 GFMessage.message.style.color = GFMessage.WARNING_COLOR;
-                return _context5.abrupt("break", 13);
+                return _context5.abrupt("break", 14);
 
-              case 11:
+              case 12:
                 GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 13);
+                return _context5.abrupt("break", 14);
 
-              case 13:
+              case 14:
                 GFMessage.container.style.display = '';
                 $GF.setUniqTimeOut(this.clearMessage, $GF.CONSTANTS.CONF_GFMESSAGE_MS, 'flowcharting-message');
 
-              case 15:
+              case 16:
               case "end":
                 return _context5.stop();
             }

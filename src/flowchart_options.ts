@@ -97,7 +97,7 @@ export class FlowchartOptionsCtrl {
   }
 
   selectFlowchart() {
-    this.flowchartHandler.setCurrentFlowchart(this.currentFlowchartName);
+    this.flowchartHandler.setCurrentFlowchart(this.flowchartHandler.currentFlowchartName);
     this.currentFlowchart = this.flowchartHandler.getCurrentFlowchart();
     if (this.currentFlowchart) {
       this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
