@@ -86,17 +86,14 @@ Fade on message/notification
 Update toolkit
 multi Diagrams
 Add sparkline
+Convert to D3 graph
 Add a refresh timer on donwload optionsFlag
 Add rename option on flowchart
-fade
 change layer event 
 Simplify editor
+Change Layer
+Fix Message console
+
 
 # effect
 https://pavenum.com/overlay-avec-hover-sur-une-image-en-html-css/
-
-# Bug alignement :
-mxSvgCanvas2D.js 
-'display: flex; align-items: unsafe ' +
-by 
-'display: flex; align-self: unsafe ' +

@@ -17962,7 +17962,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       }
 
       if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
-        this.flowchartHandler.addFlowchart('Main');
+        this.flowchartHandler.addFlowchart('Main').init();
       }
 
       this.panel.flowchartsData = newFlowchartsData;
@@ -19109,39 +19109,37 @@ var GFMessage = function () {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                debugger;
-
                 if (!(GFMessage.container && GFMessage.message)) {
-                  _context5.next = 16;
+                  _context5.next = 15;
                   break;
                 }
 
                 GFMessage.message.innerHTML = message;
                 _context5.t0 = type;
-                _context5.next = _context5.t0 === GFMessage.INFO_MESSAGE ? 6 : _context5.t0 === GFMessage.ERROR_MESSAGE ? 8 : _context5.t0 === GFMessage.WARNING_MESSAGE ? 10 : 12;
+                _context5.next = _context5.t0 === GFMessage.INFO_MESSAGE ? 5 : _context5.t0 === GFMessage.ERROR_MESSAGE ? 7 : _context5.t0 === GFMessage.WARNING_MESSAGE ? 9 : 11;
                 break;
 
-              case 6:
+              case 5:
                 GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 14);
+                return _context5.abrupt("break", 13);
 
-              case 8:
+              case 7:
                 GFMessage.message.style.color = GFMessage.ERROR_COLOR;
-                return _context5.abrupt("break", 14);
+                return _context5.abrupt("break", 13);
 
-              case 10:
+              case 9:
                 GFMessage.message.style.color = GFMessage.WARNING_COLOR;
-                return _context5.abrupt("break", 14);
+                return _context5.abrupt("break", 13);
 
-              case 12:
+              case 11:
                 GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 14);
+                return _context5.abrupt("break", 13);
 
-              case 14:
+              case 13:
                 GFMessage.container.style.display = '';
                 $GF.setUniqTimeOut(this.clearMessage, $GF.CONSTANTS.CONF_GFMESSAGE_MS, 'flowcharting-message');
 
-              case 16:
+              case 15:
               case "end":
                 return _context5.stop();
             }
@@ -19330,7 +19328,7 @@ var GFTrace = function () {
   return GFTrace;
 }();
 
-GFTrace.enable = false;
+GFTrace.enable = true;
 GFTrace.trc = new Map();
 GFTrace.fn = new Map();
 GFTrace.indent = 0;

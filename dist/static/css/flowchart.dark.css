@@ -819,7 +819,6 @@ div.tooltip-date {
 }
 
 .GF_console {
-  display: none;
   z-index: 2;
   position: absolute;
   box-sizing: border-box;
