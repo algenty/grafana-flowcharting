@@ -87,7 +87,7 @@ export class FlowchartHandler {
 
   static getDefaultData(): gf.TFlowchartHandlerData {
     return {
-      editorUrl: 'https://diagrams.new/',
+      editorUrl: 'https://embed.diagrams.net/',
       editorTheme: 'kennedy',
       flowcharts: [],
       allowDrawio: true,

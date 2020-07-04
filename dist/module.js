@@ -16992,7 +16992,7 @@ var FlowchartHandler = function () {
     key: "getDefaultData",
     value: function getDefaultData() {
       return {
-        editorUrl: 'https://diagrams.new/',
+        editorUrl: 'https://embed.diagrams.net/',
         editorTheme: 'kennedy',
         flowcharts: [],
         allowDrawio: true
