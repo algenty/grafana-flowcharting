@@ -86,7 +86,8 @@ export class State {
       const value = rule.getValueForMetric(metric);
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
-      const color = rule.data.gradient && rule.data.type === 'number' ? rule.getColorForValue(value) : rule.getColorForLevel(level);
+      const color =
+        rule.data.gradient && rule.data.type === 'number' ? rule.getColorForValue(value) : rule.getColorForLevel(level);
       this.variables.set($GF.CONSTANTS.VAR_STR_RULENAME, rule.data.alias);
       this.variables.set($GF.CONSTANTS.VAR_NUM_VALUE, value);
       this.variables.set($GF.CONSTANTS.VAR_STR_FORMATED, FormattedValue);
@@ -395,7 +396,9 @@ export class GFState {
     this.matchLevel.set(key, GFState.DEFAULTLEVEL);
     this.matchedKey.set(key, false);
     this.changedKey.set(key, false);
-    $GF.log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
+    $GF.log.debug(
+      'GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value
+    );
   }
 
   hasKey(key: string): boolean {

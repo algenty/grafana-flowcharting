@@ -52,7 +52,15 @@ Arnaud
 
 # Changelog
 
-## [[0.9.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0.zip) - 2020-05-31  
+## [[0.9.1]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.9.1/download) - 2020-07-04
+### Added
+  - New initialization engine for drawio libs
+  
+### Fixed
+  - Fixed : Label position in shape [(issue #147)](https://github.com/algenty/grafana-flowcharting/issues/147)   
+  - Fixed : Initialization of first model
+  
+## [[0.9.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.9.0/download) - 2020-05-31  
 ### Added
   - CSV Format support for flowchart source (https://drawio-app.com/import-from-csv-to-drawio/)
   - New aggregation : Time of last point  
@@ -75,7 +83,7 @@ Arnaud
   - Fixed : Blink event  
   - Fixed : Overflow on grafana v7 [(issue #172)](https://github.com/algenty/grafana-flowcharting/issues/172)   
   
-## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
+## [[0.8.1]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.8.1/download) - 2020-05-11  
 ### Added
   - New plugin logo for Grafana V7 ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/agenty-flowcharting.png?raw=true))  
   
@@ -83,7 +91,7 @@ Arnaud
   - Fixed : Dashboard variables.  
   - Optimize performance and size (7 Mo instead 15 Mo).  
   
-## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.0.zip) - 2020-05-02  
+## [[0.8.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.8.0/download) - 2020-05-02  
   
 ### Added
   - Add Identification by Value/lable in field 'what' in rules (experimental)  
@@ -115,7 +123,7 @@ Arnaud
   - Fix range value Min and Max range when 'from' or 'to' is empty
   - Fix 'With' field in text mapping, empty after clone or save/reload
   
-## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
+## [[0.7.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.7.0/download) - 2020-03-25  
   
 ### Added  
   - New conditions and design in rule for each mapping instead one per rule ([See example](https://algenty.github.io/flowcharting-repository/images/what_when_how.png))  
@@ -136,13 +144,13 @@ Arnaud
   - Fix shapes with last versions of draw.io [(issue #125)](https://github.com/algenty/grafana-flowcharting/issues/125)  
   - Fix 'Direct link rendered image' [(issue #114)](https://github.com/algenty/grafana-flowcharting/issues/114)  
 
-## [[0.6.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.1.zip) - 2020-01-15  
+## [[0.6.1]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.6.1/download) - 2020-01-15  
 ### Fixed
   - Fix endless loading when edit graph [(issue #102)](https://github.com/algenty/grafana-flowcharting/issues/102)
   - Fix error on edit mode for timeserie [(issue #100)](https://github.com/algenty/grafana-flowcharting/issues/100)
   - Fix "Apply button" in inspect mode [(issue #104)](https://github.com/algenty/grafana-flowcharting/issues/104)
   
-## [[0.6.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0.zip) - 2019-12-21  
+## [[0.6.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.6.0/download) - 2019-12-21  
   
 ### Added  
   - Experimental implementation for table type data (Mysql, Postgres, Zabbix, Streaming, loki and other ...)
@@ -168,7 +176,7 @@ Arnaud
   - Fix date on 2 digit in tooltip [(issue #77)](https://github.com/algenty/grafana-flowcharting/issues/73)
   - Fix minors bug.
   
-## [[0.5.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0.zip) - 2019-10-17
+## [[0.5.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.5.0/download) - 2019-10-17
   
 ### Added  
   - 2 new modes for "Update text value" ([See example](https://algenty.github.io/flowcharting-repository/images/append_mode_ani.png))

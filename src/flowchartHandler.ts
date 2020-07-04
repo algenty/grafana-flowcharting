@@ -96,12 +96,7 @@ export class FlowchartHandler {
       }
       // import data
       tmpFc.forEach((fcData: gf.TFlowchartData) => {
-        const container = this.createContainer();
-        const newData = Flowchart.getDefaultData();
-        const fc = new Flowchart(fcData.name, container, this.ctrl, newData);
-        fc.import(fcData);
-        this.flowcharts.push(fc);
-        this.data.flowcharts.push(newData);
+        this.addFlowchart(fcData.name).import(fcData);
       });
     }
     return this;
@@ -241,7 +236,7 @@ export class FlowchartHandler {
     const container = this.createContainer();
     const data = Flowchart.getDefaultData();
     const flowchart = new Flowchart(name, container, this.ctrl, data);
-    flowchart.init();
+    // flowchart.init();
     this.data.flowcharts.push(data);
     this.flowcharts.push(flowchart);
     trc.after();

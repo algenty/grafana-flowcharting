@@ -1608,7 +1608,9 @@ export class EventMap extends GFMap {
     }
     // _GF.loadLocalFile(_GF.CONSTANTS.VAR_STG_SHAPES, _GF.CONSTANTS.CONF_FILE_SHAPES);
     // const shapesText: string = _GF.getVar(_GF.CONSTANTS.VAR_STG_SHAPES);
-    const shapesText = $GF.utils.loadFile($GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT) + $GF.CONSTANTS.CONF_FILE_SHAPESTXT);
+    const shapesText = $GF.utils.loadFile(
+      $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT) + $GF.CONSTANTS.CONF_FILE_SHAPESTXT
+    );
     if (shapesText !== undefined) {
       if (EventMap.shapes.length === 0) {
         EventMap.shapes = EventMap.shapes.concat(shapesText.split(/\n/));
@@ -1707,7 +1709,10 @@ class RangeMap {
    * @memberof RangeMap
    */
   match(value: any): boolean {
-    if ((value !== undefined && typeof value === 'string' && value.length > 0) || (value !== undefined && typeof value === 'number')) {
+    if (
+      (value !== undefined && typeof value === 'string' && value.length > 0) ||
+      (value !== undefined && typeof value === 'number')
+    ) {
       let v: number = Number(value);
       if (
         (this.data.from !== undefined && typeof value === 'string' && this.data.from.length > 0) ||
