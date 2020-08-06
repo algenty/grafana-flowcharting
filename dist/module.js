@@ -16829,6 +16829,8 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _classCallCheck(this, FlowchartCtrl);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(FlowchartCtrl).call(this, $scope, $injector));
+    _this.editFlag = false;
+    _this.tearDownFlag = false;
     _this.GHApplied = false;
     globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].init($scope, templateSrv, _this.dashboard);
     _this.$rootScope = $rootScope;
@@ -16837,6 +16839,8 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _this.templateSrv = templateSrv;
     _this.changedSource = true;
     _this.changedData = true;
+    _this.editFlag = false;
+    _this.tearDownFlag = false;
     _this.changedOptions = true;
     _this.rulesHandler = undefined;
     _this.flowchartHandler = undefined;
@@ -16866,6 +16870,8 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
     _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].PanelEvents.editModeInitialized, _this.onInitEditMode.bind(_assertThisInitialized(_this)));
 
+    _this.events.on("panel-teardown", _this.onTearDown.bind(_assertThisInitialized(_this)));
+
     grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].appEvents.on('graph-hover', _this.onGraphHover.bind(_assertThisInitialized(_this)), _this.$scope);
     grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].appEvents.on('graph-hover-clear', _this.clearCrosshair.bind(_assertThisInitialized(_this)), _this.$scope);
 
@@ -16880,6 +16886,15 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       this.addEditorTab('Flowchart', flowchart_options__WEBPACK_IMPORTED_MODULE_2__["flowchartOptionsTab"], 2);
       this.addEditorTab('Mapping', mapping_options__WEBPACK_IMPORTED_MODULE_1__["mappingOptionsTab"], 3);
       this.addEditorTab('Inspect', inspect_options__WEBPACK_IMPORTED_MODULE_3__["inspectOptionsTab"], 4);
+      this.editFlag = true;
+    }
+  }, {
+    key: "onTearDown",
+    value: function onTearDown() {
+      if (this.editFlag === true && this.flowchartHandler) {
+        this.editFlag = false;
+        this.tearDownFlag = true;
+      }
     }
   }, {
     key: "onGraphHover",
@@ -16932,7 +16947,13 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     }
   }, {
     key: "onRender",
-    value: function onRender() {}
+    value: function onRender() {
+      if (this.tearDownFlag && this.flowchartHandler) {
+        this.tearDownFlag = false;
+        this.flowchartHandler.sourceChanged();
+        this.flowchartHandler.render();
+      }
+    }
   }, {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
@@ -18120,7 +18141,7 @@ var GFTrace = function () {
   return GFTrace;
 }();
 
-GFTrace.enable = true;
+GFTrace.enable = false;
 GFTrace.trc = new Map();
 GFTrace.fn = new Map();
 GFTrace.indent = 0;
@@ -18439,7 +18460,7 @@ $GF.log = GFLog.init();
 $GF.trace = GFTrace.init();
 $GF.graphHover = false;
 $GF.GHTimeStamp = 0;
-$GF.DEBUG = false;
+$GF.DEBUG = true;
 $GF.utils = __webpack_require__(/*! ./utils_raw */ "./utils_raw.js");
 /* WEBPACK VAR INJECTION */}.call(this, "/"))
 
