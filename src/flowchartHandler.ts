@@ -3,6 +3,7 @@ import { Rule, GFMap } from 'rule_class';
 import _ from 'lodash';
 import { Metric } from './metric_class';
 import { $GF } from 'globals_class';
+import { FlowchartCtrl } from './flowchart_ctrl';
 
 /**
  * Class FlowchartHandler
@@ -11,7 +12,7 @@ export class FlowchartHandler {
   $scope: ng.IScope;
   $elem: any; //TODO: elem ?
   parentDiv: HTMLDivElement;
-  ctrl: any; //TODO: ctrl ?
+  ctrl: FlowchartCtrl; //TODO: ctrl ?
   flowcharts: Flowchart[] = [];
   currentFlowchart = 'Main'; // name of current Flowchart
   data: gf.TFlowchartHandlerData;
@@ -99,6 +100,22 @@ export class FlowchartHandler {
         this.addFlowchart(fcData.name).import(fcData);
       });
     }
+    return this;
+  }
+
+  /**
+  * Reset/empty flowcharts, rules and children
+  *
+  * @returns {this}
+  * @param {Object} obj
+  * @memberof FlowchartHandler
+  */
+  clear():this {
+    this.flowcharts.forEach((fc:Flowchart) => {
+      fc.clear();
+    });
+    this.flowcharts = [];
+    this.data.flowcharts = [];
     return this;
   }
 
@@ -254,12 +271,14 @@ export class FlowchartHandler {
     if (!this.mousedown) {
       let optionsFlag = true;
       const self = this;
+      
       // SOURCE
       if (self.changeSourceFlag) {
         self.load();
         self.changeSourceFlag = false;
         self.changeRuleFlag = true;
         optionsFlag = true;
+        // this.ctrl.editModeFalse();
       }
       // OPTIONS
       if (self.changeOptionFlag) {
@@ -269,11 +288,12 @@ export class FlowchartHandler {
       }
       // RULES or DATAS
       if (self.changeRuleFlag || self.changeDataFlag || self.changeGraphHoverFlag) {
-        const rules = self.ctrl.rulesHandler.getRules();
-        const metrics = self.ctrl.metricHandler.getMetrics();
-
-        // Change to async to optimize
-        self.async_refreshStates(rules, metrics);
+        if (self.ctrl.rulesHandler && self.ctrl.metricHandler) {
+          const rules = self.ctrl.rulesHandler.getRules();
+          const metrics = self.ctrl.metricHandler.getMetrics();
+          // Change to async to optimize
+          self.async_refreshStates(rules, metrics);
+        }
         self.changeDataFlag = false;
         optionsFlag = false;
         self.changeGraphHoverFlag = false;

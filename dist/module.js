@@ -15734,6 +15734,16 @@ var FlowchartHandler = function () {
       return this;
     }
   }, {
+    key: "clear",
+    value: function clear() {
+      this.flowcharts.forEach(function (fc) {
+        fc.clear();
+      });
+      this.flowcharts = [];
+      this.data.flowcharts = [];
+      return this;
+    }
+  }, {
     key: "getFlowchart",
     value: function getFlowchart(name) {
       return this.flowcharts[0];
@@ -15811,9 +15821,12 @@ var FlowchartHandler = function () {
                   }
 
                   if (self.changeRuleFlag || self.changeDataFlag || self.changeGraphHoverFlag) {
-                    rules = self.ctrl.rulesHandler.getRules();
-                    metrics = self.ctrl.metricHandler.getMetrics();
-                    self.async_refreshStates(rules, metrics);
+                    if (self.ctrl.rulesHandler && self.ctrl.metricHandler) {
+                      rules = self.ctrl.rulesHandler.getRules();
+                      metrics = self.ctrl.metricHandler.getMetrics();
+                      self.async_refreshStates(rules, metrics);
+                    }
+
                     self.changeDataFlag = false;
                     optionsFlag = false;
                     self.changeGraphHoverFlag = false;
@@ -16209,6 +16222,22 @@ var Flowchart = function () {
       }
 
       this.init();
+      return this;
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      if (this.xgraph) {
+        this.xgraph.destroyGraph();
+        this.xgraph = undefined;
+        this.container.remove();
+      }
+
+      if (this.stateHandler) {
+        this.stateHandler.clear();
+        this.stateHandler = undefined;
+      }
+
       return this;
     }
   }, {
@@ -16829,8 +16858,6 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _classCallCheck(this, FlowchartCtrl);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(FlowchartCtrl).call(this, $scope, $injector));
-    _this.editFlag = false;
-    _this.tearDownFlag = false;
     _this.GHApplied = false;
     globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].init($scope, templateSrv, _this.dashboard);
     _this.$rootScope = $rootScope;
@@ -16839,19 +16866,20 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _this.templateSrv = templateSrv;
     _this.changedSource = true;
     _this.changedData = true;
-    _this.editFlag = false;
-    _this.tearDownFlag = false;
     _this.changedOptions = true;
     _this.rulesHandler = undefined;
     _this.flowchartHandler = undefined;
     _this.metricHandler = undefined;
+    _this.id = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].utils.uniqueID();
     _this.panelDefaults = {
       newFlag: true,
       format: 'short',
       valueName: 'current',
       rulesData: rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"].getDefaultData(),
-      flowchartsData: flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"].getDefaultData()
+      flowchartsData: flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"].getDefaultData(),
+      editedFlag: false
     };
+    globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug("PANEL ID : ", _this.id);
 
     lodash__WEBPACK_IMPORTED_MODULE_9___default.a.defaults(_this.panel, _this.panelDefaults);
 
@@ -16870,31 +16898,51 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
     _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].PanelEvents.editModeInitialized, _this.onInitEditMode.bind(_assertThisInitialized(_this)));
 
-    _this.events.on("panel-teardown", _this.onTearDown.bind(_assertThisInitialized(_this)));
+    _this.events.on('panel-teardown', _this.onTearDown.bind(_assertThisInitialized(_this)));
 
     grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].appEvents.on('graph-hover', _this.onGraphHover.bind(_assertThisInitialized(_this)), _this.$scope);
     grafana_func__WEBPACK_IMPORTED_MODULE_8__["default"].appEvents.on('graph-hover-clear', _this.clearCrosshair.bind(_assertThisInitialized(_this)), _this.$scope);
 
     _this.dashboard.events.on('template-variable-value-updated', _this.onVarChanged.bind(_assertThisInitialized(_this)), $scope);
 
+    globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug("CTRL : ", _this.id, _assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(FlowchartCtrl, [{
     key: "onInitEditMode",
     value: function onInitEditMode() {
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug("EVENT : ", this.id, "onInitEditMode");
       this.addEditorTab('Flowchart', flowchart_options__WEBPACK_IMPORTED_MODULE_2__["flowchartOptionsTab"], 2);
       this.addEditorTab('Mapping', mapping_options__WEBPACK_IMPORTED_MODULE_1__["mappingOptionsTab"], 3);
       this.addEditorTab('Inspect', inspect_options__WEBPACK_IMPORTED_MODULE_3__["inspectOptionsTab"], 4);
-      this.editFlag = true;
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug("CTRL : ", this.id, this);
+      this.editModeTrue();
+    }
+  }, {
+    key: "editModeTrue",
+    value: function editModeTrue() {
+      this.panel.editedFlag = true;
+    }
+  }, {
+    key: "editModeFalse",
+    value: function editModeFalse() {
+      this.panel.editedFlag = false;
+    }
+  }, {
+    key: "isEditedMode",
+    value: function isEditedMode() {
+      return this.panel.editedFlag;
+    }
+  }, {
+    key: "isEditingMode",
+    value: function isEditingMode() {
+      return this.panel.isEditing === true;
     }
   }, {
     key: "onTearDown",
     value: function onTearDown() {
-      if (this.editFlag === true && this.flowchartHandler) {
-        this.editFlag = false;
-        this.tearDownFlag = true;
-      }
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug("EVENT : ", this.id, "onTearDown");
     }
   }, {
     key: "onGraphHover",
@@ -16935,6 +16983,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "onRefresh",
     value: function onRefresh() {
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug("EVENT : ", this.id, "onRefresh");
       this.onRender();
     }
   }, {
@@ -16948,8 +16997,14 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "onRender",
     value: function onRender() {
-      if (this.tearDownFlag && this.flowchartHandler) {
-        this.tearDownFlag = false;
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug("EVENT : ", this.id, "onRender", this);
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug("EDIT MODE", this.id, this.isEditedMode());
+
+      if (this.flowchartHandler && this.isEditedMode() && !this.isEditingMode()) {
+        debugger;
+        this.editModeFalse();
+        this.flowchartHandler["import"](this.panel.flowchartsData);
+        this.flowchartHandler.draw();
         this.flowchartHandler.sourceChanged();
         this.flowchartHandler.render();
       }
@@ -16957,6 +17012,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug("EVENT : ", this.id, "onDataReceived");
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].trace.before(this.constructor.name + '.' + 'onDataReceived()');
 
       if (!!this.metricHandler) {
@@ -16974,6 +17030,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "onDataError",
     value: function onDataError() {
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug("EVENT : ", this.id, "onDataError");
       this.render();
     }
   }, {
@@ -17874,7 +17931,7 @@ GFLog.DEBUG = 0;
 GFLog.INFO = 1;
 GFLog.WARN = 2;
 GFLog.ERROR = 3;
-GFLog.logLevel = GFLog.WARN;
+GFLog.logLevel = GFLog.DEBUG;
 GFLog.logDisplay = true;
 
 var GFPlugin = function () {
@@ -18961,7 +19018,6 @@ var XGraph = function () {
 
       if (prop === 'id') {
         lodash__WEBPACK_IMPORTED_MODULE_1___default.a.each(cells, function (mxcell) {
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', _this2.getStyleCell(mxcell, 'shape'));
           cellIds.push(_this2.getId(mxcell));
         });
       } else if (prop === 'value') {
@@ -24099,6 +24155,11 @@ var State = function () {
   }
 
   _createClass(State, [{
+    key: "clear",
+    value: function clear() {
+      return this;
+    }
+  }, {
     key: "async_applyState",
     value: function async_applyState() {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee() {
@@ -24384,6 +24445,16 @@ var GFState = function () {
   }
 
   _createClass(GFState, [{
+    key: "clear",
+    value: function clear() {
+      this.keys = [];
+      this.matchedKey.clear();
+      this.changedKey.clear();
+      this.originalValue.clear();
+      this.matchValue.clear();
+      this.matchLevel.clear();
+    }
+  }, {
     key: "init_core",
     value: function init_core() {}
   }, {
@@ -24398,7 +24469,6 @@ var GFState = function () {
       this.matchLevel.set(key, GFState.DEFAULTLEVEL);
       this.matchedKey.set(key, false);
       this.changedKey.set(key, false);
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.debug('GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value);
     }
   }, {
     key: "hasKey",
@@ -24978,7 +25048,6 @@ var ShapeState = function (_GFState4) {
   _createClass(ShapeState, [{
     key: "init_core",
     value: function init_core() {
-      globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info('ShapeState [' + this.mxcell.id + ']');
       this.mxcell.GF_tooltipHandler = null;
     }
   }, {
@@ -25279,6 +25348,18 @@ var StateHandler = function () {
       });
 
       trc.after();
+      return this;
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      if (this.states) {
+        this.states.forEach(function (st) {
+          st.clear();
+        });
+        this.states.clear();
+      }
+
       return this;
     }
   }, {

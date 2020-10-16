@@ -110,6 +110,25 @@ export class Flowchart {
   }
 
   /**
+   * Reset/empty/destroy flowchart
+   *
+   * @returns {this}
+   * @memberof Flowchart
+   */
+  clear():this {
+    if (this.xgraph) {
+      this.xgraph.destroyGraph();
+      this.xgraph = undefined;
+      this.container.remove();
+    }
+    if(this.stateHandler) {
+      this.stateHandler.clear()
+      this.stateHandler = undefined;
+    }
+    return this;
+  }
+
+  /**
    * Return the default XML when new
    *
    * @static

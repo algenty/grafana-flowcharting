@@ -19,12 +19,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   version: any;
   changedSource: boolean;
   changedData: boolean;
-  editFlag:boolean = false;
-  tearDownFlag:boolean = false; 
   changedOptions: boolean;
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
+  id : String;
   GHApplied = false;
   panelDefaults: {
     newFlag: boolean;
@@ -32,6 +31,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     valueName: string;
     rulesData: gf.TIRulesHandlerData;
     flowchartsData: gf.TFlowchartHandlerData;
+    editedFlag: boolean;
   };
   containerDivId: string;
   static templateUrl: string;
@@ -45,19 +45,22 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.templateSrv = templateSrv;
     this.changedSource = true;
     this.changedData = true;
-    this.editFlag = false;
-    this.tearDownFlag = false;
     this.changedOptions = true;
     this.rulesHandler = undefined;
     this.flowchartHandler = undefined;
     this.metricHandler = undefined;
+    this.id = $GF.utils.uniqueID();
     this.panelDefaults = {
       newFlag: true,
       format: 'short',
       valueName: 'current',
       rulesData: RulesHandler.getDefaultData(),
       flowchartsData: FlowchartHandler.getDefaultData(),
+      editedFlag: false,
     };
+
+    // Identify panel
+    $GF.log.debug("PANEL ID : ",this.id);
 
     _.defaults(this.panel, this.panelDefaults);
     this.panel.graphId = `flowchart_${this.panel.id}`;
@@ -70,33 +73,46 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on(grafana.PanelEvents.dataError, this.onDataError.bind(this));
     this.events.on(grafana.PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
     this.events.on(grafana.PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
-    this.events.on("panel-teardown", this.onTearDown.bind(this));
+    this.events.on('panel-teardown', this.onTearDown.bind(this));
     grafana.appEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
     grafana.appEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-    // console.log("THIS", this);
-    
+    $GF.log.debug("CTRL : ", this.id ,this);
   }
 
   //
   // EVENTS FCT
   //
   onInitEditMode() {
+    $GF.log.debug("EVENT : ", this.id ,"onInitEditMode");
     this.addEditorTab('Flowchart', flowchartOptionsTab, 2);
     this.addEditorTab('Mapping', mappingOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
-    this.editFlag=true;
-    // console.log("THIS", this);
+    $GF.log.debug("CTRL : ", this.id ,this);
+    this.editModeTrue();
   }
 
-  // 9.1 : FIX for edit mode in grafana 7.x
+  // For Grafana 7, who to know if edit mode is actived
+  editModeTrue() {
+    this.panel.editedFlag = true;
+  }
+
+  editModeFalse() {
+    this.panel.editedFlag = false;
+  }
+
+  isEditedMode(): boolean {
+    return this.panel.editedFlag;
+  }
+
+  isEditingMode():boolean {
+    return this.panel.isEditing === true;
+  }
+
+  // 9.1 : FIX for edit mode in grafana 7.x : Not work
+  // Clean edit mode
   onTearDown() {
-    if(this.editFlag === true && this.flowchartHandler) {
-      this.editFlag = false;
-      this.tearDownFlag = true;
-      // this.flowchartHandler.sourceChanged();
-      // this.flowchartHandler.render();
-    }
+    $GF.log.debug("EVENT : ", this.id ,"onTearDown");
   }
 
   onGraphHover(event: any) {
@@ -131,6 +147,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRefresh() {
+    $GF.log.debug("EVENT : ", this.id ,"onRefresh");
     this.onRender();
   }
 
@@ -142,16 +159,20 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    // console.log("THIS", this);
-    // console.trace();
-    if (this.tearDownFlag && this.flowchartHandler) {
-      this.tearDownFlag = false;
+    $GF.log.debug("EVENT : ", this.id ,"onRender", this);
+    $GF.log.debug("EDIT MODE", this.id , this.isEditedMode());
+    if (this.flowchartHandler && this.isEditedMode() && !this.isEditingMode()) {
+      debugger
+      this.editModeFalse();
+      this.flowchartHandler.import(this.panel.flowchartsData);
+      this.flowchartHandler.draw();
       this.flowchartHandler.sourceChanged();
       this.flowchartHandler.render();
     }
   }
 
   onDataReceived(dataList) {
+    $GF.log.debug("EVENT : ", this.id ,"onDataReceived");
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
     if (!!this.metricHandler) {
       this.metricHandler.initData(dataList);
@@ -165,6 +186,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onDataError() {
+    $GF.log.debug("EVENT : ", this.id ,"onDataError");
     this.render();
   }
 
@@ -212,6 +234,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     } else {
       this.flowchartHandler.import(this.panel.flowchartsData);
     }
+
     if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
       this.flowchartHandler.addFlowchart('Main').init();
     }

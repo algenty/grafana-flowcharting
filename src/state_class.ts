@@ -58,6 +58,18 @@ export class State {
   }
 
   /**
+   * Reset/empty/clear/destroy it
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  clear():this {
+
+    return this;
+  }
+
+
+  /**
    * Call applyState() asynchronously
    *
    * @memberof State
@@ -383,6 +395,20 @@ export class GFState {
     this.init_core();
   }
 
+  /**
+   * Reset/clear/empty/destroy
+   *
+   * @memberof GFState
+   */
+  clear() {
+    this.keys = [];
+    this.matchedKey.clear();
+    this.changedKey.clear();
+    this.originalValue.clear();
+    this.matchValue.clear();
+    this.matchLevel.clear();
+  }
+
   init_core() {}
 
   addValue(key: string, value: any) {
@@ -396,9 +422,9 @@ export class GFState {
     this.matchLevel.set(key, GFState.DEFAULTLEVEL);
     this.matchedKey.set(key, false);
     this.changedKey.set(key, false);
-    $GF.log.debug(
-      'GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value
-    );
+    // $GF.log.debug(
+    //   'GFState.addValue from ' + this.constructor.name + ' [' + this.mxcell.id + '] KEY=' + key + ' VALUE=' + value
+    // );
   }
 
   hasKey(key: string): boolean {
@@ -811,7 +837,7 @@ class ShapeState extends GFState {
   }
 
   init_core() {
-    $GF.log.info('ShapeState [' + this.mxcell.id + ']');
+    //$GF.log.info('ShapeState [' + this.mxcell.id + ']');
     // this.keys = $GF.CONSTANTS.COLORMETHODS.map(x => x.value);
     // this.fullStylesString = this.mxcell.getStyle();
     // this.keys.forEach(key => {

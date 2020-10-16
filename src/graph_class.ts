@@ -595,7 +595,7 @@ export default class XGraph {
     const cells = model.cells;
     if (prop === 'id') {
       _.each(cells, (mxcell: mxCell) => {
-        $GF.log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', this.getStyleCell(mxcell, 'shape'));
+        //$GF.log.debug("this.getStyleCell(mxcell, 'shape') [" + mxcell.id + '] : ', this.getStyleCell(mxcell, 'shape'));
         cellIds.push(this.getId(mxcell));
       });
     } else if (prop === 'value') {
