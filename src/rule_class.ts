@@ -394,6 +394,10 @@ export class Rule {
     return this;
   }
 
+  clear():this {
+    return this;
+  }
+
   /**
    * Return uniq id of rule
    *
@@ -1176,6 +1180,11 @@ export class GFMap {
     if (!!obj.hidden) {
       this.data.hidden = obj.hidden;
     }
+    return this;
+  }
+
+  clear(): this {
+
     return this;
   }
 
