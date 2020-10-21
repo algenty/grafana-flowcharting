@@ -163,13 +163,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.log.debug("EDIT MODE", this.id , this.isEditedMode());
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.editModeFalse();
-      this.flowchartHandler.clear();
-      this.flowchartHandler.import(this.panel.flowchartsData);
+      // this.flowchartHandler.clear();
+      // this.flowchartHandler.import(this.panel.flowchartsData);
       // this.flowchartHandler.draw();
-      this.rulesHandler.clear();
-      this.rulesHandler.import(this.panel.rulesData);
-      this.flowchartHandler.sourceChanged();
-      this.flowchartHandler.render();
+      // this.rulesHandler.clear();
+      // this.rulesHandler.import(this.panel.rulesData);
+      // this.flowchartHandler.sourceChanged();
+      // this.flowchartHandler.render();
     }
   }
 

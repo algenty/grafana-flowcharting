@@ -1,0 +1,134 @@
+<div class="table-panel-container">
+  <div class="table-panel-header-bg"/>
+  <div class="table-panel-scroll" style="max-height: 300px;">
+    <table class="table-panel-table">
+      <thead>
+        <tr>
+          <th style="width: 100px;">
+            <div class="table-panel-table-header-inner pointer">
+              Id
+              <info-popover mode="right-normal">
+                <span
+                  ng-bind-html="$GF.popover('Id of object, double click on it to rename', 'INSPECT','inspect_graph_table')">
+                </span>
+              </info-popover>
+            </div>
+          </th>
+          <th style="width: 300px;">
+            <div class="table-panel-table-header-inner pointer">
+              Text</div>
+          </th>
+          <th>
+            <div class="table-panel-table-header-inner pointer" style="text-align:center;">
+              Level
+            </div>
+          </th>
+          <th>
+            <div class="table-panel-table-header-inner pointer" style="text-align:center;">
+              Font Col.
+            </div>
+          </th>
+          <th>
+            <div class="table-panel-table-header-inner pointer" style="text-align:center;">
+              Fill Col.
+            </div>
+          </th>
+          <th>
+            <div class="table-panel-table-header-inner pointer" style="text-align:center;">
+              Stoke Col.
+            </div>
+          </th>
+          <th style="display:inline-block;">
+            <div class="table-panel-table-header-inner pointer" style="text-align:center;">
+              Tags
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="state in editor.flowchartHandler.getFlowchart().getStateHandler().getStatesForInspect()"
+          ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
+          <td>
+            <div class="flowchartTable-editor" ng-dblclick="editor.onEdit(state)">
+              <div ng-hide="state.edited || state.edit"><span>{{state.cellId}}</span></div>
+              <div ng-hide="!state.edited || state.edit"><span style="color:blue">{{state.cellId}}</span></div>
+              <div ng-show="state.edit">
+                <input type="text" id="{{state.cellId}}" class="gf-form-input width-15" ng-model="state.newcellId"
+                  ng-blur="editor.onChangeId(state)" placeholder="{{state.cellId}}"
+                  ng-keydown="$event.keyCode === 13 && editor.onChangeId(state)" />
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="flowchartTable-editor">
+              {{state.getCellProp('value')}}
+            </div>
+          </td>
+          <td>
+            <div class="flowchartTable-editor"
+              style="display:table-cell;vertical-align:middle;">
+              {{state.getTextLevel()}}
+            </div>
+          </td>
+          <td>
+            <div class="flowchartTable-editor">
+              <div ng-show="state.getStatus('fontColor') !== null"
+                style="display:table-cell;vertical-align:middle;">
+                <div bs-tooltip="state.getStatus('fontColor')"
+                    style="width: 16px;height: 16px; background-color: {{state.getStatus('fontColor')}};border: 1px solid rgb(228, 228, 228);" >
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="flowchartTable-editor">
+              <div ng-show="state.getStatus('fillColor') !== null"
+                style="display:table-cell;vertical-align:middle;">
+                <div bs-tooltip="state.getStatus('fillColor')"
+                    style="width: 16px;height: 16px; background-color: {{state.getStatus('fillColor')}};border: 1px solid rgb(228, 228, 228);" >
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="flowchartTable-editor">
+              <div ng-show="state.getStatus('strokeColor') !== null"
+                style="display:table-cell;vertical-align:middle;">
+                <div bs-tooltip="state.getStatus('strokeColor')"
+                    style="width: 16px;height: 16px; background-color: {{state.getStatus('strokeColor')}};border: 1px solid rgb(228, 228, 228);" >
+                </div>
+              </div>
+            </div>
+          </td>
+          <td style='text-align:center;'>
+            <div class="flowchartTable-editor">
+              <div>
+                <div style="display:inline-block" ng-show="state.shapeState.isChanged()" bs-tooltip="'Mapping on Color'"><i
+                    class="fa fa-paint-brush"></i><i class="fa fa-fw"></i></div>
+                <div style="display:inline-block" ng-show="state.textState.isChanged()" bs-tooltip="'Mapping on text'"><i
+                    class="fa fa-paragraph"></i><i class="fa fa-fw"></i></div>
+                <div style="display:inline-block" ng-show="state.linkState.isChanged()" bs-tooltip="'Mapping on Link'"><i
+                    class="fa fa-chain"></i><i class="fa fa-fw"></i></div>
+                <div style="display:inline-block" ng-show="state.eventState.isChanged()" bs-tooltip="'Mapping on Animation'"><i
+                    class="fa fa-film"></i><i class="fa fa-fw"></i></div>
+                <div style="display:inline-block" ng-show="state.changed" bs-tooltip="'Mapped and Changed'"><i
+                    class="fa fa-check-circle"></i><i class="fa fa-fw"></i></div>
+                <div style="display:inline-block" ng-show="state.getStatus('tooltip') === true" bs-tooltip="'Tooltips available'"><i
+                    class="fa fa-info"></i><i class="fa fa-fw"></i></div>
+              </div>
+            </div>
+        </tr>
+      </tbody>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="gf-form">
+  <button class="btn btn-danger btn-small" ng-click="editor.reset()" style="margin-right: 5px;">
+    <i class="fa fa-power-off"></i> Reinit graph and color
+  </button>
+  <button ng-show="editor.flowchartHandler.getFlowchart().getStateHandler().edited"
+    class="btn btn-secondary btn-small" ng-click="editor.apply()" style="margin-right: 5px;">
+    <i class="fa fa-save"></i> Apply changes
+  </button>
+</div>

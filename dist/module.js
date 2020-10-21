@@ -17002,12 +17002,6 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
       if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
         this.editModeFalse();
-        this.flowchartHandler.clear();
-        this.flowchartHandler["import"](this.panel.flowchartsData);
-        this.rulesHandler.clear();
-        this.rulesHandler["import"](this.panel.rulesData);
-        this.flowchartHandler.sourceChanged();
-        this.flowchartHandler.render();
       }
     }
   }, {

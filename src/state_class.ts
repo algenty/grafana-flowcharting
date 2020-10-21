@@ -245,6 +245,13 @@ export class State {
     return this.globalLevel === -1 ? '' : this.globalLevel.toString();
   }
 
+  /**
+   * Give value of status
+   *
+   * @param {string} key
+   * @returns {string}
+   * @memberof State
+   */
   getStatus(key: string): string {
     let style: string | null | undefined = this.status.get(key);
     if (style !== undefined && style !== null) {
@@ -257,6 +264,13 @@ export class State {
     this.status.set(key, style);
     return style;
   }
+
+  /**
+   * Indicate if have a status for this key
+   *
+   * @param {string} key
+   * @memberof State
+   */
 
   haveStatus(key: string): boolean {
     return this.status.has(key);
