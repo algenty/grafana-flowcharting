@@ -42,7 +42,7 @@
     "@types/jquery": "^3.3.31",
     "@types/lodash": "^4.14.150",
     "@typescript-eslint/eslint-plugin": "^2.18",
-    "angular": "^1.7.9",
+    "angular": "^1.8.0",
     "babel-eslint": "^10.0.3",
     "babel-polyfill": "^6.26.0",
     "chartist": "^0.11.4",
