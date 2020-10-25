@@ -61,7 +61,7 @@
     "invariant": "^2.2.4",
     "jquery": "^3.4.1",
     "load-grunt-tasks": "^5.1.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "marky": "^1.2.1",
     "mxgraph": "^4.1.1",
     "mxgraph-type-definitions": "^1.0.1",
