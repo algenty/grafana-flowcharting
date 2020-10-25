@@ -23,7 +23,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
-  id : String;
+  id: String;
   GHApplied = false;
   panelDefaults: {
     newFlag: boolean;
@@ -60,7 +60,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     };
 
     // Identify panel
-    $GF.log.debug("PANEL ID : ",this.id);
+    $GF.log.debug('PANEL ID : ', this.id);
 
     _.defaults(this.panel, this.panelDefaults);
     this.panel.graphId = `flowchart_${this.panel.id}`;
@@ -77,18 +77,18 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     grafana.appEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
     grafana.appEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-    $GF.log.debug("CTRL : ", this.id ,this);
+    $GF.log.debug('CTRL : ', this.id, this);
   }
 
   //
   // EVENTS FCT
   //
   onInitEditMode() {
-    $GF.log.debug("EVENT : ", this.id ,"onInitEditMode");
+    $GF.log.debug('EVENT : ', this.id, 'onInitEditMode');
     this.addEditorTab('Flowchart', flowchartOptionsTab, 2);
     this.addEditorTab('Mapping', mappingOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
-    $GF.log.debug("CTRL : ", this.id ,this);
+    $GF.log.debug('CTRL : ', this.id, this);
     this.editModeTrue();
   }
 
@@ -105,14 +105,14 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     return this.panel.editedFlag;
   }
 
-  isEditingMode():boolean {
+  isEditingMode(): boolean {
     return this.panel.isEditing === true;
   }
 
   // 9.1 : FIX for edit mode in grafana 7.x : Not work
   // Clean edit mode
   onTearDown() {
-    $GF.log.debug("EVENT : ", this.id ,"onTearDown");
+    $GF.log.debug('EVENT : ', this.id, 'onTearDown');
   }
 
   onGraphHover(event: any) {
@@ -147,7 +147,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRefresh() {
-    $GF.log.debug("EVENT : ", this.id ,"onRefresh");
+    $GF.log.debug('EVENT : ', this.id, 'onRefresh');
     this.onRender();
   }
 
@@ -159,22 +159,22 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    $GF.log.debug("EVENT : ", this.id ,"onRender", this);
-    $GF.log.debug("EDIT MODE", this.id , this.isEditedMode());
+    $GF.log.debug('EVENT : ', this.id, 'onRender', this);
+    $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.editModeFalse();
-      // this.flowchartHandler.clear();
-      // this.flowchartHandler.import(this.panel.flowchartsData);
+      this.flowchartHandler.clear();
+      this.flowchartHandler.import(this.panel.flowchartsData);
       // this.flowchartHandler.draw();
-      // this.rulesHandler.clear();
-      // this.rulesHandler.import(this.panel.rulesData);
-      // this.flowchartHandler.sourceChanged();
-      // this.flowchartHandler.render();
+      this.rulesHandler.clear();
+      this.rulesHandler.import(this.panel.rulesData);
+      this.flowchartHandler.sourceChanged();
+      this.flowchartHandler.render();
     }
   }
 
   onDataReceived(dataList) {
-    $GF.log.debug("EVENT : ", this.id ,"onDataReceived");
+    $GF.log.debug('EVENT : ', this.id, 'onDataReceived');
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
     if (!!this.metricHandler) {
       this.metricHandler.initData(dataList);
@@ -188,7 +188,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onDataError() {
-    $GF.log.debug("EVENT : ", this.id ,"onDataError");
+    $GF.log.debug('EVENT : ', this.id, 'onDataError');
     this.render();
   }
 

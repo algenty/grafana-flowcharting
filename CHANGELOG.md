@@ -1,6 +1,18 @@
 # Changelog
+
+# Changelog
+
+## [[0.9.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.1-SNAPSHOT.zip) - 2020-10-25
+### Added
+  - New initialization engine for drawio libs
   
-## [[0.9.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0.zip) - 2020-05-31  
+### Fixed
+  - Fixed : Inspect mode [(issue #209)](https://github.com/algenty/grafana-flowcharting/issues/209)
+  - Fixed : Label position in shape [(issue #147)](https://github.com/algenty/grafana-flowcharting/issues/147)   
+  - Fixed : Initialization of first model
+  - Fixed : Display refresh between "edit mode" and "dashboard mode" in grafana v7 [(issue #205)](https://github.com/algenty/grafana-flowcharting/issues/205)  
+  
+## [[0.9.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.9.0/download) - 2020-05-31  
 ### Added
   - CSV Format support for flowchart source (https://drawio-app.com/import-from-csv-to-drawio/)
   - New aggregation : Time of last point  
@@ -23,7 +35,7 @@
   - Fixed : Blink event  
   - Fixed : Overflow on grafana v7 [(issue #172)](https://github.com/algenty/grafana-flowcharting/issues/172)   
   
-## [[0.8.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.1.zip) - 2020-05-11  
+## [[0.8.1]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.8.1/download) - 2020-05-11  
 ### Added
   - New plugin logo for Grafana V7 ([See example](https://github.com/algenty/grafana-flowcharting/blob/master/src/img/agenty-flowcharting.png?raw=true))  
   
@@ -31,7 +43,7 @@
   - Fixed : Dashboard variables.  
   - Optimize performance and size (7 Mo instead 15 Mo).  
   
-## [[0.8.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.8.0.zip) - 2020-05-02  
+## [[0.8.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.8.0/download) - 2020-05-02  
   
 ### Added
   - Add Identification by Value/lable in field 'what' in rules (experimental)  
@@ -63,7 +75,7 @@
   - Fix range value Min and Max range when 'from' or 'to' is empty
   - Fix 'With' field in text mapping, empty after clone or save/reload
   
-## [[0.7.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.7.0.zip) - 2020-03-25  
+## [[0.7.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.7.0/download) - 2020-03-25  
   
 ### Added  
   - New conditions and design in rule for each mapping instead one per rule ([See example](https://algenty.github.io/flowcharting-repository/images/what_when_how.png))  
@@ -84,13 +96,13 @@
   - Fix shapes with last versions of draw.io [(issue #125)](https://github.com/algenty/grafana-flowcharting/issues/125)  
   - Fix 'Direct link rendered image' [(issue #114)](https://github.com/algenty/grafana-flowcharting/issues/114)  
 
-## [[0.6.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.1.zip) - 2020-01-15  
+## [[0.6.1]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.6.1/download) - 2020-01-15  
 ### Fixed
   - Fix endless loading when edit graph [(issue #102)](https://github.com/algenty/grafana-flowcharting/issues/102)
   - Fix error on edit mode for timeserie [(issue #100)](https://github.com/algenty/grafana-flowcharting/issues/100)
   - Fix "Apply button" in inspect mode [(issue #104)](https://github.com/algenty/grafana-flowcharting/issues/104)
   
-## [[0.6.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.6.0.zip) - 2019-12-21  
+## [[0.6.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.6.0/download) - 2019-12-21  
   
 ### Added  
   - Experimental implementation for table type data (Mysql, Postgres, Zabbix, Streaming, loki and other ...)
@@ -116,9 +128,9 @@
   - Fix date on 2 digit in tooltip [(issue #77)](https://github.com/algenty/grafana-flowcharting/issues/73)
   - Fix minors bug.
   
-## [[0.5.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.5.0.zip) - 2019-10-17
+## [[0.5.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.5.0/download) - 2019-10-17
 
-## [[0.4.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.4.0.zip) - 2019-09-26
+## [[0.4.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.4.0/download) - 2019-09-26
 ### Added
   - Draw.io editor ([see example](https://algenty.github.io/flowcharting-repository/images/openEditor_ani.gif))
     - Open draw.io with dark theme for better rendering  
@@ -155,7 +167,7 @@
   - Fix formatted text when label is html [(issues #21)](https://github.com/algenty/grafana-flowcharting/issues/29)
   - Work around a bug since Grafana 6+ [(issues 19426 grafana)](https://github.com/grafana/grafana/issues/19426)
 
-## [[0.3.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.3.0.zip) - 2019-05-07
+## [[0.3.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.3.0/download) - 2019-05-07
 ### Added
 
   /!\ Possible breaking change with 0.2.0 and 0.2.5 but it will compatible with next release.  
@@ -182,7 +194,7 @@
   - Fixed Change the colors [(Issue #14)](https://github.com/algenty/grafana-flowcharting/issues/14)
   - Fixed Unit [(Issue #12)](https://github.com/algenty/grafana-flowcharting/issues/12)
 
-## [[0.2.5]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.2.5.zip) - 2019-04-19
+## [[0.2.5]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.2.5/download) - 2019-04-19
 ### Added
   - Mapping Helper for select object with mouse  
   

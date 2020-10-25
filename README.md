@@ -52,14 +52,15 @@ Arnaud
 
 # Changelog
 
-## [[0.9.1]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.9.1/download) - 2020-07-04
+## [[0.9.1]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.1-SNAPSHOT.zip) - 2020-10-25
 ### Added
   - New initialization engine for drawio libs
   
 ### Fixed
+  - Fixed : Inspect mode [(issue #209)](https://github.com/algenty/grafana-flowcharting/issues/209)
   - Fixed : Label position in shape [(issue #147)](https://github.com/algenty/grafana-flowcharting/issues/147)   
   - Fixed : Initialization of first model
-  - TODO : Display refresh between "edit mode" and "dashboard mode" in grafana v7 [(issue #205)](https://github.com/algenty/grafana-flowcharting/issues/205)   
+  - Fixed : Display refresh between "edit mode" and "dashboard mode" in grafana v7 [(issue #205)](https://github.com/algenty/grafana-flowcharting/issues/205)   
   
 ## [[0.9.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.9.0/download) - 2020-05-31  
 ### Added

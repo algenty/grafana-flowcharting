@@ -51,11 +51,11 @@ export class StateHandler {
    * @returns {this}
    * @memberof StateHandler
    */
-  clear():this {
-    if(this.states) {
+  clear(): this {
+    if (this.states) {
       this.states.forEach(st => {
         st.clear();
-      })
+      });
       this.states.clear();
     }
     return this;

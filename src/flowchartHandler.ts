@@ -104,14 +104,14 @@ export class FlowchartHandler {
   }
 
   /**
-  * Reset/empty flowcharts, rules and children
-  *
-  * @returns {this}
-  * @param {Object} obj
-  * @memberof FlowchartHandler
-  */
-  clear():this {
-    this.flowcharts.forEach((fc:Flowchart) => {
+   * Reset/empty flowcharts, rules and children
+   *
+   * @returns {this}
+   * @param {Object} obj
+   * @memberof FlowchartHandler
+   */
+  clear(): this {
+    this.flowcharts.forEach((fc: Flowchart) => {
       fc.clear();
     });
     this.flowcharts = [];
@@ -271,7 +271,7 @@ export class FlowchartHandler {
     if (!this.mousedown) {
       let optionsFlag = true;
       const self = this;
-      
+
       // SOURCE
       if (self.changeSourceFlag) {
         self.load();

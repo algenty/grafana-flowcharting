@@ -123,6 +123,19 @@ export class InspectOptionsCtrl {
   }
 
   reset() {
+    const flowchart = this.flowchartHandler.getFlowchart();
+    const sh = flowchart.getStateHandler();
+    if (sh !== undefined) {
+      const states = sh.getStates();
+      states.forEach(state => {
+        if (state.edited && state.previousId) {
+          state.cellId = state.previousId;
+          state.edited = false;
+        }
+      });
+      sh.edited = false;
+    }
+    flowchart.applyModel();
     this.flowchartHandler.draw();
     this.flowchartHandler.refresh();
     // this.$scope.$apply();

@@ -394,7 +394,7 @@ export class Rule {
     return this;
   }
 
-  clear():this {
+  clear(): this {
     return this;
   }
 
@@ -1184,7 +1184,6 @@ export class GFMap {
   }
 
   clear(): this {
-
     return this;
   }
 

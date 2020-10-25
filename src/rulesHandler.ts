@@ -65,7 +65,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   clear(): this {
-    this.rules.forEach( r=>{
+    this.rules.forEach(r => {
       r.clear();
     });
     this.rules = [];

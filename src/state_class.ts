@@ -63,11 +63,9 @@ export class State {
    * @returns {this}
    * @memberof State
    */
-  clear():this {
-
+  clear(): this {
     return this;
   }
-
 
   /**
    * Call applyState() asynchronously

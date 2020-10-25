@@ -115,14 +115,14 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  clear():this {
+  clear(): this {
     if (this.xgraph) {
       this.xgraph.destroyGraph();
       this.xgraph = undefined;
       this.container.remove();
     }
-    if(this.stateHandler) {
-      this.stateHandler.clear()
+    if (this.stateHandler) {
+      this.stateHandler.clear();
       this.stateHandler = undefined;
     }
     return this;
