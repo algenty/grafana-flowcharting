@@ -41,6 +41,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.init($scope, templateSrv, this.dashboard);
     this.$rootScope = $rootScope;
     this.$scope = $scope;
+    $scope.editor = this;
     this.version = $GF.plugin.getVersion();
     this.templateSrv = templateSrv;
     this.changedSource = true;
@@ -124,7 +125,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       $GF.clearUniqTimeOut(id);
       const setGraphHover = () => {
         $GF.setGraphHover(timestamp);
-        flowchartHandler.graphHoverChanged();
+        flowchartHandler.onGraphHoverChange();
         self.render();
         self.GHApplied = true;
         $GF.clearUniqTimeOut(id);
@@ -141,7 +142,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.GHApplied = false;
       $GF.clearUniqTimeOut(id);
       $GF.unsetGraphHover();
-      this.flowchartHandler.graphHoverChanged();
+      this.flowchartHandler.onGraphHoverChange();
       this.render();
     }
   }
@@ -153,7 +154,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onVarChanged() {
     if (this.flowchartHandler !== undefined) {
-      this.flowchartHandler.sourceChanged();
+      this.flowchartHandler.onSourceChange();
       this.flowchartHandler.render();
     }
   }
@@ -163,12 +164,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.editModeFalse();
-      this.flowchartHandler.clear();
-      this.flowchartHandler.import(this.panel.flowchartsData);
+      // this.flowchartHandler.clear();
+      // this.flowchartHandler.import(this.panel.flowchartsData);
       // this.flowchartHandler.draw();
-      this.rulesHandler.clear();
-      this.rulesHandler.import(this.panel.rulesData);
-      this.flowchartHandler.sourceChanged();
+      // this.rulesHandler.clear();
+      // this.rulesHandler.import(this.panel.rulesData);
+      this.flowchartHandler.onSourceChange();
       this.flowchartHandler.render();
     }
   }
@@ -205,11 +206,18 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   link(scope, elem, attrs, ctrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
 
-    // Init mxGraph/draw.io libs
+    // $GF Containers
+    const $section = elem.find('#flowcharting-section');
+    const parent = $section[0];
+    $GF.setMessageDiv(parent);
+
+    $GF.message.setMessage('Initialisation');
+    // MxGraph Init
     XGraph.initMxGraph();
 
+    $GF.message.setMessage('Load configuration');
     // DATA
-    this.metricHandler = new MetricHandler(this.$scope);
+    this.metricHandler = new MetricHandler();
 
     // RULES
     const newRulesData = RulesHandler.getDefaultData();
@@ -236,16 +244,51 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     } else {
       this.flowchartHandler.import(this.panel.flowchartsData);
     }
-
     if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
       this.flowchartHandler.addFlowchart('Main').init();
     }
     this.panel.flowchartsData = newFlowchartsData;
 
+    // Position to main flowchart
+    // this.flowchartHandler.setCurrentFlowchart('Main');
+
     // Versions
     this.panel.newFlag = false;
     this.panel.version = this.version;
     trc.after();
+  }
+
+  displayMultiCursor(): boolean {
+    if (this.flowchartHandler) {
+      return this.flowchartHandler?.isMultiFlowcharts();
+    }
+    return false;
+  }
+
+  displayFirstCursor(): boolean {
+    if (this.flowchartHandler) {
+      return !this.flowchartHandler?.isCurrentfirst();
+    }
+    return false;
+  }
+
+  displayLastCursor(): boolean {
+    if (this.flowchartHandler) {
+      return !this.flowchartHandler?.isCurrentLast();
+    }
+    return false;
+  }
+
+  displayNextFlowchart() {
+    if (this.flowchartHandler) {
+      this.flowchartHandler.setNextFlowchart();
+    }
+  }
+
+  displayPreviousFlowchart() {
+    if (this.flowchartHandler) {
+      this.flowchartHandler.setPreviousFlowchart();
+    }
   }
 
   // exportSVG() {

@@ -21,12 +21,15 @@ export class Flowchart {
   // ctrl: any;
   templateSrv: any;
   states: Map<string, State> | undefined;
+  id: string;
+  visible = false;
 
   constructor(name: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {
     this.data = data;
     this.data.name = name;
     this.container = container;
     this.templateSrv = ctrl.templateSrv;
+    this.id = $GF.utils.uniqueID();
   }
 
   /**
@@ -52,7 +55,6 @@ export class Flowchart {
       this.data.center = obj.options.center;
       this.data.scale = obj.options.scale;
       this.data.lock = obj.options.lock;
-      this.data.allowDrawio = false;
       this.data.tooltip = obj.options.tooltip;
       this.data.grid = obj.options.grid;
       this.data.bgColor = obj.options.bgColor;
@@ -84,9 +86,7 @@ export class Flowchart {
     if (!!obj.lock || obj.lock === false) {
       this.data.lock = obj.lock;
     }
-    if (!!obj.allowDrawio || obj.allowDrawio === false) {
-      this.data.allowDrawio = obj.allowDrawio;
-    }
+
     if (!!obj.enableAnim || obj.enableAnim === false) {
       this.data.enableAnim = obj.enableAnim;
     }
@@ -99,32 +99,7 @@ export class Flowchart {
     if (!!obj.bgColor) {
       this.data.bgColor = obj.bgColor;
     }
-    if (!!obj.editorUrl) {
-      this.data.editorUrl = obj.editorUrl;
-    }
-    if (!!obj.editorTheme) {
-      this.data.editorTheme = obj.editorTheme;
-    }
     this.init();
-    return this;
-  }
-
-  /**
-   * Reset/empty/destroy flowchart
-   *
-   * @returns {this}
-   * @memberof Flowchart
-   */
-  clear(): this {
-    if (this.xgraph) {
-      this.xgraph.destroyGraph();
-      this.xgraph = undefined;
-      this.container.remove();
-    }
-    if (this.stateHandler) {
-      this.stateHandler.clear();
-      this.stateHandler = undefined;
-    }
     return this;
   }
 
@@ -147,13 +122,10 @@ export class Flowchart {
       center: true,
       scale: true,
       lock: true,
-      allowDrawio: false,
       enableAnim: true,
       tooltip: true,
       grid: false,
       bgColor: null,
-      editorUrl: 'https://www.draw.io',
-      editorTheme: 'dark',
     };
   }
 
@@ -207,14 +179,6 @@ export class Flowchart {
         this.xgraph = new XGraph(this.container, this.data.type, content);
       }
       if (content !== undefined && content !== null) {
-        // if (this.data.download) {
-        //   this.xgraph.setXmlGraph(this.getContent());
-        // }
-        if (this.data.allowDrawio) {
-          this.xgraph.allowDrawio(true);
-        } else {
-          this.xgraph.allowDrawio(false);
-        }
         if (this.data.enableAnim) {
           this.xgraph.enableAnim(true);
         } else {
@@ -237,10 +201,13 @@ export class Flowchart {
           this.xgraph.lockGraph(true);
         }
         this.stateHandler = new StateHandler(this.xgraph);
+        $GF.message.clearMessage();
       } else {
+        $GF.message.setMessage('Source content empty Graph not defined', 'error');
         $GF.log.error('Source content empty Graph not defined');
       }
     } catch (error) {
+      $GF.message.setMessage('Unable to initialize graph', 'error');
       $GF.log.error('Unable to initialize graph', error);
     }
     return this;
@@ -274,7 +241,7 @@ export class Flowchart {
    * @memberof Flowchart
    */
   setStates(rules: Rule[], metrics: Metric[]): this {
-    $GF.log.info(`flowchart[${this.data.name}].setStates()`);
+    // $GF.log.info(`flowchart[${this.data.name}].setStates()`);
     if (rules === undefined) {
       $GF.log.warn("Rules shoudn't be null");
     }
@@ -311,7 +278,7 @@ export class Flowchart {
    * @memberof Flowchart
    */
   applyStates(): this {
-    $GF.log.info(`flowchart[${this.data.name}].applyStates()`);
+    // $GF.log.info(`flowchart[${this.data.name}].applyStates()`);
     if (this.stateHandler) {
       this.stateHandler.applyStates();
     }
@@ -355,7 +322,7 @@ export class Flowchart {
     if (this.xgraph !== undefined) {
       this.xgraph.setContent(this.getContent());
     }
-    this.applyOptions();
+    // this.applyOptions();
   }
 
   /**
@@ -371,6 +338,39 @@ export class Flowchart {
     } else {
       this.init();
     }
+  }
+
+  /**
+   * Reset/empty/destroy flowchart
+   *
+   * @returns {this}
+   * @memberof Flowchart
+   */
+  clear(): this {
+    if (this.xgraph) {
+      this.xgraph.destroyGraph();
+      this.xgraph = undefined;
+      this.container.remove();
+    }
+    if (this.stateHandler) {
+      this.stateHandler.clear();
+      this.stateHandler = undefined;
+    }
+    return this;
+  }
+
+  /**
+   * Set the name
+   *
+   * @param {string} name
+   * @memberof Flowchart
+   */
+  setName(name: string) {
+    this.data.name = name;
+  }
+
+  getName(): string {
+    return this.data.name;
   }
 
   /**
@@ -575,18 +575,11 @@ export class Flowchart {
     return '';
   }
 
-  /**
-   * Get Url editor
-   *
-   * @returns {string}
-   * @memberof Flowchart
-   */
-  getUrlEditor(): string {
-    return this.data.editorUrl;
-  }
-
-  getThemeEditor(): string {
-    return this.data.editorTheme;
+  allowDrawio(flag: boolean): this {
+    if (this.xgraph) {
+      this.xgraph.allowDrawio(flag);
+    }
+    return this;
   }
 
   /**
@@ -601,7 +594,9 @@ export class Flowchart {
     let content: string | null = '';
     if (this.data.download) {
       const url = this.templateSrv.replaceWithText(this.data.url);
+      $GF.message.setMessage(`Loading content definition for ${this.data.name}`, 'info');
       content = this.loadContent(url);
+      $GF.message.clearMessage();
       if (content !== null) {
         if (replaceVarBool) {
           content = this.templateSrv.replaceWithText(content);
@@ -758,5 +753,26 @@ export class Flowchart {
     if (this.xgraph) {
       this.xgraph.unsetMap();
     }
+  }
+
+  toFront(forceRefresh: boolean = false): this {
+    $GF.log.debug('toFront', this.data.name);
+    this.visible = true;
+    this.container.className = 'GF_flowchartShow';
+    if (forceRefresh) {
+      this.applyOptions();
+    }
+    return this;
+  }
+
+  toBack(): this {
+    $GF.log.debug('toBack', this.data.name);
+    this.visible = false;
+    this.container.className = 'GF_flowchartHide';
+    return this;
+  }
+
+  isVisible(): boolean {
+    return this.visible;
   }
 }

@@ -18,6 +18,10 @@ STYLE_DASHED Pointillé
 STYLE_DASHED: 'dashed'
 Defines the key for the dashed style.  Use 0 (default) for non-dashed or 1 for dashed.  Value is “dashed”.
 
+# Update master
+git checkout master
+git merge branch
+git push
 
 to front
 to back
