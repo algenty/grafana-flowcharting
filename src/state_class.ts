@@ -58,6 +58,16 @@ export class State {
   }
 
   /**
+   * Reset/empty/clear/destroy it
+   *
+   * @returns {this}
+   * @memberof State
+   */
+  clear(): this {
+    return this;
+  }
+
+  /**
    * Call applyState() asynchronously
    *
    * @memberof State

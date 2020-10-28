@@ -24,11 +24,11 @@ export class Flowchart {
   id: string;
   visible = false;
 
-  constructor(name: string, container: HTMLDivElement, ctrl: any, data: gf.TFlowchartData) {
+  constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData) {
     this.data = data;
     this.data.name = name;
     this.container = container;
-    this.templateSrv = ctrl.templateSrv;
+    // this.templateSrv = ctrl.templateSrv;
     this.id = $GF.utils.uniqueID();
   }
 
@@ -40,6 +40,7 @@ export class Flowchart {
    */
   import(obj: any): this {
     $GF.log.info(`flowchart[${this.data.name}].import()`);
+    this.clear();
     if (!!obj.download || this.data.download === false) {
       this.data.download = obj.download;
     }
@@ -341,17 +342,22 @@ export class Flowchart {
   }
 
   /**
-   * Destroy this flowchart correctly
+   * Reset/empty/destroy flowchart
    *
+   * @returns {this}
    * @memberof Flowchart
    */
-  destroy() {
-    this.toBack();
-    if (this.xgraph !== undefined && this.xgraph !== null) {
+  clear(): this {
+    if (this.xgraph) {
       this.xgraph.destroyGraph();
       this.xgraph = undefined;
+      this.container.remove();
     }
-    this.container.remove();
+    if (this.stateHandler) {
+      this.stateHandler.clear();
+      this.stateHandler = undefined;
+    }
+    return this;
   }
 
   /**

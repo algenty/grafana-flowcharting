@@ -14,9 +14,7 @@ export class MetricHandler {
   tables: Table[] = [];
   series: Serie[] = [];
   metrics: Array<Serie | Table> = [];
-  // constructor($scope: ng.IScope) {
-  //   this.$scope = $scope;
-  // }
+
   constructor() {}
 
   /**
@@ -35,6 +33,27 @@ export class MetricHandler {
       this.addMetric(dl);
     });
     trc.after();
+  }
+
+
+  /**
+   * Reset/clear/destroy metrics
+   *
+   * @memberof MetricHandler
+   */
+  clear() {
+    this.tables.forEach(table => {
+      table.clear();
+    });
+    this.series.forEach(serie => {
+      serie.clear();
+    })
+    this.metrics.forEach(metric => {
+      metric.clear();
+    });
+    this.tables = [];
+    this.series = [];
+    this.metrics = [];
   }
 
   /**

@@ -58,6 +58,28 @@ export class RulesHandler {
     return this;
   }
 
+  /**
+   * Reset/clear/empty rules
+   *
+   * @returns {this}
+   * @memberof RulesHandler
+   */
+  clear(): this {
+    this.rules.forEach(r => {
+      r.clear();
+    });
+    this.rules = [];
+    this.data.rulesData = [];
+    return this;
+  }
+
+  /**
+   * Return data with default value
+   *
+   * @static
+   * @returns {gf.TIRulesHandlerData}
+   * @memberof RulesHandler
+   */
   static getDefaultData(): gf.TIRulesHandlerData {
     return {
       rulesData: [],

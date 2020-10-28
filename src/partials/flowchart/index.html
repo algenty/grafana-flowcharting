@@ -48,15 +48,15 @@
         <input type="text" class="gf-form-input width-12" ng-model="editor.newName" ng-if="editor.editMode === true"
           placeholder="Name" ng-change="editor.isValideFlowchart()" />
       </div>
-      <label class="gf-form-label" ng-if="editor.editMode === false">
+      <!-- <label class="gf-form-label" ng-if="editor.editMode === false">
         <i class="fa fa-plus pointer" ng-click="editor.addFlowchart()" style="margin-right: 2px;"
           bs-tooltip="'Add new flowchart'"></i>
-      </label>
-      <label class="gf-form-label" style="margin-right: 4px;"
+      </label> -->
+      <!-- <label class="gf-form-label" style="margin-right: 4px;"
         ng-if="editor.flowchartHandler.countFlowcharts() > 1 && editor.editMode === false && editor.flowchartHandler.getCurrentFlowchartName() !== 'Main'">
         <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete current flowchart'"
           ng-click="editor.removeFlowchart()"></i>
-      </label>
+      </label> -->
       <label class="gf-form-label" style="margin-right: 4px;"
         ng-if="editor.editMode === true && editor.isValideFlowchart()">
         <i class="fa fa-w fa-check pointer" bs-tooltip="'Validate'" ng-click="editor.validateFlowchart()"></i>
@@ -136,7 +136,7 @@
         <!-- BUTTONS RULES -->
         <div class="gf-form-inline" ng-if=" flowchart.data.type == 'xml' && !flowchart.data.download ">
           <div class="gf-form" style="margin-right: 5px;">
-            <button class="btn btn-secondary btn-small" ng-click="editor.edit($index)">
+            <button class="btn btn-primary btn-small" ng-click="editor.edit($index)">
               <i class="fa fa-edit pointer"></i> Edit Draw
               <info-popover mode="right-normal"><span
                   ng-bind-html="$GF.popover('Open Graph in draw.io', 'DEFINITION_XML#Buttons','EDIT_EXAMPLE')"></span>

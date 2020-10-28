@@ -15,6 +15,7 @@ import _ from 'lodash';
 class FlowchartCtrl extends MetricsPanelCtrl {
   $rootScope: any;
   $scope: any;
+  parentDiv: HTMLDivElement | undefined;
   templateSrv: any;
   version: any;
   changedSource: boolean;
@@ -23,6 +24,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
+  id: String;
   GHApplied = false;
   panelDefaults: {
     newFlag: boolean;
@@ -48,6 +50,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.rulesHandler = undefined;
     this.flowchartHandler = undefined;
     this.metricHandler = undefined;
+    this.id = $GF.utils.uniqueID();
     this.panelDefaults = {
       newFlag: true,
       format: 'short',
@@ -67,17 +70,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on(grafana.PanelEvents.dataError, this.onDataError.bind(this));
     this.events.on(grafana.PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
     this.events.on(grafana.PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
-    // this.events.on('init-panel-actions', this.onInitPanelActions.bind(this));
-    // this.events.on('template-variable-value-updated', this.onVarChanged.bind(this));
-    // grafana.PanelEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
-    // grafana.PanelEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
+    this.events.on('panel-teardown', this.onTearDown.bind(this));
     grafana.appEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
     grafana.appEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-    // if ($scope.$root.onAppEvent) {
-    //   $scope.$root.onAppEvent('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
-    //   // $scope.$root.onAppEvent('graph-hover', this.onVarChanged.bind(this), $scope);
-    // }
   }
 
   //
@@ -87,6 +83,14 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Flowchart', flowchartOptionsTab, 2);
     this.addEditorTab('Mapping', mappingOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
+    $GF.log.debug('CTRL : ', this.id, this);
+    this.editModeTrue();
+  }
+
+  // 9.1 : FIX for edit mode in grafana 7.x : Not work
+  // Clean edit mode
+  onTearDown() {
+    $GF.log.debug('EVENT : ', this.id, 'onTearDown');
   }
 
   onGraphHover(event: any) {
@@ -131,7 +135,20 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-  onRender() {}
+  onRender() {
+    $GF.log.debug('EVENT : ', this.id, 'onRender', this);
+    $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
+    if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
+      this.editModeFalse();
+      this.flowchartHandler.clear();
+      this.flowchartHandler.import(this.panel.flowchartsData);
+      // this.flowchartHandler.draw();
+      this.rulesHandler.clear();
+      this.rulesHandler.import(this.panel.rulesData);
+      this.flowchartHandler.onSourceChange();
+      this.flowchartHandler.render();
+    }
+  }
 
   onDataReceived(dataList) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
@@ -150,31 +167,75 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.render();
   }
 
-  // onInitPanelActions(actions) {
-  //   actions.push({
-  //     text: 'Export SVG',
-  //     click: 'ctrl.exportSVG()',
-  //   });
-  // }
+  //
+  // Functions ----------------------------------------------------------------
+  //
+  // For Grafana 7, who to know if edit mode is actived
+  editModeTrue() {
+    this.panel.editedFlag = true;
+  }
 
-  //
-  // FUNCTIONS
-  //
+  editModeFalse() {
+    this.panel.editedFlag = false;
+  }
+
+  isEditedMode(): boolean {
+    return this.panel.editedFlag;
+  }
+
+  isEditingMode(): boolean {
+    return this.panel.isEditing === true;
+  }
+
+  init() {
+
+    // METRICS / DATAS
+    if (!this.metricHandler) {
+      this.metricHandler = new MetricHandler();
+    }
+    this.metricHandler.clear();
+
+    // FLOWCHARTS
+    if(!this.flowchartHandler) {
+      const newFlowchartsData = FlowchartHandler.getDefaultData();
+      this.flowchartHandler = new FlowchartHandler(this.parentDiv, this, newFlowchartsData);
+      this.flowchartHandler.import(this.panel.flowchartsData);
+      this.panel.flowchartsData = newFlowchartsData;
+    } else {
+      this.flowchartHandler.clear();
+      this.flowchartHandler.import(this.panel.flowchartsData);
+    }
+
+    if(this.rulesHandler) {
+      this.rulesHandler.clear();
+    } else {
+
+    }
+    
+    if(this.parentDiv) {
+
+    }
+  }
+
   link(scope, elem, attrs, ctrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
+    const $elem = elem.find('.flowchart-panel__chart');
+    this.parentDiv = $elem[0];
 
     // $GF Containers
-    const $section = elem.find('#flowcharting-section');
-    const parent = $section[0];
-    $GF.setMessageDiv(parent);
+    // const $section = elem.find('#flowcharting-section');
+    // const parent = $section[0];
+    // $GF.setMessageDiv(parent);
 
-    $GF.message.setMessage('Initialisation');
+    $GF.message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
     // MxGraph Init
     XGraph.initMxGraph();
 
     $GF.message.setMessage('Load configuration');
+
+    this.init();
     // DATA
-    this.metricHandler = new MetricHandler();
+    // this.metricHandler = new MetricHandler();
 
     // RULES
     const newRulesData = RulesHandler.getDefaultData();

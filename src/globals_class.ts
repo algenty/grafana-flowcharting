@@ -355,7 +355,7 @@ class GFLog {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  static logLevel = GFLog.DEBUG;
+  static logLevel = GFLog.WARN;
   static logDisplay = true;
   constructor() {}
 
@@ -658,7 +658,7 @@ class GFMessage {
  * @class GFTrace
  */
 class GFTrace {
-  static enable = true;
+  static enable = false;
   static trc = new Map();
   static fn = new Map();
   static indent = 0;

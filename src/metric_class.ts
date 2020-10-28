@@ -17,6 +17,15 @@ export class Metric {
   constructor(dataList: any) {}
 
   /**
+   * Reset/clear
+   *
+   * @memberof Metric
+   */
+  clear() {
+    this.metrics = {};
+  }
+
+  /**
    * Get name of metric
    *
    * @returns {string}

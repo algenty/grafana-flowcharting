@@ -46,6 +46,22 @@ export class StateHandler {
   }
 
   /**
+   * Reset/empty/destroy StateHandler
+   *
+   * @returns {this}
+   * @memberof StateHandler
+   */
+  clear(): this {
+    if (this.states) {
+      this.states.forEach(st => {
+        st.clear();
+      });
+      this.states.clear();
+    }
+    return this;
+  }
+
+  /**
    * Return states array for a rule
    *
    * @param {Rule} rule - rule mapping

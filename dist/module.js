@@ -16276,7 +16276,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var FlowchartHandler = function () {
-  function FlowchartHandler($scope, elem, ctrl, data) {
+  function FlowchartHandler(parentDiv, ctrl, data) {
     var _this = this;
 
     _classCallCheck(this, FlowchartHandler);
@@ -16308,9 +16308,7 @@ var FlowchartHandler = function () {
     this.postedId = undefined;
     this.editorWindow = null;
     FlowchartHandler.getDefaultDioGraph();
-    this.$scope = $scope;
-    this.$elem = elem.find('.flowchart-panel__chart');
-    this.parentDiv = this.$elem[0];
+    this.parentDiv = parentDiv;
     this.ctrl = ctrl;
     this.data = data;
     this.currentFlowchartName = 'Main';
@@ -16337,7 +16335,7 @@ var FlowchartHandler = function () {
     value: function _import(obj) {
       var _this2 = this;
 
-      this.flowcharts = [];
+      this.clear();
 
       if (obj !== undefined && obj !== null) {
         var tmpFc;
@@ -16377,6 +16375,16 @@ var FlowchartHandler = function () {
         this.currentFlowchart = this.getFlowchart('Main');
       }
 
+      return this;
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      this.flowcharts.forEach(function (fc) {
+        fc.clear();
+      });
+      this.flowcharts = [];
+      this.data.flowcharts = [];
       return this;
     }
   }, {
@@ -16559,7 +16567,7 @@ var FlowchartHandler = function () {
       var index = this.flowcharts.indexOf(fc);
       this.flowcharts.splice(index, 1);
       this.data.flowcharts.splice(index, 1);
-      fc.destroy();
+      fc.clear();
       trc.after();
     }
   }, {
@@ -17054,7 +17062,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var Flowchart = function () {
-  function Flowchart(name, container, ctrl, data) {
+  function Flowchart(name, container, data) {
     _classCallCheck(this, Flowchart);
 
     this.xgraph = undefined;
@@ -17062,7 +17070,6 @@ var Flowchart = function () {
     this.data = data;
     this.data.name = name;
     this.container = container;
-    this.templateSrv = ctrl.templateSrv;
     this.id = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.uniqueID();
   }
 
@@ -17070,6 +17077,7 @@ var Flowchart = function () {
     key: "import",
     value: function _import(obj) {
       globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.info("flowchart[".concat(this.data.name, "].import()"));
+      this.clear();
 
       if (!!obj.download || this.data.download === false) {
         this.data.download = obj.download;
@@ -17313,16 +17321,20 @@ var Flowchart = function () {
       }
     }
   }, {
-    key: "destroy",
-    value: function destroy() {
-      this.toBack();
-
-      if (this.xgraph !== undefined && this.xgraph !== null) {
+    key: "clear",
+    value: function clear() {
+      if (this.xgraph) {
         this.xgraph.destroyGraph();
         this.xgraph = undefined;
+        this.container.remove();
       }
 
-      this.container.remove();
+      if (this.stateHandler) {
+        this.stateHandler.clear();
+        this.stateHandler = undefined;
+      }
+
+      return this;
     }
   }, {
     key: "setName",
@@ -17811,6 +17823,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _this.rulesHandler = undefined;
     _this.flowchartHandler = undefined;
     _this.metricHandler = undefined;
+    _this.id = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].utils.uniqueID();
     _this.panelDefaults = {
       newFlag: true,
       format: 'short',
@@ -17836,6 +17849,8 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
     _this.events.on(grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].PanelEvents.editModeInitialized, _this.onInitEditMode.bind(_assertThisInitialized(_this)));
 
+    _this.events.on('panel-teardown', _this.onTearDown.bind(_assertThisInitialized(_this)));
+
     grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].appEvents.on('graph-hover', _this.onGraphHover.bind(_assertThisInitialized(_this)), _this.$scope);
     grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].appEvents.on('graph-hover-clear', _this.clearCrosshair.bind(_assertThisInitialized(_this)), _this.$scope);
 
@@ -17850,6 +17865,13 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       this.addEditorTab('Flowchart', flowchart_options__WEBPACK_IMPORTED_MODULE_2__["flowchartOptionsTab"], 2);
       this.addEditorTab('Mapping', mapping_options__WEBPACK_IMPORTED_MODULE_1__["mappingOptionsTab"], 3);
       this.addEditorTab('Inspect', inspect_options__WEBPACK_IMPORTED_MODULE_3__["inspectOptionsTab"], 4);
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug('CTRL : ', this.id, this);
+      this.editModeTrue();
+    }
+  }, {
+    key: "onTearDown",
+    value: function onTearDown() {
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug('EVENT : ', this.id, 'onTearDown');
     }
   }, {
     key: "onGraphHover",
@@ -17902,7 +17924,20 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     }
   }, {
     key: "onRender",
-    value: function onRender() {}
+    value: function onRender() {
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug('EVENT : ', this.id, 'onRender', this);
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug('EDIT MODE', this.id, this.isEditedMode());
+
+      if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
+        this.editModeFalse();
+        this.flowchartHandler.clear();
+        this.flowchartHandler["import"](this.panel.flowchartsData);
+        this.rulesHandler.clear();
+        this.rulesHandler["import"](this.panel.rulesData);
+        this.flowchartHandler.onSourceChange();
+        this.flowchartHandler.render();
+      }
+    }
   }, {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
@@ -17926,16 +17961,60 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       this.render();
     }
   }, {
+    key: "editModeTrue",
+    value: function editModeTrue() {
+      this.panel.editedFlag = true;
+    }
+  }, {
+    key: "editModeFalse",
+    value: function editModeFalse() {
+      this.panel.editedFlag = false;
+    }
+  }, {
+    key: "isEditedMode",
+    value: function isEditedMode() {
+      return this.panel.editedFlag;
+    }
+  }, {
+    key: "isEditingMode",
+    value: function isEditingMode() {
+      return this.panel.isEditing === true;
+    }
+  }, {
+    key: "init",
+    value: function init() {
+      if (!this.metricHandler) {
+        this.metricHandler = new metricHandler__WEBPACK_IMPORTED_MODULE_6__["MetricHandler"]();
+      }
+
+      this.metricHandler.clear();
+
+      if (!this.flowchartHandler) {
+        var newFlowchartsData = flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"].getDefaultData();
+        this.flowchartHandler = new flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"](this.parentDiv, this, newFlowchartsData);
+        this.flowchartHandler["import"](this.panel.flowchartsData);
+        this.panel.flowchartsData = newFlowchartsData;
+      } else {
+        this.flowchartHandler.clear();
+        this.flowchartHandler["import"](this.panel.flowchartsData);
+      }
+
+      if (this.rulesHandler) {
+        this.rulesHandler.clear();
+      } else {}
+
+      if (this.parentDiv) {}
+    }
+  }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].trace.before(this.constructor.name + '.' + 'link()');
-      var $section = elem.find('#flowcharting-section');
-      var parent = $section[0];
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setMessageDiv(parent);
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Initialisation');
+      var $elem = elem.find('.flowchart-panel__chart');
+      this.parentDiv = $elem[0];
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
       graph_class__WEBPACK_IMPORTED_MODULE_8__["default"].initMxGraph();
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Load configuration');
-      this.metricHandler = new metricHandler__WEBPACK_IMPORTED_MODULE_6__["MetricHandler"]();
+      this.init();
       var newRulesData = rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"].getDefaultData();
       this.rulesHandler = new rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"](newRulesData);
 
@@ -18968,7 +19047,7 @@ GFLog.DEBUG = 0;
 GFLog.INFO = 1;
 GFLog.WARN = 2;
 GFLog.ERROR = 3;
-GFLog.logLevel = GFLog.DEBUG;
+GFLog.logLevel = GFLog.WARN;
 GFLog.logDisplay = true;
 
 var GFPlugin = function () {
@@ -19328,7 +19407,7 @@ var GFTrace = function () {
   return GFTrace;
 }();
 
-GFTrace.enable = true;
+GFTrace.enable = false;
 GFTrace.trc = new Map();
 GFTrace.fn = new Map();
 GFTrace.indent = 0;
@@ -22008,6 +22087,22 @@ var MetricHandler = function () {
       trc.after();
     }
   }, {
+    key: "clear",
+    value: function clear() {
+      this.tables.forEach(function (table) {
+        table.clear();
+      });
+      this.series.forEach(function (serie) {
+        serie.clear();
+      });
+      this.metrics.forEach(function (metric) {
+        metric.clear();
+      });
+      this.tables = [];
+      this.series = [];
+      this.metrics = [];
+    }
+  }, {
     key: "addMetric",
     value: function addMetric(data) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].trace.before(this.constructor.name + '.' + 'addMetric()');
@@ -22177,6 +22272,11 @@ var Metric = function () {
   }
 
   _createClass(Metric, [{
+    key: "clear",
+    value: function clear() {
+      this.metrics = {};
+    }
+  }, {
     key: "getName",
     value: function getName() {
       if (this.name === undefined || this.name === null) {
@@ -22723,7 +22823,7 @@ var customize=function customize(){mxTooltipHandler.prototype.show=function(tip,
 /*! exports provided: type, name, id, info, dependencies, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"type\":\"panel\",\"name\":\"FlowCharting\",\"id\":\"agenty-flowcharting-panel\",\"info\":{\"description\":\"Flowcharting is a Grafana plugin. Use it to display complexe diagrams using the online graphing library draw.io like a vsio\",\"author\":{\"name\":\"Arnaud GENTY\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},\"keywords\":[\"flowchart\",\"panel\",\"diagram\",\"workflow\",\"floorplan\",\"map\",\"organigram\",\"draw.io\",\"visio\",\"mxgraph\"],\"links\":[{\"name\":\"Project site\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},{\"name\":\"Documentation\",\"url\":\"https://algenty.github.io/flowcharting-repository/\"},{\"name\":\"Demonstration\",\"url\":\"https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1\"},{\"name\":\"Apache License\",\"url\":\"https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE\"}],\"version\":\"1.0.0\",\"updated\":\"2019-05-31\",\"logos\":{\"small\":\"img/agenty-flowcharting.svg\",\"large\":\"img/agenty-flowcharting.svg\"}},\"dependencies\":{\"grafanaVersion\":\"6.x.x\",\"plugins\":[]}}");
+module.exports = JSON.parse("{\"type\":\"panel\",\"name\":\"FlowCharting\",\"id\":\"agenty-flowcharting-panel\",\"info\":{\"description\":\"Flowcharting is a Grafana plugin. Use it to display complexe diagrams using the online graphing library draw.io like a vsio\",\"author\":{\"name\":\"Arnaud GENTY\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},\"keywords\":[\"flowchart\",\"panel\",\"diagram\",\"workflow\",\"floorplan\",\"map\",\"organigram\",\"draw.io\",\"visio\",\"mxgraph\"],\"links\":[{\"name\":\"Project site\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},{\"name\":\"Documentation\",\"url\":\"https://algenty.github.io/flowcharting-repository/\"},{\"name\":\"Demonstration\",\"url\":\"https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1\"},{\"name\":\"Apache License\",\"url\":\"https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE\"}],\"version\":\"0.9.1\",\"updated\":\"2019-05-31\",\"logos\":{\"small\":\"img/agenty-flowcharting.svg\",\"large\":\"img/agenty-flowcharting.svg\"}},\"dependencies\":{\"grafanaVersion\":\"6.x.x\",\"plugins\":[]}}");
 
 /***/ }),
 
@@ -23112,6 +23212,11 @@ var Rule = function () {
 
       this.data.sanitize = obj.sanitize || false;
       trc.after();
+      return this;
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
       return this;
     }
   }, {
@@ -23838,6 +23943,11 @@ var GFMap = function () {
       return this;
     }
   }, {
+    key: "clear",
+    value: function clear() {
+      return this;
+    }
+  }, {
     key: "match",
     value: function match(text) {
       var regex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
@@ -24528,6 +24638,16 @@ var RulesHandler = function () {
       return this;
     }
   }, {
+    key: "clear",
+    value: function clear() {
+      this.rules.forEach(function (r) {
+        r.clear();
+      });
+      this.rules = [];
+      this.data.rulesData = [];
+      return this;
+    }
+  }, {
     key: "getRules",
     value: function getRules() {
       return this.rules;
@@ -24725,6 +24845,11 @@ var State = function () {
   }
 
   _createClass(State, [{
+    key: "clear",
+    value: function clear() {
+      return this;
+    }
+  }, {
     key: "async_applyState",
     value: function async_applyState() {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee() {
@@ -25900,6 +26025,18 @@ var StateHandler = function () {
       });
 
       trc.after();
+      return this;
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      if (this.states) {
+        this.states.forEach(function (st) {
+          st.clear();
+        });
+        this.states.clear();
+      }
+
       return this;
     }
   }, {
