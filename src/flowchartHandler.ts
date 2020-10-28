@@ -9,14 +9,14 @@ import { $GF } from 'globals_class';
  * Class FlowchartHandler
  */
 export class FlowchartHandler {
-  $scope: ng.IScope;
-  $elem: any; //TODO: elem ?
+  // $scope: ng.IScope;
+  // $elem: any; //TODO: elem ?
   parentDiv: HTMLDivElement;
   ctrl: any; //TODO: ctrl ?
   flowcharts: Flowchart[] = [];
   currentFlowchartName = 'Main'; // name of current Flowchart
-  currentFlowchart: Flowchart | undefined;
-  data: gf.TFlowchartHandlerData;
+  currentFlowchart: Flowchart | undefined; // Current flowchart obj
+  data: gf.TFlowchartHandlerData; // DATA panel
   firstLoad = true; // First load
   flags = {
     sources: new Set<string>(),
@@ -27,22 +27,17 @@ export class FlowchartHandler {
     applyOptions: new Set<string>(),
     hiddenChange: new Set<string>(),
   };
-  // changeSourceFlag: Set<string> = new Set<string>(); // Source changed
-  // changeOptionFlag: Set<string> = new Set<string>(); // Options changed
-  // changeDataFlag = false; // Data changed
-  // changeGraphHoverFlag = false; // Graph Hover
-  // changeRuleFlag = false; // rules changed
   newMode = false; // Mode if new flowchart
   sequenceNumber = 0; // Sequence Number for a name
-  static defaultXml: string;
-  static defaultCsv: string;
+  static defaultXml: string; // Default XML
+  static defaultCsv: string; // Default CSV
   onMapping: gf.TIOnMappingObj = {
     active: false,
     object: null,
     value: null,
     prop: 'id',
     $scope: null,
-  };
+  }; // For link mapping, sharing
   mousedownTimeout = 0;
   mousedown = 0;
   onEdit = false; // editor open or not
@@ -57,11 +52,10 @@ export class FlowchartHandler {
    * @param {*} data - Empty data to store
    * @memberof FlowchartHandler
    */
-  constructor($scope: ng.IScope, elem: any, ctrl: any, data: gf.TFlowchartHandlerData) {
+  constructor(parentDiv: HTMLDivElement, ctrl: any, data: gf.TFlowchartHandlerData) {
     FlowchartHandler.getDefaultDioGraph();
-    this.$scope = $scope;
-    this.$elem = elem.find('.flowchart-panel__chart');
-    this.parentDiv = this.$elem[0];
+    // this.$scope = $scope;
+    this.parentDiv = parentDiv;
     this.ctrl = ctrl;
     this.data = data;
     this.currentFlowchartName = 'Main';
@@ -102,7 +96,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   import(obj: any): this {
-    this.flowcharts = [];
+    this.clear();
     if (obj !== undefined && obj !== null) {
       // For version 0.5.0 and under
       let tmpFc: any[];
@@ -158,6 +152,22 @@ export class FlowchartHandler {
       result = $GF.utils.$loadFile(url);
     }
     return result;
+  }
+
+  /**
+   * Reset/empty flowcharts, rules and children
+   *
+   * @returns {this}
+   * @param {Object} obj
+   * @memberof FlowchartHandler
+   */
+  clear(): this {
+    this.flowcharts.forEach((fc: Flowchart) => {
+      fc.clear();
+    });
+    this.flowcharts = [];
+    this.data.flowcharts = [];
+    return this;
   }
 
   /**
@@ -389,7 +399,7 @@ export class FlowchartHandler {
     const index = this.flowcharts.indexOf(fc);
     this.flowcharts.splice(index, 1);
     this.data.flowcharts.splice(index, 1);
-    fc.destroy();
+    fc.clear();
     trc.after();
   }
 
