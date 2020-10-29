@@ -203,7 +203,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // FLOWCHARTS
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
-      this.flowchartHandler = new FlowchartHandler(this.flowchartsDiv, newFlowchartsData);
+      this.flowchartHandler = new FlowchartHandler(this.parentDiv, newFlowchartsData);
       if (this.flowchartHandler) {
         this.flowchartHandler.import(this.panel.flowchartsData);
       }
