@@ -17825,6 +17825,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _this.flowchartHandler = undefined;
     _this.metricHandler = undefined;
     _this.parentDiv = document.createElement('div');
+    _this.flowchartsDiv = document.createElement('div');
     _this.id = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].utils.uniqueID();
     _this.panelDefaults = {
       newFlag: true,
@@ -17932,12 +17933,6 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
       if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
         this.editModeFalse();
-        this.flowchartHandler.clear();
-        this.flowchartHandler["import"](this.panel.flowchartsData);
-        this.rulesHandler.clear();
-        this.rulesHandler["import"](this.panel.rulesData);
-        this.flowchartHandler.onSourceChange();
-        this.flowchartHandler.render();
       }
     }
   }, {
@@ -17988,11 +17983,6 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       console.log("INIT");
       console.trace();
 
-      if (!this.parentDiv) {
-        var $elem = this.$panelElem.find('.flowchart-panel__chart');
-        this.parentDiv = $elem[0];
-      }
-
       if (!this.metricHandler) {
         this.metricHandler = new metricHandler__WEBPACK_IMPORTED_MODULE_6__["MetricHandler"]();
       }
@@ -18001,7 +17991,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
       if (!this.flowchartHandler) {
         var newFlowchartsData = flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"].getDefaultData();
-        this.flowchartHandler = new flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"](this.parentDiv, newFlowchartsData);
+        this.flowchartHandler = new flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"](this.flowchartsDiv, newFlowchartsData);
 
         if (this.flowchartHandler) {
           this.flowchartHandler["import"](this.panel.flowchartsData);
@@ -18033,23 +18023,25 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
-      console.log("LINK");
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].trace.before(this.constructor.name + '.' + 'link()');
       this.$panelElem = elem;
-      var $elem = elem.find('.flowchart-panel__chart');
-      this.parentDiv = $elem[0];
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setMessageDiv(this.parentDiv);
+      var $section = elem.find('#flowcharting-section');
+      this.parentDiv = $section[0];
+      var $flowcharts = elem.find('.flowchart-panel__chart');
+      this.flowchartsDiv = $flowcharts[0];
+      var $message = $section.find('#flowcharting-message');
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setMessageDiv($message[0]);
       debugger;
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
       graph_class__WEBPACK_IMPORTED_MODULE_8__["default"].initMxGraph();
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Load configuration');
       this.initHandlers();
+      this.panel.newFlag = false;
 
-      if (this.flowchartHandler) {
-        this.flowchartHandler.setCurrentFlowchart('Main');
+      if (this.panel.version !== globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].plugin.getVersion()) {
+        globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('The plugin version has changed, save the dashboard to optimize loading');
       }
 
-      this.panel.newFlag = false;
       this.panel.version = this.version;
       trc.after();
     }
@@ -19169,7 +19161,7 @@ var GFMessage = function () {
   function GFMessage(parent) {
     _classCallCheck(this, GFMessage);
 
-    var container = parent.querySelector('div#flowcharting-message');
+    var container = parent;
 
     if (container !== null) {
       GFMessage.container = container;

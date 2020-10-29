@@ -605,8 +605,8 @@ class GFMessage {
   static WARNING_MESSAGE = 'warning';
   static WARNING_COLOR = 'yellow';
 
-  constructor(parent: HTMLElement) {
-    const container = parent.querySelector<HTMLDivElement>('div#flowcharting-message');
+  constructor(parent: HTMLDivElement) {
+    const container = parent;
     if (container !== null) {
       GFMessage.container = container;
       const span = container.querySelector<HTMLSpanElement>('#message-text');
@@ -619,7 +619,7 @@ class GFMessage {
     }
   }
 
-  static init(parentDiv: HTMLElement): GFMessage {
+  static init(parentDiv: HTMLDivElement): GFMessage {
     return new GFMessage(parentDiv);
   }
 
@@ -829,7 +829,7 @@ export class $GF {
    * @param {HTMLElement} html
    * @memberof $GF
    */
-  static setMessageDiv(html: HTMLElement) {
+  static setMessageDiv(html: HTMLDivElement) {
     this.message = GFMessage.init(html);
   }
 

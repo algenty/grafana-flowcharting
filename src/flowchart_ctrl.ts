@@ -17,6 +17,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   $scope: any;
   $panelElem: any; // Type Jquery
   parentDiv: HTMLDivElement;
+  flowchartsDiv: HTMLDivElement;
   templateSrv: any;
   version: any;
   changedSource: boolean;
@@ -52,6 +53,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.flowchartHandler = undefined;
     this.metricHandler = undefined;
     this.parentDiv = document.createElement('div');
+    this.flowchartsDiv = document.createElement('div');
     this.id = $GF.utils.uniqueID();
     this.panelDefaults = {
       newFlag: true,
@@ -142,13 +144,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.editModeFalse();
-      this.flowchartHandler.clear();
-      this.flowchartHandler.import(this.panel.flowchartsData);
+      // this.flowchartHandler.clear();
+      // this.flowchartHandler.import(this.panel.flowchartsData);
       // this.flowchartHandler.draw();
-      this.rulesHandler.clear();
-      this.rulesHandler.import(this.panel.rulesData);
-      this.flowchartHandler.onSourceChange();
-      this.flowchartHandler.render();
+      // this.rulesHandler.clear();
+      // this.rulesHandler.import(this.panel.rulesData);
+      // this.flowchartHandler.onSourceChange();
+      // this.flowchartHandler.render();
     }
   }
 
@@ -192,10 +194,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   initHandlers() {
     console.log("INIT")
     console.trace();
-    if (!this.parentDiv) {
-      const $elem = this.$panelElem.find('.flowchart-panel__chart');
-      this.parentDiv = $elem[0];
-    }
 
     // METRICS / DATAS
     if (!this.metricHandler) {
@@ -205,7 +203,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // FLOWCHARTS
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
-      this.flowchartHandler = new FlowchartHandler(this.parentDiv, newFlowchartsData);
+      this.flowchartHandler = new FlowchartHandler(this.flowchartsDiv, newFlowchartsData);
       if (this.flowchartHandler) {
         this.flowchartHandler.import(this.panel.flowchartsData);
       }
@@ -233,17 +231,19 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   link(scope, elem, attrs, ctrl) {
-    // console.trace();
-    console.log("LINK")
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
     this.$panelElem = elem;
-    const $elem = elem.find('.flowchart-panel__chart');
-    this.parentDiv = $elem[0];
-    $GF.setMessageDiv(<HTMLElement> this.parentDiv);
-    // $GF Containers
-    // const $section = elem.find('#flowcharting-section');
-    // const parent = $section[0];
-    // $GF.setMessageDiv(parent);
+
+    const $section = elem.find('#flowcharting-section');
+    this.parentDiv = $section[0];
+
+    const $flowcharts = elem.find('.flowchart-panel__chart');
+    this.flowchartsDiv = $flowcharts[0];
+
+
+    const $message = $section.find('#flowcharting-message');
+    $GF.setMessageDiv($message[0]);
+
     debugger
     $GF.message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
     // MxGraph Init
@@ -286,12 +286,15 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // this.panel.flowchartsData = newFlowchartsData;
 
     // Position to main flowchart
-    if(this.flowchartHandler) {
-      this.flowchartHandler.setCurrentFlowchart('Main');
-    }
+    // if(this.flowchartHandler) {
+    //   this.flowchartHandler.setCurrentFlowchart('Main');
+    // }
 
     // Versions
     this.panel.newFlag = false;
+    if(this.panel.version !== $GF.plugin.getVersion()) {
+      $GF.message.setMessage('The plugin version has changed, save the dashboard to optimize loading');
+    }
     this.panel.version = this.version;
     trc.after();
   }
