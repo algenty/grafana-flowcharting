@@ -18039,6 +18039,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       var $elem = elem.find('.flowchart-panel__chart');
       this.parentDiv = $elem[0];
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setMessageDiv(this.parentDiv);
+      debugger;
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
       graph_class__WEBPACK_IMPORTED_MODULE_8__["default"].initMxGraph();
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Load configuration');

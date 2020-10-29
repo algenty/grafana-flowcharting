@@ -244,7 +244,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // const $section = elem.find('#flowcharting-section');
     // const parent = $section[0];
     // $GF.setMessageDiv(parent);
-
+    debugger
     $GF.message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
     // MxGraph Init
     XGraph.initMxGraph();
