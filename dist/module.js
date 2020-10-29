@@ -17472,7 +17472,7 @@ var Flowchart = function () {
         return this.data.xml;
       }
 
-      return this.templateSrv.replaceWithText(this.data.xml);
+      return globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].resolveVars(this.data.xml);
     }
   }, {
     key: "getCsv",
@@ -17483,7 +17483,7 @@ var Flowchart = function () {
         return this.data.csv;
       }
 
-      return this.templateSrv.replaceWithText(this.data.csv);
+      return globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].resolveVars(this.data.csv);
     }
   }, {
     key: "getSource",
@@ -17517,14 +17517,14 @@ var Flowchart = function () {
       var content = '';
 
       if (this.data.download) {
-        var url = this.templateSrv.replaceWithText(this.data.url);
+        var url = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].resolveVars(this.data.url);
         globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.setMessage("Loading content definition for ".concat(this.data.name), 'info');
         content = this.loadContent(url);
         globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.clearMessage();
 
         if (content !== null) {
           if (replaceVarBool) {
-            content = this.templateSrv.replaceWithText(content);
+            content = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].resolveVars(content);
           }
         }
       } else {
@@ -17824,6 +17824,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _this.rulesHandler = undefined;
     _this.flowchartHandler = undefined;
     _this.metricHandler = undefined;
+    _this.parentDiv = document.createElement('div');
     _this.id = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].utils.uniqueID();
     _this.panelDefaults = {
       newFlag: true,
@@ -17982,8 +17983,11 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       return this.panel.isEditing === true;
     }
   }, {
-    key: "init",
-    value: function init() {
+    key: "initHandlers",
+    value: function initHandlers() {
+      console.log("INIT");
+      console.trace();
+
       if (!this.parentDiv) {
         var $elem = this.$panelElem.find('.flowchart-panel__chart');
         this.parentDiv = $elem[0];
@@ -18029,17 +18033,21 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
-      debugger;
+      console.log("LINK");
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].trace.before(this.constructor.name + '.' + 'link()');
       this.$panelElem = elem;
       var $elem = elem.find('.flowchart-panel__chart');
       this.parentDiv = $elem[0];
+      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setMessageDiv(this.parentDiv);
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
       graph_class__WEBPACK_IMPORTED_MODULE_8__["default"].initMxGraph();
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Load configuration');
-      this.init();
-      this.init();
-      this.flowchartHandler.setCurrentFlowchart('Main');
+      this.initHandlers();
+
+      if (this.flowchartHandler) {
+        this.flowchartHandler.setCurrentFlowchart('Main');
+      }
+
       this.panel.newFlag = false;
       this.panel.version = this.version;
       trc.after();
@@ -19890,7 +19898,6 @@ var XGraph = function () {
     this.type = type;
     this.onMapping = {
       active: false,
-      $scope: null,
       value: null,
       prop: 'id',
       object: null

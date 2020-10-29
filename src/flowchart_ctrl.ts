@@ -1,5 +1,4 @@
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
-import * as $ from 'jquery';
 // import { appEvents } from 'grafana/app/core/core';
 import { mappingOptionsTab } from 'mapping_options';
 import { flowchartOptionsTab } from 'flowchart_options';
@@ -17,7 +16,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   $rootScope: any;
   $scope: any;
   $panelElem: any; // Type Jquery
-  parentDiv: HTMLDivElement | undefined;
+  parentDiv: HTMLDivElement;
   templateSrv: any;
   version: any;
   changedSource: boolean;
@@ -52,6 +51,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.rulesHandler = undefined;
     this.flowchartHandler = undefined;
     this.metricHandler = undefined;
+    this.parentDiv = document.createElement('div');
     this.id = $GF.utils.uniqueID();
     this.panelDefaults = {
       newFlag: true,
@@ -189,8 +189,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     return this.panel.isEditing === true;
   }
 
-  init() {
-    // ParentDiv
+  initHandlers() {
+    console.log("INIT")
+    console.trace();
     if (!this.parentDiv) {
       const $elem = this.$panelElem.find('.flowchart-panel__chart');
       this.parentDiv = $elem[0];
@@ -201,7 +202,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.metricHandler = new MetricHandler();
     }
     this.metricHandler.clear();
-
     // FLOWCHARTS
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
@@ -233,12 +233,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   link(scope, elem, attrs, ctrl) {
-    debugger;
+    // console.trace();
+    console.log("LINK")
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
     this.$panelElem = elem;
     const $elem = elem.find('.flowchart-panel__chart');
     this.parentDiv = $elem[0];
-
+    $GF.setMessageDiv(<HTMLElement> this.parentDiv);
     // $GF Containers
     // const $section = elem.find('#flowcharting-section');
     // const parent = $section[0];
@@ -250,7 +251,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
     $GF.message.setMessage('Load configuration');
 
-    this.init();
+    this.initHandlers();
     // DATA
     // this.metricHandler = new MetricHandler();
 
@@ -284,10 +285,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // }
     // this.panel.flowchartsData = newFlowchartsData;
 
-    this.init();
-    
     // Position to main flowchart
-    this.flowchartHandler.setCurrentFlowchart('Main');
+    if(this.flowchartHandler) {
+      this.flowchartHandler.setCurrentFlowchart('Main');
+    }
 
     // Versions
     this.panel.newFlag = false;

@@ -19,7 +19,7 @@ export class Flowchart {
   xgraph: XGraph | undefined = undefined;
   stateHandler: StateHandler | undefined;
   // ctrl: any;
-  templateSrv: any;
+  // templateSrv: any;
   states: Map<string, State> | undefined;
   id: string;
   visible = false;
@@ -542,7 +542,7 @@ export class Flowchart {
     if (!replaceVarBool) {
       return this.data.xml;
     }
-    return this.templateSrv.replaceWithText(this.data.xml);
+    return $GF.resolveVars(this.data.xml);
   }
 
   /**
@@ -556,7 +556,7 @@ export class Flowchart {
     if (!replaceVarBool) {
       return this.data.csv;
     }
-    return this.templateSrv.replaceWithText(this.data.csv);
+    return $GF.resolveVars(this.data.csv);
   }
 
   /**
@@ -594,13 +594,13 @@ export class Flowchart {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'getContent()');
     let content: string | null = '';
     if (this.data.download) {
-      const url = this.templateSrv.replaceWithText(this.data.url);
+      const url = $GF.resolveVars(this.data.url);
       $GF.message.setMessage(`Loading content definition for ${this.data.name}`, 'info');
       content = this.loadContent(url);
       $GF.message.clearMessage();
       if (content !== null) {
         if (replaceVarBool) {
-          content = this.templateSrv.replaceWithText(content);
+          content = $GF.resolveVars(content);
         }
       }
     } else {

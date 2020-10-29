@@ -58,7 +58,7 @@ export default class XGraph {
     this.type = type;
     this.onMapping = {
       active: false,
-      $scope: null,
+      // $scope: null,
       value: null,
       prop: 'id',
       object: null,
