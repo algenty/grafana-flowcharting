@@ -12,7 +12,6 @@ export class FlowchartHandler {
   // $scope: ng.IScope;
   // $elem: any; //TODO: elem ?
   parentDiv: HTMLDivElement;
-  ctrl: any; //TODO: ctrl ?
   flowcharts: Flowchart[] = [];
   currentFlowchartName = 'Main'; // name of current Flowchart
   currentFlowchart: Flowchart | undefined; // Current flowchart obj
@@ -36,7 +35,7 @@ export class FlowchartHandler {
     object: null,
     value: null,
     prop: 'id',
-    $scope: null,
+    // $scope: null,
   }; // For link mapping, sharing
   mousedownTimeout = 0;
   mousedown = 0;
@@ -52,13 +51,13 @@ export class FlowchartHandler {
    * @param {*} data - Empty data to store
    * @memberof FlowchartHandler
    */
-  constructor(parentDiv: HTMLDivElement, ctrl: any, data: gf.TFlowchartHandlerData) {
+  constructor(parentDiv: HTMLDivElement, data: gf.TFlowchartHandlerData) {
     FlowchartHandler.getDefaultDioGraph();
     // this.$scope = $scope;
     this.parentDiv = parentDiv;
-    this.ctrl = ctrl;
     this.data = data;
     this.currentFlowchartName = 'Main';
+    const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
 
     // Events Render
     ctrl.events.on('render', () => {
@@ -378,7 +377,7 @@ export class FlowchartHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addFlowchart()');
     const data = Flowchart.getDefaultData();
     const container = this.createContainer();
-    const flowchart = new Flowchart(name, container, this.ctrl, data);
+    const flowchart = new Flowchart(name, container, data);
     // flowchart.init();
     this.flowcharts.push(flowchart);
     this.data.flowcharts.push(data);
@@ -410,6 +409,7 @@ export class FlowchartHandler {
    */
   async render(name?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
+    const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
     // console.log('RENDER Flags BEGIN', clonedeep(this.flags));
     // not repeat render if mouse down
     if (!this.mousedown) {
@@ -437,8 +437,9 @@ export class FlowchartHandler {
         self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS) ||
         self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER)
       ) {
-        const rules = self.ctrl.rulesHandler.getRules();
-        const metrics = self.ctrl.metricHandler.getMetrics();
+        const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
+        const rules = ctrl.rulesHandler.getRules();
+        const metrics = ctrl.metricHandler.getMetrics();
 
         // Change to async to optimize
         self.async_refreshStates(rules, metrics);
@@ -471,7 +472,7 @@ export class FlowchartHandler {
       }
       // this.refresh();
     }
-    this.ctrl.renderingCompleted();
+    ctrl.renderingCompleted();
     trc.after();
   }
 
@@ -798,7 +799,7 @@ export class FlowchartHandler {
     this.onMapping.active = true;
     this.onMapping.object = objToMap;
     this.onMapping.value = objToMap.getId();
-    this.onMapping.$scope = this.$scope;
+    // this.onMapping.$scope = this.$scope;
     this.onMapping.prop = prop;
     flowchart.setMap(this.onMapping);
     return this;
@@ -871,7 +872,7 @@ export class FlowchartHandler {
             $GF.message.setMessage('Received data from draw.io editor, refresh in progress', 'info');
             fc.redraw(event.data);
             this.onSourceChange(fc.getName());
-            this.$scope.$apply();
+            $GF.refresh();
             this.render();
           }
         }

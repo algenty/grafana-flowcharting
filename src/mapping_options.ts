@@ -8,7 +8,7 @@ import { MetricHandler } from './metricHandler';
 
 export class MappingOptionsCtrl {
   $scope: gf.TMappingOptionsScope;
-  ctrl: any;
+  // ctrl: any;
   panel: any;
   flowchartHandler: FlowchartHandler;
   rulesHandler: RulesHandler;
@@ -45,12 +45,12 @@ export class MappingOptionsCtrl {
     $scope.editor = this;
     $scope.$GF = $GF.me();
     this.$scope = $scope;
-    this.ctrl = $scope.ctrl;
-    this.panel = this.ctrl.panel;
-    this.rulesHandler = this.ctrl.rulesHandler;
-    this.flowchartHandler = this.ctrl.flowchartHandler;
-    this.rulesHandler = this.ctrl.rulesHandler;
-    this.metricHandler = this.ctrl.metricHandler;
+    const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
+    this.panel = ctrl.panel;
+    this.rulesHandler = ctrl.rulesHandler;
+    this.flowchartHandler = ctrl.flowchartHandler;
+    this.rulesHandler = ctrl.rulesHandler;
+    this.metricHandler = ctrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();
     this.tpGraphSize = $GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
 
@@ -129,7 +129,8 @@ export class MappingOptionsCtrl {
   }
 
   render() {
-    this.ctrl.render();
+    const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
+    ctrl.render();
   }
 
   setUnitFormat(rule: Rule, subItem: any) {

@@ -1,4 +1,5 @@
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
+import * as $ from 'jquery';
 // import { appEvents } from 'grafana/app/core/core';
 import { mappingOptionsTab } from 'mapping_options';
 import { flowchartOptionsTab } from 'flowchart_options';
@@ -15,6 +16,7 @@ import _ from 'lodash';
 class FlowchartCtrl extends MetricsPanelCtrl {
   $rootScope: any;
   $scope: any;
+  $panelElem: any; // Type Jquery
   parentDiv: HTMLDivElement | undefined;
   templateSrv: any;
   version: any;
@@ -38,7 +40,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   /**@ngInject*/
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
-    $GF.init($scope, templateSrv, this.dashboard);
+    $GF.init($scope, templateSrv, this.dashboard, this);
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     $scope.editor = this;
@@ -188,6 +190,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   init() {
+    // ParentDiv
+    if (!this.parentDiv) {
+      const $elem = this.$panelElem.find('.flowchart-panel__chart');
+      this.parentDiv = $elem[0];
+    }
 
     // METRICS / DATAS
     if (!this.metricHandler) {
@@ -196,29 +203,39 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.metricHandler.clear();
 
     // FLOWCHARTS
-    if(!this.flowchartHandler) {
+    if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
-      this.flowchartHandler = new FlowchartHandler(this.parentDiv, this, newFlowchartsData);
-      this.flowchartHandler.import(this.panel.flowchartsData);
+      this.flowchartHandler = new FlowchartHandler(this.parentDiv, newFlowchartsData);
+      if (this.flowchartHandler) {
+        this.flowchartHandler.import(this.panel.flowchartsData);
+      }
       this.panel.flowchartsData = newFlowchartsData;
     } else {
       this.flowchartHandler.clear();
       this.flowchartHandler.import(this.panel.flowchartsData);
     }
+    if (this.panel.newFlag && this.flowchartHandler && this.flowchartHandler.countFlowcharts() === 0) {
+      this.flowchartHandler.addFlowchart('Main').init();
+    }
 
-    if(this.rulesHandler) {
+    // RULES
+    if (this.rulesHandler) {
       this.rulesHandler.clear();
     } else {
-
+      const newRulesData = RulesHandler.getDefaultData();
+      this.rulesHandler = new RulesHandler(newRulesData);
+      this.rulesHandler.import(this.panel.rulesData);
+      this.panel.rulesData = newRulesData;
     }
-    
-    if(this.parentDiv) {
-
+    if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
+      this.rulesHandler.addRule('.*');
     }
   }
 
   link(scope, elem, attrs, ctrl) {
+    debugger;
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
+    this.$panelElem = elem;
     const $elem = elem.find('.flowchart-panel__chart');
     this.parentDiv = $elem[0];
 
@@ -238,37 +255,39 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // this.metricHandler = new MetricHandler();
 
     // RULES
-    const newRulesData = RulesHandler.getDefaultData();
-    this.rulesHandler = new RulesHandler(newRulesData);
-    // for version < 0.4.0
-    if (this.panel.version === undefined && this.panel.styles !== undefined) {
-      this.rulesHandler.import(this.panel.styles);
-      delete this.panel.styles;
-    } else {
-      this.rulesHandler.import(this.panel.rulesData);
-    }
-    if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
-      this.rulesHandler.addRule('.*');
-    }
-    this.panel.rulesData = newRulesData;
+    // const newRulesData = RulesHandler.getDefaultData();
+    // this.rulesHandler = new RulesHandler(newRulesData);
+    // // for version < 0.4.0
+    // if (this.panel.version === undefined && this.panel.styles !== undefined) {
+    //   this.rulesHandler.import(this.panel.styles);
+    //   delete this.panel.styles;
+    // } else {
+    //   this.rulesHandler.import(this.panel.rulesData);
+    // }
+    // if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
+    //   this.rulesHandler.addRule('.*');
+    // }
+    // this.panel.rulesData = newRulesData;
 
     // FLOWCHART
-    const newFlowchartsData = FlowchartHandler.getDefaultData();
-    this.flowchartHandler = new FlowchartHandler(scope, elem, ctrl, newFlowchartsData);
-    // for version < 0.4.0
-    if (this.panel.version === undefined && this.panel.flowchart !== undefined) {
-      this.flowchartHandler.import([this.panel.flowchart]);
-      delete this.panel.flowchart;
-    } else {
-      this.flowchartHandler.import(this.panel.flowchartsData);
-    }
-    if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
-      this.flowchartHandler.addFlowchart('Main').init();
-    }
-    this.panel.flowchartsData = newFlowchartsData;
+    // const newFlowchartsData = FlowchartHandler.getDefaultData();
+    // this.flowchartHandler = new FlowchartHandler(scope, elem, ctrl, newFlowchartsData);
+    // // for version < 0.4.0
+    // if (this.panel.version === undefined && this.panel.flowchart !== undefined) {
+    //   this.flowchartHandler.import([this.panel.flowchart]);
+    //   delete this.panel.flowchart;
+    // } else {
+    //   this.flowchartHandler.import(this.panel.flowchartsData);
+    // }
+    // if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
+    //   this.flowchartHandler.addFlowchart('Main').init();
+    // }
+    // this.panel.flowchartsData = newFlowchartsData;
 
+    this.init();
+    
     // Position to main flowchart
-    // this.flowchartHandler.setCurrentFlowchart('Main');
+    this.flowchartHandler.setCurrentFlowchart('Main');
 
     // Versions
     this.panel.newFlag = false;

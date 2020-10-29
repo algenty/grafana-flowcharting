@@ -16276,7 +16276,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var FlowchartHandler = function () {
-  function FlowchartHandler(parentDiv, ctrl, data) {
+  function FlowchartHandler(parentDiv, data) {
     var _this = this;
 
     _classCallCheck(this, FlowchartHandler);
@@ -16299,8 +16299,7 @@ var FlowchartHandler = function () {
       active: false,
       object: null,
       value: null,
-      prop: 'id',
-      $scope: null
+      prop: 'id'
     };
     this.mousedownTimeout = 0;
     this.mousedown = 0;
@@ -16309,9 +16308,9 @@ var FlowchartHandler = function () {
     this.editorWindow = null;
     FlowchartHandler.getDefaultDioGraph();
     this.parentDiv = parentDiv;
-    this.ctrl = ctrl;
     this.data = data;
     this.currentFlowchartName = 'Main';
+    var ctrl = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
     ctrl.events.on('render', function () {
       _this.render();
     });
@@ -16553,7 +16552,7 @@ var FlowchartHandler = function () {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'addFlowchart()');
       var data = flowchart_class__WEBPACK_IMPORTED_MODULE_1__["Flowchart"].getDefaultData();
       var container = this.createContainer();
-      var flowchart = new flowchart_class__WEBPACK_IMPORTED_MODULE_1__["Flowchart"](name, container, this.ctrl, data);
+      var flowchart = new flowchart_class__WEBPACK_IMPORTED_MODULE_1__["Flowchart"](name, container, data);
       this.flowcharts.push(flowchart);
       this.data.flowcharts.push(data);
       trc.after();
@@ -16574,12 +16573,14 @@ var FlowchartHandler = function () {
     key: "render",
     value: function render(name) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee() {
-        var trc, self, rules, metrics;
+        var trc, ctrl, self, _ctrl, rules, metrics;
+
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'render()');
+                ctrl = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
 
                 if (!this.mousedown) {
                   this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_APL_OPTIONS);
@@ -16598,8 +16599,9 @@ var FlowchartHandler = function () {
                   }
 
                   if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_RULES) || self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_DATAS) || self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_GRAPHHOVER)) {
-                    rules = self.ctrl.rulesHandler.getRules();
-                    metrics = self.ctrl.metricHandler.getMetrics();
+                    _ctrl = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
+                    rules = _ctrl.rulesHandler.getRules();
+                    metrics = _ctrl.metricHandler.getMetrics();
                     self.async_refreshStates(rules, metrics);
                     this.aknowledgeFlagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_APL_OPTIONS);
                     this.aknowledgeFlagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_DATAS);
@@ -16623,10 +16625,10 @@ var FlowchartHandler = function () {
                   }
                 }
 
-                this.ctrl.renderingCompleted();
+                ctrl.renderingCompleted();
                 trc.after();
 
-              case 4:
+              case 5:
               case "end":
                 return _context.stop();
             }
@@ -16907,7 +16909,6 @@ var FlowchartHandler = function () {
       this.onMapping.active = true;
       this.onMapping.object = objToMap;
       this.onMapping.value = objToMap.getId();
-      this.onMapping.$scope = this.$scope;
       this.onMapping.prop = prop;
       flowchart.setMap(this.onMapping);
       return this;
@@ -16959,7 +16960,7 @@ var FlowchartHandler = function () {
               _fc.redraw(event.data);
 
               this.onSourceChange(_fc.getName());
-              this.$scope.$apply();
+              globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].refresh();
               this.render();
             }
           }
@@ -17811,7 +17812,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(FlowchartCtrl).call(this, $scope, $injector));
     _this.GHApplied = false;
-    globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].init($scope, templateSrv, _this.dashboard);
+    globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].init($scope, templateSrv, _this.dashboard, _assertThisInitialized(_this));
     _this.$rootScope = $rootScope;
     _this.$scope = $scope;
     $scope.editor = _assertThisInitialized(_this);
@@ -17983,6 +17984,11 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "init",
     value: function init() {
+      if (!this.parentDiv) {
+        var $elem = this.$panelElem.find('.flowchart-panel__chart');
+        this.parentDiv = $elem[0];
+      }
+
       if (!this.metricHandler) {
         this.metricHandler = new metricHandler__WEBPACK_IMPORTED_MODULE_6__["MetricHandler"]();
       }
@@ -17991,60 +17997,49 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
       if (!this.flowchartHandler) {
         var newFlowchartsData = flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"].getDefaultData();
-        this.flowchartHandler = new flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"](this.parentDiv, this, newFlowchartsData);
-        this.flowchartHandler["import"](this.panel.flowchartsData);
+        this.flowchartHandler = new flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"](this.parentDiv, newFlowchartsData);
+
+        if (this.flowchartHandler) {
+          this.flowchartHandler["import"](this.panel.flowchartsData);
+        }
+
         this.panel.flowchartsData = newFlowchartsData;
       } else {
         this.flowchartHandler.clear();
         this.flowchartHandler["import"](this.panel.flowchartsData);
       }
 
+      if (this.panel.newFlag && this.flowchartHandler && this.flowchartHandler.countFlowcharts() === 0) {
+        this.flowchartHandler.addFlowchart('Main').init();
+      }
+
       if (this.rulesHandler) {
         this.rulesHandler.clear();
-      } else {}
+      } else {
+        var newRulesData = rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"].getDefaultData();
+        this.rulesHandler = new rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"](newRulesData);
+        this.rulesHandler["import"](this.panel.rulesData);
+        this.panel.rulesData = newRulesData;
+      }
 
-      if (this.parentDiv) {}
+      if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
+        this.rulesHandler.addRule('.*');
+      }
     }
   }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
+      debugger;
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].trace.before(this.constructor.name + '.' + 'link()');
+      this.$panelElem = elem;
       var $elem = elem.find('.flowchart-panel__chart');
       this.parentDiv = $elem[0];
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
       graph_class__WEBPACK_IMPORTED_MODULE_8__["default"].initMxGraph();
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Load configuration');
       this.init();
-      var newRulesData = rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"].getDefaultData();
-      this.rulesHandler = new rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"](newRulesData);
-
-      if (this.panel.version === undefined && this.panel.styles !== undefined) {
-        this.rulesHandler["import"](this.panel.styles);
-        delete this.panel.styles;
-      } else {
-        this.rulesHandler["import"](this.panel.rulesData);
-      }
-
-      if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
-        this.rulesHandler.addRule('.*');
-      }
-
-      this.panel.rulesData = newRulesData;
-      var newFlowchartsData = flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"].getDefaultData();
-      this.flowchartHandler = new flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"](scope, elem, ctrl, newFlowchartsData);
-
-      if (this.panel.version === undefined && this.panel.flowchart !== undefined) {
-        this.flowchartHandler["import"]([this.panel.flowchart]);
-        delete this.panel.flowchart;
-      } else {
-        this.flowchartHandler["import"](this.panel.flowchartsData);
-      }
-
-      if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
-        this.flowchartHandler.addFlowchart('Main').init();
-      }
-
-      this.panel.flowchartsData = newFlowchartsData;
+      this.init();
+      this.flowchartHandler.setCurrentFlowchart('Main');
       this.panel.newFlag = false;
       this.panel.version = this.version;
       trc.after();
@@ -18152,9 +18147,9 @@ var FlowchartOptionsCtrl = function () {
     $scope.editor = this;
     $scope.$GF = globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].me();
     this.$scope = $scope;
-    this.ctrl = $scope.ctrl;
-    this.panel = this.ctrl.panel;
-    this.flowchartHandler = this.ctrl.flowchartHandler;
+    var ctrl = globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
+    this.panel = ctrl.panel;
+    this.flowchartHandler = ctrl.flowchartHandler;
     this.currentFlowchart = this.flowchartHandler.getFlowchart();
   }
 
@@ -18188,7 +18183,7 @@ var FlowchartOptionsCtrl = function () {
       } else {
         globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.clearMessage();
         this.onSourceChange();
-        this.$scope.$applyAsync();
+        globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].refresh();
       }
 
       return bool;
@@ -18287,13 +18282,12 @@ var FlowchartOptionsCtrl = function () {
       };
 
       try {
-        url = this.ctrl.templateSrv.replaceWithText(url);
+        url = globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].resolveVars(url);
         fetch(url, init).then(function (response) {
           if (!(response.status >= 200 && response.status <= 299)) {
             _this.errorSourceFlag = true;
             globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage("Error ".concat(response.status, " : ").concat(response.statusText), 'error');
-
-            _this.$scope.$applyAsync();
+            globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].refresh();
           } else {
             response.text().then(function (text) {
               var fc = _this.flowchartHandler.getCurrentFlowchart();
@@ -18314,14 +18308,13 @@ var FlowchartOptionsCtrl = function () {
                 _this.onSourceChange();
               }
 
-              _this.$scope.$applyAsync();
+              globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].refresh();
             });
           }
         })["catch"](function (error) {
           _this.errorSourceFlag = true;
           globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage("Error : ".concat(error), 'error');
-
-          _this.$scope.$applyAsync();
+          globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].refresh();
         });
       } catch (error) {
         this.errorDownloadFlag = true;
@@ -18435,6 +18428,7 @@ var GFCONSTANT = function GFCONSTANT() {
   this.VAR_NUM_GHTIMESTAMP = 'graph-hover-timestamp';
   this.VAR_OBJ_TEMPLATESRV = 'templatesrv';
   this.VAR_OBJ_CTRL = 'ctrl';
+  this.VAR_OBJ_SCOPE = 'scope';
   this.VAR_OBJ_DASHBOARD = 'dashboard';
   this.VAR_MAP_INTERVAL = 'interval';
   this.VAR_MAP_TIMEOUT = 'timeout';
@@ -19133,7 +19127,7 @@ var GFPlugin = function () {
     }
   }], [{
     key: "init",
-    value: function init($scope, templateSrv, dashboard) {
+    value: function init($scope, templateSrv, dashboard, ctrl) {
       var plug = new GFPlugin();
       this.contextRoot = GFPlugin.defaultContextRoot;
 
@@ -19150,6 +19144,8 @@ var GFPlugin = function () {
       $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
       $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
       $GF.setVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD, dashboard);
+      $GF.setVar($GF.CONSTANTS.VAR_OBJ_CTRL, ctrl);
+      $GF.setVar($GF.CONSTANTS.VAR_OBJ_SCOPE, $scope);
       return plug;
     }
   }]);
@@ -19418,8 +19414,8 @@ var $GF = function () {
 
   _createClass($GF, null, [{
     key: "init",
-    value: function init($scope, templateSrv, dashboard) {
-      this.plugin = GFPlugin.init($scope, templateSrv, dashboard);
+    value: function init($scope, templateSrv, dashboard, ctrl) {
+      this.plugin = GFPlugin.init($scope, templateSrv, dashboard, ctrl);
 
       if (this.DEBUG) {
         console.log('DEBUG Scope', $scope);
@@ -19441,11 +19437,37 @@ var $GF = function () {
       this.message = GFMessage.init(html);
     }
   }, {
+    key: "resolveVars",
+    value: function resolveVars(text) {
+      return this.getGlobalVars().replaceText(text);
+    }
+  }, {
     key: "getTheme",
     value: function getTheme() {
       var templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
       var theme = templateSrv !== undefined ? templateSrv.style : 'dark';
       return theme;
+    }
+  }, {
+    key: "refresh",
+    value: function refresh() {
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee9() {
+        var scope;
+        return regeneratorRuntime.wrap(function _callee9$(_context9) {
+          while (1) {
+            switch (_context9.prev = _context9.next) {
+              case 0:
+                scope = $GF.getVar($GF.CONSTANTS.VAR_OBJ_SCOPE);
+                _context9.next = 3;
+                return scope.$applyAsync();
+
+              case 3:
+              case "end":
+                return _context9.stop();
+            }
+          }
+        }, _callee9);
+      }));
     }
   }, {
     key: "createLocalVars",
@@ -19589,30 +19611,30 @@ var $GF = function () {
   }, {
     key: "loadLocalFile",
     value: function loadLocalFile(varName, fileName) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee9() {
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee10() {
         var v, contextroot, filePath, txt;
-        return regeneratorRuntime.wrap(function _callee9$(_context9) {
+        return regeneratorRuntime.wrap(function _callee10$(_context10) {
           while (1) {
-            switch (_context9.prev = _context9.next) {
+            switch (_context10.prev = _context10.next) {
               case 0:
                 v = $GF.getVar(varName);
 
                 if (!(v === undefined)) {
-                  _context9.next = 16;
+                  _context10.next = 16;
                   break;
                 }
 
                 contextroot = $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
 
                 if (!(contextroot !== undefined)) {
-                  _context9.next = 15;
+                  _context10.next = 15;
                   break;
                 }
 
                 filePath = "".concat(contextroot, "/").concat(fileName);
 
                 if (!window.fetch) {
-                  _context9.next = 9;
+                  _context10.next = 9;
                   break;
                 }
 
@@ -19629,36 +19651,36 @@ var $GF = function () {
                 })["catch"](function (error) {
                   return $GF.log.error('Error when download file', filePath, error);
                 });
-                _context9.next = 13;
+                _context10.next = 13;
                 break;
 
               case 9:
                 txt = $GF.utils.loadFile(fileName);
 
                 if (!txt) {
-                  _context9.next = 13;
+                  _context10.next = 13;
                   break;
                 }
 
                 $GF.setVar(varName, $GF.utils.loadFile(fileName));
-                return _context9.abrupt("return", txt);
+                return _context10.abrupt("return", txt);
 
               case 13:
-                _context9.next = 16;
+                _context10.next = 16;
                 break;
 
               case 15:
                 $GF.log.warn('loadLocalFile Contexroot : ', contextroot);
 
               case 16:
-                return _context9.abrupt("return", false);
+                return _context10.abrupt("return", false);
 
               case 17:
               case "end":
-                return _context9.stop();
+                return _context10.stop();
             }
           }
-        }, _callee9);
+        }, _callee10);
       }));
     }
   }, {
@@ -20658,10 +20680,7 @@ var XGraph = function () {
       this.onMapping.active = false;
       this.container.style.cursor = 'auto';
       this.graph.click = this.clickBackup;
-
-      if (this.onMapping.$scope) {
-        this.onMapping.$scope.$applyAsync();
-      }
+      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].refresh();
     }
   }, {
     key: "eventClick",
@@ -21699,12 +21718,12 @@ var MappingOptionsCtrl = function () {
     $scope.editor = this;
     $scope.$GF = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].me();
     this.$scope = $scope;
-    this.ctrl = $scope.ctrl;
-    this.panel = this.ctrl.panel;
-    this.rulesHandler = this.ctrl.rulesHandler;
-    this.flowchartHandler = this.ctrl.flowchartHandler;
-    this.rulesHandler = this.ctrl.rulesHandler;
-    this.metricHandler = this.ctrl.metricHandler;
+    var ctrl = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
+    this.panel = ctrl.panel;
+    this.rulesHandler = ctrl.rulesHandler;
+    this.flowchartHandler = ctrl.flowchartHandler;
+    this.rulesHandler = ctrl.rulesHandler;
+    this.metricHandler = ctrl.metricHandler;
     this.unitFormats = grafana_func__WEBPACK_IMPORTED_MODULE_3__["default"].getUnitFormats();
     this.tpGraphSize = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
 
@@ -21803,7 +21822,8 @@ var MappingOptionsCtrl = function () {
   }, {
     key: "render",
     value: function render() {
-      this.ctrl.render();
+      var ctrl = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
+      ctrl.render();
     }
   }, {
     key: "setUnitFormat",
@@ -22823,7 +22843,7 @@ var customize=function customize(){mxTooltipHandler.prototype.show=function(tip,
 /*! exports provided: type, name, id, info, dependencies, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"type\":\"panel\",\"name\":\"FlowCharting\",\"id\":\"agenty-flowcharting-panel\",\"info\":{\"description\":\"Flowcharting is a Grafana plugin. Use it to display complexe diagrams using the online graphing library draw.io like a vsio\",\"author\":{\"name\":\"Arnaud GENTY\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},\"keywords\":[\"flowchart\",\"panel\",\"diagram\",\"workflow\",\"floorplan\",\"map\",\"organigram\",\"draw.io\",\"visio\",\"mxgraph\"],\"links\":[{\"name\":\"Project site\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},{\"name\":\"Documentation\",\"url\":\"https://algenty.github.io/flowcharting-repository/\"},{\"name\":\"Demonstration\",\"url\":\"https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1\"},{\"name\":\"Apache License\",\"url\":\"https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE\"}],\"version\":\"0.9.1\",\"updated\":\"2019-05-31\",\"logos\":{\"small\":\"img/agenty-flowcharting.svg\",\"large\":\"img/agenty-flowcharting.svg\"}},\"dependencies\":{\"grafanaVersion\":\"6.x.x\",\"plugins\":[]}}");
+module.exports = JSON.parse("{\"type\":\"panel\",\"name\":\"FlowCharting\",\"id\":\"agenty-flowcharting-panel\",\"info\":{\"description\":\"Flowcharting is a Grafana plugin. Use it to display complexe diagrams using the online graphing library draw.io like a vsio\",\"author\":{\"name\":\"Arnaud GENTY\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},\"keywords\":[\"flowchart\",\"panel\",\"diagram\",\"workflow\",\"floorplan\",\"map\",\"organigram\",\"draw.io\",\"visio\",\"mxgraph\"],\"links\":[{\"name\":\"Project site\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},{\"name\":\"Documentation\",\"url\":\"https://algenty.github.io/flowcharting-repository/\"},{\"name\":\"Demonstration\",\"url\":\"https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1\"},{\"name\":\"Apache License\",\"url\":\"https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE\"}],\"version\":\"0.9.1\",\"updated\":\"2020-10-28\",\"logos\":{\"small\":\"img/agenty-flowcharting.svg\",\"large\":\"img/agenty-flowcharting.svg\"}},\"dependencies\":{\"grafanaVersion\":\"6.x.x\",\"plugins\":[]}}");
 
 /***/ }),
 

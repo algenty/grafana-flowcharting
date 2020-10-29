@@ -33,6 +33,7 @@ class GFCONSTANT {
   VAR_NUM_GHTIMESTAMP = 'graph-hover-timestamp';
   VAR_OBJ_TEMPLATESRV = 'templatesrv';
   VAR_OBJ_CTRL = 'ctrl';
+  VAR_OBJ_SCOPE = 'scope';
   VAR_OBJ_DASHBOARD = 'dashboard';
   VAR_MAP_INTERVAL = 'interval';
   VAR_MAP_TIMEOUT = 'timeout';
@@ -451,7 +452,7 @@ class GFPlugin {
    * @returns {GFPlugin}
    * @memberof GFPlugin
    */
-  static init($scope: any, templateSrv: any, dashboard: any): GFPlugin {
+  static init($scope: any, templateSrv: any, dashboard: any, ctrl: any): GFPlugin {
     let plug = new GFPlugin();
     this.contextRoot = GFPlugin.defaultContextRoot;
     if ($scope === undefined) {
@@ -465,6 +466,8 @@ class GFPlugin {
     $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
     $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
     $GF.setVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD, dashboard);
+    $GF.setVar($GF.CONSTANTS.VAR_OBJ_CTRL, ctrl);
+    $GF.setVar($GF.CONSTANTS.VAR_OBJ_SCOPE, $scope);
     return plug;
   }
 
@@ -804,8 +807,8 @@ export class $GF {
     addScript: (src: string) => void;
   } = require('./utils_raw');
 
-  static init($scope: any, templateSrv: any, dashboard: any): $GF {
-    this.plugin = GFPlugin.init($scope, templateSrv, dashboard);
+  static init($scope: any, templateSrv: any, dashboard: any, ctrl : any): $GF {
+    this.plugin = GFPlugin.init($scope, templateSrv, dashboard, ctrl);
     if (this.DEBUG) {
       console.log('DEBUG Scope', $scope);
       console.log('DEBUG TemplateSrv', templateSrv);
@@ -831,6 +834,17 @@ export class $GF {
   }
 
   /**
+   * Replace/resolve variables
+   *
+   * @static
+   * @param {string} text
+   * @memberof $GF
+   */
+  static resolveVars(text: string) {
+    return this.getGlobalVars().replaceText(text);
+  }
+
+  /**
    * Return the theme
    *
    * @static
@@ -841,6 +855,16 @@ export class $GF {
     let templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
     let theme = templateSrv !== undefined ? templateSrv.style : 'dark';
     return theme;
+  }
+
+  /**
+   * angular $apply
+   *
+   * @memberof $GF
+   */
+  static async refresh() {
+    const scope = $GF.getVar($GF.CONSTANTS.VAR_OBJ_SCOPE);
+    await scope.$applyAsync();
   }
 
   /**

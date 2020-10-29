@@ -311,7 +311,7 @@ declare module gf {
     object: GFMap | null;
     value: string | null;
     prop: TPropertieKey;
-    $scope: ng.IScope | null;
+    // $scope: ng.IScope | null;
   }
 
   // Export of id and label

@@ -1139,9 +1139,10 @@ export default class XGraph {
     this.onMapping.active = false;
     this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
-    if (this.onMapping.$scope) {
-      this.onMapping.$scope.$applyAsync();
-    }
+    $GF.refresh();
+    // if (this.onMapping.$scope) {
+    //   this.onMapping.$scope.$applyAsync();
+    // }
   }
 
   //

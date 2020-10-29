@@ -6,7 +6,7 @@ import { $GF } from 'globals_class';
 
 export class FlowchartOptionsCtrl {
   $scope: gf.TIFlowchartOptionsScope;
-  ctrl: any; //TODO: redefine any
+  // ctrl: any; //TODO: redefine any
   flowchartHandler: FlowchartHandler;
   panel: any;
   sourceTypes = $GF.CONSTANTS.SOURCE_TYPES;
@@ -24,9 +24,9 @@ export class FlowchartOptionsCtrl {
     $scope.editor = this;
     $scope.$GF = $GF.me();
     this.$scope = $scope;
-    this.ctrl = $scope.ctrl;
-    this.panel = this.ctrl.panel;
-    this.flowchartHandler = this.ctrl.flowchartHandler;
+    const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
+    this.panel = ctrl.panel;
+    this.flowchartHandler = ctrl.flowchartHandler;
     this.currentFlowchart = this.flowchartHandler.getFlowchart();
   }
 
@@ -73,7 +73,8 @@ export class FlowchartOptionsCtrl {
     } else {
       $GF.message.clearMessage();
       this.onSourceChange();
-      this.$scope.$applyAsync();
+      // this.$scope.$applyAsync();
+      $GF.refresh();
     }
     return bool;
   }
@@ -147,14 +148,15 @@ export class FlowchartOptionsCtrl {
     // this.errorDownloadMsg = '';
     const init: RequestInit = { method: 'GET', mode: 'cors', cache: 'default' };
     try {
-      url = this.ctrl.templateSrv.replaceWithText(url);
+      url = $GF.resolveVars(url);
       fetch(url, init)
         .then(response => {
           if (!(response.status >= 200 && response.status <= 299)) {
             this.errorSourceFlag = true;
             // this.errorDownloadMsg = `Error ${response.status} : ${response.statusText}`;
             $GF.message.setMessage(`Error ${response.status} : ${response.statusText}`, 'error');
-            this.$scope.$applyAsync();
+            // this.$scope.$applyAsync();
+            $GF.refresh();
           } else {
             response.text().then(text => {
               const fc = this.flowchartHandler.getCurrentFlowchart();
@@ -174,7 +176,8 @@ export class FlowchartOptionsCtrl {
                 // this.errorDownloadMsg = '';
                 this.onSourceChange();
               }
-              this.$scope.$applyAsync();
+              // this.$scope.$applyAsync();
+              $GF.refresh();
             });
           }
         })
@@ -182,7 +185,8 @@ export class FlowchartOptionsCtrl {
           this.errorSourceFlag = true;
           // this.errorDownloadMsg = `Error : ${error}`;
           $GF.message.setMessage(`Error : ${error}`, 'error');
-          this.$scope.$applyAsync();
+          // this.$scope.$applyAsync();
+          $GF.refresh();
         });
     } catch (error) {
       this.errorDownloadFlag = true;

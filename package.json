@@ -39,7 +39,7 @@
     "@types/chartist": "^0.9.46",
     "@types/chroma-js": "^2.0.0",
     "@types/grafana": "github:CorpGlory/types-grafana.git",
-    "@types/jquery": "^3.3.31",
+    "@types/jquery": "^3.5.4",
     "@types/lodash": "^4.14.150",
     "@typescript-eslint/eslint-plugin": "^2.18",
     "angular": "^1.7.9",
