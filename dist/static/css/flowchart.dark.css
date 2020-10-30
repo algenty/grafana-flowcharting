@@ -5,7 +5,7 @@ div.flowchart-panel {
   width: 100%;
 }
 
-div.flowchart-panel__chart {
+div.flowchart-panel-chart {
   position: relative;
   flex-grow: 1;
   width: 100%;
@@ -215,7 +215,7 @@ div.GF_inspect-color-picker {
   font-size: 8px;
 }
 
-.unselectable {
+.GF_unselectable {
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;

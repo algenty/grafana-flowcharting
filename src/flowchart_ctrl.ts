@@ -203,7 +203,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // FLOWCHARTS
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
-      this.flowchartHandler = new FlowchartHandler(this.parentDiv, newFlowchartsData);
+      this.flowchartHandler = new FlowchartHandler(this.flowchartsDiv, newFlowchartsData);
       if (this.flowchartHandler) {
         this.flowchartHandler.import(this.panel.flowchartsData);
       }
@@ -237,14 +237,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     const $section = elem.find('#flowcharting-section');
     this.parentDiv = $section[0];
 
-    const $flowcharts = elem.find('.flowchart-panel__chart');
-    this.flowchartsDiv = $flowcharts[0];
-
+    const $elem = elem.find('#flowcharting-panel-content');
+    this.flowchartsDiv = $elem[0];
 
     const $message = $section.find('#flowcharting-message');
     $GF.setMessageDiv($message[0]);
 
-    debugger
     $GF.message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
     // MxGraph Init
     XGraph.initMxGraph();

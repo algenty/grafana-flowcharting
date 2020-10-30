@@ -18027,11 +18027,10 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       this.$panelElem = elem;
       var $section = elem.find('#flowcharting-section');
       this.parentDiv = $section[0];
-      var $flowcharts = elem.find('.flowchart-panel__chart');
-      this.flowchartsDiv = $flowcharts[0];
+      var $elem = elem.find('#flowcharting-panel-content');
+      this.flowchartsDiv = $elem[0];
       var $message = $section.find('#flowcharting-message');
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setMessageDiv($message[0]);
-      debugger;
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
       graph_class__WEBPACK_IMPORTED_MODULE_8__["default"].initMxGraph();
       globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Load configuration');
