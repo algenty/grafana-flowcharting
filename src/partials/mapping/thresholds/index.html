@@ -25,7 +25,7 @@
             <label class="gf-form-label width-8" style="margin-right: 2px;"
               ng-if="rule.data.type === 'number'">Number
               <info-popover mode="right-normal">
-                <span ng-bind-html="$GF.popover('Apply color when value is egal or upper', 'THRESHOLDS')">
+                <span ng-bind-html="$GF.popover('Apply color when value is greater than or equal', 'THRESHOLDS')">
                 </span>
               </info-popover>
             </label>
@@ -64,7 +64,7 @@
               </span>
               <label class="gf-form-label  width-2" style="margin-right: 4px;"
                 ng-if="$index > 0 && rule.data.type === 'number'">
-                <i class="fa fa-w fa-angle-right" bs-tooltip="'Upper than'"></i>
+                <i class="fa fa-w fa-angle-right" bs-tooltip="'Greater than or equal'"></i>
               </label>
               <label class="gf-form-label  width-2" style="margin-right: 4px;"
                 ng-if="$index > 0 && rule.data.type === 'string'" bs-tooltip="'Like'">
@@ -81,7 +81,7 @@
             </label>
             <input ng-if="$index > 0 && rule.data.type === 'number'" type="number" class="gf-form-input width-8"
               ng-model="rule.data.thresholds[$index-1]" placeholder="value"
-              bs-tooltip="'Specify a value for apply color when value is egual or upper'"
+              bs-tooltip="'Specify a value for apply color when value is greater than or equal'"
               ng-blur="editor.onRulesChange()" />
             <input ng-if="$index > 0 && rule.data.type === 'string'" type="text" class="gf-form-input width-8"
               ng-model="rule.data.stringThresholds[$index-1]" placeholder="pattern"
