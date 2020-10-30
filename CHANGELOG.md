@@ -1,4 +1,17 @@
 # Changelog
+
+## [[0.9.1 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.1-SNAPSHOT.zip) - 2020-10-30
+### Added
+  - New initialization engine for drawio libs
+  - New notifier handler in panel.
+  
+### Fixed
+  - Fixed : Inspect mode [(issue #209)](https://github.com/algenty/grafana-flowcharting/issues/209)
+  - Fixed : Label position in shape [(issue #147)](https://github.com/algenty/grafana-flowcharting/issues/147)   
+  - Fixed : Initialization of first model
+  - Fixed : Display refresh between "edit mode" and "dashboard mode" in grafana v7 [(issue #205)](https://github.com/algenty/grafana-flowcharting/issues/205)  
+  - Fixed :  zoom on text without witdth and height
+  - Fixed : Disable select text when double click for zoom
   
 ## [[0.9.0]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.0.zip) - 2020-05-31  
 ### Added

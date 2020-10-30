@@ -143,14 +143,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.log.debug('EVENT : ', this.id, 'onRender', this);
     $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
+      $GF.message.setMessage('Configuration updating...');
       this.editModeFalse();
-      // this.flowchartHandler.clear();
-      // this.flowchartHandler.import(this.panel.flowchartsData);
+      const panelClone = _.cloneDeep(this.panel);
+      this.flowchartHandler.clear();
+      this.flowchartHandler.import(panelClone.flowchartsData);
       // this.flowchartHandler.draw();
-      // this.rulesHandler.clear();
-      // this.rulesHandler.import(this.panel.rulesData);
-      // this.flowchartHandler.onSourceChange();
-      // this.flowchartHandler.render();
+      this.rulesHandler.clear();
+      this.rulesHandler.import(panelClone.rulesData);
+      this.flowchartHandler.onSourceChange();
+      this.flowchartHandler.render();
     }
   }
 
@@ -192,9 +194,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   initHandlers() {
-    console.log("INIT")
-    console.trace();
-
     // METRICS / DATAS
     if (!this.metricHandler) {
       this.metricHandler = new MetricHandler();
@@ -290,7 +289,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
     // Versions
     this.panel.newFlag = false;
-    if(this.panel.version !== $GF.plugin.getVersion()) {
+    if (this.panel.version !== $GF.plugin.getVersion()) {
       $GF.message.setMessage('The plugin version has changed, save the dashboard to optimize loading');
     }
     this.panel.version = this.version;

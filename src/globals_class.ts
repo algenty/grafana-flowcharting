@@ -807,7 +807,7 @@ export class $GF {
     addScript: (src: string) => void;
   } = require('./utils_raw');
 
-  static init($scope: any, templateSrv: any, dashboard: any, ctrl : any): $GF {
+  static init($scope: any, templateSrv: any, dashboard: any, ctrl: any): $GF {
     this.plugin = GFPlugin.init($scope, templateSrv, dashboard, ctrl);
     if (this.DEBUG) {
       console.log('DEBUG Scope', $scope);

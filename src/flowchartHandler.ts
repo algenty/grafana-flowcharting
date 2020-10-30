@@ -410,7 +410,7 @@ export class FlowchartHandler {
   async render(name?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
     const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
-    // console.log('RENDER Flags BEGIN', clonedeep(this.flags));
+
     // not repeat render if mouse down
     if (!this.mousedown) {
       this.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);

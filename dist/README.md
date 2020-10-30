@@ -52,7 +52,7 @@ Arnaud
 
 # Changelog
 
-## [[0.9.1 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.1-SNAPSHOT.zip) - 2020-10-25
+## [[0.9.1 SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.1-SNAPSHOT.zip) - 2020-10-30
 ### Added
   - New initialization engine for drawio libs
   - New notifier handler in panel.

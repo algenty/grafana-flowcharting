@@ -35,7 +35,6 @@ export class MetricHandler {
     trc.after();
   }
 
-
   /**
    * Reset/clear/destroy metrics
    *
@@ -47,7 +46,7 @@ export class MetricHandler {
     });
     this.series.forEach(serie => {
       serie.clear();
-    })
+    });
     this.metrics.forEach(metric => {
       metric.clear();
     });

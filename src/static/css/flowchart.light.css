@@ -5,7 +5,7 @@ div.flowchart-panel {
   width: 100%;
 }
 
-div.flowchart-panel__chart {
+div.flowchart-panel-chart {
   position: relative;
   flex-grow: 1;
   width: 100%;
@@ -131,6 +131,169 @@ div.tooltip-graph {
 div.tooltip-date {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+
+
+div.GF_inspect-table-main {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  display: flex;
+}
+
+div.GF_inspect-table-thead {
+  height: 33px;
+  overflow: hidden auto;
+  background: rgb(32, 34, 38);
+  position: relative;
+}
+
+div.GF_inspect-table-title {
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  margin-right: 4px;
+}
+
+div.GF_inspect-table-resizeHandle {
+  display: inline-block;
+  background: rgb(31, 96, 196);
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+  transition-delay: 0s;
+  width: 8px;
+  height: 100%;
+  position: absolute;
+  right: -4px;
+  border-radius: 3px;
+  top: 0px;
+  z-index: 1030;
+  touch-action: none;
+  cursor: col-resize !important;
+}
+
+div.GF_inspect-table-columnheader {
+  padding: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  color: rgb(51, 162, 229);
+  border-right: 1px solid rgb(20, 22, 25);
+  display: flex;
+}
+
+div.GF_inspect-table-rows {
+  border-bottom: 1px solid rgb(32, 34, 38);
+}
+
+div.GF_inspect-table-cells {
+  border-right: 1px solid rgb(32, 34, 38);
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 100%;
+}
+
+div.GF_inspect-table-content {
+  padding: 6px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  flex: 1 1 0%;
+}
+
+div.GF_inspect-color-picker {
+  text-align: center;
+  margin-right: 5px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgb(228, 228, 228);
+  font-size: 8px;
+}
+
+.GF_unselectable {
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
+.GF_flowchartHide {
+  opacity: 0;
+  z-index: 0;
+  transition: 0.3s ease;
+}
+
+.GF_flowchartShow {
+  opacity: 1;
+  z-index: 1;
+  transition: 0.3s ease;
+}
+
+.GF_navigation {
+  z-index: 2;
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 20px;
+  width: 50px;
+  white-space: nowrap;
+  background-color: rgba(0, 0, 0, 0.7);
+  opacity: 0.2;
+  bottom: 1px;
+  right: 5px;
+  transform: translate(-50%, -50%);
+  transition: 0.2s ease;
+}
+
+.GF_navigation:hover {
+  opacity: 1;
+  transition: 0.2s ease;
+}
+
+.GF_console {
+  z-index: 2;
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 40px;
+  width: 33%;
+  white-space: nowrap;
+  background-color: rgba(0, 0, 0, 0.7);
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.GF_message {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.GF_mapping {
+  z-index: 2;
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 40px;
+  width: 33%;
+  white-space: nowrap;
+  background-color: rgba(0, 0, 0, 0.7);
+  bottom: 1px;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
 }
 
 .ct-label {
@@ -763,15 +926,4 @@ div.tooltip-date {
 }
 .ct-chart .ct-series.ct-series-a .ct-line {
   stroke: rgb(34, 230, 27);
-}
-
-.mxEdgeFlow {
-  animation: mxEdgeFlow 0.5s linear;
-  animation-iteration-count: infinite;
-}
-
-@keyframes mxEdgeFlow {
-  to {
-  stroke-dashoffset: -16;
-  }
 }
