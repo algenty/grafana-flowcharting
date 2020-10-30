@@ -1103,6 +1103,21 @@ export class $GF {
   }
 
   /**
+   * Return true if mouse is in panel
+   *
+   * @static
+   * @returns {boolean}
+   * @memberof $GF
+   */
+  static isMouseInPanel(): boolean {
+    const ctrl = this.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
+    if (ctrl) {
+      return ctrl.isMouseIn();
+    }
+    return false;
+  }
+
+  /**
    * Return Html for popup with links to documentation
    *
    * @param {string} text

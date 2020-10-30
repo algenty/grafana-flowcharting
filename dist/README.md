@@ -56,6 +56,7 @@ Arnaud
 ### Added
   - New initialization engine for drawio libs
   - New notifier handler in panel.
+  - Change default url draw.io by https://embed.diagrams.net
   
 ### Fixed
   - Fixed : Inspect mode [(issue #209)](https://github.com/algenty/grafana-flowcharting/issues/209)
@@ -64,6 +65,7 @@ Arnaud
   - Fixed : Display refresh between "edit mode" and "dashboard mode" in grafana v7 [(issue #205)](https://github.com/algenty/grafana-flowcharting/issues/205)  
   - Fixed :  zoom on text without witdth and height
   - Fixed : Disable select text when double click for zoom
+  - Fixed : retro compatibility with grafana 6.x
 
 ## [[0.9.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.9.0/download) - 2020-05-31  
 ### Added

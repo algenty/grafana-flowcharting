@@ -64,7 +64,6 @@ export default class XGraph {
       object: null,
     };
 
-    // END ZOOM MouseWheele
     XGraph.initMxGraph();
     if (type === 'xml') {
       if ($GF.utils.isencoded(definition)) {
@@ -1206,7 +1205,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventMouseWheel(evt: WheelEvent, up: boolean) {
-    if (this.graph.isZoomWheelEvent(evt)) {
+    if (this.graph.isZoomWheelEvent(evt) && $GF.isMouseInPanel()) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {
           up = true;

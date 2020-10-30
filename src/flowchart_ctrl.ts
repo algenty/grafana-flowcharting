@@ -28,12 +28,14 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   metricHandler: MetricHandler | undefined;
   id: String;
   GHApplied = false;
+  mouseIn = false;
   panelDefaults: {
     newFlag: boolean;
     format: string;
     valueName: string;
     rulesData: gf.TIRulesHandlerData;
     flowchartsData: gf.TFlowchartHandlerData;
+    version: string;
   };
   containerDivId: string;
   static templateUrl: string;
@@ -61,6 +63,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       valueName: 'current',
       rulesData: RulesHandler.getDefaultData(),
       flowchartsData: FlowchartHandler.getDefaultData(),
+      version: $GF.plugin.getVersion(),
     };
 
     _.defaults(this.panel, this.panelDefaults);
@@ -68,12 +71,19 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.containerDivId = `container_${this.panel.graphId}`;
 
     // events
-    this.events.on(grafana.PanelEvents.render, this.onRender.bind(this));
-    this.events.on(grafana.PanelEvents.refresh, this.onRefresh.bind(this));
-    this.events.on(grafana.PanelEvents.dataReceived, this.onDataReceived.bind(this));
-    this.events.on(grafana.PanelEvents.dataError, this.onDataError.bind(this));
-    this.events.on(grafana.PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
-    this.events.on(grafana.PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
+    console.log('grafana.PanelEvents', grafana.PanelEvents);
+    // this.events.on(grafana.PanelEvents.render, this.onRender.bind(this));
+    this.events.on('render', this.onRender.bind(this));
+    // this.events.on(grafana.PanelEvents.refresh, this.onRefresh.bind(this));
+    this.events.on('refresh', this.onRefresh.bind(this));
+    // this.events.on(grafana.PanelEvents.dataReceived, this.onDataReceived.bind(this));
+    this.events.on('data-received', this.onDataReceived.bind(this));
+    // this.events.on(grafana.PanelEvents.dataError, this.onDataError.bind(this));
+    this.events.on('data-error', this.onDataError.bind(this));
+    // this.events.on(grafana.PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
+    this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
+    // this.events.on(grafana.PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
+    this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
     this.events.on('panel-teardown', this.onTearDown.bind(this));
     grafana.appEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
     grafana.appEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
@@ -249,51 +259,32 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.message.setMessage('Load configuration');
 
     this.initHandlers();
-    // DATA
-    // this.metricHandler = new MetricHandler();
-
-    // RULES
-    // const newRulesData = RulesHandler.getDefaultData();
-    // this.rulesHandler = new RulesHandler(newRulesData);
-    // // for version < 0.4.0
-    // if (this.panel.version === undefined && this.panel.styles !== undefined) {
-    //   this.rulesHandler.import(this.panel.styles);
-    //   delete this.panel.styles;
-    // } else {
-    //   this.rulesHandler.import(this.panel.rulesData);
-    // }
-    // if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
-    //   this.rulesHandler.addRule('.*');
-    // }
-    // this.panel.rulesData = newRulesData;
-
-    // FLOWCHART
-    // const newFlowchartsData = FlowchartHandler.getDefaultData();
-    // this.flowchartHandler = new FlowchartHandler(scope, elem, ctrl, newFlowchartsData);
-    // // for version < 0.4.0
-    // if (this.panel.version === undefined && this.panel.flowchart !== undefined) {
-    //   this.flowchartHandler.import([this.panel.flowchart]);
-    //   delete this.panel.flowchart;
-    // } else {
-    //   this.flowchartHandler.import(this.panel.flowchartsData);
-    // }
-    // if (this.panel.newFlag && this.flowchartHandler.countFlowcharts() === 0) {
-    //   this.flowchartHandler.addFlowchart('Main').init();
-    // }
-    // this.panel.flowchartsData = newFlowchartsData;
-
-    // Position to main flowchart
-    // if(this.flowchartHandler) {
-    //   this.flowchartHandler.setCurrentFlowchart('Main');
-    // }
 
     // Versions
     this.panel.newFlag = false;
     if (this.panel.version !== $GF.plugin.getVersion()) {
-      $GF.message.setMessage('The plugin version has changed, save the dashboard to optimize loading');
+      $GF.message.setMessage(
+        `The plugin version has changed, save the dashboard to optimize loading : ${
+          this.panel.version
+        } <> ${$GF.plugin.getVersion()}`
+      );
     }
     this.panel.version = this.version;
     trc.after();
+  }
+
+  onMouseIn(event) {
+    // console.log("onMouseIn",this.id,event)
+    this.mouseIn = true;
+  }
+
+  onMouseOut(event) {
+    // console.log("onMouseOut",this.id,event)
+    this.mouseIn = false;
+  }
+
+  isMouseIn(): boolean {
+    return this.mouseIn;
   }
 
   displayMultiCursor(): boolean {
