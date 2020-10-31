@@ -1205,6 +1205,9 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventMouseWheel(evt: WheelEvent, up: boolean) {
+    console.log("eventMouseWheel",$GF.isMouseInPanel());
+    const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
+    console.log("eventMouseWheel -> ctrl", ctrl)
     if (this.graph.isZoomWheelEvent(evt) && $GF.isMouseInPanel()) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {

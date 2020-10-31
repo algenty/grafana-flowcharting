@@ -274,12 +274,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onMouseIn(event) {
-    // console.log("onMouseIn",this.id,event)
+    console.log("onMouseIn",this.id,$GF)
+    console.log("$GF",this.id,event)
     this.mouseIn = true;
   }
 
   onMouseOut(event) {
-    // console.log("onMouseOut",this.id,event)
+    console.log("$GF",this.id,$GF)
     this.mouseIn = false;
   }
 
