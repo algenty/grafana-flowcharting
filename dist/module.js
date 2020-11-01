@@ -16276,7 +16276,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var FlowchartHandler = function () {
-  function FlowchartHandler(parentDiv, data) {
+  function FlowchartHandler(parentDiv, data, ctrl) {
     var _this = this;
 
     _classCallCheck(this, FlowchartHandler);
@@ -16307,11 +16307,11 @@ var FlowchartHandler = function () {
     this.postedId = undefined;
     this.editorWindow = null;
     FlowchartHandler.getDefaultDioGraph();
+    this.ctrl = ctrl;
     this.parentDiv = parentDiv;
     this.data = data;
     this.currentFlowchartName = 'Main';
-    var ctrl = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
-    ctrl.events.on('render', function () {
+    this.ctrl.events.on('render', function () {
       _this.render();
     });
 
@@ -16552,7 +16552,7 @@ var FlowchartHandler = function () {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'addFlowchart()');
       var data = flowchart_class__WEBPACK_IMPORTED_MODULE_1__["Flowchart"].getDefaultData();
       var container = this.createContainer();
-      var flowchart = new flowchart_class__WEBPACK_IMPORTED_MODULE_1__["Flowchart"](name, container, data);
+      var flowchart = new flowchart_class__WEBPACK_IMPORTED_MODULE_1__["Flowchart"](name, container, data, this.ctrl);
       this.flowcharts.push(flowchart);
       this.data.flowcharts.push(data);
       trc.after();
@@ -16573,14 +16573,12 @@ var FlowchartHandler = function () {
     key: "render",
     value: function render(name) {
       return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee() {
-        var trc, ctrl, self, _ctrl, rules, metrics;
-
+        var trc, self, rules, metrics;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 trc = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].trace.before(this.constructor.name + '.' + 'render()');
-                ctrl = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
 
                 if (!this.mousedown) {
                   this.flagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_APL_OPTIONS);
@@ -16599,9 +16597,8 @@ var FlowchartHandler = function () {
                   }
 
                   if (self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_RULES) || self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_DATAS) || self.isFlagedChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_GRAPHHOVER)) {
-                    _ctrl = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
-                    rules = _ctrl.rulesHandler.getRules();
-                    metrics = _ctrl.metricHandler.getMetrics();
+                    rules = this.ctrl.rulesHandler.getRules();
+                    metrics = this.ctrl.metricHandler.getMetrics();
                     self.async_refreshStates(rules, metrics);
                     this.aknowledgeFlagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_APL_OPTIONS);
                     this.aknowledgeFlagChange(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.FLOWCHART_CHG_DATAS);
@@ -16625,10 +16622,10 @@ var FlowchartHandler = function () {
                   }
                 }
 
-                ctrl.renderingCompleted();
+                this.ctrl.renderingCompleted();
                 trc.after();
 
-              case 5:
+              case 4:
               case "end":
                 return _context.stop();
             }
@@ -16945,7 +16942,7 @@ var FlowchartHandler = function () {
         this.currentFlowchart = fc;
 
         if (fc !== undefined) {
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Sending current data to draw.io editor', 'info');
+          this.ctrl.notify('Sending current data to draw.io editor', 'info');
           event.source.postMessage(fc.data.xml, event.origin);
           this.postedId = fc.id;
         }
@@ -16955,12 +16952,12 @@ var FlowchartHandler = function () {
             var _fc = this.getFlowchartById(this.postedId);
 
             if (_fc !== undefined) {
-              globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Received data from draw.io editor, refresh in progress', 'info');
+              this.ctrl.notify('Received data from draw.io editor, refresh in progress', 'info');
 
               _fc.redraw(event.data);
 
               this.onSourceChange(_fc.getName());
-              globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].refresh();
+              this.ctrl.$scope.$applyAsync();
               this.render();
             }
           }
@@ -16974,7 +16971,7 @@ var FlowchartHandler = function () {
           this.onEdit = false;
           this.postedId = undefined;
           window.removeEventListener('message', this.listenMessage.bind(this), false);
-          globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Draw.io editor closed', 'info');
+          this.ctrl.notify('Draw.io editor closed', 'info');
         }
       }
     }
@@ -16987,7 +16984,7 @@ var FlowchartHandler = function () {
       var urlParams = "".concat(urlEditor, "?embed=1&spin=1&libraries=1&ui=").concat(theme, "&ready=fc-").concat(fc.id, "&src=grafana");
       this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
       this.onEdit = true;
-      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage("Opening current flowchart on draw.io editor", 'info');
+      this.ctrl.notify("Opening current flowchart on draw.io editor", 'info');
       window.addEventListener('message', this.listenMessage.bind(this), false);
     }
   }, {
@@ -17063,7 +17060,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var Flowchart = function () {
-  function Flowchart(name, container, data) {
+  function Flowchart(name, container, data, ctrl) {
     _classCallCheck(this, Flowchart);
 
     this.xgraph = undefined;
@@ -17071,6 +17068,7 @@ var Flowchart = function () {
     this.data = data;
     this.data.name = name;
     this.container = container;
+    this.ctrl = ctrl;
     this.id = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].utils.uniqueID();
   }
 
@@ -17187,7 +17185,7 @@ var Flowchart = function () {
         var content = this.getContent();
 
         if (this.xgraph === undefined) {
-          this.xgraph = new graph_class__WEBPACK_IMPORTED_MODULE_0__["default"](this.container, this.data.type, content);
+          this.xgraph = new graph_class__WEBPACK_IMPORTED_MODULE_0__["default"](this.container, this.data.type, content, this.ctrl);
         }
 
         if (content !== undefined && content !== null) {
@@ -17219,13 +17217,13 @@ var Flowchart = function () {
           }
 
           this.stateHandler = new statesHandler__WEBPACK_IMPORTED_MODULE_1__["StateHandler"](this.xgraph);
-          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.clearMessage();
+          this.ctrl.clearNotify();
         } else {
-          globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.setMessage('Source content empty Graph not defined', 'error');
+          this.ctrl.notify('Source content empty Graph not defined', 'error');
           globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('Source content empty Graph not defined');
         }
       } catch (error) {
-        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.setMessage('Unable to initialize graph', 'error');
+        this.ctrl.notify('Unable to initialize graph', 'error');
         globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].log.error('Unable to initialize graph', error);
       }
 
@@ -17518,9 +17516,9 @@ var Flowchart = function () {
 
       if (this.data.download) {
         var url = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].resolveVars(this.data.url);
-        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.setMessage("Loading content definition for ".concat(this.data.name), 'info');
+        this.ctrl.notify("Loading content definition for ".concat(this.data.name), 'info');
         content = this.loadContent(url);
-        globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].message.clearMessage();
+        this.ctrl.clearNotify();
 
         if (content !== null) {
           if (replaceVarBool) {
@@ -17757,19 +17755,20 @@ var Flowchart = function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FlowchartCtrl", function() { return FlowchartCtrl; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MetricsPanelCtrl", function() { return FlowchartCtrl; });
-/* harmony import */ var grafana_app_plugins_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! grafana/app/plugins/sdk */ "grafana/app/plugins/sdk");
-/* harmony import */ var grafana_app_plugins_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(grafana_app_plugins_sdk__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var mapping_options__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! mapping_options */ "./mapping_options.ts");
-/* harmony import */ var flowchart_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! flowchart_options */ "./flowchart_options.ts");
-/* harmony import */ var inspect_options__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! inspect_options */ "./inspect_options.ts");
-/* harmony import */ var rulesHandler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rulesHandler */ "./rulesHandler.ts");
-/* harmony import */ var flowchartHandler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! flowchartHandler */ "./flowchartHandler.ts");
-/* harmony import */ var metricHandler__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! metricHandler */ "./metricHandler.ts");
-/* harmony import */ var globals_class__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! globals_class */ "./globals_class.ts");
-/* harmony import */ var graph_class__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! graph_class */ "./graph_class.ts");
-/* harmony import */ var grafana_func__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! grafana_func */ "./grafana_func.ts");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! lodash */ "lodash");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
+/* harmony import */ var grafana_app_plugins_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! grafana/app/plugins/sdk */ "grafana/app/plugins/sdk");
+/* harmony import */ var grafana_app_plugins_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(grafana_app_plugins_sdk__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var mapping_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! mapping_options */ "./mapping_options.ts");
+/* harmony import */ var flowchart_options__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! flowchart_options */ "./flowchart_options.ts");
+/* harmony import */ var inspect_options__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! inspect_options */ "./inspect_options.ts");
+/* harmony import */ var rulesHandler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rulesHandler */ "./rulesHandler.ts");
+/* harmony import */ var flowchartHandler__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! flowchartHandler */ "./flowchartHandler.ts");
+/* harmony import */ var metricHandler__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! metricHandler */ "./metricHandler.ts");
+/* harmony import */ var globals_class__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! globals_class */ "./globals_class.ts");
+/* harmony import */ var graph_class__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! graph_class */ "./graph_class.ts");
+/* harmony import */ var grafana_func__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! grafana_func */ "./grafana_func.ts");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! lodash */ "lodash");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_11__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -17800,6 +17799,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var FlowchartCtrl = function (_MetricsPanelCtrl) {
   FlowchartCtrl.$inject = ["$scope", "$injector", "$rootScope", "templateSrv"];
 
@@ -17813,11 +17813,11 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(FlowchartCtrl).call(this, $scope, $injector));
     _this.GHApplied = false;
     _this.mouseIn = false;
-    globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].init($scope, templateSrv, _this.dashboard, _assertThisInitialized(_this));
+    globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].init($scope, templateSrv, _this.dashboard, _assertThisInitialized(_this));
     _this.$rootScope = $rootScope;
     _this.$scope = $scope;
     $scope.editor = _assertThisInitialized(_this);
-    _this.version = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].plugin.getVersion();
+    _this.version = globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].plugin.getVersion();
     _this.templateSrv = templateSrv;
     _this.changedSource = true;
     _this.changedData = true;
@@ -17827,21 +17827,21 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     _this.metricHandler = undefined;
     _this.parentDiv = document.createElement('div');
     _this.flowchartsDiv = document.createElement('div');
-    _this.id = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].utils.uniqueID();
+    _this.id = globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].utils.uniqueID();
     _this.panelDefaults = {
       newFlag: true,
       format: 'short',
       valueName: 'current',
-      rulesData: rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"].getDefaultData(),
-      flowchartsData: flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"].getDefaultData(),
-      version: globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].plugin.getVersion()
+      rulesData: rulesHandler__WEBPACK_IMPORTED_MODULE_5__["RulesHandler"].getDefaultData(),
+      flowchartsData: flowchartHandler__WEBPACK_IMPORTED_MODULE_6__["FlowchartHandler"].getDefaultData(),
+      version: globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].plugin.getVersion()
     };
 
-    lodash__WEBPACK_IMPORTED_MODULE_10___default.a.defaults(_this.panel, _this.panelDefaults);
+    lodash__WEBPACK_IMPORTED_MODULE_11___default.a.defaults(_this.panel, _this.panelDefaults);
 
     _this.panel.graphId = "flowchart_".concat(_this.panel.id);
     _this.containerDivId = "container_".concat(_this.panel.graphId);
-    console.log('grafana.PanelEvents', grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].PanelEvents);
+    console.log('grafana.PanelEvents', grafana_func__WEBPACK_IMPORTED_MODULE_10__["default"].PanelEvents);
 
     _this.events.on('render', _this.onRender.bind(_assertThisInitialized(_this)));
 
@@ -17857,8 +17857,8 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
     _this.events.on('panel-teardown', _this.onTearDown.bind(_assertThisInitialized(_this)));
 
-    grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].appEvents.on('graph-hover', _this.onGraphHover.bind(_assertThisInitialized(_this)), _this.$scope);
-    grafana_func__WEBPACK_IMPORTED_MODULE_9__["default"].appEvents.on('graph-hover-clear', _this.clearCrosshair.bind(_assertThisInitialized(_this)), _this.$scope);
+    grafana_func__WEBPACK_IMPORTED_MODULE_10__["default"].appEvents.on('graph-hover', _this.onGraphHover.bind(_assertThisInitialized(_this)), _this.$scope);
+    grafana_func__WEBPACK_IMPORTED_MODULE_10__["default"].appEvents.on('graph-hover-clear', _this.clearCrosshair.bind(_assertThisInitialized(_this)), _this.$scope);
 
     _this.dashboard.events.on('template-variable-value-updated', _this.onVarChanged.bind(_assertThisInitialized(_this)), $scope);
 
@@ -17868,16 +17868,16 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   _createClass(FlowchartCtrl, [{
     key: "onInitEditMode",
     value: function onInitEditMode() {
-      this.addEditorTab('Flowchart', flowchart_options__WEBPACK_IMPORTED_MODULE_2__["flowchartOptionsTab"], 2);
-      this.addEditorTab('Mapping', mapping_options__WEBPACK_IMPORTED_MODULE_1__["mappingOptionsTab"], 3);
-      this.addEditorTab('Inspect', inspect_options__WEBPACK_IMPORTED_MODULE_3__["inspectOptionsTab"], 4);
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug('CTRL : ', this.id, this);
+      this.addEditorTab('Flowchart', flowchart_options__WEBPACK_IMPORTED_MODULE_3__["flowchartOptionsTab"], 2);
+      this.addEditorTab('Mapping', mapping_options__WEBPACK_IMPORTED_MODULE_2__["mappingOptionsTab"], 3);
+      this.addEditorTab('Inspect', inspect_options__WEBPACK_IMPORTED_MODULE_4__["inspectOptionsTab"], 4);
+      globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].log.debug('CTRL : ', this.id, this);
       this.editModeTrue();
     }
   }, {
     key: "onTearDown",
     value: function onTearDown() {
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug('EVENT : ', this.id, 'onTearDown');
+      globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].log.debug('EVENT : ', this.id, 'onTearDown');
     }
   }, {
     key: "onGraphHover",
@@ -17888,19 +17888,19 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       if (this.dashboard.sharedTooltipModeEnabled() && flowchartHandler !== undefined) {
         var timestamp = event.pos.x;
         var id = 'graph-hover';
-        globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].clearUniqTimeOut(id);
+        globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].clearUniqTimeOut(id);
 
         var setGraphHover = function setGraphHover() {
-          globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setGraphHover(timestamp);
+          globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].setGraphHover(timestamp);
           flowchartHandler.onGraphHoverChange();
           self.render();
           self.GHApplied = true;
-          globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].clearUniqTimeOut(id);
+          globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].clearUniqTimeOut(id);
         };
 
-        globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setUniqTimeOut(setGraphHover, globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].CONSTANTS.CONF_GRAPHHOVER_DELAY, id);
+        globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].setUniqTimeOut(setGraphHover, globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].CONSTANTS.CONF_GRAPHHOVER_DELAY, id);
       } else if (self.GHApplied) {
-        globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].unsetGraphHover();
+        globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].unsetGraphHover();
       }
     }
   }, {
@@ -17909,8 +17909,8 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       if (this.flowchartHandler !== undefined && this.GHApplied) {
         var id = 'graph-hover';
         this.GHApplied = false;
-        globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].clearUniqTimeOut(id);
-        globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].unsetGraphHover();
+        globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].clearUniqTimeOut(id);
+        globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].unsetGraphHover();
         this.flowchartHandler.onGraphHoverChange();
         this.render();
       }
@@ -17931,14 +17931,14 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "onRender",
     value: function onRender() {
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug('EVENT : ', this.id, 'onRender', this);
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].log.debug('EDIT MODE', this.id, this.isEditedMode());
+      globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].log.debug('EVENT : ', this.id, 'onRender', this);
+      globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].log.debug('EDIT MODE', this.id, this.isEditedMode());
 
       if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
-        globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Configuration updating...');
+        this.notify('Configuration updating...');
         this.editModeFalse();
 
-        var panelClone = lodash__WEBPACK_IMPORTED_MODULE_10___default.a.cloneDeep(this.panel);
+        var panelClone = lodash__WEBPACK_IMPORTED_MODULE_11___default.a.cloneDeep(this.panel);
 
         this.flowchartHandler.clear();
         this.flowchartHandler["import"](panelClone.flowchartsData);
@@ -17951,7 +17951,8 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].trace.before(this.constructor.name + '.' + 'onDataReceived()');
+      var trc = globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].trace.before(this.constructor.name + '.' + 'onDataReceived()');
+      debugger;
 
       if (!!this.metricHandler) {
         this.metricHandler.initData(dataList);
@@ -17963,7 +17964,7 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
       this.render();
       trc.after();
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].trace.resume();
+      globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].trace.resume();
     }
   }, {
     key: "onDataError",
@@ -17994,14 +17995,14 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     key: "initHandlers",
     value: function initHandlers() {
       if (!this.metricHandler) {
-        this.metricHandler = new metricHandler__WEBPACK_IMPORTED_MODULE_6__["MetricHandler"]();
+        this.metricHandler = new metricHandler__WEBPACK_IMPORTED_MODULE_7__["MetricHandler"]();
       }
 
       this.metricHandler.clear();
 
       if (!this.flowchartHandler) {
-        var newFlowchartsData = flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"].getDefaultData();
-        this.flowchartHandler = new flowchartHandler__WEBPACK_IMPORTED_MODULE_5__["FlowchartHandler"](this.flowchartsDiv, newFlowchartsData);
+        var newFlowchartsData = flowchartHandler__WEBPACK_IMPORTED_MODULE_6__["FlowchartHandler"].getDefaultData();
+        this.flowchartHandler = new flowchartHandler__WEBPACK_IMPORTED_MODULE_6__["FlowchartHandler"](this.flowchartsDiv, newFlowchartsData, this);
 
         if (this.flowchartHandler) {
           this.flowchartHandler["import"](this.panel.flowchartsData);
@@ -18020,8 +18021,8 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       if (this.rulesHandler) {
         this.rulesHandler.clear();
       } else {
-        var newRulesData = rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"].getDefaultData();
-        this.rulesHandler = new rulesHandler__WEBPACK_IMPORTED_MODULE_4__["RulesHandler"](newRulesData);
+        var newRulesData = rulesHandler__WEBPACK_IMPORTED_MODULE_5__["RulesHandler"].getDefaultData();
+        this.rulesHandler = new rulesHandler__WEBPACK_IMPORTED_MODULE_5__["RulesHandler"](newRulesData);
         this.rulesHandler["import"](this.panel.rulesData);
         this.panel.rulesData = newRulesData;
       }
@@ -18033,22 +18034,20 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "link",
     value: function link(scope, elem, attrs, ctrl) {
-      var trc = globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].trace.before(this.constructor.name + '.' + 'link()');
+      var trc = globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].trace.before(this.constructor.name + '.' + 'link()');
       this.$panelElem = elem;
-      var $section = elem.find('#flowcharting-section');
+      var $section = this.$panelElem.find('#flowcharting-section');
       this.parentDiv = $section[0];
-      var $elem = elem.find('#flowcharting-panel-content');
-      this.flowchartsDiv = $elem[0];
-      var $message = $section.find('#flowcharting-message');
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].setMessageDiv($message[0]);
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
-      graph_class__WEBPACK_IMPORTED_MODULE_8__["default"].initMxGraph();
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage('Load configuration');
+      var $flowchartsDiv = $section.find('#flowcharting-panel-content');
+      this.flowchartsDiv = $flowchartsDiv[0];
+      this.notify('Initialisation MXGRAPH/DRAW.IO Libs');
+      graph_class__WEBPACK_IMPORTED_MODULE_9__["default"].initMxGraph();
+      this.notify('Load configuration');
       this.initHandlers();
       this.panel.newFlag = false;
 
-      if (this.panel.version !== globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].plugin.getVersion()) {
-        globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].message.setMessage("The plugin version has changed, save the dashboard to optimize loading : ".concat(this.panel.version, " <> ").concat(globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].plugin.getVersion()));
+      if (this.panel.version !== globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].plugin.getVersion()) {
+        this.notify("The plugin version has changed, save the dashboard to optimize loading : ".concat(this.panel.version, " <> ").concat(globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].plugin.getVersion()));
       }
 
       this.panel.version = this.version;
@@ -18057,19 +18056,16 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "onMouseIn",
     value: function onMouseIn(event) {
-      console.log("onMouseIn", this.id, globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"]);
-      console.log("$GF", this.id, event);
       this.mouseIn = true;
     }
   }, {
     key: "onMouseOut",
     value: function onMouseOut(event) {
-      console.log("$GF", this.id, globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"]);
       this.mouseIn = false;
     }
   }, {
-    key: "isMouseIn",
-    value: function isMouseIn() {
+    key: "isMouseInPanel",
+    value: function isMouseInPanel() {
       return this.mouseIn;
     }
   }, {
@@ -18122,15 +18118,121 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "$onDestroy",
     value: function $onDestroy() {
-      globals_class__WEBPACK_IMPORTED_MODULE_7__["$GF"].destroy();
+      globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].destroy();
+    }
+  }, {
+    key: "notify",
+    value: function notify(message) {
+      var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GFMessage.INFO_MESSAGE;
+
+      if (this.message) {
+        this.message.setMessage(message, type);
+      } else {
+        var $section = this.$panelElem.find('#flowcharting-section');
+        var $message = $section.find('#flowcharting-message');
+        this.message = new GFMessage($message[0]);
+        this.notify(message, type);
+      }
+    }
+  }, {
+    key: "clearNotify",
+    value: function clearNotify() {
+      if (this.message) {
+        this.message.clearMessage();
+      }
     }
   }]);
 
   return FlowchartCtrl;
-}(grafana_app_plugins_sdk__WEBPACK_IMPORTED_MODULE_0__["MetricsPanelCtrl"]);
+}(grafana_app_plugins_sdk__WEBPACK_IMPORTED_MODULE_1__["MetricsPanelCtrl"]);
 
 
 FlowchartCtrl.templateUrl = './partials/module.html';
+
+var GFMessage = function () {
+  function GFMessage(parent) {
+    _classCallCheck(this, GFMessage);
+
+    this.id = globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].utils.uniqueID();
+    this.container = parent;
+    var span = this.container.querySelector('#message-text');
+
+    if (span == null) {
+      this.message = document.createElement('span');
+      this.container.appendChild(this.message);
+    } else {
+      this.message = span;
+    }
+  }
+
+  _createClass(GFMessage, [{
+    key: "setMessage",
+    value: function setMessage(message) {
+      var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GFMessage.INFO_MESSAGE;
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee() {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (!(this.container && this.message)) {
+                  _context.next = 15;
+                  break;
+                }
+
+                this.message.innerHTML = message;
+                _context.t0 = type;
+                _context.next = _context.t0 === GFMessage.INFO_MESSAGE ? 5 : _context.t0 === GFMessage.ERROR_MESSAGE ? 7 : _context.t0 === GFMessage.WARNING_MESSAGE ? 9 : 11;
+                break;
+
+              case 5:
+                this.message.style.color = GFMessage.INFO_COLOR;
+                return _context.abrupt("break", 13);
+
+              case 7:
+                this.message.style.color = GFMessage.ERROR_COLOR;
+                return _context.abrupt("break", 13);
+
+              case 9:
+                this.message.style.color = GFMessage.WARNING_COLOR;
+                return _context.abrupt("break", 13);
+
+              case 11:
+                this.message.style.color = GFMessage.INFO_COLOR;
+                return _context.abrupt("break", 13);
+
+              case 13:
+                this.container.style.display = '';
+                globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].setUniqTimeOut(this.clearMessage.bind(this), globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].CONSTANTS.CONF_GFMESSAGE_MS, "flowcharting-message-".concat(this.id));
+
+              case 15:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+    }
+  }, {
+    key: "clearMessage",
+    value: function clearMessage() {
+      if (this.container && this.message) {
+        this.container.style.display = 'none';
+        this.message.innerHTML = '';
+      }
+
+      globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].clearUniqTimeOut("flowcharting-message-".concat(this.id));
+    }
+  }]);
+
+  return GFMessage;
+}();
+
+GFMessage.ERROR_MESSAGE = 'error';
+GFMessage.ERROR_COLOR = 'red';
+GFMessage.INFO_MESSAGE = 'info';
+GFMessage.INFO_COLOR = 'white';
+GFMessage.WARNING_MESSAGE = 'warning';
+GFMessage.WARNING_COLOR = 'yellow';
 
 /***/ }),
 
@@ -18175,9 +18277,9 @@ var FlowchartOptionsCtrl = function () {
     $scope.editor = this;
     $scope.$GF = globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].me();
     this.$scope = $scope;
-    var ctrl = globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
-    this.panel = ctrl.panel;
-    this.flowchartHandler = ctrl.flowchartHandler;
+    this.ctrl = $scope.ctrl;
+    this.panel = this.ctrl.panel;
+    this.flowchartHandler = this.ctrl.flowchartHandler;
     this.currentFlowchart = this.flowchartHandler.getFlowchart();
   }
 
@@ -18207,11 +18309,11 @@ var FlowchartOptionsCtrl = function () {
       this.errorSourceFlag = !bool;
 
       if (!bool) {
-        globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage('Invalid Xml definition', 'error');
+        this.ctrl.notify('Invalid Xml definition', 'error');
       } else {
-        globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.clearMessage();
+        this.ctrl.clearNotify();
         this.onSourceChange();
-        globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].refresh();
+        this.$scope.$applyAsync();
       }
 
       return bool;
@@ -18222,7 +18324,7 @@ var FlowchartOptionsCtrl = function () {
       this.editMode = true;
       this.currentFlowchart = this.flowchartHandler.addFlowchart(this.flowchartHandler.getFlowchartTmpName());
       this.flowchartHandler.setCurrentFlowchart(this.currentFlowchart.getName());
-      globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage(this.currentFlowchart.getName());
+      this.ctrl.notify(this.currentFlowchart.getName());
       this.newName = this.currentFlowchart.getName();
     }
   }, {
@@ -18233,7 +18335,7 @@ var FlowchartOptionsCtrl = function () {
       if (current !== undefined && current.getName() !== 'Main') {
         this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart();
         this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
-        globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage(this.currentFlowchartName);
+        this.ctrl.notify(this.currentFlowchartName);
         this.flowchartHandler.removeFlowchart(current.getName());
       }
     }
@@ -18245,7 +18347,7 @@ var FlowchartOptionsCtrl = function () {
 
       if (this.currentFlowchart) {
         this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
-        globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage(this.currentFlowchartName);
+        this.ctrl.notify(this.currentFlowchartName);
       }
     }
   }, {
@@ -18263,7 +18365,7 @@ var FlowchartOptionsCtrl = function () {
         }
       }
 
-      globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage(this.currentFlowchartName);
+      this.ctrl.notify(this.currentFlowchartName);
     }
   }, {
     key: "isValideFlowchart",
@@ -18279,7 +18381,7 @@ var FlowchartOptionsCtrl = function () {
       }
 
       if (fcs.includes(this.newName) && this.currentFlowchart && this.newName !== this.currentFlowchart.getName()) {
-        globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage("Flowchart with name \"".concat(this.newName, "\" already exist"), 'error');
+        this.ctrl.notify("Flowchart with name \"".concat(this.newName, "\" already exist"), 'error');
         return false;
       }
 
@@ -18314,8 +18416,10 @@ var FlowchartOptionsCtrl = function () {
         fetch(url, init).then(function (response) {
           if (!(response.status >= 200 && response.status <= 299)) {
             _this.errorSourceFlag = true;
-            globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage("Error ".concat(response.status, " : ").concat(response.statusText), 'error');
-            globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].refresh();
+
+            _this.ctrl.notify("Error ".concat(response.status, " : ").concat(response.statusText), 'error');
+
+            _this.$scope.$applyAsync();
           } else {
             response.text().then(function (text) {
               var fc = _this.flowchartHandler.getCurrentFlowchart();
@@ -18325,10 +18429,11 @@ var FlowchartOptionsCtrl = function () {
                 _this.errorSourceFlag = !bool;
 
                 if (_this.errorSourceFlag) {
-                  globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage('Response is an invalid Xml definition', 'error');
+                  _this.ctrl.notify('Response is an invalid Xml definition', 'error');
+
                   globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].log.error('Response is an invalid Xml definition');
                 } else {
-                  globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.clearMessage();
+                  _this.ctrl.clearNotify();
 
                   _this.onSourceChange();
                 }
@@ -18336,17 +18441,19 @@ var FlowchartOptionsCtrl = function () {
                 _this.onSourceChange();
               }
 
-              globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].refresh();
+              _this.$scope.$applyAsync();
             });
           }
         })["catch"](function (error) {
           _this.errorSourceFlag = true;
-          globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage("Error : ".concat(error), 'error');
-          globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].refresh();
+
+          _this.ctrl.notify("Error : ".concat(error), 'error');
+
+          _this.$scope.$applyAsync();
         });
       } catch (error) {
         this.errorDownloadFlag = true;
-        globals_class__WEBPACK_IMPORTED_MODULE_1__["$GF"].message.setMessage('Error when call url', 'error');
+        this.ctrl.notify('Error when call url', 'error');
       }
 
       return true;
@@ -18455,8 +18562,6 @@ var GFCONSTANT = function GFCONSTANT() {
   this.VAR_STG_CTXROOT = 'contextroot';
   this.VAR_NUM_GHTIMESTAMP = 'graph-hover-timestamp';
   this.VAR_OBJ_TEMPLATESRV = 'templatesrv';
-  this.VAR_OBJ_CTRL = 'ctrl';
-  this.VAR_OBJ_SCOPE = 'scope';
   this.VAR_OBJ_DASHBOARD = 'dashboard';
   this.VAR_MAP_INTERVAL = 'interval';
   this.VAR_MAP_TIMEOUT = 'timeout';
@@ -19172,8 +19277,6 @@ var GFPlugin = function () {
       $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
       $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
       $GF.setVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD, dashboard);
-      $GF.setVar($GF.CONSTANTS.VAR_OBJ_CTRL, ctrl);
-      $GF.setVar($GF.CONSTANTS.VAR_OBJ_SCOPE, $scope);
       return plug;
     }
   }]);
@@ -19183,99 +19286,6 @@ var GFPlugin = function () {
 
 GFPlugin.data = __webpack_require__(/*! ./plugin.json */ "./plugin.json");
 GFPlugin.defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
-
-var GFMessage = function () {
-  function GFMessage(parent) {
-    _classCallCheck(this, GFMessage);
-
-    var container = parent;
-
-    if (container !== null) {
-      GFMessage.container = container;
-      var span = container.querySelector('#message-text');
-
-      if (span === null) {
-        GFMessage.message = document.createElement('span');
-        GFMessage.container.appendChild(GFMessage.message);
-      } else {
-        GFMessage.message = span;
-      }
-    }
-  }
-
-  _createClass(GFMessage, [{
-    key: "setMessage",
-    value: function setMessage(message) {
-      var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : GFMessage.INFO_MESSAGE;
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee5() {
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                if (!(GFMessage.container && GFMessage.message)) {
-                  _context5.next = 15;
-                  break;
-                }
-
-                GFMessage.message.innerHTML = message;
-                _context5.t0 = type;
-                _context5.next = _context5.t0 === GFMessage.INFO_MESSAGE ? 5 : _context5.t0 === GFMessage.ERROR_MESSAGE ? 7 : _context5.t0 === GFMessage.WARNING_MESSAGE ? 9 : 11;
-                break;
-
-              case 5:
-                GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 13);
-
-              case 7:
-                GFMessage.message.style.color = GFMessage.ERROR_COLOR;
-                return _context5.abrupt("break", 13);
-
-              case 9:
-                GFMessage.message.style.color = GFMessage.WARNING_COLOR;
-                return _context5.abrupt("break", 13);
-
-              case 11:
-                GFMessage.message.style.color = GFMessage.INFO_COLOR;
-                return _context5.abrupt("break", 13);
-
-              case 13:
-                GFMessage.container.style.display = '';
-                $GF.setUniqTimeOut(this.clearMessage, $GF.CONSTANTS.CONF_GFMESSAGE_MS, 'flowcharting-message');
-
-              case 15:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5, this);
-      }));
-    }
-  }, {
-    key: "clearMessage",
-    value: function clearMessage() {
-      if (GFMessage.container && GFMessage.message) {
-        GFMessage.container.style.display = 'none';
-        GFMessage.message.innerHTML = '';
-      }
-
-      $GF.clearUniqTimeOut('flowcharting-message');
-    }
-  }], [{
-    key: "init",
-    value: function init(parentDiv) {
-      return new GFMessage(parentDiv);
-    }
-  }]);
-
-  return GFMessage;
-}();
-
-GFMessage.ERROR_MESSAGE = 'error';
-GFMessage.ERROR_COLOR = 'red';
-GFMessage.INFO_MESSAGE = 'info';
-GFMessage.INFO_COLOR = 'white';
-GFMessage.WARNING_MESSAGE = 'warning';
-GFMessage.WARNING_COLOR = 'yellow';
 
 var GFTrace = function () {
   function GFTrace(fn) {
@@ -19315,10 +19325,10 @@ var GFTrace = function () {
   }, {
     key: "after",
     value: function after() {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee6() {
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee5() {
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
                 if (GFTrace.enable && this.trace !== undefined) {
                   if (this.trace) {
@@ -19329,19 +19339,19 @@ var GFTrace = function () {
 
               case 1:
               case "end":
-                return _context6.stop();
+                return _context5.stop();
             }
           }
-        }, _callee6, this);
+        }, _callee5, this);
       }));
     }
   }, {
     key: "clear",
     value: function clear() {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee7() {
-        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee6() {
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context7.prev = _context7.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 if (GFTrace.enable) {
                   GFTrace.trc.clear();
@@ -19350,10 +19360,10 @@ var GFTrace = function () {
 
               case 1:
               case "end":
-                return _context7.stop();
+                return _context6.stop();
             }
           }
-        }, _callee7);
+        }, _callee6);
       }));
     }
   }, {
@@ -19374,11 +19384,11 @@ var GFTrace = function () {
   }, {
     key: "resume",
     value: function resume() {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee8() {
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee7() {
         var tb, fn;
-        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+        return regeneratorRuntime.wrap(function _callee7$(_context7) {
           while (1) {
-            switch (_context8.prev = _context8.next) {
+            switch (_context7.prev = _context7.next) {
               case 0:
                 if (GFTrace.enable) {
                   tb = [];
@@ -19399,10 +19409,10 @@ var GFTrace = function () {
 
               case 1:
               case "end":
-                return _context8.stop();
+                return _context7.stop();
             }
           }
-        }, _callee8, this);
+        }, _callee7, this);
       }));
     }
   }], [{
@@ -19443,13 +19453,23 @@ var $GF = function () {
   _createClass($GF, null, [{
     key: "init",
     value: function init($scope, templateSrv, dashboard, ctrl) {
-      this.plugin = GFPlugin.init($scope, templateSrv, dashboard, ctrl);
+      if (!this.plugin) {
+        this.plugin = GFPlugin.init($scope, templateSrv, dashboard, ctrl);
 
-      if (this.DEBUG) {
-        console.log('DEBUG Scope', $scope);
-        console.log('DEBUG TemplateSrv', templateSrv);
-        console.log('DEBUG Theme', dashboard.style);
-        console.log('DEBUG dashboard', dashboard);
+        if (this.DEBUG) {
+          console.log('DEBUG Scope', $scope);
+          console.log('DEBUG TemplateSrv', templateSrv);
+          console.log('DEBUG Theme', dashboard.style);
+          console.log('DEBUG dashboard', dashboard);
+        }
+      }
+
+      if (!this.log) {
+        this.log = GFLog.init();
+      }
+
+      if (!this.trace) {
+        this.trace = GFTrace.init();
       }
 
       return this;
@@ -19458,11 +19478,6 @@ var $GF = function () {
     key: "me",
     value: function me() {
       return this;
-    }
-  }, {
-    key: "setMessageDiv",
-    value: function setMessageDiv(html) {
-      this.message = GFMessage.init(html);
     }
   }, {
     key: "resolveVars",
@@ -19475,27 +19490,6 @@ var $GF = function () {
       var templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
       var theme = templateSrv !== undefined ? templateSrv.style : 'dark';
       return theme;
-    }
-  }, {
-    key: "refresh",
-    value: function refresh() {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee9() {
-        var scope;
-        return regeneratorRuntime.wrap(function _callee9$(_context9) {
-          while (1) {
-            switch (_context9.prev = _context9.next) {
-              case 0:
-                scope = $GF.getVar($GF.CONSTANTS.VAR_OBJ_SCOPE);
-                _context9.next = 3;
-                return scope.$applyAsync();
-
-              case 3:
-              case "end":
-                return _context9.stop();
-            }
-          }
-        }, _callee9);
-      }));
     }
   }, {
     key: "createLocalVars",
@@ -19639,30 +19633,30 @@ var $GF = function () {
   }, {
     key: "loadLocalFile",
     value: function loadLocalFile(varName, fileName) {
-      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee10() {
+      return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, regeneratorRuntime.mark(function _callee8() {
         var v, contextroot, filePath, txt;
-        return regeneratorRuntime.wrap(function _callee10$(_context10) {
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
           while (1) {
-            switch (_context10.prev = _context10.next) {
+            switch (_context8.prev = _context8.next) {
               case 0:
                 v = $GF.getVar(varName);
 
                 if (!(v === undefined)) {
-                  _context10.next = 16;
+                  _context8.next = 16;
                   break;
                 }
 
                 contextroot = $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
 
                 if (!(contextroot !== undefined)) {
-                  _context10.next = 15;
+                  _context8.next = 15;
                   break;
                 }
 
                 filePath = "".concat(contextroot, "/").concat(fileName);
 
                 if (!window.fetch) {
-                  _context10.next = 9;
+                  _context8.next = 9;
                   break;
                 }
 
@@ -19679,36 +19673,36 @@ var $GF = function () {
                 })["catch"](function (error) {
                   return $GF.log.error('Error when download file', filePath, error);
                 });
-                _context10.next = 13;
+                _context8.next = 13;
                 break;
 
               case 9:
                 txt = $GF.utils.loadFile(fileName);
 
                 if (!txt) {
-                  _context10.next = 13;
+                  _context8.next = 13;
                   break;
                 }
 
                 $GF.setVar(varName, $GF.utils.loadFile(fileName));
-                return _context10.abrupt("return", txt);
+                return _context8.abrupt("return", txt);
 
               case 13:
-                _context10.next = 16;
+                _context8.next = 16;
                 break;
 
               case 15:
                 $GF.log.warn('loadLocalFile Contexroot : ', contextroot);
 
               case 16:
-                return _context10.abrupt("return", false);
+                return _context8.abrupt("return", false);
 
               case 17:
               case "end":
-                return _context10.stop();
+                return _context8.stop();
             }
           }
-        }, _callee10);
+        }, _callee8);
       }));
     }
   }, {
@@ -19744,17 +19738,6 @@ var $GF = function () {
       }
 
       return undefined;
-    }
-  }, {
-    key: "isMouseInPanel",
-    value: function isMouseInPanel() {
-      var ctrl = this.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
-
-      if (ctrl) {
-        return ctrl.isMouseIn();
-      }
-
-      return false;
     }
   }, {
     key: "popover",
@@ -19803,8 +19786,6 @@ var $GF = function () {
 }();
 $GF._globalvars = new GFVariables();
 $GF.CONSTANTS = new GFCONSTANT();
-$GF.log = GFLog.init();
-$GF.trace = GFTrace.init();
 $GF.graphHover = false;
 $GF.GHTimeStamp = 0;
 $GF.DEBUG = false;
@@ -19901,7 +19882,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var XGraph = function () {
-  function XGraph(container, type, definition) {
+  function XGraph(container, type, definition, ctrl) {
     var _this = this;
 
     _classCallCheck(this, XGraph);
@@ -19927,6 +19908,7 @@ var XGraph = function () {
     };
     this.container = container;
     this.type = type;
+    this.ctrl = ctrl;
     this.onMapping = {
       active: false,
       value: null,
@@ -20033,7 +20015,7 @@ var XGraph = function () {
             this.refresh();
           } catch (error) {
             globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].log.error('Bad CSV format', error);
-            globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].message.setMessage('Bad CSV format');
+            this.ctrl.notify('Bad CSV format', 'error');
           }
         }
       } catch (error) {
@@ -20718,7 +20700,7 @@ var XGraph = function () {
       this.onMapping.active = false;
       this.container.style.cursor = 'auto';
       this.graph.click = this.clickBackup;
-      globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].refresh();
+      this.ctrl.$scope.$applyAsync();
     }
   }, {
     key: "eventClick",
@@ -20763,11 +20745,7 @@ var XGraph = function () {
   }, {
     key: "eventMouseWheel",
     value: function eventMouseWheel(evt, up) {
-      console.log("eventMouseWheel", globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].isMouseInPanel());
-      var ctrl = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
-      console.log("eventMouseWheel -> ctrl", ctrl);
-
-      if (this.graph.isZoomWheelEvent(evt) && globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].isMouseInPanel()) {
+      if (this.graph.isZoomWheelEvent(evt) && this.ctrl.isMouseInPanel()) {
         if (up === null || up === undefined) {
           if (evt.deltaY < 0) {
             up = true;
@@ -21760,12 +21738,12 @@ var MappingOptionsCtrl = function () {
     $scope.editor = this;
     $scope.$GF = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].me();
     this.$scope = $scope;
-    var ctrl = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
-    this.panel = ctrl.panel;
-    this.rulesHandler = ctrl.rulesHandler;
-    this.flowchartHandler = ctrl.flowchartHandler;
-    this.rulesHandler = ctrl.rulesHandler;
-    this.metricHandler = ctrl.metricHandler;
+    this.ctrl = $scope.ctrl;
+    this.panel = this.ctrl.panel;
+    this.rulesHandler = this.ctrl.rulesHandler;
+    this.flowchartHandler = this.ctrl.flowchartHandler;
+    this.rulesHandler = this.ctrl.rulesHandler;
+    this.metricHandler = this.ctrl.metricHandler;
     this.unitFormats = grafana_func__WEBPACK_IMPORTED_MODULE_3__["default"].getUnitFormats();
     this.tpGraphSize = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
 
@@ -21864,8 +21842,7 @@ var MappingOptionsCtrl = function () {
   }, {
     key: "render",
     value: function render() {
-      var ctrl = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar(globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.VAR_OBJ_CTRL);
-      ctrl.render();
+      this.ctrl.render();
     }
   }, {
     key: "setUnitFormat",

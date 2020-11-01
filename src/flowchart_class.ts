@@ -16,6 +16,7 @@ import { $GF } from 'globals_class';
 export class Flowchart {
   data: gf.TFlowchartData;
   container: HTMLDivElement;
+  ctrl: any;
   xgraph: XGraph | undefined = undefined;
   stateHandler: StateHandler | undefined;
   // ctrl: any;
@@ -24,11 +25,11 @@ export class Flowchart {
   id: string;
   visible = false;
 
-  constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData) {
+  constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData, ctrl: any) {
     this.data = data;
     this.data.name = name;
     this.container = container;
-    // this.templateSrv = ctrl.templateSrv;
+    this.ctrl = ctrl;
     this.id = $GF.utils.uniqueID();
   }
 
@@ -177,7 +178,7 @@ export class Flowchart {
     try {
       const content = this.getContent();
       if (this.xgraph === undefined) {
-        this.xgraph = new XGraph(this.container, this.data.type, content);
+        this.xgraph = new XGraph(this.container, this.data.type, content, this.ctrl);
       }
       if (content !== undefined && content !== null) {
         if (this.data.enableAnim) {
@@ -202,13 +203,13 @@ export class Flowchart {
           this.xgraph.lockGraph(true);
         }
         this.stateHandler = new StateHandler(this.xgraph);
-        $GF.message.clearMessage();
+        this.ctrl.clearNotify();
       } else {
-        $GF.message.setMessage('Source content empty Graph not defined', 'error');
+        this.ctrl.notify('Source content empty Graph not defined', 'error');
         $GF.log.error('Source content empty Graph not defined');
       }
     } catch (error) {
-      $GF.message.setMessage('Unable to initialize graph', 'error');
+      this.ctrl.notify('Unable to initialize graph', 'error');
       $GF.log.error('Unable to initialize graph', error);
     }
     return this;
@@ -595,9 +596,9 @@ export class Flowchart {
     let content: string | null = '';
     if (this.data.download) {
       const url = $GF.resolveVars(this.data.url);
-      $GF.message.setMessage(`Loading content definition for ${this.data.name}`, 'info');
+      this.ctrl.notify(`Loading content definition for ${this.data.name}`, 'info');
       content = this.loadContent(url);
-      $GF.message.clearMessage();
+      this.ctrl.clearNotify();
       if (content !== null) {
         if (replaceVarBool) {
           content = $GF.resolveVars(content);

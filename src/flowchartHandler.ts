@@ -9,9 +9,9 @@ import { $GF } from 'globals_class';
  * Class FlowchartHandler
  */
 export class FlowchartHandler {
-  // $scope: ng.IScope;
-  // $elem: any; //TODO: elem ?
   parentDiv: HTMLDivElement;
+  // $scope: ng.IScope;
+  ctrl: any;
   flowcharts: Flowchart[] = [];
   currentFlowchartName = 'Main'; // name of current Flowchart
   currentFlowchart: Flowchart | undefined; // Current flowchart obj
@@ -51,16 +51,15 @@ export class FlowchartHandler {
    * @param {*} data - Empty data to store
    * @memberof FlowchartHandler
    */
-  constructor(parentDiv: HTMLDivElement, data: gf.TFlowchartHandlerData) {
+  constructor(parentDiv: HTMLDivElement, data: gf.TFlowchartHandlerData, ctrl: any) {
     FlowchartHandler.getDefaultDioGraph();
-    // this.$scope = $scope;
+    this.ctrl = ctrl;
     this.parentDiv = parentDiv;
     this.data = data;
     this.currentFlowchartName = 'Main';
-    const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
 
     // Events Render
-    ctrl.events.on('render', () => {
+    this.ctrl.events.on('render', () => {
       this.render();
     });
 
@@ -377,7 +376,7 @@ export class FlowchartHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addFlowchart()');
     const data = Flowchart.getDefaultData();
     const container = this.createContainer();
-    const flowchart = new Flowchart(name, container, data);
+    const flowchart = new Flowchart(name, container, data, this.ctrl);
     // flowchart.init();
     this.flowcharts.push(flowchart);
     this.data.flowcharts.push(data);
@@ -409,7 +408,6 @@ export class FlowchartHandler {
    */
   async render(name?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
-    const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
 
     // not repeat render if mouse down
     if (!this.mousedown) {
@@ -437,9 +435,9 @@ export class FlowchartHandler {
         self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS) ||
         self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER)
       ) {
-        const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
-        const rules = ctrl.rulesHandler.getRules();
-        const metrics = ctrl.metricHandler.getMetrics();
+        // const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
+        const rules = this.ctrl.rulesHandler.getRules();
+        const metrics = this.ctrl.metricHandler.getMetrics();
 
         // Change to async to optimize
         self.async_refreshStates(rules, metrics);
@@ -472,7 +470,7 @@ export class FlowchartHandler {
       }
       // this.refresh();
     }
-    ctrl.renderingCompleted();
+    this.ctrl.renderingCompleted();
     trc.after();
   }
 
@@ -852,7 +850,7 @@ export class FlowchartHandler {
       // if (event.source) {
       //   if (!(event.source instanceof MessagePort) && !(event.source instanceof ServiceWorker)) {
       if (fc !== undefined) {
-        $GF.message.setMessage('Sending current data to draw.io editor', 'info');
+        this.ctrl.notify('Sending current data to draw.io editor', 'info');
         event.source.postMessage(fc.data.xml, event.origin);
         this.postedId = fc.id;
       }
@@ -869,10 +867,10 @@ export class FlowchartHandler {
         if (this.postedId !== undefined) {
           const fc = this.getFlowchartById(this.postedId);
           if (fc !== undefined) {
-            $GF.message.setMessage('Received data from draw.io editor, refresh in progress', 'info');
+            this.ctrl.notify('Received data from draw.io editor, refresh in progress', 'info');
             fc.redraw(event.data);
             this.onSourceChange(fc.getName());
-            $GF.refresh();
+            this.ctrl.$scope.$applyAsync();
             this.render();
           }
         }
@@ -884,7 +882,7 @@ export class FlowchartHandler {
         this.onEdit = false;
         this.postedId = undefined;
         window.removeEventListener('message', this.listenMessage.bind(this), false);
-        $GF.message.setMessage('Draw.io editor closed', 'info');
+        this.ctrl.notify('Draw.io editor closed', 'info');
       }
     }
   }
@@ -901,7 +899,7 @@ export class FlowchartHandler {
     const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&ready=fc-${fc.id}&src=grafana`;
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;
-    $GF.message.setMessage(`Opening current flowchart on draw.io editor`, 'info');
+    this.ctrl.notify(`Opening current flowchart on draw.io editor`, 'info');
     window.addEventListener('message', this.listenMessage.bind(this), false);
   }
 

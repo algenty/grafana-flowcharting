@@ -32,8 +32,8 @@ class GFCONSTANT {
   VAR_STG_CTXROOT = 'contextroot';
   VAR_NUM_GHTIMESTAMP = 'graph-hover-timestamp';
   VAR_OBJ_TEMPLATESRV = 'templatesrv';
-  VAR_OBJ_CTRL = 'ctrl';
-  VAR_OBJ_SCOPE = 'scope';
+  // VAR_OBJ_CTRL = 'ctrl';
+  // VAR_OBJ_SCOPE = 'scope';
   VAR_OBJ_DASHBOARD = 'dashboard';
   VAR_MAP_INTERVAL = 'interval';
   VAR_MAP_TIMEOUT = 'timeout';
@@ -466,8 +466,8 @@ class GFPlugin {
     $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
     $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
     $GF.setVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD, dashboard);
-    $GF.setVar($GF.CONSTANTS.VAR_OBJ_CTRL, ctrl);
-    $GF.setVar($GF.CONSTANTS.VAR_OBJ_SCOPE, $scope);
+    // $GF.setVar($GF.CONSTANTS.VAR_OBJ_CTRL, ctrl);
+    // $GF.setVar($GF.CONSTANTS.VAR_OBJ_SCOPE, $scope);
     return plug;
   }
 
@@ -595,65 +595,65 @@ class GFPlugin {
   }
 }
 
-class GFMessage {
-  static container: HTMLDivElement;
-  static message: HTMLSpanElement;
-  static ERROR_MESSAGE = 'error';
-  static ERROR_COLOR = 'red';
-  static INFO_MESSAGE = 'info';
-  static INFO_COLOR = 'white';
-  static WARNING_MESSAGE = 'warning';
-  static WARNING_COLOR = 'yellow';
+// class GFMessage {
+//   static container: HTMLDivElement;
+//   static message: HTMLSpanElement;
+//   static ERROR_MESSAGE = 'error';
+//   static ERROR_COLOR = 'red';
+//   static INFO_MESSAGE = 'info';
+//   static INFO_COLOR = 'white';
+//   static WARNING_MESSAGE = 'warning';
+//   static WARNING_COLOR = 'yellow';
 
-  constructor(parent: HTMLDivElement) {
-    const container = parent;
-    if (container !== null) {
-      GFMessage.container = container;
-      const span = container.querySelector<HTMLSpanElement>('#message-text');
-      if (span === null) {
-        GFMessage.message = document.createElement('span');
-        GFMessage.container.appendChild(GFMessage.message);
-      } else {
-        GFMessage.message = span;
-      }
-    }
-  }
+//   constructor(parent: HTMLDivElement) {
+//     const container = parent;
+//     if (container !== null) {
+//       GFMessage.container = container;
+//       const span = container.querySelector<HTMLSpanElement>('#message-text');
+//       if (span === null) {
+//         GFMessage.message = document.createElement('span');
+//         GFMessage.container.appendChild(GFMessage.message);
+//       } else {
+//         GFMessage.message = span;
+//       }
+//     }
+//   }
 
-  static init(parentDiv: HTMLDivElement): GFMessage {
-    return new GFMessage(parentDiv);
-  }
+//   static init(parentDiv: HTMLDivElement): GFMessage {
+//     return new GFMessage(parentDiv);
+//   }
 
-  async setMessage(message: string, type: string = GFMessage.INFO_MESSAGE) {
-    if (GFMessage.container && GFMessage.message) {
-      GFMessage.message.innerHTML = message;
-      switch (type) {
-        case GFMessage.INFO_MESSAGE:
-          GFMessage.message.style.color = GFMessage.INFO_COLOR;
-          break;
-        case GFMessage.ERROR_MESSAGE:
-          GFMessage.message.style.color = GFMessage.ERROR_COLOR;
-          break;
-        case GFMessage.WARNING_MESSAGE:
-          GFMessage.message.style.color = GFMessage.WARNING_COLOR;
-          break;
+//   async setMessage(message: string, type: string = GFMessage.INFO_MESSAGE) {
+//     if (GFMessage.container && GFMessage.message) {
+//       GFMessage.message.innerHTML = message;
+//       switch (type) {
+//         case GFMessage.INFO_MESSAGE:
+//           GFMessage.message.style.color = GFMessage.INFO_COLOR;
+//           break;
+//         case GFMessage.ERROR_MESSAGE:
+//           GFMessage.message.style.color = GFMessage.ERROR_COLOR;
+//           break;
+//         case GFMessage.WARNING_MESSAGE:
+//           GFMessage.message.style.color = GFMessage.WARNING_COLOR;
+//           break;
 
-        default:
-          GFMessage.message.style.color = GFMessage.INFO_COLOR;
-          break;
-      }
-      GFMessage.container.style.display = '';
-      $GF.setUniqTimeOut(this.clearMessage, $GF.CONSTANTS.CONF_GFMESSAGE_MS, 'flowcharting-message');
-    }
-  }
+//         default:
+//           GFMessage.message.style.color = GFMessage.INFO_COLOR;
+//           break;
+//       }
+//       GFMessage.container.style.display = '';
+//       $GF.setUniqTimeOut(this.clearMessage, $GF.CONSTANTS.CONF_GFMESSAGE_MS, 'flowcharting-message');
+//     }
+//   }
 
-  clearMessage() {
-    if (GFMessage.container && GFMessage.message) {
-      GFMessage.container.style.display = 'none';
-      GFMessage.message.innerHTML = '';
-    }
-    $GF.clearUniqTimeOut('flowcharting-message');
-  }
-}
+//   clearMessage() {
+//     if (GFMessage.container && GFMessage.message) {
+//       GFMessage.container.style.display = 'none';
+//       GFMessage.message.innerHTML = '';
+//     }
+//     $GF.clearUniqTimeOut('flowcharting-message');
+//   }
+// }
 
 /**
  * Trace Perf class
@@ -778,9 +778,9 @@ class GFTrace {
 export class $GF {
   static _globalvars: GFVariables = new GFVariables();
   static CONSTANTS: GFCONSTANT = new GFCONSTANT();
-  static log: GFLog = GFLog.init();
-  static trace: GFTrace = GFTrace.init();
-  static message: GFMessage;
+  static log: GFLog;
+  static trace: GFTrace;
+  // static message: GFMessage;
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
@@ -808,12 +808,20 @@ export class $GF {
   } = require('./utils_raw');
 
   static init($scope: any, templateSrv: any, dashboard: any, ctrl: any): $GF {
-    this.plugin = GFPlugin.init($scope, templateSrv, dashboard, ctrl);
-    if (this.DEBUG) {
-      console.log('DEBUG Scope', $scope);
-      console.log('DEBUG TemplateSrv', templateSrv);
-      console.log('DEBUG Theme', dashboard.style);
-      console.log('DEBUG dashboard', dashboard);
+    if(!this.plugin) {
+      this.plugin = GFPlugin.init($scope, templateSrv, dashboard, ctrl);
+      if (this.DEBUG) {
+        console.log('DEBUG Scope', $scope);
+        console.log('DEBUG TemplateSrv', templateSrv);
+        console.log('DEBUG Theme', dashboard.style);
+        console.log('DEBUG dashboard', dashboard);
+      }
+    }
+    if(!this.log) {
+      this.log = GFLog.init();
+    }
+    if(!this.trace) {
+      this.trace = GFTrace.init()
     }
     return this;
   }
@@ -829,9 +837,9 @@ export class $GF {
    * @param {HTMLElement} html
    * @memberof $GF
    */
-  static setMessageDiv(html: HTMLDivElement) {
-    this.message = GFMessage.init(html);
-  }
+  // static setMessageDiv(html: HTMLDivElement) {
+  //   this.message = GFMessage.init(html);
+  // }
 
   /**
    * Replace/resolve variables
@@ -862,10 +870,10 @@ export class $GF {
    *
    * @memberof $GF
    */
-  static async refresh() {
-    const scope = $GF.getVar($GF.CONSTANTS.VAR_OBJ_SCOPE);
-    await scope.$applyAsync();
-  }
+  // static async refresh() {
+  //   const scope = $GF.getVar($GF.CONSTANTS.VAR_OBJ_SCOPE);
+  //   await scope.$applyAsync();
+  // }
 
   /**
    * Create and get local variables container
@@ -1109,13 +1117,13 @@ export class $GF {
    * @returns {boolean}
    * @memberof $GF
    */
-  static isMouseInPanel(): boolean {
-    const ctrl = this.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
-    if (ctrl) {
-      return ctrl.isMouseIn();
-    }
-    return false;
-  }
+  // static isMouseInPanel(): boolean {
+  //   const ctrl = this.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
+  //   if (ctrl) {
+  //     return ctrl.isMouseIn();
+  //   }
+  //   return false;
+  // }
 
   /**
    * Return Html for popup with links to documentation

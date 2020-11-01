@@ -28,6 +28,7 @@ export default class XGraph {
   xmlGraph = '';
   csvGraph = '';
   type: gf.TSourceTypeKeys = 'xml';
+  ctrl: any;
   graph: any = undefined;
   scale = true;
   tooltip = true;
@@ -53,9 +54,10 @@ export default class XGraph {
    * @param {string} definition
    * @memberof XGraph
    */
-  constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string) {
+  constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string, ctrl: any) {
     this.container = container;
     this.type = type;
+    this.ctrl = ctrl;
     this.onMapping = {
       active: false,
       // $scope: null,
@@ -284,7 +286,7 @@ export default class XGraph {
           this.refresh();
         } catch (error) {
           $GF.log.error('Bad CSV format', error);
-          $GF.message.setMessage('Bad CSV format');
+          this.ctrl.notify('Bad CSV format', 'error');
         }
       }
     } catch (error) {
@@ -1138,10 +1140,7 @@ export default class XGraph {
     this.onMapping.active = false;
     this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
-    $GF.refresh();
-    // if (this.onMapping.$scope) {
-    //   this.onMapping.$scope.$applyAsync();
-    // }
+    this.ctrl.$scope.$applyAsync();
   }
 
   //
@@ -1205,10 +1204,9 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventMouseWheel(evt: WheelEvent, up: boolean) {
-    console.log("eventMouseWheel",$GF.isMouseInPanel());
-    const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
-    console.log("eventMouseWheel -> ctrl", ctrl)
-    if (this.graph.isZoomWheelEvent(evt) && $GF.isMouseInPanel()) {
+    // console.log('eventMouseWheel', this.ctrl.id, this.ctrl.isMouseInPanel());
+    // this.ctrl.notify(`Zoom ${this.cumulativeZoomFactor}`);
+    if (this.graph.isZoomWheelEvent(evt) && this.ctrl.isMouseInPanel()) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {
           up = true;

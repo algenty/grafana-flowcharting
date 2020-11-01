@@ -20,6 +20,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   flowchartsDiv: HTMLDivElement;
   templateSrv: any;
   version: any;
+  message: GFMessage | undefined;
   changedSource: boolean;
   changedData: boolean;
   changedOptions: boolean;
@@ -153,7 +154,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.log.debug('EVENT : ', this.id, 'onRender', this);
     $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
-      $GF.message.setMessage('Configuration updating...');
+      this.notify('Configuration updating...');
       this.editModeFalse();
       const panelClone = _.cloneDeep(this.panel);
       this.flowchartHandler.clear();
@@ -168,6 +169,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onDataReceived(dataList) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
+    debugger
     if (!!this.metricHandler) {
       this.metricHandler.initData(dataList);
       if (!!this.flowchartHandler) {
@@ -212,7 +214,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // FLOWCHARTS
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
-      this.flowchartHandler = new FlowchartHandler(this.flowchartsDiv, newFlowchartsData);
+      this.flowchartHandler = new FlowchartHandler(this.flowchartsDiv, newFlowchartsData, this);
       if (this.flowchartHandler) {
         this.flowchartHandler.import(this.panel.flowchartsData);
       }
@@ -243,27 +245,28 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
     this.$panelElem = elem;
 
-    const $section = elem.find('#flowcharting-section');
+    const $section = this.$panelElem.find('#flowcharting-section');
     this.parentDiv = $section[0];
 
-    const $elem = elem.find('#flowcharting-panel-content');
-    this.flowchartsDiv = $elem[0];
+    // const $flowchartsDiv = this.$panelElem.find('#flowcharting-panel-content');
+    const $flowchartsDiv = $section.find('#flowcharting-panel-content');
+    this.flowchartsDiv = $flowchartsDiv[0];
 
-    const $message = $section.find('#flowcharting-message');
-    $GF.setMessageDiv($message[0]);
+    // const $message = $section.find('#flowcharting-message');
+    // $GF.setMessageDiv($message[0]);
+    // this.message = new GFMessage($message[0]);
+    this.notify('Initialisation MXGRAPH/DRAW.IO Libs');
 
-    $GF.message.setMessage('Initialisation MXGRAPH/DRAW.IO Libs');
     // MxGraph Init
     XGraph.initMxGraph();
-
-    $GF.message.setMessage('Load configuration');
+    this.notify('Load configuration');
 
     this.initHandlers();
 
     // Versions
     this.panel.newFlag = false;
     if (this.panel.version !== $GF.plugin.getVersion()) {
-      $GF.message.setMessage(
+      this.notify(
         `The plugin version has changed, save the dashboard to optimize loading : ${
           this.panel.version
         } <> ${$GF.plugin.getVersion()}`
@@ -274,17 +277,14 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onMouseIn(event) {
-    console.log("onMouseIn",this.id,$GF)
-    console.log("$GF",this.id,event)
     this.mouseIn = true;
   }
 
   onMouseOut(event) {
-    console.log("$GF",this.id,$GF)
     this.mouseIn = false;
   }
 
-  isMouseIn(): boolean {
+  isMouseInPanel(): boolean {
     return this.mouseIn;
   }
 
@@ -346,8 +346,85 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   $onDestroy() {
     $GF.destroy();
   }
+
+  /**
+   * Display a message in current panel
+   *
+   * @memberof FlowchartCtrl
+   */
+  notify(message: string, type: string = GFMessage.INFO_MESSAGE) {
+    if (this.message) {
+      this.message.setMessage(message, type);
+    } else {
+      const $section = this.$panelElem.find('#flowcharting-section');
+      const $message = $section.find('#flowcharting-message');
+      this.message = new GFMessage($message[0]);
+      this.notify(message, type);
+    }
+  }
+
+  clearNotify() {
+    if(this.message) {
+      this.message.clearMessage();
+    }
+  }
+
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };
-
 FlowchartCtrl.templateUrl = './partials/module.html';
+
+class GFMessage {
+  container: HTMLDivElement;
+  message: HTMLSpanElement;
+  id : String;
+  static ERROR_MESSAGE = 'error';
+  static ERROR_COLOR = 'red';
+  static INFO_MESSAGE = 'info';
+  static INFO_COLOR = 'white';
+  static WARNING_MESSAGE = 'warning';
+  static WARNING_COLOR = 'yellow';
+
+  constructor(parent: HTMLDivElement) {
+    this.id = $GF.utils.uniqueID();
+    this.container = parent;
+    const span = this.container.querySelector<HTMLSpanElement>('#message-text');
+    if (span == null) {
+      this.message = document.createElement('span');
+      this.container.appendChild(this.message);
+    } else {
+      this.message = span;
+    }
+  }
+
+  async setMessage(message: string, type: string = GFMessage.INFO_MESSAGE) {
+    if (this.container && this.message) {
+      this.message.innerHTML = message;
+      switch (type) {
+        case GFMessage.INFO_MESSAGE:
+          this.message.style.color = GFMessage.INFO_COLOR;
+          break;
+        case GFMessage.ERROR_MESSAGE:
+          this.message.style.color = GFMessage.ERROR_COLOR;
+          break;
+        case GFMessage.WARNING_MESSAGE:
+          this.message.style.color = GFMessage.WARNING_COLOR;
+          break;
+
+        default:
+          this.message.style.color = GFMessage.INFO_COLOR;
+          break;
+      }
+      this.container.style.display = '';
+      $GF.setUniqTimeOut(this.clearMessage.bind(this), $GF.CONSTANTS.CONF_GFMESSAGE_MS, `flowcharting-message-${this.id}`);
+    }
+  }
+
+  clearMessage() {
+    if (this.container && this.message) {
+      this.container.style.display = 'none';
+      this.message.innerHTML = '';
+    }
+    $GF.clearUniqTimeOut(`flowcharting-message-${this.id}`);
+  }
+}
