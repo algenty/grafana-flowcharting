@@ -8,56 +8,61 @@
             <i class="fa fa-chevron-right"
               ng-class="{'fa-chevron-right': rule.data.reduce, 'fa-chevron-down': rule.data.reduce === false}"> </i>
           </span>
-          <span class="rule-title" bs-tooltip="'Rule Name : {{rule.data.alias}}'" ng-click="rule.data.reduce=!rule.data.reduce">{{ rule.data.order }} : 
+          <span class="rule-title" bs-tooltip="'Rule Name : {{rule.data.alias}}'"
+            ng-click="rule.data.reduce=!rule.data.reduce">{{ rule.data.order }} :
             [{{ rule.data.alias }}]
           </span>
         </div>
         <div id="center" style="display: inline-block;margin: 0 auto;width:50%;">
-          <div style="display: inline-block;margin-right: 2px;"><span bs-tooltip="'Last state level : [{{rule.highestLevel}}]'">Lvl : [{{rule.highestLevel}}]</span>
+          <div style="display: inline-block;margin-right: 2px;"><span
+              bs-tooltip="'Last state level : [{{rule.highestLevel}}]'">Lvl : [{{rule.highestLevel}}]</span>
           </div>
-          <div style="display: inline-block;margin-right: 2px;"><span bs-tooltip="'Raw value : [{{rule.highestValue}}]'">R Val.: [{{rule.highestValue}}]</span>
+          <div style="display: inline-block;margin-right: 2px;"><span
+              bs-tooltip="'Raw value : [{{rule.highestValue}}]'">R Val.: [{{rule.highestValue}}]</span>
           </div>
-          <div style="display: inline-block;margin-right: 2px;"><span bs-tooltip="'Fomatted value : [{{rule.highestFormattedValue}}]'">F val. : [{{rule.highestFormattedValue}}]</span>
+          <div style="display: inline-block;margin-right: 2px;"><span
+              bs-tooltip="'Fomatted value : [{{rule.highestFormattedValue}}]'">F val. :
+              [{{rule.highestFormattedValue}}]</span>
           </div>
           <div style="display: inline-block;margin-right: 10px;">
             <div style="display: inline-block;margin-right: 5px;">
-            <div bs-tooltip="rule.highestColor" bs-tooltip="'Hightest Colors : [{{rule.highestFormattedValue}}]'"
-            style="display: inline-block; width: 10px;height: 10px; background-color: {{rule.highestColor}};border: 1px solid rgb(228, 228, 228);">
-          </div>
-          <!-- <div style="display: inline-block;margin-right: 5px;"><span>Execute time : [{{rule.getExectedTime()}}]</span>
+              <div bs-tooltip="rule.highestColor" bs-tooltip="'Hightest Colors : [{{rule.highestFormattedValue}}]'"
+                style="display: inline-block; width: 10px;height: 10px; background-color: {{rule.highestColor}};border: 1px solid rgb(228, 228, 228);">
+              </div>
+              <!-- <div style="display: inline-block;margin-right: 5px;"><span>Execute time : [{{rule.getExectedTime()}}]</span>
           </div> -->
+            </div>
           </div>
-        </div>
-        <div id="right" style="float:right">
-          <div id="delete" style="width:20px;clear:left;display: inline-block;">
-            <span ng-if="rule.removeClick > 1" class="rule-nav" bs-tooltip="'Click twice to remove rule'"><i
-                class="fa fa-w fa-remove pointer" ng-click="editor.removeRule(rule)"></i></span>
-            <span ng-if="rule.removeClick === 1" class="rule-nav" bs-tooltip="'Click to remove rule'"
-              style="color:brown"><i class="fa fa-w fa-remove pointer" ng-click="editor.removeRule(rule)"></i></span>
-          </div>
-          <div id="clone" style="width:20px;clear:left;display: inline-block;">
-            <span class="rule-nav" bs-tooltip="'Clone this rule'"><i class="fa fa-copy"
-                ng-click="editor.cloneRule(rule)"></i></span>
-          </div>
-          <div id="show/hide" style="width:20px;clear:left;display: inline-block;">
-            <span class="rule-nav" ng-click="editor.toggleShow(rule,!rule.data.hidden)"
-              bs-tooltip="rule.data.hidden ? 'Show/enable this rule' : 'Hide/disable this rule' ">
-              <i class="fa fa-chevron-right"
-                ng-class="{'fa fa-w fa-eye pointer': !rule.isHidden(), 'fa fa-w fa-eye-slash pointer': rule.isHidden()}">
-              </i>
-            </span>
-          </div>
-          <div id="up" style="width:20px;clear:left;display: inline-block;">
-            <span class="rule-nav" ng-if="!editor.isFirstRule($index)" bs-tooltip="'Move up'"><i
-                class="fa fa-arrow-up fa-lg" ng-click="editor.moveRule(rule, true)"></i></span>
-          </div>
-          <div id="down" style="width:20px;clear:right;display: inline-block;">
-            <span class="rule-nav" ng-if="!editor.isLastRule($index)" bs-tooltip="'Move down'"><i
-                class="fa fa-arrow-down fa-lg" ng-click="editor.moveRule(rule, false)"></i></span>
+          <div id="right" style="float:right">
+            <div id="delete" style="width:20px;clear:left;display: inline-block;">
+              <span ng-if="rule.removeClick > 1" class="rule-nav" bs-tooltip="'Click twice to remove rule'"><i
+                  class="fa fa-w fa-remove pointer" ng-click="editor.removeRule(rule)"></i></span>
+              <span ng-if="rule.removeClick === 1" class="rule-nav" bs-tooltip="'Click to remove rule'"
+                style="color:brown"><i class="fa fa-w fa-remove pointer" ng-click="editor.removeRule(rule)"></i></span>
+            </div>
+            <div id="clone" style="width:20px;clear:left;display: inline-block;">
+              <span class="rule-nav" bs-tooltip="'Clone this rule'"><i class="fa fa-copy"
+                  ng-click="editor.cloneRule(rule)"></i></span>
+            </div>
+            <div id="show/hide" style="width:20px;clear:left;display: inline-block;">
+              <span class="rule-nav" ng-click="editor.toggleShow(rule,!rule.data.hidden)"
+                bs-tooltip="rule.data.hidden ? 'Show/enable this rule' : 'Hide/disable this rule' ">
+                <i class="fa fa-chevron-right"
+                  ng-class="{'fa fa-w fa-eye pointer': !rule.isHidden(), 'fa fa-w fa-eye-slash pointer': rule.isHidden()}">
+                </i>
+              </span>
+            </div>
+            <div id="up" style="width:20px;clear:left;display: inline-block;">
+              <span class="rule-nav" ng-if="!editor.isFirstRule($index)" bs-tooltip="'Move up'"><i
+                  class="fa fa-arrow-up fa-lg" ng-click="editor.moveRule(rule, true)"></i></span>
+            </div>
+            <div id="down" style="width:20px;clear:right;display: inline-block;">
+              <span class="rule-nav" ng-if="!editor.isLastRule($index)" bs-tooltip="'Move down'"><i
+                  class="fa fa-arrow-down fa-lg" ng-click="editor.moveRule(rule, false)"></i></span>
+            </div>
           </div>
         </div>
       </div>
-
       <!-- CORPS -->
       <div style="padding:30px" ng-hide="rule.data.reduce==true">
         <!-- OPTIONS -->
@@ -244,11 +249,12 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class="editor-row">
-    <div class="gf-form-button-row">
-      <button class="btn btn-inverse" ng-click="editor.rulesHandler.addRule('/.*/')"><i class="fa fa-plus"></i>&nbsp;Add
-        Rule</button>
-    </div>
+<div class="editor-row">
+  <div class="gf-form-button-row">
+    <button class="btn btn-inverse" ng-click="editor.rulesHandler.addRule('/.*/')"><i class="fa fa-plus"></i>&nbsp;Add
+      Rule</button>
   </div>
+</div>
 </div>

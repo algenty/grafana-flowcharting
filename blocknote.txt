@@ -101,3 +101,7 @@ https://pavenum.com/overlay-avec-hover-sur-une-image-en-html-css/
 
 #Optimize
 js-coroutines
+
+
+# Resizable tablet
+https://medium.com/@imdebasispanda/resize-table-column-angular-5cb58b67367
