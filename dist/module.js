@@ -17871,14 +17871,11 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
       this.addEditorTab('Flowchart', flowchart_options__WEBPACK_IMPORTED_MODULE_3__["flowchartOptionsTab"], 2);
       this.addEditorTab('Mapping', mapping_options__WEBPACK_IMPORTED_MODULE_2__["mappingOptionsTab"], 3);
       this.addEditorTab('Inspect', inspect_options__WEBPACK_IMPORTED_MODULE_4__["inspectOptionsTab"], 4);
-      globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].log.debug('CTRL : ', this.id, this);
       this.editModeTrue();
     }
   }, {
     key: "onTearDown",
-    value: function onTearDown() {
-      globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].log.debug('EVENT : ', this.id, 'onTearDown');
-    }
+    value: function onTearDown() {}
   }, {
     key: "onGraphHover",
     value: function onGraphHover(event) {
@@ -17931,9 +17928,6 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
   }, {
     key: "onRender",
     value: function onRender() {
-      globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].log.debug('EVENT : ', this.id, 'onRender', this);
-      globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].log.debug('EDIT MODE', this.id, this.isEditedMode());
-
       if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
         this.notify('Configuration updating...');
         this.editModeFalse();
@@ -17952,7 +17946,6 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
     key: "onDataReceived",
     value: function onDataReceived(dataList) {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_8__["$GF"].trace.before(this.constructor.name + '.' + 'onDataReceived()');
-      debugger;
 
       if (!!this.metricHandler) {
         this.metricHandler.initData(dataList);

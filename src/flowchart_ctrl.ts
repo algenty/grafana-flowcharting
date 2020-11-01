@@ -98,14 +98,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.addEditorTab('Flowchart', flowchartOptionsTab, 2);
     this.addEditorTab('Mapping', mappingOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
-    $GF.log.debug('CTRL : ', this.id, this);
     this.editModeTrue();
   }
 
   // 9.1 : FIX for edit mode in grafana 7.x : Not work
   // Clean edit mode
   onTearDown() {
-    $GF.log.debug('EVENT : ', this.id, 'onTearDown');
+    // $GF.log.debug('EVENT : ', this.id, 'onTearDown');
   }
 
   onGraphHover(event: any) {
@@ -151,8 +150,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    $GF.log.debug('EVENT : ', this.id, 'onRender', this);
-    $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
+    // $GF.log.debug('EVENT : ', this.id, 'onRender', this);
+    // $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();
@@ -169,7 +168,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onDataReceived(dataList) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
-    debugger
     if (!!this.metricHandler) {
       this.metricHandler.initData(dataList);
       if (!!this.flowchartHandler) {

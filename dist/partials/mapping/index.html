@@ -8,23 +8,24 @@
             <i class="fa fa-chevron-right"
               ng-class="{'fa-chevron-right': rule.data.reduce, 'fa-chevron-down': rule.data.reduce === false}"> </i>
           </span>
-          <span class="rule-title" ng-click="rule.data.reduce=!rule.data.reduce">{{ rule.data.order }} : Rule
-            [{{ rule.data.alias }}]</span>
+          <span class="rule-title" bs-tooltip="'Rule Name : {{rule.data.alias}}'" ng-click="rule.data.reduce=!rule.data.reduce">{{ rule.data.order }} : 
+            [{{ rule.data.alias }}]
+          </span>
         </div>
         <div id="center" style="display: inline-block;margin: 0 auto;width:50%;">
-          <div style="display: inline-block;margin-right: 5px;"><span>Last state level : [{{rule.highestLevel}}]</span>
+          <div style="display: inline-block;margin-right: 2px;"><span bs-tooltip="'Last state level : [{{rule.highestLevel}}]'">Lvl : [{{rule.highestLevel}}]</span>
           </div>
-          <div style="display: inline-block;margin-right: 5px;"><span>Raw value : [{{rule.highestValue}}]</span>
+          <div style="display: inline-block;margin-right: 2px;"><span bs-tooltip="'Raw value : [{{rule.highestValue}}]'">R Val.: [{{rule.highestValue}}]</span>
           </div>
-          <div style="display: inline-block;margin-right: 5px;"><span>Fomatted value : [{{rule.highestFormattedValue}}]</span>
+          <div style="display: inline-block;margin-right: 2px;"><span bs-tooltip="'Fomatted value : [{{rule.highestFormattedValue}}]'">F val. : [{{rule.highestFormattedValue}}]</span>
           </div>
           <div style="display: inline-block;margin-right: 10px;">
-            <div style="display: inline-block;margin-right: 5px;"><span>color : </span></div>
-            <div bs-tooltip="rule.highestColor"
+            <div style="display: inline-block;margin-right: 5px;">
+            <div bs-tooltip="rule.highestColor" bs-tooltip="'Hightest Colors : [{{rule.highestFormattedValue}}]'"
             style="display: inline-block; width: 10px;height: 10px; background-color: {{rule.highestColor}};border: 1px solid rgb(228, 228, 228);">
           </div>
-          <div style="display: inline-block;margin-right: 5px;"><span>Execute time : [{{rule.getExectedTime()}}]</span>
-          </div>
+          <!-- <div style="display: inline-block;margin-right: 5px;"><span>Execute time : [{{rule.getExectedTime()}}]</span>
+          </div> -->
           </div>
         </div>
         <div id="right" style="float:right">
