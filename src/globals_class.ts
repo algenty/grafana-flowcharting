@@ -808,7 +808,7 @@ export class $GF {
   } = require('./utils_raw');
 
   static init($scope: any, templateSrv: any, dashboard: any, ctrl: any): $GF {
-    if(!this.plugin) {
+    if (!this.plugin) {
       this.plugin = GFPlugin.init($scope, templateSrv, dashboard, ctrl);
       if (this.DEBUG) {
         console.log('DEBUG Scope', $scope);
@@ -817,11 +817,11 @@ export class $GF {
         console.log('DEBUG dashboard', dashboard);
       }
     }
-    if(!this.log) {
+    if (!this.log) {
       this.log = GFLog.init();
     }
-    if(!this.trace) {
-      this.trace = GFTrace.init()
+    if (!this.trace) {
+      this.trace = GFTrace.init();
     }
     return this;
   }

@@ -21473,15 +21473,20 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var InspectOptionsCtrl = function () {
-  InspectOptionsCtrl.$inject = ["$scope"];
+  InspectOptionsCtrl.$inject = ["$scope", "$element"];
 
-  function InspectOptionsCtrl($scope) {
+  function InspectOptionsCtrl($scope, $element) {
     _classCallCheck(this, InspectOptionsCtrl);
 
     this.enable = false;
     this.traceEnable = globals_class__WEBPACK_IMPORTED_MODULE_0__["$GF"].trace.isEnabled();
+    this.pressed = false;
+    this.startX = 0;
+    this.startWidth = 0;
     $scope.editor = this;
     $scope.$GF = globals_class__WEBPACK_IMPORTED_MODULE_0__["$GF"].me();
+    var $div = $element.find('#templateInspect');
+    this.parentDiv = $div[0];
     this.state = {
       data: this.getStates(),
       columns: [{
@@ -21521,6 +21526,7 @@ var InspectOptionsCtrl = function () {
         select: false
       }]
     };
+    console.log('$scope', $scope);
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
@@ -21648,6 +21654,48 @@ var InspectOptionsCtrl = function () {
 
       if (xg) {
         xg.anonymize();
+      }
+    }
+  }, {
+    key: "onMouseMove",
+    value: function onMouseMove(event) {
+      if (this.pressed && this.header) {
+        var decaleHeaders = function decaleHeaders(parent) {
+          if (parent !== null) {
+            if (parent.nextElementSibling !== null) {
+              var child = parent.nextElementSibling;
+              var newLeft = parseInt(parent.style.width, 10) + parseInt(parent.style.left, 10);
+              child.style.left = "".concat(newLeft, "px");
+              decaleHeaders(child);
+            }
+          }
+        };
+
+        var delta = event.pageX - this.startX;
+        var width = this.startWidth + delta;
+        this.header.style.width = "".concat(width, "px");
+        decaleHeaders(this.header);
+      }
+    }
+  }, {
+    key: "onMouseDown",
+    value: function onMouseDown(event) {
+      this.pressed = true;
+      this.startX = event.pageX;
+      this.header = event.currentTarget.parentElement;
+
+      if (this.header) {
+        this.header.classList.add('GF_resizing');
+        this.startWidth = parseInt(this.header.style.width, 10);
+      }
+    }
+  }, {
+    key: "onMouseUp",
+    value: function onMouseUp(event) {
+      this.pressed = false;
+
+      if (this.header) {
+        this.header.classList.remove('GF_resizing');
       }
     }
   }]);

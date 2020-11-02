@@ -7,7 +7,7 @@
         <div style="width: 100%;">
           <div>
             <!-- COLUMNS -->
-            <div class="GF_inspect-table-thead" role="row" style="position: relative; width: 100%;">
+            <div class="GF_inspect-table-thead" role="row" style="position: relative; width: 100%;" ng-mouseup="editor.onMouseUp($event)" ng-mousemove="editor.onMouseMove($event)">
               <!-- COLUMN REPEAT-->
               <!-- ID -->
               <div class="GF_inspect-table-columnheader" colspan="1" role="columnheader"
@@ -16,7 +16,7 @@
                   <div>Id</div>
                   <div></div>
                 </div>
-                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;">
+                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
               <!-- LABEL -->
@@ -72,7 +72,7 @@
                 style="position: absolute; width: 100%; left: 0px; top: {{$index * 35}}px; height: 35px;">
                 <!-- CELLS -->
                 <!-- ID -->
-                <div role="cell" class="GF_inspect-table-cells"
+                <div role="cell" class="GF_inspect-table-cells" id="IdCells"
                   style="position: absolute; top: 0px; left: 0px; width: 100px; text-align: left;">
                   <!-- CONTENT -->
                   <div class="GF_inspect-table-content" ng-hide="state.edited || state.edit"

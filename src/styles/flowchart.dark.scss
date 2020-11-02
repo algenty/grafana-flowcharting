@@ -177,6 +177,11 @@ div.GF_inspect-table-resizeHandle {
   cursor: col-resize !important;
 }
 
+div.GF_inspect-table-resizeHandle:hover {
+  opacity: 1;
+}
+
+
 div.GF_inspect-table-columnheader {
   padding: 6px;
   overflow: hidden;
@@ -188,6 +193,10 @@ div.GF_inspect-table-columnheader {
 
 div.GF_inspect-table-rows {
   border-bottom: 1px solid rgb(32, 34, 38);
+}
+
+div.GF_inspect-table-rows:hover {
+  background-color: rgb(25, 27, 30);
 }
 
 div.GF_inspect-table-cells {
@@ -204,6 +213,13 @@ div.GF_inspect-table-content {
   white-space: nowrap;
   overflow: hidden;
   flex: 1 1 0%;
+}
+
+.GF_resizing {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: col-resize;
 }
 
 div.GF_inspect-color-picker {

@@ -362,11 +362,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   clearNotify() {
-    if(this.message) {
+    if (this.message) {
       this.message.clearMessage();
     }
   }
-
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };
@@ -375,7 +374,7 @@ FlowchartCtrl.templateUrl = './partials/module.html';
 class GFMessage {
   container: HTMLDivElement;
   message: HTMLSpanElement;
-  id : String;
+  id: String;
   static ERROR_MESSAGE = 'error';
   static ERROR_COLOR = 'red';
   static INFO_MESSAGE = 'info';
@@ -414,7 +413,11 @@ class GFMessage {
           break;
       }
       this.container.style.display = '';
-      $GF.setUniqTimeOut(this.clearMessage.bind(this), $GF.CONSTANTS.CONF_GFMESSAGE_MS, `flowcharting-message-${this.id}`);
+      $GF.setUniqTimeOut(
+        this.clearMessage.bind(this),
+        $GF.CONSTANTS.CONF_GFMESSAGE_MS,
+        `flowcharting-message-${this.id}`
+      );
     }
   }
 

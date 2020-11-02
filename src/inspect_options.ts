@@ -24,13 +24,20 @@ export class InspectOptionsCtrl {
   stateHandler: StateHandler | undefined;
   state: TTable;
   panel: any;
+  parentDiv: HTMLDivElement;
+  header: HTMLDivElement | undefined;
   traceEnable: boolean = $GF.trace.isEnabled();
+  pressed: boolean = false;
+  startX: number = 0;
+  startWidth: any = 0;
+  column: any;
 
   /** @ngInject */
-  constructor($scope: gf.TInspectOptionsScope) {
+  constructor($scope: gf.TInspectOptionsScope, $element) {
     $scope.editor = this;
     $scope.$GF = $GF.me();
-
+    const $div = $element.find('#templateInspect');
+    this.parentDiv = $div[0];
     this.state = {
       data: this.getStates(),
       columns: [
@@ -78,6 +85,7 @@ export class InspectOptionsCtrl {
         },
       ],
     };
+    console.log('$scope', $scope);
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
@@ -191,6 +199,52 @@ export class InspectOptionsCtrl {
     const xg = fc.getXGraph();
     if (xg) {
       xg.anonymize();
+    }
+  }
+
+  onMouseMove(event: MouseEvent) {
+    if (this.pressed && this.header) {
+      const decaleHeaders = function(parent: HTMLDivElement) {
+        if (parent !== null) {
+          if(parent.nextElementSibling !== null) {
+            // debugger
+            const child  = <HTMLDivElement> parent.nextElementSibling;
+            const newLeft = parseInt(parent.style.width, 10) + parseInt(parent.style.left, 10);
+            child.style.left = `${newLeft}px`;
+            decaleHeaders(child);
+          }
+        }
+      };
+      // const offset = 35;
+      // const columnsHeader = this.parentDiv.querySelectorAll(".GF_inspect-table-columnheader");
+      // columnsHeader.removeChild(this.header);
+      // const columnsCells = this.parentDiv.querySelectorAll("#IdCells");
+      const delta = event.pageX - this.startX;
+      const width = this.startWidth + delta;
+      this.header.style.width = `${width}px`;
+      decaleHeaders(this.header);
+    }
+  }
+
+  onMouseDown(event: any) {
+    this.pressed = true;
+    this.startX = event.pageX;
+    // console.log('onMouseDown',event);
+    this.header = event.currentTarget.parentElement;
+    if (this.header) {
+      // debugger
+      // console.log('this.header style', this.header.style);
+      this.header.classList.add('GF_resizing');
+      // console.log('begin width',this.header.style.width);
+      this.startWidth = parseInt(this.header.style.width, 10);
+      // console.log('parseInt',this.startWidth);
+    }
+  }
+
+  onMouseUp(event: MouseEvent) {
+    this.pressed = false;
+    if (this.header) {
+      this.header.classList.remove('GF_resizing');
     }
   }
 }
