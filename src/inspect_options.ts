@@ -5,27 +5,12 @@ import { StateHandler } from 'statesHandler';
 import _ from 'lodash';
 // import { MetricHandler } from './metricHandler';
 
-declare interface TColumn {
-  index: number;
-  id: string;
-  label: string;
-  desc: string;
-  size: string;
-  sort: 'asc' | 'desc';
-  select: boolean;
-}
-
-declare interface TTable {
-  data: State[];
-  columns: TColumn[];
-}
-
 export class InspectOptionsCtrl {
   enable = false; // enable inspector or not
   ctrl: any; //TODO: define type
   flowchartHandler: FlowchartHandler;
   stateHandler: StateHandler | undefined;
-  state: TTable;
+  state: gf.TTableData;
   panel: any;
   parentDiv: HTMLDivElement;
   headerTable: HTMLDivElement | undefined;
@@ -241,7 +226,7 @@ export class InspectOptionsCtrl {
       decaleColumns(<HTMLElement >this.headerTable.nextElementSibling)
 
       if (this.bodyTable) {
-        const rows = this.bodyTable.querySelectorAll('.GF_inspect-table-rows');
+        const rows = this.bodyTable.querySelectorAll('.GF_table-rows');
         Array.from(rows).forEach(r => { 
           let cell = r.firstElementChild as HTMLElement;
           for (let index = 0; index < this.indexTable; index++) {
@@ -265,7 +250,7 @@ export class InspectOptionsCtrl {
       }
       this.headerTable.classList.add('GF_resizing');
       this.startWidth = parseInt(this.headerTable.style.width, 10);
-      this.bodyTable = <HTMLDivElement>this.parentDiv.getElementsByClassName('GF_inspect-table-body')[0];
+      this.bodyTable = <HTMLDivElement>this.parentDiv.getElementsByClassName('GF_table-body')[0];
     }
   }
 

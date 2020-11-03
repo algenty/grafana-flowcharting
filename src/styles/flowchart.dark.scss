@@ -133,23 +133,21 @@ div.tooltip-date {
   margin-bottom: 5px;
 }
 
-
-
-div.GF_inspect-table-main {
+div.GF_table-main {
   height: 100%;
   width: 100%;
   overflow: auto;
   display: flex;
 }
 
-div.GF_inspect-table-thead {
+div.GF_table-thead {
   height: 33px;
   overflow: hidden auto;
   background: rgb(32, 34, 38);
   position: relative;
 }
 
-div.GF_inspect-table-title {
+div.GF_table-title {
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
@@ -158,7 +156,7 @@ div.GF_inspect-table-title {
   margin-right: 4px;
 }
 
-div.GF_inspect-table-resizeHandle {
+div.GF_table-resizeHandle {
   display: inline-block;
   background: rgb(31, 96, 196);
   opacity: 0;
@@ -177,12 +175,12 @@ div.GF_inspect-table-resizeHandle {
   cursor: col-resize !important;
 }
 
-div.GF_inspect-table-resizeHandle:hover {
+div.GF_table-resizeHandle:hover {
   opacity: 1;
 }
 
 
-div.GF_inspect-table-columnheader {
+div.GF_table-columnheader {
   padding: 6px;
   overflow: hidden;
   white-space: nowrap;
@@ -191,7 +189,7 @@ div.GF_inspect-table-columnheader {
   display: flex;
 }
 
-div.GF_inspect-table-body {
+div.GF_table-body {
   position: relative;
   height: 300px; 
   width: 100%; 
@@ -199,15 +197,15 @@ div.GF_inspect-table-body {
   will-change: transform; direction: ltr;
 }
 
-div.GF_inspect-table-rows {
+div.GF_table-rows {
   border-bottom: 1px solid rgb(32, 34, 38);
 }
 
-div.GF_inspect-table-rows:hover {
+div.GF_table-rows:hover {
   background-color: rgb(25, 27, 30);
 }
 
-div.GF_inspect-table-cells {
+div.GF_table-cells {
   border-right: 1px solid rgb(32, 34, 38);
   display: inline-flex;
   -webkit-box-align: center;
@@ -215,7 +213,7 @@ div.GF_inspect-table-cells {
   height: 100%;
 }
 
-div.GF_inspect-table-content {
+div.GF_table-content {
   padding: 6px;
   text-overflow: ellipsis;
   white-space: nowrap;

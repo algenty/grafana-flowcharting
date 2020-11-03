@@ -1,5 +1,5 @@
 <div>
-  <div role="table" class="GF_inspect-table-main">
+  <div role="table" class="GF_table-main">
     <div class="custom-scrollbar"
       style="position: relative; overflow: hidden; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
       <div class="view"
@@ -7,92 +7,92 @@
         <div style="width: 100%;">
           <div>
             <!-- COLUMNS -->
-            <div class="GF_inspect-table-thead GF_unselectable" role="row" style="position: relative; width: 100%;" ng-mouseup="editor.onMouseUp($event)" ng-mousemove="editor.onMouseMove($event)" ng-mouseleave="editor.onMouseUp($event)">
+            <div class="GF_table-thead GF_unselectable" role="row" style="position: relative; width: 100%;" ng-mouseup="editor.onMouseUp($event)" ng-mousemove="editor.onMouseMove($event)" ng-mouseleave="editor.onMouseUp($event)">
               <!-- COLUMN REPEAT-->
               <!-- ID -->
-              <div class="GF_inspect-table-columnheader" colspan="1" role="columnheader"
+              <div class="GF_table-columnheader" colspan="1" role="columnheader"
                 style="position: absolute; top: 0px; left: 0px; width: 100px; user-select: auto; justify-content: flex-start;">
-                <div title="Id" class="GF_inspect-table-title" style="cursor: pointer;">
+                <div title="Id" class="GF_table-title" style="cursor: pointer;">
                   <div>Id</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
               <!-- LABEL -->
-              <div class="GF_inspect-table-columnheader" colspan="1" role="columnheader"
+              <div class="GF_table-columnheader" colspan="1" role="columnheader"
                 style="position: absolute; top: 0px; left: 100px; width: 100px; user-select: auto; justify-content: flex-start;">
-                <div title="Label" class="GF_inspect-table-title" style="cursor: pointer;">
+                <div title="Label" class="GF_table-title" style="cursor: pointer;">
                   <div>Label</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
               <!-- LEVEL -->
-              <div class="GF_inspect-table-columnheader" colspan="1" role="columnheader"
+              <div class="GF_table-columnheader" colspan="1" role="columnheader"
                 style="position: absolute; top: 0px; left: 200px; width: 40px; user-select: auto; justify-content: flex-start;">
-                <div title="Level" class="GF_inspect-table-title" style="cursor: pointer;">
+                <div title="Level" class="GF_table-title" style="cursor: pointer;">
                   <div>Lvl</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
               <!-- COLORS -->
-              <div class="GF_inspect-table-columnheader" colspan="1" role="columnheader"
+              <div class="GF_table-columnheader" colspan="1" role="columnheader"
                 style="position: absolute; top: 0px; left: 240px; width: 100px; user-select: auto; justify-content: flex-start;">
-                <div title="Colors" class="GF_inspect-table-title" style="cursor: pointer;">
+                <div title="Colors" class="GF_table-title" style="cursor: pointer;">
                   <div>Colors</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
               <!-- TAGS -->
-              <div class="GF_inspect-table-columnheader" colspan="1" role="columnheader"
+              <div class="GF_table-columnheader" colspan="1" role="columnheader"
                 style="position: absolute; top: 0px; left: 340px; width: 100px; user-select: auto; justify-content: flex-start;">
-                <div title="Tags" class="GF_inspect-table-title" style="cursor: pointer;">
+                <div title="Tags" class="GF_table-title" style="cursor: pointer;">
                   <div>Tags</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
             </div>
           </div>
           <!-- BODY -->
-          <div class="GF_inspect-table-body">
+          <div class="GF_table-body">
             <div>
               <!-- ROW REPAT -->
-              <div role="row" class="GF_inspect-table-rows"
+              <div role="row" class="GF_table-rows"
                 ng-repeat="state in editor.flowchartHandler.getFlowchart().getStateHandler().getStatesForInspect()"
                 ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)"
                 style="position: absolute; width: 100%; left: 0px; top: {{$index * 35}}px; height: 35px;">
                 <!-- CELLS -->
                 <!-- ID -->
-                <div role="cell" class="GF_inspect-table-cells" id="IdCells"
+                <div role="cell" class="GF_table-cells" id="IdCells"
                   style="position: absolute; top: 0px; left: 0px; width: 100px; text-align: left;">
                   <!-- CONTENT -->
-                  <div class="GF_inspect-table-content" ng-hide="state.edit" ng-style="state.edited && {'color':'blue'};"
+                  <div class="GF_table-content" ng-hide="state.edit" ng-style="state.edited && {'color':'blue'};"
                     ng-dblclick="editor.onEdit(state)">
                     {{state.cellId}}
                   </div>
-                  <div ng-show="state.edit" class="GF_inspect-table-cells">
+                  <div ng-show="state.edit" class="GF_table-cells">
                     <input type="text" id="{{state.cellId}}" class="gf-form-input" ng-model="state.newcellId"
                       ng-blur="editor.onChangeId(state)" placeholder="{{state.cellId}}" style="width: 100%;"
                       ng-keydown="$event.keyCode === 13 && editor.onChangeId(state)" />
                   </div>
                 </div>
                 <!-- LABEL -->
-                <div role="cell" class="GF_inspect-table-cells"
+                <div role="cell" class="GF_table-cells"
                   style="position: absolute; top: 0px; left: 100px; width: 100px; text-align: left;">
-                  <div class="GF_inspect-table-content">{{state.getCellProp('value')}}</div>
+                  <div class="GF_table-content">{{state.getCellProp('value')}}</div>
                 </div>
                 <!-- LEVEL -->
-                <div role="cell" class="GF_inspect-table-cells"
+                <div role="cell" class="GF_table-cells"
                   style="position: absolute; top: 0px; left: 200px; width: 40px; text-align: left;">
-                  <div class="GF_inspect-table-content">{{state.getTextLevel()}}</div>
+                  <div class="GF_table-content">{{state.getTextLevel()}}</div>
                 </div>
                 <!-- COLORS -->
-                <div role="cell" class="GF_inspect-table-cells"
+                <div role="cell" class="GF_table-cells"
                   style="position: absolute; top: 0px; left: 240px; width: 100px; text-align: left;">
-                  <div class="GF_inspect-table-content">
+                  <div class="GF_table-content">
                     <!-- TEXT COLOR -->
                     <div
                       ng-show="state.haveStatus('fontColor') && state.getStatus('fontColor').length > 0 && state.getStatus('fontColor') !== 'none'"
@@ -123,9 +123,9 @@
                   </div>
                 </div>
                 <!-- TAGS -->
-                <div role="cell" class="GF_inspect-table-cells"
+                <div role="cell" class="GF_table-cells"
                   style="position: absolute; top: 0px; left: 340px; width: 100px; text-align: left;">
-                  <div class="GF_inspect-table-content">
+                  <div class="GF_table-content">
                     <div style="display:inline-block" ng-show="state.shapeState.isChanged()"
                       bs-tooltip="'Mapping on Color'"><i class="fa fa-paint-brush"></i></div>
                     <div style="display:inline-block" ng-show="state.textState.isChanged()"

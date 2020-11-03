@@ -21703,7 +21703,7 @@ var InspectOptionsCtrl = function () {
         decaleColumns(this.headerTable.nextElementSibling);
 
         if (this.bodyTable) {
-          var rows = this.bodyTable.querySelectorAll('.GF_inspect-table-rows');
+          var rows = this.bodyTable.querySelectorAll('.GF_table-rows');
           Array.from(rows).forEach(function (r) {
             var cell = r.firstElementChild;
 
@@ -21731,7 +21731,7 @@ var InspectOptionsCtrl = function () {
 
         this.headerTable.classList.add('GF_resizing');
         this.startWidth = parseInt(this.headerTable.style.width, 10);
-        this.bodyTable = this.parentDiv.getElementsByClassName('GF_inspect-table-body')[0];
+        this.bodyTable = this.parentDiv.getElementsByClassName('GF_table-body')[0];
       }
     }
   }, {
@@ -21832,6 +21832,66 @@ var MappingOptionsCtrl = function () {
     this.metricHandler = this.ctrl.metricHandler;
     this.unitFormats = grafana_func__WEBPACK_IMPORTED_MODULE_3__["default"].getUnitFormats();
     this.tpGraphSize = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
+    this.rulesTable = {
+      data: this.rulesHandler.getRules(),
+      columns: [{
+        index: 0,
+        id: 'expand',
+        label: '<>',
+        desc: 'Expand/collapse',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 1,
+        id: 'rule',
+        label: 'Rule',
+        desc: 'Rule Name',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 2,
+        id: 'level',
+        label: 'Level',
+        desc: 'Highest level',
+        size: '40px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 3,
+        id: 'rval',
+        label: 'Raw value',
+        desc: 'Raw value',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 4,
+        id: 'fval',
+        label: 'Formated value',
+        desc: 'Formated value',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 5,
+        id: 'color',
+        label: 'Color',
+        desc: 'Highest color',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 6,
+        id: 'actions',
+        label: 'Actions',
+        desc: 'Actions',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }]
+    };
 
     this.getMetricNames = function () {
       return _this.metricHandler.getNames('serie');
@@ -22150,6 +22210,33 @@ var MappingOptionsCtrl = function () {
     key: "onEventValue",
     value: function onEventValue(event) {
       this.getEventValues = event.getTypeahead();
+    }
+  }, {
+    key: "getWidth",
+    value: function getWidth(tableData, id) {
+      var size = '99px';
+      tableData.columns.forEach(function (c) {
+        if (c.id === id) {
+          size = c.size;
+        }
+      });
+      return size;
+    }
+  }, {
+    key: "getLeft",
+    value: function getLeft(tableData, id) {
+      var sizes = 0;
+      var found = false;
+      tableData.columns.forEach(function (c) {
+        if (c.id !== id && found === false) {
+          sizes += parseInt(c.size, 10);
+        }
+
+        if (c.id === id) {
+          found = true;
+        }
+      });
+      return "".concat(sizes, "px");
     }
   }]);
 
@@ -25106,12 +25193,12 @@ var State = function () {
   }, {
     key: "isEdited",
     value: function isEdited() {
-      return this.state.edited;
+      return this.edited;
     }
   }, {
     key: "isEditMode",
     value: function isEditMode() {
-      return this.state.edit;
+      return this.edit;
     }
   }, {
     key: "unsetState",

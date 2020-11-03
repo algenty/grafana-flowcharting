@@ -1,0 +1,260 @@
+<div class="edit-tab-content">
+  <div class="editor-row" ng-repeat="rule in editor.rulesHandler.getRules()">
+    <div ng-init="editor.initType(rule)">
+      <!-- HEADER of style -->
+      <div class="rule-item" ng-mouseover="editor.highlightCells(rule)" ng-mouseleave="editor.unhighlightCells(rule)">
+        <div id="left" style="float:left;width:30%;">
+          <span class="rule-extend" ng-click="rule.data.reduce=!rule.data.reduce">
+            <i class="fa fa-chevron-right"
+              ng-class="{'fa-chevron-right': rule.data.reduce, 'fa-chevron-down': rule.data.reduce === false}"> </i>
+          </span>
+          <span class="rule-title" bs-tooltip="'Rule Name : {{rule.data.alias}}'"
+            ng-click="rule.data.reduce=!rule.data.reduce">{{ rule.data.order }} :
+            [{{ rule.data.alias }}]
+          </span>
+        </div>
+        <div id="center" style="display: inline-block;margin: 0 auto;width:50%;">
+          <div style="display: inline-block;margin-right: 2px;"><span
+              bs-tooltip="'Last state level : [{{rule.highestLevel}}]'">Lvl : [{{rule.highestLevel}}]</span>
+          </div>
+          <div style="display: inline-block;margin-right: 2px;"><span
+              bs-tooltip="'Raw value : [{{rule.highestValue}}]'">R Val.: [{{rule.highestValue}}]</span>
+          </div>
+          <div style="display: inline-block;margin-right: 2px;"><span
+              bs-tooltip="'Fomatted value : [{{rule.highestFormattedValue}}]'">F val. :
+              [{{rule.highestFormattedValue}}]</span>
+          </div>
+          <div style="display: inline-block;margin-right: 10px;">
+            <div style="display: inline-block;margin-right: 5px;">
+              <div bs-tooltip="rule.highestColor" bs-tooltip="'Hightest Colors : [{{rule.highestFormattedValue}}]'"
+                style="display: inline-block; width: 10px;height: 10px; background-color: {{rule.highestColor}};border: 1px solid rgb(228, 228, 228);">
+              </div>
+              <!-- <div style="display: inline-block;margin-right: 5px;"><span>Execute time : [{{rule.getExectedTime()}}]</span>
+          </div> -->
+            </div>
+          </div>
+          <div id="right" style="float:right">
+            <div id="delete" style="width:20px;clear:left;display: inline-block;">
+              <span ng-if="rule.removeClick > 1" class="rule-nav" bs-tooltip="'Click twice to remove rule'"><i
+                  class="fa fa-w fa-remove pointer" ng-click="editor.removeRule(rule)"></i></span>
+              <span ng-if="rule.removeClick === 1" class="rule-nav" bs-tooltip="'Click to remove rule'"
+                style="color:brown"><i class="fa fa-w fa-remove pointer" ng-click="editor.removeRule(rule)"></i></span>
+            </div>
+            <div id="clone" style="width:20px;clear:left;display: inline-block;">
+              <span class="rule-nav" bs-tooltip="'Clone this rule'"><i class="fa fa-copy"
+                  ng-click="editor.cloneRule(rule)"></i></span>
+            </div>
+            <div id="show/hide" style="width:20px;clear:left;display: inline-block;">
+              <span class="rule-nav" ng-click="editor.toggleShow(rule,!rule.data.hidden)"
+                bs-tooltip="rule.data.hidden ? 'Show/enable this rule' : 'Hide/disable this rule' ">
+                <i class="fa fa-chevron-right"
+                  ng-class="{'fa fa-w fa-eye pointer': !rule.isHidden(), 'fa fa-w fa-eye-slash pointer': rule.isHidden()}">
+                </i>
+              </span>
+            </div>
+            <div id="up" style="width:20px;clear:left;display: inline-block;">
+              <span class="rule-nav" ng-if="!editor.isFirstRule($index)" bs-tooltip="'Move up'"><i
+                  class="fa fa-arrow-up fa-lg" ng-click="editor.moveRule(rule, true)"></i></span>
+            </div>
+            <div id="down" style="width:20px;clear:right;display: inline-block;">
+              <span class="rule-nav" ng-if="!editor.isLastRule($index)" bs-tooltip="'Move down'"><i
+                  class="fa fa-arrow-down fa-lg" ng-click="editor.moveRule(rule, false)"></i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- CORPS -->
+      <div style="padding:30px" ng-hide="rule.data.reduce==true">
+        <!-- OPTIONS -->
+        <div class="section gf-form-group">
+          <h5 class="section-heading">
+            Options
+            <info-popover mode="right-normal"><span
+                ng-bind-html="$GF.popover('Options for mapping objects and metrics', 'MAPPING','fc_archi_example')"></span>
+            </info-popover>
+          </h5>
+          <div class="gf-form">
+            <label class="gf-form-label width-10">Rule name
+              <info-popover mode="right-normal"><span
+                  ng-bind-html="$GF.popover('Name of the rule, for information', 'MAPPING#Rule name')"></span>
+              </info-popover>
+            </label>
+            <input type="text" class="gf-form-input width-12" ng-model="rule.data.alias" id="{{ rule.getId() }}"
+              placeholder="Name of this rule" />
+          </div>
+          <!-- Data type -->
+          <div class="gf-form" ng-if="editor.isMultipleType()">
+            <label class="gf-form-label width-10">Metrics Type
+              <info-popover mode="right-normal"><span
+                  ng-bind-html="$GF.popover('Only one type of queries by rule Series or table', 'MAPPING#Aggregation')"></span>
+              </info-popover>
+            </label>
+            <div class="gf-form-select-wrapper width-12">
+              <select class="gf-form-input" ng-model="rule.data.metricType"
+                ng-options="c.value as c.text for c in editor.metricType" ng-blur="editor.onRulesChange()"></select>
+            </div>
+          </div>
+          <!-- Metric Name -->
+          <div class="gf-form">
+            <label class="gf-form-label width-10">Apply to metrics
+              <info-popover mode="right-normal"><span
+                  ng-bind-html="$GF.popover('Select alias or name of metric', 'MAPPING#Apply to metrics named','mp_metrics_name')"></span>
+              </info-popover>
+            </label>
+            <input type="text" placeholder="Name or regex of metric" class="gf-form-input width-12"
+              ng-model="rule.data.pattern" bs-tooltip="'Specify regex using /my.*regex/ syntax'"
+              bs-typeahead="editor.getMetricNames" ng-blur="editor.onRulesChange()" ng-model-onblur data-min-length="0"
+              data-items="100" data-placement="right" ng-if="rule.data.metricType === 'serie'" />
+            <div class="gf-form-select-wrapper width-12" ng-if="rule.data.metricType === 'table'">
+              <select class="gf-form-input" ng-model="rule.data.refId" ng-options="o for o in editor.getTablesName()"
+                ng-blur="editor.onRulesChange()">
+                <option style="display:none" value="">select a table</option>
+              </select>
+            </div>
+          </div>
+          <!-- Columns -->
+          <div class="gf-form" ng-if="rule.data.metricType === 'table'">
+            <label class="gf-form-label width-10">Apply to column
+              <info-popover mode="right-normal"><span
+                  ng-bind-html="$GF.popover('Column name of the table', 'MAPPING#Aggregation')"></span>
+              </info-popover>
+            </label>
+            <div class="gf-form-select-wrapper width-12">
+              <select class="gf-form-input" ng-model="rule.data.column"
+                ng-options="o for o in editor.getColumnsForTable(rule.data.refId)" ng-blur="editor.onRulesChange()">
+                <option style="display:none" value="">select a column</option>
+              </select>
+            </div>
+          </div>
+          <!-- Aggregation -->
+          <div class="gf-form">
+            <label class="gf-form-label width-10">Aggregation
+              <info-popover mode="right-normal"><span
+                  ng-bind-html="$GF.popover('Select an aggregation for all values of metric', 'MAPPING#Aggregation')"></span>
+              </info-popover>
+            </label>
+            <div class="gf-form-select-wrapper width-12">
+              <select class="gf-form-input" ng-model="rule.data.aggregation"
+                ng-options="c.value as c.text for c in editor.aggregationTypes"
+                ng-blur="editor.onRulesChange()"></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- TYPE -->
+        <div class="section gf-form-group">
+          <h5 class="section-heading">
+            Type
+            <info-popover mode="right-normal">
+              <span
+                ng-bind-html="$GF.popover('Specify unit (Number, String or date) and type for displayed values by Text Mappings.', 'MAPPING#Type')">
+              </span>
+            </info-popover>
+          </h5>
+          <div class="gf-form">
+            <label class="gf-form-label width-10">Type
+              <info-popover mode="right-normal"><span
+                  ng-bind-html="$GF.popover('Select type and unit of metric to display it for the good format.', 'MAPPING#Type')"></span>
+              </info-popover>
+            </label>
+            <div class="gf-form-select-wrapper width-16">
+              <select class="gf-form-input" ng-model="rule.data.type"
+                ng-options="c.value as c.text for c in editor.metricTypes" ng-change="editor.onRulesChange()"></select>
+            </div>
+          </div>
+          <div class="gf-form" ng-if="rule.data.type === 'date'">
+            <label class="gf-form-label width-10">Date Format
+              <info-popover mode="right-normal"><span
+                  ng-bind-html="$GF.popover('Select format of the date to display it in text with text mapping.', 'MAPPING#Type')"></span>
+              </info-popover>
+            </label>
+            <gf-form-dropdown model="rule.data.dateFormat" css-class="gf-form-input width-16" lookup-text="true"
+              get-options="editor.dateFormats" on-change="editor.onRulesChange()" allow-custom="true">
+            </gf-form-dropdown>
+          </div>
+
+          <div ng-if="rule.data.type === 'string'">
+            <gf-form-switch class="gf-form" label-class="width-14" ng-if="rule.data.type === 'string'"
+              label="Sanitize HTML" checked="rule.data.sanitize" on-change="editor.onRulesChange()"></gf-form-switch>
+          </div>
+          <div ng-if="rule.data.type === 'string'">
+            <gf-form-switch class="gf-form" label-class="width-14" ng-if="rule.data.type === 'string'"
+              label="Preserve Formatting" checked="rule.data.preserveFormat" on-change="editor.onRulesChange()">
+            </gf-form-switch>
+          </div>
+
+          <div ng-if="rule.data.type === 'number'">
+            <div class="gf-form">
+              <label class="gf-form-label width-10">Unit
+                <info-popover mode="right-normal"><span
+                    ng-bind-html="$GF.popover('Select unit of aggregated value.', 'MAPPING#Type')"></span>
+                </info-popover>
+              </label>
+              <div class="gf-form-dropdown-typeahead width-16" ng-model="rule.data.unit"
+                dropdown-typeahead2="editor.unitFormats"
+                dropdown-typeahead-on-select="editor.setUnitFormat(rule, $subItem)"></div>
+            </div>
+            <div class="gf-form">
+              <label class="gf-form-label width-10">Decimals
+                <info-popover mode="right-normal"><span
+                    ng-bind-html="$GF.popover('Select number of decimals', 'MAPPING#Type')"></span>
+                </info-popover>
+              </label>
+              <input type="number" class="gf-form-input width-4" data-placement="right" ng-model="rule.data.decimals"
+                ng-blur="editor.onRulesChange()" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Thresholds -->
+        <ng-include src="$GF.plugin.getPartialPath() + 'mapping/thresholds/index.html'"> </ng-include>
+
+        <!-- TOOLTIP -->
+        <ng-include src="$GF.plugin.getPartialPath() + 'mapping/tooltip/index.html'"> </ng-include>
+
+        <!-- GRAPH TOOLTIP -->
+        <ng-include src="$GF.plugin.getPartialPath() + 'mapping/graph/index.html'"> </ng-include>
+
+        <!-- MAPPINGS -->
+        <div class="editor-row">
+          <!-- SHAPE MAPPING -->
+          <ng-include src="$GF.plugin.getPartialPath() + 'mapping/shape/index.html'"> </ng-include>
+
+          <!-- TEXT MAPPING -->
+          <ng-include src="$GF.plugin.getPartialPath() + 'mapping/text/index.html'"> </ng-include>
+
+          <!-- LINK MAPPING -->
+          <ng-include src="$GF.plugin.getPartialPath() + 'mapping/link/index.html'"> </ng-include>
+
+          <!-- LINK MAPPING -->
+          <ng-include src="$GF.plugin.getPartialPath() + 'mapping/event/index.html'"> </ng-include>
+
+          <!-- VALUE MAPPING & RANGE MAPPING -->
+          <ng-include src="$GF.plugin.getPartialPath() + 'mapping/valuemap/index.html'"> </ng-include>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <!-- BUTTONS RULES -->
+        <div class="gf-form-inline">
+          <div class="gf-form" style="margin-right: 5px;">
+            <button class="btn btn-danger btn-small" ng-click="editor.removeRule(rule, true)"><i
+                class="fa fa-trash"></i> Remove Rule</button>
+          </div>
+          <div class="gf-form">
+            <button class="btn btn-secondary btn-small" ng-click="editor.cloneRule(rule)"><i class="fa fa-copy"></i>
+              Copy Rule</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="editor-row">
+  <div class="gf-form-button-row">
+    <button class="btn btn-inverse" ng-click="editor.rulesHandler.addRule('/.*/')"><i class="fa fa-plus"></i>&nbsp;Add
+      Rule</button>
+  </div>
+</div>
+</div>

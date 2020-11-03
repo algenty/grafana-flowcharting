@@ -360,4 +360,19 @@ declare module gf {
     $GF: $GF;
     ctrl: any;
   }
+
+  declare interface TTableColumn {
+    index: number;
+    id: string;
+    label: string;
+    desc: string;
+    size: string;
+    sort: 'asc' | 'desc';
+    select: boolean;
+  }
+  
+  declare interface TTableData {
+    data: any[];
+    columns: TTableColumn[];
+  }
 }

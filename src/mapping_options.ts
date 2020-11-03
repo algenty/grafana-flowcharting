@@ -25,6 +25,7 @@ export class MappingOptionsCtrl {
   tpDirection: gf.TSelectString[] = $GF.CONSTANTS.TOOLTIP_DIRECTION_TYPES;
   propTypes: gf.TSelectString[] = $GF.CONSTANTS.IDENT_TYPES;
   textPattern = '/.*/';
+  rulesTable : gf.TTableData;
   metricTypes = $GF.CONSTANTS.VALUE_TYPES;
   dateFormats: gf.TSelectString[] = $GF.CONSTANTS.VALUE_DATEFORMAT_TYPES;
   aggregationTypes = $GF.CONSTANTS.AGGREGATION_TYPES;
@@ -53,6 +54,74 @@ export class MappingOptionsCtrl {
     this.metricHandler = this.ctrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();
     this.tpGraphSize = $GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
+    this.rulesTable = {
+      data: this.rulesHandler.getRules(),
+      columns: [
+        {
+          index: 0,
+          id: 'expand',
+          label: '<>',
+          desc: 'Expand/collapse',
+          size : '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 1,
+          id: 'rule',
+          label: 'Rule',
+          desc: 'Rule Name',
+          size : '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 2,
+          id: 'level',
+          label: 'Level',
+          desc: 'Highest level',
+          size : '40px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 3,
+          id: 'rval',
+          label: 'Raw value',
+          desc: 'Raw value',
+          size : '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 4,
+          id: 'fval',
+          label: 'Formated value',
+          desc: 'Formated value',
+          size : '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 5,
+          id: 'color',
+          label: 'Color',
+          desc: 'Highest color',
+          size : '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 6,
+          id: 'actions',
+          label: 'Actions',
+          desc: 'Actions',
+          size : '100px',
+          sort: 'asc',
+          select: false,
+        },
+      ],
+    };
 
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');
@@ -321,6 +390,35 @@ export class MappingOptionsCtrl {
   onEventValue(event: EventMap) {
     this.getEventValues = event.getTypeahead();
   }
+
+  //
+  // Rules Table
+  //
+  getWidth(tableData : gf.TTableData, id : string):string {
+    let size = '99px';
+    tableData.columns.forEach(c => {
+      if(c.id === id) {
+        size =  c.size;
+      }
+    });
+    return size;
+  }
+
+  getLeft(tableData : gf.TTableData, id : string):string {
+    let sizes = 0;
+    let found = false;
+    tableData.columns.forEach(c => {
+      if(c.id !== id && found === false ) {
+        sizes +=  parseInt( c.size, 10);
+      }
+      if(c.id === id) {
+        found = true
+      }
+    });
+    return `${sizes}px`;
+  }
+
+
 }
 
 /** @ngInject */

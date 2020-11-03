@@ -194,7 +194,7 @@ export class State {
    * @memberof State
    */
   isEdited() {
-    return this.state.edited
+    return this.edited
   }
 
   /**
@@ -204,7 +204,7 @@ export class State {
    * @memberof State
    */
   isEditMode() {
-    return this.state.edit
+    return this.edit
   }
 
   /**
