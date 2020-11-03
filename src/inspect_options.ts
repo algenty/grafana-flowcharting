@@ -10,6 +10,7 @@ declare interface TColumn {
   id: string;
   label: string;
   desc: string;
+  size: string;
   sort: 'asc' | 'desc';
   select: boolean;
 }
@@ -50,6 +51,7 @@ export class InspectOptionsCtrl {
           id: 'id',
           label: 'ID',
           desc: 'Uniq Id',
+          size : '100px',
           sort: 'asc',
           select: false,
         },
@@ -58,6 +60,7 @@ export class InspectOptionsCtrl {
           id: 'label',
           label: 'Label',
           desc: 'Text/Label',
+          size : '100px',
           sort: 'asc',
           select: false,
         },
@@ -66,6 +69,7 @@ export class InspectOptionsCtrl {
           id: 'Level',
           label: 'Level',
           desc: 'Lvl',
+          size : '40px',
           sort: 'asc',
           select: false,
         },
@@ -74,6 +78,7 @@ export class InspectOptionsCtrl {
           id: 'colors',
           label: 'Font/Fill/Stoke colors',
           desc: 'Shape ID',
+          size : '100px',
           sort: 'asc',
           select: false,
         },
@@ -82,6 +87,7 @@ export class InspectOptionsCtrl {
           id: 'tags',
           label: 'Tags',
           desc: 'Tags',
+          size : '100px',
           sort: 'asc',
           select: false,
         },
@@ -134,6 +140,19 @@ export class InspectOptionsCtrl {
   reset() {
     this.flowchartHandler.draw();
     this.flowchartHandler.refresh();
+    const flowchart = this.flowchartHandler.getFlowchart();
+    const sh = flowchart.getStateHandler();
+    if (sh !== undefined) {
+      const states = sh.getStates();
+      states.forEach(state => {
+        state.edit = false;
+        if(state.edited && state.cellId && state.previousId) {
+          state.cellId = state.previousId;
+          state.edited = false;
+        }
+      });
+      sh.edited = false;
+    }
     // this.$scope.$apply();
   }
 
@@ -151,6 +170,7 @@ export class InspectOptionsCtrl {
       sh.edited = false;
     }
     flowchart.applyModel();
+    this.ctrl.notify("Save the dashboard to apply the modifications");
   }
 
   selectCell(state: State) {
@@ -204,24 +224,12 @@ export class InspectOptionsCtrl {
 
   onMouseMove(event: MouseEvent) {
     if (this.pressed && this.headerTable && this.headerTable.parentNode) {
-      // const decaleColumns = function(parent: HTMLDivElement) {
-      //   if (parent !== null) {
-      //     if (parent.nextElementSibling !== null) {
-      //       const child = <HTMLDivElement>parent.nextElementSibling;
-      //       const newLeft = parseInt(parent.style.width, 10) + parseInt(parent.style.left, 10);
-      //       child.style.left = `${newLeft}px`;
-      //       decaleColumns(child);
-      //     }
-      //   }
-      // };
       const decaleColumns = function(node : HTMLElement | null) {
         while (node !== null) {
           const prec = node.previousElementSibling as HTMLElement;
           let newLeft = 0;
           if (prec) {
             newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
-          } else {
-            newLeft = 0;
           }
           node.style.left = `${newLeft}px`;
           node = node.nextElementSibling as HTMLElement;

@@ -188,6 +188,26 @@ export class State {
   }
 
   /**
+   * Return if id is edited
+   *
+   * @returns
+   * @memberof State
+   */
+  isEdited() {
+    return this.state.edited
+  }
+
+  /**
+   * Return if is in edit mode
+   *
+   * @returns
+   * @memberof State
+   */
+  isEditMode() {
+    return this.state.edit
+  }
+
+  /**
    * Restore initial status of state without apply display.
    * Use applyState() to apply on graph (color, level and text)
    *

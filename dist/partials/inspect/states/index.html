@@ -14,7 +14,6 @@
                 style="position: absolute; top: 0px; left: 0px; width: 100px; user-select: auto; justify-content: flex-start;">
                 <div title="Id" class="GF_inspect-table-title" style="cursor: pointer;">
                   <div>Id</div>
-                  <div></div>
                 </div>
                 <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.onMouseDown($event)">
                 </div>
@@ -24,7 +23,6 @@
                 style="position: absolute; top: 0px; left: 100px; width: 100px; user-select: auto; justify-content: flex-start;">
                 <div title="Label" class="GF_inspect-table-title" style="cursor: pointer;">
                   <div>Label</div>
-                  <div></div>
                 </div>
                 <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
@@ -34,7 +32,6 @@
                 style="position: absolute; top: 0px; left: 200px; width: 40px; user-select: auto; justify-content: flex-start;">
                 <div title="Level" class="GF_inspect-table-title" style="cursor: pointer;">
                   <div>Lvl</div>
-                  <div></div>
                 </div>
                 <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
@@ -44,7 +41,6 @@
                 style="position: absolute; top: 0px; left: 240px; width: 100px; user-select: auto; justify-content: flex-start;">
                 <div title="Colors" class="GF_inspect-table-title" style="cursor: pointer;">
                   <div>Colors</div>
-                  <div></div>
                 </div>
                 <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
@@ -54,7 +50,6 @@
                 style="position: absolute; top: 0px; left: 340px; width: 100px; user-select: auto; justify-content: flex-start;">
                 <div title="Tags" class="GF_inspect-table-title" style="cursor: pointer;">
                   <div>Tags</div>
-                  <div></div>
                 </div>
                 <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
@@ -74,14 +69,9 @@
                 <div role="cell" class="GF_inspect-table-cells" id="IdCells"
                   style="position: absolute; top: 0px; left: 0px; width: 100px; text-align: left;">
                   <!-- CONTENT -->
-                  <div class="GF_inspect-table-content" ng-hide="state.edited || state.edit"
+                  <div class="GF_inspect-table-content" ng-hide="state.edit" ng-style="state.edited && {'color':'blue'};"
                     ng-dblclick="editor.onEdit(state)">
                     {{state.cellId}}
-                  </div>
-                  <div ng-hide="!state.edited || state.edit" ng-dblclick="editor.onEdit(state)">
-                    <span style="color:blue">
-                      {{state.cellId}}
-                    </span>
                   </div>
                   <div ng-show="state.edit" class="GF_inspect-table-cells">
                     <input type="text" id="{{state.cellId}}" class="gf-form-input" ng-model="state.newcellId"

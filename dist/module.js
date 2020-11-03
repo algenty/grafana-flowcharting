@@ -21495,6 +21495,7 @@ var InspectOptionsCtrl = function () {
         id: 'id',
         label: 'ID',
         desc: 'Uniq Id',
+        size: '100px',
         sort: 'asc',
         select: false
       }, {
@@ -21502,6 +21503,7 @@ var InspectOptionsCtrl = function () {
         id: 'label',
         label: 'Label',
         desc: 'Text/Label',
+        size: '100px',
         sort: 'asc',
         select: false
       }, {
@@ -21509,6 +21511,7 @@ var InspectOptionsCtrl = function () {
         id: 'Level',
         label: 'Level',
         desc: 'Lvl',
+        size: '40px',
         sort: 'asc',
         select: false
       }, {
@@ -21516,6 +21519,7 @@ var InspectOptionsCtrl = function () {
         id: 'colors',
         label: 'Font/Fill/Stoke colors',
         desc: 'Shape ID',
+        size: '100px',
         sort: 'asc',
         select: false
       }, {
@@ -21523,6 +21527,7 @@ var InspectOptionsCtrl = function () {
         id: 'tags',
         label: 'Tags',
         desc: 'Tags',
+        size: '100px',
         sort: 'asc',
         select: false
       }]
@@ -21576,6 +21581,21 @@ var InspectOptionsCtrl = function () {
     value: function reset() {
       this.flowchartHandler.draw();
       this.flowchartHandler.refresh();
+      var flowchart = this.flowchartHandler.getFlowchart();
+      var sh = flowchart.getStateHandler();
+
+      if (sh !== undefined) {
+        var states = sh.getStates();
+        states.forEach(function (state) {
+          state.edit = false;
+
+          if (state.edited && state.cellId && state.previousId) {
+            state.cellId = state.previousId;
+            state.edited = false;
+          }
+        });
+        sh.edited = false;
+      }
     }
   }, {
     key: "apply",
@@ -21595,6 +21615,7 @@ var InspectOptionsCtrl = function () {
       }
 
       flowchart.applyModel();
+      this.ctrl.notify("Save the dashboard to apply the modifications");
     }
   }, {
     key: "selectCell",
@@ -21669,8 +21690,6 @@ var InspectOptionsCtrl = function () {
 
             if (prec) {
               newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
-            } else {
-              newLeft = 0;
             }
 
             node.style.left = "".concat(newLeft, "px");
@@ -25083,6 +25102,16 @@ var State = function () {
 
       trc.after();
       return this;
+    }
+  }, {
+    key: "isEdited",
+    value: function isEdited() {
+      return this.state.edited;
+    }
+  }, {
+    key: "isEditMode",
+    value: function isEditMode() {
+      return this.state.edit;
     }
   }, {
     key: "unsetState",
