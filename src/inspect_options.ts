@@ -26,6 +26,7 @@ export class InspectOptionsCtrl {
   panel: any;
   parentDiv: HTMLDivElement;
   header: HTMLDivElement | undefined;
+  body: HTMLDivElement | undefined;
   traceEnable: boolean = $GF.trace.isEnabled();
   pressed: boolean = false;
   startX: number = 0;
@@ -85,7 +86,7 @@ export class InspectOptionsCtrl {
         },
       ],
     };
-    console.log('$scope', $scope);
+    // console.log('$scope', $scope);
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
@@ -203,26 +204,32 @@ export class InspectOptionsCtrl {
   }
 
   onMouseMove(event: MouseEvent) {
-    if (this.pressed && this.header) {
-      const decaleHeaders = function(parent: HTMLDivElement) {
+    if (this.pressed && this.header && this.header.parentNode) {
+      const decaleColumns = function(parent: HTMLDivElement) {
         if (parent !== null) {
           if(parent.nextElementSibling !== null) {
-            // debugger
             const child  = <HTMLDivElement> parent.nextElementSibling;
             const newLeft = parseInt(parent.style.width, 10) + parseInt(parent.style.left, 10);
             child.style.left = `${newLeft}px`;
-            decaleHeaders(child);
+            decaleColumns(child);
           }
         }
       };
-      // const offset = 35;
-      // const columnsHeader = this.parentDiv.querySelectorAll(".GF_inspect-table-columnheader");
-      // columnsHeader.removeChild(this.header);
-      // const columnsCells = this.parentDiv.querySelectorAll("#IdCells");
+      const index = Array.from(this.header.parentNode.children).indexOf(this.header);
       const delta = event.pageX - this.startX;
       const width = this.startWidth + delta;
       this.header.style.width = `${width}px`;
-      decaleHeaders(this.header);
+      decaleColumns(this.header);
+      if (this.body) {
+        const rows = this.body.querySelectorAll(".GF_inspect-table-rows");
+        Array.from(rows).forEach(r => {
+          const cell = <HTMLDivElement> r.firstElementChild;
+          if(cell) {
+            cell.style.width = `${width}px`;
+            decaleColumns(cell);
+          }
+        })
+      }
     }
   }
 
@@ -232,12 +239,9 @@ export class InspectOptionsCtrl {
     // console.log('onMouseDown',event);
     this.header = event.currentTarget.parentElement;
     if (this.header) {
-      // debugger
-      // console.log('this.header style', this.header.style);
       this.header.classList.add('GF_resizing');
-      // console.log('begin width',this.header.style.width);
       this.startWidth = parseInt(this.header.style.width, 10);
-      // console.log('parseInt',this.startWidth);
+      this.body = <HTMLDivElement> this.parentDiv.getElementsByClassName('GF_inspect-table-body')[0]
     }
   }
 

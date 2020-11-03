@@ -191,6 +191,14 @@ div.GF_inspect-table-columnheader {
   display: flex;
 }
 
+div.GF_inspect-table-body {
+  position: relative;
+  height: 300px; 
+  width: 100%; 
+  overflow: hidden auto; 
+  will-change: transform; direction: ltr;
+}
+
 div.GF_inspect-table-rows {
   border-bottom: 1px solid rgb(32, 34, 38);
 }
