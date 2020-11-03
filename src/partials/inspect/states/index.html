@@ -7,7 +7,7 @@
         <div style="width: 100%;">
           <div>
             <!-- COLUMNS -->
-            <div class="GF_inspect-table-thead" role="row" style="position: relative; width: 100%;" ng-mouseup="editor.onMouseUp($event)" ng-mousemove="editor.onMouseMove($event)">
+            <div class="GF_inspect-table-thead GF_unselectable" role="row" style="position: relative; width: 100%;" ng-mouseup="editor.onMouseUp($event)" ng-mousemove="editor.onMouseMove($event)" ng-mouseleave="editor.onMouseUp($event)">
               <!-- COLUMN REPEAT-->
               <!-- ID -->
               <div class="GF_inspect-table-columnheader" colspan="1" role="columnheader"
@@ -26,7 +26,7 @@
                   <div>Label</div>
                   <div></div>
                 </div>
-                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;">
+                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
               <!-- LEVEL -->
@@ -36,7 +36,7 @@
                   <div>Lvl</div>
                   <div></div>
                 </div>
-                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;">
+                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
               <!-- COLORS -->
@@ -46,7 +46,7 @@
                   <div>Colors</div>
                   <div></div>
                 </div>
-                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;">
+                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
               <!-- TAGS -->
@@ -56,7 +56,7 @@
                   <div>Tags</div>
                   <div></div>
                 </div>
-                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;">
+                <div draggable="false" role="separator" class="GF_inspect-table-resizeHandle" style="cursor: ew-resize;" ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
             </div>

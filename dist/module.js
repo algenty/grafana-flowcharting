@@ -21479,8 +21479,9 @@ var InspectOptionsCtrl = function () {
     _classCallCheck(this, InspectOptionsCtrl);
 
     this.enable = false;
-    this.traceEnable = globals_class__WEBPACK_IMPORTED_MODULE_0__["$GF"].trace.isEnabled();
+    this.indexTable = 0;
     this.pressed = false;
+    this.traceEnable = globals_class__WEBPACK_IMPORTED_MODULE_0__["$GF"].trace.isEnabled();
     this.startX = 0;
     this.startWidth = 0;
     $scope.editor = this;
@@ -21490,38 +21491,38 @@ var InspectOptionsCtrl = function () {
     this.state = {
       data: this.getStates(),
       columns: [{
-        id: 'cellId',
-        desc: 'Shape ID',
+        index: 0,
+        id: 'id',
+        label: 'ID',
+        desc: 'Uniq Id',
         sort: 'asc',
         select: false
       }, {
+        index: 1,
         id: 'label',
-        desc: 'Label',
+        label: 'Label',
+        desc: 'Text/Label',
         sort: 'asc',
         select: false
       }, {
-        id: 'cellId',
+        index: 2,
+        id: 'Level',
+        label: 'Level',
+        desc: 'Lvl',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 3,
+        id: 'colors',
+        label: 'Font/Fill/Stoke colors',
         desc: 'Shape ID',
         sort: 'asc',
         select: false
       }, {
-        id: 'font',
-        desc: 'Font color',
-        sort: 'asc',
-        select: false
-      }, {
-        id: 'fill',
-        desc: 'Fill color',
-        sort: 'asc',
-        select: false
-      }, {
-        id: 'stroke',
-        desc: 'Stroke color',
-        sort: 'asc',
-        select: false
-      }, {
+        index: 4,
         id: 'tags',
-        desc: 'Tags Mapping',
+        label: 'Tags',
+        desc: 'Tags',
         sort: 'asc',
         select: false
       }]
@@ -21619,7 +21620,7 @@ var InspectOptionsCtrl = function () {
     key: "getStateValue",
     value: function getStateValue(state, col) {
       switch (col) {
-        case 'cellId':
+        case 'id':
           return state.cellId;
           break;
 
@@ -21658,33 +21659,41 @@ var InspectOptionsCtrl = function () {
   }, {
     key: "onMouseMove",
     value: function onMouseMove(event) {
-      if (this.pressed && this.header && this.header.parentNode) {
-        var decaleColumns = function decaleColumns(parent) {
-          if (parent !== null) {
-            if (parent.nextElementSibling !== null) {
-              var child = parent.nextElementSibling;
-              var newLeft = parseInt(parent.style.width, 10) + parseInt(parent.style.left, 10);
-              child.style.left = "".concat(newLeft, "px");
-              decaleColumns(child);
+      var _this = this;
+
+      if (this.pressed && this.headerTable && this.headerTable.parentNode) {
+        var decaleColumns = function decaleColumns(node) {
+          while (node !== null) {
+            var prec = node.previousElementSibling;
+            var newLeft = 0;
+
+            if (prec) {
+              newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
+            } else {
+              newLeft = 0;
             }
+
+            node.style.left = "".concat(newLeft, "px");
+            node = node.nextElementSibling;
           }
         };
 
-        var index = Array.from(this.header.parentNode.children).indexOf(this.header);
         var delta = event.pageX - this.startX;
         var width = this.startWidth + delta;
-        this.header.style.width = "".concat(width, "px");
-        decaleColumns(this.header);
+        this.headerTable.style.width = "".concat(width, "px");
+        decaleColumns(this.headerTable.nextElementSibling);
 
-        if (this.body) {
-          var rows = this.body.querySelectorAll(".GF_inspect-table-rows");
+        if (this.bodyTable) {
+          var rows = this.bodyTable.querySelectorAll('.GF_inspect-table-rows');
           Array.from(rows).forEach(function (r) {
             var cell = r.firstElementChild;
 
-            if (cell) {
-              cell.style.width = "".concat(width, "px");
-              decaleColumns(cell);
+            for (var index = 0; index < _this.indexTable; index++) {
+              cell = cell.nextElementSibling;
             }
+
+            cell.style.width = "".concat(width, "px");
+            decaleColumns(cell.nextElementSibling);
           });
         }
       }
@@ -21694,12 +21703,16 @@ var InspectOptionsCtrl = function () {
     value: function onMouseDown(event) {
       this.pressed = true;
       this.startX = event.pageX;
-      this.header = event.currentTarget.parentElement;
+      this.headerTable = event.currentTarget.parentElement;
 
-      if (this.header) {
-        this.header.classList.add('GF_resizing');
-        this.startWidth = parseInt(this.header.style.width, 10);
-        this.body = this.parentDiv.getElementsByClassName('GF_inspect-table-body')[0];
+      if (this.headerTable) {
+        if (this.headerTable.parentNode) {
+          this.indexTable = Array.from(this.headerTable.parentNode.children).indexOf(this.headerTable);
+        }
+
+        this.headerTable.classList.add('GF_resizing');
+        this.startWidth = parseInt(this.headerTable.style.width, 10);
+        this.bodyTable = this.parentDiv.getElementsByClassName('GF_inspect-table-body')[0];
       }
     }
   }, {
@@ -21707,8 +21720,8 @@ var InspectOptionsCtrl = function () {
     value: function onMouseUp(event) {
       this.pressed = false;
 
-      if (this.header) {
-        this.header.classList.remove('GF_resizing');
+      if (this.headerTable) {
+        this.headerTable.classList.remove('GF_resizing');
       }
     }
   }]);

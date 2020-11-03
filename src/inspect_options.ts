@@ -6,7 +6,9 @@ import _ from 'lodash';
 // import { MetricHandler } from './metricHandler';
 
 declare interface TColumn {
+  index: number;
   id: string;
+  label: string;
   desc: string;
   sort: 'asc' | 'desc';
   select: boolean;
@@ -25,10 +27,11 @@ export class InspectOptionsCtrl {
   state: TTable;
   panel: any;
   parentDiv: HTMLDivElement;
-  header: HTMLDivElement | undefined;
-  body: HTMLDivElement | undefined;
-  traceEnable: boolean = $GF.trace.isEnabled();
+  headerTable: HTMLDivElement | undefined;
+  bodyTable: HTMLDivElement | undefined;
+  indexTable: number = 0;
   pressed: boolean = false;
+  traceEnable: boolean = $GF.trace.isEnabled();
   startX: number = 0;
   startWidth: any = 0;
   column: any;
@@ -43,50 +46,47 @@ export class InspectOptionsCtrl {
       data: this.getStates(),
       columns: [
         {
-          id: 'cellId',
-          desc: 'Shape ID',
+          index: 0,
+          id: 'id',
+          label: 'ID',
+          desc: 'Uniq Id',
           sort: 'asc',
           select: false,
         },
         {
+          index: 1,
           id: 'label',
-          desc: 'Label',
+          label: 'Label',
+          desc: 'Text/Label',
           sort: 'asc',
           select: false,
         },
         {
-          id: 'cellId',
+          index: 2,
+          id: 'Level',
+          label: 'Level',
+          desc: 'Lvl',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 3,
+          id: 'colors',
+          label: 'Font/Fill/Stoke colors',
           desc: 'Shape ID',
           sort: 'asc',
           select: false,
         },
         {
-          id: 'font',
-          desc: 'Font color',
-          sort: 'asc',
-          select: false,
-        },
-        {
-          id: 'fill',
-          desc: 'Fill color',
-          sort: 'asc',
-          select: false,
-        },
-        {
-          id: 'stroke',
-          desc: 'Stroke color',
-          sort: 'asc',
-          select: false,
-        },
-        {
+          index: 4,
           id: 'tags',
-          desc: 'Tags Mapping',
+          label: 'Tags',
+          desc: 'Tags',
           sort: 'asc',
           select: false,
         },
       ],
     };
-    // console.log('$scope', $scope);
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
@@ -171,7 +171,7 @@ export class InspectOptionsCtrl {
 
   getStateValue(state: State, col: string): string | null {
     switch (col) {
-      case 'cellId':
+      case 'id':
         return state.cellId;
         break;
       case 'level':
@@ -180,7 +180,6 @@ export class InspectOptionsCtrl {
       case 'label':
         return state.getCellProp('value');
         break;
-
       default:
         return null;
         break;
@@ -204,31 +203,45 @@ export class InspectOptionsCtrl {
   }
 
   onMouseMove(event: MouseEvent) {
-    if (this.pressed && this.header && this.header.parentNode) {
-      const decaleColumns = function(parent: HTMLDivElement) {
-        if (parent !== null) {
-          if(parent.nextElementSibling !== null) {
-            const child  = <HTMLDivElement> parent.nextElementSibling;
-            const newLeft = parseInt(parent.style.width, 10) + parseInt(parent.style.left, 10);
-            child.style.left = `${newLeft}px`;
-            decaleColumns(child);
+    if (this.pressed && this.headerTable && this.headerTable.parentNode) {
+      // const decaleColumns = function(parent: HTMLDivElement) {
+      //   if (parent !== null) {
+      //     if (parent.nextElementSibling !== null) {
+      //       const child = <HTMLDivElement>parent.nextElementSibling;
+      //       const newLeft = parseInt(parent.style.width, 10) + parseInt(parent.style.left, 10);
+      //       child.style.left = `${newLeft}px`;
+      //       decaleColumns(child);
+      //     }
+      //   }
+      // };
+      const decaleColumns = function(node : HTMLElement | null) {
+        while (node !== null) {
+          const prec = node.previousElementSibling as HTMLElement;
+          let newLeft = 0;
+          if (prec) {
+            newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
+          } else {
+            newLeft = 0;
           }
+          node.style.left = `${newLeft}px`;
+          node = node.nextElementSibling as HTMLElement;
         }
-      };
-      const index = Array.from(this.header.parentNode.children).indexOf(this.header);
+      }
       const delta = event.pageX - this.startX;
       const width = this.startWidth + delta;
-      this.header.style.width = `${width}px`;
-      decaleColumns(this.header);
-      if (this.body) {
-        const rows = this.body.querySelectorAll(".GF_inspect-table-rows");
-        Array.from(rows).forEach(r => {
-          const cell = <HTMLDivElement> r.firstElementChild;
-          if(cell) {
-            cell.style.width = `${width}px`;
-            decaleColumns(cell);
+      this.headerTable.style.width = `${width}px`;
+      decaleColumns(<HTMLElement >this.headerTable.nextElementSibling)
+
+      if (this.bodyTable) {
+        const rows = this.bodyTable.querySelectorAll('.GF_inspect-table-rows');
+        Array.from(rows).forEach(r => { 
+          let cell = r.firstElementChild as HTMLElement;
+          for (let index = 0; index < this.indexTable; index++) {
+            cell = cell.nextElementSibling as HTMLElement;
           }
-        })
+          cell.style.width = `${width}px`;
+          decaleColumns(<HTMLElement > cell.nextElementSibling)
+        });
       }
     }
   }
@@ -237,18 +250,21 @@ export class InspectOptionsCtrl {
     this.pressed = true;
     this.startX = event.pageX;
     // console.log('onMouseDown',event);
-    this.header = event.currentTarget.parentElement;
-    if (this.header) {
-      this.header.classList.add('GF_resizing');
-      this.startWidth = parseInt(this.header.style.width, 10);
-      this.body = <HTMLDivElement> this.parentDiv.getElementsByClassName('GF_inspect-table-body')[0]
+    this.headerTable = event.currentTarget.parentElement;
+    if (this.headerTable) {
+      if (this.headerTable.parentNode) {
+        this.indexTable = Array.from(this.headerTable.parentNode.children).indexOf(this.headerTable);
+      }
+      this.headerTable.classList.add('GF_resizing');
+      this.startWidth = parseInt(this.headerTable.style.width, 10);
+      this.bodyTable = <HTMLDivElement>this.parentDiv.getElementsByClassName('GF_inspect-table-body')[0];
     }
   }
 
   onMouseUp(event: MouseEvent) {
     this.pressed = false;
-    if (this.header) {
-      this.header.classList.remove('GF_resizing');
+    if (this.headerTable) {
+      this.headerTable.classList.remove('GF_resizing');
     }
   }
 }
