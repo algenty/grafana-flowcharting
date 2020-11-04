@@ -21796,9 +21796,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
 var MappingOptionsCtrl = function () {
-  MappingOptionsCtrl.$inject = ["$scope"];
+  MappingOptionsCtrl.$inject = ["$scope", "$element"];
 
-  function MappingOptionsCtrl($scope) {
+  function MappingOptionsCtrl($scope, $element) {
     var _this = this;
 
     _classCallCheck(this, MappingOptionsCtrl);
@@ -21826,6 +21826,10 @@ var MappingOptionsCtrl = function () {
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
+    var $div = $element.find('#templateMapping');
+    this.parentDiv = $div[0];
+    var $rulesTable = $div.find('#RulesTable');
+    var rulesTable = $rulesTable[0];
     this.rulesHandler = this.ctrl.rulesHandler;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.rulesHandler = this.ctrl.rulesHandler;
@@ -21839,7 +21843,7 @@ var MappingOptionsCtrl = function () {
         id: 'expand',
         label: '<>',
         desc: 'Expand/collapse',
-        size: '100px',
+        size: '30px',
         sort: 'asc',
         select: false
       }, {
@@ -21853,7 +21857,7 @@ var MappingOptionsCtrl = function () {
       }, {
         index: 2,
         id: 'level',
-        label: 'Level',
+        label: 'Lvl',
         desc: 'Highest level',
         size: '40px',
         sort: 'asc',
@@ -21861,7 +21865,7 @@ var MappingOptionsCtrl = function () {
       }, {
         index: 3,
         id: 'rval',
-        label: 'Raw value',
+        label: 'R. val.',
         desc: 'Raw value',
         size: '100px',
         sort: 'asc',
@@ -21869,7 +21873,7 @@ var MappingOptionsCtrl = function () {
       }, {
         index: 4,
         id: 'fval',
-        label: 'Formated value',
+        label: 'F. val.',
         desc: 'Formated value',
         size: '100px',
         sort: 'asc',
@@ -21892,7 +21896,7 @@ var MappingOptionsCtrl = function () {
         select: false
       }]
     };
-    this.rulesTable = new GFTable(this.rulesTableData);
+    this.rulesTable = new GFTable(this.rulesTableData, rulesTable);
 
     this.getMetricNames = function () {
       return _this.metricHandler.getNames('serie');
@@ -22228,29 +22232,28 @@ function mappingOptionsTab($q, uiSegmentSrv) {
 }
 
 var GFTable = function () {
-  function GFTable(table) {
+  function GFTable(table, div) {
     _classCallCheck(this, GFTable);
 
-    this.table = table;
+    this.pressed = false;
+    this.indexTable = 0;
+    this.startX = 0;
+    this.startWidth = 0;
+    this.tableData = table;
+    this.parentDiv = div;
   }
 
   _createClass(GFTable, [{
     key: "getWidth",
     value: function getWidth(id) {
-      var size = '99px';
-      this.table.columns.forEach(function (c) {
-        if (c.id === id) {
-          size = c.size;
-        }
-      });
-      return size;
+      return this.getColumnProperty(id, "size");
     }
   }, {
     key: "getLeft",
     value: function getLeft(id) {
       var sizes = 0;
       var found = false;
-      this.table.columns.forEach(function (c) {
+      this.tableData.columns.forEach(function (c) {
         if (c.id !== id && found === false) {
           sizes += parseInt(c.size, 10);
         }
@@ -22262,21 +22265,141 @@ var GFTable = function () {
       return "".concat(sizes, "px");
     }
   }, {
+    key: "getIndex",
+    value: function getIndex(id) {
+      return this.getColumnProperty(id, 'index');
+    }
+  }, {
+    key: "getId",
+    value: function getId(index) {
+      return this.getColumnProperty(index, 'id');
+    }
+  }, {
     key: "getLabel",
     value: function getLabel(id) {
-      var label = 'no label';
-      this.table.columns.forEach(function (c) {
-        if (c.id === id) {
-          label = c.label;
+      return this.getColumnProperty(id, 'label');
+    }
+  }, {
+    key: "getDesc",
+    value: function getDesc(id) {
+      return this.getColumnProperty(id, 'desc');
+    }
+  }, {
+    key: "getColumnProperty",
+    value: function getColumnProperty(id, property) {
+      var result = "No value for properti ".concat(property);
+      var isNumber = typeof id === 'number';
+
+      for (var index = 0; index < this.tableData.columns.length; index++) {
+        var element = this.tableData.columns[index];
+
+        if (isNumber && id === element.index || !isNumber && id === element.id) {
+          return element[property];
         }
-      });
-      return label;
+      }
+
+      return result;
+    }
+  }, {
+    key: "setColumnProperty",
+    value: function setColumnProperty(id, property, value) {
+      var isNumber = typeof id === 'number';
+
+      for (var index = 0; index < this.tableData.columns.length; index++) {
+        var element = this.tableData.columns[index];
+
+        if (isNumber && id === element.index || !isNumber && id === element.id) {
+          element[property] = value;
+        }
+      }
+
+      return this;
     }
   }, {
     key: "getElement",
     value: function getElement(element) {
       console.log('GFTable -> getElement -> element', element);
       debugger;
+    }
+  }, {
+    key: "onMouseMove",
+    value: function onMouseMove(event) {
+      var _this3 = this;
+
+      if (this.pressed && this.headerTable && this.headerTable.parentNode) {
+        var decaleColumns = function decaleColumns(node) {
+          while (node !== null) {
+            var prec = node.previousElementSibling;
+            var newLeft = 0;
+
+            if (prec) {
+              newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
+            }
+
+            node.style.left = "".concat(newLeft, "px");
+            node = node.nextElementSibling;
+          }
+        };
+
+        var delta = event.pageX - this.startX;
+        var width = this.startWidth + delta;
+        this.headerTable.style.width = "".concat(width, "px");
+        decaleColumns(this.headerTable.nextElementSibling);
+
+        if (this.bodyTable) {
+          var rows = this.bodyTable.querySelectorAll('.GF_table-rows');
+          Array.from(rows).forEach(function (r) {
+            var cells = r.querySelectorAll('.GF_table-cells');
+            var index = 0;
+            var prec = null;
+            cells.forEach(function (cell) {
+              var node = cell;
+
+              if (index == _this3.indexTable) {
+                node.style.width = "".concat(width, "px");
+                prec = node;
+
+                _this3.setColumnProperty(index, 'size', "".concat(width, "px"));
+              }
+
+              if (index > _this3.indexTable && prec !== null) {
+                var newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
+                node.style.left = "".concat(newLeft, "px");
+                prec = node;
+              }
+
+              index += 1;
+            });
+          });
+        }
+      }
+    }
+  }, {
+    key: "onMouseDown",
+    value: function onMouseDown(event) {
+      this.pressed = true;
+      this.startX = event.pageX;
+      console.log('onMouseDown', event);
+      this.headerTable = event.currentTarget.parentElement;
+
+      if (this.headerTable) {
+        if (this.headerTable.parentNode) {
+          this.indexTable = Array.from(this.headerTable.parentNode.children).indexOf(this.headerTable);
+        }
+
+        this.headerTable.classList.add('GF_resizing');
+        this.startWidth = parseInt(this.headerTable.style.width, 10);
+        this.bodyTable = this.parentDiv.getElementsByClassName('GF_table-body')[0];
+      }
+    }
+  }, {
+    key: "onMouseUp",
+    value: function onMouseUp(event) {
+      this.pressed = false;
+
+      if (this.headerTable) {
+        this.headerTable.classList.remove('GF_resizing');
+      }
     }
   }]);
 

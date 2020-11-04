@@ -205,6 +205,12 @@ div.GF_table-rows:hover {
   background-color: rgb(25, 27, 30);
 }
 
+div.GF_table-row_body {
+  border-left: 1px solid rgb(32, 34, 38);
+  border-right: 1px solid rgb(32, 34, 38);
+  border-bottom: 1px solid rgb(32, 34, 38);
+}
+
 div.GF_table-cells {
   border-right: 1px solid rgb(32, 34, 38);
   display: inline-flex;
@@ -213,13 +219,15 @@ div.GF_table-cells {
   height: 100%;
 }
 
-div.GF_inspect-table-content {
+div.GF_table-content {
   padding: 6px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   flex: 1 1 0%;
 }
+
+
 
 .GF_resizing {
   -moz-user-select: none;

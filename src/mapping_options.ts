@@ -14,6 +14,7 @@ export class MappingOptionsCtrl {
   rulesHandler: RulesHandler;
   metricHandler: MetricHandler;
   unitFormats: any;
+  parentDiv: HTMLDivElement;
   style = $GF.CONSTANTS.COLORMETHODS;
   metricType: gf.TSelectString[] = $GF.CONSTANTS.METRIC_TYPES;
   colorOn = $GF.CONSTANTS.COLOR_APPLYON;
@@ -43,12 +44,16 @@ export class MappingOptionsCtrl {
   getEventValues: string[];
 
   /** @ngInject */
-  constructor($scope: gf.TMappingOptionsScope) {
+  constructor($scope: gf.TMappingOptionsScope, $element) {
     $scope.editor = this;
     $scope.$GF = $GF.me();
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
+    const $div = $element.find('#templateMapping');
+    this.parentDiv = $div[0];
+    const $rulesTable = $div.find('#RulesTable');
+    const rulesTable = $rulesTable[0];
     this.rulesHandler = this.ctrl.rulesHandler;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.rulesHandler = this.ctrl.rulesHandler;
@@ -63,7 +68,7 @@ export class MappingOptionsCtrl {
           id: 'expand',
           label: '<>',
           desc: 'Expand/collapse',
-          size: '100px',
+          size: '30px',
           sort: 'asc',
           select: false,
         },
@@ -79,7 +84,7 @@ export class MappingOptionsCtrl {
         {
           index: 2,
           id: 'level',
-          label: 'Level',
+          label: 'Lvl',
           desc: 'Highest level',
           size: '40px',
           sort: 'asc',
@@ -88,7 +93,7 @@ export class MappingOptionsCtrl {
         {
           index: 3,
           id: 'rval',
-          label: 'Raw value',
+          label: 'R. val.',
           desc: 'Raw value',
           size: '100px',
           sort: 'asc',
@@ -97,7 +102,7 @@ export class MappingOptionsCtrl {
         {
           index: 4,
           id: 'fval',
-          label: 'Formated value',
+          label: 'F. val.',
           desc: 'Formated value',
           size: '100px',
           sort: 'asc',
@@ -124,7 +129,7 @@ export class MappingOptionsCtrl {
       ],
     };
 
-    this.rulesTable = new GFTable(this.rulesTableData);
+    this.rulesTable = new GFTable(this.rulesTableData, rulesTable);
 
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');
@@ -407,25 +412,29 @@ export function mappingOptionsTab($q, uiSegmentSrv) {
 }
 
 class GFTable {
-  table: gf.TTableData;
-  constructor(table: gf.TTableData) {
-    this.table = table;
+  parentDiv : HTMLDivElement;
+  tableData: gf.TTableData;
+  tableDom : HTMLElement | undefined;
+  pressed : boolean = false;
+  headerTable: HTMLDivElement | undefined;
+  bodyTable: HTMLDivElement | undefined;
+  indexTable: number = 0;
+  startX: number = 0;
+  startWidth: any = 0;
+
+  constructor(table: gf.TTableData, div : HTMLDivElement) {
+    this.tableData = table;
+    this.parentDiv = div;
   }
 
-  getWidth(id: string): string {
-    let size = '99px';
-    this.table.columns.forEach(c => {
-      if (c.id === id) {
-        size = c.size;
-      }
-    });
-    return size;
+  getWidth(id: string | number): string {
+    return this.getColumnProperty(id,"size");
   }
 
-  getLeft(id: string): string {
+  getLeft(id: string | number): string {
     let sizes = 0;
     let found = false;
-    this.table.columns.forEach(c => {
+    this.tableData.columns.forEach(c => {
       if (c.id !== id && found === false) {
         sizes += parseInt(c.size, 10);
       }
@@ -436,18 +445,112 @@ class GFTable {
     return `${sizes}px`;
   }
 
-  getLabel(id: string): string {
-    let label = 'no label';
-    this.table.columns.forEach(c => {
-      if (c.id === id) {
-        label = c.label;
-      }
-    });
-    return label;
+  getIndex(id : string):number {
+    return this.getColumnProperty(id,'index');
+  }
+
+  getId(index : number):string {
+    return this.getColumnProperty(index,'id');
+  }
+
+  getLabel(id: string| number): string {
+    return this.getColumnProperty(id,'label');
+  }
+
+  getDesc(id: string| number): string {
+    return this.getColumnProperty(id,'desc');
+  }
+
+  getColumnProperty(id: string| number, property : string): any {
+    let result = `No value for properti ${property}`;
+    const isNumber = (typeof(id) === 'number');
+    for (let index = 0; index < this.tableData.columns.length; index++) {
+      const element = this.tableData.columns[index];
+      if( (isNumber && id === element.index) || ( !isNumber && id === element.id)) {
+        return element[property];
+      } 
+    }
+    return result;
+  }
+
+  setColumnProperty(id: string| number, property : string, value:any):this {
+    const isNumber = (typeof(id) === 'number');
+    for (let index = 0; index < this.tableData.columns.length; index++) {
+      const element = this.tableData.columns[index];
+      if( (isNumber && id === element.index) || ( !isNumber && id === element.id)) {
+        element[property] = value;
+      } 
+    }
+    return this;
   }
 
   getElement(element) {
     console.log('GFTable -> getElement -> element', element);
     debugger
+  }
+
+  onMouseMove(event: MouseEvent) {
+    if (this.pressed && this.headerTable && this.headerTable.parentNode) {
+      const decaleColumns = function(node : HTMLElement | null) {
+        while (node !== null) {
+          const prec = node.previousElementSibling as HTMLElement;
+          let newLeft = 0;
+          if (prec) {
+            newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
+          }
+          node.style.left = `${newLeft}px`;
+          node = node.nextElementSibling as HTMLElement;
+        }
+      }
+      const delta = event.pageX - this.startX;
+      const width = this.startWidth + delta;
+      this.headerTable.style.width = `${width}px`;
+      decaleColumns(<HTMLElement>this.headerTable.nextElementSibling)
+
+      if (this.bodyTable) {
+        const rows = this.bodyTable.querySelectorAll('.GF_table-rows');
+        Array.from(rows).forEach(r => {
+          const cells = r.querySelectorAll('.GF_table-cells');
+          let index = 0;
+          let prec: HTMLElement | null = null;
+          cells.forEach( cell  => {
+            const node = <HTMLElement> cell;
+            if(index == this.indexTable) {
+              node.style.width = `${width}px`;
+              prec = node;
+              this.setColumnProperty(index,'size', `${width}px`);
+            }
+            if (index > this.indexTable && prec !== null) {
+              const newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
+              node.style.left = `${newLeft}px`;
+              prec = node;
+            }
+            index += 1;
+          });
+        });
+      }
+    }
+  }
+
+  onMouseDown(event: any) {
+    this.pressed = true;
+    this.startX = event.pageX;
+    console.log('onMouseDown',event);
+    this.headerTable = event.currentTarget.parentElement;
+    if (this.headerTable) {
+      if (this.headerTable.parentNode) {
+        this.indexTable = Array.from(this.headerTable.parentNode.children).indexOf(this.headerTable);
+      }
+      this.headerTable.classList.add('GF_resizing');
+      this.startWidth = parseInt(this.headerTable.style.width, 10);
+      this.bodyTable = <HTMLDivElement>this.parentDiv.getElementsByClassName('GF_table-body')[0];
+    }
+  }
+
+  onMouseUp(event: MouseEvent) {
+    this.pressed = false;
+    if (this.headerTable) {
+      this.headerTable.classList.remove('GF_resizing');
+    }
   }
 }
