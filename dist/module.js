@@ -21832,7 +21832,7 @@ var MappingOptionsCtrl = function () {
     this.metricHandler = this.ctrl.metricHandler;
     this.unitFormats = grafana_func__WEBPACK_IMPORTED_MODULE_3__["default"].getUnitFormats();
     this.tpGraphSize = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
-    this.rulesTable = {
+    this.rulesTableData = {
       data: this.rulesHandler.getRules(),
       columns: [{
         index: 0,
@@ -21892,6 +21892,7 @@ var MappingOptionsCtrl = function () {
         select: false
       }]
     };
+    this.rulesTable = new GFTable(this.rulesTableData);
 
     this.getMetricNames = function () {
       return _this.metricHandler.getNames('serie');
@@ -22211,33 +22212,6 @@ var MappingOptionsCtrl = function () {
     value: function onEventValue(event) {
       this.getEventValues = event.getTypeahead();
     }
-  }, {
-    key: "getWidth",
-    value: function getWidth(tableData, id) {
-      var size = '99px';
-      tableData.columns.forEach(function (c) {
-        if (c.id === id) {
-          size = c.size;
-        }
-      });
-      return size;
-    }
-  }, {
-    key: "getLeft",
-    value: function getLeft(tableData, id) {
-      var sizes = 0;
-      var found = false;
-      tableData.columns.forEach(function (c) {
-        if (c.id !== id && found === false) {
-          sizes += parseInt(c.size, 10);
-        }
-
-        if (c.id === id) {
-          found = true;
-        }
-      });
-      return "".concat(sizes, "px");
-    }
   }]);
 
   return MappingOptionsCtrl;
@@ -22252,6 +22226,62 @@ function mappingOptionsTab($q, uiSegmentSrv) {
     controller: MappingOptionsCtrl
   };
 }
+
+var GFTable = function () {
+  function GFTable(table) {
+    _classCallCheck(this, GFTable);
+
+    this.table = table;
+  }
+
+  _createClass(GFTable, [{
+    key: "getWidth",
+    value: function getWidth(id) {
+      var size = '99px';
+      this.table.columns.forEach(function (c) {
+        if (c.id === id) {
+          size = c.size;
+        }
+      });
+      return size;
+    }
+  }, {
+    key: "getLeft",
+    value: function getLeft(id) {
+      var sizes = 0;
+      var found = false;
+      this.table.columns.forEach(function (c) {
+        if (c.id !== id && found === false) {
+          sizes += parseInt(c.size, 10);
+        }
+
+        if (c.id === id) {
+          found = true;
+        }
+      });
+      return "".concat(sizes, "px");
+    }
+  }, {
+    key: "getLabel",
+    value: function getLabel(id) {
+      var label = 'no label';
+      this.table.columns.forEach(function (c) {
+        if (c.id === id) {
+          label = c.label;
+        }
+      });
+      return label;
+    }
+  }, {
+    key: "getElement",
+    value: function getElement(element) {
+      console.log('GFTable -> getElement -> element', element);
+      debugger;
+    }
+  }]);
+
+  return GFTable;
+}();
 
 /***/ }),
 

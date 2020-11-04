@@ -25,7 +25,8 @@ export class MappingOptionsCtrl {
   tpDirection: gf.TSelectString[] = $GF.CONSTANTS.TOOLTIP_DIRECTION_TYPES;
   propTypes: gf.TSelectString[] = $GF.CONSTANTS.IDENT_TYPES;
   textPattern = '/.*/';
-  rulesTable : gf.TTableData;
+  rulesTableData: gf.TTableData;
+  rulesTable: GFTable;
   metricTypes = $GF.CONSTANTS.VALUE_TYPES;
   dateFormats: gf.TSelectString[] = $GF.CONSTANTS.VALUE_DATEFORMAT_TYPES;
   aggregationTypes = $GF.CONSTANTS.AGGREGATION_TYPES;
@@ -54,7 +55,7 @@ export class MappingOptionsCtrl {
     this.metricHandler = this.ctrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();
     this.tpGraphSize = $GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
-    this.rulesTable = {
+    this.rulesTableData = {
       data: this.rulesHandler.getRules(),
       columns: [
         {
@@ -62,7 +63,7 @@ export class MappingOptionsCtrl {
           id: 'expand',
           label: '<>',
           desc: 'Expand/collapse',
-          size : '100px',
+          size: '100px',
           sort: 'asc',
           select: false,
         },
@@ -71,7 +72,7 @@ export class MappingOptionsCtrl {
           id: 'rule',
           label: 'Rule',
           desc: 'Rule Name',
-          size : '100px',
+          size: '100px',
           sort: 'asc',
           select: false,
         },
@@ -80,7 +81,7 @@ export class MappingOptionsCtrl {
           id: 'level',
           label: 'Level',
           desc: 'Highest level',
-          size : '40px',
+          size: '40px',
           sort: 'asc',
           select: false,
         },
@@ -89,7 +90,7 @@ export class MappingOptionsCtrl {
           id: 'rval',
           label: 'Raw value',
           desc: 'Raw value',
-          size : '100px',
+          size: '100px',
           sort: 'asc',
           select: false,
         },
@@ -98,7 +99,7 @@ export class MappingOptionsCtrl {
           id: 'fval',
           label: 'Formated value',
           desc: 'Formated value',
-          size : '100px',
+          size: '100px',
           sort: 'asc',
           select: false,
         },
@@ -107,7 +108,7 @@ export class MappingOptionsCtrl {
           id: 'color',
           label: 'Color',
           desc: 'Highest color',
-          size : '100px',
+          size: '100px',
           sort: 'asc',
           select: false,
         },
@@ -116,12 +117,14 @@ export class MappingOptionsCtrl {
           id: 'actions',
           label: 'Actions',
           desc: 'Actions',
-          size : '100px',
+          size: '100px',
           sort: 'asc',
           select: false,
         },
       ],
     };
+
+    this.rulesTable = new GFTable(this.rulesTableData);
 
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');
@@ -390,35 +393,6 @@ export class MappingOptionsCtrl {
   onEventValue(event: EventMap) {
     this.getEventValues = event.getTypeahead();
   }
-
-  //
-  // Rules Table
-  //
-  getWidth(tableData : gf.TTableData, id : string):string {
-    let size = '99px';
-    tableData.columns.forEach(c => {
-      if(c.id === id) {
-        size =  c.size;
-      }
-    });
-    return size;
-  }
-
-  getLeft(tableData : gf.TTableData, id : string):string {
-    let sizes = 0;
-    let found = false;
-    tableData.columns.forEach(c => {
-      if(c.id !== id && found === false ) {
-        sizes +=  parseInt( c.size, 10);
-      }
-      if(c.id === id) {
-        found = true
-      }
-    });
-    return `${sizes}px`;
-  }
-
-
 }
 
 /** @ngInject */
@@ -430,4 +404,50 @@ export function mappingOptionsTab($q, uiSegmentSrv) {
     templateUrl: `${$GF.plugin.getPartialPath()}/mapping/index.html`,
     controller: MappingOptionsCtrl,
   };
+}
+
+class GFTable {
+  table: gf.TTableData;
+  constructor(table: gf.TTableData) {
+    this.table = table;
+  }
+
+  getWidth(id: string): string {
+    let size = '99px';
+    this.table.columns.forEach(c => {
+      if (c.id === id) {
+        size = c.size;
+      }
+    });
+    return size;
+  }
+
+  getLeft(id: string): string {
+    let sizes = 0;
+    let found = false;
+    this.table.columns.forEach(c => {
+      if (c.id !== id && found === false) {
+        sizes += parseInt(c.size, 10);
+      }
+      if (c.id === id) {
+        found = true;
+      }
+    });
+    return `${sizes}px`;
+  }
+
+  getLabel(id: string): string {
+    let label = 'no label';
+    this.table.columns.forEach(c => {
+      if (c.id === id) {
+        label = c.label;
+      }
+    });
+    return label;
+  }
+
+  getElement(element) {
+    console.log('GFTable -> getElement -> element', element);
+    debugger
+  }
 }

@@ -8,33 +8,33 @@
             <div class="GF_table-thead GF_unselectable" role="row" style="position: relative; width: 100%;" ng-mouseup="editor.onMouseUp($event)" ng-mousemove="editor.onMouseMove($event)" ng-mouseleave="editor.onMouseUp($event)">
               <!-- HEADERS -->
               <!-- EXPAND -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="position: absolute; top: 0px; left: 0px; width: 20px; user-select: auto; justify-content: flex-start;">
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="position: absolute; top: 0px; user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('expand'), 'width' : editor.rulesTable.getWidth('expand')}">
                 <div title="Id" class="GF_table-title" style="cursor: pointer;">
-                  <div>Expand</div>
+                  <div>{{editor.rulesTable.getLabel('expand')}}</div>
                 </div>
                 <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
               <!-- RULE NAME -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="position: absolute; top: 0px; left: 20px; width: 100px; user-select: auto; justify-content: flex-start;">
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="position: absolute; top: 0px; user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('rule'), 'width' : editor.rulesTable.getWidth('rule')}">
                 <div title="Id" class="GF_table-title" style="cursor: pointer;">
-                  <div>Rule Name</div>
+                  <div>{{editor.rulesTable.getLabel('rule')}}</div>
                 </div>
                 <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
               <!-- LEVEL -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="position: absolute; top: 0px; left: 120px; width: 100px; user-select: auto; justify-content: flex-start;">
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="position: absolute; top: 0px; user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('level'), 'width' : editor.rulesTable.getWidth('level')}">
                 <div title="Id" class="GF_table-title" style="cursor: pointer;">
-                  <div>Level</div>
+                  <div>{{editor.rulesTable.getLabel('level')}}</div>
                 </div>
                 <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.onMouseDown($event)">
                 </div>
               </div>
               <!-- RAW VALUE -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="position: absolute; top: 0px; left: 220px; width: 100px; user-select: auto; justify-content: flex-start;">
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="position: absolute; top: 0px; user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('rval'), 'width' : editor.rulesTable.getWidth('rval')}">
                 <div title="Id" class="GF_table-title" style="cursor: pointer;">
-                  <div>Raw value</div>
+                  <div>{{editor.rulesTable.getLabel('rval')}}</div>
                 </div>
                 <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.onMouseDown($event)">
                 </div>
