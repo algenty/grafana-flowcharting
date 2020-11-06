@@ -520,11 +520,11 @@ class GFTable {
               prec = node;
               this.setColumnProperty(index,'size', `${width}px`);
             }
-            if (index > this.indexTable && prec !== null) {
-              const newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
-              node.style.left = `${newLeft}px`;
-              prec = node;
-            }
+            // if (index > this.indexTable && prec !== null) {
+            //   const newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
+            //   node.style.left = `${newLeft}px`;
+            //   prec = node;
+            // }
             index += 1;
           });
         });

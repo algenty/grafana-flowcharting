@@ -145,6 +145,22 @@ div.GF_table-thead {
   overflow: hidden auto;
   background: rgb(32, 34, 38);
   position: relative;
+  width: 100%;
+}
+
+div.GF_table-body {
+  /* height: 33px; */
+  overflow: hidden auto;
+  position: relative;
+  width: 100%;
+  /* display: flex;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  flex-direction: column;
+  height: 300px; 
+  width: 100%; 
+  overflow: hidden auto; */
+  /* will-change: transform; direction: ltr; */
 }
 
 div.GF_table-title {
@@ -166,7 +182,7 @@ div.GF_table-resizeHandle {
   transition-delay: 0s;
   width: 8px;
   height: 100%;
-  position: absolute;
+  /* position: absolute; */
   right: -4px;
   border-radius: 3px;
   top: 0px;
@@ -189,14 +205,6 @@ div.GF_table-columnheader {
   display: flex;
 }
 
-div.GF_table-body {
-  position: relative;
-  height: 300px; 
-  width: 100%; 
-  overflow: hidden auto; 
-  will-change: transform; direction: ltr;
-}
-
 div.GF_table-rows {
   border-bottom: 1px solid rgb(32, 34, 38);
 }
@@ -216,6 +224,7 @@ div.GF_table-cells {
   display: inline-flex;
   -webkit-box-align: center;
   align-items: center;
+  overflow: hidden;
   height: 100%;
 }
 
@@ -226,8 +235,6 @@ div.GF_table-content {
   overflow: hidden;
   flex: 1 1 0%;
 }
-
-
 
 .GF_resizing {
   -moz-user-select: none;

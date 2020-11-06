@@ -22362,12 +22362,6 @@ var GFTable = function () {
                 _this3.setColumnProperty(index, 'size', "".concat(width, "px"));
               }
 
-              if (index > _this3.indexTable && prec !== null) {
-                var newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
-                node.style.left = "".concat(newLeft, "px");
-                prec = node;
-              }
-
               index += 1;
             });
           });
