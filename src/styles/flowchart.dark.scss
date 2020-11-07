@@ -141,10 +141,28 @@ div.GF_table-main {
 }
 
 div.GF_table-thead {
+  display:flex;
   height: 33px;
   overflow: hidden auto;
   background: rgb(32, 34, 38);
   position: relative;
+  width: 100%;
+  overflow: hidden auto;
+}
+
+div.GF_table-body {
+  /* height: 33px; */
+  overflow: hidden auto;
+  position: relative;
+  width: 100%;
+  /* display: flex;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  flex-direction: column;
+  height: 300px; 
+  width: 100%; 
+  overflow: hidden auto; */
+  /* will-change: transform; direction: ltr; */
 }
 
 div.GF_table-title {
@@ -152,21 +170,25 @@ div.GF_table-title {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: flex;
+  /* display: flex; */
   margin-right: 4px;
+  margin-left: 4px;
+  margin-top: 6px;
+  /* margin-bottom: 6px; */
 }
 
 div.GF_table-resizeHandle {
-  display: inline-block;
+  /* display: inline-block; */
+  float : right;
   background: rgb(31, 96, 196);
   opacity: 0;
   transition-property: opacity;
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
   transition-delay: 0s;
-  width: 8px;
+  width: 3px;
   height: 100%;
-  position: absolute;
+  /* position: absolute; */
   right: -4px;
   border-radius: 3px;
   top: 0px;
@@ -181,24 +203,34 @@ div.GF_table-resizeHandle:hover {
 
 
 div.GF_table-columnheader {
-  padding: 6px;
+  /* padding: 6px; */
   overflow: hidden;
   white-space: nowrap;
   color: rgb(51, 162, 229);
   border-right: 1px solid rgb(20, 22, 25);
   display: flex;
-}
-
-div.GF_table-body {
-  position: relative;
-  height: 300px; 
-  width: 100%; 
-  overflow: hidden auto; 
-  will-change: transform; direction: ltr;
+  user-select: auto;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 
 div.GF_table-rows {
   border-bottom: 1px solid rgb(32, 34, 38);
+  display:flex;
+  -webkit-box-flex:1;
+  flex-grow:1;flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+}
+
+div.GF_table-row_line {
+  height: 35px; 
+  display:flex; 
+  flex-wrap: nowrap;
+  overflow: hidden auto;
+  width: 100%;
+  flex-direction: row;
 }
 
 div.GF_table-rows:hover {
@@ -206,14 +238,11 @@ div.GF_table-rows:hover {
 }
 
 div.GF_table-row_body {
-  padding: 6px;
-  overflow: hidden;
-  flex: 1 1 0%;
+  border-left: 1px solid rgb(32, 34, 38);
   border-right: 1px solid rgb(32, 34, 38);
-  display: inline-flex;
-  -webkit-box-align: center;
-  align-items: center;
-  height: 100%;
+  border-bottom: 1px solid rgb(32, 34, 38);
+  width: 100%; 
+  padding : 10px;
 }
 
 div.GF_table-cells {
@@ -221,7 +250,10 @@ div.GF_table-cells {
   display: inline-flex;
   -webkit-box-align: center;
   align-items: center;
+  overflow: hidden;
   height: 100%;
+  user-select: auto; 
+  justify-content: start;
 }
 
 div.GF_table-content {
@@ -231,8 +263,6 @@ div.GF_table-content {
   overflow: hidden;
   flex: 1 1 0%;
 }
-
-
 
 .GF_resizing {
   -moz-user-select: none;

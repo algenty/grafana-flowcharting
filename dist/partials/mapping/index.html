@@ -83,7 +83,7 @@
                     </div>
                   </div>
                   <!-- LEVEL -->
-                  <div role="cell" class="GF_table-cells" id="level" ng-style="{'width' : editor.rulesTable.getWidth('level')}">
+                  <div role="cell" class="GF_table-cells" id="level" style="text-align: center;" ng-style="{'width' : editor.rulesTable.getWidth('level')}">
                     <div class="GF_table-content">
                       {{rule.highestLevel}}
                     </div>
@@ -102,8 +102,10 @@
                   </div>
                   <!-- COLOR -->
                   <div role="cell" class="GF_table-cells" id="fval" ng-style="{'width' : editor.rulesTable.getWidth('color')}">
-                    <div class="GF_table-content">
-                      COLOR
+                    <div class="GF_table-content" style="text-align: center;">
+                      <span style="color : {{rule.highestColor}}" ng-if="rule.highestColor !== null && rule.highestColor.length > 0">
+                        <i class="fa fa-w fa-square"></i>
+                      </span>
                     </div>
                   </div>
                   <!-- ACTIONS -->
@@ -300,6 +302,12 @@
             </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="editor-row">
+    <div class="gf-form-button-row">
+      <button class="btn btn-inverse" ng-click="editor.rulesHandler.addRule('/.*/')"><i class="fa fa-plus"></i>&nbsp;Add
+        Rule</button>
     </div>
   </div>
 </div>

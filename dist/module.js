@@ -18496,13 +18496,14 @@ function flowchartOptionsTab($q, $sce, uiSegmentSrv) {
 /*!**************************!*\
   !*** ./globals_class.ts ***!
   \**************************/
-/*! exports provided: GFVariables, $GF */
+/*! exports provided: GFVariables, $GF, GFTable */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(__dirname) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GFVariables", function() { return GFVariables; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "$GF", function() { return $GF; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GFTable", function() { return GFTable; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "lodash");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
@@ -19492,6 +19493,11 @@ var $GF = function () {
       return _v;
     }
   }, {
+    key: "createGFTable",
+    value: function createGFTable(table, div) {
+      return new GFTable(table, div);
+    }
+  }, {
     key: "getGlobalVars",
     value: function getGlobalVars() {
       if ($GF._globalvars === undefined) {
@@ -19783,6 +19789,178 @@ $GF.graphHover = false;
 $GF.GHTimeStamp = 0;
 $GF.DEBUG = false;
 $GF.utils = __webpack_require__(/*! ./utils_raw */ "./utils_raw.js");
+var GFTable = function () {
+  function GFTable(table, div) {
+    _classCallCheck(this, GFTable);
+
+    this.pressed = false;
+    this.indexTable = 0;
+    this.startX = 0;
+    this.startWidth = 0;
+    this.tableData = table;
+    this.parentDiv = div;
+  }
+
+  _createClass(GFTable, [{
+    key: "getWidth",
+    value: function getWidth(id) {
+      return this.getColumnProperty(id, "size");
+    }
+  }, {
+    key: "getLeft",
+    value: function getLeft(id) {
+      var sizes = 0;
+      var found = false;
+      this.tableData.columns.forEach(function (c) {
+        if (c.id !== id && found === false) {
+          sizes += parseInt(c.size, 10);
+        }
+
+        if (c.id === id) {
+          found = true;
+        }
+      });
+      return "".concat(sizes, "px");
+    }
+  }, {
+    key: "getIndex",
+    value: function getIndex(id) {
+      return this.getColumnProperty(id, 'index');
+    }
+  }, {
+    key: "getId",
+    value: function getId(index) {
+      return this.getColumnProperty(index, 'id');
+    }
+  }, {
+    key: "getLabel",
+    value: function getLabel(id) {
+      return this.getColumnProperty(id, 'label');
+    }
+  }, {
+    key: "getDesc",
+    value: function getDesc(id) {
+      return this.getColumnProperty(id, 'desc');
+    }
+  }, {
+    key: "getColumnProperty",
+    value: function getColumnProperty(id, property) {
+      var result = "No value for properti ".concat(property);
+      var isNumber = typeof id === 'number';
+
+      for (var index = 0; index < this.tableData.columns.length; index++) {
+        var element = this.tableData.columns[index];
+
+        if (isNumber && id === element.index || !isNumber && id === element.id) {
+          return element[property];
+        }
+      }
+
+      return result;
+    }
+  }, {
+    key: "setColumnProperty",
+    value: function setColumnProperty(id, property, value) {
+      var isNumber = typeof id === 'number';
+
+      for (var index = 0; index < this.tableData.columns.length; index++) {
+        var element = this.tableData.columns[index];
+
+        if (isNumber && id === element.index || !isNumber && id === element.id) {
+          element[property] = value;
+        }
+      }
+
+      return this;
+    }
+  }, {
+    key: "getElement",
+    value: function getElement(element) {
+      console.log('GFTable -> getElement -> element', element);
+      debugger;
+    }
+  }, {
+    key: "onMouseMove",
+    value: function onMouseMove(event) {
+      var _this = this;
+
+      if (this.pressed && this.headerTable && this.headerTable.parentNode) {
+        var decaleColumns = function decaleColumns(node) {
+          while (node !== null) {
+            var prec = node.previousElementSibling;
+            var newLeft = 0;
+
+            if (prec) {
+              newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
+            }
+
+            node.style.left = "".concat(newLeft, "px");
+            node = node.nextElementSibling;
+          }
+        };
+
+        var delta = event.pageX - this.startX;
+        var width = this.startWidth + delta;
+
+        if (width < 10) {
+          width = 10;
+        }
+
+        this.headerTable.style.width = "".concat(width, "px");
+
+        if (this.bodyTable) {
+          var rows = this.bodyTable.querySelectorAll('.GF_table-rows');
+          Array.from(rows).forEach(function (r) {
+            var cells = r.querySelectorAll('.GF_table-cells');
+            var index = 0;
+            var prec = null;
+            cells.forEach(function (cell) {
+              var node = cell;
+
+              if (index == _this.indexTable) {
+                node.style.width = "".concat(width, "px");
+                prec = node;
+
+                _this.setColumnProperty(index, 'size', "".concat(width, "px"));
+              }
+
+              index += 1;
+            });
+          });
+        }
+      }
+    }
+  }, {
+    key: "onMouseDown",
+    value: function onMouseDown(event) {
+      this.pressed = true;
+      this.startX = event.pageX;
+      console.log('onMouseDown', event);
+      this.headerTable = event.currentTarget.parentElement;
+
+      if (this.headerTable) {
+        if (this.headerTable.parentNode) {
+          this.indexTable = Array.from(this.headerTable.parentNode.children).indexOf(this.headerTable);
+        }
+
+        this.headerTable.classList.add('GF_resizing');
+        this.startWidth = parseInt(this.headerTable.style.width, 10);
+        this.bodyTable = this.parentDiv.getElementsByClassName('GF_table-body')[0];
+      }
+    }
+  }, {
+    key: "onMouseUp",
+    value: function onMouseUp(event) {
+      this.pressed = false;
+
+      if (this.headerTable) {
+        this.headerTable.classList.remove('GF_resizing');
+      }
+    }
+  }]);
+
+  return GFTable;
+}();
 /* WEBPACK VAR INJECTION */}.call(this, "/"))
 
 /***/ }),
@@ -21896,7 +22074,7 @@ var MappingOptionsCtrl = function () {
         select: false
       }]
     };
-    this.rulesTable = new GFTable(this.rulesTableData, rulesTable);
+    this.rulesTable = new globals_class__WEBPACK_IMPORTED_MODULE_2__["GFTable"](this.rulesTableData, rulesTable);
 
     this.getMetricNames = function () {
       return _this.metricHandler.getNames('serie');
@@ -22230,179 +22408,6 @@ function mappingOptionsTab($q, uiSegmentSrv) {
     controller: MappingOptionsCtrl
   };
 }
-
-var GFTable = function () {
-  function GFTable(table, div) {
-    _classCallCheck(this, GFTable);
-
-    this.pressed = false;
-    this.indexTable = 0;
-    this.startX = 0;
-    this.startWidth = 0;
-    this.tableData = table;
-    this.parentDiv = div;
-  }
-
-  _createClass(GFTable, [{
-    key: "getWidth",
-    value: function getWidth(id) {
-      return this.getColumnProperty(id, "size");
-    }
-  }, {
-    key: "getLeft",
-    value: function getLeft(id) {
-      var sizes = 0;
-      var found = false;
-      this.tableData.columns.forEach(function (c) {
-        if (c.id !== id && found === false) {
-          sizes += parseInt(c.size, 10);
-        }
-
-        if (c.id === id) {
-          found = true;
-        }
-      });
-      return "".concat(sizes, "px");
-    }
-  }, {
-    key: "getIndex",
-    value: function getIndex(id) {
-      return this.getColumnProperty(id, 'index');
-    }
-  }, {
-    key: "getId",
-    value: function getId(index) {
-      return this.getColumnProperty(index, 'id');
-    }
-  }, {
-    key: "getLabel",
-    value: function getLabel(id) {
-      return this.getColumnProperty(id, 'label');
-    }
-  }, {
-    key: "getDesc",
-    value: function getDesc(id) {
-      return this.getColumnProperty(id, 'desc');
-    }
-  }, {
-    key: "getColumnProperty",
-    value: function getColumnProperty(id, property) {
-      var result = "No value for properti ".concat(property);
-      var isNumber = typeof id === 'number';
-
-      for (var index = 0; index < this.tableData.columns.length; index++) {
-        var element = this.tableData.columns[index];
-
-        if (isNumber && id === element.index || !isNumber && id === element.id) {
-          return element[property];
-        }
-      }
-
-      return result;
-    }
-  }, {
-    key: "setColumnProperty",
-    value: function setColumnProperty(id, property, value) {
-      var isNumber = typeof id === 'number';
-
-      for (var index = 0; index < this.tableData.columns.length; index++) {
-        var element = this.tableData.columns[index];
-
-        if (isNumber && id === element.index || !isNumber && id === element.id) {
-          element[property] = value;
-        }
-      }
-
-      return this;
-    }
-  }, {
-    key: "getElement",
-    value: function getElement(element) {
-      console.log('GFTable -> getElement -> element', element);
-      debugger;
-    }
-  }, {
-    key: "onMouseMove",
-    value: function onMouseMove(event) {
-      var _this3 = this;
-
-      if (this.pressed && this.headerTable && this.headerTable.parentNode) {
-        var decaleColumns = function decaleColumns(node) {
-          while (node !== null) {
-            var prec = node.previousElementSibling;
-            var newLeft = 0;
-
-            if (prec) {
-              newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
-            }
-
-            node.style.left = "".concat(newLeft, "px");
-            node = node.nextElementSibling;
-          }
-        };
-
-        var delta = event.pageX - this.startX;
-        var width = this.startWidth + delta;
-
-        if (width < 10) {
-          width = 10;
-        }
-
-        this.headerTable.style.width = "".concat(width, "px");
-
-        if (this.bodyTable) {
-          var rows = this.bodyTable.querySelectorAll('.GF_table-rows');
-          Array.from(rows).forEach(function (r) {
-            var cells = r.querySelectorAll('.GF_table-cells');
-            var index = 0;
-            var prec = null;
-            cells.forEach(function (cell) {
-              var node = cell;
-
-              if (index == _this3.indexTable) {
-                node.style.width = "".concat(width, "px");
-                prec = node;
-
-                _this3.setColumnProperty(index, 'size', "".concat(width, "px"));
-              }
-
-              index += 1;
-            });
-          });
-        }
-      }
-    }
-  }, {
-    key: "onMouseDown",
-    value: function onMouseDown(event) {
-      this.pressed = true;
-      this.startX = event.pageX;
-      console.log('onMouseDown', event);
-      this.headerTable = event.currentTarget.parentElement;
-
-      if (this.headerTable) {
-        if (this.headerTable.parentNode) {
-          this.indexTable = Array.from(this.headerTable.parentNode.children).indexOf(this.headerTable);
-        }
-
-        this.headerTable.classList.add('GF_resizing');
-        this.startWidth = parseInt(this.headerTable.style.width, 10);
-        this.bodyTable = this.parentDiv.getElementsByClassName('GF_table-body')[0];
-      }
-    }
-  }, {
-    key: "onMouseUp",
-    value: function onMouseUp(event) {
-      this.pressed = false;
-
-      if (this.headerTable) {
-        this.headerTable.classList.remove('GF_resizing');
-      }
-    }
-  }]);
-
-  return GFTable;
-}();
 
 /***/ }),
 
