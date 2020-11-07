@@ -1,6 +1,6 @@
 import { FlowchartHandler } from './flowchartHandler';
 import { State } from 'state_class';
-import { $GF } from 'globals_class';
+import { $GF, GFTable } from 'globals_class';
 import { StateHandler } from 'statesHandler';
 import _ from 'lodash';
 // import { MetricHandler } from './metricHandler';
@@ -10,7 +10,8 @@ export class InspectOptionsCtrl {
   ctrl: any; //TODO: define type
   flowchartHandler: FlowchartHandler;
   stateHandler: StateHandler | undefined;
-  state: gf.TTableData;
+  statesTableData: gf.TTableData;
+  statesTable : GFTable;
   panel: any;
   parentDiv: HTMLDivElement;
   headerTable: HTMLDivElement | undefined;
@@ -24,11 +25,7 @@ export class InspectOptionsCtrl {
 
   /** @ngInject */
   constructor($scope: gf.TInspectOptionsScope, $element) {
-    $scope.editor = this;
-    $scope.$GF = $GF.me();
-    const $div = $element.find('#templateInspect');
-    this.parentDiv = $div[0];
-    this.state = {
+    this.statesTableData = {
       data: this.getStates(),
       columns: [
         {
@@ -36,7 +33,7 @@ export class InspectOptionsCtrl {
           id: 'id',
           label: 'ID',
           desc: 'Uniq Id',
-          size : '100px',
+          size : '25px',
           sort: 'asc',
           select: false,
         },
@@ -51,24 +48,42 @@ export class InspectOptionsCtrl {
         },
         {
           index: 2,
-          id: 'Level',
-          label: 'Level',
-          desc: 'Lvl',
-          size : '40px',
+          id: 'level',
+          label: 'Lvl',
+          desc: 'Current level',
+          size : '45px',
           sort: 'asc',
           select: false,
         },
         {
           index: 3,
-          id: 'colors',
-          label: 'Font/Fill/Stoke colors',
-          desc: 'Shape ID',
-          size : '100px',
+          id: 'rval',
+          label: 'R.Val.',
+          desc: 'Raw value',
+          size : '80px',
           sort: 'asc',
           select: false,
         },
         {
           index: 4,
+          id: 'fval',
+          label: 'F.Val.',
+          desc: 'Formated value',
+          size : '80px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 4,
+          id: 'colors',
+          label: 'Colors',
+          desc: 'Shape ID',
+          size : '80px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 6,
           id: 'tags',
           label: 'Tags',
           desc: 'Tags',
@@ -78,6 +93,13 @@ export class InspectOptionsCtrl {
         },
       ],
     };
+    $scope.editor = this;
+    $scope.$GF = $GF.me();
+    const $div = $element.find('#templateInspect');
+    this.parentDiv = $div[0];
+    const $statesTable = $div.find('#StatesTable');
+    const statesTable = $statesTable[0];
+    this.statesTable = new GFTable(this.statesTableData, statesTable);
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;

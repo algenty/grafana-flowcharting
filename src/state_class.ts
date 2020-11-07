@@ -29,6 +29,8 @@ export class State {
   variables: GFVariables;
   status: Map<string, any>;
   globalLevel = -1;
+  highestFormattedValue: string = '';
+  highestValue: any = undefined;
   tooltipHandler: TooltipHandler | null = null;
   originalText: string;
 
@@ -111,7 +113,11 @@ export class State {
         if (!shape.isHidden() && shape.match(cellProp, rule.data.shapeRegEx)) {
           let v: any = color;
           this.matched = true;
-          this.globalLevel = level > this.globalLevel ? level : this.globalLevel;
+          if(level > this.globalLevel) {
+            this.globalLevel = level;
+            this.highestValue = value;
+            this.highestFormattedValue = FormattedValue;
+          }
           if (shape.toColorize(level)) {
             this.shapeState.set(k, v, level) && this.status.set(k, v);
           }
@@ -138,7 +144,11 @@ export class State {
         if (!text.isHidden() && text.match(cellProp, rule.data.textRegEx) && text.toLabelize(level)) {
           if (text.toLabelize(level)) {
             this.matched = true;
-            this.globalLevel = level > this.globalLevel ? level : this.globalLevel;
+            if(level > this.globalLevel) {
+              this.globalLevel = level;
+              this.highestValue = value;
+              this.highestFormattedValue = FormattedValue;
+            }
             const textScoped = this.variables.replaceText(FormattedValue);
             const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
             this.textState.set(k, v, level) && this.status.set(k, v);
@@ -153,7 +163,11 @@ export class State {
         if (!event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level)) {
           if (event.toEventable(level)) {
             this.matched = true;
-            this.globalLevel = level > this.globalLevel ? level : this.globalLevel;
+            if(level > this.globalLevel) {
+              this.globalLevel = level;
+              this.highestValue = value;
+              this.highestFormattedValue = FormattedValue;
+            }
             const v = this.variables.eval(event.data.value);
             this.eventState.set(k, v, level) && this.status.set(k, v);
           }
@@ -167,7 +181,11 @@ export class State {
         if (!link.isHidden() && link.match(cellProp, rule.data.linkRegEx)) {
           if (link.toLinkable(level)) {
             this.matched = true;
-            this.globalLevel = level > this.globalLevel ? level : this.globalLevel;
+            if(level > this.globalLevel) {
+              this.globalLevel = level;
+              this.highestValue = value;
+              this.highestFormattedValue = FormattedValue;
+            }
             const v = this.variables.replaceText(link.getLink());
             this.linkState.set(k, v, level) && this.status.set(k, v);
           }
@@ -338,6 +356,8 @@ export class State {
     this.variables.clear();
     this.status.clear();
     this.globalLevel = -1;
+    this.highestFormattedValue = '';
+    this.highestValue = undefined;
     this.changed = false;
     trc.after();
     return this;
@@ -361,6 +381,8 @@ export class State {
       this.variables.clear();
       this.status.clear();
       this.globalLevel = -1;
+      this.highestFormattedValue =  '';
+      this.highestValue = undefined;
       this.matched = false;
     }
     trc.after();

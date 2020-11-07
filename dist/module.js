@@ -19798,7 +19798,7 @@ var GFTable = function () {
     this.startX = 0;
     this.startWidth = 0;
     this.tableData = table;
-    this.parentDiv = div;
+    this.tableDiv = div;
   }
 
   _createClass(GFTable, [{
@@ -19880,25 +19880,31 @@ var GFTable = function () {
       debugger;
     }
   }, {
+    key: "findTableDiv",
+    value: function findTableDiv(elt) {
+      if (elt !== null && elt !== undefined) {
+        var node = elt;
+
+        while (node !== null && this.tableDiv === undefined) {
+          if (node.classList.contains("GF_table-main")) {
+            this.tableDiv = node;
+          } else {
+            node = node.parentElement;
+          }
+        }
+      }
+    }
+  }, {
+    key: "setTableDiv",
+    value: function setTableDiv(div) {
+      this.tableDiv = div;
+    }
+  }, {
     key: "onMouseMove",
     value: function onMouseMove(event) {
       var _this = this;
 
       if (this.pressed && this.headerTable && this.headerTable.parentNode) {
-        var decaleColumns = function decaleColumns(node) {
-          while (node !== null) {
-            var prec = node.previousElementSibling;
-            var newLeft = 0;
-
-            if (prec) {
-              newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
-            }
-
-            node.style.left = "".concat(newLeft, "px");
-            node = node.nextElementSibling;
-          }
-        };
-
         var delta = event.pageX - this.startX;
         var width = this.startWidth + delta;
 
@@ -19935,17 +19941,25 @@ var GFTable = function () {
     value: function onMouseDown(event) {
       this.pressed = true;
       this.startX = event.pageX;
-      console.log('onMouseDown', event);
       this.headerTable = event.currentTarget.parentElement;
 
       if (this.headerTable) {
+        if (!this.tableDiv) {
+          this.findTableDiv(this.headerTable);
+        }
+
         if (this.headerTable.parentNode) {
           this.indexTable = Array.from(this.headerTable.parentNode.children).indexOf(this.headerTable);
         }
 
         this.headerTable.classList.add('GF_resizing');
         this.startWidth = parseInt(this.headerTable.style.width, 10);
-        this.bodyTable = this.parentDiv.getElementsByClassName('GF_table-body')[0];
+
+        if (this.tableDiv) {
+          this.bodyTable = this.tableDiv.getElementsByClassName('GF_table-body')[0];
+        } else {
+          $GF.log.error('Unable to find table definition with class GF_table-main');
+        }
       }
     }
   }, {
@@ -21662,18 +21676,14 @@ var InspectOptionsCtrl = function () {
     this.traceEnable = globals_class__WEBPACK_IMPORTED_MODULE_0__["$GF"].trace.isEnabled();
     this.startX = 0;
     this.startWidth = 0;
-    $scope.editor = this;
-    $scope.$GF = globals_class__WEBPACK_IMPORTED_MODULE_0__["$GF"].me();
-    var $div = $element.find('#templateInspect');
-    this.parentDiv = $div[0];
-    this.state = {
+    this.statesTableData = {
       data: this.getStates(),
       columns: [{
         index: 0,
         id: 'id',
         label: 'ID',
         desc: 'Uniq Id',
-        size: '100px',
+        size: '25px',
         sort: 'asc',
         select: false
       }, {
@@ -21686,22 +21696,38 @@ var InspectOptionsCtrl = function () {
         select: false
       }, {
         index: 2,
-        id: 'Level',
-        label: 'Level',
-        desc: 'Lvl',
-        size: '40px',
+        id: 'level',
+        label: 'Lvl',
+        desc: 'Current level',
+        size: '45px',
         sort: 'asc',
         select: false
       }, {
         index: 3,
-        id: 'colors',
-        label: 'Font/Fill/Stoke colors',
-        desc: 'Shape ID',
-        size: '100px',
+        id: 'rval',
+        label: 'R.Val.',
+        desc: 'Raw value',
+        size: '80px',
         sort: 'asc',
         select: false
       }, {
         index: 4,
+        id: 'fval',
+        label: 'F.Val.',
+        desc: 'Formated value',
+        size: '80px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 4,
+        id: 'colors',
+        label: 'Colors',
+        desc: 'Shape ID',
+        size: '80px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 6,
         id: 'tags',
         label: 'Tags',
         desc: 'Tags',
@@ -21710,6 +21736,13 @@ var InspectOptionsCtrl = function () {
         select: false
       }]
     };
+    $scope.editor = this;
+    $scope.$GF = globals_class__WEBPACK_IMPORTED_MODULE_0__["$GF"].me();
+    var $div = $element.find('#templateInspect');
+    this.parentDiv = $div[0];
+    var $statesTable = $div.find('#StatesTable');
+    var statesTable = $statesTable[0];
+    this.statesTable = new globals_class__WEBPACK_IMPORTED_MODULE_0__["GFTable"](this.statesTableData, statesTable);
     this.ctrl = $scope.ctrl;
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
@@ -25193,6 +25226,8 @@ var State = function () {
     this.changed = false;
     this.matched = false;
     this.globalLevel = -1;
+    this.highestFormattedValue = '';
+    this.highestValue = undefined;
     this.tooltipHandler = null;
     var trc = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].trace.before(this.constructor.name + '.' + 'constructor()');
     this.mxcell = mxcell;
@@ -25264,7 +25299,12 @@ var State = function () {
           if (!shape.isHidden() && shape.match(cellProp, rule.data.shapeRegEx)) {
             var v = color;
             _this.matched = true;
-            _this.globalLevel = level > _this.globalLevel ? level : _this.globalLevel;
+
+            if (level > _this.globalLevel) {
+              _this.globalLevel = level;
+              _this.highestValue = value;
+              _this.highestFormattedValue = FormattedValue;
+            }
 
             if (shape.toColorize(level)) {
               _this.shapeState.set(k, v, level) && _this.status.set(k, v);
@@ -25292,7 +25332,12 @@ var State = function () {
           if (!text.isHidden() && text.match(cellProp, rule.data.textRegEx) && text.toLabelize(level)) {
             if (text.toLabelize(level)) {
               _this.matched = true;
-              _this.globalLevel = level > _this.globalLevel ? level : _this.globalLevel;
+
+              if (level > _this.globalLevel) {
+                _this.globalLevel = level;
+                _this.highestValue = value;
+                _this.highestFormattedValue = FormattedValue;
+              }
 
               var textScoped = _this.variables.replaceText(FormattedValue);
 
@@ -25308,7 +25353,12 @@ var State = function () {
           if (!event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level)) {
             if (event.toEventable(level)) {
               _this.matched = true;
-              _this.globalLevel = level > _this.globalLevel ? level : _this.globalLevel;
+
+              if (level > _this.globalLevel) {
+                _this.globalLevel = level;
+                _this.highestValue = value;
+                _this.highestFormattedValue = FormattedValue;
+              }
 
               var v = _this.variables.eval(event.data.value);
 
@@ -25323,7 +25373,12 @@ var State = function () {
           if (!link.isHidden() && link.match(cellProp, rule.data.linkRegEx)) {
             if (link.toLinkable(level)) {
               _this.matched = true;
-              _this.globalLevel = level > _this.globalLevel ? level : _this.globalLevel;
+
+              if (level > _this.globalLevel) {
+                _this.globalLevel = level;
+                _this.highestValue = value;
+                _this.highestFormattedValue = FormattedValue;
+              }
 
               var v = _this.variables.replaceText(link.getLink());
 
@@ -25456,6 +25511,8 @@ var State = function () {
       this.variables.clear();
       this.status.clear();
       this.globalLevel = -1;
+      this.highestFormattedValue = '';
+      this.highestValue = undefined;
       this.changed = false;
       trc.after();
       return this;
@@ -25475,6 +25532,8 @@ var State = function () {
         this.variables.clear();
         this.status.clear();
         this.globalLevel = -1;
+        this.highestFormattedValue = '';
+        this.highestValue = undefined;
         this.matched = false;
       }
 
