@@ -503,9 +503,12 @@ class GFTable {
         }
       }
       const delta = event.pageX - this.startX;
-      const width = this.startWidth + delta;
+      let width = this.startWidth + delta;
+      if(width<10) {
+        width = 10
+      }
       this.headerTable.style.width = `${width}px`;
-      decaleColumns(<HTMLElement>this.headerTable.nextElementSibling)
+      // decaleColumns(<HTMLElement>this.headerTable.nextElementSibling);
 
       if (this.bodyTable) {
         const rows = this.bodyTable.querySelectorAll('.GF_table-rows');

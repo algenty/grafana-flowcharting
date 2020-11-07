@@ -1,75 +1,75 @@
 <div class="edit-tab-content" id="templateMapping">
-  <div class="editor-row" ">
+  <div class="editor-row">
     <div role=" table" class="GF_table-main" id="RulesTable">
       <div class="custom-scrollbar" style="position: relative; overflow: hidden; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
         <div class="view" style="position: relative; overflow: scroll; margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
             <!-- THEAD -->
-            <div class="GF_table-thead GF_unselectable" style="display:inline-flex;" role="row" ng-mouseup="editor.rulesTable.onMouseUp($event)" ng-mousemove="editor.rulesTable.onMouseMove($event)" ng-mouseleave="editor.rulesTable.onMouseUp($event)">
+            <div class="GF_table-thead GF_unselectable" style="" role="row" ng-mouseup="editor.rulesTable.onMouseUp($event)" ng-mousemove="editor.rulesTable.onMouseMove($event)" ng-mouseleave="editor.rulesTable.onMouseUp($event)">
               <!-- HEADERS -->
               <!-- EXPAND -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('expand'), 'width' : editor.rulesTable.getWidth('expand')}">
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
                 <div ng-attr-title="{{editor.rulesTable.getDesc('expand')}}" class="GF_table-title" style="cursor: pointer;">
                   <div>{{editor.rulesTable.getLabel('expand')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="float : right; cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- RULE NAME -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="display:flex;user-select: auto;justify-content: flex-start;flex-direction: row;overflow: hidden;" ng-style="{'left' : editor.rulesTable.getLeft('rule'), 'width' : editor.rulesTable.getWidth('rule')}">
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
                 <div ng-attr-title="{{editor.rulesTable.getDesc('rule')}}" class="GF_table-title" style="cursor: pointer;">
                   <div>{{editor.rulesTable.getLabel('rule')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="float : right; cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- LEVEL -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="display:inline-flex;user-select: auto; justify-content:flex-start" ng-style="{'left' : editor.rulesTable.getLeft('level'), 'width' : editor.rulesTable.getWidth('level')}">
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.rulesTable.getWidth('level')}">
                 <div ng-attr-title="{{editor.rulesTable.getDesc('level')}}" class="GF_table-title" style="cursor: pointer;">
                   <div>{{editor.rulesTable.getLabel('level')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="float : right; float:inline-end;cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- RAW VALUE -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="display:inline-flex;user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('rval'), 'width' : editor.rulesTable.getWidth('rval')}">
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.rulesTable.getWidth('rval')}">
                 <div ng-attr-title="{{editor.rulesTable.getDesc('rval')}}" class="GF_table-title" style="cursor: pointer;">
                   <div>{{editor.rulesTable.getLabel('rval')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="float : right;cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- FORMATED VALUE -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="display:inline-flex;user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('fval'), 'width' : editor.rulesTable.getWidth('fval')}">
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.rulesTable.getWidth('fval')}">
                 <div ng-attr-title="{{editor.rulesTable.getDesc('fval')}}" class="GF_table-title" style="cursor: pointer;">
                   <div>{{editor.rulesTable.getLabel('fval')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="float : right;cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- COLOR LEVEL -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="display:inline-flex;user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('color'), 'width' : editor.rulesTable.getWidth('color')}">
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.rulesTable.getWidth('color')}">
                 <div ng-attr-title="{{editor.rulesTable.getDesc('color')}}" class="GF_table-title" style="cursor: pointer;">
                   <div>{{editor.rulesTable.getLabel('color')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="float:right;cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- ACTIONS -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" style="display:inline-flex;user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('actions'), 'width' : editor.rulesTable.getWidth('actions')}">
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.rulesTable.getWidth('actions')}">
                 <div ng-attr-title="{{editor.rulesTable.getDesc('actions')}}" class="GF_table-title" style="cursor: pointer;">
                   <div>{{editor.rulesTable.getLabel('actions')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="float:right;cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.rulesTable.onMouseDown($event)">
                 </div>
               </div>
             </div>
             <!-- TBODY -->
             <div class="GF_table-body">
-              <div role="row" class="GF_table-rows" ng-repeat="rule in editor.rulesHandler.getRules()" ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)" style="display:flex;-webkit-box-flex:1;flex-grow:1;flex-direction: column;width: 100%;overflow: hidden;">
+              <div role="row" class="GF_table-rows" ng-repeat="rule in editor.rulesHandler.getRules()" ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
                 <!-- CELLS -->
-                <div class="GF_table-row_line" style="height: 35px; display:inline-flex; flex-wrap: nowrap;overflow: hidden auto;width: 100%;">
+                <div class="GF_table-row_line">
                   <!-- EXPAND -->
-                  <div role="cell" class="GF_table-cells" id="expand" style="user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('expand'),'width' : editor.rulesTable.getWidth('expand')}">
+                  <div role="cell" class="GF_table-cells" id="expand" ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
                     <div class="GF_table-content">
                       <span class="rule-extend" ng-click="rule.data.reduce=!rule.data.reduce">
                         <i class="fa fa-chevron-right" ng-class="{'fa-chevron-right': rule.data.reduce, 'fa-chevron-down': rule.data.reduce === false}"> </i>
@@ -77,43 +77,43 @@
                     </div>
                   </div>
                   <!-- RULE NAME -->
-                  <div role="cell" class="GF_table-cells" id="rule" style="user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('rule'),'width' : editor.rulesTable.getWidth('rule')}">
+                  <div role="cell" class="GF_table-cells" id="rule" ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
                     <div class="GF_table-content">
                       {{rule.data.alias}}
                     </div>
                   </div>
                   <!-- LEVEL -->
-                  <div role="cell" class="GF_table-cells" id="level" style="user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('level'),'width' : editor.rulesTable.getWidth('level')}">
+                  <div role="cell" class="GF_table-cells" id="level" ng-style="{'width' : editor.rulesTable.getWidth('level')}">
                     <div class="GF_table-content">
                       {{rule.highestLevel}}
                     </div>
                   </div>
                   <!-- HIGTEST RAW VALUE -->
-                  <div role="cell" class="GF_table-cells" id="rval" style="user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('rval'),'width' : editor.rulesTable.getWidth('rval')}">
+                  <div role="cell" class="GF_table-cells" id="rval" ng-style="{'width' : editor.rulesTable.getWidth('rval')}">
                     <div class="GF_table-content">
                       {{rule.highestValue}}
                     </div>
                   </div>
                   <!-- HIGTEST FORMATED VALUE -->
-                  <div role="cell" class="GF_table-cells" id="fval" style="user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('fval'),'width' : editor.rulesTable.getWidth('fval')}">
+                  <div role="cell" class="GF_table-cells" id="fval" ng-style="{'width' : editor.rulesTable.getWidth('fval')}">
                     <div class="GF_table-content">
                       {{rule.highestFormattedValue}}
                     </div>
                   </div>
                   <!-- COLOR -->
-                  <div role="cell" class="GF_table-cells" id="fval" style="user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('color'),'width' : editor.rulesTable.getWidth('color')}">
+                  <div role="cell" class="GF_table-cells" id="fval" ng-style="{'width' : editor.rulesTable.getWidth('color')}">
                     <div class="GF_table-content">
                       COLOR
                     </div>
                   </div>
                   <!-- ACTIONS -->
-                  <div role="cell" class="GF_table-cells" id="actions" style="user-select: auto; justify-content: flex-start;" ng-style="{'left' : editor.rulesTable.getLeft('actions'),'width' : editor.rulesTable.getWidth('actions')}">
+                  <div role="cell" class="GF_table-cells" id="actions" ng-style="{'width' : editor.rulesTable.getWidth('actions')}">
                     <div class="GF_table-content">
                       Actions
                     </div>
                   </div>
                 </div>
-                <div ng-hide="rule.data.reduce==true" class="GF_table-row_body" style="width: 100%; padding : 10px;">
+                <div ng-hide="rule.data.reduce==true" class="GF_table-row_body">
                   <!-- OPTIONS -->
                   <div class="section gf-form-group">
                     <h5 class="section-heading">

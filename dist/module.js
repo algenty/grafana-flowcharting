@@ -22343,8 +22343,12 @@ var GFTable = function () {
 
         var delta = event.pageX - this.startX;
         var width = this.startWidth + delta;
+
+        if (width < 10) {
+          width = 10;
+        }
+
         this.headerTable.style.width = "".concat(width, "px");
-        decaleColumns(this.headerTable.nextElementSibling);
 
         if (this.bodyTable) {
           var rows = this.bodyTable.querySelectorAll('.GF_table-rows');
