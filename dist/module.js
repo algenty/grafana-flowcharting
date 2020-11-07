@@ -22061,7 +22061,7 @@ var MappingOptionsCtrl = function () {
         id: 'color',
         label: 'Color',
         desc: 'Highest color',
-        size: '100px',
+        size: '50px',
         sort: 'asc',
         select: false
       }, {
