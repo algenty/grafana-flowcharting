@@ -67,7 +67,7 @@
             <div class="GF_table-body">
               <div role="row" class="GF_table-rows" ng-repeat="state in editor.flowchartHandler.getFlowchart().getStateHandler().getStatesForInspect()" ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
                 <!-- CELLS -->
-                <div class="GF_table-row_line">
+                <div class="GF_table-row_line" >
                   <!-- ID -->
                   <div role="cell" class="GF_table-cells" id="expand" ng-style="{'width' : editor.statesTable.getWidth('id')}">
                     <div class="GF_table-content GF_unselectable">
