@@ -1,9 +1,9 @@
 //import moment from 'moment';
-import grafana from 'grafana_func';
+import grafana from './grafana_func';
 import { State } from './state_class';
 import _ from 'lodash';
-import { Metric } from 'metric_class';
-import { $GF } from 'globals_class';
+import { Metric } from './metric_class';
+import { $GF } from './globals_class';
 import chroma from 'chroma-js';
 
 /**
@@ -789,7 +789,6 @@ export class Rule {
   // LINK MAPS
   //
   addLinkMap(pattern: string): LinkMap {
-    $GF.log.info('Rule.addLinkMap()');
     const data = LinkMap.getDefaultData();
     const m = new LinkMap(pattern, data);
     m.import(data);

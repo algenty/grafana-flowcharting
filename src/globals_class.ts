@@ -1259,10 +1259,11 @@ export class GFTable {
 
   findTableDiv(elt: HTMLElement): HTMLElement | undefined {
     if (elt !== null && elt !== undefined) {
-      let node: HTMLElement | null = elt;
+      // CANT BUILD WITH FORCE CASTING
+      let node: any = elt;
       while (node !== null && this.tableDiv === undefined) {
         if (node.classList.contains('GF_table-main')) {
-          this.tableDiv = <HTMLDivElement>node;
+          this.tableDiv = node;
         } else {
           node = node.parentElement;
         }
@@ -1277,43 +1278,24 @@ export class GFTable {
 
   onMouseMove(event: MouseEvent) {
     if (this.pressed && this.headerTable && this.headerTable.parentNode) {
-      // const decaleColumns = function(node : HTMLElement | null) {
-      //   while (node !== null) {
-      //     const prec = node.previousElementSibling as HTMLElement;
-      //     let newLeft = 0;
-      //     if (prec) {
-      //       newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
-      //     }
-      //     node.style.left = `${newLeft}px`;
-      //     node = node.nextElementSibling as HTMLElement;
-      //   }
-      // }
       const delta = event.pageX - this.startX;
       let width = this.startWidth + delta;
       if (width < 10) {
         width = 10;
       }
       this.headerTable.style.width = `${width}px`;
-      // decaleColumns(<HTMLElement>this.headerTable.nextElementSibling);
-
       if (this.bodyTable) {
         const rows = this.bodyTable.querySelectorAll('.GF_table-rows');
         Array.from(rows).forEach(r => {
           const cells = r.querySelectorAll('.GF_table-cells');
           let index = 0;
-          let prec: HTMLElement | null = null;
           cells.forEach(cell => {
-            const node = <HTMLElement>cell;
-            if (index == this.indexTable) {
+            // CANT BUILD WITH FORCE CASTING
+            const node: any = cell;
+            if (index === this.indexTable) {
               node.style.width = `${width}px`;
-              prec = node;
               this.setColumnProperty(index, 'size', `${width}px`);
             }
-            // if (index > this.indexTable && prec !== null) {
-            //   const newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
-            //   node.style.left = `${newLeft}px`;
-            //   prec = node;
-            // }
             index += 1;
           });
         });
@@ -1336,7 +1318,9 @@ export class GFTable {
       this.headerTable.classList.add('GF_resizing');
       this.startWidth = parseInt(this.headerTable.style.width, 10);
       if (this.tableDiv) {
-        this.bodyTable = <HTMLDivElement>this.tableDiv.getElementsByClassName('GF_table-body')[0];
+        // CANT BUILD WITH HTMLDIVELEMENT
+        const body: any = this.tableDiv.getElementsByClassName('GF_table-body')[0];
+        this.bodyTable = body;
       } else {
         $GF.log.error('Unable to find table definition with class GF_table-main');
       }
