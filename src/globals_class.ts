@@ -888,7 +888,6 @@ export class $GF {
     return _v;
   }
 
-
   /**
    * Return a dynamic GFTable
    *
@@ -896,7 +895,7 @@ export class $GF {
    * @param {*} init
    * @memberof $GF
    */
-  static createGFTable(table: gf.TTableData, div : HTMLDivElement):GFTable {
+  static createGFTable(table: gf.TTableData, div: HTMLDivElement): GFTable {
     return new GFTable(table, div);
   }
 
@@ -1186,24 +1185,23 @@ export class $GF {
   }
 }
 
-
 export class GFTable {
-  tableDiv : HTMLDivElement | undefined;
+  tableDiv: HTMLDivElement | undefined;
   tableData: gf.TTableData;
-  pressed : boolean = false;
+  pressed: boolean = false;
   headerTable: HTMLDivElement | undefined;
   bodyTable: HTMLDivElement | undefined;
   indexTable: number = 0;
   startX: number = 0;
   startWidth: any = 0;
 
-  constructor(table: gf.TTableData, div : HTMLDivElement | undefined) {
+  constructor(table: gf.TTableData, div: HTMLDivElement | undefined) {
     this.tableData = table;
     this.tableDiv = div;
   }
 
   getWidth(id: string | number): string {
-    return this.getColumnProperty(id,"size");
+    return this.getColumnProperty(id, 'size');
   }
 
   getLeft(id: string | number): string {
@@ -1220,64 +1218,60 @@ export class GFTable {
     return `${sizes}px`;
   }
 
-  getIndex(id : string):number {
-    return this.getColumnProperty(id,'index');
+  getIndex(id: string): number {
+    return this.getColumnProperty(id, 'index');
   }
 
-  getId(index : number):string {
-    return this.getColumnProperty(index,'id');
+  getId(index: number): string {
+    return this.getColumnProperty(index, 'id');
   }
 
-  getLabel(id: string| number): string {
-    return this.getColumnProperty(id,'label');
+  getLabel(id: string | number): string {
+    return this.getColumnProperty(id, 'label');
   }
 
-  getDesc(id: string| number): string {
-    return this.getColumnProperty(id,'desc');
+  getDesc(id: string | number): string {
+    return this.getColumnProperty(id, 'desc');
   }
 
-  getColumnProperty(id: string| number, property : string): any {
+  getColumnProperty(id: string | number, property: string): any {
     let result = `No value for properti ${property}`;
-    const isNumber = (typeof(id) === 'number');
+    const isNumber = typeof id === 'number';
     for (let index = 0; index < this.tableData.columns.length; index++) {
       const element = this.tableData.columns[index];
-      if( (isNumber && id === element.index) || ( !isNumber && id === element.id)) {
+      if ((isNumber && id === element.index) || (!isNumber && id === element.id)) {
         return element[property];
-      } 
+      }
     }
     return result;
   }
 
-  setColumnProperty(id: string| number, property : string, value:any):this {
-    const isNumber = (typeof(id) === 'number');
+  setColumnProperty(id: string | number, property: string, value: any): this {
+    const isNumber = typeof id === 'number';
     for (let index = 0; index < this.tableData.columns.length; index++) {
       const element = this.tableData.columns[index];
-      if( (isNumber && id === element.index) || ( !isNumber && id === element.id)) {
+      if ((isNumber && id === element.index) || (!isNumber && id === element.id)) {
         element[property] = value;
-      } 
+      }
     }
     return this;
   }
 
-  getElement(element) {
-    console.log('GFTable -> getElement -> element', element);
-    debugger
-  }
-
-  findTableDiv(elt : HTMLElement) { 
-    if(elt !== null && elt !== undefined) {
+  findTableDiv(elt: HTMLElement): HTMLElement | undefined {
+    if (elt !== null && elt !== undefined) {
       let node: HTMLElement | null = elt;
-      while(node !== null && this.tableDiv === undefined) {
-        if(node.classList.contains("GF_table-main")) {
-          this.tableDiv = <HTMLDivElement> node;
+      while (node !== null && this.tableDiv === undefined) {
+        if (node.classList.contains('GF_table-main')) {
+          this.tableDiv = <HTMLDivElement>node;
         } else {
           node = node.parentElement;
         }
       }
     }
+    return this.tableDiv;
   }
 
-  setTableDiv(div : HTMLDivElement) {
+  setTableDiv(div: HTMLDivElement) {
     this.tableDiv = div;
   }
 
@@ -1296,8 +1290,8 @@ export class GFTable {
       // }
       const delta = event.pageX - this.startX;
       let width = this.startWidth + delta;
-      if(width<10) {
-        width = 10
+      if (width < 10) {
+        width = 10;
       }
       this.headerTable.style.width = `${width}px`;
       // decaleColumns(<HTMLElement>this.headerTable.nextElementSibling);
@@ -1308,12 +1302,12 @@ export class GFTable {
           const cells = r.querySelectorAll('.GF_table-cells');
           let index = 0;
           let prec: HTMLElement | null = null;
-          cells.forEach( cell  => {
-            const node = <HTMLElement> cell;
-            if(index == this.indexTable) {
+          cells.forEach(cell => {
+            const node = <HTMLElement>cell;
+            if (index == this.indexTable) {
               node.style.width = `${width}px`;
               prec = node;
-              this.setColumnProperty(index,'size', `${width}px`);
+              this.setColumnProperty(index, 'size', `${width}px`);
             }
             // if (index > this.indexTable && prec !== null) {
             //   const newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);

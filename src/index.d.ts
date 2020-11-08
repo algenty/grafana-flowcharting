@@ -372,7 +372,7 @@ declare module gf {
     sort: 'asc' | 'desc';
     select: boolean;
   }
-  
+
   declare interface TTableData {
     data: any[];
     columns: TTableColumn[];

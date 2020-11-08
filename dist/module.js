@@ -19809,7 +19809,7 @@ var GFTable = function () {
   _createClass(GFTable, [{
     key: "getWidth",
     value: function getWidth(id) {
-      return this.getColumnProperty(id, "size");
+      return this.getColumnProperty(id, 'size');
     }
   }, {
     key: "getLeft",
@@ -19879,25 +19879,21 @@ var GFTable = function () {
       return this;
     }
   }, {
-    key: "getElement",
-    value: function getElement(element) {
-      console.log('GFTable -> getElement -> element', element);
-      debugger;
-    }
-  }, {
     key: "findTableDiv",
     value: function findTableDiv(elt) {
       if (elt !== null && elt !== undefined) {
         var node = elt;
 
         while (node !== null && this.tableDiv === undefined) {
-          if (node.classList.contains("GF_table-main")) {
+          if (node.classList.contains('GF_table-main')) {
             this.tableDiv = node;
           } else {
             node = node.parentElement;
           }
         }
       }
+
+      return this.tableDiv;
     }
   }, {
     key: "setTableDiv",
@@ -21849,7 +21845,7 @@ var InspectOptionsCtrl = function () {
       }
 
       flowchart.applyModel();
-      this.ctrl.notify("Save the dashboard to apply the modifications");
+      this.ctrl.notify('Save the dashboard to apply the modifications');
     }
   }, {
     key: "selectCell",

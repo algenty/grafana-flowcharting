@@ -113,7 +113,7 @@ export class State {
         if (!shape.isHidden() && shape.match(cellProp, rule.data.shapeRegEx)) {
           let v: any = color;
           this.matched = true;
-          if(level > this.globalLevel) {
+          if (level > this.globalLevel) {
             this.globalLevel = level;
             this.highestValue = value;
             this.highestFormattedValue = FormattedValue;
@@ -144,7 +144,7 @@ export class State {
         if (!text.isHidden() && text.match(cellProp, rule.data.textRegEx) && text.toLabelize(level)) {
           if (text.toLabelize(level)) {
             this.matched = true;
-            if(level > this.globalLevel) {
+            if (level > this.globalLevel) {
               this.globalLevel = level;
               this.highestValue = value;
               this.highestFormattedValue = FormattedValue;
@@ -163,7 +163,7 @@ export class State {
         if (!event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level)) {
           if (event.toEventable(level)) {
             this.matched = true;
-            if(level > this.globalLevel) {
+            if (level > this.globalLevel) {
               this.globalLevel = level;
               this.highestValue = value;
               this.highestFormattedValue = FormattedValue;
@@ -181,7 +181,7 @@ export class State {
         if (!link.isHidden() && link.match(cellProp, rule.data.linkRegEx)) {
           if (link.toLinkable(level)) {
             this.matched = true;
-            if(level > this.globalLevel) {
+            if (level > this.globalLevel) {
               this.globalLevel = level;
               this.highestValue = value;
               this.highestFormattedValue = FormattedValue;
@@ -212,7 +212,7 @@ export class State {
    * @memberof State
    */
   isEdited() {
-    return this.edited
+    return this.edited;
   }
 
   /**
@@ -222,7 +222,7 @@ export class State {
    * @memberof State
    */
   isEditMode() {
-    return this.edit
+    return this.edit;
   }
 
   /**
@@ -324,8 +324,8 @@ export class State {
    * @returns {string}
    * @memberof State
    */
-  getShapeName():string {
-    if(this.mxcell) {
+  getShapeName(): string {
+    if (this.mxcell) {
       return this.xgraph.getMxCellStateStyle(this.mxcell, 'shape');
     }
     return 'Unknown';
@@ -337,8 +337,8 @@ export class State {
    * @returns {string}
    * @memberof State
    */
-  getShapeStyles():string {
-    if(this.mxcell) {
+  getShapeStyles(): string {
+    if (this.mxcell) {
       return this.mxcell.style;
     }
     return 'Unknown';
@@ -407,7 +407,7 @@ export class State {
       this.variables.clear();
       this.status.clear();
       this.globalLevel = -1;
-      this.highestFormattedValue =  '';
+      this.highestFormattedValue = '';
       this.highestValue = undefined;
       this.matched = false;
     }

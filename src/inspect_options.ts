@@ -11,7 +11,7 @@ export class InspectOptionsCtrl {
   flowchartHandler: FlowchartHandler;
   stateHandler: StateHandler | undefined;
   statesTableData: gf.TTableData;
-  statesTable : GFTable;
+  statesTable: GFTable;
   panel: any;
   parentDiv: HTMLDivElement;
   headerTable: HTMLDivElement | undefined;
@@ -33,7 +33,7 @@ export class InspectOptionsCtrl {
           id: 'id',
           label: 'ID',
           desc: 'Uniq Id',
-          size : '100px',
+          size: '100px',
           sort: 'asc',
           select: false,
         },
@@ -42,7 +42,7 @@ export class InspectOptionsCtrl {
           id: 'label',
           label: 'Label',
           desc: 'Text/Label',
-          size : '100px',
+          size: '100px',
           sort: 'asc',
           select: false,
         },
@@ -51,7 +51,7 @@ export class InspectOptionsCtrl {
           id: 'shape',
           label: 'Shape',
           desc: 'Draw.io shape model',
-          size : '100px',
+          size: '100px',
           sort: 'asc',
           select: false,
         },
@@ -60,7 +60,7 @@ export class InspectOptionsCtrl {
           id: 'level',
           label: 'Lvl',
           desc: 'Current level',
-          size : '45px',
+          size: '45px',
           sort: 'asc',
           select: false,
         },
@@ -69,7 +69,7 @@ export class InspectOptionsCtrl {
           id: 'rval',
           label: 'R.Val.',
           desc: 'Raw value',
-          size : '80px',
+          size: '80px',
           sort: 'asc',
           select: false,
         },
@@ -78,7 +78,7 @@ export class InspectOptionsCtrl {
           id: 'fval',
           label: 'F.Val.',
           desc: 'Formated value',
-          size : '80px',
+          size: '80px',
           sort: 'asc',
           select: false,
         },
@@ -87,7 +87,7 @@ export class InspectOptionsCtrl {
           id: 'colors',
           label: 'Colors',
           desc: 'Shape ID',
-          size : '80px',
+          size: '80px',
           sort: 'asc',
           select: false,
         },
@@ -96,7 +96,7 @@ export class InspectOptionsCtrl {
           id: 'tags',
           label: 'Tags',
           desc: 'Tags',
-          size : '100px',
+          size: '100px',
           sort: 'asc',
           select: false,
         },
@@ -162,7 +162,7 @@ export class InspectOptionsCtrl {
       const states = sh.getStates();
       states.forEach(state => {
         state.edit = false;
-        if(state.edited && state.cellId && state.previousId) {
+        if (state.edited && state.cellId && state.previousId) {
           state.cellId = state.previousId;
           state.edited = false;
         }
@@ -186,7 +186,7 @@ export class InspectOptionsCtrl {
       sh.edited = false;
     }
     flowchart.applyModel();
-    this.ctrl.notify("Save the dashboard to apply the modifications");
+    this.ctrl.notify('Save the dashboard to apply the modifications');
   }
 
   selectCell(state: State) {
@@ -237,7 +237,6 @@ export class InspectOptionsCtrl {
       xg.anonymize();
     }
   }
-
 }
 
 /** @ngInject */

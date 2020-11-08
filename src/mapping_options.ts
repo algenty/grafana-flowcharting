@@ -410,4 +410,3 @@ export function mappingOptionsTab($q, uiSegmentSrv) {
     controller: MappingOptionsCtrl,
   };
 }
-

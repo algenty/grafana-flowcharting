@@ -672,7 +672,7 @@ export default class XGraph {
    * @returns {mxCellState}
    * @memberof XGraph
    */
-  getMxCellState(mxcell : mxCell): mxCellState {
+  getMxCellState(mxcell: mxCell): mxCellState {
     return this.graph.view.getState(mxcell);
   }
 
@@ -684,7 +684,7 @@ export default class XGraph {
    * @returns {*}
    * @memberof XGraph
    */
-  getMxCellStateStyle(mxcell : mxCell, styleName : string):any {
+  getMxCellStateStyle(mxcell: mxCell, styleName: string): any {
     const state = this.getMxCellState(mxcell);
     return state.style[styleName];
   }
