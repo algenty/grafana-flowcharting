@@ -18852,6 +18852,11 @@ var GFCONSTANT = function GFCONSTANT() {
     type: 'number',
     placeholder: '0-100'
   }, {
+    text: 'Shape : Change position in Gauge (0-100)',
+    value: 'gaugePos',
+    type: 'number',
+    placeholder: '0-100'
+  }, {
     text: 'Shape : Flip horizontally (0|1)',
     value: 'flipH',
     type: 'number',
@@ -19787,7 +19792,7 @@ $GF._globalvars = new GFVariables();
 $GF.CONSTANTS = new GFCONSTANT();
 $GF.graphHover = false;
 $GF.GHTimeStamp = 0;
-$GF.DEBUG = false;
+$GF.DEBUG = true;
 $GF.utils = __webpack_require__(/*! ./utils_raw */ "./utils_raw.js");
 var GFTable = function () {
   function GFTable(table, div) {
@@ -20128,8 +20133,7 @@ var XGraph = function () {
           var id = _evt.properties.cell.id;
           var state = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].getVar("STATE_".concat(id));
           console.log('DEBUG GF STATE', state);
-          var view = self.graph.view;
-          console.log('DEBUG CELL STATE', view.getState(_evt.properties.cell));
+          console.log('DEBUG CELL STATE', self.getMxCellState(_evt.properties.cell));
         }
       });
     }
@@ -20515,6 +20519,17 @@ var XGraph = function () {
 
       trc.after();
       return result;
+    }
+  }, {
+    key: "getMxCellState",
+    value: function getMxCellState(mxcell) {
+      return this.graph.view.getState(mxcell);
+    }
+  }, {
+    key: "getMxCellStateStyle",
+    value: function getMxCellStateStyle(mxcell, styleName) {
+      var state = this.getMxCellState(mxcell);
+      return state.style[styleName];
     }
   }, {
     key: "selectMxCells",
@@ -21683,7 +21698,7 @@ var InspectOptionsCtrl = function () {
         id: 'id',
         label: 'ID',
         desc: 'Uniq Id',
-        size: '25px',
+        size: '100px',
         sort: 'asc',
         select: false
       }, {
@@ -21696,6 +21711,14 @@ var InspectOptionsCtrl = function () {
         select: false
       }, {
         index: 2,
+        id: 'shape',
+        label: 'Shape',
+        desc: 'Draw.io shape model',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 3,
         id: 'level',
         label: 'Lvl',
         desc: 'Current level',
@@ -21703,7 +21726,7 @@ var InspectOptionsCtrl = function () {
         sort: 'asc',
         select: false
       }, {
-        index: 3,
+        index: 4,
         id: 'rval',
         label: 'R.Val.',
         desc: 'Raw value',
@@ -21711,7 +21734,7 @@ var InspectOptionsCtrl = function () {
         sort: 'asc',
         select: false
       }, {
-        index: 4,
+        index: 5,
         id: 'fval',
         label: 'F.Val.',
         desc: 'Formated value',
@@ -21719,7 +21742,7 @@ var InspectOptionsCtrl = function () {
         sort: 'asc',
         select: false
       }, {
-        index: 4,
+        index: 6,
         id: 'colors',
         label: 'Colors',
         desc: 'Shape ID',
@@ -21727,7 +21750,7 @@ var InspectOptionsCtrl = function () {
         sort: 'asc',
         select: false
       }, {
-        index: 6,
+        index: 7,
         id: 'tags',
         label: 'Tags',
         desc: 'Tags',
@@ -21886,72 +21909,6 @@ var InspectOptionsCtrl = function () {
 
       if (xg) {
         xg.anonymize();
-      }
-    }
-  }, {
-    key: "onMouseMove",
-    value: function onMouseMove(event) {
-      var _this = this;
-
-      if (this.pressed && this.headerTable && this.headerTable.parentNode) {
-        var decaleColumns = function decaleColumns(node) {
-          while (node !== null) {
-            var prec = node.previousElementSibling;
-            var newLeft = 0;
-
-            if (prec) {
-              newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
-            }
-
-            node.style.left = "".concat(newLeft, "px");
-            node = node.nextElementSibling;
-          }
-        };
-
-        var delta = event.pageX - this.startX;
-        var width = this.startWidth + delta;
-        this.headerTable.style.width = "".concat(width, "px");
-        decaleColumns(this.headerTable.nextElementSibling);
-
-        if (this.bodyTable) {
-          var rows = this.bodyTable.querySelectorAll('.GF_table-rows');
-          Array.from(rows).forEach(function (r) {
-            var cell = r.firstElementChild;
-
-            for (var index = 0; index < _this.indexTable; index++) {
-              cell = cell.nextElementSibling;
-            }
-
-            cell.style.width = "".concat(width, "px");
-            decaleColumns(cell.nextElementSibling);
-          });
-        }
-      }
-    }
-  }, {
-    key: "onMouseDown",
-    value: function onMouseDown(event) {
-      this.pressed = true;
-      this.startX = event.pageX;
-      this.headerTable = event.currentTarget.parentElement;
-
-      if (this.headerTable) {
-        if (this.headerTable.parentNode) {
-          this.indexTable = Array.from(this.headerTable.parentNode.children).indexOf(this.headerTable);
-        }
-
-        this.headerTable.classList.add('GF_resizing');
-        this.startWidth = parseInt(this.headerTable.style.width, 10);
-        this.bodyTable = this.parentDiv.getElementsByClassName('GF_table-body')[0];
-      }
-    }
-  }, {
-    key: "onMouseUp",
-    value: function onMouseUp(event) {
-      this.pressed = false;
-
-      if (this.headerTable) {
-        this.headerTable.classList.remove('GF_resizing');
       }
     }
   }]);
@@ -23224,7 +23181,7 @@ var customize=function customize(){mxTooltipHandler.prototype.show=function(tip,
 /*! exports provided: type, name, id, info, dependencies, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"type\":\"panel\",\"name\":\"FlowCharting\",\"id\":\"agenty-flowcharting-panel\",\"info\":{\"description\":\"Flowcharting is a Grafana plugin. Use it to display complexe diagrams using the online graphing library draw.io like a vsio\",\"author\":{\"name\":\"Arnaud GENTY\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},\"keywords\":[\"flowchart\",\"panel\",\"diagram\",\"workflow\",\"floorplan\",\"map\",\"organigram\",\"draw.io\",\"visio\",\"mxgraph\"],\"links\":[{\"name\":\"Project site\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},{\"name\":\"Documentation\",\"url\":\"https://algenty.github.io/flowcharting-repository/\"},{\"name\":\"Demonstration\",\"url\":\"https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1\"},{\"name\":\"Apache License\",\"url\":\"https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE\"}],\"version\":\"0.9.1\",\"updated\":\"2020-10-28\",\"logos\":{\"small\":\"img/agenty-flowcharting.svg\",\"large\":\"img/agenty-flowcharting.svg\"}},\"dependencies\":{\"grafanaVersion\":\"6.x.x\",\"plugins\":[]}}");
+module.exports = JSON.parse("{\"type\":\"panel\",\"name\":\"FlowCharting\",\"id\":\"agenty-flowcharting-panel\",\"info\":{\"description\":\"Flowcharting is a Grafana plugin. Use it to display complexe diagrams using the online graphing library draw.io like a vsio\",\"author\":{\"name\":\"Arnaud GENTY\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},\"keywords\":[\"flowchart\",\"panel\",\"diagram\",\"workflow\",\"floorplan\",\"map\",\"organigram\",\"draw.io\",\"visio\",\"mxgraph\"],\"links\":[{\"name\":\"Project site\",\"url\":\"https://github.com/algenty/grafana-flowcharting\"},{\"name\":\"Documentation\",\"url\":\"https://algenty.github.io/flowcharting-repository/\"},{\"name\":\"Demonstration\",\"url\":\"https://play.grafana.org/d/Unu5JcjWk/flowcharting-index?orgId=1\"},{\"name\":\"Apache License\",\"url\":\"https://github.com/algenty/grafana-flowcharting/blob/master/LICENSE\"}],\"version\":\"0.9.1b\",\"updated\":\"2020-11-08\",\"logos\":{\"small\":\"img/agenty-flowcharting.svg\",\"large\":\"img/agenty-flowcharting.svg\"}},\"dependencies\":{\"grafanaVersion\":\"6.x.x\",\"plugins\":[]}}");
 
 /***/ }),
 
@@ -25481,6 +25438,24 @@ var State = function () {
       return this.mxcell.isEdge();
     }
   }, {
+    key: "getShapeName",
+    value: function getShapeName() {
+      if (this.mxcell) {
+        return this.xgraph.getMxCellStateStyle(this.mxcell, 'shape');
+      }
+
+      return 'Unknown';
+    }
+  }, {
+    key: "getShapeStyles",
+    value: function getShapeStyles() {
+      if (this.mxcell) {
+        return this.mxcell.style;
+      }
+
+      return 'Unknown';
+    }
+  }, {
     key: "applyState",
     value: function applyState() {
       var trc = globals_class__WEBPACK_IMPORTED_MODULE_3__["$GF"].trace.before(this.constructor.name + '.' + 'applyState()');
@@ -25944,6 +25919,7 @@ var EventState = function (_GFState) {
           break;
 
         case 'barPos':
+        case 'gaugePos':
         case 'fontSize':
         case 'opacity':
         case 'textOpacity':

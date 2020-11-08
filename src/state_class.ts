@@ -319,6 +319,32 @@ export class State {
   }
 
   /**
+   * Return the name of the shape
+   *
+   * @returns {string}
+   * @memberof State
+   */
+  getShapeName():string {
+    if(this.mxcell) {
+      return this.xgraph.getMxCellStateStyle(this.mxcell, 'shape');
+    }
+    return 'Unknown';
+  }
+
+  /**
+   *Return all styles/properties 'draw.io'
+   *
+   * @returns {string}
+   * @memberof State
+   */
+  getShapeStyles():string {
+    if(this.mxcell) {
+      return this.mxcell.style;
+    }
+    return 'Unknown';
+  }
+
+  /**
    * Apply new state
    *
    * @returns {this}
@@ -726,6 +752,7 @@ class EventState extends GFState {
         break;
 
       case 'barPos':
+      case 'gaugePos':
       case 'fontSize':
       case 'opacity':
       case 'textOpacity':

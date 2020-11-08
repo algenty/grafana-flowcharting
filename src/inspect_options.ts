@@ -33,7 +33,7 @@ export class InspectOptionsCtrl {
           id: 'id',
           label: 'ID',
           desc: 'Uniq Id',
-          size : '25px',
+          size : '100px',
           sort: 'asc',
           select: false,
         },
@@ -48,6 +48,15 @@ export class InspectOptionsCtrl {
         },
         {
           index: 2,
+          id: 'shape',
+          label: 'Shape',
+          desc: 'Draw.io shape model',
+          size : '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 3,
           id: 'level',
           label: 'Lvl',
           desc: 'Current level',
@@ -56,7 +65,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
         {
-          index: 3,
+          index: 4,
           id: 'rval',
           label: 'R.Val.',
           desc: 'Raw value',
@@ -65,7 +74,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
         {
-          index: 4,
+          index: 5,
           id: 'fval',
           label: 'F.Val.',
           desc: 'Formated value',
@@ -74,7 +83,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
         {
-          index: 4,
+          index: 6,
           id: 'colors',
           label: 'Colors',
           desc: 'Shape ID',
@@ -83,7 +92,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
         {
-          index: 6,
+          index: 7,
           id: 'tags',
           label: 'Tags',
           desc: 'Tags',
@@ -229,59 +238,6 @@ export class InspectOptionsCtrl {
     }
   }
 
-  onMouseMove(event: MouseEvent) {
-    if (this.pressed && this.headerTable && this.headerTable.parentNode) {
-      const decaleColumns = function(node : HTMLElement | null) {
-        while (node !== null) {
-          const prec = node.previousElementSibling as HTMLElement;
-          let newLeft = 0;
-          if (prec) {
-            newLeft = parseInt(prec.style.width, 10) + parseInt(prec.style.left, 10);
-          }
-          node.style.left = `${newLeft}px`;
-          node = node.nextElementSibling as HTMLElement;
-        }
-      }
-      const delta = event.pageX - this.startX;
-      const width = this.startWidth + delta;
-      this.headerTable.style.width = `${width}px`;
-      decaleColumns(<HTMLElement >this.headerTable.nextElementSibling)
-
-      if (this.bodyTable) {
-        const rows = this.bodyTable.querySelectorAll('.GF_table-rows');
-        Array.from(rows).forEach(r => { 
-          let cell = r.firstElementChild as HTMLElement;
-          for (let index = 0; index < this.indexTable; index++) {
-            cell = cell.nextElementSibling as HTMLElement;
-          }
-          cell.style.width = `${width}px`;
-          decaleColumns(<HTMLElement > cell.nextElementSibling)
-        });
-      }
-    }
-  }
-
-  onMouseDown(event: any) {
-    this.pressed = true;
-    this.startX = event.pageX;
-    // console.log('onMouseDown',event);
-    this.headerTable = event.currentTarget.parentElement;
-    if (this.headerTable) {
-      if (this.headerTable.parentNode) {
-        this.indexTable = Array.from(this.headerTable.parentNode.children).indexOf(this.headerTable);
-      }
-      this.headerTable.classList.add('GF_resizing');
-      this.startWidth = parseInt(this.headerTable.style.width, 10);
-      this.bodyTable = <HTMLDivElement>this.parentDiv.getElementsByClassName('GF_table-body')[0];
-    }
-  }
-
-  onMouseUp(event: MouseEvent) {
-    this.pressed = false;
-    if (this.headerTable) {
-      this.headerTable.classList.remove('GF_resizing');
-    }
-  }
 }
 
 /** @ngInject */

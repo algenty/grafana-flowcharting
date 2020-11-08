@@ -186,6 +186,7 @@ class GFCONSTANT {
       default: '1',
     },
     { text: 'Shape : Change position in Bar (0-100)', value: 'barPos', type: 'number', placeholder: '0-100' },
+    { text: 'Shape : Change position in Gauge (0-100)', value: 'gaugePos', type: 'number', placeholder: '0-100' },
     {
       text: 'Shape : Flip horizontally (0|1)',
       value: 'flipH',
@@ -784,7 +785,7 @@ export class $GF {
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
-  static DEBUG = false;
+  static DEBUG = true;
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;

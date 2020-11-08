@@ -22,6 +22,14 @@
                 <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize"  ng-mousedown="editor.statesTable.onMouseDown($event)">
                 </div>
               </div>
+              <!-- SHAPE -->
+              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('shape')}">
+                <div ng-attr-title="{{editor.statesTable.getDesc('shape')}}" class="GF_table-title" style="cursor: pointer;">
+                  <div>{{editor.statesTable.getLabel('shape')}}</div>
+                </div>
+                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize"  ng-mousedown="editor.statesTable.onMouseDown($event)">
+                </div>
+              </div>
               <!-- LEVEL -->
               <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('level')}">
                 <div ng-attr-title="{{editor.statesTable.getDesc('level')}}" class="GF_table-title" style="cursor: pointer;">
@@ -65,19 +73,30 @@
             </div>
             <!-- TBODY -->
             <div class="GF_table-body">
-              <div role="row" class="GF_table-rows" ng-repeat="state in editor.flowchartHandler.getFlowchart().getStateHandler().getStatesForInspect()" ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
+              <div role="row" class="GF_table-rows" ng-repeat="state in editor.flowchartHandler.getFlowchart().getStateHandler().getStatesForInspect()">
                 <!-- CELLS -->
-                <div class="GF_table-row_line" >
+                <div class="GF_table-row_line" ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
                   <!-- ID -->
                   <div role="cell" class="GF_table-cells" id="expand" ng-style="{'width' : editor.statesTable.getWidth('id')}">
-                    <div class="GF_table-content GF_unselectable">
+                    <div class="GF_table-content" ng-hide="state.edit" ng-style="state.edited && {'color':'blue'};" ng-dblclick="editor.onEdit(state)">
                       {{state.cellId}}
+                    </div>
+                    <div ng-show="state.edit">
+                      <input type="text" id="{{state.cellId}}" class="gf-form-input" ng-model="state.newcellId"
+                        ng-blur="editor.onChangeId(state)" placeholder="{{state.cellId}}" style="width: 100%;"
+                        ng-keydown="$event.keyCode === 13 && editor.onChangeId(state)" />
                     </div>
                   </div>
                   <!-- LABEL -->
                   <div role="cell" class="GF_table-cells" id="rule" ng-style="{'width' : editor.statesTable.getWidth('label')}">
                     <div class="GF_table-content">
                       {{state.getCellProp('value')}}
+                    </div>
+                  </div>
+                  <!-- SHAPE -->
+                  <div role="cell" class="GF_table-cells" id="rule" ng-style="{'width' : editor.statesTable.getWidth('label')}">
+                    <div class="GF_table-content" title="{{state.getShapeStyles()}}">
+                      {{state.getShapeName()}}
                     </div>
                   </div>
                   <!-- LEVEL -->
@@ -154,5 +173,17 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="edit-tab-content" id="templateInspect">
+  <div class="gf-form" ng-show="editor.flowchartHandler.getFlowchart().getStateHandler().edited">
+    <button class="btn btn-danger btn-small" ng-click="editor.reset()" style="margin-right: 5px;">
+      <i class="fa fa-power-off"></i> Reinit graph and color
+    </button>
+    <button ng-show="editor.flowchartHandler.getFlowchart().getStateHandler().edited"
+      class="btn btn-secondary btn-small" ng-click="editor.apply()" style="margin-right: 5px;">
+      <i class="fa fa-save"></i> Apply changes
+    </button>
   </div>
 </div>

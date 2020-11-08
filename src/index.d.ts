@@ -1,5 +1,6 @@
 //declare var GFP: FlowChartingPlugin;
 type mxCell = any;
+type mxCellState = any;
 type mxMouseEvent = any;
 type mxGeometry = { x: number; y: number; width: number; height: number };
 
@@ -57,6 +58,7 @@ declare module gf {
     | 'fontSize'
     | 'blink'
     | 'barPos'
+    | 'gaugePos'
     | 'text'
     | 'opacity'
     | 'textOpacity'

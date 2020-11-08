@@ -88,8 +88,9 @@ export default class XGraph {
           const id = _evt.properties.cell.id;
           const state = $GF.getVar(`STATE_${id}`);
           console.log('DEBUG GF STATE', state);
-          const view = self.graph.view;
-          console.log('DEBUG CELL STATE', view.getState(_evt.properties.cell));
+          // const view = self.graph.view;
+          // console.log('DEBUG CELL STATE', view.getState(_evt.properties.cell));
+          console.log('DEBUG CELL STATE', self.getMxCellState(_evt.properties.cell));
         }
       });
     }
@@ -662,6 +663,30 @@ export default class XGraph {
     }
     trc.after();
     return result;
+  }
+
+  /**
+   * Return mxCellState of mxCell
+   *
+   * @param {mxCell} mxcell
+   * @returns {mxCellState}
+   * @memberof XGraph
+   */
+  getMxCellState(mxcell : mxCell): mxCellState {
+    return this.graph.view.getState(mxcell);
+  }
+
+  /**
+   * Return a property of style from mxCellState
+   *
+   * @param {mxCell} mxcell
+   * @param {string} styleName
+   * @returns {*}
+   * @memberof XGraph
+   */
+  getMxCellStateStyle(mxcell : mxCell, styleName : string):any {
+    const state = this.getMxCellState(mxcell);
+    return state.style[styleName];
   }
 
   /**
