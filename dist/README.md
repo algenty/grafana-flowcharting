@@ -57,18 +57,19 @@ Arnaud
   - New initialization engine for drawio libs
   - New notifier handler in panel.
   - Change default url draw.io by https://embed.diagrams.net
-  - New edit design for grafana v7
-  - Add shape name and properties in inspect console
-  - Add gaugePos property in Event Mapping for the gauge models
+  - New edit design for grafana v7 ([See example](https://algenty.github.io/flowcharting-repository/images/rulesv7_ani.png?raw=true))  
+  - Add shape name and properties in inspect console ([See example](https://algenty.github.io/flowcharting-repository/images/inspectv7_ani.png?raw=true))  
+  - Add gaugePos property in Event Mapping for the gauge draw.io models [See example](https://algenty.github.io/flowcharting-repository/images/gaugePos_ani.png?raw=true))  
   
 ### Fixed
-  - Fixed : Inspect mode [(issue #209)](https://github.com/algenty/grafana-flowcharting/issues/209)
+  - Fixed : Inspect mode [(issue #209)](https://github.com/algenty/grafana-flowcharting/issues/209) ([See example](https://algenty.github.io/flowcharting-repository/images/inspectv7_ani.png?raw=true))  
   - Fixed : Label position in shape [(issue #147)](https://github.com/algenty/grafana-flowcharting/issues/147)   
   - Fixed : Initialization of first model
   - Fixed : Display refresh between "edit mode" and "dashboard mode" in grafana v7 [(issue #205)](https://github.com/algenty/grafana-flowcharting/issues/205)  
   - Fixed : zoom on text without witdth and height
   - Fixed : Disable select text when double click for zoom
-  - Fixed : retro compatibility with grafana 6.x
+  - Fixed : retro compatibility with grafana 6.x [(issue #218)](https://github.com/algenty/grafana-flowcharting/issues/218)  
+  - Fixed : Zoom when with 2 or mode panels with flowcharting [(issue #214)](https://github.com/algenty/grafana-flowcharting/issues/214)  
 
 ## [[0.9.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.9.0/download) - 2020-05-31  
 ### Added

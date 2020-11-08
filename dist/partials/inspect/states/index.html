@@ -77,9 +77,19 @@
                 <!-- CELLS -->
                 <div class="GF_table-row_line" ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
                   <!-- ID -->
-                  <div role="cell" class="GF_table-cells" id="expand" ng-style="{'width' : editor.statesTable.getWidth('id')}">
+                  <div role="cell" class="GF_table-cells" id="expand" ng-style="{'width' : editor.statesTable.getWidth('id')}" ng-mouseleave="state.editButton = false;" ng-mouseover="state.editButton = true;">
                     <div class="GF_table-content" ng-hide="state.edit" ng-style="state.edited && {'color':'blue'};" ng-dblclick="editor.onEdit(state)">
                       {{state.cellId}}
+                    </div>
+                    <div ng-show="state.editButton === true && state.edited === true && state.edit !== true" style="padding:6px;float:right;" ng-click="editor.undo(state)">
+                      <span bs-tooltip="'Undo'">
+                        <i class="fa fa-undo"></i>
+                      </span>
+                    </div>
+                    <div ng-show="state.editButton === true && state.edit !== true" style="padding:6px;float:right;" ng-click="editor.onEdit(state)">
+                      <span bs-tooltip="'Edit/Change ID'">
+                        <i class="fa fa-edit"></i>
+                      </span>
                     </div>
                     <div ng-show="state.edit">
                       <input type="text" id="{{state.cellId}}" class="gf-form-input" ng-model="state.newcellId"

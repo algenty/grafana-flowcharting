@@ -153,6 +153,14 @@ export class InspectOptionsCtrl {
     }, 100);
   }
 
+  undo(state: State) {
+    state.edit = false;
+    state.edited = false;
+    if (state.previousId) {
+      state.cellId = state.previousId;
+    }
+  }
+
   reset() {
     this.flowchartHandler.draw();
     this.flowchartHandler.refresh();
