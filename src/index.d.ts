@@ -5,7 +5,7 @@ type mxMouseEvent = any;
 type mxGeometry = { x: number; y: number; width: number; height: number };
 
 declare module gf {
-  interface TSelectString {
+  declare interface TSelectString {
     text: string;
     value: string;
   }
