@@ -52,7 +52,7 @@ Arnaud
 
 # Changelog
 
-## [[0.9.1b SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.1b-SNAPSHOT.zip) - 2020-11-08
+## [[0.9.1c SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.1b-SNAPSHOT.zip) - 2020-11-08
 ### Added
   - New initialization engine for drawio libs
   - New notifier handler in panel.
@@ -60,6 +60,7 @@ Arnaud
   - New edit design for grafana v7 ([See example](https://algenty.github.io/flowcharting-repository/images/rulesv7_ani.png?raw=true))  
   - Add shape name and properties in inspect console ([See example](https://algenty.github.io/flowcharting-repository/images/inspectv7_ani.png?raw=true))  
   - Add gaugePos property in Event Mapping for the gauge draw.io models [See example](https://algenty.github.io/flowcharting-repository/images/gaugePos_ani.png?raw=true))  
+  - Plugin is signed
   
 ### Fixed
   - Fixed : Inspect mode [(issue #209)](https://github.com/algenty/grafana-flowcharting/issues/209) ([See example](https://algenty.github.io/flowcharting-repository/images/inspectv7_ani.png?raw=true))  
