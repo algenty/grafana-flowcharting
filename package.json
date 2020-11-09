@@ -31,11 +31,11 @@
   "devDependencies": {
     "@angular/core": "^10.2.1",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
-    "@grafana/data": "^7.0.3",
+    "@grafana/data": "7.3.1",
     "@grafana/eslint-config": "1.0.0-rc1",
-    "@grafana/runtime": "^7.0.3",
-    "@grafana/toolkit": "^7.0.3",
-    "@grafana/ui": "^7.0.3",
+    "@grafana/runtime": "7.3.1",
+    "@grafana/toolkit": "7.3.1",
+    "@grafana/ui": "7.3.1",
     "@types/angular": "^1.6.56",
     "@types/chartist": "^0.9.46",
     "@types/chroma-js": "^2.0.0",
@@ -60,6 +60,7 @@
     "grunt-contrib-compress": "^1.6.0",
     "grunt-git": "^1.0.14",
     "invariant": "^2.2.4",
+    "jest": "^26.6.3",
     "jquery": "^3.4.1",
     "load-grunt-tasks": "^5.1.0",
     "lodash": "^4.17.15",
@@ -68,6 +69,7 @@
     "mxgraph": "^4.1.1",
     "mxgraph-type-definitions": "^1.0.1",
     "safe-eval": "^0.4.1",
+    "ts-jest": "^26.4.4",
     "vkbeautify": "^0.99.3"
   },
   "dependencies": {
