@@ -72,7 +72,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.containerDivId = `container_${this.panel.graphId}`;
 
     // events
-    console.log('grafana.PanelEvents', grafana.PanelEvents);
+    // console.log('grafana.PanelEvents', grafana.PanelEvents);
     // this.events.on(grafana.PanelEvents.render, this.onRender.bind(this));
     this.events.on('render', this.onRender.bind(this));
     // this.events.on(grafana.PanelEvents.refresh, this.onRefresh.bind(this));

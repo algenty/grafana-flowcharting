@@ -17841,7 +17841,6 @@ var FlowchartCtrl = function (_MetricsPanelCtrl) {
 
     _this.panel.graphId = "flowchart_".concat(_this.panel.id);
     _this.containerDivId = "container_".concat(_this.panel.graphId);
-    console.log('grafana.PanelEvents', grafana_func__WEBPACK_IMPORTED_MODULE_10__["default"].PanelEvents);
 
     _this.events.on('render', _this.onRender.bind(_assertThisInitialized(_this)));
 
