@@ -1,0 +1,12 @@
+$notifier_background : rgba(0, 0, 0, 0.7);
+$color_picker_border : rgb(228, 228, 228);
+$table_columnheader_border : rgb(20, 22, 25);
+$table_header_background : rgb(32, 34, 38);
+$table_text_header_color : rgb(51, 162, 229);
+$table_cell_border : $table_header_background;
+$table_cell_hover_border : rgb(87, 148, 242);
+$table_cell_hover_background : rgb(25, 27, 30);
+$table_row_hover : rgb(25, 27, 30);
+$hr_color : #333;
+
+@import 'common';

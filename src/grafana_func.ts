@@ -22,9 +22,13 @@ var grafana = {
 
   loadCss() {
     loadPluginCss({
-      dark: 'plugins/agenty-flowcharting-panel/static/css/flowchart.dark.css',
-      light: 'plugins/agenty-flowcharting-panel/static/css/flowchart.light.css',
+      dark: 'plugins/agenty-flowcharting-panel/styles/dark.css',
+      light: 'plugins/agenty-flowcharting-panel/styles/light.css',
     });
+    // loadPluginCss({
+    //   dark: 'plugins/agenty-flowcharting-panel/static/css/flowchart.dark.css',
+    //   light: 'plugins/agenty-flowcharting-panel/static/css/flowchart.light.css',
+    // });
   },
 
   getTimeSeries(seriesData) {

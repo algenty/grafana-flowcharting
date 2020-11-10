@@ -20012,8 +20012,8 @@ var grafana = {
   },
   loadCss: function loadCss() {
     Object(grafana_app_plugins_sdk__WEBPACK_IMPORTED_MODULE_2__["loadPluginCss"])({
-      dark: 'plugins/agenty-flowcharting-panel/static/css/flowchart.dark.css',
-      light: 'plugins/agenty-flowcharting-panel/static/css/flowchart.light.css'
+      dark: 'plugins/agenty-flowcharting-panel/styles/dark.css',
+      light: 'plugins/agenty-flowcharting-panel/styles/light.css'
     });
   },
   getTimeSeries: function getTimeSeries(seriesData) {

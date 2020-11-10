@@ -1,0 +1,372 @@
+@import 'chartist';
+
+div.flowchart-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+div.flowchart-panel-chart {
+  position: relative;
+  flex-grow: 1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+// table.flowchartTable-editor {
+//   font-family: Arial, Helvetica, sans-serif;
+//   border: 2px solid #161719;
+//   background-color: #212124;
+//   width: 90%;
+//   height: 200px;
+//   text-align: left;
+//   border-collapse: collapse;
+// }
+
+// table.flowchartTable-editor td,
+// table.flowchartTable-editor th {
+//   border: 2px solid #161719;
+//   padding: 2px 2px;
+// }
+// table.flowchartTable-editor tbody td {
+//   font-size: 11px;
+//   color: #e6e6e6;
+// }
+// table.flowchartTable-editor thead {
+//   background: #2f2f32;
+//   border-bottom: 2px solid #000000;
+// }
+// table.flowchartTable-editor thead th {
+//   font-size: 12px;
+//   font-weight: bold;
+//   color: #33b5e5;
+//   text-align: center;
+//   border-left: 2px solid #171819;
+// }
+// table.flowchartTable-editor thead th:first-child {
+//   border-left: none;
+// }
+
+// table.flowchartTable-editor tfoot td {
+//   font-size: 12px;
+// }
+
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid $hr_color;
+}
+
+// div.rule-item {
+//   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+//   font-family: Roboto, Helvetica Neue, Arial, sans-serif;
+//   font-size: 13px;
+//   line-height: 1.5;
+//   -webkit-box-direction: normal;
+//   box-sizing: inherit;
+//   text-decoration: none;
+//   touch-action: manipulation;
+//   display: block;
+//   margin: 3px;
+//   padding: 7px;
+//   background: linear-gradient(135deg, #2f2f32, #262628);
+//   box-shadow: -1px -1px 0 0 hsla(0, 0%, 100%, 0.1), 1px 1px 0 0 rgba(0, 0, 0, 0.3);
+//   color: #d8d9da;
+// }
+
+// div.rule-item:hover {
+//   background: linear-gradient(135deg, #3d3d41, #262628);
+// }
+
+// span.rule-extend {
+//   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+//   font-family: Roboto, Helvetica Neue, Arial, sans-serif;
+//   font-size: 13px;
+//   line-height: 1.5;
+//   -webkit-box-direction: normal;
+//   cursor: pointer;
+//   color: #dad9d8;
+//   box-sizing: inherit;
+// }
+
+// span.rule-title {
+//   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+//   font-family: Roboto, Helvetica Neue, Arial, sans-serif;
+//   font-size: 13px;
+//   line-height: 1.5;
+//   -webkit-box-direction: normal;
+//   cursor: pointer;
+//   color: #dad9d8;
+//   box-sizing: inherit;
+// }
+
+// span.rule-nav {
+//   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+//   font-family: Roboto, Helvetica Neue, Arial, sans-serif;
+//   font-size: 13px;
+//   line-height: 1.5;
+//   -webkit-box-direction: normal;
+//   cursor: pointer;
+//   color: #d8d9da;
+//   box-sizing: inherit;
+//   float: right;
+// }
+
+div.tooltip-text {
+  display: block;
+  word-wrap: break-word;
+  max-width: 200px;
+  white-space: normal;
+}
+
+div.tooltip-metric {
+  margin: 5px 5px 5px 5px;
+}
+
+div.tooltip-graph {
+  margin: 5px 5px 5px 5px;
+}
+
+div.tooltip-date {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+div.GF_table-main {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  display: flex;
+}
+
+div.GF_table-thead {
+  display:flex;
+  height: 33px;
+  overflow: hidden auto;
+  background: $table_header_background;
+  position: relative;
+  width: 100%;
+  overflow: hidden auto;
+}
+
+div.GF_table-body {
+  /* height: 33px; */
+  overflow: hidden auto;
+  position: relative;
+  width: 100%;
+  /* display: flex;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  flex-direction: column;
+  height: 300px; 
+  width: 100%; 
+  overflow: hidden auto; */
+  /* will-change: transform; direction: ltr; */
+}
+
+div.GF_table-title {
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* display: flex; */
+  margin-right: 4px;
+  margin-left: 4px;
+  margin-top: 6px;
+  /* margin-bottom: 6px; */
+}
+
+div.GF_table-resizeHandle {
+  /* display: inline-block; */
+  float : right;
+  background: rgb(31, 96, 196);
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+  transition-delay: 0s;
+  width: 3px;
+  height: 100%;
+  /* position: absolute; */
+  right: -4px;
+  border-radius: 3px;
+  top: 0px;
+  z-index: 1030;
+  touch-action: none;
+  cursor: col-resize !important;
+}
+
+div.GF_table-resizeHandle:hover {
+  opacity: 1;
+}
+
+
+div.GF_table-columnheader {
+  /* padding: 6px; */
+  overflow: hidden;
+  white-space: nowrap;
+  color: $table_text_header_color;
+  border-right: 1px solid $table_columnheader_border;
+  display: flex;
+  user-select: auto;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+div.GF_table-rows {
+  border-bottom: 1px solid $table_cell_border;
+  display:flex;
+  -webkit-box-flex:1;
+  flex-grow:1;flex-direction: column;
+  width: 100%;
+  // overflow: hidden;
+}
+
+div.GF_table-row_line {
+  height: 35px; 
+  display:flex; 
+  flex-wrap: nowrap;
+  // overflow: hidden auto;
+  width: 100%;
+  flex-direction: row;
+}
+
+div.GF_table-rows:hover {
+  background-color: $table_row_hover;
+}
+
+div.GF_table-row_body {
+  border-left: 1px solid $table_cell_border;
+  border-right: 1px solid $table_cell_border;
+  border-bottom: 1px solid $table_cell_border;
+  width: 100%; 
+  padding : 10px;
+}
+
+div.GF_table-cells {
+  border-right: 1px solid $table_cell_border;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  // overflow: hidden;
+  height: 100%;
+  user-select: auto; 
+  justify-content: start;
+}
+
+div.GF_table-cells:hover {
+  overflow: visible;
+  box-shadow: $table_cell_hover_border 0px 0px 2px;
+  background: $table_cell_hover_background;
+  // z-index: 1;
+  // width: auto !important;
+}
+
+div.GF_table-content {
+  padding: 6px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  flex: 1 1 0%;
+}
+
+.GF_resizing {
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: col-resize;
+}
+
+div.GF_inspect-color-picker {
+  text-align: center;
+  margin-right: 5px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid $color_picker_border;
+  font-size: 8px;
+}
+
+.GF_unselectable {
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+}
+
+.GF_flowchartHide {
+  opacity: 0;
+  z-index: 0;
+  transition: 0.3s ease;
+}
+
+.GF_flowchartShow {
+  opacity: 1;
+  z-index: 1;
+  transition: 0.3s ease;
+}
+
+.GF_navigation {
+  z-index: 2;
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 20px;
+  width: 50px;
+  white-space: nowrap;
+  background-color: $notifier_background;
+  opacity: 0.2;
+  bottom: 1px;
+  right: 5px;
+  transform: translate(-50%, -50%);
+  transition: 0.2s ease;
+}
+
+.GF_navigation:hover {
+  opacity: 1;
+  transition: 0.2s ease;
+}
+
+.GF_console {
+  z-index: 2;
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 40px;
+  width: 33%;
+  white-space: nowrap;
+  background-color: $notifier_background;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.GF_message {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
+
+.GF_mapping {
+  z-index: 2;
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: 40px;
+  width: 33%;
+  white-space: nowrap;
+  background-color: $notifier_background;
+  bottom: 1px;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+}
