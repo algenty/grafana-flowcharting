@@ -61,6 +61,7 @@ Arnaud
   - Add shape name and properties in inspect console ([See example](https://algenty.github.io/flowcharting-repository/images/inspectv7_ani.png?raw=true))  
   - Add gaugePos property in Event Mapping for the gauge draw.io models [See example](https://algenty.github.io/flowcharting-repository/images/gaugePos_ani.png?raw=true))  
   - Plugin is signed
+  - Add Light theme
   
 ### Fixed
   - Fixed : Inspect mode [(issue #209)](https://github.com/algenty/grafana-flowcharting/issues/209) ([See example](https://algenty.github.io/flowcharting-repository/images/inspectv7_ani.png?raw=true))  
@@ -70,7 +71,7 @@ Arnaud
   - Fixed : zoom on text without witdth and height
   - Fixed : Disable select text when double click for zoom
   - Fixed : retro compatibility with grafana 6.x [(issue #218)](https://github.com/algenty/grafana-flowcharting/issues/218)  
-  - Fixed : Zoom when with 2 or mode panels with flowcharting [(issue #214)](https://github.com/algenty/grafana-flowcharting/issues/214)  
+  - Fixed : Zoom with 2 or more FlowCharting [(issue #214)](https://github.com/algenty/grafana-flowcharting/issues/214)  
 
 ## [[0.9.0]](https://grafana.com/api/plugins/agenty-flowcharting-panel/versions/0.9.0/download) - 2020-05-31  
 ### Added
