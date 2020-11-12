@@ -24,6 +24,8 @@ export class Flowchart {
   states: Map<string, State> | undefined;
   id: string;
   visible = false;
+  reduce = true;
+
 
   constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData, ctrl: any) {
     this.data = data;

@@ -17065,6 +17065,7 @@ var Flowchart = function () {
 
     this.xgraph = undefined;
     this.visible = false;
+    this.reduce = true;
     this.data = data;
     this.data.name = name;
     this.container = container;
@@ -18273,6 +18274,60 @@ var FlowchartOptionsCtrl = function () {
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.currentFlowchart = this.flowchartHandler.getFlowchart();
+    var index = 0;
+    this.flowchartsTableData = {
+      data: [],
+      columns: [{
+        index: index++,
+        id: 'expand',
+        label: '',
+        desc: 'Expand/collapse',
+        size: '30px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: index++,
+        id: 'name',
+        label: 'Flowchart name',
+        desc: 'Flowchart Name',
+        size: '120px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: index++,
+        id: 'type',
+        label: 'Type',
+        desc: 'XML or CSV',
+        size: '45px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: index++,
+        id: 'source',
+        label: 'source',
+        desc: 'Src. origin',
+        size: '60px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: index++,
+        id: 'background',
+        label: 'BG Col.',
+        desc: 'Background color',
+        size: '60px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: index++,
+        id: 'options',
+        label: 'Options',
+        desc: 'Checked options',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }]
+    };
+    this.flowchartsTable = new globals_class__WEBPACK_IMPORTED_MODULE_1__["GFTable"](this.flowchartsTableData);
   }
 
   _createClass(FlowchartOptionsCtrl, [{
@@ -18309,6 +18364,11 @@ var FlowchartOptionsCtrl = function () {
       }
 
       return bool;
+    }
+  }, {
+    key: "getFlowcharts",
+    value: function getFlowcharts() {
+      return this.flowchartHandler.getFlowcharts();
     }
   }, {
     key: "addFlowchart",
@@ -18454,11 +18514,6 @@ var FlowchartOptionsCtrl = function () {
     key: "edit",
     value: function edit(name) {
       this.flowchartHandler.openDrawEditor(name);
-    }
-  }, {
-    key: "getFlowcharts",
-    value: function getFlowcharts() {
-      return this.flowchartHandler.getFlowcharts();
     }
   }, {
     key: "getNames",

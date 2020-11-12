@@ -70,7 +70,7 @@
                 <div class="GF_table-row_line" ng-mouseover="editor.highlightCells(rule)" ng-mouseleave="editor.unhighlightCells(rule)">
                   <!-- EXPAND -->
                   <div role="cell" class="GF_table-cells" id="expand" ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
-                    <div class="GF_table-content GF_unselectable">
+                    <div class="GF_table-content GF_unselectable" style="text-align: center;cursor: pointer;">
                       <span class="rule-extend" ng-click="rule.data.reduce=!rule.data.reduce">
                         <i class="fa fa-chevron-right" ng-class="{'fa-chevron-right': rule.data.reduce, 'fa-chevron-down': rule.data.reduce === false}"> </i>
                       </span>

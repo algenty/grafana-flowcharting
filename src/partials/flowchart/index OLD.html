@@ -1,0 +1,245 @@
+<div class="edit-tab-content">
+  <div class="section gf-form-group" style="width:100%;">
+    <h5 class="section-heading">
+      Global
+      <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Define you flowchart', 'README')"></span>
+      </info-popover>
+    </h5>
+    <div class="gf-form">
+      <label class="gf-form-label width-12">Editor Url & Theme
+        <info-popover mode="right-normal"><span
+            ng-bind-html="$GF.popover('Address and theme of editor when click on button edit draw', 'FLOWCHART#address')"></span>
+        </info-popover>
+      </label>
+      <input type="text" class="gf-form-input width-30" ng-model="editor.flowchartHandler.data.editorUrl"
+        placeholder="https://draw.io" />
+      <div class="gf-form-select-wrapper width-8">
+        <select class="gf-form-input" ng-model="editor.flowchartHandler.data.editorTheme"
+          ng-options="c.value as c.text for c in editor.themes"></select>
+      </div>
+    </div>
+    <!-- Draw.io source -->
+    <gf-form-switch class="gf-form" label="Allow draw.io source" label-class="width-12"
+      tooltip="allow downloads images from draw.io" checked="editor.flowcharthandler.data.allowDrawio"
+      on-change="editor.onSourceChange()">
+    </gf-form-switch>
+  </div>
+  <div class="section gf-form-group" style="width:100%;">
+    <h5 class="section-heading">
+      Flowchart Edition
+      <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Define you flowchart', 'README')"></span>
+      </info-popover>
+    </h5>
+    <div class="gf-form">
+      <span class="gf-form-label width-12" ng-if="editor.editMode === false">
+        Current flowchart
+        <info-popover mode="right-normal"><span
+            ng-bind-html="$GF.popover('Current flowchart', 'DEFINITION_XML#Type','DEFINITION_XML')"></span>
+        </info-popover>
+      </span>
+      <span class="gf-form-label width-12" ng-if="editor.editMode === true">
+        Name of new flowchart
+      </span>
+      <div class="gf-form-select-wrapper width-12" ng-if="editor.editMode === false">
+        <select class="gf-form-input" ng-model="editor.flowchartHandler.currentFlowchartName" ng-change="editor.selectFlowchart()"
+          ng-options="f as f for f in editor.getNames()"></select>
+      </div>
+      <div class="gf-form-select-wrapper width-12" ng-if="editor.editMode === true">
+        <input type="text" class="gf-form-input width-12" ng-model="editor.newName" ng-if="editor.editMode === true"
+          placeholder="Name" ng-change="editor.isValideFlowchart()" />
+      </div>
+      <!-- <label class="gf-form-label" ng-if="editor.editMode === false">
+        <i class="fa fa-plus pointer" ng-click="editor.addFlowchart()" style="margin-right: 2px;"
+          bs-tooltip="'Add new flowchart'"></i>
+      </label> -->
+      <!-- <label class="gf-form-label" style="margin-right: 4px;"
+        ng-if="editor.flowchartHandler.countFlowcharts() > 1 && editor.editMode === false && editor.flowchartHandler.getCurrentFlowchartName() !== 'Main'">
+        <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete current flowchart'"
+          ng-click="editor.removeFlowchart()"></i>
+      </label> -->
+      <label class="gf-form-label" style="margin-right: 4px;"
+        ng-if="editor.editMode === true && editor.isValideFlowchart()">
+        <i class="fa fa-w fa-check pointer" bs-tooltip="'Validate'" ng-click="editor.validateFlowchart()"></i>
+      </label>
+      <label class="gf-form-label" style="margin-right: 4px;" ng-if="editor.editMode === true">
+        <i class="fa fa-w fa-remove pointer" bs-tooltip="'Cancel'" ng-click="editor.cancelFlowchart()"></i>
+      </label>
+    </div>
+  </div>
+  <div class="editor-row" ng-repeat="flowchart in editor.getCurrentFlowchart()" ng-if="editor.editMode === false">
+    <div class="editor-row">
+      <!-- Definition -->
+      <div class="section gf-form-group" style="width:100%;">
+        <h5 class="section-heading">
+          Definition
+          <info-popover mode="right-normal"><span
+              ng-bind-html="$GF.popover('Definition of graph', 'DEFINITION_XML#Type')"></span></info-popover>
+        </h5>
+        <!-- Flowchart Definition -->
+        <div class="gf-form">
+          <gf-form-switch class="gf-form" label="Download source" label-class="width-12"
+            checked="flowchart.data.download" on-change="editor.onSourceChange()">
+          </gf-form-switch>
+        </div>
+
+        <div class="gf-form">
+          <span class="gf-form-label width-12">
+            Source Type
+            <info-popover mode="right-normal"><span
+                ng-bind-html="$GF.popover('Source of mxgraph definition (Xml definition, Url with xml result)', 'DEFINITION_XML#Type','DEFINITION_XML')"></span>
+            </info-popover>
+          </span>
+          <div class="gf-form-select-wrapper width-12">
+            <select class="gf-form-input" ng-model="flowchart.data.type"
+              ng-options="c.value as c.text for c in editor.sourceTypes" ng-change="editor.onSourceChange()"></select>
+          </div>
+        </div>
+        <!-- URL -->
+        <div class="gf-form" ng-if="flowchart.data.download">
+          <div class="gf-form">
+            <span class="gf-form-label width-12">
+              URL
+              <info-popover mode="right-normal">
+                This service should respond with a xml/plain response containing mxgraph syntax
+              </info-popover>
+            </span>
+            <input type="text" ng-model="flowchart.data.url"
+              class="gf-form-input ng-pristine ng-untouched ng-valid ng-empty" style="width: 300px"
+              ng-change="editor.checkUrl_onSourceChange(flowchart.data.url)" ng-model-onblur />
+          </div>
+        </div>
+        <span style="color: brown;font-weight: bold;">{{editor.errorDownloadMsg}}</span>
+        <!-- XML/CSV -->
+        <div class="gf-form gf-form--v-stretch" ng-if="!flowchart.data.download">
+          <span class="gf-form-label width-12">
+            Source Content
+            <info-popover mode="right-normal"><span
+                ng-bind-html="$GF.popover('mxgraph model, edit on draw.io and select Extra menu > Edit Diagram', 'DEFINITION_XML#Type','DEFINITION_XML')"></span>
+            </info-popover>
+          </span>
+          <textarea name="options.source.xml.input"
+            class="gf-form-input width:95% ng-pristine ng-valid ng-empty ng-touched" rows="10"
+            placeholder="This text should respect xml/plain mxgraph syntax"
+            style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;"
+            ng-change="editor.checkSource_onSourceChange(flowchart.data.xml)" ng-model="flowchart.data.xml"
+            ng-if="flowchart.data.type === 'xml'" ng-model-onBlur>
+          </textarea>
+          <textarea name="options.source.csv.input"
+            class="gf-form-input width:95% ng-pristine ng-valid ng-empty ng-touched" rows="10"
+            placeholder="This text should respect csv draw.io syntax&#10;See https://drawio-app.com/import-from-csv-to-drawio for more information"
+            style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;"
+            ng-change="editor.checkSource_onSourceChange(flowchart.data.xml)" ng-model="flowchart.data.csv"
+            ng-if="flowchart.data.type === 'csv'" ng-model-onBlur>
+          </textarea>
+        </div>
+        <span style="color: brown;font-weight: bold;">{{editor.errorSourceMsg}}</span>
+        <!-- BUTTONS RULES -->
+        <div class="gf-form-inline" ng-if=" flowchart.data.type == 'xml' && !flowchart.data.download ">
+          <div class="gf-form" style="margin-right: 5px;">
+            <button class="btn btn-primary btn-small" ng-click="editor.edit($index)">
+              <i class="fa fa-edit pointer"></i> Edit Draw
+              <info-popover mode="right-normal"><span
+                  ng-bind-html="$GF.popover('Open Graph in draw.io', 'DEFINITION_XML#Buttons','EDIT_EXAMPLE')"></span>
+              </info-popover>
+            </button>
+          </div>
+          <div class="gf-form" style="margin-right: 5px;">
+            <button class="btn btn-secondary btn-small" ng-click="flowchart.prettify()">
+              <img
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAxklEQVQokZWQMUpDURREzzw+kiKIlaWksnIPWttaCkFXkDWI63AFVtmApXswiFjY2IpIIOEdi7xC0PfBud29M3OZiUgXMgH21JpkTdiWEfIA3KhLYAmctf3I6Lm6cYcrm8vfD6oz5DrJC3AAVKAvAG6THAEX6n6SD4D8Ci3HwLQ5fhKef56HRjpRp0m+1LskK8JlpwxR5+q7+qTe11pnvSIGALUkOWzhFil57QUrAEne1AfgUT0day8iVkuSSTPYEtajgv/gG3TbgAtdLpuZAAAAAElFTkSuQmCC" />
+              Prettify
+              <info-popover mode="right-normal">
+                <span
+                  ng-bind-html="$GF.popover('Format XML code to display or modify', 'DEFINITION_XML#Buttons')"></span>
+              </info-popover>
+            </button>
+          </div>
+          <div class="gf-form" style="margin-right: 5px;">
+            <button class="btn btn-secondary btn-small" ng-click="flowchart.minify()">
+              <img
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAzElEQVQokYWSvUoDYRREzywfS9jCInYWeTILSytRH0CwshUtbHwD38xCQSGIP/dYZINBN2Zu8RV3+Dgz3Ij8K2nAnPAI0O0wd8AhcIUcALRJX3mSZB94Bc7U+yQv4ycToxdV9aE+q7fqsN5NIqkkacAesATe1ru2EewUGEYzwPWY8XN86wdJO/VO/XKlS7Wvqr6q+k3cdeimPiVZAgMA4T3kD25DZsAxcKTeJJmP7WypWhfqg3qu9iNem2wPVxmqaqHOtpk2JztP45e+AdC7pvsVKoFjAAAAAElFTkSuQmCC" />
+              Minify
+            </button>
+          </div>
+          <div class="gf-form" style="margin-right: 5px;">
+            <button class="btn btn-secondary btn-small" ng-click="flowchart.encode()">
+              <i class="fas fa-compress-arrows-alt pointer"></i> Compress/Encode
+              <info-popover mode="right-normal"><span
+                  ng-bind-html="$GF.popover('Zip XML definition for big XML', 'DEFINITION_XML#Buttons')"></span>
+              </info-popover>
+            </button>
+          </div>
+          <div class="gf-form" style="margin-right: 5px;">
+            <button class="btn btn-secondary btn-small" ng-click="flowchart.decode()">
+              <i class="fas expand-arrows-alt pointer"></i> Extract/Decode
+              <info-popover mode="right-normal"><span
+                  ng-bind-html="$GF.popover('Extract xml from content when compressed', 'DEFINITION_XML#Buttons')"></span>
+              </info-popover>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Option Section -->
+    <div class="editor-row">
+      <h5 class="section-heading">Advanced</h5>
+      <div class="section gf-form-group">
+        <h5 class="section-heading">
+          Display
+          <info-popover mode="right-normal"><span
+              ng-bind-html="$GF.popover('Change display graph options', 'ADVANCED_XML#Buttons','ADVANCED_XML2')"></span>
+          </info-popover>
+        </h5>
+        <gf-form-switch class="gf-form" label="Scale" label-class="width-12" checked="flowchart.data.scale"
+          on-change="editor.onOptionChange()">
+        </gf-form-switch>
+        <gf-form-switch class="gf-form" label="Center" label-class="width-12" checked="flowchart.data.center"
+          on-change="editor.onOptionChange()">
+        </gf-form-switch>
+        <gf-form-switch class="gf-form" label="Grid" label-class="width-12" checked="flowchart.data.grid"
+          on-change="editor.onOptionChange()">
+        </gf-form-switch>
+        <div class="gf-form">
+          <label class="gf-form-label width-12">Bg Color</label>
+          <span>
+            <spectrum-picker class="gf-form-input" ng-model="flowchart.data.bgColor"
+              ng-change="editor.onOptionChange()"> </spectrum-picker>
+          </span>
+          <input type="text" class="gf-form-input width-8" ng-model="flowchart.data.bgColor" placeholder="#000000" />
+        </div>
+        <!--zoom-->
+        <div class="gf-form" ng-if="!flowchart.data.scale">
+          <span class="gf-form-label width-12">
+            Zoom
+            <info-popover mode="right-normal"><span
+                ng-bind-html="$GF.popover('Zoom graph, if scale is unchecked. if < 100% : reduce graph, >100% increase graph', 'DEFINITION_XML#Buttons','ADVANCED_XML2')"></span>
+            </info-popover>
+          </span>
+          <input type="text" name="valueDisplayRegex" ng-model="flowchart.data.zoom" style="text-align: right"
+            placeholder="100%" class="gf-form-input max-width-10" ng-blur="editor.onOptionChange()" />
+        </div>
+      </div>
+      <div class="section gf-form-group">
+        <h5 class="section-heading">
+          Others options
+          <info-popover mode="right-normal"><span
+              ng-bind-html="$GF.popover('Change options in graph', 'ADVANCED_XML#Buttons','ADVANCED_XML2')"></span>
+          </info-popover>
+        </h5>
+        <!-- Lock -->
+        <gf-form-switch class="gf-form" label="Lock" label-class="width-12" checked="flowchart.data.lock"
+          on-change="editor.onOptionChange()">
+        </gf-form-switch>
+        <!-- Enable animation -->
+        <gf-form-switch class="gf-form" label="Enable animation" label-class="width-12"
+          tooltip="Enable animation in flowcharting like fade colors, disable it if you use 'Direct link rendered image' in share panel options for a best rendered or best performance"
+          checked="flowchart.data.enableAnim" on-change="editor.onSourceChange()">
+        </gf-form-switch>
+        <!-- Tooltip -->
+        <gf-form-switch class="gf-form" label="Tooltip" tooltip="Enable tooltip" label-class="width-12"
+          checked="flowchart.data.tooltip" on-change="editor.onOptionChange()">
+        </gf-form-switch>
+      </div>
+    </div>
+  </div>
+</div>

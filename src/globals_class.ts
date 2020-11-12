@@ -1195,7 +1195,7 @@ export class GFTable {
   startX: number = 0;
   startWidth: any = 0;
 
-  constructor(table: gf.TTableData, div: HTMLDivElement | undefined) {
+  constructor(table: gf.TTableData, div ?: HTMLDivElement) {
     this.tableData = table;
     this.tableDiv = div;
   }

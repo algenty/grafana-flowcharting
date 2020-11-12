@@ -2,7 +2,7 @@ import { FlowchartHandler } from 'flowchartHandler';
 
 import XGraph from 'graph_class';
 import { Flowchart } from 'flowchart_class';
-import { $GF } from 'globals_class';
+import { $GF, GFTable } from 'globals_class';
 
 export class FlowchartOptionsCtrl {
   $scope: gf.TIFlowchartOptionsScope;
@@ -19,6 +19,9 @@ export class FlowchartOptionsCtrl {
   currentFlowchart: Flowchart | undefined;
   newName = '';
   currentFlowchartName = 'Main';
+  flowchartsTableData: gf.TTableData;
+  flowchartsTable: GFTable;
+
   /** @ngInject */
   constructor($scope: gf.TIFlowchartOptionsScope) {
     $scope.editor = this;
@@ -28,6 +31,112 @@ export class FlowchartOptionsCtrl {
     this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.currentFlowchart = this.flowchartHandler.getFlowchart();
+    let index = 0;
+    this.flowchartsTableData = {
+      data: [],
+      columns: [
+        {
+          index: index++,
+          id: 'expand',
+          label: '',
+          desc: 'Expand/collapse',
+          size: '30px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: index++,
+          id: 'name',
+          label: 'Flowchart name',
+          desc: 'Flowchart Name',
+          size: '120px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: index++,
+          id: 'type',
+          label: 'Type',
+          desc: 'XML or CSV',
+          size: '45px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: index++,
+          id: 'source',
+          label: 'source',
+          desc: 'Src. origin',
+          size: '60px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: index++,
+          id: 'background',
+          label: 'BG Col.',
+          desc: 'Background color',
+          size: '60px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: index++,
+          id: 'options',
+          label: 'Options',
+          desc: 'Checked options',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        // {
+        //   index: 6,
+        //   id: 'scale',
+        //   label: 'Fit',
+        //   desc: 'Fit/scale diagram',
+        //   size: '40px',
+        //   sort: 'asc',
+        //   select: false,
+        // },
+        // {
+        //   index: 7,
+        //   id: 'center',
+        //   label: 'Center',
+        //   desc: 'Center diagram in panel',
+        //   size: '55px',
+        //   sort: 'asc',
+        //   select: false,
+        // },
+        // {
+        //   index: 8,
+        //   id: 'grid',
+        //   label: 'Grid',
+        //   desc: 'Display grid',
+        //   size: '50px',
+        //   sort: 'asc',
+        //   select: false,
+        // },
+        // {
+        //   index: 10,
+        //   id: 'anim',
+        //   label: 'Anim.',
+        //   desc: 'Enable/Disable animations on diagram',
+        //   size: '40px',
+        //   sort: 'asc',
+        //   select: false,
+        // },
+        // {
+        //   index: 11,
+        //   id: 'tooltip',
+        //   label: 'Tooltip',
+        //   desc: 'Enable/Disable tooltip on diagram',
+        //   size: '40px',
+        //   sort: 'asc',
+        //   select: false,
+        // },
+      ],
+    };
+    this.flowchartsTable = new GFTable(this.flowchartsTableData);
   }
 
   /**
@@ -61,10 +170,6 @@ export class FlowchartOptionsCtrl {
     this.render();
   }
 
-  // onColorChange() {
-  //   this.onOptionChange();
-  // }
-
   checkSource_onSourceChange(source: string): boolean {
     const bool = XGraph.isValidXml(source);
     this.errorSourceFlag = !bool;
@@ -76,6 +181,10 @@ export class FlowchartOptionsCtrl {
       this.$scope.$applyAsync();
     }
     return bool;
+  }
+
+  getFlowcharts(): Flowchart[] {
+    return this.flowchartHandler.getFlowcharts();
   }
 
   addFlowchart() {
@@ -196,10 +305,6 @@ export class FlowchartOptionsCtrl {
    */
   edit(name: string) {
     this.flowchartHandler.openDrawEditor(name);
-  }
-
-  getFlowcharts() {
-    return this.flowchartHandler.getFlowcharts();
   }
 
   getNames(): string[] {
