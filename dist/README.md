@@ -53,6 +53,12 @@ Arnaud
 # Changelog
 
 ## [[0.9.1c SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-0.9.1b-SNAPSHOT.zip) - 2020-11-08
+
+### TODO
+  - Disable anim not work
+  - message console size
+  - display zoom percent
+  - align icons
 ### Added
   - New initialization engine for drawio libs
   - New notifier handler in panel.

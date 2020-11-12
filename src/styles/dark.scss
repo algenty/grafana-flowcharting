@@ -8,6 +8,8 @@ $table_cell_hover_border : rgb(87, 148, 242);
 $table_cell_hover_background : rgb(25, 27, 30);
 $table_row_hover : rgb(25, 27, 30);
 $icon_color: #c7d0d9;
+$icon_action : $table_text_header_color;
+$icon_action_hover : $table_cell_hover_border;
 $hr_color : #333;
 
 @import 'common';
