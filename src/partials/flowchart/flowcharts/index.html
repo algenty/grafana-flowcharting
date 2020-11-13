@@ -79,7 +79,7 @@
             <div class="GF_table-body">
                 <div role="row" class="GF_table-rows" ng-repeat="flowchart in editor.getFlowcharts()">
                     <!-- CELLS -->
-                    <div class="GF_table-row_line" ng-mouseover="" ng-mouseleave="">
+                    <div class="GF_table-row_line">
                         <!-- EXPAND -->
                         <div role="cell" class="GF_table-cells" id="expand"
                             ng-click="flowchart.reduce=!flowchart.reduce"
@@ -87,6 +87,7 @@
                             <div class="GF_table-content GF_unselectable" style="text-align: center; cursor: pointer;">
                                 <span>
                                     <i class="fa fa-chevron-right"
+                                        bs-tooltip="flowchart.redude ? 'Expand/Detail' : 'Collapse/Reduce'"
                                         ng-class="{'fa-chevron-right': flowchart.reduce, 'fa-chevron-down': flowchart.reduce === false}">
                                     </i>
                                 </span>
@@ -94,10 +95,23 @@
                         </div>
                         <!-- NAME -->
                         <div role="cell" class="GF_table-cells" id="name"
+                            ng-mouseleave="flowchart.displayEdit = false;" ng-mouseover="flowchart.displayEdit = true;"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('name')}">
-                            <div class="GF_table-content" *>
+                            <div class="GF_table-content">
                                 {{flowchart.data.name}}
                             </div>
+                            <!-- <div ng-if="flowchart.displayEdit === true"
+                                style="padding:6px;float:right;" ng-click="flowchart.edit = true;flowchart.displayEdit  = false;">
+                                <span bs-tooltip="'Edit/Change name'">
+                                    <i class="fa fa-edit"></i>
+                                </span>
+                            </div>
+                            <div ng-show="flowchart.edit">
+                                <input type="text" id="{{state.cellId}}" class="gf-form-input"
+                                    ng-model="flowchart.data.name"
+                                    style="width: 100%;"
+                                    ng-keydown="$event.keyCode === 13" />
+                            </div> -->
                         </div>
                         <!-- TYPE -->
                         <div role="cell" class="GF_table-cells" id="type"
@@ -118,12 +132,12 @@
                         <div role="cell" class="GF_table-cells" id="source"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('source')}">
                             <div class="GF_table-content" style="text-align: center;">
-                                <div style="display:inline-block" ng-show="flowchart.data.download"
-                                    bs-tooltip="'URL : ' + flowchart.data.url">
-                                    <div class="gf-icon-file-download"></div>
-                                </div>
-                                <div style="display:inline-block" ng-hide="flowchart.data.download" bs-tooltip="'Text'">
-                                    <div class="gf-icon-file-text"></div>
+                                <!-- {{flowchart.data.download}} -->
+                                <div style="display:inline-block" ng-click="editor.edit($index)"
+                                    bs-tooltip="flowchart.data.download ? 'URL : ' + flowchart.data.url : 'Edit diagram'">
+                                    <div
+                                        ng-class="{ 'gf-icon-file-download' : flowchart.data.download, 'gf-icon-file-text-action': !flowchart.data.download }">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -141,42 +155,43 @@
                         <!-- OPTIONS -->
                         <div role="cell" class="GF_table-cells" id="options"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('options')}">
-                            <div class="GF_table-content" style="text-align: center;justify-content: center;">
-                                <div style="display:inline-block"
+                            <div class="GF_table-content GF_unselectable"
+                                style="text-align: center;justify-content: center;">
+                                <div style="display:inline-block" class="gf-icon-margin"
                                     ng-click="flowchart.data.scale = !flowchart.data.scale;editor.onOptionChange()"
                                     bs-tooltip="flowchart.data.scale ? 'Disable scale' : 'Enable scale'">
                                     <div
                                         ng-class="{'gf-icon-scale-action': flowchart.data.scale, 'gf-icon-scale-off-action': !flowchart.data.scale}">
                                     </div>
                                 </div>
-                                <div style="display:inline-block; cursor : pointer;"
+                                <div style="display:inline-block;" class="gf-icon-margin"
                                     ng-click="flowchart.data.center = !flowchart.data.center;editor.onOptionChange()"
                                     bs-tooltip="flowchart.data.scale ? 'Disable center' : 'Center'">
                                     <i class="fa"
                                         ng-class="{'fa-align-center': flowchart.data.center, 'fa-align-left': !flowchart.data.center}"></i>
                                 </div>
-                                <div style="display:inline-block"
+                                <div style="display:inline-block" class="gf-icon-margin"
                                     ng-click="flowchart.data.tooltip = !flowchart.data.tooltip;editor.onOptionChange()"
                                     bs-tooltip="flowchart.data.scale ? 'Disable tooltips' : 'Enable tooltips'">
                                     <div
                                         ng-class="{'gf-icon-comment-action': flowchart.data.tooltip, 'gf-icon-comment-off-action': !flowchart.data.tooltip}">
                                     </div>
                                 </div>
-                                <div style="display:inline-block" ng-show="flowchart.data.grid"
+                                <div style="display:inline-block" ng-show="flowchart.data.grid" class="gf-icon-margin"
                                     bs-tooltip="'Display grid'">
                                     <div class="gf-icon-grid"></div>
                                 </div>
-                                <div style="display:inline-block" ng-hide="flowchart.data.scale"
+                                <div style="display:inline-block;" ng-hide="flowchart.data.scale" class="gf-icon-margin"
                                     bs-tooltip="'Zoom at ' + flowchart.data.zoom">
                                     <div class="gf-icon-zoom"></div>
                                 </div>
-                                <div style="display:inline-block; cursor : pointer;"
+                                <div style="display:inline-block;" class="gf-icon-margin"
                                     ng-click="flowchart.data.lock = !flowchart.data.lock;editor.onOptionChange()"
                                     bs-tooltip="flowchart.data.lock ? 'Unlock' : 'Lock'">
                                     <i class="fa"
                                         ng-class="{'fa-lock': flowchart.data.lock, 'fa-unlock': !flowchart.data.lock}"></i>
                                 </div>
-                                <div style="display:inline-block"
+                                <div style="display:inline-block;" class="gf-icon-margin"
                                     ng-click="flowchart.data.enableAnim = !flowchart.data.enableAnim;editor.onOptionChange()"
                                     bs-tooltip="flowchart.data.enableAnim ? 'Disable animation' : 'Enable animation'">
                                     <div

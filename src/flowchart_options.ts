@@ -85,7 +85,7 @@ export class FlowchartOptionsCtrl {
           id: 'options',
           label: 'Options',
           desc: 'Checked options',
-          size: '100px',
+          size: '150px',
           sort: 'asc',
           select: false,
         },
@@ -304,7 +304,10 @@ export class FlowchartOptionsCtrl {
    * @see flowchartHandler:openDrawEditor
    */
   edit(name: string) {
-    this.flowchartHandler.openDrawEditor(name);
+    const fc = this.flowchartHandler.getFlowchart(name);
+    if (fc && !fc.data.download) {
+      this.flowchartHandler.openDrawEditor(name);
+    }
   }
 
   getNames(): string[] {

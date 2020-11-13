@@ -212,9 +212,24 @@ $encoding-reference: (
 //   }
 // }
 
+// MARGIN BETWEEN ICONS
+.gf-icon-margin {
+  margin-left: 5px;
+}
+.gf-icon-clickable { 
+  cursor: pointer;
+}
+.gf-icon-action { 
+  @extend .gf-icon-clickable;
+}
+
+
+//
+// ICONS
+//
 .gf-icon {
-  width: 13px;
-  height: 13px;
+  width: 14px;
+  height: 14px;
   // background-size: 13px;
   background-repeat: no-repeat;
   background-position: center;
@@ -232,8 +247,8 @@ $encoding-reference: (
     content: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     &-action  {
       @extend .gf-icon-scale;
+      @extend .gf-icon-action;
       // $encoded-color : $icon_action;
-      cursor : pointer;
       // content: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     }
   }
@@ -244,8 +259,8 @@ $encoding-reference: (
     content: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     &-action  {
       @extend .gf-icon-scale-off;
+      @extend .gf-icon-action;
       // $encoded-color : $icon_action;
-      cursor : pointer;
       // content: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     }
   }
@@ -258,14 +273,12 @@ $encoding-reference: (
   &-comment {
     @extend .gf-icon;
     $encoded-color : $icon_color;
-    width: 16px;
-    height: 16px;
     $source : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-comment-alt fa-w-16"><path fill="currentColor" d="M448 0H64C28.7 0 0 28.7 0 64v288c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L304 416h144c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64zm32 352c0 17.6-14.4 32-32 32H293.3l-8.5 6.4L192 460v-76H64c-17.6 0-32-14.4-32-32V64c0-17.6 14.4-32 32-32h384c17.6 0 32 14.4 32 32v288z" class=""></path></svg>';
     background-image: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     &-action  {
       @extend .gf-icon-comment;
+      @extend .gf-icon-action;
       // $encoded-color : $icon_action;
-      cursor : pointer;
       // content: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     }
   }
@@ -273,13 +286,13 @@ $encoding-reference: (
     @extend .gf-icon;
     $encoded-color : $icon_color;
     width: 20px;
-    height: 16px;
+    // height: 16px;
     $source : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="svg-inline--fa fa-comment-alt-slash fa-w-20"><path fill="currentColor" d="M634 471L36 3.5C29.1-2 19-.9 13.5 6l-10 12.5C-2 25.4-.9 35.5 6 41l58 45.3 41.6 32.5L604 508.5c6.9 5.5 17 4.4 22.5-2.5l10-12.5c5.5-6.9 4.4-17-2.5-22.5zM512 48c8.8 0 16 7.2 16 16v263.2l46.8 36.6c.7-3.8 1.2-7.8 1.2-11.8V64c0-35.3-28.7-64-64-64H128c-5.5 0-10.7.9-15.8 2.2L170.8 48H512zM339.2 377.6L272 428v-60H128c-8.8 0-16-7.2-16-16V184.8l-48-37.5V352c0 35.3 28.7 64 64 64h96v84c0 7.1 5.8 12 12 12 2.4 0 4.9-.7 7.1-2.4L368 416h39.8l-58.6-45.8-10 7.4z" class=""></path></svg>';
     background-image: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     &-action  {
       @extend .gf-icon-comment-off;
+      @extend .gf-icon-action;
       // $encoded-color : $icon_action;
-      cursor : pointer;
       // content: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     }
   }
@@ -290,6 +303,12 @@ $encoding-reference: (
     height: 16px;
     $source : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="svg-inline--fa fa-file-alt fa-w-12"><path fill="currentColor" d="M288 248v28c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-28c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm-12 72H108c-6.6 0-12 5.4-12 12v28c0 6.6 5.4 12 12 12h168c6.6 0 12-5.4 12-12v-28c0-6.6-5.4-12-12-12zm108-188.1V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V48C0 21.5 21.5 0 48 0h204.1C264.8 0 277 5.1 286 14.1L369.9 98c9 8.9 14.1 21.2 14.1 33.9zm-128-80V128h76.1L256 51.9zM336 464V176H232c-13.3 0-24-10.7-24-24V48H48v416h288z" class=""></path></svg>';
     background-image: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
+    &-action  {
+      @extend .gf-icon-file-text;
+      @extend .gf-icon-action;
+      // $encoded-color : $icon_action;
+      // content: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
+    }
   }
   &-file-download {
     @extend .gf-icon;
@@ -318,28 +337,24 @@ $encoding-reference: (
   &-anim {
     @extend .gf-icon;
     $encoded-color : $icon_color;
-    width: 16px;
-    height: 16px;
     $source : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-film fa-w-16"><path fill="currentColor" d="M488 64h-8v20c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12V64H96v20c0 6.6-5.4 12-12 12H44c-6.6 0-12-5.4-12-12V64h-8C10.7 64 0 74.7 0 88v336c0 13.3 10.7 24 24 24h8v-20c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v20h320v-20c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v20h8c13.3 0 24-10.7 24-24V88c0-13.3-10.7-24-24-24zM96 372c0 6.6-5.4 12-12 12H44c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-96c0 6.6-5.4 12-12 12H44c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-96c0 6.6-5.4 12-12 12H44c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm288 208c0 6.6-5.4 12-12 12H140c-6.6 0-12-5.4-12-12v-96c0-6.6 5.4-12 12-12h232c6.6 0 12 5.4 12 12v96zm0-168c0 6.6-5.4 12-12 12H140c-6.6 0-12-5.4-12-12v-96c0-6.6 5.4-12 12-12h232c6.6 0 12 5.4 12 12v96zm96 152c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-96c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-96c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40z" class=""></path></svg>';
     background-image: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     &-action  {
       @extend .gf-icon-anim;
+      @extend .gf-icon-action;
       // $encoded-color : $icon_action;
-      cursor : pointer;
       // content: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     }
   }
   &-picture {
     @extend .gf-icon;
     $encoded-color : $icon_color;
-    width: 16px;
-    height: 16px;
     $source : '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-image fa-w-16"><path fill="currentColor" d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm-6 336H54a6 6 0 0 1-6-6V118a6 6 0 0 1 6-6h404a6 6 0 0 1 6 6v276a6 6 0 0 1-6 6zM128 152c-22.091 0-40 17.909-40 40s17.909 40 40 40 40-17.909 40-40-17.909-40-40-40zM96 352h320v-80l-87.515-87.515c-4.686-4.686-12.284-4.686-16.971 0L192 304l-39.515-39.515c-4.686-4.686-12.284-4.686-16.971 0L96 304v48z" class=""></path></svg>';
     background-image: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     &-action  {
       @extend .gf-icon-picture;
+      @extend .gf-icon-action;
       // $encoded-color : $icon_action;
-      cursor : pointer;
       // content: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     }
   }

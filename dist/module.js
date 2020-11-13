@@ -18322,7 +18322,7 @@ var FlowchartOptionsCtrl = function () {
         id: 'options',
         label: 'Options',
         desc: 'Checked options',
-        size: '100px',
+        size: '150px',
         sort: 'asc',
         select: false
       }]
@@ -18513,7 +18513,11 @@ var FlowchartOptionsCtrl = function () {
   }, {
     key: "edit",
     value: function edit(name) {
-      this.flowchartHandler.openDrawEditor(name);
+      var fc = this.flowchartHandler.getFlowchart(name);
+
+      if (fc && !fc.data.download) {
+        this.flowchartHandler.openDrawEditor(name);
+      }
     }
   }, {
     key: "getNames",
