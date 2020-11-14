@@ -108,23 +108,32 @@
                         <div role="cell" class="GF_table-cells" id="what" ng-mouseleave="shape.displayEdit = false;"
                             ng-mouseover="shape.displayEdit = true;"
                             ng-style="{'width' : editor.shapesTable.getWidth('what')}">
-                            <div class="GF_table-content">
+                            <div class="GF_table-content" ng-show="shape.patternEdit !== true">
                                 {{shape.data.pattern}}
                             </div>
-                            <div ng-show="shape.editButton === true && shape.edit !== true"
-                                style="padding:6px;float:right;" ng-click="shape.edit = true;">
-                                <span bs-tooltip="'Edit/Change pattern'">
-                                    <i class="fa fa-edit"></i>
-                                </span>
+                            <div ng-show="shape.displayEdit === true && shape.patternEdit !== true"
+                                style="float:right;" ng-click="shape.patternEdit = true;">
+                                <div style="display:inline-block" class="gf-icon-margin"
+                                    ng-click="shape.patternEdit = true;"
+                                    bs-tooltip="'Edit pattern'">
+                                    <div class="gf-icon-action gf-icon-edit">
+                                    </div>
+                                </div>
                             </div>
-                            <input type="text" style="margin-right: 2px;" ng-attr-id="shape.getId()"
-                                ng-show="shape.edit === true" class="gf-form-input width-8"
-                                ng-model="shape.data.pattern" ng-if="rule.data.shapeProp === 'value'"
-                                bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+                            <input type="text" style="margin-right: 2px;width : 100%" ng-attr-id="shape.getId()"
+                                ng-show="shape.patternEdit === true" class="gf-form-input"
+                                ng-model="shape.data.pattern"
+                                ng-model-onblur
+                                ng-blur="editor.onRulesChange();shape.patternEdit = false;"
                                 bs-typeahead="rule.data.shapeProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
-                                ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
-                                ng-model-onblur data-placement="right" />
-                            <!-- placeholder="{{(rule.data.shapeProp === 'value' ? "Id" : "Label") + " or regex of shape"}}" -->
+                                data-min-length="0" data-items="100"
+                                data-placement="right" />
+                                <!-- ng-keyup="$event.keyCode === 13 ? editor.onRulesChange() : shape.patternEdit = true;$event.keyCode === 13 ?  shape.patternEdit = false : shape.patternEdit = true" -->
+                                <!-- ng-model-onblur -->
+                                <!-- placeholder="{{(rule.data.shapeProp === 'value' ? "Id" : "Label") + " or regex of shape"}}" -->
+                                <!-- bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'" -->
+                                <!-- bs-typeahead="rule.data.shapeProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue" -->
+                                <!-- ng-keydown="$event.keyCode === 13 && shape.patternEdit = false" -->
                         </div>
                         <!-- WHEN -->
                         <div role="cell" class="GF_table-cells" id="when"

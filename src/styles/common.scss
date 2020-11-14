@@ -139,14 +139,14 @@ div.tooltip-date {
 div.GF_table-main {
   height: 100%;
   width: 100%;
-  overflow: auto;
+  // overflow: auto;
   display: flex;
 }
 
 div.GF_table-thead {
   display:flex;
   height: 33px;
-  overflow: hidden auto;
+  // overflow: hidden auto;
   background: $table_header_background;
   position: relative;
   width: 100%;
@@ -155,7 +155,7 @@ div.GF_table-thead {
 
 div.GF_table-body {
   /* height: 33px; */
-  overflow: hidden auto;
+  // overflow: hidden auto;
   position: relative;
   width: 100%;
   /* display: flex;
@@ -224,14 +224,14 @@ div.GF_table-rows {
   -webkit-box-flex:1;
   flex-grow:1;flex-direction: column;
   width: 100%;
-  // overflow: hidden;
+  overflow: hidden;
 }
 
 div.GF_table-row_line {
   height: 35px; 
   display:flex; 
   flex-wrap: nowrap;
-  // overflow: hidden auto;
+  overflow: hidden auto;
   width: 100%;
   flex-direction: row;
 }
@@ -253,7 +253,7 @@ div.GF_table-cells {
   display: inline-flex;
   -webkit-box-align: center;
   align-items: center;
-  // overflow: hidden;
+  overflow: hidden;
   height: 100%;
   user-select: auto; 
   justify-content: start;
