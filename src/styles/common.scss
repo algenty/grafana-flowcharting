@@ -189,7 +189,7 @@ div.GF_table-resizeHandle {
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
   transition-delay: 0s;
-  width: 3px;
+  width: 3px !important;
   height: 100%;
   /* position: absolute; */
   right: -4px;

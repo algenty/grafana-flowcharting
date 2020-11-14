@@ -10,6 +10,11 @@ declare module gf {
     value: string;
   }
 
+  declare interface TSelectAny {
+    text: string;
+    value: any;
+  }
+
   declare interface TSelectNumber {
     text: string;
     value: number;

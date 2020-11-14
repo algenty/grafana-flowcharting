@@ -9,7 +9,9 @@ $table_cell_hover_background : rgb(25, 27, 30);
 $table_row_hover : rgb(25, 27, 30);
 $icon_color: #c7d0d9;
 $icon_action : $table_text_header_color;
-$icon_action_hover : $table_cell_hover_border;
+$icon_action_hover : #33a2e5;
+$icon_action_filter : invert(55%) sepia(88%) saturate(1374%) hue-rotate(174deg) brightness(93%) contrast(92%);
+$icon_selected : #33a2e5;
 $hr_color : #333;
 
 @import 'common';

@@ -108,3 +108,10 @@ https://medium.com/@imdebasispanda/resize-table-column-angular-5cb58b67367
 
 # CSS manipulation
 emotion
+
+# icons svg
+https://friconix.com/search/?q=text
+
+# filter converter
+https://en.it1352.com/article/3c71576dec7f4969bdb299a4fe1ecc7a.html
+https://codepen.io/sosuke/pen/Pjoqqp

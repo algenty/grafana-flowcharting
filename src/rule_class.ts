@@ -1293,6 +1293,7 @@ export class GFMap {
  */
 export class ShapeMap extends GFMap {
   data: gf.TShapeMapData;
+  reduce = true;
 
   /**
    * Creates an instance of ShapeMap.

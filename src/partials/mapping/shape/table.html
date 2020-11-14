@@ -1,0 +1,178 @@
+<div role=" table" class="GF_table-main" id="ShapesTable">
+    <div class="custom-scrollbar"
+        style="position: relative; overflow: hidden; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
+        <div class="view"
+            style="position: relative; overflow: scroll; margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
+            <!-- THEAD -->
+            <div class="GF_table-thead GF_unselectable" role="row" ng-mouseup="editor.shapesTable.onMouseUp($event)"
+                ng-mousemove="editor.shapesTable.onMouseMove($event)"
+                ng-mouseleave="editor.shapesTable.onMouseUp($event)">
+                <!-- HEADERS -->
+                <!-- EXPAND -->
+                <div class="GF_table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.shapesTable.getWidth('expand')}">
+                    <div ng-attr-title="{{editor.shapesTable.getDesc('expand')}}" class="GF_table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.shapesTable.getLabel('expand')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.shapesTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- WHAT -->
+                <div class="GF_table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.shapesTable.getWidth('what')}">
+                    <div ng-attr-title="{{editor.shapesTable.getDesc('what')}}" class="GF_table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.shapesTable.getLabel('what')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover('Enter shape Id or click on link button', 'SHAPES')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.shapesTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- WHEN -->
+                <div class="GF_table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.shapesTable.getWidth('when')}">
+                    <div ng-attr-title="{{editor.shapesTable.getDesc('when')}}" class="GF_table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.shapesTable.getLabel('when')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span
+                                ng-bind-html="$GF.popover('Select condition to apply color and tooltip on shape.', 'SHAPES')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize"
+                        ng-mousedown="editor.shapesTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- HOW -->
+                <div class="GF_table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.shapesTable.getWidth('how')}">
+                    <div ng-attr-title="{{editor.shapesTable.getDesc('how')}}" class="GF_table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.shapesTable.getLabel('how')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span
+                                ng-bind-html="$GF.popover('Fill to color content, Stroke for outline or arrows, Text for text.', 'SHAPES', 'colormode_ani')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.shapesTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- ACTION -->
+                <div class="GF_table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.shapesTable.getWidth('actions')}">
+                    <div ng-attr-title="{{editor.shapesTable.getDesc('actions')}}" class="GF_table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.shapesTable.getLabel('actions')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.shapesTable.onMouseDown($event)">
+                    </div>
+                </div>
+            </div>
+            <!-- TBODY -->
+            <div class="GF_table-body">
+                <div role="row" class="GF_table-rows" ng-repeat="shape in rule.getShapeMaps()">
+                    <!-- CELLS -->
+                    <div class="GF_table-row_line"
+                        ng-mouseleave="editor.unselectCell(rule.data.shapeProp,shape.data.pattern)"
+                        ng-mouseover="editor.selectCell(rule.data.shapeProp,shape.data.pattern)">
+                        <!-- EXPAND -->
+                        <div role="cell" class="GF_table-cells" id="expand" ng-click="shape.reduce=!shape.reduce"
+                            ng-style="{'width' : editor.shapesTable.getWidth('expand')}">
+                            <div class="GF_table-content GF_unselectable"
+                                style="text-align: center; cursor: pointer;">
+                                <span>
+                                    <i class="fa fa-chevron-right"
+                                        bs-tooltip="shape.redude ? 'Expand/Detail' : 'Collapse/Reduce'"
+                                        ng-class="{'fa-chevron-right': shape.reduce, 'fa-chevron-down': shape.reduce === false}">
+                                    </i>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- WHAT -->
+                        <div role="cell" class="GF_table-cells" id="what" ng-mouseleave="shape.displayEdit = false;"
+                            ng-mouseover="shape.displayEdit = true;"
+                            ng-style="{'width' : editor.shapesTable.getWidth('what')}">
+                            <div class="GF_table-content">
+                                {{shape.data.pattern}}
+                            </div>
+                            <div ng-show="shape.editButton === true && shape.edit !== true"
+                                style="padding:6px;float:right;" ng-click="shape.edit = true;">
+                                <span bs-tooltip="'Edit/Change pattern'">
+                                    <i class="fa fa-edit"></i>
+                                </span>
+                            </div>
+                            <input type="text" style="margin-right: 2px;" ng-attr-id="shape.getId()"
+                                ng-show="shape.edit === true" class="gf-form-input width-8"
+                                ng-model="shape.data.pattern" ng-if="rule.data.shapeProp === 'value'"
+                                bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+                                bs-typeahead="rule.data.shapeProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
+                                ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+                                ng-model-onblur data-placement="right" />
+                            <!-- placeholder="{{(rule.data.shapeProp === 'value' ? "Id" : "Label") + " or regex of shape"}}" -->
+                        </div>
+                        <!-- WHEN -->
+                        <div role="cell" class="GF_table-cells" id="when"
+                            ng-style="{'width' : editor.shapesTable.getWidth('when')}">
+                            <div class="GF_table-content" style="text-align: left;">
+                                <!-- {{shape.data.colorOn}} -->
+                                {{$GF.GetT4V( editor.colorOn, shape.data.colorOn)}}
+                            </div>
+                        </div>
+                        <!-- HOW -->
+                        <div role="cell" class="GF_table-cells" id="how"
+                            ng-style="{'width' : editor.shapesTable.getWidth('how')}">
+                            <div class="GF_table-content" style="text-align: left;">
+                                <!-- {{shape.data.style}} -->
+                                <div style="display:inline-block" class="gf-icon-margin"
+                                    ng-if="shape.data.style === 'fillColor'" ng-click="selectStyle = true;"
+                                    bs-tooltip="'Fill method'">
+                                    <div class="gf-icon-fill gf-icon-action">
+                                    </div>
+                                </div>
+                                <div style="display:inline-block" class="gf-icon-margin"
+                                    ng-if="shape.data.style === 'strokeColor'" ng-click="selectStyle = true;"
+                                    bs-tooltip="'Border/stroke method'">>
+                                    <div class="gf-icon-border gf-icon-action">
+                                    </div>
+                                </div>
+                                <div style="display:inline-block" class="gf-icon-margin"
+                                    ng-if="shape.data.style === 'gradientColor'" ng-click="selectStyle = true;"
+                                    bs-tooltip="'Border/stroke method'">>
+                                    <div class="gf-icon-gradien gf-icon-action">
+                                    </div>
+                                </div>
+                                {{$GF.GetT4V(editor.style, shape.data.style)}}
+                            </div>
+                        </div>
+                        <!-- OPTIONS -->
+                        <div role="cell" class="GF_table-cells" id="options"
+                            ng-style="{'width' : editor.shapesTable.getWidth('options')}">
+                            <div class="GF_table-content GF_unselectable"
+                                style="text-align: center;justify-content: center;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="GF_table-row_body" ng-show="shape.reduce==false">
+                        <ng-include src="$GF.plugin.getPartialPath() + 'mapping/shape/body.html'"> </ng-include>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

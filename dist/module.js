@@ -19603,6 +19603,21 @@ var $GF = function () {
       return GFVariables.getAvailableLocalVarNames().concat($GF.getGrafanaVars());
     }
   }, {
+    key: "GetT4V",
+    value: function GetT4V(list, value) {
+      if (list) {
+        for (var i = 0; i < list.length; i++) {
+          var element = list[i];
+
+          if (element.value == value) {
+            return element.text;
+          }
+        }
+      }
+
+      return 'No text ';
+    }
+  }, {
     key: "getIntervalCounter",
     value: function getIntervalCounter(begin, end, count) {
       var method = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'linear';
@@ -22059,8 +22074,6 @@ var MappingOptionsCtrl = function () {
     this.panel = this.ctrl.panel;
     var $div = $element.find('#templateMapping');
     this.parentDiv = $div[0];
-    var $rulesTable = $div.find('#RulesTable');
-    var rulesTable = $rulesTable[0];
     this.rulesHandler = this.ctrl.rulesHandler;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.rulesHandler = this.ctrl.rulesHandler;
@@ -22068,7 +22081,7 @@ var MappingOptionsCtrl = function () {
     this.unitFormats = grafana_func__WEBPACK_IMPORTED_MODULE_3__["default"].getUnitFormats();
     this.tpGraphSize = globals_class__WEBPACK_IMPORTED_MODULE_2__["$GF"].CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
     this.rulesTableData = {
-      data: this.rulesHandler.getRules(),
+      data: [],
       columns: [{
         index: 0,
         id: 'expand',
@@ -22127,7 +22140,65 @@ var MappingOptionsCtrl = function () {
         select: false
       }]
     };
+    var n = 0;
+    this.shapesTableData = {
+      data: [],
+      columns: [{
+        index: n++,
+        id: 'expand',
+        label: '',
+        desc: 'Expand/collapse',
+        size: '30px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: n++,
+        id: 'what',
+        label: 'What',
+        desc: 'What is the shape to apply this rule',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: n++,
+        id: 'when',
+        label: 'When',
+        desc: 'When to apply this rule on shape',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: n++,
+        id: 'how',
+        label: 'How',
+        desc: 'How to apply this rule on shape',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 3,
+        id: 'rval',
+        label: 'R. val.',
+        desc: 'Raw value',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }, {
+        index: 6,
+        id: 'actions',
+        label: 'Actions',
+        desc: 'Actions',
+        size: '100px',
+        sort: 'asc',
+        select: false
+      }]
+    };
+    var $rulesTable = $div.find('#RulesTable');
+    var rulesTable = $rulesTable[0];
     this.rulesTable = new globals_class__WEBPACK_IMPORTED_MODULE_2__["GFTable"](this.rulesTableData, rulesTable);
+    var $shapesTable = $div.find('#ShapesTable');
+    var shapesTable = $shapesTable[0];
+    this.shapesTable = new globals_class__WEBPACK_IMPORTED_MODULE_2__["GFTable"](this.shapesTableData, shapesTable);
 
     this.getMetricNames = function () {
       return _this.metricHandler.getNames('serie');
@@ -24466,6 +24537,7 @@ var ShapeMap = function (_GFMap) {
     _classCallCheck(this, ShapeMap);
 
     _this3 = _possibleConstructorReturn(this, _getPrototypeOf(ShapeMap).call(this, pattern, data));
+    _this3.reduce = true;
     _this3.data = data;
     return _this3;
   }

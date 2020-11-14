@@ -94,8 +94,8 @@
                             </div>
                         </div>
                         <!-- NAME -->
-                        <div role="cell" class="GF_table-cells" id="name"
-                            ng-mouseleave="flowchart.displayEdit = false;" ng-mouseover="flowchart.displayEdit = true;"
+                        <div role="cell" class="GF_table-cells" id="name" ng-mouseleave="flowchart.displayEdit = false;"
+                            ng-mouseover="flowchart.displayEdit = true;"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('name')}">
                             <div class="GF_table-content">
                                 {{flowchart.data.name}}
@@ -136,7 +136,7 @@
                                 <div style="display:inline-block" ng-click="editor.edit($index)"
                                     bs-tooltip="flowchart.data.download ? 'URL : ' + flowchart.data.url : 'Edit diagram'">
                                     <div
-                                        ng-class="{ 'gf-icon-file-download' : flowchart.data.download, 'gf-icon-file-text-action': !flowchart.data.download }">
+                                        ng-class="{ 'gf-icon-file-download' : flowchart.data.download, 'gf-icon-file-text gf-icon-action': !flowchart.data.download }">
                                     </div>
                                 </div>
                             </div>
@@ -159,45 +159,61 @@
                                 style="text-align: center;justify-content: center;">
                                 <div style="display:inline-block" class="gf-icon-margin"
                                     ng-click="flowchart.data.scale = !flowchart.data.scale;editor.onOptionChange()"
-                                    bs-tooltip="flowchart.data.scale ? 'Disable scale' : 'Enable scale'">
-                                    <div
-                                        ng-class="{'gf-icon-scale-action': flowchart.data.scale, 'gf-icon-scale-off-action': !flowchart.data.scale}">
+                                    bs-tooltip="flowchart.data.scale ? 'Scale enable' : 'Scale disable'">
+                                    <div class="gf-icon-action"
+                                        ng-class="{'gf-icon-scale-on': flowchart.data.scale, 'gf-icon-scale-off': !flowchart.data.scale}">
                                     </div>
                                 </div>
-                                <div style="display:inline-block;" class="gf-icon-margin"
-                                    ng-click="flowchart.data.center = !flowchart.data.center;editor.onOptionChange()"
-                                    bs-tooltip="flowchart.data.scale ? 'Disable center' : 'Center'">
-                                    <i class="fa"
-                                        ng-class="{'fa-align-center': flowchart.data.center, 'fa-align-left': !flowchart.data.center}"></i>
+
+                                <div style="display:inline-block" class="gf-icon-margin"
+                                    ng-click="flowchart.data.center= !flowchart.data.center;editor.onOptionChange()"
+                                    bs-tooltip="flowchart.data.center ? 'Center enabled' : 'Center disabled'">
+                                    <div class="gf-icon-action"
+                                        ng-class="{'gf-icon-center-on': flowchart.data.center, 'gf-icon-center-off': !flowchart.data.center}">
+                                    </div>
                                 </div>
+
                                 <div style="display:inline-block" class="gf-icon-margin"
                                     ng-click="flowchart.data.tooltip = !flowchart.data.tooltip;editor.onOptionChange()"
-                                    bs-tooltip="flowchart.data.scale ? 'Disable tooltips' : 'Enable tooltips'">
-                                    <div
-                                        ng-class="{'gf-icon-comment-action': flowchart.data.tooltip, 'gf-icon-comment-off-action': !flowchart.data.tooltip}">
+                                    bs-tooltip="flowchart.data.tooltip ? 'Tooltips enabled' : 'Tooltips disabled'">
+                                    <div class="gf-icon-action"
+                                        ng-class="{'gf-icon-comment-on': flowchart.data.tooltip, 'gf-icon-comment-off': !flowchart.data.tooltip}">
                                     </div>
                                 </div>
+
                                 <div style="display:inline-block" ng-show="flowchart.data.grid" class="gf-icon-margin"
                                     bs-tooltip="'Display grid'">
                                     <div class="gf-icon-grid"></div>
                                 </div>
-                                <div style="display:inline-block;" ng-hide="flowchart.data.scale" class="gf-icon-margin"
-                                    bs-tooltip="'Zoom at ' + flowchart.data.zoom">
-                                    <div class="gf-icon-zoom"></div>
-                                </div>
-                                <div style="display:inline-block;" class="gf-icon-margin"
+
+                                <div style="display:inline-block" class="gf-icon-margin"
                                     ng-click="flowchart.data.lock = !flowchart.data.lock;editor.onOptionChange()"
-                                    bs-tooltip="flowchart.data.lock ? 'Unlock' : 'Lock'">
-                                    <i class="fa"
-                                        ng-class="{'fa-lock': flowchart.data.lock, 'fa-unlock': !flowchart.data.lock}"></i>
-                                </div>
-                                <div style="display:inline-block;" class="gf-icon-margin"
-                                    ng-click="flowchart.data.enableAnim = !flowchart.data.enableAnim;editor.onOptionChange()"
-                                    bs-tooltip="flowchart.data.enableAnim ? 'Disable animation' : 'Enable animation'">
-                                    <div
-                                        ng-class="{'gf-icon-anim-action': flowchart.data.enableAnim, 'gf-icon-picture-action': !flowchart.data.enableAnim}">
+                                    bs-tooltip="flowchart.data.lock ? 'Locked' : 'Unlocked'">
+                                    <div class="gf-icon-action"
+                                        ng-class="{'gf-icon-lock-on': flowchart.data.lock, 'gf-icon-lock-off': !flowchart.data.lock}">
                                     </div>
                                 </div>
+
+                                <div style="display:inline-block;" class="gf-icon-margin"
+                                    ng-click="flowchart.data.enableAnim = !flowchart.data.enableAnim;editor.onOptionChange()"
+                                    bs-tooltip="flowchart.data.enableAnim ? 'Animation enabled' : 'Animation disabled'">
+                                    <div class="gf-icon-action"
+                                        ng-class="{'gf-icon-anim-on': flowchart.data.enableAnim, 'gf-icon-anim-off': !flowchart.data.enableAnim}">
+                                    </div>
+                                </div>
+
+                                <div style="display:inline-block;" class="gf-icon-margin"
+                                    bs-tooltip="flowchart.data.scale ? '' :'Zoom at ' + flowchart.data.zoom">
+                                    <div
+                                        ng-class="{'gf-icon-empty': flowchart.data.scale, 'gf-icon-zoom': !flowchart.data.scale}">
+                                    </div>
+                                </div>
+
+                                <!-- <div style="display:inline-block;" ng-hide="flowchart.data.scale" class="gf-icon-margin"
+                                    bs-tooltip="'Zoom at ' + flowchart.data.zoom">
+                                    <div class="gf-icon-zoom"></div>
+                                </div> -->
+
                             </div>
                         </div>
                     </div>

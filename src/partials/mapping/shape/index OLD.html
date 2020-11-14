@@ -1,0 +1,129 @@
+<div class="section gf-form-group">
+  <h5 class="section-heading">
+    Color/Tooltip Mappings
+    <info-popover mode="right-normal">
+      <span ng-bind-html="$GF.popover('Select the objects to colorize', 'SHAPES','fc_subway_example')">
+      </span>
+    </info-popover>
+  </h5>
+  <div class="gf-form">
+    <span class="gf-form-label width-11">Identify by
+      <info-popover mode="right-normal">
+        <span ng-bind-html="$GF.popover('Select the type of data in field \'What\' ID (uniq) or LABEL', 'SHAPES')">
+        </span>
+      </info-popover>
+    </span>
+    <!-- ID INPUT -->
+    <div class="gf-form-select-wrapper">
+      <select class="gf-form-input width-10" ng-model="rule.data.shapeProp"
+        ng-options="c.value as c.text for c in editor.propTypes" ng-change="editor.onRulesChange()"></select>
+    </div>
+  </div>
+  <div class="gf-form">
+    <!-- ID Regular expression -->
+    <gf-form-switch class="gf-form" label="Regular expression" label-class="width-11" checked="rule.data.shapeRegEx"
+      on-change="editor.onRulesChange()"
+      tooltip="Disable this option if you don't use regular expressions in field 'What' below to improve performance">
+    </gf-form-switch>
+  </div>
+  <!-- Table -->
+  <table>
+    <!-- Header -->
+    <thead>
+      <tr>
+        <th>
+          <label class="gf-form-label width-7" style="margin-right: 2px;">Buttons</label>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">What
+            <info-popover mode="right-normal">
+              <span ng-bind-html="$GF.popover('Enter shape Id or click on link button', 'SHAPES')">
+              </span>
+            </info-popover>
+          </label>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">When
+            <info-popover mode="right-normal">
+              <span
+                ng-bind-html="$GF.popover('Select condition to apply color and tooltip on shape.', 'SHAPES')">
+              </span>
+            </info-popover>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">How
+            <info-popover mode="right-normal">
+              <span
+                ng-bind-html="$GF.popover('Fill to color content, Stroke for outline or arrows, Text for text.', 'SHAPES', 'colormode_ani')">
+              </span>
+            </info-popover>
+          </label>
+        </th>
+      </tr>
+    </thead>
+    <tbody ng-mouseleave="editor.unhighlightAllCells()">
+      <tr ng-repeat="shape in rule.getShapeMaps()" ng-class="{'gf-form-disabled': shape.data.hidden}"
+        ng-mouseleave="editor.unselectCell(rule.data.shapeProp,shape.data.pattern)"
+        ng-mouseover="editor.selectCell(rule.data.shapeProp,shape.data.pattern)">
+        <td>
+          <div class="gf-form">
+            <label class="gf-form-label" style="margin-right: 4px;">
+              <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete this mapping object'"
+                ng-click="editor.removeShapeMap(rule,$index);editor.onRulesChange()"></i>
+            </label>
+            <label class="gf-form-label" ng-if="!shape.isHidden()" style="margin-right: 4px;">
+              <i class="fa fa-w fa-eye pointer" bs-tooltip="'Hide selected object graph in rule'"
+                ng-click="shape.hide();editor.onRulesChange()"></i>
+            </label>
+            <label class="gf-form-label" ng-if="shape.isHidden()" style="margin-right: 4px;">
+              <i class="fa fa-w fa-eye-slash pointer" bs-tooltip="'show selected object graph in rule'"
+                ng-click="shape.show();editor.onRulesChange()"></i>
+            </label>
+            <label class="gf-form-label" style="margin-right: 4px;" ng-hide="editor.flowchartHandler.isMapping(shape)">
+              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)"
+                bs-tooltip="'Link it on object graph'"></i>
+            </label>
+            <label class="gf-form-label" style="margin-right: 4px;color:orange"
+              ng-show="editor.flowchartHandler.isMapping(shape)">
+              <i class="fa fa-unlink pointer" bs-tooltip="'Cancel link object graph selection'"
+                ng-click="editor.flowchartHandler.unsetMap()"></i>
+            </label>
+          </div>
+        </td>
+        <td>
+          <div class="gf-form">
+            <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
+              class="gf-form-input width-8" ng-model="shape.data.pattern" ng-if="rule.data.shapeProp === 'id'"
+              bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+              bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0"
+              data-items="100" ng-model-onblur data-placement="right" />
+            <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
+              class="gf-form-input width-8" ng-model="shape.data.pattern" ng-if="rule.data.shapeProp === 'value'"
+              bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+              bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" data-min-length="0"
+              data-items="100" ng-model-onblur data-placement="right" />
+          </div>
+        </td>
+        <td>
+          <select class="gf-form-input width-8" ng-model="shape.data.colorOn"
+            ng-options="c.value as c.text for c in editor.colorOn" ng-change="editor.onRulesChange()"></select>
+        </td>
+        <td>
+          <select class="gf-form-input width-8" ng-model="shape.data.style"
+            ng-options="c.value as c.text for c in editor.style" ng-change="editor.onRulesChange()"></select>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>
+          <div class="gf-form">
+            <label class="gf-form-label">
+              <i class="fa fa-plus pointer" ng-click="rule.addShapeMap('')" style="margin-right: 2px;"></i>
+            </label>
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

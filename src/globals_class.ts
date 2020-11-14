@@ -960,6 +960,26 @@ export class $GF {
     return GFVariables.getAvailableLocalVarNames().concat($GF.getGrafanaVars());
   }
 
+  /**
+   * Return text for a value
+   *
+   * @static
+   * @param {TSelectString[]} list
+   * @param {*} value
+   * @memberof $GF
+   */
+  static GetT4V(list : gf.TSelectAny[], value : any) : string {
+    if(list) {
+      for (let i = 0; i < list.length; i++) {
+        const element = list[i];
+        if(element.value == value) {
+          return element.text;
+        }
+      }
+    }
+    return 'No text ';
+  }
+
   static getIntervalCounter(begin: number, end: number, count: number, method: gf.TCounterKeys = 'linear'): number[] {
     let result: number[] = [];
     const distance = end - begin;

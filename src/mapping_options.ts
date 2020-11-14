@@ -27,7 +27,9 @@ export class MappingOptionsCtrl {
   propTypes: gf.TSelectString[] = $GF.CONSTANTS.IDENT_TYPES;
   textPattern = '/.*/';
   rulesTableData: gf.TTableData;
+  shapesTableData: gf.TTableData;
   rulesTable: GFTable;
+  shapesTable: GFTable;
   metricTypes = $GF.CONSTANTS.VALUE_TYPES;
   dateFormats: gf.TSelectString[] = $GF.CONSTANTS.VALUE_DATEFORMAT_TYPES;
   aggregationTypes = $GF.CONSTANTS.AGGREGATION_TYPES;
@@ -52,8 +54,6 @@ export class MappingOptionsCtrl {
     this.panel = this.ctrl.panel;
     const $div = $element.find('#templateMapping');
     this.parentDiv = $div[0];
-    const $rulesTable = $div.find('#RulesTable');
-    const rulesTable = $rulesTable[0];
     this.rulesHandler = this.ctrl.rulesHandler;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.rulesHandler = this.ctrl.rulesHandler;
@@ -61,7 +61,7 @@ export class MappingOptionsCtrl {
     this.unitFormats = grafana.getUnitFormats();
     this.tpGraphSize = $GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
     this.rulesTableData = {
-      data: this.rulesHandler.getRules(),
+      data: [],
       columns: [
         {
           index: 0,
@@ -128,8 +128,74 @@ export class MappingOptionsCtrl {
         },
       ],
     };
+    let n = 0;
+    this.shapesTableData = {
+      data: [],
+      columns: [
+        {
+          index: n++,
+          id: 'expand',
+          label: '',
+          desc: 'Expand/collapse',
+          size: '30px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'what',
+          label: 'What',
+          desc: 'What is the shape to apply this rule',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'when',
+          label: 'When',
+          desc: 'When to apply this rule on shape',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'how',
+          label: 'How',
+          desc: 'How to apply this rule on shape',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 3,
+          id: 'rval',
+          label: 'R. val.',
+          desc: 'Raw value',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 6,
+          id: 'actions',
+          label: 'Actions',
+          desc: 'Actions',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+      ],
+    };
 
+    const $rulesTable = $div.find('#RulesTable');
+    const rulesTable = $rulesTable[0];
     this.rulesTable = new GFTable(this.rulesTableData, rulesTable);
+    
+    const $shapesTable = $div.find('#ShapesTable');
+    const shapesTable = $shapesTable[0];
+    this.shapesTable = new GFTable(this.shapesTableData, shapesTable);
 
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');
