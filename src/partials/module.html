@@ -2,18 +2,18 @@
   <section style="width:100%;height:100%;" id="flowcharting-section">
     <div class="flowchart-panel" id="flowcharting-panel"
       style="right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; overflow: auto; cursor: default;z-index: 1;-webkit-box-sizing:content-box;box-sizing:content-box">
-      <div class="flowchart-panel-chart GF_unselectable" id="flowcharting-panel-content" ng-mouseenter="editor.onMouseIn($event)" ng-mouseleave="editor.onMouseOut($event)" 
+      <div class="flowchart-panel-chart gf-unselectable" id="flowcharting-panel-content" ng-mouseenter="editor.onMouseIn($event)" ng-mouseleave="editor.onMouseOut($event)" 
         style="overflow: hidden;position:relative;">
       </div>
     </div>
 
-    <div id="flowcharting-message" class="GF_console">
-      <div class="GF_message" id="flowcharting-message-content">
+    <div id="flowcharting-message" class="gf-console">
+      <div class="gf-message" id="flowcharting-message-content">
         <span id="message-text">This is a message</span>
       </div>
     </div>
 
-    <div id="flowcharting-navigation" class="GF_navigation" ng-show="editor.displayMultiCursor();">
+    <div id="flowcharting-navigation" class="gf-navigation" ng-show="editor.displayMultiCursor();">
       <div id="flowcharting-navigation-content">
         <div style="float:left;padding-left:10px;cursor: pointer;" ng-show="editor.displayFirstCursor()"
           ng-click="editor.displayPreviousFlowchart()"><i class="fa fa-caret-left fa-lg"></i></div>
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div id="flowcharting-mapping" ng-show="ctrl.flowchartHandler.isMapping()" class="GF_mapping">
+    <div id="flowcharting-mapping" ng-show="ctrl.flowchartHandler.isMapping()" class="gf-mapping">
       <div style="margin: 0;position: absolute;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);" id="flowcharting-mapping-content">
         <span>Select Object to map</span>
         <button class="btn btn-danger btn-small" ng-click="ctrl.flowchartHandler.unsetMap()" style="margin: 10px;">

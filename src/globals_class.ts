@@ -1282,7 +1282,7 @@ export class GFTable {
       // CANT BUILD WITH FORCE CASTING
       let node: any = elt;
       while (node !== null && this.tableDiv === undefined) {
-        if (node.classList.contains('GF_table-main')) {
+        if (node.classList.contains('gf-table-main')) {
           this.tableDiv = node;
         } else {
           node = node.parentElement;
@@ -1305,9 +1305,9 @@ export class GFTable {
       }
       this.headerTable.style.width = `${width}px`;
       if (this.bodyTable) {
-        const rows = this.bodyTable.querySelectorAll('.GF_table-rows');
+        const rows = this.bodyTable.querySelectorAll('.gf-table-rows');
         Array.from(rows).forEach(r => {
-          const cells = r.querySelectorAll('.GF_table-cells');
+          const cells = r.querySelectorAll('.gf-table-cells');
           let index = 0;
           cells.forEach(cell => {
             // CANT BUILD WITH FORCE CASTING
@@ -1335,14 +1335,14 @@ export class GFTable {
       if (this.headerTable.parentNode) {
         this.indexTable = Array.from(this.headerTable.parentNode.children).indexOf(this.headerTable);
       }
-      this.headerTable.classList.add('GF_resizing');
+      this.headerTable.classList.add('gf-resizing');
       this.startWidth = parseInt(this.headerTable.style.width, 10);
       if (this.tableDiv) {
         // CANT BUILD WITH HTMLDIVELEMENT
-        const body: any = this.tableDiv.getElementsByClassName('GF_table-body')[0];
+        const body: any = this.tableDiv.getElementsByClassName('gf-table-body')[0];
         this.bodyTable = body;
       } else {
-        $GF.log.error('Unable to find table definition with class GF_table-main');
+        $GF.log.error('Unable to find table definition with class gf-table-main');
       }
     }
   }
@@ -1350,7 +1350,7 @@ export class GFTable {
   onMouseUp(event: MouseEvent) {
     this.pressed = false;
     if (this.headerTable) {
-      this.headerTable.classList.remove('GF_resizing');
+      this.headerTable.classList.remove('gf-resizing');
     }
   }
 }

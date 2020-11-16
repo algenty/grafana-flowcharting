@@ -1,19 +1,28 @@
-.GF_custom-scrollbar .GF_view {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
+.gf-overflow-x-visible {
+  overflow-x: visible;
 }
 
-div.GF_table-main {
+.gf-overflow-x-visible {
+  overflow-y: visible;
+}
+
+.gf-custom-scrollbar .gf-view {
+  overflow: hidden auto;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+div.gf-table-main {
   height: 100%;
   width: 100%;
-  // overflow: auto;
+  overflow: hidden auto;
   display: flex;
 }
 
-div.GF_table-thead {
+div.gf-table-thead {
   display: flex;
   height: 33px;
   // overflow: hidden auto;
@@ -23,7 +32,7 @@ div.GF_table-thead {
   overflow: hidden auto;
 }
 
-div.GF_table-body {
+div.gf-table-body {
   /* height: 33px; */
   // overflow: hidden auto;
   position: relative;
@@ -38,10 +47,10 @@ div.GF_table-body {
   /* will-change: transform; direction: ltr; */
 }
 
-div.GF_table-title {
+div.gf-table-title {
   cursor: pointer;
   white-space: nowrap;
-  overflow: hidden;
+  overflow-x: hidden;
   text-overflow: ellipsis;
   /* display: flex; */
   margin-right: 4px;
@@ -50,7 +59,7 @@ div.GF_table-title {
   /* margin-bottom: 6px; */
 }
 
-div.GF_table-resizeHandle {
+div.gf-table-resizeHandle {
   /* display: inline-block; */
   float: right;
   background: rgb(31, 96, 196);
@@ -70,13 +79,13 @@ div.GF_table-resizeHandle {
   cursor: col-resize !important;
 }
 
-div.GF_table-resizeHandle:hover {
+div.gf-table-resizeHandle:hover {
   opacity: 1;
 }
 
-div.GF_table-columnheader {
+div.gf-table-columnheader {
   /* padding: 6px; */
-  overflow: hidden;
+  overflow-x: hidden;
   white-space: nowrap;
   color: $table_text_header_color;
   border-right: 1px solid $table_columnheader_border;
@@ -87,17 +96,17 @@ div.GF_table-columnheader {
   justify-content: space-between;
 }
 
-div.GF_table-rows {
+div.gf-table-rows {
   border-bottom: 1px solid $table_cell_border;
   display: flex;
   -webkit-box-flex: 1;
   flex-grow: 1;
   flex-direction: column;
   width: 100%;
-  overflow: visible;
+  // overflow: visible;
 }
 
-div.GF_table-row_line {
+div.gf-table-row_line {
   height: 35px;
   display: flex;
   flex-wrap: nowrap;
@@ -106,11 +115,11 @@ div.GF_table-row_line {
   flex-direction: row;
 }
 
-div.GF_table-rows:hover {
+div.gf-table-rows:hover {
   background-color: $table_row_hover;
 }
 
-div.GF_table-row_body {
+div.gf-table-row_body {
   border-left: 1px solid $table_cell_border;
   border-right: 1px solid $table_cell_border;
   border-bottom: 1px solid $table_cell_border;
@@ -118,7 +127,7 @@ div.GF_table-row_body {
   padding: 10px;
 }
 
-div.GF_table-cells {
+div.gf-table-cells {
   border-right: 1px solid $table_cell_border;
   display: inline-flex;
   -webkit-box-align: center;
@@ -129,15 +138,15 @@ div.GF_table-cells {
   justify-content: start;
 }
 
-div.GF_table-cells:hover {
-  overflow-x: visible;
+div.gf-table-cells:hover {
+  // overflow-x: visible;
   box-shadow: $table_cell_hover_border 0px 0px 2px;
   background: $table_cell_hover_background;
   // z-index: 1;
   // width: auto !important;
 }
 
-div.GF_table-content {
+div.gf-table-content {
   padding: 6px;
   text-overflow: ellipsis;
   white-space: nowrap;

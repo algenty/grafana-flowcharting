@@ -1,0 +1,192 @@
+    <div role="table" class="gf-table-main" id="RulesTable">
+      <div class="custom-scrollbar"
+        style="position: relative; overflow: hidden; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
+        <div class="view"
+          style="position: relative; overflow: scroll; margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
+          <!-- THEAD -->
+          <div class="gf-table-thead gf-unselectable" role="row" ng-mouseup="editor.rulesTable.onMouseUp($event)"
+            ng-mousemove="editor.rulesTable.onMouseMove($event)" ng-mouseleave="editor.rulesTable.onMouseUp($event)">
+            <!-- HEADERS -->
+            <!-- EXPAND -->
+            <div class="gf-table-columnheader" colspan="1" role="columnheader"
+              ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
+              <div ng-attr-title="{{editor.rulesTable.getDesc('expand')}}" class="gf-table-title"
+                style="cursor: pointer;">
+                <div>&nbsp;</div>
+              </div>
+              <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                ng-mousedown="editor.rulesTable.onMouseDown($event)">
+              </div>
+            </div>
+            <!-- RULE NAME -->
+            <div class="gf-table-columnheader" colspan="1" role="columnheader"
+              ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
+              <div ng-attr-title="{{editor.rulesTable.getDesc('rule')}}" class="gf-table-title"
+                style="cursor: pointer;">
+                <div>{{editor.rulesTable.getLabel('rule')}}</div>
+              </div>
+              <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize"
+                ng-mousedown="editor.rulesTable.onMouseDown($event)">
+              </div>
+            </div>
+            <!-- LEVEL -->
+            <div class="gf-table-columnheader" colspan="1" role="columnheader"
+              ng-style="{'width' : editor.rulesTable.getWidth('level')}">
+              <div ng-attr-title="{{editor.rulesTable.getDesc('level')}}" class="gf-table-title"
+                style="cursor: pointer;">
+                <div>{{editor.rulesTable.getLabel('level')}}</div>
+              </div>
+              <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                ng-mousedown="editor.rulesTable.onMouseDown($event)">
+              </div>
+            </div>
+            <!-- RAW VALUE -->
+            <div class="gf-table-columnheader" colspan="1" role="columnheader"
+              ng-style="{'width' : editor.rulesTable.getWidth('rval')}">
+              <div ng-attr-title="{{editor.rulesTable.getDesc('rval')}}" class="gf-table-title"
+                style="cursor: pointer;">
+                <div>{{editor.rulesTable.getLabel('rval')}}</div>
+              </div>
+              <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                ng-mousedown="editor.rulesTable.onMouseDown($event)">
+              </div>
+            </div>
+            <!-- FORMATED VALUE -->
+            <div class="gf-table-columnheader" colspan="1" role="columnheader"
+              ng-style="{'width' : editor.rulesTable.getWidth('fval')}">
+              <div ng-attr-title="{{editor.rulesTable.getDesc('fval')}}" class="gf-table-title"
+                style="cursor: pointer;">
+                <div>{{editor.rulesTable.getLabel('fval')}}</div>
+              </div>
+              <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                ng-mousedown="editor.rulesTable.onMouseDown($event)">
+              </div>
+            </div>
+            <!-- COLOR LEVEL -->
+            <div class="gf-table-columnheader" colspan="1" role="columnheader"
+              ng-style="{'width' : editor.rulesTable.getWidth('color')}">
+              <div ng-attr-title="{{editor.rulesTable.getDesc('color')}}" class="gf-table-title"
+                style="cursor: pointer;">
+                <div>{{editor.rulesTable.getLabel('color')}}</div>
+              </div>
+              <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                ng-mousedown="editor.rulesTable.onMouseDown($event)">
+              </div>
+            </div>
+            <!-- ACTIONS -->
+            <div class="gf-table-columnheader" colspan="1" role="columnheader"
+              ng-style="{'width' : editor.rulesTable.getWidth('actions')}">
+              <div ng-attr-title="{{editor.rulesTable.getDesc('actions')}}" class="gf-table-title"
+                style="cursor: pointer;">
+                <div>&nbsp;</div>
+              </div>
+              <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                ng-mousedown="editor.rulesTable.onMouseDown($event)">
+              </div>
+            </div>
+          </div>
+          <!-- TBODY -->
+          <div class="gf-table-body">
+            <div role="row" class="gf-table-rows" ng-repeat="rule in editor.rulesHandler.getRules()">
+              <!-- CELLS -->
+              <div class="gf-table-row_line" ng-mouseover="editor.highlightCells(rule)"
+                ng-mouseleave="editor.unhighlightCells(rule)">
+                <!-- EXPAND -->
+                <div role="cell" class="gf-table-cells" id="expand"
+                  ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
+                  <div class="gf-table-content gf-unselectable" style="text-align: center;cursor: pointer;">
+                    <span class="rule-extend" ng-click="rule.data.reduce=!rule.data.reduce">
+                      <i class="fa fa-chevron-right"
+                        ng-class="{'fa-chevron-right': rule.data.reduce, 'fa-chevron-down': rule.data.reduce === false}">
+                      </i>
+                    </span>
+                  </div>
+                </div>
+                <!-- RULE NAME -->
+                <div role="cell" class="gf-table-cells" id="rule" ng-mouseleave="rule.editButton = false;" ng-mouseover="rule.editButton = true;"
+                  ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
+                  <div class="gf-table-content" ng-hide="rule.edit === true" ng-dblclick="rule.edit = true;">
+                    {{rule.data.alias}}
+                  </div>
+                  <div ng-show="rule.editButton === true && rule.edit !== true" style="padding:6px;float:right;" ng-click="rule.edit = true;">
+                    <span bs-tooltip="'Edit/Change rule name'">
+                      <i class="fa fa-edit"></i>
+                    </span>
+                  </div>
+                  <div ng-show="rule.edit">
+                    <input type="text" class="gf-form-input max-width-16" ng-model="rule.data.alias"
+                      ng-blur="rule.edit = false;" style="width: 100%;"
+                      ng-keydown="$event.keyCode === 13 ? rule.edit = false : rule.edit = true" autofocus/>
+                  </div>
+                </div>
+                <!-- LEVEL -->
+                <div role="cell" class="gf-table-cells" id="level" style="text-align: center;"
+                  ng-style="{'width' : editor.rulesTable.getWidth('level')}">
+                  <div class="gf-table-content">
+                    <span ng-show="rule.highestLevel >= 0">{{rule.highestLevel}}</span>
+                  </div>
+                </div>
+                <!-- HIGTEST RAW VALUE -->
+                <div role="cell" class="gf-table-cells" id="rval"
+                  ng-style="{'width' : editor.rulesTable.getWidth('rval')}">
+                  <div class="gf-table-content">
+                    {{rule.highestValue}}
+                  </div>
+                </div>
+                <!-- HIGTEST FORMATED VALUE -->
+                <div role="cell" class="gf-table-cells" id="fval"
+                  ng-style="{'width' : editor.rulesTable.getWidth('fval')}">
+                  <div class="gf-table-content">
+                    {{rule.highestFormattedValue}}
+                  </div>
+                </div>
+                <!-- COLOR -->
+                <div role="cell" class="gf-table-cells" id="fval"
+                  ng-style="{'width' : editor.rulesTable.getWidth('color')}">
+                  <div class="gf-table-content" style="text-align: center;">
+                    <span style="color : {{rule.highestColor}}"
+                      ng-if="rule.highestColor !== null && rule.highestColor.length > 0">
+                      <i class="fa fa-w fa-square"></i>
+                    </span>
+                  </div>
+                </div>
+                <!-- ACTIONS -->
+                <div role="cell" class="gf-table-cells" id="actions"
+                  ng-style="{'width' : editor.rulesTable.getWidth('actions')}">
+                  <div class="gf-table-content gf-unselectable">
+                    <span bs-tooltip="rule.removeClick > 1 ? 'Click twice to remove rule' : 'Click to remove rule'"
+                      class='gf-icon-margin'>
+                      <i class="fa fa-w fa-remove pointer" ng-click="editor.removeRule(rule)"
+                        ng-style="rule.removeClick == 1 && { 'color' : 'brown' }"></i>
+                    </span>
+                    <span bs-tooltip="'Clone the rule'" class='gf-icon-margin'>
+                      <i class="fa fa-copy" ng-click="editor.cloneRule(rule)"></i>
+                    </span>
+                    <span ng-click="editor.toggleShow(rule,!rule.data.hidden)"
+                      bs-tooltip="rule.data.hidden ? 'Show/enable this rule' : 'Hide/disable this rule' "
+                      class='gf-icon-margin'>
+                      <i class="fa fa-chevron-right"
+                        ng-class="{'fa fa-w fa-eye pointer': !rule.isHidden(), 'fa fa-w fa-eye-slash pointer': rule.isHidden()}"></i>
+                    </span>
+                    <span>
+                      <i class="fa fa-fw" ng-if="editor.isFirstRule($index)">&nbsp;</i>
+                      <i class="fa fa-arrow-up" bs-tooltip="'Move up'" ng-if="!editor.isFirstRule($index)"
+                        ng-click="editor.moveRule(rule, true)" class='gf-icon-margin'></i>
+                    </span>
+                    <span class='gf-icon-margin'>
+                      <!-- <i class="fa fa-fw" ng-if="editor.isLastRule($index)">&nbsp;</i> -->
+                      <i class="fa fa-arrow-down" bs-tooltip="'Move down'" ng-if="!editor.isLastRule($index)"
+                        ng-click="editor.moveRule(rule, false)"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div ng-hide="rule.data.reduce==true" class="gf-table-row_body">
+                <!-- GRAPH TOOLTIP -->
+                <ng-include src="$GF.plugin.getPartialPath() + 'rules/ruleBody.html'"> </ng-include>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

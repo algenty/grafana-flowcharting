@@ -137,14 +137,14 @@ div.tooltip-date {
   margin-bottom: 5px;
 }
 
-.GF_resizing {
+.gf-resizing {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   cursor: col-resize;
 }
 
-div.GF_inspect-color-picker {
+div.gf-inspect-color-picker {
   text-align: center;
   margin-right: 5px;
   width: 16px;
@@ -153,7 +153,7 @@ div.GF_inspect-color-picker {
   font-size: 8px;
 }
 
-.GF_unselectable {
+.gf-unselectable {
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -162,19 +162,19 @@ div.GF_inspect-color-picker {
   -webkit-user-select: none;
 }
 
-.GF_flowchartHide {
+.gf-flowchartHide {
   opacity: 0;
   z-index: 0;
   transition: 0.3s ease;
 }
 
-.GF_flowchartShow {
+.gf-flowchartShow {
   opacity: 1;
   z-index: 1;
   transition: 0.3s ease;
 }
 
-.GF_navigation {
+.gf-navigation {
   z-index: 2;
   position: absolute;
   box-sizing: border-box;
@@ -190,12 +190,12 @@ div.GF_inspect-color-picker {
   transition: 0.2s ease;
 }
 
-.GF_navigation:hover {
+.gf-navigation:hover {
   opacity: 1;
   transition: 0.2s ease;
 }
 
-.GF_console {
+.gf-console {
   z-index: 2;
   position: absolute;
   box-sizing: border-box;
@@ -210,7 +210,7 @@ div.GF_inspect-color-picker {
   transform: translate(-50%, -50%);
 }
 
-.GF_message {
+.gf-message {
   margin: 0;
   position: absolute;
   top: 50%;
@@ -219,7 +219,7 @@ div.GF_inspect-color-picker {
   transform: translate(-50%, -50%);
 }
 
-.GF_mapping {
+.gf-mapping {
   z-index: 2;
   position: absolute;
   box-sizing: border-box;

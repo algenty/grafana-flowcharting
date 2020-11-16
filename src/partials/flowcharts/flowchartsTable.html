@@ -1,90 +1,90 @@
-<div role=" table" class="GF_table-main" id="FlowchartsTable">
+<div role=" table" class="gf-table-main" id="FlowchartsTable">
     <div class="custom-scrollbar"
         style="position: relative; overflow: hidden; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
         <div class="view"
-            style="position: relative; overflow: scroll; margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
+            style="position: relative; overflow: scroll;margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
             <!-- THEAD -->
-            <div class="GF_table-thead GF_unselectable" role="row" ng-mouseup="editor.flowchartsTable.onMouseUp($event)"
+            <div class="gf-table-thead gf-unselectable" role="row" ng-mouseup="editor.flowchartsTable.onMouseUp($event)"
                 ng-mousemove="editor.flowchartsTable.onMouseMove($event)"
                 ng-mouseleave="editor.flowchartsTable.onMouseUp($event)">
                 <!-- HEADERS -->
                 <!-- EXPAND -->
-                <div class="GF_table-columnheader" colspan="1" role="columnheader"
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
                     ng-style="{'width' : editor.flowchartsTable.getWidth('expand')}">
-                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('expand')}}" class="GF_table-title"
+                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('expand')}}" class="gf-table-title"
                         style="cursor: pointer;">
                         <div>{{editor.flowchartsTable.getLabel('expand')}}</div>
                     </div>
-                    <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
                         ng-mousedown="editor.flowchartsTable.onMouseDown($event)">
                     </div>
                 </div>
                 <!-- NAME -->
-                <div class="GF_table-columnheader" colspan="1" role="columnheader"
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
                     ng-style="{'width' : editor.flowchartsTable.getWidth('name')}">
-                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('name')}}" class="GF_table-title"
+                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('name')}}" class="gf-table-title"
                         style="cursor: pointer;">
                         <div>{{editor.flowchartsTable.getLabel('name')}}</div>
                     </div>
-                    <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
                         ng-mousedown="editor.flowchartsTable.onMouseDown($event)">
                     </div>
                 </div>
                 <!-- TYPE -->
-                <div class="GF_table-columnheader" colspan="1" role="columnheader"
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
                     ng-style="{'width' : editor.flowchartsTable.getWidth('type')}">
-                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('type')}}" class="GF_table-title"
+                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('type')}}" class="gf-table-title"
                         style="cursor: pointer;">
                         <div>{{editor.flowchartsTable.getLabel('type')}}</div>
                     </div>
-                    <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize"
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize"
                         ng-mousedown="editor.flowchartsTable.onMouseDown($event)">
                     </div>
                 </div>
                 <!-- SOURCE -->
-                <div class="GF_table-columnheader" colspan="1" role="columnheader"
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
                     ng-style="{'width' : editor.flowchartsTable.getWidth('source')}">
-                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('source')}}" class="GF_table-title"
+                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('source')}}" class="gf-table-title"
                         style="cursor: pointer;">
                         <div>{{editor.flowchartsTable.getLabel('source')}}</div>
                     </div>
-                    <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
                         ng-mousedown="editor.flowchartsTable.onMouseDown($event)">
                     </div>
                 </div>
                 <!-- BACKGROUND -->
-                <div class="GF_table-columnheader" colspan="1" role="columnheader"
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
                     ng-style="{'width' : editor.flowchartsTable.getWidth('background')}">
-                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('background')}}" class="GF_table-title"
+                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('background')}}" class="gf-table-title"
                         style="cursor: pointer;">
                         <div>{{editor.flowchartsTable.getLabel('background')}}</div>
                     </div>
-                    <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
                         ng-mousedown="editor.flowchartsTable.onMouseDown($event)">
                     </div>
                 </div>
                 <!-- OPTIONS -->
-                <div class="GF_table-columnheader" colspan="1" role="columnheader"
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
                     ng-style="{'width' : editor.flowchartsTable.getWidth('options')}">
-                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('options')}}" class="GF_table-title"
+                    <div ng-attr-title="{{editor.flowchartsTable.getDesc('options')}}" class="gf-table-title"
                         style="cursor: pointer;">
                         <div>{{editor.flowchartsTable.getLabel('options')}}</div>
                     </div>
-                    <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
                         ng-mousedown="editor.flowchartsTable.onMouseDown($event)">
                     </div>
                 </div>
             </div>
             <!-- TBODY -->
-            <div class="GF_table-body">
-                <div role="row" class="GF_table-rows" ng-repeat="flowchart in editor.getFlowcharts()">
+            <div class="gf-table-body">
+                <div role="row" class="gf-table-rows" ng-repeat="flowchart in editor.getFlowcharts()">
                     <!-- CELLS -->
-                    <div class="GF_table-row_line">
+                    <div class="gf-table-row_line">
                         <!-- EXPAND -->
-                        <div role="cell" class="GF_table-cells" id="expand"
+                        <div role="cell" class="gf-table-cells" id="expand"
                             ng-click="flowchart.reduce=!flowchart.reduce"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('expand')}">
-                            <div class="GF_table-content GF_unselectable" style="text-align: center; cursor: pointer;">
+                            <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
                                 <span>
                                     <i class="fa fa-chevron-right"
                                         bs-tooltip="flowchart.redude ? 'Expand/Detail' : 'Collapse/Reduce'"
@@ -94,10 +94,10 @@
                             </div>
                         </div>
                         <!-- NAME -->
-                        <div role="cell" class="GF_table-cells" id="name" ng-mouseleave="flowchart.displayEdit = false;"
+                        <div role="cell" class="gf-table-cells" id="name" ng-mouseleave="flowchart.displayEdit = false;"
                             ng-mouseover="flowchart.displayEdit = true;"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('name')}">
-                            <div class="GF_table-content">
+                            <div class="gf-table-content">
                                 {{flowchart.data.name}}
                             </div>
                             <!-- <div ng-if="flowchart.displayEdit === true"
@@ -114,9 +114,9 @@
                             </div> -->
                         </div>
                         <!-- TYPE -->
-                        <div role="cell" class="GF_table-cells" id="type"
+                        <div role="cell" class="gf-table-cells" id="type"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('type')}">
-                            <div class="GF_table-content" style="text-align: center;">
+                            <div class="gf-table-content" style="text-align: center;">
                                 <!-- {{flowchart.data.type}} -->
                                 <div style="display:inline-block" ng-if="flowchart.data.type === 'csv'"
                                     bs-tooltip="'CSV format'">
@@ -129,9 +129,9 @@
                             </div>
                         </div>
                         <!-- SOURCE -->
-                        <div role="cell" class="GF_table-cells" id="source"
+                        <div role="cell" class="gf-table-cells" id="source"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('source')}">
-                            <div class="GF_table-content" style="text-align: center;">
+                            <div class="gf-table-content" style="text-align: center;">
                                 <!-- {{flowchart.data.download}} -->
                                 <div style="display:inline-block" ng-click="editor.edit($index)"
                                     bs-tooltip="flowchart.data.download ? 'URL : ' + flowchart.data.url : 'Edit diagram'">
@@ -142,9 +142,9 @@
                             </div>
                         </div>
                         <!-- BACKGROUND -->
-                        <div role="cell" class="GF_table-cells" id="background"
+                        <div role="cell" class="gf-table-cells" id="background"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('background')}">
-                            <div class="GF_table-content" style="text-align: center;">
+                            <div class="gf-table-content" style="text-align: center;">
                                 <!-- {{flowchart.data.bgColor}} -->
                                 <span style="color : {{flowchart.data.bgColor}};" bs-tooltip="flowchart.data.bgColor"
                                     ng-if="flowchart.data.bgColor !== null && flowchart.data.bgColor.length > 0">
@@ -153,71 +153,61 @@
                             </div>
                         </div>
                         <!-- OPTIONS -->
-                        <div role="cell" class="GF_table-cells" id="options"
+                        <div role="cell" class="gf-table-cells" id="options"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('options')}">
-                            <div class="GF_table-content GF_unselectable"
+                            <div 
+                                class="gf-table-content gf-unselectable"
                                 style="text-align: center;justify-content: center;">
-                                <div style="display:inline-block" 
+                                <div
                                     ng-click="flowchart.data.scale = !flowchart.data.scale;editor.onOptionChange()"
-                                    bs-tooltip="flowchart.data.scale ? 'Scale enable' : 'Scale disable'">
-                                    <div class="gf-icon-action"
-                                        ng-class="{'gf-icon-scale-on': flowchart.data.scale, 'gf-icon-scale-off': !flowchart.data.scale}">
-                                    </div>
+                                    title="Enable/Disable scale/fit"
+                                    class="gf-icon-action"
+                                    ng-class="{'gf-icon-scale-on': flowchart.data.scale, 'gf-icon-scale-off': !flowchart.data.scale}">
                                 </div>
 
-                                <div style="display:inline-block" 
+                                <div
                                     ng-click="flowchart.data.center= !flowchart.data.center;editor.onOptionChange()"
-                                    bs-tooltip="flowchart.data.center ? 'Center enabled' : 'Center disabled'">
-                                    <div class="gf-icon-action"
-                                        ng-class="{'gf-icon-center-on': flowchart.data.center, 'gf-icon-center-off': !flowchart.data.center}">
-                                    </div>
+                                    title="Enable/Disable center"
+                                    class="gf-icon-action"
+                                    ng-class="{'gf-icon-center-on': flowchart.data.center, 'gf-icon-center-off': !flowchart.data.center}">
                                 </div>
 
-                                <div style="display:inline-block" 
+                                <div
                                     ng-click="flowchart.data.tooltip = !flowchart.data.tooltip;editor.onOptionChange()"
-                                    bs-tooltip="flowchart.data.tooltip ? 'Tooltips enabled' : 'Tooltips disabled'">
-                                    <div class="gf-icon-action"
-                                        ng-class="{'gf-icon-comment-on': flowchart.data.tooltip, 'gf-icon-comment-off': !flowchart.data.tooltip}">
-                                    </div>
+                                    title="Enable/Disable tooltips"
+                                    class="gf-icon-action"
+                                    ng-class="{'gf-icon-comment-on': flowchart.data.tooltip, 'gf-icon-comment-off': !flowchart.data.tooltip}">
                                 </div>
 
-                                <div style="display:inline-block" ng-show="flowchart.data.grid"
-                                    bs-tooltip="'Display grid'">
-                                    <div class="gf-icon-grid"></div>
+                                <div 
+                                    ng-show="flowchart.data.grid"
+                                    title="Grid enabled"
+                                    class="gf-icon-grid">
                                 </div>
 
-                                <div style="display:inline-block" 
+                                <div
                                     ng-click="flowchart.data.lock = !flowchart.data.lock;editor.onOptionChange()"
-                                    bs-tooltip="flowchart.data.lock ? 'Locked' : 'Unlocked'">
-                                    <div class="gf-icon-action"
-                                        ng-class="{'gf-icon-lock-on': flowchart.data.lock, 'gf-icon-lock-off': !flowchart.data.lock}">
-                                    </div>
+                                    title="Enable/Disable lock"
+                                    class="gf-icon-action"
+                                    ng-class="{'gf-icon-lock-on': flowchart.data.lock, 'gf-icon-lock-off': !flowchart.data.lock}">
                                 </div>
 
-                                <div style="display:inline-block;" 
+                                <div 
                                     ng-click="flowchart.data.enableAnim = !flowchart.data.enableAnim;editor.onOptionChange()"
-                                    bs-tooltip="flowchart.data.enableAnim ? 'Animation enabled' : 'Animation disabled'">
-                                    <div class="gf-icon-action"
-                                        ng-class="{'gf-icon-anim-on': flowchart.data.enableAnim, 'gf-icon-anim-off': !flowchart.data.enableAnim}">
-                                    </div>
+                                    title="Enable/Disable animation"
+                                    class="gf-icon-action"
+                                    ng-class="{'gf-icon-anim-on': flowchart.data.enableAnim, 'gf-icon-anim-off': !flowchart.data.enableAnim}">
                                 </div>
 
-                                <div style="display:inline-block;" 
-                                    bs-tooltip="flowchart.data.scale ? '' :'Zoom at ' + flowchart.data.zoom">
-                                    <div
-                                        ng-class="{'gf-icon-empty': flowchart.data.scale, 'gf-icon-zoom': !flowchart.data.scale}">
-                                    </div>
+                                <div 
+                                    ng-attr-title="{{flowchart.data.scale ? '' :'Zoom at ' + flowchart.data.zoom}}"
+                                    ng-class="{'gf-icon-empty': flowchart.data.scale, 'gf-icon-zoom': !flowchart.data.scale}">
                                 </div>
-
-                                <!-- <div style="display:inline-block;" ng-hide="flowchart.data.scale" 
-                                    bs-tooltip="'Zoom at ' + flowchart.data.zoom">
-                                    <div class="gf-icon-zoom"></div>
-                                </div> -->
 
                             </div>
                         </div>
                     </div>
-                    <div ng-show="flowchart.reduce==false" class="GF_table-row_body">
+                    <div ng-show="flowchart.reduce==false" class="gf-table-row_body">
                         <!-- GRAPH TOOLTIP -->
                         <ng-include src="$GF.plugin.getPartialPath() + 'flowcharts/flowchartBody.html'"> </ng-include>
                     </div>

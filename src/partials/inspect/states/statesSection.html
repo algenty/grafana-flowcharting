@@ -1,84 +1,84 @@
 <div class="edit-tab-content" id="templateInspect">
   <div class="editor-row">
-    <div role=" table" class="GF_table-main" id="StatesTable">
+    <div role=" table" class="gf-table-main" id="StatesTable">
       <div class="custom-scrollbar" style="position: relative; overflow: hidden; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
         <div class="view" style="position: relative; overflow: scroll; margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
             <!-- THEAD -->
-            <div class="GF_table-thead GF_unselectable" role="row" ng-mouseup="editor.statesTable.onMouseUp($event)" ng-mousemove="editor.statesTable.onMouseMove($event)" ng-mouseleave="editor.statesTable.onMouseUp($event)">
+            <div class="gf-table-thead gf-unselectable" role="row" ng-mouseup="editor.statesTable.onMouseUp($event)" ng-mousemove="editor.statesTable.onMouseMove($event)" ng-mouseleave="editor.statesTable.onMouseUp($event)">
               <!-- HEADERS -->
               <!-- ID -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('id')}">
-                <div ng-attr-title="{{editor.statesTable.getDesc('id')}}" class="GF_table-title" style="cursor: pointer;">
+              <div class="gf-table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('id')}">
+                <div ng-attr-title="{{editor.statesTable.getDesc('id')}}" class="gf-table-title" style="cursor: pointer;">
                   <div>{{editor.statesTable.getLabel('id')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- LABEL -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('label')}">
-                <div ng-attr-title="{{editor.statesTable.getDesc('label')}}" class="GF_table-title" style="cursor: pointer;">
+              <div class="gf-table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('label')}">
+                <div ng-attr-title="{{editor.statesTable.getDesc('label')}}" class="gf-table-title" style="cursor: pointer;">
                   <div>{{editor.statesTable.getLabel('label')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize"  ng-mousedown="editor.statesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize"  ng-mousedown="editor.statesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- SHAPE -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('shape')}">
-                <div ng-attr-title="{{editor.statesTable.getDesc('shape')}}" class="GF_table-title" style="cursor: pointer;">
+              <div class="gf-table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('shape')}">
+                <div ng-attr-title="{{editor.statesTable.getDesc('shape')}}" class="gf-table-title" style="cursor: pointer;">
                   <div>{{editor.statesTable.getLabel('shape')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize"  ng-mousedown="editor.statesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize"  ng-mousedown="editor.statesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- LEVEL -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('level')}">
-                <div ng-attr-title="{{editor.statesTable.getDesc('level')}}" class="GF_table-title" style="cursor: pointer;">
+              <div class="gf-table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('level')}">
+                <div ng-attr-title="{{editor.statesTable.getDesc('level')}}" class="gf-table-title" style="cursor: pointer;">
                   <div>{{editor.statesTable.getLabel('level')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- RAW VALUE -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('rval')}">
-                <div ng-attr-title="{{editor.statesTable.getDesc('rval')}}" class="GF_table-title" style="cursor: pointer;">
+              <div class="gf-table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('rval')}">
+                <div ng-attr-title="{{editor.statesTable.getDesc('rval')}}" class="gf-table-title" style="cursor: pointer;">
                   <div>{{editor.statesTable.getLabel('rval')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- FORMATED VALUE -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('fval')}">
-                <div ng-attr-title="{{editor.statesTable.getDesc('fval')}}" class="GF_table-title" style="cursor: pointer;">
+              <div class="gf-table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('fval')}">
+                <div ng-attr-title="{{editor.statesTable.getDesc('fval')}}" class="gf-table-title" style="cursor: pointer;">
                   <div>{{editor.statesTable.getLabel('fval')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- COLOR LEVEL -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('colors')}">
-                <div ng-attr-title="{{editor.statesTable.getDesc('colors')}}" class="GF_table-title" style="cursor: pointer;">
+              <div class="gf-table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('colors')}">
+                <div ng-attr-title="{{editor.statesTable.getDesc('colors')}}" class="gf-table-title" style="cursor: pointer;">
                   <div>{{editor.statesTable.getLabel('colors')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
                 </div>
               </div>
               <!-- TAGS -->
-              <div class="GF_table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('tags')}">
-                <div ng-attr-title="{{editor.statesTable.getDesc('tags')}}" class="GF_table-title" style="cursor: pointer;">
+              <div class="gf-table-columnheader" colspan="1" role="columnheader" ng-style="{'width' : editor.statesTable.getWidth('tags')}">
+                <div ng-attr-title="{{editor.statesTable.getDesc('tags')}}" class="gf-table-title" style="cursor: pointer;">
                   <div>{{editor.statesTable.getLabel('tags')}}</div>
                 </div>
-                <div draggable="false" role="separator" class="GF_table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
+                <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"  ng-mousedown="editor.statesTable.onMouseDown($event)">
                 </div>
               </div>
             </div>
             <!-- TBODY -->
-            <div class="GF_table-body">
-              <div role="row" class="GF_table-rows" ng-repeat="state in editor.flowchartHandler.getFlowchart().getStateHandler().getStatesForInspect()">
+            <div class="gf-table-body">
+              <div role="row" class="gf-table-rows" ng-repeat="state in editor.flowchartHandler.getFlowchart().getStateHandler().getStatesForInspect()">
                 <!-- CELLS -->
-                <div class="GF_table-row_line" ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
+                <div class="gf-table-row_line" ng-mouseleave="editor.unselectCell(state)" ng-mouseover="editor.selectCell(state)">
                   <!-- ID -->
-                  <div role="cell" class="GF_table-cells" id="expand" ng-style="{'width' : editor.statesTable.getWidth('id')}" ng-mouseleave="state.editButton = false;" ng-mouseover="state.editButton = true;">
-                    <div class="GF_table-content" ng-hide="state.edit" ng-style="state.edited && {'color':'blue'};" ng-dblclick="editor.onEdit(state)">
+                  <div role="cell" class="gf-table-cells" id="expand" ng-style="{'width' : editor.statesTable.getWidth('id')}" ng-mouseleave="state.editButton = false;" ng-mouseover="state.editButton = true;">
+                    <div class="gf-table-content" ng-hide="state.edit" ng-style="state.edited && {'color':'blue'};" ng-dblclick="editor.onEdit(state)">
                       {{state.cellId}}
                     </div>
                     <div ng-show="state.editButton === true && state.edited === true && state.edit !== true" style="padding:6px;float:right;" ng-click="editor.undo(state)">
@@ -98,43 +98,43 @@
                     </div>
                   </div>
                   <!-- LABEL -->
-                  <div role="cell" class="GF_table-cells" id="rule" ng-style="{'width' : editor.statesTable.getWidth('label')}">
-                    <div class="GF_table-content">
+                  <div role="cell" class="gf-table-cells" id="rule" ng-style="{'width' : editor.statesTable.getWidth('label')}">
+                    <div class="gf-table-content">
                       {{state.getCellProp('value')}}
                     </div>
                   </div>
                   <!-- SHAPE -->
-                  <div role="cell" class="GF_table-cells" id="rule" ng-style="{'width' : editor.statesTable.getWidth('label')}">
-                    <div class="GF_table-content" title="{{state.getShapeStyles()}}">
+                  <div role="cell" class="gf-table-cells" id="rule" ng-style="{'width' : editor.statesTable.getWidth('label')}">
+                    <div class="gf-table-content" title="{{state.getShapeStyles()}}">
                       {{state.getShapeName()}}
                     </div>
                   </div>
                   <!-- LEVEL -->
-                  <div role="cell" class="GF_table-cells" id="level" style="text-align: center;" ng-style="{'width' : editor.statesTable.getWidth('level')}">
-                    <div class="GF_table-content">
+                  <div role="cell" class="gf-table-cells" id="level" style="text-align: center;" ng-style="{'width' : editor.statesTable.getWidth('level')}">
+                    <div class="gf-table-content">
                       {{state.getTextLevel()}}
                     </div>
                   </div>
                   <!-- HIGTEST RAW VALUE -->
-                  <div role="cell" class="GF_table-cells" id="rval" ng-style="{'width' : editor.statesTable.getWidth('rval')}">
-                    <div class="GF_table-content">
+                  <div role="cell" class="gf-table-cells" id="rval" ng-style="{'width' : editor.statesTable.getWidth('rval')}">
+                    <div class="gf-table-content">
                       {{state.highestValue}}
                     </div>
                   </div>
                   <!-- HIGTEST FORMATED VALUE -->
-                  <div role="cell" class="GF_table-cells" id="fval" ng-style="{'width' : editor.statesTable.getWidth('fval')}">
-                    <div class="GF_table-content">
+                  <div role="cell" class="gf-table-cells" id="fval" ng-style="{'width' : editor.statesTable.getWidth('fval')}">
+                    <div class="gf-table-content">
                       {{state.highestFormattedValue}}
                     </div>
                   </div>
                   <!-- COLOR -->
-                  <div role="cell" class="GF_table-cells" id="fval" ng-style="{'width' : editor.statesTable.getWidth('colors')}">
-                    <div class="GF_table-content" style="text-align: center;">
+                  <div role="cell" class="gf-table-cells" id="fval" ng-style="{'width' : editor.statesTable.getWidth('colors')}">
+                    <div class="gf-table-content" style="text-align: center;">
                       <!-- TEXT COLOR -->
                       <div 
                         ng-show="state.haveStatus('fontColor') && state.getStatus('fontColor').length > 0 && state.getStatus('fontColor') !== 'none'"
                         style="display:table-cell;vertical-align:middle;">
-                        <div bs-tooltip="'Text : ' + state.getStatus('fontColor')" class="GF_inspect-color-picker"
+                        <div bs-tooltip="'Text : ' + state.getStatus('fontColor')" class="gf-inspect-color-picker"
                           style="background-color: {{state.getStatus('fontColor')}};">
                           T
                         </div>
@@ -143,7 +143,7 @@
                       <div
                       ng-show="state.haveStatus('fillColor') && state.getStatus('fillColor').length > 0 && state.getStatus('fillColor') !== 'none'"
                       style="display:table-cell;vertical-align:middle;">
-                        <div bs-tooltip="'Fill : ' + state.getStatus('fillColor')" class="GF_inspect-color-picker"
+                        <div bs-tooltip="'Fill : ' + state.getStatus('fillColor')" class="gf-inspect-color-picker"
                           style="background-color: {{state.getStatus('fillColor')}};">
                           F
                         </div>
@@ -152,7 +152,7 @@
                       <div
                         ng-show="state.haveStatus('strokeColor') && state.getStatus('strokeColor').length > 0 && state.getStatus('strokeColor') !== 'none'"
                         style="display:table-cell;vertical-align:middle;">
-                        <div bs-tooltip="'Stroke : ' + state.getStatus('strokeColor')" class="GF_inspect-color-picker"
+                        <div bs-tooltip="'Stroke : ' + state.getStatus('strokeColor')" class="gf-inspect-color-picker"
                           style="background-color: {{state.getStatus('strokeColor')}};">
                           S
                         </div>
@@ -161,8 +161,8 @@
                     </div>
                   </div>
                   <!-- TAGS -->
-                  <div role="cell" class="GF_table-cells" id="actions" ng-style="{'width' : editor.statesTable.getWidth('tags')}">
-                    <div class="GF_table-content GF_unselectable">
+                  <div role="cell" class="gf-table-cells" id="actions" ng-style="{'width' : editor.statesTable.getWidth('tags')}">
+                    <div class="gf-table-content gf-unselectable">
                       <div style="display:inline-block" ng-show="state.shapeState.isChanged()"
                         bs-tooltip="'Mapping on Color'"><i class="fa fa-paint-brush"></i></div>
                       <div style="display:inline-block" ng-show="state.textState.isChanged()"
