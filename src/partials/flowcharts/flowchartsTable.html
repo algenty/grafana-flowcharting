@@ -87,7 +87,7 @@
                             <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
                                 <span>
                                     <i class="fa fa-chevron-right"
-                                        bs-tooltip="flowchart.redude ? 'Expand/Detail' : 'Collapse/Reduce'"
+                                        ng-attr-title="{{flowchart.redude ? 'Expand/Detail' : 'Collapse/Reduce'}}"
                                         ng-class="{'fa-chevron-right': flowchart.reduce, 'fa-chevron-down': flowchart.reduce === false}">
                                     </i>
                                 </span>
@@ -118,14 +118,18 @@
                             ng-style="{'width' : editor.flowchartsTable.getWidth('type')}">
                             <div class="gf-table-content" style="text-align: center;">
                                 <!-- {{flowchart.data.type}} -->
-                                <div style="display:inline-block" ng-if="flowchart.data.type === 'csv'"
-                                    bs-tooltip="'CSV format'">
+                                <div 
+                                    ng-attr-title="{{flowchart.data.type === 'csv' ? 'CSV format' : 'Draw.io XML format'}}"
+                                    ng-class="{ 'gf-icon-csv' : flowchart.data.type === 'csv' , 'gf-icon-xml' : flowchart.data.type === 'xml' }">
+                                </div>
+                                <!-- <div style="display:inline-block" ng-if="flowchart.data.type === 'csv'"
+                                    title="'CSV format'">
                                     <div class="gf-icon-csv"></div>
-                                </div>
-                                <div style="display:inline-block" ng-if="flowchart.data.type === 'xml'"
-                                    bs-tooltip="'Draw.io XML format'">
+                                </div> -->
+                                <!-- <div style="display:inline-block" ng-if="flowchart.data.type === 'xml'"
+                                    title="'Draw.io XML format'">
                                     <div class="gf-icon-xml"></div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <!-- SOURCE -->
@@ -133,11 +137,9 @@
                             ng-style="{'width' : editor.flowchartsTable.getWidth('source')}">
                             <div class="gf-table-content" style="text-align: center;">
                                 <!-- {{flowchart.data.download}} -->
-                                <div style="display:inline-block" ng-click="editor.edit($index)"
-                                    bs-tooltip="flowchart.data.download ? 'URL : ' + flowchart.data.url : 'Edit diagram'">
-                                    <div
-                                        ng-class="{ 'gf-icon-file-download' : flowchart.data.download, 'gf-icon-file-text gf-icon-action': !flowchart.data.download }">
-                                    </div>
+                                <div ng-click="editor.edit($index)"
+                                    ng-attr-title="{{flowchart.data.download ? 'URL : ' + flowchart.data.url : 'Edit diagram'}}"
+                                    ng-class="{ 'gf-icon-file-download' : flowchart.data.download, 'gf-icon-file-text gf-icon-action': !flowchart.data.download }">
                                 </div>
                             </div>
                         </div>

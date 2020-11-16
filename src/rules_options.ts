@@ -60,11 +60,12 @@ export class RulesOptionsCtrl {
     this.metricHandler = this.ctrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();
     this.tpGraphSize = $GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
+    let n = 0;
     this.rulesTableData = {
       data: [],
       columns: [
         {
-          index: 0,
+          index: n++,
           id: 'expand',
           label: '<>',
           desc: 'Expand/collapse',
@@ -73,7 +74,7 @@ export class RulesOptionsCtrl {
           select: false,
         },
         {
-          index: 1,
+          index: n++,
           id: 'rule',
           label: 'Rule',
           desc: 'Rule Name',
@@ -82,7 +83,7 @@ export class RulesOptionsCtrl {
           select: false,
         },
         {
-          index: 2,
+          index: n++,
           id: 'level',
           label: 'Lvl',
           desc: 'Highest level',
@@ -90,17 +91,17 @@ export class RulesOptionsCtrl {
           sort: 'asc',
           select: false,
         },
+        // {
+        //   index: n++,
+        //   id: 'rval',
+        //   label: 'R. val.',
+        //   desc: 'Raw value',
+        //   size: '100px',
+        //   sort: 'asc',
+        //   select: false,
+        // },
         {
-          index: 3,
-          id: 'rval',
-          label: 'R. val.',
-          desc: 'Raw value',
-          size: '100px',
-          sort: 'asc',
-          select: false,
-        },
-        {
-          index: 4,
+          index: n++,
           id: 'fval',
           label: 'F. val.',
           desc: 'Formated value',
@@ -109,7 +110,7 @@ export class RulesOptionsCtrl {
           select: false,
         },
         {
-          index: 5,
+          index: n++,
           id: 'color',
           label: 'Color',
           desc: 'Highest color',
@@ -118,7 +119,7 @@ export class RulesOptionsCtrl {
           select: false,
         },
         {
-          index: 6,
+          index: n++,
           id: 'actions',
           label: 'Actions',
           desc: 'Actions',
@@ -128,7 +129,7 @@ export class RulesOptionsCtrl {
         },
       ],
     };
-    let n = 0;
+    n = 0;
     this.shapesTableData = {
       data: [],
       columns: [

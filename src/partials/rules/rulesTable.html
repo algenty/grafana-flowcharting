@@ -41,7 +41,7 @@
               </div>
             </div>
             <!-- RAW VALUE -->
-            <div class="gf-table-columnheader" colspan="1" role="columnheader"
+            <!-- <div class="gf-table-columnheader" colspan="1" role="columnheader"
               ng-style="{'width' : editor.rulesTable.getWidth('rval')}">
               <div ng-attr-title="{{editor.rulesTable.getDesc('rval')}}" class="gf-table-title"
                 style="cursor: pointer;">
@@ -50,7 +50,7 @@
               <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
                 ng-mousedown="editor.rulesTable.onMouseDown($event)">
               </div>
-            </div>
+            </div> -->
             <!-- FORMATED VALUE -->
             <div class="gf-table-columnheader" colspan="1" role="columnheader"
               ng-style="{'width' : editor.rulesTable.getWidth('fval')}">
@@ -109,7 +109,7 @@
                     {{rule.data.alias}}
                   </div>
                   <div ng-show="rule.editButton === true && rule.edit !== true" style="padding:6px;float:right;" ng-click="rule.edit = true;">
-                    <span bs-tooltip="'Edit/Change rule name'">
+                    <span title="Edit/Change rule name">
                       <i class="fa fa-edit"></i>
                     </span>
                   </div>
@@ -127,23 +127,23 @@
                   </div>
                 </div>
                 <!-- HIGTEST RAW VALUE -->
-                <div role="cell" class="gf-table-cells" id="rval"
+                <!-- <div role="cell" class="gf-table-cells" id="rval"
                   ng-style="{'width' : editor.rulesTable.getWidth('rval')}">
                   <div class="gf-table-content">
                     {{rule.highestValue}}
                   </div>
-                </div>
+                </div> -->
                 <!-- HIGTEST FORMATED VALUE -->
                 <div role="cell" class="gf-table-cells" id="fval"
                   ng-style="{'width' : editor.rulesTable.getWidth('fval')}">
-                  <div class="gf-table-content">
+                  <div class="gf-table-content" ng-attr-title="{{rule.highestValue}}">
                     {{rule.highestFormattedValue}}
                   </div>
                 </div>
                 <!-- COLOR -->
                 <div role="cell" class="gf-table-cells" id="fval"
                   ng-style="{'width' : editor.rulesTable.getWidth('color')}">
-                  <div class="gf-table-content" style="text-align: center;">
+                  <div class="gf-table-content" style="text-align: center;" ng-attr-title="{{rule.highestColor}}">
                     <span style="color : {{rule.highestColor}}"
                       ng-if="rule.highestColor !== null && rule.highestColor.length > 0">
                       <i class="fa fa-w fa-square"></i>
@@ -154,30 +154,57 @@
                 <div role="cell" class="gf-table-cells" id="actions"
                   ng-style="{'width' : editor.rulesTable.getWidth('actions')}">
                   <div class="gf-table-content gf-unselectable">
-                    <span bs-tooltip="rule.removeClick > 1 ? 'Click twice to remove rule' : 'Click to remove rule'"
+                    <!-- <span bs-tooltip="rule.removeClick > 1 ? 'Click twice to remove rule' : 'Click to remove rule'"
                       class='gf-icon-margin'>
                       <i class="fa fa-w fa-remove pointer" ng-click="editor.removeRule(rule)"
                         ng-style="rule.removeClick == 1 && { 'color' : 'brown' }"></i>
-                    </span>
-                    <span bs-tooltip="'Clone the rule'" class='gf-icon-margin'>
+                    </span> -->
+                    <div
+                      ng-click="editor.removeRule(rule)"
+                      title="Remove this rule (double click for secure)"
+                      class="gf-icon-action gf-icon-remove">
+                    </div>
+                    <!-- <span bs-tooltip="'Clone the rule'" class='gf-icon-margin'>
                       <i class="fa fa-copy" ng-click="editor.cloneRule(rule)"></i>
-                    </span>
-                    <span ng-click="editor.toggleShow(rule,!rule.data.hidden)"
+                    </span> -->
+                    <div
+                      ng-click="editor.cloneRule(rule)"
+                      title="Duplicate this rule"
+                      class="gf-icon-action gf-icon-clone">
+                    </div>
+                    <!-- <span ng-click="editor.toggleShow(rule,!rule.data.hidden)"
                       bs-tooltip="rule.data.hidden ? 'Show/enable this rule' : 'Hide/disable this rule' "
                       class='gf-icon-margin'>
                       <i class="fa fa-chevron-right"
                         ng-class="{'fa fa-w fa-eye pointer': !rule.isHidden(), 'fa fa-w fa-eye-slash pointer': rule.isHidden()}"></i>
-                    </span>
-                    <span>
+                    </span> -->
+                    <div
+                      ng-click="editor.toggleShow(rule,!rule.data.hidden)"
+                      title="Enable/Disable this rule"
+                      class="gf-icon-action"
+                      ng-class="{'gf-icon-hide': rule.isHidden(), 'gf-icon-show': !rule.isHidden()}">
+                    </div>
+                    <!-- <span>
                       <i class="fa fa-fw" ng-if="editor.isFirstRule($index)">&nbsp;</i>
                       <i class="fa fa-arrow-up" bs-tooltip="'Move up'" ng-if="!editor.isFirstRule($index)"
                         ng-click="editor.moveRule(rule, true)" class='gf-icon-margin'></i>
-                    </span>
-                    <span class='gf-icon-margin'>
-                      <!-- <i class="fa fa-fw" ng-if="editor.isLastRule($index)">&nbsp;</i> -->
+                    </span> -->
+                    <div
+                      ng-click="!editor.isFirstRule($index) && editor.moveRule(rule, true)"
+                      ng-attr-title="{{!editor.isFirstRule($index) ? 'Move up' : ''}}"
+                      class="gf-icon-action"
+                      ng-class="{'gf-icon-moveUp': !editor.isFirstRule($index), 'gf-icon-empty': editor.isFirstRule($index)}">
+                    </div>
+                    <!-- <span class='gf-icon-margin'>
                       <i class="fa fa-arrow-down" bs-tooltip="'Move down'" ng-if="!editor.isLastRule($index)"
                         ng-click="editor.moveRule(rule, false)"></i>
-                    </span>
+                    </span> -->
+                    <div
+                      ng-click="!editor.isLastRule($index) && editor.moveRule(rule, false)"
+                      ng-attr-title="{{!editor.isLastRule($index) ? 'Move down' : ''}}"
+                      class="gf-icon-action"
+                      ng-class="{'gf-icon-moveDown': !editor.isLastRule($index), 'gf-icon-empty': editor.isLastRule($index)}">
+                    </div>
                   </div>
                 </div>
               </div>

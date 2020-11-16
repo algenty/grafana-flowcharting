@@ -140,8 +140,13 @@ div.gf-table-cells {
 
 div.gf-table-cells:hover {
   // overflow-x: visible;
-  box-shadow: $table_cell_hover_border 0px 0px 2px;
-  background: $table_cell_hover_background;
+  // box-shadow: $table_cell_hover_border 0px 0px 2px;
+  // background: $table_cell_hover_background;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border: 1px solid $table_cell_hover_border;
+  // transition: 0.2s;
   // z-index: 1;
   // width: auto !important;
 }
