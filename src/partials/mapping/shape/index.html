@@ -29,6 +29,17 @@
                 tooltip="Disable this option if you don't use regular expressions in field 'What' below to improve performance">
             </gf-form-switch>
         </div>
+        <ng-include src="$GF.plugin.getPartialPath() + 'mapping/shape/table.html'"> </ng-include>
+        <div class="gf-form">
+            <!-- <label class="gf-form-label">
+                <i class="fa fa-plus pointer" ng-click="rule.addShapeMap('')" style="margin-right: 2px;"></i>
+            </label> -->
+            <div class="gf-form-button-row">
+                <button class="btn btn-inverse" ng-click="rule.addShapeMap('')">
+                    <i class="fa fa-plus"></i>
+                    &nbsp;Add mapping
+                </button>
+            </div>
+        </div>
     </div>
-    <ng-include src="$GF.plugin.getPartialPath() + 'mapping/shape/table.html'"> </ng-include>
 </div>

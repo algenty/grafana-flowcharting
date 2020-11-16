@@ -23891,6 +23891,11 @@ var Rule = function () {
       return m;
     }
   }, {
+    key: "cloneShapeMap",
+    value: function cloneShapeMap(initial) {
+      return this.addShapeMap(initial.data.pattern)["import"](initial);
+    }
+  }, {
     key: "removeShapeMap",
     value: function removeShapeMap(index) {
       this.data.shapeData.splice(index, 1);

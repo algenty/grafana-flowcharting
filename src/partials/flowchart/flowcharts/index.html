@@ -157,7 +157,7 @@
                             ng-style="{'width' : editor.flowchartsTable.getWidth('options')}">
                             <div class="GF_table-content GF_unselectable"
                                 style="text-align: center;justify-content: center;">
-                                <div style="display:inline-block" class="gf-icon-margin"
+                                <div style="display:inline-block" 
                                     ng-click="flowchart.data.scale = !flowchart.data.scale;editor.onOptionChange()"
                                     bs-tooltip="flowchart.data.scale ? 'Scale enable' : 'Scale disable'">
                                     <div class="gf-icon-action"
@@ -165,7 +165,7 @@
                                     </div>
                                 </div>
 
-                                <div style="display:inline-block" class="gf-icon-margin"
+                                <div style="display:inline-block" 
                                     ng-click="flowchart.data.center= !flowchart.data.center;editor.onOptionChange()"
                                     bs-tooltip="flowchart.data.center ? 'Center enabled' : 'Center disabled'">
                                     <div class="gf-icon-action"
@@ -173,7 +173,7 @@
                                     </div>
                                 </div>
 
-                                <div style="display:inline-block" class="gf-icon-margin"
+                                <div style="display:inline-block" 
                                     ng-click="flowchart.data.tooltip = !flowchart.data.tooltip;editor.onOptionChange()"
                                     bs-tooltip="flowchart.data.tooltip ? 'Tooltips enabled' : 'Tooltips disabled'">
                                     <div class="gf-icon-action"
@@ -181,12 +181,12 @@
                                     </div>
                                 </div>
 
-                                <div style="display:inline-block" ng-show="flowchart.data.grid" class="gf-icon-margin"
+                                <div style="display:inline-block" ng-show="flowchart.data.grid"
                                     bs-tooltip="'Display grid'">
                                     <div class="gf-icon-grid"></div>
                                 </div>
 
-                                <div style="display:inline-block" class="gf-icon-margin"
+                                <div style="display:inline-block" 
                                     ng-click="flowchart.data.lock = !flowchart.data.lock;editor.onOptionChange()"
                                     bs-tooltip="flowchart.data.lock ? 'Locked' : 'Unlocked'">
                                     <div class="gf-icon-action"
@@ -194,7 +194,7 @@
                                     </div>
                                 </div>
 
-                                <div style="display:inline-block;" class="gf-icon-margin"
+                                <div style="display:inline-block;" 
                                     ng-click="flowchart.data.enableAnim = !flowchart.data.enableAnim;editor.onOptionChange()"
                                     bs-tooltip="flowchart.data.enableAnim ? 'Animation enabled' : 'Animation disabled'">
                                     <div class="gf-icon-action"
@@ -202,14 +202,14 @@
                                     </div>
                                 </div>
 
-                                <div style="display:inline-block;" class="gf-icon-margin"
+                                <div style="display:inline-block;" 
                                     bs-tooltip="flowchart.data.scale ? '' :'Zoom at ' + flowchart.data.zoom">
                                     <div
                                         ng-class="{'gf-icon-empty': flowchart.data.scale, 'gf-icon-zoom': !flowchart.data.scale}">
                                     </div>
                                 </div>
 
-                                <!-- <div style="display:inline-block;" ng-hide="flowchart.data.scale" class="gf-icon-margin"
+                                <!-- <div style="display:inline-block;" ng-hide="flowchart.data.scale" 
                                     bs-tooltip="'Zoom at ' + flowchart.data.zoom">
                                     <div class="gf-icon-zoom"></div>
                                 </div> -->

@@ -666,6 +666,10 @@ export class Rule {
     return m;
   }
 
+  cloneShapeMap(initial :ShapeMap): ShapeMap {
+    return this.addShapeMap(initial.data.pattern).import(initial);
+  }
+
   /**
    * Remove shape for rule
    *

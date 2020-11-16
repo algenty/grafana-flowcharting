@@ -1,8 +1,8 @@
 <div class="gf-form">
-    <label class="gf-form-label width-10">What
+    <label class="gf-form-label width-10">
+        What
         <info-popover mode="right-normal">
-            <span 
-                ng-bind-html="$GF.popover('Enter shape Id or click on link button', 'SHAPES')">
+            <span ng-bind-html="$GF.popover('Enter shape Id or click on link button', 'SHAPES')">
             </span>
         </info-popover>
     </label>
@@ -20,8 +20,7 @@
 <div class="gf-form">
     <label class="gf-form-label width-10">When
         <info-popover mode="right-normal">
-            <span
-                ng-bind-html="$GF.popover('Select condition to apply color and tooltip on shape.', 'SHAPES')">
+            <span ng-bind-html="$GF.popover('Select condition to apply color and tooltip on shape.', 'SHAPES')">
             </span>
         </info-popover>
     </label>
@@ -36,6 +35,6 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-8" ng-model="shape.data.style" ng-options="c.value as c.text for c in editor.style"
-    ng-change="editor.onRulesChange()"></select>
+    <select class="gf-form-input width-8" ng-model="shape.data.style"
+        ng-options="c.value as c.text for c in editor.style" ng-change="editor.onRulesChange()"></select>
 </div>
