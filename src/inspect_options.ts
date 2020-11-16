@@ -253,7 +253,7 @@ export function inspectOptionsTab($q, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `${$GF.plugin.getPartialPath()}inspect/index.html`,
+    templateUrl: `${$GF.plugin.getPartialPath()}inspect/inspectTab.html`,
     controller: InspectOptionsCtrl,
   };
 }

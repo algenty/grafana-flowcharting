@@ -1,0 +1,63 @@
+<div class="edit-tab-content" id="templateInspect">
+  <div class="editor-row">
+    <div class="section gf-form-group">
+      <h5 class="section-heading">Inspector</h5>
+    </div>
+  </div>
+  <!-- STATES -->
+  <div class="editor-row">
+    <h5 class="section-heading">
+      Graph inspect Id
+      <info-popover mode="right-normal">
+        <span ng-bind-html="$GF.popover('List of all objects in graph with states', 'INSPECT','inspect_graph_table')">
+        </span>
+      </info-popover>
+    </h5>
+    <gf-form-switch class="gf-form" label-class="width-14"
+      tooltip="Enable inspect mode to view/modify identity of shapes" label="Enable" checked="editor.enable">
+    </gf-form-switch>
+
+    <!-- STATES MAPPING -->
+    <ng-include src="$GF.plugin.getPartialPath() + 'inspect/states/statesSection.html'" ng-if="editor.enable"> </ng-include>
+    <hr />
+
+  </div>
+
+  <!-- DEBUG -->
+  <div class="editor-row">
+    <h5 class="section-heading">Debug Mode</h5>
+    <div class="section gf-form-group">
+      <div class="gf-form">
+        <gf-form-switch class="gf-form" label="Trace perf (console)" label-class="width-10" checked="editor.traceEnable"
+          on-change="editor.tracePerf()"></gf-form-switch>
+        </gf-form-switch>
+      </div>
+    </div>
+  </div>
+
+  <div class="editor-row">
+    <h5 class="section-heading">Anonymize Graph to export or to share</h5>
+    <div class="section gf-form-group">
+      <div class="gf-form">
+        <button class="btn btn-inverse" ng-click="editor.anonymize()">
+          <div class="css-1cvxpvr">
+            <svg aria-hidden="true" focusable="false" data-prefix="fad" data-icon="mask" role="img"
+            class="svg-inline--fa fa-mask fa-w-20"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"
+              style="--fa-secondary-opacity:0.1;display: inline-block;font-size: inherit;height: 1em;overflow: visible;vertical-align: -0.125em">
+              <g class="fa-group">
+                <path fill="currentColor"
+                  d="M320.67 64c-442.6 0-357.57 384-158.46 384 39.9 0 77.47-20.69 101.42-55.86l25.73-37.79c15.66-23 47-23 62.63 0l25.73 37.79C401.66 427.31 439.23 448 479.13 448 669 448 769.76 64 320.67 64zm-56.59 203.31c-12.32 15.4-39 41.05-80.08 41.05s-67.76-25.66-80.08-41.05a18.28 18.28 0 0 1 0-22.63c12.32-15.4 39-41.05 80.08-41.05s67.76 25.66 80.08 41.05a18.28 18.28 0 0 1 0 22.63zm272 0c-12.32 15.4-39 41.05-80.08 41.05s-67.76-25.66-80.08-41.05a18.28 18.28 0 0 1 0-22.63c12.32-15.4 39-41.05 80.08-41.05s67.76 25.66 80.08 41.05a18.28 18.28 0 0 1 0 22.63z"
+                  class="fa-secondary"></path>
+                <path fill="currentColor"
+                  d="M184 203.63c-41.08 0-67.76 25.65-80.08 41.05a18.28 18.28 0 0 0 0 22.63c12.32 15.39 39 41.05 80.08 41.05s67.76-25.65 80.08-41.05a18.28 18.28 0 0 0 0-22.63c-12.32-15.39-39-41.05-80.08-41.05zm352.08 41.05c-12.32-15.39-39-41.05-80.08-41.05s-67.76 25.65-80.08 41.05a18.28 18.28 0 0 0 0 22.63c12.32 15.39 39 41.05 80.08 41.05s67.76-25.65 80.08-41.05a18.28 18.28 0 0 0 0-22.63z"
+                  class="fa-primary"></path>
+              </g>
+            </svg>
+          </div>
+          &nbsp;Anonymize
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

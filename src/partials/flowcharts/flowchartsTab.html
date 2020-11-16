@@ -1,0 +1,33 @@
+<div class="edit-tab-content" id="templateFlowchart">
+    <div class="editor-row">
+        <div class="section gf-form-group" style="width:100%;">
+            <h5 class="section-heading">
+                Global
+                <info-popover mode="right-normal"><span
+                        ng-bind-html="$GF.popover('Define you flowchart', 'README')"></span>
+                </info-popover>
+            </h5>
+            <div class="gf-form">
+                <label class="gf-form-label width-12">Editor Url & Theme
+                    <info-popover mode="right-normal"><span
+                            ng-bind-html="$GF.popover('Address and theme of editor when click on button edit draw', 'FLOWCHART#address')"></span>
+                    </info-popover>
+                </label>
+                <input type="text" class="gf-form-input width-30" ng-model="editor.flowchartHandler.data.editorUrl"
+                    placeholder="https://embed.diagrams.net" />
+                <div class="gf-form-select-wrapper width-8">
+                    <select class="gf-form-input" ng-model="editor.flowchartHandler.data.editorTheme"
+                        ng-options="c.value as c.text for c in editor.themes"></select>
+                </div>
+            </div>
+            <!-- Draw.io source -->
+            <gf-form-switch class="gf-form" label="Allow draw.io source" label-class="width-12"
+                tooltip="allow downloads images from draw.io" checked="editor.flowcharthandler.data.allowDrawio"
+                on-change="editor.onSourceChange()">
+            </gf-form-switch>
+        </div>
+    </div>
+    <div class="editor-row">
+        <ng-include src="$GF.plugin.getPartialPath() + 'flowcharts/flowchartsTable.html'"> </ng-include>
+    </div>
+</div>

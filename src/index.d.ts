@@ -362,8 +362,8 @@ declare module gf {
     flowcharts: TFlowchartData[];
   }
 
-  declare interface TMappingOptionsScope extends ng.IScope {
-    editor: MappingOptionsCtrl;
+  declare interface TRulesOptionsScope extends ng.IScope {
+    editor: RulesOptionsCtrl;
     $GF: $GF;
     ctrl: any;
   }
