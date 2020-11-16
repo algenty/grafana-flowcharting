@@ -192,7 +192,7 @@ export class RulesOptionsCtrl {
     const $rulesTable = $div.find('#RulesTable');
     const rulesTable = $rulesTable[0];
     this.rulesTable = new GFTable(this.rulesTableData, rulesTable);
-    
+
     const $shapesTable = $div.find('#ShapesTable');
     const shapesTable = $shapesTable[0];
     this.shapesTable = new GFTable(this.shapesTableData, shapesTable);
@@ -281,7 +281,7 @@ export class RulesOptionsCtrl {
   }
 
   onRulesChange() {
-    $GF.log.info('MappingOptionsCtrl.onRulesChange()');
+    $GF.log.info('RulesOptionsCtrl.onRulesChange()');
     this.flowchartHandler.onRulesChange();
     this.render();
     return true;
@@ -325,7 +325,7 @@ export class RulesOptionsCtrl {
    *
    * @param {Number} ruleIndex
    * @param {Number} colorIndex
-   * @memberof MappingOptionsCtrl
+   * @memberof RulesOptionsCtrl
    */
   onColorChange(ruleIndex: number, colorIndex: number) {
     return (newColor: any) => {
@@ -351,7 +351,7 @@ export class RulesOptionsCtrl {
   /**
    * Undisplay cell selection
    *
-   * @memberof MappingOptionsCtrl
+   * @memberof RulesOptionsCtrl
    */
   async unselectCell(prop: gf.TPropertieKey, value: string) {
     const flowchart = this.flowchartHandler.getFlowchart();
@@ -366,7 +366,7 @@ export class RulesOptionsCtrl {
    *
    * @param {Rule} rule
    * @param {boolean} bool
-   * @memberof MappingOptionsCtrl
+   * @memberof RulesOptionsCtrl
    */
   toggleShow(rule: Rule, bool: boolean) {
     rule.data.hidden = bool;
@@ -377,7 +377,7 @@ export class RulesOptionsCtrl {
    * Turn Highlight on of cells in rule
    *
    * @param {*} rule
-   * @memberof MappingOptionsCtrl
+   * @memberof RulesOptionsCtrl
    */
   async highlightCells(rule: Rule) {
     rule.highlightCells();
@@ -387,7 +387,7 @@ export class RulesOptionsCtrl {
    * Turn Highlight off of cells in rule
    *
    * @param {*} rule
-   * @memberof MappingOptionsCtrl
+   * @memberof RulesOptionsCtrl
    */
   async unhighlightCells(rule: Rule) {
     rule.unhighlightCells();
@@ -397,7 +397,7 @@ export class RulesOptionsCtrl {
    * Turn Highlight off all cells
    *
    * @param {*} rule
-   * @memberof MappingOptionsCtrl
+   * @memberof RulesOptionsCtrl
    */
   async unhighlightAllCells() {
     const flowchart = this.flowchartHandler.getFlowchart();
@@ -416,7 +416,7 @@ export class RulesOptionsCtrl {
    *
    * @param {Rule} rule
    * @param {boolean} [force]
-   * @memberof MappingOptionsCtrl
+   * @memberof RulesOptionsCtrl
    */
   removeRule(rule: Rule, force?: boolean) {
     if (rule.removeClick === 1 || force) {
@@ -435,7 +435,7 @@ export class RulesOptionsCtrl {
    * Clone a rule
    *
    * @param {Rule} rule
-   * @memberof MappingOptionsCtrl
+   * @memberof RulesOptionsCtrl
    */
   cloneRule(rule: Rule) {
     this.rulesHandler.cloneRule(rule);
@@ -447,7 +447,7 @@ export class RulesOptionsCtrl {
    *
    * @param {Rule} rule
    * @param {boolean} up
-   * @memberof MappingOptionsCtrl
+   * @memberof RulesOptionsCtrl
    */
   moveRule(rule: Rule, up: boolean) {
     if (up) {
@@ -467,7 +467,7 @@ export class RulesOptionsCtrl {
 }
 
 /** @ngInject */
-export function mappingOptionsTab($q, uiSegmentSrv) {
+export function rulesOptionsTab($q, uiSegmentSrv) {
   'use strict';
   return {
     restrict: 'E',

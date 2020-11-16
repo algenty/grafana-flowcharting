@@ -1,7 +1,7 @@
 import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 // import { appEvents } from 'grafana/app/core/core';
-import { mappingOptionsTab } from 'rules_options';
-import { flowchartOptionsTab } from 'flowcharts_options';
+import { rulesOptionsTab } from 'rules_options';
+import { flowchartsOptionsTab } from 'flowcharts_options';
 import { inspectOptionsTab } from 'inspect_options';
 import { RulesHandler } from 'rulesHandler';
 import { FlowchartHandler } from 'flowchartHandler';
@@ -95,8 +95,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // EVENTS FCT
   //
   onInitEditMode() {
-    this.addEditorTab('Flowcharts', flowchartOptionsTab, 2);
-    this.addEditorTab('Rules', mappingOptionsTab, 3);
+    this.addEditorTab('Flowcharts', flowchartsOptionsTab, 2);
+    this.addEditorTab('Rules', rulesOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
     this.editModeTrue();
   }

@@ -968,11 +968,11 @@ export class $GF {
    * @param {*} value
    * @memberof $GF
    */
-  static GetT4V(list : gf.TSelectAny[], value : any) : string {
-    if(list) {
+  static GetT4V(list: gf.TSelectAny[], value: any): string {
+    if (list) {
       for (let i = 0; i < list.length; i++) {
         const element = list[i];
-        if(element.value == value) {
+        if (element.value === value) {
           return element.text;
         }
       }
@@ -1215,7 +1215,7 @@ export class GFTable {
   startX: number = 0;
   startWidth: any = 0;
 
-  constructor(table: gf.TTableData, div ?: HTMLDivElement) {
+  constructor(table: gf.TTableData, div?: HTMLDivElement) {
     this.tableData = table;
     this.tableDiv = div;
   }

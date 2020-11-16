@@ -666,7 +666,7 @@ export class Rule {
     return m;
   }
 
-  cloneShapeMap(initial :ShapeMap): ShapeMap {
+  cloneShapeMap(initial: ShapeMap): ShapeMap {
     return this.addShapeMap(initial.data.pattern).import(initial);
   }
 
