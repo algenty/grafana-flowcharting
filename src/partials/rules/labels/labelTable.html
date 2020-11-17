@@ -1,0 +1,251 @@
+<div role=" table" class="gf-table-main" id="TextsTable" style="overflow: visible;">
+    <div class="gf-custom-scrollbar"
+        style="position: relative; overflow: visible; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
+        <div class="gf-view"
+            style="position: relative; overflow: visible; margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
+            <!-- THEAD -->
+            <div class="gf-table-thead gf-unselectable" role="row" ng-mouseup="editor.textsTable.onMouseUp($event)"
+                ng-mousemove="editor.textsTable.onMouseMove($event)"
+                ng-mouseleave="editor.textsTable.onMouseUp($event)">
+                <!-- HEADERS -->
+                <!-- EXPAND -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.textsTable.getWidth('expand')}">
+                    <div ng-attr-title="{{editor.textsTable.getDesc('expand')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.textsTable.getLabel('expand')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.textsTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- WHAT -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.textsTable.getWidth('what')}">
+                    <div ng-attr-title="{{editor.textsTable.getDesc('what')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.textsTable.getLabel('what')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover('Enter text Id or click on link button', 'SHAPES')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.textsTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- WHEN -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.textsTable.getWidth('when')}">
+                    <div ng-attr-title="{{editor.textsTable.getDesc('when')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.textsTable.getLabel('when')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span
+                                ng-bind-html="$GF.popover('Select condition to apply color and tooltip on text.', 'SHAPES')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize"
+                        ng-mousedown="editor.textsTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- HOW -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.textsTable.getWidth('how')}">
+                    <div ng-attr-title="{{editor.textsTable.getDesc('how')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.textsTable.getLabel('how')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span
+                                ng-bind-html="$GF.popover('Fill to color content, Stroke for outline or arrows, Text for text.', 'SHAPES', 'colormode_ani')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.textsTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- ACTION -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.textsTable.getWidth('actions')}">
+                    <div ng-attr-title="{{editor.textsTable.getDesc('actions')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.textsTable.getLabel('actions')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.textsTable.onMouseDown($event)">
+                    </div>
+                </div>
+            </div>
+            <!-- TBODY -->
+            <div class="gf-table-body">
+                <div role="row" class="gf-table-rows" ng-repeat="text in rule.getTextMaps()">
+                    <!-- CELLS -->
+                    <div class="gf-table-row_line"
+                        ng-mouseleave="editor.unselectCell(rule.data.textProp,text.data.pattern)"
+                        ng-mouseover="editor.selectCell(rule.data.textProp,text.data.pattern)">
+                        <!-- EXPAND -->
+                        <div role="cell" class="gf-table-cells" id="expand" ng-click="text.reduce=!text.reduce"
+                            ng-style="{'width' : editor.textsTable.getWidth('expand')}">
+                            <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
+                                <span>
+                                    <i class="fa fa-chevron-right"
+                                        bs-tooltip="text.redude ? 'Expand/Detail' : 'Collapse/Reduce'"
+                                        ng-class="{'fa-chevron-right': text.reduce, 'fa-chevron-down': text.reduce === false}">
+                                    </i>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- WHAT -->
+                        <div role="cell" class="gf-table-cells" id="what" ng-mouseleave="text.displayWhatEdit = false;"
+                            ng-mouseover="text.displayWhatEdit = true;"
+                            ng-style="{'width' : editor.textsTable.getWidth('what')}">
+                            <div class="gf-table-content" ng-show="text.whatEdit !== true"
+                                ng-dblclick="text.whatEdit = true;">
+                                {{text.data.pattern}}
+                            </div>
+                            <div ng-show="text.displayWhatEdit === true && text.whatEdit !== true"
+                                ng-click="text.whatEdit = true;"
+                                title="Edit pattern"
+                                class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
+                            </div>
+                            <div ng-show="text.displayWhatEdit === true && text.whatEdit !== true && !editor.flowchartHandler.isMapping(text)"
+                                ng-click="editor.flowchartHandler.setMap(text,rule.data.textProp)"
+                                class="gf-icon-action gf-icon-target gf-icon-withcontent"
+                                title="Select a text in diagram">
+                            </div>
+                            <input type="text" style="margin-right: 2px;width : 100%" ng-attr-id="text.getId()"
+                                ng-show="text.whatEdit === true" class="gf-form-input" ng-model="text.data.pattern"
+                                ng-model-onblur ng-blur="editor.onRulesChange();text.whatEdit = false;"
+                                bs-typeahead="rule.data.textProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
+                                data-min-length="0" data-items="100" data-placement="right" />
+                            <!-- ng-keyup="$event.keyCode === 13 ? editor.onRulesChange() : text.whatEdit = true;$event.keyCode === 13 ?  text.whatEdit = false : text.whatEdit = true" -->
+                            <!-- ng-model-onblur -->
+                            <!-- placeholder="{{(rule.data.textProp === 'value' ? "Id" : "Label") + " or regex of text"}}" -->
+                            <!-- bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of text (see inspect tab)'" -->
+                            <!-- bs-typeahead="rule.data.textProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue" -->
+                            <!-- ng-keydown="$event.keyCode === 13 && text.whatEdit = false" -->
+                        </div>
+                        <!-- WHEN -->
+                        <div role="cell" class="gf-table-cells" id="when" ng-mouseleave="text.displayWhenEdit = false;"
+                            ng-mouseover="text.displayWhenEdit = true;"
+                            ng-style="{'width' : editor.textsTable.getWidth('when')}">
+                            <!-- {{text.data.TextOn}} -->
+                            <div class="gf-table-content" style="text-align: left;" ng-show="text.whenEdit !== true">
+                                {{$GF.GetT4V( editor.TextOn, text.data.TextOn)}}
+                            </div>
+                            <div ng-show="text.displayWhenEdit === true && text.whenEdit !== true"
+                                ng-click="text.whenEdit = true;"
+                                class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                                title="Edit condition">
+                            </div>
+                            <select class="gf-form-input" ng-model="text.data.TextOn" style="width:100%;"
+                                ng-blur="editor.onRulesChange();text.whenEdit = false;"
+                                ng-show="text.whenEdit === true" ng-options="c.value as c.text for c in editor.TextOn"
+                                ng-change="editor.onRulesChange()">
+                            </select>
+                        </div>
+                        <!-- HOW -->
+                        <div role="cell" class="gf-table-cells" id="how" 
+                            ng-mouseleave="text.displayHowEdit = false;"
+                            ng-mouseover="text.displayHowEdit = true;"
+                            ng-style="{'width' : editor.textsTable.getWidth('how')}">
+                            <!-- {{text.data.textPattern}} -->
+                            <div class="gf-table-content" style="text-align: left;" ng-show="text.howEdit !== true">
+                                {{text.data.textPattern}}
+                            </div>
+                            <div ng-show="text.displayHowEdit === true && text.howEdit !== true"
+                                ng-click="text.howEdit = true;"
+                                class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                                title="Edit method">
+                            </div>
+                            <select class="gf-form-input" ng-model="text.data.style" style="width:100%;"
+                                ng-blur="editor.onRulesChange();text.howEdit = false;"
+                                ng-show="text.howEdit === true" ng-options="c.value as c.text for c in editor.style"
+                                ng-change="editor.onRulesChange()">
+                            </select>
+                        </div>
+                        <!-- WITH -->
+                        <div role="cell" class="gf-table-cells" id="with" 
+                            ng-mouseleave="text.displayWithEdit = false;"
+                            ng-mouseover="text.displayWithEdit = true;"
+                            ng-style="{'width' : editor.textsTable.getWidth('with')}">
+                            <!-- {{text.data.style}} -->
+                            <div class="gf-table-content" style="text-align: left;" ng-show="text.withEdit !== true && text.data.textReplace == 'pattern'">
+                                {{$GF.GetT4V(editor.style, text.data.style)}}
+                            </div>
+                            <div ng-show="text.displayWithEdit === true && text.withEdit !== true && text.data.textReplace == 'pattern'"
+                                ng-click="text.withEdit = true;"
+                                class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                                title="Text or pattern to replace by value">
+                            </div>
+                            <input ng-if="text.data.textReplace == 'pattern'"
+                                style="margin-right: 2px;width : 100%"
+                                type="text"
+                                class="gf-form-input"
+                                ng-show="text.withEdit === true"
+                                ng-model="text.data.textPattern" 
+                                ng-blur="editor.onRulesChange()"
+                                placeholder="Text or pattern to replace by value" />
+                            <!-- <select class="gf-form-input" ng-model="text.data.style" style="width:100%;"
+                                ng-blur="editor.onRulesChange();text.howEdit = false;"
+                                ng-show="text.withEdit === true" ng-options="c.value as c.text for c in editor.style"
+                                ng-change="editor.onRulesChange()">
+                            </select> -->
+                            <!-- <div style="display:inline-block;">
+                                <div class="gf-icon-fill gf-icon-action" * ng-click="selectStyle = true;"
+                                    bs-tooltip="'Fill method'">
+                                </div>
+                                <div class="gf-icon-border gf-icon-action" ng-click="selectStyle = true;"
+                                    bs-tooltip="'Border/stroke method'">
+                                </div>
+                                <div class="gf-icon-gradien gf-icon-action" ng-click="selectStyle = true;"
+                                    bs-tooltip="'Border/stroke method'">
+                                </div>
+                            </div> -->
+                        </div>
+                        <!-- OPTIONS/ACTION -->
+                        <div role="cell" class="gf-table-cells" id="options"
+                            ng-style="{'width' : editor.textsTable.getWidth('actions')}">
+                            <div class="gf-table-content gf-unselectable"
+                                style="text-align: left;justify-content: center;">
+                                <div 
+                                    ng-click="editor.removeTextMap(rule,$index);editor.onRulesChange()"
+                                    title="Delete this mapping object"
+                                    class="gf-icon-action gf-icon-remove">
+                                </div>
+                                <div 
+                                    ng-click="text.isHidden() ? text.show(): text.hide();editor.onRulesChange()"
+                                    title="Enable/Disable this mapping"
+                                    class="gf-icon-action"
+                                    ng-class="{'gf-icon-show': !text.isHidden(), 'gf-icon-hide': text.isHidden()}">
+                                </div>
+                                <div 
+                                    ng-click="editor.flowchartHandler.setMap(text,rule.data.textProp)"
+                                    title="Select a shape in diagram"
+                                    class="gf-icon-action"
+                                    ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(text), 'gf-icon-empty': editor.flowchartHandler.isMapping(text)}">
+                                </div>
+                                <div 
+                                    ng-click="rule.cloneTextMap(text);editor.onRulesChange();"
+                                    title="Duplicate this mapping"
+                                    class="gf-icon-action gf-icon-clone">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gf-table-row_body" ng-show="text.reduce==false">
+                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/labels/labelBody.html'"> </ng-include>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

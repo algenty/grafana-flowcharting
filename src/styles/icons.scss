@@ -223,6 +223,12 @@ $encoding-reference: (
   cursor: pointer;
 }
 
+.gf-icon-withcontent {
+  float:inline-end;
+  text-align: left;
+  justify-content: center;
+}
+
 .gf-icon-action { 
   @extend .gf-icon-clickable;
   &:hover {

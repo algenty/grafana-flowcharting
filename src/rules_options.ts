@@ -475,5 +475,6 @@ export function rulesOptionsTab($q, uiSegmentSrv) {
     scope: true,
     templateUrl: `${$GF.plugin.getPartialPath()}/rules/rulesTab.html`,
     controller: RulesOptionsCtrl,
+    module: ['ngAnimate'],
   };
 }

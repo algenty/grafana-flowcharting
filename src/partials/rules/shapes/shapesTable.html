@@ -112,19 +112,14 @@
                                 {{shape.data.pattern}}
                             </div>
                             <div ng-show="shape.displayWhatEdit === true && shape.whatEdit !== true"
-                                style="float:right;" ng-click="shape.whatEdit = true;">
-                                <div style="display:inline-block" bs-tooltip="'Edit pattern'">
-                                    <div class="gf-icon-action gf-icon-edit">
-                                    </div>
-                                </div>
+                                ng-click="shape.whatEdit = true;"
+                                title="Edit pattern"
+                                class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
                             <div ng-show="shape.displayWhatEdit === true && shape.whatEdit !== true && !editor.flowchartHandler.isMapping(shape)"
-                                style="float:right;"
-                                ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)">
-                                <div style="display:inline-block" bs-tooltip="'Select a shape in diagram'">
-                                    <div class="gf-icon-action gf-icon-target">
-                                    </div>
-                                </div>
+                                ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)"
+                                class="gf-icon-action gf-icon-target gf-icon-withcontent"
+                                title="Select a shape in diagram">
                             </div>
                             <input type="text" style="margin-right: 2px;width : 100%" ng-attr-id="shape.getId()"
                                 ng-show="shape.whatEdit === true" class="gf-form-input" ng-model="shape.data.pattern"
@@ -147,11 +142,9 @@
                                 {{$GF.GetT4V( editor.colorOn, shape.data.colorOn)}}
                             </div>
                             <div ng-show="shape.displayWhenEdit === true && shape.whenEdit !== true"
-                                style="float:right;" ng-click="shape.whenEdit = true;">
-                                <div style="display:inline-block" bs-tooltip="'Edit condition'">
-                                    <div class="gf-icon-action gf-icon-edit">
-                                    </div>
-                                </div>
+                                ng-click="shape.whenEdit = true;"
+                                class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                                title="Edit condition">
                             </div>
                             <select class="gf-form-input" ng-model="shape.data.colorOn" style="width:100%;"
                                 ng-blur="editor.onRulesChange();shape.whenEdit = false;"
@@ -160,12 +153,24 @@
                             </select>
                         </div>
                         <!-- HOW -->
-                        <div role="cell" class="gf-table-cells" id="how"
+                        <div role="cell" class="gf-table-cells" id="how" 
+                            ng-mouseleave="shape.displayHowEdit = false;"
+                            ng-mouseover="shape.displayHowEdit = true;"
                             ng-style="{'width' : editor.shapesTable.getWidth('how')}">
                             <!-- {{shape.data.style}} -->
-                            <div class="gf-table-content" style="text-align: left;">
+                            <div class="gf-table-content" style="text-align: left;" ng-show="shape.howEdit !== true">
                                 {{$GF.GetT4V(editor.style, shape.data.style)}}
                             </div>
+                            <div ng-show="shape.displayHowEdit === true && shape.howEdit !== true"
+                                ng-click="shape.howEdit = true;"
+                                class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                                title="Edit method">
+                            </div>
+                            <select class="gf-form-input" ng-model="shape.data.style" style="width:100%;"
+                                ng-blur="editor.onRulesChange();shape.howEdit = false;"
+                                ng-show="shape.howEdit === true" ng-options="c.value as c.text for c in editor.style"
+                                ng-change="editor.onRulesChange()">
+                            </select>
                             <!-- <div style="display:inline-block;">
                                 <div class="gf-icon-fill gf-icon-action" * ng-click="selectStyle = true;"
                                     bs-tooltip="'Fill method'">
@@ -183,31 +188,27 @@
                             ng-style="{'width' : editor.shapesTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
-                                <div style="display:inline-block"
+                                <div 
                                     ng-click="editor.removeShapeMap(rule,$index);editor.onRulesChange()"
-                                    bs-tooltip="'Delete this mapping object'">
-                                    <div class="gf-icon-action gf-icon-remove">
-                                    </div>
+                                    title="Delete this mapping object"
+                                    class="gf-icon-action gf-icon-remove">
                                 </div>
-                                <div style="display:inline-block"
+                                <div title="Duplicate this mapping"
                                     ng-click="shape.isHidden() ? shape.show(): shape.hide();editor.onRulesChange()"
-                                    bs-tooltip="shape.isHidden() ? 'Mapping disabled': 'Mapping enabled'">
-                                    <div class="gf-icon-action"
-                                        ng-class="{'gf-icon-show': !shape.isHidden(), 'gf-icon-hide': shape.isHidden()}">
-                                    </div>
+                                    title="Enable/Disable this mapping"
+                                    class="gf-icon-action"
+                                    ng-class="{'gf-icon-show': !shape.isHidden(), 'gf-icon-hide': shape.isHidden()}">
                                 </div>
-                                <div style="display:inline-block"
+                                <div 
                                     ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)"
-                                    bs-tooltip="!editor.flowchartHandler.isMapping(shape) ? 'Select a shape in diagram' : ''">
-                                    <div class="gf-icon-action"
-                                        ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(shape), 'gf-icon-empty': editor.flowchartHandler.isMapping(shape)}">
-                                    </div>
+                                    title="Select a shape in diagram"
+                                    class="gf-icon-action"
+                                    ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(shape), 'gf-icon-empty': editor.flowchartHandler.isMapping(shape)}">
                                 </div>
-                                <div style="display:inline-block"
+                                <div 
                                     ng-click="rule.cloneShapeMap(shape);editor.onRulesChange();"
-                                    bs-tooltip="'Clone this mapping'">
-                                    <div class="gf-icon-action gf-icon-clone">
-                                    </div>
+                                    title="Duplicate this mapping"
+                                    class="gf-icon-action gf-icon-clone">
                                 </div>
                             </div>
                         </div>
