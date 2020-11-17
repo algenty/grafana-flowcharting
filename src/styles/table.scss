@@ -136,6 +136,7 @@ div.gf-table-cells {
   height: 100%;
   user-select: auto;
   justify-content: start;
+  padding : 1px;
 }
 
 div.gf-table-cells:hover {
@@ -146,6 +147,7 @@ div.gf-table-cells:hover {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   border: 1px solid $table_cell_hover_border;
+  padding : 0px;
   // transition: 0.2s;
   // z-index: 1;
   // width: auto !important;

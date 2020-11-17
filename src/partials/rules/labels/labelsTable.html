@@ -46,7 +46,7 @@
                     <div style="float: right;padding: 6px;width: 6px">
                         <info-popover mode="right-normal">
                             <span
-                                ng-bind-html="$GF.popover('Select condition to apply color and tooltip on text.', 'SHAPES')">
+                                ng-bind-html="$GF.popover('Select condition to metric on text.', 'SHAPES')">
                             </span>
                         </info-popover>
                     </div>
@@ -63,8 +63,25 @@
                     </div>
                     <div style="float: right;padding: 6px;width: 6px">
                         <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover('Whitch part of text to replace', 'TEXTS','example_text_pattern')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.textsTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- WITH -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.textsTable.getWidth('with')}">
+                    <div ng-attr-title="{{editor.textsTable.getDesc('with')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.textsTable.getLabel('with')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
                             <span
-                                ng-bind-html="$GF.popover('Fill to color content, Stroke for outline or arrows, Text for text.', 'SHAPES', 'colormode_ani')">
+                                ng-bind-html="$GF.popover('Enter pattern/regular expression (Only for substring method)', 'TEXTS','example_text_pattern')">
                             </span>
                         </info-popover>
                     </div>
@@ -97,7 +114,7 @@
                             <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
                                 <span>
                                     <i class="fa fa-chevron-right"
-                                        bs-tooltip="text.redude ? 'Expand/Detail' : 'Collapse/Reduce'"
+                                        title="Expand/Collapse for detail"
                                         ng-class="{'fa-chevron-right': text.reduce, 'fa-chevron-down': text.reduce === false}">
                                     </i>
                                 </span>
@@ -139,7 +156,7 @@
                             ng-style="{'width' : editor.textsTable.getWidth('when')}">
                             <!-- {{text.data.TextOn}} -->
                             <div class="gf-table-content" style="text-align: left;" ng-show="text.whenEdit !== true">
-                                {{$GF.GetT4V( editor.TextOn, text.data.TextOn)}}
+                                {{$GF.GetT4V( editor.textOn, text.data.textOn)}}
                             </div>
                             <div ng-show="text.displayWhenEdit === true && text.whenEdit !== true"
                                 ng-click="text.whenEdit = true;"
@@ -148,7 +165,7 @@
                             </div>
                             <select class="gf-form-input" ng-model="text.data.TextOn" style="width:100%;"
                                 ng-blur="editor.onRulesChange();text.whenEdit = false;"
-                                ng-show="text.whenEdit === true" ng-options="c.value as c.text for c in editor.TextOn"
+                                ng-show="text.whenEdit === true" ng-options="c.value as c.text for c in editor.textOn"
                                 ng-change="editor.onRulesChange()">
                             </select>
                         </div>
@@ -157,18 +174,18 @@
                             ng-mouseleave="text.displayHowEdit = false;"
                             ng-mouseover="text.displayHowEdit = true;"
                             ng-style="{'width' : editor.textsTable.getWidth('how')}">
-                            <!-- {{text.data.textPattern}} -->
+                            <!-- {{text.data.style}} -->
                             <div class="gf-table-content" style="text-align: left;" ng-show="text.howEdit !== true">
-                                {{text.data.textPattern}}
+                                {{$GF.GetT4V(editor.textReplace, text.data.textReplace)}}
                             </div>
                             <div ng-show="text.displayHowEdit === true && text.howEdit !== true"
                                 ng-click="text.howEdit = true;"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Edit method">
                             </div>
-                            <select class="gf-form-input" ng-model="text.data.style" style="width:100%;"
+                            <select class="gf-form-input" ng-model="text.data.textReplace" style="width:100%;"
                                 ng-blur="editor.onRulesChange();text.howEdit = false;"
-                                ng-show="text.howEdit === true" ng-options="c.value as c.text for c in editor.style"
+                                ng-show="text.howEdit === true" ng-options="c.value as c.text for c in editor.textReplace"
                                 ng-change="editor.onRulesChange()">
                             </select>
                         </div>
@@ -177,9 +194,9 @@
                             ng-mouseleave="text.displayWithEdit = false;"
                             ng-mouseover="text.displayWithEdit = true;"
                             ng-style="{'width' : editor.textsTable.getWidth('with')}">
-                            <!-- {{text.data.style}} -->
+                            <!-- {{text.data.textPattern}} -->
                             <div class="gf-table-content" style="text-align: left;" ng-show="text.withEdit !== true && text.data.textReplace == 'pattern'">
-                                {{$GF.GetT4V(editor.style, text.data.style)}}
+                                {{text.data.textPattern}}
                             </div>
                             <div ng-show="text.displayWithEdit === true && text.withEdit !== true && text.data.textReplace == 'pattern'"
                                 ng-click="text.withEdit = true;"
@@ -192,7 +209,7 @@
                                 class="gf-form-input"
                                 ng-show="text.withEdit === true"
                                 ng-model="text.data.textPattern" 
-                                ng-blur="editor.onRulesChange()"
+                                ng-blur="editor.onRulesChange();text.withEdit = false;"
                                 placeholder="Text or pattern to replace by value" />
                             <!-- <select class="gf-form-input" ng-model="text.data.style" style="width:100%;"
                                 ng-blur="editor.onRulesChange();text.howEdit = false;"

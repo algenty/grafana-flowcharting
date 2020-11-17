@@ -93,9 +93,10 @@
                 ng-mouseleave="editor.unhighlightCells(rule)">
                 <!-- EXPAND -->
                 <div role="cell" class="gf-table-cells" id="expand"
+                  ng-click="rule.data.reduce=!rule.data.reduce"
                   ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
                   <div class="gf-table-content gf-unselectable" style="text-align: center;cursor: pointer;">
-                    <span class="rule-extend" ng-click="rule.data.reduce=!rule.data.reduce">
+                    <span class="rule-extend">
                       <i class="fa fa-chevron-right"
                         ng-class="{'fa-chevron-right': rule.data.reduce, 'fa-chevron-down': rule.data.reduce === false}">
                       </i>

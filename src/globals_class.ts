@@ -980,6 +980,29 @@ export class $GF {
     return 'No text ';
   }
 
+
+  /**
+   * Set focus to id dom
+   *
+   * @param {string} id
+   * @returns
+   * @memberof $GF
+   */
+  setFocus(id: string) {
+    try {
+      const elt = document.getElementById(id);
+      if (elt) {
+        setTimeout(() => {
+          elt.focus();
+        }, 100);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  }
+
   static getIntervalCounter(begin: number, end: number, count: number, method: gf.TCounterKeys = 'linear'): number[] {
     let result: number[] = [];
     const distance = end - begin;

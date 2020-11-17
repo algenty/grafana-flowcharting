@@ -1,0 +1,218 @@
+<div role=" table" class="gf-table-main" id="LinksTable" style="overflow: visible;">
+    <div class="gf-custom-scrollbar"
+        style="position: relative; overflow: visible; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
+        <div class="gf-view"
+            style="position: relative; overflow: visible; margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
+            <!-- THEAD -->
+            <div class="gf-table-thead gf-unselectable" role="row" ng-mouseup="editor.linksTable.onMouseUp($event)"
+                ng-mousemove="editor.linksTable.onMouseMove($event)"
+                ng-mouseleave="editor.linksTable.onMouseUp($event)">
+                <!-- HEADERS -->
+                <!-- EXPAND -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.linksTable.getWidth('expand')}">
+                    <div ng-attr-title="{{editor.linksTable.getDesc('expand')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.linksTable.getLabel('expand')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.linksTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- WHAT -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.linksTable.getWidth('what')}">
+                    <div ng-attr-title="{{editor.linksTable.getDesc('what')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.linksTable.getLabel('what')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover('Enter shape Id or click on target button', 'LINKS')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.linksTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- WHEN -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.linksTable.getWidth('when')}">
+                    <div ng-attr-title="{{editor.linksTable.getDesc('when')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.linksTable.getLabel('when')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover('Select condition to apply link on object.', 'SHAPES')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize"
+                        ng-mousedown="editor.linksTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- URL -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.linksTable.getWidth('url')}">
+                    <div ng-attr-title="{{editor.linksTable.getDesc('url')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.linksTable.getLabel('url')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover('Enter absolute or relative URL', 'MAPPING#Link')"> </span>
+                        </info-popover></label>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.linksTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- OPTION -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.linksTable.getWidth('options')}">
+                    <div ng-attr-title="{{editor.linksTable.getDesc('options')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.linksTable.getLabel('options')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.linksTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- ACTION -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.linksTable.getWidth('actions')}">
+                    <div ng-attr-title="{{editor.linksTable.getDesc('actions')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.linksTable.getLabel('actions')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.linksTable.onMouseDown($event)">
+                    </div>
+                </div>
+            </div>
+            <!-- TBODY -->
+            <div class="gf-table-body">
+                <div role="row" class="gf-table-rows" ng-repeat="link in rule.getLinkMaps()">
+                    <!-- CELLS -->
+                    <div class="gf-table-row_line"
+                        ng-mouseleave="editor.unselectCell(rule.data.linkProp,link.data.pattern)"
+                        ng-mouseover="editor.selectCell(rule.data.linkProp,link.data.pattern)">
+                        <!-- EXPAND -->
+                        <div role="cell" class="gf-table-cells" id="expand" ng-click="link.reduce=!link.reduce"
+                            ng-style="{'width' : editor.linksTable.getWidth('expand')}">
+                            <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
+                                <span>
+                                    <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
+                                        ng-class="{'fa-chevron-right': link.reduce, 'fa-chevron-down': link.reduce === false}">
+                                    </i>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- WHAT -->
+                        <div role="cell" class="gf-table-cells" id="what" ng-mouseleave="link.displayWhatEdit = false;"
+                            ng-mouseover="link.displayWhatEdit = true;"
+                            ng-style="{'width' : editor.linksTable.getWidth('what')}">
+                            <div class="gf-table-content" ng-show="link.whatEdit !== true"
+                                ng-dblclick="link.whatEdit = true;">
+                                {{link.data.pattern}}
+                            </div>
+                            <div ng-show="link.displayWhatEdit === true && link.whatEdit !== true"
+                                ng-click="link.whatEdit = true;" title="Edit pattern"
+                                class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
+                            </div>
+                            <div ng-show="link.displayWhatEdit === true && link.whatEdit !== true && !editor.flowchartHandler.isMapping(link)"
+                                ng-click="editor.flowchartHandler.setMap(link,rule.data.linkProp)"
+                                class="gf-icon-action gf-icon-target gf-icon-withcontent"
+                                title="Select a text in diagram">
+                            </div>
+                            <input type="text" style="margin-right: 2px;width : 100%" ng-attr-id="link.getId()"
+                                ng-show="link.whatEdit === true" class="gf-form-input" ng-model="link.data.pattern"
+                                ng-model-onblur ng-blur="editor.onRulesChange();link.whatEdit = false;"
+                                bs-typeahead="rule.data.linkProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
+                                data-min-length="0" data-items="100" data-placement="right" />
+                            <!-- ng-keyup="$event.keyCode === 13 ? editor.onRulesChange() : link.whatEdit = true;$event.keyCode === 13 ?  link.whatEdit = false : link.whatEdit = true" -->
+                            <!-- ng-model-onblur -->
+                            <!-- placeholder="{{(rule.data.linkProp === 'value' ? "Id" : "Label") + " or regex of text"}}" -->
+                            <!-- bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of text (see inspect tab)'" -->
+                            <!-- bs-typeahead="rule.data.linkProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue" -->
+                            <!-- ng-keydown="$event.keyCode === 13 && link.whatEdit = false" -->
+                        </div>
+                        <!-- WHEN -->
+                        <div role="cell" class="gf-table-cells" id="when" ng-mouseleave="link.displayWhenEdit = false;"
+                            ng-mouseover="link.displayWhenEdit = true;"
+                            ng-style="{'width' : editor.linksTable.getWidth('when')}">
+                            <!-- {{link.data.LinkOn}} -->
+                            <div class="gf-table-content" style="text-align: left;" ng-show="link.whenEdit !== true">
+                                {{$GF.GetT4V( editor.linkOn, link.data.linkOn)}}
+                            </div>
+                            <div ng-show="link.displayWhenEdit === true && link.whenEdit !== true"
+                                ng-click="link.whenEdit = true;" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                                title="Edit condition">
+                            </div>
+                            <select class="gf-form-input" ng-model="link.data.LinkOn" style="width:100%;"
+                                ng-blur="editor.onRulesChange();link.whenEdit = false;" ng-show="link.whenEdit === true"
+                                ng-options="c.value as c.text for c in editor.linkOn"
+                                ng-change="editor.onRulesChange()">
+                            </select>
+                        </div>
+                        <!-- URL -->
+                        <div role="cell" class="gf-table-cells" id="with" ng-mouseleave="link.displayUrlEdit = false;"
+                            ng-mouseover="link.displayUrlEdit = true;"
+                            ng-style="{'width' : editor.linksTable.getWidth('with')}">
+                            <!-- {{link.data.linkUrl}} -->
+                            <div class="gf-table-content" style="text-align: left;"
+                                ng-show="link.urlEdit !== true && link.data.textReplace == 'pattern'">
+                                {{link.data.linkUrl}}
+                            </div>
+                            <div ng-show="link.displayUrlEdit === true && link.urlEdit !== true"
+                                ng-click="link.urlEdit = true;" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                                title="Text or pattern to replace by value">
+                            </div>
+                            <input style="margin-right: 2px;width : 100%"
+                                type="text" class="gf-form-input" ng-show="link.urlEdit === true"
+                                ng-model="link.data.linkUrl" ng-blur="editor.onRulesChange();link.urlEdit = false;"
+                                placeholder="Text or pattern to replace by value" />
+                        </div>
+                        <!-- OPTIONS -->
+                        <div role="cell" class="gf-table-cells" id="options"
+                            ng-style="{'width' : editor.linksTable.getWidth('options')}">
+                            <div class="gf-table-content gf-unselectable"
+                                style="text-align: center;justify-content: center;">
+                                <div ng-click="link.data.linkParams = !link.data.linkParams;editor.onRulesChange()"
+                                    title="Add/Remove the dashboad parameters with url" class="gf-icon-action"
+                                    ng-class="{'gf-icon-address-on': link.data.linkParams, 'gf-icon-address-off': !link.data.linkParams}">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ACTION -->
+                        <div role="cell" class="gf-table-cells" id="actions"
+                            ng-style="{'width' : editor.linksTable.getWidth('actions')}">
+                            <div class="gf-table-content gf-unselectable"
+                                style="text-align: left;justify-content: center;">
+                                <div ng-click="editor.removeLinkMap(rule,$index);editor.onRulesChange()"
+                                    title="Delete this mapping object" class="gf-icon-action gf-icon-remove">
+                                </div>
+                                <div ng-click="link.isHidden() ? link.show(): link.hide();editor.onRulesChange()"
+                                    title="Enable/Disable this mapping" class="gf-icon-action"
+                                    ng-class="{'gf-icon-show': !link.isHidden(), 'gf-icon-hide': link.isHidden()}">
+                                </div>
+                                <div ng-click="editor.flowchartHandler.setMap(link,rule.data.linkProp)"
+                                    title="Select a shape in diagram" class="gf-icon-action"
+                                    ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(link), 'gf-icon-empty': editor.flowchartHandler.isMapping(link)}">
+                                </div>
+                                <div ng-click="rule.cloneLinkMap(link);editor.onRulesChange();"
+                                    title="Duplicate this mapping" class="gf-icon-action gf-icon-clone">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gf-table-row_body" ng-show="link.reduce==false">
+                        <!-- <ng-include src="$GF.plugin.getPartialPath() + 'rules/links/linkBody.html'"> </ng-include> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

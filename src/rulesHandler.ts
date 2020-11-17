@@ -184,7 +184,6 @@ export class RulesHandler {
     this.activeRuleIndex = index;
     this.setOrder();
     const elt = document.getElementById(newRule.getId());
-    //TODO: verify ScrollTo
     if (elt) {
       setTimeout(() => {
         elt.focus();

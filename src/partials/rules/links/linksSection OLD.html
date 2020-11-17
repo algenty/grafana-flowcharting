@@ -1,0 +1,139 @@
+<!-- 
+  Link Mapping
+-->
+
+<div class="section gf-form-group">
+  <h5 class="section-heading">Link Mappings</h5>
+  <div class="gf-form">
+    <span class="gf-form-label width-11">Identify by
+      <info-popover mode="right-normal">
+        <span ng-bind-html="$GF.popover('Select the type of data in field \'What\' ID (uniq) or LABEL', 'LINKS')">
+        </span>
+      </info-popover>
+    </span>
+    <!-- ID INPUT -->
+    <div class="gf-form-select-wrapper">
+      <select class="gf-form-input width-10" ng-model="rule.data.linkProp"
+        ng-options="c.value as c.text for c in editor.propTypes" ng-change="editor.onRulesChange()"></select>
+    </div>
+  </div>
+  <div class="gf-form">
+    <!-- ID Regular expression -->
+    <gf-form-switch class="gf-form" label="Regular expression" label-class="width-11" checked="rule.data.linkRegEx"
+      on-change="editor.onRulesChange()"
+      tooltip="Disable this option if you don't use regular expressions in field 'What' below to improve performance">
+    </gf-form-switch>
+  </div>
+  <!-- TABLE -->
+  <table>
+    <thead>
+      <tr>
+        <th>
+          <label class="gf-form-label width-7" style="margin-right: 2px;">Buttons</label>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">What
+            <info-popover mode="right-normal">
+              <span ng-bind-html="$GF.popover('Enter shape Id or click on link button', 'LINKS')">
+              </span>
+            </info-popover>
+          </label>
+        </th>
+        <th>
+          <label class="gf-form-label width-8" style="margin-right: 2px;">When
+            <info-popover mode="right-normal">
+              <span ng-bind-html="$GF.popover('Select condition to dislay value or text on shape.', 'LINKS')">
+              </span>
+            </info-popover>
+          </label>
+        </th>
+        <th>
+          <label class="gf-form-label width-10" style="margin-right: 2px;">Url
+            <info-popover mode="right-normal">
+              <span ng-bind-html="$GF.popover('Enter absolute or relative URL', 'MAPPING#Link')"> </span>
+            </info-popover></label>
+          </label>
+        </th>
+        <th>
+          <label class="gf-form-label width-7" style="margin-right: 2px;">Params
+            <info-popover mode="right-normal">
+              <span ng-bind-html="$GF.popover('Apply actual parameters to URL', 'LINKS')">
+              </span>
+            </info-popover>
+          </label>
+        </th>
+      </tr>
+    </thead>
+    <tbody ng-mouseleave="editor.unhighlightAllCells()">
+      <tr ng-repeat="link in rule.getLinkMaps()" ng-class="{'gf-form-disabled': link.data.hidden}"
+        ng-mouseleave="editor.unselectCell(rule.data.linkProp,link.data.pattern)"
+        ng-mouseover="editor.selectCell(rule.data.linkProp,link.data.pattern)">
+        <td>
+          <div class="gf-form">
+            <label class="gf-form-label" style="margin-right: 4px;">
+              <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete this mapping object'"
+                ng-click="editor.removeLinkMap(rule,$index);editor.onRulesChange()"></i>
+            </label>
+            <label class="gf-form-label" ng-if="!link.isHidden()" style="margin-right: 4px;">
+              <i class="fa fa-w fa-eye pointer" bs-tooltip="'Hide selected object graph in rule'"
+                ng-click="link.hide();editor.onRulesChange()"></i>
+            </label>
+            <label class="gf-form-label" ng-if="link.isHidden()" style="margin-right: 4px;">
+              <i class="fa fa-w fa-eye-slash pointer" bs-tooltip="'show selected object graph in rule'"
+                ng-click="link.show();editor.onRulesChange()"></i>
+            </label>
+            <label class="gf-form-label" style="margin-right: 4px;" ng-hide="editor.flowchartHandler.isMapping(link)">
+              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(link, rule.data.linkProp)"
+                bs-tooltip="'Link it on object graph'"></i>
+            </label>
+            <label class="gf-form-label" style="margin-right: 4px;color:orange"
+              ng-show="editor.flowchartHandler.isMapping(link)">
+              <i class="fa fa-unlink pointer" bs-tooltip="'Cancel link object graph selection'"
+                ng-click="editor.flowchartHandler.unsetMap()"></i>
+            </label>
+          </div>
+        </td>
+        <td>
+          <div class="gf-form">
+            <input type="link" id="{{ link.getId() }}" style="margin-right: 2px;"
+              placeholder="id or regex of shape/link name" class="gf-form-input width-8"
+              ng-if="rule.data.linkProp === 'id'" ng-model="link.data.pattern"
+              bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/link (see inspect tab)'"
+              bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" ng-model-onblur
+              data-min-length="0" data-items="100" data-placement="right" />
+            <input type="link" id="{{ link.getId() }}" style="margin-right: 2px;"
+              placeholder="id or regex of shape/link name" class="gf-form-input width-8"
+              ng-if="rule.data.linkProp === 'value'" ng-model="link.data.pattern"
+              bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/link (see inspect tab)'"
+              bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" ng-model-onblur
+              data-min-length="0" data-items="100" data-placement="right" />
+          </div>
+        </td>
+        <td>
+          <select class="gf-form-input width-8" ng-model="link.data.linkOn"
+            ng-options="c.value as c.text for c in editor.linkOn" ng-change="editor.onRulesChange()"></select>
+        </td>
+        <td>
+          <input type="text" style="margin-right: 2px;" class="gf-form-input width-10" bs-tooltip="'Enter the URL link'"
+            ng-model="link.data.linkUrl" ng-blur="editor.onRulesChange()" data-placement="right" />
+        </td>
+        <td>
+          <gf-form-switch class="gf-form width-7" style="width: 66px;" checked="link.data.linkParams">
+          </gf-form-switch>
+        </td>
+
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>
+          <div class="gf-form">
+            <label class="gf-form-label">
+              <i class="fa fa-plus pointer" ng-click="rule.addLinkMap('')" style="margin-right: 2px;"></i>
+            </label>
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

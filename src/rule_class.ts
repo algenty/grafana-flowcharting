@@ -666,6 +666,13 @@ export class Rule {
     return m;
   }
 
+  /**
+   * Duplicate and add shapeMap
+   *
+   * @param {ShapeMap} initial
+   * @returns {ShapeMap}
+   * @memberof Rule
+   */
   cloneShapeMap(initial: ShapeMap): ShapeMap {
     return this.addShapeMap(initial.data.pattern).import(initial);
   }
@@ -730,6 +737,17 @@ export class Rule {
     this.textMaps.push(m);
     this.data.textData.push(data);
     return m;
+  }
+
+  /**
+   * Duplicate and add textMap
+   *
+   * @param {ShapeMap} initial
+   * @returns {ShapeMap}
+   * @memberof Rule
+   */
+  cloneTextMap(initial: TextMap): TextMap {
+    return this.addTextMap(initial.data.pattern).import(initial);
   }
 
   removeTextMap(index: number) {

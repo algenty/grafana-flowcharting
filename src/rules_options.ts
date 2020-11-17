@@ -28,8 +28,12 @@ export class RulesOptionsCtrl {
   textPattern = '/.*/';
   rulesTableData: gf.TTableData;
   shapesTableData: gf.TTableData;
+  textsTableData: gf.TTableData;
+  linksTableData: gf.TTableData;
   rulesTable: GFTable;
   shapesTable: GFTable;
+  textsTable: GFTable;
+  linksTable: GFTable;
   metricTypes = $GF.CONSTANTS.VALUE_TYPES;
   dateFormats: gf.TSelectString[] = $GF.CONSTANTS.VALUE_DATEFORMAT_TYPES;
   aggregationTypes = $GF.CONSTANTS.AGGREGATION_TYPES;
@@ -170,16 +174,127 @@ export class RulesOptionsCtrl {
           select: false,
         },
         {
-          index: 3,
-          id: 'rval',
-          label: 'R. val.',
-          desc: 'Raw value',
+          index: n++,
+          id: 'actions',
+          label: 'Actions',
+          desc: 'Actions',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+      ],
+    };
+    n = 0;
+    this.textsTableData = {
+      data: [],
+      columns: [
+        {
+          index: n++,
+          id: 'expand',
+          label: '',
+          desc: 'Expand/collapse',
+          size: '30px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'what',
+          label: 'What',
+          desc: 'What is the shape/label to apply this rule',
           size: '100px',
           sort: 'asc',
           select: false,
         },
         {
-          index: 6,
+          index: n++,
+          id: 'when',
+          label: 'When',
+          desc: 'When to apply this rule on shape',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'how',
+          label: 'How',
+          desc: 'How to apply this rule on shape',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'with',
+          label: 'With',
+          desc: 'Text to replace',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'actions',
+          label: 'Actions',
+          desc: 'Actions',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+      ],
+    };
+    n = 0;
+    this.linksTableData = {
+      data: [],
+      columns: [
+        {
+          index: n++,
+          id: 'expand',
+          label: '',
+          desc: 'Expand/collapse',
+          size: '30px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'what',
+          label: 'What',
+          desc: 'What is the shape/label to apply this rule',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'when',
+          label: 'When',
+          desc: 'When to apply this rule on shape',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'url',
+          label: 'URL',
+          desc: 'URL relative or absolute',
+          size: '150px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'options',
+          label: 'Options',
+          desc: 'Options',
+          size: '45px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
           id: 'actions',
           label: 'Actions',
           desc: 'Actions',
@@ -197,6 +312,14 @@ export class RulesOptionsCtrl {
     const $shapesTable = $div.find('#ShapesTable');
     const shapesTable = $shapesTable[0];
     this.shapesTable = new GFTable(this.shapesTableData, shapesTable);
+
+    const $textsTable = $div.find('#TextsTable');
+    const textsTable = $textsTable[0];
+    this.textsTable = new GFTable(this.textsTableData, textsTable);
+
+    const $linksTable = $div.find('#LinksTable');
+    const linksTable = $linksTable[0];
+    this.linksTable = new GFTable(this.linksTableData, linksTable);
 
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');

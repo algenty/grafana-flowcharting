@@ -1,1 +1,56 @@
-Body
+<div class="gf-form">
+    <label class="gf-form-label width-10">
+        What
+        <info-popover mode="right-normal">
+            <span ng-bind-html="$GF.popover('Enter shape Id or click on target button', 'TEXTS')">
+            </span>
+        </info-popover>
+    </label>
+    <input type="text" style="margin-right: 2px;" id="{{ text.getId() }}" placeholder="id or regex of shape"
+        class="gf-form-input width-8" ng-model="text.data.pattern" ng-if="rule.data.textProp === 'id'"
+        bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+        bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+        ng-model-onblur data-placement="right" />
+    <input type="text" style="margin-right: 2px;" id="{{ text.getId() }}" placeholder="id or regex of shape"
+        class="gf-form-input width-8" ng-model="text.data.pattern" ng-if="rule.data.textProp === 'value'"
+        bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+        bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+        ng-model-onblur data-placement="right" />
+</div>
+<div class="gf-form">
+    <label class="gf-form-label width-10">When
+        <info-popover mode="right-normal">
+            <span ng-bind-html="$GF.popover('Select condition to display metric value on shape or text.', 'TEXTS')">
+            </span>
+        </info-popover>
+    </label>
+    <select class="gf-form-input width-8" ng-model="text.data.textOn"
+        ng-options="c.value as c.text for c in editor.textOn" ng-change="editor.onRulesChange()">
+    </select>
+</div>
+<div class="gf-form">
+    <label class="gf-form-label width-10" style="margin-right: 2px;">How
+        <info-popover mode="right-normal">
+            <span ng-bind-html="$GF.popover('Whitch part of text to replace', 'TEXTS','example_text_pattern')">
+            </span>
+        </info-popover>
+    </label>
+    <select class="gf-form-input width-8" style="margin-right: 2px;" ng-model="text.data.textReplace"
+        ng-options="c.value as c.text for c in editor.textReplace" ng-change="editor.onRulesChange()">
+    </select>
+</div>
+<div class="gf-form" ng-if="text.data.textReplace == 'pattern' && text.data.textOn != 'n'">
+    <label class="gf-form-label width-10" style="margin-right: 2px;">With
+        <info-popover mode="right-normal">
+            <span
+                ng-bind-html="$GF.popover('Enter pattern/regular expression (Only for substring method)', 'TEXTS','example_text_pattern')">
+            </span>
+        </info-popover>
+    </label>
+    <input  
+        type="text"
+        class="gf-form-input width-8" 
+        ng-model="text.data.textPattern" 
+        ng-blur="editor.onRulesChange()"
+        placeholder="Text or pattern to replace by metric value" />
+</div>
