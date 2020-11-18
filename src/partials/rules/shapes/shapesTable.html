@@ -123,10 +123,12 @@
                             </div>
                             <input type="text" 
                                 ng-show="shape.whatEdit === true"
-                                class="gf-form-input" ng-model="shape.data.pattern"
+                                class="gf-form-input" 
+                                ng-model="shape.data.pattern"
                                 style="margin-right: 2px;width : 100%" 
                                 ng-attr-id="{{shape.getId() + '-what'}}"
-                                ng-model-onblur ng-blur="editor.onRulesChange();shape.whatEdit = false;"
+                                ng-model-onblur 
+                                ng-blur="editor.onRulesChange();shape.whatEdit = false;"
                                 bs-typeahead="rule.data.shapeProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
                                 data-min-length="0" data-items="100" data-placement="right" />
                                 <!-- ng-keyup="$event.keyCode === 13 ? editor.onRulesChange() : shape.whatEdit = true;$event.keyCode === 13 ?  shape.whatEdit = false : shape.whatEdit = true" -->

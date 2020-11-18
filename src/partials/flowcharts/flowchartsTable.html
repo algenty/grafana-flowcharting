@@ -146,12 +146,19 @@
                         <!-- BACKGROUND -->
                         <div role="cell" class="gf-table-cells" id="background"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('background')}">
-                            <div class="gf-table-content" style="text-align: center;">
-                                <!-- {{flowchart.data.bgColor}} -->
-                                <span style="color : {{flowchart.data.bgColor}};" bs-tooltip="flowchart.data.bgColor"
+                            <div class="gf-table-content" style="text-align: center;" title="Select background color">
+                                <!-- <div class="gf-icon" style="width : 12px; height: 12px;"
+                                    ng-if="flowchart.data.bgColor === null || flowchart.data.bgColor === undefined || flowchart.data.bgColor.length === 0">
+                                    <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 100 0C 45 0 0 45 0 100C 0 100 0 900 0 900C 0 955 45 1000 100 1000C 100 1000 900 1000 900 1000C 955 1000 1000 955 1000 900C 1000 900 1000 100 1000 100C 1000 45 955 0 900 0C 900 0 100 0 100 0C 100 0 100 0 100 0M 128 75C 128 75 900 75 900 75C 914 75 925 86 925 100C 925 100 925 872 925 872C 925 872 128 75 128 75C 128 75 128 75 128 75M 75 128C 75 128 872 925 872 925C 872 925 100 925 100 925C 86 925 75 914 75 900C 75 900 75 128 75 128C 75 128 75 128 75 128M 0,0" transform="translate(1000,0) scale(-1,1)"/></svg>
+                                </div> -->
+                                <!-- <div class="gf-icon" style="width : 12px; height: 12px;"
+                                    ng-style="{ 'color': flowchart.data.bgColor }"
                                     ng-if="flowchart.data.bgColor !== null && flowchart.data.bgColor.length > 0">
-                                    <i class="fa fa-w fa-square"></i>
-                                </span>
+                                    <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 100 0C 45 0 0 45 0 100C 0 100 0 900 0 900C 0 955 45 1000 100 1000C 100 1000 900 1000 900 1000C 955 1000 1000 955 1000 900C 1000 900 1000 100 1000 100C 1000 45 955 0 900 0C 900 0 100 0 100 0C 100 0 100 0 100 0M 0,0"/></svg>
+                                </div> -->
+                                <div class="gf-icon" style="width : 15px; height: 15px;">
+                                    <color-picker color="flowchart.data.bgColor" onChange="editor.onColorChange($index)"></color-picker>
+                                </div>
                             </div>
                         </div>
                         <!-- OPTIONS -->

@@ -310,6 +310,66 @@ export class RulesOptionsCtrl {
         },
       ],
     };
+        n = 0;
+    this.linksTableData = {
+      data: [],
+      columns: [
+        {
+          index: n++,
+          id: 'expand',
+          label: '',
+          desc: 'Expand/collapse',
+          size: '30px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'what',
+          label: 'What',
+          desc: 'What is the shape/label to apply this rule',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'when',
+          label: 'When',
+          desc: 'When to apply this rule on shape',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'url',
+          label: 'URL',
+          desc: 'URL relative or absolute',
+          size: '150px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'options',
+          label: 'Options',
+          desc: 'Options',
+          size: '45px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'actions',
+          label: 'Actions',
+          desc: 'Actions',
+          size: '100px',
+          sort: 'asc',
+          select: false,
+        },
+      ],
+    };
 
     const $rulesTable = $div.find('#RulesTable');
     const rulesTable = $rulesTable[0];

@@ -21,6 +21,7 @@ export class FlowchartsOptionsCtrl {
   currentFlowchartName = 'Main';
   flowchartsTableData: gf.TTableData;
   flowchartsTable: GFTable;
+  // onColorChange : () => any;
 
   /** @ngInject */
   constructor($scope: gf.TIFlowchartOptionsScope) {
@@ -32,6 +33,13 @@ export class FlowchartsOptionsCtrl {
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.currentFlowchart = this.flowchartHandler.getFlowchart();
     let index = 0;
+
+    // this.onColorChange = () => {
+    //   const name = this.flowchartHandler.getCurrentFlowchartName();
+    //   this.flowchartHandler.onOptionsChange(name);
+    //   this.render();
+    // }
+
     this.flowchartsTableData = {
       data: [],
       columns: [
@@ -157,6 +165,14 @@ export class FlowchartsOptionsCtrl {
     const name = this.flowchartHandler.getCurrentFlowchartName();
     this.flowchartHandler.onSourceChange(name);
     this.render();
+  }
+
+  onColorChange(index : number) {
+    return (newColor: any) => {
+      const fc = this.flowchartHandler.getFlowcharts()[index];
+      fc.data.bgColor = newColor;
+      this.onOptionChange();
+    };
   }
 
   /**

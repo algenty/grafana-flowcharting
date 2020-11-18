@@ -129,9 +129,11 @@
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a text in diagram">
                             </div>
-                            <input type="text" style="margin-right: 2px;width : 100%" ng-attr-id="{{link.getId() + '-what'}}"
+                            <input type="text" style="margin-right: 2px;width : 100%" 
+                                ng-attr-id="{{link.getId() + '-what'}}"
                                 ng-show="link.whatEdit === true"
                                 class="gf-form-input" ng-model="link.data.pattern"
+                                ng-change="editor.onRulesChange()"
                                 ng-model-onblur ng-blur="editor.onRulesChange();link.whatEdit = false;"
                                 bs-typeahead="rule.data.linkProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
                                 data-min-length="0" data-items="100" data-placement="right" />
@@ -147,7 +149,10 @@
                             ng-mouseover="link.displayWhenEdit = true;"
                             ng-style="{'width' : editor.linksTable.getWidth('when')}">
                             <!-- {{link.data.LinkOn}} -->
-                            <div class="gf-table-content" style="text-align: left;" ng-show="link.whenEdit !== true">
+                            <div class="gf-table-content" 
+                                style="text-align: left;"
+                                ng-dblclick="link.whenEdit = true;$GF.setFocus( link.getId() + '-when' )" 
+                                ng-show="link.whenEdit !== true">
                                 {{$GF.GetT4V( editor.linkOn, link.data.linkOn)}}
                             </div>
                             <div ng-show="link.displayWhenEdit === true && link.whenEdit !== true"
@@ -170,16 +175,19 @@
                             ng-style="{'width' : editor.linksTable.getWidth('url')}">
                             <!-- {{link.data.linkUrl}} -->
                             <div class="gf-table-content" style="text-align: left;"
+                                ng-dblclick="link.urlEdit = true;$GF.setFocus( link.getId() + '-url' )"
                                 ng-show="link.urlEdit !== true">
                                 {{link.data.linkUrl}}
                             </div>
                             <div ng-show="link.displayUrlEdit === true && link.urlEdit !== true"
-                                ng-click="link.urlEdit = true;" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                                ng-click="link.urlEdit = true;$GF.setFocus( link.getId() + '-url' )" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Text or pattern to replace by value">
                             </div>
                             <input style="margin-right: 2px;width : 100%"
+                                ng-attr-id="{{link.getId() + '-url'}}"
                                 type="text" class="gf-form-input" 
                                 ng-show="link.urlEdit === true"
+                                ng-change="editor.onRulesChange()"
                                 ng-model="link.data.linkUrl" ng-blur="editor.onRulesChange();link.urlEdit = false;"
                                 placeholder="Text or pattern to replace by value" />
                         </div>
