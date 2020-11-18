@@ -111,7 +111,9 @@
                             </div>
                         </div>
                         <!-- WHAT -->
-                        <div role="cell" class="gf-table-cells" id="what" ng-mouseleave="link.displayWhatEdit = false;"
+                        <div role="cell" class="gf-table-cells"
+                            ng-init="link.displayWhatEdit = false;link.whatEdit = false;" 
+                            ng-mouseleave="link.displayWhatEdit = false;"
                             ng-mouseover="link.displayWhatEdit = true;"
                             ng-style="{'width' : editor.linksTable.getWidth('what')}">
                             <div class="gf-table-content" ng-show="link.whatEdit !== true"
@@ -119,7 +121,7 @@
                                 {{link.data.pattern}}
                             </div>
                             <div ng-show="link.displayWhatEdit === true && link.whatEdit !== true"
-                                ng-click="link.whatEdit = true" title="Edit pattern"
+                                ng-click="link.whatEdit = true;$GF.setFocus( link.getId() + '-what' )" title="Edit pattern"
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
                             <div ng-show="link.displayWhatEdit === true && link.whatEdit !== true && !editor.flowchartHandler.isMapping(link)"
@@ -127,21 +129,22 @@
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a text in diagram">
                             </div>
-                            <input type="text" style="margin-right: 2px;width : 100%" ng-attr-id="link.getId()"
-                                ng-focus="link.whatEdit"
-                                ng-show="link.whatEdit === true" class="gf-form-input" ng-model="link.data.pattern"
-                                ng-model-onblur ng-blur="editor.onRulesChange();link.whatEdit = false;"
-                                bs-typeahead="rule.data.linkProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
-                                data-min-length="0" data-items="100" data-placement="right" />
-                            <!-- ng-keyup="$event.keyCode === 13 ? editor.onRulesChange() : link.whatEdit = true;$event.keyCode === 13 ?  link.whatEdit = false : link.whatEdit = true" -->
-                            <!-- ng-model-onblur -->
-                            <!-- placeholder="{{(rule.data.linkProp === 'value' ? "Id" : "Label") + " or regex of text"}}" -->
-                            <!-- bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of text (see inspect tab)'" -->
-                            <!-- bs-typeahead="rule.data.linkProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue" -->
-                            <!-- ng-keydown="$event.keyCode === 13 && link.whatEdit = false" -->
+                            <div ng-show="link.whatEdit === true">
+                                <input type="text" style="margin-right: 2px;width : 100%" ng-attr-id="{{link.getId() + '-what'}}"
+                                    class="gf-form-input" ng-model="link.data.pattern"
+                                    ng-model-onblur ng-blur="editor.onRulesChange();link.whatEdit = false;"
+                                    bs-typeahead="rule.data.linkProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
+                                    data-min-length="0" data-items="100" data-placement="right" />
+                                <!-- ng-keyup="$event.keyCode === 13 ? editor.onRulesChange() : link.whatEdit = true;$event.keyCode === 13 ?  link.whatEdit = false : link.whatEdit = true" -->
+                                <!-- ng-model-onblur -->
+                                <!-- placeholder="{{(rule.data.linkProp === 'value' ? "Id" : "Label") + " or regex of text"}}" -->
+                                <!-- bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of text (see inspect tab)'" -->
+                                <!-- bs-typeahead="rule.data.linkProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue" -->
+                                <!-- ng-keydown="$event.keyCode === 13 && link.whatEdit = false" -->
+                            </div>
                         </div>
                         <!-- WHEN -->
-                        <div role="cell" class="gf-table-cells" id="when" ng-mouseleave="link.displayWhenEdit = false;"
+                        <div role="cell" class="gf-table-cells" ng-mouseleave="link.displayWhenEdit = false;"
                             ng-mouseover="link.displayWhenEdit = true;"
                             ng-style="{'width' : editor.linksTable.getWidth('when')}">
                             <!-- {{link.data.LinkOn}} -->
@@ -149,20 +152,25 @@
                                 {{$GF.GetT4V( editor.linkOn, link.data.linkOn)}}
                             </div>
                             <div ng-show="link.displayWhenEdit === true && link.whenEdit !== true"
-                                ng-click="link.whenEdit = true;" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                                ng-click="link.whenEdit = true;$GF.setFocus( link.getId() + '-when' )" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Edit condition">
                             </div>
-                            <select class="gf-form-input" ng-model="link.data.LinkOn" style="width:100%;"
-                                ng-blur="editor.onRulesChange();link.whenEdit = false;" ng-show="link.whenEdit === true"
-                                ng-options="c.value as c.text for c in editor.linkOn"
-                                ng-change="editor.onRulesChange()">
-                            </select>
+                            <div ng-show="link.whenEdit === true">
+                                <select class="gf-form-input" ng-model="link.data.LinkOn" style="width:100%;"
+                                    ng-attr-id="{{link.getId() + '-when'}}"
+                                    ng-blur="editor.onRulesChange();link.whenEdit = false;"
+                                    ng-options="c.value as c.text for c in editor.linkOn"
+                                    ng-change="editor.onRulesChange()">
+                                </select>
+                            </div>
                         </div>
                         <!-- URL -->
-                        <div role="cell" class="gf-table-cells" id="with" ng-mouseleave="link.displayUrlEdit = false;"
+                        <div role="cell" class="gf-table-cells"
+                            ng-init="link.displayUrlEdit = false;link.urlEdit = false;" 
+                            ng-mouseleave="link.displayUrlEdit = false;"
                             ng-mouseover="link.displayUrlEdit = true;"
-                            ng-style="{'width' : editor.linksTable.getWidth('with')}">
-                            <!-- {{link.data.linkUrl}} -->
+                            ng-style="{'width' : editor.linksTable.getWidth('url')}">
+                            <!-- {{link.data.url}} -->
                             <div class="gf-table-content" style="text-align: left;"
                                 ng-show="link.urlEdit !== true && link.data.textReplace == 'pattern'">
                                 {{link.data.linkUrl}}
@@ -171,13 +179,15 @@
                                 ng-click="link.urlEdit = true;" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Text or pattern to replace by value">
                             </div>
-                            <input style="margin-right: 2px;width : 100%"
-                                type="text" class="gf-form-input" ng-show="link.urlEdit === true"
-                                ng-model="link.data.linkUrl" ng-blur="editor.onRulesChange();link.urlEdit = false;"
-                                placeholder="Text or pattern to replace by value" />
+                            <div ng-show="link.urlEdit === true">
+                                <input style="margin-right: 2px;width : 100%"
+                                    type="text" class="gf-form-input" ng-show="link.urlEdit === true"
+                                    ng-model="link.data.linkUrl" ng-blur="editor.onRulesChange();link.urlEdit = false;"
+                                    placeholder="Text or pattern to replace by value" />
+                            </div>
                         </div>
                         <!-- OPTIONS -->
-                        <div role="cell" class="gf-table-cells" id="options"
+                        <div role="cell" class="gf-table-cells"
                             ng-style="{'width' : editor.linksTable.getWidth('options')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: center;justify-content: center;">
@@ -188,7 +198,7 @@
                             </div>
                         </div>
                         <!-- ACTION -->
-                        <div role="cell" class="gf-table-cells" id="actions"
+                        <div role="cell" class="gf-table-cells"
                             ng-style="{'width' : editor.linksTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
@@ -209,7 +219,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="gf-table-row_body" ng-show="link.reduce==false">
+                    <div class="gf-table-row_body" ng-show="link.reduce === false">
                         <!-- <ng-include src="$GF.plugin.getPartialPath() + 'rules/links/linkBody.html'"> </ng-include> -->
                     </div>
                 </div>

@@ -1179,6 +1179,7 @@ export class Rule {
 export class GFMap {
   data: gf.TGFMapData;
   id: string;
+  reduce =true;
   static methods: any[] = [];
   constructor(pattern, data: gf.TGFMapData) {
     this.data = data;
@@ -1300,6 +1301,12 @@ export class GFMap {
     return true;
   }
 
+  /**
+   * Export current data
+   *
+   * @returns {gf.TGFMapData}
+   * @memberof GFMap
+   */
   export(): gf.TGFMapData {
     return {
       pattern: this.data.pattern,
@@ -1315,7 +1322,6 @@ export class GFMap {
  */
 export class ShapeMap extends GFMap {
   data: gf.TShapeMapData;
-  reduce = true;
 
   /**
    * Creates an instance of ShapeMap.

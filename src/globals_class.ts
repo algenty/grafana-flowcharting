@@ -995,8 +995,7 @@ export class $GF {
           if(elt) {
             elt.focus();
           }
-          else { console.log("ELT is null")}
-        }, 500);
+        }, 100);
         return true;
     } catch (error) {
       return false;
