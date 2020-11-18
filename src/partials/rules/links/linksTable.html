@@ -119,7 +119,7 @@
                                 {{link.data.pattern}}
                             </div>
                             <div ng-show="link.displayWhatEdit === true && link.whatEdit !== true"
-                                ng-click="link.whatEdit = true;" title="Edit pattern"
+                                ng-click="link.whatEdit = true" title="Edit pattern"
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
                             <div ng-show="link.displayWhatEdit === true && link.whatEdit !== true && !editor.flowchartHandler.isMapping(link)"
@@ -128,6 +128,7 @@
                                 title="Select a text in diagram">
                             </div>
                             <input type="text" style="margin-right: 2px;width : 100%" ng-attr-id="link.getId()"
+                                ng-focus="link.whatEdit"
                                 ng-show="link.whatEdit === true" class="gf-form-input" ng-model="link.data.pattern"
                                 ng-model-onblur ng-blur="editor.onRulesChange();link.whatEdit = false;"
                                 bs-typeahead="rule.data.linkProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"

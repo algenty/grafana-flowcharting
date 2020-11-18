@@ -6,6 +6,12 @@ import grafana from 'grafana_func';
 import _ from 'lodash';
 import { MetricHandler } from './metricHandler';
 
+/**
+ * Rules tab controller
+ *
+ * @export
+ * @class RulesOptionsCtrl
+ */
 export class RulesOptionsCtrl {
   $scope: gf.TRulesOptionsScope;
   ctrl: any;
@@ -598,6 +604,5 @@ export function rulesOptionsTab($q, uiSegmentSrv) {
     scope: true,
     templateUrl: `${$GF.plugin.getPartialPath()}/rules/rulesTab.html`,
     controller: RulesOptionsCtrl,
-    module: ['ngAnimate'],
   };
 }

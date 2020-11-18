@@ -988,16 +988,16 @@ export class $GF {
    * @returns
    * @memberof $GF
    */
-  setFocus(id: string) {
+  static async setFocus(id: string) {
     try {
-      const elt = document.getElementById(id);
-      if (elt) {
         setTimeout(() => {
-          elt.focus();
-        }, 100);
+          const elt = document.getElementById(id);
+          if(elt) {
+            elt.focus();
+          }
+          else { console.log("ELT is null")}
+        }, 500);
         return true;
-      }
-      return false;
     } catch (error) {
       return false;
     }
