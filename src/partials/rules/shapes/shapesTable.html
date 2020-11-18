@@ -112,7 +112,7 @@
                                 {{shape.data.pattern}}
                             </div>
                             <div ng-show="shape.displayWhatEdit === true && shape.whatEdit !== true"
-                                ng-click="shape.whatEdit = true;"
+                                ng-click="shape.whatEdit = true;$GF.setFocus(shape.getId() + '-what');"
                                 title="Edit pattern"
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
@@ -121,17 +121,20 @@
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a shape in diagram">
                             </div>
-                            <input type="text" style="margin-right: 2px;width : 100%" ng-attr-id="shape.getId()"
-                                ng-show="shape.whatEdit === true" class="gf-form-input" ng-model="shape.data.pattern"
+                            <input type="text" 
+                                ng-show="shape.whatEdit === true"
+                                class="gf-form-input" ng-model="shape.data.pattern"
+                                style="margin-right: 2px;width : 100%" 
+                                ng-attr-id="{{shape.getId() + '-what'}}"
                                 ng-model-onblur ng-blur="editor.onRulesChange();shape.whatEdit = false;"
                                 bs-typeahead="rule.data.shapeProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
                                 data-min-length="0" data-items="100" data-placement="right" />
-                            <!-- ng-keyup="$event.keyCode === 13 ? editor.onRulesChange() : shape.whatEdit = true;$event.keyCode === 13 ?  shape.whatEdit = false : shape.whatEdit = true" -->
-                            <!-- ng-model-onblur -->
-                            <!-- placeholder="{{(rule.data.shapeProp === 'value' ? "Id" : "Label") + " or regex of shape"}}" -->
-                            <!-- bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'" -->
-                            <!-- bs-typeahead="rule.data.shapeProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue" -->
-                            <!-- ng-keydown="$event.keyCode === 13 && shape.whatEdit = false" -->
+                                <!-- ng-keyup="$event.keyCode === 13 ? editor.onRulesChange() : shape.whatEdit = true;$event.keyCode === 13 ?  shape.whatEdit = false : shape.whatEdit = true" -->
+                                <!-- ng-model-onblur -->
+                                <!-- placeholder="{{(rule.data.shapeProp === 'value' ? "Id" : "Label") + " or regex of shape"}}" -->
+                                <!-- bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'" -->
+                                <!-- bs-typeahead="rule.data.shapeProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue" -->
+                                <!-- ng-keydown="$event.keyCode === 13 && shape.whatEdit = false" -->
                         </div>
                         <!-- WHEN -->
                         <div role="cell" class="gf-table-cells" id="when" ng-mouseleave="shape.displayWhenEdit = false;"
@@ -142,11 +145,12 @@
                                 {{$GF.GetT4V( editor.colorOn, shape.data.colorOn)}}
                             </div>
                             <div ng-show="shape.displayWhenEdit === true && shape.whenEdit !== true"
-                                ng-click="shape.whenEdit = true;"
+                                ng-click="shape.whenEdit = true;$GF.setFocus( shape.getId() + '-when' )"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Edit condition">
                             </div>
                             <select class="gf-form-input" ng-model="shape.data.colorOn" style="width:100%;"
+                                ng-attr-id="{{shape.getId() + '-when'}}"
                                 ng-blur="editor.onRulesChange();shape.whenEdit = false;"
                                 ng-show="shape.whenEdit === true" ng-options="c.value as c.text for c in editor.colorOn"
                                 ng-change="editor.onRulesChange()">
@@ -162,11 +166,12 @@
                                 {{$GF.GetT4V(editor.style, shape.data.style)}}
                             </div>
                             <div ng-show="shape.displayHowEdit === true && shape.howEdit !== true"
-                                ng-click="shape.howEdit = true;"
+                                ng-click="shape.howEdit = true;$GF.setFocus( shape.getId() + '-how' );"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Edit method">
                             </div>
                             <select class="gf-form-input" ng-model="shape.data.style" style="width:100%;"
+                                ng-attr-id="{{shape.getId() + '-how'}}"
                                 ng-blur="editor.onRulesChange();shape.howEdit = false;"
                                 ng-show="shape.howEdit === true" ng-options="c.value as c.text for c in editor.style"
                                 ng-change="editor.onRulesChange()">

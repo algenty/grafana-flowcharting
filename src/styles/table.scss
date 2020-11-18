@@ -47,6 +47,16 @@ div.gf-table-body {
   /* will-change: transform; direction: ltr; */
 }
 
+div.gf-table-body-open {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border: 1px solid yellow;
+  &:hover {
+    border: 1px solid red;
+  }
+}
+
 div.gf-table-title {
   cursor: pointer;
   white-space: nowrap;

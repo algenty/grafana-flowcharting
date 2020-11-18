@@ -667,7 +667,7 @@ export class Rule {
   }
 
   /**
-   * Duplicate and add shapeMap
+   * Duplicate shapeMap
    *
    * @param {ShapeMap} initial
    * @returns {ShapeMap}
@@ -817,6 +817,17 @@ export class Rule {
     this.linkMaps.push(m);
     this.data.linkData.push(data);
     return m;
+  }
+
+  /**
+   * Duplicate linkMap
+   *
+   * @param {ShapeMap} initial
+   * @returns {ShapeMap}
+   * @memberof Rule
+   */
+  cloneLinkMap(initial: LinkMap): LinkMap {
+    return this.addLinkMap(initial.data.pattern).import(initial);
   }
 
   removeLinkMap(index: number) {

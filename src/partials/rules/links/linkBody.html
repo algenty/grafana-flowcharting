@@ -1,0 +1,47 @@
+<div class="gf-form">
+    <label class="gf-form-label width-7" style="margin-right: 2px;">What
+        <info-popover mode="right-normal">
+            <span ng-bind-html="$GF.popover('Enter shape Id or click on link button', 'LINKS')">
+            </span>
+        </info-popover>
+    </label>
+    <input type="link" id="{{ link.getId() }}" style="margin-right: 2px;" placeholder="id or regex of shape/link name"
+        class="gf-form-input width-8" ng-if="rule.data.linkProp === 'id'" ng-model="link.data.pattern"
+        bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/link (see inspect tab)'"
+        bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" ng-model-onblur data-min-length="0"
+        data-items="100" data-placement="right" />
+    <input type="link" id="{{ link.getId() }}" style="margin-right: 2px;" placeholder="id or regex of shape/link name"
+        class="gf-form-input width-8" ng-if="rule.data.linkProp === 'value'" ng-model="link.data.pattern"
+        bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/link (see inspect tab)'"
+        bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" ng-model-onblur data-min-length="0"
+        data-items="100" data-placement="right" />
+</div>
+<div class="gf-form">
+    <label class="gf-form-label width-7" style="margin-right: 2px;">When
+        <info-popover mode="right-normal">
+            <span ng-bind-html="$GF.popover('Select the condition to apply link on shape.', 'LINKS')">
+            </span>
+        </info-popover>
+    </label>
+    <select class="gf-form-input width-8" ng-model="link.data.linkOn"
+        ng-options="c.value as c.text for c in editor.linkOn" ng-change="editor.onRulesChange()"></select>
+</div>
+<div class="gf-form">
+    <label class="gf-form-label width-7" style="margin-right: 2px;">Url
+        <info-popover mode="right-normal">
+            <span ng-bind-html="$GF.popover('Enter absolute or relative URL', 'MAPPING#Link')"> </span>
+        </info-popover></label>
+    </label>
+    <input type="text" style="margin-right: 2px;" class="gf-form-input width-10" bs-tooltip="'Enter the URL link'"
+        ng-model="link.data.linkUrl" ng-blur="editor.onRulesChange()" data-placement="right" />
+</div>
+<div class="gf-form">
+    <label class="gf-form-label width-7" style="margin-right: 2px;">Parameters
+        <info-popover mode="right-normal">
+            <span ng-bind-html="$GF.popover('Apply actual parameters to URL', 'LINKS')">
+            </span>
+        </info-popover>
+    </label>
+    <gf-form-switch class="gf-form width-7" style="width: 66px;" checked="link.data.linkParams">
+    </gf-form-switch>
+</div>

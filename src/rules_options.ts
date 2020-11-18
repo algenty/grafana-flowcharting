@@ -133,7 +133,7 @@ export class RulesOptionsCtrl {
           id: 'actions',
           label: 'Actions',
           desc: 'Actions',
-          size: '100px',
+          size: '120px',
           sort: 'asc',
           select: false,
         },
