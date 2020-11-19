@@ -275,6 +275,7 @@ declare module gf {
 
   declare interface TEventMapData extends TGFMapData {
     style: TStyleEventKeys;
+    comparator : TComparatorKeys;
     eventOn: number;
     value: string;
   }

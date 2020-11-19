@@ -1615,6 +1615,7 @@ export class EventMap extends GFMap {
       pattern: '',
       hidden: false,
       style: 'shape',
+      comparator: 'eq',
       eventOn: 0,
       value: '',
     };
@@ -1677,7 +1678,32 @@ export class EventMap extends GFMap {
    * 0.7.0 : Moved to shape
    */
   toEventable(level: number): boolean {
-    return this.data.eventOn === -1 || level === this.data.eventOn;
+    switch (this.data.comparator) {
+      case 'al':
+          return true;
+        break;
+      case 'lt':
+          return level < this.data.eventOn;
+        break;
+      case 'le':
+          return level <= this.data.eventOn;
+        break;
+      case 'eq':
+          return level <= this.data.eventOn;
+        break;
+      case 'ne':
+          return level !== this.data.eventOn;
+        break;
+      case 'ge':
+          return level >= this.data.eventOn;
+        break;
+      case 'gt':
+          return level > this.data.eventOn;
+        break;
+      default:
+        return this.data.eventOn === -1 || level === this.data.eventOn;
+        break;
+    }
   }
 
   /**
@@ -1692,8 +1718,16 @@ export class EventMap extends GFMap {
     if (!!obj.style) {
       this.data.style = obj.style;
     }
+    if (!!obj.comparator) {
+      this.data.comparator = obj.comparator;
+    }
+
     if (!!obj.eventOn) {
       this.data.eventOn = obj.eventOn;
+      if(this.data.eventOn === -1) {
+        this.data.comparator = 'al';
+        this.data.eventOn = 0;
+      }
     }
     if (!!obj.value) {
       this.data.value = obj.value;

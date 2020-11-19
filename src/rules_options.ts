@@ -28,7 +28,7 @@ export class RulesOptionsCtrl {
   tooltipOn = $GF.CONSTANTS.TOOLTIP_APPLYON;
   textOn = $GF.CONSTANTS.TEXT_APPLYON;
   textReplace = $GF.CONSTANTS.TEXTMETHODS;
-  comparatorType = $GF.CONSTANTS.COMPARATOR_TYPES;
+  comparator = $GF.CONSTANTS.COMPARATOR_TYPES;
   EventType = EventMap.getDefaultMethods();
   tpDirection: gf.TSelectString[] = $GF.CONSTANTS.TOOLTIP_DIRECTION_TYPES;
   propTypes: gf.TSelectString[] = $GF.CONSTANTS.IDENT_TYPES;
@@ -338,9 +338,9 @@ export class RulesOptionsCtrl {
         {
           index: n++,
           id: 'when',
-          label: 'When',
+          label: 'When lvl.',
           desc: 'When current level is',
-          size: '30px',
+          size: '80px',
           sort: 'asc',
           select: false,
         },
@@ -348,8 +348,8 @@ export class RulesOptionsCtrl {
           index: n++,
           id: 'level',
           label: 'Lvl',
-          desc: 'at threshold',
-          size: '30px',
+          desc: 'Threshold level',
+          size: '60px',
           sort: 'asc',
           select: false,
         },
@@ -358,7 +358,7 @@ export class RulesOptionsCtrl {
           id: 'then',
           label: 'Then',
           desc: 'Then execute this action',
-          size: '100px',
+          size: '120px',
           sort: 'asc',
           select: false,
         },
@@ -367,13 +367,13 @@ export class RulesOptionsCtrl {
           id: 'with',
           label: 'With',
           desc: 'With this value/parameter',
-          size: '100px',
+          size: '80px',
           sort: 'asc',
           select: false,
         },
         {
           index: n++,
-          id: 'action',
+          id: 'actions',
           label: 'Actions',
           desc: 'Actions',
           size: '100px',
@@ -400,6 +400,10 @@ export class RulesOptionsCtrl {
     const $linksTable = $div.find('#LinksTable');
     const linksTable = $linksTable[0];
     this.linksTable = new GFTable(this.linksTableData, linksTable);
+
+    const $eventsTable = $div.find('#EventsTable');
+    const eventsTable = $eventsTable[0];
+    this.eventsTable = new GFTable(this.eventsTableData, eventsTable);
 
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');
