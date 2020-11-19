@@ -202,7 +202,12 @@ declare module gf {
     | 'MM/DD/YY h:mm:ss a'
     | 'MMMM D, YYYY LT'
     | 'YYYY-MM-DD';
-  declare type TDateFormatList = { text: string; value: TDateFormatKeys }[];
+  declare type TDateFormatElt = { text: string; value: TDateFormatKeys };
+  declare type TDateFormatList = TDateFormatElt[];
+
+  declare type TComparatorKeys = 'lt' | 'le' | 'eq' | 'ne' | 'ge' | 'gt' | 'al' ;
+  declare type TComparatorElt = { text: string; value: TComparatorKeys };
+  declare type TComparatorList = TComparatorElt[];
 
   declare type TVariableKeys = '_rule' | '_level' | '_value' | '_color' | '_formated';
   declare type TVariableList = { text: string; value: TVariableKeys }[];

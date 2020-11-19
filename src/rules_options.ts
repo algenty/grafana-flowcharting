@@ -28,6 +28,7 @@ export class RulesOptionsCtrl {
   tooltipOn = $GF.CONSTANTS.TOOLTIP_APPLYON;
   textOn = $GF.CONSTANTS.TEXT_APPLYON;
   textReplace = $GF.CONSTANTS.TEXTMETHODS;
+  comparatorType = $GF.CONSTANTS.COMPARATOR_TYPES;
   EventType = EventMap.getDefaultMethods();
   tpDirection: gf.TSelectString[] = $GF.CONSTANTS.TOOLTIP_DIRECTION_TYPES;
   propTypes: gf.TSelectString[] = $GF.CONSTANTS.IDENT_TYPES;
@@ -36,10 +37,12 @@ export class RulesOptionsCtrl {
   shapesTableData: gf.TTableData;
   textsTableData: gf.TTableData;
   linksTableData: gf.TTableData;
+  eventsTableData: gf.TTableData;
   rulesTable: GFTable;
   shapesTable: GFTable;
   textsTable: GFTable;
   linksTable: GFTable;
+  eventsTable: GFTable;
   metricTypes = $GF.CONSTANTS.VALUE_TYPES;
   dateFormats: gf.TSelectString[] = $GF.CONSTANTS.VALUE_DATEFORMAT_TYPES;
   aggregationTypes = $GF.CONSTANTS.AGGREGATION_TYPES;
@@ -310,8 +313,8 @@ export class RulesOptionsCtrl {
         },
       ],
     };
-        n = 0;
-    this.linksTableData = {
+    n = 0;
+    this.eventsTableData = {
       data: [],
       columns: [
         {
@@ -336,32 +339,41 @@ export class RulesOptionsCtrl {
           index: n++,
           id: 'when',
           label: 'When',
-          desc: 'When to apply this rule on shape',
+          desc: 'When current level is',
+          size: '30px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'level',
+          label: 'Lvl',
+          desc: 'at threshold',
+          size: '30px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'then',
+          label: 'Then',
+          desc: 'Then execute this action',
           size: '100px',
           sort: 'asc',
           select: false,
         },
         {
           index: n++,
-          id: 'url',
-          label: 'URL',
-          desc: 'URL relative or absolute',
-          size: '150px',
+          id: 'with',
+          label: 'With',
+          desc: 'With this value/parameter',
+          size: '100px',
           sort: 'asc',
           select: false,
         },
         {
           index: n++,
-          id: 'options',
-          label: 'Options',
-          desc: 'Options',
-          size: '45px',
-          sort: 'asc',
-          select: false,
-        },
-        {
-          index: n++,
-          id: 'actions',
+          id: 'action',
           label: 'Actions',
           desc: 'Actions',
           size: '100px',
@@ -370,6 +382,8 @@ export class RulesOptionsCtrl {
         },
       ],
     };
+    
+
 
     const $rulesTable = $div.find('#RulesTable');
     const rulesTable = $rulesTable[0];

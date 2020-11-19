@@ -112,24 +112,39 @@ class GFCONSTANT {
     { text: 'Diff', value: 'diff' },
     { text: 'Time of last point', value: 'last_time' },
   ];
+
   TOOLTIP_GRAPH_TYPES: gf.TGraphTypeList = [
     { text: 'Line', value: 'line' },
     { text: 'Histogram', value: 'bar' },
   ];
+
   TOOLTIP_GRAPH_SCALE_TYPES: gf.TGraphScaleList = [
     { text: 'Linear', value: 'linear' },
     { text: 'Logarithmic', value: 'log' },
   ];
+
   TOOLTIP_GRAPH_SIZE_TYPES: gf.TGraphSizeList = [
     { text: 'Adjustable', value: '100%' },
     { text: 'Small', value: '100px' },
     { text: 'Medium', value: '200px' },
     { text: 'Large', value: '400px' },
   ];
+
   TOOLTIP_DIRECTION_TYPES: gf.TDirectionList = [
     { text: 'Vertical', value: 'v' },
     { text: 'Horizontal ', value: 'h' },
   ];
+
+  COMPARATOR_TYPES : gf.TComparatorList= [
+    { text: 'Always', value: 'al' },
+    { text: 'Less than', value: 'lt' },
+    { text: 'Less than or equal to', value: 'le' },
+    { text: 'Equal to', value: 'eq' },
+    { text: 'Not equal to', value: 'ne' },
+    { text: 'Greater than or equal to', value: 'ge' },
+    { text: 'Greater than ', value: 'gt' },
+  ];
+
   VALUE_DATEFORMAT_TYPES: gf.TDateFormatList = [
     { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
     { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
