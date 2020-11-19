@@ -1,5 +1,6 @@
 <textarea>
     {{ rule.getEventMaps() | json }}
+    {{editor.EventType}}
 </textarea>
 <div role=" table" class="gf-table-main" id="EventsTable" style="overflow: visible;">
     <div class="gf-custom-scrollbar"
@@ -8,7 +9,7 @@
             style="position: relative; overflow: visible; margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
             <!-- THEAD -->
             <div class="gf-table-thead gf-unselectable" role="row" 
-                png-mouseup="editor.eventsTable.onMouseUp($event)"
+                ng-mouseup="editor.eventsTable.onMouseUp($event)"
                 ng-mousemove="editor.eventsTable.onMouseMove($event)"
                 ng-mouseleave="editor.eventsTable.onMouseUp($event)">
                 <!-- HEADERS -->
@@ -121,104 +122,97 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows" ng-repeat="elt in rule.getEventMaps()">
+                <div role="row" class="gf-table-rows" ng-repeat="event in rule.getEventMaps()">
                     <!-- CELLS -->
                     <div class="gf-table-row_line"
-                        ng-init="elt.displayEdit = [];elt.inEdit = [];"
-                        ng-mouseleave="editor.unselectCell(rule.data.eventProp,elt.data.pattern)"
-                        ng-mouseover="editor.selectCell(rule.data.eventProp,elt.data.pattern)">
+                        ng-mouseleave="editor.unselectCell(rule.data.eventProp,event.data.pattern)"
+                        ng-mouseover="editor.selectCell(rule.data.eventProp,event.data.pattern)">
                         <!-- EXPAND -->
-                        <div role="cell" class="gf-table-cells" id="expand" ng-click="elt.reduce=!elt.reduce"
-                            ng-init="CN1 = 'expand';elt.displayEdit[CN1] = false;elt.inEdit[CN1] = false;"
-                            ng-style="{'width' : editor.eventsTable.getWidth(CN1)}">
+                        <div role="cell" class="gf-table-cells" id="expand" ng-click="event.reduce=!event.reduce"
+                            ng-style="{'width' : editor.eventsTable.getWidth('expand')}">
                             <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
                                 <span>
                                     <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
-                                        ng-class="{'fa-chevron-right': elt.reduce, 'fa-chevron-down': elt.reduce === false}">
+                                        ng-class="{'fa-chevron-right': event.reduce, 'fa-chevron-down': event.reduce === false}">
                                     </i>
                                 </span>
                             </div>
                         </div>
                         <!-- WHAT -->
                         <div role="cell" class="gf-table-cells"
-                            ng-init="CN2 = 'what';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
-                            ng-mouseleave="elt.displayEdit[CN2] = false;"
-                            ng-mouseover="elt.displayEdit[CN2] = true;"
-                            ng-style="{'width' : editor.eventsTable.getWidth(CN2)}">
-                            <div class="gf-table-content" ng-show="elt.inEdit[CN2] !== true"
-                                ng-attr-title="{{elt.data.pattern}}"
-                                ng-dblclick="elt.inEdit[CN2] = true;">
-                                <!-- {{elt.data.pattern}} -->
-                                {{CN}}
+                            ng-init="event.displayWhatEdit = false;event.whatEdit = false;" 
+                            ng-mouseleave="event.displayWhatEdit = false;"
+                            ng-mouseover="event.displayWhatEdit = true;"
+                            ng-style="{'width' : editor.eventsTable.getWidth('what')}">
+                            <div class="gf-table-content" ng-show="event.whatEdit !== true"
+                                ng-attr-title="{{event.data.pattern}}"
+                                ng-dblclick="event.whatEdit = true;">
+                                {{event.data.pattern}}
                             </div>
-                            <div ng-show="elt.displayEdit[CN2] === true && elt.inEdit[CN2] !== true"
-                                ng-click="elt.inEdit[CN2] = true;$GF.setFocus( elt.getId() + '-' + CN2 )" title="Edit pattern"
+                            <div ng-show="event.displayWhatEdit === true && event.whatEdit !== true"
+                                ng-click="event.whatEdit = true;$GF.setFocus( event.getId() + '-what' )" title="Edit pattern"
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
-                            <div ng-show="elt.displayEdit[CN2] === true && elt.inEdit[CN2] !== true && !editor.flowchartHandler.isMapping(event)"
+                            <div ng-show="event.displayWhatEdit === true && event.whatEdit !== true && !editor.flowchartHandler.isMapping(event)"
                                 ng-click="editor.flowchartHandler.setMap(event,rule.data.eventProp)"
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a text in diagram">
                             </div>
                             <input type="text" style="margin-right: 2px;width : 100%" 
-                                ng-attr-id="{{elt.getId() + '-' + CN2}}"
-                                ng-show="elt.inEdit[CN2] === true"
-                                class="gf-form-input" ng-model="elt.data.pattern"
+                                ng-attr-id="{{event.getId() + '-what'}}"
+                                ng-show="event.whatEdit === true"
+                                class="gf-form-input" ng-model="event.data.pattern"
                                 ng-change="editor.onRulesChange()"
-                                ng-model-onblur ng-blur="editor.onRulesChange();elt.inEdit[CN2] = false;"
+                                ng-model-onblur ng-blur="editor.onRulesChange();event.whatEdit = false;"
                                 bs-typeahead="rule.data.eventProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
                         <!-- WHEN -->
-                        <div role="cell" class="gf-table-cells"
-                            ng-init="CN3 = 'when';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
-                            ng-mouseleave="elt.displayEdit[CN3] = false;"
-                            ng-mouseover="elt.displayEdit[CN3] = true;"
-                            ng-style="{'width' : editor.eventsTable.getWidth(CN3)}">
-                            <!-- {{elt.data.comparator}} -->
+                        <div role="cell" class="gf-table-cells" ng-mouseleave="event.displayWhenEdit = false;"
+                            ng-mouseover="event.displayWhenEdit = true;"
+                            ng-style="{'width' : editor.eventsTable.getWidth('when')}">
+                            <!-- {{event.data.comparator}} -->
                             <div class="gf-table-content" 
                                 style="text-align: left;"
-                                ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.data.comparator)}}"
-                                ng-dblclick="elt.inEdit[CN3] = true;$GF.setFocus( elt.getId() + '-' + CN3 )" 
-                                ng-show="elt.inEdit[CN3] !== true">
-                                {{$GF.GetT4V( editor.comparator, elt.data.comparator)}}
+                                ng-attr-title="{{$GF.GetT4V( editor.comparator, event.data.comparator)}}"
+                                ng-dblclick="event.whenEdit = true;$GF.setFocus( event.getId() + '-when' )" 
+                                ng-show="event.whenEdit !== true">
+                                {{$GF.GetT4V( editor.comparator, event.data.comparator)}}
                             </div>
-                            <div ng-show="elt.displayEdit[CN3] === true && elt.inEdit[CN3] !== true"
-                                ng-click="elt.inEdit[CN3] = true;$GF.setFocus( elt.getId() + '-' + CN3 )" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                            <div ng-show="event.displayWhenEdit === true && event.whenEdit !== true"
+                                ng-click="event.whenEdit = true;$GF.setFocus( event.getId() + '-when' )" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Edit condition">
                             </div>
-                            <select class="gf-form-input" ng-model="elt.data.EventOn" style="width:100%;"
-                                ng-show="elt.inEdit[CN3] === true"
-                                ng-attr-id="{{elt.getId() + '-' + CN3}}"
-                                ng-blur="editor.onRulesChange();elt.inEdit[CN3] = false;"
-                                ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.data.comparator)}}"
+                            <select class="gf-form-input" ng-model="event.data.EventOn" style="width:100%;"
+                                ng-show="event.whenEdit === true"
+                                ng-attr-id="{{event.getId() + '-when'}}"
+                                ng-blur="editor.onRulesChange();event.whenEdit = false;"
+                                ng-attr-title="{{$GF.GetT4V( editor.comparator, event.data.comparator)}}"
                                 ng-options="c.value as c.text for c in editor.comparator"
                                 ng-change="editor.onRulesChange()">
                             </select>
                         </div>
                         <!-- LEVEL -->
-                        <div role="cell" class="gf-table-cells"
-                            ng-init="CN4 = 'level';elt.displayEdit[CN4] = false;elt.inEdit[CN4] = false;"
-                            ng-mouseleave="elt.displayEdit[CN4] = false;"
-                            ng-mouseover="elt.displayEdit[CN4] = true;"
-                            ng-style="{'width' : editor.eventsTable.getWidth(CN4)}">
-                            <!-- {{elt.data.EventOn}} -->
+                        <div role="cell" class="gf-table-cells" ng-mouseleave="event.displayLevelEdit = false;"
+                            ng-mouseover="event.displayLevelEdit = true;"
+                            ng-style="{'width' : editor.eventsTable.getWidth('level')}">
+                            <!-- {{event.data.EventOn}} -->
                             <div class="gf-table-content" 
                                 style="text-align: center;justify-content: center;"
                                 ng-attr-title="TODO : Add threshold definition"
-                                ng-dblclick="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )" 
-                                ng-show="elt.inEdit[CN4] !== true">
-                                {{elt.data.eventOn}}
+                                ng-dblclick="event.levelEdit = true;$GF.setFocus( event.getId() + '-level' )" 
+                                ng-show="event.levelEdit !== true">
+                                {{event.data.eventOn}}
                             </div>
-                            <div ng-show="elt.displayEdit[CN4] === true && elt.inEdit[CN4] !== true"
-                                ng-click="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                            <div ng-show="event.displayLevelEdit === true && event.levelEdit !== true"
+                                ng-click="event.levelEdit = true;$GF.setFocus( event.getId() + '-level' )" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Edit threshold level">
                             </div>
-                            <!-- <select class="gf-form-input" ng-model="elt.data.EventOn" style="width:100%;"
-                                ng-show="elt.inEdit[CN4] === true"
+                            <!-- <select class="gf-form-input" ng-model="event.data.EventOn" style="width:100%;"
+                                ng-show="event.levelEdit === true"
                                 ng-attr-title="TODO : Add threshold definition"
-                                ng-attr-id="{{elt.getId() + '-' + CN4}}"
-                                ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;"
+                                ng-attr-id="{{event.getId() + '-level'}}"
+                                ng-blur="editor.onRulesChange();event.levelEdit = false;"
                                 ng-options="c.value as c.text for c in editor.eventOn"
                                 ng-change="editor.onRulesChange()">
                             </select> -->
@@ -226,72 +220,72 @@
                                 style="width:100%;"
                                 convert-to-number 
                                 class="gf-form-input" 
-                                ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;"
-                                ng-model="elt.data.eventOn"
-                                ng-show="elt.inEdit[CN4] === true"
-                                ng-attr-id="{{elt.getId() + '-' + CN4}}"
+                                ng-blur="editor.onRulesChange();event.levelEdit = false;"
+                                ng-model="event.data.eventOn"
+                                ng-show="event.levelEdit === true"
+                                ng-attr-id="{{event.getId() + '-level'}}"
                                 ng-change="editor.onRulesChange()">
                                 <option type="number" ng-repeat="color in rule.data.colors" ng-value="$index">{{$index}}</option>
                             </select>
                         </div>
                         <!-- THEN -->
                         <div role="cell" class="gf-table-cells"
-                            ng-init="CN5 = 'then';elt.displayEdit[CN5] = false;elt.inEdit[CN5] = false;" 
-                            ng-mouseleave="elt.displayEdit[CN5] = false;"
-                            ng-mouseover="elt.displayEdit[CN5] = true;"
-                            ng-style="{'width' : editor.eventsTable.getWidth(CN5)}">
-                            <!-- {{elt.data.EventType}} -->
+                            ng-init="event.displayThenEdit = false;event.thenEdit = false;" 
+                            ng-mouseleave="event.displayThenEdit = false;"
+                            ng-mouseover="event.displayThenEdit = true;"
+                            ng-style="{'width' : editor.eventsTable.getWidth('then')}">
+                            <!-- {{event.data.EventType}} -->
                             <div class="gf-table-content" style="text-align: left;"
-                                ng-dblclick="elt.inEdit[CN5] = true;$GF.setFocus( elt.getId() + '-' + CN5 )"
-                                ng-show="elt.inEdit[CN5] !== true">
-                                {{elt.data.style}}
+                                ng-dblclick="event.thenEdit = true;$GF.setFocus( event.getId() + '-then' )"
+                                ng-show="event.thenEdit !== true">
+                                {{event.data.style}}
                             </div>
-                            <div ng-show="elt.displayEdit[CN5] === true && elt.inEdit[CN6] !== true"
-                                ng-click="elt.inEdit[CN5] = true;$GF.setFocus( elt.getId() + '-' + CN5 )" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                            <div ng-show="event.displayThenEdit === true && event.withEdit !== true"
+                                ng-click="event.thenEdit = true;$GF.setFocus( event.getId() + '-then' )" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Select an action">
                             </div>
                             <select class="gf-form-input" 
-                                ng-model="elt.data.EventOn" style="width:100%;"
-                                ng-show="elt.inEdit[CN5] === true"
-                                ng-attr-id="{{elt.getId() + '-' + CN5}}"
-                                ng-blur="editor.onRulesChange();elt.ThenEdit = false;"
-                                ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.data.style)}}"
+                                ng-model="event.data.EventOn" style="width:100%;"
+                                ng-show="event.thenEdit === true"
+                                ng-attr-id="{{event.getId() + '-then'}}"
+                                ng-blur="editor.onRulesChange();event.ThenEdit = false;"
+                                ng-attr-title="{{$GF.GetT4V( editor.EventType, event.data.style)}}"
                                 ng-options="c.value as c.text for c in editor.EventType"
                                 ng-change="editor.onRulesChange()">
                             </select>
                         </div>
                         <!-- WITH -->
                         <div role="cell" class="gf-table-cells"
-                            ng-init="CN6 = 'then';elt.displayEdit[CN6] = false;elt.inEdit[CN6] = false;" 
-                            ng-mouseleave="elt.displayEdit[CN6] = false;"
-                            ng-mouseover="elt.displayEdit[CN6] = true;"
-                            ng-style="{'width' : editor.eventsTable.getWidth(CN6)}">
-                            <!-- {{elt.data.value}} -->
+                            ng-init="event.displayWithEdit = false;event.withEdit = false;" 
+                            ng-mouseleave="event.displayWithEdit = false;"
+                            ng-mouseover="event.displayWithEdit = true;"
+                            ng-style="{'width' : editor.eventsTable.getWidth('with')}">
+                            <!-- {{event.data.value}} -->
                             <div class="gf-table-content" style="text-align: left;"
-                                ng-dblclick="elt.inEdit[CN6] = true;$GF.setFocus( elt.getId() + '-' + CN6 )"
-                                ng-show="elt.inEdit[CN6] !== true">
-                                {{elt.data.value}}
+                                ng-dblclick="event.withEdit = true;$GF.setFocus( event.getId() + '-with' )"
+                                ng-show="event.withEdit !== true">
+                                {{event.data.value}}
                             </div>
-                            <div ng-show="elt.displayEdit[CN6] === true && elt.inEdit[CN6] !== true"
-                                ng-click="elt.inEdit[CN6] = true;$GF.setFocus( elt.getId() + '-' + CN6 )" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
+                            <div ng-show="event.displayWithEdit === true && event.withEdit !== true"
+                                ng-click="event.withEdit = true;$GF.setFocus( event.getId() + '-with' )" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Edit current value">
                             </div>
                             <!-- <input style="margin-right: 2px;width : 100%"
-                                ng-attr-id="{{elt.getId() + '-url'}}"
+                                ng-attr-id="{{event.getId() + '-url'}}"
                                 type="text" class="gf-form-input" 
-                                ng-show="elt.inEdit[CN6] === true"
+                                ng-show="event.withEdit === true"
                                 ng-change="editor.onRulesChange()"
-                                ng-model="elt.data.value" ng-blur="editor.onRulesChange();elt.inEdit[CN6] = false;"
+                                ng-model="event.data.value" ng-blur="editor.onRulesChange();event.withEdit = false;"
                                 placeholder="Text or pattern to replace by value" /> -->
                             <input type="text" style="margin-right: 2px;" 
-                                ng-show="elt.inEdit[CN6] === true"
-                                placeholder="{{elt.getPlaceHolder()}}"
+                                ng-show="event.withEdit === true"
+                                placeholder="{{event.getPlaceHolder()}}"
                                 class="gf-form-input" 
-                                ng-model="elt.data.value" title="Specify value for this action"
+                                ng-model="event.data.value" title="Specify value for this action"
                                 bs-typeahead="editor.getEventValues" 
                                 data-min-length="0" data-items="100"
                                 ng-focus="editor.onEventValue(event)" 
-                                ng-blur="editor.onRulesChange();elt.inEdit[CN6] = false" data-min-length="0"
+                                ng-blur="editor.onRulesChange();event.withEdit = false" data-min-length="0"
                                 data-items="100" ng-model-onblur data-placement="right" />
                         </div>
                         <!-- OPTIONS -->
@@ -299,9 +293,9 @@
                             ng-style="{'width' : editor.eventsTable.getWidth('options')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: center;justify-content: center;">
-                                <div ng-click="elt.data.eventParams = !elt.data.eventParams;editor.onRulesChange()"
+                                <div ng-click="event.data.eventParams = !event.data.eventParams;editor.onRulesChange()"
                                     title="Add/Remove the dashboad parameters with url" class="gf-icon-action"
-                                    ng-class="{'gf-icon-address-on': elt.data.eventParams, 'gf-icon-address-off': !elt.data.eventParams}">
+                                    ng-class="{'gf-icon-address-on': event.data.eventParams, 'gf-icon-address-off': !event.data.eventParams}">
                                 </div>
                             </div>
                         </div> -->
@@ -313,9 +307,9 @@
                                 <div ng-click="editor.removeEventMap(rule,$index);editor.onRulesChange()"
                                     title="Delete this mapping object" class="gf-icon-action gf-icon-remove">
                                 </div>
-                                <div ng-click="elt.isHidden() ? elt.show(): elt.hide();editor.onRulesChange()"
+                                <div ng-click="event.isHidden() ? event.show(): event.hide();editor.onRulesChange()"
                                     title="Enable/Disable this mapping" class="gf-icon-action"
-                                    ng-class="{'gf-icon-show': !elt.isHidden(), 'gf-icon-hide': elt.isHidden()}">
+                                    ng-class="{'gf-icon-show': !event.isHidden(), 'gf-icon-hide': event.isHidden()}">
                                 </div>
                                 <div ng-click="editor.flowchartHandler.setMap(event,rule.data.eventProp)"
                                     title="Select a shape in diagram" class="gf-icon-action"
@@ -327,7 +321,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="gf-table-row_body" ng-show="elt.reduce === false">
+                    <div class="gf-table-row_body" ng-show="event.reduce === false">
                         <!-- <ng-include src="$GF.plugin.getPartialPath() + 'rules/events/eventBody.html'"> </ng-include> -->
                     </div>
                 </div>
