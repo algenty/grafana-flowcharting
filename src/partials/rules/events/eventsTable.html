@@ -184,7 +184,7 @@
                                 ng-show="event.whenEdit === true"
                                 ng-attr-id="{{event.getId() + '-when'}}"
                                 ng-blur="editor.onRulesChange();event.whenEdit = false;"
-                                ng-attr-title="{{$GF.GetT4V( editor.operator, event.data.operator)}}""
+                                ng-attr-title="{{$GF.GetT4V( editor.operator, event.data.operator)}}"
                                 ng-options="c.value as c.text for c in editor.operator"
                                 ng-change="editor.onRulesChange()">
                             </select>
