@@ -115,7 +115,8 @@
                             ng-init="link.displayWhatEdit = false;link.whatEdit = false;" 
                             ng-mouseleave="link.displayWhatEdit = false;"
                             ng-mouseover="link.displayWhatEdit = true;"
-                            ng-style="{'width' : editor.linksTable.getWidth('what')}">
+                            ng-style="{'width' : editor.linksTable.getWidth('what')}"
+                            ng-attr-title="{{link.data.pattern}}">
                             <div class="gf-table-content" ng-show="link.whatEdit !== true"
                                 ng-dblclick="link.whatEdit = true;">
                                 {{link.data.pattern}}
@@ -147,11 +148,11 @@
                         <!-- WHEN -->
                         <div role="cell" class="gf-table-cells" ng-mouseleave="link.displayWhenEdit = false;"
                             ng-mouseover="link.displayWhenEdit = true;"
-                            ng-style="{'width' : editor.linksTable.getWidth('when')}">
+                            ng-style="{'width' : editor.linksTable.getWidth('when')}"
+                            ng-attr-title="{{$GF.GetT4V( editor.linkOn, link.data.linkOn)}}">
                             <!-- {{link.data.LinkOn}} -->
                             <div class="gf-table-content" 
                                 style="text-align: left;"
-                                ng-attr-title="{{$GF.GetT4V( editor.linkOn, link.data.linkOn)}}"
                                 ng-dblclick="link.whenEdit = true;$GF.setFocus( link.getId() + '-when' )" 
                                 ng-show="link.whenEdit !== true">
                                 {{$GF.GetT4V( editor.linkOn, link.data.linkOn)}}
@@ -163,7 +164,6 @@
                             <select class="gf-form-input" ng-model="link.data.linkOn" style="width:100%;"
                                 ng-show="link.whenEdit === true"
                                 ng-attr-id="{{link.getId() + '-when'}}"
-                                ng-attr-title="{{$GF.GetT4V( editor.linkOn, link.data.linkOn)}}"
                                 ng-blur="editor.onRulesChange();link.whenEdit = false;"
                                 ng-options="c.value as c.text for c in editor.linkOn"
                                 ng-change="editor.onRulesChange()">
@@ -174,7 +174,8 @@
                             ng-init="link.displayUrlEdit = false;link.urlEdit = false;" 
                             ng-mouseleave="link.displayUrlEdit = false;"
                             ng-mouseover="link.displayUrlEdit = true;"
-                            ng-style="{'width' : editor.linksTable.getWidth('url')}">
+                            ng-style="{'width' : editor.linksTable.getWidth('url')}"
+                            ng-attr-title="{{link.data.linkUrl}}">
                             <!-- {{link.data.linkUrl}} -->
                             <div class="gf-table-content" style="text-align: left;"
                                 ng-attr-title="{{link.data.linkUrl}}"

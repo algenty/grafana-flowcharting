@@ -382,8 +382,6 @@ export class RulesOptionsCtrl {
         },
       ],
     };
-    
-
 
     const $rulesTable = $div.find('#RulesTable');
     const rulesTable = $rulesTable[0];
@@ -567,6 +565,27 @@ export class RulesOptionsCtrl {
     if (xgraph) {
       xgraph.unselectMxCells(prop, value);
     }
+  }
+
+  identifyCell(prop: gf.TPropertieKey, value: string) {
+    // debugger
+    const id = 'identifyCell';
+    $GF.clearUniqTimeOut(id);
+    const self = this;
+    let count = 0;
+    const select = () => {
+      self.selectCell(prop, value);
+      count = count + 1;
+      $GF.setUniqTimeOut(unselect, 500, id);
+    };
+    const unselect = () => {
+      self.unselectCell(prop, value);
+      if (count < 3) {
+        $GF.setUniqTimeOut(select, 500, id);
+      }
+    };
+    select();
+    return true;
   }
 
   /**

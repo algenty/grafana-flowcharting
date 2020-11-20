@@ -135,7 +135,7 @@ class GFCONSTANT {
     { text: 'Horizontal ', value: 'h' },
   ];
 
-  COMPARATOR_TYPES : gf.TComparatorList= [
+  COMPARATOR_TYPES: gf.TComparatorList = [
     { text: 'Always', value: 'al' },
     { text: 'Less than', value: 'lt' },
     { text: 'Less than or equal to', value: 'le' },
@@ -995,7 +995,6 @@ export class $GF {
     return 'No text ';
   }
 
-
   /**
    * Set focus to id dom
    *
@@ -1005,13 +1004,13 @@ export class $GF {
    */
   static async setFocus(id: string) {
     try {
-        setTimeout(() => {
-          const elt = document.getElementById(id);
-          if(elt) {
-            elt.focus();
-          }
-        }, 100);
-        return true;
+      setTimeout(() => {
+        const elt = document.getElementById(id);
+        if (elt) {
+          elt.focus();
+        }
+      }, 100);
+      return true;
     } catch (error) {
       return false;
     }

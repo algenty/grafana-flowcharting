@@ -138,9 +138,10 @@
                         <div role="cell" class="gf-table-cells"
                             ng-init="CN2 = 'what';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
                             ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseover="elt.displayEdit[CN2] = true;"
-                            ng-style="{'width' : editor.eventsTable.getWidth(CN2)}">
+                            ng-style="{'width' : editor.eventsTable.getWidth(CN2)}"
+                            ng-attr-title="{{elt.data.pattern}}">
                             <div class="gf-table-content" ng-show="elt.inEdit[CN2] !== true"
-                                ng-attr-title="{{elt.data.pattern}}" ng-dblclick="elt.inEdit[CN2] = true;">
+                                ng-dblclick="elt.inEdit[CN2] = true;">
                                 {{elt.data.pattern}}
                             </div>
                             <div ng-show="elt.displayEdit[CN2] === true && elt.inEdit[CN2] !== true"
@@ -164,7 +165,8 @@
                         <div role="cell" class="gf-table-cells"
                             ng-init="CN3 = 'when';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
                             ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseover="elt.displayEdit[CN3] = true;"
-                            ng-style="{'width' : editor.eventsTable.getWidth(CN3)}">
+                            ng-style="{'width' : editor.eventsTable.getWidth(CN3)}"
+                            ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.data.comparator)}}">
                             <!-- {{elt.data.comparator}} -->
                             <div class="gf-table-content" style="text-align: left;"
                                 ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.data.comparator)}}"
@@ -179,7 +181,6 @@
                             <select class="gf-form-input" ng-model="elt.data.comparator" style="width:100%;"
                                 ng-show="elt.inEdit[CN3] === true" ng-attr-id="{{elt.getId() + '-' + CN3}}"
                                 ng-blur="editor.onRulesChange();elt.inEdit[CN3] = false;"
-                                ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.data.comparator)}}"
                                 ng-options="c.value as c.text for c in editor.comparator"
                                 ng-change="editor.onRulesChange()">
                             </select>
@@ -212,10 +213,10 @@
                         <div role="cell" class="gf-table-cells"
                             ng-init="CN5 = 'then';elt.displayEdit[CN5] = false;elt.inEdit[CN5] = false;"
                             ng-mouseleave="elt.displayEdit[CN5] = false;" ng-mouseover="elt.displayEdit[CN5] = true;"
-                            ng-style="{'width' : editor.eventsTable.getWidth(CN5)}">
+                            ng-style="{'width' : editor.eventsTable.getWidth(CN5)}"
+                            ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.data.style)}}">
                             <!-- {{elt.data.EventType}} -->
                             <div class="gf-table-content" style="text-align: left;"
-                                ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.data.style)}}"
                                 ng-dblclick="elt.inEdit[CN5] = true;$GF.setFocus( elt.getId() + '-' + CN5 )"
                                 ng-show="elt.inEdit[CN5] !== true">
                                 <span>

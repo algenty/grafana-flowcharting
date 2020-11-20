@@ -167,7 +167,7 @@ export class FlowchartsOptionsCtrl {
     this.render();
   }
 
-  onColorChange(index : number) {
+  onColorChange(index: number) {
     return (newColor: any) => {
       const fc = this.flowchartHandler.getFlowcharts()[index];
       fc.data.bgColor = newColor;

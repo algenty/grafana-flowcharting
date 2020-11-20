@@ -1190,7 +1190,7 @@ export class Rule {
 export class GFMap {
   data: gf.TGFMapData;
   id: string;
-  reduce =true;
+  reduce = true;
   static methods: any[] = [];
   constructor(pattern, data: gf.TGFMapData) {
     this.data = data;
@@ -1680,25 +1680,25 @@ export class EventMap extends GFMap {
   toEventable(level: number): boolean {
     switch (this.data.comparator) {
       case 'al':
-          return true;
+        return true;
         break;
       case 'lt':
-          return level < this.data.eventOn;
+        return level < this.data.eventOn;
         break;
       case 'le':
-          return level <= this.data.eventOn;
+        return level <= this.data.eventOn;
         break;
       case 'eq':
-          return level <= this.data.eventOn;
+        return level <= this.data.eventOn;
         break;
       case 'ne':
-          return level !== this.data.eventOn;
+        return level !== this.data.eventOn;
         break;
       case 'ge':
-          return level >= this.data.eventOn;
+        return level >= this.data.eventOn;
         break;
       case 'gt':
-          return level > this.data.eventOn;
+        return level > this.data.eventOn;
         break;
       default:
         return this.data.eventOn === -1 || level === this.data.eventOn;
@@ -1724,7 +1724,7 @@ export class EventMap extends GFMap {
 
     if (!!obj.eventOn) {
       this.data.eventOn = obj.eventOn;
-      if(this.data.eventOn === -1) {
+      if (this.data.eventOn === -1) {
         this.data.comparator = 'al';
         this.data.eventOn = 0;
       }

@@ -123,7 +123,8 @@
                         <!-- WHAT -->
                         <div role="cell" class="gf-table-cells" id="what" ng-mouseleave="text.displayWhatEdit = false;"
                             ng-mouseover="text.displayWhatEdit = true;"
-                            ng-style="{'width' : editor.textsTable.getWidth('what')}">
+                            ng-style="{'width' : editor.textsTable.getWidth('what')}"
+                            ng-attr-title="{{text.data.pattern}}">
                             <div class="gf-table-content" ng-show="text.whatEdit !== true"
                                 ng-dblclick="text.whatEdit = true;">
                                 {{text.data.pattern}}
@@ -131,7 +132,7 @@
                             <div ng-show="text.displayWhatEdit === true && text.whatEdit !== true"
                                 ng-click="text.whatEdit = true;$GF.setFocus( text.getId() + '-what' )"
                                 title="Edit pattern"
-                                class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
+                                class="gf-icon-action gf-icon-edit gf-icon-withcontent">
                             </div>
                             <div ng-show="text.displayWhatEdit === true && text.whatEdit !== true && !editor.flowchartHandler.isMapping(text)"
                                 ng-click="editor.flowchartHandler.setMap(text,rule.data.textProp)"
@@ -154,12 +155,13 @@
                             <!-- ng-keydown="$event.keyCode === 13 && text.whatEdit = false" -->
                         </div>
                         <!-- WHEN -->
-                        <div role="cell" class="gf-table-cells" id="when" ng-mouseleave="text.displayWhenEdit = false;"
+                        <div role="cell" class="gf-table-cells" id="when" 
+                            ng-mouseleave="text.displayWhenEdit = false;"
                             ng-mouseover="text.displayWhenEdit = true;"
-                            ng-style="{'width' : editor.textsTable.getWidth('when')}">
+                            ng-style="{'width' : editor.textsTable.getWidth('when')}"
+                            ng-attr-title="{{$GF.GetT4V( editor.textOn, text.data.textOn)}}">
                             <!-- {{text.data.TextOn}} -->
                             <div class="gf-table-content"
-                            ng-attr-title="{{$GF.GetT4V( editor.textOn, text.data.textOn)}}" 
                             style="text-align: left;" 
                             ng-show="text.whenEdit !== true">
                                 {{$GF.GetT4V( editor.textOn, text.data.textOn)}}
@@ -171,7 +173,6 @@
                             </div>
                             <select class="gf-form-input" ng-model="text.data.textOn" style="width:100%;"
                                 ng-attr-id="{{text.getId() + '-when'}}"
-                                ng-attr-title="{{$GF.GetT4V( editor.textOn, text.data.textOn)}}" 
                                 ng-blur="editor.onRulesChange();text.whenEdit = false;"
                                 ng-show="text.whenEdit === true" ng-options="c.value as c.text for c in editor.textOn"
                                 ng-change="editor.onRulesChange()">
@@ -181,7 +182,8 @@
                         <div role="cell" class="gf-table-cells" id="how" 
                             ng-mouseleave="text.displayHowEdit = false;"
                             ng-mouseover="text.displayHowEdit = true;"
-                            ng-style="{'width' : editor.textsTable.getWidth('how')}">
+                            ng-style="{'width' : editor.textsTable.getWidth('how')}"
+                            ng-attr-title="{{$GF.GetT4V(editor.textReplace, text.data.textReplace)}}">
                             <!-- {{text.data.style}} -->
                             <div class="gf-table-content" 
                                 style="text-align: left;"
@@ -196,7 +198,6 @@
                             </div>
                             <select class="gf-form-input" ng-model="text.data.textReplace" style="width:100%;"
                                 ng-attr-id="{{text.getId() + '-how'}}"
-                                ng-attr-title="{{$GF.GetT4V(editor.textReplace, text.data.textReplace)}}"
                                 ng-blur="editor.onRulesChange();text.howEdit = false;"
                                 ng-show="text.howEdit === true" ng-options="c.value as c.text for c in editor.textReplace"
                                 ng-change="editor.onRulesChange()">
@@ -206,7 +207,8 @@
                         <div role="cell" class="gf-table-cells" id="with" 
                             ng-mouseleave="text.displayWithEdit = false;"
                             ng-mouseover="text.displayWithEdit = true;"
-                            ng-style="{'width' : editor.textsTable.getWidth('with')}">
+                            ng-style="{'width' : editor.textsTable.getWidth('with')}"
+                            ng-attr-title="{{text.data.textPattern}}">
                             <!-- {{text.data.textPattern}} -->
                             <div class="gf-table-content" style="text-align: left;" ng-show="text.withEdit !== true && text.data.textReplace == 'pattern'">
                                 {{text.data.textPattern}}

@@ -118,8 +118,7 @@
                             ng-style="{'width' : editor.flowchartsTable.getWidth('type')}">
                             <div class="gf-table-content" style="text-align: center;">
                                 <!-- {{flowchart.data.type}} -->
-                                <div 
-                                    ng-attr-title="{{flowchart.data.type === 'csv' ? 'CSV format' : 'Draw.io XML format'}}"
+                                <div ng-attr-title="{{flowchart.data.type === 'csv' ? 'CSV format' : 'Draw.io XML format'}}"
                                     ng-class="{ 'gf-icon-csv' : flowchart.data.type === 'csv' , 'gf-icon-xml' : flowchart.data.type === 'xml' }">
                                 </div>
                                 <!-- <div style="display:inline-block" ng-if="flowchart.data.type === 'csv'"
@@ -145,71 +144,54 @@
                         </div>
                         <!-- BACKGROUND -->
                         <div role="cell" class="gf-table-cells" id="background"
-                            ng-style="{'width' : editor.flowchartsTable.getWidth('background')}">
+                            ng-style="{'width' : editor.flowchartsTable.getWidth('background')}"
+                            ng-mouseenter="bgButton = true" ng-mouseleave="bgButton = false">
                             <div class="gf-table-content" style="text-align: center;" title="Select background color">
-                                <!-- <div class="gf-icon" style="width : 12px; height: 12px;"
-                                    ng-if="flowchart.data.bgColor === null || flowchart.data.bgColor === undefined || flowchart.data.bgColor.length === 0">
-                                    <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 100 0C 45 0 0 45 0 100C 0 100 0 900 0 900C 0 955 45 1000 100 1000C 100 1000 900 1000 900 1000C 955 1000 1000 955 1000 900C 1000 900 1000 100 1000 100C 1000 45 955 0 900 0C 900 0 100 0 100 0C 100 0 100 0 100 0M 128 75C 128 75 900 75 900 75C 914 75 925 86 925 100C 925 100 925 872 925 872C 925 872 128 75 128 75C 128 75 128 75 128 75M 75 128C 75 128 872 925 872 925C 872 925 100 925 100 925C 86 925 75 914 75 900C 75 900 75 128 75 128C 75 128 75 128 75 128M 0,0" transform="translate(1000,0) scale(-1,1)"/></svg>
-                                </div> -->
-                                <!-- <div class="gf-icon" style="width : 12px; height: 12px;"
-                                    ng-style="{ 'color': flowchart.data.bgColor }"
-                                    ng-if="flowchart.data.bgColor !== null && flowchart.data.bgColor.length > 0">
-                                    <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 100 0C 45 0 0 45 0 100C 0 100 0 900 0 900C 0 955 45 1000 100 1000C 100 1000 900 1000 900 1000C 955 1000 1000 955 1000 900C 1000 900 1000 100 1000 100C 1000 45 955 0 900 0C 900 0 100 0 100 0C 100 0 100 0 100 0M 0,0"/></svg>
-                                </div> -->
                                 <div class="gf-icon" style="width : 15px; height: 15px;">
-                                    <color-picker color="flowchart.data.bgColor" onChange="editor.onColorChange($index)"></color-picker>
+                                    <color-picker color="flowchart.data.bgColor"
+                                        onChange="editor.onColorChange($index)"></color-picker>
                                 </div>
+                            </div>
+                            <div ng-show="bgButton === true && flowchart.data.bgColor !== null && flowchart.data.bgColor !== undefined && flowchart.data.bgColor.length > 0"
+                                ng-click="flowchart.data.bgColor = null;;editor.onOptionChange()"
+                                title="Remove background color"
+                                class="gf-icon-remove gf-icon-action gf-icon-withcontent">
                             </div>
                         </div>
                         <!-- OPTIONS -->
                         <div role="cell" class="gf-table-cells" id="options"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('options')}">
-                            <div 
-                                class="gf-table-content gf-unselectable"
+                            <div class="gf-table-content gf-unselectable"
                                 style="text-align: center;justify-content: center;">
-                                <div
-                                    ng-click="flowchart.data.scale = !flowchart.data.scale;editor.onOptionChange()"
-                                    title="Enable/Disable scale/fit"
-                                    class="gf-icon-action"
+                                <div ng-click="flowchart.data.scale = !flowchart.data.scale;editor.onOptionChange()"
+                                    title="Enable/Disable scale/fit" class="gf-icon-action"
                                     ng-class="{'gf-icon-scale-on': flowchart.data.scale, 'gf-icon-scale-off': !flowchart.data.scale}">
                                 </div>
 
-                                <div
-                                    ng-click="flowchart.data.center= !flowchart.data.center;editor.onOptionChange()"
-                                    title="Enable/Disable center"
-                                    class="gf-icon-action"
+                                <div ng-click="flowchart.data.center= !flowchart.data.center;editor.onOptionChange()"
+                                    title="Enable/Disable center" class="gf-icon-action"
                                     ng-class="{'gf-icon-center-on': flowchart.data.center, 'gf-icon-center-off': !flowchart.data.center}">
                                 </div>
 
-                                <div
-                                    ng-click="flowchart.data.tooltip = !flowchart.data.tooltip;editor.onOptionChange()"
-                                    title="Enable/Disable tooltips"
-                                    class="gf-icon-action"
+                                <div ng-click="flowchart.data.tooltip = !flowchart.data.tooltip;editor.onOptionChange()"
+                                    title="Enable/Disable tooltips" class="gf-icon-action"
                                     ng-class="{'gf-icon-comment-on': flowchart.data.tooltip, 'gf-icon-comment-off': !flowchart.data.tooltip}">
                                 </div>
 
-                                <div 
-                                    ng-show="flowchart.data.grid"
-                                    title="Grid enabled"
-                                    class="gf-icon-grid">
+                                <div ng-show="flowchart.data.grid" title="Grid enabled" class="gf-icon-grid">
                                 </div>
 
-                                <div
-                                    ng-click="flowchart.data.lock = !flowchart.data.lock;editor.onOptionChange()"
-                                    title="Enable/Disable lock"
-                                    class="gf-icon-action"
+                                <div ng-click="flowchart.data.lock = !flowchart.data.lock;editor.onOptionChange()"
+                                    title="Enable/Disable lock" class="gf-icon-action"
                                     ng-class="{'gf-icon-lock-on': flowchart.data.lock, 'gf-icon-lock-off': !flowchart.data.lock}">
                                 </div>
 
-                                <div 
-                                    ng-click="flowchart.data.enableAnim = !flowchart.data.enableAnim;editor.onOptionChange()"
-                                    title="Enable/Disable animation"
-                                    class="gf-icon-action"
+                                <div ng-click="flowchart.data.enableAnim = !flowchart.data.enableAnim;editor.onOptionChange()"
+                                    title="Enable/Disable animation" class="gf-icon-action"
                                     ng-class="{'gf-icon-anim-on': flowchart.data.enableAnim, 'gf-icon-anim-off': !flowchart.data.enableAnim}">
                                 </div>
 
-                                <div 
-                                    ng-attr-title="{{flowchart.data.scale ? '' :'Zoom at ' + flowchart.data.zoom}}"
+                                <div ng-attr-title="{{flowchart.data.scale ? '' :'Zoom at ' + flowchart.data.zoom}}"
                                     ng-class="{'gf-icon-empty': flowchart.data.scale, 'gf-icon-zoom': !flowchart.data.scale}">
                                 </div>
 

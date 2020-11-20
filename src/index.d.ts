@@ -205,7 +205,7 @@ declare module gf {
   declare type TDateFormatElt = { text: string; value: TDateFormatKeys };
   declare type TDateFormatList = TDateFormatElt[];
 
-  declare type TComparatorKeys = 'lt' | 'le' | 'eq' | 'ne' | 'ge' | 'gt' | 'al' ;
+  declare type TComparatorKeys = 'lt' | 'le' | 'eq' | 'ne' | 'ge' | 'gt' | 'al';
   declare type TComparatorElt = { text: string; value: TComparatorKeys };
   declare type TComparatorList = TComparatorElt[];
 
@@ -275,7 +275,7 @@ declare module gf {
 
   declare interface TEventMapData extends TGFMapData {
     style: TStyleEventKeys;
-    comparator : TComparatorKeys;
+    comparator: TComparatorKeys;
     eventOn: number;
     value: string;
   }

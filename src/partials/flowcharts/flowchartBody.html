@@ -134,18 +134,14 @@
             </gf-form-switch>
             <div class="gf-form">
                 <label class="gf-form-label width-12">Bg Color</label>
-                <!-- <span>
-                    <spectrum-picker class="gf-form-input" ng-model="flowchart.data.bgColor"
-                        ng-change="editor.onOptionChange()"> </spectrum-picker>
-                </span> -->
-                <span class="gf-form-label" style="margin-right: 4px;">
+                <input type="text" class="gf-form-input width-8" ng-model="flowchart.data.bgColor"
+                    ng-change="editor.onOptionChange()" placeholder="#000000" />
+                <button class="btn btn-secondary btn-small" style="height: 32px;" title="Remove background color" ng-click="flowchart.data.bgColor = null;editor.onOptionChange()">
                     <color-picker color="flowchart.data.bgColor" onChange="editor.onColorChange($index)"></color-picker>
-                </span>
-                <input type="text" 
-                    class="gf-form-input width-8" 
-                    ng-model="flowchart.data.bgColor"
-                    ng-change="editor.onOptionChange()" 
-                    placeholder="#000000" />
+                </button>
+                <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Remove background color" ng-click="flowchart.data.bgColor = null;editor.onOptionChange()">
+                    <div Class="gf-icon-remove" style="margin-bottom: 7px;margin-right: 2px;"></div>
+                </button>
             </div>
             <!--zoom-->
             <div class="gf-form" ng-if="!flowchart.data.scale">

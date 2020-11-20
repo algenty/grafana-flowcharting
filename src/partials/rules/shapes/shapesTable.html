@@ -106,7 +106,8 @@
                         <!-- WHAT -->
                         <div role="cell" class="gf-table-cells" id="what" ng-mouseleave="shape.displayWhatEdit = false;"
                             ng-mouseover="shape.displayWhatEdit = true;"
-                            ng-style="{'width' : editor.shapesTable.getWidth('what')}">
+                            ng-style="{'width' : editor.shapesTable.getWidth('what')}"
+                            ng-attr-title="{{shape.data.pattern}}">
                             <div class="gf-table-content" ng-show="shape.whatEdit !== true"
                                 ng-dblclick="shape.whatEdit = true;">
                                 {{shape.data.pattern}}
@@ -141,9 +142,12 @@
                         <!-- WHEN -->
                         <div role="cell" class="gf-table-cells" id="when" ng-mouseleave="shape.displayWhenEdit = false;"
                             ng-mouseover="shape.displayWhenEdit = true;"
-                            ng-style="{'width' : editor.shapesTable.getWidth('when')}">
+                            ng-style="{'width' : editor.shapesTable.getWidth('when')}"
+                            ng-attr-title="{{$GF.GetT4V( editor.colorOn, shape.data.colorOn)}}">
                             <!-- {{shape.data.colorOn}} -->
-                            <div class="gf-table-content" style="text-align: left;" ng-show="shape.whenEdit !== true">
+                            <div class="gf-table-content" 
+                                style="text-align: left;"
+                                ng-show="shape.whenEdit !== true">
                                 {{$GF.GetT4V( editor.colorOn, shape.data.colorOn)}}
                             </div>
                             <div ng-show="shape.displayWhenEdit === true && shape.whenEdit !== true"
@@ -162,7 +166,8 @@
                         <div role="cell" class="gf-table-cells" id="how" 
                             ng-mouseleave="shape.displayHowEdit = false;"
                             ng-mouseover="shape.displayHowEdit = true;"
-                            ng-style="{'width' : editor.shapesTable.getWidth('how')}">
+                            ng-style="{'width' : editor.shapesTable.getWidth('how')}"
+                            ng-attr-title="{{$GF.GetT4V(editor.style, shape.data.style)}}">
                             <!-- {{shape.data.style}} -->
                             <div class="gf-table-content" style="text-align: left;" ng-show="shape.howEdit !== true">
                                 {{$GF.GetT4V(editor.style, shape.data.style)}}
