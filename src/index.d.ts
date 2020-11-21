@@ -379,7 +379,8 @@ declare module gf {
     id: string;
     label: string;
     desc: string;
-    size: string;
+    width: string = '100px';
+    align ?: 'left' | 'center' | 'right' = 'left';
     sort: 'asc' | 'desc';
     select: boolean;
   }

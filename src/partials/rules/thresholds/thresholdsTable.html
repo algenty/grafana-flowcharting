@@ -1,0 +1,252 @@
+<div role=" table" class="gf-table-main" id="THsTable" style="overflow: visible;">
+    <div class="gf-custom-scrollbar"
+        style="position: relative; overflow: visible; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
+        <div class="gf-view"
+            style="position: relative; overflow: visible; margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
+            <!-- THEAD -->
+            <div class="gf-table-thead gf-unselectable" role="row" ng-mouseup="editor.THsTable.onMouseUp($event)"
+                ng-mousemove="editor.THsTable.onMouseMove($event)" ng-mouseleave="editor.THsTable.onMouseUp($event)">
+                <!-- HEADERS -->
+                <!-- EXPAND -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.THsTable.getWidth('expand')}">
+                    <div ng-attr-title="{{editor.THsTable.getDesc('expand')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.THsTable.getLabel('expand')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.THsTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- COLORS -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.THsTable.getWidth('colors')}">
+                    <div ng-attr-title="{{editor.THsTable.getDesc('colors')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.THsTable.getLabel('colors')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover('Select a color', 'LINKS')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.THsTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- WHEN -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.THsTable.getWidth('when')}">
+                    <div ng-attr-title="{{editor.THsTable.getDesc('when')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.THsTable.getLabel('when')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover(editor.THsTable.getDesc('when'), 'THRESHOLD')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.THsTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- VALUE -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.THsTable.getWidth('value')}">
+                    <div ng-attr-title="{{editor.THsTable.getDesc('value')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.THsTable.getLabel('value')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover('Select condition to apply event on object.', 'SHAPES')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize"
+                        ng-mousedown="editor.THsTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- LEVEL -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.THsTable.getWidth('level')}">
+                    <div ng-attr-title="{{editor.THsTable.getDesc('level')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.THsTable.getLabel('level')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover('Select condition to apply event on object.', 'SHAPES')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize"
+                        ng-mousedown="editor.THsTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- OPTIONS -->
+                <!-- <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.THsTable.getWidth('options')}">
+                    <div ng-attr-title="{{editor.THsTable.getDesc('options')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.THsTable.getLabel('options')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover('Enter absolute or relative URL', 'MAPPING#Event')"> </span>
+                        </info-popover></label>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.THsTable.onMouseDown($event)">
+                    </div>
+                </div> -->
+                <!-- ACTION -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.THsTable.getWidth('actions')}">
+                    <div ng-attr-title="{{editor.THsTable.getDesc('actions')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.THsTable.getLabel('actions')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.THsTable.onMouseDown($event)">
+                    </div>
+                </div>
+            </div>
+            <!-- TBODY -->
+            <div class="gf-table-body">
+                <div role="row" class="gf-table-rows" ng-repeat="col in rule.getColors() track by $index">
+                    <!-- CELLS -->
+                    <div class="gf-table-row_line" ng-init="elt = {};elt.displayEdit = [];elt.inEdit = [];">
+                        <!-- EXPAND -->
+                        <div role="cell" class="gf-table-cells" ng-click="elt.reduce=!elt.reduce"
+                            ng-init="CN1 = 'expand';elt.displayEdit[CN1] = false;elt.inEdit[CN1] = false;"
+                            ng-style="{'width' : editor.THsTable.getWidth(CN1)}">
+                            <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
+                                <span>
+                                    <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
+                                        ng-class="{'fa-chevron-right': elt.reduce, 'fa-chevron-down': elt.reduce === false}">
+                                    </i>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- COLORS -->
+                        <div role="cell" class="gf-table-cells"
+                            ng-init="CN2 = 'colors';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
+                            ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseover="elt.displayEdit[CN2] = true;"
+                            ng-style="{'width' : editor.THsTable.getWidth(CN2)}" ng-attr-title="{{elt.data.pattern}}">
+                            <div class="gf-table-content" style="text-align: center">
+                                <div class="gf-icon" style="width : 15px; height: 15px;">
+                                    <color-picker color="rule.data.colors[$index]"
+                                        onChange="editor.onColorChange($parent.$index, $index)"></color-picker>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- WHEN -->
+                        <div role="cell" class="gf-table-cells"
+                            ng-init="CN3 = 'colors';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
+                            ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseover="elt.displayEdit[CN3] = true;"
+                            ng-style="{'width' : editor.THsTable.getWidth(CN3)}" ng-attr-title="{{elt.data.pattern}}">
+                            <div class="gf-table-content" style="text-align: center">
+                                <div class="gf-icon-comp-ge gf-icon-border gf-icon-24" title="Greater or equal than">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- VALUE -->
+                        <div role="cell" class="gf-table-cells"
+                            ng-init="CN4 = 'value';elt.displayEdit[CN4] = false;elt.inEdit[CN4] = false;"
+                            ng-mouseleave="elt.displayEdit[CN4] = false;" ng-mouseover="elt.displayEdit[CN4] = true;"
+                            ng-style="{'width' : editor.THsTable.getWidth(CN4)}"
+                            ng-attr-title="{{$index > 0 && rule.data.type === 'number' ? 'Specify a value for apply color when value is greater or equal' : 'Specify a pattern regex for apply color' }}">
+                            <div class="gf-table-content" style="text-align: center;justify-content: center;"
+                                ng-attr-title="TODO : Add threshold definition"
+                                ng-dblclick="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
+                                ng-show="elt.inEdit[CN4] !== true">
+                                <span
+                                    ng-show="$index > 0 && rule.data.type === 'number'">
+                                    {{rule.data.thresholds[$index-1]}}
+                                </span>
+                                <span
+                                    ng-show="$index > 0 && rule.data.type === 'string'">
+                                    {{rule.data.stringThresholds[$index-1]}}
+                                </span>
+                                <label class="gf-form-label" style="margin-right: 2px;text-align: center"
+                                    ng-show="$index === 0 && rule.data.type === 'number'">
+                                    Base
+                                </label>
+                            </div>
+                            <div ng-show="elt.displayEdit[CN4] === true && elt.inEdit[CN4] !== true && $index > 0"
+                                ng-click="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
+                                class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit threshold level">
+                            </div>
+                            <!-- TODO : Replace by a select -->
+                            <input ng-show="$index > 0 && rule.data.type === 'number' && elt.inEdit[CN4] === true"
+                                type="number" class="gf-form-input" ng-model="rule.data.thresholds[$index-1]"
+                                placeholder="value"
+                                title="Specify a value for apply color when value is greater or equal"
+                                ng-blur="editor.onRulesChange()" />
+                            <input ng-show="$index > 0 && rule.data.type === 'string' && elt.inEdit[CN4] === true"
+                                type="text" class="gf-form-input" ng-model="rule.data.stringThresholds[$index-1]"
+                                placeholder="pattern" title="'Specify a pattern regex for apply color'"
+                                ng-blur="editor.onRulesChange()" />
+                        </div>
+                        <!-- LEVEL -->
+                        <div role="cell" class="gf-table-cells"
+                            ng-init="CN5 = 'level';elt.displayEdit[CN5] = false;elt.inEdit[CN5] = false;"
+                            ng-mouseleave="elt.displayEdit[CN5] = false;" ng-mouseover="elt.displayEdit[CN5] = true;"
+                            ng-style="{'width' : editor.THsTable.getWidth(CN5)}"
+                            ng-attr-title="{{ ! rule.data.invert ? rule.getColorsCount() - $index - 1 : $index}}">
+                            <!-- {{elt.data.EventType}} -->
+                            <div class="gf-table-content" style="text-align: center;"
+                                ng-dblclick="elt.inEdit[CN5] = true;$GF.setFocus( elt.getId() + '-' + CN5 )"
+                                ng-show="elt.inEdit[CN5] !== true">
+                                <span>
+                                    {{ ! rule.data.invert ? rule.getColorsCount() - $index - 1 : $index}}
+                                </span>
+                            </div>
+                        </div>
+                        <!-- OPTIONS -->
+                        <!-- <div role="cell" class="gf-table-cells"
+                            ng-style="{'width' : editor.THsTable.getWidth('options')}">
+                            <div class="gf-table-content gf-unselectable"
+                                style="text-align: center;justify-content: center;">
+                                <div ng-click="elt.data.eventParams = !elt.data.eventParams;editor.onRulesChange()"
+                                    title="Add/Remove the dashboad parameters with url" class="gf-icon-action"
+                                    ng-class="{'gf-icon-address-on': elt.data.eventParams, 'gf-icon-address-off': !elt.data.eventParams}">
+                                </div>
+                            </div>
+                        </div> -->
+                        <!-- ACTION -->
+                        <div role="cell" class="gf-table-cells"
+                            ng-style="{'width' : editor.THsTable.getWidth('actions')}">
+                            <div class="gf-table-content gf-unselectable"
+                                style="text-align: left;justify-content: center;">
+                                <div ng-click="rule.addColor($index)"
+                                    title="Add e new color" class="gf-icon-action gf-icon-new">
+                                </div>
+                                <div ng-click="elt.isHidden() ? elt.show(): elt.hide();editor.onRulesChange()"
+                                title="Hide/Disable this color/level" class="gf-icon-action"
+                                ng-class="{'gf-icon-show': !elt.isHidden(), 'gf-icon-hide': elt.isHidden()}">
+                                </div>
+                                <div ng-click="rule.removeColor($index);editor.onRulesChange()"
+                                    title="Delete this color" class="gf-icon-action gf-icon-remove">
+                                </div>
+                                <!-- <div ng-click="editor.flowchartHandler.setMap(elt,rule.data.eventProp)"
+                                    title="Select a shape in diagram" class="gf-icon-action"
+                                    ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(elt), 'gf-icon-empty': editor.flowchartHandler.isMapping(elt)}">
+                                </div> -->
+                                <div ng-click="rule.cloneEventMap(elt);editor.onRulesChange();"
+                                    title="Duplicate this mapping" class="gf-icon-action gf-icon-clone">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gf-table-row_body" ng-show="elt.reduce === false">
+                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/events/eventBody.html'"> </ng-include>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

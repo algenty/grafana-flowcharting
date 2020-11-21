@@ -145,8 +145,9 @@
                         <!-- BACKGROUND -->
                         <div role="cell" class="gf-table-cells" id="background"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('background')}"
-                            ng-mouseenter="bgButton = true" ng-mouseleave="bgButton = false">
-                            <div class="gf-table-content" style="text-align: center;" title="Select background color">
+                            ng-mouseenter="bgButton = true" ng-mouseleave="bgButton = false"
+                            title="Select background color">
+                            <div class="gf-table-content" style="text-align: center;">
                                 <div class="gf-icon" style="width : 15px; height: 15px;">
                                     <color-picker color="flowchart.data.bgColor"
                                         onChange="editor.onColorChange($index)"></color-picker>

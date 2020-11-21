@@ -83,17 +83,17 @@ https://www.percona.com/blog/2020/06/02/intro-to-grafana-plugin-development/
 allowdrawio
 Add gradient to graph (D3JS ?)
 Fade on message/notification
-Update toolkit
 multi Diagrams
 Add sparkline
 Convert to D3 graph
 Add a refresh timer on donwload optionsFlag
 Add rename option on flowchart
-change layer event 
+change reset/change/apply state to event (rxjx) 
 Simplify editor
-Change Layer
 Fix Message console
-
+Add multi grid modele : background
+convert threshold to object
+add friconix to contribute
 
 # effect
 https://pavenum.com/overlay-avec-hover-sur-une-image-en-html-css/

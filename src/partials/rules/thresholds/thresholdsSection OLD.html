@@ -11,8 +11,7 @@
           ng-bind-html="$GF.popover('Define states according to value and direction (invert).', 'THRESHOLDS')"></span>
       </info-popover>
     </h5>
-    <ng-include src="$GF.plugin.getPartialPath() + 'rules/thresholds/thresholdsTable.html'"> </ng-include>
-    <!-- <table>
+    <table>
       <thead>
         <tr>
           <th>
@@ -48,7 +47,7 @@
           <td>
             <div class="gf-form">
               <label class="gf-form-label" style="margin-right: 4px;" ng-if="rule.getColorsCount() > 1">
-                <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete this colors'"
+                <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete this color'"
                   ng-click="rule.removeColor($index);editor.onRulesChange()"></i>
               </label>
               <label class="gf-form-label">
@@ -120,5 +119,5 @@
           </td>
         </tr>
       </tfoot>
-    </table> -->
+    </table>
   </div>
