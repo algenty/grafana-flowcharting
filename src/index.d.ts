@@ -374,14 +374,15 @@ declare module gf {
     ctrl: any;
   }
 
+  declare type TTableProperty = 'index' | 'id' | 'label' | 'desc' | 'width' | 'align' | 'sort' | 'select';
   declare interface TTableColumn {
     index: number;
     id: string;
     label: string;
     desc: string;
-    width: string = '100px';
-    align ?: 'left' | 'center' | 'right' = 'left';
-    sort: 'asc' | 'desc';
+    width: string;
+    align?: string =  'left' | 'center' | 'right';
+    sort?: string = 'asc' | 'desc';
     select: boolean;
   }
 

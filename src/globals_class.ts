@@ -910,7 +910,7 @@ export class $GF {
    * @param {*} init
    * @memberof $GF
    */
-  static createGFTable(table: gf.TTableData, div: HTMLDivElement): GFTable {
+  static createGFTable(table: gf.TTableData, div ?: HTMLDivElement): GFTable {
     return new GFTable(table, div);
   }
 
@@ -1257,7 +1257,7 @@ export class GFTable {
   }
 
   getWidth(id: string | number): string {
-    return this.getColumnProperty(id, 'size');
+    return this.getColumnProperty(id, 'width');
   }
 
   getLeft(id: string | number): string {
@@ -1265,13 +1265,27 @@ export class GFTable {
     let found = false;
     this.tableData.columns.forEach(c => {
       if (c.id !== id && found === false) {
-        sizes += parseInt(c.size, 10);
+        sizes += parseInt(c.width, 10);
       }
       if (c.id === id) {
         found = true;
       }
     });
     return `${sizes}px`;
+  }
+
+  getStyle(id: string | number): string {
+    // const properties = ['width', 'align'];
+    let style = '';
+    if (this.haveProperty(id, 'width')) {
+      const prop = this.getColumnProperty(id, 'width');
+      style = `${style}width: ${prop};`;
+    }
+    if (this.haveProperty(id, 'align')) {
+      const prop = this.getColumnProperty(id, 'align');
+      style = `${style}text-align: ${prop};`;
+    }
+    return style;
   }
 
   getIndex(id: string): number {
@@ -1290,8 +1304,8 @@ export class GFTable {
     return this.getColumnProperty(id, 'desc');
   }
 
-  getColumnProperty(id: string | number, property: string): any {
-    let result = `No value for properti ${property}`;
+  getColumnProperty(id: string | number, property: gf.TTableProperty): any {
+    let result = `No value for property ${property}`;
     const isNumber = typeof id === 'number';
     for (let index = 0; index < this.tableData.columns.length; index++) {
       const element = this.tableData.columns[index];
@@ -1300,6 +1314,17 @@ export class GFTable {
       }
     }
     return result;
+  }
+
+  haveProperty(id: string | number, property: gf.TTableProperty): boolean {
+    const isNumber = typeof id === 'number';
+    for (let index = 0; index < this.tableData.columns.length; index++) {
+      const element = this.tableData.columns[index];
+      if ((isNumber && id === element.index) || (!isNumber && id === element.id)) {
+        return element[property] !== undefined && element[property] !== null;
+      }
+    }
+    return false;
   }
 
   setColumnProperty(id: string | number, property: string, value: any): this {

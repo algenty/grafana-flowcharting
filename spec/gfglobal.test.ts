@@ -79,4 +79,59 @@ describe('$GF', () => {
       expect(GFVariables.getAvailableLocalVarNames()).toMatchSnapshot();
     });
   });
+
+  describe('GFTable', () => {
+    const myTableData = {
+      data: [],
+      columns: [
+        {
+          index: 0,
+          id: 'expand',
+          label: '',
+          desc: 'Expand/collapse',
+          width: '10px',
+          align: 'center',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 1,
+          id: 'name',
+          label: 'Flowchart name',
+          desc: 'Flowchart Name',
+          width: '20px',
+          align: 'center',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: 2,
+          id: 'type',
+          label: 'Type',
+          desc: 'XML or CSV',
+          width: '30px',
+          sort: 'asc',
+          select: false,
+        },
+      ],
+    };
+
+    const myTable = $GF.createGFTable(myTableData);
+
+    test('Properties should ', () => {
+      expect(myTable.getColumnProperty('name', 'width')).toEqual('20px');
+      expect(myTable.getColumnProperty(1, 'width')).toEqual('20px');
+      expect(myTable.haveProperty('name', 'align')).toBeTruthy();
+      expect(myTable.haveProperty(1, 'align')).toBeTruthy();
+      expect(myTable.haveProperty('type', 'align')).toBeFalsy();
+      expect(myTable.haveProperty(2, 'align')).toBeFalsy();
+    });
+
+    test('Style should ', () => {
+      expect(myTable.getWidth('name')).toEqual('20px');
+      expect(myTable.getLeft('type')).toEqual('30px');
+      expect(myTable.getStyle('name')).toEqual('width: 20px;text-align: center;');
+      expect(myTable.getStyle('type')).toEqual('width: 30px;');
+    });
+  });
 });

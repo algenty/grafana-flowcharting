@@ -115,3 +115,6 @@ https://friconix.com/search/?q=text
 # filter converter
 https://en.it1352.com/article/3c71576dec7f4969bdb299a4fe1ecc7a.html
 https://codepen.io/sosuke/pen/Pjoqqp
+
+#Angular definition
+http://definitelytyped.org/docs/angularjs--angular/modules/ng.html

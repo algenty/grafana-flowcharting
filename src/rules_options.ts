@@ -393,7 +393,7 @@ export class RulesOptionsCtrl {
           id: 'expand',
           label: '',
           desc: 'Expand/collapse',
-          width : '30px',
+          width: '30px',
           align: 'center',
           sort: 'asc',
           select: false,
@@ -476,7 +476,6 @@ export class RulesOptionsCtrl {
     const eventsTable = $eventsTable[0];
     this.eventsTable = new GFTable(this.eventsTableData, eventsTable);
 
-    
     const $THsTable = $div.find('#THsTable');
     const THsTable = $THsTable[0];
     this.THsTable = new GFTable(this.THsTableData, THsTable);
