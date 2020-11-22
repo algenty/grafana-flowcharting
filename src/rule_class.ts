@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { Metric } from './metric_class';
 import { $GF } from './globals_class';
 import chroma from 'chroma-js';
+import { NumberTH, StringTH } from 'threshold_class';
 
 /**
  * Rule definition
@@ -20,6 +21,8 @@ export class Rule {
   eventMaps: EventMap[] = [];
   valueMaps: ValueMap[] = [];
   rangeMaps: RangeMap[] = [];
+  numberTH: NumberTH[] = [];
+  stringTH: StringTH[] = [];
   id: string;
   removeClick = 2;
   states: Map<string, State>;
@@ -62,7 +65,7 @@ export class Rule {
       hidden: false,
       aggregation: 'current',
       decimals: 2,
-      colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
+      // colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
       reduce: true,
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
       thresholds: [50, 80],
@@ -474,19 +477,59 @@ export class Rule {
    * @returns {this}
    * @memberof Rule
    */
-  invertColorOrder(): this {
-    // const ref = this.data.colors;
-    // const copy = ref[0];
-    // ref[0] = ref[2];
-    // ref[2] = copy;
-    this.data.colors.reverse();
-    // this.data.invert = !this.data.invert;
-    // if (this.data.invert) {
-    //   this.data.invert = false;
-    // } else {
-    //   this.data.invert = true;
-    // }
+  private invertColorOrder(): this {
+    // this.data.colors.reverse();
+    this._invertColorOrderFor(this.numberTH);
+    this._invertColorOrderFor(this.stringTH);
     return this;
+  }
+
+  private _invertColorOrderFor(ths: NumberTH[] | StringTH[]): this {
+    const colors: string[] = [];
+    ths.forEach(th => {
+      colors.push(th.getColor());
+    });
+    colors.reverse();
+    let i = 0;
+    ths.forEach(TH => {
+      TH.setColor(colors[i++]);
+    });
+    return this;
+  }
+
+  private _getTHIndex(th: NumberTH | StringTH): number {
+    // TODO
+    return 0;
+  }
+
+  private _getTHLevel(th: NumberTH | StringTH): number {
+    let index = 0;
+    switch (this.data.type) {
+      case 'number':
+        const nth = th as NumberTH;
+        index = this.numberTH.indexOf(nth);
+        if (!this.data.invert) {
+          return this.numberTH.length - 1 - index;
+        }
+        return index;
+        break;
+      case 'string':
+        const sth = th as StringTH;
+        index = this.stringTH.indexOf(sth);
+        if (!this.data.invert) {
+          return this.stringTH.length - 1 - index;
+        }
+        return index;
+        break;
+      case 'date':
+        return 0;
+        break;
+      default:
+        $GF.log.error('Data type unknown');
+        throw new Error('Data type unknown');
+        return -1;
+        break;
+    }
   }
 
   /**
@@ -514,6 +557,7 @@ export class Rule {
     const colorStart: string = colors[index];
     let color: string;
     let value: any;
+    // if is not the last
     if (index !== colors.length - 1) {
       const ratio = 0.5;
       let colorEnd = colors[index + 1];
@@ -541,6 +585,24 @@ export class Rule {
       this.data.stringThresholds.splice(index, 0, value);
     }
     return this;
+  }
+
+  _addThreshold(index: number) {
+    let th: NumberTH | StringTH;
+    let ths: NumberTH[] | StringTH[];
+    switch (this.data.type) {
+      case 'number':
+        ths = this.numberTH;
+        break;
+      case 'string':
+        ths = this.stringTH;
+        break;
+      default:
+        throw new Error('Type of threshold unknown')
+        break;
+    }
+    th = ths[index];
+    let color = th.getColor();
   }
 
   /**

@@ -226,11 +226,11 @@ declare module gf {
     type: string;
     hidden: boolean;
     decimals: number;
-    colors: string[];
+    // colors: string[];
     reduce: boolean;
     dateFormat: TDateFormatKeys;
-    thresholds: number[];
-    stringThresholds: string[];
+    // thresholds: number[];
+    // stringThresholds: string[];
     invert: boolean;
     gradient: boolean;
     overlayIcon: boolean;
@@ -248,6 +248,8 @@ declare module gf {
     shapeProp: TPropertieKey;
     shapeRegEx: boolean;
     shapeData: TShapeMapData[];
+    THNumberData : THNumberData[];
+    THStringData : THNumberData[];
     textProp: TPropertieKey;
     textRegEx: boolean;
     textData: TTextMapData[];
@@ -390,4 +392,29 @@ declare module gf {
     data: any[];
     columns: TTableColumn[];
   }
+
+  declare type TTHType = 'string' | 'number' | 'date';
+  declare type TTHNumberComparator = 'ge' | 'gt';
+  declare type TTHStringComparator = 'eq' | 'ne';
+  declare type TTHDateComparator = 'ge' | 'gt';
+  declare interface TTHData {
+    color : string | undefined
+    comparator : any;
+    value : any;
+    level : number;
+  }
+
+  declare interface TTHStringData extends TTHData {
+    comparator : THStringComparator;
+    value : string | undefined;
+  }
+  declare interface TTHNumberData extends TTHData {
+    comparator : THStringComparator;
+    value : number | undefined;
+  }
+  declare interface TTHDateData extends TTHData {
+    comparator : THDateComparator;
+    value : any | undefined;
+  }
+
 }

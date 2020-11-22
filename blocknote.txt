@@ -118,3 +118,7 @@ https://codepen.io/sosuke/pen/Pjoqqp
 
 #Angular definition
 http://definitelytyped.org/docs/angularjs--angular/modules/ng.html
+
+# colors order
+invert = false => 3,2,1,0 Thresholds (2 : Critical > ... > 0 : Ok)
+invert = true => 0,1,2,3 Thresholds ( 0 : Ok > ... > 2 : Critical)

@@ -1383,7 +1383,6 @@ export class GFTable {
       }
     }
   }
-
   onMouseDown(event: any) {
     this.pressed = true;
     this.startX = event.pageX;
