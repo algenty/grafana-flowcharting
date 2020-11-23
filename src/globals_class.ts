@@ -52,6 +52,15 @@ class GFCONSTANT {
   FLOWCHART_CHG_GRAPHHOVER: gf.TFlowchartFlagKeys = 'graphHover';
   FLOWCHART_CHG_HIDDENCHANGE: gf.TFlowchartFlagKeys = 'hiddenChange';
 
+  // COMPARATORS
+  COMP_LT: any = 'lt';
+  COMP_LE: any = 'le';
+  COMP_EQ: any = 'eq';
+  COMP_NE: any = 'ne';
+  COMP_GE: any = 'ge';
+  COMP_GT: any = 'gt';
+  COMP_AL: any = 'al';
+
   // CONDITIONS
   TOOLTIP_APPLYON: gf.TTooltipOnList = [
     { text: 'Warning / Critical', value: 'wc' },
@@ -910,7 +919,7 @@ export class $GF {
    * @param {*} init
    * @memberof $GF
    */
-  static createGFTable(table: gf.TTableData, div ?: HTMLDivElement): GFTable {
+  static createGFTable(table: gf.TTableData, div?: HTMLDivElement): GFTable {
     return new GFTable(table, div);
   }
 

@@ -1,10 +1,10 @@
-import { $GF } from 'globals_class';
+import { $GF } from '../globals_class';
 
 class GFTH {
   data: gf.TTHData;
   hidden = false;
   id = $GF.utils.uniqueID();
-  constructor(color: string | undefined, comparator: any, value: any, data: gf.TTHData) {
+  constructor(color: string, comparator: any, value: any, data: gf.TTHData) {
     this.data = data;
     this.data.value = value;
     this.data.comparator = comparator;
@@ -42,11 +42,15 @@ class GFTH {
     return true;
   }
 
+  getData():any {
+    return this.data;
+  }
+
   getColor() {
     return this.data.value;
   }
 
-  setColor(color: string | undefined):this {
+  setColor(color: string):this {
     this.data.color = color;
     return this;
   }
@@ -55,7 +59,7 @@ class GFTH {
     return this.data.value;
   }
 
-  setValue(value: string | undefined):this {
+  setValue(value: string):this {
     this.data.value = value;
     return this;
   }
@@ -96,13 +100,14 @@ class GFTH {
 export class NumberTH extends GFTH {
   data: gf.TTHNumberData;
   constructor(
-    color: string | undefined,
-    value: number | undefined,
+    color: string,
+    value: number,
     comparator: gf.TTHNumberComparator,
     data: gf.TTHNumberData
   ) {
     super(color, value, comparator, data);
     this.data = data;
+    this.data.color = color;
     this.data.value = value;
     this.data.comparator = comparator;
   }
@@ -142,13 +147,14 @@ export class NumberTH extends GFTH {
 export class StringTH extends GFTH {
   data: gf.TTHStringData;
   constructor(
-    color: string | undefined,
-    value: string | undefined,
+    color: string,
+    value: string,
     comparator: gf.TTHStringComparator,
     data: gf.TTHStringData
   ) {
     super(color, value, comparator, data);
     this.data = data;
+    this.data.color = color;
     this.data.value = value;
     this.data.comparator = comparator;
   }

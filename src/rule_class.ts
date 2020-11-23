@@ -68,8 +68,10 @@ export class Rule {
       // colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
       reduce: true,
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
-      thresholds: [50, 80],
-      stringThresholds: ['/.*/', '/.*/'],
+      // thresholds: [50, 80],
+      // stringThresholds: ['/.*/', '/.*/'],
+      numberTHData: [],
+      stringTHData: [],
       invert: false,
       gradient: false,
       overlayIcon: false,
@@ -147,6 +149,7 @@ export class Rule {
       this.data.decimals = obj.decimals;
     }
     if (!!obj.colors) {
+      //TODO : To convert
       this.data.colors = obj.colors.slice(0);
     }
     if (!!this.data.reduce) {
@@ -207,6 +210,7 @@ export class Rule {
       this.data.dateFormat = obj.dateFormat;
     }
     if (!!obj.thresholds) {
+      // TODO : To convert
       this.data.thresholds = obj.thresholds.map((x: any) => {
         let value = x;
         if (typeof value === 'string') {
@@ -218,14 +222,17 @@ export class Rule {
     }
 
     if (!!obj.stringThresholds) {
+      // TODO : To convert
       this.data.stringThresholds = obj.stringThresholds.slice(0);
     }
 
     if (!!obj.stringWarning) {
+      // TODO : To convert
       //this.data.stringWarning = obj.stringWarning;
       this.data.stringThresholds[1] = obj.stringWarning;
     }
     if (!!obj.stringCritical) {
+      // TODO : To convert
       //this.data.stringCritical = obj.stringCritical;
       this.data.stringThresholds[0] = obj.stringCritical;
     }
@@ -497,11 +504,6 @@ export class Rule {
     return this;
   }
 
-  private _getTHIndex(th: NumberTH | StringTH): number {
-    // TODO
-    return 0;
-  }
-
   private _getTHLevel(th: NumberTH | StringTH): number {
     let index = 0;
     switch (this.data.type) {
@@ -525,7 +527,6 @@ export class Rule {
         return 0;
         break;
       default:
-        $GF.log.error('Data type unknown');
         throw new Error('Data type unknown');
         return -1;
         break;
@@ -547,7 +548,7 @@ export class Rule {
   /**
    * Add a new threshold at the position index, if index is undefined, add to the end.
    *
-   * @param {number} index 
+   * @param {number} index
    * @returns {this}
    * @memberof Rule
    */
@@ -586,38 +587,36 @@ export class Rule {
   //   }
   //   return this;
   // }
-  addThreshold(index ?: number):this {
-    let th: NumberTH | StringTH;
-    let ths: NumberTH[] | StringTH[];
-    let thd: gf.TTHNumberData[] | gf.TTHStringData[]; 
-    let data:any;
-    let color: string;
+  addThreshold(index?: number): this {
     switch (this.data.type) {
       case 'number':
-        ths = this.numberTH;
-        thd = this.data.numberTHData;
-        data = NumberTH.getDefaultData();
-        th = new NumberTH(data.color, data.value,data.comparator,data);
+        this._addNumberThreshold(index);
         break;
       case 'string':
-        ths = this.stringTH;
-        thd = this.data.stringTHData;
-        data = StringTH.getDefaultData();
-        th = new StringTH(data.color, data.value,data.comparator,data);
+        this._addStringThreshold(index);
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
         break;
     }
+    return this;
+  }
+
+  private _addNumberThreshold(index?: number): NumberTH {
+    const thfTable = this.numberTH;
+    const thdTable = this.data.numberTHData;
+    const data = NumberTH.getDefaultData();
+    const nth = new NumberTH(data.color, data.value, data.comparator, data);
     if (index === undefined) {
-      index = thd.length - 1; 
+      index = thdTable.length - 1;
     }
-    th = ths[index];
-    let colorStart = th.getColor();
-    let value = th.getValue();
-    if (index !== ths.length - 1) {
+    const lth = thfTable[index];
+    let colorStart = lth.getColor();
+    let value = lth.getValue();
+    let color: string;
+    if (index !== thfTable.length - 1) {
       const ratio = 0.5;
-      let colorEnd = ths[index + 1].getColor();
+      let colorEnd = thfTable[index + 1].getColor();
       try {
         let f = chroma.scale([colorStart, colorEnd]).mode('lrgb');
         color = f(ratio).hex();
@@ -625,18 +624,30 @@ export class Rule {
         $GF.log.error(error);
         color = colorStart;
       }
-      if (this.data.type === 'number') {
-        let absoluteDistance = ths[index].getValue() - ths[index - 1].getValue();
-        value = absoluteDistance / 2 + ths[index - 1].getValue();
-      } else {
-        value = ths[index - 1].getValue();
-      }
+      let absoluteDistance = thfTable[index].getValue() - thfTable[index - 1].getValue();
+      value = absoluteDistance / 2 + thfTable[index - 1].getValue();
     } else {
       color = colorStart;
     }
-    ths.splice(index + 1, 0, th);
-    thd.splice(index + 1, 0, data)
-    return this;
+    nth.setValue(value);
+    nth.setColor(color);
+    thfTable.splice(index + 1, 0, nth);
+    thdTable.splice(index + 1, 0, data);
+    return nth;
+  }
+
+  private _addStringThreshold(index?: number): StringTH {
+    const thfTable = this.stringTH;
+    const thdTable = this.data.stringTHData;
+    const data = StringTH.getDefaultData();
+    const nth = new StringTH(data.color, data.value, data.comparator, data);
+    if (index === undefined) {
+      index = thdTable.length;
+    }
+    nth.import(thfTable[index - 1].getData());
+    thfTable.splice(index, 0, nth);
+    thdTable.splice(index, 0, data);
+    return nth;
   }
 
   /**
@@ -646,10 +657,26 @@ export class Rule {
    * @returns {this}
    * @memberof Rule
    */
-  removeColor(index: number): this {
-    this.data.thresholds.splice(index - 1, 1);
-    this.data.stringThresholds.splice(index - 1, 1);
-    this.data.colors.splice(index, 1);
+  // removeColor(index: number): this {
+  //   this.data.thresholds.splice(index - 1, 1);
+  //   this.data.stringThresholds.splice(index - 1, 1);
+  //   this.data.colors.splice(index, 1);
+  //   return this;
+  // }
+  removeThreshold(index: number): this {
+    switch (this.data.type) {
+      case 'number':
+        this.data.numberTHData.splice(index - 1, 1);
+        this.numberTH.splice(index - 1, 1);
+        break;
+      case 'string':
+        this.data.stringTHData.splice(index - 1, 1);
+        this.stringTH.splice(index - 1, 1);
+        break;
+      default:
+        throw new Error('Type of threshold unknown : ' + this.data.type);
+        break;
+    }
     return this;
   }
 
@@ -660,9 +687,9 @@ export class Rule {
    * @returns {string} html color
    * @memberof Rule
    */
-  getColor(index: number): string {
-    return this.data.colors[index];
-  }
+  // getColor(index: number): string {
+  //   return this.data.colors[index];
+  // }
 
   /**
    * Return Array of html colors
@@ -670,8 +697,21 @@ export class Rule {
    * @returns {string[]}
    * @memberof Rule
    */
-  getColors(): string[] {
-    return this.data.colors;
+  // getColors(): string[] {
+  //   return this.data.colors;
+  // }
+  getThresholds(): NumberTH[] | StringTH[] {
+    switch (this.data.type) {
+      case 'number':
+        return this.numberTH;
+        break;
+      case 'string':
+        return this.stringTH;
+        break;
+      default:
+        throw new Error('Type of threshold unknown : ' + this.data.type);
+        break;
+    }
   }
 
   /**
@@ -680,8 +720,22 @@ export class Rule {
    * @returns {number}
    * @memberof Rule
    */
-  getColorsCount(): number {
-    return this.data.colors.length;
+  // getColorsCount(): number {
+  //   return this.data.colors.length;
+  // }
+  getThresholdsCount(): number {
+    switch (this.data.type) {
+      case 'number':
+        return this.numberTH.length;
+        break;
+      case 'string':
+        this.stringTH.length;
+        break;
+      default:
+        throw new Error('Type of threshold unknown : ' + this.data.type);
+        break;
+    }
+    return 0;
   }
 
   //
@@ -1021,53 +1075,171 @@ export class Rule {
    * @returns {string} html color
    * @memberof Rule
    */
-  getColorForValue(value: any): string {
-    if (!this.data.gradient || this.data.type !== 'number') {
-      let level = this.getThresholdLevel(value);
-      return this.getColorForLevel(level);
-    }
-    if (this.data.type === 'number') {
-      const thresholds = this.data.thresholds;
-      const colors = this.data.colors;
-      let l = thresholds.length;
-      // No Thresholds
-      if (thresholds === undefined || l === 0) {
-        return colors[0];
-      }
+  // getColorForValue(value: any): string {
+  //   if (!this.data.gradient || this.data.type !== 'number') {
+  //     let level = this.getThresholdLevel(value);
+  //     return this.getColorForLevel(level);
+  //   }
+  //   if (this.data.type === 'number') {
+  //     const thresholds = this.data.thresholds;
+  //     const colors = this.data.colors;
+  //     let l = thresholds.length;
+  //     // No Thresholds
+  //     if (thresholds === undefined || l === 0) {
+  //       return colors[0];
+  //     }
 
-      let cursor = 0;
-      for (let index = 0; index < l; index++) {
-        const t = thresholds[index];
-        if (value < t) {
-          break;
+  //     let cursor = 0;
+  //     for (let index = 0; index < l; index++) {
+  //       const t = thresholds[index];
+  //       if (value < t) {
+  //         break;
+  //       }
+  //       cursor = index;
+  //     }
+  //     // value Lower than min level
+  //     if (cursor === 0 && value <= thresholds[0]) {
+  //       return colors[0];
+  //     }
+  //     // value upper then max level
+  //     if (cursor === l - 1) {
+  //       return colors[cursor + 1];
+  //     }
+  //     // Or
+  //     let absoluteDistance = thresholds[cursor + 1] - thresholds[cursor];
+  //     let valueDistanceFromMin = value - thresholds[cursor];
+  //     let ratio = valueDistanceFromMin / absoluteDistance;
+  //     // let color = $GF.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
+  //     let color = colors[cursor + 1];
+  //     try {
+  //       color = chroma
+  //         .scale([colors[cursor + 1], colors[cursor + 2]])
+  //         .mode('lrgb')(ratio)
+  //         .hex();
+  //     } catch (error) {
+  //       color = colors[cursor + 1];
+  //     }
+  //     return color;
+  //   }
+  //   return '';
+  // }
+
+  private _getMiddleValue(index: number): number {
+    // Table is empty
+    if (this.numberTH.length == 1) {
+      return NumberTH.getDefaultData().value;
+    }
+    // Last element
+    if (index >= this.numberTH.length - 1) {
+      return this.numberTH[this.numberTH.length - 1].getValue();
+    } else {
+      const startValue = this.numberTH[index].getValue();
+      const endValue = this.numberTH[index + 1].getValue();
+      return startValue + (endValue - startValue) / 2;
+    }
+  }
+
+  private _getMiddleColor(index: number): string {
+    // Table is empty
+    if (this.numberTH.length == 1) {
+      return NumberTH.getDefaultData().color;
+    }
+    // Last element
+    if (index >= this.numberTH.length - 1) {
+      return this.numberTH[this.numberTH.length - 1].getColor();
+    } else {
+      const beginColor = this.numberTH[index].getColor();
+      const endColor = this.numberTH[index + 1].getColor();
+      return this._getRatioColor(beginColor, endColor, 0.5);
+    }
+  }
+
+  private _getRatioColor(beginColor: string, endColor: string, ratio: number): string {
+    let color = endColor;
+    try {
+      color = chroma
+        .scale([beginColor, endColor])
+        .mode('lrgb')(ratio)
+        .hex();
+    } catch (error) {
+      color = endColor;
+    }
+    return color;
+  }
+
+  private _getRatioValue(beginValue: number, endValue: number, value: number): number {
+    if (value < beginValue || value > endValue) {
+      throw new Error(
+        `Cannot calculate ratio for value ${value} because value is less than ${beginValue} or greater than ${endValue}`
+      );
+    }
+    let absoluteDistance = endValue - beginValue;
+    let valueDistanceFromMin = value - beginValue;
+    let ratio = valueDistanceFromMin / absoluteDistance;
+    return ratio;
+  }
+
+  getColorForValue(value: any): string {
+    switch (this.data.type) {
+      case 'number':
+        //TODO : Gradient color
+        if(this.data.gradient) {
+
         }
-        cursor = index;
-      }
-      // value Lower than min level
-      if (cursor === 0 && value <= thresholds[0]) {
-        return colors[0];
-      }
-      // value upper then max level
-      if (cursor === l - 1) {
-        return colors[cursor + 1];
-      }
-      // Or
-      let absoluteDistance = thresholds[cursor + 1] - thresholds[cursor];
-      let valueDistanceFromMin = value - thresholds[cursor];
-      let ratio = valueDistanceFromMin / absoluteDistance;
-      // let color = $GF.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
-      let color = colors[cursor + 1];
-      try {
-        color = chroma
-          .scale([colors[cursor + 1], colors[cursor + 2]])
-          .mode('lrgb')(ratio)
-          .hex();
-      } catch (error) {
-        color = colors[cursor + 1];
-      }
-      return color;
+        return this._getColorForNumberTH(value);
+        break;
+
+      case 'string':
+        return this._getColorForStringTH(value);
+        break;
+
+      default:
+        throw new Error('Data type unknown' + this.data.type);
+        break;
     }
     return '';
+  }
+
+  private _getIndexForNumberTH(value) : number {
+    let index = 0;
+    for (let i = 0; i < this.numberTH.length; i++) {
+      const th = this.numberTH[i];
+      // Base
+      if (i == 0) {
+        index = i;
+      } else {
+        if (th.match(value)) {
+          index = i;
+        } else {
+          break;
+        }
+      }
+    }
+    return index;
+  }
+
+  private _getColorForNumberTH(value: number): string {
+    return this.numberTH[this._getIndexForNumberTH(value)].getColor();
+  }
+
+  private _getIndexForStringTH(value: string): number {
+    let index = 0;
+    for (let i = 0; i < this.stringTH.length; i++) {
+      const th = this.stringTH[i];
+      // Base
+      if (i == 0) {
+        index = i;
+      } else {
+        if (th.match(value)) {
+          index = i;
+        }
+      }
+    }
+    return index;
+  }
+
+  private _getColorForStringTH(value: number): string {
+    return this.stringTH[this._getIndexForStringTH(value)].getColor();
   }
 
   /**

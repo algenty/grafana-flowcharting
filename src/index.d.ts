@@ -398,7 +398,7 @@ declare module gf {
   declare type TTHStringComparator = 'eq' | 'ne';
   declare type TTHDateComparator = 'ge' | 'gt';
   declare interface TTHData {
-    color : string | undefined
+    color : string;
     comparator : any;
     value : any;
     level : number;
@@ -406,15 +406,15 @@ declare module gf {
 
   declare interface TTHStringData extends TTHData {
     comparator : THStringComparator;
-    value : string | undefined;
+    value : string;
   }
   declare interface TTHNumberData extends TTHData {
-    comparator : THStringComparator;
-    value : number | undefined;
+    comparator : THNumberComparator;
+    value : number;
   }
   declare interface TTHDateData extends TTHData {
     comparator : THDateComparator;
-    value : any | undefined;
+    value : any;
   }
 
 }
