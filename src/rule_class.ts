@@ -1075,6 +1075,22 @@ export class Rule {
    * @returns {string} html color
    * @memberof Rule
    */
+  getColorForValue(value: any): string {
+    switch (this.data.type) {
+      case 'number':
+        return this._getColorForNumberTH(value);
+        break;
+
+      case 'string':
+        return this._getColorForStringTH(value);
+        break;
+
+      default:
+        throw new Error('Data type unknown' + this.data.type);
+        break;
+    }
+    return '';
+  }
   // getColorForValue(value: any): string {
   //   if (!this.data.gradient || this.data.type !== 'number') {
   //     let level = this.getThresholdLevel(value);
@@ -1150,11 +1166,11 @@ export class Rule {
     } else {
       const beginColor = this.numberTH[index].getColor();
       const endColor = this.numberTH[index + 1].getColor();
-      return this._getRatioColor(beginColor, endColor, 0.5);
+      return this._getColorForRatio(beginColor, endColor, 0.5);
     }
   }
 
-  private _getRatioColor(beginColor: string, endColor: string, ratio: number): string {
+  private _getColorForRatio(beginColor: string, endColor: string, ratio: number): string {
     let color = endColor;
     try {
       color = chroma
@@ -1167,7 +1183,7 @@ export class Rule {
     return color;
   }
 
-  private _getRatioValue(beginValue: number, endValue: number, value: number): number {
+  private _getRatioForValue(beginValue: number, endValue: number, value: number): number {
     if (value < beginValue || value > endValue) {
       throw new Error(
         `Cannot calculate ratio for value ${value} because value is less than ${beginValue} or greater than ${endValue}`
@@ -1179,28 +1195,7 @@ export class Rule {
     return ratio;
   }
 
-  getColorForValue(value: any): string {
-    switch (this.data.type) {
-      case 'number':
-        //TODO : Gradient color
-        if(this.data.gradient) {
-
-        }
-        return this._getColorForNumberTH(value);
-        break;
-
-      case 'string':
-        return this._getColorForStringTH(value);
-        break;
-
-      default:
-        throw new Error('Data type unknown' + this.data.type);
-        break;
-    }
-    return '';
-  }
-
-  private _getIndexForNumberTH(value) : number {
+  private _getIndexForNumberTH(value : number) : number {
     let index = 0;
     for (let i = 0; i < this.numberTH.length; i++) {
       const th = this.numberTH[i];
@@ -1219,7 +1214,22 @@ export class Rule {
   }
 
   private _getColorForNumberTH(value: number): string {
-    return this.numberTH[this._getIndexForNumberTH(value)].getColor();
+    const index = this._getIndexForNumberTH(value);
+    if(this.data.gradient) {
+      if(index == 0) {
+        return this.numberTH[index].getColor();
+      }
+      if(index === ( this.numberTH.length -1 ) ) {
+        return this.numberTH[index].getColor();
+      }
+      const beginColor = this.numberTH[index].getColor();
+      const beginValue = this.numberTH[index].getValue();
+      const endColor = this.numberTH[index + 1].getColor();
+      const endValue = this.numberTH[index + 1].getValue();
+      const ratio = this._getRatioForValue(beginValue, endValue, value);
+      return this._getColorForRatio(beginColor, endColor, ratio);
+    }
+    return this.numberTH[index].getColor();
   }
 
   private _getIndexForStringTH(value: string): number {
@@ -1238,7 +1248,7 @@ export class Rule {
     return index;
   }
 
-  private _getColorForStringTH(value: number): string {
+  private _getColorForStringTH(value: string): string {
     return this.stringTH[this._getIndexForStringTH(value)].getColor();
   }
 
