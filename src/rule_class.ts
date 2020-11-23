@@ -545,24 +545,80 @@ export class Rule {
   }
 
   /**
+   * Add a new threshold at the position index, if index is undefined, add to the end.
    *
-   *
-   * @param {number} index
+   * @param {number} index 
    * @returns {this}
    * @memberof Rule
    */
-  addColor(index: number): this {
-    const thresholds = this.data.thresholds;
-    const colors = this.data.colors;
-    const colorStart: string = colors[index];
+  // addColor(index : number): this {
+  //   const thresholds = this.data.thresholds;
+  //   const colors = this.data.colors;
+  //   const colorStart: string = colors[index];
+  //   let color: string;
+  //   let value: any;
+  //   // if is not the last
+  //   if (index !== colors.length - 1) {
+  //     const ratio = 0.5;
+  //     let colorEnd = colors[index + 1];
+  //     try {
+  //       // color = $GF.utils.getRatioColor(ratio, colorStart, colorEnd);
+  //       let f = chroma.scale([colorStart, colorEnd]).mode('lrgb');
+  //       color = f(ratio).hex();
+  //     } catch (error) {
+  //       $GF.log.error(error);
+  //       color = colorStart;
+  //     }
+  //     if (this.data.type === 'number') {
+  //       let absoluteDistance = thresholds[index] - thresholds[index - 1];
+  //       value = absoluteDistance / 2 + thresholds[index - 1];
+  //     } else {
+  //       value = this.data.stringThresholds[index - 1];
+  //     }
+  //   } else {
+  //     color = colorStart;
+  //   }
+  //   this.data.colors.splice(index + 1, 0, color);
+  //   if (this.data.type === 'number') {
+  //     this.data.thresholds.splice(index, 0, value);
+  //   } else if (this.data.type === 'string') {
+  //     this.data.stringThresholds.splice(index, 0, value);
+  //   }
+  //   return this;
+  // }
+  addThreshold(index ?: number):this {
+    let th: NumberTH | StringTH;
+    let ths: NumberTH[] | StringTH[];
+    let thd: gf.TTHNumberData[] | gf.TTHStringData[]; 
+    let data:any;
     let color: string;
-    let value: any;
-    // if is not the last
-    if (index !== colors.length - 1) {
+    switch (this.data.type) {
+      case 'number':
+        ths = this.numberTH;
+        thd = this.data.numberTHData;
+        data = NumberTH.getDefaultData();
+        th = new NumberTH(data.color, data.value,data.comparator,data);
+        break;
+      case 'string':
+        ths = this.stringTH;
+        thd = this.data.stringTHData;
+        data = StringTH.getDefaultData();
+        th = new StringTH(data.color, data.value,data.comparator,data);
+        break;
+      default:
+        throw new Error('Type of threshold unknown : ' + this.data.type);
+        break;
+    }
+    if (index === undefined) {
+      index = thd.length - 1; 
+    }
+    th = ths[index];
+    let colorStart = th.getColor();
+    let value = th.getValue();
+    if (index !== ths.length - 1) {
       const ratio = 0.5;
-      let colorEnd = colors[index + 1];
+      let colorEnd = ths[index + 1].getColor();
       try {
-        // color = $GF.utils.getRatioColor(ratio, colorStart, colorEnd);
         let f = chroma.scale([colorStart, colorEnd]).mode('lrgb');
         color = f(ratio).hex();
       } catch (error) {
@@ -570,39 +626,17 @@ export class Rule {
         color = colorStart;
       }
       if (this.data.type === 'number') {
-        let absoluteDistance = thresholds[index] - thresholds[index - 1];
-        value = absoluteDistance / 2 + thresholds[index - 1];
+        let absoluteDistance = ths[index].getValue() - ths[index - 1].getValue();
+        value = absoluteDistance / 2 + ths[index - 1].getValue();
       } else {
-        value = this.data.stringThresholds[index - 1];
+        value = ths[index - 1].getValue();
       }
     } else {
       color = colorStart;
     }
-    this.data.colors.splice(index + 1, 0, color);
-    if (this.data.type === 'number') {
-      this.data.thresholds.splice(index, 0, value);
-    } else if (this.data.type === 'string') {
-      this.data.stringThresholds.splice(index, 0, value);
-    }
+    ths.splice(index + 1, 0, th);
+    thd.splice(index + 1, 0, data)
     return this;
-  }
-
-  _addThreshold(index: number) {
-    let th: NumberTH | StringTH;
-    let ths: NumberTH[] | StringTH[];
-    switch (this.data.type) {
-      case 'number':
-        ths = this.numberTH;
-        break;
-      case 'string':
-        ths = this.stringTH;
-        break;
-      default:
-        throw new Error('Type of threshold unknown')
-        break;
-    }
-    th = ths[index];
-    let color = th.getColor();
   }
 
   /**

@@ -248,8 +248,8 @@ declare module gf {
     shapeProp: TPropertieKey;
     shapeRegEx: boolean;
     shapeData: TShapeMapData[];
-    THNumberData : THNumberData[];
-    THStringData : THNumberData[];
+    numberTHData : TTHNumberData[];
+    stringTHData : TTHStringData[];
     textProp: TPropertieKey;
     textRegEx: boolean;
     textData: TTextMapData[];
