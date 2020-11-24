@@ -1,4 +1,4 @@
-import { $GF } from '../globals_class';
+import { $GF } from './globals_class';
 
 class GFTH {
   data: gf.TTHData;
@@ -18,7 +18,7 @@ class GFTH {
       if (!!obj.color) {
         this.data.color = obj.color;
       } else {
-        this.data.color = undefined;
+        this.data.color = '';
       }
 
       if (!!obj.comparator) {

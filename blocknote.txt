@@ -94,6 +94,7 @@ Fix Message console
 Add multi grid modele : background
 convert threshold to object
 add friconix to contribute
+radius to div colors
 
 # effect
 https://pavenum.com/overlay-avec-hover-sur-une-image-en-html-css/
@@ -120,5 +121,5 @@ https://codepen.io/sosuke/pen/Pjoqqp
 http://definitelytyped.org/docs/angularjs--angular/modules/ng.html
 
 # colors order
-invert = false => 3,2,1,0 Thresholds (2 : Critical > ... > 0 : Ok)
+invert = false => 3,2,1,0 Thresholds (2 : Critical > ... > 0 : Ok) length -1 - level
 invert = true => 0,1,2,3 Thresholds ( 0 : Ok > ... > 2 : Critical)
