@@ -42,43 +42,52 @@ class GFTH {
     return true;
   }
 
-  getData():any {
+  getData(): any {
     return this.data;
   }
 
   getColor() {
-    return this.data.value;
+    return this.data.color;
   }
 
-  setColor(color: string):this {
+  setColor(color: string): this {
     this.data.color = color;
     return this;
   }
 
-  getValue() {
+  getComparator() {
+    return this.data.comparator;
+  }
+
+  setComparator(comparator: string): this {
+    this.data.comparator = comparator;
+    return this;
+  }
+
+  getValue(): any {
     return this.data.value;
   }
 
-  setValue(value: string):this {
+  setValue(value: any): this {
     this.data.value = value;
     return this;
   }
 
-  getLevel(): number {
-    return this.data.level;
-  }
+  // getLevel(): number {
+  //   return this.data.level;
+  // }
 
-  setLevel(level: number):this {
-    this.data.level = level;
-    return this;
-  }
+  // setLevel(level: number):this {
+  //   this.data.level = level;
+  //   return this;
+  // }
 
-  hide():this {
+  hide(): this {
     this.hidden = true;
     return this;
   }
 
-  show():this {
+  show(): this {
     this.hidden = false;
     return this;
   }
@@ -99,12 +108,7 @@ class GFTH {
 
 export class NumberTH extends GFTH {
   data: gf.TTHNumberData;
-  constructor(
-    color: string,
-    value: number,
-    comparator: gf.TTHNumberComparator,
-    data: gf.TTHNumberData
-  ) {
+  constructor(color: string, value: number, comparator: gf.TTHNumberComparator, data: gf.TTHNumberData) {
     super(color, value, comparator, data);
     this.data = data;
     this.data.color = color;
@@ -112,10 +116,10 @@ export class NumberTH extends GFTH {
     this.data.comparator = comparator;
   }
 
-  static getDefaultData(): gf.TTHData {
+  static getDefaultData(): gf.TTHNumberData {
     return {
       color: 'rgba(245, 54, 54, 0.9)',
-      comparator: 'eq',
+      comparator: 'ge',
       value: 50,
       level: 0,
     };
@@ -132,12 +136,12 @@ export class NumberTH extends GFTH {
       case 'ge':
         return value >= this.data.value;
         break;
-      case 'gt':
+        case 'gt':
         return value > this.data.value;
         break;
       default:
-        $GF.log.error('Comparator unknown : ' + this.data.comparator);
-        throw new Error('Comparator unknown : ' + this.data.comparator)
+        // $GF.log.error('Comparator unknown : ' + this.data.comparator);
+        throw new Error('Comparator unknown : ' + this.data.comparator);
         return false;
         break;
     }
@@ -146,12 +150,7 @@ export class NumberTH extends GFTH {
 
 export class StringTH extends GFTH {
   data: gf.TTHStringData;
-  constructor(
-    color: string,
-    value: string,
-    comparator: gf.TTHStringComparator,
-    data: gf.TTHStringData
-  ) {
+  constructor(color: string, value: string, comparator: gf.TTHStringComparator, data: gf.TTHStringData) {
     super(color, value, comparator, data);
     this.data = data;
     this.data.color = color;

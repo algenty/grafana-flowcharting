@@ -5,6 +5,7 @@ import { $GF, GFTable } from './globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
 import { MetricHandler } from './metricHandler';
+import { NumberTH, StringTH } from 'threshold_class';
 
 /**
  * Rules tab controller
@@ -570,14 +571,14 @@ export class RulesOptionsCtrl {
     return true;
   }
 
-  getLevels(rule: Rule): gf.TSelectNumber[] {
-    let lvl: gf.TSelectNumber[] = [];
-    let count = rule.data.colors.length;
-    for (let index = 0; index < count; index++) {
-      lvl.push({ text: `${index}`, value: index });
-    }
-    return lvl;
-  }
+  // getLevels(rule: Rule): gf.TSelectNumber[] {
+  //   let lvl: gf.TSelectNumber[] = [];
+  //   let count = rule.data.colors.length;
+  //   for (let index = 0; index < count; index++) {
+  //     lvl.push({ text: `${index}`, value: index });
+  //   }
+  //   return lvl;
+  // }
 
   removeShapeMap(rule: Rule, index: number) {
     const shape = rule.getShapeMap(index);
@@ -610,10 +611,16 @@ export class RulesOptionsCtrl {
    * @param {Number} colorIndex
    * @memberof RulesOptionsCtrl
    */
-  onColorChange(ruleIndex: number, colorIndex: number) {
+  // onColorChange(ruleIndex: number, colorIndex: number) {
+  //   return (newColor: any) => {
+  //     const rule = this.rulesHandler.getRule(ruleIndex);
+  //     rule.data.colors[colorIndex] = newColor;
+  //     this.onRulesChange();
+  //   };
+  // }
+  onColorChange(th: NumberTH | StringTH) {
     return (newColor: any) => {
-      const rule = this.rulesHandler.getRule(ruleIndex);
-      rule.data.colors[colorIndex] = newColor;
+      th.setColor(newColor);
       this.onRulesChange();
     };
   }

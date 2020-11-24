@@ -3,7 +3,7 @@
 exports[`Thresholds NumberTH Data should be new 1`] = `
 Object {
   "color": "rgba(245, 54, 54, 0.9)",
-  "comparator": "eq",
+  "comparator": "ge",
   "level": 0,
   "value": 50,
 }

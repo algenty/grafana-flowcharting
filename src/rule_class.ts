@@ -148,10 +148,11 @@ export class Rule {
     if (!!obj.decimals || obj.decimals === 0) {
       this.data.decimals = obj.decimals;
     }
-    if (!!obj.colors) {
-      //TODO : To convert
-      this.data.colors = obj.colors.slice(0);
-    }
+
+    // Move to bellow since 0.9.1
+    // if (!!obj.colors) {
+    //   this.data.colors = obj.colors.slice(0);
+    // }
     if (!!this.data.reduce) {
       this.data.reduce = true;
     }
@@ -209,32 +210,62 @@ export class Rule {
     if (!!obj.dateFormat) {
       this.data.dateFormat = obj.dateFormat;
     }
-    if (!!obj.thresholds) {
-      // TODO : To convert
-      this.data.thresholds = obj.thresholds.map((x: any) => {
-        let value = x;
-        if (typeof value === 'string') {
-          value = parseFloat(value);
-        }
-        return value;
-      });
-      // this.data.thresholds = obj.thresholds.slice(0);
+    if (this.data.type === 'number') {
+      if (!!obj.thresholds && obj.colors) {
+        let i = 0;
+        let j = 0;
+        obj.colors.array.forEach(cl => {
+          if (i === 0) {
+            this.addThreshold(i++, cl);
+          } else {
+            let th = obj.thresholds[j++];
+            if (typeof th === 'string' && th.length > 0) {
+              th = parseFloat(th);
+            }
+            this.addThreshold(i++, cl, th);
+          }
+        });
+      }
     }
+    // if (!!obj.thresholds) {
+    //   // TODO : To convert
+    //   // < 0.9.1 : Convert thresholds to object
+    //   this.data.thresholds = obj.thresholds.map((x: any) => {
+    //     let value = x;
+    //     if (typeof value === 'string') {
+    //       value = parseFloat(value);
+    //     }
+    //     return value;
+    //   });
+    //   // this.data.thresholds = obj.thresholds.slice(0);
+    // }
 
+    let stringTH: any = [];
     if (!!obj.stringThresholds) {
-      // TODO : To convert
-      this.data.stringThresholds = obj.stringThresholds.slice(0);
+      stringTH = obj.stringThresholds.slice(0);
     }
-
     if (!!obj.stringWarning) {
-      // TODO : To convert
-      //this.data.stringWarning = obj.stringWarning;
-      this.data.stringThresholds[1] = obj.stringWarning;
+      stringTH[1] = obj.stringWarning;
     }
     if (!!obj.stringCritical) {
-      // TODO : To convert
-      //this.data.stringCritical = obj.stringCritical;
-      this.data.stringThresholds[0] = obj.stringCritical;
+      stringTH[0] = obj.stringCritical;
+    }
+    if (this.data.type === 'string') {
+      if (!!obj.stringThresholds && obj.colors) {
+        let i = 0;
+        let j = 0;
+        obj.colors.array.forEach(cl => {
+          if (i === 0) {
+            this.addThreshold(i++, cl);
+          } else {
+            let th = stringTH[j++];
+            if (typeof th === 'string' && th.length > 0) {
+              th = parseFloat(th);
+            }
+            this.addThreshold(i++, cl, th);
+          }
+        });
+      }
     }
 
     if (!!obj.invert || obj.invert === false) {
@@ -484,14 +515,14 @@ export class Rule {
    * @returns {this}
    * @memberof Rule
    */
-  private invertColorOrder(): this {
+  _invertColorOrder(): this {
     // this.data.colors.reverse();
     this._invertColorOrderFor(this.numberTH);
     this._invertColorOrderFor(this.stringTH);
     return this;
   }
 
-  private _invertColorOrderFor(ths: NumberTH[] | StringTH[]): this {
+  _invertColorOrderFor(ths: NumberTH[] | StringTH[]): this {
     const colors: string[] = [];
     ths.forEach(th => {
       colors.push(th.getColor());
@@ -504,7 +535,7 @@ export class Rule {
     return this;
   }
 
-  // private _getTHLevel(th: NumberTH | StringTH): number {
+  // _getTHLevel(th: NumberTH | StringTH): number {
   //   let index = 0;
   //   switch (this.data.type) {
   //     case 'number':
@@ -540,7 +571,7 @@ export class Rule {
    * @memberof Rule
    */
   invertThesholds(): this {
-    this.invertColorOrder();
+    this._invertColorOrder();
     this.data.invert = !this.data.invert;
     return this;
   }
@@ -587,64 +618,104 @@ export class Rule {
   //   }
   //   return this;
   // }
-  addThreshold(index?: number): this {
+  addThreshold(index?: number, color?: string, value?: any): NumberTH | StringTH {
     switch (this.data.type) {
       case 'number':
-        this._addNumberThreshold(index);
+        return this._addNumberThreshold(index, color, value);
         break;
       case 'string':
-        this._addStringThreshold(index);
+        return this._addStringThreshold(index, color, value);
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
         break;
     }
-    return this;
   }
 
-  private _addNumberThreshold(index?: number): NumberTH {
+  _addNumberThreshold(index?: number, color?: string, value?: number): NumberTH {
     const thfTable = this.numberTH;
     const thdTable = this.data.numberTHData;
+    let finalColor = color;
+    let finalValue = value;
     const data = NumberTH.getDefaultData();
     const nth = new NumberTH(data.color, data.value, data.comparator, data);
-    if (index === undefined) {
-      index = thdTable.length - 1;
+    const length = thdTable.length;
+    if (index === undefined || length === 0) {
+      index = length;
     }
-    const lth = thfTable[index];
-    let colorStart = lth.getColor();
-    let value = lth.getValue();
-    let color: string;
-    if (index !== thfTable.length - 1) {
+    if( index > length -1) {
+      index = length -1;
+    }
+    if (length > 0 && index <= length - 1) {
+      const lth = thfTable[index];
+      nth.import(lth.getData());
       const ratio = 0.5;
-      let colorEnd = thfTable[index + 1].getColor();
-      try {
-        let f = chroma.scale([colorStart, colorEnd]).mode('lrgb');
-        color = f(ratio).hex();
-      } catch (error) {
-        $GF.log.error(error);
-        color = colorStart;
+      if (finalColor === undefined) {
+        let beginColor = lth.getColor();
+        if (index < length - 1) {
+          const endColor = thfTable[index + 1].getColor();
+          finalColor = this._getColorForRatio(beginColor, endColor, ratio);
+        } else {
+          finalColor = beginColor;
+        }
+        if (finalColor !== undefined) {
+        }
       }
-      let absoluteDistance = thfTable[index].getValue() - thfTable[index - 1].getValue();
-      value = absoluteDistance / 2 + thfTable[index - 1].getValue();
-    } else {
-      color = colorStart;
+      if (finalValue === undefined) {
+        let beginValue = lth.getValue();
+        if (index < length - 1) {
+          const endValue = thfTable[index + 1].getValue();
+          finalValue = this._getValueForRatio(beginValue, endValue, ratio);
+        } else {
+          finalValue = beginValue;
+        }
+        if (finalValue !== undefined) {
+        }
+      }
     }
-    nth.setValue(value);
-    nth.setColor(color);
+    if(finalColor !== undefined) {
+      nth.setColor(finalColor);
+    }
+    if (finalValue !== undefined) {
+      nth.setValue(finalValue);
+    }
     thfTable.splice(index + 1, 0, nth);
     thdTable.splice(index + 1, 0, data);
     return nth;
   }
 
-  private _addStringThreshold(index?: number): StringTH {
+  _addStringThreshold(index?: number, color?: string, value?: string): StringTH {
     const thfTable = this.stringTH;
     const thdTable = this.data.stringTHData;
     const data = StringTH.getDefaultData();
     const nth = new StringTH(data.color, data.value, data.comparator, data);
+    const length = thdTable.length;
+    let finalColor = color;
+    let finalValue = value;
     if (index === undefined) {
-      index = thdTable.length;
+      index = length - 1;
     }
-    nth.import(thfTable[index - 1].getData());
+    if (index >= 0) {
+      const lth = thfTable[index];
+      nth.import(lth.getData());
+      const ratio = 0.5;
+      if (finalColor === undefined) {
+        let beginColor = lth.getColor();
+        if (index < length - 1) {
+          const endColor = thfTable[index + 1].getColor();
+          finalColor = this._getColorForRatio(beginColor, endColor, ratio);
+        } else {
+          finalColor = beginColor;
+        }
+        if (finalColor !== undefined) {
+          nth.setColor(finalColor);
+        }
+      }
+      if (finalValue === undefined) {
+        finalValue = lth.getValue();
+        nth.setValue(finalValue);
+      }
+    }
     thfTable.splice(index, 0, nth);
     thdTable.splice(index, 0, data);
     return nth;
@@ -723,7 +794,7 @@ export class Rule {
   // getColorsCount(): number {
   //   return this.data.colors.length;
   // }
-  getThresholdsCount(): number {
+  getThresholdCount(): number {
     switch (this.data.type) {
       case 'number':
         return this.numberTH.length;
@@ -1140,9 +1211,9 @@ export class Rule {
   //   return '';
   // }
 
-  private _getMiddleValue(index: number): number {
+  _getMiddleValue(index: number): number {
     // Table is empty
-    if (this.numberTH.length == 1) {
+    if (this.numberTH.length === 1) {
       return NumberTH.getDefaultData().value;
     }
     // Last element
@@ -1155,9 +1226,9 @@ export class Rule {
     }
   }
 
-  private _getMiddleColor(index: number): string {
+  _getMiddleColor(index: number): string {
     // Table is empty
-    if (this.numberTH.length == 1) {
+    if (this.numberTH.length === 1) {
       return NumberTH.getDefaultData().color;
     }
     // Last element
@@ -1170,7 +1241,7 @@ export class Rule {
     }
   }
 
-  private _getColorForRatio(beginColor: string, endColor: string, ratio: number): string {
+  _getColorForRatio(beginColor: string, endColor: string, ratio: number): string {
     let color = endColor;
     try {
       color = chroma
@@ -1183,7 +1254,11 @@ export class Rule {
     return color;
   }
 
-  private _getRatioForValue(beginValue: number, endValue: number, value: number): number {
+  _getValueForRatio(beginValue: number, endValue: number, ratio: number) {
+    return beginValue + (endValue - beginValue) * ratio;
+  }
+
+  _getRatioForValue(beginValue: number, endValue: number, value: number): number {
     if (value < beginValue || value > endValue) {
       throw new Error(
         `Cannot calculate ratio for value ${value} because value is less than ${beginValue} or greater than ${endValue}`
@@ -1195,10 +1270,10 @@ export class Rule {
     return ratio;
   }
 
-  private _getColorForNumberTH(value: number): string {
+  _getColorForNumberTH(value: number): string {
     const index = this._getIndexNumberTHForValue(value);
     if (this.data.gradient) {
-      if (index == 0) {
+      if (index === 0) {
         return this.numberTH[index].getColor();
       }
       if (index === this.numberTH.length - 1) {
@@ -1214,7 +1289,7 @@ export class Rule {
     return this.numberTH[index].getColor();
   }
 
-  private _getIndexTHForValue(value: any): number {
+  _getIndexTHForValue(value: any): number {
     switch (this.data.type) {
       case 'number':
         return this._getIndexNumberTHForValue(value);
@@ -1229,12 +1304,12 @@ export class Rule {
     return -1;
   }
 
-  private _getIndexNumberTHForValue(value: number): number {
+  _getIndexNumberTHForValue(value: number): number {
     let index = -1;
     for (let i = 0; i < this.numberTH.length; i++) {
       const th = this.numberTH[i];
       // Base
-      if (i == 0) {
+      if (i === 0) {
         index = i;
       } else {
         if (th.match(value)) {
@@ -1247,12 +1322,12 @@ export class Rule {
     return index;
   }
 
-  private _getIndexStringTHForValue(value: string): number {
+  _getIndexStringTHForValue(value: string): number {
     let index = -1;
     for (let i = 0; i < this.stringTH.length; i++) {
       const th = this.stringTH[i];
       // Base
-      if (i == 0) {
+      if (i === 0) {
         index = i;
       } else {
         if (th.match(value)) {
@@ -1263,7 +1338,7 @@ export class Rule {
     return index;
   }
 
-  private _getColorForStringTH(value: string): string {
+  _getColorForStringTH(value: string): string {
     return this.stringTH[this._getIndexStringTHForValue(value)].getColor();
   }
 
@@ -1303,7 +1378,7 @@ export class Rule {
   //   return colors[0];
   // }
 
-  private _getIndexForLevel(level: number): number {
+  _getIndexForLevel(level: number): number {
     let length = 0;
     switch (this.data.type) {
       case 'number':
@@ -1331,6 +1406,7 @@ export class Rule {
    */
   getThresholdLevel(value: any): number {
     let index = this._getIndexTHForValue(value);
+    let length = 0;
     switch (this.data.type) {
       case 'number':
         length = this.numberTH.length;
@@ -1342,13 +1418,13 @@ export class Rule {
         throw new Error('Type of threshold unknown : ' + this.data.type);
         break;
     }
-    if (this.data.invert && index !== -1 ) {
+    if (this.data.invert && index !== -1) {
       return index;
-    } 
-    if (index !== -1 ) {
-      return length -1 - index;
     }
-    return index
+    if (index !== -1) {
+      return (length - 1) - index;
+    }
+    return index;
   }
   // getThresholdLevel(value: any): number {
   //   // NUMBER

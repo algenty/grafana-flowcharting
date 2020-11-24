@@ -1,0 +1,523 @@
+// ################################################################ INVERT FALSE ####################################################################################################
+{
+  "shapeMaps": [
+    {
+      "data": {
+        "pattern": "27",
+        "hidden": false,
+        "style": "fillColor",
+        "colorOn": "a"
+      },
+      "id": "08d89758-2c18-79e8-5dfd-cc3fb5f5c018"
+    }
+  ],
+  "textMaps": [
+    {
+      "data": {
+        "pattern": "27",
+        "hidden": false,
+        "textReplace": "content",
+        "textPattern": "/.*/",
+        "textOn": "wmd"
+      },
+      "id": "20922328-27b8-dbfe-7a08-cce67849945c"
+    }
+  ],
+  "linkMaps": [
+    {
+      "data": {
+        "pattern": "27",
+        "hidden": false,
+        "linkUrl": "http://www.google.fr",
+        "linkParams": false,
+        "linkOn": "a"
+      },
+      "id": "b1184458-6d48-cb03-b6b8-8058ddd84a08"
+    }
+  ],
+  "eventMaps": [
+    {
+      "data": {
+        "pattern": "27",
+        "hidden": false,
+        "style": "blink",
+        "eventOn": 2,
+        "value": "2000"
+      },
+      "id": "79987918-1304-ea38-e715-dd28af08e8b5"
+    }
+  ],
+  "valueMaps": [],
+  "rangeMaps": [],
+  "removeClick": 2,
+  "highestLevel": 2,
+  "highestColor": "rgba(245, 54, 54, 0.9)",
+  "highestFormattedValue": "21.72",
+  "highestValue": 21.715133357082426,
+  "execTimes": 23,
+  "data": {
+    "order": 1,
+    "pattern": "NUMBER",
+    "unit": "short",
+    "type": "number",
+    "metricType": "serie",
+    "alias": "NUMBER",
+    "refId": "A",
+    "column": "Time",
+    "hidden": false,
+    "aggregation": "current",
+    "decimals": 2,
+    "colors": [
+      "rgba(245, 54, 54, 0.9)",
+      "rgba(237, 129, 40, 0.89)",
+      "rgba(50, 172, 45, 0.97)"
+    ],
+    "reduce": true,
+    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+    "thresholds": [
+      50,
+      80
+    ],
+    "stringThresholds": [
+      "/.*/",
+      "/.*/"
+    ],
+    "invert": false,
+    "gradient": false,
+    "overlayIcon": false,
+    "tooltip": false,
+    "tooltipLabel": "",
+    "tooltipColors": false,
+    "tooltipOn": "a",
+    "tpDirection": "v",
+    "tpGraph": false,
+    "tpGraphSize": "100%",
+    "tpGraphType": "line",
+    "tpGraphLow": null,
+    "tpGraphHigh": null,
+    "tpGraphScale": "linear",
+    "shapeProp": "id",
+    "shapeRegEx": true,
+    "shapeData": [
+      {
+        "pattern": "27",
+        "hidden": false,
+        "style": "fillColor",
+        "colorOn": "a"
+      }
+    ],
+    "textProp": "id",
+    "textRegEx": true,
+    "textData": [
+      {
+        "pattern": "27",
+        "hidden": false,
+        "textReplace": "content",
+        "textPattern": "/.*/",
+        "textOn": "wmd"
+      }
+    ],
+    "linkProp": "id",
+    "linkRegEx": true,
+    "linkData": [
+      {
+        "pattern": "27",
+        "hidden": false,
+        "linkUrl": "http://www.google.fr",
+        "linkParams": false,
+        "linkOn": "a"
+      }
+    ],
+    "eventProp": "id",
+    "eventRegEx": false,
+    "eventData": [
+      {
+        "pattern": "27",
+        "hidden": false,
+        "style": "blink",
+        "eventOn": 2,
+        "value": "2000"
+      }
+    ],
+    "mappingType": 1,
+    "valueData": [],
+    "rangeData": [],
+    "sanitize": false
+  },
+  "id": "c508e778-2401-49b8-424e-716863387c2e",
+  "states": {}
+},
+
+// ################################################################ INVERT TRUE ####################################################################################################
+{
+  "shapeMaps": [
+    {
+      "data": {
+        "pattern": "37",
+        "hidden": false,
+        "style": "fillColor",
+        "colorOn": "a"
+      },
+      "id": "94a6ce68-4937-513c-f558-c2ef729895cf"
+    }
+  ],
+  "textMaps": [
+    {
+      "data": {
+        "pattern": "37",
+        "hidden": false,
+        "textReplace": "content",
+        "textPattern": "/.*/",
+        "textOn": "wmd"
+      },
+      "id": "0d3877b9-4348-0a98-cf08-7f288b199b98"
+    }
+  ],
+  "linkMaps": [
+    {
+      "data": {
+        "pattern": "37",
+        "hidden": false,
+        "linkUrl": "http://www.google.fr",
+        "linkParams": false,
+        "linkOn": "a"
+      },
+      "id": "75fe49c8-7052-4048-2ab1-3b090859ab2a"
+    }
+  ],
+  "eventMaps": [
+    {
+      "data": {
+        "pattern": "27",
+        "hidden": false,
+        "style": "blink",
+        "eventOn": null,
+        "value": "2000"
+      },
+      "id": "bc58d828-a8e8-1da8-56f8-a03a2b3897c8"
+    }
+  ],
+  "valueMaps": [],
+  "rangeMaps": [],
+  "removeClick": 2,
+  "highestLevel": 0,
+  "highestColor": "rgba(50, 172, 45, 0.97)",
+  "highestFormattedValue": "21.72",
+  "highestValue": 21.715133357082426,
+  "execTimes": 0,
+  "data": {
+    "order": 2,
+    "pattern": "NUMBER",
+    "unit": "short",
+    "type": "number",
+    "metricType": "serie",
+    "alias": "NUMBER INVERT",
+    "refId": "A",
+    "column": "Time",
+    "hidden": false,
+    "aggregation": "current",
+    "decimals": 2,
+    "colors": [
+      "rgba(50, 172, 45, 0.97)",
+      "rgba(237, 129, 40, 0.89)",
+      "rgba(245, 54, 54, 0.9)"
+    ],
+    "reduce": true,
+    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+    "thresholds": [
+      50,
+      80
+    ],
+    "stringThresholds": [
+      "/.*/",
+      "/.*/"
+    ],
+    "invert": true,
+    "gradient": false,
+    "overlayIcon": false,
+    "tooltip": false,
+    "tooltipLabel": "",
+    "tooltipColors": false,
+    "tooltipOn": "a",
+    "tpDirection": "v",
+    "tpGraph": false,
+    "tpGraphSize": "100%",
+    "tpGraphType": "line",
+    "tpGraphLow": null,
+    "tpGraphHigh": null,
+    "tpGraphScale": "linear",
+    "shapeProp": "id",
+    "shapeRegEx": true,
+    "shapeData": [
+      {
+        "pattern": "37",
+        "hidden": false,
+        "style": "fillColor",
+        "colorOn": "a"
+      }
+    ],
+    "textProp": "id",
+    "textRegEx": true,
+    "textData": [
+      {
+        "pattern": "37",
+        "hidden": false,
+        "textReplace": "content",
+        "textPattern": "/.*/",
+        "textOn": "wmd"
+      }
+    ],
+    "linkProp": "id",
+    "linkRegEx": true,
+    "linkData": [
+      {
+        "pattern": "37",
+        "hidden": false,
+        "linkUrl": "http://www.google.fr",
+        "linkParams": false,
+        "linkOn": "a"
+      }
+    ],
+    "eventProp": "id",
+    "eventRegEx": false,
+    "eventData": [
+      {
+        "pattern": "27",
+        "hidden": false,
+        "style": "blink",
+        "eventOn": null,
+        "value": "2000"
+      }
+    ],
+    "mappingType": 1,
+    "valueData": [],
+    "rangeData": [],
+    "sanitize": false
+  },
+  "id": "64a861ba-a648-97af-1a35-1ea71098e378",
+  "states": {}
+},
+
+// ################################################################## STRING #######################################################################################################
+{
+  "shapeMaps": [
+    {
+      "data": {
+        "pattern": "39",
+        "hidden": false,
+        "style": "fillColor",
+        "colorOn": "a"
+      },
+      "id": "7491d868-5d68-4f78-149d-e8e8463a1f88"
+    }
+  ],
+  "textMaps": [
+    {
+      "data": {
+        "pattern": "39",
+        "hidden": false,
+        "textReplace": "content",
+        "textPattern": "/.*/",
+        "textOn": "wmd"
+      },
+      "id": "e8d81e23-7658-4bcb-85d8-fb882e85b1f8"
+    }
+  ],
+  "linkMaps": [],
+  "eventMaps": [],
+  "valueMaps": [],
+  "rangeMaps": [],
+  "removeClick": 2,
+  "highestLevel": 0,
+  "highestColor": "rgba(50, 172, 45, 0.97)",
+  "highestFormattedValue": "This is a message",
+  "highestValue": "This is a message",
+  "execTimes": 0,
+  "data": {
+    "order": 4,
+    "pattern": "/.*/",
+    "unit": "short",
+    "type": "string",
+    "metricType": "table",
+    "alias": "STRING",
+    "refId": "F",
+    "column": "Message",
+    "hidden": false,
+    "aggregation": "current",
+    "decimals": 2,
+    "colors": [
+      "rgba(50, 172, 45, 0.97)",
+      "rgba(237, 129, 40, 0.89)",
+      "rgba(245, 54, 54, 0.9)"
+    ],
+    "reduce": true,
+    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+    "thresholds": [
+      50,
+      80
+    ],
+    "stringThresholds": [
+      "message",
+      "/.*this.*/"
+    ],
+    "invert": true,
+    "gradient": false,
+    "overlayIcon": false,
+    "tooltip": false,
+    "tooltipLabel": "",
+    "tooltipColors": false,
+    "tooltipOn": "a",
+    "tpDirection": "v",
+    "tpGraph": false,
+    "tpGraphSize": "100%",
+    "tpGraphType": "line",
+    "tpGraphLow": null,
+    "tpGraphHigh": null,
+    "tpGraphScale": "linear",
+    "shapeProp": "id",
+    "shapeRegEx": true,
+    "shapeData": [
+      {
+        "pattern": "39",
+        "hidden": false,
+        "style": "fillColor",
+        "colorOn": "a"
+      }
+    ],
+    "textProp": "id",
+    "textRegEx": true,
+    "textData": [
+      {
+        "pattern": "39",
+        "hidden": false,
+        "textReplace": "content",
+        "textPattern": "/.*/",
+        "textOn": "wmd"
+      }
+    ],
+    "linkProp": "id",
+    "linkRegEx": true,
+    "linkData": [],
+    "eventProp": "id",
+    "eventRegEx": false,
+    "eventData": [],
+    "mappingType": 1,
+    "valueData": [],
+    "rangeData": [],
+    "sanitize": false
+  },
+  "id": "2d48ac1e-f7d2-2c18-59f8-f468cc082088",
+  "states": {}
+},
+
+// ################################################################## DATE #########################################################################################################
+{
+  "shapeMaps": [
+    {
+      "data": {
+        "pattern": "26",
+        "hidden": false,
+        "style": "fillColor",
+        "colorOn": "a"
+      },
+      "id": "5fc14e18-7c6d-c618-5b28-40cd2653c9c8"
+    }
+  ],
+  "textMaps": [
+    {
+      "data": {
+        "pattern": "26",
+        "hidden": false,
+        "textReplace": "content",
+        "textPattern": "/.*/",
+        "textOn": "wmd"
+      },
+      "id": "15cc1024-8658-3c7a-cd18-42d813786fc8"
+    }
+  ],
+  "linkMaps": [],
+  "eventMaps": [],
+  "valueMaps": [],
+  "rangeMaps": [],
+  "removeClick": 2,
+  "highestLevel": 0,
+  "highestColor": "rgba(50, 172, 45, 0.97)",
+  "highestFormattedValue": "2020-11-24 09:56:43",
+  "highestValue": 1606208203658,
+  "execTimes": 1,
+  "data": {
+    "order": 3,
+    "pattern": "/.*/",
+    "unit": "short",
+    "type": "date",
+    "metricType": "table",
+    "alias": "DATE",
+    "refId": "B",
+    "column": "time",
+    "hidden": false,
+    "aggregation": "current",
+    "decimals": 2,
+    "colors": [
+      "rgba(245, 54, 54, 0.9)",
+      "rgba(237, 129, 40, 0.89)",
+      "rgba(50, 172, 45, 0.97)"
+    ],
+    "reduce": true,
+    "dateFormat": "YYYY-MM-DD HH:mm:ss",
+    "thresholds": [
+      50,
+      80
+    ],
+    "stringThresholds": [
+      "/.*/",
+      "/.*/"
+    ],
+    "invert": false,
+    "gradient": false,
+    "overlayIcon": false,
+    "tooltip": false,
+    "tooltipLabel": "",
+    "tooltipColors": false,
+    "tooltipOn": "a",
+    "tpDirection": "v",
+    "tpGraph": false,
+    "tpGraphSize": "100%",
+    "tpGraphType": "line",
+    "tpGraphLow": null,
+    "tpGraphHigh": null,
+    "tpGraphScale": "linear",
+    "shapeProp": "id",
+    "shapeRegEx": true,
+    "shapeData": [
+      {
+        "pattern": "26",
+        "hidden": false,
+        "style": "fillColor",
+        "colorOn": "a"
+      }
+    ],
+    "textProp": "id",
+    "textRegEx": true,
+    "textData": [
+      {
+        "pattern": "26",
+        "hidden": false,
+        "textReplace": "content",
+        "textPattern": "/.*/",
+        "textOn": "wmd"
+      }
+    ],
+    "linkProp": "id",
+    "linkRegEx": true,
+    "linkData": [],
+    "eventProp": "id",
+    "eventRegEx": false,
+    "eventData": [],
+    "mappingType": 1,
+    "valueData": [],
+    "rangeData": [],
+    "sanitize": false
+  },
+  "id": "154853a2-c198-a838-aa78-6848fa523802",
+  "states": {}
+}

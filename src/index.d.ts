@@ -248,8 +248,8 @@ declare module gf {
     shapeProp: TPropertieKey;
     shapeRegEx: boolean;
     shapeData: TShapeMapData[];
-    numberTHData : TTHNumberData[];
-    stringTHData : TTHStringData[];
+    numberTHData: TTHNumberData[];
+    stringTHData: TTHStringData[];
     textProp: TPropertieKey;
     textRegEx: boolean;
     textData: TTextMapData[];
@@ -377,14 +377,16 @@ declare module gf {
   }
 
   declare type TTableProperty = 'index' | 'id' | 'label' | 'desc' | 'width' | 'align' | 'sort' | 'select';
+  declare type TTableAlign = 'left' | 'center' | 'right';
+  declare type TTableSort = 'asc' | 'desc';
   declare interface TTableColumn {
     index: number;
     id: string;
     label: string;
     desc: string;
     width: string;
-    align?: string =  'left' | 'center' | 'right';
-    sort?: string = 'asc' | 'desc';
+    align?: TTableAlign;
+    sort?: TTableSort;
     select: boolean;
   }
 
@@ -398,23 +400,22 @@ declare module gf {
   declare type TTHStringComparator = 'eq' | 'ne';
   declare type TTHDateComparator = 'ge' | 'gt';
   declare interface TTHData {
-    color : string;
-    comparator : any;
-    value : any;
-    level : number;
+    color: string;
+    comparator: string;
+    value: any;
+    level: number;
   }
 
   declare interface TTHStringData extends TTHData {
-    comparator : THStringComparator;
-    value : string;
+    comparator: THStringComparator;
+    value: string;
   }
   declare interface TTHNumberData extends TTHData {
-    comparator : THNumberComparator;
-    value : number;
+    comparator: THNumberComparator;
+    value: number;
   }
   declare interface TTHDateData extends TTHData {
-    comparator : THDateComparator;
-    value : any;
+    comparator: THDateComparator;
+    value: any;
   }
-
 }
