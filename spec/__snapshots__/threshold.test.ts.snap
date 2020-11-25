@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Thresholds NumberTH Data should be new 1`] = `
+exports[`Threshold init on NumberTH Data should be new 1`] = `
 Object {
   "color": "rgba(245, 54, 54, 0.9)",
   "comparator": "ge",
@@ -9,7 +9,7 @@ Object {
 }
 `;
 
-exports[`Thresholds StringTH Data should be new 1`] = `
+exports[`Threshold init on StringTH Data should be new 1`] = `
 Object {
   "color": "rgba(245, 54, 54, 0.9)",
   "comparator": "eq",

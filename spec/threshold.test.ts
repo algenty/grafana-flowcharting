@@ -2,9 +2,9 @@ import { NumberTH, StringTH } from '../src/threshold_class';
 import { Rule } from '../src/rule_class';
 import {$GF} from '../src/globals_class';
 
-describe('Thresholds', () => {
+describe('Threshold init', () => {
 
-    describe('NumberTH', () => {
+    describe.skip('on NumberTH', () => {
         const data = NumberTH.getDefaultData();
         test('Data should be new', () => {
             expect(data).not.toBeNaN();
@@ -40,7 +40,7 @@ describe('Thresholds', () => {
         });
     });
 
-    describe('StringTH', () => {
+    describe.skip('on StringTH', () => {
         test('Data should be new', () => {
             const data = StringTH.getDefaultData();
             expect(data).not.toBeNaN();
@@ -67,7 +67,7 @@ describe('Thresholds', () => {
     describe('Thresholds Handler', () => {
         const rule = new Rule('/.*/', Rule.getDefaultData());
         
-        describe('NumberTHs', () => {
+        describe('on NumberTHs', () => {
             let th1 = rule.addThreshold(undefined, "COLOR1", 10);
             let th2 = rule.addThreshold(undefined, "COLOR2", 20);
             let th3 = rule.addThreshold(undefined, "COLOR3", 30);
@@ -98,6 +98,7 @@ describe('Thresholds', () => {
                 expect(rule.getThresholdLevel(25)).toEqual(1);
                 expect(rule.getThresholdLevel(30)).toEqual(2);
                 expect(rule.getThresholdLevel(35)).toEqual(2);
+                rule.data.invert = false;
             });
             test('should be after Add a new TH', () => {
                 let thbis = rule.addThreshold();

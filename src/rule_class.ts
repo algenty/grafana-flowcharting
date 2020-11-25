@@ -650,9 +650,10 @@ export class Rule {
       const lth = thfTable[index];
       nth.import(lth.getData());
       const ratio = 0.5;
+      // Color
       if (finalColor === undefined) {
         let beginColor = lth.getColor();
-        if (index < length - 1) {
+        if (index < length - 1 && index !== 0) {
           const endColor = thfTable[index + 1].getColor();
           finalColor = this._getColorForRatio(beginColor, endColor, ratio);
         } else {
@@ -661,9 +662,10 @@ export class Rule {
         if (finalColor !== undefined) {
         }
       }
+      // Value
       if (finalValue === undefined) {
         let beginValue = lth.getValue();
-        if (index < length - 1) {
+        if (index < length - 1 && index !== 0) {
           const endValue = thfTable[index + 1].getValue();
           finalValue = this._getValueForRatio(beginValue, endValue, ratio);
         } else {
@@ -1488,7 +1490,7 @@ export class Rule {
         const value = metric.getValue(this.data.aggregation, this.data.column);
         return value;
       } catch (error) {
-        $GF.log.error('datapoint for metric is null', error);
+        $GF.log.error('Datapoint for metric is null', error);
         return null;
       }
     }
