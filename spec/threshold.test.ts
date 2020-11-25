@@ -102,6 +102,10 @@ describe('Thresholds', () => {
             test('should be after Add a new TH', () => {
                 let thbis = rule.addThreshold();
                 expect(thbis.getValue()).toEqual(30);
+                expect(thbis.getColor()).toEqual("COLOR3");
+                thbis = rule.addThreshold(0);
+                expect(thbis.getValue()).toEqual(20);
+                expect(thbis.getValue()).toEqual("COLOR2");
             });
         });
 
