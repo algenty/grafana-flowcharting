@@ -646,15 +646,20 @@ export class Rule {
     if( index > length -1) {
       index = length -1;
     }
-    if (length > 0 && index <= length - 1) {
-      const lth = thfTable[index];
+    let ref = index;
+    if( index === 0 && length > 1) {
+      ref = 1;
+    }
+
+    if (length > 0) {
+      const lth = thfTable[ref];
       nth.import(lth.getData());
       const ratio = 0.5;
       // Color
       if (finalColor === undefined) {
         let beginColor = lth.getColor();
-        if (index < length - 1 && index !== 0) {
-          const endColor = thfTable[index + 1].getColor();
+        if (ref < length - 1 && index !== 0) {
+          const endColor = thfTable[ref + 1].getColor();
           finalColor = this._getColorForRatio(beginColor, endColor, ratio);
         } else {
           finalColor = beginColor;
@@ -665,13 +670,11 @@ export class Rule {
       // Value
       if (finalValue === undefined) {
         let beginValue = lth.getValue();
-        if (index < length - 1 && index !== 0) {
-          const endValue = thfTable[index + 1].getValue();
+        if (ref < length - 1 && index !== 0) {
+          const endValue = thfTable[ref + 1].getValue();
           finalValue = this._getValueForRatio(beginValue, endValue, ratio);
         } else {
           finalValue = beginValue;
-        }
-        if (finalValue !== undefined) {
         }
       }
     }
@@ -689,39 +692,90 @@ export class Rule {
   _addStringThreshold(index?: number, color?: string, value?: string): StringTH {
     const thfTable = this.stringTH;
     const thdTable = this.data.stringTHData;
+    let finalColor = color;
+    let finalValue = value;
     const data = StringTH.getDefaultData();
     const nth = new StringTH(data.color, data.value, data.comparator, data);
     const length = thdTable.length;
-    let finalColor = color;
-    let finalValue = value;
-    if (index === undefined) {
-      index = length - 1;
+    if (index === undefined || length === 0) {
+      index = length;
     }
-    if (index >= 0) {
-      const lth = thfTable[index];
+    if( index > length -1) {
+      index = length -1;
+    }
+    let ref = index;
+    if( index === 0 && length > 1) {
+      ref = 1;
+    }
+
+    if (length > 0) {
+      const lth = thfTable[ref];
       nth.import(lth.getData());
       const ratio = 0.5;
+      // Color
       if (finalColor === undefined) {
         let beginColor = lth.getColor();
-        if (index < length - 1) {
-          const endColor = thfTable[index + 1].getColor();
+        if (ref < length - 1 && index !== 0) {
+          const endColor = thfTable[ref + 1].getColor();
           finalColor = this._getColorForRatio(beginColor, endColor, ratio);
         } else {
           finalColor = beginColor;
         }
         if (finalColor !== undefined) {
-          nth.setColor(finalColor);
         }
       }
+      // Value
       if (finalValue === undefined) {
         finalValue = lth.getValue();
-        nth.setValue(finalValue);
       }
     }
-    thfTable.splice(index, 0, nth);
-    thdTable.splice(index, 0, data);
+    if(finalColor !== undefined) {
+      nth.setColor(finalColor);
+    }
+    if (finalValue !== undefined) {
+      nth.setValue(finalValue);
+    }
+    thfTable.splice(index + 1, 0, nth);
+    thdTable.splice(index + 1, 0, data);
     return nth;
   }
+
+  // _addStringThreshold(index?: number, color?: string, value?: string): StringTH {
+  //   const thfTable = this.stringTH;
+  //   const thdTable = this.data.stringTHData;
+  //   const data = StringTH.getDefaultData();
+  //   const nth = new StringTH(data.color, data.value, data.comparator, data);
+  //   const length = thdTable.length;
+  //   let finalColor = color;
+  //   let finalValue = value;
+  //   if (index === undefined) {
+  //     index = length - 1;
+  //   }
+  //   if (index >= 0) {
+  //     const lth = thfTable[index];
+  //     nth.import(lth.getData());
+  //     const ratio = 0.5;
+  //     if (finalColor === undefined) {
+  //       let beginColor = lth.getColor();
+  //       if (index < length - 1) {
+  //         const endColor = thfTable[index + 1].getColor();
+  //         finalColor = this._getColorForRatio(beginColor, endColor, ratio);
+  //       } else {
+  //         finalColor = beginColor;
+  //       }
+  //       if (finalColor !== undefined) {
+  //         nth.setColor(finalColor);
+  //       }
+  //     }
+  //     if (finalValue === undefined) {
+  //       finalValue = lth.getValue();
+  //       nth.setValue(finalValue);
+  //     }
+  //   }
+  //   thfTable.splice(index, 0, nth);
+  //   thdTable.splice(index, 0, data);
+  //   return nth;
+  // }
 
   /**
    *
