@@ -140,8 +140,8 @@
                             ng-style="{'width' : editor.THsTable.getWidth(CN2)}" ng-attr-title="{{elt.data.pattern}}">
                             <div class="gf-table-content" style="text-align: center">
                                 <div class="gf-icon" style="width : 15px; height: 15px;">
-                                    <color-picker color="elt.data.color"
-                                        onChange="editor.onColorChange(elt)"></color-picker>
+                                    <color-picker color="elt.data.color" onChange="editor.onColorChange(elt)">
+                                    </color-picker>
                                 </div>
                             </div>
                         </div>
@@ -155,17 +155,15 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- VALUE -->
+                        <!-- VALUE/THAN -->
                         <div role="cell" class="gf-table-cells"
                             ng-init="CN4 = 'value';elt.displayEdit[CN4] = false;elt.inEdit[CN4] = false;"
                             ng-mouseleave="elt.displayEdit[CN4] = false;" ng-mouseover="elt.displayEdit[CN4] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN4)}"
                             ng-attr-title="{{$index > 0 && rule.data.type === 'number' ? 'Specify a value for apply color when value is greater or equal' : 'Specify a pattern regex for apply color' }}">
                             <div class="gf-table-content" style="text-align: center;justify-content: center;"
-                                ng-attr-title="TODO : Add threshold definition"
-                                ng-dblclick="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
-                                ng-show="elt.inEdit[CN4] !== true">
-                                <span
+                                ng-attr-title="TODO : Add threshold definition" ng-show="elt.inEdit[CN4] !== true">
+                                <span ng-dblclick="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
                                     ng-show="$index > 0 && rule.data.type === 'number'">
                                     {{elt.data.value}}
                                 </span>
@@ -178,27 +176,21 @@
                                 ng-click="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit threshold level">
                             </div>
-                            <!-- TODO : Replace by a select -->
-                            <!-- <input ng-show="$index > 0 && rule.data.type === 'number' && elt.inEdit[CN4] === true"
-                                type="number" class="gf-form-input" ng-model="rule.data.thresholds[$index-1]"
-                                placeholder="value"
-                                title="Specify a value for apply color when value is greater or equal"
-                                ng-blur="editor.onRulesChange()" />
-                                <input ng-show="$index > 0 && rule.data.type === 'string' && elt.inEdit[CN4] === true"
-                                type="text" class="gf-form-input" ng-model="rule.data.stringThresholds[$index-1]"
-                                placeholder="pattern" title="'Specify a pattern regex for apply color'"
-                                ng-blur="editor.onRulesChange()" /> -->
+                            <input ng-show="elt.inEdit[CN4] === true"
+                                ng-attr-id="{{elt.getId() + '-' + CN4}}"
+                                type="text" class="gf-form-input" ng-model="elt.data.value"
+                                ng-model-onblur ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;"
+                                placeholder="pattern or value" 
+                                ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'"/>
                         </div>
                         <!-- LEVEL -->
                         <div role="cell" class="gf-table-cells"
                             ng-init="CN5 = 'level';elt.displayEdit[CN5] = false;elt.inEdit[CN5] = false;"
                             ng-mouseleave="elt.displayEdit[CN5] = false;" ng-mouseover="elt.displayEdit[CN5] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN5)}"
-                            ng-attr-title="{{ elt.getTHLevel(th) }}">
+                            ng-attr-title="{{ 'Computed level is' + elt.getTHLevel(th) }}">
                             <!-- {{elt.data.EventType}} -->
-                            <div class="gf-table-content" style="text-align: center;"
-                                ng-dblclick="elt.inEdit[CN5] = true;$GF.setFocus( elt.getId() + '-' + CN5 )"
-                                ng-show="elt.inEdit[CN5] !== true">
+                            <div class="gf-table-content" style="text-align: center;">
                                 <span>
                                     {{ rule.getTHLevel(elt) }}
                                 </span>
@@ -220,12 +212,12 @@
                             ng-style="{'width' : editor.THsTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
-                                <div ng-click="rule.addColor($index)"
-                                    title="Add e new color" class="gf-icon-action gf-icon-new">
+                                <div ng-click="rule.addColor($index)" title="Add e new color"
+                                    class="gf-icon-action gf-icon-new">
                                 </div>
                                 <div ng-click="elt.isHidden() ? elt.show(): elt.hide();editor.onRulesChange()"
-                                title="Hide/Disable this color/level" class="gf-icon-action"
-                                ng-class="{'gf-icon-show': !elt.isHidden(), 'gf-icon-hide': elt.isHidden()}">
+                                    title="Hide/Disable this color/level" class="gf-icon-action"
+                                    ng-class="{'gf-icon-show': !elt.isHidden(), 'gf-icon-hide': elt.isHidden()}">
                                 </div>
                                 <div ng-click="rule.removeColor($index);editor.onRulesChange()"
                                     title="Delete this color" class="gf-icon-action gf-icon-remove">

@@ -123,6 +123,7 @@ export class Rule {
    * @memberof Rule
    */
   import(obj: any): this {
+    console.log('Rule -> import -> obj', obj);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'import()');
     if (!!obj.unit) {
       this.data.unit = obj.unit;
@@ -210,8 +211,13 @@ export class Rule {
     if (!!obj.dateFormat) {
       this.data.dateFormat = obj.dateFormat;
     }
+
+    // THRESHOLD NUMBER
     if (this.data.type === 'number') {
-      if (!!obj.thresholds && obj.colors) {
+      // debugger
+      if (!!obj.thresholds && !!obj.colors) {
+        this.data.numberTHData = [];
+        this.numberTH = [];
         let i = 0;
         let j = 0;
         obj.colors.forEach(cl => {
@@ -225,6 +231,17 @@ export class Rule {
             this.addThreshold(i++, cl, th);
           }
         });
+      } else {
+        if (!!obj.numberTHData) {
+          this.data.numberTHData = [];
+          this.numberTH = [];
+          let th = obj.numberTHData as gf.TTHNumberData[];
+          if (th !== undefined && th != null && th.length > 0) {
+            th.forEach((thdata: gf.TTHNumberData) => {
+              this.addThreshold().import(thdata);
+            });   
+          }
+        }
       }
     }
     // if (!!obj.thresholds) {
@@ -252,6 +269,8 @@ export class Rule {
     }
     if (this.data.type === 'string') {
       if (!!obj.stringThresholds && obj.colors) {
+        this.data.stringTHData = [];
+        this.stringTH = [];
         let i = 0;
         let j = 0;
         obj.colors.forEach(cl => {
@@ -265,6 +284,17 @@ export class Rule {
             this.addThreshold(i++, cl, th);
           }
         });
+      } else {
+        if (!!obj.stringTHData) {
+          this.data.stringTHData = [];
+          this.stringTH = [];
+          let th = obj.stringTHData as gf.TTHStringData[];
+          if (th !== undefined && th != null && th.length > 0) {
+            th.forEach((thdata: gf.TTHStringData) => {
+              this.addThreshold().import(thdata);
+            });   
+          }
+        }
       }
     }
 
@@ -535,35 +565,6 @@ export class Rule {
     return this;
   }
 
-  // _getTHLevel(th: NumberTH | StringTH): number {
-  //   let index = 0;
-  //   switch (this.data.type) {
-  //     case 'number':
-  //       const nth = th as NumberTH;
-  //       index = this.numberTH.indexOf(nth);
-  //       if (!this.data.invert) {
-  //         return this.numberTH.length - 1 - index;
-  //       }
-  //       return index;
-  //       break;
-  //     case 'string':
-  //       const sth = th as StringTH;
-  //       index = this.stringTH.indexOf(sth);
-  //       if (!this.data.invert) {
-  //         return this.stringTH.length - 1 - index;
-  //       }
-  //       return index;
-  //       break;
-  //     case 'date':
-  //       return 0;
-  //       break;
-  //     default:
-  //       throw new Error('Data type unknown');
-  //       return -1;
-  //       break;
-  //   }
-  // }
-
   /**
    * Invert threshold
    *
@@ -624,6 +625,10 @@ export class Rule {
         return this._addNumberThreshold(index, color, value);
         break;
       case 'string':
+        return this._addStringThreshold(index, color, value);
+        break;
+      case 'date':
+        //TODO
         return this._addStringThreshold(index, color, value);
         break;
       default:
@@ -800,6 +805,11 @@ export class Rule {
         this.data.stringTHData.splice(index - 1, 1);
         this.stringTH.splice(index - 1, 1);
         break;
+      case 'date' :
+        //TODO
+        this.data.stringTHData.splice(index - 1, 1);
+        this.stringTH.splice(index - 1, 1);
+        break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
         break;
@@ -835,6 +845,10 @@ export class Rule {
       case 'string':
         return this.stringTH;
         break;
+      case 'date':
+        //TODO
+        return this.stringTH;
+        break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
         break;
@@ -856,6 +870,10 @@ export class Rule {
         return this.numberTH.length;
         break;
       case 'string':
+        return this.stringTH.length;
+        break;
+      case 'date':
+        //TODO
         return this.stringTH.length;
         break;
       default:
@@ -1212,6 +1230,11 @@ export class Rule {
         return this._getColorForStringTH(value);
         break;
 
+      case 'date':
+        //TODO
+        return this._getColorForStringTH(value);
+        break;
+
       default:
         throw new Error('Data type unknown' + this.data.type);
         break;
@@ -1323,6 +1346,10 @@ export class Rule {
       case 'string':
         return this._getIndexStringTHForValue(value);
         break;
+      case 'date':
+        //TODO
+        return this._getIndexStringTHForValue(value);
+        break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
         break;
@@ -1384,6 +1411,10 @@ export class Rule {
       case 'string':
         return this.stringTH[index].getColor();
         break;
+      case 'date':
+        //TODO
+        return this.stringTH[index].getColor();
+        break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
         break;
@@ -1397,6 +1428,10 @@ export class Rule {
         length = this.numberTH.length;
         break;
       case 'string':
+        length = this.stringTH.length;
+        break;
+      case 'date':
+        //TODO
         length = this.stringTH.length;
         break;
       default:
@@ -1424,6 +1459,10 @@ export class Rule {
         length = this.numberTH.length;
         break;
       case 'string':
+        length = this.stringTH.length;
+        break;
+      case 'date':
+        //TODO
         length = this.stringTH.length;
         break;
       default:
@@ -1460,6 +1499,14 @@ export class Rule {
       case 'string':
         const ths = th as StringTH;
         index = this.stringTH.indexOf(ths);
+        if (index !== -1) {
+          return this.data.invert ? this.stringTH.length - 1 - index : index;
+        }
+        break;
+      case 'date':
+        //TODO
+        const thd = th as StringTH;
+        index = this.stringTH.indexOf(thd);
         if (index !== -1) {
           return this.data.invert ? this.stringTH.length - 1 - index : index;
         }
