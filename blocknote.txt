@@ -95,6 +95,8 @@ Add multi grid modele : background
 convert threshold to object
 add friconix to contribute
 radius to div colors
+add size of icon when mouse is hover over
+loop/repeat on 
 
 # effect
 https://pavenum.com/overlay-avec-hover-sur-une-image-en-html-css/

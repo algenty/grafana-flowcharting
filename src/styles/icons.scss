@@ -84,8 +84,26 @@ $encoding-reference: (
   @extend .gf-icon-border;
 }
 
+.gf-icon-action-nocolor { 
+  @extend .gf-icon-clickable;
+  // transition: 0.2s ease;
+  &:hover {
+    @extend .gf-icon-action-nocolor;
+    // border-color: $icon_action_hover !important;
+    // border:2px solid;
+    // dark theme
+    // filter : invert(55%) sepia(88%) saturate(1374%) hue-rotate(174deg) brightness(93%) contrast(92%);
+    // Light themes
+    // filter: invert(44%) sepia(78%) saturate(3038%) hue-rotate(166deg) brightness(101%) contrast(101%);
+    // filter : $icon_action_filter;
+    transform: scale(1.3);
+    // transition: 0.2s ease;
+  }
+}
+
 .gf-icon-action { 
   @extend .gf-icon-clickable;
+  transition: 0.2s ease;
   &:hover {
     @extend .gf-icon-action;
     // border-color: $icon_action_hover !important;
@@ -95,7 +113,8 @@ $encoding-reference: (
     // Light themes
     // filter: invert(44%) sepia(78%) saturate(3038%) hue-rotate(166deg) brightness(101%) contrast(101%);
     filter : $icon_action_filter;
-    // transition: 0.1s ease;
+    transform: scale(1.3);
+    transition: 0.2s ease;
   }
 }
 

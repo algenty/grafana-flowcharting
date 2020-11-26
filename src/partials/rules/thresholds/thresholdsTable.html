@@ -139,8 +139,8 @@
                             ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseenter="elt.displayEdit[CN2] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN2)}" ng-attr-title="{{elt.data.pattern}}">
                             <div class="gf-table-content" style="text-align: center">
-                                <div class="gf-icon" style="width : 15px; height: 15px;"
-                                    ng-click="elt.displayEdit[CN2] === false"
+                                <div style="width : 15px; height: 15px;" 
+                                    class="gf-icon gf-icon-action-nocolor"
                                     ng-show="elt.displayEdit[CN2] === true || elt.data.color.length > 0">
                                     <color-picker color="elt.data.color" onChange="editor.onColorChange(elt)">
                                     </color-picker>
