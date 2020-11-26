@@ -80,6 +80,10 @@ $encoding-reference: (
   border: 1px solid;
 }
 
+.gf-icon-selected {
+  @extend .gf-icon-border;
+}
+
 .gf-icon-action { 
   @extend .gf-icon-clickable;
   &:hover {

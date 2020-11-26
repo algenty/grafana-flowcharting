@@ -1,10 +1,14 @@
 import { $GF } from './globals_class';
 
 export type ObjectTH = NumberTH | StringTH;
+export type ObjectTHData = gf.TTHNumberData | gf.TTHStringData;
+
 class GFTH {
   data: gf.TTHData;
   hidden = false;
+  validComp: string[] = [];
   id = $GF.utils.uniqueID();
+  type = 'unknown';
   constructor(color: string, comparator: any, value: any, data: gf.TTHData) {
     this.data = data;
     this.data.value = value;
@@ -41,6 +45,14 @@ class GFTH {
 
   match(value: any): boolean {
     return true;
+  }
+
+  isValidComp(comp : string):boolean {
+    return this.validComp.indexOf(comp) !== -1;
+  }
+
+  getId() {
+    return this.id;
   }
 
   getData(): any {
@@ -109,6 +121,8 @@ class GFTH {
 
 export class NumberTH extends GFTH {
   data: gf.TTHNumberData;
+  type = 'number';
+  validComp : gf.TTHNumberComparator[] = ['ge', 'gt'];
   constructor(color: string, value: number, comparator: gf.TTHNumberComparator, data: gf.TTHNumberData) {
     super(color, value, comparator, data);
     this.data = data;
@@ -147,10 +161,13 @@ export class NumberTH extends GFTH {
         break;
     }
   }
+
 }
 
 export class StringTH extends GFTH {
   data: gf.TTHStringData;
+  type = 'string';
+  validComp : gf.TTHStringComparator[] = ['eq', 'ne'];
   constructor(color: string, value: string, comparator: gf.TTHStringComparator, data: gf.TTHStringData) {
     super(color, value, comparator, data);
     this.data = data;

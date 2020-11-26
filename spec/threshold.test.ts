@@ -85,9 +85,9 @@ describe('Thresholds Handler', () => {
       expect(rule.getThresholdCount()).toEqual(3);
     });
     test('Level with an object should be', () => {
-      expect(rule.getTHLevel(th1)).toEqual(2);
-      expect(rule.getTHLevel(th2)).toEqual(1);
-      expect(rule.getTHLevel(th3)).toEqual(0);
+      expect(rule.getThresholdLevelForTH(th1)).toEqual(2);
+      expect(rule.getThresholdLevelForTH(th2)).toEqual(1);
+      expect(rule.getThresholdLevelForTH(th3)).toEqual(0);
     });
 
     test('Level with a value should be with invert == false', () => {

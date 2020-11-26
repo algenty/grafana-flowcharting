@@ -5,8 +5,7 @@ import _ from 'lodash';
 import { Metric } from './metric_class';
 import { $GF } from './globals_class';
 import chroma from 'chroma-js';
-import { NumberTH, StringTH, ObjectTH } from 'threshold_class';
-
+import { NumberTH, StringTH, ObjectTH, ObjectTHData } from 'threshold_class';
 
 /**
  * Rule definition
@@ -215,7 +214,6 @@ export class Rule {
 
     // THRESHOLD NUMBER
     if (this.data.type === 'number') {
-      // debugger
       if (!!obj.thresholds && !!obj.colors) {
         this.data.numberTHData = [];
         this.numberTH = [];
@@ -236,11 +234,11 @@ export class Rule {
         if (!!obj.numberTHData) {
           this.data.numberTHData = [];
           this.numberTH = [];
-          let th = obj.numberTHData as gf.TTHNumberData[];
+          let th: gf.TTHNumberData[] = obj.numberTHData;
           if (th !== undefined && th != null && th.length > 0) {
             th.forEach((thdata: gf.TTHNumberData) => {
               this.addThreshold().import(thdata);
-            });   
+            });
           }
         }
       }
@@ -289,11 +287,11 @@ export class Rule {
         if (!!obj.stringTHData) {
           this.data.stringTHData = [];
           this.stringTH = [];
-          let th = obj.stringTHData as gf.TTHStringData[];
+          let th: gf.TTHStringData[] = obj.stringTHData;
           if (th !== undefined && th != null && th.length > 0) {
             th.forEach((thdata: gf.TTHStringData) => {
               this.addThreshold().import(thdata);
-            });   
+            });
           }
         }
       }
@@ -610,7 +608,7 @@ export class Rule {
    * @returns {ObjectTH}
    * @memberof Rule
    */
-  getThreshold(index: number) : ObjectTH {
+  getThreshold(index: number): ObjectTH {
     switch (this.data.type) {
       case 'number':
         return this.numberTH[index];
@@ -628,9 +626,9 @@ export class Rule {
     }
   }
 
-  cloneThreshold(index : number): ObjectTH  {
+  cloneThreshold(index: number): ObjectTH {
     const refth = this.getThreshold(index);
-    if(refth !== undefined) {
+    if (refth !== undefined) {
       return this.addThreshold(index).import(refth.getData());
     }
     return refth;
@@ -788,35 +786,12 @@ export class Rule {
    * @returns {this}
    * @memberof Rule
    */
-  // removeColor(index: number): this {
-  //   this.data.thresholds.splice(index - 1, 1);
-  //   this.data.stringThresholds.splice(index - 1, 1);
-  //   this.data.colors.splice(index, 1);
-  //   return this;
-  // }
   removeThreshold(index: number): this {
     const ths = this.getThresholds();
-    ths.splice(index - 1, 1);
+    const thd = this.getThresholdDatas()
+    ths.splice(index, 1);
+    thd.splice(index, 1);
     return this;
-    // switch (this.data.type) {
-    //   case 'number':
-    //     this.data.numberTHData.splice(index - 1, 1);
-    //     this.numberTH.splice(index - 1, 1);
-    //     break;
-    //   case 'string':
-    //     this.data.stringTHData.splice(index - 1, 1);
-    //     this.stringTH.splice(index - 1, 1);
-    //     break;
-    //   case 'date' :
-    //     //TODO
-    //     this.data.stringTHData.splice(index - 1, 1);
-    //     this.stringTH.splice(index - 1, 1);
-    //     break;
-    //   default:
-    //     throw new Error('Type of threshold unknown : ' + this.data.type);
-    //     break;
-    // }
-    // return this;
   }
 
   /**
@@ -831,14 +806,12 @@ export class Rule {
   // }
 
   /**
-   * Return Array of html colors
+   * Return Thresholds Array
    *
    * @returns {string[]}
    * @memberof Rule
    */
-  // getColors(): string[] {
-  //   return this.data.colors;
-  // }
+
   getThresholds(): ObjectTH[] {
     switch (this.data.type) {
       case 'number':
@@ -858,6 +831,31 @@ export class Rule {
   }
 
   /**
+   * Return data threshold array
+   *
+   * @returns {string[]}
+   * @memberof Rule
+   */
+
+  getThresholdDatas(): ObjectTHData[] {
+    switch (this.data.type) {
+      case 'number':
+        return this.data.numberTHData;
+        break;
+      case 'string':
+        return this.data.stringTHData;
+        break;
+      case 'date':
+        //TODO
+        return this.data.stringTHData;
+        break;
+      default:
+        throw new Error('Type of threshold unknown : ' + this.data.type);
+        break;
+    }
+  }
+
+  /**
    * Return number of colors
    *
    * @returns {number}
@@ -867,22 +865,7 @@ export class Rule {
   //   return this.data.colors.length;
   // }
   getThresholdCount(): number {
-    switch (this.data.type) {
-      case 'number':
-        return this.numberTH.length;
-        break;
-      case 'string':
-        return this.stringTH.length;
-        break;
-      case 'date':
-        //TODO
-        return this.stringTH.length;
-        break;
-      default:
-        throw new Error('Type of threshold unknown : ' + this.data.type);
-        break;
-    }
-    return 0;
+    return this.getThresholds().length;
   }
 
   //
@@ -1367,10 +1350,12 @@ export class Rule {
       if (i === 0) {
         index = i;
       } else {
-        if (!th.isHidden() && th.match(value)) {
-          index = i;
-        } else {
-          break;
+        if (!th.isHidden()) {
+          if (th.match(value)) {
+            index = i;
+          } else {
+            break;
+          }
         }
       }
     }
@@ -1398,48 +1383,27 @@ export class Rule {
   }
 
   /**
-   * Get color according level (-1,0,1,2)
-   * TODO : complete
+   * Get color according level (-1,0,1,2...)
+   * 
    * @param {*} level
    * @returns
    * @memberof Rule
    */
-  getColorForLevel(level: number): string {
-    const index = this._getIndexForLevel(level);
-    switch (this.data.type) {
-      case 'number':
-        return this.numberTH[index].getColor();
-        break;
-      case 'string':
-        return this.stringTH[index].getColor();
-        break;
-      case 'date':
-        //TODO
-        return this.stringTH[index].getColor();
-        break;
-      default:
-        throw new Error('Type of threshold unknown : ' + this.data.type);
-        break;
-    }
+  getThresholdColorForLevel(level: number): string {
+    const index = this.getThresholdIndexForLevel(level);
+    const th = this.getThreshold(index);
+    return th.getColor();
   }
 
-  _getIndexForLevel(level: number): number {
-    let length = 0;
-    switch (this.data.type) {
-      case 'number':
-        length = this.numberTH.length;
-        break;
-      case 'string':
-        length = this.stringTH.length;
-        break;
-      case 'date':
-        //TODO
-        length = this.stringTH.length;
-        break;
-      default:
-        throw new Error('Type of threshold unknown : ' + this.data.type);
-        break;
-    }
+  /**
+   * Return an index for a level
+   *
+   * @param {number} level
+   * @returns {number}
+   * @memberof Rule
+   */
+  getThresholdIndexForLevel(level: number): number {
+    let length = this.getThresholds().length;
     if (this.data.invert) {
       return level;
     }
@@ -1455,22 +1419,7 @@ export class Rule {
    */
   getThresholdLevel(value: any): number {
     let index = this._getIndexTHForValue(value);
-    let length = 0;
-    switch (this.data.type) {
-      case 'number':
-        length = this.numberTH.length;
-        break;
-      case 'string':
-        length = this.stringTH.length;
-        break;
-      case 'date':
-        //TODO
-        length = this.stringTH.length;
-        break;
-      default:
-        throw new Error('Type of threshold unknown : ' + this.data.type);
-        break;
-    }
+    let length = this.getThresholds().length;
     if (this.data.invert && index !== -1) {
       return index;
     }
@@ -1487,11 +1436,25 @@ export class Rule {
    * @returns {number}
    * @memberof Rule
    */
-  getTHLevel(th : ObjectTH): number {
+  getThresholdLevelForTH(th: ObjectTH): number {
     const ths = this.getThresholds();
     const index = ths.indexOf(th);
     if (index !== -1) {
-      return this.data.invert ? this.stringTH.length - 1 - index : index;
+      return this.data.invert ? index : this.getThresholdCount() - 1 - index;
+    }
+    return index;
+  }
+
+  /**
+   * Get the level according index
+   *
+   * @param {ObjectTH} th
+   * @returns {number}
+   * @memberof Rule
+   */
+  getThresholdLevelForIndex(index: number): number {
+    if (index !== -1) {
+      return this.data.invert ? index : this.getThresholdCount() - 1 - index;
     }
     return index;
   }

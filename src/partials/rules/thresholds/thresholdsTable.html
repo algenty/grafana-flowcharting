@@ -1,4 +1,4 @@
-<textarea>{{rule.getThresholds() | json}}</textarea>
+<!-- <textarea>{{rule.getThresholds() | json}}</textarea> -->
 <div role=" table" class="gf-table-main" id="THsTable" style="overflow: visible;">
     <div class="gf-custom-scrollbar"
         style="position: relative; overflow: visible; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
@@ -118,7 +118,7 @@
             <!-- TBODY -->
             <div class="gf-table-body">
                 <div role="row" class="gf-table-rows" ng-repeat="elt in rule.getThresholds()">
-                    <textarea>{{elt | json}}</textarea>
+                    <!-- <textarea>{{elt | json}}</textarea> -->
                     <!-- CELLS -->
                     <div class="gf-table-row_line" ng-init="elt.displayEdit = [];elt.inEdit = [];">
                         <!-- EXPAND -->
@@ -136,7 +136,7 @@
                         <!-- COLORS -->
                         <div role="cell" class="gf-table-cells"
                             ng-init="CN2 = 'colors';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
-                            ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseover="elt.displayEdit[CN2] = true;"
+                            ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseenter="elt.displayEdit[CN2] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN2)}" ng-attr-title="{{elt.data.pattern}}">
                             <div class="gf-table-content" style="text-align: center">
                                 <div class="gf-icon" style="width : 15px; height: 15px;"
@@ -153,18 +153,28 @@
                         </div>
                         <!-- WHEN -->
                         <div role="cell" class="gf-table-cells"
-                            ng-init="CN3 = 'colors';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
-                            ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseover="elt.displayEdit[CN3] = true;"
+                            ng-init="CN3 = 'when';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
+                            ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseenter="elt.displayEdit[CN3] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN3)}" ng-attr-title="{{elt.data.pattern}}">
                             <div class="gf-table-content" style="text-align: center">
-                                <div class="gf-icon-comp-ge gf-icon-border gf-icon-24" title="Greater or equal than">
+                                <div
+                                    ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp('ge')) || elt.data.comparator === 'ge'" 
+                                    ng-click="elt.data.comparator = 'ge';editor.onRulesChange();"
+                                    class="gf-icon-comp-ge gf-icon-action" title="Greater or equal than"
+                                    ng-class="{'gf-icon-selected' : elt.data.comparator === 'ge'}">
+                                </div>
+                                <div 
+                                    ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp('gt')) || elt.data.comparator === 'gt'"
+                                    ng-click="elt.data.comparator = 'gt';editor.onRulesChange();"
+                                    class="gf-icon-comp-gt gf-icon-action" title="Greater than"
+                                    ng-class="{'gf-icon-selected' : elt.data.comparator === 'gt'}">
                                 </div>
                             </div>
                         </div>
                         <!-- VALUE/THAN -->
                         <div role="cell" class="gf-table-cells"
                             ng-init="CN4 = 'value';elt.displayEdit[CN4] = false;elt.inEdit[CN4] = false;"
-                            ng-mouseleave="elt.displayEdit[CN4] = false;" ng-mouseover="elt.displayEdit[CN4] = true;"
+                            ng-mouseleave="elt.displayEdit[CN4] = false;" ng-mouseenter="elt.displayEdit[CN4] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN4)}"
                             ng-attr-title="{{$index > 0 && rule.data.type === 'number' ? 'Specify a value for apply color when value is greater or equal' : 'Specify a pattern regex for apply color' }}">
                             <div class="gf-table-content" style="text-align: center;justify-content: center;"
@@ -182,23 +192,27 @@
                                 ng-click="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit threshold level">
                             </div>
-                            <input ng-show="elt.inEdit[CN4] === true"
-                                ng-attr-id="{{elt.getId() + '-' + CN4}}"
-                                type="text" class="gf-form-input" ng-model="elt.data.value"
-                                ng-model-onblur ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;"
-                                placeholder="pattern or value" 
-                                ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'"/>
+                            <input ng-show="elt.inEdit[CN4] === true && rule.data.type === 'number'"
+                                ng-attr-id="{{elt.getId() + '-' + CN4}}" type="number" class="gf-form-input"
+                                ng-model="elt.data.value" ng-model-onblur
+                                ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" placeholder="pattern or value"
+                                ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'" />
+                            <input ng-show="elt.inEdit[CN4] === true && rule.data.type === 'string'"
+                                ng-attr-id="{{elt.getId() + '-' + CN4}}" type="text" class="gf-form-input"
+                                ng-model="elt.data.value" ng-model-onblur
+                                ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" placeholder="pattern or value"
+                                ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'" />
                         </div>
                         <!-- LEVEL -->
                         <div role="cell" class="gf-table-cells"
                             ng-init="CN5 = 'level';elt.displayEdit[CN5] = false;elt.inEdit[CN5] = false;"
-                            ng-mouseleave="elt.displayEdit[CN5] = false;" ng-mouseover="elt.displayEdit[CN5] = true;"
+                            ng-mouseleave="elt.displayEdit[CN5] = false;" ng-mouseenter="elt.displayEdit[CN5] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN5)}"
                             ng-attr-title="{{ 'Computed level is' + elt.getTHLevel(th) }}">
                             <!-- {{elt.data.EventType}} -->
                             <div class="gf-table-content" style="text-align: center;">
                                 <span>
-                                    {{ rule.getTHLevel(elt) }}
+                                    {{ rule.getThresholdLevelForIndex($index) }}
                                 </span>
                             </div>
                         </div>
@@ -218,18 +232,24 @@
                             ng-style="{'width' : editor.THsTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
-                                <div ng-click="rule.addColor($index)" title="Add e new threshold"
+                                <div ng-click="rule.addThreshold($index)" title="Add e new threshold"
                                     class="gf-icon-action gf-icon-new">
                                 </div>
-                                <div ng-click="elt.isHidden() ? elt.show(): elt.hide();editor.onRulesChange()"
+                                <div ng-show="$index === 0" class="gf-icon-empty">
+                                </div>
+                                <div ng-show="$index !== 0"
+                                    ng-click="elt.isHidden() ? elt.show(): elt.hide();editor.onRulesChange()"
                                     title="Hide/Disable this color/level" class="gf-icon-action"
                                     ng-class="{'gf-icon-show': !elt.isHidden(), 'gf-icon-hide': elt.isHidden()}">
                                 </div>
-                                <div ng-click="rule.removeColor($index);editor.onRulesChange()"
+                                <div ng-show="$index === 0" class="gf-icon-empty">
+                                </div>
+                                <div ng-show="$index !== 0"
+                                    ng-click="rule.removeThreshold($index);editor.onRulesChange()"
                                     title="Delete this color" class="gf-icon-action gf-icon-remove">
                                 </div>
-                                <div ng-click="rule.cloneColor($index);editor.onRulesChange();"
-                                    title="Duplicate this mapping" class="gf-icon-action gf-icon-clone">
+                                <div ng-click="rule.cloneThreshold($index);editor.onRulesChange();"
+                                    title="Duplicate this color" class="gf-icon-action gf-icon-clone">
                                 </div>
                             </div>
                         </div>
