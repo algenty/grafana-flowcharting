@@ -1,6 +1,6 @@
 import { GFState } from '../src/state_class';
 
-describe.skip('States', () => {
+describe('States', () => {
   const xgraph: any = undefined;
   const mxcell: any = {
     id : "1234"

@@ -4,11 +4,6 @@ exports[`Rule New Should be equals 1`] = `
 Object {
   "aggregation": "current",
   "alias": "myRule",
-  "colors": Array [
-    "rgba(245, 54, 54, 0.9)",
-    "rgba(237, 129, 40, 0.89)",
-    "rgba(50, 172, 45, 0.97)",
-  ],
   "column": "Time",
   "dateFormat": "YYYY-MM-DD HH:mm:ss",
   "decimals": 2,
@@ -23,6 +18,20 @@ Object {
   "linkRegEx": true,
   "mappingType": 1,
   "metricType": "serie",
+  "numberTHData": Array [
+    Object {
+      "color": "COLOR1",
+      "comparator": "ge",
+      "level": 0,
+      "value": 50,
+    },
+    Object {
+      "color": "COLOR2",
+      "comparator": "ge",
+      "level": 0,
+      "value": 80,
+    },
+  ],
   "order": 1,
   "overlayIcon": false,
   "pattern": "/.*/",
@@ -40,17 +49,10 @@ Object {
   ],
   "shapeProp": "id",
   "shapeRegEx": true,
-  "stringThresholds": Array [
-    "/.*/",
-    "/.*/",
-  ],
+  "stringTHData": Array [],
   "textData": Array [],
   "textProp": "id",
   "textRegEx": true,
-  "thresholds": Array [
-    50,
-    80,
-  ],
   "tooltip": false,
   "tooltipColors": false,
   "tooltipLabel": "",

@@ -21,9 +21,6 @@
           ng-click="editor.displayNextFlowchart()"><i class="fa fa-caret-right fa-lg"></i></div>
       </div>
     </div>
-    <textarea>
-      {{ctrl | json}}
-    </textarea>
     <div id="flowcharting-mapping" ng-show="ctrl.flowchartHandler.isMapping()" class="gf-mapping">
       <div style="margin: 0;position: absolute;top: 50%;left: 50%;margin-right: -50%;transform: translate(-50%, -50%);" id="flowcharting-mapping-content">
         <span>Select Object to map</span>

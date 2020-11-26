@@ -1,3 +1,4 @@
+<textarea>{{rule.getThresholds() | json}}</textarea>
 <div role=" table" class="gf-table-main" id="THsTable" style="overflow: visible;">
     <div class="gf-custom-scrollbar"
         style="position: relative; overflow: visible; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
@@ -116,9 +117,10 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows" ng-repeat="col in rule.getColors() track by $index">
+                <div role="row" class="gf-table-rows" ng-repeat="elt in rule.getThresholds()">
+                    <textarea>{{elt | json}}</textarea>
                     <!-- CELLS -->
-                    <div class="gf-table-row_line" ng-init="elt = {};elt.displayEdit = [];elt.inEdit = [];">
+                    <div class="gf-table-row_line" ng-init="elt.displayEdit = [];elt.inEdit = [];">
                         <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells" ng-click="elt.reduce=!elt.reduce"
                             ng-init="CN1 = 'expand';elt.displayEdit[CN1] = false;elt.inEdit[CN1] = false;"
@@ -138,8 +140,8 @@
                             ng-style="{'width' : editor.THsTable.getWidth(CN2)}" ng-attr-title="{{elt.data.pattern}}">
                             <div class="gf-table-content" style="text-align: center">
                                 <div class="gf-icon" style="width : 15px; height: 15px;">
-                                    <color-picker color="rule.data.colors[$index]"
-                                        onChange="editor.onColorChange($parent.$index, $index)"></color-picker>
+                                    <color-picker color="elt.data.color"
+                                        onChange="editor.onColorChange(elt)"></color-picker>
                                 </div>
                             </div>
                         </div>
@@ -165,14 +167,10 @@
                                 ng-show="elt.inEdit[CN4] !== true">
                                 <span
                                     ng-show="$index > 0 && rule.data.type === 'number'">
-                                    {{rule.data.thresholds[$index-1]}}
-                                </span>
-                                <span
-                                    ng-show="$index > 0 && rule.data.type === 'string'">
-                                    {{rule.data.stringThresholds[$index-1]}}
+                                    {{elt.data.value}}
                                 </span>
                                 <label class="gf-form-label" style="margin-right: 2px;text-align: center"
-                                    ng-show="$index === 0 && rule.data.type === 'number'">
+                                    ng-show="$index === 0">
                                     Base
                                 </label>
                             </div>
@@ -181,28 +179,28 @@
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit threshold level">
                             </div>
                             <!-- TODO : Replace by a select -->
-                            <input ng-show="$index > 0 && rule.data.type === 'number' && elt.inEdit[CN4] === true"
+                            <!-- <input ng-show="$index > 0 && rule.data.type === 'number' && elt.inEdit[CN4] === true"
                                 type="number" class="gf-form-input" ng-model="rule.data.thresholds[$index-1]"
                                 placeholder="value"
                                 title="Specify a value for apply color when value is greater or equal"
                                 ng-blur="editor.onRulesChange()" />
-                            <input ng-show="$index > 0 && rule.data.type === 'string' && elt.inEdit[CN4] === true"
+                                <input ng-show="$index > 0 && rule.data.type === 'string' && elt.inEdit[CN4] === true"
                                 type="text" class="gf-form-input" ng-model="rule.data.stringThresholds[$index-1]"
                                 placeholder="pattern" title="'Specify a pattern regex for apply color'"
-                                ng-blur="editor.onRulesChange()" />
+                                ng-blur="editor.onRulesChange()" /> -->
                         </div>
                         <!-- LEVEL -->
                         <div role="cell" class="gf-table-cells"
                             ng-init="CN5 = 'level';elt.displayEdit[CN5] = false;elt.inEdit[CN5] = false;"
                             ng-mouseleave="elt.displayEdit[CN5] = false;" ng-mouseover="elt.displayEdit[CN5] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN5)}"
-                            ng-attr-title="{{ ! rule.data.invert ? rule.getColorsCount() - $index - 1 : $index}}">
+                            ng-attr-title="{{ elt.getTHLevel(th) }}">
                             <!-- {{elt.data.EventType}} -->
                             <div class="gf-table-content" style="text-align: center;"
                                 ng-dblclick="elt.inEdit[CN5] = true;$GF.setFocus( elt.getId() + '-' + CN5 )"
                                 ng-show="elt.inEdit[CN5] !== true">
                                 <span>
-                                    {{ ! rule.data.invert ? rule.getColorsCount() - $index - 1 : $index}}
+                                    {{ rule.getTHLevel(elt) }}
                                 </span>
                             </div>
                         </div>

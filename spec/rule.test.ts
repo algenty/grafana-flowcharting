@@ -10,40 +10,40 @@ describe('Rule', () => {
     });
   });
 
-  describe('Level', () => {
-    const rule = new Rule('/.*/', data);
-    test('In order', () => {
-      rule.data.thresholds = [50, 80];
-      expect(rule.data.invert).toBeFalsy();
-      expect(rule.getThresholdLevel(25)).toBe(2);
-      expect(rule.getThresholdLevel(60)).toBe(1);
-      expect(rule.getThresholdLevel(90)).toBe(0);
-    });
+  // describe.skip('Level skipped : Moved to thresholds.test', () => {
+  //   const rule = new Rule('/.*/', data);
+  //   test('In order', () => {
+  //     rule.data.thresholds = [50, 80];
+  //     expect(rule.data.invert).toBeFalsy();
+  //     expect(rule.getThresholdLevel(25)).toBe(2);
+  //     expect(rule.getThresholdLevel(60)).toBe(1);
+  //     expect(rule.getThresholdLevel(90)).toBe(0);
+  //   });
 
-    test('Invert', () => {
-      rule.invertThesholds();
-      expect(rule.data.invert).toBeTruthy();
-      expect(rule.getThresholdLevel(25)).toBe(0);
-      expect(rule.getThresholdLevel(60)).toBe(1);
-      expect(rule.getThresholdLevel(90)).toBe(2);
-    });
-  });
+  //   test('Invert', () => {
+  //     rule.invertThesholds();
+  //     expect(rule.data.invert).toBeTruthy();
+  //     expect(rule.getThresholdLevel(25)).toBe(0);
+  //     expect(rule.getThresholdLevel(60)).toBe(1);
+  //     expect(rule.getThresholdLevel(90)).toBe(2);
+  //   });
+  // });
 
-  describe('Colors', () => {
-    const rule = new Rule('/.*/', data);
-    rule.data.thresholds = [50, 80];
-    test('Each colors', () => {
-      expect(rule.getColorForValue(25)).toBe('rgba(50, 172, 45, 0.97)');
-      expect(rule.getColorForValue(60)).toBe('rgba(237, 129, 40, 0.89)');
-      expect(rule.getColorForValue(90)).toBe('rgba(245, 54, 54, 0.9)');
-    });
-    test('Each colors', () => {
-      rule.invertThesholds();
-      expect(rule.getColorForValue(25)).toBe('rgba(245, 54, 54, 0.9)');
-      expect(rule.getColorForValue(60)).toBe('rgba(237, 129, 40, 0.89)');
-      expect(rule.getColorForValue(90)).toBe('rgba(50, 172, 45, 0.97)');
-    });
-  });
+  // describe.skip('Colors skipped : Moved to thresholds.test', () => {
+  //   const rule = new Rule('/.*/', data);
+  //   rule.data.thresholds = [50, 80];
+  //   test('Each colors', () => {
+  //     expect(rule.getColorForValue(25)).toBe('rgba(50, 172, 45, 0.97)');
+  //     expect(rule.getColorForValue(60)).toBe('rgba(237, 129, 40, 0.89)');
+  //     expect(rule.getColorForValue(90)).toBe('rgba(245, 54, 54, 0.9)');
+  //   });
+  //   test('Each colors', () => {
+  //     rule.invertThesholds();
+  //     expect(rule.getColorForValue(25)).toBe('rgba(245, 54, 54, 0.9)');
+  //     expect(rule.getColorForValue(60)).toBe('rgba(237, 129, 40, 0.89)');
+  //     expect(rule.getColorForValue(90)).toBe('rgba(50, 172, 45, 0.97)');
+  //   });
+  // });
 
   describe('Shape', () => {
     const pattern = '/.*Toto.*/';
@@ -79,7 +79,9 @@ describe('Rule', () => {
 
     describe('Colorize', () => {
       const rule = new Rule('/.*/', data);
-      rule.data.thresholds = [50, 80];
+      // rule.data.thresholds = [50, 80];
+      rule.addThreshold(undefined, "COLOR1", 50);
+      rule.addThreshold(undefined, "COLOR2", 80);
       const shape = rule.addShapeMap(pattern);
 
       test('toColorize always ERR should be true', () => {

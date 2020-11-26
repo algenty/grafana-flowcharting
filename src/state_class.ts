@@ -98,8 +98,7 @@ export class State {
       const value = rule.getValueForMetric(metric);
       const FormattedValue = rule.getFormattedValue(value);
       const level = rule.getThresholdLevel(value);
-      const color =
-        rule.data.gradient && rule.data.type === 'number' ? rule.getColorForValue(value) : rule.getColorForLevel(level);
+      const color = rule.getThresholdColor(value);
       this.variables.set($GF.CONSTANTS.VAR_STR_RULENAME, rule.data.alias);
       this.variables.set($GF.CONSTANTS.VAR_NUM_VALUE, value);
       this.variables.set($GF.CONSTANTS.VAR_STR_FORMATED, FormattedValue);

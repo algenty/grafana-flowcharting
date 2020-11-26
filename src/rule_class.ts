@@ -214,7 +214,7 @@ export class Rule {
       if (!!obj.thresholds && obj.colors) {
         let i = 0;
         let j = 0;
-        obj.colors.array.forEach(cl => {
+        obj.colors.forEach(cl => {
           if (i === 0) {
             this.addThreshold(i++, cl);
           } else {
@@ -254,7 +254,7 @@ export class Rule {
       if (!!obj.stringThresholds && obj.colors) {
         let i = 0;
         let j = 0;
-        obj.colors.array.forEach(cl => {
+        obj.colors.forEach(cl => {
           if (i === 0) {
             this.addThreshold(i++, cl);
           } else {
@@ -643,11 +643,11 @@ export class Rule {
     if (index === undefined || length === 0) {
       index = length;
     }
-    if( index > length -1) {
-      index = length -1;
+    if (index > length - 1) {
+      index = length - 1;
     }
     let ref = index;
-    if( index === 0 && length > 1) {
+    if (index === 0 && length > 1) {
       ref = 1;
     }
 
@@ -678,7 +678,7 @@ export class Rule {
         }
       }
     }
-    if(finalColor !== undefined) {
+    if (finalColor !== undefined) {
       nth.setColor(finalColor);
     }
     if (finalValue !== undefined) {
@@ -700,11 +700,11 @@ export class Rule {
     if (index === undefined || length === 0) {
       index = length;
     }
-    if( index > length -1) {
-      index = length -1;
+    if (index > length - 1) {
+      index = length - 1;
     }
     let ref = index;
-    if( index === 0 && length > 1) {
+    if (index === 0 && length > 1) {
       ref = 1;
     }
 
@@ -729,7 +729,7 @@ export class Rule {
         finalValue = lth.getValue();
       }
     }
-    if(finalColor !== undefined) {
+    if (finalColor !== undefined) {
       nth.setColor(finalColor);
     }
     if (finalValue !== undefined) {
@@ -856,7 +856,7 @@ export class Rule {
         return this.numberTH.length;
         break;
       case 'string':
-        this.stringTH.length;
+        return this.stringTH.length;
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
@@ -1267,36 +1267,6 @@ export class Rule {
   //   return '';
   // }
 
-  _getMiddleValue(index: number): number {
-    // Table is empty
-    if (this.numberTH.length === 1) {
-      return NumberTH.getDefaultData().value;
-    }
-    // Last element
-    if (index >= this.numberTH.length - 1) {
-      return this.numberTH[this.numberTH.length - 1].getValue();
-    } else {
-      const startValue = this.numberTH[index].getValue();
-      const endValue = this.numberTH[index + 1].getValue();
-      return startValue + (endValue - startValue) / 2;
-    }
-  }
-
-  _getMiddleColor(index: number): string {
-    // Table is empty
-    if (this.numberTH.length === 1) {
-      return NumberTH.getDefaultData().color;
-    }
-    // Last element
-    if (index >= this.numberTH.length - 1) {
-      return this.numberTH[this.numberTH.length - 1].getColor();
-    } else {
-      const beginColor = this.numberTH[index].getColor();
-      const endColor = this.numberTH[index + 1].getColor();
-      return this._getColorForRatio(beginColor, endColor, 0.5);
-    }
-  }
-
   _getColorForRatio(beginColor: string, endColor: string, ratio: number): string {
     let color = endColor;
     try {
@@ -1350,7 +1320,7 @@ export class Rule {
       case 'number':
         return this._getIndexNumberTHForValue(value);
         break;
-      case 'number':
+      case 'string':
         return this._getIndexStringTHForValue(value);
         break;
       default:
@@ -1419,20 +1389,6 @@ export class Rule {
         break;
     }
   }
-  // getColorForLevel(level: number): string {
-  //   const colors = this.data.colors;
-  //   if (level < 0) {
-  //     return colors[0];
-  //   }
-  //   let l = level;
-  //   if (!this.data.invert) {
-  //     l = this.data.colors.length - 1 - level;
-  //   }
-  //   if (colors[l] !== undefined) {
-  //     return colors[l];
-  //   }
-  //   return colors[0];
-  // }
 
   _getIndexForLevel(level: number): number {
     let length = 0;
@@ -1478,58 +1434,42 @@ export class Rule {
       return index;
     }
     if (index !== -1) {
-      return (length - 1) - index;
+      return length - 1 - index;
     }
     return index;
   }
-  // getThresholdLevel(value: any): number {
-  //   // NUMBER
-  //   if (this.data.type === 'number') {
-  //     let thresholdLevel = 0;
-  //     let thresholds = this.data.thresholds;
 
-  //     if (thresholds === undefined || thresholds.length === 0) {
-  //       return 0;
-  //     }
-
-  //     let l = thresholds.length;
-  //     for (let index = 0; index < l; index++) {
-  //       const t = thresholds[index];
-  //       if (value < t) {
-  //         break;
-  //       }
-  //       thresholdLevel = index + 1;
-  //     }
-
-  //     if (!this.data.invert) {
-  //       thresholdLevel = this.data.colors.length - 1 - thresholdLevel;
-  //     }
-  //     return thresholdLevel;
-  //   }
-  //   // STRING
-  //   if (this.data.type === 'string') {
-  //     let thresholdLevel = 0;
-  //     const formatedValue = this.getFormattedValue(value);
-  //     let thresholds = this.data.stringThresholds;
-  //     if (thresholds === undefined || thresholds.length === 0) {
-  //       return 0;
-  //     }
-  //     let l = thresholds.length;
-  //     for (let index = 0; index < l; index++) {
-  //       const t = thresholds[index];
-  //       if ($GF.utils.matchString(value, t) || $GF.utils.matchString(formatedValue, t)) {
-  //         thresholdLevel = index + 1;
-  //         break;
-  //       }
-  //     }
-
-  //     if (!this.data.invert) {
-  //       thresholdLevel = this.data.colors.length - 1 - thresholdLevel;
-  //     }
-  //     return thresholdLevel;
-  //   }
-  //   return 0;
-  // }
+  /**
+   * Get the level according objet TH
+   *
+   * @param {(NumberTH | StringTH)} th
+   * @returns {number}
+   * @memberof Rule
+   */
+  getTHLevel(th: NumberTH | StringTH): number {
+    let name = th.constructor.name;
+    let index = -1;
+    switch (this.data.type) {
+      case 'number':
+        const thn = th as NumberTH;
+        index = this.numberTH.indexOf(thn);
+        if (index !== -1) {
+          return this.data.invert ? index : this.numberTH.length - 1 - index;
+        }
+        break;
+      case 'string':
+        const ths = th as StringTH;
+        index = this.stringTH.indexOf(ths);
+        if (index !== -1) {
+          return this.data.invert ? this.stringTH.length - 1 - index : index;
+        }
+        break;
+      default:
+        throw new Error('Unknow object : ' + name);
+        break;
+    }
+    return index;
+  }
 
   /**
    * Get value for this metric
