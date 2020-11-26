@@ -1,5 +1,6 @@
 import { $GF } from './globals_class';
 
+export type ObjectTH = NumberTH | StringTH;
 class GFTH {
   data: gf.TTHData;
   hidden = false;
@@ -136,7 +137,7 @@ export class NumberTH extends GFTH {
       case 'ge':
         return value >= this.data.value;
         break;
-        case 'gt':
+      case 'gt':
         return value > this.data.value;
         break;
       default:

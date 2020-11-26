@@ -395,6 +395,7 @@ declare module gf {
     columns: TTableColumn[];
   }
 
+  // declare type ObjectTH = NumberTH | StringTH;
   declare type TTHType = 'string' | 'number' | 'date';
   declare type TTHNumberComparator = 'ge' | 'gt';
   declare type TTHStringComparator = 'eq' | 'ne';

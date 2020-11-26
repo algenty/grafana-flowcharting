@@ -565,6 +565,7 @@ export class RulesOptionsCtrl {
   }
 
   onRulesChange() {
+    console.log('RulesOptionsCtrl -> onRulesChange -> onRulesChange');
     $GF.log.info('RulesOptionsCtrl.onRulesChange()');
     this.flowchartHandler.onRulesChange();
     this.render();
@@ -611,13 +612,6 @@ export class RulesOptionsCtrl {
    * @param {Number} colorIndex
    * @memberof RulesOptionsCtrl
    */
-  // onColorChange(ruleIndex: number, colorIndex: number) {
-  //   return (newColor: any) => {
-  //     const rule = this.rulesHandler.getRule(ruleIndex);
-  //     rule.data.colors[colorIndex] = newColor;
-  //     this.onRulesChange();
-  //   };
-  // }
   onColorChange(th: NumberTH | StringTH) {
     return (newColor: any) => {
       th.setColor(newColor);

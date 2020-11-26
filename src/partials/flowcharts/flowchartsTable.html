@@ -121,14 +121,6 @@
                                 <div ng-attr-title="{{flowchart.data.type === 'csv' ? 'CSV format' : 'Draw.io XML format'}}"
                                     ng-class="{ 'gf-icon-csv' : flowchart.data.type === 'csv' , 'gf-icon-xml' : flowchart.data.type === 'xml' }">
                                 </div>
-                                <!-- <div style="display:inline-block" ng-if="flowchart.data.type === 'csv'"
-                                    title="'CSV format'">
-                                    <div class="gf-icon-csv"></div>
-                                </div> -->
-                                <!-- <div style="display:inline-block" ng-if="flowchart.data.type === 'xml'"
-                                    title="'Draw.io XML format'">
-                                    <div class="gf-icon-xml"></div>
-                                </div> -->
                             </div>
                         </div>
                         <!-- SOURCE -->
@@ -148,16 +140,21 @@
                             ng-mouseenter="bgButton = true" ng-mouseleave="bgButton = false"
                             title="Select background color">
                             <div class="gf-table-content" style="text-align: center;">
-                                <div class="gf-icon" style="width : 15px; height: 15px;">
+                                <div class="gf-icon" style="width : 15px; height: 15px;"
+                                    ng-show="bgButton === true || flowchart.data.bgColor.length >0">
                                     <color-picker color="flowchart.data.bgColor"
                                         onChange="editor.onColorChange($index)"></color-picker>
                                 </div>
+                                <div class="gf-icon-circle-slashed gf-icon-action" style="width : 15px; height: 15px;"
+                                    ng-show="bgButton === true || !(flowchart.data.bgColor !== null && flowchart.data.bgColor !== undefined && flowchart.data.bgColor.length > 0)"
+                                    ng-click="flowchart.data.bgColor = '';elt.displayEdit[CN2] === false;editor.onOptionChange();">
+                                </div>
                             </div>
-                            <div ng-show="bgButton === true && flowchart.data.bgColor !== null && flowchart.data.bgColor !== undefined && flowchart.data.bgColor.length > 0"
+                            <!-- <div ng-show="bgButton === true && flowchart.data.bgColor !== null && flowchart.data.bgColor !== undefined && flowchart.data.bgColor.length > 0"
                                 ng-click="flowchart.data.bgColor = null;;editor.onOptionChange()"
                                 title="Remove background color"
                                 class="gf-icon-remove gf-icon-action gf-icon-withcontent">
-                            </div>
+                            </div> -->
                         </div>
                         <!-- OPTIONS -->
                         <div role="cell" class="gf-table-cells" id="options"

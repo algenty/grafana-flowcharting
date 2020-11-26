@@ -450,4 +450,20 @@ $encoding-reference: (
       background-image: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
     }
 
+    // https://friconix.com/icon/fi-cnpuhl-circle/
+    $icon-name : "circle-empty";
+    &-#{$icon-name}  {
+      @extend .gf-icon;
+      $source : '<svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 500 0C 224 0 0 224 0 500C 0 776 224 1000 500 1000C 776 1000 1000 776 1000 500C 1000 224 776 0 500 0C 500 0 500 0 500 0M 500 50C 749 50 950 251 950 500C 950 749 749 950 500 950C 251 950 50 749 50 500C 50 251 251 50 500 50C 500 50 500 50 500 50M 0,0"/></svg>';
+      background-image: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
+    }
+
+    // https://friconix.com/icon/fi-cnpuhl-circle/
+    $icon-name : "circle-slashed";
+    &-#{$icon-name}  {
+      @extend .gf-icon;
+      $source : '<svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 500 0C 224 0 0 224 0 500C 0 776 224 1000 500 1000C 776 1000 1000 776 1000 500C 1000 224 776 0 500 0C 500 0 500 0 500 0M 500 50C 749 50 950 251 950 500C 950 615 907 720 835 800C 835 800 200 165 200 165C 280 93 385 50 500 50C 500 50 500 50 500 50M 165 200C 165 200 800 835 800 835C 720 907 615 950 500 950C 251 950 50 749 50 500C 50 385 93 280 165 200C 165 200 165 200 165 200M 0,0" transform="translate(1000,0) scale(-1,1)"/></svg>';
+      background-image: url(svg-encode(str-replace($source,'currentColor',$encoded-color)));
+    }
+
 }

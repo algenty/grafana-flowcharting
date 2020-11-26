@@ -139,9 +139,15 @@
                             ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseover="elt.displayEdit[CN2] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN2)}" ng-attr-title="{{elt.data.pattern}}">
                             <div class="gf-table-content" style="text-align: center">
-                                <div class="gf-icon" style="width : 15px; height: 15px;">
+                                <div class="gf-icon" style="width : 15px; height: 15px;"
+                                    ng-click="elt.displayEdit[CN2] === false"
+                                    ng-show="elt.displayEdit[CN2] === true || elt.data.color.length > 0">
                                     <color-picker color="elt.data.color" onChange="editor.onColorChange(elt)">
                                     </color-picker>
+                                </div>
+                                <div class="gf-icon-circle-slashed gf-icon-action" style="width : 15px; height: 15px;"
+                                    ng-show="elt.displayEdit[CN2] === true || elt.data.color.length === 0"
+                                    ng-click="elt.data.color = '';elt.displayEdit[CN2] === false;editor.onRulesChange();">
                                 </div>
                             </div>
                         </div>
@@ -167,7 +173,7 @@
                                     ng-show="$index > 0 && rule.data.type === 'number'">
                                     {{elt.data.value}}
                                 </span>
-                                <label class="gf-form-label" style="margin-right: 2px;text-align: center"
+                                <label class="gf-form-label" style="margin-right: 2px;display : inherit"
                                     ng-show="$index === 0">
                                     Base
                                 </label>
@@ -212,7 +218,7 @@
                             ng-style="{'width' : editor.THsTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
-                                <div ng-click="rule.addColor($index)" title="Add e new color"
+                                <div ng-click="rule.addColor($index)" title="Add e new threshold"
                                     class="gf-icon-action gf-icon-new">
                                 </div>
                                 <div ng-click="elt.isHidden() ? elt.show(): elt.hide();editor.onRulesChange()"
@@ -222,11 +228,7 @@
                                 <div ng-click="rule.removeColor($index);editor.onRulesChange()"
                                     title="Delete this color" class="gf-icon-action gf-icon-remove">
                                 </div>
-                                <!-- <div ng-click="editor.flowchartHandler.setMap(elt,rule.data.eventProp)"
-                                    title="Select a shape in diagram" class="gf-icon-action"
-                                    ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(elt), 'gf-icon-empty': editor.flowchartHandler.isMapping(elt)}">
-                                </div> -->
-                                <div ng-click="rule.cloneEventMap(elt);editor.onRulesChange();"
+                                <div ng-click="rule.cloneColor($index);editor.onRulesChange();"
                                     title="Duplicate this mapping" class="gf-icon-action gf-icon-clone">
                                 </div>
                             </div>
