@@ -9,6 +9,7 @@ class GFTH {
   validComp: string[] = [];
   id = $GF.utils.uniqueID();
   type = 'unknown';
+  reduce = true;
   constructor(color: string, comparator: any, value: any, data: gf.TTHData) {
     this.data = data;
     this.data.value = value;

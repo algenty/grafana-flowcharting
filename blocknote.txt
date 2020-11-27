@@ -96,7 +96,9 @@ convert threshold to object
 add friconix to contribute
 radius to div colors
 add size of icon when mouse is hover over
-loop/repeat on 
+Up / down color icon on threshold
+Expand : transform : rotate + gf-icon-action
+https://developer.mozilla.org/fr/docs/Web/CSS/transform
 
 # effect
 https://pavenum.com/overlay-avec-hover-sur-une-image-en-html-css/

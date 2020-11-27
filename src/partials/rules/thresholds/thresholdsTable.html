@@ -157,7 +157,16 @@
                             ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseenter="elt.displayEdit[CN3] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN3)}" ng-attr-title="{{elt.data.pattern}}">
                             <div class="gf-table-content" style="text-align: center">
-                                <div
+                                <div ng-show="$index != 0">
+                                    <div ng-repeat="comp in editor.comparator"
+                                        ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp(comp.value)) || elt.data.comparator === comp.value"
+                                        ng-attr-title="{{comp.text}}"
+                                        ng-click="elt.data.comparator = comp.value;editor.onRulesChange();"
+                                        class="gf-icon-action {{'gf-icon-comp-' + comp.value}}"
+                                        ng-class="{'gf-icon-selected' : elt.data.comparator === comp.value}">
+                                    </div>
+                                </div>
+                                <!-- <div
                                     ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp('ge')) || elt.data.comparator === 'ge'" 
                                     ng-click="elt.data.comparator = 'ge';editor.onRulesChange();"
                                     class="gf-icon-comp-ge gf-icon-action" title="Greater or equal than"
@@ -168,7 +177,7 @@
                                     ng-click="elt.data.comparator = 'gt';editor.onRulesChange();"
                                     class="gf-icon-comp-gt gf-icon-action" title="Greater than"
                                     ng-class="{'gf-icon-selected' : elt.data.comparator === 'gt'}">
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <!-- VALUE/THAN -->
@@ -178,14 +187,18 @@
                             ng-style="{'width' : editor.THsTable.getWidth(CN4)}"
                             ng-attr-title="{{$index > 0 && rule.data.type === 'number' ? 'Specify a value for apply color when value is greater or equal' : 'Specify a pattern regex for apply color' }}">
                             <div class="gf-table-content" style="text-align: center;justify-content: center;"
-                                ng-attr-title="TODO : Add threshold definition" ng-show="elt.inEdit[CN4] !== true">
+                                ng-attr-title="Add a value for the logical operator" ng-show="elt.inEdit[CN4] !== true">
                                 <span ng-dblclick="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
                                     ng-show="$index > 0 && rule.data.type === 'number'">
                                     {{elt.data.value}}
                                 </span>
-                                <label class="gf-form-label" style="margin-right: 2px;display : inherit"
+                                <label class="gf-form-label" style="margin-right: 2px;"
                                     ng-show="$index === 0">
                                     Base
+                                    <info-popover mode="right-normal">
+                                        <span ng-bind-html="$GF.popover('when the values do not correspond to the conditions below', 'THRESHOLDS')">
+                                        </span>
+                                    </info-popover>
                                 </label>
                             </div>
                             <div ng-show="elt.displayEdit[CN4] === true && elt.inEdit[CN4] !== true && $index > 0"
@@ -255,7 +268,7 @@
                         </div>
                     </div>
                     <div class="gf-table-row_body" ng-show="elt.reduce === false">
-                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/events/eventBody.html'"> </ng-include>
+                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/thresholds/thresholdBody.html'"> </ng-include>
                     </div>
                 </div>
             </div>
