@@ -576,6 +576,18 @@ export class Rule {
     return this;
   }
 
+    /**
+   * Invert threshold
+   *
+   * @returns {this}
+   * @memberof Rule
+   */
+  invertThesholdsColors(): this {
+    this._invertColorOrder();
+    // this.data.invert = !this.data.invert;
+    return this;
+  }
+
   /**
    * Add a new threshold at the position index, if index is undefined, add to the end.
    *

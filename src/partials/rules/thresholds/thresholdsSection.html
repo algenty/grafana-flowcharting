@@ -1,15 +1,34 @@
-<div class="section gf-form-group" ng-if="['number', 'string'].indexOf(rule.data.type) !== -1">
-    <h5 class="section-heading" ng-if="rule.data.invert">
-      Thresholds ( 0 : Ok > ... > {{rule.getColorsCount() - 1}} : Critical)
-      <info-popover mode="right-normal"><span
-          ng-bind-html="$GF.popover('Define states according to value and direction (invert).', 'THRESHOLDS')"></span>
-      </info-popover>
-    </h5>
-    <h5 class="section-heading" ng-if="!rule.data.invert">
-      Thresholds ({{rule.getColorsCount() - 1}} : Critical > ... > 0 : Ok)
-      <info-popover mode="right-normal"><span
-          ng-bind-html="$GF.popover('Define states according to value and direction (invert).', 'THRESHOLDS')"></span>
-      </info-popover>
-    </h5>
-    <ng-include src="$GF.plugin.getPartialPath() + 'rules/thresholds/thresholdsTable.html'"> </ng-include>
+<div class="section gf-form-group" >
+  <h5 class="section-heading" ng-show="rule.data.invert">
+    Thresholds (0 : Ok &#62; ... &#62; {{rule.getThresholdCount() - 1}} : Critical)
+    <info-popover mode="right-normal"><span
+        ng-bind-html="$GF.popover('Define states according to value and direction (invert).', 'THRESHOLDS')"></span>
+    </info-popover>
+  </h5>
+  <h5 class="section-heading" ng-show="!rule.data.invert">
+    Thresholds ({{rule.getThresholdCount() - 1}} : Critical &#62; ... &#62; 0 : Ok)
+    <info-popover mode="right-normal"><span
+        ng-bind-html="$GF.popover('Define states according to value and direction (invert).', 'THRESHOLDS')"></span>
+    </info-popover>
+  </h5>
+  <div class="gf-form-group" style="width:100%;">
+    <gf-form-switch class="gf-form" label="Invert" label-class="width-8" checked="rule.data.invert"
+      on-change="rule.invertThesholdsColors();editor.onRulesChange()" tooltip="Invert level state and color">
+    </gf-form-switch>
+    <gf-form-switch class="gf-form" label="Gradient" label-class="width-8" checked="rule.data.gradient"
+      ng-if="rule.data.type === 'number'" on-change="editor.onRulesChange()"
+      tooltip="Apply gradient color according to the value">
+    </gf-form-switch>
+    <gf-form-switch class="gf-form" label="Icon state" label-class="width-8" checked="rule.data.overlayIcon"
+      on-change="editor.onRulesChange()" tooltip="Display a warning icon when state > 0">
+    </gf-form-switch>
   </div>
+  <ng-include src="$GF.plugin.getPartialPath() + 'rules/thresholds/thresholdsTable.html'"> </ng-include>
+  <div class="gf-form-button-row gf-unselectable">
+    <button class="btn btn-secondary btn-small" ng-click="rule.addThreshold();editor.onRulesChange();"
+      title="Duplicate this threshold color">
+      <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 200 450C 200 435 210 425 225 425C 225 425 425 425 425 425C 425 425 425 225 425 225C 425 210 435 200 450 200C 450 200 550 200 550 200C 565 200 575 210 575 225C 575 225 575 425 575 425C 575 425 775 425 775 425C 790 425 800 435 800 450C 800 450 800 550 800 550C 800 565 790 575 775 575C 775 575 575 575 575 575C 575 575 575 775 575 775C 575 790 565 800 550 800C 550 800 450 800 450 800C 435 800 425 790 425 775C 425 775 425 575 425 575C 425 575 225 575 225 575C 210 575 200 565 200 550C 200 550 200 450 200 450"/></svg>
+      &nbsp;Add threshold
+    </button>
+  </div>
+</div>
