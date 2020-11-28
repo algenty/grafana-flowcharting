@@ -127,3 +127,18 @@ http://definitelytyped.org/docs/angularjs--angular/modules/ng.html
 # colors order
 invert = false => 3,2,1,0 Thresholds (2 : Critical > ... > 0 : Ok) length -1 - level
 invert = true => 0,1,2,3 Thresholds ( 0 : Ok > ... > 2 : Critical)
+
+#dayjs
+https://jstool.gitlab.io/dayjs/
+^(\+|\-)?(\d*)(d|w|M|Q|y|h|m|s|ms)$
+https://day.js.org/docs/en/manipulate/add
+Unit	Shorthand	Description
+day	d	Day of Week (Sunday as 0, Saturday as 6)
+week	w	Week of Year
+month	M	Month (January as 0, December as 11)
+quarter	Q	Quarter ( dependent QuarterOfYear plugin )
+year	y	Year
+hour	h	Hour
+minute	m	Minute
+second	s	Second
+millisecond	ms	Millisecond

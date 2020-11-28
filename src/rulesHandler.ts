@@ -117,6 +117,7 @@ export class RulesHandler {
   addRule(pattern: string): Rule {
     const data = Rule.getDefaultData();
     const newRule = new Rule(pattern, data);
+    newRule.initThresholds();
     this.rules.push(newRule);
     this.data.rulesData.push(data);
     newRule.setOrder(this.countRules());

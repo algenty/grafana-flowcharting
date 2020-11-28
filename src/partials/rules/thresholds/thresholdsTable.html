@@ -186,10 +186,10 @@
                             ng-mouseleave="elt.displayEdit[CN4] = false;" ng-mouseenter="elt.displayEdit[CN4] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN4)}"
                             ng-attr-title="{{$index > 0 && rule.data.type === 'number' ? 'Specify a value for apply color when value is greater or equal' : 'Specify a pattern regex for apply color' }}">
-                            <div class="gf-table-content" style="text-align: center;justify-content: center;"
+                            <div class="gf-table-content" style="text-align: left;justify-content: left;"
                                 ng-attr-title="Add a value for the logical operator" ng-show="elt.inEdit[CN4] !== true">
                                 <span ng-dblclick="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
-                                    ng-show="$index > 0 && rule.data.type === 'number'">
+                                    ng-show="$index > 0">
                                     {{elt.data.value}}
                                 </span>
                                 <label class="gf-form-label" style="margin-right: 2px;"
@@ -206,12 +206,12 @@
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit threshold level">
                             </div>
                             <input ng-show="elt.inEdit[CN4] === true && rule.data.type === 'number'"
-                                ng-attr-id="{{elt.getId() + '-' + CN4}}" type="number" class="gf-form-input"
+                                id="{{elt.getId() + '-' + CN4 }}" type="number" class="gf-form-input"
                                 ng-model="elt.data.value" ng-model-onblur
                                 ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" placeholder="pattern or value"
                                 ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'" />
                             <input ng-show="elt.inEdit[CN4] === true && rule.data.type === 'string'"
-                                ng-attr-id="{{elt.getId() + '-' + CN4}}" type="text" class="gf-form-input"
+                                id="{{elt.getId() + '-' + CN4 }}" type="text" class="gf-form-input"
                                 ng-model="elt.data.value" ng-model-onblur
                                 ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" placeholder="pattern or value"
                                 ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'" />

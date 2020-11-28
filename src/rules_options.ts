@@ -424,6 +424,7 @@ export class RulesOptionsCtrl {
           label: 'Than',
           desc: 'Enter a value to define the level',
           width: '80px',
+          align: 'left',
           sort: 'asc',
           select: false,
         },

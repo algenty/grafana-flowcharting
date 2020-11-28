@@ -102,6 +102,7 @@ export class Rule {
       valueData: [],
       rangeData: [],
       sanitize: false,
+      newRule: true,
     };
   }
 
@@ -212,51 +213,50 @@ export class Rule {
       this.data.dateFormat = obj.dateFormat;
     }
 
-    // THRESHOLD NUMBER
-    if (this.data.type === 'number') {
-      if (!!obj.thresholds && !!obj.colors) {
-        this.data.numberTHData = [];
-        this.numberTH = [];
-        let i = 0;
-        let j = 0;
-        obj.colors.forEach(cl => {
-          if (i === 0) {
-            this.addThreshold(i++, cl);
-          } else {
-            let th = obj.thresholds[j++];
-            if (typeof th === 'string' && th.length > 0) {
-              th = parseFloat(th);
-            }
-            this.addThreshold(i++, cl, th);
+    /******* BEGIN THRESHOLD NUMBER **********/
+    this.data.numberTHData = [];
+    this.numberTH = [];
+    // if (this.data.type === 'number') {
+    if (!!obj.thresholds && !!obj.colors) {
+      let i = 0;
+      let j = 0;
+      obj.colors.forEach(cl => {
+        if (i === 0) {
+          this.addThreshold(i++, cl);
+        } else {
+          let th = obj.thresholds[j++];
+          if (typeof th === 'string' && th.length > 0) {
+            th = parseFloat(th);
           }
-        });
-      } else {
-        if (!!obj.numberTHData) {
-          this.data.numberTHData = [];
-          this.numberTH = [];
-          let th: gf.TTHNumberData[] = obj.numberTHData;
-          if (th !== undefined && th != null && th.length > 0) {
-            th.forEach((thdata: gf.TTHNumberData) => {
-              this.addThreshold().import(thdata);
-            });
-          }
+          this.addThreshold(i++, cl, th);
+        }
+      });
+    } else {
+      if (!!obj.numberTHData) {
+        // this.data.numberTHData = [];
+        // this.numberTH = [];
+        let th: gf.TTHNumberData[] = obj.numberTHData;
+        if (th !== undefined && th != null && th.length > 0) {
+          th.forEach((thdata: gf.TTHNumberData) => {
+            this._addNumberThreshold().import(thdata);
+          });
         }
       }
     }
-    // if (!!obj.thresholds) {
-    //   // TODO : To convert
-    //   // < 0.9.1 : Convert thresholds to object
-    //   this.data.thresholds = obj.thresholds.map((x: any) => {
-    //     let value = x;
-    //     if (typeof value === 'string') {
-    //       value = parseFloat(value);
-    //     }
-    //     return value;
-    //   });
-    //   // this.data.thresholds = obj.thresholds.slice(0);
     // }
 
+    // debugger
+    // if(this.numberTH.length === 0) {
+    //   this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0);
+    //   this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50);
+    //   this._addNumberThreshold(2, 'rgba(50, 172, 45, 0.97)', 80);
+    // }
+    /******* END THRESHOLD NUMBER **********/
+
+    /******* BEGIN THRESHOLD STRING **********/
     let stringTH: any = [];
+    this.data.stringTHData = [];
+    this.stringTH = [];
     if (!!obj.stringThresholds) {
       stringTH = obj.stringThresholds.slice(0);
     }
@@ -266,36 +266,41 @@ export class Rule {
     if (!!obj.stringCritical) {
       stringTH[0] = obj.stringCritical;
     }
-    if (this.data.type === 'string') {
-      if (!!obj.stringThresholds && obj.colors) {
-        this.data.stringTHData = [];
-        this.stringTH = [];
-        let i = 0;
-        let j = 0;
-        obj.colors.forEach(cl => {
-          if (i === 0) {
-            this.addThreshold(i++, cl);
-          } else {
-            let th = stringTH[j++];
-            if (typeof th === 'string' && th.length > 0) {
-              th = parseFloat(th);
-            }
-            this.addThreshold(i++, cl, th);
+    // if (this.data.type === 'string') {
+    if (!!obj.stringThresholds && obj.colors) {
+      let i = 0;
+      let j = 0;
+      obj.colors.forEach(cl => {
+        if (i === 0) {
+          this.addThreshold(i++, cl);
+        } else {
+          let th = stringTH[j++];
+          if (typeof th === 'string' && th.length > 0) {
+            th = parseFloat(th);
           }
-        });
-      } else {
-        if (!!obj.stringTHData) {
-          this.data.stringTHData = [];
-          this.stringTH = [];
-          let th: gf.TTHStringData[] = obj.stringTHData;
-          if (th !== undefined && th != null && th.length > 0) {
-            th.forEach((thdata: gf.TTHStringData) => {
-              this.addThreshold().import(thdata);
-            });
-          }
+          this.addThreshold(i++, cl, th);
+        }
+      });
+    } else {
+      if (!!obj.stringTHData) {
+        // this.data.stringTHData = [];
+        // this.stringTH = [];
+        let th: gf.TTHStringData[] = obj.stringTHData;
+        if (th !== undefined && th != null && th.length > 0) {
+          th.forEach((thdata: gf.TTHStringData) => {
+            this._addStringThreshold().import(thdata);
+          });
         }
       }
     }
+    // }
+
+    // if(this.stringTH.length === 0) {
+    //   this._addStringThreshold(0, 'rgba(245, 54, 54, 0.9)', '/.*/');
+    //   this._addStringThreshold(1, 'rgba(237, 129, 40, 0.89)', '/.*warning.*/');
+    //   this._addStringThreshold(2, 'rgba(50, 172, 45, 0.97)', '/.*(success|ok).*/');
+    // }
+    /******* END THRESHOLD STRING **********/
 
     if (!!obj.invert || obj.invert === false) {
       this.data.invert = obj.invert;
@@ -460,6 +465,7 @@ export class Rule {
       });
     }
     this.data.sanitize = obj.sanitize || false;
+    this.data.newRule = false;
     trc.after();
     return this;
   }
@@ -576,7 +582,7 @@ export class Rule {
     return this;
   }
 
-    /**
+  /**
    * Invert threshold
    *
    * @returns {this}
@@ -604,7 +610,6 @@ export class Rule {
         return this._addStringThreshold(index, color, value);
         break;
       case 'date':
-        //TODO
         return this._addStringThreshold(index, color, value);
         break;
       default:
@@ -800,22 +805,11 @@ export class Rule {
    */
   removeThreshold(index: number): this {
     const ths = this.getThresholds();
-    const thd = this.getThresholdDatas()
+    const thd = this.getThresholdDatas();
     ths.splice(index, 1);
     thd.splice(index, 1);
     return this;
   }
-
-  /**
-   * Return a color
-   *
-   * @param {number} index
-   * @returns {string} html color
-   * @memberof Rule
-   */
-  // getColor(index: number): string {
-  //   return this.data.colors[index];
-  // }
 
   /**
    * Return Thresholds Array
@@ -840,6 +834,25 @@ export class Rule {
         throw new Error('Type of threshold unknown : ' + this.data.type);
         break;
     }
+  }
+
+  clearThresholds(): this {
+    this.data.numberTHData = [];
+    this.numberTH = [];
+    this.data.stringTHData = [];
+    this.stringTH = [];
+    return this;
+  }
+
+  initThresholds(): this {
+    this.clearThresholds();
+    this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0);
+    this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50);
+    this._addNumberThreshold(2, 'rgba(50, 172, 45, 0.97)', 80);
+    this._addStringThreshold(0, 'rgba(245, 54, 54, 0.9)', '/.*/');
+    this._addStringThreshold(1, 'rgba(237, 129, 40, 0.89)', '/.*warning.*/');
+    this._addStringThreshold(2, 'rgba(50, 172, 45, 0.97)', '/.*(success|ok).*/');
+    return this;
   }
 
   /**
@@ -1396,7 +1409,7 @@ export class Rule {
 
   /**
    * Get color according level (-1,0,1,2...)
-   * 
+   *
    * @param {*} level
    * @returns
    * @memberof Rule
