@@ -400,7 +400,7 @@ declare module gf {
   declare type TTHType = 'string' | 'number' | 'date';
   declare type TTHNumberComparator = 'ge' | 'gt';
   declare type TTHStringComparator = 'eq' | 'ne';
-  declare type TTHDateComparator = 'ge' | 'gt';
+  declare type TTHDateComparator = 'eq' | 'ne' | 'ge' | 'gt';
   declare interface TTHData {
     color: string;
     comparator: string;
@@ -418,6 +418,8 @@ declare module gf {
   }
   declare interface TTHDateData extends TTHData {
     comparator: THDateComparator;
-    value: any;
+    value: string;
   }
+
+  declare type THDatePrecision = 'y' | 'M' | 'w' | 'd' | 'h' | 'm' | 's';
 }

@@ -18,6 +18,7 @@ Object {
   "linkRegEx": true,
   "mappingType": 1,
   "metricType": "serie",
+  "newRule": true,
   "numberTHData": Array [
     Object {
       "color": "COLOR1",

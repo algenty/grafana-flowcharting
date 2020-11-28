@@ -222,13 +222,13 @@ export class Rule {
       let j = 0;
       obj.colors.forEach(cl => {
         if (i === 0) {
-          this.addThreshold(i++, cl);
+          this._addNumberThreshold(i++, cl);
         } else {
           let th = obj.thresholds[j++];
           if (typeof th === 'string' && th.length > 0) {
             th = parseFloat(th);
           }
-          this.addThreshold(i++, cl, th);
+          this._addNumberThreshold(i++, cl, th);
         }
       });
     } else {
@@ -246,11 +246,11 @@ export class Rule {
     // }
 
     // debugger
-    // if(this.numberTH.length === 0) {
-    //   this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0);
-    //   this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50);
-    //   this._addNumberThreshold(2, 'rgba(50, 172, 45, 0.97)', 80);
-    // }
+    if (this.numberTH.length === 0) {
+      this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0);
+      this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50);
+      this._addNumberThreshold(2, 'rgba(50, 172, 45, 0.97)', 80);
+    }
     /******* END THRESHOLD NUMBER **********/
 
     /******* BEGIN THRESHOLD STRING **********/
@@ -267,18 +267,18 @@ export class Rule {
       stringTH[0] = obj.stringCritical;
     }
     // if (this.data.type === 'string') {
-    if (!!obj.stringThresholds && obj.colors) {
+    if (!!stringTH && obj.colors) {
       let i = 0;
       let j = 0;
       obj.colors.forEach(cl => {
         if (i === 0) {
-          this.addThreshold(i++, cl);
+          this._addStringThreshold(i++, cl);
         } else {
           let th = stringTH[j++];
-          if (typeof th === 'string' && th.length > 0) {
-            th = parseFloat(th);
+          if (typeof th === 'number') {
+            th = th.toString();
           }
-          this.addThreshold(i++, cl, th);
+          this._addStringThreshold(i++, cl, th);
         }
       });
     } else {
@@ -295,11 +295,11 @@ export class Rule {
     }
     // }
 
-    // if(this.stringTH.length === 0) {
-    //   this._addStringThreshold(0, 'rgba(245, 54, 54, 0.9)', '/.*/');
-    //   this._addStringThreshold(1, 'rgba(237, 129, 40, 0.89)', '/.*warning.*/');
-    //   this._addStringThreshold(2, 'rgba(50, 172, 45, 0.97)', '/.*(success|ok).*/');
-    // }
+    if (this.stringTH.length === 0) {
+      this._addStringThreshold(0, 'rgba(245, 54, 54, 0.9)', '/.*/');
+      this._addStringThreshold(1, 'rgba(237, 129, 40, 0.89)', '/.*warning.*/');
+      this._addStringThreshold(2, 'rgba(50, 172, 45, 0.97)', '/.*(success|ok).*/');
+    }
     /******* END THRESHOLD STRING **********/
 
     if (!!obj.invert || obj.invert === false) {
@@ -837,18 +837,40 @@ export class Rule {
   }
 
   clearThresholds(): this {
+    this._clearNumberThresholds();
+    this._clearStringThresholds();
+    return this;
+  }
+
+  initThresholds(): this {
+    // this.clearThresholds();
+    this._initNumberThresholds();
+    this._initStringThresholds
+    return this;
+  }
+
+  _clearNumberThresholds(): this {
     this.data.numberTHData = [];
     this.numberTH = [];
+    return this;
+  }
+
+  _initNumberThresholds(): this {
+    this._clearNumberThresholds();
+    this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0);
+    this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50);
+    this._addNumberThreshold(2, 'rgba(50, 172, 45, 0.97)', 80);
+    return this;
+  }
+
+  _clearStringThresholds(): this {
     this.data.stringTHData = [];
     this.stringTH = [];
     return this;
   }
 
-  initThresholds(): this {
-    this.clearThresholds();
-    this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0);
-    this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50);
-    this._addNumberThreshold(2, 'rgba(50, 172, 45, 0.97)', 80);
+  _initStringThresholds(): this {
+    this._clearStringThresholds();
     this._addStringThreshold(0, 'rgba(245, 54, 54, 0.9)', '/.*/');
     this._addStringThreshold(1, 'rgba(237, 129, 40, 0.89)', '/.*warning.*/');
     this._addStringThreshold(2, 'rgba(50, 172, 45, 0.97)', '/.*(success|ok).*/');

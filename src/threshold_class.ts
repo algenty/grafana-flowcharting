@@ -1,5 +1,5 @@
 import { $GF } from './globals_class';
-
+import { default as dayjs } from 'dayjs';
 export type ObjectTH = NumberTH | StringTH;
 export type ObjectTHData = gf.TTHNumberData | gf.TTHStringData;
 
@@ -48,8 +48,12 @@ class GFTH {
     return true;
   }
 
-  isValidComp(comp : string):boolean {
+  isValidComp(comp: string): boolean {
     return this.validComp.indexOf(comp) !== -1;
+  }
+
+  isValidValue(): boolean {
+    return true;
   }
 
   getId() {
@@ -120,10 +124,17 @@ class GFTH {
   // }
 }
 
+/**
+ * Threshold type number
+ *
+ * @export
+ * @class NumberTH
+ * @extends {GFTH}
+ */
 export class NumberTH extends GFTH {
   data: gf.TTHNumberData;
   type = 'number';
-  validComp : gf.TTHNumberComparator[] = ['ge', 'gt'];
+  validComp: gf.TTHNumberComparator[] = ['ge', 'gt'];
   constructor(color: string, value: number, comparator: gf.TTHNumberComparator, data: gf.TTHNumberData) {
     super(color, value, comparator, data);
     this.data = data;
@@ -139,6 +150,13 @@ export class NumberTH extends GFTH {
       value: 50,
       level: 0,
     };
+  }
+
+  isValidValue(): boolean {
+    if (typeof this.data.value === 'number') {
+      return true;
+    }
+    return false;
   }
 
   match(value: number | undefined): boolean {
@@ -162,13 +180,19 @@ export class NumberTH extends GFTH {
         break;
     }
   }
-
 }
 
+/**
+ * Threshold types string
+ *
+ * @export
+ * @class StringTH
+ * @extends {GFTH}
+ */
 export class StringTH extends GFTH {
   data: gf.TTHStringData;
   type = 'string';
-  validComp : gf.TTHStringComparator[] = ['eq', 'ne'];
+  validComp: gf.TTHDateComparator[] = ['eq', 'ne', 'ge', 'gt'];
   constructor(color: string, value: string, comparator: gf.TTHStringComparator, data: gf.TTHStringData) {
     super(color, value, comparator, data);
     this.data = data;
@@ -184,6 +208,15 @@ export class StringTH extends GFTH {
       value: '/.*/',
       level: 0,
     };
+  }
+
+  isValidValue(): boolean {
+    try {
+      new RegExp(this.data.value);
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
 
   match(value: string | undefined): boolean {
@@ -203,6 +236,140 @@ export class StringTH extends GFTH {
         break;
       default:
         throw new Error('Unknown comparator: ' + this.data.comparator);
+        return false;
+        break;
+    }
+  }
+}
+/**
+ * Threshold type date
+ *
+ * @export
+ * @class DateTH
+ * @extends {GFTH}
+ */
+export class DateTH extends GFTH {
+  data: gf.TTHDateData;
+  pattern: RegExp = /^(?<signe>\+|\-)?(?<number>\d+\.?\d*)(?<precision>d|w|M|Q|y|h|m|s|ms)$/;
+  matchs: RegExpMatchArray | null = [];
+  testedValue: string | undefined;
+  date: any;
+  isValidated = false;
+  isDate = false;
+  isPattern = false;
+  type = 'string';
+  validComp: gf.TTHStringComparator[] = ['eq', 'ne'];
+  constructor(color: string, value: string, comparator: gf.TTHStringComparator, data: gf.TTHStringData) {
+    super(color, value, comparator, data);
+    this.data = data;
+    this.data.color = color;
+    this.data.value = value;
+    this.data.comparator = comparator;
+  }
+
+  static getDefaultData(): gf.TTHStringData {
+    return {
+      color: 'rgba(245, 54, 54, 0.9)',
+      comparator: 'ge',
+      value: '-1d',
+      level: 0,
+    };
+  }
+
+  isValidValue(): boolean {
+
+    if (this.testedValue === this.data.value && this.isValidated) {
+      return this.isValidated;
+    }
+    
+    this.testedValue = this.data.value;
+    this.isValidated = false;
+    this.isPattern = false;
+    this.isDate = false;
+    if (this.testedValue === undefined || this.testedValue === null || this.testedValue.length === 0) {
+      return this.isValidated;
+    }
+
+    if (dayjs(this.testedValue).isValid()) {
+      this.date = dayjs(this.testedValue);
+      console.log("🚀 ~ file: threshold_class.ts ~ line 301 ~ DateTH ~ isValidValue ~ this.date", this.date)
+      this.isDate = true;
+      this.isValidated = true;
+      return this.isValidated;
+    } else {
+      if (this.pattern.test(this.testedValue) === true) {
+        this.matchs = this.pattern.exec(this.testedValue);
+        this.isValidated = true;
+        this.isPattern = true;
+        if (this.matchs !== null && this.matchs.groups !== undefined) {
+          if (this.matchs.groups.signe == undefined ) {
+            this.matchs.groups.signe = '+';
+          }
+        }
+        return this.isValidated;
+      }
+    }
+    return this.isValidated;
+  }
+
+  match(value: any): boolean {
+    if (this.data.value === undefined) {
+      return true;
+    }
+    if (value === undefined) {
+      return false;
+    }
+    if (!this.isValidated) {
+      const test = this.isValidValue();
+      if (!test) {
+        return false;
+      }
+    }
+
+    if (this.isDate) {
+      return this._matchDate(value);
+    }
+    if (this.isPattern) {
+      return this._matchPattern(value);
+    }
+    return false;
+  }
+
+  _matchDate(value: string): boolean {
+    return DateTH.compareDates(this.date, value, this.data.comparator, 'd');
+  }
+
+  _matchPattern(value: string): boolean {
+    if(this.isValidated && this.matchs !== null && this.matchs.groups !== undefined) {
+      const now = dayjs();
+      const signe = this.matchs.groups.signe;
+      const number = parseFloat(`${this.matchs.groups.number}`);
+      const precision : any = this.matchs.groups.precision !== undefined ? this.matchs.groups.precision: 'd';
+      if(signe === '-' ) {
+        now.subtract(number, precision); 
+      } else {
+        now.add(number, precision);
+      }
+      return DateTH.compareDates( now, value, this.data.comparator, precision);
+    }
+    return false;
+  }
+
+  static compareDates(beginDate, endDate, comparator, precision ?: gf.THDatePrecision ){
+    switch (comparator) {
+      case 'eq':
+        return dayjs(endDate).isSame(beginDate, precision);
+        break;
+      case 'ne':
+        return !dayjs(endDate).isSame(beginDate, precision);
+        break;
+      case 'ge':
+        return dayjs(endDate).isSame(beginDate, precision) || dayjs(endDate).isAfter(beginDate, precision);
+        break;
+      case 'gt':
+        return !dayjs(endDate).isAfter(beginDate, precision);
+        break;
+      default:
         return false;
         break;
     }

@@ -1,6 +1,7 @@
-import { NumberTH, StringTH } from '../src/threshold_class';
+import { DateTH, NumberTH, StringTH } from '../src/threshold_class';
 import { Rule } from '../src/rule_class';
 import { $GF } from '../src/globals_class';
+import { default as dayjs } from 'dayjs';
 
 describe('Threshold init', () => {
   describe('on NumberTH', () => {
@@ -59,6 +60,47 @@ describe('Threshold init', () => {
       let value = 'toto';
       expect(tn1.match(value)).toBeTruthy();
       expect(tn2.match(value)).toBeTruthy();
+    });
+  });
+
+  describe.only('On DateTH', () => {
+    test('dayjs format ', () => {
+      expect(dayjs(new Date()).isValid()).toBeTruthy();
+      expect(dayjs(1483228810000).isValid()).toBeTruthy();
+      expect(dayjs('2020-11-28').isValid()).toBeTruthy();
+    });
+
+    test('Data should be new', () => {
+      const data = DateTH.getDefaultData();
+      expect(data).not.toBeNaN();
+      expect(data).toMatchSnapshot();
+    });
+    test('Should be valid TH', () => {
+      let td1 = new DateTH('Color1', '5d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
+      expect(td1.isValidValue()).toBeTruthy();
+      td1.setValue('-8w');
+      expect(td1.isValidValue()).toBeTruthy();
+      td1.setValue('1974-07-25');
+      expect(td1.isValidValue()).toBeTruthy();
+      td1.setValue(1606586657059);
+      expect(td1.isValidValue()).toBeTruthy();
+    });
+    test.only('Should be match or not with pattern', () => {
+      //1606586657059
+      //1606586733
+      // 1day = 86400 or 86400000
+      let now = new Date().getTime(); 
+      let td1 = new DateTH('Color1', '-2d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
+      let td2 = new DateTH('Color2', '-4d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
+      let td3 = new DateTH('Color3', '-6d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
+      expect(td1.match(now)).toBeTruthy()
+      expect(td2.match(now)).toBeTruthy()
+      expect(td3.match(now)).toBeTruthy();
+      now = now - 86400000; // now -1 d
+      console.log("🚀 ~ file: threshold.test.ts ~ line 105 ~ test.only ~ now", dayjs(now).toString())
+      expect(td1.match(now)).toBeFalsy()
+      expect(td2.match(now)).toBeTruthy()
+      expect(td3.match(now)).toBeTruthy();
     });
   });
 });

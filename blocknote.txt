@@ -130,7 +130,7 @@ invert = true => 0,1,2,3 Thresholds ( 0 : Ok > ... > 2 : Critical)
 
 #dayjs
 https://jstool.gitlab.io/dayjs/
-^(\+|\-)?(\d*)(d|w|M|Q|y|h|m|s|ms)$
+^(\+|\-)?(\d+)(d|w|M|Q|y|h|m|s|ms)$
 https://day.js.org/docs/en/manipulate/add
 Unit	Shorthand	Description
 day	d	Day of Week (Sunday as 0, Saturday as 6)
