@@ -216,7 +216,7 @@ export class Serie extends Metric {
 
   getColumnsName(): string[] {
     //TODO: If multi column
-    return ['time', 'value'];
+    return ['Time', this.name];
   }
 }
 

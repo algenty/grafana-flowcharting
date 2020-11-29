@@ -68,6 +68,7 @@ export class MetricHandler {
     } else {
       this.addSerie(data);
     }
+    console.log("🚀 ~ file: metricHandler.ts ~ line 72 ~ MetricHandler ~ addMetric ~ this", this)
     trc.after();
   }
 
@@ -160,22 +161,36 @@ export class MetricHandler {
   /**
    * Get metrics with this name Serie or table or both
    *
-   * @param {string} name
+   * @param {string} name (regex)
    * @param {gf.TMetricTypeKeys} [type]
    * @returns {Metric[]}
    * @memberof MetricHandler
    */
   findMetrics(name: string, type?: gf.TMetricTypeKeys): Metric[] {
     let metrics: Metric[] = [];
+    // < 0.9.1 strict name
+    // if (type) {
+    //   if (type === 'table') {
+    //     metrics = this.tables.filter(m => m.getName() === name);
+    //   }
+    //   if (type === 'serie') {
+    //     metrics = this.series.filter(m => m.getName() === name);
+    //   }
+    // } else {
+    //   metrics = this.metrics.filter(m => m.getName() === name);
+    // }
+
+
+    // >= 0.9.1 : Add RegEx on name
     if (type) {
       if (type === 'table') {
-        metrics = this.tables.filter(m => m.getName() === name);
+        metrics = this.tables.filter(m => $GF.utils.matchString(m.getName(),name , true ));
       }
       if (type === 'serie') {
-        metrics = this.series.filter(m => m.getName() === name);
+        metrics = this.series.filter(m => $GF.utils.matchString(m.getName(),name , true ));
       }
     } else {
-      metrics = this.metrics.filter(m => m.getName() === name);
+      metrics = this.metrics.filter(m => $GF.utils.matchString(m.getName(),name , true ));
     }
     return metrics;
   }

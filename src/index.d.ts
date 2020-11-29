@@ -215,7 +215,7 @@ declare module gf {
     rulesData: TIRuleData[];
   }
   declare interface TIRuleData {
-    order: number;  // Index of rule
+    order: number; // Index of rule
     pattern: string;
     metricType: TMetricTypeKeys;
     alias: string;
@@ -228,6 +228,7 @@ declare module gf {
     decimals: number;
     // colors: string[];
     reduce: boolean;
+    dateColumn: string;
     dateFormat: TDateFormatKeys;
     // thresholds: number[];
     // stringThresholds: string[];
@@ -264,7 +265,7 @@ declare module gf {
     valueData: TValueMapData[];
     rangeData: TRangeMapData[];
     sanitize: boolean;
-    newRule : boolean;
+    newRule: boolean;
   }
 
   declare interface TGFMapData {

@@ -257,9 +257,9 @@ export class DateTH extends GFTH {
   isValidated = false;
   isDate = false;
   isPattern = false;
-  type = 'string';
-  validComp: gf.TTHStringComparator[] = ['eq', 'ne'];
-  constructor(color: string, value: string, comparator: gf.TTHStringComparator, data: gf.TTHStringData) {
+  type = 'date';
+  validComp: gf.TTHDateComparator[] = ['eq', 'ne', 'ge', 'gt'];
+  constructor(color: string, value: string, comparator: gf.TTHDateComparator, data: gf.TTHDateData) {
     super(color, value, comparator, data);
     this.data = data;
     this.data.color = color;
@@ -267,7 +267,7 @@ export class DateTH extends GFTH {
     this.data.comparator = comparator;
   }
 
-  static getDefaultData(): gf.TTHStringData {
+  static getDefaultData(): gf.TTHDateData {
     return {
       color: 'rgba(245, 54, 54, 0.9)',
       comparator: 'ge',
@@ -277,11 +277,10 @@ export class DateTH extends GFTH {
   }
 
   isValidValue(): boolean {
-
     if (this.testedValue === this.data.value && this.isValidated) {
       return this.isValidated;
     }
-    
+
     this.testedValue = this.data.value;
     this.isValidated = false;
     this.isPattern = false;
@@ -301,7 +300,7 @@ export class DateTH extends GFTH {
         this.isValidated = true;
         this.isPattern = true;
         if (this.matchs !== null && this.matchs.groups !== undefined) {
-          if (this.matchs.groups.signe == undefined ) {
+          if (this.matchs.groups.signe === undefined) {
             this.matchs.groups.signe = '+';
           }
         }
@@ -339,22 +338,22 @@ export class DateTH extends GFTH {
   }
 
   _matchPattern(value: string): boolean {
-    if(this.isValidated && this.matchs !== null && this.matchs.groups !== undefined) {
+    if (this.isValidated && this.matchs !== null && this.matchs.groups !== undefined) {
       let now = dayjs();
       const signe = this.matchs.groups.signe;
       const number = parseFloat(`${this.matchs.groups.number}`);
-      const precision : any = this.matchs.groups.precision !== undefined ? this.matchs.groups.precision: 'd';
-      if(signe === '-' ) {
-        now = dayjs(now).subtract(number, precision); 
+      const precision: any = this.matchs.groups.precision !== undefined ? this.matchs.groups.precision : 'd';
+      if (signe === '-') {
+        now = dayjs(now).subtract(number, precision);
       } else {
         now = dayjs(now).add(number, precision);
       }
-      return DateTH.compareDates( now, value, this.data.comparator, precision);
+      return DateTH.compareDates(now, value, this.data.comparator, precision);
     }
     return false;
   }
 
-  static compareDates(beginDate, endDate, comparator, precision ?: gf.THDatePrecision ){
+  static compareDates(beginDate, endDate, comparator, precision?: gf.THDatePrecision) {
     switch (comparator) {
       case 'eq':
         return dayjs(endDate).isSame(beginDate, precision);

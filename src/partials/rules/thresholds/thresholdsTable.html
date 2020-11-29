@@ -139,8 +139,7 @@
                             ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseenter="elt.displayEdit[CN2] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN2)}" ng-attr-title="{{elt.data.pattern}}">
                             <div class="gf-table-content" style="text-align: center">
-                                <div style="width : 15px; height: 15px;" 
-                                    class="gf-icon gf-icon-action-nocolor"
+                                <div style="width : 15px; height: 15px;" class="gf-icon gf-icon-action-nocolor"
                                     ng-show="elt.displayEdit[CN2] === true || elt.data.color.length > 0">
                                     <color-picker color="elt.data.color" onChange="editor.onColorChange(elt)">
                                     </color-picker>
@@ -192,11 +191,11 @@
                                     ng-show="$index > 0">
                                     {{elt.data.value}}
                                 </span>
-                                <label class="gf-form-label" style="margin-right: 2px;"
-                                    ng-show="$index === 0">
+                                <label class="gf-form-label" style="margin-right: 2px;" ng-show="$index === 0">
                                     Base
                                     <info-popover mode="right-normal">
-                                        <span ng-bind-html="$GF.popover('when the values do not correspond to the conditions below', 'THRESHOLDS')">
+                                        <span
+                                            ng-bind-html="$GF.popover('when the values do not correspond to the conditions below', 'THRESHOLDS')">
                                         </span>
                                     </info-popover>
                                 </label>
@@ -205,7 +204,7 @@
                                 ng-click="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit threshold level">
                             </div>
-                            <input ng-show="elt.inEdit[CN4] === true && rule.data.type === 'number'"
+                            <!-- <input ng-show="elt.inEdit[CN4] === true && rule.data.type === 'number'"
                                 id="{{elt.getId() + '-' + CN4 }}" type="number" class="gf-form-input"
                                 ng-model="elt.data.value" ng-model-onblur
                                 ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" placeholder="pattern or value"
@@ -214,7 +213,15 @@
                                 id="{{elt.getId() + '-' + CN4 }}" type="text" class="gf-form-input"
                                 ng-model="elt.data.value" ng-model-onblur
                                 ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" placeholder="pattern or value"
-                                ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'" />
+                                ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'" /> -->
+                            <input ng-show="elt.inEdit[CN4] === true"
+                                id="{{elt.getId() + '-' + CN4 }}" 
+                                type="{{rule.data.type === 'string' || rule.data.type === 'date' ? 'text' : 'number'}}" 
+                                placeholder="{{rule.data.type === 'string' || rule.data.type === 'date' ? 'Pattern' : 'Number'}}"
+                                ng-attr-title="{{Apply this color "
+                                class="gf-form-input"
+                                ng-model="elt.data.value" ng-model-onblur
+                                ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" />
                         </div>
                         <!-- LEVEL -->
                         <div role="cell" class="gf-table-cells"
@@ -268,7 +275,8 @@
                         </div>
                     </div>
                     <div class="gf-table-row_body" ng-show="elt.reduce === false">
-                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/thresholds/thresholdBody.html'"> </ng-include>
+                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/thresholds/thresholdBody.html'">
+                        </ng-include>
                     </div>
                 </div>
             </div>

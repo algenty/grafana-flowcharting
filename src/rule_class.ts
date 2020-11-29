@@ -68,6 +68,7 @@ export class Rule {
       decimals: 2,
       // colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
       reduce: true,
+      dateColumn: 'Time',
       dateFormat: 'YYYY-MM-DD HH:mm:ss',
       // thresholds: [50, 80],
       // stringThresholds: ['/.*/', '/.*/'],
@@ -126,7 +127,6 @@ export class Rule {
    * @memberof Rule
    */
   import(obj: any): this {
-    console.log('Rule -> import -> obj', obj);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'import()');
     if (!!obj.unit) {
       this.data.unit = obj.unit;
@@ -211,6 +211,11 @@ export class Rule {
     if (!!obj.pattern) {
       this.data.pattern = obj.pattern;
     }
+
+    if (!!obj.dateColumn) {
+      this.data.dateColumn = obj.dateColumn;
+    }
+
     if (!!obj.dateFormat) {
       this.data.dateFormat = obj.dateFormat;
     }
@@ -820,7 +825,6 @@ export class Rule {
     return nth;
   }
 
-
   /**
    *
    *
@@ -870,8 +874,8 @@ export class Rule {
   initThresholds(): this {
     // this.clearThresholds();
     this._initNumberThresholds();
-    this._initStringThresholds
-    this._initDateThresholds
+    this._initStringThresholds();
+    this._initDateThresholds();
     return this;
   }
 
@@ -1277,12 +1281,23 @@ export class Rule {
     return this;
   }
 
+  //
+  // DIVERS
+  //
+
   getExectedTime(): string {
     return typeof this.execTimes === 'number' ? `${this.execTimes.toFixed(2)} ms` : `${this.execTimes} ms`;
   }
 
   //
-  // Format value
+  // METRICS
+  //
+  getMetrics(): {
+
+  }
+
+  //
+  // THRESHOLDS
   //
   /**
    * Get color according to value

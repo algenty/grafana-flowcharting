@@ -548,6 +548,10 @@ export class RulesOptionsCtrl {
     return this.metricHandler.getColumnsName(tableName, 'table');
   }
 
+  getColumnsName(tableName: string): string[] {
+    return this.metricHandler.getColumnsName(tableName);
+  }
+
   isLastRule(index: number): boolean {
     const count = this.rulesHandler.countRules();
     if (index === count - 1) {
