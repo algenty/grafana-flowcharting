@@ -250,6 +250,7 @@ declare module gf {
     shapeData: TShapeMapData[];
     numberTHData: TTHNumberData[];
     stringTHData: TTHStringData[];
+    dateTHData: TTHDateData[];
     textProp: TPropertieKey;
     textRegEx: boolean;
     textData: TTextMapData[];

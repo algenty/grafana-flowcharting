@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { Metric } from './metric_class';
 import { $GF } from './globals_class';
 import chroma from 'chroma-js';
-import { NumberTH, StringTH, ObjectTH, ObjectTHData } from 'threshold_class';
+import { NumberTH, StringTH, ObjectTH, ObjectTHData, DateTH } from 'threshold_class';
 
 /**
  * Rule definition
@@ -23,6 +23,7 @@ export class Rule {
   rangeMaps: RangeMap[] = [];
   numberTH: NumberTH[] = [];
   stringTH: StringTH[] = [];
+  dateTH: DateTH[] = [];
   id: string;
   removeClick = 2;
   states: Map<string, State>;
@@ -72,6 +73,7 @@ export class Rule {
       // stringThresholds: ['/.*/', '/.*/'],
       numberTHData: [],
       stringTHData: [],
+      dateTHData: [],
       invert: false,
       gradient: false,
       overlayIcon: false,
@@ -301,6 +303,14 @@ export class Rule {
       this._addStringThreshold(2, 'rgba(50, 172, 45, 0.97)', '/.*(success|ok).*/');
     }
     /******* END THRESHOLD STRING **********/
+
+    /******* BEGIN THRESHOLD DATE **********/
+    if (this.dateTH.length === 0) {
+      this._addDateThreshold(0, 'rgba(245, 54, 54, 0.9)', '0d');
+      this._addDateThreshold(1, 'rgba(237, 129, 40, 0.89)', '-1d');
+      this._addDateThreshold(2, 'rgba(50, 172, 45, 0.97)', '-1w');
+    }
+    /******* END THRESHOLD DATE **********/
 
     if (!!obj.invert || obj.invert === false) {
       this.data.invert = obj.invert;
@@ -554,10 +564,11 @@ export class Rule {
     // this.data.colors.reverse();
     this._invertColorOrderFor(this.numberTH);
     this._invertColorOrderFor(this.stringTH);
+    this._invertColorOrderFor(this.dateTH);
     return this;
   }
 
-  _invertColorOrderFor(ths: NumberTH[] | StringTH[]): this {
+  _invertColorOrderFor(ths: ObjectTH[]): this {
     const colors: string[] = [];
     ths.forEach(th => {
       colors.push(th.getColor());
@@ -610,7 +621,7 @@ export class Rule {
         return this._addStringThreshold(index, color, value);
         break;
       case 'date':
-        return this._addStringThreshold(index, color, value);
+        return this._addDateThreshold(index, color, value);
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
@@ -634,8 +645,7 @@ export class Rule {
         return this.stringTH[index];
         break;
       case 'date':
-        //TODO
-        return this.stringTH[index];
+        return this.dateTH[index];
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
@@ -759,42 +769,57 @@ export class Rule {
     return nth;
   }
 
-  // _addStringThreshold(index?: number, color?: string, value?: string): StringTH {
-  //   const thfTable = this.stringTH;
-  //   const thdTable = this.data.stringTHData;
-  //   const data = StringTH.getDefaultData();
-  //   const nth = new StringTH(data.color, data.value, data.comparator, data);
-  //   const length = thdTable.length;
-  //   let finalColor = color;
-  //   let finalValue = value;
-  //   if (index === undefined) {
-  //     index = length - 1;
-  //   }
-  //   if (index >= 0) {
-  //     const lth = thfTable[index];
-  //     nth.import(lth.getData());
-  //     const ratio = 0.5;
-  //     if (finalColor === undefined) {
-  //       let beginColor = lth.getColor();
-  //       if (index < length - 1) {
-  //         const endColor = thfTable[index + 1].getColor();
-  //         finalColor = this._getColorForRatio(beginColor, endColor, ratio);
-  //       } else {
-  //         finalColor = beginColor;
-  //       }
-  //       if (finalColor !== undefined) {
-  //         nth.setColor(finalColor);
-  //       }
-  //     }
-  //     if (finalValue === undefined) {
-  //       finalValue = lth.getValue();
-  //       nth.setValue(finalValue);
-  //     }
-  //   }
-  //   thfTable.splice(index, 0, nth);
-  //   thdTable.splice(index, 0, data);
-  //   return nth;
-  // }
+  _addDateThreshold(index?: number, color?: string, value?: string): DateTH {
+    const thfTable = this.dateTH;
+    const thdTable = this.data.dateTHData;
+    let finalColor = color;
+    let finalValue = value;
+    const data = DateTH.getDefaultData();
+    const nth = new DateTH(data.color, data.value, data.comparator, data);
+    const length = thdTable.length;
+    if (index === undefined || length === 0) {
+      index = length;
+    }
+    if (index > length - 1) {
+      index = length - 1;
+    }
+    let ref = index;
+    if (index === 0 && length > 1) {
+      ref = 1;
+    }
+
+    if (length > 0) {
+      const lth = thfTable[ref];
+      nth.import(lth.getData());
+      const ratio = 0.5;
+      // Color
+      if (finalColor === undefined) {
+        let beginColor = lth.getColor();
+        if (ref < length - 1 && index !== 0) {
+          const endColor = thfTable[ref + 1].getColor();
+          finalColor = this._getColorForRatio(beginColor, endColor, ratio);
+        } else {
+          finalColor = beginColor;
+        }
+        if (finalColor !== undefined) {
+        }
+      }
+      // Value
+      if (finalValue === undefined) {
+        finalValue = lth.getValue();
+      }
+    }
+    if (finalColor !== undefined) {
+      nth.setColor(finalColor);
+    }
+    if (finalValue !== undefined) {
+      nth.setValue(finalValue);
+    }
+    thfTable.splice(index + 1, 0, nth);
+    thdTable.splice(index + 1, 0, data);
+    return nth;
+  }
+
 
   /**
    *
@@ -827,8 +852,7 @@ export class Rule {
         return this.stringTH;
         break;
       case 'date':
-        //TODO
-        return this.stringTH;
+        return this.dateTH;
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
@@ -839,6 +863,7 @@ export class Rule {
   clearThresholds(): this {
     this._clearNumberThresholds();
     this._clearStringThresholds();
+    this._clearDateThresholds();
     return this;
   }
 
@@ -846,6 +871,7 @@ export class Rule {
     // this.clearThresholds();
     this._initNumberThresholds();
     this._initStringThresholds
+    this._initDateThresholds
     return this;
   }
 
@@ -877,6 +903,20 @@ export class Rule {
     return this;
   }
 
+  _clearDateThresholds(): this {
+    this.data.dateTHData = [];
+    this.dateTH = [];
+    return this;
+  }
+
+  _initDateThresholds(): this {
+    this._clearDateThresholds();
+    this._addDateThreshold(0, 'rgba(245, 54, 54, 0.9)', '0d');
+    this._addDateThreshold(1, 'rgba(237, 129, 40, 0.89)', '-1d');
+    this._addDateThreshold(2, 'rgba(50, 172, 45, 0.97)', '-1w');
+    return this;
+  }
+
   /**
    * Return data threshold array
    *
@@ -893,8 +933,7 @@ export class Rule {
         return this.data.stringTHData;
         break;
       case 'date':
-        //TODO
-        return this.data.stringTHData;
+        return this.data.dateTHData;
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
@@ -1263,8 +1302,7 @@ export class Rule {
         break;
 
       case 'date':
-        //TODO
-        return this._getColorForStringTH(value);
+        return this._getColorForDateTH(value);
         break;
 
       default:
@@ -1379,8 +1417,7 @@ export class Rule {
         return this._getIndexStringTHForValue(value);
         break;
       case 'date':
-        //TODO
-        return this._getIndexStringTHForValue(value);
+        return this._getIndexDateTHForValue(value);
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
@@ -1427,6 +1464,26 @@ export class Rule {
 
   _getColorForStringTH(value: string): string {
     return this.stringTH[this._getIndexStringTHForValue(value)].getColor();
+  }
+
+  _getIndexDateTHForValue(value: string): number {
+    let index = -1;
+    for (let i = 0; i < this.dateTH.length; i++) {
+      const th = this.dateTH[i];
+      // Base
+      if (i === 0) {
+        index = i;
+      } else {
+        if (!th.isHidden() && th.match(value)) {
+          index = i;
+        }
+      }
+    }
+    return index;
+  }
+
+  _getColorForDateTH(value: string): string {
+    return this.dateTH[this._getIndexDateTHForValue(value)].getColor();
   }
 
   /**

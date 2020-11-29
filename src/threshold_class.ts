@@ -1,7 +1,7 @@
 import { $GF } from './globals_class';
 import { default as dayjs } from 'dayjs';
-export type ObjectTH = NumberTH | StringTH;
-export type ObjectTHData = gf.TTHNumberData | gf.TTHStringData;
+export type ObjectTH = NumberTH | StringTH | DateTH;
+export type ObjectTHData = gf.TTHNumberData | gf.TTHStringData | gf.TTHDateData;
 
 class GFTH {
   data: gf.TTHData;
@@ -292,7 +292,6 @@ export class DateTH extends GFTH {
 
     if (dayjs(this.testedValue).isValid()) {
       this.date = dayjs(this.testedValue);
-      console.log("🚀 ~ file: threshold_class.ts ~ line 301 ~ DateTH ~ isValidValue ~ this.date", this.date)
       this.isDate = true;
       this.isValidated = true;
       return this.isValidated;
@@ -341,14 +340,14 @@ export class DateTH extends GFTH {
 
   _matchPattern(value: string): boolean {
     if(this.isValidated && this.matchs !== null && this.matchs.groups !== undefined) {
-      const now = dayjs();
+      let now = dayjs();
       const signe = this.matchs.groups.signe;
       const number = parseFloat(`${this.matchs.groups.number}`);
       const precision : any = this.matchs.groups.precision !== undefined ? this.matchs.groups.precision: 'd';
       if(signe === '-' ) {
-        now.subtract(number, precision); 
+        now = dayjs(now).subtract(number, precision); 
       } else {
-        now.add(number, precision);
+        now = dayjs(now).add(number, precision);
       }
       return DateTH.compareDates( now, value, this.data.comparator, precision);
     }
@@ -367,7 +366,7 @@ export class DateTH extends GFTH {
         return dayjs(endDate).isSame(beginDate, precision) || dayjs(endDate).isAfter(beginDate, precision);
         break;
       case 'gt':
-        return !dayjs(endDate).isAfter(beginDate, precision);
+        return dayjs(endDate).isAfter(beginDate, precision);
         break;
       default:
         return false;

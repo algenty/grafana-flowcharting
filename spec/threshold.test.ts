@@ -63,7 +63,7 @@ describe('Threshold init', () => {
     });
   });
 
-  describe.only('On DateTH', () => {
+  describe('On DateTH', () => {
     test('dayjs format ', () => {
       expect(dayjs(new Date()).isValid()).toBeTruthy();
       expect(dayjs(1483228810000).isValid()).toBeTruthy();
@@ -85,22 +85,53 @@ describe('Threshold init', () => {
       td1.setValue(1606586657059);
       expect(td1.isValidValue()).toBeTruthy();
     });
-    test.only('Should be match or not with pattern', () => {
+    test('Should be match or not with pattern', () => {
       //1606586657059
       //1606586733
       // 1day = 86400 or 86400000
       let now = new Date().getTime(); 
       let td1 = new DateTH('Color1', '-2d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
-      let td2 = new DateTH('Color2', '-4d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
+      let td2 = new DateTH('Color2', '-2d', $GF.CONSTANTS.COMP_GT, StringTH.getDefaultData());
       let td3 = new DateTH('Color3', '-6d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
       expect(td1.match(now)).toBeTruthy()
       expect(td2.match(now)).toBeTruthy()
       expect(td3.match(now)).toBeTruthy();
-      now = now - 86400000; // now -1 d
-      console.log("🚀 ~ file: threshold.test.ts ~ line 105 ~ test.only ~ now", dayjs(now).toString())
+      now = now - 86400000*2; // now -1d
+      expect(td1.match(now)).toBeTruthy()
+      expect(td2.match(now)).toBeFalsy()
+      expect(td3.match(now)).toBeTruthy();
+      now = now - 86400000; // now - 3d
       expect(td1.match(now)).toBeFalsy()
+      expect(td2.match(now)).toBeFalsy()
+      expect(td3.match(now)).toBeTruthy();
+      now = now - 86400000*5; // before 6d
+      expect(td1.match(now)).toBeFalsy()
+      expect(td2.match(now)).toBeFalsy()
+      expect(td3.match(now)).toBeFalsy();
+    });
+
+    test('Should be match or not with date', () => {
+      let now = new Date().getTime(); 
+      let date_2 = dayjs(now).subtract(2,'d').format('YYYY-MM-DD');
+      let date_6 = dayjs(now).subtract(6,'d').format('YYYY-MM-DD');
+      let td1 = new DateTH('Color1', date_2, $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
+      let td2 = new DateTH('Color2', date_2, $GF.CONSTANTS.COMP_GT, StringTH.getDefaultData());
+      let td3 = new DateTH('Color3', date_6, $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
+      expect(td1.match(now)).toBeTruthy()
       expect(td2.match(now)).toBeTruthy()
       expect(td3.match(now)).toBeTruthy();
+      now = now - 86400000*2; // now -1d
+      expect(td1.match(now)).toBeTruthy()
+      expect(td2.match(now)).toBeFalsy()
+      expect(td3.match(now)).toBeTruthy();
+      now = now - 86400000; // now - 3d
+      expect(td1.match(now)).toBeFalsy()
+      expect(td2.match(now)).toBeFalsy()
+      expect(td3.match(now)).toBeTruthy();
+      now = now - 86400000*5; // before 6d
+      expect(td1.match(now)).toBeFalsy()
+      expect(td2.match(now)).toBeFalsy()
+      expect(td3.match(now)).toBeFalsy();
     });
   });
 });
