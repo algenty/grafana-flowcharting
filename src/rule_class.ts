@@ -1293,6 +1293,7 @@ export class Rule {
   // METRICS
   //
   getMetrics(): ObjectMetric[] {
+    error here
     if(this.ctrl.metricHandler)
   }
 
