@@ -5,7 +5,7 @@ import { $GF, GFTable } from './globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
 import { MetricHandler } from './metricHandler';
-import { NumberTH, StringTH } from 'threshold_class';
+import { DateTH, NumberTH, StringTH } from 'threshold_class';
 
 /**
  * Rules tab controller
@@ -548,8 +548,44 @@ export class RulesOptionsCtrl {
     return this.metricHandler.getColumnsName(tableName, 'table');
   }
 
-  getColumnsName(tableName: string): string[] {
-    return this.metricHandler.getColumnsName(tableName);
+  ValidateDate(rule : Rule): boolean {
+    if(rule.data.type !== 'date') {
+      return true;
+    }
+    try {
+      let metricType : gf.TMetricTypeKeys = 'serie';
+      let metricName = rule.data.pattern;
+      let columnName: string | undefined = undefined;
+      if(rule.data.metricType === 'table') {
+        metricType = 'table';
+        metricName = rule.data.refId;
+        columnName = rule.data.column;
+      }
+      const metrics = this.metricHandler.findMetrics(metricName, metricType);
+      const length = metrics.length;
+      for (let index = 0; index < length; index++) {
+        const m = metrics[index];
+        const value = m.getValue(rule.data.aggregation, columnName);
+        if(!DateTH.isValidDate(value)) {
+          this.ctrl.notify(`The value for the metric ${m.getName()} and the aggregation ${$GF.GetT4V(this.aggregationTypes, rule.data.aggregation)} is not a valid date : ${value}`);
+          return false;
+          break;
+        }
+      }
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  getColumnsNameForRule(rule: Rule): string[] {
+    let metricType : gf.TMetricTypeKeys = 'serie';
+    let tableName = rule.data.pattern;
+    if(rule.data.metricType === 'table') {
+      metricType = 'table';
+      tableName = rule.data.refId;
+    }
+    return this.metricHandler.getColumnsName(tableName, metricType);
   }
 
   isLastRule(index: number): boolean {
@@ -651,7 +687,6 @@ export class RulesOptionsCtrl {
   }
 
   identifyCell(prop: gf.TPropertieKey, value: string) {
-    // debugger
     const id = 'identifyCell';
     $GF.clearUniqTimeOut(id);
     const self = this;

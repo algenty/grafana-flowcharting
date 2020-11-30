@@ -36,11 +36,11 @@
         </label>
         <input type="text" placeholder="Name or regex of metric" class="gf-form-input width-12"
             ng-model="rule.data.pattern" bs-tooltip="'Specify regex using /my.*regex/ syntax'"
-            bs-typeahead="editor.getMetricNames" ng-blur="editor.onRulesChange()" ng-model-onblur data-min-length="0"
+            bs-typeahead="editor.getMetricNames" ng-blur="editor.ValidateDate(rule) && editor.onRulesChange()" ng-model-onblur data-min-length="0"
             data-items="100" data-placement="right" ng-if="rule.data.metricType === 'serie'" />
         <div class="gf-form-select-wrapper width-12" ng-if="rule.data.metricType === 'table'">
             <select class="gf-form-input" ng-model="rule.data.refId" ng-options="o for o in editor.getTablesName()"
-                ng-blur="editor.onRulesChange()">
+                ng-blur="editor.ValidateDate(rule) && editor.onRulesChange()">
                 <option style="display:none" value="">select a table</option>
             </select>
         </div>
@@ -54,7 +54,7 @@
         </label>
         <div class="gf-form-select-wrapper width-12">
             <select class="gf-form-input" ng-model="rule.data.column"
-                ng-options="o for o in editor.getColumnsForTable(rule.data.refId)" ng-blur="editor.onRulesChange()">
+                ng-options="o for o in editor.getColumnsForTable(rule.data.refId)" ng-blur="editor.ValidateDate(rule) && editor.onRulesChange()">
                 <option style="display:none" value="">select a column</option>
             </select>
         </div>
@@ -69,7 +69,7 @@
         <div class="gf-form-select-wrapper width-12">
             <select class="gf-form-input" ng-model="rule.data.aggregation"
                 ng-options="c.value as c.text for c in editor.aggregationTypes"
-                ng-blur="editor.onRulesChange()"></select>
+                ng-blur="editor.ValidateDate(rule) && editor.onRulesChange()"></select>
         </div>
     </div>
 </div>
@@ -90,32 +90,24 @@
                     ng-bind-html="$GF.popover('Select type and unit of metric to display it for the good format.', 'MAPPING#Type')"></span>
             </info-popover>
         </label>
-        <div class="gf-form-select-wrapper width-16">
+        <div class="gf-form-select-wrapper width-12">
             <select class="gf-form-input" ng-model="rule.data.type"
-                ng-options="c.value as c.text for c in editor.metricTypes" ng-change="editor.onRulesChange()"></select>
+                ng-options="c.value as c.text for c in editor.metricTypes" ng-change="editor.ValidateDate(rule) && editor.onRulesChange()"></select>
         </div>
     </div>
-    <div class="gf-form" ng-if="rule.data.type === 'date'">
-        <label class="gf-form-label width-10">Column with a date format
+    <!-- <div class="gf-form" ng-if="rule.data.type === 'date'">
+        <label class="gf-form-label width-10">Tag or column
             <info-popover mode="right-normal"><span
-                    ng-bind-html="$GF.popover('Select a column from metric with a date format (stimestamp or string).', 'MAPPING#Type')"></span>
+                    ng-bind-html="$GF.popover('Select a column/Tag from metric with a date format (Unix Timestamp or a text).', 'MAPPING#Type')"></span>
             </info-popover>
         </label>
         <div class="gf-form-select-wrapper width-12">
             <select class="gf-form-input" ng-model="rule.data.dateColumn"
-                ng-options="o for o in editor.getColumnsName(rule.data.metricType === 'serie' ? rule.data.pattern : rule.data.refId)" ng-blur="editor.onRulesChange()">
+                ng-options="o for o in editor.getColumnsNameForRule(rule)" ng-blur="editor.onRulesChange()">
                 <option style="display:none" value="">select a column</option>
             </select>
         </div>
-        <!-- <select class="gf-form-input" ng-model="rule.data.dateColumn"
-            ng-change="editor.onRulesChange()">
-            <option ng-repeat="col in editor.getColumnsName(rule.data.metricType === 'serie' ? rule.data.pattern : rule.data.refId)">{{col}}</option>
-        </select> -->
-        <!-- <gf-form-dropdown model="rule.data.dateColumn" css-class="gf-form-input width-16" lookup-text="true"
-            on-change="editor.onRulesChange()" allow-custom="true">
-            <option ng-repeat="col in editor.getColumnsName(rule.data.pattern)">{{col}}</option>
-        </gf-form-dropdown> -->
-    </div>
+    </div> -->
 
     <div class="gf-form" ng-if="rule.data.type === 'date'">
         <label class="gf-form-label width-10">Output date Format
@@ -123,8 +115,8 @@
                     ng-bind-html="$GF.popover('Select format of the date to display it in text with text mapping.', 'MAPPING#Type')"></span>
             </info-popover>
         </label>
-        <gf-form-dropdown model="rule.data.dateFormat" css-class="gf-form-input width-16" lookup-text="true"
-            get-options="editor.dateFormats" on-change="editor.onRulesChange()" allow-custom="true">
+        <gf-form-dropdown model="rule.data.dateFormat" css-class="gf-form-input width-12" lookup-text="true"
+            get-options="editor.dateFormats" on-change="editor.ValidateDate(rule) && editor.onRulesChange()" allow-custom="true">
         </gf-form-dropdown>
     </div>
 
@@ -146,7 +138,7 @@
                         ng-bind-html="$GF.popover('Select unit of aggregated value.', 'MAPPING#Type')"></span>
                 </info-popover>
             </label>
-            <div class="gf-form-dropdown-typeahead width-16" ng-model="rule.data.unit"
+            <div class="gf-form-dropdown-typeahead width-12" ng-model="rule.data.unit"
                 dropdown-typeahead2="editor.unitFormats"
                 dropdown-typeahead-on-select="editor.setUnitFormat(rule, $subItem)"></div>
         </div>

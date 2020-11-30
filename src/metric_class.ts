@@ -1,6 +1,8 @@
 import grafana from './grafana_func';
 import _ from 'lodash';
 import { $GF } from 'globals_class';
+import { default as dayjs } from 'dayjs';
+import { DateTH } from 'threshold_class';
 
 export type ObjectMetric = SerieMetric | TableMetric;
 
@@ -11,7 +13,7 @@ export type ObjectMetric = SerieMetric | TableMetric;
  * @class Metric
  */
 export class Metric {
-  type: gf.TMetricType = 'unknown';
+  type: gf.TMetricTypeKeys | 'unknown' = 'unknown';
   scopedVars: any;
   metrics: any = {};
   name = '';
@@ -50,6 +52,18 @@ export class Metric {
    */
   getValue(aggregator: gf.TAggregationKeys, column?: string): string | number | null {
     return null;
+  }
+
+  /**
+   * Return if value is a correct date dayjs
+   *
+   * @param {gf.TAggregationKeys} aggregator
+   * @param {string} [column]
+   * @returns {boolean}
+   * @memberof SerieMetric
+   */
+  isValidDate(aggregator: gf.TAggregationKeys, column?: string): boolean {
+    return DateTH.isValidDate(this.getValue(aggregator, column));
   }
 
   findValue(timestamp: number, column?: string): string | number | null {
@@ -151,7 +165,7 @@ export class SerieMetric extends Metric {
    * @returns {(string | number | null)}
    * @memberof Metric
    */
-  getValue(aggregator: gf.TAggregationKeys): string | number | null {
+  getValue(aggregator: gf.TAggregationKeys, column: string = this.name): string | number | null {
     try {
       let value: string | number | null = null;
       if ($GF.hasGraphHover()) {
@@ -433,7 +447,7 @@ export class TableMetric extends Metric {
    * @returns {(string | number | null)}
    * @memberof Metric
    */
-  getValue(aggregator: gf.TAggregationKeys, column: string): string | number | null {
+  getValue(aggregator: gf.TAggregationKeys, column: string = 'Value'): string | number | null {
     try {
       let value: string | number | null = null;
       if ($GF.hasGraphHover()) {

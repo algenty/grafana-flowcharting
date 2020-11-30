@@ -99,6 +99,8 @@ add size of icon when mouse is hover over
 Up / down color icon on threshold
 Expand : transform : rotate + gf-icon-action
 https://developer.mozilla.org/fr/docs/Web/CSS/transform
+On hover on cell : transform it to shadow
+
 
 # effect
 https://pavenum.com/overlay-avec-hover-sur-une-image-en-html-css/

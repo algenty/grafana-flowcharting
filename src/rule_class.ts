@@ -252,7 +252,6 @@ export class Rule {
     }
     // }
 
-    // debugger
     if (this.numberTH.length === 0) {
       this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0);
       this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50);
@@ -1292,10 +1291,6 @@ export class Rule {
   //
   // METRICS
   //
-  getMetrics(): ObjectMetric[] {
-    error here
-    if(this.ctrl.metricHandler)
-  }
 
   //
   // THRESHOLDS
