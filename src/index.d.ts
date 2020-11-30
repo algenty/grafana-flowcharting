@@ -326,7 +326,7 @@ declare module gf {
   // For mapping object
   declare interface TIOnMappingObj {
     active: boolean;
-    object: GFMap | null;
+    object: ObjectMap | null;
     value: string | null;
     prop: TPropertieKey;
     // $scope: ng.IScope | null;
@@ -424,5 +424,4 @@ declare module gf {
   }
 
   declare type THDatePrecision = 'y' | 'M' | 'w' | 'd' | 'h' | 'm' | 's';
-
 }

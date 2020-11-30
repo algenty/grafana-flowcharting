@@ -1,5 +1,6 @@
 import XGraph from './graph_class';
-import { Rule, EventMap } from './rule_class';
+import { Rule } from './rule_class';
+import { EventMap } from 'mapping_class';
 import { Metric } from './metric_class';
 import { TooltipHandler } from './tooltipHandler';
 import { $GF, GFVariables } from 'globals_class';

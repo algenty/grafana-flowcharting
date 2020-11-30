@@ -1,7 +1,6 @@
 import grafana from './grafana_func';
 import _ from 'lodash';
 import { $GF } from 'globals_class';
-import { default as dayjs } from 'dayjs';
 import { DateTH } from 'threshold_class';
 
 export type ObjectMetric = SerieMetric | TableMetric;

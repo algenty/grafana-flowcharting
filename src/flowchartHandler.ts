@@ -1,9 +1,10 @@
 import { Flowchart } from 'flowchart_class';
-import { Rule, GFMap } from 'rule_class';
+import { Rule } from 'rule_class';
 import _ from 'lodash';
 // const clonedeep = require('lodash.clonedeep')
 import { Metric } from './metric_class';
 import { $GF } from 'globals_class';
+import { ObjectMap } from 'mapping_class';
 
 /**
  * Class FlowchartHandler
@@ -792,7 +793,7 @@ export class FlowchartHandler {
    * @param {Object} objToMap
    * @memberof FlowchartHandler
    */
-  setMap(objToMap: GFMap, prop: gf.TPropertieKey = 'id'): this {
+  setMap(objToMap: ObjectMap, prop: gf.TPropertieKey = 'id'): this {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
     this.onMapping.active = true;
     this.onMapping.object = objToMap;
@@ -824,7 +825,7 @@ export class FlowchartHandler {
    * @returns true - true if mapping mode
    * @memberof FlowchartHandler
    */
-  isMapping(objToMap: GFMap): boolean {
+  isMapping(objToMap: ObjectMap): boolean {
     if (objToMap === undefined || objToMap == null) {
       return this.onMapping.active;
     }

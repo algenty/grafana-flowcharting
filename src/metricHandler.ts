@@ -40,7 +40,7 @@ export class MetricHandler {
    *
    * @memberof MetricHandler
    */
-  clear():this {
+  clear(): this {
     this.tables.forEach(table => {
       table.clear();
     });
@@ -62,15 +62,15 @@ export class MetricHandler {
    * @param {*} data
    * @memberof MetricHandler
    */
-  addMetric(data: any) : ObjectMetric {
+  addMetric(data: any): ObjectMetric {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addMetric()');
-    let metric : ObjectMetric;
+    let metric: ObjectMetric;
     if (data.type === 'table') {
       metric = this.addTable(data);
     } else {
       metric = this.addSerie(data);
     }
-    console.log("🚀 ~ file: metricHandler.ts ~ line 72 ~ MetricHandler ~ addMetric ~ this", this)
+    console.log('🚀 ~ file: metricHandler.ts ~ line 72 ~ MetricHandler ~ addMetric ~ this', this);
     return metric;
     trc.after();
   }
@@ -183,17 +183,16 @@ export class MetricHandler {
     //   metrics = this.metrics.filter(m => m.getName() === name);
     // }
 
-
     // >= 0.9.1 : Add RegEx on name
     if (type) {
       if (type === 'table') {
-        metrics = this.tables.filter(m => $GF.utils.matchString(m.getName(),name , true ));
+        metrics = this.tables.filter(m => $GF.utils.matchString(m.getName(), name, true));
       }
       if (type === 'serie') {
-        metrics = this.series.filter(m => $GF.utils.matchString(m.getName(),name , true ));
+        metrics = this.series.filter(m => $GF.utils.matchString(m.getName(), name, true));
       }
     } else {
-      metrics = this.metrics.filter(m => $GF.utils.matchString(m.getName(),name , true ));
+      metrics = this.metrics.filter(m => $GF.utils.matchString(m.getName(), name, true));
     }
     return metrics;
   }

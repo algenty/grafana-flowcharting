@@ -276,14 +276,14 @@ export class DateTH extends GFTH {
     };
   }
 
-  static isValidDate(date : any): boolean {
+  static isValidDate(date: any): boolean {
     try {
       const d = dayjs(date);
-      const result= dayjs(date).isValid();
-      if(result) {
+      const result = dayjs(date).isValid();
+      if (result) {
         if (d.year() <= 1980) {
           return false;
-        } 
+        }
       }
       return result;
     } catch (error) {

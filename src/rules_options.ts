@@ -1,6 +1,7 @@
 import { FlowchartHandler } from './flowchartHandler';
 import { RulesHandler } from './rulesHandler';
-import { Rule, EventMap } from './rule_class';
+import { Rule } from './rule_class';
+import { EventMap } from './mapping_class';
 import { $GF, GFTable } from './globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
@@ -548,15 +549,15 @@ export class RulesOptionsCtrl {
     return this.metricHandler.getColumnsName(tableName, 'table');
   }
 
-  ValidateDate(rule : Rule): boolean {
-    if(rule.data.type !== 'date') {
+  ValidateDate(rule: Rule): boolean {
+    if (rule.data.type !== 'date') {
       return true;
     }
     try {
-      let metricType : gf.TMetricTypeKeys = 'serie';
+      let metricType: gf.TMetricTypeKeys = 'serie';
       let metricName = rule.data.pattern;
       let columnName: string | undefined = undefined;
-      if(rule.data.metricType === 'table') {
+      if (rule.data.metricType === 'table') {
         metricType = 'table';
         metricName = rule.data.refId;
         columnName = rule.data.column;
@@ -566,8 +567,13 @@ export class RulesOptionsCtrl {
       for (let index = 0; index < length; index++) {
         const m = metrics[index];
         const value = m.getValue(rule.data.aggregation, columnName);
-        if(!DateTH.isValidDate(value)) {
-          this.ctrl.notify(`The value for the metric ${m.getName()} and the aggregation ${$GF.GetT4V(this.aggregationTypes, rule.data.aggregation)} is not a valid date : ${value}`);
+        if (!DateTH.isValidDate(value)) {
+          this.ctrl.notify(
+            `The value for the metric ${m.getName()} and the aggregation ${$GF.GetT4V(
+              this.aggregationTypes,
+              rule.data.aggregation
+            )} is not a valid date : ${value}`
+          );
           return false;
           break;
         }
@@ -579,9 +585,9 @@ export class RulesOptionsCtrl {
   }
 
   getColumnsNameForRule(rule: Rule): string[] {
-    let metricType : gf.TMetricTypeKeys = 'serie';
+    let metricType: gf.TMetricTypeKeys = 'serie';
     let tableName = rule.data.pattern;
-    if(rule.data.metricType === 'table') {
+    if (rule.data.metricType === 'table') {
       metricType = 'table';
       tableName = rule.data.refId;
     }
@@ -612,15 +618,6 @@ export class RulesOptionsCtrl {
     this.render();
     return true;
   }
-
-  // getLevels(rule: Rule): gf.TSelectNumber[] {
-  //   let lvl: gf.TSelectNumber[] = [];
-  //   let count = rule.data.colors.length;
-  //   for (let index = 0; index < count; index++) {
-  //     lvl.push({ text: `${index}`, value: index });
-  //   }
-  //   return lvl;
-  // }
 
   removeShapeMap(rule: Rule, index: number) {
     const shape = rule.getShapeMap(index);
