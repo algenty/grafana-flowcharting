@@ -2,6 +2,8 @@ import grafana from './grafana_func';
 import _ from 'lodash';
 import { $GF } from 'globals_class';
 
+export type ObjectMetric = SerieMetric | TableMetric;
+
 /**
  * Metric parent
  *
@@ -9,7 +11,7 @@ import { $GF } from 'globals_class';
  * @class Metric
  */
 export class Metric {
-  type = 'unknow';
+  type: gf.TMetricType = 'unknown';
   scopedVars: any;
   metrics: any = {};
   name = '';
@@ -90,7 +92,7 @@ export class Metric {
  * @class Serie
  * @extends {Metric}
  */
-export class Serie extends Metric {
+export class SerieMetric extends Metric {
   constructor(dataList: any) {
     super(dataList);
     this.type = 'serie';
@@ -227,7 +229,7 @@ export class Serie extends Metric {
  * @class Table
  * @extends {Metric}
  */
-export class Table extends Metric {
+export class TableMetric extends Metric {
   tableColumnOptions: any = {};
   tableColumn = '';
   allIsNull = true;

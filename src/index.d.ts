@@ -424,4 +424,8 @@ declare module gf {
   }
 
   declare type THDatePrecision = 'y' | 'M' | 'w' | 'd' | 'h' | 'm' | 's';
+
+
+  declare type TMetricType = 'table' | 'serie' | 'unknown';
+
 }

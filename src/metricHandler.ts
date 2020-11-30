@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { Metric, Serie, Table } from './metric_class';
+import { Metric, SerieMetric, TableMetric, ObjectMetric } from './metric_class';
 import { $GF } from 'globals_class';
 
 /**
@@ -11,9 +11,9 @@ import { $GF } from 'globals_class';
 export class MetricHandler {
   panel: any;
   // $scope: ng.IScope;
-  tables: Table[] = [];
-  series: Serie[] = [];
-  metrics: Array<Serie | Table> = [];
+  tables: TableMetric[] = [];
+  series: SerieMetric[] = [];
+  metrics: Array<SerieMetric | TableMetric> = [];
 
   constructor() {}
 
@@ -40,7 +40,7 @@ export class MetricHandler {
    *
    * @memberof MetricHandler
    */
-  clear() {
+  clear():this {
     this.tables.forEach(table => {
       table.clear();
     });
@@ -53,6 +53,7 @@ export class MetricHandler {
     this.tables = [];
     this.series = [];
     this.metrics = [];
+    return this;
   }
 
   /**
@@ -61,14 +62,16 @@ export class MetricHandler {
    * @param {*} data
    * @memberof MetricHandler
    */
-  addMetric(data: any) {
+  addMetric(data: any) : ObjectMetric {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addMetric()');
+    let metric : ObjectMetric;
     if (data.type === 'table') {
-      this.addTable(data);
+      metric = this.addTable(data);
     } else {
-      this.addSerie(data);
+      metric = this.addSerie(data);
     }
     console.log("🚀 ~ file: metricHandler.ts ~ line 72 ~ MetricHandler ~ addMetric ~ this", this)
+    return metric;
     trc.after();
   }
 
@@ -76,12 +79,12 @@ export class MetricHandler {
    * Convert and add dataList to a Metric Table
    *
    * @param {any} data
-   * @returns {Table}
+   * @returns {TableMetric}
    * @memberof MetricHandler
    */
-  addTable(data: any): Table {
+  addTable(data: any): TableMetric {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addTable()');
-    const table = new Table(data);
+    const table = new TableMetric(data);
     this.tables.push(table);
     this.metrics.push(table);
     trc.after();
@@ -92,12 +95,12 @@ export class MetricHandler {
    * Convert and add dataList to a Metric Serie
    *
    * @param {any} data
-   * @returns {Serie}
+   * @returns {SerieMetric}
    * @memberof MetricHandler
    */
-  addSerie(data: any): Serie {
+  addSerie(data: any): SerieMetric {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addSerie()');
-    const serie = new Serie(data);
+    const serie = new SerieMetric(data);
     this.series.push(serie);
     this.metrics.push(serie);
     trc.after();
@@ -166,8 +169,8 @@ export class MetricHandler {
    * @returns {Metric[]}
    * @memberof MetricHandler
    */
-  findMetrics(name: string, type?: gf.TMetricTypeKeys): Metric[] {
-    let metrics: Metric[] = [];
+  findMetrics(name: string, type?: gf.TMetricTypeKeys): ObjectMetric[] {
+    let metrics: ObjectMetric[] = [];
     // < 0.9.1 strict name
     // if (type) {
     //   if (type === 'table') {

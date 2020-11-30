@@ -1292,8 +1292,8 @@ export class Rule {
   //
   // METRICS
   //
-  getMetrics(): {
-
+  getMetrics(): ObjectMetric[] {
+    if(this.ctrl.metricHandler)
   }
 
   //
