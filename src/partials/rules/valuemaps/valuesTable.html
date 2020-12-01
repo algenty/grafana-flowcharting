@@ -1,0 +1,171 @@
+<div role=" table" class="gf-table-main" id="valuesTable" style="overflow: visible">
+    <div class="gf-custom-scrollbar"
+        style="position: relative; overflow: visible; width: 100%; height: auto; min-height: 0px; max-height: 100%;box-sizing: inherit;">
+        <div class="gf-view"
+            style="position: relative; overflow: visible; margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
+            <!-- THEAD -->
+            <div class="gf-table-thead gf-unselectable" role="row" ng-mouseup="editor.valuesTable.onMouseUp($event)"
+                ng-mousemove="editor.valuesTable.onMouseMove($event)"
+                ng-mouseleave="editor.valuesTable.onMouseUp($event)">
+                <!-- HEADERS -->
+                <!-- EXPAND -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.valuesTable.getWidth('expand')}">
+                    <div ng-attr-title="{{editor.valuesTable.getDesc('expand')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.valuesTable.getLabel('expand')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.valuesTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- VALUE -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.valuesTable.getWidth('value')}">
+                    <div ng-attr-title="{{editor.valuesTable.getDesc('value')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.valuesTable.getLabel('value')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover(editor.valuesTable.getDesc('value'), 'RULE')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.valuesTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- TEXT -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.valuesTable.getWidth('text')}">
+                    <div ng-attr-title="{{editor.valuesTable.getDesc('text')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.valuesTable.getLabel('text')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover(editor.valuesTable.getDesc('text'), 'RULE')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.valuesTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- VALUE -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.valuesTable.getWidth('value')}">
+                    <div ng-attr-title="{{editor.valuesTable.getDesc('value')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.valuesTable.getLabel('value')}}</div>
+                    </div>
+                    <div style="float: right;padding: 6px;width: 6px">
+                        <info-popover mode="right-normal">
+                            <span ng-bind-html="$GF.popover('Select condition to apply event on object.', 'SHAPES')">
+                            </span>
+                        </info-popover>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize"
+                        ng-mousedown="editor.valuesTable.onMouseDown($event)">
+                    </div>
+                </div>
+                <!-- ACTION -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.valuesTable.getWidth('actions')}">
+                    <div ng-attr-title="{{editor.valuesTable.getDesc('actions')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.valuesTable.getLabel('actions')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.valuesTable.onMouseDown($event)">
+                    </div>
+                </div>
+            </div>
+            <!-- TBODY -->
+            <div class="gf-table-body">
+                <div role="row" class="gf-table-rows" ng-repeat="elt in rule.getValueMaps()">
+                    <!-- <textarea>{{elt | json}}</textarea> -->
+                    <!-- CELLS -->
+                    <div class="gf-table-row_line" ng-init="elt.displayEdit = [];elt.inEdit = [];">
+                        <!-- EXPAND -->
+                        <div role="cell" class="gf-table-cells" ng-click="elt.reduce=!elt.reduce"
+                            ng-init="CN1 = 'expand';elt.displayEdit[CN1] = false;elt.inEdit[CN1] = false;"
+                            ng-style="{'width' : editor.valuesTable.getWidth(CN1)}">
+                            <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
+                                <span>
+                                    <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
+                                        ng-class="{'fa-chevron-right': elt.reduce === undefined || elt.reduce === true, 'fa-chevron-down': elt.reduce === false}">
+                                    </i>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- VALUE -->
+                        <div role="cell" class="gf-table-cells"
+                            ng-init="CN2 = 'value';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
+                            ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseenter="elt.displayEdit[CN2] = true;"
+                            ng-style="{'width' : editor.valuesTable.getWidth(CN2)}" ng-attr-title="{{elt.data.value}}">
+                            <div class="gf-table-content" style="text-align: left">
+                                {{elt.data.value}}
+                            </div>
+                            <div ng-show="elt.displayEdit[CN2] === true && elt.inEdit[CN2] !== true"
+                                ng-click="elt.inEdit[CN2] = true;$GF.setFocus( elt.getId() + '-' + CN2 )" title="Edit"
+                                class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
+                            </div>
+                            <input type="text" style="margin-right: 2px;width : 100%"
+                                ng-attr-id="{{elt.getId() + '-' + CN2}}" ng-show="elt.inEdit[CN2] === true"
+                                class="gf-form-input" ng-model="elt.data.value" ng-change="editor.onRulesChange()"
+                                ng-model-onblur ng-blur="editor.onRulesChange();elt.inEdit[CN2] = false;"
+                                data-min-length="0" data-items="100" data-placement="right" />
+                        </div>
+                        <!-- TEXT -->
+                        <div role="cell" class="gf-table-cells"
+                            ng-init="CN3 = 'text';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
+                            ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseenter="elt.displayEdit[CN3] = true;"
+                            ng-style="{'width' : editor.valuesTable.getWidth(CN3)}" ng-attr-title="{{elt.data.text}}">
+                            <div class="gf-table-content" style="text-align: left">
+                                {{elt.data.text}}
+                            </div>
+                            <div ng-show="elt.displayEdit[CN3] === true && elt.inEdit[CN3] !== true"
+                                ng-click="elt.inEdit[CN3] = true;$GF.setFocus( elt.getId() + '-' + CN3 )" title="Edit"
+                                class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
+                            </div>
+                            <input type="text" class="gf-form-input" ng-model="elt.data.text" placeholder="Text"
+                                ng-show="elt.inEdit[CN3] === true"
+                                ng-attr-id="{{elt.getId() + '-' + CN3}}"
+                                style="margin-right: 2px;width : 100%"
+                                bs-typeahead="editor.getVariables"
+                                title="Specify string or variables to replace values" data-min-length="0"
+                                data-items="100" data-placement="right" ng-blur="editor.onRulesChange()"
+                                ng-model-onblur />
+                        </div>
+                    </div>
+                    <!-- ACTION -->
+                    <div role="cell" class="gf-table-cells"
+                        ng-style="{'width' : editor.valuesTable.getWidth('actions')}">
+                        <div class="gf-table-content gf-unselectable" style="text-align: left;justify-content: center;">
+                            <div ng-click="rule.addValueMap($index)" title="Add a new value mapping"
+                                class="gf-icon-action gf-icon-new">
+                            </div>
+                            <div ng-click="elt.isHidden() ? elt.show(): elt.hide();editor.onRulesChange()"
+                                title="Hide/Disable" class="gf-icon-action"
+                                ng-class="{'gf-icon-show': !elt.isHidden(), 'gf-icon-hide': elt.isHidden()}">
+                            </div>
+                            <div ng-click="rule.removeValueMap($index);editor.onRulesChange()" title="Delete"
+                                class="gf-icon-action gf-icon-remove">
+                            </div>
+                            <div ng-click="rule.cloneValueMap($index);editor.onRulesChange();" title="Duplicate"
+                                class="gf-icon-action gf-icon-clone">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gf-table-row_body" ng-show="elt.reduce === false">
+                    <ng-include src="$GF.plugin.getPartialPath() + 'rules/valuemaps/valueBody.html'">
+                    </ng-include>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

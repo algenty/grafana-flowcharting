@@ -1,0 +1,78 @@
+<div>
+    <!-- Definition -->
+    <div class="section gf-form-group" style="width:100%;">
+        <h5 class="section-heading">
+            Detail
+            <info-popover mode="right-normal"><span
+                    ng-bind-html="$GF.popover('Definition of value mapping', 'MAPPING')"></span></info-popover>
+        </h5>
+        <!-- VALUE -->
+        <div class="gf-form">
+            <label class="gf-form-label width-10" style="margin-right: 2px;">Value
+                <info-popover mode="right-normal">
+                    <span ng-bind-html="$GF.popover('Value string to replace', 'MAPPING#Map')"> </span>
+                </info-popover>
+            </label>
+            <input type="text" class="gf-form-input max-width-10" ng-model="elt.data.value" placeholder="Value"
+                ng-blur="editor.onRulesChange()" ng-model-onblur />
+        </div>
+        <!-- TEXT -->
+        <div class="gf-form">
+            <label class="gf-form-label width-10" style="margin-right: 2px;">Text
+                <info-popover mode="right-normal">
+                    <span ng-bind-html="$GF.popover('Replace string with this text', 'MAPPING#Map')"> </span>
+                </info-popover>
+            </label>
+            <input type="text" class="gf-form-input max-width-10" ng-model="elt.data.text" placeholder="Text"
+                bs-typeahead="editor.getVariables" bs-tooltip="'Specify string or variables to replace values'"
+                data-min-length="0" data-items="100" data-placement="right" ng-blur="editor.onRulesChange()"
+                ng-model-onblur />
+        </div>
+        <!-- BUTTONS -->
+        <div class="gf-form-button-row gf-unselectable">
+            <button class="btn btn-primary btn-small" ng-click="editor.onRulesChange();"
+                title="Apply this threshold color">
+                <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor"
+                        d="M 250 475C 279 504 359 586 390 615C 400 625 410 615 410 615C 410 615 625 400 750 275C 765 260 785 260 800 275C 816 292 837 313 850 325C 865 340 865 360 850 375C 700 525 583 642 425 800C 410 815 390 815 375 800C 292 717 150 575 150 575C 135 560 135 540 150 525C 150 525 200 475 200 475C 215 461 235 460 250 475C 250 475 250 475 250 475" />
+                </svg>
+                &nbsp;Apply
+            </button>
+            <button class="btn btn-secondary btn-small" ng-show="$index !== 0"
+                ng-click="elt.hidden= !elt.hidden;editor.onRulesChange();" title="Enable/Disable">
+                <svg ng-show="!elt.isHidden()" width="16" height="16" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24" fill="currentColor" class="css-4fl056">
+                    <path
+                        d="M21.92,11.6C19.9,6.91,16.1,4,12,4S4.1,6.91,2.08,11.6a1,1,0,0,0,0,.8C4.1,17.09,7.9,20,12,20s7.9-2.91,9.92-7.6A1,1,0,0,0,21.92,11.6ZM12,18c-3.17,0-6.17-2.29-7.9-6C5.83,8.29,8.83,6,12,6s6.17,2.29,7.9,6C18.17,15.71,15.17,18,12,18ZM12,8a4,4,0,1,0,4,4A4,4,0,0,0,12,8Zm0,6a2,2,0,1,1,2-2A2,2,0,0,1,12,14Z">
+                    </path>
+                </svg>
+                <svg ng-show="elt.isHidden()" width="16" height="16" xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24">
+                    <path fill="currentColor"
+                        d="M10.94,6.08A6.93,6.93,0,0,1,12,6c3.18,0,6.17,2.29,7.91,6a15.23,15.23,0,0,1-.9,1.64,1,1,0,0,0-.16.55,1,1,0,0,0,1.86.5,15.77,15.77,0,0,0,1.21-2.3,1,1,0,0,0,0-.79C19.9,6.91,16.1,4,12,4a7.77,7.77,0,0,0-1.4.12,1,1,0,1,0,.34,2ZM3.71,2.29A1,1,0,0,0,2.29,3.71L5.39,6.8a14.62,14.62,0,0,0-3.31,4.8,1,1,0,0,0,0,.8C4.1,17.09,7.9,20,12,20a9.26,9.26,0,0,0,5.05-1.54l3.24,3.25a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Zm6.36,9.19,2.45,2.45A1.81,1.81,0,0,1,12,14a2,2,0,0,1-2-2A1.81,1.81,0,0,1,10.07,11.48ZM12,18c-3.18,0-6.17-2.29-7.9-6A12.09,12.09,0,0,1,6.8,8.21L8.57,10A4,4,0,0,0,14,15.43L15.59,17A7.24,7.24,0,0,1,12,18Z">
+                    </path>
+                </svg>
+                &nbsp;Enable/Disable
+            </button>
+            <button class="btn btn-secondary btn-small" ng-click="rule.cloneThreshold($index);editor.onRulesChange();"
+                title="Duplicate">
+                <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path fill="currentColor"
+                        d="M21,8.94a1.31,1.31,0,0,0-.06-.27l0-.09a1.07,1.07,0,0,0-.19-.28h0l-6-6h0a1.07,1.07,0,0,0-.28-.19.32.32,0,0,0-.09,0A.88.88,0,0,0,14.05,2H10A3,3,0,0,0,7,5V6H6A3,3,0,0,0,3,9V19a3,3,0,0,0,3,3h8a3,3,0,0,0,3-3V18h1a3,3,0,0,0,3-3V9S21,9,21,8.94ZM15,5.41,17.59,8H16a1,1,0,0,1-1-1ZM15,19a1,1,0,0,1-1,1H6a1,1,0,0,1-1-1V9A1,1,0,0,1,6,8H7v7a3,3,0,0,0,3,3h5Zm4-4a1,1,0,0,1-1,1H10a1,1,0,0,1-1-1V5a1,1,0,0,1,1-1h3V7a3,3,0,0,0,3,3h3Z">
+                    </path>
+                </svg>
+                &nbsp;Duplicate
+            </button>
+            <button class="btn btn-danger btn-small" ng-show="$index !== 0"
+                ng-click="rule.removeValueMap($index);editor.onRulesChange()" title="Delete this threshold color">
+                <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                    class="css-4fl056">
+                    <path
+                        d="M10,18a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,10,18ZM20,6H16V5a3,3,0,0,0-3-3H11A3,3,0,0,0,8,5V6H4A1,1,0,0,0,4,8H5V19a3,3,0,0,0,3,3h8a3,3,0,0,0,3-3V8h1a1,1,0,0,0,0-2ZM10,5a1,1,0,0,1,1-1h2a1,1,0,0,1,1,1V6H10Zm7,14a1,1,0,0,1-1,1H8a1,1,0,0,1-1-1V8H17Zm-3-1a1,1,0,0,0,1-1V11a1,1,0,0,0-2,0v6A1,1,0,0,0,14,18Z">
+                    </path>
+                </svg>
+                &nbsp;Remove
+            </button>
+        </div>
+    </div>
+</div>
