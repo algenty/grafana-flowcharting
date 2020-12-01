@@ -10,46 +10,11 @@ describe('Rule', () => {
     });
   });
 
-  // describe.skip('Level skipped : Moved to thresholds.test', () => {
-  //   const rule = new Rule('/.*/', data);
-  //   test('In order', () => {
-  //     rule.data.thresholds = [50, 80];
-  //     expect(rule.data.invert).toBeFalsy();
-  //     expect(rule.getThresholdLevel(25)).toBe(2);
-  //     expect(rule.getThresholdLevel(60)).toBe(1);
-  //     expect(rule.getThresholdLevel(90)).toBe(0);
-  //   });
-
-  //   test('Invert', () => {
-  //     rule.invertThesholds();
-  //     expect(rule.data.invert).toBeTruthy();
-  //     expect(rule.getThresholdLevel(25)).toBe(0);
-  //     expect(rule.getThresholdLevel(60)).toBe(1);
-  //     expect(rule.getThresholdLevel(90)).toBe(2);
-  //   });
-  // });
-
-  // describe.skip('Colors skipped : Moved to thresholds.test', () => {
-  //   const rule = new Rule('/.*/', data);
-  //   rule.data.thresholds = [50, 80];
-  //   test('Each colors', () => {
-  //     expect(rule.getColorForValue(25)).toBe('rgba(50, 172, 45, 0.97)');
-  //     expect(rule.getColorForValue(60)).toBe('rgba(237, 129, 40, 0.89)');
-  //     expect(rule.getColorForValue(90)).toBe('rgba(245, 54, 54, 0.9)');
-  //   });
-  //   test('Each colors', () => {
-  //     rule.invertThesholds();
-  //     expect(rule.getColorForValue(25)).toBe('rgba(245, 54, 54, 0.9)');
-  //     expect(rule.getColorForValue(60)).toBe('rgba(237, 129, 40, 0.89)');
-  //     expect(rule.getColorForValue(90)).toBe('rgba(50, 172, 45, 0.97)');
-  //   });
-  // });
-
   describe('Shape', () => {
     const pattern = '/.*Toto.*/';
 
     describe('Create', () => {
-      test.skip('addshape & remove', () => {
+      test('addshape & remove', () => {
         const rule = new Rule('/.*/', data);
         rule.addShapeMap(pattern);
         expect(rule.getShapeMaps().length).toBe(1);
@@ -203,7 +168,6 @@ describe('Rule', () => {
       expect(rule.getFormattedValue(12)).toBe('12');
     });
 
-    //TODO: Fix It
     test('Mapping values upper and lower', () => {
       const rule = new Rule('/.*/', data);
       rule.data.mappingType = 2;
