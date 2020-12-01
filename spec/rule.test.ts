@@ -14,7 +14,7 @@ describe('Rule', () => {
     const pattern = '/.*Toto.*/';
 
     describe('Create', () => {
-      test.skip('addshape & remove', () => {
+      test('addshape & remove', () => {
         const rule = new Rule('/.*/', data);
         rule.addShapeMap(pattern);
         expect(rule.getShapeMaps().length).toBe(1);
@@ -168,7 +168,6 @@ describe('Rule', () => {
       expect(rule.getFormattedValue(12)).toBe('12');
     });
 
-    //TODO: Fix It
     test('Mapping values upper and lower', () => {
       const rule = new Rule('/.*/', data);
       rule.data.mappingType = 2;
