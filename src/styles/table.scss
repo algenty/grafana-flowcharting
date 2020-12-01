@@ -116,6 +116,10 @@ div.gf-table-rows {
   // overflow: visible;
 }
 
+div.gf-table-rows-2 {
+  @extend .gf-table-rows
+}
+
 div.gf-table-row_line {
   height: 35px;
   display: flex;
@@ -125,8 +129,14 @@ div.gf-table-row_line {
   flex-direction: row;
 }
 
-div.gf-table-row_line:hover {
+div.gf-table-rows:hover {
   background-color: $table_row_hover;
+  transform: 0.2s ease;
+}
+
+div.gf-table-rows-2:hover {
+  background-color: $table_row_hover_2;
+  transform: 0.2s ease;
 }
 
 div.gf-table-row_body {
