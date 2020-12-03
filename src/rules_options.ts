@@ -41,12 +41,16 @@ export class RulesOptionsCtrl {
   linksTableData: gf.TTableData;
   eventsTableData: gf.TTableData;
   THsTableData: gf.TTableData;
+  valuesTableData: gf.TTableData;
+  rangesTableData: gf.TTableData;
   rulesTable: GFTable;
   shapesTable: GFTable;
   textsTable: GFTable;
   linksTable: GFTable;
   eventsTable: GFTable;
   THsTable: GFTable;
+  valuesTable: GFTable;
+  rangesTable: GFTable;
   metricTypes = $GF.CONSTANTS.VALUE_TYPES;
   dateFormats: gf.TSelectString[] = $GF.CONSTANTS.VALUE_DATEFORMAT_TYPES;
   aggregationTypes = $GF.CONSTANTS.AGGREGATION_TYPES;
@@ -459,6 +463,100 @@ export class RulesOptionsCtrl {
       ],
     };
 
+    n = 0;
+    this.valuesTableData = {
+      data: [],
+      columns: [
+        {
+          index: n++,
+          id: 'expand',
+          label: '',
+          desc: 'Expand/collapse',
+          width: '30px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'value',
+          label: 'Value',
+          desc: 'Origin value',
+          width: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'text',
+          label: 'Text',
+          desc: 'Final value',
+          width: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'actions',
+          label: 'Actions',
+          desc: 'Actions',
+          width: '100px',
+          sort: 'asc',
+          select: false,
+        },
+      ],
+    };
+    n = 0;
+    this.rangesTableData = {
+      data: [],
+      columns: [
+        {
+          index: n++,
+          id: 'expand',
+          label: '',
+          desc: 'Expand/collapse',
+          width: '30px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'from',
+          label: 'From',
+          desc: 'Min of value to replace',
+          width: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'to',
+          label: 'To',
+          desc: 'Max of value to replace',
+          width: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'text',
+          label: 'Text',
+          desc: 'Final value',
+          width: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
+          id: 'actions',
+          label: 'Actions',
+          desc: 'Actions',
+          width: '100px',
+          sort: 'asc',
+          select: false,
+        },
+      ],
+    };
+
     const $rulesTable = $div.find('#RulesTable');
     const rulesTable = $rulesTable[0];
     this.rulesTable = new GFTable(this.rulesTableData, rulesTable);
@@ -482,6 +580,14 @@ export class RulesOptionsCtrl {
     const $THsTable = $div.find('#THsTable');
     const THsTable = $THsTable[0];
     this.THsTable = new GFTable(this.THsTableData, THsTable);
+
+    const $valuesTable = $div.find('#ValuesTable');
+    const valuesTable = $valuesTable[0];
+    this.valuesTable = new GFTable(this.valuesTableData, valuesTable);
+
+    const $rangesTable = $div.find('#RangesTable');
+    const rangesTable = $rangesTable[0];
+    this.rangesTable = new GFTable(this.rangesTableData, rangesTable);
 
     this.getMetricNames = (): string[] => {
       return this.metricHandler.getNames('serie');

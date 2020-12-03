@@ -1,0 +1,53 @@
+<!-- 
+  Value and range mapping when type = "string"
+-->
+<div class="section gf-form-group" ng-if="rule.data.type === 'string'">
+    <h5 class="section-heading">Value Mappings</h5>
+    <div class="gf-form-group">
+      <div class="gf-form">
+        <span class="gf-form-label width-7">
+          Type
+        </span>
+        <div class="gf-form-select-wrapper">
+          <select class="gf-form-input width-10" ng-model="rule.data.mappingType"
+            ng-options="c.value as c.text for c in editor.mappingTypes"
+            ng-change="editor.onRulesChange()"></select>
+        </div>
+      </div>
+      <!-- MAP TYPE -->
+      <div class="gf-form" ng-show="rule.data.mappingType === 1">
+        <div ng-include="$GF.plugin.getPartialPath() + 'rules/valuemaps/valuesTable.html'">
+        </div>
+      </div>
+      <div class="gf-form">
+        <div class="gf-form-button-row gf-unselectable">
+          <button class="btn btn-secondary btn-small" ng-click="rule.addValueMap() && editor.onRulesChange();"
+            title="Add value mapping">
+            <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+              <path fill="currentColor"
+                d="M 200 450C 200 435 210 425 225 425C 225 425 425 425 425 425C 425 425 425 225 425 225C 425 210 435 200 450 200C 450 200 550 200 550 200C 565 200 575 210 575 225C 575 225 575 425 575 425C 575 425 775 425 775 425C 790 425 800 435 800 450C 800 450 800 550 800 550C 800 565 790 575 775 575C 775 575 575 575 575 575C 575 575 575 775 575 775C 575 790 565 800 550 800C 550 800 450 800 450 800C 435 800 425 790 425 775C 425 775 425 575 425 575C 425 575 225 575 225 575C 210 575 200 565 200 550C 200 550 200 450 200 450" />
+            </svg>
+            &nbsp;Add value mapping
+          </button>
+        </div>
+      </div>
+  
+      <!-- RANGE TYPE -->
+      <div class="gf-form" ng-show="rule.data.mappingType === 2">
+        <div ng-include="$GF.plugin.getPartialPath() + 'rules/valuemaps/rangesTable.html'">
+        </div>
+      </div>
+      <div class="gf-form" ng-show="rule.data.mappingType === 2">
+        <div class="gf-form-button-row gf-unselectable">
+          <button class="btn btn-secondary btn-small" ng-click="rule.addRangeMap() && editor.onRulesChange();"
+            title="Add range mapping">
+            <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+              <path fill="currentColor"
+                d="M 200 450C 200 435 210 425 225 425C 225 425 425 425 425 425C 425 425 425 225 425 225C 425 210 435 200 450 200C 450 200 550 200 550 200C 565 200 575 210 575 225C 575 225 575 425 575 425C 575 425 775 425 775 425C 790 425 800 435 800 450C 800 450 800 550 800 550C 800 565 790 575 775 575C 775 575 575 575 575 575C 575 575 575 775 575 775C 575 790 565 800 550 800C 550 800 450 800 450 800C 435 800 425 790 425 775C 425 775 425 575 425 575C 425 575 225 575 225 575C 210 575 200 565 200 550C 200 550 200 450 200 450" />
+            </svg>
+            &nbsp;Add range mapping
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -127,7 +127,7 @@
                             <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
                                 <span>
                                     <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
-                                        ng-class="{'fa-chevron-right': elt.reduce, 'fa-chevron-down': elt.reduce === false}">
+                                        ng-class="{'gf-chevron-init': elt.reduce, 'gf-chevron-rotate': elt.reduce === false}">
                                     </i>
                                 </span>
                             </div>
@@ -273,7 +273,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="gf-table-row_body" ng-show="elt.reduce === false">
+                    <div class="gf-table-row_body" ng-show="elt.reduce === false"
+                        ng-class="{ 'gf-body-hide' : elt.reduce, 'gf-body-show' : !elt.reduce}">
                         <ng-include src="$GF.plugin.getPartialPath() + 'rules/thresholds/thresholdBody.html'">
                         </ng-include>
                     </div>

@@ -132,12 +132,6 @@
                                 ng-blur="editor.onRulesChange();shape.whatEdit = false;"
                                 bs-typeahead="rule.data.shapeProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
                                 data-min-length="0" data-items="100" data-placement="right" />
-                                <!-- ng-keyup="$event.keyCode === 13 ? editor.onRulesChange() : shape.whatEdit = true;$event.keyCode === 13 ?  shape.whatEdit = false : shape.whatEdit = true" -->
-                                <!-- ng-model-onblur -->
-                                <!-- placeholder="{{(rule.data.shapeProp === 'value' ? "Id" : "Label") + " or regex of shape"}}" -->
-                                <!-- bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'" -->
-                                <!-- bs-typeahead="rule.data.shapeProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue" -->
-                                <!-- ng-keydown="$event.keyCode === 13 && shape.whatEdit = false" -->
                         </div>
                         <!-- WHEN -->
                         <div role="cell" class="gf-table-cells" id="when" ng-mouseleave="shape.displayWhenEdit = false;"
