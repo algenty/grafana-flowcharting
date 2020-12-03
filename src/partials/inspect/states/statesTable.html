@@ -99,13 +99,13 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows"
+                <div role="row" class="gf-table-rows gf-table-rows-resizable"
                     ng-repeat="state in editor.flowchartHandler.getFlowchart().getStateHandler().getStatesForInspect()">
                     <!-- CELLS -->
                     <div class="gf-table-row_line" ng-mouseleave="editor.unselectCell(state)"
                         ng-mouseover="editor.selectCell(state)">
                         <!-- ID -->
-                        <div role="cell" class="gf-table-cells" id="expand"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
                             ng-style="{'width' : editor.statesTable.getWidth('id')}"
                             ng-mouseleave="state.editButton = false;" ng-mouseover="state.editButton = true;">
                             <div class="gf-table-content" ng-hide="state.edit"
@@ -132,42 +132,42 @@
                             </div>
                         </div>
                         <!-- LABEL -->
-                        <div role="cell" class="gf-table-cells" id="rule"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rule"
                             ng-style="{'width' : editor.statesTable.getWidth('label')}">
                             <div class="gf-table-content">
                                 {{state.getCellProp('value')}}
                             </div>
                         </div>
                         <!-- SHAPE -->
-                        <div role="cell" class="gf-table-cells" id="rule"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rule"
                             ng-style="{'width' : editor.statesTable.getWidth('label')}">
                             <div class="gf-table-content" title="{{state.getShapeStyles()}}">
                                 {{state.getShapeName()}}
                             </div>
                         </div>
                         <!-- LEVEL -->
-                        <div role="cell" class="gf-table-cells" id="level" style="text-align: center;"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="level" style="text-align: center;"
                             ng-style="{'width' : editor.statesTable.getWidth('level')}">
                             <div class="gf-table-content">
                                 {{state.getTextLevel()}}
                             </div>
                         </div>
                         <!-- HIGTEST RAW VALUE -->
-                        <div role="cell" class="gf-table-cells" id="rval"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rval"
                             ng-style="{'width' : editor.statesTable.getWidth('rval')}">
                             <div class="gf-table-content">
                                 {{state.highestValue}}
                             </div>
                         </div>
                         <!-- HIGTEST FORMATED VALUE -->
-                        <div role="cell" class="gf-table-cells" id="fval"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="fval"
                             ng-style="{'width' : editor.statesTable.getWidth('fval')}">
                             <div class="gf-table-content">
                                 {{state.highestFormattedValue}}
                             </div>
                         </div>
                         <!-- COLOR -->
-                        <div role="cell" class="gf-table-cells" id="fval"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="fval"
                             ng-style="{'width' : editor.statesTable.getWidth('colors')}">
                             <div class="gf-table-content" style="text-align: center;">
                                 <!-- TEXT COLOR -->
@@ -201,7 +201,7 @@
                             </div>
                         </div>
                         <!-- TAGS -->
-                        <div role="cell" class="gf-table-cells" id="actions"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="actions"
                             ng-style="{'width' : editor.statesTable.getWidth('tags')}">
                             <div class="gf-table-content gf-unselectable">
                                 <div style="display:inline-block" ng-show="state.shapeState.isChanged()"

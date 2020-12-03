@@ -32,6 +32,24 @@ div.gf-table-thead {
   overflow: hidden auto;
 }
 
+div.gf-table-tfooter {
+  display: inline-block;
+  height: 33px;
+  background: $table_header_background;
+  position: relative;
+  width: 100%;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  padding-left: 5px;
+  padding-right: 5px;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
+  overflow: hidden auto;
+}
+
 div.gf-table-body {
   /* height: 33px; */
   // overflow: hidden auto;
@@ -47,6 +65,8 @@ div.gf-table-body {
   /* will-change: transform; direction: ltr; */
 }
 
+
+// Not use at this time
 div.gf-table-body-open {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -106,6 +126,20 @@ div.gf-table-columnheader {
   justify-content: space-between;
 }
 
+div.gf-table-columnfooter {
+  /* padding: 6px; */
+  overflow-x: hidden;
+  // white-space: nowrap;
+  // color: $table_text_header_color;
+  // border-right: 1px solid $table_columnheader_border;
+  // display: flex;
+  user-select: auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width : 100%;
+  // justify-content: space-between;
+}
+
 div.gf-table-rows {
   border-bottom: 1px solid $table_cell_border;
   display: flex;
@@ -146,6 +180,7 @@ div.gf-table-row_body {
   width: 100%;
   padding: 10px;
 }
+
 
 div.gf-table-cells {
   border-right: 1px solid $table_cell_border;

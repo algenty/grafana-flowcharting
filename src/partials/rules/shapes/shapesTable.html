@@ -4,7 +4,7 @@
         <div class="gf-view"
             style="position: relative; overflow: visible; margin-right: -8px; margin-bottom: -8px; max-height: calc(100% + 8px);">
             <!-- THEAD -->
-            <div class="gf-table-thead gf-unselectable" role="row" ng-mouseup="editor.shapesTable.onMouseUp($event)"
+            <div class="gf-table-thead gf-unselectable" g-mouseup="editor.shapesTable.onMouseUp($event)"
                 ng-mousemove="editor.shapesTable.onMouseMove($event)"
                 ng-mouseleave="editor.shapesTable.onMouseUp($event)">
                 <!-- HEADERS -->
@@ -86,26 +86,27 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows-2" ng-repeat="shape in rule.getShapeMaps()">
+                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable"
+                    ng-repeat="shape in rule.getShapeMaps()">
                     <!-- CELLS -->
                     <div class="gf-table-row_line"
                         ng-mouseleave="editor.unselectCell(rule.data.shapeProp,shape.data.pattern)"
                         ng-mouseover="editor.selectCell(rule.data.shapeProp,shape.data.pattern)">
                         <!-- EXPAND -->
-                        <div role="cell" class="gf-table-cells" id="expand" ng-click="shape.reduce=!shape.reduce"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
+                            ng-click="shape.reduce=!shape.reduce" title="Expand/Collapse for detail"
                             ng-style="{'width' : editor.shapesTable.getWidth('expand')}">
                             <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
                                 <span>
                                     <i class="fa fa-chevron-right"
-                                        bs-tooltip="shape.redude ? 'Expand/Detail' : 'Collapse/Reduce'"
                                         ng-class="{'fa-chevron-right': shape.reduce, 'fa-chevron-down': shape.reduce === false}">
                                     </i>
                                 </span>
                             </div>
                         </div>
                         <!-- WHAT -->
-                        <div role="cell" class="gf-table-cells" id="what" ng-mouseleave="shape.displayWhatEdit = false;"
-                            ng-mouseover="shape.displayWhatEdit = true;"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="what"
+                            ng-mouseleave="shape.displayWhatEdit = false;" ng-mouseover="shape.displayWhatEdit = true;"
                             ng-style="{'width' : editor.shapesTable.getWidth('what')}"
                             ng-attr-title="{{shape.data.pattern}}">
                             <div class="gf-table-content" ng-show="shape.whatEdit !== true"
@@ -122,32 +123,25 @@
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a shape in diagram">
                             </div>
-                            <input type="text" 
-                                ng-show="shape.whatEdit === true"
-                                class="gf-form-input" 
-                                ng-model="shape.data.pattern"
-                                style="margin-right: 2px;width : 100%" 
-                                ng-attr-id="{{shape.getId() + '-what'}}"
-                                ng-model-onblur 
+                            <input type="text" ng-show="shape.whatEdit === true" class="gf-form-input"
+                                ng-model="shape.data.pattern" style="margin-right: 2px;width : 100%"
+                                ng-attr-id="{{shape.getId() + '-what'}}" ng-model-onblur
                                 ng-blur="editor.onRulesChange();shape.whatEdit = false;"
                                 bs-typeahead="rule.data.shapeProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
                         <!-- WHEN -->
-                        <div role="cell" class="gf-table-cells" id="when" ng-mouseleave="shape.displayWhenEdit = false;"
-                            ng-mouseover="shape.displayWhenEdit = true;"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="when"
+                            ng-mouseleave="shape.displayWhenEdit = false;" ng-mouseover="shape.displayWhenEdit = true;"
                             ng-style="{'width' : editor.shapesTable.getWidth('when')}"
                             ng-attr-title="{{$GF.GetT4V( editor.colorOn, shape.data.colorOn)}}">
                             <!-- {{shape.data.colorOn}} -->
-                            <div class="gf-table-content" 
-                                style="text-align: left;"
-                                ng-show="shape.whenEdit !== true">
+                            <div class="gf-table-content" style="text-align: left;" ng-show="shape.whenEdit !== true">
                                 {{$GF.GetT4V( editor.colorOn, shape.data.colorOn)}}
                             </div>
                             <div ng-show="shape.displayWhenEdit === true && shape.whenEdit !== true"
                                 ng-click="shape.whenEdit = true;$GF.setFocus( shape.getId() + '-when' )"
-                                class="gf-icon-action gf-icon-edit gf-icon-withcontent"
-                                title="Edit condition">
+                                class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit condition">
                             </div>
                             <select class="gf-form-input" ng-model="shape.data.colorOn" style="width:100%;"
                                 ng-attr-id="{{shape.getId() + '-when'}}"
@@ -157,9 +151,8 @@
                             </select>
                         </div>
                         <!-- HOW -->
-                        <div role="cell" class="gf-table-cells" id="how" 
-                            ng-mouseleave="shape.displayHowEdit = false;"
-                            ng-mouseover="shape.displayHowEdit = true;"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="how"
+                            ng-mouseleave="shape.displayHowEdit = false;" ng-mouseover="shape.displayHowEdit = true;"
                             ng-style="{'width' : editor.shapesTable.getWidth('how')}"
                             ng-attr-title="{{$GF.GetT4V(editor.style, shape.data.style)}}">
                             <!-- {{shape.data.style}} -->
@@ -168,14 +161,12 @@
                             </div>
                             <div ng-show="shape.displayHowEdit === true && shape.howEdit !== true"
                                 ng-click="shape.howEdit = true;$GF.setFocus( shape.getId() + '-how' );"
-                                class="gf-icon-action gf-icon-edit gf-icon-withcontent"
-                                title="Edit method">
+                                class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit method">
                             </div>
                             <select class="gf-form-input" ng-model="shape.data.style" style="width:100%;"
                                 ng-attr-id="{{shape.getId() + '-how'}}"
-                                ng-blur="editor.onRulesChange();shape.howEdit = false;"
-                                ng-show="shape.howEdit === true" ng-options="c.value as c.text for c in editor.style"
-                                ng-change="editor.onRulesChange()">
+                                ng-blur="editor.onRulesChange();shape.howEdit = false;" ng-show="shape.howEdit === true"
+                                ng-options="c.value as c.text for c in editor.style" ng-change="editor.onRulesChange()">
                             </select>
                             <!-- <div style="display:inline-block;">
                                 <div class="gf-icon-fill gf-icon-action" * ng-click="selectStyle = true;"
@@ -190,31 +181,24 @@
                             </div> -->
                         </div>
                         <!-- OPTIONS/ACTION -->
-                        <div role="cell" class="gf-table-cells" id="options"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-style="{'width' : editor.shapesTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
-                                <div 
-                                    ng-click="editor.removeShapeMap(rule,$index);editor.onRulesChange()"
-                                    title="Delete this mapping object"
-                                    class="gf-icon-action gf-icon-remove">
+                                <div ng-click="editor.removeShapeMap(rule,$index);editor.onRulesChange()"
+                                    title="Delete this mapping object" class="gf-icon-action gf-icon-remove">
                                 </div>
                                 <div title="Duplicate this mapping"
                                     ng-click="shape.isHidden() ? shape.show(): shape.hide();editor.onRulesChange()"
-                                    title="Enable/Disable this mapping"
-                                    class="gf-icon-action"
+                                    title="Enable/Disable this mapping" class="gf-icon-action"
                                     ng-class="{'gf-icon-show': !shape.isHidden(), 'gf-icon-hide': shape.isHidden()}">
                                 </div>
-                                <div 
-                                    ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)"
-                                    title="Select a shape in diagram"
-                                    class="gf-icon-action"
+                                <div ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)"
+                                    title="Select a shape in diagram" class="gf-icon-action"
                                     ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(shape), 'gf-icon-empty': editor.flowchartHandler.isMapping(shape)}">
                                 </div>
-                                <div 
-                                    ng-click="rule.cloneShapeMap(shape);editor.onRulesChange();"
-                                    title="Duplicate this mapping"
-                                    class="gf-icon-action gf-icon-clone">
+                                <div ng-click="rule.cloneShapeMap(shape);editor.onRulesChange();"
+                                    title="Duplicate this mapping" class="gf-icon-action gf-icon-clone">
                                 </div>
                             </div>
                         </div>
@@ -222,6 +206,19 @@
                     <div class="gf-table-row_body" ng-show="shape.reduce==false">
                         <ng-include src="$GF.plugin.getPartialPath() + 'rules/shapes/shapeBody.html'"> </ng-include>
                     </div>
+                </div>
+            </div>
+            <!-- TFOOTER -->
+            <div class="gf-table-tfooter gf-unselectable">
+                <div class="gf-table-columnfooter" colspan="1">
+                    <button class="btn btn-secondary btn-small" ng-click="rule.addShapeMap('');"
+                        title="Add a color mapping for shapes and tooltips">
+                        <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="currentColor"
+                                d="M 200 450C 200 435 210 425 225 425C 225 425 425 425 425 425C 425 425 425 225 425 225C 425 210 435 200 450 200C 450 200 550 200 550 200C 565 200 575 210 575 225C 575 225 575 425 575 425C 575 425 775 425 775 425C 790 425 800 435 800 450C 800 450 800 550 800 550C 800 565 790 575 775 575C 775 575 575 575 575 575C 575 575 575 775 575 775C 575 790 565 800 550 800C 550 800 450 800 450 800C 435 800 425 790 425 775C 425 775 425 575 425 575C 425 575 225 575 225 575C 210 575 200 565 200 550C 200 550 200 450 200 450" />
+                        </svg>
+                        &nbsp;Add a mapping
+                    </button>
                 </div>
             </div>
         </div>

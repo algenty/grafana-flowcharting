@@ -559,7 +559,8 @@ export class EventMap extends GFMap {
  */
 export class RangeMap {
   data: gf.TRangeMapData;
-  constructor(from: string, to: string, text: string, data: gf.TRangeMapData) {
+  id = $GF.utils.uniqueID();
+  constructor(from: string ='', to: string = '', text: string = '', data: gf.TRangeMapData) {
     this.data = data;
     this.data.from = from;
     this.data.to = to;
@@ -597,6 +598,14 @@ export class RangeMap {
       text: undefined,
       hidden: false,
     };
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  getData() {
+    return this.data;
   }
 
   /**
@@ -716,7 +725,8 @@ export class RangeMap {
 
 export class ValueMap {
   data: gf.TValueMapData;
-  constructor(value: string, text: string, data: gf.TValueMapData) {
+  id = $GF.utils.uniqueID();
+  constructor(value: string = '', text: string = '', data: gf.TValueMapData) {
     this.data = data;
     this.data.value = value;
     this.data.text = text;
@@ -737,6 +747,14 @@ export class ValueMap {
       text: undefined,
       hidden: false,
     };
+  }
+
+  getId() {
+    return this.id;
+  }
+
+  getData() {
+    return this.data;
   }
 
   /**

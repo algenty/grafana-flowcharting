@@ -1367,6 +1367,7 @@ export class GFTable {
   }
 
   onMouseMove(event: MouseEvent) {
+    
     if (this.pressed && this.headerTable && this.headerTable.parentNode) {
       const delta = event.pageX - this.startX;
       let width = this.startWidth + delta;
@@ -1375,9 +1376,9 @@ export class GFTable {
       }
       this.headerTable.style.width = `${width}px`;
       if (this.bodyTable) {
-        const rows = this.bodyTable.querySelectorAll('.gf-table-rows');
+        const rows = this.bodyTable.querySelectorAll('.gf-table-rows-resizable');
         Array.from(rows).forEach(r => {
-          const cells = r.querySelectorAll('.gf-table-cells');
+          const cells = r.querySelectorAll('.gf-table-cells-resizable');
           let index = 0;
           cells.forEach(cell => {
             // CANT BUILD WITH FORCE CASTING

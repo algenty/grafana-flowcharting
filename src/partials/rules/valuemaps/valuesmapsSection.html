@@ -19,7 +19,7 @@
         <div ng-include="$GF.plugin.getPartialPath() + 'rules/valuemaps/valuesTable.html'">
         </div>
       </div>
-      <div class="gf-form">
+      <!-- <div class="gf-form">
         <div class="gf-form-button-row gf-unselectable">
           <button class="btn btn-secondary btn-small" ng-click="rule.addValueMap() && editor.onRulesChange();"
             title="Add value mapping">
@@ -30,14 +30,14 @@
             &nbsp;Add value mapping
           </button>
         </div>
-      </div>
+      </div> -->
   
       <!-- RANGE TYPE -->
       <div class="gf-form" ng-show="rule.data.mappingType === 2">
         <div ng-include="$GF.plugin.getPartialPath() + 'rules/valuemaps/rangesTable.html'">
         </div>
       </div>
-      <div class="gf-form" ng-show="rule.data.mappingType === 2">
+      <!-- <div class="gf-form" ng-show="rule.data.mappingType === 2">
         <div class="gf-form-button-row gf-unselectable">
           <button class="btn btn-secondary btn-small" ng-click="rule.addRangeMap() && editor.onRulesChange();"
             title="Add range mapping">
@@ -48,6 +48,6 @@
             &nbsp;Add range mapping
           </button>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>

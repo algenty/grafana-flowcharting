@@ -192,7 +192,7 @@ export class NumberTH extends GFTH {
 export class StringTH extends GFTH {
   data: gf.TTHStringData;
   type = 'string';
-  validComp: gf.TTHDateComparator[] = ['eq', 'ne', 'ge', 'gt'];
+  validComp: gf.TTHDateComparator[] = ['eq', 'ne'];
   constructor(color: string, value: string, comparator: gf.TTHStringComparator, data: gf.TTHStringData) {
     super(color, value, comparator, data);
     this.data = data;

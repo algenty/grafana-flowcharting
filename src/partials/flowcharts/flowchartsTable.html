@@ -77,25 +77,25 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows" ng-repeat="flowchart in editor.getFlowcharts()">
+                <div role="row" class="gf-table-rows gf-table-rows-resizable" ng-repeat="flowchart in editor.getFlowcharts()">
                     <!-- CELLS -->
                     <div class="gf-table-row_line">
                         <!-- EXPAND -->
-                        <div role="cell" class="gf-table-cells" id="expand"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
                             ng-click="flowchart.reduce=!flowchart.reduce"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('expand')}">
                             <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
                                 <span>
-                                    <i class="fa fa-chevron-right"
-                                        ng-attr-title="{{flowchart.redude ? 'Expand/Detail' : 'Collapse/Reduce'}}"
-                                        ng-class="{'fa-chevron-right': flowchart.reduce, 'fa-chevron-down': flowchart.reduce === false}">
+                                    <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
+                                        ng-class="{'gf-chevron-init': flowchart.reduce, 'gf-chevron-rotate': flowchart.reduce === false}">
                                     </i>
                                 </span>
                             </div>
                         </div>
                         <!-- NAME -->
-                        <div role="cell" class="gf-table-cells" id="name" ng-mouseleave="flowchart.displayEdit = false;"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="name" ng-mouseleave="flowchart.displayEdit = false;"
                             ng-mouseover="flowchart.displayEdit = true;"
+                            ng-attr-title="{{flowchart.data.name}}"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('name')}">
                             <div class="gf-table-content">
                                 {{flowchart.data.name}}
@@ -114,7 +114,7 @@
                             </div> -->
                         </div>
                         <!-- TYPE -->
-                        <div role="cell" class="gf-table-cells" id="type"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="type"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('type')}">
                             <div class="gf-table-content" style="text-align: center;">
                                 <!-- {{flowchart.data.type}} -->
@@ -124,7 +124,7 @@
                             </div>
                         </div>
                         <!-- SOURCE -->
-                        <div role="cell" class="gf-table-cells" id="source"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="source"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('source')}">
                             <div class="gf-table-content" style="text-align: center;">
                                 <!-- {{flowchart.data.download}} -->
@@ -135,7 +135,7 @@
                             </div>
                         </div>
                         <!-- BACKGROUND -->
-                        <div role="cell" class="gf-table-cells" id="background"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="background"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('background')}"
                             ng-mouseenter="bgButton = true" ng-mouseleave="bgButton = false"
                             title="Select background color">
@@ -146,6 +146,7 @@
                                         onChange="editor.onColorChange($index)"></color-picker>
                                 </div>
                                 <div class="gf-icon-circle-slashed gf-icon-action" style="width : 15px; height: 15px;"
+                                    Title="Remove cuurent background color"
                                     ng-show="bgButton === true || !(flowchart.data.bgColor !== null && flowchart.data.bgColor !== undefined && flowchart.data.bgColor.length > 0)"
                                     ng-click="flowchart.data.bgColor = '';elt.displayEdit[CN2] === false;editor.onOptionChange();">
                                 </div>
@@ -157,7 +158,7 @@
                             </div> -->
                         </div>
                         <!-- OPTIONS -->
-                        <div role="cell" class="gf-table-cells" id="options"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="options"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('options')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: center;justify-content: center;">

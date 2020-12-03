@@ -117,13 +117,13 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows-2" ng-repeat="elt in rule.getEventMaps()">
+                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" ng-repeat="elt in rule.getEventMaps()">
                     <!-- CELLS -->
                     <div class="gf-table-row_line" ng-init="elt.displayEdit = [];elt.inEdit = [];"
                         ng-mouseleave="editor.unselectCell(rule.data.eventProp,elt.data.pattern)"
                         ng-mouseover="editor.selectCell(rule.data.eventProp,elt.data.pattern)">
                         <!-- EXPAND -->
-                        <div role="cell" class="gf-table-cells" id="expand" ng-click="elt.reduce=!elt.reduce"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand" ng-click="elt.reduce=!elt.reduce"
                             ng-init="CN1 = 'expand';elt.displayEdit[CN1] = false;elt.inEdit[CN1] = false;"
                             ng-style="{'width' : editor.eventsTable.getWidth(CN1)}">
                             <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
@@ -135,7 +135,7 @@
                             </div>
                         </div>
                         <!-- WHAT -->
-                        <div role="cell" class="gf-table-cells"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN2 = 'what';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
                             ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseover="elt.displayEdit[CN2] = true;"
                             ng-style="{'width' : editor.eventsTable.getWidth(CN2)}"
@@ -162,7 +162,7 @@
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
                         <!-- WHEN -->
-                        <div role="cell" class="gf-table-cells"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN3 = 'when';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
                             ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseover="elt.displayEdit[CN3] = true;"
                             ng-style="{'width' : editor.eventsTable.getWidth(CN3)}"
@@ -186,7 +186,7 @@
                             </select>
                         </div>
                         <!-- LEVEL -->
-                        <div role="cell" class="gf-table-cells"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN4 = 'level';elt.displayEdit[CN4] = false;elt.inEdit[CN4] = false;"
                             ng-mouseleave="elt.displayEdit[CN4] = false;" ng-mouseover="elt.displayEdit[CN4] = true;"
                             ng-style="{'width' : editor.eventsTable.getWidth(CN4)}">
@@ -210,7 +210,7 @@
                             </select>
                         </div>
                         <!-- THEN -->
-                        <div role="cell" class="gf-table-cells"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN5 = 'then';elt.displayEdit[CN5] = false;elt.inEdit[CN5] = false;"
                             ng-mouseleave="elt.displayEdit[CN5] = false;" ng-mouseover="elt.displayEdit[CN5] = true;"
                             ng-style="{'width' : editor.eventsTable.getWidth(CN5)}"
@@ -238,7 +238,7 @@
                             </select>
                         </div>
                         <!-- WITH -->
-                        <div role="cell" class="gf-table-cells"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN6 = 'with';elt.displayEdit[CN6] = false;elt.inEdit[CN6] = false;"
                             ng-mouseleave="elt.displayEdit[CN6] = false;" ng-mouseover="elt.displayEdit[CN6] = true;"
                             ng-style="{'width' : editor.eventsTable.getWidth(CN6)}">
@@ -275,7 +275,7 @@
                             </div>
                         </div> -->
                         <!-- ACTION -->
-                        <div role="cell" class="gf-table-cells"
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-style="{'width' : editor.eventsTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
@@ -299,6 +299,24 @@
                     <div class="gf-table-row_body" ng-show="elt.reduce === false">
                         <ng-include src="$GF.plugin.getPartialPath() + 'rules/events/eventBody.html'"> </ng-include>
                     </div>
+                </div>
+            </div>
+            <!-- TFOOTER -->
+            <div class="gf-table-tfooter gf-unselectable">
+                <div class="gf-table-columnfooter" colspan="1">
+                    <button class="btn btn-secondary btn-small" ng-click="rule.addEventMap('');"
+                        title="Add an animation or event when level change">
+                        <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="currentColor"
+                                d="M 200 450C 200 435 210 425 225 425C 225 425 425 425 425 425C 425 425 425 225 425 225C 425 210 435 200 450 200C 450 200 550 200 550 200C 565 200 575 210 575 225C 575 225 575 425 575 425C 575 425 775 425 775 425C 790 425 800 435 800 450C 800 450 800 550 800 550C 800 565 790 575 775 575C 775 575 575 575 575 575C 575 575 575 775 575 775C 575 790 565 800 550 800C 550 800 450 800 450 800C 435 800 425 790 425 775C 425 775 425 575 425 575C 425 575 225 575 225 575C 210 575 200 565 200 550C 200 550 200 450 200 450" />
+                        </svg>
+                        &nbsp;Add a mapping
+                    </button>
+                    <!-- <button class="btn btn-secondary btn-small" ng-click="editor.onRulesChange();"
+                        title="Refresh/Apply">
+                        <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 535 114C 550 128 555 150 547 169C 539 188 521 200 500 200C 379 200 269 273 223 385C 186 474 194 572 242 652C 242 652 253 641 253 641C 262 632 275 626 289 627C 303 627 316 633 325 643C 332 650 336 660 337 670C 337 670 355 793 355 793C 357 809 352 825 341 836C 330 847 314 852 298 850C 298 850 175 832 175 832C 156 830 140 817 134 799C 128 781 133 761 146 747C 146 747 169 725 169 725C 94 615 78 473 130 347C 192 198 338 100 500 100C 513 100 526 105 535 114C 535 114 535 114 535 114M 852 181C 862 190 868 203 868 216C 868 230 863 243 854 253C 854 253 831 275 831 275C 906 385 922 527 870 653C 808 802 662 900 500 900C 482 900 465 891 456 875C 447 860 447 840 456 825C 465 809 482 800 500 800C 621 800 731 727 777 615C 814 526 806 428 758 348C 758 348 747 359 747 359C 733 373 712 377 693 369C 674 362 662 343 662 323C 662 323 662 217 662 217C 662 190 685 167 712 167C 712 167 818 167 818 167C 831 167 843 172 852 181C 852 181 852 181 852 181"/></svg>
+                        &nbsp;Refresh
+                    </button> -->
                 </div>
             </div>
         </div>

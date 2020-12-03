@@ -1226,7 +1226,7 @@ export class Rule {
   //
   // STRING VALUE MAPS
   //
-  addValueMap(value: any, text: string): ValueMap {
+  addValueMap(value?: any, text?: string): ValueMap {
     const data: gf.TValueMapData = ValueMap.getDefaultdata();
     const m = new ValueMap(value, text, data);
     this.valueMaps.push(m);
@@ -1234,12 +1234,17 @@ export class Rule {
     return m;
   }
 
-  removeValueMap(index) {
+  cloneValueMap(index: number):ValueMap {
+    const data = this.getValueMap(index).getData();
+    return this.addValueMap().import(data);
+  }
+
+  removeValueMap(index: number) {
     this.data.valueData.splice(index, 1);
     this.valueMaps.splice(index, 1);
   }
 
-  getValueMap(index): ValueMap {
+  getValueMap(index: number): ValueMap {
     return this.valueMaps[index];
   }
 
@@ -1250,7 +1255,7 @@ export class Rule {
   //
   // STRING RANGE VALUE MAPS
   //
-  addRangeMap(from, to, text): RangeMap {
+  addRangeMap(from?: any, to?: any, text?: any): RangeMap {
     const data = RangeMap.getDefaultData();
     const m = new RangeMap(from, to, text, data);
     this.rangeMaps.push(m);
@@ -1258,12 +1263,17 @@ export class Rule {
     return m;
   }
 
-  removeRangeMap(index) {
+  cloneRangeMap(index: number): RangeMap {
+    const data = this.getRangeMap(index).getData();
+    return this.addRangeMap().import(data);
+  }
+
+  removeRangeMap(index: number) {
     this.data.rangeData.splice(index, 1);
     this.rangeMaps.splice(index, 1);
   }
 
-  getRangeMap(index): RangeMap {
+  getRangeMap(index: number): RangeMap {
     return this.rangeMaps[index];
   }
 
@@ -1271,13 +1281,13 @@ export class Rule {
     return this.rangeMaps;
   }
 
-  hideRangeMap(index): this {
-    this.rangeMaps[index].hide();
+  hideRangeMap(index: number): this {
+    this.getRangeMap(index).hide();
     return this;
   }
 
-  showRangeMap(index): this {
-    this.rangeMaps[index].show();
+  showRangeMap(index: nummber): this {
+    this.getRangeMap(index).show();
     return this;
   }
 
@@ -1640,7 +1650,7 @@ export class Rule {
       if (mappingType === 1 && this.valueMaps) {
         for (let i = 0; i < this.valueMaps.length; i += 1) {
           const map = this.valueMaps[i];
-          if (map.match(value)) {
+          if (!map.isHidden() && map.match(value)) {
             return map.getFormattedText(value);
           }
         }
@@ -1650,7 +1660,7 @@ export class Rule {
       if (mappingType === 2 && this.rangeMaps) {
         for (let i = 0; i < this.rangeMaps.length; i += 1) {
           const map = this.rangeMaps[i];
-          if (map.match(value)) {
+          if (!map.isHidden() && map.match(value)) {
             return map.getFormattedText(value);
           }
         }
