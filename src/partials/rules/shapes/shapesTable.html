@@ -98,8 +98,8 @@
                             ng-style="{'width' : editor.shapesTable.getWidth('expand')}">
                             <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
                                 <span>
-                                    <i class="fa fa-chevron-right"
-                                        ng-class="{'fa-chevron-right': shape.reduce, 'fa-chevron-down': shape.reduce === false}">
+                                    <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
+                                        ng-class="{'gf-chevron-init': shape.reduce, 'gf-chevron-rotate': shape.reduce === false}">
                                     </i>
                                 </span>
                             </div>

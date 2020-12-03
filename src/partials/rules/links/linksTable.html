@@ -105,7 +105,7 @@
                             <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
                                 <span>
                                     <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
-                                        ng-class="{'fa-chevron-right': link.reduce, 'fa-chevron-down': link.reduce === false}">
+                                        ng-class="{'gf-chevron-init': link.reduce, 'gf-chevron-rotate': link.reduce === false}">
                                     </i>
                                 </span>
                             </div>
@@ -201,7 +201,7 @@
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-style="{'width' : editor.linksTable.getWidth('options')}">
                             <div class="gf-table-content gf-unselectable"
-                                style="text-align: center;justify-content: center;">
+                                style="text-align: left;justify-content: center;">
                                 <div ng-click="link.data.linkParams = !link.data.linkParams;editor.onRulesChange()"
                                     title="Add/Remove the dashboad parameters with url" class="gf-icon-action"
                                     ng-class="{'gf-icon-address-on': link.data.linkParams, 'gf-icon-address-off': !link.data.linkParams}">
