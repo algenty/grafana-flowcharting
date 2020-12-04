@@ -200,11 +200,11 @@
                             ng-mouseleave="elt.displayEdit[CN4] = false;" ng-mouseover="elt.displayEdit[CN4] = true;"
                             ng-style="{'width' : editor.eventsTable.getWidth(CN4)}">
                             <div class="gf-table-content gf-unselectable" style="text-align: center;justify-content: center;"
-                                style="cursor: pointer;"
-                                ng-attr-title="Level"
-                                ng-click="elt.data.eventOn = elt.data.eventOn < rule.getThresholds().length - 2 ? elt.data.eventOn + 1 : 0;editor.onRulesChange()"
-                                ng-dblclick="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
-                                ng-show="elt.inEdit[CN4] !== true">
+                            style="cursor: pointer;"
+                            ng-attr-title="Level"
+                            ng-click="elt.data.eventOn = elt.data.eventOn < rule.getThresholds().length - 1 ? elt.data.eventOn + 1 : 0;editor.onRulesChange()"
+                            ng-show="elt.inEdit[CN4] !== true">
+                            <!-- ng-dblclick="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )" -->
                                 {{elt.data.eventOn}}
                             </div>
                             <div ng-show="elt.displayEdit[CN4] === true && elt.inEdit[CN4] !== true"
@@ -268,17 +268,6 @@
                                 ng-blur="editor.onRulesChange();elt.inEdit[CN6] = false" data-min-length="0"
                                 data-items="100" ng-model-onblur data-placement="right" />
                         </div>
-                        <!-- OPTIONS -->
-                        <!-- <div role="cell" class="gf-table-cells"
-                            ng-style="{'width' : editor.eventsTable.getWidth('options')}">
-                            <div class="gf-table-content gf-unselectable"
-                                style="text-align: center;justify-content: center;">
-                                <div ng-click="elt.data.eventParams = !elt.data.eventParams;editor.onRulesChange()"
-                                    title="Add/Remove the dashboad parameters with url" class="gf-icon-action"
-                                    ng-class="{'gf-icon-address-on': elt.data.eventParams, 'gf-icon-address-off': !elt.data.eventParams}">
-                                </div>
-                            </div>
-                        </div> -->
                         <!-- ACTION -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-style="{'width' : editor.eventsTable.getWidth('actions')}">

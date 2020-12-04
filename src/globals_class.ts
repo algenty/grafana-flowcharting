@@ -1367,7 +1367,6 @@ export class GFTable {
   }
 
   onMouseMove(event: MouseEvent) {
-    
     if (this.pressed && this.headerTable && this.headerTable.parentNode) {
       const delta = event.pageX - this.startX;
       let width = this.startWidth + delta;

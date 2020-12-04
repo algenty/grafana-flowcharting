@@ -27,6 +27,7 @@ export class Rule {
   dateTH: DateTH[] = [];
   id: string;
   removeClick = 2;
+
   states: Map<string, State>;
   highestLevel: number = -1;
   highestColor: string = '';
@@ -1146,12 +1147,18 @@ export class Rule {
   //
   // Event MAPS
   //
-  addEventMap(pattern: string): EventMap {
+
+  
+  addEventMap(pattern: string = "/.*/"): EventMap {
     const data = EventMap.getDefaultData();
     const m = new EventMap(pattern, data);
     this.eventMaps.push(m);
     this.data.eventData.push(data);
     return m;
+  }
+
+  cloneEventMap(map: EventMap): EventMap {
+    return this.addEventMap().import(map.getData());
   }
 
   removeEventMap(index: number) {
@@ -1267,7 +1274,7 @@ export class Rule {
    * @returns {ValueMap}
    * @memberof Rule
    */
-  cloneValueMap(index: number):ValueMap {
+  cloneValueMap(index: number): ValueMap {
     const data = this.getValueMap(index).getData();
     return this.addValueMap().import(data);
   }
@@ -1431,7 +1438,7 @@ export class Rule {
 
   /**
    * Get a color between 2 colors with a ratio
-   * 
+   *
    * @private
    * @param {string} beginColor
    * @param {string} endColor
@@ -1454,7 +1461,7 @@ export class Rule {
 
   /**
    * Get a value between 2 values with a ratio
-   * 
+   *
    * @private
    * @param {number} beginValue
    * @param {number} endValue
