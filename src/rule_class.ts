@@ -1200,23 +1200,49 @@ export class Rule {
     return this.addLinkMap(initial.data.pattern).import(initial);
   }
 
+  /**
+   * Remove a linkmap at position
+   *
+   * @param {number} index
+   * @memberof Rule
+   */
   removeLinkMap(index: number) {
     this.data.linkData.splice(index, 1);
     this.linkMaps.splice(index, 1);
   }
 
+  /**
+   * Get LinkMap at position
+   *
+   * @param {number} index
+   * @returns {LinkMap}
+   * @memberof Rule
+   */
   getLinkMap(index: number): LinkMap {
     return this.linkMaps[index];
   }
 
+  /**
+   * Get all LinkMap as array
+   *
+   * @returns {LinkMap[]}
+   * @memberof Rule
+   */
   getLinkMaps(): LinkMap[] {
     return this.linkMaps;
   }
 
+  /**
+   * Verify if one of links is matched
+   *
+   * @param {(string | null)} pattern
+   * @returns {boolean}
+   * @memberof Rule
+   */
   matchLink(pattern: string | null): boolean {
     let found = false;
-    this.linkMaps.forEach(element => {
-      if (element.match(pattern)) {
+    this.linkMaps.forEach(linkMap => {
+      if (!linkMap.isHidden() && linkMap.match(pattern)) {
         found = true;
       }
     });
@@ -1234,20 +1260,46 @@ export class Rule {
     return m;
   }
 
+  /**
+   * Clone ValueMap at position
+   *
+   * @param {number} index
+   * @returns {ValueMap}
+   * @memberof Rule
+   */
   cloneValueMap(index: number):ValueMap {
     const data = this.getValueMap(index).getData();
     return this.addValueMap().import(data);
   }
 
+  /**
+   * Remove a ValueMap at position
+   *
+   * @param {number} index
+   * @memberof Rule
+   */
   removeValueMap(index: number) {
     this.data.valueData.splice(index, 1);
     this.valueMaps.splice(index, 1);
   }
 
+  /**
+   * Get a ValueMap at position
+   *
+   * @param {number} index
+   * @returns {ValueMap}
+   * @memberof Rule
+   */
   getValueMap(index: number): ValueMap {
     return this.valueMaps[index];
   }
 
+  /**
+   * Get all ValueMaps as array
+   *
+   * @returns {ValueMap[]}
+   * @memberof Rule
+   */
   getValueMaps(): ValueMap[] {
     return this.valueMaps;
   }
@@ -1255,6 +1307,15 @@ export class Rule {
   //
   // STRING RANGE VALUE MAPS
   //
+  /**
+   * Add a RangeMap
+   *
+   * @param {*} [from]
+   * @param {*} [to]
+   * @param {*} [text]
+   * @returns {RangeMap}
+   * @memberof Rule
+   */
   addRangeMap(from?: any, to?: any, text?: any): RangeMap {
     const data = RangeMap.getDefaultData();
     const m = new RangeMap(from, to, text, data);
@@ -1263,38 +1324,72 @@ export class Rule {
     return m;
   }
 
+  /**
+   * Clone RangeMap at position
+   *
+   * @param {number} index
+   * @returns {RangeMap}
+   * @memberof Rule
+   */
   cloneRangeMap(index: number): RangeMap {
     const data = this.getRangeMap(index).getData();
     return this.addRangeMap().import(data);
   }
 
+  /**
+   * Remove a RangeMap at position
+   *
+   * @param {number} index
+   * @memberof Rule
+   */
   removeRangeMap(index: number) {
     this.data.rangeData.splice(index, 1);
     this.rangeMaps.splice(index, 1);
   }
 
+  /**
+   * Get a RangeMap at position
+   *
+   * @param {number} index
+   * @returns {RangeMap}
+   * @memberof Rule
+   */
   getRangeMap(index: number): RangeMap {
     return this.rangeMaps[index];
   }
 
+  /**
+   * Get all RangeMaps as array
+   *
+   * @returns {RangeMap[]}
+   * @memberof Rule
+   */
   getRangeMaps(): RangeMap[] {
     return this.rangeMaps;
   }
 
-  hideRangeMap(index: number): this {
-    this.getRangeMap(index).hide();
-    return this;
-  }
+  //TODO : remove
+  // hideRangeMap(index: number): this {
+  //   this.getRangeMap(index).hide();
+  //   return this;
+  // }
 
-  showRangeMap(index: nummber): this {
-    this.getRangeMap(index).show();
-    return this;
-  }
+  //TODO : remove
+  // showRangeMap(index: number): this {
+  //   this.getRangeMap(index).show();
+  //   return this;
+  // }
 
   //
   // DIVERS
   //
 
+  /**
+   * Get executed time of last execution of rule
+   *
+   * @returns {string}
+   * @memberof Rule
+   */
   getExectedTime(): string {
     return typeof this.execTimes === 'number' ? `${this.execTimes.toFixed(2)} ms` : `${this.execTimes} ms`;
   }
@@ -1333,55 +1428,17 @@ export class Rule {
     }
     return '';
   }
-  // getColorForValue(value: any): string {
-  //   if (!this.data.gradient || this.data.type !== 'number') {
-  //     let level = this.getThresholdLevel(value);
-  //     return this.getColorForLevel(level);
-  //   }
-  //   if (this.data.type === 'number') {
-  //     const thresholds = this.data.thresholds;
-  //     const colors = this.data.colors;
-  //     let l = thresholds.length;
-  //     // No Thresholds
-  //     if (thresholds === undefined || l === 0) {
-  //       return colors[0];
-  //     }
 
-  //     let cursor = 0;
-  //     for (let index = 0; index < l; index++) {
-  //       const t = thresholds[index];
-  //       if (value < t) {
-  //         break;
-  //       }
-  //       cursor = index;
-  //     }
-  //     // value Lower than min level
-  //     if (cursor === 0 && value <= thresholds[0]) {
-  //       return colors[0];
-  //     }
-  //     // value upper then max level
-  //     if (cursor === l - 1) {
-  //       return colors[cursor + 1];
-  //     }
-  //     // Or
-  //     let absoluteDistance = thresholds[cursor + 1] - thresholds[cursor];
-  //     let valueDistanceFromMin = value - thresholds[cursor];
-  //     let ratio = valueDistanceFromMin / absoluteDistance;
-  //     // let color = $GF.utils.getRatioColor(ratio, colors[cursor + 1], colors[cursor + 2]);
-  //     let color = colors[cursor + 1];
-  //     try {
-  //       color = chroma
-  //         .scale([colors[cursor + 1], colors[cursor + 2]])
-  //         .mode('lrgb')(ratio)
-  //         .hex();
-  //     } catch (error) {
-  //       color = colors[cursor + 1];
-  //     }
-  //     return color;
-  //   }
-  //   return '';
-  // }
-
+  /**
+   * Get a color between 2 colors with a ratio
+   * 
+   * @private
+   * @param {string} beginColor
+   * @param {string} endColor
+   * @param {number} ratio
+   * @returns {string}
+   * @memberof Rule
+   */
   _getColorForRatio(beginColor: string, endColor: string, ratio: number): string {
     let color = endColor;
     try {
@@ -1395,10 +1452,30 @@ export class Rule {
     return color;
   }
 
+  /**
+   * Get a value between 2 values with a ratio
+   * 
+   * @private
+   * @param {number} beginValue
+   * @param {number} endValue
+   * @param {number} ratio
+   * @returns
+   * @memberof Rule
+   */
   _getValueForRatio(beginValue: number, endValue: number, ratio: number) {
     return beginValue + (endValue - beginValue) * ratio;
   }
 
+  /**
+   * Get a ratio, used for parameters of _getColorForRatio
+   *
+   * @private
+   * @param {number} beginValue
+   * @param {number} endValue
+   * @param {number} value
+   * @returns {number}
+   * @memberof Rule
+   */
   _getRatioForValue(beginValue: number, endValue: number, value: number): number {
     if (value < beginValue || value > endValue) {
       throw new Error(

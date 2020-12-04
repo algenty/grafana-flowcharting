@@ -2,7 +2,10 @@ import { $GF } from 'globals_class';
 import _ from 'lodash';
 
 export type ObjectMap = ShapeMap | TextMap | LinkMap | EventMap;
-export type ObjectData = gf.TShapeMapData | gf.TTextMapData | gf.TlinkMapData | gf.TEventMapData;
+export type DataMap = gf.TShapeMapData | gf.TTextMapData | gf.TlinkMapData | gf.TEventMapData;
+
+export type ObjectVMap = ValueMap | RangeMap;
+export type DataVMap = gf.TValueMapData | gf.TRangeMapData;
 
 class GFMap {
   data: gf.TGFMapData;
@@ -13,7 +16,6 @@ class GFMap {
     this.data = data;
     this.data.pattern = pattern;
     this.id = $GF.utils.uniqueID();
-    // this.import(data);
   }
 
   /**
@@ -558,21 +560,152 @@ export class EventMap extends GFMap {
   }
 }
 
-/**
- * TextMap class for Range Value
- * @class RangeMap
- */
-export class RangeMap {
+class VMAP {
+  data: DataVMap;
+  id: string;
+  hidden = false;
+  reduce = true;
+  constructor(data: DataVMap) {
+    this.data = data;
+    this.id = $GF.utils.uniqueID();
+  }
+
+  import(obj:any): this {
+    if(!!obj.text) {
+      this.data.text = obj.text;
+    }
+    return this;
+  }
+
+  getId():string {
+    return this.id;
+  }
+
+  getData(): DataVMap {
+    return this.data;
+  }
+
+  /**
+   * Show/enable valuemap
+   *
+   * @memberof ValueMap
+   */
+  show() {
+    this.data.hidden = false;
+  }
+
+  /**
+   * Hide/disable valuemap
+   *
+   * @memberof ValueMap
+   */
+  hide() {
+    this.data.hidden = true;
+  }
+
+  /**
+   * Is hidden/disable
+   *
+   * @returns
+   * @memberof ValueMap
+   */
+  isHidden() {
+    return this.data.hidden;
+  }
+
+}
+
+export class ValueMap extends VMAP{
+  data: gf.TValueMapData;
+  constructor(value: string = '', text: string = '', data: gf.TValueMapData) {
+    super(data);
+    this.data = data;
+    this.data.value = value;
+    this.data.text = text;
+    this.import(data);
+  }
+
+  /**
+   * Get default data
+   *
+   * @static
+   * @returns
+   * @memberof ValueMap
+   */
+  static getDefaultdata():gf.TValueMapData {
+    return {
+      value: undefined,
+      text: undefined,
+      hidden: false,
+    };
+  }
+
+  /**
+   * import data from panel
+   *
+   * @param {*} obj
+   * @returns {this}
+   * @memberof ValueMap
+   */
+  import(obj: any): this {
+    this.data.value = obj.value || this.data.value || undefined;
+    this.data.text = obj.text || this.data.text || undefined;
+    this.data.hidden = obj.hidden || this.data.hidden || false;
+    return this;
+  }
+
+  /**
+   * Match value with datas
+   *
+   * @param {any} value
+   * @returns {boolean}
+   * @memberof ValueMap
+   */
+  match(value: any): boolean {
+    if (value === null || value === undefined) {
+      if (this.data.value === 'null') {
+        return true;
+      }
+      return false;
+    }
+
+    if (!_.isString(value) && Number(this.data.value) === Number(value)) {
+      return true;
+    }
+    return $GF.utils.matchString(value.toString(), this.data.value);
+  }
+
+  /**
+   * Get formatted value
+   *
+   * @param {any} value
+   * @returns
+   * @memberof ValueMap
+   */
+  getFormattedText(value: any): string {
+    if (value === null || value === undefined) {
+      if (this.data.value === 'null' || this.data.value === 'undefined') {
+        return !!this.data.text ? this.data.text : '';
+      }
+    }
+    if (this.match(value)) {
+      return !!this.data.text ? this.data.text : '';
+    }
+    return `${value}`;
+  }
+}
+
+export class RangeMap extends VMAP {
   data: gf.TRangeMapData;
   reduce = true;
   id = $GF.utils.uniqueID();
   constructor(from: string ='', to: string = '', text: string = '', data: gf.TRangeMapData) {
+    super(data);
     this.data = data;
     this.data.from = from;
     this.data.to = to;
     this.data.text = text;
     this.data.hidden = false;
-    // this.import(data);
   }
 
   /**
@@ -604,14 +737,6 @@ export class RangeMap {
       text: undefined,
       hidden: false,
     };
-  }
-
-  getId() {
-    return this.id;
-  }
-
-  getData() {
-    return this.data;
   }
 
   /**
@@ -672,191 +797,4 @@ export class RangeMap {
     return value;
   }
 
-  /**
-   * Show/enable range
-   *
-   * @memberof RangeMap
-   */
-  show() {
-    this.data.hidden = false;
-  }
-
-  /**
-   * Hide/disable range
-   *
-   * @memberof RangeMap
-   */
-  hide() {
-    this.data.hidden = true;
-  }
-
-  /**
-   * Is hidden
-   *
-   * @returns
-   * @memberof RangeMap
-   */
-  isHidden() {
-    return this.data.hidden;
-  }
-
-  /**
-   * is visible
-   *
-   * @returns
-   * @memberof RangeMap
-   */
-  toVisible() {
-    if (this.data.hidden) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * Export current data
-   *
-   * @returns
-   * @memberof RangeMap
-   */
-  export() {
-    return {
-      from: this.data.from,
-      to: this.data.to,
-      text: this.data.text,
-      hidden: this.data.hidden,
-    };
-  }
-}
-
-export class ValueMap {
-  data: gf.TValueMapData;
-  id = $GF.utils.uniqueID();
-  reduce = true;
-  constructor(value: string = '', text: string = '', data: gf.TValueMapData) {
-    this.data = data;
-    this.data.value = value;
-    this.data.text = text;
-    this.data.hidden = false;
-    this.import(data);
-  }
-
-  /**
-   * Get default data
-   *
-   * @static
-   * @returns
-   * @memberof ValueMap
-   */
-  static getDefaultdata() {
-    return {
-      value: undefined,
-      text: undefined,
-      hidden: false,
-    };
-  }
-
-  getId() {
-    return this.id;
-  }
-
-  getData() {
-    return this.data;
-  }
-
-  /**
-   * import data from panel
-   *
-   * @param {*} obj
-   * @returns {this}
-   * @memberof ValueMap
-   */
-  import(obj: any): this {
-    this.data.value = obj.value || this.data.value || undefined;
-    this.data.text = obj.text || this.data.text || undefined;
-    this.data.hidden = obj.hidden || this.data.hidden || false;
-    return this;
-  }
-
-  /**
-   * Match value with datas
-   *
-   * @param {any} value
-   * @returns {boolean}
-   * @memberof ValueMap
-   */
-  match(value: any): boolean {
-    if (value === null || value === undefined) {
-      if (this.data.value === 'null') {
-        return true;
-      }
-      return false;
-    }
-
-    if (!_.isString(value) && Number(this.data.value) === Number(value)) {
-      return true;
-    }
-    return $GF.utils.matchString(value.toString(), this.data.value);
-  }
-
-  /**
-   * Get formatted value
-   *
-   * @param {any} value
-   * @returns
-   * @memberof ValueMap
-   */
-  getFormattedText(value: any): string {
-    if (value === null || value === undefined) {
-      if (this.data.value === 'null' || this.data.value === 'undefined') {
-        return !!this.data.text ? this.data.text : '';
-      }
-    }
-    if (this.match(value)) {
-      return !!this.data.text ? this.data.text : '';
-    }
-    return `${value}`;
-  }
-
-  /**
-   * Show/enable valuemap
-   *
-   * @memberof ValueMap
-   */
-  show() {
-    this.data.hidden = false;
-  }
-
-  /**
-   * Hide/disable valuemap
-   *
-   * @memberof ValueMap
-   */
-  hide() {
-    this.data.hidden = true;
-  }
-
-  /**
-   * Is hidden/disable
-   *
-   * @returns
-   * @memberof ValueMap
-   */
-  isHidden() {
-    return this.data.hidden;
-  }
-
-  /**
-   * export data
-   *
-   * @returns
-   * @memberof ValueMap
-   */
-  export() {
-    return {
-      value: this.data.value,
-      text: this.data.text,
-      hidden: this.data.hidden,
-    };
-  }
 }
