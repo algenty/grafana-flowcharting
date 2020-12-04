@@ -141,6 +141,15 @@ export class RulesOptionsCtrl {
         },
         {
           index: n++,
+          id: 'options',
+          label: 'Options',
+          desc: 'Options',
+          width: '80px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
           id: 'actions',
           label: 'Actions',
           desc: 'Actions',

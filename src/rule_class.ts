@@ -1121,19 +1121,45 @@ export class Rule {
     return this.addTextMap(initial.data.pattern).import(initial);
   }
 
+  /**
+   * Remove TextMap
+   *
+   * @param {number} index
+   * @memberof Rule
+   */
   removeTextMap(index: number) {
     this.data.textData.splice(index, 1);
     this.textMaps.splice(index, 1);
   }
 
+  /**
+   * Get a TextMap at position
+   *
+   * @param {number} index
+   * @returns {TextMap}
+   * @memberof Rule
+   */
   getTextMap(index: number): TextMap {
     return this.textMaps[index];
   }
 
+  /**
+   * Get TextMaps as array
+   *
+   * @returns {TextMap[]}
+   * @memberof Rule
+   */
   getTextMaps(): TextMap[] {
     return this.textMaps;
   }
 
+  /**
+   * Match pattern
+   *
+   * @param {(string | null)} pattern
+   * @returns {boolean}
+   * @memberof Rule
+   */
   matchText(pattern: string | null): boolean {
     let found = false;
     this.textMaps.forEach(element => {
@@ -1144,11 +1170,14 @@ export class Rule {
     return found;
   }
 
-  //
-  // Event MAPS
-  //
-
   
+  /**
+   * Add an Event Map
+   *
+   * @param {string} 
+   * @returns {EventMap}
+   * @memberof Rule
+   */
   addEventMap(pattern: string = "/.*/"): EventMap {
     const data = EventMap.getDefaultData();
     const m = new EventMap(pattern, data);
@@ -1157,6 +1186,13 @@ export class Rule {
     return m;
   }
 
+  /**
+   * Clone an evenMap
+   *
+   * @param {EventMap} map
+   * @returns {EventMap}
+   * @memberof Rule
+   */
   cloneEventMap(map: EventMap): EventMap {
     return this.addEventMap().import(map.getData());
   }
