@@ -403,6 +403,7 @@ declare module gf {
   declare type TTHNumberComparator = 'ge' | 'gt';
   declare type TTHStringComparator = 'eq' | 'ne';
   declare type TTHDateComparator = 'eq' | 'ne' | 'ge' | 'gt';
+  declare type TEventComparator = 'lt' | 'le' | 'eq' | 'ne' | 'ge' | 'gt' | 'al';
   declare interface TTHData {
     color: string;
     comparator: string;

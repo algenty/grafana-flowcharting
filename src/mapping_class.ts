@@ -405,6 +405,7 @@ export class LinkMap extends GFMap {
 export class EventMap extends GFMap {
   data: gf.TEventMapData;
   static methods = $GF.CONSTANTS.EVENTMETHODS;
+  validComp: gf.TEventComparator[] = [ 'lt' , 'le', 'eq' , 'ne' , 'ge' , 'gt' , 'al' ];
   // static shapes: string[] = EventMap.getFormNames();
   static shapes: string[] = [];
 
@@ -441,6 +442,10 @@ export class EventMap extends GFMap {
   getPlaceHolder(): string {
     const ph = EventMap.getDefaultPlaceHolder(this.data.style);
     return ph !== undefined ? ph : '';
+  }
+
+  isValidComp(comp: gf.TEventComparator): boolean {
+    return this.validComp.indexOf(comp) !== -1;
   }
 
   getTypeahead(): string[] {
@@ -500,22 +505,22 @@ export class EventMap extends GFMap {
         return true;
         break;
       case 'lt':
-        return level < this.data.eventOn;
+        return this.data.eventOn < level;
         break;
       case 'le':
-        return level <= this.data.eventOn;
+        return this.data.eventOn <= level;
         break;
       case 'eq':
-        return level <= this.data.eventOn;
+        return level === this.data.eventOn;
         break;
       case 'ne':
         return level !== this.data.eventOn;
         break;
       case 'ge':
-        return level >= this.data.eventOn;
+        return this.data.eventOn >= level ;
         break;
       case 'gt':
-        return level > this.data.eventOn;
+        return this.data.eventOn > level;
         break;
       default:
         return this.data.eventOn === -1 || level === this.data.eventOn;

@@ -1,70 +1,64 @@
-<div>
-    <!-- Definition -->
-    <div class="section gf-form-group" style="width:100%;">
-        <h5 class="section-heading">
-            Detail
-            <info-popover mode="right-normal"><span
-                    ng-bind-html="$GF.popover('Definition of threshold', 'THRESHOLD')"></span></info-popover>
-        </h5>
-        <!-- COLOR -->
-        <div class="gf-form">
-            <label class="gf-form-label width-10" style="margin-right: 2px;">
-                Color
-            </label>
-            <input type="text" class="gf-form-input width-10" ng-model="elt.data.color"
-                ng-change="editor.onOptionChange()" placeholder="#000000" />
-            <button class="btn btn-secondary btn-small" style="height: 32px;" title="Remove background color">
-                <color-picker color="elt.data.color" onChange="editor.onColorChange(elt)"></color-picker>
-            </button>
-            <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;"
-                title="Remove background color" ng-click="elt.data.color= '';;editor.onRulesChange();">
-                <div Class="gf-icon-remove" style="margin-bottom: 7px;margin-right: 2px;"></div>
-            </button>
-        </div>
-        <!-- COMPARATOR -->
-        <div class="gf-form" ng-show="$index != 0">
-            <label class="gf-form-label width-10" style="margin-right: 2px;" title="Comparison operator">
-                Comp. operator
-                <info-popover mode="right-normal">
-                    <span ng-bind-html="$GF.popover('Select an operator when metric is or like', 'THRESHOLDS')">
-                    </span>
-                </info-popover>
-            </label>
-            <select class="gf-form-input width-10" ng-model="elt.data.comparator" ng-blur="editor.onRulesChange();"
-                ng-change="editor.onRulesChange();">
-                <option type="string" ng-repeat="comp in editor.comparator" ng-attr-title="{{comp.text}}"
-                    ng-value="comp.value" ng-if="elt.isValidComp(comp.value)">
-                    {{comp.text}}
-                </option>
-            </select>
-        </div>
-        <!-- VALUE -->
-        <div class="gf-form" ng-show="$index != 0">
-            <label class="gf-form-label width-10" style="margin-right: 2px;"
-                ng-if="rule.data.type === 'number'">Value
-                <info-popover mode="right-normal">
-                    <span ng-bind-html="$GF.popover('Apply color when value is greater or equal', 'THRESHOLDS')">
-                    </span>
-                </info-popover>
-            </label>
-            <label class="gf-form-label width-10" style="margin-right: 2px;"
-                ng-if="rule.data.type === 'string'">Pattern or
-                string
-                <info-popover mode="right-normal">
-                    <span ng-bind-html="$GF.popover('Apply color when pattern is true', 'THRESHOLDS')">
-                    </span>
-                </info-popover>
-            </label>
-            <input ng-if="rule.data.type === 'number'" type="number" class="gf-form-input width-10"
-                ng-model="elt.data.value" placeholder="value"
-                bs-tooltip="'Specify a value for apply color when value is greater or equal'" ng-model-onblur
-                ng-blur="editor.onRulesChange();" />
-            <input ng-if="rule.data.type === 'string'" type="text" class="gf-form-input width-10"
-                ng-model="elt.data.value" ng-model-onblur placeholder="pattern"
-                bs-tooltip="'Specify a pattern regex for apply color'" ng-blur="editor.onRulesChange();" />
-        </div>
-        <!-- BUTTONS -->
-        <!-- <div class="gf-form-button-row gf-unselectable">
+<h5 class="section-heading">
+    Detail
+    <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Definition of threshold', 'THRESHOLD')"></span>
+    </info-popover>
+</h5>
+<!-- COLOR -->
+<div class="gf-form">
+    <label class="gf-form-label width-10" style="margin-right: 2px;">
+        Color
+    </label>
+    <input type="text" class="gf-form-input width-10" ng-model="elt.data.color" ng-change="editor.onOptionChange()"
+        placeholder="#000000" />
+    <button class="btn btn-secondary btn-small" style="height: 32px;" title="Remove background color">
+        <color-picker color="elt.data.color" onChange="editor.onColorChange(elt)"></color-picker>
+    </button>
+    <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Remove background color"
+        ng-click="elt.data.color= '';;editor.onRulesChange();">
+        <div Class="gf-icon-remove" style="margin-bottom: 7px;margin-right: 2px;"></div>
+    </button>
+</div>
+<!-- COMPARATOR -->
+<div class="gf-form" ng-show="$index != 0">
+    <label class="gf-form-label width-10" style="margin-right: 2px;" title="Comparison operator">
+        Comp. operator
+        <info-popover mode="right-normal">
+            <span ng-bind-html="$GF.popover('Select an operator when metric is or like', 'THRESHOLDS')">
+            </span>
+        </info-popover>
+    </label>
+    <select class="gf-form-input width-10" ng-model="elt.data.comparator" ng-blur="editor.onRulesChange();"
+        ng-change="editor.onRulesChange();">
+        <option type="string" ng-repeat="comp in editor.comparator" ng-attr-title="{{comp.text}}" ng-value="comp.value"
+            ng-if="elt.isValidComp(comp.value)">
+            {{comp.text}}
+        </option>
+    </select>
+</div>
+<!-- VALUE -->
+<div class="gf-form" ng-show="$index != 0">
+    <label class="gf-form-label width-10" style="margin-right: 2px;" ng-if="rule.data.type === 'number'">Value
+        <info-popover mode="right-normal">
+            <span ng-bind-html="$GF.popover('Apply color when value is greater or equal', 'THRESHOLDS')">
+            </span>
+        </info-popover>
+    </label>
+    <label class="gf-form-label width-10" style="margin-right: 2px;" ng-if="rule.data.type === 'string'">Pattern or
+        string
+        <info-popover mode="right-normal">
+            <span ng-bind-html="$GF.popover('Apply color when pattern is true', 'THRESHOLDS')">
+            </span>
+        </info-popover>
+    </label>
+    <input ng-if="rule.data.type === 'number'" type="number" class="gf-form-input width-10" ng-model="elt.data.value"
+        placeholder="value" bs-tooltip="'Specify a value for apply color when value is greater or equal'"
+        ng-model-onblur ng-blur="editor.onRulesChange();" />
+    <input ng-if="rule.data.type === 'string'" type="text" class="gf-form-input width-10" ng-model="elt.data.value"
+        ng-model-onblur placeholder="pattern" bs-tooltip="'Specify a pattern regex for apply color'"
+        ng-blur="editor.onRulesChange();" />
+</div>
+<!-- BUTTONS -->
+<!-- <div class="gf-form-button-row gf-unselectable">
             <button class="btn btn-secondary btn-small" ng-show="$index !== 0"
                 ng-click="elt.hidden= !elt.hidden;editor.onRulesChange();"
                 title="Enable/Disable this threshold color">
@@ -103,5 +97,3 @@
                 &nbsp;Remove
             </button>
         </div> -->
-    </div>
-</div>

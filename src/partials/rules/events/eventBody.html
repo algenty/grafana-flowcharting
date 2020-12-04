@@ -43,7 +43,7 @@
     </label>
     <select convert-to-number class="gf-form-input width-10" ng-model="elt.data.eventOn"
         ng-change="editor.onRulesChange()">
-        <option type="number" ng-repeat="color in rule.data.colors" ng-value="$index">{{$index}}</option>
+        <option type="number" ng-repeat="color in rule.getThresholds()" ng-value="$index">{{$index}}</option>
     </select>
 </div>
 <div class="gf-form">

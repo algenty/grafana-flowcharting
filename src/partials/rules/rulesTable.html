@@ -81,13 +81,14 @@
       </div>
       <!-- TBODY -->
       <div class="gf-table-body">
-        <div role="row" class="gf-table-rows gf-table-rows-resizable" ng-repeat="rule in editor.rulesHandler.getRules()">
+        <div role="row" class="gf-table-rows gf-table-rows-resizable"
+          ng-repeat="rule in editor.rulesHandler.getRules()">
           <!-- CELLS -->
           <div class="gf-table-row_line" ng-mouseover="editor.highlightCells(rule)"
             ng-mouseleave="editor.unhighlightCells(rule)">
             <!-- EXPAND -->
-            <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand" ng-click="rule.data.reduce=!rule.data.reduce"
-              ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
+            <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
+              ng-click="rule.data.reduce=!rule.data.reduce" ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
               <div class="gf-table-content gf-unselectable" style="text-align: center;cursor: pointer;">
                 <span>
                   <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
@@ -97,8 +98,9 @@
               </div>
             </div>
             <!-- RULE NAME -->
-            <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rule" ng-mouseleave="rule.editButton = false;"
-              ng-mouseover="rule.editButton = true;" ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
+            <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rule"
+              ng-mouseleave="rule.editButton = false;" ng-mouseover="rule.editButton = true;"
+              ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
               <div class="gf-table-content" ng-hide="rule.edit === true" ng-dblclick="rule.edit = true;">
                 {{rule.data.alias}}
               </div>
@@ -129,7 +131,8 @@
                   </div>
                 </div> -->
             <!-- HIGTEST FORMATED VALUE -->
-            <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="fval" ng-style="{'width' : editor.rulesTable.getWidth('fval')}">
+            <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="fval"
+              ng-style="{'width' : editor.rulesTable.getWidth('fval')}">
               <div class="gf-table-content" ng-attr-title="{{rule.highestValue}}">
                 {{rule.highestFormattedValue}}
               </div>
@@ -199,21 +202,29 @@
       <!-- TFOOTER -->
       <div class="gf-table-tfooter gf-unselectable">
         <div class="gf-table-columnfooter" colspan="1">
-            <button class="btn btn-secondary btn-small" ng-click="editor.rulesHandler.addRule('/.*/') && editor.onRulesChange();"
-                title="Add a new rule">
+          <div class="gf-form-inline">
+            <div class="gf-form" style="margin-right: 5px;">
+              <button class="btn btn-primary btn-small"
+              ng-click="editor.rulesHandler.addRule('/.*/') && editor.onRulesChange();" title="Add a new rule">
+              <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                <path fill="currentColor"
+                  d="M 200 450C 200 435 210 425 225 425C 225 425 425 425 425 425C 425 425 425 225 425 225C 425 210 435 200 450 200C 450 200 550 200 550 200C 565 200 575 210 575 225C 575 225 575 425 575 425C 575 425 775 425 775 425C 790 425 800 435 800 450C 800 450 800 550 800 550C 800 565 790 575 775 575C 775 575 575 575 575 575C 575 575 575 775 575 775C 575 790 565 800 550 800C 550 800 450 800 450 800C 435 800 425 790 425 775C 425 775 425 575 425 575C 425 575 225 575 225 575C 210 575 200 565 200 550C 200 550 200 450 200 450" />
+              </svg>
+              &nbsp;Add a new rule
+            </button>
+            </div>
+            <div class="gf-form" style="margin-right: 5px;">
+              <button class="btn btn-secondary btn-small" ng-click="editor.onRulesChange();" title="Refresh/Apply">
                 <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
-                    <path fill="currentColor"
-                        d="M 200 450C 200 435 210 425 225 425C 225 425 425 425 425 425C 425 425 425 225 425 225C 425 210 435 200 450 200C 450 200 550 200 550 200C 565 200 575 210 575 225C 575 225 575 425 575 425C 575 425 775 425 775 425C 790 425 800 435 800 450C 800 450 800 550 800 550C 800 565 790 575 775 575C 775 575 575 575 575 575C 575 575 575 775 575 775C 575 790 565 800 550 800C 550 800 450 800 450 800C 435 800 425 790 425 775C 425 775 425 575 425 575C 425 575 225 575 225 575C 210 575 200 565 200 550C 200 550 200 450 200 450" />
-                </svg>
-                &nbsp;Add a new rule
-            </button>
-            <button class="btn btn-secondary btn-small" ng-click="editor.onRulesChange();"
-                title="Refresh/Apply">
-                <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 535 114C 550 128 555 150 547 169C 539 188 521 200 500 200C 379 200 269 273 223 385C 186 474 194 572 242 652C 242 652 253 641 253 641C 262 632 275 626 289 627C 303 627 316 633 325 643C 332 650 336 660 337 670C 337 670 355 793 355 793C 357 809 352 825 341 836C 330 847 314 852 298 850C 298 850 175 832 175 832C 156 830 140 817 134 799C 128 781 133 761 146 747C 146 747 169 725 169 725C 94 615 78 473 130 347C 192 198 338 100 500 100C 513 100 526 105 535 114C 535 114 535 114 535 114M 852 181C 862 190 868 203 868 216C 868 230 863 243 854 253C 854 253 831 275 831 275C 906 385 922 527 870 653C 808 802 662 900 500 900C 482 900 465 891 456 875C 447 860 447 840 456 825C 465 809 482 800 500 800C 621 800 731 727 777 615C 814 526 806 428 758 348C 758 348 747 359 747 359C 733 373 712 377 693 369C 674 362 662 343 662 323C 662 323 662 217 662 217C 662 190 685 167 712 167C 712 167 818 167 818 167C 831 167 843 172 852 181C 852 181 852 181 852 181"/></svg>
+                  <path fill="currentColor"
+                    d="M 535 114C 550 128 555 150 547 169C 539 188 521 200 500 200C 379 200 269 273 223 385C 186 474 194 572 242 652C 242 652 253 641 253 641C 262 632 275 626 289 627C 303 627 316 633 325 643C 332 650 336 660 337 670C 337 670 355 793 355 793C 357 809 352 825 341 836C 330 847 314 852 298 850C 298 850 175 832 175 832C 156 830 140 817 134 799C 128 781 133 761 146 747C 146 747 169 725 169 725C 94 615 78 473 130 347C 192 198 338 100 500 100C 513 100 526 105 535 114C 535 114 535 114 535 114M 852 181C 862 190 868 203 868 216C 868 230 863 243 854 253C 854 253 831 275 831 275C 906 385 922 527 870 653C 808 802 662 900 500 900C 482 900 465 891 456 875C 447 860 447 840 456 825C 465 809 482 800 500 800C 621 800 731 727 777 615C 814 526 806 428 758 348C 758 348 747 359 747 359C 733 373 712 377 693 369C 674 362 662 343 662 323C 662 323 662 217 662 217C 662 190 685 167 712 167C 712 167 818 167 818 167C 831 167 843 172 852 181C 852 181 852 181 852 181" />
+                  </svg>
                 &nbsp;Refresh
-            </button>
+              </button>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
     </div>
   </div>
 </div>

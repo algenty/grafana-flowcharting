@@ -1,4 +1,9 @@
-<div class="gf-form" ng-init="count = 0;">
+<h5 class="section-heading">
+    Detail
+    <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Definition of shape mapping', 'SHAPE')"></span>
+    </info-popover>
+</h5>
+<div class="gf-form">
     <label class="gf-form-label width-10">
         What
         <info-popover mode="right-normal">
@@ -12,17 +17,18 @@
         bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
     <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
-        ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
-        class="gf-form-input width-8" ng-model="shape.data.pattern" ng-if="rule.data.shapeProp === 'value'"
+        ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100" class="gf-form-input width-8"
+        ng-model="shape.data.pattern" ng-if="rule.data.shapeProp === 'value'"
         bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-        bs-typeahead="editor.getCellNamesByValue" 
-        ng-model-onblur data-placement="right" />
-        <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;" title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)">
-            <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
-        </button>
-        <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects" ng-click="editor.identifyCell(rule.data.shapeProp,shape.data.pattern)">
-            <div Class="gf-icon-location" style="margin-bottom: 7px;margin-right: 2px;"></div>
-        </button>
+        bs-typeahead="editor.getCellNamesByValue" ng-model-onblur data-placement="right" />
+    <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
+        title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)">
+        <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
+    </button>
+    <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects"
+        ng-click="editor.identifyCell(rule.data.shapeProp,shape.data.pattern)">
+        <div Class="gf-icon-location" style="margin-bottom: 7px;margin-right: 2px;"></div>
+    </button>
 </div>
 <div class="gf-form">
     <label class="gf-form-label width-10">When

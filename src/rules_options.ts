@@ -346,7 +346,7 @@ export class RulesOptionsCtrl {
         {
           index: n++,
           id: 'when',
-          label: 'When lvl.',
+          label: 'When',
           desc: 'When current level is',
           width: '80px',
           sort: 'asc',
