@@ -530,10 +530,10 @@ export class EventMap extends GFMap {
         return true;
         break;
       case 'lt':
-        return this.data.eventOn < level;
+        return level < this.data.eventOn;
         break;
       case 'le':
-        return this.data.eventOn <= level;
+        return level <= this.data.eventOn;
         break;
       case 'eq':
         return level === this.data.eventOn;
@@ -542,10 +542,10 @@ export class EventMap extends GFMap {
         return level !== this.data.eventOn;
         break;
       case 'ge':
-        return this.data.eventOn >= level;
+        return level >= this.data.eventOn;
         break;
       case 'gt':
-        return this.data.eventOn > level;
+        return level > this.data.eventOn;
         break;
       default:
         return this.data.eventOn === -1 || level === this.data.eventOn;

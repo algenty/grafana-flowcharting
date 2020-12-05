@@ -111,17 +111,18 @@
             <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rule"
               ng-mouseleave="rule.editButton = false;" ng-mouseover="rule.editButton = true;"
               ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
-              <div class="gf-table-content" ng-hide="rule.edit === true" ng-dblclick="rule.edit = true;">
+              <div class="gf-table-content" ng-hide="rule.edit === true" ng-dblclick="rule.edit = true;$GF.setFocus(rule.getId() + '-name')">
                 {{rule.data.alias}}
               </div>
               <div ng-show="rule.editButton === true && rule.edit !== true" style="padding:6px;float:right;"
-                ng-click="rule.edit = true;">
+                ng-click="rule.edit = true;$GF.setFocus(rule.getId() + '-name')">
                 <span title="Edit/Change rule name">
                   <i class="fa fa-edit"></i>
                 </span>
               </div>
               <div ng-show="rule.edit">
                 <input type="text" class="gf-form-input max-width-16" ng-model="rule.data.alias"
+                  ng-attr-id="{{rule.getId() + '-name'}}"
                   ng-blur="rule.edit = false;" style="width: 100%;"
                   ng-keydown="$event.keyCode === 13 ? rule.edit = false : rule.edit = true" autofocus />
               </div>

@@ -1170,15 +1170,14 @@ export class Rule {
     return found;
   }
 
-  
   /**
    * Add an Event Map
    *
-   * @param {string} 
+   * @param {string}
    * @returns {EventMap}
    * @memberof Rule
    */
-  addEventMap(pattern: string = "/.*/"): EventMap {
+  addEventMap(pattern: string = '/.*/'): EventMap {
     const data = EventMap.getDefaultData();
     const m = new EventMap(pattern, data);
     this.eventMaps.push(m);
