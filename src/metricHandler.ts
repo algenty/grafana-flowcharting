@@ -70,7 +70,6 @@ export class MetricHandler {
     } else {
       metric = this.addSerie(data);
     }
-    console.log('🚀 ~ file: metricHandler.ts ~ line 72 ~ MetricHandler ~ addMetric ~ this', this);
     return metric;
     trc.after();
   }

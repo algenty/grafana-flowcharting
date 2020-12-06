@@ -93,9 +93,19 @@
 	color:#a94442 !important;
 	border-radius:3px;
 }
-.geStatusAlert:hover {
-	background-color:#f1d8d8;
-	border-color:#d6b2b8;
+.geStatusAlertOrange {
+	white-space:nowrap;
+	margin-top:-5px;
+	font-size:12px;
+	padding:4px 6px 4px 6px;
+	background-color:rgb(242, 147, 30);
+	border:rgb(240, 135, 5);
+	color:#000000 !important;
+	border-radius:3px;
+	opacity:0.8;
+}
+.geStatusAlertOrange:hover {
+	opacity:1;
 }
 .geStatusMessage {
 	white-space:nowrap;
@@ -384,7 +394,7 @@ div.mxWindow .geButton {
 	padding:6px;
 	margin:6px;
 	color:#a0a0a0;
-	fontSize:13px;
+	font-size:13px;
 }
 .geTitle img {
 	opacity:0.5;
@@ -547,7 +557,7 @@ div.mxWindow .geButton {
 	white-space: nowrap;
 	border-radius:3px;
 	background-color:#0052cc;
-	currsor:pointer;
+	cursor:pointer;
 	transition: background-color 0.1s ease-out;
 	overflow:hidden;
 	text-overflow: ellipsis;
@@ -776,6 +786,9 @@ html td.mxWindowTitle {
  	font-size:12px;
  	color:rgb(112, 112, 112);
  	padding:4px;
+}
+table.geProperties tr td {
+	height:21px;
 }
 .gePropHeader, .gePropRow {
 	border: 1px solid #e9e9e9;	
@@ -1502,6 +1515,31 @@ html td.mxWindowTitle {
 {
 	min-height: 184px;
 	white-space: nowrap;
-	overflow-x : auto;
-	overflow-y : hidden;
+}
+
+.geStripedTable
+{
+	border-collapse: collapse;
+ 	width: 100%;
+ 	table-layout: fixed;
+}
+
+.geStripedTable td, .geStripedTable th
+{
+	border: 1px solid #ddd;
+	text-align: left;
+	padding: 2px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.geStripedTable tr:nth-child(odd){background-color: #f2f2f2;}
+
+.geStripedTable tr:hover {background-color: #ddd;}
+
+.geStripedTable th {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  background-color: #bbb;
 }

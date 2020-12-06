@@ -12,7 +12,8 @@ class GFCONSTANT {
   CONF_FILE_SHAPESTXT = 'static/shapes.txt';
   CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
   CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
-  CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
+  // CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
+  CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer-static.min.js';
   CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
   CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
   CONF_TOOLTIPS_DELAY = 200;
@@ -809,7 +810,7 @@ export class $GF {
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
-  static DEBUG = true;
+  static DEBUG = false;
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;

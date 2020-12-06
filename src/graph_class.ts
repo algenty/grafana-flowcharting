@@ -88,8 +88,6 @@ export default class XGraph {
           const id = _evt.properties.cell.id;
           const state = $GF.getVar(`STATE_${id}`);
           console.log('DEBUG GF STATE', state);
-          // const view = self.graph.view;
-          // console.log('DEBUG CELL STATE', view.getState(_evt.properties.cell));
           console.log('DEBUG CELL STATE', self.getMxCellState(_evt.properties.cell));
         }
       });
@@ -146,10 +144,16 @@ export default class XGraph {
     if (!XGraph.initialized) {
       if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
+        // Before 0.9
         // let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
         // $GF.utils.evalRaw(code);
-        // $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
-        mxcustom.evalCode();
+
+        // $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/viewer-static.min.js`);
+        // $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/shapes.min.js`);
+
+        // Eval Fileor Eval Code
+        $GF.utils.$evalFile(`${$GF.plugin.getRootPath()}${$GF.CONSTANTS.CONF_FILE_VIEWERJS}`);
+        // mxcustom.evalCode();
         mxcustom.customize();
         XGraph.postInitGlobalVars();
         // $GF.utils.$evalFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
@@ -1518,43 +1522,6 @@ export default class XGraph {
     return this.graph.model.isVisible(mxcell);
   }
 
-  // async resizeCell(mxcell: mxCell, percent: number, origine?: mxGeometry) {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
-  //   const geo = this.graph.model.getGeometry(mxcell);
-  //   if (geo !== null) {
-  //     let _x = origine !== undefined ? origine.x : geo.x;
-  //     let _ow = origine !== undefined ? origine.width : geo.x;
-  //     let _y = origine !== undefined ? origine.y : geo.y;
-  //     let _oh = origine !== undefined ? origine.height : geo.y;
-  //     let _w = _ow * (percent / 100);
-  //     let _h = _oh * (percent / 100);
-  //     _x = _x - (_w - _ow) / 2;
-  //     _y = _y - (_h - _oh) / 2;
-  //     if (this.isAnimated()) {
-  //       const steps_x = $GF.getIntervalCounter(geo.x, _x, $GF.CONSTANTS.CONF_ANIMS_STEP);
-  //       const steps_y = $GF.getIntervalCounter(geo.y, _y, $GF.CONSTANTS.CONF_ANIMS_STEP);
-  //       const steps_w = $GF.getIntervalCounter(geo.width, _w, $GF.CONSTANTS.CONF_ANIMS_STEP);
-  //       const steps_h = $GF.getIntervalCounter(geo.height, _h, $GF.CONSTANTS.CONF_ANIMS_STEP);
-  //       const l = steps_x.length;
-  //       let count = 0;
-  //       const self = this;
-  //       function graduate(count, steps_x, steps_y, steps_w, steps_h) {
-  //         if (count < l) {
-  //           window.setTimeout(() => {
-  //             const _rec = new mxRectangle(steps_x[count], steps_y[count], steps_w[count], steps_h[count]);
-  //             self.graph.resizeCell(mxcell, _rec, true);
-  //             graduate(count + 1, steps_x, steps_y, steps_w, steps_h);
-  //           }, $GF.CONSTANTS.CONF_ANIMS_MS);
-  //         }
-  //       }
-  //       graduate(count, steps_x, steps_y, steps_w, steps_h);
-  //     } else {
-  //       const _rec = new mxRectangle(_x, _y, _w, _h);
-  //       this.graph.resizeCell(mxcell, _rec, true);
-  //     }
-  //   }
-  //   trc.after();
-  // }
   async resizeCell(mxcell: mxCell, percent: number, origine?: mxGeometry) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
     const geo = this.graph.model.getGeometry(mxcell);
@@ -1698,11 +1665,6 @@ export default class XGraph {
       if (state !== null) {
         let rect: any;
         if (state.width !== undefined && state.width > 0 && state.height !== undefined && state.height > 0) {
-          // const x = state.x;
-          // const y = state.y;
-          // const width = state.width;
-          // const height = state.height;
-          // rect = new mxRectangle(x, y, width, height);
           rect = state.shape.bounds;
         } else {
           rect = state.text.boundingBox;

@@ -14,7 +14,7 @@ describe('Rule', () => {
     const pattern = '/.*Toto.*/';
 
     describe('Create', () => {
-      test('addshape & remove', () => {
+      test.skip('addshape & remove', () => {
         const rule = new Rule('/.*/', data);
         rule.addShapeMap(pattern);
         expect(rule.getShapeMaps().length).toBe(1);
