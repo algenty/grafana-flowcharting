@@ -61,9 +61,11 @@ export default class XGraph {
     this.onMapping = {
       active: false,
       // $scope: null,
-      value: null,
+      domId: null,
+      mxCellValue: null,
       prop: 'id',
       object: null,
+      callback: null,
     };
 
     XGraph.initMxGraph();
@@ -629,11 +631,11 @@ export default class XGraph {
     const cells = model.cells;
     if (prop === 'id') {
       _.each(cells, (mxcell: mxCell) => {
-        cellIds.push(this.getId(mxcell));
+        cellIds.push(XGraph.getId(mxcell));
       });
     } else if (prop === 'value') {
       _.each(cells, (mxcell: mxCell) => {
-        cellIds.push(this.getLabelCell(mxcell));
+        cellIds.push(XGraph.getLabelCell(mxcell));
       });
     }
     trc.after();
@@ -660,7 +662,7 @@ export default class XGraph {
       });
     } else if (prop === 'value') {
       _.each(mxcells, (mxcell: mxCell) => {
-        if ($GF.utils.matchString(this.getLabelCell(mxcell), pattern)) {
+        if ($GF.utils.matchString(XGraph.getLabelCell(mxcell), pattern)) {
           result.push(mxcell);
         }
       });
@@ -860,12 +862,12 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getValuePropOfMxCell(prop: gf.TPropertieKey, mxcell: mxCell): string | null {
+  static getValuePropOfMxCell(prop: gf.TPropertieKey, mxcell: mxCell): string | null {
     if (prop === 'id') {
-      return this.getId(mxcell);
+      return XGraph.getId(mxcell);
     }
     if (prop === 'value') {
-      return this.getLabelCell(mxcell);
+      return XGraph.getLabelCell(mxcell);
     }
     return null;
   }
@@ -1113,7 +1115,7 @@ export default class XGraph {
    * @returns {string} Label of current cell
    * @memberof XGraph
    */
-  getLabelCell(mxcell: mxCell): string {
+  static getLabelCell(mxcell: mxCell): string {
     if (mxUtils.isNode(mxcell.value)) {
       return mxcell.value.getAttribute('label');
     }
@@ -1140,7 +1142,7 @@ export default class XGraph {
    * @returns {string} Id of mxCell
    * @memberof XGraph
    */
-  getId(mxcell): string {
+  static getId(mxcell): string {
     return mxcell.getId();
   }
 
@@ -1167,6 +1169,8 @@ export default class XGraph {
   unsetMap() {
     $GF.log.info('XGraph.unsetMapping()');
     this.onMapping.active = false;
+    this.onMapping.domId = null;
+    this.onMapping.callback = null;
     this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
     this.ctrl.$scope.$applyAsync();
@@ -1187,17 +1191,20 @@ export default class XGraph {
       const state = me.getState();
       if (state) {
         const prop = this.onMapping.prop !== null ? this.onMapping.prop : 'id';
-        const value = this.getValuePropOfMxCell(prop, state.cell);
-        if (this.onMapping.object) {
-          this.onMapping.object.data.pattern = value;
+        this.onMapping.mxCellValue = XGraph.getValuePropOfMxCell(prop, state.cell);
+        if (this.onMapping.object && this.onMapping.object.data) {
+          this.onMapping.object.data.pattern = this.onMapping.mxCellValue;
         }
-        if (this.onMapping.value) {
-          const elt = document.getElementById(this.onMapping.value);
+        if (this.onMapping.domId) {
+          const elt = document.getElementById(this.onMapping.domId);
           if (elt) {
             setTimeout(() => {
               elt.focus();
             }, 100);
           }
+        }
+        if (this.onMapping.callback) {
+          this.onMapping.callback(state.cell);
         }
         this.unsetMap();
       }

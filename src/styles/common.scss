@@ -198,25 +198,31 @@ div.gf-inspect-color-picker {
 .gf-console {
   z-index: 2;
   position: absolute;
+  display: flex;
   box-sizing: border-box;
   border-radius: 20px;
-  height: 40px;
-  width: 33%;
+  overflow: hidden;
+  height: 30px;
+  width: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  color:ghostwhite;
   white-space: nowrap;
   background-color: $notifier_background;
   top: 50%;
   left: 50%;
   margin-right: -50%;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
   transform: translate(-50%, -50%);
 }
 
 .gf-message {
   margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
+  width: auto;
+  overflow: hidden;
 }
 
 .gf-mapping {
@@ -224,8 +230,12 @@ div.gf-inspect-color-picker {
   position: absolute;
   box-sizing: border-box;
   border-radius: 20px;
-  height: 40px;
-  width: 33%;
+  height: 30px;
+  // width: 33%;
+  width: auto;
+  min-width: 225px;
+  font-size: 12px;
+  color:ghostwhite;
   white-space: nowrap;
   background-color: $notifier_background;
   bottom: 1px;

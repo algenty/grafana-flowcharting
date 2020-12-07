@@ -327,9 +327,10 @@ declare module gf {
   declare interface TIOnMappingObj {
     active: boolean;
     object: ObjectMap | null;
-    value: string | null;
-    prop: TPropertieKey;
-    // $scope: ng.IScope | null;
+    domId: string | null;
+    mxCellValue: string | null;
+    prop: TPropertieKey | null;
+    callback: CallableFunction | null;
   }
 
   // Export of id and label

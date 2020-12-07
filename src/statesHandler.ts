@@ -72,14 +72,13 @@ export class StateHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'getStatesForRule()');
     const result = new Map();
     let name: string | null;
-    const xgraph = this.xgraph;
     this.states.forEach(state => {
       const mxcell: mxCell = state.mxcell;
       const id: string = mxcell.id;
       let found = false;
 
       // SHAPES
-      name = xgraph.getValuePropOfMxCell(rule.data.shapeProp, mxcell);
+      name = XGraph.getValuePropOfMxCell(rule.data.shapeProp, mxcell);
       if (name !== null && rule.matchShape(name)) {
         result.set(id, state);
         found = true;
@@ -87,7 +86,7 @@ export class StateHandler {
 
       // TEXTS
       if (!found) {
-        name = xgraph.getValuePropOfMxCell(rule.data.textProp, mxcell);
+        name = XGraph.getValuePropOfMxCell(rule.data.textProp, mxcell);
         if (rule.matchText(name)) {
           result.set(id, state);
           found = true;
@@ -96,7 +95,7 @@ export class StateHandler {
 
       // LINKS
       if (!found) {
-        name = xgraph.getValuePropOfMxCell(rule.data.linkProp, mxcell);
+        name = XGraph.getValuePropOfMxCell(rule.data.linkProp, mxcell);
         if (rule.matchLink(name)) {
           result.set(id, state);
           found = true;
@@ -105,7 +104,7 @@ export class StateHandler {
 
       // EVENTS
       if (!found) {
-        name = xgraph.getValuePropOfMxCell(rule.data.eventProp, mxcell);
+        name = XGraph.getValuePropOfMxCell(rule.data.eventProp, mxcell);
         if (rule.matchEvent(name)) {
           result.set(id, state);
           found = true;

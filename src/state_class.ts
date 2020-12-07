@@ -56,7 +56,7 @@ export class State {
     this.status = new Map();
     this.tooltipHandler = null;
     this.mxcell.GF_tooltipHandler = null;
-    this.originalText = this.xgraph.getLabelCell(mxcell);
+    this.originalText = XGraph.getLabelCell(mxcell);
     trc.after();
   }
 
@@ -779,7 +779,7 @@ class EventState extends GFState {
   _get(key: gf.TStyleEventKeys): any {
     switch (key) {
       case 'text':
-        return this.xgraph.getLabelCell(this.mxcell);
+        return XGraph.getLabelCell(this.mxcell);
         break;
 
       case 'visibility':
@@ -827,7 +827,7 @@ class TextState extends GFState {
   }
 
   default_core(key: any): string | null {
-    return this.xgraph.getLabelCell(this.mxcell);
+    return XGraph.getLabelCell(this.mxcell);
   }
 
   async apply_core(key: string, value: any) {

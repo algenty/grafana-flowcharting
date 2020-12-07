@@ -2,6 +2,7 @@ import { $GF } from 'globals_class';
 import _ from 'lodash';
 
 export type ObjectMap = ShapeMap | TextMap | LinkMap | EventMap;
+export type ObjectMapArray = ObjectMap[];
 export type DataMap = gf.TShapeMapData | gf.TTextMapData | gf.TlinkMapData | gf.TEventMapData;
 
 export type ObjectVMap = ValueMap | RangeMap;
@@ -104,6 +105,28 @@ class GFMap {
    */
   getId(): string {
     return this.id;
+  }
+
+  /**
+   * Change pattern
+   *
+   * @param {string} pattern
+   * @returns {this}
+   * @memberof GFMap
+   */
+  setPattern(pattern: string): this {
+    this.data.pattern = pattern;
+    return this;
+  }
+
+  /**
+   * Get target Pattern
+   *
+   * @readonly
+   * @memberof GFMap
+   */
+  get Pattern() {
+    return this.data.pattern;
   }
 
   /**

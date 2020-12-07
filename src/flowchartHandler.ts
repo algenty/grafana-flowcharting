@@ -33,10 +33,11 @@ export class FlowchartHandler {
   static defaultCsv: string; // Default CSV
   onMapping: gf.TIOnMappingObj = {
     active: false,
+    mxCellValue: null,
     object: null,
-    value: null,
+    domId: null,
     prop: 'id',
-    // $scope: null,
+    callback: null,
   }; // For link mapping, sharing
   mousedownTimeout = 0;
   mousedown = 0;
@@ -797,9 +798,20 @@ export class FlowchartHandler {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
     this.onMapping.active = true;
     this.onMapping.object = objToMap;
-    this.onMapping.value = objToMap.getId();
+    this.onMapping.domId = objToMap.getId();
     // this.onMapping.$scope = this.$scope;
     this.onMapping.prop = prop;
+    flowchart.setMap(this.onMapping);
+    return this;
+  }
+
+  setMaps(fn: CallableFunction): this {
+    const flowchart = this.getFlowchart(this.currentFlowchartName);
+    this.onMapping.active = true;
+    this.onMapping.object = null;
+    this.onMapping.domId = null;
+    this.onMapping.prop = null;
+    this.onMapping.callback = fn;
     flowchart.setMap(this.onMapping);
     return this;
   }
@@ -813,7 +825,7 @@ export class FlowchartHandler {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
     this.onMapping.active = false;
     this.onMapping.object = undefined;
-    this.onMapping.value = '';
+    this.onMapping.domId = '';
     flowchart.unsetMap();
     return this;
   }

@@ -111,7 +111,8 @@
             <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rule"
               ng-mouseleave="rule.editButton = false;" ng-mouseover="rule.editButton = true;"
               ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
-              <div class="gf-table-content" ng-hide="rule.edit === true" ng-dblclick="rule.edit = true;$GF.setFocus(rule.getId() + '-name')">
+              <div class="gf-table-content" ng-hide="rule.edit === true"
+                ng-dblclick="rule.edit = true;$GF.setFocus(rule.getId() + '-name')">
                 {{rule.data.alias}}
               </div>
               <div ng-show="rule.editButton === true && rule.edit !== true" style="padding:6px;float:right;"
@@ -122,8 +123,7 @@
               </div>
               <div ng-show="rule.edit">
                 <input type="text" class="gf-form-input max-width-16" ng-model="rule.data.alias"
-                  ng-attr-id="{{rule.getId() + '-name'}}"
-                  ng-blur="rule.edit = false;" style="width: 100%;"
+                  ng-attr-id="{{rule.getId() + '-name'}}" ng-blur="rule.edit = false;" style="width: 100%;"
                   ng-keydown="$event.keyCode === 13 ? rule.edit = false : rule.edit = true" autofocus />
               </div>
             </div>
@@ -162,18 +162,20 @@
             <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="actions"
               ng-style="{'width' : editor.rulesTable.getWidth('options')}">
               <div class="gf-table-content gf-unselectable">
+                <!-- TARGETS -->
+                <div
+                  ng-click="editor.setRuleMappings(rule);"
+                  class="gf-icon-action gf-icon-target" title="Change the targets of all mapping">
+                </div>
                 <!-- TOOLTIP -->
                 <div ng-click="rule.data.tooltip = !rule.data.tooltip;editor.onRulesChange()"
                   title="Enable/Disable tooltips" class="gf-icon-action"
                   ng-class="{'gf-icon-comment-on': rule.data.tooltip, 'gf-icon-comment-off': !rule.data.tooltip}">
                 </div>
                 <!-- CHART/GRAPH -->
-                <div 
-                  ng-show="rule.data.tooltip === false"
-                  class="gf-icon-empty">
+                <div ng-show="rule.data.tooltip === false" class="gf-icon-empty">
                 </div>
-                <div 
-                  ng-show="rule.data.tooltip === true"
+                <div ng-show="rule.data.tooltip === true"
                   ng-click="rule.data.tpGraph = !rule.data.tpGraph;editor.onRulesChange()"
                   title="Enable/Disable charts with tooltips" class="gf-icon-action"
                   ng-class="{'gf-icon-graph-off': !rule.data.tpGraph, 'gf-icon-graph-on': rule.data.tpGraph}">

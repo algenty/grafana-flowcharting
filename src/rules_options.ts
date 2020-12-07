@@ -1,12 +1,13 @@
 import { FlowchartHandler } from './flowchartHandler';
 import { RulesHandler } from './rulesHandler';
 import { Rule } from './rule_class';
-import { EventMap } from './mapping_class';
+import { EventMap, ObjectMapArray } from './mapping_class';
 import { $GF, GFTable } from './globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
 import { MetricHandler } from './metricHandler';
 import { DateTH, NumberTH, StringTH } from 'threshold_class';
+import XGraph from 'graph_class';
 
 /**
  * Rules tab controller
@@ -913,6 +914,33 @@ export class RulesOptionsCtrl {
       this.rulesHandler.moveRuleToDown(rule);
     }
     this.onRulesChange();
+  }
+
+  setRuleMappings(rule: Rule): this {
+    const _setTarget = (cell: mxCell) => {
+      if (cell) {
+        let mapsList: ObjectMapArray[] = [rule.shapeMaps, rule.textMaps, rule.linkMaps, rule.eventMaps];
+        let propList: gf.TPropertieKey[] = [
+          rule.data.shapeProp,
+          rule.data.textProp,
+          rule.data.linkProp,
+          rule.data.eventProp,
+        ];
+        for (let index = 0; index < propList.length; index++) {
+          const prop = propList[index];
+          const maps = mapsList[index];
+          const value = XGraph.getValuePropOfMxCell(prop, cell);
+          if (value) {
+            maps.forEach(map => {
+              map.setPattern(value);
+            });
+          }
+        }
+        this.onRulesChange();
+      }
+    };
+    this.flowchartHandler.setMaps(_setTarget.bind(this));
+    return this;
   }
 
   //

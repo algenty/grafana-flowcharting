@@ -61,6 +61,8 @@ Arnaud
   - align icons
   - Column resize
   - Size of plugin
+  - Styles on firefox
+
 ### Added
   - New initialization engine for drawio libs
   - New draw.io libs (13.10.9)
@@ -74,7 +76,8 @@ Arnaud
   - Add gaugePos property in Event Mapping for the gauge draw.io models [See example](https://algenty.github.io/flowcharting-repository/images/gaugePos_ani.png?raw=true))  
   - Plugin is signed
   - Add Light theme support
-  - New thresholds on dates (accept units like d, w, m, y, h, s or a date)
+  - New thresholds type : dates (accept units like d, w, m, y, h, s or a date)
+  - New event mapping operators
   - Can Enable/Disable each element.
   - Colors (threshold and background) can be empty.
   
