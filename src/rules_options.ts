@@ -4,7 +4,7 @@ import { Rule } from './rule_class';
 import { EventMap, ObjectMapArray } from './mapping_class';
 import { $GF, GFTable } from './globals_class';
 import grafana from 'grafana_func';
-import _ from 'lodash';
+import _, { after } from 'lodash';
 import { MetricHandler } from './metricHandler';
 import { DateTH, NumberTH, StringTH } from 'threshold_class';
 import XGraph from 'graph_class';
@@ -106,6 +106,15 @@ export class RulesOptionsCtrl {
         },
         {
           index: n++,
+          id: 'metric',
+          label: 'Metric',
+          desc: 'Metric Name',
+          width: '100px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
           id: 'level',
           label: 'Lvl',
           desc: 'Highest level',
@@ -127,7 +136,7 @@ export class RulesOptionsCtrl {
           id: 'fval',
           label: 'F. val.',
           desc: 'Formated value',
-          width: '100px',
+          width: '50px',
           sort: 'asc',
           select: false,
         },
@@ -664,6 +673,51 @@ export class RulesOptionsCtrl {
   getColumnsForTable(tableName: string): string[] {
     return this.metricHandler.getColumnsName(tableName, 'table');
   }
+
+  getFastEditMectricNames(rule): string[] {
+    const result: string[] = [];
+    let prefix = "";
+    if(this.isMultipleType()) {
+      prefix = "Series/";
+    }
+    this.getMetricNames().forEach(m => result.push(`${prefix}${m}`));
+    if(this.isMultipleType()) {
+      prefix = "Tables/";
+    }
+    this.getTablesName().forEach( t => {
+      this.getColumnsForTable(t).forEach(c => result.push(`${prefix}${t}/${c}`));
+    });
+    rule.metricName = this.getFastEditMectricName(rule);
+    return result;
+  }
+
+  getFastEditMectricName(rule : Rule): string {
+    let result: string = '';
+    if(this.isMultipleType()) {
+      if(rule.data.metricType === 'serie') {
+        result += "Series/" + rule.data.pattern;
+      }
+      else { 
+        result += "Tables/" + rule.data.refId + "/" + rule.data.column;
+      }
+    }
+    else { 
+      if(this.isOnlySeries()) {
+        result = rule.data.pattern;
+      }
+      else { 
+        result = rule.data.refId + "/" + rule.data.column;
+      }
+    }
+    return result;
+  }
+
+  setFastEditMectricNames(rule){
+    if(rule.FE_metricName) {
+      
+    }
+  }
+
 
   ValidateDate(rule: Rule): boolean {
     if (rule.data.type !== 'date') {

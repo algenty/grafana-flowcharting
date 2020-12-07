@@ -27,6 +27,16 @@
             ng-mousedown="editor.rulesTable.onMouseDown($event)">
           </div>
         </div>
+        <!-- METRIC NAME -->
+        <div class="gf-table-columnheader" colspan="1" role="columnheader"
+          ng-style="{'width' : editor.rulesTable.getWidth('metric')}">
+          <div ng-attr-title="{{editor.rulesTable.getDesc('metric')}}" class="gf-table-title" style="cursor: pointer;">
+            <div>{{editor.rulesTable.getLabel('metric')}}</div>
+          </div>
+          <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize"
+            ng-mousedown="editor.rulesTable.onMouseDown($event)">
+          </div>
+        </div>
         <!-- LEVEL -->
         <div class="gf-table-columnheader" colspan="1" role="columnheader"
           ng-style="{'width' : editor.rulesTable.getWidth('level')}">
@@ -127,6 +137,30 @@
                   ng-keydown="$event.keyCode === 13 ? rule.edit = false : rule.edit = true" autofocus />
               </div>
             </div>
+            <!-- METRIC NAME -->
+            <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rule"
+              ng-init="CN2 = 'metric';rule.displayEdit[CN2] = false;rule.inEdit[CN2] = false;rule.metricName = editor.getFastEditMectricName(rule);"
+              ng-mouseleave="rule.displayEdit[CN2] = false;" ng-mouseover="rule.displayEdit[CN2] = true;"
+              ng-style="{'width' : editor.rulesTable.getWidth('metric')}">
+              <div class="gf-table-content" ng-hide="rule.edit === true"
+                ng-dblclick="rule.inEdit[CN2] = true;$GF.setFocus(rule.getId() + '-' + CN2)">
+                {{rule.metricName}}
+              </div>
+              <div ng-show="rule.displayEdit[CN2] === true && rule.inEdit[CN2] !== true"
+                ng-click="rule.inEdit[CN2] = true;$GF.setFocus( rule.getId() + '-' + CN2 )"
+                title="Edit/Change metric name/alias"
+                class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
+              </div>
+              <div ng-show="rule.inEdit[CN2] === true">
+                <select style="width:100%;" convert-to-number class="gf-form-input"
+                  ng-blur="editor.onRulesChange();rule.inEdit[CN2] = false;" ng-model="rule.metricName"
+                  ng-show="elt.inEdit[CN2] === true" ng-attr-id="{{elt.getId() + '-' + CN2}}"
+                  ng-change="editor.onRulesChange()">
+                  <option type="number" ng-repeat="m in editor.getFastEditMectricNames();" ng-value="rule.metricName">{{m}}
+                  </option>
+                </select>
+              </div>
+            </div>
             <!-- LEVEL -->
             <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="level" style="text-align: center;"
               ng-style="{'width' : editor.rulesTable.getWidth('level')}">
@@ -163,9 +197,8 @@
               ng-style="{'width' : editor.rulesTable.getWidth('options')}">
               <div class="gf-table-content gf-unselectable">
                 <!-- TARGETS -->
-                <div
-                  ng-click="editor.setRuleMappings(rule);"
-                  class="gf-icon-action gf-icon-target" title="Change the targets of all mapping">
+                <div ng-click="editor.setRuleMappings(rule);" class="gf-icon-action gf-icon-target"
+                  title="Change the targets of all mapping">
                 </div>
                 <!-- TOOLTIP -->
                 <div ng-click="rule.data.tooltip = !rule.data.tooltip;editor.onRulesChange()"
