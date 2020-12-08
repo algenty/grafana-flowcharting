@@ -710,7 +710,6 @@ export class RulesOptionsCtrl {
   }
 
   setFastEditMectricName(rule: Rule) {
-    debugger
     if (rule.FE_metricName) {
       const metric = rule.FE_metricName.split('/');
       const length = metric.length;
@@ -732,17 +731,20 @@ export class RulesOptionsCtrl {
             this.ctrl.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
             return null;
           }
-        } else if (this.isOnlySeries()) {
-          rule.data.metricType = 'serie';
-          rule.data.pattern = metric[0];
-        } else if (this.isOnlyTables()) {
-          rule.data.metricType = 'table';
-          rule.data.refId = metric[0];
-          rule.data.column = metric[1];
         } else {
           this.ctrl.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
           return null;
         }
+      } else if (this.isOnlySeries()) {
+        rule.data.metricType = 'serie';
+        rule.data.pattern = metric[0];
+      } else if (this.isOnlyTables()) {
+        rule.data.metricType = 'table';
+        rule.data.refId = metric[0];
+        rule.data.column = metric[1];
+      } else {
+        this.ctrl.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
+        return null;
       }
     }
     rule.FE_metricName = this.getFastEditMectricName(rule);

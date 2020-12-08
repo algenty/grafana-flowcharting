@@ -90,16 +90,16 @@ Add a refresh timer on donwload optionsFlag
 Add rename option on flowchart
 change reset/change/apply state to event (rxjx) 
 Simplify editor
-Fix Message console
+Fix Message console : DONE
 Add multi grid modele : background
-convert threshold to object
+convert threshold to object : DONE
 add friconix to contribute
-radius to div colors
-add size of icon when mouse is hover over
-Up / down color icon on threshold
-Expand : transform : rotate + gf-icon-action
+radius to div colors ???
+add size of icon when mouse is hover over : DONE
+Up / down color icon on threshold : CANCEL
+Expand : transform : rotate + gf-icon-action : DONE
 https://developer.mozilla.org/fr/docs/Web/CSS/transform
-On hover on cell : transform it to shadow
+On hover on cell : transform it to shadow :DONE
 
 
 # effect
