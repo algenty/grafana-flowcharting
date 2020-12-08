@@ -134,6 +134,7 @@
               <div ng-show="rule.edit">
                 <input type="text" class="gf-form-input max-width-16" ng-model="rule.data.alias"
                   ng-attr-id="{{rule.getId() + '-name'}}" ng-blur="rule.edit = false;" style="width: 100%;"
+                  ng-model-onblur
                   ng-keydown="$event.keyCode === 13 ? rule.edit = false : rule.edit = true" autofocus />
               </div>
             </div>
@@ -144,7 +145,7 @@
               ng-style="{'width' : editor.rulesTable.getWidth('metric')}">
               <div class="gf-table-content" ng-show="rule.inEdit[CN2] !== true"
                 ng-dblclick="rule.inEdit[CN2] = true;$GF.setFocus(rule.getId() + '-' + CN2)">
-                {{editor.getFastEditMectricName(rule)}}
+                {{rule.metricName}}
               </div>
               <div ng-show="rule.displayEdit[CN2] === true && rule.inEdit[CN2] !== true"
                 ng-click="rule.inEdit[CN2] = true;$GF.setFocus( rule.getId() + '-' + CN2 )"
@@ -153,10 +154,10 @@
               </div>
               <div ng-show="rule.inEdit[CN2] === true">
                 <select style="width:100%;" convert-to-number class="gf-form-input"
-                  ng-blur="editor.onRulesChange();rule.inEdit[CN2] = false;" ng-model="rule.metricName"
+                  ng-blur="editor.onRulesChange();rule.inEdit[CN2] = false;" ng-model="rule.FE_metricName"
                   ng-show="rule.inEdit[CN2] === true" ng-attr-id="{{rule.getId() + '-' + CN2}}"
-                  ng-change="editor.onRulesChange()">
-                  <option type="number" ng-repeat="m in editor.getFastEditMectricNames();" ng-value="rule.metricName">{{m}}
+                  ng-change="editor.setFastEditMectricName(rule) && editor.onRulesChange()">
+                  <option type="number" ng-repeat="m in editor.getFastEditMectricNames(rule);" ng-value="rule.metricName">{{m}}
                   </option>
                 </select>
               </div>

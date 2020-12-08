@@ -25,6 +25,7 @@ export class Rule {
   numberTH: NumberTH[] = [];
   stringTH: StringTH[] = [];
   dateTH: DateTH[] = [];
+  FE_metricName: string | undefined;
   id: string;
   removeClick = 2;
 
