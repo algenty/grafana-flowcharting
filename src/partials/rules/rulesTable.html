@@ -142,9 +142,9 @@
               ng-init="CN2 = 'metric';rule.displayEdit[CN2] = false;rule.inEdit[CN2] = false;rule.metricName = editor.getFastEditMectricName(rule);"
               ng-mouseleave="rule.displayEdit[CN2] = false;" ng-mouseover="rule.displayEdit[CN2] = true;"
               ng-style="{'width' : editor.rulesTable.getWidth('metric')}">
-              <div class="gf-table-content" ng-hide="rule.edit === true"
+              <div class="gf-table-content" ng-show="rule.inEdit[CN2] !== true"
                 ng-dblclick="rule.inEdit[CN2] = true;$GF.setFocus(rule.getId() + '-' + CN2)">
-                {{rule.metricName}}
+                {{editor.getFastEditMectricName(rule)}}
               </div>
               <div ng-show="rule.displayEdit[CN2] === true && rule.inEdit[CN2] !== true"
                 ng-click="rule.inEdit[CN2] = true;$GF.setFocus( rule.getId() + '-' + CN2 )"
@@ -154,7 +154,7 @@
               <div ng-show="rule.inEdit[CN2] === true">
                 <select style="width:100%;" convert-to-number class="gf-form-input"
                   ng-blur="editor.onRulesChange();rule.inEdit[CN2] = false;" ng-model="rule.metricName"
-                  ng-show="elt.inEdit[CN2] === true" ng-attr-id="{{elt.getId() + '-' + CN2}}"
+                  ng-show="rule.inEdit[CN2] === true" ng-attr-id="{{rule.getId() + '-' + CN2}}"
                   ng-change="editor.onRulesChange()">
                   <option type="number" ng-repeat="m in editor.getFastEditMectricNames();" ng-value="rule.metricName">{{m}}
                   </option>
