@@ -1337,12 +1337,13 @@ export class GFTable {
     return false;
   }
 
-  setColumnProperty(id: string | number, property: string, value: any): this {
+  setColumnProperty(id: string | number, property: gf.TTableProperty, value: any): this {
     const isNumber = typeof id === 'number';
     for (let index = 0; index < this.tableData.columns.length; index++) {
       const element = this.tableData.columns[index];
       if ((isNumber && id === element.index) || (!isNumber && id === element.id)) {
-        element[property] = value;
+        const prop : string = property;
+        element[prop] = value;
       }
     }
     return this;
@@ -1385,7 +1386,7 @@ export class GFTable {
             const node: any = cell;
             if (index === this.indexTable) {
               node.style.width = `${width}px`;
-              this.setColumnProperty(index, 'size', `${width}px`);
+              this.setColumnProperty(index, 'width', `${width}px`);
             }
             index += 1;
           });
