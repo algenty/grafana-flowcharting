@@ -2,6 +2,7 @@ import Chartist from 'chartist';
 // import ctAreaGradient from 'chartist-plugin-gradient';
 import { Metric } from './metric_class';
 import { $GF } from 'globals_class';
+import * as d3 from 'd3';
 
 /**
  *
@@ -378,6 +379,7 @@ class LineGraphTooltip extends GraphTooltip {
     }
 
     this.chart = new Chartist.Line(div, this.data, this.chartistOptions);
+
     this.chart.on('draw', (data: any) => {
       if (data.type === 'line' || data.type === 'area') {
         if (data.type === 'line') {
@@ -405,6 +407,66 @@ class LineGraphTooltip extends GraphTooltip {
         });
       }
     });
+    return div;
+  }
+}
+
+/**
+ * tooltip for line graph
+ *
+ * @class LineGraphTooltip
+ * @extends {GraphTooltip}
+ */
+class D3LineGraphTooltip extends GraphTooltip {
+  D3Options: Chartist.ILineChartOptions;
+  chart : any;
+  div: HTMLDivElement | undefined;
+  // data: { series: Array<{ x: any; y: any }>[] } | undefined;
+  // chart: Chartist.IChartistLineChart | undefined;
+  /**
+   * Creates an instance of LineGraphTooltip.
+   * @memberof LineGraphTooltip
+   */
+  constructor() {
+    super();
+    this.type = 'line';
+    this.D3Options = {
+
+    };
+  }
+
+  /**
+   * get current Div
+   *
+   * @param {HTMLDivElement} parentDiv
+   * @returns {HTMLDivElement}
+   * @memberof LineGraphTooltip
+   */
+  getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
+    if (this.metric) {
+      let log = this.scaleType === 'log' ? true : false;
+      this.data.series[0]['data'] = this.metric.getData(this.column, log);
+    }
+    const div = document.createElement('div');
+    const color = this.color;
+    this.div = div;
+    if (parentDiv !== undefined) {
+      parentDiv.appendChild(div);
+    }
+    // div.className = 'ct-chart ct-golden-section';
+    if (this.size !== null) {
+      div.style.width = this.size;
+    }
+    if (this.low !== null) {
+      this.D3Options.low = this.low;
+    }
+    if (this.high !== null) {
+      this.D3Options.high = this.high;
+    }
+
+    // this.chart = new Chartist.Line(div, this.data, this.D3Options);
+    this.chart = d3.select(this.div).append('svg').;
+    
     return div;
   }
 }
