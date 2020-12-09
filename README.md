@@ -52,14 +52,12 @@ Arnaud
 
 # Changelog
 
-## [[1.0.0a SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-1.0.0a-SNAPSHOT.zip) - 2020-12-06
+## [[1.0.0b SNAPSHOT]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-1.0.0b-SNAPSHOT.zip) - 2020-12-08
 
 ### TODO
   - Disable anim not work
-  - message console size
   - display zoom percent
   - align icons
-  - Column resize
   - Size of plugin
   - Styles on firefox
 
@@ -72,6 +70,7 @@ Arnaud
   - New UX design and new concept "fast edit" :
     - Can edit without expand rules and flowcharts with icons
     - Advanced/detail mode on expand.
+    - Fast edit mode
   - Add shape name and properties in inspect console ([See example](https://algenty.github.io/flowcharting-repository/images/inspectv7_ani.png?raw=true))  
   - Add gaugePos property in Event Mapping for the gauge draw.io models [See example](https://algenty.github.io/flowcharting-repository/images/gaugePos_ani.png?raw=true))  
   - Plugin is signed
@@ -80,6 +79,7 @@ Arnaud
   - New event mapping operators
   - Can Enable/Disable each element.
   - Colors (threshold and background) can be empty.
+  
   
 ### Fixed
   - Fixed : Inspect mode [(issue #209)](https://github.com/algenty/grafana-flowcharting/issues/209) ([See example](https://algenty.github.io/flowcharting-repository/images/inspectv7_ani.png?raw=true))  

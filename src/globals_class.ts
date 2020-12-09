@@ -1342,7 +1342,7 @@ export class GFTable {
     for (let index = 0; index < this.tableData.columns.length; index++) {
       const element = this.tableData.columns[index];
       if ((isNumber && id === element.index) || (!isNumber && id === element.id)) {
-        const prop : string = property;
+        const prop: string = property;
         element[prop] = value;
       }
     }
