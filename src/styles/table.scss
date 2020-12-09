@@ -98,7 +98,8 @@ div.gf-table-resizeHandle {
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
   transition-delay: 0s;
-  width: 3px !important;
+  min-width: 3px;
+  max-width: 3px;
   height: 100%;
   /* position: absolute; */
   right: -4px;

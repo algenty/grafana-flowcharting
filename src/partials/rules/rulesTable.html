@@ -119,27 +119,22 @@
             </div>
             <!-- RULE NAME -->
             <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rule"
-              ng-mouseleave="rule.editButton = false;" ng-mouseover="rule.editButton = true;"
+              ng-init="CN1 = 'rule';rule.displayEdit[CN1] = false;rule.inEdit[CN1] = false;"
+              ng-mouseleave="rule.displayEdit[CN1] = false;" ng-mouseover="rule.displayEdit[CN1] = true;"
               ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
-              <div class="gf-table-content" ng-hide="rule.edit === true"
-                ng-dblclick="rule.edit = true;$GF.setFocus(rule.getId() + '-name')">
+              <div class="gf-table-content" ng-show="rule.inEdit[CN1] !== true"
+                ng-dblclick="rule.inEdit[CN1] = true;$GF.setFocus(rule.getId() + '-' + CN1)">
                 {{rule.data.alias}}
               </div>
-              <!-- <div ng-show="rule.editButton === true && rule.edit !== true" style="padding:6px;float:right;"
-                ng-click="rule.edit = true;$GF.setFocus(rule.getId() + '-name')">
-                <span title="Edit/Change rule name">
-                  <i class="fa fa-edit"></i>
-                </span>
-              </div> -->
               <div ng-show="rule.displayEdit[CN1] === true && rule.inEdit[CN1] !== true"
                 ng-click="rule.inEdit[CN1] = true;$GF.setFocus( rule.getId() + '-' + CN1 )"
                 title="Edit/Change metric name/alias"
                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
               </div>
-              <div ng-show="rule.edit">
+              <div ng-show="rule.inEdit[CN1] === true">
                 <input type="text" class="gf-form-input max-width-16" ng-model="rule.data.alias"
-                  ng-attr-id="{{rule.getId() + '-name'}}" ng-blur="rule.edit = false;" style="width: 100%;"
-                  ng-model-onblur ng-keydown="$event.keyCode === 13 ? rule.edit = false : rule.edit = true" autofocus />
+                  ng-attr-id="{{rule.getId() + '-' + CN1}}" ng-blur="rule.inEdit[CN1] = false;" style="width: 100%;"
+                  ng-model-onblur ng-keydown="$event.keyCode === 13 ? rule.inEdit[CN1] = false : rule.inEdit[CN1] = true" autofocus />
               </div>
             </div>
             <!-- METRIC NAME -->
@@ -159,7 +154,7 @@
               <div ng-show="rule.inEdit[CN2] === true">
                 <select style="width:100%;" convert-to-number class="gf-form-input"
                   ng-blur="editor.onRulesChange();rule.inEdit[CN2] = false;" ng-model="rule.FE_metricName"
-                  ng-show="rule.inEdit[CN2] === true" ng-attr-id="{{rule.getId() + '-' + CN2}}"
+                  ng-attr-id="{{rule.getId() + '-' + CN2}}"
                   ng-change="editor.setFastEditMectricName(rule) && editor.onRulesChange();rule.inEdit[CN2] = false"
                   ng-options="m for m in editor.getFastEditMectricNames(rule)">
                   <!-- <option type="number" ng-repeat="m in editor.getFastEditMectricNames(rule);" ng-value="rule.FE_metricName">{{m}}
