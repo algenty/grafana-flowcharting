@@ -25,7 +25,7 @@ declare module gf {
     value: boolean;
   }
 
-  declare type TPropertieKey = 'id' | 'value' | 'form'; //Type properties for finding cells
+  declare type TPropertieKey = 'id' | 'value' | 'metadata'; //Type properties for finding cells
   declare type TPropertieList = { text: string; value: TPropertieKey }[];
 
   declare interface TIFlowchartOptionsScope extends ng.IScope {
@@ -269,6 +269,7 @@ declare module gf {
   }
 
   declare interface TGFMapData {
+    attribute: string;
     pattern: string;
     hidden: boolean;
   }

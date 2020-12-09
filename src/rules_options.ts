@@ -63,6 +63,7 @@ export class RulesOptionsCtrl {
   getCellNames: (prop: gf.TPropertieKey) => any[];
   getCellNamesById: () => any[];
   getCellNamesByValue: () => any[];
+  getCellNames4: (prop : gf.TPropertieKey, attribute ?:string) => string[];
   getVariables: () => any;
   // getEventValues: () => any;
   getEventValues: string[];
@@ -629,12 +630,25 @@ export class RulesOptionsCtrl {
       return this.getCellNames('value');
     };
 
+    this.getCellNames4 = (prop : gf.TPropertieKey, attribute ?: string) => {
+      return () => {
+        const flowchart = this.flowchartHandler.getFlowchart();
+        const cells = flowchart.getNamesByProp(prop);
+        const uniq = new Set(cells);
+        let filter = [...uniq];
+        filter = filter.filter(e => e !== undefined && e.length > 0);
+        return filter;
+      }
+    }
+
     this.getVariables = () => {
       return $GF.getFullAvailableVarNames();
     };
 
     this.getEventValues = [];
   }
+
+
 
   isFirstRule(index: number): boolean {
     if (index === 0) {

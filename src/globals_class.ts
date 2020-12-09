@@ -106,6 +106,7 @@ class GFCONSTANT {
   IDENT_TYPES: { text: string; value: gf.TPropertieKey }[] = [
     { text: 'Id', value: 'id' },
     { text: 'Label', value: 'value' },
+    { text: 'Metadata', value: 'metadata' },
   ];
   AGGREGATION_TYPES: gf.TAggregationList = [
     { text: 'First', value: 'first' },
@@ -810,7 +811,7 @@ export class $GF {
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
-  static DEBUG = false;
+  static DEBUG = true;
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;

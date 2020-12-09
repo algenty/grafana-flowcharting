@@ -12,15 +12,21 @@
         </info-popover>
     </label>
     <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
-        class="gf-form-input width-8" ng-model="shape.data.pattern" ng-if="rule.data.shapeProp === 'id'"
-        bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-        bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+        class="gf-form-input width-8" ng-model="shape.data.pattern"
+        ng-attr-title="{ 'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)': rule.data.shapeProp === 'id' , 'Specify regex using /my.*regex/ syntax or complete label of shape': rule.data.shapeProp === 'value' }"
+        bs-typeahead="editor.getCellNames4(rule.data.shapeProp)" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
-    <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
+    <!-- <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
         ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100" class="gf-form-input width-8"
         ng-model="shape.data.pattern" ng-if="rule.data.shapeProp === 'value'"
         bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
         bs-typeahead="editor.getCellNamesByValue" ng-model-onblur data-placement="right" />
+    <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="Attribute value or regex"
+        ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100" class="gf-form-input width-8"
+        ng-model="shape.data.pattern" ng-if="rule.data.shapeProp === 'value'"
+        bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
+        bs-typeahead="editor.getCellNamesByMetadata
+        " ng-model-onblur data-placement="right" /> -->
     <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
         title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)">
         <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>

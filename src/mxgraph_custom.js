@@ -57,7 +57,6 @@ Graph.prototype.getTooltipForCell = function (cell) {
       ttDiv.innerHTML = this.sanitizeHtml(tmp);
       div.appendChild(ttDiv);
     }
-
     let ignored = this.builtInProperties;
     let attrs = cell.value.attributes;
     let temp = [];
