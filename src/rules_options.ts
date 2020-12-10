@@ -1,7 +1,7 @@
 import { FlowchartHandler } from './flowchartHandler';
 import { RulesHandler } from './rulesHandler';
 import { Rule } from './rule_class';
-import { EventMap, ObjectMapArray } from './mapping_class';
+import { EventMap, LinkMap, ObjectMap, ObjectMapArray, ShapeMap, TextMap } from './mapping_class';
 import { $GF, GFTable } from './globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
@@ -59,10 +59,11 @@ export class RulesOptionsCtrl {
   tpGraphType = $GF.CONSTANTS.TOOLTIP_GRAPH_TYPES;
   tpGraphScale = $GF.CONSTANTS.TOOLTIP_GRAPH_SCALE_TYPES;
   tpGraphSize = $GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
+  currentParams = new Map();
   getMetricNames: () => any[];
-  getCellNames: (prop: gf.TPropertieKey) => any[];
-  getCellNamesById: () => any[];
-  getCellNamesByValue: () => any[];
+  // getCellNames: (prop: gf.TPropertieKey) => any[];
+  // getCellNamesById: () => any[];
+  // getCellNamesByValue: () => any[];
   // getCellNames4: (rule : Rule) => string[];
   getVariables: () => any;
   // getEventValues: () => any;
@@ -613,22 +614,22 @@ export class RulesOptionsCtrl {
       return this.metricHandler.getNames('serie');
     };
 
-    this.getCellNames = (prop: gf.TPropertieKey = 'id'): string[] => {
-      const flowchart = this.flowchartHandler.getFlowchart();
-      const cells = flowchart.getNamesByProp(prop);
-      const uniq = new Set(cells);
-      let filter = [...uniq];
-      filter = filter.filter(e => e !== undefined && e.length > 0);
-      return filter;
-    };
+    // this.getCellNames = (prop: gf.TPropertieKey = 'id'): string[] => {
+    //   const flowchart = this.flowchartHandler.getFlowchart();
+    //   const cells = flowchart.getNamesByProp(prop);
+    //   const uniq = new Set(cells);
+    //   let filter = [...uniq];
+    //   filter = filter.filter(e => e !== undefined && e.length > 0);
+    //   return filter;
+    // };
 
-    this.getCellNamesById = (): string[] => {
-      return this.getCellNames('id');
-    };
+    // this.getCellNamesById = (): string[] => {
+    //   return this.getCellNames('id');
+    // };
 
-    this.getCellNamesByValue = (): string[] => {
-      return this.getCellNames('value');
-    };
+    // this.getCellNamesByValue = (): string[] => {
+    //   return this.getCellNames('value');
+    // };
 
     this.getVariables = () => {
       return $GF.getFullAvailableVarNames();
@@ -637,15 +638,83 @@ export class RulesOptionsCtrl {
     this.getEventValues = [];
   }
 
-  getCellNames4 = (prop : gf.TPropertieKey) => {
-      console.log("🚀 ~ file: rules_options.ts ~ line 641 ~ RulesOptionsCtrl ~ prop", prop)
-      const flowchart = this.flowchartHandler.getFlowchart();
-      const cells = flowchart.getNamesByProp(prop);
-      const uniq = new Set(cells);
-      let filter = [...uniq];
-      filter = filter.filter(e => e !== undefined && e.length > 0);
-      return filter;
+  setCurrentParam(prop : string, value : any) {
+    console.log("RulesOptionsCtrl -> setCurrentParam -> prop, value", prop, value);
+    this.currentParams.set(prop, value);
+  }
+
+  unsetCurrentParam(prop : string) {
+    console.log("RulesOptionsCtrl -> unsetCurrentParam -> prop", prop);
+    this.currentParams.delete(prop);
+  }
+
+  setCurrentMap(map : ObjectMap) {
+    const currRule:Rule = this.getCurrentParam('currentRule');
+    // let currProp = '';
+    // let currMD = '';
+    if(currRule) {
+      this.setCurrentParam('currentMap', map);
+      // if(map instanceof ShapeMap) {
+      //   currProp = currRule.data.shapeProp;
+      //   currMD = currRule.data.shapeMD;
+      // }
+      // if(map instanceof TextMap) {
+      //   currProp = currRule.data.textProp;
+      //   currMD = currRule.data.textMD;
+      // }
+      // if(map instanceof LinkMap) {
+      //   currProp = currRule.data.linkProp;
+      //   currMD = currRule.data.linkMD;
+      // }
+      // if(map instanceof EventMap) {
+      //   currProp = currRule.data.eventProp;
+      //   currMD = currRule.data.eventMD;
+      // }
+      // this.setCurrentParam("currentProp", currProp);
+      // this.setCurrentParam("currentMD", currMD);
+    }
+  }
+
+  unsetCurrentMap() {
+    this.unsetCurrentParam("currentMap");
+    // this.unsetCurrentParam("currentProp");
+    // this.unsetCurrentParam("currentMD");
+  }
+
+  getCurrentParam(prop : string) {
+    return this.currentParams.get(prop);
+  }
+
+  getCellNamesTypeHead = () => {
+    const prop = this.getCurrentParam('currentProp');
+    return this.getCellNames4(prop);
   };
+
+  getCellNamesMD = () => {
+    const md = this.getCurrentParam('currentMD');
+    return this.getCellNames4('metadata', md);
+  }
+
+  getCellNames4(prop : gf.TPropertieKey, attribute ?: string) {
+    let filter:any[] = [];
+    if(prop) {
+      const flowchart = this.flowchartHandler.getFlowchart();
+      if(!attribute) {
+        filter = flowchart.getNamesByProp(prop);
+      }
+      else {
+        const xgraph = flowchart.getXGraph();
+        if(xgraph) {
+          filter = xgraph.getCurrentMDValue(attribute);
+        }
+      }
+      // const uniq = new Set(cells);
+      // filter = [...uniq];
+      // filter = filter.filter(e => e !== undefined && e.length > 0);
+    }
+    return filter;
+  }
+
 
   isFirstRule(index: number): boolean {
     if (index === 0) {
@@ -873,13 +942,13 @@ export class RulesOptionsCtrl {
   /**
    * Display cell selection in graph
    * @param  {} prop
-   * @param  {} value
+   * @param  {} pattern
    */
-  async selectCell(prop: gf.TPropertieKey, value: string) {
+  async selectCell(prop: gf.TPropertieKey, pattern: string, option ?: string) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
-      xgraph.selectMxCells(prop, value);
+      xgraph.selectMxCells(prop, pattern, option);
     }
   }
 
@@ -888,11 +957,11 @@ export class RulesOptionsCtrl {
    *
    * @memberof RulesOptionsCtrl
    */
-  async unselectCell(prop: gf.TPropertieKey, value: string) {
+  async unselectCell(prop: gf.TPropertieKey, pattern: string, option ?: string) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
-      xgraph.unselectMxCells(prop, value);
+      xgraph.unselectMxCells(prop, pattern, option);
     }
   }
 

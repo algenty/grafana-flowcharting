@@ -87,11 +87,13 @@
             <!-- TBODY -->
             <div class="gf-table-body">
                 <div role="row" class="gf-table-rows-2 gf-table-rows-resizable"
-                    ng-repeat="shape in rule.getShapeMaps()">
+                    ng-repeat="shape in rule.getShapeMaps()" 
+                    ng-mouseenter="editor.setCurrentMap(shape);"
+                    ng-mouseleave="editor.unsetCurrentMap();">
                     <!-- CELLS -->
                     <div class="gf-table-row_line"
-                        ng-mouseleave="editor.unselectCell(rule.data.shapeProp,shape.data.pattern)"
-                        ng-mouseover="editor.selectCell(rule.data.shapeProp,shape.data.pattern)">
+                        ng-mouseleave="editor.unselectCell(rule.data.shapeProp,shape.data.pattern, rule.data.shapeMD);"
+                        ng-mouseover="editor.selectCell(rule.data.shapeProp, shape.data.pattern, rule.data.shapeMD)">
                         <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
                             ng-click="shape.reduce=!shape.reduce" title="Expand/Collapse for detail"
@@ -104,7 +106,7 @@
                                 </span>
                             </div>
                         </div>
-                        <!-- WHAT -->
+                        <!-- WHAT/PATTERN -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="what"
                             ng-mouseleave="shape.displayWhatEdit = false;" ng-mouseover="shape.displayWhatEdit = true;"
                             ng-style="{'width' : editor.shapesTable.getWidth('what')}"
@@ -127,7 +129,7 @@
                                 ng-model="shape.data.pattern" style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{shape.getId() + '-what'}}" ng-model-onblur
                                 ng-blur="editor.onRulesChange();shape.whatEdit = false;"
-                                bs-typeahead="rule.data.shapeProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
+                                bs-typeahead="rule.data.shapeProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD"
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
                         <!-- WHEN -->
@@ -135,7 +137,6 @@
                             ng-mouseleave="shape.displayWhenEdit = false;" ng-mouseover="shape.displayWhenEdit = true;"
                             ng-style="{'width' : editor.shapesTable.getWidth('when')}"
                             ng-attr-title="{{$GF.GetT4V( editor.colorOn, shape.data.colorOn)}}">
-                            <!-- {{shape.data.colorOn}} -->
                             <div class="gf-table-content" style="text-align: left;" ng-show="shape.whenEdit !== true">
                                 {{$GF.GetT4V( editor.colorOn, shape.data.colorOn)}}
                             </div>

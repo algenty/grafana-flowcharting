@@ -247,18 +247,23 @@ declare module gf {
     tpGraphHigh: number | null;
     tpGraphScale: TGraphScaleKeys;
     shapeProp: TPropertieKey;
+    shapeMD: string;
     shapeRegEx: boolean;
     shapeData: TShapeMapData[];
+    
     numberTHData: TTHNumberData[];
     stringTHData: TTHStringData[];
     dateTHData: TTHDateData[];
     textProp: TPropertieKey;
+    textMD: string;
     textRegEx: boolean;
     textData: TTextMapData[];
     linkProp: TPropertieKey;
+    linkMD: string;
     linkRegEx: boolean;
     linkData: TlinkMapData[];
     eventProp: TPropertieKey;
+    eventMD: string;
     eventRegEx: boolean;
     eventData: TeventMapData[];
     mappingType: number;
@@ -269,7 +274,6 @@ declare module gf {
   }
 
   declare interface TGFMapData {
-    attribute: string;
     pattern: string;
     hidden: boolean;
   }

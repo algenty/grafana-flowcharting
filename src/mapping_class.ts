@@ -30,9 +30,7 @@ class GFMap {
     if (!!obj.pattern) {
       this.data.pattern = obj.pattern;
     }
-    if (!!obj.attribute) {
-      this.data.attribute = obj.attribute;
-    }
+
     if (!!obj.hidden) {
       this.data.hidden = obj.hidden;
     }

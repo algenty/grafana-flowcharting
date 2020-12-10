@@ -94,7 +94,7 @@ export default class XGraph {
           console.log('DEBUG GF STATE', state);
           console.log('DEBUG MXCELL', mxcell);
           console.log('DEBUG MXCELL STATE', mxcellState);
-          console.table(XGraph.getAttributes(mxcell, false));          
+          console.table(XGraph.getAttributes(mxcell, false));
         }
       });
     }
@@ -200,20 +200,6 @@ export default class XGraph {
     urlParams['nav'] = '1'; // Enables folding in chromeless mode
     urlParams['local'] = '1'; // Uses device mode only
     urlParams['embed'] = '1'; // Runs in embed mode
-    // const theme = $GF.getTheme();
-    // switch (theme) {
-    //   case 'dark':
-    //     urlParams['ui'] = 'dark';
-    //     break;
-
-    //   case 'light':
-    //     urlParams['ui'] = 'kennedy';
-    //     break;
-
-    //   default:
-    //     urlParams['ui'] = 'dark';
-    //     break;
-    // }
     urlParams['ui'] = 'min';
     myWindow.mxImageBasePath = $GF.plugin.getMxImagePath();
     myWindow.mxBasePath = $GF.plugin.getMxBasePath();
@@ -303,13 +289,18 @@ export default class XGraph {
     } catch (error) {
       $GF.log.error('Error in draw', error);
     } finally {
-      this.cells['id'] = this.getCurrentCells('id');
-      this.cells['value'] = this.getCurrentCells('value');
-      this.cells['metadata'] = this.getCurrentCells('metadata');
+      this.initOriginalDatas();
       this.graph.getModel().endUpdate();
     }
     trc.after();
     return this;
+  }
+
+  async initOriginalDatas() {
+    this.cells['id'] = this.getCurrentCells('id');
+    this.cells['value'] = this.getCurrentCells('value');
+    this.cells['metadata'] = this.getCurrentCells('metadata');
+    console.log("initOriginalDatas -> this.cells", this.cells);
   }
 
   async loadExtFont() {
@@ -622,6 +613,22 @@ export default class XGraph {
     return this;
   }
 
+  getCurrentMDValue(regName : string) {
+    const model = this.graph.getModel();
+    const cells = model.cells;
+    const values: string[] = []; 
+    _.each(cells, (mxcell: mxCell) => {
+      const attrs = XGraph.getAttributes(mxcell);
+      for (let index = 0; index < attrs.length; index++) {
+        const attr = attrs[index];
+        if (attr.name !== undefined && $GF.utils.matchString(attr.name, regName) && values.includes(attr.value) !== true) {
+          values.push(attr.value);
+        }
+      }
+    });
+    return values;
+  }
+
   /**
    * Get list of values or id
    *
@@ -634,26 +641,36 @@ export default class XGraph {
     const cellIds: string[] = [];
     const model = this.graph.getModel();
     const cells = model.cells;
-    if (prop === 'id') {
-      _.each(cells, (mxcell: mxCell) => {
-        cellIds.push(XGraph.getId(mxcell));
-      });
-    } else if (prop === 'value') {
-      _.each(cells, (mxcell: mxCell) => {
-        cellIds.push(XGraph.getLabelCell(mxcell));
-      });
-    } else if(prop === 'metadata') {
-      _.each(cells, (mxcell: mxCell) => {
-          const attrs = XGraph.getAttributes(mxcell);
-          for (let index = 0; index < attrs.length; index++) {
-            const attr = attrs[index];
-            if(attr.name !== undefined && cellIds.indexOf(attr.name) < 0 ) {
-              cellIds.push(attr.name);
-            }
-          }
-          cellIds.push(XGraph.getLabelCell(mxcell))
-      });
+    const add = (data) => {
+      if(data !== undefined && data !== null && data.length > 0 && cellIds.includes(data) !== true) {
+        cellIds.push(data);
+      }
     }
+    
+    _.each(cells, (mxcell: mxCell) => {
+      let result = ''
+      switch (prop) {
+        case 'id':
+          result = XGraph.getId(mxcell);
+          add(result);
+          break;
+        case 'value':
+          result = XGraph.getLabelCell(mxcell);
+          add(result)
+          break;
+        case 'metadata':
+          const attrs = XGraph.getAttributes(mxcell);
+          const length = attrs.length;
+          for (let index = 0; index < length; index++) {
+            const attr = attrs[index];
+            add(attr.name);
+          }
+          break;
+        default:
+          $GF.log.error("Unknow prop : " + prop);
+          break;
+      }
+    });
     trc.after();
     return cellIds;
   }
@@ -666,7 +683,7 @@ export default class XGraph {
    * @returns {mxCell[]}
    * @memberof XGraph
    */
-  findMxCells(prop: gf.TPropertieKey, pattern: string, value ?:string): mxCell[] {
+  findMxCells(prop: gf.TPropertieKey, pattern: string, option?: string): mxCell[] {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'findMxCells()');
     const mxcells = this.getMxCells();
     const result: any[] = [];
@@ -684,7 +701,7 @@ export default class XGraph {
       });
     } else if (prop === 'metadata') {
       _.each(mxcells, (mxcell: mxCell) => {
-        if (XGraph.matchAttribute(mxcell, pattern, value)) {
+        if (XGraph.matchAttribute(mxcell, option, pattern)) {
           result.push(mxcell);
         }
       });
@@ -724,8 +741,8 @@ export default class XGraph {
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  async selectMxCells(prop: gf.TPropertieKey, pattern: string, value ?: string) {
-    const mxcells = this.findMxCells(prop, pattern, value);
+  async selectMxCells(prop: gf.TPropertieKey, pattern: string, option?: string) {
+    const mxcells = this.findMxCells(prop, pattern, option);
     if (mxcells) {
       this.highlightCells(mxcells);
     }
@@ -737,8 +754,8 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  async unselectMxCells(prop: gf.TPropertieKey, pattern: string) {
-    const mxcells = this.findMxCells(prop, pattern);
+  async unselectMxCells(prop: gf.TPropertieKey, pattern: string, option ?: string) {
+    const mxcells = this.findMxCells(prop, pattern, option); 
     if (mxcells) {
       this.unhighlightCells(mxcells);
     }
@@ -827,7 +844,7 @@ export default class XGraph {
    * @returns {string[]} value of labels or id frome source
    * @memberof XGraph
    */
-  getOrignalCells(prop: gf.TPropertieKey, attribute ?: string): string[] {
+  getOrignalCells(prop: gf.TPropertieKey, attribute?: string): string[] {
     if (prop === 'id' || prop === 'value' || prop === 'metadata') {
       return this.cells[prop];
     }
@@ -840,23 +857,23 @@ export default class XGraph {
    * @static
    * @param {mxCell} cell
    * @param {boolean} [filter=true]
-   * 
+   *
    * @returns {{name : string, value : string}[]}
    * @memberof XGraph
    */
-  static getAttributes(cell : mxCell, filter : boolean = true): {name : string, value : string}[] {
-    const result:{name : string, value : string}[] = [];
-    if(cell && mxUtils.isNode(cell.value)) {
-      const ignored = [ "label" , "tooltip", "placeholders", "placeholder", "link" ];
+  static getAttributes(cell: mxCell, filter: boolean = true): { name: string; value: string }[] {
+    const result: { name: string; value: string }[] = [];
+    if (cell && mxUtils.isNode(cell.value)) {
+      const ignored = ['label', 'tooltip', 'placeholders', 'placeholder', 'link'];
       const attrs = cell.value.attributes;
       const length = attrs.length;
       for (var i = 0; i < length; i++) {
-        if(filter) {
+        if (filter) {
           if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
-            result.push({ name : attrs[i].nodeName, value : attrs[i].nodeValue });
+            result.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
           }
         } else {
-          result.push({ name : attrs[i].nodeName, value : attrs[i].nodeValue });
+          result.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
         }
       }
     }
@@ -872,11 +889,11 @@ export default class XGraph {
    * @returns {boolean}
    * @memberof XGraph
    */
-  static hasAttribute(cell : mxCell, regex : string): boolean {
+  static hasAttribute(cell: mxCell, regex: string): boolean {
     const attrs = XGraph.getAttributes(cell);
     length = attrs.length;
     for (var i = 0; i < length; i++) {
-      if($GF.utils.matchString(attrs[i].name, regex)) {
+      if ($GF.utils.matchString(attrs[i].name, regex)) {
         return true;
       }
     }
@@ -892,7 +909,7 @@ export default class XGraph {
    * @returns {string}
    * @memberof XGraph
    */
-  static getAttribute(cell : mxCell, name : string) : string {
+  static getAttribute(cell: mxCell, name: string): string {
     return cell.getAttribute(name);
   }
 
@@ -906,27 +923,26 @@ export default class XGraph {
    * @returns {boolean}
    * @memberof XGraph
    */
-  static matchAttribute(cell : mxCell, regName ?: string, regValue ?: string): boolean {
+  static matchAttribute(cell: mxCell, regName?: string, regValue?: string): boolean {
     const attrs = XGraph.getAttributes(cell);
     length = attrs.length;
     for (var i = 0; i < length; i++) {
-      if(regName !== undefined) {
-        if($GF.utils.matchString(attrs[i].name, regName)) {
-          if(regValue !== undefined) {
-            if($GF.utils.matchString(attrs[i].value, regValue)) {
-              return true
+      if (regName !== undefined) {
+        if ($GF.utils.matchString(attrs[i].name, regName)) {
+          if (regValue !== undefined) {
+            if ($GF.utils.matchString(attrs[i].value, regValue)) {
+              return true;
             }
-          }
-          else {
+          } else {
             return true;
           }
         }
-      } else if(regValue !== undefined) {
-        if($GF.utils.matchString(attrs[i].value, regValue)) {
-          return true
+      } else if (regValue !== undefined) {
+        if ($GF.utils.matchString(attrs[i].value, regValue)) {
+          return true;
         }
       } else {
-        return false
+        return false;
       }
     }
     return false;
@@ -981,14 +997,14 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  static getValuePropOfMxCell(prop: gf.TPropertieKey, mxcell: mxCell, attribute ?:string): string | null {
+  static getValuePropOfMxCell(prop: gf.TPropertieKey, mxcell: mxCell, attribute?: string): string | null {
     if (prop === 'id') {
       return XGraph.getId(mxcell);
     }
     if (prop === 'value') {
       return XGraph.getLabelCell(mxcell);
     }
-    if(prop === 'metadata' && attribute !== undefined) {
+    if (prop === 'metadata' && attribute !== undefined) {
       return XGraph.getAttribute(mxcell, attribute);
     }
     return null;

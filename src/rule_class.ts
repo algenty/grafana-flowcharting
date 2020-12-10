@@ -93,15 +93,19 @@ export class Rule {
       tpGraphHigh: null,
       tpGraphScale: 'linear',
       shapeProp: 'id',
+      shapeMD: 'NAME',
       shapeRegEx: true,
       shapeData: [],
       textProp: 'id',
+      textMD: 'NAME',
       textRegEx: true,
       textData: [],
       linkProp: 'id',
+      linkMD: 'NAME', 
       linkRegEx: true,
       linkData: [],
       eventProp: 'id',
+      eventMD: 'NAME', 
       eventRegEx: false,
       eventData: [],
       mappingType: 1,
@@ -369,6 +373,9 @@ export class Rule {
     if (!!obj.shapeProp) {
       this.data.shapeProp = obj.shapeProp;
     }
+    if (!!obj.shapeMD) {
+      this.data.shapeMD = obj.shapeMD;
+    }
     if (!!obj.shapeRegEx || obj.shapeRegEx === false) {
       this.data.shapeRegEx = obj.shapeRegEx;
     }
@@ -403,6 +410,10 @@ export class Rule {
     if (!!obj.textRegEx || obj.textRegEx === false) {
       this.data.textRegEx = obj.textRegEx;
     }
+    if (!!obj.textMD) {
+      this.data.textMD = obj.textMD;
+    }
+
     this.data.textData = [];
     // For 0.2.0
     maps = [];
@@ -434,6 +445,9 @@ export class Rule {
     if (!!obj.linkRegEx || obj.linkRegEx === false) {
       this.data.linkRegEx = obj.linkRegEx;
     }
+    if (!!obj.linkMD) {
+      this.data.linkMD = obj.linkMD;
+    }
     this.data.linkData = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
       obj.linkData.forEach((linkData: gf.TlinkMapData) => {
@@ -455,6 +469,9 @@ export class Rule {
     this.data.eventProp = obj.eventProp || 'id';
     if (!!obj.eventRegEx || obj.eventRegEx === false) {
       this.data.eventRegEx = obj.eventRegEx;
+    }
+    if (!!obj.eventMD) {
+      this.data.eventMD = obj.eventMD;
     }
     this.data.eventData = [];
     if (obj.eventData !== undefined && obj.eventData != null && obj.eventData.length > 0) {
@@ -1090,7 +1107,7 @@ export class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  matchShape(pattern: string | null): boolean {
+  matchShape(pattern: string | null, option ?: string): boolean {
     let found = false;
     this.shapeMaps.forEach(element => {
       if (element.match(pattern, this.data.shapeRegEx)) {

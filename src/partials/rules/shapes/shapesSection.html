@@ -1,4 +1,6 @@
-<div class="section gf-form-group">
+<div class="section gf-form-group"
+    ng-mouseenter="editor.setCurrentParam('currentProp', rule.data.shapeProp);editor.setCurrentParam('currentMD', rule.data.shapeMD);"
+    ng-mouseleave="editor.unsetCurrentParam('currentProp');editor.unsetCurrentParam('currentMD');">
     <h5 class="section-heading">
         Color/Tooltip Mappings
         <info-popover mode="right-normal">
@@ -19,8 +21,22 @@
             <div class="gf-form-select-wrapper">
                 <select class="gf-form-input width-10" ng-model="rule.data.shapeProp"
                     ng-options="c.value as c.text for c in editor.propTypes"
-                    ng-change="editor.onRulesChange()"></select>
+                    ng-change="editor.setCurrentParam('currentProp', rule.data.shapeProp);editor.onRulesChange()"></select>
             </div>
+        </div>
+        <div class="gf-form" ng-show="rule.data.shapeProp === 'metadata'">
+            <span class="gf-form-label width-11">Data name
+                <info-popover mode="right-normal">
+                    <span ng-bind-html="$GF.popover('Select a metadata name or a regex', 'SHAPES')">
+                    </span>
+                </info-popover>
+            </span>
+            <!-- ID INPUT -->
+            <input type="text" style="margin-right: 2px;" placeholder="id or regex of shape"
+                class="gf-form-input width-8" ng-model="rule.data.shapeMD"
+                title="Enter a metadata name or a regex"
+                bs-typeahead="editor.getCellNamesTypeHead" ng-blur="editor.setCurrentParam('currentMD', rule.data.shapeMD);editor.onRulesChange()" data-min-length="0"
+                data-items="100" ng-model-onblur data-placement="right" />
         </div>
         <div class="gf-form">
             <!-- ID Regular expression -->
@@ -30,13 +46,5 @@
             </gf-form-switch>
         </div>
         <ng-include src="$GF.plugin.getPartialPath() + 'rules/shapes/shapesTable.html'"> </ng-include>
-        <!-- <div class="gf-form">
-            <div class="gf-form-button-row">
-                <button class="btn btn-inverse" ng-click="rule.addShapeMap('')">
-                    <i class="fa fa-plus"></i>
-                    &nbsp;Add mapping
-                </button>
-            </div>
-        </div> -->
     </div>
 </div>
