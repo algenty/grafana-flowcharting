@@ -13,7 +13,7 @@
     </label>
     <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
         class="gf-form-input width-8" ng-model="shape.data.pattern"
-        ng-attr-title="{ 'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)': rule.data.shapeProp === 'id' , 'Specify regex using /my.*regex/ syntax or complete label of shape': rule.data.shapeProp === 'value' }"
+        ng-attr-title="Enter an id, label,metadata attribute or regex to identify object"
         bs-typeahead="editor.getCellNames4(rule.data.shapeProp)" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
     <!-- <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"

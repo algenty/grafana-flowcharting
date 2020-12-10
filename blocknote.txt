@@ -102,6 +102,7 @@ https://developer.mozilla.org/fr/docs/Web/CSS/transform
 On hover on cell : transform it to shadow :DONE
 Add option to display or not metadata in tooltip
 Add event to add/change/remove metadata
+async methods in constructors of XGraph
 
 
 # effect
