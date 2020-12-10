@@ -11,6 +11,7 @@ export type DataVMap = gf.TValueMapData | gf.TRangeMapData;
 class GFMap {
   data: DataMap;
   id: string;
+  type:gf.TTypeMap = 'shape';
   reduce = true;
   static methods: any[] = [];
   constructor(pattern, data: DataMap) {
@@ -27,6 +28,10 @@ class GFMap {
    * @memberof GFMap
    */
   import(obj: any): this {
+    if (!!obj.metadata) {
+      this.data.pattern = obj.metadata;
+    }
+
     if (!!obj.pattern) {
       this.data.pattern = obj.pattern;
     }
@@ -45,6 +50,10 @@ class GFMap {
    */
   getData(): DataMap {
     return this.data;
+  }
+
+  getType(): gf.TTypeMap {
+    return this.type;
   }
 
   /**
@@ -91,11 +100,11 @@ class GFMap {
    * @returns {boolean}
    * @memberof GFMap
    */
-  match(text: string | null, regex = true): boolean {
+  match(text: string | null, options : gf.TRuleMapOptions = Rule.getDefaultOption()): boolean {
     if (text === undefined || text === null || text.length === 0) {
       return false;
     }
-    return $GF.utils.matchString(text, this.data.pattern, regex);
+    return $GF.utils.matchString(text, this.data.pattern, options.enableRegEx);
   }
 
   /**
@@ -186,6 +195,7 @@ class GFMap {
    */
   export(): gf.TGFMapData {
     return {
+      metadata : this.data.metadata,
       pattern: this.data.pattern,
       hidden: this.data.hidden,
     };
@@ -199,7 +209,6 @@ class GFMap {
  */
 export class ShapeMap extends GFMap {
   data: gf.TShapeMapData;
-
   /**
    * Creates an instance of ShapeMap.
    * @param {string} pattern
@@ -208,6 +217,7 @@ export class ShapeMap extends GFMap {
    */
   constructor(pattern: string, data: gf.TShapeMapData) {
     super(pattern, data);
+    this.type = 'shape';
     this.data = data;
   }
 
@@ -220,6 +230,7 @@ export class ShapeMap extends GFMap {
    */
   static getDefaultData(): gf.TShapeMapData {
     return {
+      metadata: '',
       pattern: '',
       hidden: false,
       style: 'fillColor',
@@ -280,6 +291,7 @@ export class TextMap extends GFMap {
 
   constructor(pattern: string, data: gf.TTextMapData) {
     super(pattern, data);
+    this.type = 'text';
     this.data = data;
   }
 
@@ -292,6 +304,7 @@ export class TextMap extends GFMap {
    */
   static getDefaultData(): gf.TTextMapData {
     return {
+      metadata: '',
       pattern: '',
       hidden: false,
       textReplace: 'content',
@@ -386,11 +399,13 @@ export class LinkMap extends GFMap {
 
   constructor(pattern: string, data: gf.TlinkMapData) {
     super(pattern, data);
+    this.type = 'link';
     this.data = data;
   }
 
   static getDefaultData(): gf.TlinkMapData {
     return {
+      metadata: '',
       pattern: '',
       hidden: false,
       linkUrl: '',
@@ -466,6 +481,7 @@ export class EventMap extends GFMap {
    */
   constructor(pattern: string, data: gf.TEventMapData) {
     super(pattern, data);
+    this.type = 'event';
     this.data = data;
     // GFGlobal.loadFile(_GF.CONSTANTS.VAR_STG_SHAPES, _GF.CONSTANTS.CONF_FILE_SHAPES);
   }
@@ -479,6 +495,7 @@ export class EventMap extends GFMap {
    */
   static getDefaultData(): gf.TEventMapData {
     return {
+      metadata: '',
       pattern: '',
       hidden: false,
       style: 'shape',

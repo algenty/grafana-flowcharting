@@ -214,6 +214,44 @@ declare module gf {
   declare interface TIRulesHandlerData {
     rulesData: TIRuleData[];
   }
+
+  declare interface TRuleMaps {
+    shapes : ShapeMap[];
+    texts : TextMap[];
+    links : LinkMap[];
+    events : EventMap[];
+  }
+  declare type TMapDataArray = TShapeMapData[] | TTextMapData[] | TlinkMapData[] | TEventMapData[];
+  declare interface TRuleMapOptions {
+    identByProp : TPropertieKey;
+    enableRegEx : boolean;
+  } 
+
+  declare type TTypeMap = 'shape' | 'text' | 'link' | 'event';
+  declare interface TRuleMapData {
+    type : TTypeMap,
+    options : TRuleMapOptions;
+    dataList : TMapDataArray;
+  }
+
+  declare interface TRuleShapeMapData extends TRuleMapData{
+    type : 'shape';
+    dataList : TShapeMapData[];
+  }
+  declare interface TRuleTextMapData extends TRuleMapData{
+    type : 'text';
+    dataList : TTextMapData[];
+  }
+  declare interface TRuleLinkMapData extends TRuleMapData{
+    type : 'link';
+    dataList : TLinkMapData[];
+  }
+
+  declare interface TRuleEventMapData extends TRuleMapData{
+    type : 'event';
+    dataList : TEventMapData[];
+  }
+
   declare interface TIRuleData {
     order: number; // Index of rule
     pattern: string;
@@ -246,26 +284,28 @@ declare module gf {
     tpGraphLow: number | null;
     tpGraphHigh: number | null;
     tpGraphScale: TGraphScaleKeys;
-    shapeProp: TPropertieKey;
-    shapeMD: string;
-    shapeRegEx: boolean;
-    shapeData: TShapeMapData[];
-    
+    shapesData: TRuleShapeMapData;
+    // shapeProp: TPropertieKey;
+    // shapeRegEx: boolean;
+    // shapeData: TShapeMapData[];
     numberTHData: TTHNumberData[];
     stringTHData: TTHStringData[];
     dateTHData: TTHDateData[];
-    textProp: TPropertieKey;
-    textMD: string;
-    textRegEx: boolean;
-    textData: TTextMapData[];
-    linkProp: TPropertieKey;
-    linkMD: string;
-    linkRegEx: boolean;
-    linkData: TlinkMapData[];
-    eventProp: TPropertieKey;
-    eventMD: string;
-    eventRegEx: boolean;
-    eventData: TeventMapData[];
+    textsData : TRuleTextMapData;
+    // textProp: TPropertieKey;
+    // textMD: string;
+    // textRegEx: boolean;
+    // textData: TTextMapData[];
+    linksData : TRuleLinkMapData;
+    // linkProp: TPropertieKey;
+    // linkMD: string;
+    // linkRegEx: boolean;
+    // linkData: TlinkMapData[];
+    eventsData : TRuleEventMapData;
+    // eventProp: TPropertieKey;
+    // eventMD: string;
+    // eventRegEx: boolean;
+    // eventData: TeventMapData[];
     mappingType: number;
     valueData: TValueMapData[];
     rangeData: TRangeMapData[];
@@ -274,6 +314,7 @@ declare module gf {
   }
 
   declare interface TGFMapData {
+    metadata: string;
     pattern: string;
     hidden: boolean;
   }

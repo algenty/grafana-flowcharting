@@ -6,7 +6,7 @@ import { Metric } from './metric_class';
 import { $GF } from './globals_class';
 import chroma from 'chroma-js';
 import { NumberTH, StringTH, ObjectTH, ObjectTHData, DateTH } from 'threshold_class';
-import { EventMap, ShapeMap, TextMap, LinkMap, ValueMap, RangeMap } from 'mapping_class';
+backupimport { EventMap, ShapeMap, TextMap, LinkMap, ValueMap, RangeMap, ObjectMap, DataMap } from 'mapping_class';
 
 /**
  * Rule definition
@@ -16,10 +16,16 @@ import { EventMap, ShapeMap, TextMap, LinkMap, ValueMap, RangeMap } from 'mappin
  */
 export class Rule {
   data: gf.TIRuleData;
-  shapeMaps: ShapeMap[] = [];
-  textMaps: TextMap[] = [];
-  linkMaps: LinkMap[] = [];
-  eventMaps: EventMap[] = [];
+  maps:gf.TRuleMaps = {
+    shapes: [],
+    texts: [],
+    links: [],
+    events: [],
+  }
+  // shapeMaps: ShapeMap[] = [];
+  // textMaps: TextMap[] = [];
+  // linkMaps: LinkMap[] = [];
+  // eventMaps: EventMap[] = [];
   valueMaps: ValueMap[] = [];
   rangeMaps: RangeMap[] = [];
   numberTH: NumberTH[] = [];
@@ -92,28 +98,55 @@ export class Rule {
       tpGraphLow: null,
       tpGraphHigh: null,
       tpGraphScale: 'linear',
-      shapeProp: 'id',
-      shapeMD: 'NAME',
-      shapeRegEx: true,
-      shapeData: [],
-      textProp: 'id',
-      textMD: 'NAME',
-      textRegEx: true,
-      textData: [],
-      linkProp: 'id',
-      linkMD: 'NAME', 
-      linkRegEx: true,
-      linkData: [],
-      eventProp: 'id',
-      eventMD: 'NAME', 
-      eventRegEx: false,
-      eventData: [],
+      shapesData: {
+        type : 'shape',
+        options : Rule.getDefaultMapOptions(),
+        dataList : [],
+      },
+      // shapeProp: 'id',
+      // shapeMD: 'NAME',
+      // shapeRegEx: true,
+      // shapeData: [],
+      textsData: {
+        type : 'text',
+        options : Rule.getDefaultMapOptions(),
+        dataList : [],
+      },
+      // textProp: 'id',
+      // textMD: 'NAME',
+      // textRegEx: true,
+      // textData: [],
+      linksData: {
+        type : 'link',
+        options : Rule.getDefaultMapOptions(),
+        dataList : [],
+      },
+      // linkProp: 'id',
+      // linkMD: 'NAME', 
+      // linkRegEx: true,
+      // linkData: [],
+      eventsData: {
+        type : 'event',
+        options : Rule.getDefaultMapOptions(),
+        dataList : [],
+      },
+      // eventProp: 'id',
+      // eventMD: 'NAME', 
+      // eventRegEx: false,
+      // eventData: [],
       mappingType: 1,
       valueData: [],
       rangeData: [],
       sanitize: false,
       newRule: true,
     };
+  }
+
+  static getDefaultMapOptions(): gf.TRuleMapOptions {
+    return {
+      identByProp : 'id',
+      enableRegEx : true,
+    }
   }
 
   /**
@@ -371,23 +404,31 @@ export class Rule {
 
     // SHAPES
     if (!!obj.shapeProp) {
-      this.data.shapeProp = obj.shapeProp;
-    }
-    if (!!obj.shapeMD) {
-      this.data.shapeMD = obj.shapeMD;
+      this.data.shapesData.options.identByProp = obj.shapeProp;
     }
     if (!!obj.shapeRegEx || obj.shapeRegEx === false) {
-      this.data.shapeRegEx = obj.shapeRegEx;
+      this.data.shapesData.options.enableRegEx = obj.shapeRegEx;
+    }
+    if (!!obj.shapesData) {
+      if(!!obj.shapesData.options) {
+        this.data.shapesData.options.identByProp = obj.shapesData.options.identifyProp;
+        this.data.shapesData.options.enableRegEx = obj.shapesData.options.enableRegEx;
+      }
     }
 
-    this.data.shapeData = [];
-
+    this.data.shapesData.dataList = [];
     // For 0.2.0
     maps = [];
     if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) {
       maps = obj.shapeMaps;
     } else {
-      maps = obj.shapeData;
+      // 0.9.1
+      if(obj.shapeData !== undefined && obj.shapeData !== null && obj.shapeData.length > 0) {
+        maps = obj.shapeData;
+      }
+      else {
+        maps = obj.shapesData.dataList;
+      }
     }
 
     if (maps !== undefined && maps !== null && maps.length > 0) {
@@ -401,26 +442,35 @@ export class Rule {
         if (!!colorOn) {
           shapeData.colorOn = colorOn;
         }
-        this.addShapeMap('').import(shapeData);
+        this.addShapeMap().import(shapeData);
       });
     }
 
     // TEXT
-    this.data.textProp = obj.textProp || 'id';
+    this.data.textsData.options.identByProp = obj.textProp || 'id';
     if (!!obj.textRegEx || obj.textRegEx === false) {
-      this.data.textRegEx = obj.textRegEx;
+      this.data.textsData.options.enableRegEx = obj.textRegEx;
     }
-    if (!!obj.textMD) {
-      this.data.textMD = obj.textMD;
+    if (!!obj.textsMap) {
+      if(!!obj.textsMap.options) {
+        this.data.textsData.options.identByProp = obj.textsMap.options.identifyProp;
+        this.data.textsData.options.enableRegEx = obj.textsMap.options.enableRegEx;
+      }
     }
 
-    this.data.textData = [];
+    this.data.textsData.dataList = [];
     // For 0.2.0
     maps = [];
-    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) {
+    if (obj.textMaps !== undefined && obj.textMaps !== null && obj.textMaps.length > 0) {
       maps = obj.textMaps;
     } else {
-      maps = obj.textData;
+      // 0.9.1
+      if(obj.textData !== undefined && obj.textData !== null && obj.textData.length > 0) {
+        maps = obj.textData;
+      }
+      else {
+        maps = obj.textsData.dataList;
+      }
     }
 
     if (maps !== undefined && maps != null && maps.length > 0) {
@@ -436,21 +486,33 @@ export class Rule {
           textData.textOn = textOn;
         }
 
-        this.addTextMap('').import(textData);
+        this.addTextMap().import(textData);
       });
     }
 
     // LINK
-    this.data.linkProp = obj.linkProp || 'id';
+    this.data.linksData.options.identByProp = obj.linkProp || 'id';
     if (!!obj.linkRegEx || obj.linkRegEx === false) {
-      this.data.linkRegEx = obj.linkRegEx;
+      this.data.linksData.options.identByProp = obj.linkRegEx;
     }
-    if (!!obj.linkMD) {
-      this.data.linkMD = obj.linkMD;
+    if (!!obj.linksMap) {
+      if(!!obj.linksMap.options) {
+        this.data.linksData.options.identByProp = obj.linksMap.options.identifyProp;
+        this.data.linksData.options.enableRegEx = obj.linksMap.options.enableRegEx;
+      }
     }
-    this.data.linkData = [];
+
+    this.data.linksData.dataList = [];
+    maps = [];
     if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
-      obj.linkData.forEach((linkData: gf.TlinkMapData) => {
+      maps = obj.linkData
+    }
+    if(obj.linksMap.dataList !== undefined && obj.linksMap.dataList !== null &&  obj.linksMap.dataList.length >0 ) {
+      maps = obj.linksMap.dataList
+    }
+
+    if(maps.length >0 ) {
+      maps.forEach((linkData: gf.TlinkMapData) => {
         // 0.7.0
         if (!!linkUrl && link) {
           linkData.linkUrl = linkUrl;
@@ -461,23 +523,33 @@ export class Rule {
         if (!!linkOn) {
           linkData.linkOn = linkOn;
         }
-        this.addLinkMap('').import(linkData);
+        this.addLinkMap().import(linkData);
       });
     }
 
     // EVENT
-    this.data.eventProp = obj.eventProp || 'id';
+    this.data.eventsData.options.identByProp = obj.eventProp || 'id';
     if (!!obj.eventRegEx || obj.eventRegEx === false) {
-      this.data.eventRegEx = obj.eventRegEx;
+      this.data.eventsData.options.identByProp = obj.eventRegEx;
     }
-    if (!!obj.eventMD) {
-      this.data.eventMD = obj.eventMD;
+    if (!!obj.eventsMap) {
+      if(!!obj.eventsMap.options) {
+        this.data.eventsData.options.identByProp = obj.eventsMap.options.identifyProp;
+        this.data.eventsData.options.enableRegEx = obj.eventsMap.options.enableRegEx;
+      }
     }
-    this.data.eventData = [];
+
+    this.data.eventsData.dataList = [];
+    maps = [];
     if (obj.eventData !== undefined && obj.eventData != null && obj.eventData.length > 0) {
-      obj.eventData.forEach((eventData: gf.TEventMapData) => {
-        // 0.7.0
-        this.addEventMap('').import(eventData);
+      maps = obj.eventData
+    }
+    if(obj.eventsMap.dataList !== undefined && obj.eventsMap.dataList !== null &&  obj.eventsMap.dataList.length >0 ) {
+      maps = obj.eventsMap.dataList
+    }
+    if (maps !== undefined && maps != null && maps.length > 0) {
+      maps.forEach((eventData: gf.TEventMapData) => {
+        this.addEventMap().import(eventData);
       });
     }
 
@@ -1039,6 +1111,45 @@ export class Rule {
   }
 
   //
+  // Private methods maps
+  //
+  _matchMaps(maps : ObjectMap[], pattern: string | null, options : gf.TRuleMapOptions = Rule.getDefaultMapOptions()): boolean {
+    let found = false;
+    const length = maps.length;
+    for (let index = 0; index < length; index++) {
+      const map = maps[index];
+      found = map.match(pattern, options);
+      if(found) {
+        break;
+      }
+    }
+    return found;
+  }
+
+  _getRuleMapsData(type : gf.TTypeMap): gf.TRuleMapData {
+    return this.data[`${type}sData`];
+  }
+
+  _getObjectListMap(type : gf.TTypeMap): ObjectMap[] {
+    return this.maps[`${type}s`];
+  }
+
+  _getDataListMap(type : gf.TTypeMap): DataMap[] {
+    return this._getRuleMapsData(type).dataList;
+  }
+
+  _getOptionsMap(type : gf.TTypeMap): gf.TRuleMapOptions {
+    return this._getRuleMapsData(type).options;
+  }
+
+  _addMaps(map : ObjectMap) {
+    const maps = this._getObjectListMap(map.getType());
+    const datas = this._getDataListMap(map.getType());
+    maps.push(map);
+    datas.push(map.getData());
+  }
+
+  //
   // SHAPE MAPS
   //
   /**
@@ -1047,11 +1158,10 @@ export class Rule {
    * @param {string} pattern
    * @memberof Rule
    */
-  addShapeMap(pattern: string): ShapeMap {
+  addShapeMap(pattern : string = ''): ShapeMap {
     const data = ShapeMap.getDefaultData();
     const m = new ShapeMap(pattern, data);
-    this.shapeMaps.push(m);
-    this.data.shapeData.push(data);
+    this._addMaps(m);
     return m;
   }
 
@@ -1063,7 +1173,7 @@ export class Rule {
    * @memberof Rule
    */
   cloneShapeMap(initial: ShapeMap): ShapeMap {
-    return this.addShapeMap(initial.data.pattern).import(initial);
+    return this.addShapeMap().import(initial);
   }
 
   /**
@@ -1074,7 +1184,7 @@ export class Rule {
    * @memberof Rule
    */
   removeShapeMap(index: number): this {
-    this.data.shapeData.splice(index, 1);
+    this.data.shapesData.dataList.splice(index, 1);
     this.shapeMaps.splice(index, 1);
     return this;
   }
@@ -1107,20 +1217,14 @@ export class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  matchShape(pattern: string | null, option ?: string): boolean {
-    let found = false;
-    this.shapeMaps.forEach(element => {
-      if (element.match(pattern, this.data.shapeRegEx)) {
-        found = true;
-      }
-    });
-    return found;
+  matchShape(pattern: string | null, options ?: gf.TRuleMapOptions): boolean {
+    return this._matchMaps(this.shapeMaps, options);
   }
 
   //
   // TEXT MAPS
   //
-  addTextMap(pattern: string): TextMap {
+  addTextMap(pattern : string = ''): TextMap {
     const data = TextMap.getDefaultData();
     const m = new TextMap(pattern, data);
     this.textMaps.push(m);
@@ -1240,7 +1344,7 @@ export class Rule {
   //
   // LINK MAPS
   //
-  addLinkMap(pattern: string): LinkMap {
+  addLinkMap(pattern: string = ''): LinkMap {
     const data = LinkMap.getDefaultData();
     const m = new LinkMap(pattern, data);
     m.import(data);
