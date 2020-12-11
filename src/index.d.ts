@@ -229,26 +229,21 @@ declare module gf {
 
   declare type TTypeMap = 'shape' | 'text' | 'link' | 'event';
   declare interface TRuleMapData {
-    type : TTypeMap,
     options : TRuleMapOptions;
     dataList : TMapDataArray;
   }
 
   declare interface TRuleShapeMapData extends TRuleMapData{
-    type : 'shape';
     dataList : TShapeMapData[];
   }
   declare interface TRuleTextMapData extends TRuleMapData{
-    type : 'text';
     dataList : TTextMapData[];
   }
   declare interface TRuleLinkMapData extends TRuleMapData{
-    type : 'link';
     dataList : TLinkMapData[];
   }
 
   declare interface TRuleEventMapData extends TRuleMapData{
-    type : 'event';
     dataList : TEventMapData[];
   }
 
@@ -284,24 +279,26 @@ declare module gf {
     tpGraphLow: number | null;
     tpGraphHigh: number | null;
     tpGraphScale: TGraphScaleKeys;
-    shapesData: TRuleShapeMapData;
+    mapsDat: {
+      shapes : TRuleShapeMapData;
+      texts : TRuleTextMapData;
+      links : TRuleLinkMapData;
+      events : TRuleEventMapData;
+    };
     // shapeProp: TPropertieKey;
     // shapeRegEx: boolean;
     // shapeData: TShapeMapData[];
     numberTHData: TTHNumberData[];
     stringTHData: TTHStringData[];
     dateTHData: TTHDateData[];
-    textsData : TRuleTextMapData;
     // textProp: TPropertieKey;
     // textMD: string;
     // textRegEx: boolean;
     // textData: TTextMapData[];
-    linksData : TRuleLinkMapData;
     // linkProp: TPropertieKey;
     // linkMD: string;
     // linkRegEx: boolean;
     // linkData: TlinkMapData[];
-    eventsData : TRuleEventMapData;
     // eventProp: TPropertieKey;
     // eventMD: string;
     // eventRegEx: boolean;
