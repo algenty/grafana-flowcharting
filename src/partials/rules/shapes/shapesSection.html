@@ -1,6 +1,6 @@
 <div class="section gf-form-group"
-    ng-mouseenter="editor.setCurrentParam('currentProp', rule.data.shapeProp);editor.setCurrentParam('currentMD', rule.data.shapeMD);"
-    ng-mouseleave="editor.unsetCurrentParam('currentProp');editor.unsetCurrentParam('currentMD');">
+    ng-mouseenter="editor.setCurrentParam('currentOptions', rule.getShapeMapOptions());"
+    ng-mouseleave="editor.unsetCurrentParam('currentOptions');">
     <h5 class="section-heading">
         Color/Tooltip Mappings
         <info-popover mode="right-normal">
@@ -19,12 +19,12 @@
             </span>
             <!-- ID INPUT -->
             <div class="gf-form-select-wrapper">
-                <select class="gf-form-input width-10" ng-model="rule.data.shapeProp"
+                <select class="gf-form-input width-10" ng-model="rule.getShapeMapOptions().identByProp"
                     ng-options="c.value as c.text for c in editor.propTypes"
-                    ng-change="editor.setCurrentParam('currentProp', rule.data.shapeProp);editor.onRulesChange()"></select>
+                    ng-change="editor.setCurrentParam('currentOptions', rule.getShapeMapOptions());editor.onRulesChange()"></select>
             </div>
         </div>
-        <div class="gf-form" ng-show="rule.data.shapeProp === 'metadata'">
+        <div class="gf-form" ng-show="rule.getShapeMapOptions().identByProp === 'metadata'">
             <span class="gf-form-label width-11">Data name
                 <info-popover mode="right-normal">
                     <span ng-bind-html="$GF.popover('Select a metadata name or a regex', 'SHAPES')">
@@ -41,7 +41,7 @@
         <div class="gf-form">
             <!-- ID Regular expression -->
             <gf-form-switch class="gf-form" label="Regular expression" label-class="width-11"
-                checked="rule.data.shapeRegEx" on-change="editor.onRulesChange()"
+                checked="rule.getShapeMapOptions().enableRegEx" on-change="editor.onRulesChange()"
                 tooltip="Disable this option if you don't use regular expressions in field 'What' below to improve performance">
             </gf-form-switch>
         </div>

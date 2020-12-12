@@ -125,8 +125,8 @@
                 <div role="row" class="gf-table-rows" ng-repeat="event in rule.getEventMaps()">
                     <!-- CELLS -->
                     <div class="gf-table-row_line"
-                        ng-mouseleave="editor.unselectCell(rule.data.eventProp,event.data.pattern)"
-                        ng-mouseover="editor.selectCell(rule.data.eventProp,event.data.pattern)">
+                        ng-mouseleave="editor.unselectCell(event.data.pattern, rule.getEventMapOptions())"
+                        ng-mouseover="editor.selectCell(event.data.pattern, rule.getEventMapOptions())">
                         <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells" id="expand" ng-click="event.reduce=!event.reduce"
                             ng-style="{'width' : editor.eventsTable.getWidth('expand')}">

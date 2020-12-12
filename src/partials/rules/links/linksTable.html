@@ -97,8 +97,8 @@
                 <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" ng-repeat="link in rule.getLinkMaps()">
                     <!-- CELLS -->
                     <div class="gf-table-row_line"
-                        ng-mouseleave="editor.unselectCell(rule.data.linkProp,link.data.pattern)"
-                        ng-mouseover="editor.selectCell(rule.data.linkProp,link.data.pattern)">
+                        ng-mouseleave="editor.unselectCell(link.data.pattern, getLinkMapOptions())"
+                        ng-mouseover="editor.selectCell(link.data.pattern, getLinkMapOptions().identByProp)">
                         <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand" ng-click="link.reduce=!link.reduce"
                             ng-style="{'width' : editor.linksTable.getWidth('expand')}">
@@ -126,7 +126,7 @@
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
                             <div ng-show="link.displayWhatEdit === true && link.whatEdit !== true && !editor.flowchartHandler.isMapping(link)"
-                                ng-click="editor.flowchartHandler.setMap(link,rule.data.linkProp)"
+                                ng-click="editor.flowchartHandler.setMap(link, getLinkMapOptions())"
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a text in diagram">
                             </div>
@@ -136,14 +136,8 @@
                                 class="gf-form-input" ng-model="link.data.pattern"
                                 ng-change="editor.onRulesChange()"
                                 ng-model-onblur ng-blur="editor.onRulesChange();link.whatEdit = false;"
-                                bs-typeahead="rule.data.linkProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
+                                bs-typeahead="rule.getLinkMapOptions().identByProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
                                 data-min-length="0" data-items="100" data-placement="right" />
-                            <!-- ng-keyup="$event.keyCode === 13 ? editor.onRulesChange() : link.whatEdit = true;$event.keyCode === 13 ?  link.whatEdit = false : link.whatEdit = true" -->
-                            <!-- ng-model-onblur -->
-                            <!-- placeholder="{{(rule.data.linkProp === 'value' ? "Id" : "Label") + " or regex of text"}}" -->
-                            <!-- bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of text (see inspect tab)'" -->
-                            <!-- bs-typeahead="rule.data.linkProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue" -->
-                            <!-- ng-keydown="$event.keyCode === 13 && link.whatEdit = false" -->
                         </div>
                         <!-- WHEN -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" ng-mouseleave="link.displayWhenEdit = false;"
@@ -220,7 +214,7 @@
                                     title="Enable/Disable this mapping" class="gf-icon-action"
                                     ng-class="{'gf-icon-show': !link.isHidden(), 'gf-icon-hide': link.isHidden()}">
                                 </div>
-                                <div ng-click="editor.flowchartHandler.setMap(link,rule.data.linkProp)"
+                                <div ng-click="editor.flowchartHandler.setMap(link, getLinkMapOptions())"
                                     title="Select a shape in diagram" class="gf-icon-action"
                                     ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(link), 'gf-icon-empty': editor.flowchartHandler.isMapping(link)}">
                                 </div>

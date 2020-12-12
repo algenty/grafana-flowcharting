@@ -106,8 +106,8 @@
                 <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" ng-repeat="text in rule.getTextMaps()">
                     <!-- CELLS -->
                     <div class="gf-table-row_line"
-                        ng-mouseleave="editor.unselectCell(rule.data.textProp,text.data.pattern)"
-                        ng-mouseover="editor.selectCell(rule.data.textProp,text.data.pattern)">
+                        ng-mouseleave="editor.unselectCell(text.data.pattern, rule.getTextMapOptions())"
+                        ng-mouseover="editor.selectCell(text.data.pattern, rule.getTextMapOptions())">
                         <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
                             ng-click="text.reduce=!text.reduce"
@@ -134,7 +134,7 @@
                                 title="Edit pattern" class="gf-icon-action gf-icon-edit gf-icon-withcontent">
                             </div>
                             <div ng-show="text.displayWhatEdit === true && text.whatEdit !== true && !editor.flowchartHandler.isMapping(text)"
-                                ng-click="editor.flowchartHandler.setMap(text,rule.data.textProp)"
+                                ng-click="editor.flowchartHandler.setMap(text, rule.getTextMapOptions())"
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a text in diagram">
                             </div>
@@ -142,14 +142,8 @@
                                 style="margin-right: 2px;width : 100%" ng-attr-id="{{text.getId() + '-what'}}"
                                 ng-show="text.whatEdit === true" ng-model-onblur
                                 ng-blur="editor.onRulesChange();text.whatEdit = false;"
-                                bs-typeahead="rule.data.textProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
+                                bs-typeahead="rule.getTextMapOptions().identByProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
                                 data-min-length="0" data-items="100" data-placement="right" />
-                            <!-- ng-keyup="$event.keyCode === 13 ? editor.onRulesChange() : text.whatEdit = true;$event.keyCode === 13 ?  text.whatEdit = false : text.whatEdit = true" -->
-                            <!-- ng-model-onblur -->
-                            <!-- placeholder="{{(rule.data.textProp === 'value' ? "Id" : "Label") + " or regex of text"}}" -->
-                            <!-- bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of text (see inspect tab)'" -->
-                            <!-- bs-typeahead="rule.data.textProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue" -->
-                            <!-- ng-keydown="$event.keyCode === 13 && text.whatEdit = false" -->
                         </div>
                         <!-- WHEN -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="when"
@@ -226,7 +220,7 @@
                                     title="Enable/Disable this mapping" class="gf-icon-action"
                                     ng-class="{'gf-icon-show': !text.isHidden(), 'gf-icon-hide': text.isHidden()}">
                                 </div>
-                                <div ng-click="editor.flowchartHandler.setMap(text,rule.data.textProp)"
+                                <div ng-click="editor.flowchartHandler.setMap(text,rule.getTextMapOptions())"
                                     title="Select a shape in diagram" class="gf-icon-action"
                                     ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(text), 'gf-icon-empty': editor.flowchartHandler.isMapping(text)}">
                                 </div>

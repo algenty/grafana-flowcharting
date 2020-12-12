@@ -4,6 +4,7 @@ import * as Drawio from 'drawio_custom';
 import chroma from 'chroma-js';
 import * as mxcustom from 'mxgraph_custom';
 import { Rule } from 'rule_class';
+import { FlowchartHandler } from 'flowchartHandler';
 
 declare var mxEvent: any;
 declare var mxClient: any;
@@ -59,16 +60,7 @@ export default class XGraph {
     this.container = container;
     this.type = type;
     this.ctrl = ctrl;
-    this.onMapping = {
-      active: false,
-      // $scope: null,
-      domId: null,
-      mxCellValue: null,
-      prop: 'id',
-      object: null,
-      callback: null,
-    };
-
+    this.onMapping = FlowchartHandler.getDefaultMapping();
     XGraph.initMxGraph();
     if (type === 'xml') {
       if ($GF.utils.isencoded(definition)) {
@@ -851,9 +843,11 @@ export default class XGraph {
    * @returns {string[]} value of labels or id frome source
    * @memberof XGraph
    */
-  getOrignalCells(prop: gf.TPropertieKey, attribute?: string): string[] {
-    if (prop === 'id' || prop === 'value' || prop === 'metadata') {
-      return this.cells[prop];
+  getOrignalCells(options: gf.TRuleMapOptions): string[] {
+    if (options.identByProp === 'id' || options.identByProp === 'value') {
+      return this.cells[options.identByProp];
+    } else if (options.identByProp === 'metadata') {
+      return this.getCurrentMDValue(options.metadata);
     }
     return [];
   }
@@ -1318,9 +1312,7 @@ export default class XGraph {
    */
   unsetMap() {
     $GF.log.info('XGraph.unsetMapping()');
-    this.onMapping.active = false;
-    this.onMapping.domId = null;
-    this.onMapping.callback = null;
+    this.onMapping = FlowchartHandler.getDefaultMapping();
     this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
     this.ctrl.$scope.$applyAsync();
@@ -1340,8 +1332,8 @@ export default class XGraph {
     if (this.onMapping.active) {
       const state = me.getState();
       if (state) {
-        const prop = this.onMapping.prop !== null ? this.onMapping.prop : 'id';
-        this.onMapping.mxCellValue = XGraph.getValuePropOfMxCell(prop, state.cell);
+        const options = this.onMapping.options !== null ? this.onMapping.options : Rule.getDefaultMapOptions();
+        this.onMapping.mxCellValue = XGraph.getValuePropOfMxCell(state.cell, options);
         if (this.onMapping.object && this.onMapping.object.data) {
           this.onMapping.object.data.pattern = this.onMapping.mxCellValue;
         }

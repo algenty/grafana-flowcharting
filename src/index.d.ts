@@ -224,6 +224,7 @@ declare module gf {
   declare type TMapDataArray = TShapeMapData[] | TTextMapData[] | TlinkMapData[] | TEventMapData[];
   declare interface TRuleMapOptions {
     identByProp: TPropertieKey;
+    metadata: string;
     enableRegEx: boolean;
   }
 
@@ -372,7 +373,7 @@ declare module gf {
     object: ObjectMap | null;
     domId: string | null;
     mxCellValue: string | null;
-    prop: TPropertieKey | null;
+    options: gf.TRuleMapOptions | null;
     callback: CallableFunction | null;
   }
 

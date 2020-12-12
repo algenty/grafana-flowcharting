@@ -120,8 +120,8 @@
                 <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" ng-repeat="elt in rule.getEventMaps()">
                     <!-- CELLS -->
                     <div class="gf-table-row_line" ng-init="elt.displayEdit = [];elt.inEdit = [];"
-                        ng-mouseleave="editor.unselectCell(rule.data.eventProp,elt.data.pattern)"
-                        ng-mouseover="editor.selectCell(rule.data.eventProp,elt.data.pattern)">
+                        ng-mouseleave="editor.unselectCell(elt.data.pattern, rule.getEventMapOptions())"
+                        ng-mouseover="editor.selectCell(elt.data.pattern, rule.getEventMapOptions())">
                         <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
                             ng-click="elt.reduce=!elt.reduce"
@@ -151,7 +151,7 @@
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
                             <div ng-show="elt.displayEdit[CN2] === true && elt.inEdit[CN2] !== true && !editor.flowchartHandler.isMapping(elt)"
-                                ng-click="editor.flowchartHandler.setMap(elt,rule.data.eventProp)"
+                                ng-click="editor.flowchartHandler.setMap(elt, rule.getEventMapOptions())"
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a text in diagram">
                             </div>
@@ -159,7 +159,7 @@
                                 ng-attr-id="{{elt.getId() + '-' + CN2}}" ng-show="elt.inEdit[CN2] === true"
                                 class="gf-form-input" ng-model="elt.data.pattern" ng-change="editor.onRulesChange()"
                                 ng-model-onblur ng-blur="editor.onRulesChange();elt.inEdit[CN2] = false;"
-                                bs-typeahead="rule.data.eventProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
+                                bs-typeahead="rule.getEventMapOptions().identByProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
                         <!-- WHEN -->
@@ -280,7 +280,7 @@
                                     title="Enable/Disable this mapping" class="gf-icon-action"
                                     ng-class="{'gf-icon-show': !elt.isHidden(), 'gf-icon-hide': elt.isHidden()}">
                                 </div>
-                                <div ng-click="editor.flowchartHandler.setMap(elt,rule.data.eventProp)"
+                                <div ng-click="editor.flowchartHandler.setMap(elt, rule.getEventMapOptions())"
                                     title="Select a shape in diagram" class="gf-icon-action"
                                     ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(elt), 'gf-icon-empty': editor.flowchartHandler.isMapping(elt)}">
                                 </div>

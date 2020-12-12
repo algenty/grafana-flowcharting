@@ -526,9 +526,9 @@ export class Flowchart {
    * @returns {string[]}
    * @memberof Flowchart
    */
-  getNamesByProp(prop: gf.TPropertieKey, attribute?: string): string[] {
+  getNamesByOptions(options: gf.TRuleMapOptions): string[] {
     if (this.xgraph) {
-      return this.xgraph.getOrignalCells(prop, attribute);
+      return this.xgraph.getOrignalCells(options);
     }
     return [];
   }

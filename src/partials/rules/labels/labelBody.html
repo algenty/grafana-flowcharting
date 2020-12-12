@@ -7,19 +7,19 @@
         </info-popover>
     </label>
     <input type="text" style="margin-right: 2px;" id="{{ text.getId() }}" placeholder="id or regex of shape"
-        class="gf-form-input width-8" ng-model="text.data.pattern" ng-if="rule.data.textProp === 'id'"
+        class="gf-form-input width-8" ng-model="text.data.pattern" ng-show="rule.getTextMapOptions().identByProp === 'id'"
         bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
         bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
     <input type="text" style="margin-right: 2px;" id="{{ text.getId() }}" placeholder="id or regex of shape"
-        class="gf-form-input width-8" ng-model="text.data.pattern" ng-if="rule.data.textProp === 'value'"
+        class="gf-form-input width-8" ng-model="text.data.pattern" ng-show="rule.getTextMapOptions().identByProp === 'value'"
         bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
         bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
-        <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;" title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(text,rule.data.textProp)">
+        <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;" title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(text, rule.getTextMapOptions())">
             <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
         </button>
-        <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects" ng-click="editor.identifyCell(rule.data.textProp,text.data.pattern)">
+        <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects" ng-click="editor.identifyCell(text.data.pattern, rule.getTextMapOptions())">
             <div Class="gf-icon-location" style="margin-bottom: 7px;margin-right: 2px;"></div>
         </button>
 </div>

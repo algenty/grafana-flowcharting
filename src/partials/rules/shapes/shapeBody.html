@@ -14,15 +14,15 @@
     <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
         class="gf-form-input width-8" ng-model="shape.data.pattern"
         title="Enter an id, label,metadata attribute or regex to identify object"
-        bs-typeahead="rule.data.shapeProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+        bs-typeahead="rule.getShapeMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
     <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
-        ng-show="rule.data.shapeProp !== 'metadata'"
-        title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)">
+        ng-show="rule.getShapeMapOptions().identByProp !== 'metadata'"
+        title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(shape, rule.getShapeMapOptions())">
         <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
     </button>
     <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects"
-        ng-click="editor.identifyCell(rule.data.shapeProp,shape.data.pattern)">
+        ng-click="editor.identifyCell(shape.data.pattern, rule.rule.getShapeMapOptions())">
         <div Class="gf-icon-location" style="margin-bottom: 7px;margin-right: 2px;"></div>
     </button>
 </div>

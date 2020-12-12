@@ -153,6 +153,7 @@ export class Rule {
   static getDefaultMapOptions(): gf.TRuleMapOptions {
     return {
       identByProp: 'id',
+      metadata: '',
       enableRegEx: true,
     };
   }
@@ -424,6 +425,7 @@ export class Rule {
       if (!!obj.mapsDat.shapes) {
         this.data.mapsDat.shapes.options.identByProp = obj.mapsDat.shapes.options.identifyProp;
         this.data.mapsDat.shapes.options.enableRegEx = obj.mapsDat.shapes.options.enableRegEx;
+        this.data.mapsDat.shapes.options.metadata = obj.mapsDat.shapes.options.metadata;
       }
     }
 
@@ -441,7 +443,7 @@ export class Rule {
         maps = obj.mapsDat.shapes.dataList;
       }
     }
-    
+
     if (maps !== undefined && maps !== null && maps.length > 0) {
       maps.forEach((shapeData: gf.TShapeMapData) => {
         // 0.7.0
@@ -470,6 +472,7 @@ export class Rule {
       if (!!obj.mapsDat.texts) {
         this.data.mapsDat.texts.options.identByProp = obj.mapsDat.texts.options.identifyProp;
         this.data.mapsDat.texts.options.enableRegEx = obj.mapsDat.texts.options.enableRegEx;
+        this.data.mapsDat.texts.options.metadata = obj.mapsDat.texts.options.metadata;
       }
     }
 
@@ -486,7 +489,7 @@ export class Rule {
         maps = obj.mapsDat.texts.dataList;
       }
     }
-    
+
     if (maps !== undefined && maps != null && maps.length > 0) {
       maps.forEach((textData: gf.TTextMapData) => {
         // 0.7.0
@@ -517,9 +520,10 @@ export class Rule {
       if (!!obj.mapsDat.links) {
         this.data.mapsDat.links.options.identByProp = obj.mapsDat.links.options.identifyProp;
         this.data.mapsDat.links.options.enableRegEx = obj.mapsDat.links.options.enableRegEx;
+        this.data.mapsDat.links.options.metadata = obj.mapsDat.links.options.metadata;
       }
     }
-    
+
     this.data.mapsDat.links.dataList = [];
     maps = [];
     if (obj.linkMaps !== undefined && obj.linkMaps !== null) {
@@ -561,6 +565,7 @@ export class Rule {
       if (!!obj.eventsMap.options) {
         this.data.mapsDat.events.options.identByProp = obj.eventsMap.options.identifyProp;
         this.data.mapsDat.events.options.enableRegEx = obj.eventsMap.options.enableRegEx;
+        this.data.mapsDat.events.options.metadata = obj.eventsMap.options.metadata;
       }
     }
 
@@ -575,7 +580,6 @@ export class Rule {
     if (obj.mapsDat && obj.mapsDat.events && obj.mapsDat.events.dataList) {
       maps = obj.mapsDat.events.dataList;
     }
-
 
     if (maps !== undefined && maps != null && maps.length > 0) {
       maps.forEach((eventData: gf.TEventMapData) => {

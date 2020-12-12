@@ -15,7 +15,7 @@
     </span>
     <!-- ID INPUT -->
     <div class="gf-form-select-wrapper">
-      <select class="gf-form-input width-10" ng-model="rule.data.eventProp"
+      <select class="gf-form-input width-10" ng-model="rule.getEventMapOptions().identByProp"
         ng-options="c.value as c.text for c in editor.propTypes" ng-change="editor.onRulesChange()"></select>
     </div>
   </div>
@@ -69,8 +69,8 @@
     </thead>
     <tbody ng-mouseleave="editor.unhighlightAllCells()">
       <tr ng-repeat="event in rule.getEventMaps()" ng-class="{'gf-form-disabled': event.data.hidden}"
-        ng-mouseleave="editor.unselectCell(rule.data.eventProp,event.data.pattern)"
-        ng-mouseover="editor.selectCell(rule.data.eventProp,event.data.pattern)">
+        ng-mouseleave="editor.unselectCell(event.data.pattern, rule.getEventMapOptions())"
+        ng-mouseover="editor.selectCell(event.data.pattern, rule.getEventMapOptions())">
         <td>
           <div class="gf-form">
             <label class="gf-form-label" style="margin-right: 4px;">
@@ -86,7 +86,7 @@
                 ng-click="event.show();editor.onRulesChange()"></i>
             </label>
             <label class="gf-form-label" style="margin-right: 4px;" ng-hide="editor.flowchartHandler.isMapping(event)">
-              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(event, rule.data.eventProp)"
+              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(event, rule.getEventMapOptions())"
                 bs-tooltip="'Link it on object graph'"></i>
             </label>
             <label class="gf-form-label" style="margin-right: 4px;color:orange"
@@ -99,12 +99,12 @@
         <td>
           <div class="gf-form">
             <input type="text" style="margin-right: 2px;" id="{{ event.getId() }}" placeholder="id or regex of shape"
-              class="gf-form-input width-8" ng-model="event.data.pattern" ng-if="rule.data.eventProp === 'id'"
+              class="gf-form-input width-8" ng-model="event.data.pattern" ng-if="rule.getEventMapOptions().identByProp === 'id'"
               bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
               bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0"
               data-items="100" ng-model-onblur data-placement="right" />
             <input type="text" style="margin-right: 2px;" id="{{ event.getId() }}" placeholder="id or regex of shape"
-              class="gf-form-input width-8" ng-model="event.data.pattern" ng-if="rule.data.eventProp === 'value'"
+              class="gf-form-input width-8" ng-model="event.data.pattern" ng-if="rule.getEventMapOptions().identByProp === 'value'"
               bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
               bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" data-min-length="0"
               data-items="100" ng-model-onblur data-placement="right" />

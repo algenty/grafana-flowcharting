@@ -36,7 +36,7 @@ export class FlowchartHandler {
     mxCellValue: null,
     object: null,
     domId: null,
-    prop: 'id',
+    options: Rule.getDefaultMapOptions(),
     callback: null,
   }; // For link mapping, sharing
   mousedownTimeout = 0;
@@ -136,6 +136,17 @@ export class FlowchartHandler {
       this.currentFlowchart = this.getFlowchart('Main');
     }
     return this;
+  }
+
+  static getDefaultMapping(): gf.TIOnMappingObj {
+    return {
+      active: false,
+      domId: null,
+      mxCellValue: null,
+      options: Rule.getDefaultMapOptions(),
+      object: null,
+      callback: null,
+    };
   }
 
   /**
@@ -794,23 +805,20 @@ export class FlowchartHandler {
    * @param {Object} objToMap
    * @memberof FlowchartHandler
    */
-  setMap(objToMap: ObjectMap, prop: gf.TPropertieKey = 'id'): this {
+  setMap(objToMap: ObjectMap, options: gf.TRuleMapOptions): this {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
     this.onMapping.active = true;
     this.onMapping.object = objToMap;
     this.onMapping.domId = objToMap.getId();
-    // this.onMapping.$scope = this.$scope;
-    this.onMapping.prop = prop;
+    this.onMapping.options = options;
     flowchart.setMap(this.onMapping);
     return this;
   }
 
   setMaps(fn: CallableFunction): this {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
+    this.onMapping = FlowchartHandler.getDefaultMapping();
     this.onMapping.active = true;
-    this.onMapping.object = null;
-    this.onMapping.domId = null;
-    this.onMapping.prop = null;
     this.onMapping.callback = fn;
     flowchart.setMap(this.onMapping);
     return this;
@@ -823,9 +831,7 @@ export class FlowchartHandler {
    */
   unsetMap(): this {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
-    this.onMapping.active = false;
-    this.onMapping.object = undefined;
-    this.onMapping.domId = '';
+    this.onMapping = FlowchartHandler.getDefaultMapping();
     flowchart.unsetMap();
     return this;
   }

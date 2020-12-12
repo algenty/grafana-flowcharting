@@ -15,7 +15,7 @@
     </span>
     <!-- ID INPUT -->
     <div class="gf-form-select-wrapper">
-      <select class="gf-form-input width-10" ng-model="rule.data.textProp"
+      <select class="gf-form-input width-10" ng-model="rule.getTextMapOptions().identByProp"
         ng-options="c.value as c.text for c in editor.propTypes" ng-change="editor.onRulesChange()"></select>
     </div>
   </div>
@@ -70,8 +70,8 @@
     </thead>
     <tbody ng-mouseleave="editor.unhighlightAllCells()">
       <tr ng-repeat="text in rule.getTextMaps()" ng-class="{'gf-form-disabled': text.data.hidden}"
-        ng-mouseleave="editor.unselectCell(rule.data.textProp,text.data.pattern)"
-        ng-mouseover="editor.selectCell(rule.data.textProp,text.data.pattern)">
+        ng-mouseleave="editor.unselectCell(text.data.pattern, rule.getTextMapOptions())"
+        ng-mouseover="editor.selectCell(text.data.pattern, rule.getTextMapOptions())">
         <td>
           <div class="gf-form">
             <label class="gf-form-label" style="margin-right: 4px;">
@@ -87,7 +87,7 @@
                 ng-click="text.show();editor.onRulesChange()"></i>
             </label>
             <label class="gf-form-label" style="margin-right: 4px;" ng-hide="editor.flowchartHandler.isMapping(text)">
-              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(text, rule.data.textProp)"
+              <i class="fa fa-link pointer" ng-click="editor.flowchartHandler.setMap(text, rule.getTextMapOptions())"
                 bs-tooltip="'Select object/target in graph'"></i>
             </label>
             <label class="gf-form-label" style="margin-right: 4px;color:orange"
@@ -100,12 +100,12 @@
         <td>
           <div class="gf-form">
             <input type="text" style="margin-right: 2px;" id="{{ text.getId() }}" placeholder="id or regex of shape"
-              class="gf-form-input width-8" ng-model="text.data.pattern" ng-if="rule.data.textProp === 'id'"
+              class="gf-form-input width-8" ng-model="text.data.pattern" ng-show="rule.getTextMapOptions().identByProp === 'id'"
               bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
               bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
               ng-model-onblur data-placement="right" />
             <input type="text" style="margin-right: 2px;" id="{{ text.getId() }}" placeholder="id or regex of shape"
-              class="gf-form-input width-8" ng-model="text.data.pattern" ng-if="rule.data.textProp === 'value'"
+              class="gf-form-input width-8" ng-model="text.data.pattern" ng-show="rule.getTextMapOptions().identByProp === 'value'"
               bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
               bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
               ng-model-onblur data-placement="right" />

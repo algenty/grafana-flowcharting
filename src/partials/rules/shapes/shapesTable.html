@@ -92,8 +92,8 @@
                     ng-mouseleave="editor.unsetCurrentMap();">
                     <!-- CELLS -->
                     <div class="gf-table-row_line"
-                        ng-mouseleave="editor.unselectCell(rule.data.shapeProp,shape.data.pattern, rule.data.shapeMD);"
-                        ng-mouseover="editor.selectCell(rule.data.shapeProp, shape.data.pattern, rule.data.shapeMD)">
+                        ng-mouseleave="editor.unselectCell(shape.data.pattern, rule.getShapeMapOptions());"
+                        ng-mouseover="editor.selectCell(shape.data.pattern, rule.getShapeMapOptions())">
                         <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
                             ng-click="shape.reduce=!shape.reduce" title="Expand/Collapse for detail"
@@ -121,7 +121,7 @@
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
                             <div ng-show="shape.displayWhatEdit === true && shape.whatEdit !== true && !editor.flowchartHandler.isMapping(shape)"
-                                ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)"
+                                ng-click="editor.flowchartHandler.setMap(shape, rule.getShapeMapOptions())"
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a shape in diagram">
                             </div>
@@ -129,7 +129,7 @@
                                 ng-model="shape.data.pattern" style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{shape.getId() + '-what'}}" ng-model-onblur
                                 ng-blur="editor.onRulesChange();shape.whatEdit = false;"
-                                bs-typeahead="rule.data.shapeProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD"
+                                bs-typeahead="editor.getCellNamesTypeHead"
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
                         <!-- WHEN -->
@@ -194,7 +194,7 @@
                                     title="Enable/Disable this mapping" class="gf-icon-action"
                                     ng-class="{'gf-icon-show': !shape.isHidden(), 'gf-icon-hide': shape.isHidden()}">
                                 </div>
-                                <div ng-click="editor.flowchartHandler.setMap(shape,rule.data.shapeProp)"
+                                <div ng-click="editor.flowchartHandler.setMap(shape, rule.getShapeMapOptions())"
                                     title="Select a shape in diagram" class="gf-icon-action"
                                     ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(shape), 'gf-icon-empty': editor.flowchartHandler.isMapping(shape)}">
                                 </div>

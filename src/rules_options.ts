@@ -654,31 +654,11 @@ export class RulesOptionsCtrl {
     // let currMD = '';
     if (currRule) {
       this.setCurrentParam('currentMap', map);
-      // if(map instanceof ShapeMap) {
-      //   currProp = currRule.data.shapeProp;
-      //   currMD = currRule.data.shapeMD;
-      // }
-      // if(map instanceof TextMap) {
-      //   currProp = currRule.data.textProp;
-      //   currMD = currRule.data.textMD;
-      // }
-      // if(map instanceof LinkMap) {
-      //   currProp = currRule.data.linkProp;
-      //   currMD = currRule.data.linkMD;
-      // }
-      // if(map instanceof EventMap) {
-      //   currProp = currRule.data.eventProp;
-      //   currMD = currRule.data.eventMD;
-      // }
-      // this.setCurrentParam("currentProp", currProp);
-      // this.setCurrentParam("currentMD", currMD);
     }
   }
 
   unsetCurrentMap() {
     this.unsetCurrentParam('currentMap');
-    // this.unsetCurrentParam("currentProp");
-    // this.unsetCurrentParam("currentMD");
   }
 
   getCurrentParam(prop: string) {
@@ -686,30 +666,20 @@ export class RulesOptionsCtrl {
   }
 
   getCellNamesTypeHead = () => {
-    const prop = this.getCurrentParam('currentProp');
-    return this.getCellNames4(prop);
+    const options = this.getCurrentParam('currentOptions');
+    return this.getCellNames4(options);
   };
 
-  getCellNamesMD = () => {
-    const md = this.getCurrentParam('currentMD');
-    return this.getCellNames4('metadata', md);
-  };
+  // getCellNamesMD = () => {
+  //   const md = this.getCurrentParam('currentMD');
+  //   return this.getCellNames4('metadata', );
+  // };
 
-  getCellNames4(prop: gf.TPropertieKey, attribute?: string) {
+  getCellNames4(options: gf.TRuleMapOptions) {
     let filter: any[] = [];
-    if (prop) {
+    if (options) {
       const flowchart = this.flowchartHandler.getFlowchart();
-      if (!attribute) {
-        filter = flowchart.getNamesByProp(prop);
-      } else {
-        const xgraph = flowchart.getXGraph();
-        if (xgraph) {
-          filter = xgraph.getCurrentMDValue(attribute);
-        }
-      }
-      // const uniq = new Set(cells);
-      // filter = [...uniq];
-      // filter = filter.filter(e => e !== undefined && e.length > 0);
+      filter = flowchart.getNamesByOptions(options);
     }
     return filter;
   }
