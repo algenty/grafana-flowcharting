@@ -222,7 +222,7 @@ export class InspectOptionsCtrl {
         return state.getTextLevel();
         break;
       case 'label':
-        return state.getCellProp('value');
+        return state.originalText;
         break;
       default:
         return null;

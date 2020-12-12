@@ -3,6 +3,7 @@ import { $GF } from 'globals_class';
 import * as Drawio from 'drawio_custom';
 import chroma from 'chroma-js';
 import * as mxcustom from 'mxgraph_custom';
+import { Rule } from 'rule_class';
 
 declare var mxEvent: any;
 declare var mxClient: any;
@@ -300,7 +301,7 @@ export default class XGraph {
     this.cells['id'] = this.getCurrentCells('id');
     this.cells['value'] = this.getCurrentCells('value');
     this.cells['metadata'] = this.getCurrentCells('metadata');
-    console.log("initOriginalDatas -> this.cells", this.cells);
+    console.log('initOriginalDatas -> this.cells', this.cells);
   }
 
   async loadExtFont() {
@@ -613,15 +614,19 @@ export default class XGraph {
     return this;
   }
 
-  getCurrentMDValue(regName : string) {
+  getCurrentMDValue(regName: string) {
     const model = this.graph.getModel();
     const cells = model.cells;
-    const values: string[] = []; 
+    const values: string[] = [];
     _.each(cells, (mxcell: mxCell) => {
       const attrs = XGraph.getAttributes(mxcell);
       for (let index = 0; index < attrs.length; index++) {
         const attr = attrs[index];
-        if (attr.name !== undefined && $GF.utils.matchString(attr.name, regName) && values.includes(attr.value) !== true) {
+        if (
+          attr.name !== undefined &&
+          $GF.utils.matchString(attr.name, regName) &&
+          values.includes(attr.value) !== true
+        ) {
           values.push(attr.value);
         }
       }
@@ -641,14 +646,14 @@ export default class XGraph {
     const cellIds: string[] = [];
     const model = this.graph.getModel();
     const cells = model.cells;
-    const add = (data) => {
-      if(data !== undefined && data !== null && data.length > 0 && cellIds.includes(data) !== true) {
+    const add = data => {
+      if (data !== undefined && data !== null && data.length > 0 && cellIds.includes(data) !== true) {
         cellIds.push(data);
       }
-    }
-    
+    };
+
     _.each(cells, (mxcell: mxCell) => {
-      let result = ''
+      let result = '';
       switch (prop) {
         case 'id':
           result = XGraph.getId(mxcell);
@@ -656,7 +661,7 @@ export default class XGraph {
           break;
         case 'value':
           result = XGraph.getLabelCell(mxcell);
-          add(result)
+          add(result);
           break;
         case 'metadata':
           const attrs = XGraph.getAttributes(mxcell);
@@ -667,7 +672,7 @@ export default class XGraph {
           }
           break;
         default:
-          $GF.log.error("Unknow prop : " + prop);
+          $GF.log.error('Unknow prop : ' + prop);
           break;
       }
     });
@@ -683,28 +688,30 @@ export default class XGraph {
    * @returns {mxCell[]}
    * @memberof XGraph
    */
-  findMxCells(prop: gf.TPropertieKey, pattern: string, option?: string): mxCell[] {
+  findMxCells(pattern: string, options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): mxCell[] {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'findMxCells()');
     const mxcells = this.getMxCells();
     const result: any[] = [];
-    if (prop === 'id') {
+    if (options.identByProp === 'id') {
       _.each(mxcells, (mxcell: mxCell) => {
         if ($GF.utils.matchString(mxcell.id, pattern)) {
           result.push(mxcell);
         }
       });
-    } else if (prop === 'value') {
+    } else if (options.identByProp === 'value') {
       _.each(mxcells, (mxcell: mxCell) => {
         if ($GF.utils.matchString(XGraph.getLabelCell(mxcell), pattern)) {
           result.push(mxcell);
         }
       });
-    } else if (prop === 'metadata') {
-      _.each(mxcells, (mxcell: mxCell) => {
-        if (XGraph.matchAttribute(mxcell, option, pattern)) {
-          result.push(mxcell);
-        }
-      });
+    } else if (options.identByProp === 'metadata') {
+      // TODO
+      throw new Error('Metatada not implemented');
+      // _.each(mxcells, (mxcell: mxCell) => {
+      //   if (XGraph.matchAttribute(mxcell, option, pattern)) {
+      //     result.push(mxcell);
+      //   }
+      // });
     }
     trc.after();
     return result;
@@ -741,8 +748,8 @@ export default class XGraph {
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  async selectMxCells(prop: gf.TPropertieKey, pattern: string, option?: string) {
-    const mxcells = this.findMxCells(prop, pattern, option);
+  async selectMxCells(pattern: string, options?: gf.TRuleMapOptions) {
+    const mxcells = this.findMxCells(pattern, options);
     if (mxcells) {
       this.highlightCells(mxcells);
     }
@@ -754,8 +761,8 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  async unselectMxCells(prop: gf.TPropertieKey, pattern: string, option ?: string) {
-    const mxcells = this.findMxCells(prop, pattern, option); 
+  async unselectMxCells(pattern: string, options?: gf.TRuleMapOptions) {
+    const mxcells = this.findMxCells(pattern, options);
     if (mxcells) {
       this.unhighlightCells(mxcells);
     }
@@ -957,7 +964,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   renameId(oldId: string, newId: string): this {
-    const cells = this.findMxCells('id', oldId);
+    const cells = this.findMxCells(oldId);
     if (cells !== undefined && cells.length > 0) {
       cells.forEach(cell => {
         cell.id = newId;
@@ -997,15 +1004,20 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  static getValuePropOfMxCell(prop: gf.TPropertieKey, mxcell: mxCell, attribute?: string): string | null {
-    if (prop === 'id') {
+  static getValuePropOfMxCell(
+    mxcell: mxCell,
+    options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()
+  ): string | null {
+    if (options.identByProp === 'id') {
       return XGraph.getId(mxcell);
     }
-    if (prop === 'value') {
+    if (options.identByProp === 'value') {
       return XGraph.getLabelCell(mxcell);
     }
-    if (prop === 'metadata' && attribute !== undefined) {
-      return XGraph.getAttribute(mxcell, attribute);
+    if (options.identByProp === 'metadata') {
+      //TODO
+      throw new Error('Not implemented');
+      // return XGraph.getAttribute(mxcell, metadata);
     }
     return null;
   }

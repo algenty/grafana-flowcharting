@@ -1,7 +1,7 @@
 import { FlowchartHandler } from './flowchartHandler';
 import { RulesHandler } from './rulesHandler';
 import { Rule } from './rule_class';
-import { EventMap, LinkMap, ObjectMap, ObjectMapArray, ShapeMap, TextMap } from './mapping_class';
+import { EventMap, ObjectMap, ObjectMapArray } from './mapping_class';
 import { $GF, GFTable } from './globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
@@ -638,21 +638,21 @@ export class RulesOptionsCtrl {
     this.getEventValues = [];
   }
 
-  setCurrentParam(prop : string, value : any) {
-    console.log("RulesOptionsCtrl -> setCurrentParam -> prop, value", prop, value);
+  setCurrentParam(prop: string, value: any) {
+    console.log('RulesOptionsCtrl -> setCurrentParam -> prop, value', prop, value);
     this.currentParams.set(prop, value);
   }
 
-  unsetCurrentParam(prop : string) {
-    console.log("RulesOptionsCtrl -> unsetCurrentParam -> prop", prop);
+  unsetCurrentParam(prop: string) {
+    console.log('RulesOptionsCtrl -> unsetCurrentParam -> prop', prop);
     this.currentParams.delete(prop);
   }
 
-  setCurrentMap(map : ObjectMap) {
-    const currRule:Rule = this.getCurrentParam('currentRule');
+  setCurrentMap(map: ObjectMap) {
+    const currRule: Rule = this.getCurrentParam('currentRule');
     // let currProp = '';
     // let currMD = '';
-    if(currRule) {
+    if (currRule) {
       this.setCurrentParam('currentMap', map);
       // if(map instanceof ShapeMap) {
       //   currProp = currRule.data.shapeProp;
@@ -676,12 +676,12 @@ export class RulesOptionsCtrl {
   }
 
   unsetCurrentMap() {
-    this.unsetCurrentParam("currentMap");
+    this.unsetCurrentParam('currentMap');
     // this.unsetCurrentParam("currentProp");
     // this.unsetCurrentParam("currentMD");
   }
 
-  getCurrentParam(prop : string) {
+  getCurrentParam(prop: string) {
     return this.currentParams.get(prop);
   }
 
@@ -693,18 +693,17 @@ export class RulesOptionsCtrl {
   getCellNamesMD = () => {
     const md = this.getCurrentParam('currentMD');
     return this.getCellNames4('metadata', md);
-  }
+  };
 
-  getCellNames4(prop : gf.TPropertieKey, attribute ?: string) {
-    let filter:any[] = [];
-    if(prop) {
+  getCellNames4(prop: gf.TPropertieKey, attribute?: string) {
+    let filter: any[] = [];
+    if (prop) {
       const flowchart = this.flowchartHandler.getFlowchart();
-      if(!attribute) {
+      if (!attribute) {
         filter = flowchart.getNamesByProp(prop);
-      }
-      else {
+      } else {
         const xgraph = flowchart.getXGraph();
-        if(xgraph) {
+        if (xgraph) {
           filter = xgraph.getCurrentMDValue(attribute);
         }
       }
@@ -714,7 +713,6 @@ export class RulesOptionsCtrl {
     }
     return filter;
   }
-
 
   isFirstRule(index: number): boolean {
     if (index === 0) {
@@ -903,25 +901,29 @@ export class RulesOptionsCtrl {
 
   removeShapeMap(rule: Rule, index: number) {
     const shape = rule.getShapeMap(index);
-    this.unselectCell(rule.data.shapeProp, shape.data.pattern);
+    const options = rule.getShapeMapOptions();
+    this.unselectCell(shape.getData().pattern, options);
     rule.removeShapeMap(index);
   }
 
   removeTextMap(rule: Rule, index: number) {
     const txt = rule.getTextMap(index);
-    this.unselectCell(rule.data.textProp, txt.data.pattern);
+    const options = rule.getTextMapOptions();
+    this.unselectCell(txt.getData().pattern, options);
     rule.removeTextMap(index);
   }
 
   removeLinkMap(rule: Rule, index: number) {
     const lnk = rule.getLinkMap(index);
-    this.unselectCell(rule.data.linkProp, lnk.data.pattern);
+    const options = rule.getLinkMapOptions();
+    this.unselectCell(lnk.getData().pattern, options);
     rule.removeLinkMap(index);
   }
 
   removeEventMap(rule: Rule, index: number) {
     const evt = rule.getEventMap(index);
-    this.unselectCell(rule.data.eventProp, evt.data.pattern);
+    const options = rule.getLinkMapOptions();
+    this.unselectCell(evt.getData().pattern, options);
     rule.removeEventMap(index);
   }
 
@@ -944,11 +946,11 @@ export class RulesOptionsCtrl {
    * @param  {} prop
    * @param  {} pattern
    */
-  async selectCell(prop: gf.TPropertieKey, pattern: string, option ?: string) {
+  async selectCell(pattern: string, options?: gf.TRuleMapOptions) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
-      xgraph.selectMxCells(prop, pattern, option);
+      xgraph.selectMxCells(pattern, options);
     }
   }
 
@@ -957,26 +959,26 @@ export class RulesOptionsCtrl {
    *
    * @memberof RulesOptionsCtrl
    */
-  async unselectCell(prop: gf.TPropertieKey, pattern: string, option ?: string) {
+  async unselectCell(pattern: string, options?: gf.TRuleMapOptions) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
-      xgraph.unselectMxCells(prop, pattern, option);
+      xgraph.unselectMxCells(pattern, options);
     }
   }
 
-  identifyCell(prop: gf.TPropertieKey, value: string) {
+  identifyCell(pattern: string, options: gf.TRuleMapOptions) {
     const id = 'identifyCell';
     $GF.clearUniqTimeOut(id);
     const self = this;
     let count = 0;
     const select = () => {
-      self.selectCell(prop, value);
+      self.selectCell(pattern, options);
       count = count + 1;
       $GF.setUniqTimeOut(unselect, 500, id);
     };
     const unselect = () => {
-      self.unselectCell(prop, value);
+      self.unselectCell(pattern, options);
       if (count < 3) {
         $GF.setUniqTimeOut(select, 500, id);
       }
@@ -1085,17 +1087,22 @@ export class RulesOptionsCtrl {
   setRuleMappings(rule: Rule): this {
     const _setTarget = (cell: mxCell) => {
       if (cell) {
-        let mapsList: ObjectMapArray[] = [rule.shapeMaps, rule.textMaps, rule.linkMaps, rule.eventMaps];
-        let propList: gf.TPropertieKey[] = [
-          rule.data.shapeProp,
-          rule.data.textProp,
-          rule.data.linkProp,
-          rule.data.eventProp,
+        let mapsList: ObjectMapArray[] = [
+          rule.getShapeMaps(),
+          rule.getTextMaps(),
+          rule.getLinkMaps(),
+          rule.getEventMaps(),
         ];
-        for (let index = 0; index < propList.length; index++) {
-          const prop = propList[index];
+        let optionsList: gf.TRuleMapOptions[] = [
+          rule.getShapeMapOptions(),
+          rule.getTextMapOptions(),
+          rule.getLinkMapOptions(),
+          rule.getEventMapOptions(),
+        ];
+        for (let index = 0; index < optionsList.length; index++) {
+          const options = optionsList[index];
           const maps = mapsList[index];
-          const value = XGraph.getValuePropOfMxCell(prop, cell);
+          const value = XGraph.getValuePropOfMxCell(cell, options);
           if (value) {
             maps.forEach(map => {
               map.setPattern(value);

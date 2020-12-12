@@ -107,10 +107,11 @@ export class State {
       this.variables.set($GF.CONSTANTS.VAR_STR_COLOR, color);
 
       // SHAPE
-      let cellProp = this.getCellProp(rule.data.shapeProp);
+      let mapOptions = rule.getShapeMapOptions();
+      let cellProp = this.getCellProp(mapOptions);
       shapeMaps.forEach(shape => {
         let k = shape.data.style;
-        if (!shape.isHidden() && shape.match(cellProp, rule.data.shapeRegEx)) {
+        if (!shape.isHidden() && shape.match(cellProp, mapOptions)) {
           let v: any = color;
           this.matched = true;
           if (level > this.globalLevel) {
@@ -118,7 +119,7 @@ export class State {
             this.highestValue = value;
             this.highestFormattedValue = FormattedValue;
           }
-          if (shape.toColorize(level)) {
+          if (shape.isEligible(level)) {
             this.shapeState.set(k, v, level) && this.status.set(k, v);
           }
           // TOOLTIP
@@ -138,11 +139,12 @@ export class State {
       });
 
       // TEXT
-      cellProp = this.getCellProp(rule.data.textProp);
+      mapOptions = rule.getTextMapOptions();
+      cellProp = this.getCellProp(mapOptions);
       textMaps.forEach(text => {
         const k = 'label';
-        if (!text.isHidden() && text.match(cellProp, rule.data.textRegEx) && text.toLabelize(level)) {
-          if (text.toLabelize(level)) {
+        if (!text.isHidden() && text.match(cellProp, mapOptions) && text.isEligible(level)) {
+          if (text.isEligible(level)) {
             this.matched = true;
             if (level > this.globalLevel) {
               this.globalLevel = level;
@@ -157,11 +159,12 @@ export class State {
       });
 
       // EVENTS
-      cellProp = this.getCellProp(rule.data.eventProp);
+      mapOptions = rule.getEventMapOptions();
+      cellProp = this.getCellProp(mapOptions);
       eventMaps.forEach(event => {
         const k = event.data.style;
-        if (!event.isHidden() && event.match(cellProp, rule.data.eventRegEx) && event.toEventable(level)) {
-          if (event.toEventable(level)) {
+        if (!event.isHidden() && event.match(cellProp, mapOptions) && event.isEligible(level)) {
+          if (event.isEligible(level)) {
             this.matched = true;
             if (level > this.globalLevel) {
               this.globalLevel = level;
@@ -175,11 +178,12 @@ export class State {
       });
 
       // LINK
-      cellProp = this.getCellProp(rule.data.linkProp);
+      mapOptions = rule.getEventMapOptions();
+      cellProp = this.getCellProp(mapOptions);
       linkMaps.forEach(link => {
         const k = 'link';
-        if (!link.isHidden() && link.match(cellProp, rule.data.linkRegEx)) {
-          if (link.toLinkable(level)) {
+        if (!link.isHidden() && link.match(cellProp, mapOptions)) {
+          if (link.isEligible(level)) {
             this.matched = true;
             if (level > this.globalLevel) {
               this.globalLevel = level;
@@ -251,12 +255,16 @@ export class State {
    * @returns {string|null} return original value of id or label of cell
    * @memberof State
    */
-  getCellProp(prop: gf.TPropertieKey): string | null {
-    if (prop === 'id') {
+  getCellProp(options: gf.TRuleMapOptions): string | null {
+    if (options.identByProp === 'id') {
       return this.cellId;
     }
-    if (prop === 'value') {
+    if (options.identByProp === 'value') {
       return this.originalText;
+    }
+    if (options.identByProp === 'metadata') {
+      // TODO
+      throw new Error('Metadata not implemented');
     }
     return null;
   }

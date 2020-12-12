@@ -1,8 +1,13 @@
 import { $GF } from 'globals_class';
 import _ from 'lodash';
+import { Rule } from 'rule_class';
 
 export type ObjectMap = ShapeMap | TextMap | LinkMap | EventMap;
-export type ObjectMapArray = ObjectMap[];
+export type ObjectMapArray = ShapeMapArray | TextMapArray | LinkMapArray | EventMapArray;
+export type ShapeMapArray = ShapeMap[];
+export type TextMapArray = TextMap[];
+export type LinkMapArray = LinkMap[];
+export type EventMapArray = EventMap[];
 export type DataMap = gf.TShapeMapData | gf.TTextMapData | gf.TlinkMapData | gf.TEventMapData;
 
 export type ObjectVMap = ValueMap | RangeMap;
@@ -11,7 +16,7 @@ export type DataVMap = gf.TValueMapData | gf.TRangeMapData;
 class GFMap {
   data: DataMap;
   id: string;
-  type:gf.TTypeMap = 'shape';
+  type: gf.TTypeMap = 'shape';
   reduce = true;
   static methods: any[] = [];
   constructor(pattern, data: DataMap) {
@@ -100,7 +105,7 @@ class GFMap {
    * @returns {boolean}
    * @memberof GFMap
    */
-  match(text: string | null, options : gf.TRuleMapOptions = Rule.getDefaultOption()): boolean {
+  match(text: string | null, options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): boolean {
     if (text === undefined || text === null || text.length === 0) {
       return false;
     }
@@ -195,7 +200,7 @@ class GFMap {
    */
   export(): gf.TGFMapData {
     return {
-      metadata : this.data.metadata,
+      metadata: this.data.metadata,
       pattern: this.data.pattern,
       hidden: this.data.hidden,
     };
@@ -246,7 +251,7 @@ export class ShapeMap extends GFMap {
    * @memberof ShapeMap
    * 0.7.0 : Moved to shape
    */
-  toColorize(level: number): boolean {
+  isEligible(level: number): boolean {
     if (level === -1) {
       return false;
     }
@@ -320,7 +325,7 @@ export class TextMap extends GFMap {
    * @returns {boolean}
    * @memberof TextMap
    */
-  toLabelize(level: number): boolean {
+  isEligible(level: number): boolean {
     // if (this.data.textOn === 'wmd' && level > 0) return true;
     // if (this.data.textOn === 'wmd' && level === -1) return false;
     if (this.data.textOn === 'wmd') {
@@ -455,7 +460,7 @@ export class LinkMap extends GFMap {
    * @returns {boolean}
    * @memberof LinkMap
    */
-  toLinkable(level: number): boolean {
+  isEligible(level: number): boolean {
     if (this.data.linkOn === 'a') {
       return true;
     }
@@ -565,7 +570,7 @@ export class EventMap extends GFMap {
    * @memberof ShapeMap
    * 0.7.0 : Moved to shape
    */
-  toEventable(level: number): boolean {
+  isEligible(level: number): boolean {
     switch (this.data.comparator) {
       case 'al':
         return true;

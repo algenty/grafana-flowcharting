@@ -216,35 +216,35 @@ declare module gf {
   }
 
   declare interface TRuleMaps {
-    shapes : ShapeMap[];
-    texts : TextMap[];
-    links : LinkMap[];
-    events : EventMap[];
+    shapes: ShapeMap[];
+    texts: TextMap[];
+    links: LinkMap[];
+    events: EventMap[];
   }
   declare type TMapDataArray = TShapeMapData[] | TTextMapData[] | TlinkMapData[] | TEventMapData[];
   declare interface TRuleMapOptions {
-    identByProp : TPropertieKey;
-    enableRegEx : boolean;
-  } 
+    identByProp: TPropertieKey;
+    enableRegEx: boolean;
+  }
 
   declare type TTypeMap = 'shape' | 'text' | 'link' | 'event';
   declare interface TRuleMapData {
-    options : TRuleMapOptions;
-    dataList : TMapDataArray;
+    options: TRuleMapOptions;
+    dataList: TMapDataArray;
   }
 
-  declare interface TRuleShapeMapData extends TRuleMapData{
-    dataList : TShapeMapData[];
+  declare interface TRuleShapeMapData extends TRuleMapData {
+    dataList: TShapeMapData[];
   }
-  declare interface TRuleTextMapData extends TRuleMapData{
-    dataList : TTextMapData[];
+  declare interface TRuleTextMapData extends TRuleMapData {
+    dataList: TTextMapData[];
   }
-  declare interface TRuleLinkMapData extends TRuleMapData{
-    dataList : TLinkMapData[];
+  declare interface TRuleLinkMapData extends TRuleMapData {
+    dataList: TLinkMapData[];
   }
 
-  declare interface TRuleEventMapData extends TRuleMapData{
-    dataList : TEventMapData[];
+  declare interface TRuleEventMapData extends TRuleMapData {
+    dataList: TEventMapData[];
   }
 
   declare interface TIRuleData {
@@ -280,10 +280,10 @@ declare module gf {
     tpGraphHigh: number | null;
     tpGraphScale: TGraphScaleKeys;
     mapsDat: {
-      shapes : TRuleShapeMapData;
-      texts : TRuleTextMapData;
-      links : TRuleLinkMapData;
-      events : TRuleEventMapData;
+      shapes: TRuleShapeMapData;
+      texts: TRuleTextMapData;
+      links: TRuleLinkMapData;
+      events: TRuleEventMapData;
     };
     // shapeProp: TPropertieKey;
     // shapeRegEx: boolean;

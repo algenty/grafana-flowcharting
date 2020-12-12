@@ -6,7 +6,17 @@ import { Metric } from './metric_class';
 import { $GF } from './globals_class';
 import chroma from 'chroma-js';
 import { NumberTH, StringTH, ObjectTH, ObjectTHData, DateTH } from 'threshold_class';
-import { EventMap, ShapeMap, TextMap, LinkMap, ValueMap, RangeMap, ObjectMap, DataMap } from 'mapping_class';
+import {
+  EventMap,
+  ShapeMap,
+  TextMap,
+  LinkMap,
+  ValueMap,
+  RangeMap,
+  ObjectMap,
+  DataMap,
+  ShapeMapArray,
+} from 'mapping_class';
 
 /**
  * Rule definition
@@ -16,12 +26,12 @@ import { EventMap, ShapeMap, TextMap, LinkMap, ValueMap, RangeMap, ObjectMap, Da
  */
 export class Rule {
   data: gf.TIRuleData;
-  mapsObj:gf.TRuleMaps = {
+  mapsObj: gf.TRuleMaps = {
     shapes: [],
     texts: [],
     links: [],
     events: [],
-  }
+  };
   // shapeMaps: ShapeMap[] = [];
   // textMaps: TextMap[] = [];
   // linkMaps: LinkMap[] = [];
@@ -99,22 +109,22 @@ export class Rule {
       tpGraphHigh: null,
       tpGraphScale: 'linear',
       mapsDat: {
-        shapes :{
-          options : Rule.getDefaultMapOptions(),
-          dataList : [],
+        shapes: {
+          options: Rule.getDefaultMapOptions(),
+          dataList: [],
         },
-        texts : {
-          options : Rule.getDefaultMapOptions(),
-          dataList : [],
+        texts: {
+          options: Rule.getDefaultMapOptions(),
+          dataList: [],
         },
         links: {
-          options : Rule.getDefaultMapOptions(),
-          dataList : [],
+          options: Rule.getDefaultMapOptions(),
+          dataList: [],
         },
         events: {
-          options : Rule.getDefaultMapOptions(),
-          dataList : [],
-        }, 
+          options: Rule.getDefaultMapOptions(),
+          dataList: [],
+        },
       },
       // shapeProp: 'id',
       // shapeMD: 'NAME',
@@ -125,11 +135,11 @@ export class Rule {
       // textRegEx: true,
       // textData: [],
       // linkProp: 'id',
-      // linkMD: 'NAME', 
+      // linkMD: 'NAME',
       // linkRegEx: true,
       // linkData: [],
       // eventProp: 'id',
-      // eventMD: 'NAME', 
+      // eventMD: 'NAME',
       // eventRegEx: false,
       // eventData: [],
       mappingType: 1,
@@ -142,9 +152,9 @@ export class Rule {
 
   static getDefaultMapOptions(): gf.TRuleMapOptions {
     return {
-      identByProp : 'id',
-      enableRegEx : true,
-    }
+      identByProp: 'id',
+      enableRegEx: true,
+    };
   }
 
   /**
@@ -408,31 +418,30 @@ export class Rule {
     if (!!obj.shapeRegEx || obj.shapeRegEx === false) {
       this.data.mapsDat.shapes.options.enableRegEx = obj.shapeRegEx;
     }
-    
+
     // 1.0.0
-    if (!!obj.maps) {
-      if(!!obj.maps.shape) {
-        this.data.mapsDat.shapes.options.identByProp = obj.shapesData.options.identifyProp;
-        this.data.mapsDat.shapes.options.enableRegEx = obj.shapesData.options.enableRegEx;
+    if (!!obj.mapsDat) {
+      if (!!obj.mapsDat.shapes) {
+        this.data.mapsDat.shapes.options.identByProp = obj.mapsDat.shapes.options.identifyProp;
+        this.data.mapsDat.shapes.options.enableRegEx = obj.mapsDat.shapes.options.enableRegEx;
       }
     }
 
-    this.data.mapsDat.shapes.dataList = [];
     maps = [];
-    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null && obj.shapeMaps.length > 0) {
+    this.data.mapsDat.shapes.dataList = [];
+    if (obj.shapeMaps !== undefined && obj.shapeMaps !== null) {
       // For 0.2.0
       maps = obj.shapeMaps;
     } else {
       // < 0.9.0
-      if(obj.shapeData !== undefined && obj.shapeData !== null && obj.shapeData.length > 0) {
+      if (obj.shapeData !== undefined && obj.shapeData !== null) {
         maps = obj.shapeData;
-      }
-      else {
+      } else {
         // 1.0.0
         maps = obj.mapsDat.shapes.dataList;
       }
     }
-
+    
     if (maps !== undefined && maps !== null && maps.length > 0) {
       maps.forEach((shapeData: gf.TShapeMapData) => {
         // 0.7.0
@@ -449,7 +458,7 @@ export class Rule {
     }
 
     // TEXT
-    if(!!obj.textProp) {
+    if (!!obj.textProp) {
       this.data.mapsDat.texts.options.identByProp = obj.textProp;
     }
 
@@ -457,28 +466,27 @@ export class Rule {
       this.data.mapsDat.texts.options.enableRegEx = obj.textRegEx;
     }
 
-    if (!!obj.textsMap) {
-      if(!!obj.textsMap.options) {
-        this.data.mapsDat.texts.options.identByProp = obj.textsMap.options.identifyProp;
-        this.data.mapsDat.texts.options.enableRegEx = obj.textsMap.options.enableRegEx;
+    if (!!obj.mapsDat) {
+      if (!!obj.mapsDat.texts) {
+        this.data.mapsDat.texts.options.identByProp = obj.mapsDat.texts.options.identifyProp;
+        this.data.mapsDat.texts.options.enableRegEx = obj.mapsDat.texts.options.enableRegEx;
       }
     }
 
-    this.data.mapsDat.texts.dataList = [];
     maps = [];
-    if (obj.textMaps !== undefined && obj.textMaps !== null && obj.textMaps.length > 0) {
+    this.data.mapsDat.texts.dataList = [];
+    if (obj.textMaps !== undefined && obj.textMaps !== null) {
       // For 0.2.0
       maps = obj.textMaps;
     } else {
       // 0.9.1
-      if(obj.textData !== undefined && obj.textData !== null && obj.textData.length > 0) {
+      if (obj.textData !== undefined && obj.textData !== null) {
         maps = obj.textData;
-      }
-      else {
-        maps = obj.data.mapsDat.texts.dataList;
+      } else {
+        maps = obj.mapsDat.texts.dataList;
       }
     }
-
+    
     if (maps !== undefined && maps != null && maps.length > 0) {
       maps.forEach((textData: gf.TTextMapData) => {
         // 0.7.0
@@ -497,7 +505,7 @@ export class Rule {
     }
 
     // LINK
-    if(!!obj.linkProp) {
+    if (!!obj.linkProp) {
       this.data.mapsDat.links.options.identByProp = obj.linkProp;
     }
 
@@ -505,29 +513,28 @@ export class Rule {
       this.data.mapsDat.links.options.enableRegEx = obj.linkRegEx;
     }
 
-    if (obj.linkMaps !== undefined && obj.linkMaps !== null && obj.linkMaps.length > 0) {
+    if (!!obj.mapsDat) {
+      if (!!obj.mapsDat.links) {
+        this.data.mapsDat.links.options.identByProp = obj.mapsDat.links.options.identifyProp;
+        this.data.mapsDat.links.options.enableRegEx = obj.mapsDat.links.options.enableRegEx;
+      }
+    }
+    
+    this.data.mapsDat.links.dataList = [];
+    maps = [];
+    if (obj.linkMaps !== undefined && obj.linkMaps !== null) {
       // For 0.2.0
       maps = obj.linkMaps;
     } else {
       // 0.9.1
-      if(obj.linkData !== undefined && obj.linkData !== null && obj.linkData.length > 0) {
+      if (obj.linkData !== undefined && obj.linkData !== null) {
         maps = obj.linkData;
-      }
-      else {
-        maps = obj.data.mapsDat.links.dataList;
+      } else {
+        maps = obj.mapsDat.links.dataList;
       }
     }
 
-    this.data.mapsDat.links.dataList = [];
-    maps = [];
-    if (obj.linkData !== undefined && obj.linkData != null && obj.linkData.length > 0) {
-      maps = obj.linkData
-    }
-    if(obj.linksMap.dataList !== undefined && obj.linksMap.dataList !== null &&  obj.linksMap.dataList.length >0 ) {
-      maps = obj.linksMap.dataList
-    }
-
-    if(maps.length >0 ) {
+    if (maps.length > 0) {
       maps.forEach((linkData: gf.TlinkMapData) => {
         // 0.7.0
         if (!!linkUrl && link) {
@@ -544,14 +551,14 @@ export class Rule {
     }
 
     // EVENT
-    if(!!obj.eventProp) {
-      this.data.mapsDat.events.options.identByProp = obj.eventProp
+    if (!!obj.eventProp) {
+      this.data.mapsDat.events.options.identByProp = obj.eventProp;
     }
     if (!!obj.eventRegEx || obj.eventRegEx === false) {
       this.data.mapsDat.events.options.identByProp = obj.eventRegEx;
     }
     if (!!obj.eventsMap) {
-      if(!!obj.eventsMap.options) {
+      if (!!obj.eventsMap.options) {
         this.data.mapsDat.events.options.identByProp = obj.eventsMap.options.identifyProp;
         this.data.mapsDat.events.options.enableRegEx = obj.eventsMap.options.enableRegEx;
       }
@@ -559,12 +566,17 @@ export class Rule {
 
     this.data.mapsDat.events.dataList = [];
     maps = [];
-    if (obj.eventData !== undefined && obj.eventData != null && obj.eventData.length > 0) {
-      maps = obj.eventData
+    if (obj.eventData !== undefined && obj.eventData != null) {
+      maps = obj.eventData;
     }
-    if(obj.eventsMap.dataList !== undefined && obj.eventsMap.dataList !== null &&  obj.eventsMap.dataList.length >0 ) {
-      maps = obj.eventsMap.dataList
+    if (obj.eventsMap !== undefined && obj.eventsMap !== null) {
+      maps = obj.eventsMap.dataList;
     }
+    if (obj.mapsDat && obj.mapsDat.events && obj.mapsDat.events.dataList) {
+      maps = obj.mapsDat.events.dataList;
+    }
+
+
     if (maps !== undefined && maps != null && maps.length > 0) {
       maps.forEach((eventData: gf.TEventMapData) => {
         this.addEventMap().import(eventData);
@@ -1131,46 +1143,58 @@ export class Rule {
   //
   // Private methods maps
   //
-  _matchMaps(type : gf.TTypeMap, pattern: string | null, options : gf.TRuleMapOptions = Rule.getDefaultMapOptions()): boolean {
-    const maps = this._getObjectListMap(type);
+  _matchMaps(
+    type: gf.TTypeMap,
+    pattern: string | null,
+    options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()
+  ): boolean {
+    const maps = this._getMapsObjType(type);
     let found = false;
     const length = maps.length;
     for (let index = 0; index < length; index++) {
       const map = maps[index];
       found = map.match(pattern, options);
-      if(found) {
+      if (found) {
         break;
       }
     }
     return found;
   }
 
-  _getRuleMapsData(type : gf.TTypeMap): gf.TRuleMapData {
-    return this.data.mapsDat[`${type}s`];
+  _getMapsDat() {
+    return this.data.mapsDat;
   }
 
-  _getObjectListMap(type : gf.TTypeMap): ObjectMap[] {
-    return this.mapsObj[`${type}s`];
+  _getRuleMapsData(type: gf.TTypeMap): gf.TRuleMapData {
+    return this._getMapsDat()[`${type}s`];
   }
 
-  _getDataListMap(type : gf.TTypeMap): DataMap[] {
+  _getMapsObj() {
+    return this.mapsObj;
+  }
+
+  _getMapsObjType(type: gf.TTypeMap): ObjectMap[] {
+    return this._getMapsObj()[`${type}s`];
+  }
+
+  _getMapsDatList(type: gf.TTypeMap): DataMap[] {
     return this._getRuleMapsData(type).dataList;
   }
 
-  _getOptionsMap(type : gf.TTypeMap): gf.TRuleMapOptions {
+  _getMapsOptions(type: gf.TTypeMap): gf.TRuleMapOptions {
     return this._getRuleMapsData(type).options;
   }
 
-  _addMaps(map : ObjectMap) {
-    const maps = this._getObjectListMap(map.getType());
-    const datas = this._getDataListMap(map.getType());
+  _addMaps(map: ObjectMap) {
+    const maps = this._getMapsObjType(map.getType());
+    const datas = this._getMapsDatList(map.getType());
     maps.push(map);
     datas.push(map.getData());
   }
 
-  _removeMaps(index: number, type : gf.TTypeMap) {
-    const maps = this._getObjectListMap(type);
-    const datas = this._getDataListMap(type);
+  _removeMaps(index: number, type: gf.TTypeMap) {
+    const maps = this._getMapsObjType(type);
+    const datas = this._getMapsDatList(type);
     maps.splice(index, 1);
     datas.splice(index, 1);
   }
@@ -1184,7 +1208,7 @@ export class Rule {
    * @param {string} pattern
    * @memberof Rule
    */
-  addShapeMap(pattern : string = ''): ShapeMap {
+  addShapeMap(pattern: string = ''): ShapeMap {
     const data = ShapeMap.getDefaultData();
     const m = new ShapeMap(pattern, data);
     this._addMaps(m);
@@ -1214,6 +1238,10 @@ export class Rule {
     return this;
   }
 
+  getShapeMapOptions(): gf.TRuleMapOptions {
+    return this._getMapsOptions('shape');
+  }
+
   /**
    * Return shape objet in index position
    *
@@ -1222,8 +1250,13 @@ export class Rule {
    * @memberof Rule
    */
   getShapeMap(index: number): ShapeMap {
-    const maps = <ShapeMap[]> this._getObjectListMap('shape');
-    return maps[index];
+    const maps = this._getMapsObjType('shape');
+    const map = maps[index];
+    if (map instanceof ShapeMap) {
+      return map;
+    } else {
+      throw new Error('map is not an instance of ShapeMap');
+    }
   }
 
   /**
@@ -1232,8 +1265,10 @@ export class Rule {
    * @returns {Array<ShapeMap>}
    * @memberof Rule
    */
-  getShapeMaps(): ShapeMap[] {
-    return <ShapeMap[]> this._getObjectListMap('shape');
+  getShapeMaps(): ShapeMapArray {
+    // const maps = this._getObjectListMap('shape');
+    const maps = this._getMapsObj()['shapes'];
+    return maps;
   }
 
   /**
@@ -1243,14 +1278,15 @@ export class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  matchShape(pattern: string | null, options ?: gf.TRuleMapOptions): boolean {
-    return this._matchMaps('shape', pattern, options);
+  matchShape(pattern: string | null, options?: gf.TRuleMapOptions): boolean {
+    // return this._matchMaps('shape', pattern, options);
+    return true;
   }
 
   //
   // TEXT MAPS
   //
-  addTextMap(pattern : string = ''): TextMap {
+  addTextMap(pattern: string = ''): TextMap {
     const data = TextMap.getDefaultData();
     const m = new TextMap(pattern, data);
     this._addMaps(m);
@@ -1279,6 +1315,10 @@ export class Rule {
     return this;
   }
 
+  getTextMapOptions(): gf.TRuleMapOptions {
+    return this._getMapsOptions('text');
+  }
+
   /**
    * Get a TextMap at position
    *
@@ -1287,8 +1327,13 @@ export class Rule {
    * @memberof Rule
    */
   getTextMap(index: number): TextMap {
-    const maps = this._getObjectListMap('shape');
-    return maps[index] as TextMap;
+    const maps = this._getMapsObjType('shape');
+    const map = maps[index];
+    if (map instanceof TextMap) {
+      return map;
+    } else {
+      throw new Error('map is not an instance of TextMap');
+    }
   }
 
   /**
@@ -1298,7 +1343,9 @@ export class Rule {
    * @memberof Rule
    */
   getTextMaps(): TextMap[] {
-    return <TextMap[]> this._getObjectListMap('text');
+    // return <TextMap[]> this._getMapsObjType('text');
+    const maps = this._getMapsObj()['texts'];
+    return maps;
   }
 
   /**
@@ -1308,7 +1355,7 @@ export class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  matchText(pattern: string | null, options ?: gf.TRuleMapOptions): boolean {
+  matchText(pattern: string | null, options?: gf.TRuleMapOptions): boolean {
     return this._matchMaps('text', pattern, options);
   }
 
@@ -1337,21 +1384,32 @@ export class Rule {
     return this.addEventMap().import(map.getData());
   }
 
-  removeEventMap(index: number):this {
+  removeEventMap(index: number): this {
     this._removeMaps(index, 'event');
     return this;
   }
 
+  getEventMapOptions(): gf.TRuleMapOptions {
+    return this._getMapsOptions('event');
+  }
+
   getEventMap(index: number): EventMap {
-    const maps = <EventMap[]> this._getObjectListMap('event');
-    return maps[index];
+    const maps = this._getMapsObjType('event');
+    const map = maps[index];
+    if (map instanceof EventMap) {
+      return map;
+    } else {
+      throw new Error('map is not an instance of EventMap');
+    }
   }
 
   getEventMaps(): EventMap[] {
-    return <EventMap[]> this._getObjectListMap('event');
+    // return <EventMap[]> this._getMapsObjType('event');
+    const maps = this._getMapsObj()['events'];
+    return maps;
   }
 
-  matchEvent(pattern: string | null, options ?: gf.TRuleMapOptions): boolean {
+  matchEvent(pattern: string | null, options?: gf.TRuleMapOptions): boolean {
     return this._matchMaps('event', pattern, options);
   }
 
@@ -1383,9 +1441,13 @@ export class Rule {
    * @param {number} index
    * @memberof Rule
    */
-  removeLinkMap(index: number):this {
+  removeLinkMap(index: number): this {
     this._removeMaps(index, 'link');
     return this;
+  }
+
+  getLinkMapOptions(): gf.TRuleMapOptions {
+    return this._getMapsOptions('link');
   }
 
   /**
@@ -1396,8 +1458,13 @@ export class Rule {
    * @memberof Rule
    */
   getLinkMap(index: number): LinkMap {
-    const maps = <LinkMap[]> this._getObjectListMap('link');
-    return maps[index];
+    const maps = this._getMapsObjType('link');
+    const map = maps[index];
+    if (map instanceof LinkMap) {
+      return map;
+    } else {
+      throw new Error('map is not an instance of LinkMap');
+    }
   }
 
   /**
@@ -1407,7 +1474,9 @@ export class Rule {
    * @memberof Rule
    */
   getLinkMaps(): LinkMap[] {
-    return <LinkMap[]> this._getObjectListMap('link');
+    // return <LinkMap[]> this._getMapsObjType('link');
+    const maps = this._getMapsObj()['links'];
+    return maps;
   }
 
   /**
@@ -1417,7 +1486,7 @@ export class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  matchLink(pattern: string | null, options ?: gf.TRuleMapOptions): boolean {
+  matchLink(pattern: string | null, options?: gf.TRuleMapOptions): boolean {
     return this._matchMaps('link', pattern, options);
   }
 
