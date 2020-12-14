@@ -1041,51 +1041,6 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  // setColorAnimCell(mxcell: mxCell, style: gf.TStyleColorKeys, color: string | null): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'setColorAnimCell()');
-  //   if (this.isAnimated() && color) {
-  //     try {
-  //       const startColor = this.getStyleCell(mxcell, style);
-  //       if (startColor) {
-  //         const endColor = color;
-  //         const steps = chroma
-  //           .scale([startColor, endColor])
-  //           .mode('lrgb')
-  //           .colors($GF.CONSTANTS.CONF_COLORS_STEPS + 1);
-  //         const count = 1;
-  //         const self = this;
-  //         const lg = steps.length;
-  //         function graduate(count, steps) {
-  //           if (count < lg) {
-  //             self.setStyleCell(mxcell, style, steps[count]);
-  //             window.setTimeout(() => {
-  //               graduate(count + 1, steps);
-  //             }, $GF.CONSTANTS.CONF_COLORS_MS);
-  //           }
-  //         }
-  //         graduate(count, steps);
-  //       } else {
-  //         // let hex = Color(color).hex();
-  //         let hex = chroma(color).hex();
-  //         this.setStyleCell(mxcell, style, hex);
-  //       }
-  //     } catch (error) {
-  //       $GF.log.error('Error on graduate color', error);
-  //       this.setStyleCell(mxcell, style, color);
-  //     }
-  //   } else {
-  //     if (color !== null) {
-  //       try {
-  //         color = chroma(color).hex();
-  //       } catch (error) {
-  //         $GF.log.error('Invalid Color', color);
-  //       }
-  //     }
-  //     this.setStyleCell(mxcell, style, color);
-  //   }
-  //   trc.after();
-  //   return this;
-  // }
   setColorAnimCell(mxcell: mxCell, style: gf.TStyleColorKeys, color: string | null): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setColorAnimCell()');
     const id = `${style}_${mxcell.id}`;

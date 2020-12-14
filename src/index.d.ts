@@ -1,12 +1,24 @@
-// type mxCell = any;
-declare interface mxCell {
-  [key: string]: any;
-}
+type mxCell = any;
+// declare interface mxCell {
+//   [key: string]: any;
+// }
 type mxCellState = any;
 type mxMouseEvent = any;
 type mxGeometry = { x: number; y: number; width: number; height: number };
 
 declare module gf {
+  declare interface TXCellGF {
+    defaultValues: {
+      id: string | null;
+      value: string | null;
+      metadata: TXCellMetadataGF;
+    };
+    getDefaultValue ( type : TPropertieKey): TXCellValueGF ;
+  }
+
+  declare type TXCellMetadataGF  = { key: string, value: string} []
+  declare type TXCellValueGF  = string | null | TXCellMetadataGF;
+
   declare interface TSelectString {
     text: string;
     value: string;

@@ -1,43 +1,51 @@
-declare var mxUtils: any;
+declare type mxUtils = any;
+declare type Graph =  any;
 
-declare interface gf {
-    defaultValues : {
-        id : string;
-        value : string;
-        metadata : {
-            key : string,
-            value : string,
-        }[]
-    }
-}
-
-export class XCell implements mxCell {
+export class XCell {
+  graph : Graph;
   mxcell: mxCell;
-  gf:gf = {
-      defaultValues : {
-        id : '',
-        value : '',
-        metadata : [],
-      }
-  }
-  constructor(mxcell) {
+  gf: gf.TXCellGF;
+
+  constructor(graph, mxcell) {
+    this.graph = graph;
     this.mxcell = mxcell;
+    this.gf = this._getDefaultGF();
+    this.mxcell.gf = this.gf;
     this._init();
-    mxcell.gf = this.gf;
   }
 
-  refactore(mxcell: mxCell): XCell {
-    const xcell = new XCell(mxcell);
+  refactore(graph : Graph, mxcell: mxCell): XCell {
+    const xcell = new XCell(graph, mxcell);
     return xcell;
   }
 
+  _getDefaultGF(): gf.TXCellGF {
+    return {
+      defaultValues : {
+        id : null,
+        value : null,
+        metadata : [],
+      },
+      getDefaultValue : this._getDefaultValue,
+    }
+  }
+
   async _init() {
-    this.gf.defaultValues.id = this.mxcell.getId();
+    this.gf = this._getDefaultGF();
+    this.mxcell.gf.defaultValues.id = this.mxcell.getId();
     if (mxUtils.isNode(this.mxcell.value)) {
-      this.gf.defaultValues.value = this.value.getAttribute('label');
+      this.mxcell.gf.defaultValues.value = this.mxcell.getAttribute('label');
     } else {
       this.gf.defaultValues.value = this.mxcell.getValue();
     }
+  }
+
+  _getDefaultValue(type : gf.TPropertieKey) : gf.TXCellValueGF {
+    return this.gf[type];
+  }
+
+  getMxCell(): mxCell {
+    return this.mxcell;
   }
  
 }
