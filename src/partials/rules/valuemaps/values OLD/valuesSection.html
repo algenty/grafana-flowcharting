@@ -2,7 +2,7 @@
   VALUE MAPPING WHEN type = "string" and mappingType = 1
 -->
 
-<div class="gf-form-group" ng-if="rule.data.mappingType==1">
+<div class="gf-form-group" ng-if="rule.getData().mappingType==1">
   <table>
     <thead>
       <tr>
@@ -40,12 +40,12 @@
           </div>
         </td>
         <td>
-          <input type="text" class="gf-form-input max-width-10" ng-model="map.data.value" placeholder="Value"
+          <input type="text" class="gf-form-input max-width-10" ng-model="map.getData().value" placeholder="Value"
             ng-blur="editor.onRulesChange()" ng-model-onblur />
         </td>
         <td>
           <div class="gf-form">
-            <input type="text" class="gf-form-input max-width-10" ng-model="map.data.text" placeholder="Text"
+            <input type="text" class="gf-form-input max-width-10" ng-model="map.getData().text" placeholder="Text"
               bs-typeahead="editor.getVariables" bs-tooltip="'Specify string or variables to replace values'"
               data-min-length="0" data-items="100" data-placement="right" ng-blur="editor.onRulesChange()"
               ng-model-onblur />

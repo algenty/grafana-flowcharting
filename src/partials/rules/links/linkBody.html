@@ -6,19 +6,19 @@
         </info-popover>
     </label>
     <input type="link" id="{{ link.getId() }}" style="margin-right: 2px;" placeholder="id or regex of shape/link name"
-        class="gf-form-input width-8" ng-show="rule.getLinkMapOptions().identByProp === 'id'" ng-model="link.data.pattern"
+        class="gf-form-input width-8" ng-show="rule.getLinkMapOptions().identByProp === 'id'" ng-model="link.getData().pattern"
         bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/link (see inspect tab)'"
         bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" ng-model-onblur data-min-length="0"
         data-items="100" data-placement="right" />
     <input type="link" id="{{ link.getId() }}" style="margin-right: 2px;" placeholder="id or regex of shape/link name"
-        class="gf-form-input width-8" ng-show="rule.getLinkMapOptions().identByProp === 'value'" ng-model="link.data.pattern"
+        class="gf-form-input width-8" ng-show="rule.getLinkMapOptions().identByProp === 'value'" ng-model="link.getData().pattern"
         bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape/link (see inspect tab)'"
         bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" ng-model-onblur data-min-length="0"
         data-items="100" data-placement="right" />
         <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;" title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(link, rule.getLinkMapOptions())">
             <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
         </button>
-        <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects" ng-click="editor.identifyCell(link.data.pattern, rule.getLinkMapOptions())">
+        <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects" ng-click="editor.identifyCell(link.getData().pattern, rule.getLinkMapOptions())">
             <div Class="gf-icon-location" style="margin-bottom: 7px;margin-right: 2px;"></div>
         </button>
 </div>
@@ -29,7 +29,7 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-8" ng-model="link.data.linkOn"
+    <select class="gf-form-input width-8" ng-model="link.getData().linkOn"
         ng-options="c.value as c.text for c in editor.linkOn" ng-change="editor.onRulesChange()"></select>
 </div>
 <div class="gf-form">
@@ -39,7 +39,7 @@
         </info-popover></label>
     </label>
     <input type="text" style="margin-right: 2px;" class="gf-form-input width-10" bs-tooltip="'Enter the URL link'"
-        ng-model="link.data.linkUrl" ng-blur="editor.onRulesChange()" data-placement="right" />
+        ng-model="link.getData().linkUrl" ng-blur="editor.onRulesChange()" data-placement="right" />
 </div>
 <div class="gf-form">
     <label class="gf-form-label width-7" style="margin-right: 2px;">Parameters
@@ -48,6 +48,6 @@
             </span>
         </info-popover>
     </label>
-    <gf-form-switch class="gf-form width-7" style="width: 66px;" checked="link.data.linkParams">
+    <gf-form-switch class="gf-form width-7" style="width: 66px;" checked="link.getData().linkParams">
     </gf-form-switch>
 </div>

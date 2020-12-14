@@ -73,6 +73,8 @@ export default class XGraph {
       this.csvGraph = definition;
     }
     this.initGraph();
+
+    // DEBUG MODE
     const self = this;
     if ($GF.DEBUG) {
       console.log('DEBUG ON');
@@ -257,6 +259,7 @@ export default class XGraph {
    */
   drawGraph(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'drawGraph()');
+    console.trace();
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {

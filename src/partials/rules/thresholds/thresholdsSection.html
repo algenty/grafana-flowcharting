@@ -1,25 +1,25 @@
 <div class="section gf-form-group">
-  <h5 class="section-heading" ng-show="rule.data.invert">
+  <h5 class="section-heading" ng-show="rule.getData().invert">
     Thresholds (0 : Ok &#62; ... &#62; {{rule.getThresholdCount() - 1}} : Critical)
     <info-popover mode="right-normal"><span
         ng-bind-html="$GF.popover('Define states according to value and direction (invert).', 'THRESHOLDS')"></span>
     </info-popover>
   </h5>
-  <h5 class="section-heading" ng-show="!rule.data.invert">
+  <h5 class="section-heading" ng-show="!rule.getData().invert">
     Thresholds ({{rule.getThresholdCount() - 1}} : Critical &#62; ... &#62; 0 : Ok)
     <info-popover mode="right-normal"><span
         ng-bind-html="$GF.popover('Define states according to value and direction (invert).', 'THRESHOLDS')"></span>
     </info-popover>
   </h5>
   <div class="gf-form-group" style="width:100%;">
-    <gf-form-switch class="gf-form" label="Invert" label-class="width-8" checked="rule.data.invert"
+    <gf-form-switch class="gf-form" label="Invert" label-class="width-8" checked="rule.getData().invert"
       on-change="rule.invertThesholdsColors();editor.onRulesChange()" tooltip="Invert level state and color">
     </gf-form-switch>
-    <gf-form-switch class="gf-form" label="Gradient" label-class="width-8" checked="rule.data.gradient"
-      ng-if="rule.data.type === 'number'" on-change="editor.onRulesChange()"
+    <gf-form-switch class="gf-form" label="Gradient" label-class="width-8" checked="rule.getData().gradient"
+      ng-if="rule.getData().type === 'number'" on-change="editor.onRulesChange()"
       tooltip="Apply gradient color according to the value">
     </gf-form-switch>
-    <gf-form-switch class="gf-form" label="Icon state" label-class="width-8" checked="rule.data.overlayIcon"
+    <gf-form-switch class="gf-form" label="Icon state" label-class="width-8" checked="rule.getData().overlayIcon"
       on-change="editor.onRulesChange()" tooltip="Display a warning icon when state > 0">
     </gf-form-switch>
     <div class="gf-form">

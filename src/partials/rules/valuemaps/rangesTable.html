@@ -105,9 +105,9 @@
                             ng-init="CN2 = 'from';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
                             ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseenter="elt.displayEdit[CN2] = true;"
                             ng-dblclick="elt.inEdit[CN2] = true;$GF.setFocus( elt.getId() + '-' + CN2 )"
-                            ng-style="{'width' : editor.rangesTable.getWidth(CN2)}" ng-attr-title="{{elt.data.from}}">
+                            ng-style="{'width' : editor.rangesTable.getWidth(CN2)}" ng-attr-title="{{elt.getData().from}}">
                             <div class="gf-table-content" style="text-align: left" ng-show="elt.inEdit[CN2] !== true">
-                                {{elt.data.from}}
+                                {{elt.getData().from}}
                             </div>
                             <div ng-show="elt.displayEdit[CN2] === true && elt.inEdit[CN2] !== true"
                                 ng-click="elt.inEdit[CN2] = true;$GF.setFocus( elt.getId() + '-' + CN2 )" title="Edit"
@@ -115,7 +115,7 @@
                             </div>
                             <input type="text" style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{elt.getId() + '-' + CN2}}" ng-show="elt.inEdit[CN2] === true"
-                                class="gf-form-input" ng-model="elt.data.from" ng-change="editor.onRulesChange()"
+                                class="gf-form-input" ng-model="elt.getData().from" ng-change="editor.onRulesChange()"
                                 ng-model-onblur ng-blur="elt.inEdit[CN2] = false;" data-min-length="0" data-items="100"
                                 data-placement="right" />
                         </div>
@@ -124,9 +124,9 @@
                             ng-init="CN25 = 'to';elt.displayEdit[CN25] = false;elt.inEdit[CN25] = false;"
                             ng-mouseleave="elt.displayEdit[CN25] = false;" ng-mouseenter="elt.displayEdit[CN25] = true;"
                             ng-dblclick="elt.inEdit[CN25] = true;$GF.setFocus( elt.getId() + '-' + CN25 )"
-                            ng-style="{'width' : editor.rangesTable.getWidth(CN25)}" ng-attr-title="{{elt.data.to}}">
+                            ng-style="{'width' : editor.rangesTable.getWidth(CN25)}" ng-attr-title="{{elt.getData().to}}">
                             <div class="gf-table-content" style="text-align: left" ng-show="elt.inEdit[CN25] !== true">
-                                {{elt.data.to}}
+                                {{elt.getData().to}}
                             </div>
                             <div ng-show="elt.displayEdit[CN25] === true && elt.inEdit[CN25] !== true"
                                 ng-click="elt.inEdit[CN25] = true;$GF.setFocus( elt.getId() + '-' + CN25 )" title="Edit"
@@ -134,7 +134,7 @@
                             </div>
                             <input type="text" style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{elt.getId() + '-' + CN25}}" ng-show="elt.inEdit[CN25] === true"
-                                class="gf-form-input" ng-model="elt.data.to" ng-change="editor.onRulesChange()"
+                                class="gf-form-input" ng-model="elt.getData().to" ng-change="editor.onRulesChange()"
                                 ng-model-onblur ng-blur="elt.inEdit[CN25] = false;" data-min-length="0" data-items="100"
                                 data-placement="right" />
                         </div>
@@ -143,15 +143,15 @@
                             ng-init="CN3 = 'text';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
                             ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseenter="elt.displayEdit[CN3] = true;"
                             ng-dblclick="elt.inEdit[CN3] = true;$GF.setFocus( elt.getId() + '-' + CN3 )"
-                            ng-style="{'width' : editor.rangesTable.getWidth(CN3)}" ng-attr-title="{{elt.data.text}}">
+                            ng-style="{'width' : editor.rangesTable.getWidth(CN3)}" ng-attr-title="{{elt.getData().text}}">
                             <div class="gf-table-content" style="text-align: left" ng-show="elt.inEdit[CN3] !== true">
-                                {{elt.data.text}}
+                                {{elt.getData().text}}
                             </div>
                             <div ng-show="elt.displayEdit[CN3] === true && elt.inEdit[CN3] !== true"
                                 ng-click="elt.inEdit[CN3] = true;$GF.setFocus( elt.getId() + '-' + CN3 )" title="Edit"
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
-                            <input type="text" class="gf-form-input" ng-model="elt.data.text" placeholder="Text"
+                            <input type="text" class="gf-form-input" ng-model="elt.getData().text" placeholder="Text"
                                 ng-show="elt.inEdit[CN3] === true" ng-attr-id="{{elt.getId() + '-' + CN3}}"
                                 style="margin-right: 2px;width : 100%" bs-typeahead="editor.getVariables"
                                 title="Specify string or variables to replace values" data-min-length="0"

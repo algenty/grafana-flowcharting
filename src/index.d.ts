@@ -1,5 +1,7 @@
-//declare var GFP: FlowChartingPlugin;
-type mxCell = any;
+// type mxCell = any;
+declare interface mxCell {
+  [key: string]: any;
+}
 type mxCellState = any;
 type mxMouseEvent = any;
 type mxGeometry = { x: number; y: number; width: number; height: number };
@@ -312,7 +314,6 @@ declare module gf {
   }
 
   declare interface TGFMapData {
-    metadata: string;
     pattern: string;
     hidden: boolean;
   }

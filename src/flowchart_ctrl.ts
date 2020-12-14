@@ -150,8 +150,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    // $GF.log.debug('EVENT : ', this.id, 'onRender', this);
-    // $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
+    $GF.log.debug('EVENT : ', this.id, 'onRender', this);
+    $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();

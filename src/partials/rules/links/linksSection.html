@@ -22,19 +22,11 @@
     </div>
     <div class="gf-form">
       <!-- ID Regular expression -->
-      <gf-form-switch class="gf-form" label="Regular expression" label-class="width-11" checked="rule.getLinkMapOptions().enableRegExp"
+      <gf-form-switch class="gf-form" label="Regular expression" label-class="width-11" checked="rule.getLinkMapOptions().enableRegEx"
         on-change="editor.onRulesChange()"
         tooltip="Disable this option if you don't use regular expressions in field 'What' below to improve performance">
       </gf-form-switch>
     </div>
     <ng-include src="$GF.plugin.getPartialPath() + 'rules/links/linksTable.html'"> </ng-include>
-    <!-- <div class="gf-form">
-      <div class="gf-form-button-row">
-        <button class="btn btn-inverse" ng-click="rule.addLinkMap('')">
-          <i class="fa fa-plus"></i>
-          &nbsp;Add mapping
-        </button>
-      </div>
-    </div> -->
   </div>
 </div>

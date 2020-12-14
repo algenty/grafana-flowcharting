@@ -423,7 +423,7 @@ export class Rule {
     // 1.0.0
     if (!!obj.mapsDat) {
       if (!!obj.mapsDat.shapes) {
-        this.data.mapsDat.shapes.options.identByProp = obj.mapsDat.shapes.options.identifyProp;
+        this.data.mapsDat.shapes.options.identByProp = obj.mapsDat.shapes.options.identByProp;
         this.data.mapsDat.shapes.options.enableRegEx = obj.mapsDat.shapes.options.enableRegEx;
         this.data.mapsDat.shapes.options.metadata = obj.mapsDat.shapes.options.metadata;
       }
@@ -470,7 +470,7 @@ export class Rule {
 
     if (!!obj.mapsDat) {
       if (!!obj.mapsDat.texts) {
-        this.data.mapsDat.texts.options.identByProp = obj.mapsDat.texts.options.identifyProp;
+        this.data.mapsDat.texts.options.identByProp = obj.mapsDat.texts.options.identByProp;
         this.data.mapsDat.texts.options.enableRegEx = obj.mapsDat.texts.options.enableRegEx;
         this.data.mapsDat.texts.options.metadata = obj.mapsDat.texts.options.metadata;
       }
@@ -518,7 +518,7 @@ export class Rule {
 
     if (!!obj.mapsDat) {
       if (!!obj.mapsDat.links) {
-        this.data.mapsDat.links.options.identByProp = obj.mapsDat.links.options.identifyProp;
+        this.data.mapsDat.links.options.identByProp = obj.mapsDat.links.options.identByProp;
         this.data.mapsDat.links.options.enableRegEx = obj.mapsDat.links.options.enableRegEx;
         this.data.mapsDat.links.options.metadata = obj.mapsDat.links.options.metadata;
       }
@@ -559,11 +559,11 @@ export class Rule {
       this.data.mapsDat.events.options.identByProp = obj.eventProp;
     }
     if (!!obj.eventRegEx || obj.eventRegEx === false) {
-      this.data.mapsDat.events.options.identByProp = obj.eventRegEx;
+      this.data.mapsDat.events.options.enableRegEx = obj.eventRegEx;
     }
     if (!!obj.eventsMap) {
       if (!!obj.eventsMap.options) {
-        this.data.mapsDat.events.options.identByProp = obj.eventsMap.options.identifyProp;
+        this.data.mapsDat.events.options.identByProp = obj.eventsMap.options.identByProp;
         this.data.mapsDat.events.options.enableRegEx = obj.eventsMap.options.enableRegEx;
         this.data.mapsDat.events.options.metadata = obj.eventsMap.options.metadata;
       }
@@ -1150,7 +1150,7 @@ export class Rule {
   _matchMaps(
     type: gf.TTypeMap,
     pattern: string | null,
-    options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()
+    options: gf.TRuleMapOptions = this._getMapsOptions(type)
   ): boolean {
     const maps = this._getMapsObjType(type);
     let found = false;
@@ -1282,9 +1282,8 @@ export class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  matchShape(pattern: string | null, options?: gf.TRuleMapOptions): boolean {
-    // return this._matchMaps('shape', pattern, options);
-    return true;
+  matchShape(pattern: string | null, options: gf.TRuleMapOptions = this.getShapeMapOptions()): boolean {
+    return this._matchMaps('shape', pattern, options);
   }
 
   //
@@ -1359,7 +1358,7 @@ export class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  matchText(pattern: string | null, options?: gf.TRuleMapOptions): boolean {
+  matchText(pattern: string | null, options: gf.TRuleMapOptions = this.getTextMapOptions()): boolean {
     return this._matchMaps('text', pattern, options);
   }
 
@@ -1370,7 +1369,7 @@ export class Rule {
    * @returns {EventMap}
    * @memberof Rule
    */
-  addEventMap(pattern: string = '/.*/'): EventMap {
+  addEventMap(pattern: string = ''): EventMap {
     const data = EventMap.getDefaultData();
     const m = new EventMap(pattern, data);
     this._addMaps(m);
@@ -1413,7 +1412,7 @@ export class Rule {
     return maps;
   }
 
-  matchEvent(pattern: string | null, options?: gf.TRuleMapOptions): boolean {
+  matchEvent(pattern: string | null, options: gf.TRuleMapOptions = this.getEventMapOptions()): boolean {
     return this._matchMaps('event', pattern, options);
   }
 
@@ -1490,7 +1489,7 @@ export class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  matchLink(pattern: string | null, options?: gf.TRuleMapOptions): boolean {
+  matchLink(pattern: string | null, options: gf.TRuleMapOptions = this.getLinkMapOptions()): boolean {
     return this._matchMaps('link', pattern, options);
   }
 

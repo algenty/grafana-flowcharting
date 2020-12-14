@@ -13,7 +13,7 @@
                     <span ng-bind-html="$GF.popover('Value string to replace', 'MAPPING#Map')"> </span>
                 </info-popover>
             </label>
-            <input type="text" class="gf-form-input max-width-10" ng-model="elt.data.value" placeholder="Value"
+            <input type="text" class="gf-form-input max-width-10" ng-model="elt.getData().value" placeholder="Value"
                 ng-blur="editor.onRulesChange()" ng-model-onblur />
         </div>
         <!-- TEXT -->
@@ -23,7 +23,7 @@
                     <span ng-bind-html="$GF.popover('Replace string with this text', 'MAPPING#Map')"> </span>
                 </info-popover>
             </label>
-            <input type="text" class="gf-form-input max-width-10" ng-model="elt.data.text" placeholder="Text"
+            <input type="text" class="gf-form-input max-width-10" ng-model="elt.getData().text" placeholder="Text"
                 bs-typeahead="editor.getVariables" bs-tooltip="'Specify string or variables to replace values'"
                 data-min-length="0" data-items="100" data-placement="right" ng-blur="editor.onRulesChange()"
                 ng-model-onblur />

@@ -87,10 +87,10 @@
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN2 = 'value';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
                             ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseenter="elt.displayEdit[CN2] = true;"
-                            ng-style="{'width' : editor.valuesTable.getWidth(CN2)}" ng-attr-title="{{elt.data.value}}"
+                            ng-style="{'width' : editor.valuesTable.getWidth(CN2)}" ng-attr-title="{{elt.getData().value}}"
                             ng-dblclick="elt.inEdit[CN2] = true;$GF.setFocus( elt.getId() + '-' + CN2 )">
                             <div class="gf-table-content" style="text-align: left" ng-show="elt.inEdit[CN2] !== true">
-                                {{elt.data.value}}
+                                {{elt.getData().value}}
                             </div>
                             <div ng-show="elt.displayEdit[CN2] === true && elt.inEdit[CN2] !== true"
                                 ng-click="elt.inEdit[CN2] = true;$GF.setFocus( elt.getId() + '-' + CN2 )" title="Edit"
@@ -100,23 +100,23 @@
                                 ng-attr-id="{{elt.getId() + '-' + CN2 }}" title="Number or text to replace"
                                 placeholder="Number/text" ng-attr-title="{{Apply this color "
                                 class="gf-form-input"
-                                ng-model="elt.data.value" 
+                                ng-model="elt.getData().value" 
                                 ng-blur="elt.inEdit[CN2] = false;" ng-model-onblur />
                         </div>
                         <!-- TEXT -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN3 = 'text';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
                             ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseenter="elt.displayEdit[CN3] = true;"
-                            ng-style="{'width' : editor.valuesTable.getWidth(CN3)}" ng-attr-title="{{elt.data.text}}"
+                            ng-style="{'width' : editor.valuesTable.getWidth(CN3)}" ng-attr-title="{{elt.getData().text}}"
                                 ng-dblclick="elt.inEdit[CN3] = true;$GF.setFocus( elt.getId() + '-' + CN3 )">
                             <div class="gf-table-content" style="text-align: left" ng-show="elt.inEdit[CN3] !== true">
-                                {{elt.data.text}}
+                                {{elt.getData().text}}
                             </div>
                             <div ng-show="elt.displayEdit[CN3] === true && elt.inEdit[CN3] !== true"
                                 ng-click="elt.inEdit[CN3] = true;$GF.setFocus( elt.getId() + '-' + CN3 )" title="Edit"
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
-                            <input type="text" class="gf-form-input" ng-model="elt.data.text" placeholder="Text"
+                            <input type="text" class="gf-form-input" ng-model="elt.getData().text" placeholder="Text"
                                 style="margin-right: 2px;width : 100%" ng-attr-id="{{elt.getId() + '-' + CN3 }}"
                                 ng-show="elt.inEdit[CN3] === true" ng-attr-id="{{elt.getId() + '-' + CN3}}"
                                 bs-typeahead="editor.getVariables" ng-blur="elt.inEdit[CN3] = false;" ng-model-onblur

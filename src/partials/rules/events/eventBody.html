@@ -6,19 +6,19 @@
         </info-popover>
     </label>
     <input type="text" style="margin-right: 2px;" id="{{ elt.getId() }}" placeholder="id or regex of shape"
-        class="gf-form-input width-10" ng-model="elt.data.pattern" ng-show="rule.getEventMapOptions().identByProp === 'id'"
+        class="gf-form-input width-10" ng-model="elt.getData().pattern" ng-show="rule.getEventMapOptions().identByProp === 'id'"
         bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
         bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
     <input type="text" style="margin-right: 2px;" id="{{ elt.getId() }}" placeholder="id or regex of shape"
-        class="gf-form-input width-10" ng-model="elt.data.pattern" ng-show="rule.getEventMapOptions().identByProp === 'value'"
+        class="gf-form-input width-10" ng-model="elt.getData().pattern" ng-show="rule.getEventMapOptions().identByProp === 'value'"
         bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
         bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
         <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;" title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(elt, rule.getEventMapOptions())">
             <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
         </button>
-        <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects" ng-click="editor.identifyCell(elt.data.pattern, rule.getEventMapOptions())">
+        <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects" ng-click="editor.identifyCell(elt.getData().pattern, rule.getEventMapOptions())">
             <div Class="gf-icon-location" style="margin-bottom: 7px;margin-right: 2px;"></div>
         </button>
 </div>
@@ -29,8 +29,8 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-10" ng-model="elt.data.comparator" ng-attr-id="{{elt.getId() + '-' + CN3}}"
-        ng-blur="editor.onRulesChange()" ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.data.comparator)}}"
+    <select class="gf-form-input width-10" ng-model="elt.getData().comparator" ng-attr-id="{{elt.getId() + '-' + CN3}}"
+        ng-blur="editor.onRulesChange()" ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.getData().comparator)}}"
         ng-options="c.value as c.text for c in editor.comparator" ng-change="editor.onRulesChange()">
     </select>
 </div>
@@ -41,7 +41,7 @@
             </span>
         </info-popover>
     </label>
-    <select convert-to-number class="gf-form-input width-10" ng-model="elt.data.eventOn"
+    <select convert-to-number class="gf-form-input width-10" ng-model="elt.getData().eventOn"
         ng-change="editor.onRulesChange()">
         <option type="number" ng-repeat="color in rule.getThresholds()" ng-value="$index">{{$index}}</option>
     </select>
@@ -53,9 +53,9 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-10" ng-model="elt.data.style" style="width:100%;"
+    <select class="gf-form-input width-10" ng-model="elt.getData().style" style="width:100%;"
         ng-attr-id="{{elt.getId() + '-' + CN5}}" ng-blur="editor.onRulesChange();"
-        ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.data.style)}}"
+        ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.getData().style)}}"
         ng-options="c.value as c.text for c in editor.EventType" ng-change="editor.onRulesChange()">
     </select>
 </div>
@@ -67,7 +67,7 @@
         </info-popover>
     </label>
     <input type="text" style="margin-right: 2px;" placeholder="{{elt.getPlaceHolder()}}"
-        class="gf-form-input width-10" ng-model="elt.data.value" title="Specify value for this action"
+        class="gf-form-input width-10" ng-model="elt.getData().value" title="Specify value for this action"
         bs-typeahead="editor.getEventValues" data-min-length="0" data-items="100" ng-focus="editor.onEventValue(elt)"
         ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100" ng-model-onblur data-placement="right" />
 </div>

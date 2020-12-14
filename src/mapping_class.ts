@@ -200,7 +200,6 @@ class GFMap {
    */
   export(): gf.TGFMapData {
     return {
-      metadata: this.data.metadata,
       pattern: this.data.pattern,
       hidden: this.data.hidden,
     };
@@ -235,7 +234,6 @@ export class ShapeMap extends GFMap {
    */
   static getDefaultData(): gf.TShapeMapData {
     return {
-      metadata: '',
       pattern: '',
       hidden: false,
       style: 'fillColor',
@@ -309,7 +307,6 @@ export class TextMap extends GFMap {
    */
   static getDefaultData(): gf.TTextMapData {
     return {
-      metadata: '',
       pattern: '',
       hidden: false,
       textReplace: 'content',
@@ -410,7 +407,6 @@ export class LinkMap extends GFMap {
 
   static getDefaultData(): gf.TlinkMapData {
     return {
-      metadata: '',
       pattern: '',
       hidden: false,
       linkUrl: '',
@@ -500,7 +496,6 @@ export class EventMap extends GFMap {
    */
   static getDefaultData(): gf.TEventMapData {
     return {
-      metadata: '',
       pattern: '',
       hidden: false,
       style: 'shape',

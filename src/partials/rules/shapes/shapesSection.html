@@ -33,9 +33,9 @@
             </span>
             <!-- ID INPUT -->
             <input type="text" style="margin-right: 2px;" placeholder="id or regex of shape"
-                class="gf-form-input width-8" ng-model="rule.data.shapeMD"
+                class="gf-form-input width-8" ng-model="rule.getData().shapeMD"
                 title="Enter a metadata name or a regex"
-                bs-typeahead="editor.getCellNamesTypeHead" ng-blur="editor.setCurrentParam('currentMD', rule.data.shapeMD);editor.onRulesChange()" data-min-length="0"
+                bs-typeahead="editor.getCellNamesTypeHead" ng-blur="editor.setCurrentParam('currentMD', rule.getData().shapeMD);editor.onRulesChange()" data-min-length="0"
                 data-items="100" ng-model-onblur data-placement="right" />
         </div>
         <div class="gf-form">

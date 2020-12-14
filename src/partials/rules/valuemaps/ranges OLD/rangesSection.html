@@ -2,7 +2,7 @@
   RANGE MAPPING WHEN type = "string" and mappingType = 2
 -->
 
-<div class="gf-form-group" ng-if="rule.data.mappingType==2">
+<div class="gf-form-group" ng-if="rule.getData().mappingType==2">
   <table>
     <thead>
       <tr>
@@ -47,16 +47,16 @@
           </div>
         </td>
         <td>
-          <input type="text" ng-model="rangeMap.data.from" class="gf-form-input max-width-8"
+          <input type="text" ng-model="rangeMap.getData().from" class="gf-form-input max-width-8"
             ng-blur="editor.onRulesChange()" ng-model-onblur placeholder="min" />
         </td>
         <td>
-          <input type="text" ng-model="rangeMap.data.to" class="gf-form-input max-width-8"
+          <input type="text" ng-model="rangeMap.getData().to" class="gf-form-input max-width-8"
             ng-blur="editor.onRulesChange()" ng-model-onblur placeholder="max" />
         </td>
         <td>
           <div class="gf-form">
-            <input type="text" ng-model="rangeMap.data.text" class="gf-form-input max-width-8"
+            <input type="text" ng-model="rangeMap.getData().text" class="gf-form-input max-width-8"
               bs-typeahead="editor.getVariables" bs-tooltip="'Specify string or variables to replace values'"
               data-min-length="0" data-items="100" data-placement="right" ng-blur="editor.onRulesChange()"
               ng-model-onblur placeholder="replace with" />

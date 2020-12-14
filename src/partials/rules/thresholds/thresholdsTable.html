@@ -136,16 +136,16 @@
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN2 = 'colors';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
                             ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseenter="elt.displayEdit[CN2] = true;"
-                            ng-style="{'width' : editor.THsTable.getWidth(CN2)}" ng-attr-title="{{elt.data.pattern}}">
+                            ng-style="{'width' : editor.THsTable.getWidth(CN2)}" ng-attr-title="{{elt.getData().pattern}}">
                             <div class="gf-table-content" style="text-align: center">
                                 <div style="width : 15px; height: 15px;" class="gf-icon gf-icon-action-nocolor"
-                                    ng-show="elt.displayEdit[CN2] === true || elt.data.color.length > 0">
+                                    ng-show="elt.displayEdit[CN2] === true || elt.getData().color.length > 0">
                                     <color-picker color="elt.data.color" onChange="editor.onColorChange(elt)">
                                     </color-picker>
                                 </div>
                                 <div class="gf-icon-circle-slashed gf-icon-action" style="width : 15px; height: 15px;"
-                                    ng-show="elt.displayEdit[CN2] === true || elt.data.color.length === 0"
-                                    ng-click="elt.data.color = '';elt.displayEdit[CN2] === false;editor.onRulesChange();">
+                                    ng-show="elt.displayEdit[CN2] === true || elt.getData().color.length === 0"
+                                    ng-click="elt.getData().color = '';elt.displayEdit[CN2] === false;editor.onRulesChange();">
                                 </div>
                             </div>
                         </div>
@@ -153,28 +153,28 @@
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN3 = 'when';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
                             ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseenter="elt.displayEdit[CN3] = true;"
-                            ng-style="{'width' : editor.THsTable.getWidth(CN3)}" ng-attr-title="{{elt.data.pattern}}">
+                            ng-style="{'width' : editor.THsTable.getWidth(CN3)}" ng-attr-title="{{elt.getData().pattern}}">
                             <div class="gf-table-content" style="text-align: center">
                                 <div ng-show="$index != 0">
                                     <div ng-repeat="comp in editor.comparator"
-                                        ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp(comp.value)) || elt.data.comparator === comp.value"
+                                        ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp(comp.value)) || elt.getData().comparator === comp.value"
                                         ng-attr-title="{{comp.text}}"
-                                        ng-click="elt.data.comparator = comp.value;editor.onRulesChange();"
+                                        ng-click="elt.getData().comparator = comp.value;editor.onRulesChange();"
                                         class="gf-icon-action {{'gf-icon-comp-' + comp.value}}"
-                                        ng-class="{'gf-icon-selected' : elt.data.comparator === comp.value}">
+                                        ng-class="{'gf-icon-selected' : elt.getData().comparator === comp.value}">
                                     </div>
                                 </div>
                                 <!-- <div
-                                    ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp('ge')) || elt.data.comparator === 'ge'" 
-                                    ng-click="elt.data.comparator = 'ge';editor.onRulesChange();"
+                                    ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp('ge')) || elt.getData().comparator === 'ge'" 
+                                    ng-click="elt.getData().comparator = 'ge';editor.onRulesChange();"
                                     class="gf-icon-comp-ge gf-icon-action" title="Greater or equal than"
-                                    ng-class="{'gf-icon-selected' : elt.data.comparator === 'ge'}">
+                                    ng-class="{'gf-icon-selected' : elt.getData().comparator === 'ge'}">
                                 </div>
                                 <div 
-                                    ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp('gt')) || elt.data.comparator === 'gt'"
-                                    ng-click="elt.data.comparator = 'gt';editor.onRulesChange();"
+                                    ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp('gt')) || elt.getData().comparator === 'gt'"
+                                    ng-click="elt.getData().comparator = 'gt';editor.onRulesChange();"
                                     class="gf-icon-comp-gt gf-icon-action" title="Greater than"
-                                    ng-class="{'gf-icon-selected' : elt.data.comparator === 'gt'}">
+                                    ng-class="{'gf-icon-selected' : elt.getData().comparator === 'gt'}">
                                 </div> -->
                             </div>
                         </div>
@@ -183,12 +183,12 @@
                             ng-init="CN4 = 'value';elt.displayEdit[CN4] = false;elt.inEdit[CN4] = false;"
                             ng-mouseleave="elt.displayEdit[CN4] = false;" ng-mouseenter="elt.displayEdit[CN4] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN4)}"
-                            ng-attr-title="{{$index > 0 && rule.data.type === 'number' ? 'Specify a value for apply color when value is greater or equal' : 'Specify a pattern regex for apply color' }}">
+                            ng-attr-title="{{$index > 0 && rule.getData().type === 'number' ? 'Specify a value for apply color when value is greater or equal' : 'Specify a pattern regex for apply color' }}">
                             <div class="gf-table-content" style="text-align: left;justify-content: left;"
                                 ng-attr-title="Add a value for the logical operator" ng-show="elt.inEdit[CN4] !== true">
                                 <span ng-dblclick="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
                                     ng-show="$index > 0">
-                                    {{elt.data.value}}
+                                    {{elt.getData().value}}
                                 </span>
                                 <label class="gf-form-label" style="margin-right: 2px;" ng-show="$index === 0">
                                     Base
@@ -203,22 +203,22 @@
                                 ng-click="elt.inEdit[CN4] = true;$GF.setFocus( elt.getId() + '-' + CN4 )"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit threshold level">
                             </div>
-                            <!-- <input ng-show="elt.inEdit[CN4] === true && rule.data.type === 'number'"
+                            <!-- <input ng-show="elt.inEdit[CN4] === true && rule.getData().type === 'number'"
                                 id="{{elt.getId() + '-' + CN4 }}" type="number" class="gf-form-input"
-                                ng-model="elt.data.value" ng-model-onblur
+                                ng-model="elt.getData().value" ng-model-onblur
                                 ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" placeholder="pattern or value"
-                                ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'" />
-                            <input ng-show="elt.inEdit[CN4] === true && rule.data.type === 'string'"
+                                ng-attr-title="rule.getData().type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'" />
+                            <input ng-show="elt.inEdit[CN4] === true && rule.getData().type === 'string'"
                                 id="{{elt.getId() + '-' + CN4 }}" type="text" class="gf-form-input"
-                                ng-model="elt.data.value" ng-model-onblur
+                                ng-model="elt.getData().value" ng-model-onblur
                                 ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" placeholder="pattern or value"
-                                ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'" /> -->
+                                ng-attr-title="rule.getData().type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'" /> -->
                             <input ng-show="elt.inEdit[CN4] === true" id="{{elt.getId() + '-' + CN4 }}"
-                                type="{{rule.data.type === 'string' || rule.data.type === 'date' ? 'text' : 'number'}}"
-                                placeholder="{{rule.data.type === 'string' || rule.data.type === 'date' ? 'Pattern' : 'Number'}}"
+                                type="{{rule.getData().type === 'string' || rule.getData().type === 'date' ? 'text' : 'number'}}"
+                                placeholder="{{rule.getData().type === 'string' || rule.getData().type === 'date' ? 'Pattern' : 'Number'}}"
                                 ng-attr-title="{{Apply this color "
                                 class="gf-form-input"
-                                ng-model="elt.data.value" ng-model-onblur
+                                ng-model="elt.getData().value" ng-model-onblur
                                 ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" />
                         </div>
                         <!-- LEVEL -->
@@ -227,7 +227,7 @@
                             ng-mouseleave="elt.displayEdit[CN5] = false;" ng-mouseenter="elt.displayEdit[CN5] = true;"
                             ng-style="{'width' : editor.THsTable.getWidth(CN5)}"
                             ng-attr-title="{{ 'Computed level is' + elt.getTHLevel(th) }}">
-                            <!-- {{elt.data.EventType}} -->
+                            <!-- {{elt.getData().EventType}} -->
                             <div class="gf-table-content" style="text-align: center;">
                                 <span>
                                     {{ rule.getThresholdLevelForIndex($index) }}
@@ -239,9 +239,9 @@
                             ng-style="{'width' : editor.THsTable.getWidth('options')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: center;justify-content: center;">
-                                <div ng-click="elt.data.eventParams = !elt.data.eventParams;editor.onRulesChange()"
+                                <div ng-click="elt.getData().eventParams = !elt.getData().eventParams;editor.onRulesChange()"
                                     title="Add/Remove the dashboad parameters with url" class="gf-icon-action"
-                                    ng-class="{'gf-icon-address-on': elt.data.eventParams, 'gf-icon-address-off': !elt.data.eventParams}">
+                                    ng-class="{'gf-icon-address-on': elt.getData().eventParams, 'gf-icon-address-off': !elt.getData().eventParams}">
                                 </div>
                             </div>
                         </div> -->

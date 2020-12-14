@@ -1,4 +1,4 @@
-<div class="section gf-form-group" ng-if="rule.data.type === 'string'">
+<div class="section gf-form-group" ng-if="rule.getData().type === 'string'">
     <h5 class="section-heading">Value Mappings</h5>
     <div class="gf-form-group">
       <div class="gf-form">
@@ -6,13 +6,13 @@
           Type
         </span>
         <div class="gf-form-select-wrapper">
-          <select class="gf-form-input width-10" ng-model="rule.data.mappingType"
+          <select class="gf-form-input width-10" ng-model="rule.getData().mappingType"
             ng-options="c.value as c.text for c in editor.mappingTypes"
             ng-change="editor.onRulesChange()"></select>
         </div>
       </div>
       <!-- MAP TYPE -->
-      <div class="gf-form" ng-show="rule.data.mappingType === 1">
+      <div class="gf-form" ng-show="rule.getData().mappingType === 1">
         <div ng-include="$GF.plugin.getPartialPath() + 'rules/valuemaps/valuesTable.html'">
         </div>
       </div>
@@ -30,11 +30,11 @@
       </div> -->
   
       <!-- RANGE TYPE -->
-      <div class="gf-form" ng-show="rule.data.mappingType === 2">
+      <div class="gf-form" ng-show="rule.getData().mappingType === 2">
         <div ng-include="$GF.plugin.getPartialPath() + 'rules/valuemaps/rangesTable.html'">
         </div>
       </div>
-      <!-- <div class="gf-form" ng-show="rule.data.mappingType === 2">
+      <!-- <div class="gf-form" ng-show="rule.getData().mappingType === 2">
         <div class="gf-form-button-row gf-unselectable">
           <button class="btn btn-secondary btn-small" ng-click="rule.addRangeMap() && editor.onRulesChange();"
             title="Add range mapping">

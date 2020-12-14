@@ -13,16 +13,16 @@
                             ng-bind-html="$GF.popover('Address and theme of editor when click on button edit draw', 'FLOWCHART#address')"></span>
                     </info-popover>
                 </label>
-                <input type="text" class="gf-form-input width-30" ng-model="editor.flowchartHandler.data.editorUrl"
+                <input type="text" class="gf-form-input width-30" ng-model="editor.flowchartHandler.getData().editorUrl"
                     placeholder="https://embed.diagrams.net" />
                 <div class="gf-form-select-wrapper width-8">
-                    <select class="gf-form-input" ng-model="editor.flowchartHandler.data.editorTheme"
+                    <select class="gf-form-input" ng-model="editor.flowchartHandler.getData().editorTheme"
                         ng-options="c.value as c.text for c in editor.themes"></select>
                 </div>
             </div>
             <!-- Draw.io source -->
             <gf-form-switch class="gf-form" label="Allow draw.io source" label-class="width-12"
-                tooltip="allow downloads images from draw.io" checked="editor.flowcharthandler.data.allowDrawio"
+                tooltip="allow downloads images from draw.io" checked="editor.flowcharthandler.getData().allowDrawio"
                 on-change="editor.onSourceChange()">
             </gf-form-switch>
         </div>

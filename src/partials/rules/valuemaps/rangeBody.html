@@ -13,7 +13,7 @@
                     <span ng-bind-html="$GF.popover('Min of value', 'MAPPING#Map')"> </span>
                 </info-popover>
             </label>
-            <input type="number" ng-model="elt.data.from" class="gf-form-input max-width-8"
+            <input type="number" ng-model="elt.getData().from" class="gf-form-input max-width-8"
                 ng-blur="editor.onRulesChange()" ng-model-onblur placeholder="min" />
         </div>
         <!-- TO -->
@@ -23,7 +23,7 @@
                     <span ng-bind-html="$GF.popover('Max of value', 'MAPPING#Map')"> </span>
                 </info-popover>
             </label>
-            <input type="number" ng-model="elt.data.to" class="gf-form-input max-width-8"
+            <input type="number" ng-model="elt.getData().to" class="gf-form-input max-width-8"
                 ng-blur="editor.onRulesChange()" ng-model-onblur placeholder="max" />
         </div>
         <!-- TEXT -->
@@ -33,7 +33,7 @@
                     <span ng-bind-html="$GF.popover('Value string to replace', 'MAPPING#Map')"> </span>
                 </info-popover>
             </label>
-            <input type="text" ng-model="elt.data.text" class="gf-form-input max-width-8"
+            <input type="text" ng-model="elt.getData().text" class="gf-form-input max-width-8"
                 bs-typeahead="editor.getVariables" bs-tooltip="'Specify string or variables to replace values'"
                 data-min-length="0" data-items="100" data-placement="right" ng-blur="editor.onRulesChange()"
                 ng-model-onblur placeholder="replace with" />

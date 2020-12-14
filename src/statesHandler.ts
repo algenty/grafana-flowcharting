@@ -76,11 +76,10 @@ export class StateHandler {
       const mxcell: mxCell = state.mxcell;
       const id: string = mxcell.id;
       let found = false;
-
       // SHAPES
       let options = rule.getShapeMapOptions();
       name = XGraph.getValuePropOfMxCell(mxcell, options);
-      if (name !== null && rule.matchShape(name)) {
+      if (name !== null && rule.matchShape(name, options)) {
         result.set(id, state);
         found = true;
       }
@@ -89,7 +88,7 @@ export class StateHandler {
       if (!found) {
         let options = rule.getTextMapOptions();
         name = XGraph.getValuePropOfMxCell(mxcell, options);
-        if (rule.matchText(name)) {
+        if (rule.matchText(name, options)) {
           result.set(id, state);
           found = true;
         }
@@ -99,7 +98,7 @@ export class StateHandler {
       if (!found) {
         let options = rule.getLinkMapOptions();
         name = XGraph.getValuePropOfMxCell(mxcell, options);
-        if (rule.matchLink(name)) {
+        if (rule.matchLink(name, options)) {
           result.set(id, state);
           found = true;
         }
@@ -109,13 +108,14 @@ export class StateHandler {
       if (!found) {
         let options = rule.getEventMapOptions();
         name = XGraph.getValuePropOfMxCell(mxcell, options);
-        if (rule.matchEvent(name)) {
+        if (rule.matchEvent(name, options)) {
           result.set(id, state);
           found = true;
         }
       }
     });
     trc.after();
+    console.log('🚀 ~ file: statesHandler.ts ~ line 121 ~ StateHandler ~ getStatesForRule ~ result', result);
     return result;
   }
 

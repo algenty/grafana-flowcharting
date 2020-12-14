@@ -110,11 +110,11 @@
             ng-mouseleave="editor.unhighlightCells(rule);">
             <!-- EXPAND -->
             <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
-              ng-click="rule.data.reduce=!rule.data.reduce" ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
+              ng-click="rule.getData().reduce=!rule.getData().reduce" ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
               <div class="gf-table-content gf-unselectable" style="text-align: center;cursor: pointer;">
                 <span>
                   <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
-                    ng-class="{'gf-chevron-init': rule.data.reduce, 'gf-chevron-rotate': rule.data.reduce === false}">
+                    ng-class="{'gf-chevron-init': rule.getData().reduce, 'gf-chevron-rotate': rule.getData().reduce === false}">
                   </i>
                 </span>
               </div>
@@ -126,7 +126,7 @@
               ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
               <div class="gf-table-content" ng-show="rule.inEdit[CN1] !== true"
                 ng-dblclick="rule.inEdit[CN1] = true;$GF.setFocus(rule.getId() + '-' + CN1)">
-                {{rule.data.alias}}
+                {{rule.getData().alias}}
               </div>
               <div ng-show="rule.displayEdit[CN1] === true && rule.inEdit[CN1] !== true"
                 ng-click="rule.inEdit[CN1] = true;$GF.setFocus( rule.getId() + '-' + CN1 )"
@@ -134,7 +134,7 @@
                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
               </div>
               <div ng-show="rule.inEdit[CN1] === true">
-                <input type="text" class="gf-form-input max-width-16" ng-model="rule.data.alias"
+                <input type="text" class="gf-form-input max-width-16" ng-model="rule.getData().alias"
                   ng-attr-id="{{rule.getId() + '-' + CN1}}" ng-blur="rule.inEdit[CN1] = false;" style="width: 100%;"
                   ng-model-onblur ng-keydown="$event.keyCode === 13 ? rule.inEdit[CN1] = false : rule.inEdit[CN1] = true" autofocus />
               </div>
@@ -204,17 +204,17 @@
                   title="Change the targets of all mapping">
                 </div>
                 <!-- TOOLTIP -->
-                <div ng-click="rule.data.tooltip = !rule.data.tooltip;editor.onRulesChange()"
+                <div ng-click="rule.getData().tooltip = !rule.getData().tooltip;editor.onRulesChange()"
                   title="Enable/Disable tooltips" class="gf-icon-action"
-                  ng-class="{'gf-icon-comment-on': rule.data.tooltip, 'gf-icon-comment-off': !rule.data.tooltip}">
+                  ng-class="{'gf-icon-comment-on': rule.getData().tooltip, 'gf-icon-comment-off': !rule.getData().tooltip}">
                 </div>
                 <!-- CHART/GRAPH -->
-                <div ng-show="rule.data.tooltip === false" class="gf-icon-empty">
+                <div ng-show="rule.getData().tooltip === false" class="gf-icon-empty">
                 </div>
-                <div ng-show="rule.data.tooltip === true"
-                  ng-click="rule.data.tpGraph = !rule.data.tpGraph;editor.onRulesChange()"
+                <div ng-show="rule.getData().tooltip === true"
+                  ng-click="rule.getData().tpGraph = !rule.getData().tpGraph;editor.onRulesChange()"
                   title="Enable/Disable charts with tooltips" class="gf-icon-action"
-                  ng-class="{'gf-icon-graph-off': !rule.data.tpGraph, 'gf-icon-graph-on': rule.data.tpGraph}">
+                  ng-class="{'gf-icon-graph-off': !rule.getData().tpGraph, 'gf-icon-graph-on': rule.getData().tpGraph}">
                 </div>
               </div>
             </div>
@@ -227,7 +227,7 @@
                 </div>
                 <div ng-click="editor.cloneRule(rule)" title="Duplicate this rule" class="gf-icon-action gf-icon-clone">
                 </div>
-                <div ng-click="editor.toggleShow(rule,!rule.data.hidden)" title="Enable/Disable this rule"
+                <div ng-click="editor.toggleShow(rule,!rule.getData().hidden)" title="Enable/Disable this rule"
                   class="gf-icon-action" ng-class="{'gf-icon-hide': rule.isHidden(), 'gf-icon-show': !rule.isHidden()}">
                 </div>
                 <div ng-click="!editor.isFirstRule($index) && editor.moveRule(rule, true)"
@@ -241,7 +241,7 @@
               </div>
             </div>
           </div>
-          <div ng-hide="rule.data.reduce==true" class="gf-table-row_body">
+          <div ng-hide="rule.getData().reduce==true" class="gf-table-row_body">
             <!-- GRAPH TOOLTIP -->
             <ng-include src="$GF.plugin.getPartialPath() + 'rules/ruleBody.html'"> </ng-include>
           </div>
