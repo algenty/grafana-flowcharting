@@ -186,7 +186,7 @@ class GFCONSTANT {
     { text: 'Image background', value: 'imageBackground' },
     { text: 'Image border', value: 'imageBorder' },
   ];
-  EVENTMETHODS: gf.TStyleEventList = [
+  EVENTMETHODS: gf.TTypeEventList = [
     { text: 'Shape : Change form (text)', value: 'shape', type: 'text', placeholder: 'Shape name' },
     { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number', placeholder: '0-360', default: 0 },
     { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number', placeholder: 'Number in ms', default: 500 },

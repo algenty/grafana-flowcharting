@@ -256,7 +256,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.notify('Initialisation MXGRAPH/DRAW.IO Libs');
 
     // MxGraph Init
-    XGraph.initMxGraph();
+    XGraph.initMxGraphLib();
     this.notify('Load configuration');
 
     this.initHandlers();

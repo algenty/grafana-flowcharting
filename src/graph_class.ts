@@ -10,9 +10,9 @@ import { XCell } from 'cell_class';
 
 
 declare interface TXGraphDefaultValues {
-  id : string[];
-  value : string[];
-  metadata : string[];
+  id : Set<string> | undefined;
+  value : Set<string> | undefined;
+  metadata : Set<string> | undefined;
 }
 
 /**
@@ -45,9 +45,9 @@ export default class XGraph {
   //   value: [],
   // };
   defaultXCellValues: TXGraphDefaultValues = {
-    id : [],
-    value : [],
-    metadata : [],
+    id : undefined,
+    value : undefined,
+    metadata : undefined,
   }
   xcells: XCell[];
   clickBackup: any;
@@ -65,7 +65,7 @@ export default class XGraph {
     this.ctrl = ctrl;
     this.xcells = [];
     this.onMapping = FlowchartHandler.getDefaultMapping();
-    XGraph.initMxGraph();
+    XGraph.initMxGraphLib();
     if (type === 'xml') {
       if ($GF.utils.isencoded(definition)) {
         this.xmlGraph = $GF.utils.decode(definition, true, true, true);
@@ -86,14 +86,17 @@ export default class XGraph {
         console.log('DEBUG CLICK');
         this.eventDebug(_evt);
         if (_evt.properties.cell) {
-          const id = _evt.properties.cell.id;
-          const state = $GF.getVar(`STATE_${id}`);
           const mxcell = _evt.properties.cell;
-          const mxcellState = self.getMxCellState(_evt.properties.cell);
+          const id = mxcell.id;
+          const state = $GF.getVar(`STATE_${id}`);
+          const xcell = self.getXCell(id);
           console.log('DEBUG GF STATE', state);
+          console.log('DEBUG XCELL', xcell);
           console.log('DEBUG MXCELL', mxcell);
-          console.log('DEBUG MXCELL STATE', mxcellState);
-          // console.table(XGraph.getAttributes(mxcell, false));
+          if(xcell) {
+            const mxcellState = xcell.getMxCellState();
+            console.log('DEBUG MXCELL STATE', mxcellState);
+          }
         }
       });
     }
@@ -143,7 +146,7 @@ export default class XGraph {
    * @returns
    * @memberof XGraph
    */
-  static async initMxGraph() {
+  static async initMxGraphLib() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initMxGgraph()');
     let myWindow: any = window;
     if (!XGraph.initialized) {
@@ -289,8 +292,8 @@ export default class XGraph {
     } catch (error) {
       $GF.log.error('Error in draw', error);
     } finally {
-      this.initOriginalDatas();
       this.graph.getModel().endUpdate();
+      this.initXCells();
     }
     trc.after();
     return this;
@@ -308,11 +311,12 @@ export default class XGraph {
     const model = this.graph.getModel();
     const cells = model.cells;
     this.xcells = [];
-    this.defaultXCellValues.id = [];
-    this.defaultXCellValues.value = [];
-    this.defaultXCellValues.metadata = [];
+    this.defaultXCellValues.id = undefined;
+    this.defaultXCellValues.value = undefined;
+    this.defaultXCellValues.metadata = undefined;
     _.each(cells, (mxcell: mxCell) => {
-      this.xcells.push(XCell.refactore(this.graph, mxcell));
+      const xcell = XCell.refactore(this.graph, mxcell);
+      this.xcells.push(xcell);
     });
   }
 
@@ -655,11 +659,16 @@ export default class XGraph {
    * @returns
    * @memberof XGraph
    */
-  getXCellValues(type : gf.TPropertieKey) {
-    if(this.defaultXCellValues[type].length === 0 ) {
+  getXCellValues(type : gf.TPropertieKey): string[] {
+    let values = this.defaultXCellValues[type];
+    if(values === undefined) {
       this.initXCellValues(type);
     }
-    return this.defaultXCellValues[type];
+    values = this.defaultXCellValues[type];
+    if (values !== undefined ) {
+      return Array.from(values.keys());
+    }
+    return [];
   }
 
   /**
@@ -672,20 +681,19 @@ export default class XGraph {
     const xcells = this.getXCells();
     let s:Set<string> = new Set();
     xcells.forEach(x => {
-      const value:any = x.getDefaultValue(type);
       if(type === 'id' || type === 'value') {
+        const value:any = x.getDefaultValue(type);
         s.add(value);
       }
       if(type === 'metadata') {
-        const values: gf.TXCellMetadatasGF = value;
+        const values = x.getMetadatasKeys();
         const length = values.length;
-        for (let index = 0; index < length; index++) {
-          const md = values[index];
-          s.add(md.key);
+        for (let i = 0; i < length; i++) {
+          s.add(values[i]);
         }
       }
     });
-    this.defaultXCellValues[type] = [...s];
+    this.defaultXCellValues[type] = s;
   } 
 
   // getCurrentMDValue(regName: string) {
@@ -781,7 +789,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   findXCells(pattern: string, options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): XCell[] {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'findMxCells()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'findXCells()');
     const xcells = this.getXCells();
     const result: any[] = [];
     const length = xcells.length;
@@ -867,10 +875,10 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  addOverlay(state: string, mxcell: mxCell) {
-    this.graph.addCellOverlay(mxcell, this.createOverlay(this.graph.warningImage, `State: ${state}`));
-    return this;
-  }
+  // addOverlay(state: string, mxcell: mxCell) {
+  //   this.graph.addCellOverlay(mxcell, this.createOverlay(this.graph.warningImage, `State: ${state}`));
+  //   return this;
+  // }
 
   /**
    * Remove Warning icon
@@ -892,10 +900,10 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  addLink(mxcell: mxCell, link): this {
-    this.graph.setLinkForCell(mxcell, link);
-    return this;
-  }
+  // addLink(mxcell: mxCell, link): this {
+  //   this.graph.setLinkForCell(mxcell, link);
+  //   return this;
+  // }
 
   /**
    * Get link from cell
@@ -903,9 +911,9 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  getLink(mxcell: mxCell): string | null {
-    return this.graph.getLinkForCell(mxcell);
-  }
+  // getLink(mxcell: mxCell): string | null {
+  //   return this.graph.getLinkForCell(mxcell);
+  // }
 
   /**
    * Remove link of cell
@@ -914,10 +922,10 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  removeLink(mxcell: mxCell): this {
-    this.graph.setLinkForCell(mxcell, null);
-    return this;
-  }
+  // removeLink(mxcell: mxCell): this {
+  //   this.graph.setLinkForCell(mxcell, null);
+  //   return this;
+  // }
 
   /**
    * Get value or id from cell source
@@ -1007,30 +1015,30 @@ export default class XGraph {
    * @returns {boolean}
    * @memberof XGraph
    */
-  static matchAttribute(cell: mxCell, regName?: string, regValue?: string): boolean {
-    const attrs = XGraph.getAttributes(cell);
-    length = attrs.length;
-    for (var i = 0; i < length; i++) {
-      if (regName !== undefined) {
-        if ($GF.utils.matchString(attrs[i].name, regName)) {
-          if (regValue !== undefined) {
-            if ($GF.utils.matchString(attrs[i].value, regValue)) {
-              return true;
-            }
-          } else {
-            return true;
-          }
-        }
-      } else if (regValue !== undefined) {
-        if ($GF.utils.matchString(attrs[i].value, regValue)) {
-          return true;
-        }
-      } else {
-        return false;
-      }
-    }
-    return false;
-  }
+  // static matchAttribute(cell: mxCell, regName?: string, regValue?: string): boolean {
+  //   const attrs = XGraph.getAttributes(cell);
+  //   length = attrs.length;
+  //   for (var i = 0; i < length; i++) {
+  //     if (regName !== undefined) {
+  //       if ($GF.utils.matchString(attrs[i].name, regName)) {
+  //         if (regValue !== undefined) {
+  //           if ($GF.utils.matchString(attrs[i].value, regValue)) {
+  //             return true;
+  //           }
+  //         } else {
+  //           return true;
+  //         }
+  //       }
+  //     } else if (regValue !== undefined) {
+  //       if ($GF.utils.matchString(attrs[i].value, regValue)) {
+  //         return true;
+  //       }
+  //     } else {
+  //       return false;
+  //     }
+  //   }
+  //   return false;
+  // }
 
   /**
    * Rename Id of cell
@@ -1043,8 +1051,8 @@ export default class XGraph {
   renameId(oldId: string, newId: string): this {
     const cells = this.findXCells(oldId);
     if (cells !== undefined && cells.length > 0) {
-      cells.forEach(cell => {
-        cell.id = newId;
+      cells.forEach(x => {
+        x.setId(newId);
       });
     } else {
       $GF.log.warn(`Cell ${oldId} not found`);
@@ -1081,31 +1089,31 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  static getValuePropOfMxCell(
-    mxcell: mxCell,
-    options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()
-  ): string | null {
-    if (options.identByProp === 'id') {
-      return XGraph.getId(mxcell);
-    }
-    if (options.identByProp === 'value') {
-      return XGraph.getLabelCell(mxcell);
-    }
-    if (options.identByProp === 'metadata') {
-      //TODO
-      throw new Error('Not implemented');
-      // return XGraph.getAttribute(mxcell, metadata);
-    }
-    return null;
-  }
+  // static getValuePropOfMxCell(
+  //   mxcell: mxCell,
+  //   options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()
+  // ): string | null {
+  //   if (options.identByProp === 'id') {
+  //     return XGraph.getId(mxcell);
+  //   }
+  //   if (options.identByProp === 'value') {
+  //     return XGraph.getLabelCell(mxcell);
+  //   }
+  //   if (options.identByProp === 'metadata') {
+  //     //TODO
+  //     throw new Error('Not implemented');
+  //     // return XGraph.getAttribute(mxcell, metadata);
+  //   }
+  //   return null;
+  // }
 
-  getStyleCell(mxcell: mxCell, style: any): string | null {
-    const state = this.graph.view.getState(mxcell);
-    if (state) {
-      return state.style[style];
-    }
-    return null;
-  }
+  // getStyleCell(mxcell: mxCell, style: any): string | null {
+  //   const state = this.graph.view.getState(mxcell);
+  //   if (state) {
+  //     return state.style[style];
+  //   }
+  //   return null;
+  // }
 
   isAnimated() {
     return this.animation;
@@ -1114,21 +1122,21 @@ export default class XGraph {
   /**
    * Apply color style on Cell
    *
-   * @param {mxCell} mxcell
+   * @param {mxCell} xcell
    * @param {gf.TStyleColor.Keys} style
    * @param {(string | null)} color
    * @param {boolean} [animate=false]
    * @returns {this}
    * @memberof XGraph
    */
-  setColorAnimCell(mxcell: mxCell, style: gf.TStyleColorKeys, color: string | null): this {
+  setColorAnimCell(xcell: XCell, style: gf.TStyleColorKeys, color: string | null): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setColorAnimCell()');
-    const id = `${style}_${mxcell.id}`;
+    const id = `${style}_${xcell.getId()}`;
     // Cancel Previous anim
     $GF.clearUniqTimeOut(id);
     if (this.isAnimated() && color) {
       try {
-        const startColor = this.getStyleCell(mxcell, style);
+        const startColor = xcell.getStyle(style);
         if (startColor) {
           const endColor = color;
           const steps = chroma
@@ -1136,11 +1144,10 @@ export default class XGraph {
             .mode('lrgb')
             .colors($GF.CONSTANTS.CONF_COLORS_STEPS + 1);
           let count = 1;
-          const self = this;
           const lg = steps.length;
           function graduate() {
             if (count < lg) {
-              self.setStyleCell(mxcell, style, steps[count]);
+              xcell.setStyle(style, steps[count]);
               count += 1;
               $GF.setUniqTimeOut(graduate, $GF.CONSTANTS.CONF_COLORS_MS, id);
             } else {
@@ -1151,11 +1158,11 @@ export default class XGraph {
         } else {
           // let hex = Color(color).hex();
           let hex = chroma(color).hex();
-          this.setStyleCell(mxcell, style, hex);
+          xcell.setStyle(style, hex);
         }
       } catch (error) {
         $GF.log.error('Error on graduate color', error);
-        this.setStyleCell(mxcell, style, color);
+        xcell.setStyle(style, color);
       }
     } else {
       if (color !== null) {
@@ -1165,7 +1172,7 @@ export default class XGraph {
           $GF.log.error('Invalid Color', color);
         }
       }
-      this.setStyleCell(mxcell, style, color);
+      xcell.setStyle(style, color);
     }
     trc.after();
     return this;
@@ -1174,43 +1181,42 @@ export default class XGraph {
   /**
    * Change or apply style
    *
-   * @param {mxCell} mxcell
+   * @param {mxCell} xcell
    * @param {gf.TStyleColor.Keys} style
    * @param {(string | null)} value
    * @returns {this}
    * @memberof XGraph
    */
-  setStyleCell(mxcell: mxCell, style: any, value: string | null): this {
-    this.graph.setCellStyles(style, value, [mxcell]);
-    return this;
-  }
+  // setStyleCell(mxcell: mxCell, style: any, value: string | null): this {
+  //   this.graph.setCellStyles(style, value, [mxcell]);
+  //   return this;
+  // }
 
   /**
    * Change style with steps to anime
    *
-   * @param {mxCell} mxcell
+   * @param {mxCell} xcell
    * @param {*} style
    * @param {(string | null)} endValue
    * @param {string} [beginValue]
    * @memberof XGraph
    */
-  async setStyleAnimCell(mxcell: mxCell, style: any, endValue: string | null, beginValue?: string) {
+  async setStyleAnimCell(xcell: XCell, style: any, endValue: string | null, beginValue?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
     if (this.isAnimated() && endValue !== null) {
       try {
         const end = Number(endValue);
-        const begin = beginValue !== undefined ? Number(beginValue) : Number(this.getStyleCell(mxcell, style));
+        const begin = beginValue !== undefined ? Number(beginValue) : Number(xcell.getStyle(style));
         if (end !== begin) {
-          const id = `${style}_${mxcell.id}`;
+          const id = `${style}_${xcell.getId()}`;
           // Cancel Previous anim
           $GF.clearUniqTimeOut(id);
           const steps = $GF.getIntervalCounter(begin, end, $GF.CONSTANTS.CONF_ANIMS_STEP);
           const lg = steps.length;
           let count = 0;
-          const self = this;
           function graduate() {
             if (count < lg) {
-              self.setStyleCell(mxcell, style, steps[count].toString());
+              xcell.setStyle( style, steps[count].toString());
               count += 1;
               $GF.setUniqTimeOut(graduate, $GF.CONSTANTS.CONF_ANIMS_MS, id);
             } else {
@@ -1220,10 +1226,10 @@ export default class XGraph {
           graduate();
         }
       } catch (error) {
-        this.graph.setCellStyles(style, endValue, [mxcell]);
+        this.graph.setCellStyles(style, endValue, [xcell]);
       }
     } else {
-      this.graph.setCellStyles(style, endValue, [mxcell]);
+      this.graph.setCellStyles(style, endValue, [xcell]);
     }
     trc.after();
   }
@@ -1235,60 +1241,60 @@ export default class XGraph {
    * @param {string} styles
    * @memberof XGraph
    */
-  setStyles(mxcell: mxCell, styles: string): this {
-    this.graph.getModel().setStyle(mxcell, styles);
-    return this;
-  }
+  // setStyles(mxcell: mxCell, styles: string): this {
+  //   this.graph.getModel().setStyle(mxcell, styles);
+  //   return this;
+  // }
 
-  setClassCell(mxcell: mxCell, className: string): this {
-    var state = this.graph.view.getState(mxcell);
-    if (state && state.shape !== null) {
-      const paths = state.shape.node.getElementsByTagName('path');
-      if (paths.length > 1) {
-        let currentClass: string = paths[1].getAttribute('class');
-        let classes: string[] = [];
-        if (currentClass !== null && currentClass !== undefined) {
-          classes = currentClass.split(' ');
-        }
-        if (!classes.includes(className)) {
-          classes.push(className);
-          currentClass = classes.join(' ');
-          paths[1].setAttribute('class', currentClass);
-          if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
-            paths[1].setAttribute('stroke-dasharray', '8');
-          }
-        }
-      }
-    }
-    return this;
-  }
+  // setClassCell(mxcell: mxCell, className: string): this {
+  //   var state = this.graph.view.getState(mxcell);
+  //   if (state && state.shape !== null) {
+  //     const paths = state.shape.node.getElementsByTagName('path');
+  //     if (paths.length > 1) {
+  //       let currentClass: string = paths[1].getAttribute('class');
+  //       let classes: string[] = [];
+  //       if (currentClass !== null && currentClass !== undefined) {
+  //         classes = currentClass.split(' ');
+  //       }
+  //       if (!classes.includes(className)) {
+  //         classes.push(className);
+  //         currentClass = classes.join(' ');
+  //         paths[1].setAttribute('class', currentClass);
+  //         if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
+  //           paths[1].setAttribute('stroke-dasharray', '8');
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return this;
+  // }
 
-  unsetClassCell(mxcell: mxCell, className: string): this {
-    var state = this.graph.view.getState(mxcell);
-    if (state && state.shape !== null) {
-      const paths = state.shape.node.getElementsByTagName('path');
-      if (paths.length > 1) {
-        let currentClass: string = paths[1].getAttribute('class');
-        let classes: string[] = [];
-        if (currentClass !== null && currentClass !== undefined) {
-          classes = currentClass.split(' ');
-        }
-        if (classes.includes(className)) {
-          classes = classes.filter(c => c !== className);
-          if (classes.length > 1) {
-            currentClass = classes.join(' ');
-            paths[1].setAttribute('class', currentClass);
-          } else {
-            paths[1].removeAttribute('class');
-          }
-          if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
-            paths[1].removeAttribute('stroke-dasharray');
-          }
-        }
-      }
-    }
-    return this;
-  }
+  // unsetClassCell(mxcell: mxCell, className: string): this {
+  //   var state = this.graph.view.getState(mxcell);
+  //   if (state && state.shape !== null) {
+  //     const paths = state.shape.node.getElementsByTagName('path');
+  //     if (paths.length > 1) {
+  //       let currentClass: string = paths[1].getAttribute('class');
+  //       let classes: string[] = [];
+  //       if (currentClass !== null && currentClass !== undefined) {
+  //         classes = currentClass.split(' ');
+  //       }
+  //       if (classes.includes(className)) {
+  //         classes = classes.filter(c => c !== className);
+  //         if (classes.length > 1) {
+  //           currentClass = classes.join(' ');
+  //           paths[1].setAttribute('class', currentClass);
+  //         } else {
+  //           paths[1].removeAttribute('class');
+  //         }
+  //         if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
+  //           paths[1].removeAttribute('stroke-dasharray');
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return this;
+  // }
 
   /**
    * Return Label/value of mxcell
@@ -1312,10 +1318,10 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  setLabelCell(mxcell: mxCell, text: string): this {
-    this.graph.cellLabelChanged(mxcell, text, false);
-    return this;
-  }
+  // setLabelCell(mxcell: mxCell, text: string): this {
+  //   this.graph.cellLabelChanged(mxcell, text, false);
+  //   return this;
+  // }
 
   /**
    * Return Id of mxCell
@@ -1324,9 +1330,9 @@ export default class XGraph {
    * @returns {string} Id of mxCell
    * @memberof XGraph
    */
-  static getId(mxcell): string {
-    return mxcell.getId();
-  }
+  // static getId(mxcell): string {
+  //   return mxcell.getId();
+  // }
 
   /**
    * Active mapping option when user click on mapping
@@ -1370,10 +1376,11 @@ export default class XGraph {
     if (this.onMapping.active) {
       const state = me.getState();
       if (state) {
+        const xcell = this.getXCell(state.cell.id);
         const options = this.onMapping.options !== null ? this.onMapping.options : Rule.getDefaultMapOptions();
-        this.onMapping.mxCellValue = XGraph.getValuePropOfMxCell(state.cell, options);
+        this.onMapping.value = xcell?.getValues(options);
         if (this.onMapping.object && this.onMapping.object.data) {
-          this.onMapping.object.data.pattern = this.onMapping.mxCellValue;
+          this.onMapping.object.data.pattern = this.onMapping.value;
         }
         if (this.onMapping.domId) {
           const elt = document.getElementById(this.onMapping.domId);

@@ -14,10 +14,10 @@ declare var mxCodec: any;
 declare var mxUrlConverter: any;
 declare var mxCellOverlay: any;
 declare var mxRectangle: any;
-// declare var Graph: any;
-declare interface Graph {
-  [key: string]: any;
-}
+declare var Graph: any;
+// declare interface Graph {
+//   [key: string]: any;
+// }
 declare var mxTooltipHandler: any;
 
 declare module gf {
@@ -25,18 +25,16 @@ declare module gf {
     defaultValues: {
       id: string | null | undefined;
       value: string | null | undefined;
+      metadata: TXCellMetadata | undefined;
       link: string | null | undefined;
-      metadata: TXCellMetadatasGF | undefined;
-      styles:TXCellStylesGF | undefined;
+      styles:TXCellStyles | undefined;
     };
-    getDefaultValue(type : TPropertieKey): TXCellValueGF;
-    hasMetadataName(name : string, regex : boolean = true):boolean;
-    getMetadataValue(name : string, regex : boolean = true): string | null;
   }
-
-  declare type TXCellMetadatasGF  = { key: string, value: string} []
-  declare type TXCellStylesGF  = { key: string, value: string} []
-  declare type TXCellValueGF  = string | null | TXCellMetadatasGF;
+  declare type TXCellDefaultValueKeys = gf.TPropertieKey |'link'|'styles';
+  declare type TXCellMetadata = Map<string, any>;
+  declare type TXCellStyles = Map<TXCellStyleKeys, any>;
+  declare type TXCellStyleKeys = TStyleKeys; 
+  declare type TXCellValueGF = string | null | TXCellMetadata | TXCellStyles;
 
   declare interface TSelectString {
     text: string;
@@ -89,38 +87,22 @@ declare module gf {
     | 'imageBackground';
   declare type TStyleColorElt = { text: string; value: TStyleColor.Keys };
   declare type TStyleColorList = TStyleColorElt[];
-  declare type TStyleEventKeys =
-    | 'shape'
-    | 'rotation'
-    | 'visibility'
-    | 'fontSize'
-    | 'blink'
-    | 'barPos'
-    | 'gaugePos'
-    | 'text'
-    | 'opacity'
-    | 'textOpacity'
-    | 'fold'
-    | 'height'
-    | 'width'
-    | 'size'
-    | 'image'
-    | 'endArrow'
-    | 'startArrow'
-    | 'flipH'
-    | 'flipV'
-    | 'class_mxEdgeFlow'
-    | 'gradientDirection';
-  declare type TStyleEventElt = {
+  declare type TStyleAnimEventKey = 'barPos' | 'gaugePos' | 'fontSize' | 'opacity' | 'textOpacity' | 'rotation';
+  declare type TStyleStaticEventKeys = 'shape' | 'endArrow' | 'startArrow' | 'flipH' | 'flipV' | 'gradientDirection'| 'image';
+  declare type TStyleEventKeys = TStyleAnimEventKey | TStyleStaticEventKeys;
+  declare type TOtherEventKeys = 'blink' | 'class' | 'visibility' | 'fold' | 'height' | 'width' | 'size' | 'text' | 'class_mxEdgeFlow';
+  declare type TTypeEventKeys = TStyleEventKeys | TOtherEventKeys;
+
+  declare type TTypeEventElt = {
     text: string;
-    value: TStyleEventKeys;
+    value: TTypeEventKeys;
     type: 'number' | 'text';
     placeholder: string;
     typeahead?: string;
     default?: any;
   };
-  declare type TStyleEventList = TStyleEventElt[];
-  declare type TStyleKey = TStyleColor.Keys | TStyleEventKeys;
+  declare type TTypeEventList = TTypeEventElt[];
+  declare type TStyleKeys = TStyleColorKeys | TStyleEventKeys;
 
   declare interface TSelectStyle extends TSelectString {
     value: TStyleColor.Keys;
@@ -355,7 +337,7 @@ declare module gf {
   }
 
   declare interface TEventMapData extends TGFMapData {
-    style: TStyleEventKeys;
+    style: TTypeEventKeys;
     comparator: TComparatorKeys;
     eventOn: number;
     value: string;
@@ -404,7 +386,7 @@ declare module gf {
     active: boolean;
     object: ObjectMap | null;
     domId: string | null;
-    mxCellValue: string | null;
+    value: string | null;
     options: gf.TRuleMapOptions | null;
     callback: CallableFunction | null;
   }

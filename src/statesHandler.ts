@@ -73,7 +73,7 @@ export class StateHandler {
     const result = new Map();
     let name: string | null;
     this.states.forEach(state => {
-      const mxcell: mxCell = state.mxcell;
+      const mxcell: mxCell = state.xcell;
       const id: string = mxcell.id;
       let found = false;
       // SHAPES

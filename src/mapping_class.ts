@@ -517,7 +517,7 @@ export class EventMap extends GFMap {
   getTypeahead(): string[] {
     const self = this;
     let result = $GF.getFullAvailableVarNames();
-    const elt: gf.TStyleEventElt | undefined = EventMap.methods.find(x => x.value === self.data.style);
+    const elt: gf.TTypeEventElt | undefined = EventMap.methods.find(x => x.value === self.data.style);
     if (elt !== undefined && elt.typeahead !== undefined) {
       result = result.concat(elt.typeahead.split('|'));
       return result;
