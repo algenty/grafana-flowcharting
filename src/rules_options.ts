@@ -920,7 +920,7 @@ export class RulesOptionsCtrl {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
-      xgraph.selectMxCells(pattern, options);
+      xgraph.highlightXCells(pattern, options);
     }
   }
 

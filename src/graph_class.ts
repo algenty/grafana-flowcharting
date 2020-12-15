@@ -5,18 +5,15 @@ import chroma from 'chroma-js';
 import * as mxcustom from 'mxgraph_custom';
 import { Rule } from 'rule_class';
 import { FlowchartHandler } from 'flowchartHandler';
+import { XCell } from 'cell_class';
 
-declare var mxEvent: any;
-declare var mxClient: any;
-declare var mxCodec: any;
-declare var mxUrlConverter: any;
-declare var mxCellOverlay: any;
-declare var mxConstants: any;
-declare var mxCellHighlight: any;
-declare var mxRectangle: any;
-declare var mxUtils: any;
-declare var Graph: any;
-declare var mxTooltipHandler: any;
+
+
+declare interface TXGraphDefaultValues {
+  id : string[];
+  value : string[];
+  metadata : string[];
+}
 
 /**
  * mxGraph interface class
@@ -43,10 +40,16 @@ export default class XGraph {
   grid = false;
   bgColor: string | null = null;
   zoomPercent = '1';
-  cells: { id: string[]; value: string[] } = {
-    id: [],
-    value: [],
-  };
+  // cells: { id: string[]; value: string[] } = {
+  //   id: [],
+  //   value: [],
+  // };
+  defaultXCellValues: TXGraphDefaultValues = {
+    id : [],
+    value : [],
+    metadata : [],
+  }
+  xcells: XCell[];
   clickBackup: any;
   dbclickBackup: any;
   onMapping: gf.TIOnMappingObj;
@@ -60,6 +63,7 @@ export default class XGraph {
     this.container = container;
     this.type = type;
     this.ctrl = ctrl;
+    this.xcells = [];
     this.onMapping = FlowchartHandler.getDefaultMapping();
     XGraph.initMxGraph();
     if (type === 'xml') {
@@ -89,7 +93,7 @@ export default class XGraph {
           console.log('DEBUG GF STATE', state);
           console.log('DEBUG MXCELL', mxcell);
           console.log('DEBUG MXCELL STATE', mxcellState);
-          console.table(XGraph.getAttributes(mxcell, false));
+          // console.table(XGraph.getAttributes(mxcell, false));
         }
       });
     }
@@ -292,13 +296,31 @@ export default class XGraph {
     return this;
   }
 
-  async initOriginalDatas() {
-    this.cells['id'] = this.getCurrentCells('id');
-    this.cells['value'] = this.getCurrentCells('value');
-    this.cells['metadata'] = this.getCurrentCells('metadata');
-    console.log('initOriginalDatas -> this.cells', this.cells);
+  /**
+   * Init XCells
+   *
+   * @memberof XGraph
+   */
+  async initXCells() {
+    // this.cells['id'] = this.getCurrentCells('id');
+    // this.cells['value'] = this.getCurrentCells('value');
+    // this.cells['metadata'] = this.getCurrentCells('metadata');
+    const model = this.graph.getModel();
+    const cells = model.cells;
+    this.xcells = [];
+    this.defaultXCellValues.id = [];
+    this.defaultXCellValues.value = [];
+    this.defaultXCellValues.metadata = [];
+    _.each(cells, (mxcell: mxCell) => {
+      this.xcells.push(XCell.refactore(this.graph, mxcell));
+    });
   }
 
+  /**
+   * Load external Fonts
+   *
+   * @memberof XGraph
+   */
   async loadExtFont() {
     const model = this.graph.getModel();
     let extFonts = model.extFonts;
@@ -426,6 +448,13 @@ export default class XGraph {
     return this;
   }
 
+  /**
+   * Enable Animation when change mxcell (colors, size ...)
+   *
+   * @param {boolean} bool
+   * @returns {this}
+   * @memberof XGraph
+   */
   enableAnim(bool: boolean): this {
     this.animation = bool;
     return this;
@@ -609,25 +638,75 @@ export default class XGraph {
     return this;
   }
 
-  getCurrentMDValue(regName: string) {
-    const model = this.graph.getModel();
-    const cells = model.cells;
-    const values: string[] = [];
-    _.each(cells, (mxcell: mxCell) => {
-      const attrs = XGraph.getAttributes(mxcell);
-      for (let index = 0; index < attrs.length; index++) {
-        const attr = attrs[index];
-        if (
-          attr.name !== undefined &&
-          $GF.utils.matchString(attr.name, regName) &&
-          values.includes(attr.value) !== true
-        ) {
-          values.push(attr.value);
+  /**
+   * Return XCells of graph
+   *
+   * @returns {XCell[]}
+   * @memberof XGraph
+   */
+  getXCells():XCell[] {
+    return this.xcells;
+  }
+
+  /**
+   * Get a value list
+   *
+   * @param {gf.TPropertieKey} type
+   * @returns
+   * @memberof XGraph
+   */
+  getXCellValues(type : gf.TPropertieKey) {
+    if(this.defaultXCellValues[type].length === 0 ) {
+      this.initXCellValues(type);
+    }
+    return this.defaultXCellValues[type];
+  }
+
+  /**
+   * Init initials values
+   *
+   * @param {gf.TPropertieKey} type
+   * @memberof XGraph
+   */
+  async initXCellValues(type : gf.TPropertieKey) {
+    const xcells = this.getXCells();
+    let s:Set<string> = new Set();
+    xcells.forEach(x => {
+      const value:any = x.getDefaultValue(type);
+      if(type === 'id' || type === 'value') {
+        s.add(value);
+      }
+      if(type === 'metadata') {
+        const values: gf.TXCellMetadatasGF = value;
+        const length = values.length;
+        for (let index = 0; index < length; index++) {
+          const md = values[index];
+          s.add(md.key);
         }
       }
     });
-    return values;
-  }
+    this.defaultXCellValues[type] = [...s];
+  } 
+
+  // getCurrentMDValue(regName: string) {
+  //   const model = this.graph.getModel();
+  //   const cells = model.cells;
+  //   const values: string[] = [];
+  //   _.each(cells, (mxcell: mxCell) => {
+  //     const attrs = XGraph.getAttributes(mxcell);
+  //     for (let index = 0; index < attrs.length; index++) {
+  //       const attr = attrs[index];
+  //       if (
+  //         attr.name !== undefined &&
+  //         $GF.utils.matchString(attr.name, regName) &&
+  //         values.includes(attr.value) !== true
+  //       ) {
+  //         values.push(attr.value);
+  //       }
+  //     }
+  //   });
+  //   return values;
+  // }
 
   /**
    * Get list of values or id
@@ -636,77 +715,81 @@ export default class XGraph {
    * @returns {string[]}
    * @memberof XGraph
    */
-  getCurrentCells(prop: gf.TPropertieKey): string[] {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'getCurrentCells()');
-    const cellIds: string[] = [];
-    const model = this.graph.getModel();
-    const cells = model.cells;
-    const add = data => {
-      if (data !== undefined && data !== null && data.length > 0 && cellIds.includes(data) !== true) {
-        cellIds.push(data);
-      }
-    };
+  // getCurrentCells(prop: gf.TPropertieKey): string[] {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'getCurrentCells()');
+  //   const cellIds: string[] = [];
+  //   const model = this.graph.getModel();
+  //   const cells = model.cells;
+  //   const add = data => {
+  //     if (data !== undefined && data !== null && data.length > 0 && cellIds.includes(data) !== true) {
+  //       cellIds.push(data);
+  //     }
+  //   };
 
-    _.each(cells, (mxcell: mxCell) => {
-      let result = '';
-      switch (prop) {
-        case 'id':
-          result = XGraph.getId(mxcell);
-          add(result);
-          break;
-        case 'value':
-          result = XGraph.getLabelCell(mxcell);
-          add(result);
-          break;
-        case 'metadata':
-          const attrs = XGraph.getAttributes(mxcell);
-          const length = attrs.length;
-          for (let index = 0; index < length; index++) {
-            const attr = attrs[index];
-            add(attr.name);
-          }
-          break;
-        default:
-          $GF.log.error('Unknow prop : ' + prop);
-          break;
+  //   _.each(cells, (mxcell: mxCell) => {
+  //     let result = '';
+  //     switch (prop) {
+  //       case 'id':
+  //         result = XGraph.getId(mxcell);
+  //         add(result);
+  //         break;
+  //       case 'value':
+  //         result = XGraph.getLabelCell(mxcell);
+  //         add(result);
+  //         break;
+  //       case 'metadata':
+  //         const attrs = XGraph.getAttributes(mxcell);
+  //         const length = attrs.length;
+  //         for (let index = 0; index < length; index++) {
+  //           const attr = attrs[index];
+  //           add(attr.name);
+  //         }
+  //         break;
+  //       default:
+  //         $GF.log.error('Unknow prop : ' + prop);
+  //         break;
+  //     }
+  //   });
+  //   trc.after();
+  //   return cellIds;
+  // }
+
+  /**
+   * Get the XCell according id
+   *
+   * @param {string} id
+   * @returns {(XCell | undefined)}
+   * @memberof XGraph
+   */
+  getXCell(id : string):XCell | undefined {
+    const length = this.xcells.length
+    for (let index = 0; index < length; index++) {
+      const x = this.xcells[index];
+      if(x.getDefaultValue('id') === id) {
+        return x
       }
-    });
-    trc.after();
-    return cellIds;
+    }
+    return undefined
   }
 
   /**
-   * Get list of mxCell
+   * Get list of XCell
    *
-   * @param {string} prop - id|value
-   * @param {string} pattern - regex like or string
-   * @returns {mxCell[]}
+   * @param {string} pattern
+   * @param {gf.TRuleMapOptions} [options=Rule.getDefaultMapOptions()]
+   * @returns {XCell[]}
    * @memberof XGraph
    */
-  findMxCells(pattern: string, options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): mxCell[] {
+  findXCells(pattern: string, options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): XCell[] {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'findMxCells()');
-    const mxcells = this.getMxCells();
+    const xcells = this.getXCells();
     const result: any[] = [];
-    if (options.identByProp === 'id') {
-      _.each(mxcells, (mxcell: mxCell) => {
-        if ($GF.utils.matchString(mxcell.id, pattern)) {
-          result.push(mxcell);
-        }
-      });
-    } else if (options.identByProp === 'value') {
-      _.each(mxcells, (mxcell: mxCell) => {
-        if ($GF.utils.matchString(XGraph.getLabelCell(mxcell), pattern)) {
-          result.push(mxcell);
-        }
-      });
-    } else if (options.identByProp === 'metadata') {
-      // TODO
-      throw new Error('Metatada not implemented');
-      // _.each(mxcells, (mxcell: mxCell) => {
-      //   if (XGraph.matchAttribute(mxcell, option, pattern)) {
-      //     result.push(mxcell);
-      //   }
-      // });
+    const length = xcells.length;
+    for (let index = 0; index < length; index++) {
+      const x = xcells[index];
+      if(x.match(pattern, options)) {
+        result.push(x);
+      }
     }
     trc.after();
     return result;
@@ -719,9 +802,9 @@ export default class XGraph {
    * @returns {mxCellState}
    * @memberof XGraph
    */
-  getMxCellState(mxcell: mxCell): mxCellState {
-    return this.graph.view.getState(mxcell);
-  }
+  // getMxCellState(mxcell: mxCell): mxCellState {
+  //   return this.graph.view.getState(mxcell);
+  // }
 
   /**
    * Return a property of style from mxCellState
@@ -731,36 +814,33 @@ export default class XGraph {
    * @returns {*}
    * @memberof XGraph
    */
-  getMxCellStateStyle(mxcell: mxCell, styleName: string): any {
-    const state = this.getMxCellState(mxcell);
-    return state.style[styleName];
-  }
+  // getMxCellStateStyle(mxcell: mxCell, styleName: string): any {
+  //   const state = this.getMxCellState(mxcell);
+  //   return state.style[styleName];
+  // }
 
   /**
-   * Select cells in graph with pattern for id or value
+   * Hightlight XCells
    *
    * @param {string} prop - "id"|"value"|"metadata"
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  async selectMxCells(pattern: string, options?: gf.TRuleMapOptions) {
-    const mxcells = this.findMxCells(pattern, options);
-    if (mxcells) {
-      this.highlightCells(mxcells);
-    }
+  async highlightXCells(pattern: string, options?: gf.TRuleMapOptions, bool : boolean = true) {
+    const xcells = this.findXCells(pattern, options);
+    xcells.forEach(x => {
+      x.highlight(bool);
+    });
   }
 
   /**
-   * Unselect cells
+   * unHightlight XCells
    *
    * @returns {this}
    * @memberof XGraph
    */
-  async unselectMxCells(pattern: string, options?: gf.TRuleMapOptions) {
-    const mxcells = this.findMxCells(pattern, options);
-    if (mxcells) {
-      this.unhighlightCells(mxcells);
-    }
+  async unhighlightXCells(pattern: string, options?: gf.TRuleMapOptions) {
+    this.highlightXCells(pattern, options, false);
   }
 
   /**
@@ -799,10 +879,10 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  removeOverlay(mxcell: mxCell): this {
-    this.graph.removeCellOverlays(mxcell);
-    return this;
-  }
+  // removeOverlay(mxcell: mxCell): this {
+  //   this.graph.removeCellOverlays(mxcell);
+  //   return this;
+  // }
 
   /**
    * Add link to cell
@@ -846,14 +926,14 @@ export default class XGraph {
    * @returns {string[]} value of labels or id frome source
    * @memberof XGraph
    */
-  getOrignalCells(options: gf.TRuleMapOptions): string[] {
-    if (options.identByProp === 'id' || options.identByProp === 'value') {
-      return this.cells[options.identByProp];
-    } else if (options.identByProp === 'metadata') {
-      return this.getCurrentMDValue(options.metadata);
-    }
-    return [];
-  }
+  // getOrignalCells(options: gf.TRuleMapOptions): string[] {
+  //   if (options.identByProp === 'id' || options.identByProp === 'value') {
+  //     return this.cells[options.identByProp];
+  //   } else if (options.identByProp === 'metadata') {
+  //     return this.getCurrentMDValue(options.metadata);
+  //   }
+  //   return [];
+  // }
 
   /**
    * Get Attributes and values
@@ -865,24 +945,24 @@ export default class XGraph {
    * @returns {{name : string, value : string}[]}
    * @memberof XGraph
    */
-  static getAttributes(cell: mxCell, filter: boolean = true): { name: string; value: string }[] {
-    const result: { name: string; value: string }[] = [];
-    if (cell && mxUtils.isNode(cell.value)) {
-      const ignored = ['label', 'tooltip', 'placeholders', 'placeholder', 'link'];
-      const attrs = cell.value.attributes;
-      const length = attrs.length;
-      for (var i = 0; i < length; i++) {
-        if (filter) {
-          if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
-            result.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
-          }
-        } else {
-          result.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
-        }
-      }
-    }
-    return result;
-  }
+  // static getAttributes(cell: mxCell, filter: boolean = true): { name: string; value: string }[] {
+  //   const result: { name: string; value: string }[] = [];
+  //   if (cell && mxUtils.isNode(cell.value)) {
+  //     const ignored = ['label', 'tooltip', 'placeholders', 'placeholder', 'link'];
+  //     const attrs = cell.value.attributes;
+  //     const length = attrs.length;
+  //     for (var i = 0; i < length; i++) {
+  //       if (filter) {
+  //         if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
+  //           result.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
+  //         }
+  //       } else {
+  //         result.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
 
   /**
    * Attribute exist ?
@@ -893,16 +973,16 @@ export default class XGraph {
    * @returns {boolean}
    * @memberof XGraph
    */
-  static hasAttribute(cell: mxCell, regex: string): boolean {
-    const attrs = XGraph.getAttributes(cell);
-    length = attrs.length;
-    for (var i = 0; i < length; i++) {
-      if ($GF.utils.matchString(attrs[i].name, regex)) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // static hasAttribute(cell: mxCell, regex: string): boolean {
+  //   const attrs = XGraph.getAttributes(cell);
+  //   length = attrs.length;
+  //   for (var i = 0; i < length; i++) {
+  //     if ($GF.utils.matchString(attrs[i].name, regex)) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // }
 
   /**
    * Get attribute value
@@ -961,7 +1041,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   renameId(oldId: string, newId: string): this {
-    const cells = this.findMxCells(oldId);
+    const cells = this.findXCells(oldId);
     if (cells !== undefined && cells.length > 0) {
       cells.forEach(cell => {
         cell.id = newId;

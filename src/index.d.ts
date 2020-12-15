@@ -1,23 +1,42 @@
-type mxCell = any;
+declare type mxCell = any;
 // declare interface mxCell {
 //   [key: string]: any;
 // }
-type mxCellState = any;
-type mxMouseEvent = any;
-type mxGeometry = { x: number; y: number; width: number; height: number };
+declare type mxCellState = any;
+declare type mxMouseEvent = any;
+declare var mxUtils : any;
+declare var mxCellHighlight: any;
+declare var mxConstants: any;
+declare type mxGeometry = { x: number; y: number; width: number; height: number };
+declare var mxEvent: any;
+declare var mxClient: any;
+declare var mxCodec: any;
+declare var mxUrlConverter: any;
+declare var mxCellOverlay: any;
+declare var mxRectangle: any;
+// declare var Graph: any;
+declare interface Graph {
+  [key: string]: any;
+}
+declare var mxTooltipHandler: any;
 
 declare module gf {
   declare interface TXCellGF {
     defaultValues: {
-      id: string | null;
-      value: string | null;
-      metadata: TXCellMetadataGF;
+      id: string | null | undefined;
+      value: string | null | undefined;
+      link: string | null | undefined;
+      metadata: TXCellMetadatasGF | undefined;
+      styles:TXCellStylesGF | undefined;
     };
-    getDefaultValue ( type : TPropertieKey): TXCellValueGF ;
+    getDefaultValue(type : TPropertieKey): TXCellValueGF;
+    hasMetadataName(name : string, regex : boolean = true):boolean;
+    getMetadataValue(name : string, regex : boolean = true): string | null;
   }
 
-  declare type TXCellMetadataGF  = { key: string, value: string} []
-  declare type TXCellValueGF  = string | null | TXCellMetadataGF;
+  declare type TXCellMetadatasGF  = { key: string, value: string} []
+  declare type TXCellStylesGF  = { key: string, value: string} []
+  declare type TXCellValueGF  = string | null | TXCellMetadatasGF;
 
   declare interface TSelectString {
     text: string;
