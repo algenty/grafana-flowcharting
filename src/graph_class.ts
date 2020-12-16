@@ -7,12 +7,10 @@ import { Rule } from 'rule_class';
 import { FlowchartHandler } from 'flowchartHandler';
 import { XCell } from 'cell_class';
 
-
-
 declare interface TXGraphDefaultValues {
-  id : Set<string> | undefined;
-  value : Set<string> | undefined;
-  metadata : Set<string> | undefined;
+  id: Set<string> | undefined;
+  value: Set<string> | undefined;
+  metadata: Set<string> | undefined;
 }
 
 /**
@@ -45,10 +43,10 @@ export default class XGraph {
   //   value: [],
   // };
   defaultXCellValues: TXGraphDefaultValues = {
-    id : undefined,
-    value : undefined,
-    metadata : undefined,
-  }
+    id: undefined,
+    value: undefined,
+    metadata: undefined,
+  };
   xcells: XCell[];
   clickBackup: any;
   dbclickBackup: any;
@@ -93,7 +91,7 @@ export default class XGraph {
           console.log('DEBUG GF STATE', state);
           console.log('DEBUG XCELL', xcell);
           console.log('DEBUG MXCELL', mxcell);
-          if(xcell) {
+          if (xcell) {
             const mxcellState = xcell.getMxCellState();
             console.log('DEBUG MXCELL STATE', mxcellState);
           }
@@ -648,7 +646,7 @@ export default class XGraph {
    * @returns {XCell[]}
    * @memberof XGraph
    */
-  getXCells():XCell[] {
+  getXCells(): XCell[] {
     return this.xcells;
   }
 
@@ -659,13 +657,13 @@ export default class XGraph {
    * @returns
    * @memberof XGraph
    */
-  getXCellValues(type : gf.TPropertieKey): string[] {
+  getXCellValues(type: gf.TPropertieKey): string[] {
     let values = this.defaultXCellValues[type];
-    if(values === undefined) {
+    if (values === undefined) {
       this.initXCellValues(type);
     }
     values = this.defaultXCellValues[type];
-    if (values !== undefined ) {
+    if (values !== undefined) {
       return Array.from(values.keys());
     }
     return [];
@@ -677,15 +675,15 @@ export default class XGraph {
    * @param {gf.TPropertieKey} type
    * @memberof XGraph
    */
-  async initXCellValues(type : gf.TPropertieKey) {
+  async initXCellValues(type: gf.TPropertieKey) {
     const xcells = this.getXCells();
-    let s:Set<string> = new Set();
+    let s: Set<string> = new Set();
     xcells.forEach(x => {
-      if(type === 'id' || type === 'value') {
-        const value:any = x.getDefaultValue(type);
+      if (type === 'id' || type === 'value') {
+        const value: any = x.getDefaultValue(type);
         s.add(value);
       }
-      if(type === 'metadata') {
+      if (type === 'metadata') {
         const values = x.getMetadatasKeys();
         const length = values.length;
         for (let i = 0; i < length; i++) {
@@ -694,7 +692,7 @@ export default class XGraph {
       }
     });
     this.defaultXCellValues[type] = s;
-  } 
+  }
 
   // getCurrentMDValue(regName: string) {
   //   const model = this.graph.getModel();
@@ -769,15 +767,15 @@ export default class XGraph {
    * @returns {(XCell | undefined)}
    * @memberof XGraph
    */
-  getXCell(id : string):XCell | undefined {
-    const length = this.xcells.length
+  getXCell(id: string): XCell | undefined {
+    const length = this.xcells.length;
     for (let index = 0; index < length; index++) {
       const x = this.xcells[index];
-      if(x.getDefaultValue('id') === id) {
-        return x
+      if (x.getDefaultValue('id') === id) {
+        return x;
       }
     }
-    return undefined
+    return undefined;
   }
 
   /**
@@ -795,7 +793,7 @@ export default class XGraph {
     const length = xcells.length;
     for (let index = 0; index < length; index++) {
       const x = xcells[index];
-      if(x.match(pattern, options)) {
+      if (x.match(pattern, options)) {
         result.push(x);
       }
     }
@@ -834,7 +832,7 @@ export default class XGraph {
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  async highlightXCells(pattern: string, options?: gf.TRuleMapOptions, bool : boolean = true) {
+  async highlightXCells(pattern: string, options?: gf.TRuleMapOptions, bool: boolean = true) {
     const xcells = this.findXCells(pattern, options);
     xcells.forEach(x => {
       x.highlight(bool);
@@ -1201,7 +1199,7 @@ export default class XGraph {
    * @param {string} [beginValue]
    * @memberof XGraph
    */
-  async setStyleAnimCell(xcell: XCell, style: any, endValue: string | null, beginValue?: string) {
+  async setStyleAnimCell(xcell: XCell, style: gf.TStyleAnimKeys, endValue: string | null, beginValue?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
     if (this.isAnimated() && endValue !== null) {
       try {
@@ -1216,7 +1214,7 @@ export default class XGraph {
           let count = 0;
           function graduate() {
             if (count < lg) {
-              xcell.setStyle( style, steps[count].toString());
+              xcell.setStyle(style, steps[count].toString());
               count += 1;
               $GF.setUniqTimeOut(graduate, $GF.CONSTANTS.CONF_ANIMS_MS, id);
             } else {
@@ -1296,6 +1294,21 @@ export default class XGraph {
   //   return this;
   // }
 
+  static isMxGraphStyle(type: string): boolean {
+    const t: any = type;
+    return $GF.CONSTANTS.MXGRAPH_STYLES.includes(t);
+  }
+
+  static isMxGraphAnimStyle(type: string): boolean {
+    const t: any = type;
+    return $GF.CONSTANTS.MXGRAPH_STYLES_ANIM.includes(t);
+  }
+
+  static isMxGraphStaticStyle(type: string): boolean {
+    const t: any = type;
+    return $GF.CONSTANTS.MXGRAPH_STYLES_STATIC.includes(t);
+  }
+
   /**
    * Return Label/value of mxcell
    *
@@ -1303,12 +1316,12 @@ export default class XGraph {
    * @returns {string} Label of current cell
    * @memberof XGraph
    */
-  static getLabelCell(mxcell: mxCell): string {
-    if (mxUtils.isNode(mxcell.value)) {
-      return mxcell.value.getAttribute('label');
-    }
-    return mxcell.getValue(mxcell);
-  }
+  // static getLabelCell(mxcell: mxCell): string {
+  //   if (mxUtils.isNode(mxcell.value)) {
+  //     return mxcell.value.getAttribute('label');
+  //   }
+  //   return mxcell.getValue(mxcell);
+  // }
 
   /**
    * Assign new label for mxcell
@@ -1658,26 +1671,26 @@ export default class XGraph {
   }
 
   // COLLAPSE
-  isCollapsedCell(mxcell: mxCell): boolean {
-    return this.graph.isCellCollapsed(mxcell);
-  }
+  // isCollapsedCell(mxcell: mxCell): boolean {
+  //   return this.graph.isCellCollapsed(mxcell);
+  // }
 
-  collapseCell(mxcell: mxCell) {
-    if (!this.isCollapsedCell(mxcell)) {
-      this.graph.foldCells(true, false, [mxcell], null, null);
-    }
-  }
+  // collapseCell(mxcell: mxCell) {
+  //   if (!this.isCollapsedCell(mxcell)) {
+  //     this.graph.foldCells(true, false, [mxcell], null, null);
+  //   }
+  // }
 
-  expandCell(mxcell: mxCell) {
-    if (this.isCollapsedCell(mxcell)) {
-      this.graph.foldCells(false, false, [mxcell], null, null);
-    }
-  }
+  // expandCell(mxcell: mxCell) {
+  //   if (this.isCollapsedCell(mxcell)) {
+  //     this.graph.foldCells(false, false, [mxcell], null, null);
+  //   }
+  // }
 
-  toggleFoldCell(mxcell: mxCell) {
-    const collapse: boolean = !this.isCollapsedCell(mxcell);
-    this.graph.foldCells(collapse, false, [mxcell], null, null);
-  }
+  // toggleFoldCell(mxcell: mxCell) {
+  //   const collapse: boolean = !this.isCollapsedCell(mxcell);
+  //   this.graph.foldCells(collapse, false, [mxcell], null, null);
+  // }
 
   // VISIBLE
 
@@ -1712,9 +1725,9 @@ export default class XGraph {
    * @returns {boolean}
    * @memberof XGraph
    */
-  isVisibleCell(mxcell: mxCell): boolean {
-    return this.graph.model.isVisible(mxcell);
-  }
+  // isVisibleCell(mxcell: mxCell): boolean {
+  //   return this.graph.model.isVisible(mxcell);
+  // }
 
   async resizeCell(mxcell: mxCell, percent: number, origine?: mxGeometry) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');

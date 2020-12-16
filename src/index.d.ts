@@ -4,7 +4,7 @@ declare type mxCell = any;
 // }
 declare type mxCellState = any;
 declare type mxMouseEvent = any;
-declare var mxUtils : any;
+declare var mxUtils: any;
 declare var mxCellHighlight: any;
 declare var mxConstants: any;
 declare type mxGeometry = { x: number; y: number; width: number; height: number };
@@ -27,13 +27,18 @@ declare module gf {
       value: string | null | undefined;
       metadata: TXCellMetadata | undefined;
       link: string | null | undefined;
-      styles:TXCellStyles | undefined;
-    };
+      styles: TXCellStyles | undefined;
+    }, 
+    tooltip : {
+      enableTooltip: boolean;
+      displayMetadata : boolean;
+      tooltipHandler: TooltipHandler | undefined;
+    },
   }
-  declare type TXCellDefaultValueKeys = gf.TPropertieKey |'link'|'styles';
+  declare type TXCellDefaultValueKeys = gf.TPropertieKey | 'link' | 'styles';
   declare type TXCellMetadata = Map<string, any>;
   declare type TXCellStyles = Map<TXCellStyleKeys, any>;
-  declare type TXCellStyleKeys = TStyleKeys; 
+  declare type TXCellStyleKeys = TStyleKeys;
   declare type TXCellValueGF = string | null | TXCellMetadata | TXCellStyles;
 
   declare interface TSelectString {
@@ -66,16 +71,16 @@ declare module gf {
   }
 
   // Styles
-  declare type TStyleArray = [
-    'fillColor',
-    'strokeColor',
-    'fontColor',
-    'gradientColor',
-    'imageBorder',
-    'imageBackground',
-    'shape',
-    'overflow'
-  ];
+  // declare type TStyleArray = [
+  //   'fillColor',
+  //   'strokeColor',
+  //   'fontColor',
+  //   'gradientColor',
+  //   'imageBorder',
+  //   'imageBackground',
+  //   'shape',
+  //   'overflow'
+  // ];
   declare type TStyleColorKeys =
     | 'fillColor'
     | 'strokeColor'
@@ -88,10 +93,28 @@ declare module gf {
   declare type TStyleColorElt = { text: string; value: TStyleColor.Keys };
   declare type TStyleColorList = TStyleColorElt[];
   declare type TStyleAnimEventKey = 'barPos' | 'gaugePos' | 'fontSize' | 'opacity' | 'textOpacity' | 'rotation';
-  declare type TStyleStaticEventKeys = 'shape' | 'endArrow' | 'startArrow' | 'flipH' | 'flipV' | 'gradientDirection'| 'image';
+  declare type TStyleStaticEventKeys =
+    | 'shape'
+    | 'endArrow'
+    | 'startArrow'
+    | 'flipH'
+    | 'flipV'
+    | 'gradientDirection'
+    | 'image';
   declare type TStyleEventKeys = TStyleAnimEventKey | TStyleStaticEventKeys;
-  declare type TOtherEventKeys = 'blink' | 'class' | 'visibility' | 'fold' | 'height' | 'width' | 'size' | 'text' | 'class_mxEdgeFlow';
+  declare type TOtherEventKeys =
+    | 'blink'
+    | 'class'
+    | 'visibility'
+    | 'fold'
+    | 'height'
+    | 'width'
+    | 'size'
+    | 'text'
+    | 'class_mxEdgeFlow';
   declare type TTypeEventKeys = TStyleEventKeys | TOtherEventKeys;
+  declare type TStyleAnimKeys = TStyleAnimEventKey | TStyleColorKeys;
+  declare type TStyleStaticKeys = TStyleStaticEventKey;
 
   declare type TTypeEventElt = {
     text: string;

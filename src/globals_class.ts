@@ -53,6 +53,39 @@ class GFCONSTANT {
   FLOWCHART_CHG_GRAPHHOVER: gf.TFlowchartFlagKeys = 'graphHover';
   FLOWCHART_CHG_HIDDENCHANGE: gf.TFlowchartFlagKeys = 'hiddenChange';
 
+  // MXGRAPH
+  MXGRAPH_STYLES_COLOR: gf.TStyleColorKeys[] = [
+    'fillColor',
+    'strokeColor',
+    'gradientColor',
+    'fontColor',
+    'labelBackgroundColor',
+    'labelBorderColor',
+    'imageBorder',
+    'imageBackground',
+  ];
+  MXGRAPH_STYLES_EVENT_ANIM: gf.TStyleAnimEventKey[] = [
+    'barPos',
+    'gaugePos',
+    'fontSize',
+    'opacity',
+    'textOpacity',
+    'rotation',
+  ];
+  MXGRAPH_STYLES_EVENT_STATIC: gf.TStyleStaticEventKeys[] = [
+    'shape',
+    'endArrow',
+    'startArrow',
+    'flipH',
+    'flipV',
+    'gradientDirection',
+    'image',
+  ];
+  MXGRAPH_STYLES_EVENT: gf.TStyleEventKeys[] = [...this.MXGRAPH_STYLES_EVENT_ANIM, ...this.MXGRAPH_STYLES_EVENT_STATIC];
+  MXGRAPH_STYLES_ANIM: gf.TStyleAnimKeys[] = [...this.MXGRAPH_STYLES_COLOR, ...this.MXGRAPH_STYLES_EVENT_ANIM];
+  MXGRAPH_STYLES_STATIC: gf.TStyleStaticKeys[] = [...this.MXGRAPH_STYLES_EVENT_STATIC];
+  MXGRAPH_STYLES: gf.TStyleKeys[] = [...this.MXGRAPH_STYLES_ANIM, ...this.MXGRAPH_STYLES_STATIC];
+
   // COMPARATORS
   COMP_LT: any = 'lt';
   COMP_LE: any = 'le';

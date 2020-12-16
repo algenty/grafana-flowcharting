@@ -11,13 +11,14 @@ import { $GF } from 'globals_class';
  */
 export class TooltipHandler {
   timeFormat = 'YYYY-MM-DD HH:mm:ss';
-  mxcell: mxCell;
+  // mxcell: mxCell;
   checked = false;
   metrics: Set<MetricTooltip>;
   lastChange: string | undefined;
   div: HTMLHeadingElement | null = null;
-  constructor(mxcell: any) {
-    this.mxcell = mxcell;
+  // constructor(mxcell: any) {
+  constructor() {
+    // this.mxcell = mxcell;
     this.checked = false;
     this.metrics = new Set();
   }
@@ -82,9 +83,9 @@ export class TooltipHandler {
 
   destroy() {
     this.metrics.clear();
-    if (this.mxcell.GF_tooltipHandler) {
-      delete this.mxcell.GF_tooltipHandler;
-    }
+    // if (this.mxcell.GF_tooltipHandler) {
+    //   delete this.mxcell.GF_tooltipHandler;
+    // }
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement | null {
@@ -113,7 +114,7 @@ export class TooltipHandler {
 
   getDateDiv(parentDiv: HTMLDivElement) {
     const div = document.createElement('div');
-    div.id = this.mxcell.mxObjectId + '_DATE';
+    // div.id = this.mxcell.mxObjectId + '_DATE';
     if (parentDiv !== undefined) {
       parentDiv.appendChild(div);
     }

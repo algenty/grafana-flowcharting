@@ -1,11 +1,14 @@
 import { $GF } from 'globals_class';
 import { Rule } from 'rule_class';
+import { TooltipHandler } from 'tooltipHandler';
 
 export class XCell {
   graph: any;
   mxcell: mxCell;
   isHidden: boolean = false;
   isHighlighting: boolean = false;
+  isBlink: boolean = false;
+  // isCollapsed: boolean = false;
   _mxcellHL: any = null;
   gf: gf.TXCellGF;
 
@@ -14,6 +17,8 @@ export class XCell {
     this.mxcell = mxcell;
     this.gf = this._getDefaultGFXCell();
     this.mxcell.gf = this.gf;
+    this.isHidden = this.graph.model.isVisible(this.mxcell);
+    this.isCollapsed = this.graph.isCellCollapsed(this.mxcell);
   }
 
   static refactore(graph: any, mxcell: mxCell): XCell {
@@ -30,6 +35,11 @@ export class XCell {
         link: undefined,
         styles: undefined,
       },
+      tooltip : {
+        enableTooltip: false,
+        displayMetadata : false,
+        tooltipHandler: undefined,
+      },
     };
   }
 
@@ -37,12 +47,12 @@ export class XCell {
     this._initDefaultValue(type);
     const value = this.gf.defaultValues[type];
     if (value === undefined) {
-      return null; 
+      return null;
     }
     return value;
   }
 
-  _initDefaultValue(type: gf.TXCellDefaultValueKeys):this {
+  _initDefaultValue(type: gf.TXCellDefaultValueKeys): this {
     const value = this.gf.defaultValues[type];
     if (value === undefined) {
       this._setDefaultValue(type);
@@ -73,7 +83,7 @@ export class XCell {
     }
   }
 
-  getValues(options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): any { 
+  getValues(options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): any {
     return this.getValue(options.identByProp);
   }
 
@@ -105,7 +115,6 @@ export class XCell {
       case 'link':
         const link = this.getLink();
         this.gf.defaultValues.link = link;
-        throw new Error('Link not implemented');
       case 'metadata':
         return this._setDefaultMetadatas();
         break;
@@ -261,7 +270,7 @@ export class XCell {
   //
   // Styles
   //
-  _initDefaultStyle(style: gf.TXCellStyleKeys):this {
+  _initDefaultStyle(style: gf.TXCellStyleKeys): this {
     if (this.gf.defaultValues.styles === undefined || !this.gf.defaultValues.styles.has(style)) {
       this._setDefaultStyle(style);
     }
@@ -276,7 +285,7 @@ export class XCell {
   }
 
   _setDefaultStyle(style: gf.TXCellStyleKeys): string | null {
-    if (this.gf.defaultValues.styles == undefined) {
+    if (this.gf.defaultValues.styles === undefined) {
       this._setDefaultStyles();
     }
     const state = this.graph.view.getState(this.mxcell);
@@ -318,7 +327,7 @@ export class XCell {
     return null;
   }
 
-  isStyleChanged(style: gf.TXCellStyleKeys):boolean {
+  isStyleChanged(style: gf.TXCellStyleKeys): boolean {
     const def = this.getDefaultStyle(style);
     const cur = this.getStyle(style);
     return def === cur;
@@ -380,17 +389,17 @@ export class XCell {
    * @param {boolean} [bool=true]
    * @memberof XCell
    */
-  async hide(bool:boolean = true) {
-    if(!this.isHidden && bool) {
+  async hide(bool: boolean = true) {
+    if (!this.isHidden && bool) {
       this.isHidden = true;
       this.graph.model.setVisible(this.mxcell, false);
-    } else if(this.isHidden && !bool) {
+    } else if (this.isHidden && !bool) {
       this.graph.model.setVisible(this.mxcell, true);
     }
   }
 
   /**
-   * 
+   *
    * @deprecated
    * @param {boolean} [bool=true]
    * @memberof XCell
@@ -443,6 +452,51 @@ export class XCell {
    */
   async unhighlight() {
     this.highlight(false);
+  }
+
+  /**
+   * Collapse Cell
+   *
+   * @param {boolean} [bool=true]
+   * @memberof XCell
+   */
+  async collapse(bool = true) {
+    const isCollapsed = this.graph.isCellCollapsed(this.mxcell);
+    if (!isCollapsed && bool) {
+      this.graph.foldCells(true, false, [this.mxcell], null, null);
+    } else if (isCollapsed && !bool) {
+      this.graph.foldCells(false, false, [this.mxcell], null, null);
+    }
+  }
+
+  isCollapsed(): boolean {
+    return this.graph.isCellCollapsed(this.mxcell);
+  }
+
+  /**
+   * Expand Cell
+   *
+   * @deprecated
+   * @memberof XCell
+   */
+  async expand() {
+    this.collapse(false);
+  }
+
+  enableTooltip(bool = true) {
+    this.gf.tooltip.enableTooltip = bool;
+    if(!bool) {
+      if(this.gf.tooltip.tooltipHandler) {
+        this.gf.tooltip.tooltipHandler.destroy();
+      }
+      this.gf.tooltip.tooltipHandler = undefined;
+    }
+    return this;
+  }
+
+  setTooltipHandler(tp : TooltipHandler) {
+    this.gf.tooltip.tooltipHandler = tp;
+    return this;
   }
 
   async addOverlay(state: string) {

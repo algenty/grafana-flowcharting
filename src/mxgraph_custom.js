@@ -101,11 +101,13 @@ Graph.prototype.getTooltipForCell = function (cell) {
   }
 
   // GF Tooltips
-  if (cell.GF_tooltipHandler != null) {
-    let tooltipHandler = cell.GF_tooltipHandler;
-    let gfDiv = tooltipHandler.getDiv(div);
-    if (gfDiv !== null) {
-      hasTips = true;
+  if (cell.gf !== undefined) {
+    let tooltipHandler = cell.gf.tooltip.tooltipHandler;
+    if(cell.gf.tooltip.enableTooltip) {
+      let gfDiv = tooltipHandler.getDiv(div);
+      if (gfDiv !== null) {
+        hasTips = true;
+      }
     }
   }
   if (hasTips) return div;

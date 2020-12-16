@@ -56,7 +56,7 @@ export class State {
     this.variables = $GF.createLocalVars();
     this.status = new Map();
     this.tooltipHandler = null;
-    this.xcell.GF_tooltipHandler = null;
+    // this.xcell.GF_tooltipHandler = null;
     // this.originalText = XGraph.getLabelCell(xcell);
     trc.after();
   }
@@ -141,7 +141,7 @@ export class State {
 
       // TEXT
       mapOptions = rule.getTextMapOptions();
-      cellValue = this.getCellProp(mapOptions);
+      cellValue = this.xcell.getValues(mapOptions);
       textMaps.forEach(text => {
         const k = 'label';
         if (!text.isHidden() && text.match(cellValue, mapOptions) && text.isEligible(level)) {
@@ -161,7 +161,7 @@ export class State {
 
       // EVENTS
       mapOptions = rule.getEventMapOptions();
-      cellValue = this.getCellProp(mapOptions);
+      cellValue = this.xcell.getValues(mapOptions);
       eventMaps.forEach(event => {
         const k = event.data.style;
         if (!event.isHidden() && event.match(cellValue, mapOptions) && event.isEligible(level)) {
@@ -180,7 +180,7 @@ export class State {
 
       // LINK
       mapOptions = rule.getEventMapOptions();
-      cellValue = this.getCellProp(mapOptions);
+      cellValue = this.xcell.getValues(mapOptions);
       linkMaps.forEach(link => {
         const k = 'link';
         if (!link.isHidden() && link.match(cellValue, mapOptions)) {
@@ -336,8 +336,8 @@ export class State {
    */
   getShapeName(): string {
     if (this.xcell) {
-      const name =  this.xcell.getStyle('shape');
-      if(name === null) {
+      const name = this.xcell.getStyle('shape');
+      if (name === null) {
         return '';
       }
       return name;
@@ -689,7 +689,7 @@ class EventState extends GFState {
     }
     let beginValue: any = undefined;
     // const toUnset: boolean = this.isChanged(key) && !this.isMatched(key);
-    // let className = '';
+    let className = '';
     let newkey: gf.TTypeEventKeys | 'class' = key;
     if (key.startsWith('class_')) {
       newkey = 'class';
@@ -698,7 +698,7 @@ class EventState extends GFState {
     switch (newkey) {
       case 'class':
         //
-        throw new Error("Class not implemented")
+        throw new Error('Class not implemented');
         // if (toUnset) {
         //   this.xgraph.unsetClassCell(this.mxcell, className);
         // } else {
@@ -722,9 +722,9 @@ class EventState extends GFState {
       case 'fold':
         value = String(value);
         if (value === '0') {
-          this.xgraph.collapseCell(this.xcell);
+          this.xcell.collapse(true);
         } else if (value === '1') {
-          this.xgraph.expandCell(this.xcell);
+          this.xcell.collapse(false);
         }
         break;
 
@@ -767,16 +767,16 @@ class EventState extends GFState {
         }
         break;
 
-      case 'barPos':
-      case 'gaugePos':
-      case 'fontSize':
-      case 'opacity':
-      case 'textOpacity':
-      case 'rotation':
-        beginValue = this._get(key);
-        beginValue = beginValue === undefined ? EventMap.getDefaultValue(key) : beginValue;
-        this.xgraph.setStyleAnimCell(this.xcell, key, value, beginValue);
-        break;
+      // case 'barPos':
+      // case 'gaugePos':
+      // case 'fontSize':
+      // case 'opacity':
+      // case 'textOpacity':
+      // case 'rotation':
+      //   beginValue = this._get(key);
+      //   beginValue = beginValue === undefined ? EventMap.getDefaultValue(key) : beginValue;
+      //   this.xgraph.setStyleAnimCell(this.xcell, key, value, beginValue);
+      //   break;
 
       case 'blink':
         if (!!value) {
@@ -787,7 +787,16 @@ class EventState extends GFState {
         break;
 
       default:
-        this.xgraph.setStyleCell(this.xcell, key, value);
+        const k: any = key;
+        if (XGraph.isMxGraphAnimStyle(key)) {
+          beginValue = this._get(k);
+          beginValue = beginValue === undefined ? EventMap.getDefaultValue(k) : beginValue;
+          this.xgraph.setStyleAnimCell(this.xcell, k, value, beginValue);
+        } else if (XGraph.isMxGraphStyle(k)) {
+          this.xcell.setStyle(k, value);
+        } else {
+          throw new Error(`Unknow type ${k}`);
+        }
         break;
     }
   }
@@ -795,11 +804,12 @@ class EventState extends GFState {
   _get(key: gf.TTypeEventKeys): any {
     switch (key) {
       case 'text':
-        return XGraph.getLabelCell(this.xcell);
+        return this.xcell.getLabel();
         break;
 
       case 'visibility':
-        return this.xgraph.isVisibleCell(this.xcell) === false ? '0' : '1';
+        // return this.xgraph.isVisibleCell(this.xcell) === false ? '0' : '1';
+        return !this.xcell.isHidden;
         break;
 
       case 'height':
@@ -815,15 +825,20 @@ class EventState extends GFState {
         break;
 
       case 'fold':
-        return this.xgraph.isCollapsedCell(this.xcell) === true ? '0' : '1';
+        return this.xcell.isCollapsed() === true ? '0' : '1';
         break;
 
       case 'blink':
-        return this.xgraph.geBlinkMxCell(this.xcell);
+        return this.xcell.isBlink;
         break;
 
       default:
-        return this.xgraph.getStyleCell(this.xcell, key);
+        if (XGraph.isMxGraphStyle(key)) {
+          const k: any = key;
+          return this.xcell.getStyle(k);
+        } else {
+          throw new Error(`Unknow type ${key}`);
+        }
         break;
     }
   }
@@ -843,15 +858,16 @@ class TextState extends GFState {
   }
 
   default_core(key: any): string | null {
-    return XGraph.getLabelCell(this.xcell);
+    return this.xcell.getLabel();
   }
 
   async apply_core(key: string, value: any) {
-    this.xgraph.setLabelCell(this.xcell, value);
+    this.xcell.setLabel(value);
   }
 
   async reset_core(key: string, value: any) {
-    this.xgraph.setLabelCell(this.xcell, value);
+    // this.xcell.setLabel(value);
+    this.xcell.restoreLabel();
   }
 }
 
@@ -869,19 +885,20 @@ class LinkState extends GFState {
   }
 
   default_core(key: any): string | null {
-    return this.xgraph.getLink(this.xcell);
+    return this.xcell.getDefaultLink();
   }
 
   async apply_core(key: string, value: any) {
-    this.xgraph.addLink(this.xcell, value);
+    this.xcell.setLink(value);
   }
 
   async reset_core(key: string, value: any) {
-    if (value === undefined || value === null || value.length === 0) {
-      this.xgraph.removeLink(this.xcell);
-    } else {
-      this.xgraph.addLink(this.xcell, value);
-    }
+    // if (value === undefined || value === null || value.length === 0) {
+    //   this.xgraph.removeLink(this.xcell);
+    // } else {
+    //   this.xgraph.addLink(this.xcell, value);
+    // }
+    this.xcell.restoreLink();
   }
 }
 
@@ -907,11 +924,12 @@ class ShapeState extends GFState {
     //   this.addValue(key, value);
     //   $GF.log.debug('ShapeState [' + this.mxcell.id + '] Add value : ' + key, value);
     // });
-    this.xcell.GF_tooltipHandler = null;
+    // this.xcell.GF_tooltipHandler = null;
+    this.xcell.enableTooltip(false);
   }
 
   default_core(key: any): string | null {
-    return this.xgraph.getStyleCell(this.xcell, key);
+    return this.xcell.getDefaultStyle(key);
   }
 
   async apply_core(key: gf.TStyleColorKeys, value: any) {
@@ -922,10 +940,11 @@ class ShapeState extends GFState {
   }
 
   async reset_core(key: gf.TStyleColorKeys, value: any) {
-    if (value === undefined) {
-      value = null;
-    }
-    this.xgraph.setColorAnimCell(this.xcell, key, value);
+    // if (value === undefined) {
+    //   value = null;
+    // }
+    // this.xgraph.setColorAnimCell(this.xcell, key, value);
+    this.xcell.restoreStyle(key);
   }
 }
 
@@ -940,7 +959,8 @@ class TooltipState extends GFState {
   init_core() {
     this.addValue('tooltip', false);
     this.tooltipHandler = undefined;
-    this.xcell.GF_tooltipHandler = null;
+    // this.xcell.GF_tooltipHandler = null;
+    this.xcell.enableTooltip(false);
   }
 
   async setTooltip(rule: Rule, metric: Metric, color: string, value: string) {
@@ -986,7 +1006,8 @@ class TooltipState extends GFState {
     if (key !== undefined && key === 'tooltip') {
       if (this.isMatched(key) && this.getMatchValue(key) === true) {
         if (this.tooltipHandler != null && this.tooltipHandler.isChecked()) {
-          this.xcell.GF_tooltipHandler = this.tooltipHandler;
+          // this.xcell.GF_tooltipHandler = this.tooltipHandler;
+          this.xcell.enableTooltip().setTooltipHandler(this.tooltipHandler);
         }
         super.apply(key);
       }
@@ -1006,10 +1027,10 @@ class TooltipState extends GFState {
 
   reset(key?: string): this {
     if (key !== undefined && key === 'tooltip') {
-      this.xcell.GF_tooltipHandler = null;
-      if (this.tooltipHandler) {
-        this.tooltipHandler.destroy();
-      }
+      this.xcell.enableTooltip(false);
+      // if (this.tooltipHandler) {
+      //   this.tooltipHandler.destroy();
+      // }
       this.tooltipHandler = undefined;
       super.reset(key);
     } else {
@@ -1041,7 +1062,8 @@ class IconState extends GFState {
     if (key !== undefined && key === 'icon') {
       if (this.isMatched(key) && this.getMatchValue(key) === true) {
         if (!this.isChanged(key)) {
-          this.xgraph.addOverlay(`WARNING/ERROR`, this.xcell);
+          // this.xgraph.addOverlay(`WARNING/ERROR`, this.xcell);
+          this.xcell.addOverlay(`WARNING/ERROR`);
         }
         // super.apply(key);
       } else if (this.isChanged(key)) {
@@ -1057,8 +1079,9 @@ class IconState extends GFState {
 
   reset_core(key?: string): this {
     if (key !== undefined && key === 'icon') {
-      this.xgraph.removeOverlay(this.xcell);
+      // this.xgraph.removeOverlay(this.xcell);
       // super.reset(key);
+      this.xcell.removeOverlay();
     } else {
       this.keys.forEach(key => {
         this.reset_core(key);
