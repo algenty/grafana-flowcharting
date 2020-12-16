@@ -8,8 +8,10 @@ export class XCell {
   isHidden: boolean = false;
   isHighlighting: boolean = false;
   isBlink: boolean = false;
+  percent: number = 100;
   // isCollapsed: boolean = false;
   _mxcellHL: any = null;
+  _blinkHL: any = null;
   gf: gf.TXCellGF;
 
   constructor(graph, mxcell) {
@@ -34,10 +36,11 @@ export class XCell {
         metadata: undefined,
         link: undefined,
         styles: undefined,
+        dimension: undefined,
       },
-      tooltip : {
+      tooltip: {
         enableTooltip: false,
-        displayMetadata : false,
+        displayMetadata: false,
         tooltipHandler: undefined,
       },
     };
@@ -75,7 +78,9 @@ export class XCell {
       case 'link':
         return this.getLink();
         break;
-
+      case 'metadata':
+        return this.getDefaultValue('metadata');
+        break;
       default:
         //TODO
         throw new Error(`Type ${type} not implemented in method getValue()`);
@@ -84,7 +89,11 @@ export class XCell {
   }
 
   getValues(options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): any {
-    return this.getValue(options.identByProp);
+    let value: any = this.getValue(options.identByProp);
+    if (options.identByProp === 'metadata') {
+      value = this.getMetadataValues(options.metadata, options.enableRegEx);
+    }
+    return value;
   }
 
   _sameString(def, cur): boolean {
@@ -115,6 +124,8 @@ export class XCell {
       case 'link':
         const link = this.getLink();
         this.gf.defaultValues.link = link;
+      case 'dimension':
+        this.gf.defaultValues.dimension = this.getDimension();
       case 'metadata':
         return this._setDefaultMetadatas();
         break;
@@ -141,6 +152,11 @@ export class XCell {
   setId(id: string): this {
     this._initDefaultValue('id');
     this.mxcell.id = id;
+    return this;
+  }
+
+  restoreId(): this {
+    this.setId(this.getDefaultId());
     return this;
   }
 
@@ -340,6 +356,26 @@ export class XCell {
   }
 
   //
+  // DIMENSION
+  //
+  getDefaultDimension(): mxGeometry {
+    return this.getDefaultValue('dimension');
+  }
+
+  getDimension(): mxGeometry {
+    return this.graph.model.getGeometry(this.mxcell);
+  }
+
+  async setDimension(dim: mxGeometry) {
+    this.graph.resizeCell(this.mxcell, dim, true);
+  }
+
+  async restoreDimension() {
+    const dim = this.getDefaultValue('dimension');
+    this.setDimension(dim);
+  }
+
+  //
   // OTHERS
   //
 
@@ -361,6 +397,10 @@ export class XCell {
    */
   getMxCellState(): mxCellState {
     return this.graph.view.getState(this.mxcell);
+  }
+
+  isVertex(): boolean {
+    return this.mxcell.isVertex();
   }
 
   /**
@@ -485,8 +525,8 @@ export class XCell {
 
   enableTooltip(bool = true) {
     this.gf.tooltip.enableTooltip = bool;
-    if(!bool) {
-      if(this.gf.tooltip.tooltipHandler) {
+    if (!bool) {
+      if (this.gf.tooltip.tooltipHandler) {
         this.gf.tooltip.tooltipHandler.destroy();
       }
       this.gf.tooltip.tooltipHandler = undefined;
@@ -494,9 +534,120 @@ export class XCell {
     return this;
   }
 
-  setTooltipHandler(tp : TooltipHandler) {
+  setTooltipHandler(tp: TooltipHandler) {
     this.gf.tooltip.tooltipHandler = tp;
     return this;
+  }
+
+  async zoom(percent: number = 100) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'resize()');
+    const dim: mxGeometry = this.getDefaultDimension();
+    if (percent !== 100) {
+      this._initDefaultValue('dimension');
+      if (dim !== null) {
+        let _x = dim.x;
+        let _ow = dim.width;
+        let _y = dim.y;
+        let _oh = dim.height;
+        let _w = _ow * (percent / 100);
+        let _h = _oh * (percent / 100);
+        _x = _x - (_w - _ow) / 2;
+        _y = _y - (_h - _oh) / 2;
+        const rec = new mxRectangle(_x, _y, _w, _h);
+        this.setDimension(rec);
+        this.percent = percent;
+      }
+    } else if (this.percent !== 100) {
+      this.setDimension(dim);
+      this.percent = 100;
+    }
+    trc.after();
+  }
+
+  async resize(width: number | undefined, height: number | undefined) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
+    this._initDefaultValue('dimension');
+    const dim = this.getDimension();
+    if (dim !== null) {
+      let _x = dim.x;
+      let _ow = dim.width;
+      let _y = dim.y;
+      let _oh = dim.height;
+      _x = width !== undefined && width < 0 ? _x + width + _ow : _x;
+      _y = height !== undefined && height < 0 ? _y + height + _oh : _y;
+      let _h = height !== undefined ? Math.abs(height) : dim.height;
+      let _w = width !== undefined ? Math.abs(width) : dim.width;
+      const _rec = new mxRectangle(_x, _y, _w, _h);
+      this.setDimension(_rec);
+    }
+    trc.after();
+  }
+
+  /**
+   * Blink this cell
+   *
+   * @param {number} [ms=1000]
+   * @param {boolean} [bool=true]
+   * @memberof XCell
+   */
+  async blink(ms: number = 1000, bool: boolean = true) {
+    const timeId = `blink_${this.getId()}`;
+    const self = this;
+    if (bool && !this.isBlink) {
+      // mxcell.blink = true;
+      $GF.clearUniqTimeOut(timeId);
+      this.isBlink = true;
+      const bl_on = function() {
+        const color = '#f5f242';
+        const opacity = 100;
+        const state = self.getMxCellState();
+        if (state != null) {
+          const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+          const hl = new mxCellHighlight(self.graph, color, sw, false);
+          if (opacity != null) {
+            hl.opacity = opacity;
+          }
+          hl.highlight(state);
+          self._blinkHL = hl;
+          $GF.setUniqTimeOut(bl_off, ms, timeId);
+        }
+      };
+      const bl_off = function() {
+        if (self._blinkHL) {
+          const hl = self._blinkHL;
+          // Fades out the highlight after a duration
+          if (hl.shape != null) {
+            mxUtils.setPrefixedStyle(hl.shape.node.style, `transition`, `all ${ms}ms ease-in-out`);
+            hl.shape.node.style.opacity = 0;
+          }
+          hl.destroy();
+          self._blinkHL = undefined;
+          $GF.setUniqTimeOut(bl_on, ms, timeId);
+        }
+      };
+      bl_on();
+    } else if (!bool && this.isBlink) {
+      $GF.clearUniqTimeOut(timeId);
+      if (self._blinkHL) {
+        const hl = self._blinkHL;
+        if (hl.shape != null) {
+          hl.shape.node.style.opacity = 0;
+          hl.destroy();
+          self._blinkHL = undefined;
+        }
+      }
+      this.isBlink = false;
+    }
+  }
+
+  /**
+   * Stop blink
+   *
+   * @deprecated use blink(number, false)
+   * @memberof XCell
+   */
+  async unblink() {
+    this.blink(1000, false);
   }
 
   async addOverlay(state: string) {

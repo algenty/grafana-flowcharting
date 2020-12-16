@@ -33,9 +33,10 @@ export class FlowchartHandler {
   static defaultCsv: string; // Default CSV
   onMapping: gf.TIOnMappingObj = {
     active: false,
-    mxCellValue: null,
+    value: null,
     object: null,
-    domId: null,
+    xcell: null,
+    focusId: null,
     options: Rule.getDefaultMapOptions(),
     callback: null,
   }; // For link mapping, sharing
@@ -141,8 +142,9 @@ export class FlowchartHandler {
   static getDefaultMapping(): gf.TIOnMappingObj {
     return {
       active: false,
-      domId: null,
-      mxCellValue: null,
+      focusId: null,
+      value: null,
+      xcell: null,
       options: Rule.getDefaultMapOptions(),
       object: null,
       callback: null,
@@ -809,7 +811,7 @@ export class FlowchartHandler {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
     this.onMapping.active = true;
     this.onMapping.object = objToMap;
-    this.onMapping.domId = objToMap.getId();
+    this.onMapping.focusId = objToMap.getId();
     this.onMapping.options = options;
     flowchart.setMap(this.onMapping);
     return this;

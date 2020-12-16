@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { Metric } from './metric_class';
 import XGraph from 'graph_class';
 import { $GF } from 'globals_class';
+import { XCell } from 'cell_class';
 
 /**
  * States Handler class
@@ -37,9 +38,9 @@ export class StateHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initStates()');
     this.xgraph = xgraph;
     this.states.clear();
-    const mxcells = xgraph.getMxCells();
-    _.each(mxcells, mxcell => {
-      this.addState(mxcell);
+    const xcells = xgraph.getXCells();
+    _.each(xcells, x => {
+      this.addState(x);
     });
     trc.after();
     return this;
@@ -73,12 +74,13 @@ export class StateHandler {
     const result = new Map();
     let name: string | null;
     this.states.forEach(state => {
-      const mxcell: mxCell = state.xcell;
-      const id: string = mxcell.id;
+      const xcell: XCell = state.xcell;
+      const id: string = xcell.getId();
       let found = false;
       // SHAPES
       let options = rule.getShapeMapOptions();
-      name = XGraph.getValuePropOfMxCell(mxcell, options);
+      // name = XGraph.getValuePropOfMxCell(mxcell, options);
+      name = xcell.getValues(options);
       if (name !== null && rule.matchShape(name, options)) {
         result.set(id, state);
         found = true;
@@ -87,7 +89,8 @@ export class StateHandler {
       // TEXTS
       if (!found) {
         let options = rule.getTextMapOptions();
-        name = XGraph.getValuePropOfMxCell(mxcell, options);
+        // name = XGraph.getValuePropOfMxCell(mxcell, options);
+        name = xcell.getValues(options);
         if (rule.matchText(name, options)) {
           result.set(id, state);
           found = true;
@@ -97,7 +100,8 @@ export class StateHandler {
       // LINKS
       if (!found) {
         let options = rule.getLinkMapOptions();
-        name = XGraph.getValuePropOfMxCell(mxcell, options);
+        // name = XGraph.getValuePropOfMxCell(mxcell, options);
+        name = xcell.getValues(options);
         if (rule.matchLink(name, options)) {
           result.set(id, state);
           found = true;
@@ -107,7 +111,8 @@ export class StateHandler {
       // EVENTS
       if (!found) {
         let options = rule.getEventMapOptions();
-        name = XGraph.getValuePropOfMxCell(mxcell, options);
+        // name = XGraph.getValuePropOfMxCell(mxcell, options);
+        name = xcell.getValues(options);
         if (rule.matchEvent(name, options)) {
           result.set(id, state);
           found = true;
@@ -169,16 +174,17 @@ export class StateHandler {
   /**
    * Add a state
    *
-   * @param {mxCell} mxcell
+   * @param {mxCell} xcell
    * @returns {State} created state
    * @memberof StateHandler
    */
-  addState(mxcell: mxCell): State {
+  addState(xcell: XCell): State {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addState()');
-    const state = new State(mxcell, this.xgraph);
-    this.states.set(mxcell.id, state);
+    const state = new State(xcell, this.xgraph);
+    const id = state.id;
+    this.states.set(id, state);
     if ($GF.DEBUG) {
-      $GF.setVar(`STATE_${state.cellId}`, state);
+      $GF.setVar(`STATE_${id}`, state);
     }
     trc.after();
     return state;

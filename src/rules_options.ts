@@ -7,7 +7,7 @@ import grafana from 'grafana_func';
 import _ from 'lodash';
 import { MetricHandler } from './metricHandler';
 import { DateTH, NumberTH, StringTH } from 'threshold_class';
-import XGraph from 'graph_class';
+import { XCell } from 'cell_class';
 
 /**
  * Rules tab controller
@@ -872,28 +872,28 @@ export class RulesOptionsCtrl {
   removeShapeMap(rule: Rule, index: number) {
     const shape = rule.getShapeMap(index);
     const options = rule.getShapeMapOptions();
-    this.unselectCell(shape.getData().pattern, options);
+    this.unhighlightXCells(shape.getData().pattern, options);
     rule.removeShapeMap(index);
   }
 
   removeTextMap(rule: Rule, index: number) {
     const txt = rule.getTextMap(index);
     const options = rule.getTextMapOptions();
-    this.unselectCell(txt.getData().pattern, options);
+    this.unhighlightXCells(txt.getData().pattern, options);
     rule.removeTextMap(index);
   }
 
   removeLinkMap(rule: Rule, index: number) {
     const lnk = rule.getLinkMap(index);
     const options = rule.getLinkMapOptions();
-    this.unselectCell(lnk.getData().pattern, options);
+    this.unhighlightXCells(lnk.getData().pattern, options);
     rule.removeLinkMap(index);
   }
 
   removeEventMap(rule: Rule, index: number) {
     const evt = rule.getEventMap(index);
     const options = rule.getLinkMapOptions();
-    this.unselectCell(evt.getData().pattern, options);
+    this.unhighlightXCells(evt.getData().pattern, options);
     rule.removeEventMap(index);
   }
 
@@ -916,11 +916,11 @@ export class RulesOptionsCtrl {
    * @param  {} prop
    * @param  {} pattern
    */
-  async selectCell(pattern: string, options?: gf.TRuleMapOptions) {
+  async highlightXCells(pattern: string, options?: gf.TRuleMapOptions) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
-      xgraph.highlightXCells(pattern, options);
+      xgraph.highlightXCells(pattern, options, true);
     }
   }
 
@@ -929,11 +929,11 @@ export class RulesOptionsCtrl {
    *
    * @memberof RulesOptionsCtrl
    */
-  async unselectCell(pattern: string, options?: gf.TRuleMapOptions) {
+  async unhighlightXCells(pattern: string, options?: gf.TRuleMapOptions) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
-      xgraph.unselectMxCells(pattern, options);
+      xgraph.highlightXCells(pattern, options, false);
     }
   }
 
@@ -943,12 +943,12 @@ export class RulesOptionsCtrl {
     const self = this;
     let count = 0;
     const select = () => {
-      self.selectCell(pattern, options);
+      self.highlightXCells(pattern, options);
       count = count + 1;
       $GF.setUniqTimeOut(unselect, 500, id);
     };
     const unselect = () => {
-      self.unselectCell(pattern, options);
+      self.unhighlightXCells(pattern, options);
       if (count < 3) {
         $GF.setUniqTimeOut(select, 500, id);
       }
@@ -1055,8 +1055,8 @@ export class RulesOptionsCtrl {
   }
 
   setRuleMappings(rule: Rule): this {
-    const _setTarget = (cell: mxCell) => {
-      if (cell) {
+    const _setTarget = (xcell: XCell) => {
+      if (xcell) {
         let mapsList: ObjectMapArray[] = [
           rule.getShapeMaps(),
           rule.getTextMaps(),
@@ -1072,7 +1072,7 @@ export class RulesOptionsCtrl {
         for (let index = 0; index < optionsList.length; index++) {
           const options = optionsList[index];
           const maps = mapsList[index];
-          const value = XGraph.getValuePropOfMxCell(cell, options);
+          const value = xcell.getValues(options);
           if (value) {
             maps.forEach(map => {
               map.setPattern(value);

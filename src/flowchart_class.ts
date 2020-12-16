@@ -528,7 +528,7 @@ export class Flowchart {
    */
   getNamesByOptions(options: gf.TRuleMapOptions): string[] {
     if (this.xgraph) {
-      return this.xgraph.getOrignalCells(options);
+      return this.xgraph.getDefaultValues(options);
     }
     return [];
   }
@@ -640,12 +640,12 @@ export class Flowchart {
     return $GF.utils.$loadFile(url);
   }
 
-  renameId(oldId: string, newId: string): this {
-    if (this.xgraph) {
-      this.xgraph.renameId(oldId, newId);
-    }
-    return this;
-  }
+  // renameId(oldId: string, newId: string): this {
+  //   if (this.xgraph) {
+  //     this.xgraph.renameId(oldId, newId);
+  //   }
+  //   return this;
+  // }
 
   /**
    * Apply xml to graph

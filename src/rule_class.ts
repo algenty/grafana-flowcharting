@@ -1,10 +1,8 @@
-//import moment from 'moment';
 import grafana from './grafana_func';
 import { State } from './state_class';
 import _ from 'lodash';
 import { Metric } from './metric_class';
 import { $GF } from './globals_class';
-import chroma from 'chroma-js';
 import { NumberTH, StringTH, ObjectTH, ObjectTHData, DateTH } from 'threshold_class';
 import {
   EventMap,
@@ -819,7 +817,7 @@ export class Rule {
         let beginColor = lth.getColor();
         if (ref < length - 1 && index !== 0) {
           const endColor = thfTable[ref + 1].getColor();
-          finalColor = this._getColorForRatio(beginColor, endColor, ratio);
+          finalColor = $GF.calculateColorForRatio(beginColor, endColor, ratio);
         } else {
           finalColor = beginColor;
         }
@@ -831,7 +829,7 @@ export class Rule {
         let beginValue = lth.getValue();
         if (ref < length - 1 && index !== 0) {
           const endValue = thfTable[ref + 1].getValue();
-          finalValue = this._getValueForRatio(beginValue, endValue, ratio);
+          finalValue = $GF.calculateValueForRatio(beginValue, endValue, ratio);
         } else {
           finalValue = beginValue;
         }
@@ -876,7 +874,7 @@ export class Rule {
         let beginColor = lth.getColor();
         if (ref < length - 1 && index !== 0) {
           const endColor = thfTable[ref + 1].getColor();
-          finalColor = this._getColorForRatio(beginColor, endColor, ratio);
+          finalColor = $GF.calculateColorForRatio(beginColor, endColor, ratio);
         } else {
           finalColor = beginColor;
         }
@@ -927,7 +925,7 @@ export class Rule {
         let beginColor = lth.getColor();
         if (ref < length - 1 && index !== 0) {
           const endColor = thfTable[ref + 1].getColor();
-          finalColor = this._getColorForRatio(beginColor, endColor, ratio);
+          finalColor = $GF.calculateColorForRatio(beginColor, endColor, ratio);
         } else {
           finalColor = beginColor;
         }
@@ -1683,18 +1681,18 @@ export class Rule {
    * @returns {string}
    * @memberof Rule
    */
-  _getColorForRatio(beginColor: string, endColor: string, ratio: number): string {
-    let color = endColor;
-    try {
-      color = chroma
-        .scale([beginColor, endColor])
-        .mode('lrgb')(ratio)
-        .hex();
-    } catch (error) {
-      color = endColor;
-    }
-    return color;
-  }
+  // _getColorForRatio(beginColor: string, endColor: string, ratio: number): string {
+  //   let color = endColor;
+  //   try {
+  //     color = chroma
+  //       .scale([beginColor, endColor])
+  //       .mode('lrgb')(ratio)
+  //       .hex();
+  //   } catch (error) {
+  //     color = endColor;
+  //   }
+  //   return color;
+  // }
 
   /**
    * Get a value between 2 values with a ratio
@@ -1706,9 +1704,9 @@ export class Rule {
    * @returns
    * @memberof Rule
    */
-  _getValueForRatio(beginValue: number, endValue: number, ratio: number) {
-    return beginValue + (endValue - beginValue) * ratio;
-  }
+  // _getValueForRatio(beginValue: number, endValue: number, ratio: number) {
+  //   return beginValue + (endValue - beginValue) * ratio;
+  // }
 
   /**
    * Get a ratio, used for parameters of _getColorForRatio
@@ -1720,17 +1718,17 @@ export class Rule {
    * @returns {number}
    * @memberof Rule
    */
-  _getRatioForValue(beginValue: number, endValue: number, value: number): number {
-    if (value < beginValue || value > endValue) {
-      throw new Error(
-        `Cannot calculate ratio for value ${value} because value is less than ${beginValue} or greater than ${endValue}`
-      );
-    }
-    let absoluteDistance = endValue - beginValue;
-    let valueDistanceFromMin = value - beginValue;
-    let ratio = valueDistanceFromMin / absoluteDistance;
-    return ratio;
-  }
+  // _getRatioForValue(beginValue: number, endValue: number, value: number): number {
+  //   if (value < beginValue || value > endValue) {
+  //     throw new Error(
+  //       `Cannot calculate ratio for value ${value} because value is less than ${beginValue} or greater than ${endValue}`
+  //     );
+  //   }
+  //   let absoluteDistance = endValue - beginValue;
+  //   let valueDistanceFromMin = value - beginValue;
+  //   let ratio = valueDistanceFromMin / absoluteDistance;
+  //   return ratio;
+  // }
 
   _getColorForNumberTH(value: number): string {
     const index = this._getIndexNumberTHForValue(value);
@@ -1745,8 +1743,8 @@ export class Rule {
       const beginValue = this.numberTH[index].getValue();
       const endColor = this.numberTH[index + 1].getColor();
       const endValue = this.numberTH[index + 1].getValue();
-      const ratio = this._getRatioForValue(beginValue, endValue, value);
-      return this._getColorForRatio(beginColor, endColor, ratio);
+      const ratio = $GF.calculateRatioForValue(beginValue, endValue, value);
+      return $GF.calculateColorForRatio(beginColor, endColor, ratio);
     }
     return this.numberTH[index].getColor();
   }

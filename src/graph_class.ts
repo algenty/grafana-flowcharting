@@ -933,13 +933,15 @@ export default class XGraph {
    * @memberof XGraph
    */
   // getOrignalCells(options: gf.TRuleMapOptions): string[] {
-  //   if (options.identByProp === 'id' || options.identByProp === 'value') {
-  //     return this.cells[options.identByProp];
-  //   } else if (options.identByProp === 'metadata') {
-  //     return this.getCurrentMDValue(options.metadata);
-  //   }
-  //   return [];
-  // }
+  getDefaultValues(options: gf.TRuleMapOptions): string[] {
+    // if (options.identByProp === 'id' || options.identByProp === 'value') {
+    //   return this.cells[options.identByProp];
+    // } else if (options.identByProp === 'metadata') {
+    //   return this.getCurrentMDValue(options.metadata);
+    // }
+    // return [];
+    return this.getXCellValues(options.identByProp);
+  }
 
   /**
    * Get Attributes and values
@@ -1046,17 +1048,17 @@ export default class XGraph {
    * @returns {this} XGraph
    * @memberof XGraph
    */
-  renameId(oldId: string, newId: string): this {
-    const cells = this.findXCells(oldId);
-    if (cells !== undefined && cells.length > 0) {
-      cells.forEach(x => {
-        x.setId(newId);
-      });
-    } else {
-      $GF.log.warn(`Cell ${oldId} not found`);
-    }
-    return this;
-  }
+  // renameId(oldId: string, newId: string): this {
+  //   const cells = this.findXCells(oldId);
+  //   if (cells !== undefined && cells.length > 0) {
+  //     cells.forEach(x => {
+  //       x.setId(newId);
+  //     });
+  //   } else {
+  //     $GF.log.warn(`Cell ${oldId} not found`);
+  //   }
+  //   return this;
+  // }
 
   /**
    * Get xml definition from current graph
@@ -1076,9 +1078,9 @@ export default class XGraph {
    * @returns {Map<mxCell>} mxCells
    * @memberof XGraph
    */
-  getMxCells(): any {
-    return this.graph.getModel().cells;
-  }
+  // getMxCells(): any {
+  //   return this.graph.getModel().cells;
+  // }
 
   /**
    * Return value of id or value of mxcell
@@ -1127,8 +1129,8 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  setColorAnimCell(xcell: XCell, style: gf.TStyleColorKeys, color: string | null): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setColorAnimCell()');
+  setAnimColorCell(xcell: XCell, style: gf.TStyleColorKeys, color: string | null): this {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimColorCell()');
     const id = `${style}_${xcell.getId()}`;
     // Cancel Previous anim
     $GF.clearUniqTimeOut(id);
@@ -1199,7 +1201,7 @@ export default class XGraph {
    * @param {string} [beginValue]
    * @memberof XGraph
    */
-  async setStyleAnimCell(xcell: XCell, style: gf.TStyleAnimKeys, endValue: string | null, beginValue?: string) {
+  async setAnimStyleCell(xcell: XCell, style: gf.TStyleAnimKeys, endValue: string | null, beginValue?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
     if (this.isAnimated() && endValue !== null) {
       try {
@@ -1209,7 +1211,7 @@ export default class XGraph {
           const id = `${style}_${xcell.getId()}`;
           // Cancel Previous anim
           $GF.clearUniqTimeOut(id);
-          const steps = $GF.getIntervalCounter(begin, end, $GF.CONSTANTS.CONF_ANIMS_STEP);
+          const steps = $GF.calculateIntervalCounter(begin, end, $GF.CONSTANTS.CONF_ANIMS_STEP);
           const lg = steps.length;
           let count = 0;
           function graduate() {
@@ -1392,11 +1394,12 @@ export default class XGraph {
         const xcell = this.getXCell(state.cell.id);
         const options = this.onMapping.options !== null ? this.onMapping.options : Rule.getDefaultMapOptions();
         this.onMapping.value = xcell?.getValues(options);
+        this.onMapping.xcell = xcell;
         if (this.onMapping.object && this.onMapping.object.data) {
           this.onMapping.object.data.pattern = this.onMapping.value;
         }
-        if (this.onMapping.domId) {
-          const elt = document.getElementById(this.onMapping.domId);
+        if (this.onMapping.focusId) {
+          const elt = document.getElementById(this.onMapping.focusId);
           if (elt) {
             setTimeout(() => {
               elt.focus();
@@ -1428,7 +1431,10 @@ export default class XGraph {
    */
   eventDbClick(evt: MouseEvent, mxcell: mxCell) {
     if (mxcell !== undefined) {
-      this.lazyZoomCell(mxcell);
+      const xcell = this.getXCell(mxcell.id);
+      if (xcell) {
+        this.lazyZoomCell(xcell);
+      }
     }
   }
 
@@ -1524,12 +1530,12 @@ export default class XGraph {
   /**
    * Highlights the given cell.
    *
-   * @param {mxCell[]} cells
+   * @param {mxCell[]} xcells
    * @memberof XGraph
    */
-  async highlightCells(cells: mxCell[] = this.getMxCells()) {
-    for (let i = 0; i < cells.length; i++) {
-      this.highlightCell(cells[i]);
+  async highlightCells(xcells: XCell[] = this.getXCells()) {
+    for (let i = 0; i < xcells.length; i++) {
+      xcells[i].highlight();
     }
   }
 
@@ -1539,10 +1545,10 @@ export default class XGraph {
    * @param {mxCell[]} cells
    * @memberof XGraph
    */
-  async unhighlightCells(mxcells: mxCell[] = this.getMxCells()) {
-    _.each(mxcells, (mxcell: mxCell) => {
-      this.unhighlightCell(mxcell);
-    });
+  async unhighlightCells(xcells: XCell[] = this.getXCells()) {
+    for (let i = 0; i < xcells.length; i++) {
+      xcells[i].highlight(false);
+    }
   }
 
   /**
@@ -1552,25 +1558,25 @@ export default class XGraph {
    * @returns
    * @memberof XGraph
    */
-  async highlightCell(cell: mxCell) {
-    if (!cell.highlight) {
-      const color = '#99ff33';
-      const opacity = 100;
-      const state = this.graph.view.getState(cell);
+  // async highlightCell(cell: mxCell) {
+  //   if (!cell.highlight) {
+  //     const color = '#99ff33';
+  //     const opacity = 100;
+  //     const state = this.graph.view.getState(cell);
 
-      if (state != null) {
-        const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-        const hl = new mxCellHighlight(this.graph, color, sw, false);
+  //     if (state != null) {
+  //       const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+  //       const hl = new mxCellHighlight(this.graph, color, sw, false);
 
-        if (opacity != null) {
-          hl.opacity = opacity;
-        }
+  //       if (opacity != null) {
+  //         hl.opacity = opacity;
+  //       }
 
-        hl.highlight(state);
-        cell.highlight = hl;
-      }
-    }
-  }
+  //       hl.highlight(state);
+  //       cell.highlight = hl;
+  //     }
+  //   }
+  // }
 
   /**
    * UnHighlights the given cell.
@@ -1578,97 +1584,97 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  async unhighlightCell(mxcell: mxCell) {
-    if (mxcell && mxcell.highlight) {
-      const hl = mxcell.highlight;
-      // Fades out the highlight after a duration
-      if (hl.shape != null) {
-        mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 500ms ease-in-out');
-        hl.shape.node.style.opacity = 0;
-      }
-      // Destroys the highlight after the fade
-      window.setTimeout(() => {
-        hl.destroy();
-      }, 500);
-      mxcell.highlight = null;
-    }
-  }
+  // async unhighlightCell(mxcell: mxCell) {
+  //   if (mxcell && mxcell.highlight) {
+  //     const hl = mxcell.highlight;
+  //     // Fades out the highlight after a duration
+  //     if (hl.shape != null) {
+  //       mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 500ms ease-in-out');
+  //       hl.shape.node.style.opacity = 0;
+  //     }
+  //     // Destroys the highlight after the fade
+  //     window.setTimeout(() => {
+  //       hl.destroy();
+  //     }, 500);
+  //     mxcell.highlight = null;
+  //   }
+  // }
 
   // BLINK
-  async blinkCell(mxcell: mxCell, ms: number) {
-    if (!mxcell.blink) {
-      mxcell.blink = true;
-      const self = this;
-      const id = `blink_${mxcell.id}`;
-      // Cancel Previous anim
-      $GF.clearUniqTimeOut(id);
-      const bl_on = function() {
-        const color = '#f5f242';
-        const opacity = 100;
-        const state = self.graph.view.getState(mxcell);
+  // async blinkCell(mxcell: mxCell, ms: number) {
+  //   if (!mxcell.blink) {
+  //     mxcell.blink = true;
+  //     const self = this;
+  //     const id = `blink_${mxcell.id}`;
+  //     // Cancel Previous anim
+  //     $GF.clearUniqTimeOut(id);
+  //     const bl_on = function() {
+  //       const color = '#f5f242';
+  //       const opacity = 100;
+  //       const state = self.graph.view.getState(mxcell);
 
-        if (state != null) {
-          const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-          const hl = new mxCellHighlight(self.graph, color, sw, false);
+  //       if (state != null) {
+  //         const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+  //         const hl = new mxCellHighlight(self.graph, color, sw, false);
 
-          if (opacity != null) {
-            hl.opacity = opacity;
-          }
+  //         if (opacity != null) {
+  //           hl.opacity = opacity;
+  //         }
 
-          hl.highlight(state);
-          mxcell.blink_on = hl;
-          mxcell.blink_ms = ms;
-          $GF.setUniqTimeOut(bl_off, ms, id);
-        }
-      };
-      const bl_off = function() {
-        if (mxcell && mxcell.blink) {
-          // console.log('bl_off');
-          const hl = mxcell.blink_on;
-          // Fades out the highlight after a duration
-          if (hl.shape != null) {
-            mxUtils.setPrefixedStyle(hl.shape.node.style, `transition`, `all ${ms}ms ease-in-out`);
-            hl.shape.node.style.opacity = 0;
-          }
-          // Destroys the highlight after the fade
-          // window.setTimeout(() => {
-          //   hl.destroy();
-          //   cell.blink_on = null;
-          // }, ms);
-          hl.destroy();
-          mxcell.blink_on = null;
-          $GF.setUniqTimeOut(bl_on, ms, id);
-        }
-      };
-      bl_on();
-    }
-  }
+  //         hl.highlight(state);
+  //         mxcell.blink_on = hl;
+  //         mxcell.blink_ms = ms;
+  //         $GF.setUniqTimeOut(bl_off, ms, id);
+  //       }
+  //     };
+  //     const bl_off = function() {
+  //       if (mxcell && mxcell.blink) {
+  //         // console.log('bl_off');
+  //         const hl = mxcell.blink_on;
+  //         // Fades out the highlight after a duration
+  //         if (hl.shape != null) {
+  //           mxUtils.setPrefixedStyle(hl.shape.node.style, `transition`, `all ${ms}ms ease-in-out`);
+  //           hl.shape.node.style.opacity = 0;
+  //         }
+  //         // Destroys the highlight after the fade
+  //         // window.setTimeout(() => {
+  //         //   hl.destroy();
+  //         //   cell.blink_on = null;
+  //         // }, ms);
+  //         hl.destroy();
+  //         mxcell.blink_on = null;
+  //         $GF.setUniqTimeOut(bl_on, ms, id);
+  //       }
+  //     };
+  //     bl_on();
+  //   }
+  // }
 
-  async unblinkCell(mxcell: mxCell) {
-    const id = `blink_${mxcell.id}`;
-    if (mxcell.blink) {
-      if (mxcell.blink_on) {
-        const hl = mxcell.blink_on;
-        if (hl.shape != null) {
-          hl.shape.node.style.opacity = 0;
-          hl.destroy();
-          mxcell.blink_on = null;
-          mxcell.blink_ms = 0;
-        }
-      }
-      mxcell.blink = null;
-    }
-    // Cancel Previous anim
-    $GF.clearUniqTimeOut(id);
-  }
+  // async unblinkCell(mxcell: mxCell) {
+  //   const id = `blink_${mxcell.id}`;
+  //   if (mxcell.blink) {
+  //     if (mxcell.blink_on) {
+  //       const hl = mxcell.blink_on;
+  //       if (hl.shape != null) {
+  //         hl.shape.node.style.opacity = 0;
+  //         hl.destroy();
+  //         mxcell.blink_on = null;
+  //         mxcell.blink_ms = 0;
+  //       }
+  //     }
+  //     mxcell.blink = null;
+  //   }
+  //   // Cancel Previous anim
+  //   $GF.clearUniqTimeOut(id);
+  // }
 
-  isBlinkCell(mxcell: mxCell): boolean {
-    return !!mxcell.blink;
-  }
+  // isBlinkCell(mxcell: mxCell): boolean {
+  //   return !!mxcell.blink;
+  // }
 
-  geBlinkMxCell(mxcell: mxCell): number {
-    return !!mxcell.blink ? mxcell.blink_ms : 0;
-  }
+  // geBlinkMxCell(mxcell: mxCell): number {
+  //   return !!mxcell.blink ? mxcell.blink_ms : 0;
+  // }
 
   // COLLAPSE
   // isCollapsedCell(mxcell: mxCell): boolean {
@@ -1697,31 +1703,31 @@ export default class XGraph {
   /**
    * Hide cell/shape
    *
-   * @param {mxCell} mxcell
+   * @param {mxCell} xcell
    * @memberof XGraph
    */
-  async hideCell(mxcell: mxCell) {
-    if (this.isVisibleCell(mxcell)) {
-      this.graph.model.setVisible(mxcell, false);
-    }
-  }
+  // async hideCell(mxcell: mxCell) {
+  //   if (this.isVisibleCell(mxcell)) {
+  //     this.graph.model.setVisible(mxcell, false);
+  //   }
+  // }
 
   /**
    * Show/unhide cell/shape
    *
-   * @param {mxCell} mxcell
+   * @param {mxCell} xcell
    * @memberof XGraph
    */
-  async showCell(mxcell: mxCell) {
-    if (!this.isVisibleCell(mxcell)) {
-      this.graph.model.setVisible(mxcell, true);
-    }
-  }
+  // async showCell(mxcell: mxCell) {
+  //   if (!this.isVisibleCell(mxcell)) {
+  //     this.graph.model.setVisible(mxcell, true);
+  //   }
+  // }
 
   /**
    * Cell is visible ?
    *
-   * @param {mxCell} mxcell
+   * @param {mxCell} xcell
    * @returns {boolean}
    * @memberof XGraph
    */
@@ -1729,135 +1735,80 @@ export default class XGraph {
   //   return this.graph.model.isVisible(mxcell);
   // }
 
-  async resizeCell(mxcell: mxCell, percent: number, origine?: mxGeometry) {
+  /**
+   * Zoom cell with animation
+   *
+   * @param {XCell} xcell
+   * @param {number} percent
+   * @memberof XGraph
+   */
+  async setAnimZoomCell(xcell: XCell, percent: number) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
-    const geo = this.graph.model.getGeometry(mxcell);
-    if (geo !== null) {
-      const id = `resize_${mxcell.id}`;
-      // Cancel Previous anim
-      $GF.clearUniqTimeOut(id);
-      let _x = origine !== undefined ? origine.x : geo.x;
-      let _ow = origine !== undefined ? origine.width : geo.x;
-      let _y = origine !== undefined ? origine.y : geo.y;
-      let _oh = origine !== undefined ? origine.height : geo.y;
-      let _w = _ow * (percent / 100);
-      let _h = _oh * (percent / 100);
-      _x = _x - (_w - _ow) / 2;
-      _y = _y - (_h - _oh) / 2;
-      if (this.isAnimated()) {
-        const steps_x = $GF.getIntervalCounter(geo.x, _x, $GF.CONSTANTS.CONF_ANIMS_STEP);
-        const steps_y = $GF.getIntervalCounter(geo.y, _y, $GF.CONSTANTS.CONF_ANIMS_STEP);
-        const steps_w = $GF.getIntervalCounter(geo.width, _w, $GF.CONSTANTS.CONF_ANIMS_STEP);
-        const steps_h = $GF.getIntervalCounter(geo.height, _h, $GF.CONSTANTS.CONF_ANIMS_STEP);
-        const lg = steps_x.length;
-        let count = 0;
-        const self = this;
-        function graduate() {
-          if (count < lg) {
-            const _rec = new mxRectangle(steps_x[count], steps_y[count], steps_w[count], steps_h[count]);
-            self.graph.resizeCell(mxcell, _rec, true);
-            count += 1;
-            $GF.setUniqTimeOut(graduate, $GF.CONSTANTS.CONF_ANIMS_MS, id);
-          } else {
-            $GF.clearUniqTimeOut(id);
-          }
+    const timeId = `setAnimZoomCell_${xcell.getId}`;
+    $GF.clearUniqTimeOut(timeId);
+    if (this.isAnimated()) {
+      const percents = $GF.calculateIntervalCounter(xcell.percent, percent, $GF.CONSTANTS.CONF_ANIMS_STEP);
+      let index = 0;
+      function anim() {
+        if (index < percents.length) {
+          xcell.zoom(percents[index]);
+          index = index + 1;
+          $GF.setUniqTimeOut(anim, $GF.CONSTANTS.CONF_ANIMS_MS, timeId);
+        } else {
+          $GF.clearUniqTimeOut(timeId);
         }
-        graduate();
-      } else {
-        const _rec = new mxRectangle(_x, _y, _w, _h);
-        this.graph.resizeCell(mxcell, _rec, true);
       }
+      anim();
+    } else {
+      xcell.zoom(percent);
     }
     trc.after();
   }
-  // WIDTH AND HEIGHT
-  // async changeSizeCell(mxcell: mxCell, width: number | undefined, height: number | undefined, origine?: mxGeometry) {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
-  //   const geo = this.graph.model.getGeometry(mxcell);
-  //   if (geo !== null) {
-  //     let _x = origine !== undefined ? origine.x : geo.x;
-  //     let _ow = origine !== undefined ? origine.width : geo.x;
-  //     let _y = origine !== undefined ? origine.y : geo.y;
-  //     let _oh = origine !== undefined ? origine.height : geo.y;
-  //     _x = width !== undefined && width < 0 ? _x + width + _ow : _x;
-  //     _y = height !== undefined && height < 0 ? _y + height + _oh : _y;
-  //     let _h = height !== undefined ? Math.abs(height) : origine !== undefined ? origine.height : geo.height;
-  //     let _w = width !== undefined ? Math.abs(width) : origine !== undefined ? origine.width : geo.width;
-  //     if (this.isAnimated()) {
-  //       const steps_x = $GF.getIntervalCounter(geo.x, _x, $GF.CONSTANTS.CONF_ANIMS_STEP);
-  //       const steps_y = $GF.getIntervalCounter(geo.y, _y, $GF.CONSTANTS.CONF_ANIMS_STEP);
-  //       const steps_w = $GF.getIntervalCounter(geo.width, _w, $GF.CONSTANTS.CONF_ANIMS_STEP);
-  //       const steps_h = $GF.getIntervalCounter(geo.height, _h, $GF.CONSTANTS.CONF_ANIMS_STEP);
-  //       const l = steps_x.length;
-  //       let count = 0;
-  //       const self = this;
-  //       function graduate(count, steps_x, steps_y, steps_w, steps_h) {
-  //         if (count < l) {
-  //           window.setTimeout(() => {
-  //             const _rec = new mxRectangle(steps_x[count], steps_y[count], steps_w[count], steps_h[count]);
-  //             self.graph.resizeCell(mxcell, _rec, true);
-  //             graduate(count + 1, steps_x, steps_y, steps_w, steps_h);
-  //           }, $GF.CONSTANTS.CONF_ANIMS_MS);
-  //         }
-  //       }
-  //       graduate(count, steps_x, steps_y, steps_w, steps_h);
-  //     } else {
-  //       const _rec = new mxRectangle(_x, _y, _w, _h);
-  //       this.graph.resizeCell(mxcell, _rec, true);
-  //     }
-  //   }
-  //   trc.after();
+
+  /**
+   * Resize cell with animation
+   *
+   * @param {mxCell} xcell
+   * @param {(number | undefined)} width
+   * @param {(number | undefined)} height
+   * @param {mxGeometry} [origine]
+   * @memberof XGraph
+   */
+  async setAnimSizeCell(xcell: XCell, width: number | undefined, height: number | undefined) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
+    const timeId = `setAnimSizeCell_${xcell.getId()}`;
+    const dim = xcell.getDimension();
+    width = width !== undefined ? width : dim.width;
+    height = height !== undefined ? height : dim.height;
+    $GF.clearUniqTimeOut(timeId);
+    if (this.isAnimated()) {
+      const widths = $GF.calculateIntervalCounter(dim.width, width, $GF.CONSTANTS.CONF_ANIMS_STEP);
+      const heights = $GF.calculateIntervalCounter(dim.height, height, $GF.CONSTANTS.CONF_ANIMS_STEP);
+      let index = 0;
+      function anim() {
+        if (index < widths.length) {
+          xcell.resize(widths[index], heights[index]);
+          index += 1;
+          $GF.setUniqTimeOut(anim, $GF.CONSTANTS.CONF_ANIMS_MS, timeId);
+        } else {
+          $GF.clearUniqTimeOut(timeId);
+        }
+      }
+      anim();
+    } else {
+      xcell.resize(width, height);
+    }
+    trc.after();
+  }
+
+  // getSizeCell(mxcell: mxCell): mxGeometry {
+  //   return this.graph.model.getGeometry(mxcell);
   // }
-  async changeSizeCell(mxcell: mxCell, width: number | undefined, height: number | undefined, origine?: mxGeometry) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
-    const geo = this.graph.model.getGeometry(mxcell);
-    if (geo !== null) {
-      const id = `resize_${mxcell.id}`;
-      // Cancel Previous anim
-      $GF.clearUniqTimeOut(id);
-      let _x = origine !== undefined ? origine.x : geo.x;
-      let _ow = origine !== undefined ? origine.width : geo.x;
-      let _y = origine !== undefined ? origine.y : geo.y;
-      let _oh = origine !== undefined ? origine.height : geo.y;
-      _x = width !== undefined && width < 0 ? _x + width + _ow : _x;
-      _y = height !== undefined && height < 0 ? _y + height + _oh : _y;
-      let _h = height !== undefined ? Math.abs(height) : origine !== undefined ? origine.height : geo.height;
-      let _w = width !== undefined ? Math.abs(width) : origine !== undefined ? origine.width : geo.width;
-      if (this.isAnimated()) {
-        const steps_x = $GF.getIntervalCounter(geo.x, _x, $GF.CONSTANTS.CONF_ANIMS_STEP);
-        const steps_y = $GF.getIntervalCounter(geo.y, _y, $GF.CONSTANTS.CONF_ANIMS_STEP);
-        const steps_w = $GF.getIntervalCounter(geo.width, _w, $GF.CONSTANTS.CONF_ANIMS_STEP);
-        const steps_h = $GF.getIntervalCounter(geo.height, _h, $GF.CONSTANTS.CONF_ANIMS_STEP);
-        const lg = steps_x.length;
-        let count = 0;
-        const self = this;
-        function graduate() {
-          if (count < lg) {
-            const _rec = new mxRectangle(steps_x[count], steps_y[count], steps_w[count], steps_h[count]);
-            self.graph.resizeCell(mxcell, _rec, true);
-            count += 1;
-            $GF.setUniqTimeOut(graduate, $GF.CONSTANTS.CONF_ANIMS_MS, id);
-          } else {
-            $GF.clearUniqTimeOut(id);
-          }
-        }
-        graduate();
-      } else {
-        const _rec = new mxRectangle(_x, _y, _w, _h);
-        this.graph.resizeCell(mxcell, _rec, true);
-      }
-    }
-    trc.after();
-  }
 
-  getSizeCell(mxcell: mxCell): mxGeometry {
-    return this.graph.model.getGeometry(mxcell);
-  }
-
-  async resetSizeCell(mxcell: mxCell, mxgeo: mxGeometry) {
-    const rec = new mxRectangle(mxgeo.x, mxgeo.y, mxgeo.width, mxgeo.height);
-    this.graph.resizeCell(mxcell, rec, true);
-  }
+  // async resetSizeCell(mxcell: mxCell, mxgeo: mxGeometry) {
+  //   const rec = new mxRectangle(mxgeo.x, mxgeo.y, mxgeo.width, mxgeo.height);
+  //   this.graph.resizeCell(mxcell, rec, true);
+  // }
 
   /**
    * Zoom cell on full panel
@@ -1865,10 +1816,10 @@ export default class XGraph {
    * @param {mxCell} mxcell
    * @memberof XGraph
    */
-  async lazyZoomCell(mxcell: mxCell) {
+  async lazyZoomCell(xcell: XCell) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'lazyZoomCell()');
-    if (mxcell !== undefined && mxcell !== null && mxcell.isVertex()) {
-      const state = this.graph.view.getState(mxcell);
+    if (xcell.isVertex()) {
+      const state = xcell.getMxCellState();
       if (state !== null) {
         let rect: any;
         if (state.width !== undefined && state.width > 0 && state.height !== undefined && state.height > 0) {

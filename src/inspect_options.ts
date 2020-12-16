@@ -125,27 +125,26 @@ export class InspectOptionsCtrl {
   // }
 
   onChangeId(state: State) {
-    if (state.newcellId !== undefined && state.cellId !== state.newcellId) {
-      state.edited = true;
+    const xcell = state.getXCell();
+    if (xcell.getId() !== xcell.getDefaultId()) {
       const sh = this.flowchartHandler.getFlowchart().getStateHandler();
       if (sh !== undefined) {
         sh.edited = true;
       }
-      if (state.previousId === undefined) {
-        state.previousId = state.cellId;
-      }
-      state.cellId = state.newcellId;
-      state.edited = true;
     }
-    state.edit = false;
+  }
+
+  isEdited(state: State): boolean {
+    const xcell = state.getXCell();
+    return xcell.getId() !== xcell.getDefaultId();
   }
 
   onEdit(state: State) {
-    state.edit = true;
-    state.newcellId = state.cellId;
+    // state.edit = true;
+    // state.newcellId = state.id;
     // let stateHandler = this.flowchartHandler.getFlowchart().getStateHandler();
     // stateHandler.edited = true;
-    const elt = document.getElementById(state.cellId);
+    const elt = document.getElementById(state.id);
     setTimeout(() => {
       if (elt) {
         elt.focus();
@@ -154,10 +153,9 @@ export class InspectOptionsCtrl {
   }
 
   undo(state: State) {
-    state.edit = false;
-    state.edited = false;
-    if (state.previousId) {
-      state.cellId = state.previousId;
+    const xcell = state.getXCell();
+    if (this.isEdited(state)) {
+      xcell.restoreId();
     }
   }
 
@@ -169,10 +167,9 @@ export class InspectOptionsCtrl {
     if (sh !== undefined) {
       const states = sh.getStates();
       states.forEach(state => {
-        state.edit = false;
-        if (state.edited && state.cellId && state.previousId) {
-          state.cellId = state.previousId;
-          state.edited = false;
+        if (this.isEdited(state)) {
+          const xcell = state.getXCell();
+          xcell.restoreId();
         }
       });
       sh.edited = false;
@@ -184,13 +181,13 @@ export class InspectOptionsCtrl {
     const flowchart = this.flowchartHandler.getFlowchart();
     const sh = flowchart.getStateHandler();
     if (sh !== undefined) {
-      const states = sh.getStates();
-      states.forEach(state => {
-        if (state.edited && state.previousId) {
-          flowchart.renameId(state.previousId, state.cellId);
-          state.edited = false;
-        }
-      });
+      // const states = sh.getStates();
+      // states.forEach(state => {
+      //   if (state.edited && state.previousId) {
+      //     flowchart.renameId(state.previousId, state.id);
+      //     state.edited = false;
+      //   }
+      // });
       sh.edited = false;
     }
     flowchart.applyModel();
@@ -214,15 +211,16 @@ export class InspectOptionsCtrl {
   }
 
   getStateValue(state: State, col: string): string | null {
+    const xcell = state.getXCell();
     switch (col) {
       case 'id':
-        return state.cellId;
+        return xcell.getId();
         break;
       case 'level':
         return state.getTextLevel();
         break;
       case 'label':
-        return state.originalText;
+        return xcell.getLabel();
         break;
       default:
         return null;

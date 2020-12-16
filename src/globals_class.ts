@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import chroma from 'chroma-js';
 class GFCONSTANT {
   // CONFIG
   CONF_PATH_LIBS = 'libs/';
@@ -1060,7 +1061,12 @@ export class $GF {
     }
   }
 
-  static getIntervalCounter(begin: number, end: number, count: number, method: gf.TCounterKeys = 'linear'): number[] {
+  static calculateIntervalCounter(
+    begin: number,
+    end: number,
+    count: number,
+    method: gf.TCounterKeys = 'linear'
+  ): number[] {
     let result: number[] = [];
     const distance = end - begin;
     const step = Math.round(distance / count);
@@ -1102,6 +1108,65 @@ export class $GF {
         $GF.log.warn('Failed to clear timeout thread', id, error);
       }
     }
+  }
+
+  /**
+   * Compute a ratio, used for parameters of _getColorForRatio
+   *
+   * @private
+   * @param {number} beginValue
+   * @param {number} endValue
+   * @param {number} value
+   * @returns {number}
+   * @memberof Rule
+   */
+  static calculateRatioForValue(beginValue: number, endValue: number, value: number): number {
+    if (value < beginValue || value > endValue) {
+      throw new Error(
+        `Cannot calculate ratio for value ${value} because value is less than ${beginValue} or greater than ${endValue}`
+      );
+    }
+    let absoluteDistance = endValue - beginValue;
+    let valueDistanceFromMin = value - beginValue;
+    let ratio = valueDistanceFromMin / absoluteDistance;
+    return ratio;
+  }
+
+  /**
+   * Calulate a value between 2 values with a ratio
+   *
+   * @private
+   * @param {number} beginValue
+   * @param {number} endValue
+   * @param {number} ratio
+   * @returns
+   * @memberof Rule
+   */
+  static calculateValueForRatio(beginValue: number, endValue: number, ratio: number) {
+    return beginValue + (endValue - beginValue) * ratio;
+  }
+
+  /**
+   * Calulate a color between 2 colors with a ratio
+   *
+   * @private
+   * @param {string} beginColor
+   * @param {string} endColor
+   * @param {number} ratio
+   * @returns {string}
+   * @memberof Rule
+   */
+  static calculateColorForRatio(beginColor: string, endColor: string, ratio: number): string {
+    let color = endColor;
+    try {
+      color = chroma
+        .scale([beginColor, endColor])
+        .mode('lrgb')(ratio)
+        .hex();
+    } catch (error) {
+      color = endColor;
+    }
+    return color;
   }
 
   /**

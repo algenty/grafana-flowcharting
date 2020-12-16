@@ -28,18 +28,19 @@ declare module gf {
       metadata: TXCellMetadata | undefined;
       link: string | null | undefined;
       styles: TXCellStyles | undefined;
-    }, 
-    tooltip : {
+      dimension: mxGeometry | undefined;
+    };
+    tooltip: {
       enableTooltip: boolean;
-      displayMetadata : boolean;
+      displayMetadata: boolean;
       tooltipHandler: TooltipHandler | undefined;
-    },
+    };
   }
-  declare type TXCellDefaultValueKeys = gf.TPropertieKey | 'link' | 'styles';
+  declare type TXCellDefaultValueKeys = gf.TPropertieKey | 'link' | 'styles' | 'dimension';
   declare type TXCellMetadata = Map<string, any>;
   declare type TXCellStyles = Map<TXCellStyleKeys, any>;
   declare type TXCellStyleKeys = TStyleKeys;
-  declare type TXCellValueGF = string | null | TXCellMetadata | TXCellStyles;
+  declare type TXCellValueGF = string | null | TXCellMetadata | TXCellStyles | mxGeometry;
 
   declare interface TSelectString {
     text: string;
@@ -408,7 +409,8 @@ declare module gf {
   declare interface TIOnMappingObj {
     active: boolean;
     object: ObjectMap | null;
-    domId: string | null;
+    xcell: Xcell | null;
+    focusId: string | null;
     value: string | null;
     options: gf.TRuleMapOptions | null;
     callback: CallableFunction | null;
