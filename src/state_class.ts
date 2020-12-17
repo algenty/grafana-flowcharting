@@ -113,7 +113,7 @@ export class State {
 
       // SHAPE
       let mapOptions = rule.getShapeMapOptions();
-      let cellValue = this.xcell.getValues(mapOptions);
+      let cellValue = this.xcell.getDefaultValues(mapOptions);
       shapeMaps.forEach(shape => {
         let k = shape.data.style;
         if (!shape.isHidden() && shape.match(cellValue, mapOptions)) {
@@ -145,7 +145,7 @@ export class State {
 
       // TEXT
       mapOptions = rule.getTextMapOptions();
-      cellValue = this.xcell.getValues(mapOptions);
+      cellValue = this.xcell.getDefaultValues(mapOptions);
       textMaps.forEach(text => {
         const k = 'label';
         if (!text.isHidden() && text.match(cellValue, mapOptions) && text.isEligible(level)) {
@@ -165,7 +165,7 @@ export class State {
 
       // EVENTS
       mapOptions = rule.getEventMapOptions();
-      cellValue = this.xcell.getValues(mapOptions);
+      cellValue = this.xcell.getDefaultValues(mapOptions);
       eventMaps.forEach(event => {
         const k = event.data.style;
         if (!event.isHidden() && event.match(cellValue, mapOptions) && event.isEligible(level)) {
@@ -184,7 +184,7 @@ export class State {
 
       // LINK
       mapOptions = rule.getEventMapOptions();
-      cellValue = this.xcell.getValues(mapOptions);
+      cellValue = this.xcell.getDefaultValues(mapOptions);
       linkMaps.forEach(link => {
         const k = 'link';
         if (!link.isHidden() && link.match(cellValue, mapOptions)) {

@@ -1328,7 +1328,7 @@ export class Rule {
    * @memberof Rule
    */
   getTextMap(index: number): TextMap {
-    const maps = this._getMapsObjType('shape');
+    const maps = this._getMapsObjType('text');
     const map = maps[index];
     if (map instanceof TextMap) {
       return map;

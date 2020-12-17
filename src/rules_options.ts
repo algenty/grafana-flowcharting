@@ -639,12 +639,10 @@ export class RulesOptionsCtrl {
   }
 
   setCurrentParam(prop: string, value: any) {
-    console.log('RulesOptionsCtrl -> setCurrentParam -> prop, value', prop, value);
     this.currentParams.set(prop, value);
   }
 
   unsetCurrentParam(prop: string) {
-    console.log('RulesOptionsCtrl -> unsetCurrentParam -> prop', prop);
     this.currentParams.delete(prop);
   }
 
@@ -862,7 +860,6 @@ export class RulesOptionsCtrl {
   }
 
   onRulesChange() {
-    console.log('RulesOptionsCtrl -> onRulesChange -> onRulesChange');
     $GF.log.info('RulesOptionsCtrl.onRulesChange()');
     this.flowchartHandler.onRulesChange();
     this.render();

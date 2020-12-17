@@ -7,10 +7,10 @@ GFState {
   "matchLevel": Map {},
   "matchValue": Map {},
   "matchedKey": Map {},
-  "mxcell": Object {
+  "originalValue": Map {},
+  "xcell": Object {
     "id": "1234",
   },
-  "originalValue": Map {},
   "xgraph": undefined,
 }
 `;

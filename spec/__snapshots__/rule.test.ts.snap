@@ -9,16 +9,51 @@ Object {
   "dateFormat": "YYYY-MM-DD HH:mm:ss",
   "dateTHData": Array [],
   "decimals": 2,
-  "eventData": Array [],
-  "eventProp": "id",
-  "eventRegEx": false,
   "gradient": false,
   "hidden": false,
   "invert": false,
-  "linkData": Array [],
-  "linkProp": "id",
-  "linkRegEx": true,
   "mappingType": 1,
+  "mapsDat": Object {
+    "events": Object {
+      "dataList": Array [],
+      "options": Object {
+        "enableRegEx": true,
+        "identByProp": "id",
+        "metadata": "",
+      },
+    },
+    "links": Object {
+      "dataList": Array [],
+      "options": Object {
+        "enableRegEx": true,
+        "identByProp": "id",
+        "metadata": "",
+      },
+    },
+    "shapes": Object {
+      "dataList": Array [
+        Object {
+          "colorOn": "a",
+          "hidden": false,
+          "pattern": "/.*Toto.*/",
+          "style": "fillColor",
+        },
+      ],
+      "options": Object {
+        "enableRegEx": true,
+        "identByProp": "id",
+        "metadata": "",
+      },
+    },
+    "texts": Object {
+      "dataList": Array [],
+      "options": Object {
+        "enableRegEx": true,
+        "identByProp": "id",
+        "metadata": "",
+      },
+    },
+  },
   "metricType": "serie",
   "newRule": true,
   "numberTHData": Array [
@@ -42,20 +77,7 @@ Object {
   "reduce": true,
   "refId": "A",
   "sanitize": false,
-  "shapeData": Array [
-    Object {
-      "colorOn": "a",
-      "hidden": false,
-      "pattern": "/.*Toto.*/",
-      "style": "fillColor",
-    },
-  ],
-  "shapeProp": "id",
-  "shapeRegEx": true,
   "stringTHData": Array [],
-  "textData": Array [],
-  "textProp": "id",
-  "textRegEx": true,
   "tooltip": false,
   "tooltipColors": false,
   "tooltipLabel": "",

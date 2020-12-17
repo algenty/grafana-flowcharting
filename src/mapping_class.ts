@@ -140,7 +140,7 @@ class GFMap {
    * @readonly
    * @memberof GFMap
    */
-  get Pattern() {
+  getPattern() {
     return this.data.pattern;
   }
 

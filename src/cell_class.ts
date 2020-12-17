@@ -96,6 +96,14 @@ export class XCell {
     return value;
   }
 
+  getDefaultValues(options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): any {
+    let value: any = this.getDefaultValue(options.identByProp);
+    if (options.identByProp === 'metadata') {
+      value = this.getMetadataValues(options.metadata, options.enableRegEx);
+    }
+    return value;
+  }
+
   _sameString(def, cur): boolean {
     return def === cur;
   }
@@ -457,31 +465,28 @@ export class XCell {
   async highlight(bool: boolean = true) {
     if (!this.isHighlighting && bool) {
       this.isHighlighting = true;
-      const color = '#99ff33';
+      // const color = '#99ff33';
+      const color = $GF.CONSTANTS.CONF_HIGHTLIGHT_COLOR;
       const opacity = 100;
       const state = this.getMxCellState();
-
-      if (state != null) {
+      if (state !== null && state !== undefined) {
         const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
         const hl = new mxCellHighlight(this.graph, color, sw, false);
         this._mxcellHL = hl;
-        if (opacity != null) {
-          hl.opacity = opacity;
-        }
+        hl.opacity = opacity;
         hl.highlight(state);
       }
-    } else if (this.isHighlighting !== null && !bool) {
-      // Fades out the highlight after a duration
+    } else if (this.isHighlighting && !bool) {
       const hl = this._mxcellHL;
-      if (this._mxcellHL.shape !== null) {
+      if (hl !== undefined && hl.shape !== null && hl.shape !== undefined) {
         mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 500ms ease-in-out');
         hl.shape.node.style.opacity = 0;
+        window.setTimeout(() => {
+          hl.destroy();
+        }, 500);
       }
-      // Destroys the highlight after the fade
-      window.setTimeout(() => {
-        hl.destroy();
-      }, 500);
-      this._mxcellHL = null;
+      this._mxcellHL = undefined;
+      this.isHighlighting = false;
     }
   }
 
@@ -598,7 +603,8 @@ export class XCell {
       $GF.clearUniqTimeOut(timeId);
       this.isBlink = true;
       const bl_on = function() {
-        const color = '#f5f242';
+        // const color = '#f5f242';
+        const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
         const opacity = 100;
         const state = self.getMxCellState();
         if (state != null) {
@@ -616,7 +622,7 @@ export class XCell {
         if (self._blinkHL) {
           const hl = self._blinkHL;
           // Fades out the highlight after a duration
-          if (hl.shape != null) {
+          if (hl.shape !== null) {
             mxUtils.setPrefixedStyle(hl.shape.node.style, `transition`, `all ${ms}ms ease-in-out`);
             hl.shape.node.style.opacity = 0;
           }

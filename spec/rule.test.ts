@@ -18,10 +18,8 @@ describe('Rule', () => {
         const rule = new Rule('/.*/', data);
         rule.addShapeMap(pattern);
         expect(rule.getShapeMaps().length).toBe(1);
-        expect(rule.data.shapeData.length).toBe(1);
         rule.removeShapeMap(0);
         expect(rule.getShapeMaps().length).toBe(0);
-        expect(rule.data.shapeData.length).toBe(0);
       });
     });
 
@@ -49,21 +47,21 @@ describe('Rule', () => {
       rule.addThreshold(undefined, "COLOR2", 80);
       const shape = rule.addShapeMap(pattern);
 
-      test('toColorize always ERR should be true', () => {
+      test('isEligible always ERR should be true', () => {
         shape.data.colorOn = 'a';
-        expect(shape.toColorize(1)).toBeTruthy();
+        expect(shape.isEligible(1)).toBeTruthy();
       });
       test('toColorize Warn/err ERR should be true', () => {
         shape.data.colorOn = 'wc';
-        expect(shape.toColorize(0)).toBeFalsy();
+        expect(shape.isEligible(0)).toBeFalsy();
       });
       test('toColorize Warn/err WARN should be true', () => {
         shape.data.colorOn = 'wc';
-        expect(shape.toColorize(1)).toBeTruthy();
+        expect(shape.isEligible(1)).toBeTruthy();
       });
       test('toColorize Warn/err OK should be false', () => {
         shape.data.colorOn = 'wc';
-        expect(shape.toColorize(2)).toBeTruthy();
+        expect(shape.isEligible(2)).toBeTruthy();
       });
     });
   });
@@ -100,7 +98,6 @@ describe('Rule', () => {
       const rule = new Rule('/.*/', data);
       rule.addLinkMap(pattern);
       expect(rule.getLinkMaps().length).toBe(1);
-      expect(rule.data.linkData.length).toBe(1);
       rule.removeLinkMap(0);
       expect(rule.getLinkMaps().length).toBe(0);
     });
@@ -126,10 +123,8 @@ describe('Rule', () => {
       rule.data.mappingType = 1;
       rule.addValueMap(1, 'This 1');
       expect(rule.getValueMaps().length).toBe(1);
-      expect(rule.data.valueData.length).toBe(1);
       rule.addValueMap(2, 'This 2');
       expect(rule.getValueMaps().length).toBe(2);
-      expect(rule.data.valueData.length).toBe(2);
     });
 
     test('Mapping values', () => {
@@ -151,10 +146,8 @@ describe('Rule', () => {
       rule.data.type = 'string';
       rule.addRangeMap(0, 5, 'Between 0 and 5');
       expect(rule.getRangeMaps().length).toBe(1);
-      expect(rule.data.rangeData.length).toBe(1);
       rule.addRangeMap(6, 10, 'Between 6 and 10');
       expect(rule.getRangeMaps().length).toBe(2);
-      expect(rule.data.rangeData.length).toBe(2);
     });
 
     test('Mapping values', () => {
