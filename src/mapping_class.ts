@@ -1,3 +1,4 @@
+import { XCell } from 'cell_class';
 import { $GF } from 'globals_class';
 import _ from 'lodash';
 import { Rule } from 'rule_class';
@@ -17,6 +18,7 @@ class GFMap {
   data: DataMap;
   id: string;
   type: gf.TTypeMap = 'shape';
+  options : gf.TRuleMapOptions = Rule.getDefaultMapOptions();
   reduce = true;
   static methods: any[] = [];
   constructor(pattern, data: DataMap) {
@@ -59,6 +61,15 @@ class GFMap {
 
   getType(): gf.TTypeMap {
     return this.type;
+  }
+
+  setOptions(options : gf.TRuleMapOptions):this {
+    this.options = options;
+    return this;
+  }
+
+  getOptions():gf.TRuleMapOptions {
+    return this.options;
   }
 
   /**
@@ -858,5 +869,115 @@ export class RangeMap extends VMAP {
       return this.data.text;
     }
     return value;
+  }
+}
+
+export class InteractiveMap {
+  active: boolean = false;
+  map: ObjectMap | null = null;
+  xcell: XCell | null = null;
+  focusId: string | null = null;
+  value: string | null = null;
+  options: gf.TRuleMapOptions | null = null;
+  callback: CallableFunction | null = null;
+  container: HTMLDivElement | undefined;
+  constructor(container ?: HTMLDivElement) {
+    this.container = container;
+    this.init();
+  }
+
+  init():this {
+    this.active = false;
+    this.map = null;
+    this.xcell = null;
+    this.focusId = null;
+    this.value = null;
+    this.options = null;
+    this.callback = null;
+    return this;
+  }
+
+  setContainer(container: HTMLDivElement):this {
+    this.container = container;
+    return this;
+  }
+
+  setFocus(focusId: string):this {
+    this.focusId = focusId;
+    return this;
+  }
+
+  setCallBack(fn:CallableFunction):this {
+    this.callback = fn;
+    return this;
+  }
+
+  isActive():boolean {
+    return this.active;
+  }
+
+  activate():this {
+    if(this.container) {
+      // this.container.style.cursor = 'crosshair';
+      $GF.plugin.getStaticPath()
+      this.container.style.cursor =   `url("${$GF.plugin.getStaticPath()}cursor-marker.svg") 8 16, crosshair` ;
+      this.container.scrollIntoView();
+      this.container.focus();
+    }
+    this.active = true;
+    return this;
+  }
+
+  setOptions(options: gf.TRuleMapOptions ):this {
+    this.options = options;
+    return this;
+  }
+
+  getOptions():gf.TRuleMapOptions | null {
+    return this.options;
+  }
+
+  setXCell(xcell : XCell):this {
+    this.xcell = xcell
+    return this
+  }
+
+  getXCell():XCell | null {
+    return this.xcell
+  }
+
+  getMap(): ObjectMap |null {
+    return this.map;
+  }
+
+  setMap(map : ObjectMap):this {
+    this.map = map;
+    return this;
+  }
+
+  setValue(value:string):this {
+    this.value = value;
+    return this;
+  }
+
+  valide():this {
+    if(this.map !== null && this.value !== null)
+    this.map.setPattern(this.value);
+    if(this.callback !== null ) {
+      this.callback(this.xcell);
+    }
+    if(this.focusId !== null) {
+      $GF.setFocus(this.focusId);
+    }
+    this.close();
+    return this;
+  }
+
+  close():this {
+    if(this.container) {
+      this.container.style.cursor = 'auto';
+    }
+    this.init();
+    return this;
   }
 }

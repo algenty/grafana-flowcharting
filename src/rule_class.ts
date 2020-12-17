@@ -627,7 +627,7 @@ export class Rule {
    *
    * @memberof Rule
    */
-  highlightCells() {
+  highlightXCells() {
     if (this.states) {
       this.states.forEach(state => {
         state.highlightCell();
@@ -640,7 +640,7 @@ export class Rule {
    *
    * @memberof Rule
    */
-  unhighlightCells() {
+  unhighlightXCells() {
     if (this.states) {
       this.states.forEach(state => {
         state.unhighlightCell();
@@ -1213,6 +1213,7 @@ export class Rule {
   addShapeMap(pattern: string = ''): ShapeMap {
     const data = ShapeMap.getDefaultData();
     const m = new ShapeMap(pattern, data);
+    m.setOptions(this.getShapeMapOptions());
     this._addMaps(m);
     return m;
   }
@@ -1290,6 +1291,7 @@ export class Rule {
   addTextMap(pattern: string = ''): TextMap {
     const data = TextMap.getDefaultData();
     const m = new TextMap(pattern, data);
+    m.setOptions(this.getTextMapOptions());
     this._addMaps(m);
     return m;
   }
@@ -1370,6 +1372,7 @@ export class Rule {
   addEventMap(pattern: string = ''): EventMap {
     const data = EventMap.getDefaultData();
     const m = new EventMap(pattern, data);
+    m.setOptions(this.getEventMapOptions());
     this._addMaps(m);
     return m;
   }
@@ -1420,7 +1423,8 @@ export class Rule {
   addLinkMap(pattern: string = ''): LinkMap {
     const data = LinkMap.getDefaultData();
     const m = new LinkMap(pattern, data);
-    m.import(data);
+    m.setOptions(this.getLinkMapOptions());
+    // m.import(data);
     this._addMaps(m);
     return m;
   }

@@ -483,7 +483,6 @@ export class RulesOptionsCtrl {
         },
       ],
     };
-
     n = 0;
     this.valuesTableData = {
       data: [],
@@ -614,23 +613,6 @@ export class RulesOptionsCtrl {
       return this.metricHandler.getNames('serie');
     };
 
-    // this.getCellNames = (prop: gf.TPropertieKey = 'id'): string[] => {
-    //   const flowchart = this.flowchartHandler.getFlowchart();
-    //   const cells = flowchart.getNamesByProp(prop);
-    //   const uniq = new Set(cells);
-    //   let filter = [...uniq];
-    //   filter = filter.filter(e => e !== undefined && e.length > 0);
-    //   return filter;
-    // };
-
-    // this.getCellNamesById = (): string[] => {
-    //   return this.getCellNames('id');
-    // };
-
-    // this.getCellNamesByValue = (): string[] => {
-    //   return this.getCellNames('value');
-    // };
-
     this.getVariables = () => {
       return $GF.getFullAvailableVarNames();
     };
@@ -639,24 +621,25 @@ export class RulesOptionsCtrl {
   }
 
   setCurrentParam(prop: string, value: any) {
+    console.log("RulesOptionsCtrl -> setCurrentParam -> prop/value", prop, value)
     this.currentParams.set(prop, value);
   }
 
   unsetCurrentParam(prop: string) {
+    console.log("RulesOptionsCtrl -> unsetCurrentParam -> prop", prop)
     this.currentParams.delete(prop);
   }
 
   setCurrentMap(map: ObjectMap) {
-    const currRule: Rule = this.getCurrentParam('currentRule');
-    // let currProp = '';
-    // let currMD = '';
-    if (currRule) {
       this.setCurrentParam('currentMap', map);
-    }
   }
 
   unsetCurrentMap() {
     this.unsetCurrentParam('currentMap');
+  }
+
+  getCurrentMap() {
+    return this.getCurrentParam('currentMap');
   }
 
   getCurrentParam(prop: string) {
@@ -664,14 +647,25 @@ export class RulesOptionsCtrl {
   }
 
   getCellNamesTypeHead = () => {
-    const options = this.getCurrentParam('currentOptions');
-    return this.getCellNames4(options);
+    const map = this.getCurrentMap();
+    let values:any = []
+    if(map) {
+      const options = map.getOptions();
+      values = this.getCellNames4(options);
+    }
+    return values;
   };
 
-  // getCellNamesMD = () => {
-  //   const md = this.getCurrentParam('currentMD');
-  //   return this.getCellNames4('metadata', );
-  // };
+  getCellNamesMD = () => {
+    const map = this.getCurrentMap();
+    let values:any = []
+    if(map) {
+      const options = map.getOptions();
+      const flowchart = this.flowchartHandler.getFlowchart();
+      values = flowchart.getNamesByOptions(options, 'value');
+    }
+    return values;
+  };
 
   getCellNames4(options: gf.TRuleMapOptions) {
     let filter: any[] = [];
@@ -913,11 +907,11 @@ export class RulesOptionsCtrl {
    * @param  {} prop
    * @param  {} pattern
    */
-  async highlightXCells(pattern: string, options?: gf.TRuleMapOptions) {
+  async highlightXCells(map: ObjectMap) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
-      xgraph.highlightXCells(pattern, options, true);
+      xgraph.highlightXCells(map.getPattern(), map.getOptions(), true);
     }
   }
 
@@ -926,26 +920,27 @@ export class RulesOptionsCtrl {
    *
    * @memberof RulesOptionsCtrl
    */
-  async unhighlightXCells(pattern: string, options?: gf.TRuleMapOptions) {
+  async unhighlightXCells(map : ObjectMap) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
-      xgraph.highlightXCells(pattern, options, false);
+      xgraph.highlightXCells(map.getPattern(), map.getOptions(), false);
     }
   }
 
-  identifyCell(pattern: string, options: gf.TRuleMapOptions) {
+  identifyCell(map : ObjectMap) {
+    console.log("RulesOptionsCtrl -> identifyCell -> map", map)
     const id = 'identifyCell';
     $GF.clearUniqTimeOut(id);
     const self = this;
     let count = 0;
     const select = () => {
-      self.highlightXCells(pattern, options);
+      self.highlightXCells(map.getPattern(), map.getOptions());
       count = count + 1;
       $GF.setUniqTimeOut(unselect, 500, id);
     };
     const unselect = () => {
-      self.unhighlightXCells(pattern, options);
+      self.unhighlightXCells(map.getPattern(), map.getOptions());
       if (count < 3) {
         $GF.setUniqTimeOut(select, 500, id);
       }
@@ -972,8 +967,8 @@ export class RulesOptionsCtrl {
    * @param {*} rule
    * @memberof RulesOptionsCtrl
    */
-  async highlightCells(rule: Rule) {
-    rule.highlightCells();
+  async highlightXCells4Rule(rule: Rule) {
+    rule.highlightXCells();
   }
 
   /**
@@ -982,8 +977,8 @@ export class RulesOptionsCtrl {
    * @param {*} rule
    * @memberof RulesOptionsCtrl
    */
-  async unhighlightCells(rule: Rule) {
-    rule.unhighlightCells();
+  async unhighlightXCells4Rule(rule: Rule) {
+    rule.unhighlightXCells();
   }
 
   /**
@@ -1013,6 +1008,7 @@ export class RulesOptionsCtrl {
    */
   removeRule(rule: Rule, force?: boolean) {
     if (rule.removeClick === 1 || force) {
+      this.unhighlightAllCells();
       this.rulesHandler.removeRule(rule);
       this.onRulesChange();
     }
@@ -1069,7 +1065,7 @@ export class RulesOptionsCtrl {
         for (let index = 0; index < optionsList.length; index++) {
           const options = optionsList[index];
           const maps = mapsList[index];
-          const value = xcell.getValues(options);
+          const value = xcell.getDefaultValues(options);
           if (value) {
             maps.forEach(map => {
               map.setPattern(value);

@@ -92,8 +92,8 @@
                     ng-mouseleave="editor.unsetCurrentMap();">
                     <!-- CELLS -->
                     <div class="gf-table-row_line"
-                        ng-mouseleave="editor.unselectCell(shape.getData().pattern, rule.getShapeMapOptions());"
-                        ng-mouseover="editor.selectCell(shape.getData().pattern, rule.getShapeMapOptions())">
+                        ng-mouseleave="editor.unhighlightXCells(shape);"
+                        ng-mouseover="editor.highlightXCells(shape)">
                         <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
                             ng-click="shape.reduce=!shape.reduce" title="Expand/Collapse for detail"
@@ -129,7 +129,7 @@
                                 ng-model="shape.getData().pattern" style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{shape.getId() + '-what'}}" ng-model-onblur
                                 ng-blur="editor.onRulesChange();shape.whatEdit = false;"
-                                bs-typeahead="editor.getCellNamesTypeHead"
+                                bs-typeahead="rule.getShapeMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD"
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
                         <!-- WHEN -->

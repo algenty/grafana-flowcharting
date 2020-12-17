@@ -102,12 +102,12 @@
       <!-- TBODY -->
       <div class="gf-table-body">
         <div role="row" class="gf-table-rows gf-table-rows-resizable"
-          ng-repeat="rule in editor.rulesHandler.getRules()" 
+          ng-repeat="rule in editor.rulesHandler.getRules()"
           ng-mouseenter="editor.setCurrentParam('currentRule', rule);" 
           ng-mouseleave="editor.unsetCurrentParam('currentRule');">
           <!-- CELLS -->
-          <div class="gf-table-row_line" ng-mouseenter="editor.highlightCells(rule);"
-            ng-mouseleave="editor.unhighlightCells(rule);">
+          <div class="gf-table-row_line" ng-mouseenter="editor.highlightXCells4Rule(rule);"
+            ng-mouseleave="editor.unhighlightXCells4Rule(rule);">
             <!-- EXPAND -->
             <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
               ng-click="rule.getData().reduce=!rule.getData().reduce" ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
@@ -200,7 +200,7 @@
               ng-style="{'width' : editor.rulesTable.getWidth('options')}">
               <div class="gf-table-content gf-unselectable">
                 <!-- TARGETS -->
-                <div ng-click="editor.setRuleMappings(rule);" class="gf-icon-action gf-icon-target"
+                <div ng-click="editor.setRuleMappings(rule) && editor.onRulesChange()" class="gf-icon-action gf-icon-marker-edit"
                   title="Change the targets of all mapping">
                 </div>
                 <!-- TOOLTIP -->

@@ -11,6 +11,7 @@ import { $GF } from 'globals_class';
 import XGraph from 'graph_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
+import { InteractiveMap } from 'mapping_class';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
   $rootScope: any;
@@ -27,6 +28,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
+  onMapping : InteractiveMap;
   id: String;
   GHApplied = false;
   mouseIn = false;
@@ -55,6 +57,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.rulesHandler = undefined;
     this.flowchartHandler = undefined;
     this.metricHandler = undefined;
+    this.onMapping = new InteractiveMap();
     this.parentDiv = document.createElement('div');
     this.flowchartsDiv = document.createElement('div');
     this.id = $GF.utils.uniqueID();
@@ -249,6 +252,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // const $flowchartsDiv = this.$panelElem.find('#flowcharting-panel-content');
     const $flowchartsDiv = $section.find('#flowcharting-panel-content');
     this.flowchartsDiv = $flowchartsDiv[0];
+    this.onMapping.setContainer(this.flowchartsDiv);
 
     // const $message = $section.find('#flowcharting-message');
     // $GF.setMessageDiv($message[0]);

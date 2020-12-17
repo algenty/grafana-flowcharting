@@ -6,6 +6,8 @@ import { Rule } from 'rule_class';
 import { FlowchartHandler } from 'flowchartHandler';
 import { Metric } from 'metric_class';
 import { $GF } from 'globals_class';
+import { InteractiveMap } from 'mapping_class';
+import { FlowchartCtrl } from 'flowchart_ctrl';
 
 /**
  * Flowchart handler
@@ -16,7 +18,7 @@ import { $GF } from 'globals_class';
 export class Flowchart {
   data: gf.TFlowchartData;
   container: HTMLDivElement;
-  ctrl: any;
+  ctrl: FlowchartCtrl;
   xgraph: XGraph | undefined = undefined;
   stateHandler: StateHandler | undefined;
   // ctrl: any;
@@ -25,14 +27,17 @@ export class Flowchart {
   id: string;
   visible = false;
   reduce = true;
+  // onMapping : InteractiveMap;
 
-  constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData, ctrl: any) {
+  constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData, ctrl: FlowchartCtrl) {
     this.data = data;
     this.data.name = name;
     this.container = container;
     this.ctrl = ctrl;
+    // this.onMapping = ctrl.onMapping;
     this.id = $GF.utils.uniqueID();
   }
+
 
   /**
    * Import data object in current flowchart
@@ -526,11 +531,16 @@ export class Flowchart {
    * @returns {string[]}
    * @memberof Flowchart
    */
-  getNamesByOptions(options: gf.TRuleMapOptions): string[] {
+  getNamesByOptions(options: gf.TRuleMapOptions, type : 'key'|'value' = 'key'): string[] {
+    let values: any = [];
     if (this.xgraph) {
-      return this.xgraph.getDefaultValues(options);
+      if(type === 'key') {
+        values=this.xgraph.getDefaultValues(options);
+      } else {
+        values=this.xgraph.getDefaultValuesWithKey(options, options.metadata);
+      }
     }
-    return [];
+    return values;
   }
 
   /**
@@ -743,13 +753,10 @@ export class Flowchart {
     return this.container;
   }
 
-  setMap(onMappingObj: gf.TIOnMappingObj) {
-    const container = this.getContainer();
+  setMap() {
     if (this.xgraph) {
-      this.xgraph.setMap(onMappingObj);
+      this.xgraph.setMap();
     }
-    container.scrollIntoView();
-    container.focus();
   }
 
   unsetMap() {

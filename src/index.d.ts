@@ -406,15 +406,15 @@ declare module gf {
   declare type mxCellOverlay = any;
 
   // For mapping object
-  declare interface TIOnMappingObj {
-    active: boolean;
-    object: ObjectMap | null;
-    xcell: Xcell | null;
-    focusId: string | null;
-    value: string | null;
-    options: gf.TRuleMapOptions | null;
-    callback: CallableFunction | null;
-  }
+  // declare interface TIOnMappingObj {
+  //   active: boolean;
+  //   object: ObjectMap | null;
+  //   xcell: Xcell | null;
+  //   focusId: string | null;
+  //   value: string | null;
+  //   options: gf.TRuleMapOptions | null;
+  //   callback: CallableFunction | null;
+  // }
 
   // Export of id and label
   declare interface TICellsProp {

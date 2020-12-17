@@ -4,7 +4,8 @@ import _ from 'lodash';
 // const clonedeep = require('lodash.clonedeep')
 import { Metric } from './metric_class';
 import { $GF } from 'globals_class';
-import { ObjectMap } from 'mapping_class';
+import { InteractiveMap, ObjectMap } from 'mapping_class';
+import { FlowchartCtrl } from 'flowchart_ctrl';
 
 /**
  * Class FlowchartHandler
@@ -31,15 +32,8 @@ export class FlowchartHandler {
   sequenceNumber = 0; // Sequence Number for a name
   static defaultXml: string; // Default XML
   static defaultCsv: string; // Default CSV
-  onMapping: gf.TIOnMappingObj = {
-    active: false,
-    value: null,
-    object: null,
-    xcell: null,
-    focusId: null,
-    options: Rule.getDefaultMapOptions(),
-    callback: null,
-  }; // For link mapping, sharing
+  // onMapping: gf.TIOnMappingObj = FlowchartHandler.getDefaultMapping(); // For link mapping, sharing
+  onMapping: InteractiveMap; // For link mapping, sharing
   mousedownTimeout = 0;
   mousedown = 0;
   onEdit = false; // editor open or not
@@ -54,12 +48,13 @@ export class FlowchartHandler {
    * @param {*} data - Empty data to store
    * @memberof FlowchartHandler
    */
-  constructor(parentDiv: HTMLDivElement, data: gf.TFlowchartHandlerData, ctrl: any) {
+  constructor(parentDiv: HTMLDivElement, data: gf.TFlowchartHandlerData, ctrl: FlowchartCtrl) {
     FlowchartHandler.getDefaultDioGraph();
     this.ctrl = ctrl;
     this.parentDiv = parentDiv;
     this.data = data;
     this.currentFlowchartName = 'Main';
+    this.onMapping = ctrl.onMapping;
 
     // Events Render
     this.ctrl.events.on('render', () => {
@@ -139,17 +134,17 @@ export class FlowchartHandler {
     return this;
   }
 
-  static getDefaultMapping(): gf.TIOnMappingObj {
-    return {
-      active: false,
-      focusId: null,
-      value: null,
-      xcell: null,
-      options: Rule.getDefaultMapOptions(),
-      object: null,
-      callback: null,
-    };
-  }
+  // static getDefaultMapping(): gf.TIOnMappingObj {
+  //   return {
+  //     active: false,
+  //     focusId: null,
+  //     value: null,
+  //     xcell: null,
+  //     options: Rule.getDefaultMapOptions(),
+  //     object: null,
+  //     callback: null,
+  //   };
+  // }
 
   /**
    * Return default xml source graph
@@ -809,20 +804,15 @@ export class FlowchartHandler {
    */
   setMap(objToMap: ObjectMap, options: gf.TRuleMapOptions): this {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
-    this.onMapping.active = true;
-    this.onMapping.object = objToMap;
-    this.onMapping.focusId = objToMap.getId();
-    this.onMapping.options = options;
-    flowchart.setMap(this.onMapping);
+    this.onMapping.setMap(objToMap).setOptions(options).setFocus(objToMap.getId());
+    flowchart.setMap();
     return this;
   }
 
   setMaps(fn: CallableFunction): this {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
-    this.onMapping = FlowchartHandler.getDefaultMapping();
-    this.onMapping.active = true;
     this.onMapping.callback = fn;
-    flowchart.setMap(this.onMapping);
+    flowchart.setMap();
     return this;
   }
 
@@ -833,8 +823,8 @@ export class FlowchartHandler {
    */
   unsetMap(): this {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
-    this.onMapping = FlowchartHandler.getDefaultMapping();
     flowchart.unsetMap();
+    this.onMapping.close();
     return this;
   }
 
@@ -845,14 +835,8 @@ export class FlowchartHandler {
    * @returns true - true if mapping mode
    * @memberof FlowchartHandler
    */
-  isMapping(objToMap: ObjectMap): boolean {
-    if (objToMap === undefined || objToMap == null) {
-      return this.onMapping.active;
-    }
-    if (this.onMapping.active === true && objToMap === this.onMapping.object) {
-      return true;
-    }
-    return false;
+  isMapping(): boolean {
+    return this.onMapping.isActive();
   }
 
   /**

@@ -4,8 +4,9 @@ import * as Drawio from 'drawio_custom';
 import chroma from 'chroma-js';
 import * as mxcustom from 'mxgraph_custom';
 import { Rule } from 'rule_class';
-import { FlowchartHandler } from 'flowchartHandler';
 import { XCell } from 'cell_class';
+import { FlowchartCtrl } from 'flowchart_ctrl';
+import { InteractiveMap } from 'mapping_class';
 
 declare interface TXGraphDefaultValues {
   id: Set<string> | undefined;
@@ -50,19 +51,20 @@ export default class XGraph {
   xcells: XCell[];
   clickBackup: any;
   dbclickBackup: any;
-  onMapping: gf.TIOnMappingObj;
+  onMapping: InteractiveMap;
   /**
    * Creates an instance of XGraph.
    * @param {DOM} container
    * @param {string} definition
    * @memberof XGraph
    */
-  constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string, ctrl: any) {
+  constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string, ctrl: FlowchartCtrl) {
     this.container = container;
     this.type = type;
     this.ctrl = ctrl;
     this.xcells = [];
-    this.onMapping = FlowchartHandler.getDefaultMapping();
+    // this.onMapping = FlowchartHandler.getDefaultMapping();
+    this.onMapping = this.ctrl.onMapping;
     XGraph.initMxGraphLib();
     if (type === 'xml') {
       if ($GF.utils.isencoded(definition)) {
@@ -303,9 +305,6 @@ export default class XGraph {
    * @memberof XGraph
    */
   async initXCells() {
-    // this.cells['id'] = this.getCurrentCells('id');
-    // this.cells['value'] = this.getCurrentCells('value');
-    // this.cells['metadata'] = this.getCurrentCells('metadata');
     const model = this.graph.getModel();
     const cells = model.cells;
     this.xcells = [];
@@ -681,13 +680,18 @@ export default class XGraph {
     xcells.forEach(x => {
       if (type === 'id' || type === 'value') {
         const value: any = x.getDefaultValue(type);
-        s.add(value);
+        if(value !== null && value !== undefined && value.length >0) {
+          s.add(value);
+        }
       }
       if (type === 'metadata') {
         const values = x.getMetadatasKeys();
         const length = values.length;
         for (let i = 0; i < length; i++) {
-          s.add(values[i]);
+          const value = values[i];
+          if(value !== null && value !== undefined && value.length >0) {
+            s.add(value);
+          }
         }
       }
     });
@@ -932,65 +936,26 @@ export default class XGraph {
    * @returns {string[]} value of labels or id frome source
    * @memberof XGraph
    */
-  // getOrignalCells(options: gf.TRuleMapOptions): string[] {
   getDefaultValues(options: gf.TRuleMapOptions): string[] {
-    // if (options.identByProp === 'id' || options.identByProp === 'value') {
-    //   return this.cells[options.identByProp];
-    // } else if (options.identByProp === 'metadata') {
-    //   return this.getCurrentMDValue(options.metadata);
-    // }
-    // return [];
     return this.getXCellValues(options.identByProp);
   }
 
-  /**
-   * Get Attributes and values
-   *
-   * @static
-   * @param {mxCell} cell
-   * @param {boolean} [filter=true]
-   *
-   * @returns {{name : string, value : string}[]}
-   * @memberof XGraph
-   */
-  // static getAttributes(cell: mxCell, filter: boolean = true): { name: string; value: string }[] {
-  //   const result: { name: string; value: string }[] = [];
-  //   if (cell && mxUtils.isNode(cell.value)) {
-  //     const ignored = ['label', 'tooltip', 'placeholders', 'placeholder', 'link'];
-  //     const attrs = cell.value.attributes;
-  //     const length = attrs.length;
-  //     for (var i = 0; i < length; i++) {
-  //       if (filter) {
-  //         if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
-  //           result.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
-  //         }
-  //       } else {
-  //         result.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
-  //       }
-  //     }
-  //   }
-  //   return result;
-  // }
-
-  /**
-   * Attribute exist ?
-   *
-   * @static
-   * @param {mxCell} cell
-   * @param {string} regex
-   * @returns {boolean}
-   * @memberof XGraph
-   */
-  // static hasAttribute(cell: mxCell, regex: string): boolean {
-  //   const attrs = XGraph.getAttributes(cell);
-  //   length = attrs.length;
-  //   for (var i = 0; i < length; i++) {
-  //     if ($GF.utils.matchString(attrs[i].name, regex)) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
+  getDefaultValuesWithKey(options: gf.TRuleMapOptions, key: string): string[] {
+    const xcells = this.getXCells();
+    const length = xcells.length;
+    let values:Set<string> = new Set();
+    for (let i = 0; i < length; i++) {
+      const xcell = xcells[i];
+      const datas = xcell.getDefaultValues(options);
+      datas.forEach(x => {
+        if(x !== null && x !== undefined && x.length > 0) {
+          values.add(x)
+        }
+      });
+    }
+    return Array.from(values.keys());
+  }
+  
 
   /**
    * Get attribute value
@@ -1001,63 +966,8 @@ export default class XGraph {
    * @returns {string}
    * @memberof XGraph
    */
-  static getAttribute(cell: mxCell, name: string): string {
-    return cell.getAttribute(name);
-  }
-
-  /**
-   * Check if cell matches attribute and/or value
-   *
-   * @static
-   * @param {mxCell} cell
-   * @param {string} [regName]
-   * @param {string} [regValue]
-   * @returns {boolean}
-   * @memberof XGraph
-   */
-  // static matchAttribute(cell: mxCell, regName?: string, regValue?: string): boolean {
-  //   const attrs = XGraph.getAttributes(cell);
-  //   length = attrs.length;
-  //   for (var i = 0; i < length; i++) {
-  //     if (regName !== undefined) {
-  //       if ($GF.utils.matchString(attrs[i].name, regName)) {
-  //         if (regValue !== undefined) {
-  //           if ($GF.utils.matchString(attrs[i].value, regValue)) {
-  //             return true;
-  //           }
-  //         } else {
-  //           return true;
-  //         }
-  //       }
-  //     } else if (regValue !== undefined) {
-  //       if ($GF.utils.matchString(attrs[i].value, regValue)) {
-  //         return true;
-  //       }
-  //     } else {
-  //       return false;
-  //     }
-  //   }
-  //   return false;
-  // }
-
-  /**
-   * Rename Id of cell
-   * Must be uniq
-   * @param {string} oldId
-   * @param {string} newId
-   * @returns {this} XGraph
-   * @memberof XGraph
-   */
-  // renameId(oldId: string, newId: string): this {
-  //   const cells = this.findXCells(oldId);
-  //   if (cells !== undefined && cells.length > 0) {
-  //     cells.forEach(x => {
-  //       x.setId(newId);
-  //     });
-  //   } else {
-  //     $GF.log.warn(`Cell ${oldId} not found`);
-  //   }
-  //   return this;
+  // static getAttribute(cell: mxCell, name: string): string {
+  //   return cell.getAttribute(name);
   // }
 
   /**
@@ -1355,24 +1265,18 @@ export default class XGraph {
    * @param {Object} onMappingObj
    * @memberof XGraph
    */
-  setMap(onMappingObj: gf.TIOnMappingObj) {
-    $GF.log.info('XGraph.setMapping()');
-    this.onMapping = onMappingObj;
-    if (this.onMapping.active === true) {
-      this.container.style.cursor = 'crosshair';
-      this.graph.click = this.eventClick.bind(this);
-    }
+  setMap() {
+    this.graph.click = this.eventClick.bind(this);
+    this.onMapping.setContainer(this.container);
+    this.onMapping.activate();
   }
 
-  /**
-   * Disable mapping when user click on mapping
-   *
-   * @memberof XGraph
-   */
+  // /**
+  //  * Disable mapping when user click on mapping
+  //  *
+  //  * @memberof XGraph
+  //  */
   unsetMap() {
-    $GF.log.info('XGraph.unsetMapping()');
-    this.onMapping = FlowchartHandler.getDefaultMapping();
-    this.container.style.cursor = 'auto';
     this.graph.click = this.clickBackup;
     this.ctrl.$scope.$applyAsync();
   }
@@ -1393,23 +1297,10 @@ export default class XGraph {
       if (state) {
         const xcell = this.getXCell(state.cell.id);
         const options = this.onMapping.options !== null ? this.onMapping.options : Rule.getDefaultMapOptions();
-        this.onMapping.value = xcell?.getValues(options);
-        this.onMapping.xcell = xcell;
-        if (this.onMapping.object && this.onMapping.object.data) {
-          this.onMapping.object.data.pattern = this.onMapping.value;
+        if(xcell !== undefined ) {
+          this.onMapping.setXCell(xcell).setValue(xcell.getDefaultValues(options)).valide();
+          this.unsetMap();
         }
-        if (this.onMapping.focusId) {
-          const elt = document.getElementById(this.onMapping.focusId);
-          if (elt) {
-            setTimeout(() => {
-              elt.focus();
-            }, 100);
-          }
-        }
-        if (this.onMapping.callback) {
-          this.onMapping.callback(state.cell);
-        }
-        this.unsetMap();
       }
     }
   }
