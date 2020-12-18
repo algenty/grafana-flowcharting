@@ -621,17 +621,15 @@ export class RulesOptionsCtrl {
   }
 
   setCurrentParam(prop: string, value: any) {
-    console.log("RulesOptionsCtrl -> setCurrentParam -> prop/value", prop, value)
     this.currentParams.set(prop, value);
   }
 
   unsetCurrentParam(prop: string) {
-    console.log("RulesOptionsCtrl -> unsetCurrentParam -> prop", prop)
     this.currentParams.delete(prop);
   }
 
   setCurrentMap(map: ObjectMap) {
-      this.setCurrentParam('currentMap', map);
+    this.setCurrentParam('currentMap', map);
   }
 
   unsetCurrentMap() {
@@ -648,8 +646,8 @@ export class RulesOptionsCtrl {
 
   getCellNamesTypeHead = () => {
     const map = this.getCurrentMap();
-    let values:any = []
-    if(map) {
+    let values: any = [];
+    if (map) {
       const options = map.getOptions();
       values = this.getCellNames4(options);
     }
@@ -658,8 +656,8 @@ export class RulesOptionsCtrl {
 
   getCellNamesMD = () => {
     const map = this.getCurrentMap();
-    let values:any = []
-    if(map) {
+    let values: any = [];
+    if (map) {
       const options = map.getOptions();
       const flowchart = this.flowchartHandler.getFlowchart();
       values = flowchart.getNamesByOptions(options, 'value');
@@ -862,29 +860,25 @@ export class RulesOptionsCtrl {
 
   removeShapeMap(rule: Rule, index: number) {
     const shape = rule.getShapeMap(index);
-    const options = rule.getShapeMapOptions();
-    this.unhighlightXCells(shape.getData().pattern, options);
+    this.unhighlightXCells(shape);
     rule.removeShapeMap(index);
   }
 
   removeTextMap(rule: Rule, index: number) {
     const txt = rule.getTextMap(index);
-    const options = rule.getTextMapOptions();
-    this.unhighlightXCells(txt.getData().pattern, options);
+    this.unhighlightXCells(txt);
     rule.removeTextMap(index);
   }
 
   removeLinkMap(rule: Rule, index: number) {
     const lnk = rule.getLinkMap(index);
-    const options = rule.getLinkMapOptions();
-    this.unhighlightXCells(lnk.getData().pattern, options);
+    this.unhighlightXCells(lnk);
     rule.removeLinkMap(index);
   }
 
   removeEventMap(rule: Rule, index: number) {
     const evt = rule.getEventMap(index);
-    const options = rule.getLinkMapOptions();
-    this.unhighlightXCells(evt.getData().pattern, options);
+    this.unhighlightXCells(evt);
     rule.removeEventMap(index);
   }
 
@@ -907,7 +901,7 @@ export class RulesOptionsCtrl {
    * @param  {} prop
    * @param  {} pattern
    */
-  async highlightXCells(map: ObjectMap) {
+  highlightXCells(map: ObjectMap) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
@@ -920,7 +914,7 @@ export class RulesOptionsCtrl {
    *
    * @memberof RulesOptionsCtrl
    */
-  async unhighlightXCells(map : ObjectMap) {
+  unhighlightXCells(map: ObjectMap) {
     const flowchart = this.flowchartHandler.getFlowchart();
     const xgraph = flowchart.getXGraph();
     if (xgraph) {
@@ -928,26 +922,26 @@ export class RulesOptionsCtrl {
     }
   }
 
-  identifyCell(map : ObjectMap) {
-    console.log("RulesOptionsCtrl -> identifyCell -> map", map)
-    const id = 'identifyCell';
-    $GF.clearUniqTimeOut(id);
-    const self = this;
-    let count = 0;
-    const select = () => {
-      self.highlightXCells(map.getPattern(), map.getOptions());
-      count = count + 1;
-      $GF.setUniqTimeOut(unselect, 500, id);
-    };
-    const unselect = () => {
-      self.unhighlightXCells(map.getPattern(), map.getOptions());
-      if (count < 3) {
-        $GF.setUniqTimeOut(select, 500, id);
-      }
-    };
-    select();
-    return true;
-  }
+  // identifyCell(map: ObjectMap) {
+  //   console.log('RulesOptionsCtrl -> identifyCell -> map', map);
+  //   const id = 'identifyCell';
+  //   $GF.clearUniqTimeOut(id);
+  //   const self = this;
+  //   let count = 0;
+  //   const select = () => {
+  //     self.highlightXCells(map);
+  //     count = count + 1;
+  //     $GF.setUniqTimeOut(unselect, 500, id);
+  //   };
+  //   const unselect = () => {
+  //     self.unhighlightXCells(map);
+  //     if (count < 3) {
+  //       $GF.setUniqTimeOut(select, 500, id);
+  //     }
+  //   };
+  //   select();
+  //   return true;
+  // }
 
   /**
    * Disable/Enable rule
