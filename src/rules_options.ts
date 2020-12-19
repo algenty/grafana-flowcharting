@@ -647,8 +647,13 @@ export class RulesOptionsCtrl {
   getCellNamesTypeHead = () => {
     const map = this.getCurrentMap();
     let values: any = [];
+    let options = undefined;
     if (map) {
-      const options = map.getOptions();
+      options = map.getOptions();
+    } else {
+      options = this.getCurrentParam('currentOptions');
+    }
+    if(options) {
       values = this.getCellNames4(options);
     }
     return values;

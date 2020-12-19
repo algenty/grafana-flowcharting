@@ -680,7 +680,7 @@ export default class XGraph {
     xcells.forEach(x => {
       if (type === 'id' || type === 'value') {
         const value: any = x.getDefaultValue(type);
-        if(value !== null && value !== undefined && value.length >0) {
+        if (value !== null && value !== undefined && value.length > 0) {
           s.add(value);
         }
       }
@@ -689,7 +689,7 @@ export default class XGraph {
         const length = values.length;
         for (let i = 0; i < length; i++) {
           const value = values[i];
-          if(value !== null && value !== undefined && value.length >0) {
+          if (value !== null && value !== undefined && value.length > 0) {
             s.add(value);
           }
         }
@@ -943,19 +943,18 @@ export default class XGraph {
   getDefaultValuesWithKey(options: gf.TRuleMapOptions, key: string): string[] {
     const xcells = this.getXCells();
     const length = xcells.length;
-    let values:Set<string> = new Set();
+    let values: Set<string> = new Set();
     for (let i = 0; i < length; i++) {
       const xcell = xcells[i];
       const datas = xcell.getDefaultValues(options);
       datas.forEach(x => {
-        if(x !== null && x !== undefined && x.length > 0) {
-          values.add(x)
+        if (x !== null && x !== undefined && x.length > 0) {
+          values.add(x);
         }
       });
     }
     return Array.from(values.keys());
   }
-  
 
   /**
    * Get attribute value
@@ -1297,8 +1296,11 @@ export default class XGraph {
       if (state) {
         const xcell = this.getXCell(state.cell.id);
         const options = this.onMapping.options !== null ? this.onMapping.options : Rule.getDefaultMapOptions();
-        if(xcell !== undefined ) {
-          this.onMapping.setXCell(xcell).setValue(xcell.getDefaultValues(options)).valide();
+        if (xcell !== undefined) {
+          this.onMapping
+            .setXCell(xcell)
+            .setValue(xcell.getDefaultValues(options))
+            .valide();
           this.unsetMap();
         }
       }
@@ -1669,12 +1671,14 @@ export default class XGraph {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
     const timeId = `setAnimSizeCell_${xcell.getId()}`;
     const dim = xcell.getDimension();
-    width = width !== undefined ? width : dim.width;
-    height = height !== undefined ? height : dim.height;
+    const wdir = width !== undefined && width >= 0 ? 1 : -1;
+    const hdir = height !== undefined && height >= 0 ? 1 : -1;
+    width = width !== undefined ? width : undefined;
+    height = height !== undefined ? height : undefined;
     $GF.clearUniqTimeOut(timeId);
     if (this.isAnimated()) {
-      const widths = $GF.calculateIntervalCounter(dim.width, width, $GF.CONSTANTS.CONF_ANIMS_STEP);
-      const heights = $GF.calculateIntervalCounter(dim.height, height, $GF.CONSTANTS.CONF_ANIMS_STEP);
+      const widths = $GF.calculateIntervalCounter(dim.width * wdir, width, $GF.CONSTANTS.CONF_ANIMS_STEP);
+      const heights = $GF.calculateIntervalCounter(dim.height * hdir , height, $GF.CONSTANTS.CONF_ANIMS_STEP);
       let index = 0;
       function anim() {
         if (index < widths.length) {

@@ -1063,18 +1063,28 @@ export class $GF {
   }
 
   static calculateIntervalCounter(
-    begin: number,
-    end: number,
+    begin: number | undefined,
+    end: number | undefined,
     count: number,
     method: gf.TCounterKeys = 'linear'
-  ): number[] {
-    let result: number[] = [];
-    const distance = end - begin;
-    const step = Math.round(distance / count);
-    let current = begin;
+  ): any[] {
+    let result: any[] = [];
+    let step:any;
+    let current:any;
+    if( begin !== undefined && end !== undefined) {
+      const distance = end - begin;
+      step = Math.round(distance / count);
+      current = begin;
+    } else {
+      step = undefined;
+    }
     let index = 0;
     for (index = 0; index < count; index++) {
-      current += step;
+      if(step !== undefined) {
+        current += step;
+      } else {
+        current = undefined;
+      }
       result.push(current);
     }
     result[index] = end;

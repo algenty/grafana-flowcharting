@@ -19,7 +19,7 @@ export class XCell {
     this.mxcell = mxcell;
     this.gf = this._getDefaultGFXCell();
     this.mxcell.gf = this.gf;
-    this.isHidden = this.graph.model.isVisible(this.mxcell);
+    this.isHidden = ! this.graph.model.isVisible(this.mxcell);
     this.isCollapsed = this.graph.isCellCollapsed(this.mxcell);
   }
 
@@ -439,11 +439,11 @@ export class XCell {
    */
   async hide(bool: boolean = true) {
     if (!this.isHidden && bool) {
-      this.isHidden = true;
       this.graph.model.setVisible(this.mxcell, false);
     } else if (this.isHidden && !bool) {
       this.graph.model.setVisible(this.mxcell, true);
     }
+    this.isHidden = bool;
   }
 
   /**
@@ -545,7 +545,7 @@ export class XCell {
   }
 
   async zoom(percent: number = 100) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'resize()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'zoom()');
     const dim: mxGeometry = this.getDefaultDimension();
     if (percent !== 100) {
       this._initDefaultValue('dimension');
@@ -570,7 +570,9 @@ export class XCell {
   }
 
   async resize(width: number | undefined, height: number | undefined) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
+    console.log("XCell -> resize -> width", width)
+    console.log("XCell -> resize -> height", height)
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'resize()');
     this._initDefaultValue('dimension');
     const dim = this.getDimension();
     if (dim !== null) {

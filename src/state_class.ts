@@ -662,7 +662,7 @@ class EventState extends GFState {
 
   init_core() {
     // this.keys = $GF.CONSTANTS.EVENTMETHODS.map(x => x.value);
-    this.geo = this.xcell.getDimension();
+    this.geo = this.xcell.getDefaultDimension();
     // this.keys.forEach(key => {
     //   const value = this._get(key);
     //   this.addValue(key, value);
@@ -738,10 +738,9 @@ class EventState extends GFState {
           if (this.isMatched('height')) {
             let width = this.isMatched('width') ? Number(this.getMatchValue('width')) : undefined;
             this.xgraph.setAnimSizeCell(this.xcell, width, height);
-            this.unset('width');
+            this.unset('height');
           } else {
             if (!this.isMatched('width')) {
-              // this.xgraph.resetSizeCell(this.xcell, this.geo);
               this.xcell.restoreDimension();
               this.unset('width');
             }
@@ -872,7 +871,6 @@ class TextState extends GFState {
   }
 
   async reset_core(key: string, value: any) {
-    // this.xcell.setLabel(value);
     this.xcell.restoreLabel();
   }
 }
