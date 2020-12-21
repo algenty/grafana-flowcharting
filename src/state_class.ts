@@ -717,6 +717,7 @@ class EventState extends GFState {
   }
 
   _set(key: gf.TTypeEventKeys, value: any) {
+    if (value === undefined) {
       value = null;
     }
     switch (key) {
