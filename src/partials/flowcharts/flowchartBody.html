@@ -174,9 +174,9 @@
                 <label class="gf-form-label width-12">Bg Color</label>
                 <input type="text" class="gf-form-input width-8" ng-model="flowchart.getData().bgColor"
                     ng-change="editor.onOptionChange()" placeholder="#000000" />
-                <button class="btn btn-secondary btn-small" style="height: 32px;" title="Remove background color"
-                    ng-click="flowchart.getData().bgColor = null;editor.onOptionChange()">
-                    <color-picker color="flowchart.getData().bgColor" onChange="editor.onColorChange($index)"></color-picker>
+                <button class="btn btn-secondary btn-small" style="height: 32px;" 
+                    title="Remove background color">
+                    <color-picker color="flowchart.data.bgColor" onChange="editor.onColorChange($index)"></color-picker>
                 </button>
                 <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;"
                     title="Remove background color" ng-click="flowchart.getData().bgColor = null;editor.onOptionChange()">
