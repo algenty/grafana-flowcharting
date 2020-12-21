@@ -1,17 +1,20 @@
-import { $GF } from 'globals_class';
+import { $GF, GFTimer } from 'globals_class';
 import { Rule } from 'rule_class';
 import { TooltipHandler } from 'tooltipHandler';
 
 export class XCell {
   graph: any;
   mxcell: mxCell;
+  uniqId: string = $GF.utils.uniqueID();
   isHidden: boolean = false;
   isHighlighting: boolean = false;
   isBlink: boolean = false;
+  isSurrounded:boolean = false;
+  _surroundHL: any = null;
   percent: number = 100;
   // isCollapsed: boolean = false;
   _mxcellHL: any = null;
-  _blinkHL: any = null;
+  // _blinkHL: any = null;
   gf: gf.TXCellGF;
 
   constructor(graph, mxcell) {
@@ -594,6 +597,37 @@ export class XCell {
     trc.after();
   }
 
+  surround(color:string, bool : boolean = true):this {
+    if (bool && !this.isSurrounded)  { 
+        // const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
+        const opacity = 100;
+        const state = this.getMxCellState();
+        if (state !== null) {
+          const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+          const hl = new mxCellHighlight(this.graph, color, sw, false);
+          if (opacity !== null) {
+            hl.opacity = opacity;
+          }
+          hl.highlight(state);
+          this._surroundHL = hl;
+        }
+    } else if (!bool && this.isSurrounded) {
+      const hl = this._surroundHL;
+      if (hl && hl.shape != null) {
+        hl.shape.node.style.opacity = 0;
+        hl.destroy();
+        this._surroundHL = undefined;
+      }
+    }
+    this.isSurrounded = bool;
+    return this;
+  }
+
+  unsurround():this {
+    this.surround('', false);
+    return this;
+  }
+
   /**
    * Blink this cell
    *
@@ -601,53 +635,67 @@ export class XCell {
    * @param {boolean} [bool=true]
    * @memberof XCell
    */
+  // async blink(ms: number = 1000, bool: boolean = true) {
+  //   const timeId = `blink-${this.uniqId}`;
+  //   const self = this;
+  //   if (bool && !this.isBlink) {
+  //     $GF.clearUniqTimeOut(timeId);
+  //     this.isBlink = true;
+  //     const bl_on = function() {
+  //       // const color = '#f5f242';
+  //       const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
+  //       const opacity = 100;
+  //       const state = self.getMxCellState();
+  //       if (state != null) {
+  //         const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+  //         const hl = new mxCellHighlight(self.graph, color, sw, false);
+  //         if (opacity != null) {
+  //           hl.opacity = opacity;
+  //         }
+  //         hl.highlight(state);
+  //         self._blinkHL = hl;
+  //         $GF.setUniqTimeOut(bl_off, ms, timeId);
+  //       }
+  //     };
+  //     const bl_off = function() {
+  //       if (self._blinkHL) {
+  //         const hl = self._blinkHL;
+  //         // Fades out the highlight after a duration
+  //         if (hl.shape !== null) {
+  //           mxUtils.setPrefixedStyle(hl.shape.node.style, `transition`, `all ${ms}ms ease-in-out`);
+  //           hl.shape.node.style.opacity = 0;
+  //         }
+  //         hl.destroy();
+  //         self._blinkHL = undefined;
+  //         $GF.setUniqTimeOut(bl_on, ms, timeId);
+  //       }
+  //     };
+  //     bl_on();
+  //   } else if (!bool && this.isBlink) {
+  //     $GF.clearUniqTimeOut(timeId);
+  //     if (self._blinkHL) {
+  //       const hl = self._blinkHL;
+  //       if (hl.shape != null) {
+  //         hl.shape.node.style.opacity = 0;
+  //         hl.destroy();
+  //         self._blinkHL = undefined;
+  //       }
+  //     }
+  //     this.isBlink = false;
+  //   }
+  // }
   async blink(ms: number = 1000, bool: boolean = true) {
-    const timeId = `blink_${this.getId()}`;
-    const self = this;
+    const timeId = `blink-${this.uniqId}`;
     if (bool && !this.isBlink) {
-      // mxcell.blink = true;
-      $GF.clearUniqTimeOut(timeId);
       this.isBlink = true;
-      const bl_on = function() {
-        // const color = '#f5f242';
-        const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
-        const opacity = 100;
-        const state = self.getMxCellState();
-        if (state != null) {
-          const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-          const hl = new mxCellHighlight(self.graph, color, sw, false);
-          if (opacity != null) {
-            hl.opacity = opacity;
-          }
-          hl.highlight(state);
-          self._blinkHL = hl;
-          $GF.setUniqTimeOut(bl_off, ms, timeId);
-        }
-      };
-      const bl_off = function() {
-        if (self._blinkHL) {
-          const hl = self._blinkHL;
-          // Fades out the highlight after a duration
-          if (hl.shape !== null) {
-            mxUtils.setPrefixedStyle(hl.shape.node.style, `transition`, `all ${ms}ms ease-in-out`);
-            hl.shape.node.style.opacity = 0;
-          }
-          hl.destroy();
-          self._blinkHL = undefined;
-          $GF.setUniqTimeOut(bl_on, ms, timeId);
-        }
-      };
-      bl_on();
+      const timer = GFTimer.getNewTimer(timeId);
+      timer.add(this.surround.bind(this, $GF.CONSTANTS.CONF_BLINK_COLOR), ms);
+      timer.add(this.surround.bind(this, $GF.CONSTANTS.CONF_BLINK_COLOR, false), ms * 2);
+      timer.setCyclic()
+      timer.run();
     } else if (!bool && this.isBlink) {
-      $GF.clearUniqTimeOut(timeId);
-      if (self._blinkHL) {
-        const hl = self._blinkHL;
-        if (hl.shape != null) {
-          hl.shape.node.style.opacity = 0;
-          hl.destroy();
-          self._blinkHL = undefined;
-        }
-      }
+      GFTimer.stop(timeId);
+      this.surround('', false);
       this.isBlink = false;
     }
   }

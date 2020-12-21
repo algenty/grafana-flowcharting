@@ -1546,6 +1546,8 @@ declare interface GFTimerUnit {
   tmId : number;
 }
 export class GFTimer {
+  iteration: number = 0;
+  cyclic: boolean = false;
   currentStep: number = 0;
   uniqId : string;
   static timers:Map<string, GFTimer>;
@@ -1559,7 +1561,7 @@ export class GFTimer {
     this.uniqId = uniqId;
   }
 
-  static clean( uniqId ?: string ) {
+  static stop( uniqId ?: string ) {
     if(GFTimer.timers === undefined) {
       GFTimer.timers = new Map();
     }
@@ -1575,6 +1577,27 @@ export class GFTimer {
       });
       GFTimer.timers.clear();
     }
+  }
+
+  setCyclic(bool :boolean = true):this {
+    this.cyclic = bool;
+    this.iteration = 0;
+    return this;
+  }
+
+  setIteration(it: number = 0):this {
+    this.iteration = it;
+    this.cyclic = false;
+    return this;
+  }
+
+  _reinit():this {
+    this.currentStep = 0;
+    this.units.forEach(u => {
+      u.runned = false;
+      u.invalidated = false;
+    });
+    return this;
   }
 
   cancel():this {
@@ -1614,10 +1637,17 @@ export class GFTimer {
   }
 
   static getNewTimer(uniqId):GFTimer {
-    GFTimer.clean(uniqId);
+    GFTimer.stop(uniqId);
     const gftimer = new GFTimer(uniqId);
     GFTimer.timers.set(uniqId, gftimer);
     return gftimer;
+  }
+
+  static getTimer(uniqId):GFTimer | undefined {
+    if(GFTimer.timers !== undefined) {
+      return GFTimer.timers.get(uniqId);
+    }
+    return undefined;
   }
 
   add(fn : CallableFunction, ms : number):this {
@@ -1652,7 +1682,15 @@ export class GFTimer {
       unit.running = false;
       unit.runned = true;
       if(unit.step === this.units.length - 1) {
-       GFTimer.timers.delete(this.uniqId)   
+        if(this.cyclic || this.iteration > 0) {
+          this._reinit();
+          if(this.iteration > 0) {
+            this.iteration = this.iteration -1;
+          }
+          this.run();
+        } else {
+          GFTimer.timers.delete(this.uniqId);   
+        }
       }
     }
   }
