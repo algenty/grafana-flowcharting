@@ -927,27 +927,6 @@ export class RulesOptionsCtrl {
     }
   }
 
-  // identifyCell(map: ObjectMap) {
-  //   console.log('RulesOptionsCtrl -> identifyCell -> map', map);
-  //   const id = 'identifyCell';
-  //   $GF.clearUniqTimeOut(id);
-  //   const self = this;
-  //   let count = 0;
-  //   const select = () => {
-  //     self.highlightXCells(map);
-  //     count = count + 1;
-  //     $GF.setUniqTimeOut(unselect, 500, id);
-  //   };
-  //   const unselect = () => {
-  //     self.unhighlightXCells(map);
-  //     if (count < 3) {
-  //       $GF.setUniqTimeOut(select, 500, id);
-  //     }
-  //   };
-  //   select();
-  //   return true;
-  // }
-
   /**
    * Disable/Enable rule
    *

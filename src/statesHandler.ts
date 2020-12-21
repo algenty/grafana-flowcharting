@@ -120,7 +120,6 @@ export class StateHandler {
       }
     });
     trc.after();
-    console.log('🚀 ~ file: statesHandler.ts ~ line 121 ~ StateHandler ~ getStatesForRule ~ result', result);
     return result;
   }
 

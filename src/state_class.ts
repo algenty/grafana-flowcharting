@@ -717,8 +717,6 @@ class EventState extends GFState {
   }
 
   _set(key: gf.TTypeEventKeys, value: any) {
-    console.log("🚀 ~ file: state_class.ts ~ line 720 ~ EventState ~ _set ~ key value", key, value)
-    if (value === undefined) {
       value = null;
     }
     switch (key) {
@@ -786,8 +784,6 @@ class EventState extends GFState {
         if (XGraph.isMxGraphAnimStyle(key)) {
           let beginValue = this._get(k);
           beginValue = beginValue === undefined ? EventMap.getDefaultValue(k) : beginValue;
-          console.log('🚀 ~ file: state_class.ts ~ line 788 ~ EventState ~ _set ~ beginValue', beginValue);
-          console.log('🚀 ~ file: state_class.ts ~ line 788 ~ EventState ~ _set ~ endValue', value);
           this.xgraph.setAnimStyleCell(this.xcell, k, value, beginValue);
         } else if (XGraph.isMxGraphStyle(k)) {
           this.xcell.setStyle(k, value);

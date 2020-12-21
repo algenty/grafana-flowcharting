@@ -16,9 +16,6 @@
           </span>
         </info-popover>
       </span>
-      <textarea>
-        {{rule.getEventMapOptions()|json}}
-      </textarea>
       <div class="gf-form-select-wrapper">
         <select class="gf-form-input width-10" ng-model="rule.getEventMapOptions().identByProp"
           ng-options="c.value as c.text for c in editor.propTypes" ng-change="editor.onRulesChange()"></select>
