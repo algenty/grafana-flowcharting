@@ -1,3 +1,9 @@
+<h5 class="section-heading">
+    Detail
+    <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Definition of text mapping', 'TEXTS')"></span>
+    </info-popover>
+</h5>
+<!-- WHAT/PATTERN -->
 <div class="gf-form">
     <label class="gf-form-label width-10">
         What
@@ -7,21 +13,21 @@
         </info-popover>
     </label>
     <input type="text" style="margin-right: 2px;" id="{{ text.getId() }}" placeholder="id or regex of shape"
-        class="gf-form-input width-8" ng-model="text.getData().pattern" ng-show="rule.getTextMapOptions().identByProp === 'id'"
-        bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-        bs-typeahead="editor.getCellNamesById" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+        class="gf-form-input width-8" ng-model="text.getData().pattern"
+        title="Enter an id, label,metadata attribute or regex to identify object"
+        bs-typeahead="rule.getTextMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
-    <input type="text" style="margin-right: 2px;" id="{{ text.getId() }}" placeholder="id or regex of shape"
-        class="gf-form-input width-8" ng-model="text.getData().pattern" ng-show="rule.getTextMapOptions().identByProp === 'value'"
-        bs-tooltip="'Specify regex using /my.*regex/ syntax or complete id of shape (see inspect tab)'"
-        bs-typeahead="editor.getCellNamesByValue" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
-        ng-model-onblur data-placement="right" />
-        <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;" title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(text, rule.getTextMapOptions())">
-            <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
-        </button>
-        <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects" ng-click="editor.identifyCell(text.getData().pattern, rule.getTextMapOptions())">
-            <div Class="gf-icon-location" style="margin-bottom: 7px;margin-right: 2px;"></div>
-        </button>
+    <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
+        ng-show="rule.getTextMapOptions().identByProp !== 'metadata'"
+        title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(text, rule.getTextMapOptions())">
+        <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
+    </button>
+    <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects"
+        ng-mousedown="editor.highlightXCells(text)" 
+        ng-mouseup="editor.unhighlightXCells(text)" 
+        ng-mouseleave="editor.unhighlightXCells(text)">
+        <div Class="gf-icon-location" style="margin-bottom: 7px;margin-right: 2px;"></div>
+    </button>
 </div>
 <div class="gf-form">
     <label class="gf-form-label width-10">When
