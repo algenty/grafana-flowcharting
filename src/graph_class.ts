@@ -981,49 +981,6 @@ export default class XGraph {
     return mxUtils.getXml(node);
   }
 
-  /**
-   * Return all cells
-   *
-   * @returns {Map<mxCell>} mxCells
-   * @memberof XGraph
-   */
-  // getMxCells(): any {
-  //   return this.graph.getModel().cells;
-  // }
-
-  /**
-   * Return value of id or value of mxcell
-   *
-   * @param {string} prop - "id"|"value"|"metadata"
-   * @param {mxCell} mxcell
-   * @memberof XGraph
-   */
-  // static getValuePropOfMxCell(
-  //   mxcell: mxCell,
-  //   options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()
-  // ): string | null {
-  //   if (options.identByProp === 'id') {
-  //     return XGraph.getId(mxcell);
-  //   }
-  //   if (options.identByProp === 'value') {
-  //     return XGraph.getLabelCell(mxcell);
-  //   }
-  //   if (options.identByProp === 'metadata') {
-  //     //TODO
-  //     throw new Error('Not implemented');
-  //     // return XGraph.getAttribute(mxcell, metadata);
-  //   }
-  //   return null;
-  // }
-
-  // getStyleCell(mxcell: mxCell, style: any): string | null {
-  //   const state = this.graph.view.getState(mxcell);
-  //   if (state) {
-  //     return state.style[style];
-  //   }
-  //   return null;
-  // }
-
   isAnimated() {
     return this.animation;
   }
@@ -1112,7 +1069,6 @@ export default class XGraph {
    */
   async setAnimStyleCell(xcell: XCell, style: gf.TStyleAnimKeys, endValue: string | null, beginValue?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
-    console.log("🚀 ~ file: graph_class.ts ~ line 1114 ~ XGraph ~ setAnimStyleCell ~ style value", style, endValue);
     if (this.isAnimated() && endValue !== null) {
       try {
         const end = Number(endValue);
@@ -1145,68 +1101,6 @@ export default class XGraph {
     trc.after();
   }
 
-  /**
-   * Apply the styles to mxcell
-   *
-   * @param {mxCell} mxcell
-   * @param {string} styles
-   * @memberof XGraph
-   */
-  // setStyles(mxcell: mxCell, styles: string): this {
-  //   this.graph.getModel().setStyle(mxcell, styles);
-  //   return this;
-  // }
-
-  // setClassCell(mxcell: mxCell, className: string): this {
-  //   var state = this.graph.view.getState(mxcell);
-  //   if (state && state.shape !== null) {
-  //     const paths = state.shape.node.getElementsByTagName('path');
-  //     if (paths.length > 1) {
-  //       let currentClass: string = paths[1].getAttribute('class');
-  //       let classes: string[] = [];
-  //       if (currentClass !== null && currentClass !== undefined) {
-  //         classes = currentClass.split(' ');
-  //       }
-  //       if (!classes.includes(className)) {
-  //         classes.push(className);
-  //         currentClass = classes.join(' ');
-  //         paths[1].setAttribute('class', currentClass);
-  //         if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
-  //           paths[1].setAttribute('stroke-dasharray', '8');
-  //         }
-  //       }
-  //     }
-  //   }
-  //   return this;
-  // }
-
-  // unsetClassCell(mxcell: mxCell, className: string): this {
-  //   var state = this.graph.view.getState(mxcell);
-  //   if (state && state.shape !== null) {
-  //     const paths = state.shape.node.getElementsByTagName('path');
-  //     if (paths.length > 1) {
-  //       let currentClass: string = paths[1].getAttribute('class');
-  //       let classes: string[] = [];
-  //       if (currentClass !== null && currentClass !== undefined) {
-  //         classes = currentClass.split(' ');
-  //       }
-  //       if (classes.includes(className)) {
-  //         classes = classes.filter(c => c !== className);
-  //         if (classes.length > 1) {
-  //           currentClass = classes.join(' ');
-  //           paths[1].setAttribute('class', currentClass);
-  //         } else {
-  //           paths[1].removeAttribute('class');
-  //         }
-  //         if (mxUtils.getValue(state.style, mxConstants.STYLE_DASHED, '0') !== '1') {
-  //           paths[1].removeAttribute('stroke-dasharray');
-  //         }
-  //       }
-  //     }
-  //   }
-  //   return this;
-  // }
-
   static isMxGraphStyle(type: string): boolean {
     const t: any = type;
     return $GF.CONSTANTS.MXGRAPH_STYLES.includes(t);
@@ -1221,44 +1115,6 @@ export default class XGraph {
     const t: any = type;
     return $GF.CONSTANTS.MXGRAPH_STYLES_STATIC.includes(t);
   }
-
-  /**
-   * Return Label/value of mxcell
-   *
-   * @param {mxCell} mxcell
-   * @returns {string} Label of current cell
-   * @memberof XGraph
-   */
-  // static getLabelCell(mxcell: mxCell): string {
-  //   if (mxUtils.isNode(mxcell.value)) {
-  //     return mxcell.value.getAttribute('label');
-  //   }
-  //   return mxcell.getValue(mxcell);
-  // }
-
-  /**
-   * Assign new label for mxcell
-   *
-   * @param {mxCell} mxcell
-   * @param {string} text - New label
-   * @returns {this}
-   * @memberof XGraph
-   */
-  // setLabelCell(mxcell: mxCell, text: string): this {
-  //   this.graph.cellLabelChanged(mxcell, text, false);
-  //   return this;
-  // }
-
-  /**
-   * Return Id of mxCell
-   *
-   * @param {mxCell} mxcell
-   * @returns {string} Id of mxCell
-   * @memberof XGraph
-   */
-  // static getId(mxcell): string {
-  //   return mxcell.getId();
-  // }
 
   /**
    * Active mapping option when user click on mapping
@@ -1447,190 +1303,6 @@ export default class XGraph {
   }
 
   /**
-   * Highlights the given cell.
-   *
-   * @param {*} cell
-   * @returns
-   * @memberof XGraph
-   */
-  // async highlightCell(cell: mxCell) {
-  //   if (!cell.highlight) {
-  //     const color = '#99ff33';
-  //     const opacity = 100;
-  //     const state = this.graph.view.getState(cell);
-
-  //     if (state != null) {
-  //       const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-  //       const hl = new mxCellHighlight(this.graph, color, sw, false);
-
-  //       if (opacity != null) {
-  //         hl.opacity = opacity;
-  //       }
-
-  //       hl.highlight(state);
-  //       cell.highlight = hl;
-  //     }
-  //   }
-  // }
-
-  /**
-   * UnHighlights the given cell.
-   *
-   * @param {mxCell} mxcell
-   * @memberof XGraph
-   */
-  // async unhighlightCell(mxcell: mxCell) {
-  //   if (mxcell && mxcell.highlight) {
-  //     const hl = mxcell.highlight;
-  //     // Fades out the highlight after a duration
-  //     if (hl.shape != null) {
-  //       mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 500ms ease-in-out');
-  //       hl.shape.node.style.opacity = 0;
-  //     }
-  //     // Destroys the highlight after the fade
-  //     window.setTimeout(() => {
-  //       hl.destroy();
-  //     }, 500);
-  //     mxcell.highlight = null;
-  //   }
-  // }
-
-  // BLINK
-  // async blinkCell(mxcell: mxCell, ms: number) {
-  //   if (!mxcell.blink) {
-  //     mxcell.blink = true;
-  //     const self = this;
-  //     const id = `blink_${mxcell.id}`;
-  //     // Cancel Previous anim
-  //     $GF.clearUniqTimeOut(id);
-  //     const bl_on = function() {
-  //       const color = '#f5f242';
-  //       const opacity = 100;
-  //       const state = self.graph.view.getState(mxcell);
-
-  //       if (state != null) {
-  //         const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-  //         const hl = new mxCellHighlight(self.graph, color, sw, false);
-
-  //         if (opacity != null) {
-  //           hl.opacity = opacity;
-  //         }
-
-  //         hl.highlight(state);
-  //         mxcell.blink_on = hl;
-  //         mxcell.blink_ms = ms;
-  //         $GF.setUniqTimeOut(bl_off, ms, id);
-  //       }
-  //     };
-  //     const bl_off = function() {
-  //       if (mxcell && mxcell.blink) {
-  //         // console.log('bl_off');
-  //         const hl = mxcell.blink_on;
-  //         // Fades out the highlight after a duration
-  //         if (hl.shape != null) {
-  //           mxUtils.setPrefixedStyle(hl.shape.node.style, `transition`, `all ${ms}ms ease-in-out`);
-  //           hl.shape.node.style.opacity = 0;
-  //         }
-  //         // Destroys the highlight after the fade
-  //         // window.setTimeout(() => {
-  //         //   hl.destroy();
-  //         //   cell.blink_on = null;
-  //         // }, ms);
-  //         hl.destroy();
-  //         mxcell.blink_on = null;
-  //         $GF.setUniqTimeOut(bl_on, ms, id);
-  //       }
-  //     };
-  //     bl_on();
-  //   }
-  // }
-
-  // async unblinkCell(mxcell: mxCell) {
-  //   const id = `blink_${mxcell.id}`;
-  //   if (mxcell.blink) {
-  //     if (mxcell.blink_on) {
-  //       const hl = mxcell.blink_on;
-  //       if (hl.shape != null) {
-  //         hl.shape.node.style.opacity = 0;
-  //         hl.destroy();
-  //         mxcell.blink_on = null;
-  //         mxcell.blink_ms = 0;
-  //       }
-  //     }
-  //     mxcell.blink = null;
-  //   }
-  //   // Cancel Previous anim
-  //   $GF.clearUniqTimeOut(id);
-  // }
-
-  // isBlinkCell(mxcell: mxCell): boolean {
-  //   return !!mxcell.blink;
-  // }
-
-  // geBlinkMxCell(mxcell: mxCell): number {
-  //   return !!mxcell.blink ? mxcell.blink_ms : 0;
-  // }
-
-  // COLLAPSE
-  // isCollapsedCell(mxcell: mxCell): boolean {
-  //   return this.graph.isCellCollapsed(mxcell);
-  // }
-
-  // collapseCell(mxcell: mxCell) {
-  //   if (!this.isCollapsedCell(mxcell)) {
-  //     this.graph.foldCells(true, false, [mxcell], null, null);
-  //   }
-  // }
-
-  // expandCell(mxcell: mxCell) {
-  //   if (this.isCollapsedCell(mxcell)) {
-  //     this.graph.foldCells(false, false, [mxcell], null, null);
-  //   }
-  // }
-
-  // toggleFoldCell(mxcell: mxCell) {
-  //   const collapse: boolean = !this.isCollapsedCell(mxcell);
-  //   this.graph.foldCells(collapse, false, [mxcell], null, null);
-  // }
-
-  // VISIBLE
-
-  /**
-   * Hide cell/shape
-   *
-   * @param {mxCell} xcell
-   * @memberof XGraph
-   */
-  // async hideCell(mxcell: mxCell) {
-  //   if (this.isVisibleCell(mxcell)) {
-  //     this.graph.model.setVisible(mxcell, false);
-  //   }
-  // }
-
-  /**
-   * Show/unhide cell/shape
-   *
-   * @param {mxCell} xcell
-   * @memberof XGraph
-   */
-  // async showCell(mxcell: mxCell) {
-  //   if (!this.isVisibleCell(mxcell)) {
-  //     this.graph.model.setVisible(mxcell, true);
-  //   }
-  // }
-
-  /**
-   * Cell is visible ?
-   *
-   * @param {mxCell} xcell
-   * @returns {boolean}
-   * @memberof XGraph
-   */
-  // isVisibleCell(mxcell: mxCell): boolean {
-  //   return this.graph.model.isVisible(mxcell);
-  // }
-
-  /**
    * Zoom cell with animation
    *
    * @param {XCell} xcell
@@ -1697,15 +1369,6 @@ export default class XGraph {
     }
     trc.after();
   }
-
-  // getSizeCell(mxcell: mxCell): mxGeometry {
-  //   return this.graph.model.getGeometry(mxcell);
-  // }
-
-  // async resetSizeCell(mxcell: mxCell, mxgeo: mxGeometry) {
-  //   const rec = new mxRectangle(mxgeo.x, mxgeo.y, mxgeo.width, mxgeo.height);
-  //   this.graph.resizeCell(mxcell, rec, true);
-  // }
 
   /**
    * Zoom cell on full panel
