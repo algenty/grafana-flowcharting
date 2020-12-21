@@ -94,11 +94,14 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" ng-repeat="link in rule.getLinkMaps()">
+                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" 
+                    ng-repeat="link in rule.getLinkMaps()"
+                    ng-mouseenter="editor.setCurrentMap(link);" 
+                    ng-mouseleave="editor.unsetCurrentMap();">
                     <!-- CELLS -->
                     <div class="gf-table-row_line"
-                        ng-mouseleave="editor.unselectCell(link.getData().pattern, getLinkMapOptions())"
-                        ng-mouseover="editor.selectCell(link.getData().pattern, getLinkMapOptions().identByProp)">
+                        ng-mouseleave="editor.unhighlightXCells(link);"
+                        ng-mouseover="editor.highlightXCells(link)">
                         <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand" ng-click="link.reduce=!link.reduce"
                             ng-style="{'width' : editor.linksTable.getWidth('expand')}">
@@ -110,7 +113,7 @@
                                 </span>
                             </div>
                         </div>
-                        <!-- WHAT -->
+                        <!-- WHAT/PATTERN -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="link.displayWhatEdit = false;link.whatEdit = false;" 
                             ng-mouseleave="link.displayWhatEdit = false;"
@@ -136,7 +139,7 @@
                                 class="gf-form-input" ng-model="link.getData().pattern"
                                 ng-change="editor.onRulesChange()"
                                 ng-model-onblur ng-blur="editor.onRulesChange();link.whatEdit = false;"
-                                bs-typeahead="rule.getLinkMapOptions().identByProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
+                                bs-typeahead="rule.getLinkMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD"
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
                         <!-- WHEN -->

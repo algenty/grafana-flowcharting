@@ -1,4 +1,5 @@
-<div class="section gf-form-group">
+<div class="section gf-form-group" ng-mouseenter="editor.setCurrentParam('currentOptions',rule.getLinkMapOptions())"
+  ng-mouseleave="editor.unsetCurrentParam('currentOptions')">
   <h5 class="section-heading">
     Link Mappings
     <info-popover mode="right-normal">
@@ -6,7 +7,8 @@
       </span>
     </info-popover>
   </h5>
-  <div id="linksOptionsGeneral"></div>
+  <div id="linksOptionsGeneral">
+    <!-- ID INPUT -->
     <div class="gf-form">
       <span class="gf-form-label width-11">Identify by
         <info-popover mode="right-normal">
@@ -14,16 +16,28 @@
           </span>
         </info-popover>
       </span>
-      <!-- ID INPUT -->
       <div class="gf-form-select-wrapper">
         <select class="gf-form-input width-10" ng-model="rule.getLinkMapOptions().identByProp"
           ng-options="c.value as c.text for c in editor.propTypes" ng-change="editor.onRulesChange()"></select>
       </div>
     </div>
+    <!-- METADATA INPUT -->
+    <div class="gf-form" ng-show="rule.getShapeMapOptions().identByProp === 'metadata'">
+      <span class="gf-form-label width-11">Data name
+        <info-popover mode="right-normal">
+          <span ng-bind-html="$GF.popover('Select a metadata name or a regex', 'SHAPES')">
+          </span>
+        </info-popover>
+      </span>
+      <input type="text" style="margin-right: 2px;" placeholder="id or regex of shape" class="gf-form-input width-8"
+        ng-model="rule.getLinkMapOptions().metadata" title="Enter a metadata name or a regex"
+        bs-typeahead="editor.getCellNamesTypeHead" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+        ng-model-onblur data-placement="right" />
+    </div>
+    <!-- ID Regular expression -->
     <div class="gf-form">
-      <!-- ID Regular expression -->
-      <gf-form-switch class="gf-form" label="Regular expression" label-class="width-11" checked="rule.getLinkMapOptions().enableRegEx"
-        on-change="editor.onRulesChange()"
+      <gf-form-switch class="gf-form" label="Regular expression" label-class="width-11"
+        checked="rule.getLinkMapOptions().enableRegEx" on-change="editor.onRulesChange()"
         tooltip="Disable this option if you don't use regular expressions in field 'What' below to improve performance">
       </gf-form-switch>
     </div>

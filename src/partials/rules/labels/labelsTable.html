@@ -103,11 +103,12 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" ng-repeat="text in rule.getTextMaps()">
+                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" ng-repeat="text in rule.getTextMaps()"
+                    ng-mouseenter="editor.setCurrentMap(text);" ng-mouseleave="editor.unsetCurrentMap();">
                     <!-- CELLS -->
-                    <div class="gf-table-row_line"
-                        ng-mouseleave="editor.unselectCell(text.getData().pattern, rule.getTextMapOptions())"
-                        ng-mouseover="editor.selectCell(text.getData().pattern, rule.getTextMapOptions())">
+                    <div class="gf-table-row_line" 
+                        ng-mouseleave="editor.unhighlightXCells(text);"
+                        ng-mouseover="editor.highlightXCells(text)">
                         <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
                             ng-click="text.reduce=!text.reduce"
@@ -120,7 +121,7 @@
                                 </span>
                             </div>
                         </div>
-                        <!-- WHAT -->
+                        <!-- WHAT/PATTERN -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="what"
                             ng-mouseleave="text.displayWhatEdit = false;" ng-mouseover="text.displayWhatEdit = true;"
                             ng-style="{'width' : editor.textsTable.getWidth('what')}"
@@ -131,7 +132,8 @@
                             </div>
                             <div ng-show="text.displayWhatEdit === true && text.whatEdit !== true"
                                 ng-click="text.whatEdit = true;$GF.setFocus( text.getId() + '-what' )"
-                                title="Edit pattern" class="gf-icon-action gf-icon-edit gf-icon-withcontent">
+                                title="Edit pattern" 
+                                class="gf-icon-action gf-icon-edit gf-icon-withcontent">
                             </div>
                             <div ng-show="text.displayWhatEdit === true && text.whatEdit !== true && !editor.flowchartHandler.isMapping(text)"
                                 ng-click="editor.flowchartHandler.setMap(text, rule.getTextMapOptions())"
@@ -139,10 +141,11 @@
                                 title="Select a text in diagram">
                             </div>
                             <input type="text" class="gf-form-input" ng-model="text.getData().pattern"
-                                style="margin-right: 2px;width : 100%" ng-attr-id="{{text.getId() + '-what'}}"
+                                style="margin-right: 2px;width : 100%" 
+                                ng-attr-id="{{text.getId() + '-what'}}"
                                 ng-show="text.whatEdit === true" ng-model-onblur
                                 ng-blur="editor.onRulesChange();text.whatEdit = false;"
-                                bs-typeahead="rule.getTextMapOptions().identByProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
+                                bs-typeahead="rule.getTextMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD"
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
                         <!-- WHEN -->
@@ -202,9 +205,10 @@
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Text or pattern to replace by value">
                             </div>
-                            <input ng-if="text.getData().textReplace == 'pattern'" style="margin-right: 2px;width : 100%"
-                                ng-attr-id="{{text.getId() + '-with'}}" type="text" class="gf-form-input"
-                                ng-show="text.withEdit === true" ng-model="text.getData().textPattern"
+                            <input ng-if="text.getData().textReplace == 'pattern'"
+                                style="margin-right: 2px;width : 100%" ng-attr-id="{{text.getId() + '-with'}}"
+                                type="text" class="gf-form-input" ng-show="text.withEdit === true"
+                                ng-model="text.getData().textPattern"
                                 ng-blur="editor.onRulesChange();text.withEdit = false;"
                                 placeholder="Text or pattern to replace by value" />
                         </div>
@@ -252,7 +256,10 @@
                         <div class="gf-form" style="margin-right: 5px;">
                             <button class="btn btn-secondary btn-small" ng-click="editor.onRulesChange();"
                                 title="Refresh/Apply">
-                                <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 535 114C 550 128 555 150 547 169C 539 188 521 200 500 200C 379 200 269 273 223 385C 186 474 194 572 242 652C 242 652 253 641 253 641C 262 632 275 626 289 627C 303 627 316 633 325 643C 332 650 336 660 337 670C 337 670 355 793 355 793C 357 809 352 825 341 836C 330 847 314 852 298 850C 298 850 175 832 175 832C 156 830 140 817 134 799C 128 781 133 761 146 747C 146 747 169 725 169 725C 94 615 78 473 130 347C 192 198 338 100 500 100C 513 100 526 105 535 114C 535 114 535 114 535 114M 852 181C 862 190 868 203 868 216C 868 230 863 243 854 253C 854 253 831 275 831 275C 906 385 922 527 870 653C 808 802 662 900 500 900C 482 900 465 891 456 875C 447 860 447 840 456 825C 465 809 482 800 500 800C 621 800 731 727 777 615C 814 526 806 428 758 348C 758 348 747 359 747 359C 733 373 712 377 693 369C 674 362 662 343 662 323C 662 323 662 217 662 217C 662 190 685 167 712 167C 712 167 818 167 818 167C 831 167 843 172 852 181C 852 181 852 181 852 181"/></svg>
+                                <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill="currentColor"
+                                        d="M 535 114C 550 128 555 150 547 169C 539 188 521 200 500 200C 379 200 269 273 223 385C 186 474 194 572 242 652C 242 652 253 641 253 641C 262 632 275 626 289 627C 303 627 316 633 325 643C 332 650 336 660 337 670C 337 670 355 793 355 793C 357 809 352 825 341 836C 330 847 314 852 298 850C 298 850 175 832 175 832C 156 830 140 817 134 799C 128 781 133 761 146 747C 146 747 169 725 169 725C 94 615 78 473 130 347C 192 198 338 100 500 100C 513 100 526 105 535 114C 535 114 535 114 535 114M 852 181C 862 190 868 203 868 216C 868 230 863 243 854 253C 854 253 831 275 831 275C 906 385 922 527 870 653C 808 802 662 900 500 900C 482 900 465 891 456 875C 447 860 447 840 456 825C 465 809 482 800 500 800C 621 800 731 727 777 615C 814 526 806 428 758 348C 758 348 747 359 747 359C 733 373 712 377 693 369C 674 362 662 343 662 323C 662 323 662 217 662 217C 662 190 685 167 712 167C 712 167 818 167 818 167C 831 167 843 172 852 181C 852 181 852 181 852 181" />
+                                </svg>
                                 &nbsp;Refresh
                             </button>
                         </div>

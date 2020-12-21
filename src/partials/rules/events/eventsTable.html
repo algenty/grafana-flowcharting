@@ -117,11 +117,14 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" ng-repeat="elt in rule.getEventMaps()">
+                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" 
+                    ng-repeat="elt in rule.getEventMaps()"
+                    ng-mouseenter="editor.setCurrentMap(elt);" 
+                    ng-mouseleave="editor.unsetCurrentMap();">
                     <!-- CELLS -->
                     <div class="gf-table-row_line" ng-init="elt.displayEdit = [];elt.inEdit = [];"
-                        ng-mouseleave="editor.unselectCell(elt.getData().pattern, rule.getEventMapOptions())"
-                        ng-mouseover="editor.selectCell(elt.getData().pattern, rule.getEventMapOptions())">
+                        ng-mouseleave="editor.unhighlightXCells(elt);"
+                        ng-mouseover="editor.highlightXCells(elt)">
                         <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
                             ng-click="elt.reduce=!elt.reduce"
@@ -135,7 +138,7 @@
                                 </span>
                             </div>
                         </div>
-                        <!-- WHAT -->
+                        <!-- WHAT/PATTERN -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN2 = 'what';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
                             ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseover="elt.displayEdit[CN2] = true;"
@@ -159,7 +162,7 @@
                                 ng-attr-id="{{elt.getId() + '-' + CN2}}" ng-show="elt.inEdit[CN2] === true"
                                 class="gf-form-input" ng-model="elt.getData().pattern" ng-change="editor.onRulesChange()"
                                 ng-model-onblur ng-blur="editor.onRulesChange();elt.inEdit[CN2] = false;"
-                                bs-typeahead="rule.getEventMapOptions().identByProp === 'id' ? editor.getCellNamesById : editor.getCellNamesByValue"
+                                bs-typeahead="rule.getEventMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD"
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
                         <!-- WHEN -->

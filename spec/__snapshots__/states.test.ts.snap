@@ -2,12 +2,13 @@
 
 exports[`States GFState should be new 1`] = `
 GFState {
+  "ackKey": Set {},
   "changedKey": Map {},
+  "defaultValue": Map {},
   "keys": Array [],
   "matchLevel": Map {},
   "matchValue": Map {},
   "matchedKey": Map {},
-  "originalValue": Map {},
   "xcell": Object {
     "id": "1234",
   },
