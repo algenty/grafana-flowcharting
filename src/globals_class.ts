@@ -1069,9 +1069,9 @@ export class $GF {
     method: gf.TCounterKeys = 'linear'
   ): any[] {
     let result: any[] = [];
-    let step:any;
-    let current:any;
-    if( begin !== undefined && end !== undefined) {
+    let step: any;
+    let current: any;
+    if (begin !== undefined && end !== undefined) {
       const distance = end - begin;
       step = Math.round(distance / count);
       current = begin;
@@ -1080,7 +1080,7 @@ export class $GF {
     }
     let index = 0;
     for (index = 0; index < count; index++) {
-      if(step !== undefined) {
+      if (step !== undefined) {
         current += step;
       } else {
         current = undefined;

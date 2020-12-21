@@ -653,7 +653,7 @@ export class RulesOptionsCtrl {
     } else {
       options = this.getCurrentParam('currentOptions');
     }
-    if(options) {
+    if (options) {
       values = this.getCellNames4(options);
     }
     return values;

@@ -804,7 +804,10 @@ export class FlowchartHandler {
    */
   setMap(objToMap: ObjectMap, options: gf.TRuleMapOptions): this {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
-    this.onMapping.setMap(objToMap).setOptions(options).setFocus(objToMap.getId());
+    this.onMapping
+      .setMap(objToMap)
+      .setOptions(options)
+      .setFocus(objToMap.getId());
     flowchart.setMap();
     return this;
   }

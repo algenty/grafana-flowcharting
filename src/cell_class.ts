@@ -19,8 +19,8 @@ export class XCell {
     this.mxcell = mxcell;
     this.gf = this._getDefaultGFXCell();
     this.mxcell.gf = this.gf;
-    this.isHidden = ! this.graph.model.isVisible(this.mxcell);
-    this.isCollapsed = this.graph.isCellCollapsed(this.mxcell);
+    this.isHidden = !this.graph.model.isVisible(this.mxcell);
+    // this.isCollapsed = this.graph.isCellCollapsed(this.mxcell);
   }
 
   static refactore(graph: any, mxcell: mxCell): XCell {
@@ -506,14 +506,20 @@ export class XCell {
    * @memberof XCell
    */
   async collapse(bool = true) {
-    const isCollapsed = this.graph.isCellCollapsed(this.mxcell);
-    if (!isCollapsed && bool) {
+    const coll = this.graph.isCellCollapsed(this.mxcell);
+    if (!coll && bool) {
       this.graph.foldCells(true, false, [this.mxcell], null, null);
-    } else if (isCollapsed && !bool) {
+    } else if (coll && !bool) {
       this.graph.foldCells(false, false, [this.mxcell], null, null);
     }
   }
 
+  /**
+   * return if xcell is collapse
+   *
+   * @returns {boolean}
+   * @memberof XCell
+   */
   isCollapsed(): boolean {
     return this.graph.isCellCollapsed(this.mxcell);
   }
@@ -570,8 +576,6 @@ export class XCell {
   }
 
   async resize(width: number | undefined, height: number | undefined) {
-    console.log("XCell -> resize -> width", width)
-    console.log("XCell -> resize -> height", height)
     const trc = $GF.trace.before(this.constructor.name + '.' + 'resize()');
     this._initDefaultValue('dimension');
     const dim = this.getDimension();

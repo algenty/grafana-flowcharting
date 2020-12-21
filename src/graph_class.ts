@@ -1112,6 +1112,7 @@ export default class XGraph {
    */
   async setAnimStyleCell(xcell: XCell, style: gf.TStyleAnimKeys, endValue: string | null, beginValue?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
+    console.log("🚀 ~ file: graph_class.ts ~ line 1114 ~ XGraph ~ setAnimStyleCell ~ style value", style, endValue);
     if (this.isAnimated() && endValue !== null) {
       try {
         const end = Number(endValue);
@@ -1138,7 +1139,8 @@ export default class XGraph {
         this.graph.setCellStyles(style, endValue, [xcell]);
       }
     } else {
-      this.graph.setCellStyles(style, endValue, [xcell]);
+      // this.graph.setCellStyles(style, endValue, [xcell]);
+      xcell.setStyle(style, endValue);
     }
     trc.after();
   }
@@ -1678,7 +1680,7 @@ export default class XGraph {
     $GF.clearUniqTimeOut(timeId);
     if (this.isAnimated()) {
       const widths = $GF.calculateIntervalCounter(dim.width * wdir, width, $GF.CONSTANTS.CONF_ANIMS_STEP);
-      const heights = $GF.calculateIntervalCounter(dim.height * hdir , height, $GF.CONSTANTS.CONF_ANIMS_STEP);
+      const heights = $GF.calculateIntervalCounter(dim.height * hdir, height, $GF.CONSTANTS.CONF_ANIMS_STEP);
       let index = 0;
       function anim() {
         if (index < widths.length) {

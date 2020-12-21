@@ -38,7 +38,6 @@ export class Flowchart {
     this.id = $GF.utils.uniqueID();
   }
 
-
   /**
    * Import data object in current flowchart
    *
@@ -531,13 +530,13 @@ export class Flowchart {
    * @returns {string[]}
    * @memberof Flowchart
    */
-  getNamesByOptions(options: gf.TRuleMapOptions, type : 'key'|'value' = 'key'): string[] {
+  getNamesByOptions(options: gf.TRuleMapOptions, type: 'key' | 'value' = 'key'): string[] {
     let values: any = [];
     if (this.xgraph) {
-      if(type === 'key') {
-        values=this.xgraph.getDefaultValues(options);
+      if (type === 'key') {
+        values = this.xgraph.getDefaultValues(options);
       } else {
-        values=this.xgraph.getDefaultValuesWithKey(options, options.metadata);
+        values = this.xgraph.getDefaultValuesWithKey(options, options.metadata);
       }
     }
     return values;

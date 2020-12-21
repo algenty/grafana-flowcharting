@@ -466,11 +466,11 @@ export class GFState {
   xcell: XCell;
   keys: string[] = [];
   matchedKey: Map<string, boolean> = new Map();
+  ackKey: Set<string> = new Set();
   changedKey: Map<string, boolean> = new Map();
-  originalValue: Map<string, any> = new Map();
+  defaultValue: Map<string, any> = new Map();
   matchValue: Map<string, any> = new Map();
   static DEFAULTLEVEL: number = -1;
-  // lastValue: Map<string, any> = new Map(); To not apply the same value
   matchLevel: Map<string, number> = new Map();
 
   constructor(xgraph: XGraph, mxcell: mxCell) {
@@ -483,12 +483,10 @@ export class GFState {
 
   addValue(key: string, value: any) {
     if (!this.hasKey(key)) {
-      // _GF.log.warn('GFState.addValue()', key, 'not found');
       this.keys.push(key);
     }
-    this.originalValue.set(key, value);
+    this.defaultValue.set(key, value);
     this.matchValue.set(key, value);
-    // this.lastValue.set(key, value); To not apply the same value
     this.matchLevel.set(key, GFState.DEFAULTLEVEL);
     this.matchedKey.set(key, false);
     this.changedKey.set(key, false);
@@ -498,18 +496,46 @@ export class GFState {
     return this.keys.includes(key);
   }
 
-  getOriginalValue(key: string): any | undefined {
+  getDefaultValue(key: string): any | undefined {
     if (!this.hasKey(key)) {
-      this.originalValue.set(key, this.default_core(key));
+      this.defaultValue.set(key, this.default_core(key));
     }
-    return this.originalValue.get(key);
+    return this.defaultValue.get(key);
   }
 
   getMatchValue(key: string): any | undefined {
     if (!this.hasKey(key)) {
-      this.matchValue.set(key, this.getOriginalValue(key));
+      this.matchValue.set(key, this.getDefaultValue(key));
     }
     return this.matchValue.get(key);
+  }
+
+  getTargetValue(key: string): any | undefined {
+    if (this.isMatched(key)) {
+      return this.getMatchValue(key);
+    }
+    if (this.isChanged(key)) {
+      return this.getDefaultValue(key);
+    }
+    return undefined;
+  }
+
+  ack(key: string): this {
+    if (key !== undefined) {
+      if (this.isMatched(key)) {
+        this.matchedKey.set(key, false);
+        this.changedKey.set(key, true);
+      } else if (this.isChanged(key)) {
+        this.matchedKey.set(key, false);
+        this.changedKey.set(key, false);
+      }
+      this.ackKey.add(key);
+    }
+    return this;
+  }
+
+  isAcked(key: string) {
+    return this.ackKey.has(key);
   }
 
   /**
@@ -539,17 +565,19 @@ export class GFState {
 
   apply(key?: string): this {
     if (key !== undefined) {
-      if (this.isMatched(key)) {
+      if (this.isMatched(key) && !this.isAcked(key)) {
         let value = this.getMatchValue(key);
         try {
           this.apply_core(key, value);
         } catch (error) {
           $GF.log.error('Error on reset for key ' + key, error);
         }
-        this.changedKey.set(key, true);
-        this.matchedKey.set(key, false);
-      } else if (this.isChanged(key)) {
+        // this.changedKey.set(key, true);
+        // this.matchedKey.set(key, false);
+        this.ack(key);
+      } else if (this.isChanged(key) && !this.isAcked(key)) {
         this.reset(key);
+        this.ack(key);
       }
     } else {
       this.keys.forEach(key => {
@@ -599,7 +627,7 @@ export class GFState {
 
   unset(key?: string): this {
     if (key !== undefined) {
-      this.matchValue.set(key, this.originalValue.get(key));
+      this.matchValue.set(key, this.defaultValue.get(key));
       this.matchedKey.set(key, false);
       this.matchLevel.set(key, -1);
     } else {
@@ -613,7 +641,7 @@ export class GFState {
   reset(key?: string): this {
     if (key !== undefined) {
       this.unset(key);
-      let value = this.getOriginalValue(key);
+      let value = this.getDefaultValue(key);
       try {
         this.reset_core(key, value);
       } catch (error) {
@@ -632,6 +660,7 @@ export class GFState {
   reset_core(key: any, value: any) {}
 
   prepare(): this {
+    this.ackKey.clear();
     if (this.isChanged()) {
       this.unset();
     }
@@ -688,26 +717,13 @@ class EventState extends GFState {
   }
 
   _set(key: gf.TTypeEventKeys, value: any) {
+    console.log("🚀 ~ file: state_class.ts ~ line 720 ~ EventState ~ _set ~ key value", key, value)
     if (value === undefined) {
       value = null;
     }
-    let beginValue: any = undefined;
-    // const toUnset: boolean = this.isChanged(key) && !this.isMatched(key);
-    // let className = '';
-    // let newkey: gf.TTypeEventKeys | 'class' = key;
-    // if (key.startsWith('class_')) {
-    //   newkey = 'class';
-    //   className = key.substring(6);
-    // }
     switch (key) {
       case 'class':
-        //
         throw new Error('Class not implemented');
-        // if (toUnset) {
-        //   this.xgraph.unsetClassCell(this.mxcell, className);
-        // } else {
-        //   this.xgraph.setClassCell(this.mxcell, className);
-        // }
         break;
       case 'text':
         value = String(value);
@@ -733,35 +749,20 @@ class EventState extends GFState {
         break;
 
       case 'height':
-        if (this.geo !== undefined) {
-          let height = Number(value);
-          if (this.isMatched('height')) {
-            let width = this.isMatched('width') ? Number(this.getMatchValue('width')) : undefined;
-            this.xgraph.setAnimSizeCell(this.xcell, width, height);
-            this.unset('height');
-          } else {
-            if (!this.isMatched('width')) {
-              this.xcell.restoreDimension();
-              this.unset('width');
-            }
-          }
+        if (value !== undefined) {
+          const height = Number(value);
+          const width = this.getTargetValue('width');
+          this.ack('width');
+          this.xgraph.setAnimSizeCell(this.xcell, width, height);
         }
         break;
 
       case 'width':
-        if (this.geo !== undefined) {
-          let width = Number(value);
-          if (this.isMatched('width')) {
-            let height = this.isMatched('height') ? Number(this.getMatchValue('height')) : undefined;
-            this.xgraph.setAnimSizeCell(this.xcell, width, height);
-            this.unset('width');
-          } else {
-            if (!this.isMatched('height')) {
-              // this.xgraph.resetSizeCell(this.xcell, this.geo);
-              this.xcell.restoreDimension();
-              this.unset('height');
-            }
-          }
+        if (value !== undefined) {
+          const width = Number(value);
+          const height = this.getTargetValue('height');
+          this.ack('height');
+          this.xgraph.setAnimSizeCell(this.xcell, width, height);
         }
         break;
 
@@ -771,17 +772,6 @@ class EventState extends GFState {
           this.xgraph.setAnimZoomCell(this.xcell, percent);
         }
         break;
-
-      // case 'barPos':
-      // case 'gaugePos':
-      // case 'fontSize':
-      // case 'opacity':
-      // case 'textOpacity':
-      // case 'rotation':
-      //   beginValue = this._get(key);
-      //   beginValue = beginValue === undefined ? EventMap.getDefaultValue(key) : beginValue;
-      //   this.xgraph.setStyleAnimCell(this.xcell, key, value, beginValue);
-      //   break;
 
       case 'blink':
         if (!!value) {
@@ -794,8 +784,10 @@ class EventState extends GFState {
       default:
         const k: any = key;
         if (XGraph.isMxGraphAnimStyle(key)) {
-          beginValue = this._get(k);
+          let beginValue = this._get(k);
           beginValue = beginValue === undefined ? EventMap.getDefaultValue(k) : beginValue;
+          console.log('🚀 ~ file: state_class.ts ~ line 788 ~ EventState ~ _set ~ beginValue', beginValue);
+          console.log('🚀 ~ file: state_class.ts ~ line 788 ~ EventState ~ _set ~ endValue', value);
           this.xgraph.setAnimStyleCell(this.xcell, k, value, beginValue);
         } else if (XGraph.isMxGraphStyle(k)) {
           this.xcell.setStyle(k, value);

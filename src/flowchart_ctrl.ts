@@ -28,7 +28,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
-  onMapping : InteractiveMap;
+  onMapping: InteractiveMap;
   id: String;
   GHApplied = false;
   mouseIn = false;
