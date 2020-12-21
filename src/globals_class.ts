@@ -1535,3 +1535,126 @@ export class GFTable {
     }
   }
 }
+
+declare interface GFTimerUnit {
+  step : number;
+  fn : CallableFunction;
+  ms : number;
+  running : boolean;
+  runned : boolean;
+  invalidated : boolean
+  tmId : number;
+}
+export class GFTimer {
+  currentStep: number = 0;
+  uniqId : string;
+  static timers:Map<string, GFTimer>;
+  units: GFTimerUnit[];
+
+  constructor(uniqId : string) {
+    if(GFTimer.timers === undefined) {
+      GFTimer.timers = new Map();
+    }
+    this.units = [];
+    this.uniqId = uniqId;
+  }
+
+  static clean( uniqId ?: string ) {
+    if(GFTimer.timers === undefined) {
+      GFTimer.timers = new Map();
+    }
+    if(uniqId !== undefined) {
+      const gftimer = GFTimer.timers.get(uniqId);
+      if(gftimer) {
+        gftimer.cancel();
+        GFTimer.timers.delete(uniqId);
+      }
+    } else {
+      GFTimer.timers.forEach( (gftimer, key, map) => {
+        gftimer.cancel();
+      });
+      GFTimer.timers.clear();
+    }
+  }
+
+  cancel():this {
+    this.units.forEach(t => {
+      GFTimer._cleanUnit(t);
+    });
+    return this;
+  }
+
+  _getDefaultTimerUnit():GFTimerUnit {
+    return {
+      step : this.units.length,
+      fn: () => {},
+      ms: 1000,
+      running: false,
+      runned: false,
+      invalidated: false,
+      tmId:0,
+    }
+  }
+
+  static _cleanUnit(unit: GFTimerUnit) {
+    if(unit !== undefined && unit.invalidated === false && unit.runned === false) {
+      unit.invalidated = true;
+      GFTimer._stopTimeOut(unit.tmId);
+    }
+  }
+
+  static _stopTimeOut(id : number) {
+    try {
+      if (id !== undefined) {
+        window.clearTimeout(id);
+      }
+    } catch (error) {
+      $GF.log.warn('Failed to clear timeout thread', id, error);
+    }
+  }
+
+  static getNewTimer(uniqId):GFTimer {
+    GFTimer.clean(uniqId);
+    const gftimer = new GFTimer(uniqId);
+    GFTimer.timers.set(uniqId, gftimer);
+    return gftimer;
+  }
+
+  add(fn : CallableFunction, ms : number):this {
+    const unit = this._getDefaultTimerUnit();
+    unit.fn = fn;
+    unit.ms = ms;
+    this.units.push(unit);
+    return this;
+  }
+
+  run():this {
+    const length = this.units.length
+    for (let i = 0; i < length; i++) {
+      const u = this.units[i];
+      u.tmId = window.setTimeout(this._runnable.bind(this, u), u.ms);
+    }
+    return this;
+  }
+
+  _runnable(unit : GFTimerUnit) {
+    if(unit.invalidated === false) {
+      unit.running = true;
+      try {
+        for(let i = this.currentStep; i < unit.step; i++) {
+          GFTimer._cleanUnit(this.units[i]);
+        }
+        unit.fn();
+      } catch (error) {
+        $GF.log.warn('Failed to run fn', error);
+      }
+      this.currentStep = unit.step;
+      unit.running = false;
+      unit.runned = true;
+      if(unit.step === this.units.length - 1) {
+       GFTimer.timers.delete(this.uniqId)   
+      }
+    }
+  }
+
+}

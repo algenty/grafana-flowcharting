@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { $GF } from 'globals_class';
+import { $GF, GFTimer } from 'globals_class';
 import * as Drawio from 'drawio_custom';
 import chroma from 'chroma-js';
 import * as mxcustom from 'mxgraph_custom';
@@ -26,7 +26,7 @@ export default class XGraph {
   xmlGraph = '';
   csvGraph = '';
   type: gf.TSourceTypeKeys = 'xml';
-  ctrl: any;
+  ctrl: FlowchartCtrl;
   graph: any = undefined;
   scale = true;
   tooltip = true;
@@ -37,6 +37,7 @@ export default class XGraph {
   zoomFactor = 1.2;
   cumulativeZoomFactor = 1;
   grid = false;
+  id = $GF.utils.uniqueID();
   bgColor: string | null = null;
   zoomPercent = '1';
   // cells: { id: string[]; value: string[] } = {
@@ -997,11 +998,11 @@ export default class XGraph {
    */
   setAnimColorCell(xcell: XCell, style: gf.TStyleColorKeys, color: string | null): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimColorCell()');
-    const id = `${style}_${xcell.getId()}`;
     // Cancel Previous anim
-    $GF.clearUniqTimeOut(id);
+    // $GF.clearUniqTimeOut(timeId);
     if (this.isAnimated() && color) {
       try {
+        const timeId = `${style}-${this.id}-${xcell.getId()}`;
         const startColor = xcell.getStyle(style);
         if (startColor) {
           const endColor = color;
@@ -1009,18 +1010,24 @@ export default class XGraph {
             .scale([startColor, endColor])
             .mode('lrgb')
             .colors($GF.CONSTANTS.CONF_COLORS_STEPS + 1);
-          let count = 1;
-          const lg = steps.length;
-          function graduate() {
-            if (count < lg) {
-              xcell.setStyle(style, steps[count]);
-              count += 1;
-              $GF.setUniqTimeOut(graduate, $GF.CONSTANTS.CONF_COLORS_MS, id);
-            } else {
-              $GF.clearUniqTimeOut(id);
-            }
+          const timer = GFTimer.getNewTimer(timeId);
+          const ms = $GF.CONSTANTS.CONF_COLORS_MS;
+          for (let i = 1; i < steps.length; i++) {
+            timer.add(xcell.setStyle.bind(xcell, style, steps[i]), ms * i);
           }
-          graduate();
+          timer.run();
+          // let count = 1;
+          // const lg = steps.length;
+          // function graduate() {
+          //   if (count < lg) {
+          //     xcell.setStyle(style, steps[count]);
+          //     count += 1;
+          //     $GF.setUniqTimeOut(graduate, $GF.CONSTANTS.CONF_COLORS_MS, timeId);
+          //   } else {
+          //     $GF.clearUniqTimeOut(timeId);
+          //   }
+          // }
+          // graduate();
         } else {
           // let hex = Color(color).hex();
           let hex = chroma(color).hex();
@@ -1074,22 +1081,29 @@ export default class XGraph {
         const end = Number(endValue);
         const begin = beginValue !== undefined ? Number(beginValue) : Number(xcell.getStyle(style));
         if (end !== begin) {
-          const id = `${style}_${xcell.getId()}`;
+          const timeId = `${style}-${this.id}-${xcell.getId()}`;
           // Cancel Previous anim
-          $GF.clearUniqTimeOut(id);
+          $GF.clearUniqTimeOut(timeId);
           const steps = $GF.calculateIntervalCounter(begin, end, $GF.CONSTANTS.CONF_ANIMS_STEP);
-          const lg = steps.length;
-          let count = 0;
-          function graduate() {
-            if (count < lg) {
-              xcell.setStyle(style, steps[count].toString());
-              count += 1;
-              $GF.setUniqTimeOut(graduate, $GF.CONSTANTS.CONF_ANIMS_MS, id);
-            } else {
-              $GF.clearUniqTimeOut(id);
-            }
+          const length = steps.length;
+          const timer = GFTimer.getNewTimer(timeId);
+          const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
+          for(let i = 1; i < length; i++) {
+            timer.add(xcell.setStyle.bind(xcell, style, steps[i].toString()), ms * i);
           }
-          graduate();
+          timer.run();
+          // const lg = steps.length;
+          // let count = 0;
+          // function graduate() {
+          //   if (count < lg) {
+          //     xcell.setStyle(style, steps[count].toString());
+          //     count += 1;
+          //     $GF.setUniqTimeOut(graduate, $GF.CONSTANTS.CONF_ANIMS_MS, id);
+          //   } else {
+          //     $GF.clearUniqTimeOut(id);
+          //   }
+          // }
+          // graduate();
         }
       } catch (error) {
         this.graph.setCellStyles(style, endValue, [xcell]);
@@ -1311,21 +1325,28 @@ export default class XGraph {
    */
   async setAnimZoomCell(xcell: XCell, percent: number) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
-    const timeId = `setAnimZoomCell_${xcell.getId}`;
-    $GF.clearUniqTimeOut(timeId);
+    // $GF.clearUniqTimeOut(timeId);
     if (this.isAnimated()) {
+      const timeId = `setAnimZoomCell-${this.id}${xcell.getId}`;
       const percents = $GF.calculateIntervalCounter(xcell.percent, percent, $GF.CONSTANTS.CONF_ANIMS_STEP);
-      let index = 0;
-      function anim() {
-        if (index < percents.length) {
-          xcell.zoom(percents[index]);
-          index = index + 1;
-          $GF.setUniqTimeOut(anim, $GF.CONSTANTS.CONF_ANIMS_MS, timeId);
-        } else {
-          $GF.clearUniqTimeOut(timeId);
-        }
+      const timer = GFTimer.getNewTimer(timeId);
+      const length = percents.length;
+      const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
+      for (let i = 1; i < length; i++) {
+        timer.add(xcell.zoom.bind(xcell, percents[i]), ms * i);
       }
-      anim();
+      timer.run();
+      // let index = 0;
+      // function anim() {
+      //   if (index < percents.length) {
+      //     xcell.zoom(percents[index]);
+      //     index = index + 1;
+      //     $GF.setUniqTimeOut(anim, $GF.CONSTANTS.CONF_ANIMS_MS, timeId);
+      //   } else {
+      //     $GF.clearUniqTimeOut(timeId);
+      //   }
+      // }
+      // anim();
     } else {
       xcell.zoom(percent);
     }
@@ -1343,27 +1364,34 @@ export default class XGraph {
    */
   async setAnimSizeCell(xcell: XCell, width: number | undefined, height: number | undefined) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
-    const timeId = `setAnimSizeCell_${xcell.getId()}`;
     const dim = xcell.getDimension();
     const wdir = width !== undefined && width >= 0 ? 1 : -1;
     const hdir = height !== undefined && height >= 0 ? 1 : -1;
     width = width !== undefined ? width : undefined;
     height = height !== undefined ? height : undefined;
-    $GF.clearUniqTimeOut(timeId);
+    // $GF.clearUniqTimeOut(timeId);
     if (this.isAnimated()) {
+      const timeId = `setAnimSizeCell-${this.id}-${xcell.getId()}`;
       const widths = $GF.calculateIntervalCounter(dim.width * wdir, width, $GF.CONSTANTS.CONF_ANIMS_STEP);
       const heights = $GF.calculateIntervalCounter(dim.height * hdir, height, $GF.CONSTANTS.CONF_ANIMS_STEP);
-      let index = 0;
-      function anim() {
-        if (index < widths.length) {
-          xcell.resize(widths[index], heights[index]);
-          index += 1;
-          $GF.setUniqTimeOut(anim, $GF.CONSTANTS.CONF_ANIMS_MS, timeId);
-        } else {
-          $GF.clearUniqTimeOut(timeId);
-        }
+      const length = widths.length;
+      const timer = GFTimer.getNewTimer(timeId);
+      const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
+      for (let i = 1; i < length; i++) {
+        timer.add(xcell.resize.bind(xcell, widths[i], heights[i]), ms * i);
       }
-      anim();
+      timer.run();
+      // let index = 0;
+      // function anim() {
+      //   if (index < widths.length) {
+      //     xcell.resize(widths[index], heights[index]);
+      //     index += 1;
+      //     $GF.setUniqTimeOut(anim, $GF.CONSTANTS.CONF_ANIMS_MS, timeId);
+      //   } else {
+      //     $GF.clearUniqTimeOut(timeId);
+      //   }
+      // }
+      // anim();
     } else {
       xcell.resize(width, height);
     }
