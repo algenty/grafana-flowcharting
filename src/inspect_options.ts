@@ -3,6 +3,7 @@ import { State } from 'state_class';
 import { $GF, GFTable } from 'globals_class';
 import { StateHandler } from 'statesHandler';
 import _ from 'lodash';
+import XGraph from 'graph_class';
 // import { MetricHandler } from './metricHandler';
 
 export class InspectOptionsCtrl {
@@ -25,11 +26,21 @@ export class InspectOptionsCtrl {
 
   /** @ngInject */
   constructor($scope: gf.TInspectOptionsScope, $element) {
+    let n = 0;
     this.statesTableData = {
       data: this.getStates(),
       columns: [
         {
-          index: 0,
+          index: n++,
+          id: 'expand',
+          label: '<>',
+          desc: 'Show/Hide detail',
+          width: '30px',
+          sort: 'asc',
+          select: false,
+        },
+        {
+          index: n++,
           id: 'id',
           label: 'ID',
           desc: 'Uniq Id',
@@ -38,7 +49,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
         {
-          index: 1,
+          index: n++,
           id: 'label',
           label: 'Label',
           desc: 'Text/Label',
@@ -47,7 +58,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
         {
-          index: 2,
+          index: n++,
           id: 'shape',
           label: 'Shape',
           desc: 'Draw.io shape model',
@@ -56,7 +67,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
         {
-          index: 3,
+          index: n++,
           id: 'level',
           label: 'Lvl',
           desc: 'Current level',
@@ -65,7 +76,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
         {
-          index: 4,
+          index: n++,
           id: 'rval',
           label: 'R.Val.',
           desc: 'Raw value',
@@ -74,7 +85,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
         {
-          index: 5,
+          index: n++,
           id: 'fval',
           label: 'F.Val.',
           desc: 'Formated value',
@@ -83,7 +94,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
         {
-          index: 6,
+          index: n++,
           id: 'colors',
           label: 'Colors',
           desc: 'Shape ID',
@@ -92,7 +103,7 @@ export class InspectOptionsCtrl {
           select: false,
         },
         {
-          index: 7,
+          index: n++,
           id: 'tags',
           label: 'Tags',
           desc: 'Tags',
@@ -139,24 +150,33 @@ export class InspectOptionsCtrl {
     return xcell.getId() !== xcell.getDefaultId();
   }
 
-  onEdit(state: State) {
-    // state.edit = true;
-    // state.newcellId = state.id;
-    // let stateHandler = this.flowchartHandler.getFlowchart().getStateHandler();
-    // stateHandler.edited = true;
-    const elt = document.getElementById(state.id);
-    setTimeout(() => {
-      if (elt) {
-        elt.focus();
-      }
-    }, 100);
-  }
+  // onEdit(state: State) {
+  //   // state.edit = true;
+  //   // state.newcellId = state.id;
+  //   // let stateHandler = this.flowchartHandler.getFlowchart().getStateHandler();
+  //   // stateHandler.edited = true;
+  //   const elt = document.getElementById(state.id);
+  //   setTimeout(() => {
+  //     if (elt) {
+  //       elt.focus();
+  //     }
+  //   }, 100);
+  // }
 
   undo(state: State) {
     const xcell = state.getXCell();
     if (this.isEdited(state)) {
       xcell.restoreId();
     }
+  }
+
+  initPreview(state : State):boolean {
+    const div = document.getElementById(`preview-${state.xcell.uniqId}`)
+    if(div !== null) {
+      div.innerHTML = '';
+      XGraph.preview(div, state.getXCell());
+    }
+    return true;
   }
 
   reset() {

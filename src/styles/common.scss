@@ -145,11 +145,16 @@ div.tooltip-date {
 }
 
 div.gf-inspect-color-picker {
-  text-align: center;
-  margin-right: 5px;
-  width: 16px;
-  height: 16px;
+  margin-right: 2px;
+  width: 14px;
+  height: 14px;
   border: 1px solid $color_picker_border;
+  border-radius: 3px;
+  text-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  align-items: center;
   font-size: 8px;
 }
 

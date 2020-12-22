@@ -7,7 +7,7 @@ import { RulesHandler } from 'rulesHandler';
 import { FlowchartHandler } from 'flowchartHandler';
 import { MetricHandler } from 'metricHandler';
 // import { PanelEvents } from '@grafana/data';
-import { $GF } from 'globals_class';
+import { $GF, GFTimer } from 'globals_class';
 import XGraph from 'graph_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
@@ -347,6 +347,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   $onDestroy() {
     $GF.destroy();
+    GFTimer.stop();
   }
 
   /**

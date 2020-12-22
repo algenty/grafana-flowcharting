@@ -1443,4 +1443,42 @@ export default class XGraph {
   static decompress(source: string): string {
     return Graph.decompress(source, true);
   }
+
+  static preview(container : HTMLElement, xcell : XCell, force:boolean = false) {
+    const g = new Graph(container);
+    if(g) {
+      // const mxcell = xcell.getMxCell();
+      try {
+        const model = g.getModel();
+        model.beginUpdate();
+        model.clear();
+        const clone = xcell.cloneMxCell();
+        g.setTooltips(false);
+        const parent = model.getChildAt(model.getRoot(), 0);
+        model.add(parent, clone);
+        g.updateCssTransform();
+        g.selectUnlockedLayer();
+        g.view.rendering = true;
+        g.setEnabled(false);
+        g.getModel().endUpdate();
+        const margin = 2;
+        const max = 3;
+        const bounds = g.getGraphBounds();
+        const cw = g.container.clientWidth - margin;
+        const ch = g.container.clientHeight - margin;
+        const w = bounds.width / g.view.scale;
+        const h = bounds.height / g.view.scale;
+        const s = Math.min(max, Math.min(cw / w, ch / h));
+    
+        g.view.scaleAndTranslate(
+          s,
+          (margin + cw - w * s) / (2 * s) - bounds.x / g.view.scale,
+          (margin + ch - h * s) / (2 * s) - bounds.y / g.view.scale
+        );
+      } catch (error) {
+        $GF.log.error('Error in preview', error);
+      }
+
+    }
+  }
 }

@@ -366,6 +366,13 @@ $encoding-reference: (('<', '%3C'), ('>', '%3E'), ('"', "'"), ('#', '%23'), ('&'
     background-image: url(svg-encode(str-replace($source, 'currentColor', $encoded-color)));
   }
 
+  $icon-name: 'undo';
+  &-#{$icon-name} {
+    @extend .gf-icon;
+    $source: '<svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 563 75C 563 75 563 118 563 118C 755 149 897 321 887 518C 877 728 702 891 493 887C 283 883 115 713 113 504C 112 483 129 466 150 465C 171 465 188 482 188 503C 189 673 325 809 494 812C 664 816 804 684 812 515C 820 359 712 224 563 194C 563 194 563 225 563 225C 562 240 553 254 539 260C 525 265 509 262 498 252C 498 252 423 177 423 177C 409 162 409 138 423 123C 423 123 498 48 498 48C 505 42 514 38 524 38C 545 37 562 54 563 75C 563 75 563 75 563 75"/></svg>';
+    background-image: url(svg-encode(str-replace($source, 'currentColor', $encoded-color)));
+  }
+
   $icon-name: 'shape';
   &-#{$icon-name} {
     @extend .gf-icon;

@@ -8,6 +8,17 @@
                 ng-mousemove="editor.statesTable.onMouseMove($event)"
                 ng-mouseleave="editor.statesTable.onMouseUp($event)">
                 <!-- HEADERS -->
+                <!-- EXPAND -->
+                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                    ng-style="{'width' : editor.statesTable.getWidth('expand')}">
+                    <div ng-attr-title="{{editor.statesTable.getDesc('expand')}}" class="gf-table-title"
+                        style="cursor: pointer;">
+                        <div>{{editor.statesTable.getLabel('expand')}}</div>
+                    </div>
+                    <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
+                        ng-mousedown="editor.statesTable.onMouseDown($event)">
+                    </div>
+                </div>
                 <!-- ID -->
                 <div class="gf-table-columnheader" colspan="1" role="columnheader"
                     ng-style="{'width' : editor.statesTable.getWidth('id')}">
@@ -104,13 +115,26 @@
                     <!-- CELLS -->
                     <div class="gf-table-row_line" ng-mouseleave="editor.unselectCell(state)"
                         ng-mouseover="editor.selectCell(state)">
-                        <!-- ID -->
+                        <!-- EXPAND -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
+                            ng-click="state.reduce=!state.reduce"
+                            ng-init="CN1 = 'expand';state.displayEdit[CN1] = false;state.inEdit[CN1] = false;"
+                            ng-style="{'width' : editor.statesTable.getWidth(CN1)}">
+                            <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
+                                <span>
+                                    <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
+                                        ng-class="{'gf-chevron-init': state.reduce, 'gf-chevron-rotate': state.reduce === false}">
+                                    </i>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- ID -->
+                        <!-- <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
                             ng-style="{'width' : editor.statesTable.getWidth('id')}"
                             ng-mouseleave="state.editButton = false;" ng-mouseover="state.editButton = true;">
                             <div class="gf-table-content" ng-hide="state.edit"
-                                ng-style="state.edited && {'color':'blue'};" ng-dblclick="editor.onEdit(state)">
-                                {{state.cellId}}
+                                ng-style="editor.isEdited && {'color':'blue'};" ng-dblclick="editor.onEdit(state)">
+                                <span>{{state.xcell.getId()}}</span>
                             </div>
                             <div ng-show="state.editButton === true && state.edited === true && state.edit !== true"
                                 style="padding:6px;float:right;" ng-click="editor.undo(state)">
@@ -125,17 +149,45 @@
                                 </span>
                             </div>
                             <div ng-show="state.edit">
-                                <input type="text" id="{{state.cellId}}" class="gf-form-input"
-                                    ng-model="state.newcellId" ng-blur="editor.onChangeId(state)"
-                                    placeholder="{{state.cellId}}" style="width: 100%;"
+                                <input type="text" ng-attr-id="{{'state-' + state.xcell.uniqId}}" class="gf-form-input"
+                                    ng-model="state.xcell.mxcell.id" ng-blur="editor.onChangeId(state)"
+                                    placeholder="{{state.xcell.mxcell.id}}" style="width: 100%;"
                                     ng-keydown="$event.keyCode === 13 && editor.onChangeId(state)" />
                             </div>
+                        </div> -->
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable"
+                            ng-init="CN2 = 'id';state.displayEdit[CN2] = false;state.inEdit[CN2] = false;"
+                            ng-mouseleave="state.displayEdit[CN2] = false;" ng-mouseover="state.displayEdit[CN2] = true;"
+                            ng-style="{'width' : editor.statesTable.getWidth(CN2)}"
+                            ng-attr-title="{{state.getData().pattern}}">
+                            <div class="gf-table-content" ng-show="state.inEdit[CN2] !== true"
+                                ng-dblclick="state.inEdit[CN2] = true;$GF.setFocus( state.xcell.mxcell.id + '-' + CN2 )">
+                                <span ng-style="editor.isEdited(state) && {'color':'blue'};">
+                                    {{state.xcell.mxcell.id}}
+                                </span>
+                            </div>
+                            <div ng-show="state.displayEdit[CN2] === true && state.inEdit[CN2] !== true && editor.isEdited(state)"
+                                ng-click="editor.undo(state)"
+                                title="undo"
+                                class="gf-icon-action gf-icon-undo gf-icon-oncontent gf-icon-withcontent">
+                            </div>
+                            <div ng-show="state.displayEdit[CN2] === true && state.inEdit[CN2] !== true"
+                                ng-click="state.inEdit[CN2] = true;$GF.setFocus( state.xcell.mxcell.id + '-' + CN2 )"
+                                title="Edit pattern"
+                                class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
+                            </div>
+                            <input type="text" style="margin-right: 2px;width : 100%"
+                                ng-attr-id="{{state.xcell.mxcell.id + '-' + CN2}}" ng-show="state.inEdit[CN2] === true"
+                                class="gf-form-input" ng-model="state.xcell.mxcell.id"
+                                ng-change="editor.onRulesChange()" ng-model-onblur
+                                ng-blur="editor.onRulesChange();state.inEdit[CN2] = false;"
+                                data-min-length="0" data-items="100" data-placement="right" />
                         </div>
                         <!-- LABEL -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rule"
                             ng-style="{'width' : editor.statesTable.getWidth('label')}">
                             <div class="gf-table-content">
-                                {{state.getCellProp('value')}}
+                                {{state.xcell.getDefaultLabel()}}
                             </div>
                         </div>
                         <!-- SHAPE -->
@@ -146,8 +198,8 @@
                             </div>
                         </div>
                         <!-- LEVEL -->
-                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="level" style="text-align: center;"
-                            ng-style="{'width' : editor.statesTable.getWidth('level')}">
+                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="level"
+                            style="text-align: center;" ng-style="{'width' : editor.statesTable.getWidth('level')}">
                             <div class="gf-table-content">
                                 {{state.getTextLevel()}}
                             </div>
@@ -176,16 +228,16 @@
                                     <div bs-tooltip="'Text : ' + state.getStatus('fontColor')"
                                         class="gf-inspect-color-picker"
                                         style="background-color: {{state.getStatus('fontColor')}};">
-                                        T
+                                        <span>T</span>
                                     </div>
                                 </div>
                                 <!-- FILL COLOR -->
                                 <div ng-show="state.haveStatus('fillColor') && state.getStatus('fillColor').length > 0 && state.getStatus('fillColor') !== 'none'"
-                                    style="display:table-cell;vertical-align:middle;">
+                                    style="display:table-cell;vertical-align:middle;border-radius: 3px;">
                                     <div bs-tooltip="'Fill : ' + state.getStatus('fillColor')"
                                         class="gf-inspect-color-picker"
                                         style="background-color: {{state.getStatus('fillColor')}};">
-                                        F
+                                        <span>F</span>
                                     </div>
                                 </div>
                                 <!-- STROKE COLOR -->
@@ -194,7 +246,7 @@
                                     <div bs-tooltip="'Stroke : ' + state.getStatus('strokeColor')"
                                         class="gf-inspect-color-picker"
                                         style="background-color: {{state.getStatus('strokeColor')}};">
-                                        S
+                                        <span>S</span>
                                     </div>
                                 </div>
 
@@ -218,6 +270,9 @@
                                     bs-tooltip="'Tooltips available'"><i class="fa fa-info"></i></div>
                             </div>
                         </div>
+                    </div>
+                    <div class="gf-table-row_body" ng-show="state.reduce === false && editor.initPreview(state)">
+                        <ng-include src="$GF.plugin.getPartialPath() + 'inspect/states/stateBody.html'"> </ng-include>
                     </div>
                 </div>
             </div>

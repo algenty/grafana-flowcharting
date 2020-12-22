@@ -92,7 +92,7 @@ export class RulesOptionsCtrl {
           index: n++,
           id: 'expand',
           label: '<>',
-          desc: 'Expand/collapse',
+          desc: 'Show/Hide detail',
           width: '30px',
           sort: 'asc',
           select: false,

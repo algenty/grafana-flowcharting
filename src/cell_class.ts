@@ -1,3 +1,4 @@
+import { Node } from '@babel/core';
 import { $GF, GFTimer } from 'globals_class';
 import { Rule } from 'rule_class';
 import { TooltipHandler } from 'tooltipHandler';
@@ -9,8 +10,9 @@ export class XCell {
   isHidden: boolean = false;
   isHighlighting: boolean = false;
   isBlink: boolean = false;
-  isSurrounded:boolean = false;
-  _surroundHL: any = null;
+  // isSurrounded:boolean = false;
+  // _surroundHL: any = null;
+  _surroundHL: Map<string, any>;
   percent: number = 100;
   // isCollapsed: boolean = false;
   _mxcellHL: any = null;
@@ -23,6 +25,7 @@ export class XCell {
     this.gf = this._getDefaultGFXCell();
     this.mxcell.gf = this.gf;
     this.isHidden = !this.graph.model.isVisible(this.mxcell);
+    this._surroundHL = new Map();
     // this.isCollapsed = this.graph.isCellCollapsed(this.mxcell);
   }
 
@@ -414,6 +417,32 @@ export class XCell {
     return this.mxcell.isVertex();
   }
 
+  //
+  // SVG
+  //
+  getSvgNode():HTMLElement | null {
+    const state = this.getMxCellState();
+    if(state && state.shape.node) {
+      return state.shape.node;
+    }
+    return null;
+  }
+
+  cloneSVG():HTMLElement {
+    const svg = document.createElement('svg');
+    const node = this.getSvgNode();
+    if(node !== null) {
+      const n = node.cloneNode(true);
+      svg.appendChild(n);
+      return svg;
+    }
+    return svg;
+  }
+
+  cloneMxCell():any {
+    return this.graph.cloneCell(this.mxcell, true);
+  }
+
   /**
    * Match XCell
    *
@@ -455,7 +484,7 @@ export class XCell {
    * @param {boolean} [bool=true]
    * @memberof XCell
    */
-  async show() {
+  show() {
     this.hide(false);
   }
 
@@ -466,31 +495,15 @@ export class XCell {
    * @memberof XCell
    */
   async highlight(bool: boolean = true) {
+    const color = $GF.CONSTANTS.CONF_HIGHTLIGHT_COLOR;
     if (!this.isHighlighting && bool) {
       this.isHighlighting = true;
-      // const color = '#99ff33';
-      const color = $GF.CONSTANTS.CONF_HIGHTLIGHT_COLOR;
-      const opacity = 100;
-      const state = this.getMxCellState();
-      if (state !== null && state !== undefined) {
-        const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-        const hl = new mxCellHighlight(this.graph, color, sw, false);
-        this._mxcellHL = hl;
-        hl.opacity = opacity;
-        hl.highlight(state);
-      }
+      this.surround(color, true, true);
     } else if (this.isHighlighting && !bool) {
-      const hl = this._mxcellHL;
-      if (hl !== undefined && hl.shape !== null && hl.shape !== undefined) {
-        mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', 'all 500ms ease-in-out');
-        hl.shape.node.style.opacity = 0;
-        window.setTimeout(() => {
-          hl.destroy();
-        }, 500);
-      }
-      this._mxcellHL = undefined;
+      this.surround(color, true, false);
       this.isHighlighting = false;
     }
+    this.isHighlighting = bool;
   }
 
   /**
@@ -508,7 +521,7 @@ export class XCell {
    * @param {boolean} [bool=true]
    * @memberof XCell
    */
-  async collapse(bool = true) {
+  collapse(bool = true) {
     const coll = this.graph.isCellCollapsed(this.mxcell);
     if (!coll && bool) {
       this.graph.foldCells(true, false, [this.mxcell], null, null);
@@ -533,7 +546,7 @@ export class XCell {
    * @deprecated
    * @memberof XCell
    */
-  async expand() {
+  expand() {
     this.collapse(false);
   }
 
@@ -597,33 +610,53 @@ export class XCell {
     trc.after();
   }
 
-  surround(color:string, bool : boolean = true):this {
-    if (bool && !this.isSurrounded)  { 
-        // const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
-        const opacity = 100;
-        const state = this.getMxCellState();
-        if (state !== null) {
-          const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-          const hl = new mxCellHighlight(this.graph, color, sw, false);
-          if (opacity !== null) {
-            hl.opacity = opacity;
-          }
-          hl.highlight(state);
-          this._surroundHL = hl;
+  isSurrounded(color: string): boolean {
+    if (this._surroundHL !== undefined) {
+      return this._surroundHL.has(color);
+    } else {
+      this._surroundHL = new Map();
+    }
+    return false;
+  }
+
+  surround(color: string, anim: boolean = true, bool: boolean = true): this {
+    if (bool && !this.isSurrounded(color)) {
+      const opacity = 100;
+      const state = this.getMxCellState();
+      if (state !== null) {
+        const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
+        const hl = new mxCellHighlight(this.graph, color, sw, false);
+        if (opacity !== null) {
+          hl.opacity = opacity;
         }
-    } else if (!bool && this.isSurrounded) {
-      const hl = this._surroundHL;
-      if (hl && hl.shape != null) {
+        hl.highlight(state);
+        this._surroundHL.set(color, hl);
+      }
+    } else if (!bool && this.isSurrounded(color)) {
+      const hl = this._surroundHL.get(color);
+      const transition = 300;
+      if (hl && hl.shape !== null && hl.shape !== undefined) {
+        if(anim) {
+          mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', `all ${transition}ms ease-in-out`);
+        }
         hl.shape.node.style.opacity = 0;
-        hl.destroy();
-        this._surroundHL = undefined;
+        // hl.destroy();
+        // this._surroundHL = undefined;
+        if(anim) {
+          window.setTimeout(() => {
+            hl.destroy();
+            this._surroundHL.delete(color);
+          }, transition);
+        } else {
+          hl.destroy();
+          this._surroundHL.delete(color);
+        }
       }
     }
-    this.isSurrounded = bool;
     return this;
   }
 
-  unsurround():this {
+  unsurround(): this {
     this.surround('', false);
     return this;
   }
@@ -686,18 +719,20 @@ export class XCell {
   // }
   async blink(ms: number = 1000, bool: boolean = true) {
     const timeId = `blink-${this.uniqId}`;
+    const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
     if (bool && !this.isBlink) {
       this.isBlink = true;
       const timer = GFTimer.getNewTimer(timeId);
-      timer.add(this.surround.bind(this, $GF.CONSTANTS.CONF_BLINK_COLOR), ms);
-      timer.add(this.surround.bind(this, $GF.CONSTANTS.CONF_BLINK_COLOR, false), ms * 2);
-      timer.setCyclic()
+      timer.add(this.surround.bind(this, color, false), ms);
+      timer.add(this.surround.bind(this, color, false, false), ms * 2);
+      timer.setCyclic();
       timer.run();
     } else if (!bool && this.isBlink) {
       GFTimer.stop(timeId);
-      this.surround('', false);
+      this.surround(color, false, false);
       this.isBlink = false;
     }
+    this.isBlink = bool;
   }
 
   /**

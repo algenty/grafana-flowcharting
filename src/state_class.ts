@@ -34,6 +34,7 @@ export class State {
   highestFormattedValue: string = '';
   highestValue: any = undefined;
   tooltipHandler: TooltipHandler | null = null;
+  reduce:boolean = true;
   // originalText: string;
 
   /**
