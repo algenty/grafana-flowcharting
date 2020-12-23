@@ -35,6 +35,8 @@ export class State {
   highestValue: any = undefined;
   tooltipHandler: TooltipHandler | null = null;
   reduce:boolean = true;
+  currRules:string[] = [];
+  currMetrics:string[] = [];
   // originalText: string;
 
   /**
@@ -97,6 +99,9 @@ export class State {
   setState(rule: Rule, metric: Metric): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setState()');
     if (!rule.isHidden() && rule.matchMetric(metric)) {
+      try {
+        this.currMetrics.push(metric.getName());
+      } catch(error) {}
       let beginPerf = Date.now();
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
@@ -113,19 +118,24 @@ export class State {
       this.variables.set($GF.CONSTANTS.VAR_STR_COLOR, color);
 
       // SHAPE
+      let matchedRule = false;
       let mapOptions = rule.getShapeMapOptions();
       let cellValue = this.xcell.getDefaultValues(mapOptions);
       shapeMaps.forEach(shape => {
         let k = shape.data.style;
         if (!shape.isHidden() && shape.match(cellValue, mapOptions)) {
           let v: any = color;
-          this.matched = true;
-          if (level > this.globalLevel) {
-            this.globalLevel = level;
-            this.highestValue = value;
-            this.highestFormattedValue = FormattedValue;
+          if(!matchedRule) {
+            matchedRule = true;
+            this.currRules.push(rule.data.alias);
           }
           if (shape.isEligible(level)) {
+            this.matched = true;
+            if (level > this.globalLevel) {
+              this.globalLevel = level;
+              this.highestValue = value;
+              this.highestFormattedValue = FormattedValue;
+            }
             this.shapeState.set(k, v, level) && this.status.set(k, v);
           }
           // TOOLTIP
@@ -150,6 +160,10 @@ export class State {
       textMaps.forEach(text => {
         const k = 'label';
         if (!text.isHidden() && text.match(cellValue, mapOptions) && text.isEligible(level)) {
+          if(!matchedRule) {
+            matchedRule = true;
+            this.currRules.push(rule.data.alias);
+          }
           if (text.isEligible(level)) {
             this.matched = true;
             if (level > this.globalLevel) {
@@ -170,6 +184,10 @@ export class State {
       eventMaps.forEach(event => {
         const k = event.data.style;
         if (!event.isHidden() && event.match(cellValue, mapOptions) && event.isEligible(level)) {
+          if(!matchedRule) {
+            matchedRule = true;
+            this.currRules.push(rule.data.alias);
+          }
           if (event.isEligible(level)) {
             this.matched = true;
             if (level > this.globalLevel) {
@@ -189,6 +207,10 @@ export class State {
       linkMaps.forEach(link => {
         const k = 'link';
         if (!link.isHidden() && link.match(cellValue, mapOptions)) {
+          if(!matchedRule) {
+            matchedRule = true;
+            this.currRules.push(rule.data.alias);
+          }
           if (link.isEligible(level)) {
             this.matched = true;
             if (level > this.globalLevel) {
@@ -427,6 +449,8 @@ export class State {
       this.status.clear();
       this.globalLevel = -1;
       this.highestFormattedValue = '';
+      this.currMetrics = [];
+      this.currRules = [];
       this.highestValue = undefined;
       this.matched = false;
     }

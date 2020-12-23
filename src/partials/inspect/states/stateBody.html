@@ -3,25 +3,23 @@
     <div style="width: 80%;height: auto;">
         <h5 class="section-heading">
             Detail
-            <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Definition of event mapping', 'EVENTS')"></span>
-            </info-popover>
         </h5>
         <div class="gf-form">
             <label class="gf-form-label width-10">
                 <span>Id</span>
                 <info-popover mode="right-normal">
-                    <span ng-bind-html="$GF.popover('Enter shape Id or click on target button', 'EVENTS')">
+                    <span ng-bind-html="$GF.popover('Enter shape a new Id', 'EVENTS')">
                     </span>
                 </info-popover>
             </label>
-            <input type="text" style="margin-right: 2px;" id="{{ state.getId() }}" placeholder="id or regex of shape"
-                class="gf-form-input width-8" ng-model="state.getData().pattern"
+            <input type="text" style="margin-right: 2px;" id="{{ state.getId() }}" placeholder="Draw.io Id "
+                class="gf-form-input width-8" ng-model="state.xcell.mxcell.id"
                 title="Enter an id"
                 ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
                 ng-model-onblur data-placement="right" />
             <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
-                ng-show="rule.getEventMapOptions().identByProp !== 'metadata'"
-                title="Select an object in diagram/graph" ng-click="">
+                ng-show="editor.isEdited(state)"
+                title="Restore previous Id" ng-click="editor.undo(state)">
                 <div Class="gf-icon-undo" style="margin-bottom: 7px;margin-right: 2px;"></div>
             </button>
         </div>
@@ -37,17 +35,59 @@
             </label>
             <span>{{state.xcell.getDefaultLabel()}}</span>
         </div>
+        <div class="gf-form">
+            <label class="gf-form-label width-10">
+                <span>Shape Form</span>
+            </label>
+            <span>{{state.getShapeName()}}</span>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label width-10">
+                <span>Current level</span>
+            </label>
+            <span>{{state.getTextLevel()}}</span>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label width-10">
+                <span>Raw value</span>
+            </label>
+            <span>{{state.highestValue}}</span>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label width-10">
+                <span>Formated value</span>
+            </label>
+            <span>{{state.highestFormattedValue}}</span>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label width-10">
+                <span>Rules</span>
+            </label>
+            <span>{{state.currRules.join(', ')}}</span>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label width-10">
+                <span>Metrics</span>
+            </label>
+            <span>{{state.currMetrics.join(', ')}}</span>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label width-10">
+                <span>Styles</span>
+            </label>
+            <div style="overflow-wrap: break-word;max-width: 128px;">
+                <span>{{state.getShapeStyles()}}</span>
+            </div>
+        </div>
     </div>
     <!-- PREVIEW -->
     <div style="width: 20%;height: auto;">
         <h5 class="section-heading">
             <span>Preview</span>
-            <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Shape preview', 'INSPECT')"></span>
-            </info-popover>
         </h5>
         <div
             class="gf-unselectable"
-            style="width: 50px;height: 50px;right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; overflow: auto; cursor: default;z-index: 1;-webkit-box-sizing:content-box;box-sizing:content-box"
+            style="width: 100px;height: 100px;right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; overflow: auto; cursor: default;z-index: 1;-webkit-box-sizing:content-box;box-sizing:content-box"
             ng-attr-id="{{'preview-' + state.xcell.uniqId}}">
         </div>
     </div>

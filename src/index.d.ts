@@ -313,6 +313,7 @@ declare module gf {
     tooltipColors: boolean;
     tooltipOn: TTooltipOnKeys;
     tpDirection: TDirectionKeys;
+    tpMetadata: boolean;
     tpGraph: boolean;
     tpGraphSize: TGraphSizeKeys;
     tpGraphType: TGraphTypeKeys;

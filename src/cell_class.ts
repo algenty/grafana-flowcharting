@@ -10,13 +10,9 @@ export class XCell {
   isHidden: boolean = false;
   isHighlighting: boolean = false;
   isBlink: boolean = false;
-  // isSurrounded:boolean = false;
-  // _surroundHL: any = null;
   _surroundHL: Map<string, any>;
   percent: number = 100;
-  // isCollapsed: boolean = false;
   _mxcellHL: any = null;
-  // _blinkHL: any = null;
   gf: gf.TXCellGF;
 
   constructor(graph, mxcell) {
@@ -26,7 +22,6 @@ export class XCell {
     this.mxcell.gf = this.gf;
     this.isHidden = !this.graph.model.isVisible(this.mxcell);
     this._surroundHL = new Map();
-    // this.isCollapsed = this.graph.isCellCollapsed(this.mxcell);
   }
 
   static refactore(graph: any, mxcell: mxCell): XCell {
@@ -668,55 +663,6 @@ export class XCell {
    * @param {boolean} [bool=true]
    * @memberof XCell
    */
-  // async blink(ms: number = 1000, bool: boolean = true) {
-  //   const timeId = `blink-${this.uniqId}`;
-  //   const self = this;
-  //   if (bool && !this.isBlink) {
-  //     $GF.clearUniqTimeOut(timeId);
-  //     this.isBlink = true;
-  //     const bl_on = function() {
-  //       // const color = '#f5f242';
-  //       const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
-  //       const opacity = 100;
-  //       const state = self.getMxCellState();
-  //       if (state != null) {
-  //         const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-  //         const hl = new mxCellHighlight(self.graph, color, sw, false);
-  //         if (opacity != null) {
-  //           hl.opacity = opacity;
-  //         }
-  //         hl.highlight(state);
-  //         self._blinkHL = hl;
-  //         $GF.setUniqTimeOut(bl_off, ms, timeId);
-  //       }
-  //     };
-  //     const bl_off = function() {
-  //       if (self._blinkHL) {
-  //         const hl = self._blinkHL;
-  //         // Fades out the highlight after a duration
-  //         if (hl.shape !== null) {
-  //           mxUtils.setPrefixedStyle(hl.shape.node.style, `transition`, `all ${ms}ms ease-in-out`);
-  //           hl.shape.node.style.opacity = 0;
-  //         }
-  //         hl.destroy();
-  //         self._blinkHL = undefined;
-  //         $GF.setUniqTimeOut(bl_on, ms, timeId);
-  //       }
-  //     };
-  //     bl_on();
-  //   } else if (!bool && this.isBlink) {
-  //     $GF.clearUniqTimeOut(timeId);
-  //     if (self._blinkHL) {
-  //       const hl = self._blinkHL;
-  //       if (hl.shape != null) {
-  //         hl.shape.node.style.opacity = 0;
-  //         hl.destroy();
-  //         self._blinkHL = undefined;
-  //       }
-  //     }
-  //     this.isBlink = false;
-  //   }
-  // }
   async blink(ms: number = 1000, bool: boolean = true) {
     const timeId = `blink-${this.uniqId}`;
     const color = $GF.CONSTANTS.CONF_BLINK_COLOR;

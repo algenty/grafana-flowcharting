@@ -42,6 +42,9 @@
           ng-options="c.value as c.text for c in editor.tpDirection" ng-change="editor.onRulesChange()"></select>
       </div>
     </div>
+    <gf-form-switch class="gf-form" label-class="width-10" tooltip="Add metadatas in tooltip"
+      label="Display metadatas" checked="rule.getData().tpMetadata" on-change="editor.onRulesChange()">
+    </gf-form-switch>
     <gf-form-switch label="Color with state" class="gf-form" label-class="width-10"
       tooltip="Color values in tooltip with state/thresholds colors" checked="rule.getData().tooltipColors"
       ng-if="rule.getData().tooltip">

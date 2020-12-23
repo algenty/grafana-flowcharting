@@ -100,6 +100,7 @@ export class Rule {
       tooltipColors: false,
       tooltipOn: 'a',
       tpDirection: 'v',
+      tpMetadata: false,
       tpGraph: false,
       tpGraphSize: '100%',
       tpGraphType: 'line',
@@ -388,6 +389,9 @@ export class Rule {
     }
     if (!!obj.tpDirection) {
       this.data.tpDirection = obj.tpDirection;
+    }
+    if (!!obj.tpMetadata) {
+      this.data.tpMetadata = obj.tpMetadata;
     }
     if (!!obj.tpGraph || this.data.tpGraph === false) {
       this.data.tpGraph = obj.tpGraph;

@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <!-- RAW VALUE -->
-                <div class="gf-table-columnheader" colspan="1" role="columnheader"
+                <!-- <div class="gf-table-columnheader" colspan="1" role="columnheader"
                     ng-style="{'width' : editor.statesTable.getWidth('rval')}">
                     <div ng-attr-title="{{editor.statesTable.getDesc('rval')}}" class="gf-table-title"
                         style="cursor: pointer;">
@@ -73,7 +73,7 @@
                     <div draggable="false" role="separator" class="gf-table-resizeHandle" style="cursor: ew-resize;"
                         ng-mousedown="editor.statesTable.onMouseDown($event)">
                     </div>
-                </div>
+                </div> -->
                 <!-- FORMATED VALUE -->
                 <div class="gf-table-columnheader" colspan="1" role="columnheader"
                     ng-style="{'width' : editor.statesTable.getWidth('fval')}">
@@ -157,7 +157,8 @@
                         </div> -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN2 = 'id';state.displayEdit[CN2] = false;state.inEdit[CN2] = false;"
-                            ng-mouseleave="state.displayEdit[CN2] = false;" ng-mouseover="state.displayEdit[CN2] = true;"
+                            ng-mouseleave="state.displayEdit[CN2] = false;"
+                            ng-mouseover="state.displayEdit[CN2] = true;"
                             ng-style="{'width' : editor.statesTable.getWidth(CN2)}"
                             ng-attr-title="{{state.getData().pattern}}">
                             <div class="gf-table-content" ng-show="state.inEdit[CN2] !== true"
@@ -167,8 +168,7 @@
                                 </span>
                             </div>
                             <div ng-show="state.displayEdit[CN2] === true && state.inEdit[CN2] !== true && editor.isEdited(state)"
-                                ng-click="editor.undo(state)"
-                                title="undo"
+                                ng-click="editor.undo(state)" title="undo"
                                 class="gf-icon-action gf-icon-undo gf-icon-oncontent gf-icon-withcontent">
                             </div>
                             <div ng-show="state.displayEdit[CN2] === true && state.inEdit[CN2] !== true"
@@ -180,8 +180,8 @@
                                 ng-attr-id="{{state.xcell.mxcell.id + '-' + CN2}}" ng-show="state.inEdit[CN2] === true"
                                 class="gf-form-input" ng-model="state.xcell.mxcell.id"
                                 ng-change="editor.onRulesChange()" ng-model-onblur
-                                ng-blur="editor.onRulesChange();state.inEdit[CN2] = false;"
-                                data-min-length="0" data-items="100" data-placement="right" />
+                                ng-blur="editor.onRulesChange();state.inEdit[CN2] = false;" data-min-length="0"
+                                data-items="100" data-placement="right" />
                         </div>
                         <!-- LABEL -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rule"
@@ -205,14 +205,15 @@
                             </div>
                         </div>
                         <!-- HIGTEST RAW VALUE -->
-                        <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rval"
+                        <!-- <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rval"
                             ng-style="{'width' : editor.statesTable.getWidth('rval')}">
                             <div class="gf-table-content">
                                 {{state.highestValue}}
                             </div>
-                        </div>
+                        </div> -->
                         <!-- HIGTEST FORMATED VALUE -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="fval"
+                            ng-attr-title="{{state.highestValue}}"
                             ng-style="{'width' : editor.statesTable.getWidth('fval')}">
                             <div class="gf-table-content">
                                 {{state.highestFormattedValue}}
@@ -273,6 +274,27 @@
                     </div>
                     <div class="gf-table-row_body" ng-show="state.reduce === false && editor.initPreview(state)">
                         <ng-include src="$GF.plugin.getPartialPath() + 'inspect/states/stateBody.html'"> </ng-include>
+                    </div>
+                </div>
+            </div>
+            <!-- TFOOTER -->
+            <div class="gf-table-tfooter gf-unselectable">
+                <div class="gf-table-columnfooter" colspan="1">
+                    <div class="gf-form-inline">
+                        <div class="gf-form" style="margin-right: 5px;">
+                            <button class="btn btn-danger btn-small" ng-click="editor.reset();"
+                                title="Reinit graph and color">
+                                <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 538 125C 538 125 538 450 538 450C 538 471 521 488 500 488C 479 488 462 471 462 450C 462 450 462 125 462 125C 462 104 479 87 499 87C 521 87 538 104 538 125C 538 125 538 125 538 125M 380 188C 385 205 377 223 361 231C 238 294 174 432 204 568C 235 703 353 799 492 803C 630 807 753 717 791 584C 830 451 773 309 654 239C 636 228 629 205 640 187C 651 169 674 163 692 174C 840 262 911 439 864 605C 816 770 662 883 490 878C 317 873 170 752 131 584C 93 416 173 243 326 164C 332 161 337 160 343 160C 361 159 376 171 380 188C 380 188 380 188 380 188"/></svg>
+                                &nbsp;Reset
+                            </button>
+                        </div>
+                        <div class="gf-form" style="margin-right: 5px;">
+                            <button class="btn btn-primary btn-small" ng-click="editor.apply();"
+                                title="Refresh/Apply">
+                                <svg width="16" height="16"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" ><path fill="currentColor" d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM272 80v80H144V80h128zm122 352H54a6 6 0 0 1-6-6V86a6 6 0 0 1 6-6h42v104c0 13.255 10.745 24 24 24h176c13.255 0 24-10.745 24-24V83.882l78.243 78.243a6 6 0 0 1 1.757 4.243V426a6 6 0 0 1-6 6zM224 232c-48.523 0-88 39.477-88 88s39.477 88 88 88 88-39.477 88-88-39.477-88-88-88zm0 128c-22.056 0-40-17.944-40-40s17.944-40 40-40 40 17.944 40 40-17.944 40-40 40z"></path></svg>
+                                &nbsp;Apply
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
