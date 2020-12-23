@@ -1,12 +1,54 @@
 <div style="width: 100%;height: auto;display:inline-flex">
     <!-- FIELDS -->
-    <div style="width: 50%;height: auto;">
-        
+    <div style="width: 80%;height: auto;">
+        <h5 class="section-heading">
+            Detail
+            <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Definition of event mapping', 'EVENTS')"></span>
+            </info-popover>
+        </h5>
+        <div class="gf-form">
+            <label class="gf-form-label width-10">
+                <span>Id</span>
+                <info-popover mode="right-normal">
+                    <span ng-bind-html="$GF.popover('Enter shape Id or click on target button', 'EVENTS')">
+                    </span>
+                </info-popover>
+            </label>
+            <input type="text" style="margin-right: 2px;" id="{{ state.getId() }}" placeholder="id or regex of shape"
+                class="gf-form-input width-8" ng-model="state.getData().pattern"
+                title="Enter an id"
+                ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+                ng-model-onblur data-placement="right" />
+            <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
+                ng-show="rule.getEventMapOptions().identByProp !== 'metadata'"
+                title="Select an object in diagram/graph" ng-click="">
+                <div Class="gf-icon-undo" style="margin-bottom: 7px;margin-right: 2px;"></div>
+            </button>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label width-10">
+                <span>Current Label</span>
+            </label>
+            <span>{{state.xcell.getLabel()}}</span>
+        </div>
+        <div class="gf-form">
+            <label class="gf-form-label width-10">
+                <span>Default Label</span>
+            </label>
+            <span>{{state.xcell.getDefaultLabel()}}</span>
+        </div>
     </div>
     <!-- PREVIEW -->
-    <div
-        class="gf-unselectable"
-        style="width: 50%;height: 50px;right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; overflow: auto; cursor: default;z-index: 1;-webkit-box-sizing:content-box;box-sizing:content-box"
-        ng-attr-id="{{'preview-' + state.xcell.uniqId}}">
+    <div style="width: 20%;height: auto;">
+        <h5 class="section-heading">
+            <span>Preview</span>
+            <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Shape preview', 'INSPECT')"></span>
+            </info-popover>
+        </h5>
+        <div
+            class="gf-unselectable"
+            style="width: 50px;height: 50px;right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; overflow: auto; cursor: default;z-index: 1;-webkit-box-sizing:content-box;box-sizing:content-box"
+            ng-attr-id="{{'preview-' + state.xcell.uniqId}}">
+        </div>
     </div>
 </div>
