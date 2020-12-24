@@ -14,6 +14,7 @@ export class TooltipHandler {
   // mxcell: mxCell;
   checked = false;
   metrics: Set<MetricTooltip>;
+  metadata: MetadataTooltip | null = null;
   lastChange: string | undefined;
   div: HTMLHeadingElement | null = null;
   // constructor(mxcell: any) {
@@ -43,6 +44,12 @@ export class TooltipHandler {
     const metric = new MetricTooltip();
     this.metrics.add(metric);
     return metric;
+  }
+
+  addMetadata(): MetadataTooltip {
+    this.checked = true;
+    this.metadata = new MetadataTooltip();
+    return this.metadata;
   }
 
   /**
@@ -102,11 +109,17 @@ export class TooltipHandler {
     if (parentDiv !== undefined) {
       parentDiv.appendChild(div);
     }
+    // Values + Graphs
     if (this.metrics.size > 0) {
       this.getDateDiv(div);
       this.metrics.forEach((metric: MetricTooltip) => {
         metric.getDiv(div);
       });
+    }
+
+    // Metadatas
+    if (this.metadata !== undefined && this.metadata !== null) {
+      this.metadata.getDiv(div);
     }
     this.div = div;
     return div;
@@ -498,11 +511,13 @@ class BarGraphTooltip extends GraphTooltip {
 
 class MetadataTooltip {
   enableMetadata: boolean = true;
-  div: HTMLDivElement | undefined;
+  div: HTMLDivElement | undefined = undefined;
   metadata: gf.TXCellMetadata | undefined = undefined;
   constructor() {}
-  addMetadatas(mds: gf.TXCellMetadata) {
+
+  setMetadata(mds: gf.TXCellMetadata): this {
     this.metadata = mds;
+    return this;
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
@@ -511,13 +526,15 @@ class MetadataTooltip {
     if (parentDiv !== undefined) {
       parentDiv.appendChild(div);
     }
-    let html = '';
     if (this.metadata !== undefined) {
       this.metadata.forEach((v, k, m) => {
-        html += `'<b>${k}</b> : ${mxUtils.htmlEntities(v)}\n`;
+        if (k !== undefined && k !== null && k.length > 0 && v !== undefined && v !== null && v.length > 0) {
+          const md = document.createElement('div');
+          md.innerHTML = `${k} : <b>${mxUtils.htmlEntities(v)}</b>`;
+          div.appendChild(md);
+        }
       });
     }
-    div.innerHTML = html;
     return div;
   }
 }

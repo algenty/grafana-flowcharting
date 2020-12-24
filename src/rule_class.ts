@@ -1114,7 +1114,7 @@ export class Rule {
    * @memberof Rule
    */
   toTooltipize(level: number): boolean {
-    if (this.data.tooltip === false) {
+    if (this.data.tooltip === false && this.data.tpMetadata === false) {
       return false;
     }
     if (this.data.tooltipOn === 'a') {

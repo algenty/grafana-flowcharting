@@ -686,7 +686,7 @@ export default class XGraph {
         }
       }
       if (type === 'metadata') {
-        const values = x.getMetadatasKeys();
+        const values = x.getDefaultMetadatasKeys();
         const length = values.length;
         for (let i = 0; i < length; i++) {
           const value = values[i];
@@ -1088,7 +1088,7 @@ export default class XGraph {
           const length = steps.length;
           const timer = GFTimer.getNewTimer(timeId);
           const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
-          for(let i = 1; i < length; i++) {
+          for (let i = 1; i < length; i++) {
             timer.add(xcell.setStyle.bind(xcell, style, steps[i].toString()), ms * i);
           }
           timer.run();
@@ -1444,9 +1444,9 @@ export default class XGraph {
     return Graph.decompress(source, true);
   }
 
-  static preview(container : HTMLElement, xcell : XCell, force:boolean = false) {
+  static preview(container: HTMLElement, xcell: XCell, force: boolean = false) {
     const g = new Graph(container);
-    if(g) {
+    if (g) {
       // const mxcell = xcell.getMxCell();
       try {
         const model = g.getModel();
@@ -1469,7 +1469,7 @@ export default class XGraph {
         const w = bounds.width / g.view.scale;
         const h = bounds.height / g.view.scale;
         const s = Math.min(max, Math.min(cw / w, ch / h));
-    
+
         g.view.scaleAndTranslate(
           s,
           (margin + cw - w * s) / (2 * s) - bounds.x / g.view.scale,
@@ -1478,7 +1478,6 @@ export default class XGraph {
       } catch (error) {
         $GF.log.error('Error in preview', error);
       }
-
     }
   }
 }

@@ -112,6 +112,8 @@ declare module gf {
     | 'width'
     | 'size'
     | 'text'
+    | 'tpText'
+    | 'tpMetadata'
     | 'class_mxEdgeFlow';
   declare type TTypeEventKeys = TStyleEventKeys | TOtherEventKeys;
   declare type TStyleAnimKeys = TStyleAnimEventKey | TStyleColorKeys;
@@ -248,7 +250,7 @@ declare module gf {
   declare type TComparatorElt = { text: string; value: TComparatorKeys };
   declare type TComparatorList = TComparatorElt[];
 
-  declare type TVariableKeys = '_rule' | '_level' | '_value' | '_color' | '_formated';
+  declare type TVariableKeys = '_rule' | '_level' | '_value' | '_color' | '_formated' | '_date';
   declare type TVariableList = { text: string; value: TVariableKeys }[];
   declare interface TIRulesHandlerData {
     rulesData: TIRuleData[];

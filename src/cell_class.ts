@@ -91,7 +91,7 @@ export class XCell {
   getValues(options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): any {
     let value: any = this.getValue(options.identByProp);
     if (options.identByProp === 'metadata') {
-      value = this.getMetadataValues(options.metadata, options.enableRegEx);
+      value = this.getDefaultMetadatasValues(options.metadata, options.enableRegEx);
     }
     return value;
   }
@@ -99,7 +99,7 @@ export class XCell {
   getDefaultValues(options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): any {
     let value: any = this.getDefaultValue(options.identByProp);
     if (options.identByProp === 'metadata') {
-      value = this.getMetadataValues(options.metadata, options.enableRegEx);
+      value = this.getDefaultMetadatasValues(options.metadata, options.enableRegEx);
     }
     return value;
   }
@@ -135,7 +135,7 @@ export class XCell {
       case 'dimension':
         this.gf.defaultValues.dimension = this.getDimension();
       case 'metadata':
-        return this._setDefaultMetadatas();
+        return this.gf.defaultValues.metadata = this.getMetadatas();
         break;
       case 'styles':
         return this._setDefaultStyles();
@@ -220,7 +220,31 @@ export class XCell {
   //
   // METADATA
   //
-  getMetadatasKeys(): string[] {
+  getMetadatas(): gf.TXCellMetadata {
+    const result: gf.TXCellMetadata = new Map();
+    if (this.mxcell && mxUtils.isNode(this.mxcell.value)) {
+      const ignored = ['label', 'tooltip', 'placeholders', 'placeholder', 'link'];
+      const attrs = this.mxcell.value.attributes;
+      const length = attrs.length;
+      for (var i = 0; i < length; i++) {
+        if (!ignored.includes(attrs[i].nodeName)) {
+          const key = attrs[i].nodeName;
+          const value = attrs[i].nodeValue;
+          result.set(key, value);
+        }
+      }
+    }
+    return result;
+  }
+
+  setMetadata(key: string, value: string | null): this {
+    this._initDefaultValue('metadata');
+    const attrs = this.mxcell.value.attributes;
+    attrs[key] = value;
+    return this;
+  }
+
+  getDefaultMetadatasKeys(): string[] {
     const a: any = this._getDefaultValue('metadata');
     const defaultValue: gf.TXCellMetadata = a;
     if (defaultValue !== undefined) {
@@ -229,7 +253,7 @@ export class XCell {
     return [];
   }
 
-  getMetadataValues(name: string, regex: boolean = true): string[] {
+  getDefaultMetadatasValues(name: string, regex: boolean = true): string[] {
     const a: any = this._getDefaultValue('metadata');
     const mds: gf.TXCellMetadata = a;
     if (!regex && mds.has(name)) {
@@ -239,7 +263,7 @@ export class XCell {
       }
       return [];
     }
-    const keys = this.getMetadatasKeys();
+    const keys = this.getDefaultMetadatasKeys();
     if (keys !== undefined) {
       const values: string[] = [];
       const length = keys.length;
@@ -258,11 +282,11 @@ export class XCell {
   }
 
   hasMetadataName(name: string): boolean {
-    return this.getMetadatasKeys().includes(name);
+    return this.getDefaultMetadatasKeys().includes(name);
   }
 
   _matchMetadata(pattern: string, options: gf.TRuleMapOptions): boolean {
-    const values = this.getMetadataValues(options.metadata, options.enableRegEx);
+    const values = this.getDefaultMetadatasValues(options.metadata, options.enableRegEx);
     const length = values.length;
     for (let i = 0; i < length; i++) {
       const v = values[i];

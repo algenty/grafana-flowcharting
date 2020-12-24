@@ -170,9 +170,9 @@ export class InspectOptionsCtrl {
     }
   }
 
-  initPreview(state : State):boolean {
-    const div = document.getElementById(`preview-${state.xcell.uniqId}`)
-    if(div !== null) {
+  initPreview(state: State): boolean {
+    const div = document.getElementById(`preview-${state.xcell.uniqId}`);
+    if (div !== null) {
       div.innerHTML = '';
       XGraph.preview(div, state.getXCell());
     }

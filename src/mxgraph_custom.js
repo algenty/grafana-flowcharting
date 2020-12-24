@@ -57,47 +57,47 @@ Graph.prototype.getTooltipForCell = function (cell) {
       ttDiv.innerHTML = this.sanitizeHtml(tmp);
       div.appendChild(ttDiv);
     }
-    let ignored = this.builtInProperties;
-    let attrs = cell.value.attributes;
-    let temp = [];
+    // let ignored = this.builtInProperties;
+    // let attrs = cell.value.attributes;
+    // let temp = [];
 
     // Hides links in edit mode
     // if (this.isEnabled()) {
-    ignored.push('link');
+    // ignored.push('link');
     // }
 
     // Attributes
-    for (var i = 0; i < attrs.length; i++) {
-      if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
-        temp.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
-      }
-    }
+    // for (var i = 0; i < attrs.length; i++) {
+    //   if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
+    //     temp.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
+    //   }
+    // }
 
     // Sorts by name
-    temp.sort(function (a, b) {
-      if (a.name < b.name) {
-        return -1;
-      } else if (a.name > b.name) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-    if (temp.length > 0) {
-      hasTips = true;
-      var attrDiv = document.createElement('div');
-      var attrString = '';
-      for (var i = 0; i < temp.length; i++) {
-        if (temp[i].name != 'link' || !this.isCustomLink(temp[i].value)) {
-          attrString +=
-            (temp[i].name != 'link' ? '<b>' + temp[i].name + ':</b> ' : '') +
-            mxUtils.htmlEntities(temp[i].value) +
-            '\n';
-        }
-      }
-      attrDiv.innerHTML = attrString;
-      div.appendChild(attrDiv);
-    }
+    // temp.sort(function (a, b) {
+    //   if (a.name < b.name) {
+    //     return -1;
+    //   } else if (a.name > b.name) {
+    //     return 1;
+    //   } else {
+    //     return 0;
+    //   }
+    // });
+    // if (temp.length > 0) {
+    //   hasTips = true;
+    //   var attrDiv = document.createElement('div');
+    //   var attrString = '';
+    //   for (var i = 0; i < temp.length; i++) {
+    //     if (temp[i].name != 'link' || !this.isCustomLink(temp[i].value)) {
+    //       attrString +=
+    //         (temp[i].name != 'link' ? '<b>' + temp[i].name + ':</b> ' : '') +
+    //         mxUtils.htmlEntities(temp[i].value) +
+    //         '\n';
+    //     }
+    //   }
+    //   attrDiv.innerHTML = attrString;
+    //   div.appendChild(attrDiv);
+    // }
   }
 
   // GF Tooltips

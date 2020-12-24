@@ -6,7 +6,6 @@ import { Rule } from 'rule_class';
 import { FlowchartHandler } from 'flowchartHandler';
 import { Metric } from 'metric_class';
 import { $GF } from 'globals_class';
-import { InteractiveMap } from 'mapping_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
 /**

@@ -34,9 +34,9 @@ export class State {
   highestFormattedValue: string = '';
   highestValue: any = undefined;
   tooltipHandler: TooltipHandler | null = null;
-  reduce:boolean = true;
-  currRules:string[] = [];
-  currMetrics:string[] = [];
+  reduce: boolean = true;
+  currRules: string[] = [];
+  currMetrics: string[] = [];
   // originalText: string;
 
   /**
@@ -101,7 +101,7 @@ export class State {
     if (!rule.isHidden() && rule.matchMetric(metric)) {
       try {
         this.currMetrics.push(metric.getName());
-      } catch(error) {}
+      } catch (error) {}
       let beginPerf = Date.now();
       const shapeMaps = rule.getShapeMaps();
       const textMaps = rule.getTextMaps();
@@ -125,7 +125,7 @@ export class State {
         let k = shape.data.style;
         if (!shape.isHidden() && shape.match(cellValue, mapOptions)) {
           let v: any = color;
-          if(!matchedRule) {
+          if (!matchedRule) {
             matchedRule = true;
             this.currRules.push(rule.data.alias);
           }
@@ -143,7 +143,7 @@ export class State {
             k = 'tooltip';
             v = true;
             this.tooltipState.set('tooltip', true, level) && this.status.set(k, v);
-            this.tooltipState.setTooltip(rule, metric, color, FormattedValue);
+            this.tooltipState.setTooltip(rule, metric, color, FormattedValue, this.xcell.getMetadatas());
           }
           // ICONS
           if (rule.toIconize(level)) {
@@ -160,7 +160,7 @@ export class State {
       textMaps.forEach(text => {
         const k = 'label';
         if (!text.isHidden() && text.match(cellValue, mapOptions) && text.isEligible(level)) {
-          if(!matchedRule) {
+          if (!matchedRule) {
             matchedRule = true;
             this.currRules.push(rule.data.alias);
           }
@@ -184,7 +184,7 @@ export class State {
       eventMaps.forEach(event => {
         const k = event.data.style;
         if (!event.isHidden() && event.match(cellValue, mapOptions) && event.isEligible(level)) {
-          if(!matchedRule) {
+          if (!matchedRule) {
             matchedRule = true;
             this.currRules.push(rule.data.alias);
           }
@@ -207,7 +207,7 @@ export class State {
       linkMaps.forEach(link => {
         const k = 'link';
         if (!link.isHidden() && link.match(cellValue, mapOptions)) {
-          if(!matchedRule) {
+          if (!matchedRule) {
             matchedRule = true;
             this.currRules.push(rule.data.alias);
           }
@@ -981,40 +981,46 @@ class TooltipState extends GFState {
     this.xcell.enableTooltip(false);
   }
 
-  async setTooltip(rule: Rule, metric: Metric, color: string, value: string) {
+  async setTooltip(rule: Rule, metric: Metric, color: string, value: string, metadata: gf.TXCellMetadata) {
     let tpColor: string | null = null;
     let label: string = rule.data.tooltipLabel;
     if (this.tooltipHandler === null || this.tooltipHandler === undefined) {
       this.tooltipHandler = new TooltipHandler();
     }
-    if (label === null || label.length === 0) {
-      if (rule.data.metricType === 'serie') {
-        label = metric.getName();
+    if (rule.data.tooltip) {
+      if (label === null || label.length === 0) {
+        if (rule.data.metricType === 'serie') {
+          label = metric.getName();
+        }
+        if (rule.data.metricType === 'table') {
+          label = rule.data.column;
+        }
       }
-      if (rule.data.metricType === 'table') {
-        label = rule.data.column;
+      if (rule.data.tooltipColors) {
+        tpColor = color;
       }
-    }
-    if (rule.data.tooltipColors) {
-      tpColor = color;
-    }
-    // METRIC
-    const metricToolip = this.tooltipHandler
-      .addMetric()
-      .setLabel(label)
-      .setValue(value)
-      .setColor(tpColor)
-      .setDirection(rule.data.tpDirection);
-    // GRAPH
-    if (rule.data.tpGraph) {
-      const graph = metricToolip.addGraph(rule.data.tpGraphType);
-      graph
+      // METRIC
+      const metricToolip = this.tooltipHandler
+        .addMetric()
+        .setLabel(label)
+        .setValue(value)
         .setColor(tpColor)
-        .setColumn(rule.data.column)
-        .setMetric(metric)
-        .setSize(rule.data.tpGraphSize)
-        .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh)
-        .setScale(rule.data.tpGraphScale);
+        .setDirection(rule.data.tpDirection);
+        // GRAPH
+        if (rule.data.tpGraph) {
+          const graph = metricToolip.addGraph(rule.data.tpGraphType);
+          graph
+            .setColor(tpColor)
+            .setColumn(rule.data.column)
+            .setMetric(metric)
+            .setSize(rule.data.tpGraphSize)
+            .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh)
+            .setScale(rule.data.tpGraphScale);
+        }
+    }
+    // Metadata
+    if (rule.data.tpMetadata) {
+      this.tooltipHandler.addMetadata().setMetadata(metadata);
     }
     // Date
     this.tooltipHandler.updateDate();

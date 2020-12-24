@@ -45,6 +45,7 @@ class GFCONSTANT {
   VAR_NUM_VALUE: gf.TVariableKeys = '_value';
   VAR_STR_FORMATED: gf.TVariableKeys = '_formated';
   VAR_STR_COLOR: gf.TVariableKeys = '_color';
+  VAR_STR_DATE: gf.TVariableKeys = '_date';
 
   // FLOWCHART CHANGE KEY FLAG
   FLOWCHART_CHG_SOURCES: gf.TFlowchartFlagKeys = 'sources';
@@ -282,10 +283,18 @@ class GFCONSTANT {
     { text: 'Label : Font Size (numeric)', value: 'fontSize', type: 'number', placeholder: 'Number' },
     { text: 'Label : Opacity (numeric)', value: 'textOpacity', type: 'number', placeholder: '0-100', default: 100 },
     { text: 'Image : Change URL (text)', value: 'image', type: 'text', placeholder: 'Url' },
+    { text: 'Tooltip : Add/Change tooltip text', value: 'tpText', type: 'text', placeholder: 'text' },
+    {
+      text: 'Tooltip : Add/Change metadata key and value',
+      value: 'tpMetadata',
+      type: 'text',
+      placeholder: 'key@value',
+    },
   ];
 
   LOCALVARIABLENAMES: gf.TVariableList = [
     { text: 'Name of the rule', value: this.VAR_STR_RULENAME },
+    { text: 'Current date', value: this.VAR_STR_DATE },
     { text: 'Current color according to the thresholds', value: this.VAR_STR_COLOR },
     { text: 'Current raw value according to the aggregation', value: this.VAR_NUM_VALUE },
     { text: 'Current level according to the thresholds', value: this.VAR_NUM_LEVEL },
@@ -1537,61 +1546,61 @@ export class GFTable {
 }
 
 declare interface GFTimerUnit {
-  step : number;
-  fn : CallableFunction;
-  ms : number;
-  running : boolean;
-  runned : boolean;
-  invalidated : boolean
-  tmId : number;
+  step: number;
+  fn: CallableFunction;
+  ms: number;
+  running: boolean;
+  runned: boolean;
+  invalidated: boolean;
+  tmId: number;
 }
 export class GFTimer {
   iteration: number = 0;
   cyclic: boolean = false;
   currentStep: number = 0;
-  uniqId : string;
-  static timers:Map<string, GFTimer>;
+  uniqId: string;
+  static timers: Map<string, GFTimer>;
   units: GFTimerUnit[];
 
-  constructor(uniqId : string) {
-    if(GFTimer.timers === undefined) {
+  constructor(uniqId: string) {
+    if (GFTimer.timers === undefined) {
       GFTimer.timers = new Map();
     }
     this.units = [];
     this.uniqId = uniqId;
   }
 
-  static stop( uniqId ?: string ) {
-    if(GFTimer.timers === undefined) {
+  static stop(uniqId?: string) {
+    if (GFTimer.timers === undefined) {
       GFTimer.timers = new Map();
     }
-    if(uniqId !== undefined) {
+    if (uniqId !== undefined) {
       const gftimer = GFTimer.timers.get(uniqId);
-      if(gftimer) {
+      if (gftimer) {
         gftimer.cancel();
         GFTimer.timers.delete(uniqId);
       }
     } else {
-      GFTimer.timers.forEach( (gftimer, key, map) => {
+      GFTimer.timers.forEach((gftimer, key, map) => {
         gftimer.cancel();
       });
       GFTimer.timers.clear();
     }
   }
 
-  setCyclic(bool :boolean = true):this {
+  setCyclic(bool: boolean = true): this {
     this.cyclic = bool;
     this.iteration = 0;
     return this;
   }
 
-  setIteration(it: number = 0):this {
+  setIteration(it: number = 0): this {
     this.iteration = it;
     this.cyclic = false;
     return this;
   }
 
-  _reinit():this {
+  _reinit(): this {
     this.currentStep = 0;
     this.units.forEach(u => {
       u.runned = false;
@@ -1600,33 +1609,33 @@ export class GFTimer {
     return this;
   }
 
-  cancel():this {
+  cancel(): this {
     this.units.forEach(t => {
       GFTimer._cleanUnit(t);
     });
     return this;
   }
 
-  _getDefaultTimerUnit():GFTimerUnit {
+  _getDefaultTimerUnit(): GFTimerUnit {
     return {
-      step : this.units.length,
+      step: this.units.length,
       fn: () => {},
       ms: 1000,
       running: false,
       runned: false,
       invalidated: false,
-      tmId:0,
-    }
+      tmId: 0,
+    };
   }
 
   static _cleanUnit(unit: GFTimerUnit) {
-    if(unit !== undefined && unit.invalidated === false && unit.runned === false) {
+    if (unit !== undefined && unit.invalidated === false && unit.runned === false) {
       unit.invalidated = true;
       GFTimer._stopTimeOut(unit.tmId);
     }
   }
 
-  static _stopTimeOut(id : number) {
+  static _stopTimeOut(id: number) {
     try {
       if (id !== undefined) {
         window.clearTimeout(id);
@@ -1636,21 +1645,21 @@ export class GFTimer {
     }
   }
 
-  static getNewTimer(uniqId):GFTimer {
+  static getNewTimer(uniqId): GFTimer {
     GFTimer.stop(uniqId);
     const gftimer = new GFTimer(uniqId);
     GFTimer.timers.set(uniqId, gftimer);
     return gftimer;
   }
 
-  static getTimer(uniqId):GFTimer | undefined {
-    if(GFTimer.timers !== undefined) {
+  static getTimer(uniqId): GFTimer | undefined {
+    if (GFTimer.timers !== undefined) {
       return GFTimer.timers.get(uniqId);
     }
     return undefined;
   }
 
-  add(fn : CallableFunction, ms : number):this {
+  add(fn: CallableFunction, ms: number): this {
     const unit = this._getDefaultTimerUnit();
     unit.fn = fn;
     unit.ms = ms;
@@ -1658,8 +1667,8 @@ export class GFTimer {
     return this;
   }
 
-  run():this {
-    const length = this.units.length
+  run(): this {
+    const length = this.units.length;
     for (let i = 0; i < length; i++) {
       const u = this.units[i];
       u.tmId = window.setTimeout(this._runnable.bind(this, u), u.ms);
@@ -1667,11 +1676,11 @@ export class GFTimer {
     return this;
   }
 
-  _runnable(unit : GFTimerUnit) {
-    if(unit.invalidated === false) {
+  _runnable(unit: GFTimerUnit) {
+    if (unit.invalidated === false) {
       unit.running = true;
       try {
-        for(let i = this.currentStep; i < unit.step; i++) {
+        for (let i = this.currentStep; i < unit.step; i++) {
           GFTimer._cleanUnit(this.units[i]);
         }
         unit.fn();
@@ -1681,18 +1690,17 @@ export class GFTimer {
       this.currentStep = unit.step;
       unit.running = false;
       unit.runned = true;
-      if(unit.step === this.units.length - 1) {
-        if(this.cyclic || this.iteration > 0) {
+      if (unit.step === this.units.length - 1) {
+        if (this.cyclic || this.iteration > 0) {
           this._reinit();
-          if(this.iteration > 0) {
-            this.iteration = this.iteration -1;
+          if (this.iteration > 0) {
+            this.iteration = this.iteration - 1;
           }
           this.run();
         } else {
-          GFTimer.timers.delete(this.uniqId);   
+          GFTimer.timers.delete(this.uniqId);
         }
       }
     }
   }
-
 }
