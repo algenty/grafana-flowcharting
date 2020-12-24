@@ -495,3 +495,29 @@ class BarGraphTooltip extends GraphTooltip {
     return div;
   }
 }
+
+class MetadataTooltip {
+  enableMetadata: boolean = true;
+  div: HTMLDivElement | undefined;
+  metadata: gf.TXCellMetadata | undefined = undefined;
+  constructor() {}
+  addMetadatas(mds: gf.TXCellMetadata) {
+    this.metadata = mds;
+  }
+
+  getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
+    const div = document.createElement('div');
+    this.div = div;
+    if (parentDiv !== undefined) {
+      parentDiv.appendChild(div);
+    }
+    let html = '';
+    if (this.metadata !== undefined) {
+      this.metadata.forEach((v, k, m) => {
+        html += `'<b>${k}</b> : ${mxUtils.htmlEntities(v)}\n`;
+      });
+    }
+    div.innerHTML = html;
+    return div;
+  }
+}

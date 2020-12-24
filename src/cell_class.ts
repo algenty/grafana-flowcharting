@@ -1,4 +1,3 @@
-import { Node } from '@babel/core';
 import { $GF, GFTimer } from 'globals_class';
 import { Rule } from 'rule_class';
 import { TooltipHandler } from 'tooltipHandler';
@@ -415,18 +414,18 @@ export class XCell {
   //
   // SVG
   //
-  getSvgNode():HTMLElement | null {
+  getSvgNode(): HTMLElement | null {
     const state = this.getMxCellState();
-    if(state && state.shape.node) {
+    if (state && state.shape.node) {
       return state.shape.node;
     }
     return null;
   }
 
-  cloneSVG():HTMLElement {
+  cloneSVG(): HTMLElement {
     const svg = document.createElement('svg');
     const node = this.getSvgNode();
-    if(node !== null) {
+    if (node !== null) {
       const n = node.cloneNode(true);
       svg.appendChild(n);
       return svg;
@@ -434,7 +433,7 @@ export class XCell {
     return svg;
   }
 
-  cloneMxCell():any {
+  cloneMxCell(): any {
     return this.graph.cloneCell(this.mxcell, true);
   }
 
@@ -631,13 +630,13 @@ export class XCell {
       const hl = this._surroundHL.get(color);
       const transition = 300;
       if (hl && hl.shape !== null && hl.shape !== undefined) {
-        if(anim) {
+        if (anim) {
           mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', `all ${transition}ms ease-in-out`);
         }
         hl.shape.node.style.opacity = 0;
         // hl.destroy();
         // this._surroundHL = undefined;
-        if(anim) {
+        if (anim) {
           window.setTimeout(() => {
             hl.destroy();
             this._surroundHL.delete(color);
