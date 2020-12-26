@@ -1,5 +1,5 @@
 import { XCell } from 'cell_class';
-import { $GF } from 'globals_class';
+import { $GF, GFVariables } from 'globals_class';
 import _ from 'lodash';
 import { Rule } from 'rule_class';
 
@@ -116,11 +116,19 @@ class GFMap {
    * @returns {boolean}
    * @memberof GFMap
    */
-  match(text: string | null, options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): boolean {
+  match(
+    text: string | null,
+    options: gf.TRuleMapOptions = Rule.getDefaultMapOptions(),
+    variables?: GFVariables
+  ): boolean {
+    let pattern = this.data.pattern;
+    if (variables !== undefined) {
+      pattern = variables.replaceText(pattern);
+    }
     if (text === undefined || text === null || text.length === 0) {
       return false;
     }
-    return $GF.utils.matchString(text, this.data.pattern, options.enableRegEx);
+    return $GF.utils.matchString(text, pattern, options.enableRegEx);
   }
 
   /**

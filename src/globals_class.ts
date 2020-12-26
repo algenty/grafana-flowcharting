@@ -46,6 +46,7 @@ class GFCONSTANT {
   VAR_STR_FORMATED: gf.TVariableKeys = '_formated';
   VAR_STR_COLOR: gf.TVariableKeys = '_color';
   VAR_STR_DATE: gf.TVariableKeys = '_date';
+  VAR_STR_METRIC: gf.TVariableKeys = '_metric';
 
   // FLOWCHART CHANGE KEY FLAG
   FLOWCHART_CHG_SOURCES: gf.TFlowchartFlagKeys = 'sources';
@@ -1128,6 +1129,38 @@ export class $GF {
         $GF.log.warn('Failed to clear timeout thread', id, error);
       }
     }
+  }
+
+  static getCurrentDate(): string {
+    const currentDateTime = new Date();
+    const d =
+      currentDateTime.getFullYear() +
+      '-' +
+      (currentDateTime.getMonth() + 1).toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false,
+      }) +
+      '-' +
+      currentDateTime.getDate().toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false,
+      }) +
+      ' ' +
+      currentDateTime.getHours().toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false,
+      }) +
+      ':' +
+      currentDateTime.getMinutes().toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false,
+      }) +
+      ':' +
+      currentDateTime.getSeconds().toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false,
+      });
+    return d;
   }
 
   /**

@@ -101,6 +101,7 @@ export class State {
     if (!rule.isHidden() && rule.matchMetric(metric)) {
       try {
         this.currMetrics.push(metric.getName());
+        this.variables.set($GF.CONSTANTS.VAR_STR_METRIC, metric.getName);
       } catch (error) {}
       let beginPerf = Date.now();
       const shapeMaps = rule.getShapeMaps();
@@ -116,6 +117,7 @@ export class State {
       this.variables.set($GF.CONSTANTS.VAR_STR_FORMATED, FormattedValue);
       this.variables.set($GF.CONSTANTS.VAR_NUM_LEVEL, level);
       this.variables.set($GF.CONSTANTS.VAR_STR_COLOR, color);
+      this.variables.set($GF.CONSTANTS.VAR_STR_DATE, $GF.getCurrentDate());
 
       // SHAPE
       let matchedRule = false;
@@ -123,7 +125,7 @@ export class State {
       let cellValue = this.xcell.getDefaultValues(mapOptions);
       shapeMaps.forEach(shape => {
         let k = shape.data.style;
-        if (!shape.isHidden() && shape.match(cellValue, mapOptions)) {
+        if (!shape.isHidden() && shape.match(cellValue, mapOptions, this.variables)) {
           let v: any = color;
           if (!matchedRule) {
             matchedRule = true;
@@ -159,7 +161,7 @@ export class State {
       cellValue = this.xcell.getDefaultValues(mapOptions);
       textMaps.forEach(text => {
         const k = 'label';
-        if (!text.isHidden() && text.match(cellValue, mapOptions) && text.isEligible(level)) {
+        if (!text.isHidden() && text.match(cellValue, mapOptions, this.variables) && text.isEligible(level)) {
           if (!matchedRule) {
             matchedRule = true;
             this.currRules.push(rule.data.alias);
@@ -183,7 +185,7 @@ export class State {
       cellValue = this.xcell.getDefaultValues(mapOptions);
       eventMaps.forEach(event => {
         const k = event.data.style;
-        if (!event.isHidden() && event.match(cellValue, mapOptions) && event.isEligible(level)) {
+        if (!event.isHidden() && event.match(cellValue, mapOptions, this.variables) && event.isEligible(level)) {
           if (!matchedRule) {
             matchedRule = true;
             this.currRules.push(rule.data.alias);
@@ -206,7 +208,7 @@ export class State {
       cellValue = this.xcell.getDefaultValues(mapOptions);
       linkMaps.forEach(link => {
         const k = 'link';
-        if (!link.isHidden() && link.match(cellValue, mapOptions)) {
+        if (!link.isHidden() && link.match(cellValue, mapOptions, this.variables)) {
           if (!matchedRule) {
             matchedRule = true;
             this.currRules.push(rule.data.alias);
@@ -753,7 +755,23 @@ class EventState extends GFState {
         value = String(value);
         this.xcell.setLabel(value);
         break;
-
+      case 'tpMetadata':
+        const tbl = String(value).split('@');
+        if (tbl !== undefined && tbl.length > 0) {
+          let k: any = tbl.shift();
+          let v: any = null;
+          if (tbl.length > 0) {
+            v = tbl.join('@');
+          }
+          this.xcell.setMetadata(k, v);
+        }
+        break;
+      case 'tpText':
+        if (value === undefined || value === null || value.length === 0) {
+          value = null;
+        }
+        this.xcell.setMetadata('tooltip', value);
+        break;
       case 'visibility':
         value = String(value);
         if (value === '0') {
@@ -762,7 +780,6 @@ class EventState extends GFState {
           this.xcell.hide(false);
         }
         break;
-
       case 'fold':
         value = String(value);
         if (value === '0') {
@@ -837,6 +854,15 @@ class EventState extends GFState {
 
       case 'width':
         return this.geo !== undefined ? this.geo.width : undefined;
+        break;
+
+      case 'tpText':
+        return this.xcell.getMetadata('tooltip');
+        break;
+
+      case 'tpMetadata':
+        // TODO
+        return null;
         break;
 
       case 'size':
@@ -1006,17 +1032,17 @@ class TooltipState extends GFState {
         .setValue(value)
         .setColor(tpColor)
         .setDirection(rule.data.tpDirection);
-        // GRAPH
-        if (rule.data.tpGraph) {
-          const graph = metricToolip.addGraph(rule.data.tpGraphType);
-          graph
-            .setColor(tpColor)
-            .setColumn(rule.data.column)
-            .setMetric(metric)
-            .setSize(rule.data.tpGraphSize)
-            .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh)
-            .setScale(rule.data.tpGraphScale);
-        }
+      // GRAPH
+      if (rule.data.tpGraph) {
+        const graph = metricToolip.addGraph(rule.data.tpGraphType);
+        graph
+          .setColor(tpColor)
+          .setColumn(rule.data.column)
+          .setMetric(metric)
+          .setSize(rule.data.tpGraphSize)
+          .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh)
+          .setScale(rule.data.tpGraphScale);
+      }
     }
     // Metadata
     if (rule.data.tpMetadata) {

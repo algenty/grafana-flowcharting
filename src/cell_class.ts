@@ -135,7 +135,7 @@ export class XCell {
       case 'dimension':
         this.gf.defaultValues.dimension = this.getDimension();
       case 'metadata':
-        return this.gf.defaultValues.metadata = this.getMetadatas();
+        return (this.gf.defaultValues.metadata = this.getMetadatas());
         break;
       case 'styles':
         return this._setDefaultStyles();
@@ -239,9 +239,14 @@ export class XCell {
 
   setMetadata(key: string, value: string | null): this {
     this._initDefaultValue('metadata');
-    const attrs = this.mxcell.value.attributes;
-    attrs[key] = value;
+    // const attrs = this.mxcell.value.attributes;
+    // attrs[key] = value;
+    this.mxcell.setAttribute(key, value);
     return this;
+  }
+
+  getMetadata(key: string): any {
+    return this.mxcell.getAttribute(key);
   }
 
   getDefaultMetadatasKeys(): string[] {

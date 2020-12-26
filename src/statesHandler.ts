@@ -79,7 +79,6 @@ export class StateHandler {
       let found = false;
       // SHAPES
       let options = rule.getShapeMapOptions();
-      // name = XGraph.getValuePropOfMxCell(mxcell, options);
       name = xcell.getValues(options);
       if (name !== null && rule.matchShape(name, options)) {
         result.set(id, state);

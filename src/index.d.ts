@@ -250,7 +250,7 @@ declare module gf {
   declare type TComparatorElt = { text: string; value: TComparatorKeys };
   declare type TComparatorList = TComparatorElt[];
 
-  declare type TVariableKeys = '_rule' | '_level' | '_value' | '_color' | '_formated' | '_date';
+  declare type TVariableKeys = '_rule' | '_level' | '_value' | '_color' | '_formated' | '_date' | '_metric';
   declare type TVariableList = { text: string; value: TVariableKeys }[];
   declare interface TIRulesHandlerData {
     rulesData: TIRuleData[];

@@ -58,34 +58,7 @@ export class TooltipHandler {
    * @memberof TooltipHandler
    */
   updateDate() {
-    const currentDateTime = new Date();
-    this.lastChange =
-      currentDateTime.getFullYear() +
-      '-' +
-      (currentDateTime.getMonth() + 1).toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      '-' +
-      currentDateTime.getDate().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      ' ' +
-      currentDateTime.getHours().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      ':' +
-      currentDateTime.getMinutes().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }) +
-      ':' +
-      currentDateTime.getSeconds().toLocaleString('en-US', {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      });
+    this.lastChange = $GF.getCurrentDate();
   }
 
   destroy() {
