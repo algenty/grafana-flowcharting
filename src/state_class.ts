@@ -127,19 +127,12 @@ export class State {
         let k = shape.data.style;
         if (!shape.isHidden() && shape.match(cellValue, mapOptions, this.variables)) {
           let v: any = color;
-          if (!matchedRule) {
-            matchedRule = true;
-            this.currRules.push(rule.data.alias);
-          }
           if (shape.isEligible(level)) {
+            matchedRule = true;
             this.matched = true;
-            if (level > this.globalLevel) {
-              this.globalLevel = level;
-              this.highestValue = value;
-              this.highestFormattedValue = FormattedValue;
-            }
             this.shapeState.set(k, v, level) && this.status.set(k, v);
           }
+
           // TOOLTIP
           if (rule.toTooltipize(level)) {
             k = 'tooltip';
@@ -161,18 +154,10 @@ export class State {
       cellValue = this.xcell.getDefaultValues(mapOptions);
       textMaps.forEach(text => {
         const k = 'label';
-        if (!text.isHidden() && text.match(cellValue, mapOptions, this.variables) && text.isEligible(level)) {
-          if (!matchedRule) {
-            matchedRule = true;
-            this.currRules.push(rule.data.alias);
-          }
+        if (!text.isHidden() && text.match(cellValue, mapOptions, this.variables)) {
           if (text.isEligible(level)) {
+            matchedRule = true;
             this.matched = true;
-            if (level > this.globalLevel) {
-              this.globalLevel = level;
-              this.highestValue = value;
-              this.highestFormattedValue = FormattedValue;
-            }
             const textScoped = this.variables.replaceText(FormattedValue);
             const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
             this.textState.set(k, v, level) && this.status.set(k, v);
@@ -185,18 +170,10 @@ export class State {
       cellValue = this.xcell.getDefaultValues(mapOptions);
       eventMaps.forEach(event => {
         const k = event.data.style;
-        if (!event.isHidden() && event.match(cellValue, mapOptions, this.variables) && event.isEligible(level)) {
-          if (!matchedRule) {
-            matchedRule = true;
-            this.currRules.push(rule.data.alias);
-          }
+        if (!event.isHidden() && event.match(cellValue, mapOptions, this.variables)) {
           if (event.isEligible(level)) {
+            matchedRule = true;
             this.matched = true;
-            if (level > this.globalLevel) {
-              this.globalLevel = level;
-              this.highestValue = value;
-              this.highestFormattedValue = FormattedValue;
-            }
             const v = this.variables.eval(event.data.value);
             this.eventState.set(k, v, level) && this.status.set(k, v);
           }
@@ -209,28 +186,28 @@ export class State {
       linkMaps.forEach(link => {
         const k = 'link';
         if (!link.isHidden() && link.match(cellValue, mapOptions, this.variables)) {
-          if (!matchedRule) {
-            matchedRule = true;
-            this.currRules.push(rule.data.alias);
-          }
           if (link.isEligible(level)) {
+            matchedRule = true;
             this.matched = true;
-            if (level > this.globalLevel) {
-              this.globalLevel = level;
-              this.highestValue = value;
-              this.highestFormattedValue = FormattedValue;
-            }
             const v = this.variables.replaceText(link.getLink());
             this.linkState.set(k, v, level) && this.status.set(k, v);
           }
         }
       });
 
-      if (level >= rule.highestLevel && this.matched) {
-        rule.highestLevel = level;
-        rule.highestValue = value;
-        rule.highestFormattedValue = FormattedValue;
-        rule.highestColor = color;
+      if (matchedRule) {
+        this.currRules.push(rule.data.alias);
+        if (level > this.globalLevel) {
+          this.globalLevel = level;
+          this.highestValue = value;
+          this.highestFormattedValue = FormattedValue;
+        }
+        if (level >= rule.highestLevel) {
+          rule.highestLevel = level;
+          rule.highestValue = value;
+          rule.highestFormattedValue = FormattedValue;
+          rule.highestColor = color;
+        }
       }
       let endPerf = Date.now();
       rule.execTimes += endPerf - beginPerf;
