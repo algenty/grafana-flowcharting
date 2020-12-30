@@ -425,7 +425,10 @@ export class Rule {
     // 1.0.0
     if (!!obj.mapsDat) {
       if (!!obj.mapsDat.shapes) {
-        this.data.mapsDat.shapes.options.identByProp = obj.mapsDat.shapes.options.identByProp;
+        this.data.mapsDat.shapes.options.identByProp =
+          obj.mapsDat.shapes.options.identByProp !== undefined
+            ? obj.mapsDat.shapes.options.identByProp
+            : this.data.mapsDat.shapes.options.identByProp;
         this.data.mapsDat.shapes.options.enableRegEx = obj.mapsDat.shapes.options.enableRegEx;
         this.data.mapsDat.shapes.options.metadata = obj.mapsDat.shapes.options.metadata;
       }
@@ -472,7 +475,10 @@ export class Rule {
 
     if (!!obj.mapsDat) {
       if (!!obj.mapsDat.texts) {
-        this.data.mapsDat.texts.options.identByProp = obj.mapsDat.texts.options.identByProp;
+        this.data.mapsDat.texts.options.identByProp =
+          obj.mapsDat.texts.options.identByProp !== undefined
+            ? obj.mapsDat.texts.options.identByProp
+            : this.data.mapsDat.texts.options.identByProp;
         this.data.mapsDat.texts.options.enableRegEx = obj.mapsDat.texts.options.enableRegEx;
         this.data.mapsDat.texts.options.metadata = obj.mapsDat.texts.options.metadata;
       }
@@ -520,7 +526,10 @@ export class Rule {
 
     if (!!obj.mapsDat) {
       if (!!obj.mapsDat.links) {
-        this.data.mapsDat.links.options.identByProp = obj.mapsDat.links.options.identByProp;
+        this.data.mapsDat.links.options.identByProp =
+          obj.mapsDat.links.options.identByProp !== undefined
+            ? obj.mapsDat.links.options.identByProp
+            : this.data.mapsDat.links.options.identByProp;
         this.data.mapsDat.links.options.enableRegEx = obj.mapsDat.links.options.enableRegEx;
         this.data.mapsDat.links.options.metadata = obj.mapsDat.links.options.metadata;
       }
@@ -557,17 +566,23 @@ export class Rule {
     }
 
     // EVENT
+    // <= 0.9.0
     if (!!obj.eventProp) {
-      this.data.mapsDat.events.options.identByProp = obj.eventProp;
+      this.data.mapsDat.events.options.identByProp = obj.Prop;
     }
     if (!!obj.eventRegEx || obj.eventRegEx === false) {
       this.data.mapsDat.events.options.enableRegEx = obj.eventRegEx;
     }
-    if (!!obj.eventsMap) {
-      if (!!obj.eventsMap.options) {
-        this.data.mapsDat.events.options.identByProp = obj.eventsMap.options.identByProp;
-        this.data.mapsDat.events.options.enableRegEx = obj.eventsMap.options.enableRegEx;
-        this.data.mapsDat.events.options.metadata = obj.eventsMap.options.metadata;
+
+    // 1.0.0
+    if (!!obj.mapsDat) {
+      if (!!obj.mapsDat.events) {
+        this.data.mapsDat.events.options.identByProp =
+          obj.mapsDat.events.options.identByProp !== undefined
+            ? obj.mapsDat.events.options.identByProp
+            : this.data.mapsDat.events.options.identByProp;
+        this.data.mapsDat.events.options.enableRegEx = obj.mapsDat.events.options.enableRegEx;
+        this.data.mapsDat.events.options.metadata = obj.mapsDat.events.options.metadata;
       }
     }
 

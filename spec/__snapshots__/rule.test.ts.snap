@@ -89,6 +89,7 @@ Object {
   "tpGraphScale": "linear",
   "tpGraphSize": "100%",
   "tpGraphType": "line",
+  "tpMetadata": false,
   "type": "number",
   "unit": "short",
   "valueData": Array [],

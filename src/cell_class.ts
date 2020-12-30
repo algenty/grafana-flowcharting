@@ -239,8 +239,6 @@ export class XCell {
 
   setMetadata(key: string, value: string | null): this {
     this._initDefaultValue('metadata');
-    // const attrs = this.mxcell.value.attributes;
-    // attrs[key] = value;
     this.mxcell.setAttribute(key, value);
     return this;
   }

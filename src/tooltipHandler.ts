@@ -2,6 +2,7 @@ import Chartist from 'chartist';
 // import ctAreaGradient from 'chartist-plugin-gradient';
 import { Metric } from './metric_class';
 import { $GF } from 'globals_class';
+import { XCell } from 'cell_class';
 
 /**
  *
@@ -485,22 +486,24 @@ class BarGraphTooltip extends GraphTooltip {
 class MetadataTooltip {
   enableMetadata: boolean = true;
   div: HTMLDivElement | undefined = undefined;
-  metadata: gf.TXCellMetadata | undefined = undefined;
+  xcell: XCell | undefined = undefined;
   constructor() {}
 
-  setMetadata(mds: gf.TXCellMetadata): this {
-    this.metadata = mds;
+  setXCell(cell: XCell): this {
+    this.xcell = cell;
     return this;
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     const div = document.createElement('div');
+    div.className = 'tooltip-metric';
     this.div = div;
     if (parentDiv !== undefined) {
       parentDiv.appendChild(div);
     }
-    if (this.metadata !== undefined) {
-      this.metadata.forEach((v, k, m) => {
+    if (this.xcell !== undefined) {
+      const md = this.xcell.getMetadatas();
+      md.forEach((v, k, m) => {
         if (k !== undefined && k !== null && k.length > 0 && v !== undefined && v !== null && v.length > 0) {
           const md = document.createElement('div');
           md.innerHTML = `${k} : <b>${mxUtils.htmlEntities(v)}</b>`;

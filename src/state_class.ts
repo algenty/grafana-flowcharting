@@ -721,7 +721,7 @@ class EventState extends GFState {
   }
 
   _set(key: gf.TTypeEventKeys, value: any) {
-    if (value === undefined) {
+    if (value === undefined || value === 'null') {
       value = null;
     }
     switch (key) {
@@ -733,18 +733,20 @@ class EventState extends GFState {
         this.xcell.setLabel(value);
         break;
       case 'tpMetadata':
-        const tbl = String(value).split('@');
-        if (tbl !== undefined && tbl.length > 0) {
-          let k: any = tbl.shift();
-          let v: any = null;
-          if (tbl.length > 0) {
-            v = tbl.join('@');
+        if (value !== null) {
+          const tbl = String(value).split('@');
+          if (tbl !== undefined && tbl.length > 0) {
+            let k: any = tbl.shift();
+            let v: any = null;
+            if (tbl.length > 0) {
+              v = tbl.join('@');
+            }
+            this.xcell.setMetadata(k, v);
           }
-          this.xcell.setMetadata(k, v);
         }
         break;
       case 'tpText':
-        if (value === undefined || value === null || value.length === 0) {
+        if (value === undefined || value === null || value.length === 0 || value === 'null') {
           value = null;
         }
         this.xcell.setMetadata('tooltip', value);
@@ -1023,7 +1025,7 @@ class TooltipState extends GFState {
     }
     // Metadata
     if (rule.data.tpMetadata) {
-      this.tooltipHandler.addMetadata().setMetadata(metadata);
+      this.tooltipHandler.addMetadata().setXCell(this.xcell);
     }
     // Date
     this.tooltipHandler.updateDate();

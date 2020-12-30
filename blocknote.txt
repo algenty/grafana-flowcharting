@@ -82,27 +82,22 @@ https://www.percona.com/blog/2020/06/02/intro-to-grafana-plugin-development/
 # TODO
 allowdrawio
 Add gradient to graph (D3JS ?)
-Fade on message/notification
 multi Diagrams
 Add sparkline
 Convert to D3 graph
 Add a refresh timer on donwload optionsFlag
 Add rename option on flowchart
 change reset/change/apply state to event (rxjx) 
-Simplify editor
-Fix Message console : DONE
 Add multi grid modele : background
 convert threshold to object : DONE
 add friconix to contribute
-radius to div colors ???
-add size of icon when mouse is hover over : DONE
 Up / down color icon on threshold : CANCEL
-Expand : transform : rotate + gf-icon-action : DONE
 https://developer.mozilla.org/fr/docs/Web/CSS/transform
-On hover on cell : transform it to shadow :DONE
 Add option to display or not metadata in tooltip
-Add event to add/change/remove metadata
+Fix metadata event
 async methods in constructors of XGraph
+Fix edit draw.io and 3x reload graph in init 
+StateForRule not work with ${_metric}
 
 
 # effect

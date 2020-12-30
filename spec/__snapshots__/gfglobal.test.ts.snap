@@ -9,6 +9,7 @@ GFVariables {
 exports[`$GF Variables Static should  1`] = `
 Array [
   "\${_rule}",
+  "\${_date}",
   "\${_color}",
   "\${_value}",
   "\${_level}",
