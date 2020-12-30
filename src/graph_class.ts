@@ -60,6 +60,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string, ctrl: FlowchartCtrl) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
     this.container = container;
     this.type = type;
     this.ctrl = ctrl;
@@ -101,6 +102,7 @@ export default class XGraph {
         }
       });
     }
+    trc.after();
   }
 
   /**
@@ -306,6 +308,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   async initXCells() {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'initXCells()');
     const model = this.graph.getModel();
     const cells = model.cells;
     this.xcells = [];
@@ -316,6 +319,7 @@ export default class XGraph {
       const xcell = XCell.refactore(this.graph, mxcell);
       this.xcells.push(xcell);
     });
+    trc.after();
   }
 
   /**
@@ -658,6 +662,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   getXCellValues(type: gf.TPropertieKey): string[] {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'getXCellValues()');
     let values = this.defaultXCellValues[type];
     if (values === undefined) {
       this.initXCellValues(type);
@@ -666,6 +671,7 @@ export default class XGraph {
     if (values !== undefined) {
       return Array.from(values.keys());
     }
+    trc.after();
     return [];
   }
 
@@ -676,6 +682,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   async initXCellValues(type: gf.TPropertieKey) {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'initXCellValues()');
     const xcells = this.getXCells();
     let s: Set<string> = new Set();
     xcells.forEach(x => {
@@ -697,73 +704,8 @@ export default class XGraph {
       }
     });
     this.defaultXCellValues[type] = s;
+    trc.after();
   }
-
-  // getCurrentMDValue(regName: string) {
-  //   const model = this.graph.getModel();
-  //   const cells = model.cells;
-  //   const values: string[] = [];
-  //   _.each(cells, (mxcell: mxCell) => {
-  //     const attrs = XGraph.getAttributes(mxcell);
-  //     for (let index = 0; index < attrs.length; index++) {
-  //       const attr = attrs[index];
-  //       if (
-  //         attr.name !== undefined &&
-  //         $GF.utils.matchString(attr.name, regName) &&
-  //         values.includes(attr.value) !== true
-  //       ) {
-  //         values.push(attr.value);
-  //       }
-  //     }
-  //   });
-  //   return values;
-  // }
-
-  /**
-   * Get list of values or id
-   *
-   * @param { gf.TPropertieKey} prop
-   * @returns {string[]}
-   * @memberof XGraph
-   */
-  // getCurrentCells(prop: gf.TPropertieKey): string[] {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'getCurrentCells()');
-  //   const cellIds: string[] = [];
-  //   const model = this.graph.getModel();
-  //   const cells = model.cells;
-  //   const add = data => {
-  //     if (data !== undefined && data !== null && data.length > 0 && cellIds.includes(data) !== true) {
-  //       cellIds.push(data);
-  //     }
-  //   };
-
-  //   _.each(cells, (mxcell: mxCell) => {
-  //     let result = '';
-  //     switch (prop) {
-  //       case 'id':
-  //         result = XGraph.getId(mxcell);
-  //         add(result);
-  //         break;
-  //       case 'value':
-  //         result = XGraph.getLabelCell(mxcell);
-  //         add(result);
-  //         break;
-  //       case 'metadata':
-  //         const attrs = XGraph.getAttributes(mxcell);
-  //         const length = attrs.length;
-  //         for (let index = 0; index < length; index++) {
-  //           const attr = attrs[index];
-  //           add(attr.name);
-  //         }
-  //         break;
-  //       default:
-  //         $GF.log.error('Unknow prop : ' + prop);
-  //         break;
-  //     }
-  //   });
-  //   trc.after();
-  //   return cellIds;
-  // }
 
   /**
    * Get the XCell according id
@@ -807,30 +749,6 @@ export default class XGraph {
   }
 
   /**
-   * Return mxCellState of mxCell
-   *
-   * @param {mxCell} mxcell
-   * @returns {mxCellState}
-   * @memberof XGraph
-   */
-  // getMxCellState(mxcell: mxCell): mxCellState {
-  //   return this.graph.view.getState(mxcell);
-  // }
-
-  /**
-   * Return a property of style from mxCellState
-   *
-   * @param {mxCell} mxcell
-   * @param {string} styleName
-   * @returns {*}
-   * @memberof XGraph
-   */
-  // getMxCellStateStyle(mxcell: mxCell, styleName: string): any {
-  //   const state = this.getMxCellState(mxcell);
-  //   return state.style[styleName];
-  // }
-
-  /**
    * Hightlight XCells
    *
    * @param {string} prop - "id"|"value"|"metadata"
@@ -862,72 +780,12 @@ export default class XGraph {
    * @returns {mxCellOverlay}
    * @memberof XGraph
    */
-  createOverlay(image, tooltip): any {
-    const overlay = new mxCellOverlay(image, tooltip);
-    overlay.addListener(mxEvent.CLICK, (_sender, _evt) => {
-      mxUtils.alert(`${tooltip}\nLast update: ${new Date()}`);
-    });
-    return overlay;
-  }
-
-  /**
-   * Add Warning icon
-   *
-   * @param {string} state (OK|WARN|ERROR)
-   * @param {mxCell} mxcell
-   * @returns {this}
-   * @memberof XGraph
-   */
-  // addOverlay(state: string, mxcell: mxCell) {
-  //   this.graph.addCellOverlay(mxcell, this.createOverlay(this.graph.warningImage, `State: ${state}`));
-  //   return this;
-  // }
-
-  /**
-   * Remove Warning icon
-   *
-   * @param {mxCell} mxcell
-   * @returns {this}
-   * @memberof XGraph
-   */
-  // removeOverlay(mxcell: mxCell): this {
-  //   this.graph.removeCellOverlays(mxcell);
-  //   return this;
-  // }
-
-  /**
-   * Add link to cell
-   *
-   * @param {mxCell} mxcell
-   * @param {string} link - Url
-   * @returns {this}
-   * @memberof XGraph
-   */
-  // addLink(mxcell: mxCell, link): this {
-  //   this.graph.setLinkForCell(mxcell, link);
-  //   return this;
-  // }
-
-  /**
-   * Get link from cell
-   *
-   * @param {mxCell} mxcell
-   * @memberof XGraph
-   */
-  // getLink(mxcell: mxCell): string | null {
-  //   return this.graph.getLinkForCell(mxcell);
-  // }
-
-  /**
-   * Remove link of cell
-   *
-   * @param {mxCell} mxcell
-   * @returns {this}
-   * @memberof XGraph
-   */
-  // removeLink(mxcell: mxCell): this {
-  //   this.graph.setLinkForCell(mxcell, null);
-  //   return this;
+  // createOverlay(image, tooltip): any {
+  //   const overlay = new mxCellOverlay(image, tooltip);
+  //   overlay.addListener(mxEvent.CLICK, (_sender, _evt) => {
+  //     mxUtils.alert(`${tooltip}\nLast update: ${new Date()}`);
+  //   });
+  //   return overlay;
   // }
 
   /**
@@ -942,6 +800,7 @@ export default class XGraph {
   }
 
   getDefaultValuesWithKey(options: gf.TRuleMapOptions, key: string): string[] {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'getDefaultValuesWithKey()');
     const xcells = this.getXCells();
     const length = xcells.length;
     let values: Set<string> = new Set();
@@ -954,21 +813,9 @@ export default class XGraph {
         }
       });
     }
+    trc.after();
     return Array.from(values.keys());
   }
-
-  /**
-   * Get attribute value
-   *
-   * @static
-   * @param {mxCell} cell
-   * @param {string} name : attribute name
-   * @returns {string}
-   * @memberof XGraph
-   */
-  // static getAttribute(cell: mxCell, name: string): string {
-  //   return cell.getAttribute(name);
-  // }
 
   /**
    * Get xml definition from current graph
@@ -998,8 +845,6 @@ export default class XGraph {
    */
   setAnimColorCell(xcell: XCell, style: gf.TStyleColorKeys, color: string | null): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimColorCell()');
-    // Cancel Previous anim
-    // $GF.clearUniqTimeOut(timeId);
     if (this.isAnimated() && color) {
       try {
         const timeId = `${style}-${this.id}-${xcell.getId()}`;
@@ -1016,18 +861,6 @@ export default class XGraph {
             timer.add(xcell.setStyle.bind(xcell, style, steps[i]), ms * i);
           }
           timer.run();
-          // let count = 1;
-          // const lg = steps.length;
-          // function graduate() {
-          //   if (count < lg) {
-          //     xcell.setStyle(style, steps[count]);
-          //     count += 1;
-          //     $GF.setUniqTimeOut(graduate, $GF.CONSTANTS.CONF_COLORS_MS, timeId);
-          //   } else {
-          //     $GF.clearUniqTimeOut(timeId);
-          //   }
-          // }
-          // graduate();
         } else {
           // let hex = Color(color).hex();
           let hex = chroma(color).hex();
@@ -1052,20 +885,6 @@ export default class XGraph {
   }
 
   /**
-   * Change or apply style
-   *
-   * @param {mxCell} xcell
-   * @param {gf.TStyleColor.Keys} style
-   * @param {(string | null)} value
-   * @returns {this}
-   * @memberof XGraph
-   */
-  // setStyleCell(mxcell: mxCell, style: any, value: string | null): this {
-  //   this.graph.setCellStyles(style, value, [mxcell]);
-  //   return this;
-  // }
-
-  /**
    * Change style with steps to anime
    *
    * @param {mxCell} xcell
@@ -1075,7 +894,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   async setAnimStyleCell(xcell: XCell, style: gf.TStyleAnimKeys, endValue: string | null, beginValue?: string) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setStyleAnimCell()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimStyleCell()');
     if (this.isAnimated() && endValue !== null) {
       try {
         const end = Number(endValue);
@@ -1092,18 +911,6 @@ export default class XGraph {
             timer.add(xcell.setStyle.bind(xcell, style, steps[i].toString()), ms * i);
           }
           timer.run();
-          // const lg = steps.length;
-          // let count = 0;
-          // function graduate() {
-          //   if (count < lg) {
-          //     xcell.setStyle(style, steps[count].toString());
-          //     count += 1;
-          //     $GF.setUniqTimeOut(graduate, $GF.CONSTANTS.CONF_ANIMS_MS, id);
-          //   } else {
-          //     $GF.clearUniqTimeOut(id);
-          //   }
-          // }
-          // graduate();
         }
       } catch (error) {
         this.graph.setCellStyles(style, endValue, [xcell]);
@@ -1142,11 +949,11 @@ export default class XGraph {
     this.onMapping.activate();
   }
 
-  // /**
-  //  * Disable mapping when user click on mapping
-  //  *
-  //  * @memberof XGraph
-  //  */
+  /**
+   * Disable mapping when user click on mapping
+   *
+   * @memberof XGraph
+   */
   unsetMap() {
     this.graph.click = this.clickBackup;
     this.ctrl.$scope.$applyAsync();
@@ -1324,8 +1131,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   async setAnimZoomCell(xcell: XCell, percent: number) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
-    // $GF.clearUniqTimeOut(timeId);
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimZoomCell()');
     if (this.isAnimated()) {
       const timeId = `setAnimZoomCell-${this.id}${xcell.getId}`;
       const percents = $GF.calculateIntervalCounter(xcell.percent, percent, $GF.CONSTANTS.CONF_ANIMS_STEP);
@@ -1336,17 +1142,6 @@ export default class XGraph {
         timer.add(xcell.zoom.bind(xcell, percents[i]), ms * i);
       }
       timer.run();
-      // let index = 0;
-      // function anim() {
-      //   if (index < percents.length) {
-      //     xcell.zoom(percents[index]);
-      //     index = index + 1;
-      //     $GF.setUniqTimeOut(anim, $GF.CONSTANTS.CONF_ANIMS_MS, timeId);
-      //   } else {
-      //     $GF.clearUniqTimeOut(timeId);
-      //   }
-      // }
-      // anim();
     } else {
       xcell.zoom(percent);
     }
@@ -1363,7 +1158,7 @@ export default class XGraph {
    * @memberof XGraph
    */
   async setAnimSizeCell(xcell: XCell, width: number | undefined, height: number | undefined) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'resizeCell()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimSizeCell()');
     const dim = xcell.getDimension();
     const wdir = width !== undefined && width >= 0 ? 1 : -1;
     const hdir = height !== undefined && height >= 0 ? 1 : -1;
@@ -1381,17 +1176,6 @@ export default class XGraph {
         timer.add(xcell.resize.bind(xcell, widths[i], heights[i]), ms * i);
       }
       timer.run();
-      // let index = 0;
-      // function anim() {
-      //   if (index < widths.length) {
-      //     xcell.resize(widths[index], heights[index]);
-      //     index += 1;
-      //     $GF.setUniqTimeOut(anim, $GF.CONSTANTS.CONF_ANIMS_MS, timeId);
-      //   } else {
-      //     $GF.clearUniqTimeOut(timeId);
-      //   }
-      // }
-      // anim();
     } else {
       xcell.resize(width, height);
     }

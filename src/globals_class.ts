@@ -57,6 +57,9 @@ class GFCONSTANT {
   FLOWCHART_CHG_GRAPHHOVER: gf.TFlowchartFlagKeys = 'graphHover';
   FLOWCHART_CHG_HIDDENCHANGE: gf.TFlowchartFlagKeys = 'hiddenChange';
 
+  // TRACE AND DEBUG
+  VAR_GF_TRACE_PERF = true;
+
   // MXGRAPH
   MXGRAPH_STYLES_COLOR: gf.TStyleColorKeys[] = [
     'fillColor',
@@ -808,7 +811,7 @@ class GFTrace {
     }
   }
 
-  async clear() {
+  clear() {
     if (GFTrace.enable) {
       GFTrace.trc.clear();
       GFTrace.fn.clear();
