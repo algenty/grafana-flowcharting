@@ -69,6 +69,7 @@
     "marky": "^1.2.1",
     "mxgraph": "^4.1.1",
     "mxgraph-type-definitions": "^1.0.1",
+    "rxjs": "6.6.3",
     "safe-eval": "^0.4.1",
     "ts-jest": "^26.4.4",
     "vkbeautify": "^0.99.3"

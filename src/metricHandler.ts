@@ -1,7 +1,7 @@
-import _ from 'lodash';
-import { Metric, SerieMetric, TableMetric, ObjectMetric } from './metric_class';
+import { Metric, SerieMetric, TableMetric, ObjectMetric } from 'metric_class';
 import { $GF } from 'globals_class';
-
+import { Subject, Observer, Observable, from } from 'rxjs';
+import { FlowchartCtrl } from 'flowchart_ctrl';
 /**
  * Data Series/Tables handler
  *
@@ -9,13 +9,45 @@ import { $GF } from 'globals_class';
  * @class MetricHandler
  */
 export class MetricHandler {
-  panel: any;
+  // panel: any;
   // $scope: ng.IScope;
   tables: TableMetric[] = [];
   series: SerieMetric[] = [];
-  metrics: Array<SerieMetric | TableMetric> = [];
+  metrics: ObjectMetric[] = [];
+  observers$: gf.TObserver<ObjectMetric>[] = [];
+  ctrl: FlowchartCtrl;
 
-  constructor() {}
+  constructor(ctrl: FlowchartCtrl) {
+    this.ctrl = ctrl;
+  }
+
+  //
+  // RXJS
+  //
+  subscribe$(object: gf.TObserver<ObjectMetric>): this {
+    this.observers$.push(object);
+    return this;
+  }
+
+  unsubscribe$(uid: string): this {
+    const len = this.observers$.length;
+    for (let i = 0; i < len; i++) {
+      if (this.observers$[i].uid === uid) {
+        this.observers$.splice(i, 1);
+        break;
+      }
+    }
+    return this;
+  }
+
+  getSubject$() {
+    const sub$: Subject<ObjectMetric> = new Subject();
+    const len = this.observers$.length;
+    for (let i = 0; i < len; i++) {
+      sub$.subscribe(this.observers$[i]);
+    }
+    return sub$;
+  }
 
   /**
    * Init data with dataList
@@ -23,15 +55,17 @@ export class MetricHandler {
    * @param {any} dataList
    * @memberof MetricHandler
    */
-  initData(dataList: any) {
+  async initData(dataList: any) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
     this.tables = [];
     this.series = [];
     this.metrics = [];
-
+    const sub$ = this.getSubject$();
     dataList.forEach(dl => {
-      this.addMetric(dl);
+      const metric = this.addMetric(dl);
+      sub$.next(metric);
     });
+    sub$.complete();
     trc.after();
   }
 
@@ -122,7 +156,6 @@ export class MetricHandler {
     } else {
       names = this.metrics.map(m => m.getName());
     }
-    // GFGlobal.log.debug('getNames', names);
     return names;
   }
 

@@ -209,7 +209,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   initHandlers() {
     // METRICS / DATAS
     if (!this.metricHandler) {
-      this.metricHandler = new MetricHandler();
+      this.metricHandler = new MetricHandler(this);
     }
     this.metricHandler.clear();
     // FLOWCHARTS
@@ -233,7 +233,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.rulesHandler.clear();
     } else {
       const newRulesData = RulesHandler.getDefaultData();
-      this.rulesHandler = new RulesHandler(newRulesData);
+      this.rulesHandler = new RulesHandler(newRulesData, this);
       this.rulesHandler.import(this.panel.rulesData);
       this.panel.rulesData = newRulesData;
     }

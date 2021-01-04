@@ -131,7 +131,7 @@
                                 {{text.getData().pattern}}
                             </div>
                             <div ng-show="text.displayWhatEdit === true && text.whatEdit !== true"
-                                ng-click="text.whatEdit = true;$GF.setFocus( text.getId() + '-what' )"
+                                ng-click="text.whatEdit = true;$GF.setFocus( text.uid + '-what' )"
                                 title="Edit pattern" 
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent">
                             </div>
@@ -142,7 +142,7 @@
                             </div>
                             <input type="text" class="gf-form-input" ng-model="text.getData().pattern"
                                 style="margin-right: 2px;width : 100%" 
-                                ng-attr-id="{{text.getId() + '-what'}}"
+                                ng-attr-id="{{text.uid + '-what'}}"
                                 ng-show="text.whatEdit === true" ng-model-onblur
                                 ng-blur="editor.onRulesChange();text.whatEdit = false;"
                                 bs-typeahead="rule.getTextMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD"
@@ -158,11 +158,11 @@
                                 {{$GF.GetT4V( editor.textOn, text.getData().textOn)}}
                             </div>
                             <div ng-show="text.displayWhenEdit === true && text.whenEdit !== true"
-                                ng-click="text.whenEdit = true;$GF.setFocus( text.getId() + '-when' )"
+                                ng-click="text.whenEdit = true;$GF.setFocus( text.uid + '-when' )"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit condition">
                             </div>
                             <select class="gf-form-input" ng-model="text.getData().textOn" style="width:100%;"
-                                ng-attr-id="{{text.getId() + '-when'}}"
+                                ng-attr-id="{{text.uid + '-when'}}"
                                 ng-blur="editor.onRulesChange();text.whenEdit = false;" ng-show="text.whenEdit === true"
                                 ng-options="c.value as c.text for c in editor.textOn"
                                 ng-change="editor.onRulesChange()">
@@ -180,11 +180,11 @@
                                 {{$GF.GetT4V(editor.textReplace, text.getData().textReplace)}}
                             </div>
                             <div ng-show="text.displayHowEdit === true && text.howEdit !== true"
-                                ng-click="text.howEdit = true;$GF.setFocus( text.getId() + '-how' )"
+                                ng-click="text.howEdit = true;$GF.setFocus( text.uid + '-how' )"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit method">
                             </div>
                             <select class="gf-form-input" ng-model="text.getData().textReplace" style="width:100%;"
-                                ng-attr-id="{{text.getId() + '-how'}}"
+                                ng-attr-id="{{text.uid + '-how'}}"
                                 ng-blur="editor.onRulesChange();text.howEdit = false;" ng-show="text.howEdit === true"
                                 ng-options="c.value as c.text for c in editor.textReplace"
                                 ng-change="editor.onRulesChange()">
@@ -201,12 +201,12 @@
                                 {{text.getData().textPattern}}
                             </div>
                             <div ng-show="text.displayWithEdit === true && text.withEdit !== true && text.getData().textReplace == 'pattern'"
-                                ng-click="text.withEdit = true;$GF.setFocus( text.getId() + '-with' )"
+                                ng-click="text.withEdit = true;$GF.setFocus( text.uid + '-with' )"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Text or pattern to replace by value">
                             </div>
                             <input ng-if="text.getData().textReplace == 'pattern'"
-                                style="margin-right: 2px;width : 100%" ng-attr-id="{{text.getId() + '-with'}}"
+                                style="margin-right: 2px;width : 100%" ng-attr-id="{{text.uid + '-with'}}"
                                 type="text" class="gf-form-input" ng-show="text.withEdit === true"
                                 ng-model="text.getData().textPattern"
                                 ng-blur="editor.onRulesChange();text.withEdit = false;"

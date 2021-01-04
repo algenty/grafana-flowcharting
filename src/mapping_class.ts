@@ -16,7 +16,7 @@ export type DataVMap = gf.TValueMapData | gf.TRangeMapData;
 
 class GFMap {
   data: DataMap;
-  id: string;
+  uid: string;
   type: gf.TTypeMap = 'shape';
   options: gf.TRuleMapOptions = Rule.getDefaultMapOptions();
   reduce = true;
@@ -24,7 +24,7 @@ class GFMap {
   constructor(pattern, data: DataMap) {
     this.data = data;
     this.data.pattern = pattern;
-    this.id = $GF.utils.uniqueID();
+    this.uid = $GF.utils.uniqueID();
   }
 
   /**
@@ -137,9 +137,9 @@ class GFMap {
    * @returns {string}
    * @memberof GFMap
    */
-  getId(): string {
-    return this.id;
-  }
+  // getId(): string {
+  //   return this.uid;
+  // }
 
   /**
    * Change pattern
@@ -660,9 +660,9 @@ class VMAP {
     return this;
   }
 
-  getId(): string {
-    return this.id;
-  }
+  // getId(): string {
+  //   return this.id;
+  // }
 
   getData(): DataVMap {
     return this.data;

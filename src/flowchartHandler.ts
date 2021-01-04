@@ -2,7 +2,6 @@ import { Flowchart } from 'flowchart_class';
 import { Rule } from 'rule_class';
 import _ from 'lodash';
 // const clonedeep = require('lodash.clonedeep')
-import { Metric } from './metric_class';
 import { $GF } from 'globals_class';
 import { InteractiveMap, ObjectMap } from 'mapping_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
@@ -437,7 +436,6 @@ export class FlowchartHandler {
           self.setOptions(name);
         });
       }
-      // console.log('RENDER Flags AFTER OPTIONS', clonedeep(this.flags));
 
       // RULES or DATAS
       if (
@@ -447,23 +445,19 @@ export class FlowchartHandler {
       ) {
         // const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
         const rules = this.ctrl.rulesHandler.getRules();
-        const metrics = this.ctrl.metricHandler.getMetrics();
 
         // Change to async to optimize
-        self.async_refreshStates(rules, metrics);
+        self.async_refreshStates(rules);
         this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
         this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS);
         this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER);
       }
-      // console.log('RENDER Flags AFTER DATAS', clonedeep(this.flags));
 
       // Current visible
       if (self.currentFlowchart !== undefined && !self.currentFlowchart.isVisible()) {
-        // console.log("!self.currentFlowchart.isVisible()",!self.currentFlowchart.isVisible());
         this.setCurrentFlowchart(self.currentFlowchart.getName());
         this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
       }
-      // console.log('RENDER Flags AFTER VISIBLES', clonedeep(this.flags));
 
       // OTHER : Resize, OnLoad
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS) || self.firstLoad) {
@@ -472,7 +466,6 @@ export class FlowchartHandler {
           self.applyOptions();
           self.firstLoad = false;
         } else {
-          // console.log("Apply options on",this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS));
           this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS).forEach(name => {
             self.applyOptions(name);
           });
@@ -609,9 +602,9 @@ export class FlowchartHandler {
    * @param {Metric[]} metrics
    * @memberof FlowchartHandler
    */
-  async_refreshStates(rules: Rule[], metrics: Metric[]) {
+  async_refreshStates(rules: Rule[]) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'async_refreshStates()');
-    this.refreshStates(rules, metrics);
+    this.refreshStates(rules);
     trc.after();
   }
 
@@ -623,13 +616,13 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  refreshStates(rules: Rule[], metrics: Metric[]): this {
+  refreshStates(rules: Rule[]): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'refreshStates()');
     if (this.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_RULES)) {
       this.updateStates(rules);
       this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_RULES);
     }
-    this.setStates(rules, metrics);
+    this.setStates(rules);
     this.applyStates();
     trc.after();
     return this;
@@ -656,10 +649,10 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  setStates(rules: Rule[], metrics: any[]): this {
+  setStates(rules: Rule[]): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
     this.flowcharts.forEach(flowchart => {
-      flowchart.setStates(rules, metrics);
+      flowchart.setStates(rules);
     });
     trc.after();
     return this;
@@ -807,7 +800,7 @@ export class FlowchartHandler {
     this.onMapping
       .setMap(objToMap)
       .setOptions(options)
-      .setFocus(objToMap.getId());
+      .setFocus(objToMap.uid);
     flowchart.setMap();
     return this;
   }

@@ -5,7 +5,7 @@ import { TooltipHandler } from 'tooltipHandler';
 export class XCell {
   graph: any;
   mxcell: mxCell;
-  uniqId: string = $GF.utils.uniqueID();
+  uid: string = $GF.utils.uniqueID();
   isHidden: boolean = false;
   isHighlighting: boolean = false;
   isBlink: boolean = false;
@@ -690,7 +690,7 @@ export class XCell {
    * @memberof XCell
    */
   async blink(ms: number = 1000, bool: boolean = true) {
-    const timeId = `blink-${this.uniqId}`;
+    const timeId = `blink-${this.uid}`;
     const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
     if (bool && !this.isBlink) {
       this.isBlink = true;

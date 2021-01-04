@@ -4,7 +4,6 @@ import { State } from 'state_class';
 import { Rule } from 'rule_class';
 
 import { FlowchartHandler } from 'flowchartHandler';
-import { Metric } from 'metric_class';
 import { $GF } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
@@ -20,13 +19,10 @@ export class Flowchart {
   ctrl: FlowchartCtrl;
   xgraph: XGraph | undefined = undefined;
   stateHandler: StateHandler | undefined;
-  // ctrl: any;
-  // templateSrv: any;
   states: Map<string, State> | undefined;
   id: string;
   visible = false;
   reduce = true;
-  // onMapping : InteractiveMap;
 
   constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData, ctrl: FlowchartCtrl) {
     this.data = data;
@@ -206,7 +202,7 @@ export class Flowchart {
         if (this.data.lock) {
           this.xgraph.lockGraph(true);
         }
-        this.stateHandler = new StateHandler(this.xgraph);
+        this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
         this.ctrl.clearNotify();
       } else {
         this.ctrl.notify('Source content empty Graph not defined', 'error');
@@ -246,16 +242,13 @@ export class Flowchart {
    * @param {Metric[]} metrics
    * @memberof Flowchart
    */
-  setStates(rules: Rule[], metrics: Metric[]): this {
+  setStates(rules: Rule[]): this {
     // $GF.log.info(`flowchart[${this.data.name}].setStates()`);
     if (rules === undefined) {
       $GF.log.warn("Rules shoudn't be null");
     }
-    if (metrics === undefined) {
-      $GF.log.warn("Metrics shoudn't be null");
-    }
     if (this.stateHandler) {
-      this.stateHandler.setStates(rules, metrics);
+      this.stateHandler.setStates(rules);
     }
     return this;
   }

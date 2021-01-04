@@ -1,10 +1,11 @@
 import { State } from './state_class';
 import { Rule } from './rule_class';
-import _ from 'lodash';
-import { Metric } from './metric_class';
+import { each as _each } from 'lodash';
 import XGraph from 'graph_class';
 import { $GF } from 'globals_class';
 import { XCell } from 'cell_class';
+import { FlowchartCtrl } from 'flowchart_ctrl';
+import { Subject } from 'rxjs';
 
 /**
  * States Handler class
@@ -16,15 +17,48 @@ export class StateHandler {
   states: Map<string, State>;
   xgraph: XGraph;
   edited = false;
+  ctrl: FlowchartCtrl;
+  observers$: gf.TObserver<State>[] = [];
+  sub$: Subject<State> | undefined;
+
   /**
    * Creates an instance of StateHandler.
    * @param {XGraph} xgraph
    * @memberof StateHandler
    */
-  constructor(xgraph: XGraph) {
+  constructor(xgraph: XGraph, ctrl: FlowchartCtrl) {
     this.states = new Map();
     this.xgraph = xgraph;
     this.initStates(this.xgraph);
+    this.ctrl = ctrl;
+  }
+
+  //
+  // RXJS
+  //
+  subscribe$(object: gf.TObserver<State>): this {
+    this.observers$.push(object);
+    return this;
+  }
+
+  unsubscribe$(uid: string): this {
+    const len = this.observers$.length;
+    for (let i = 0; i < len; i++) {
+      if (this.observers$[i].uid === uid) {
+        this.observers$.splice(i, 1);
+        break;
+      }
+    }
+    return this;
+  }
+
+  getSubject$() {
+    const sub$: Subject<State> = new Subject();
+    const len = this.observers$.length;
+    for (let i = 0; i < len; i++) {
+      sub$.subscribe(this.observers$[i]);
+    }
+    return sub$;
   }
 
   /**
@@ -39,9 +73,11 @@ export class StateHandler {
     this.xgraph = xgraph;
     this.states.clear();
     const xcells = xgraph.getXCells();
-    _.each(xcells, x => {
+    this.sub$ = this.getSubject$();
+    _each(xcells, x => {
       this.addState(x);
     });
+    this.sub$.complete();
     trc.after();
     return this;
   }
@@ -179,10 +215,10 @@ export class StateHandler {
   addState(xcell: XCell): State {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addState()');
     const state = new State(xcell, this.xgraph);
-    const id = state.id;
-    this.states.set(id, state);
+    this.sub$?.next(state);
+    this.states.set(state.uid, state);
     if ($GF.DEBUG) {
-      $GF.setVar(`STATE_${id}`, state);
+      $GF.setVar(`STATE_${state.uid}`, state);
     }
     trc.after();
     return state;
@@ -215,7 +251,7 @@ export class StateHandler {
    * @param  {Array<Rule>} rules - Array of Rule object
    * @param  {Array<Metric>} metrics - Array of serie object
    */
-  setStates(rules: Rule[], metrics: Metric[]): this {
+  setStates(rules: Rule[]): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
     this.prepare();
     rules.forEach(rule => {
@@ -228,9 +264,7 @@ export class StateHandler {
         rule.states = this.getStatesForRule(rule);
       }
       rule.states.forEach(state => {
-        metrics.forEach(metric => {
-          state.setState(rule, metric);
-        });
+        state.setState(rule);
       });
     });
     trc.after();

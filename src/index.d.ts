@@ -431,8 +431,7 @@ declare module gf {
     flowchartHandler: any;
     editor: InspectOptionsCtrl;
     $GF: $GF;
-    ctrl: any; //TODO: define type
-    // testData: any;
+    ctrl: FlowchartCtrl;
   }
 
   // Flowcharts
@@ -463,7 +462,7 @@ declare module gf {
   declare interface TRulesOptionsScope extends ng.IScope {
     editor: RulesOptionsCtrl;
     $GF: $GF;
-    ctrl: any;
+    ctrl: FlowchartCtrl;
   }
 
   declare type TTableProperty = 'index' | 'id' | 'label' | 'desc' | 'width' | 'align' | 'sort' | 'select';
@@ -512,4 +511,12 @@ declare module gf {
   }
 
   declare type THDatePrecision = 'y' | 'M' | 'w' | 'd' | 'h' | 'm' | 's';
+
+  declare interface TObserver<T> {
+    closed?: boolean;
+    next: (value: T) => void;
+    error: (err: any) => void;
+    complete: () => void;
+    uid: string;
+  }
 }

@@ -1,6 +1,7 @@
 import { Rule } from 'rule_class';
 import _ from 'lodash';
 import { $GF } from 'globals_class';
+import { FlowchartCtrl } from 'flowchart_ctrl';
 
 /**
  * Rules Handler
@@ -10,18 +11,40 @@ import { $GF } from 'globals_class';
  */
 export class RulesHandler {
   rules: Rule[];
+  ctrl: FlowchartCtrl;
   data: gf.TIRulesHandlerData;
   activeRuleIndex = 0;
+  observers$: gf.TObserver<Rule>[] = [];
+
   /**
    * Creates an instance of RulesHandler.
    * @param {TIRulesHandlerData} data
    * @memberof RulesHandler
    */
-  constructor(data: gf.TIRulesHandlerData) {
+  constructor(data: gf.TIRulesHandlerData, ctrl: FlowchartCtrl) {
     $GF.log.info('RulesHandler.constructor()');
     this.rules = [];
     this.data = data;
-    // this.import(this.data);
+    this.ctrl = ctrl;
+  }
+
+  //
+  // RXJS
+  //
+  subscribe$(object: gf.TObserver<Rule>): this {
+    this.observers$.push(object);
+    return this;
+  }
+
+  unsubscribe$(uid: string): this {
+    const len = this.observers$.length;
+    for (let i = 0; i < len; i++) {
+      if (this.observers$[i].uid === uid) {
+        this.observers$.splice(i, 1);
+        break;
+      }
+    }
+    return this;
   }
 
   /**
@@ -121,6 +144,7 @@ export class RulesHandler {
     this.rules.push(newRule);
     this.data.rulesData.push(data);
     newRule.setOrder(this.countRules());
+    this.ctrl.metricHandler?.subscribe$(newRule.getMetricObserver$());
     return newRule;
   }
 
@@ -158,6 +182,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   removeRule(rule: Rule) {
+    this.ctrl.metricHandler?.unsubscribe$(rule.uid);
     const index = rule.getOrder() - 1;
     this.rules.splice(index, 1);
     this.data.rulesData.splice(index, 1);
@@ -184,7 +209,7 @@ export class RulesHandler {
     newRule.data.reduce = false;
     this.activeRuleIndex = index;
     this.setOrder();
-    const elt = document.getElementById(newRule.getId());
+    const elt = document.getElementById(newRule.uid);
     if (elt) {
       setTimeout(() => {
         elt.focus();

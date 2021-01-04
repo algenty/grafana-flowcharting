@@ -37,7 +37,7 @@ export default class XGraph {
   zoomFactor = 1.2;
   cumulativeZoomFactor = 1;
   grid = false;
-  id = $GF.utils.uniqueID();
+  uid = $GF.utils.uniqueID();
   bgColor: string | null = null;
   zoomPercent = '1';
   // cells: { id: string[]; value: string[] } = {
@@ -847,7 +847,7 @@ export default class XGraph {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimColorCell()');
     if (this.isAnimated() && color) {
       try {
-        const timeId = `${style}-${this.id}-${xcell.getId()}`;
+        const timeId = `${style}-${this.uid}-${xcell.uid}`;
         const startColor = xcell.getStyle(style);
         if (startColor) {
           const endColor = color;
@@ -900,7 +900,7 @@ export default class XGraph {
         const end = Number(endValue);
         const begin = beginValue !== undefined ? Number(beginValue) : Number(xcell.getStyle(style));
         if (end !== begin) {
-          const timeId = `${style}-${this.id}-${xcell.getId()}`;
+          const timeId = `${style}-${this.uid}-${xcell.uid}`;
           // Cancel Previous anim
           $GF.clearUniqTimeOut(timeId);
           const steps = $GF.calculateIntervalCounter(begin, end, $GF.CONSTANTS.CONF_ANIMS_STEP);
@@ -1133,7 +1133,7 @@ export default class XGraph {
   async setAnimZoomCell(xcell: XCell, percent: number) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimZoomCell()');
     if (this.isAnimated()) {
-      const timeId = `setAnimZoomCell-${this.id}${xcell.getId}`;
+      const timeId = `setAnimZoomCell-${this.uid}${xcell.getId}`;
       const percents = $GF.calculateIntervalCounter(xcell.percent, percent, $GF.CONSTANTS.CONF_ANIMS_STEP);
       const timer = GFTimer.getNewTimer(timeId);
       const length = percents.length;
@@ -1166,7 +1166,7 @@ export default class XGraph {
     height = height !== undefined ? height : undefined;
     // $GF.clearUniqTimeOut(timeId);
     if (this.isAnimated()) {
-      const timeId = `setAnimSizeCell-${this.id}-${xcell.getId()}`;
+      const timeId = `setAnimSizeCell-${this.uid}-${xcell.getId()}`;
       const widths = $GF.calculateIntervalCounter(dim.width * wdir, width, $GF.CONSTANTS.CONF_ANIMS_STEP);
       const heights = $GF.calculateIntervalCounter(dim.height * hdir, height, $GF.CONSTANTS.CONF_ANIMS_STEP);
       const length = widths.length;

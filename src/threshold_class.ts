@@ -7,7 +7,7 @@ class GFTH {
   data: gf.TTHData;
   hidden = false;
   validComp: string[] = [];
-  id = $GF.utils.uniqueID();
+  uid = $GF.utils.uniqueID();
   type = 'unknown';
   reduce = true;
   constructor(color: string, comparator: any, value: any, data: gf.TTHData) {
@@ -56,9 +56,9 @@ class GFTH {
     return true;
   }
 
-  getId() {
-    return this.id;
-  }
+  // getId() {
+  //   return this.id;
+  // }
 
   getData(): any {
     return this.data;

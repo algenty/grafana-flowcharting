@@ -1,8 +1,8 @@
 import grafana from './grafana_func';
-import { State } from './state_class';
+import { State } from 'state_class';
 import _ from 'lodash';
-import { Metric } from './metric_class';
-import { $GF } from './globals_class';
+import { ObjectMetric } from 'metric_class';
+import { $GF } from 'globals_class';
 import { NumberTH, StringTH, ObjectTH, ObjectTHData, DateTH } from 'threshold_class';
 import {
   EventMap,
@@ -24,31 +24,34 @@ import {
  */
 export class Rule {
   data: gf.TIRuleData;
+  metrics: ObjectMetric[] = [];
+  cycleMetrics: boolean = false;
+  cycleStates: boolean = false;
   mapsObj: gf.TRuleMaps = {
     shapes: [],
     texts: [],
     links: [],
     events: [],
   };
-  // shapeMaps: ShapeMap[] = [];
-  // textMaps: TextMap[] = [];
-  // linkMaps: LinkMap[] = [];
-  // eventMaps: EventMap[] = [];
   valueMaps: ValueMap[] = [];
   rangeMaps: RangeMap[] = [];
   numberTH: NumberTH[] = [];
   stringTH: StringTH[] = [];
   dateTH: DateTH[] = [];
   FE_metricName: string | undefined;
-  id: string;
+  uid: string;
   removeClick = 2;
-
   states: Map<string, State>;
+  shapeStates: State[] = [];
+  textStates: State[] = [];
+  linkStates: State[] = [];
+  eventStates: State[] = [];
   highestLevel: number = -1;
   highestColor: string = '';
   highestFormattedValue: string = '';
   highestValue: any = undefined;
   execTimes: number = 0;
+  // metricSubs$: Subscription | undefined;
 
   /**
    * Creates an instance of Rule.
@@ -59,8 +62,88 @@ export class Rule {
   constructor(pattern: string, data: gf.TIRuleData) {
     this.data = data;
     this.data.pattern = pattern;
-    this.id = $GF.utils.uniqueID();
+    this.uid = $GF.utils.uniqueID();
     this.states = new Map();
+  }
+
+  //
+  // RxJS
+  //
+  getMetricObserver$(): gf.TObserver<ObjectMetric> {
+    const self = this;
+    return {
+      next: metric => {
+        if (metric !== null) {
+          if (!self.cycleMetrics) {
+            self.cycleMetrics = true;
+            self.metrics = [];
+          }
+          if (self.matchMetric(metric)) {
+            self.metrics.push(metric);
+          }
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {
+        self.cycleMetrics = false;
+      },
+      uid: self.uid,
+    };
+  }
+
+  getStateObserver$(): gf.TObserver<State> {
+    const self = this;
+    return {
+      next: state => {
+        if (state !== null) {
+          if (!self.cycleMetrics) {
+            self.cycleStates = true;
+            self.states.clear();
+            self.shapeStates = [];
+            self.textStates = [];
+            self.linkStates = [];
+            self.textStates = [];
+          }
+          let mapOptions = self.getShapeMapOptions();
+          let cellValue = state.xcell.getDefaultValues(mapOptions);
+          if (self.matchShape(cellValue, mapOptions)) {
+            self.states.set(state.uid, state);
+            self.shapeStates.push(state);
+          }
+          mapOptions = self.getTextMapOptions();
+          cellValue = state.xcell.getDefaultValues(mapOptions);
+          if (self.matchShape(cellValue, mapOptions)) {
+            self.states.set(state.uid, state);
+            self.textStates.push(state);
+          }
+          mapOptions = self.getLinkMapOptions();
+          cellValue = state.xcell.getDefaultValues(mapOptions);
+          if (self.matchShape(cellValue, mapOptions)) {
+            self.states.set(state.uid, state);
+            self.linkStates.push(state);
+          }
+          mapOptions = self.getEventMapOptions();
+          cellValue = state.xcell.getDefaultValues(mapOptions);
+          if (self.matchShape(cellValue, mapOptions)) {
+            self.states.set(state.uid, state);
+            self.eventStates.push(state);
+          }
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {
+        self.cycleStates = false;
+      },
+      uid: self.uid,
+    };
+  }
+
+  getMetrics(): ObjectMetric[] {
+    return this.metrics;
   }
 
   /**
@@ -125,22 +208,6 @@ export class Rule {
           dataList: [],
         },
       },
-      // shapeProp: 'id',
-      // shapeMD: 'NAME',
-      // shapeRegEx: true,
-      // shapeData: [],
-      // textProp: 'id',
-      // textMD: 'NAME',
-      // textRegEx: true,
-      // textData: [],
-      // linkProp: 'id',
-      // linkMD: 'NAME',
-      // linkRegEx: true,
-      // linkData: [],
-      // eventProp: 'id',
-      // eventMD: 'NAME',
-      // eventRegEx: false,
-      // eventData: [],
       mappingType: 1,
       valueData: [],
       rangeData: [],
@@ -637,9 +704,9 @@ export class Rule {
    * @returns
    * @memberof Rule
    */
-  getId(): string {
-    return this.id;
-  }
+  // .id: string {
+  //   return this.id;
+  // }
 
   /**
    * Highlight Cells in rule (mapping color text and link)
@@ -1151,7 +1218,7 @@ export class Rule {
    * @returns {boolean}
    * @memberof Rule
    */
-  matchMetric(metric: Metric): boolean {
+  matchMetric(metric: ObjectMetric): boolean {
     if (this.data.metricType === 'serie' && metric.type === 'serie') {
       return $GF.utils.matchString(metric.getName(), this.data.pattern);
     }
@@ -1934,7 +2001,7 @@ export class Rule {
    * @returns {(string | number | null)}
    * @memberof Rule
    */
-  getValueForMetric(metric: Metric): string | number | null {
+  getValueForMetric(metric: ObjectMetric): string | number | null {
     if (this.matchMetric(metric)) {
       try {
         const value = metric.getValue(this.data.aggregation, this.data.column);
@@ -1954,7 +2021,7 @@ export class Rule {
    * @returns {string}
    * @memberof Rule
    */
-  getFormattedValueForMetric(metric: Metric): string {
+  getFormattedValueForMetric(metric: ObjectMetric): string {
     const formattedValue = this.getValueForMetric(metric);
     return this.getFormattedValue(formattedValue);
   }
