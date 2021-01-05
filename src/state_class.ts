@@ -35,6 +35,7 @@ export class State {
   highestValue: any = undefined;
   tooltipHandler: TooltipHandler | null = null;
   reduce: boolean = true;
+  rules: Map<string, Rule> = new Map();
   currRules: string[] = [];
   currMetrics: string[] = [];
   // originalText: string;
@@ -64,6 +65,12 @@ export class State {
     trc.after();
   }
 
+  /**
+   * Return Xcell
+   *
+   * @returns {XCell}
+   * @memberof State
+   */
   getXCell(): XCell {
     return this.xcell;
   }
@@ -96,149 +103,131 @@ export class State {
    * @param {Metric} metric
    * @memberof State
    */
-  setState(rule: Rule): this {
+  setState(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setState()');
-    let beginPerf = Date.now();
-    if (!rule.isHidden()) {
-      const shapeMaps = rule.getShapeMaps();
-      const textMaps = rule.getTextMaps();
-      const linkMaps = rule.getLinkMaps();
-      const eventMaps = rule.getEventMaps();
-      this.variables.set($GF.CONSTANTS.VAR_STR_RULENAME, rule.data.alias);
-      rule.getMetrics().forEach(metric => {
-        try {
-          this.currMetrics.push(metric.getName());
-          this.variables.set($GF.CONSTANTS.VAR_STR_METRIC, metric.getName);
-        } catch (error) {
-          $GF.log.error(error);
-        }
-        const value = rule.getValueForMetric(metric);
-        const FormattedValue = rule.getFormattedValue(value);
-        const level = rule.getThresholdLevel(value);
-        const color = rule.getThresholdColor(value);
-        this.variables.set($GF.CONSTANTS.VAR_NUM_VALUE, value);
-        this.variables.set($GF.CONSTANTS.VAR_STR_FORMATED, FormattedValue);
-        this.variables.set($GF.CONSTANTS.VAR_NUM_LEVEL, level);
-        this.variables.set($GF.CONSTANTS.VAR_STR_COLOR, color);
-        this.variables.set($GF.CONSTANTS.VAR_STR_DATE, $GF.getCurrentDate());
+    this.rules.forEach(rule => {
+      let beginPerf = Date.now();
+      if (!rule.isHidden()) {
+        const shapeMaps = rule.getShapeMaps();
+        const textMaps = rule.getTextMaps();
+        const linkMaps = rule.getLinkMaps();
+        const eventMaps = rule.getEventMaps();
+        this.variables.set($GF.CONSTANTS.VAR_STR_RULENAME, rule.data.alias);
+        rule.getMetrics().forEach(metric => {
+          try {
+            this.currMetrics.push(metric.getName());
+            this.variables.set($GF.CONSTANTS.VAR_STR_METRIC, metric.getName);
+          } catch (error) {
+            $GF.log.error(error);
+          }
+          const value = rule.getValueForMetric(metric);
+          const FormattedValue = rule.getFormattedValue(value);
+          const level = rule.getThresholdLevel(value);
+          const color = rule.getThresholdColor(value);
+          this.variables.set($GF.CONSTANTS.VAR_NUM_VALUE, value);
+          this.variables.set($GF.CONSTANTS.VAR_STR_FORMATED, FormattedValue);
+          this.variables.set($GF.CONSTANTS.VAR_NUM_LEVEL, level);
+          this.variables.set($GF.CONSTANTS.VAR_STR_COLOR, color);
+          this.variables.set($GF.CONSTANTS.VAR_STR_DATE, $GF.getCurrentDate());
 
-        // SHAPE
-        let matchedRule = false;
-        let mapOptions = rule.getShapeMapOptions();
-        let cellValue = this.xcell.getDefaultValues(mapOptions);
-        shapeMaps.forEach(shape => {
-          let k = shape.data.style;
-          if (!shape.isHidden() && shape.match(cellValue, mapOptions, this.variables)) {
-            let v: any = color;
-            if (shape.isEligible(level)) {
-              matchedRule = true;
-              this.matched = true;
-              this.shapeState.set(k, v, level) && this.status.set(k, v);
-            }
+          // SHAPE
+          let matchedRule = false;
+          let mapOptions = rule.getShapeMapOptions();
+          let cellValue = this.xcell.getDefaultValues(mapOptions);
+          shapeMaps.forEach(shape => {
+            let k = shape.data.style;
+            if (!shape.isHidden() && shape.match(cellValue, mapOptions, this.variables)) {
+              let v: any = color;
+              if (shape.isEligible(level)) {
+                matchedRule = true;
+                this.matched = true;
+                this.shapeState.set(k, v, level) && this.status.set(k, v);
+              }
 
-            // TOOLTIP
-            if (rule.toTooltipize(level)) {
-              k = 'tooltip';
-              v = true;
-              this.tooltipState.set('tooltip', true, level) && this.status.set(k, v);
-              this.tooltipState.setTooltip(rule, metric, color, FormattedValue, this.xcell.getMetadatas());
+              // TOOLTIP
+              if (rule.toTooltipize(level)) {
+                k = 'tooltip';
+                v = true;
+                this.tooltipState.set('tooltip', true, level) && this.status.set(k, v);
+                this.tooltipState.setTooltip(rule, metric, color, FormattedValue, this.xcell.getMetadatas());
+              }
+              // ICONS
+              if (rule.toIconize(level)) {
+                k = 'icon';
+                v = true;
+                this.iconState.set('icon', true, level) && this.status.set(k, v);
+              }
             }
-            // ICONS
-            if (rule.toIconize(level)) {
-              k = 'icon';
-              v = true;
-              this.iconState.set('icon', true, level) && this.status.set(k, v);
+          });
+
+          // TEXT
+          mapOptions = rule.getTextMapOptions();
+          cellValue = this.xcell.getDefaultValues(mapOptions);
+          textMaps.forEach(text => {
+            const k = 'label';
+            if (!text.isHidden() && text.match(cellValue, mapOptions, this.variables)) {
+              if (text.isEligible(level)) {
+                matchedRule = true;
+                this.matched = true;
+                const textScoped = this.variables.replaceText(FormattedValue);
+                const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
+                this.textState.set(k, v, level) && this.status.set(k, v);
+              }
+            }
+          });
+
+          // EVENTS
+          mapOptions = rule.getEventMapOptions();
+          cellValue = this.xcell.getDefaultValues(mapOptions);
+          eventMaps.forEach(event => {
+            const k = event.data.style;
+            if (!event.isHidden() && event.match(cellValue, mapOptions, this.variables)) {
+              if (event.isEligible(level)) {
+                matchedRule = true;
+                this.matched = true;
+                const v = this.variables.eval(event.data.value);
+                this.eventState.set(k, v, level) && this.status.set(k, v);
+              }
+            }
+          });
+
+          // LINK
+          mapOptions = rule.getEventMapOptions();
+          cellValue = this.xcell.getDefaultValues(mapOptions);
+          linkMaps.forEach(link => {
+            const k = 'link';
+            if (!link.isHidden() && link.match(cellValue, mapOptions, this.variables)) {
+              if (link.isEligible(level)) {
+                matchedRule = true;
+                this.matched = true;
+                const v = this.variables.replaceText(link.getLink());
+                this.linkState.set(k, v, level) && this.status.set(k, v);
+              }
+            }
+          });
+
+          if (matchedRule) {
+            this.currRules.push(rule.data.alias);
+            if (level > this.globalLevel) {
+              this.globalLevel = level;
+              this.highestValue = value;
+              this.highestFormattedValue = FormattedValue;
+            }
+            if (level >= rule.highestLevel) {
+              rule.highestLevel = level;
+              rule.highestValue = value;
+              rule.highestFormattedValue = FormattedValue;
+              rule.highestColor = color;
             }
           }
         });
-
-        // TEXT
-        mapOptions = rule.getTextMapOptions();
-        cellValue = this.xcell.getDefaultValues(mapOptions);
-        textMaps.forEach(text => {
-          const k = 'label';
-          if (!text.isHidden() && text.match(cellValue, mapOptions, this.variables)) {
-            if (text.isEligible(level)) {
-              matchedRule = true;
-              this.matched = true;
-              const textScoped = this.variables.replaceText(FormattedValue);
-              const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
-              this.textState.set(k, v, level) && this.status.set(k, v);
-            }
-          }
-        });
-
-        // EVENTS
-        mapOptions = rule.getEventMapOptions();
-        cellValue = this.xcell.getDefaultValues(mapOptions);
-        eventMaps.forEach(event => {
-          const k = event.data.style;
-          if (!event.isHidden() && event.match(cellValue, mapOptions, this.variables)) {
-            if (event.isEligible(level)) {
-              matchedRule = true;
-              this.matched = true;
-              const v = this.variables.eval(event.data.value);
-              this.eventState.set(k, v, level) && this.status.set(k, v);
-            }
-          }
-        });
-
-        // LINK
-        mapOptions = rule.getEventMapOptions();
-        cellValue = this.xcell.getDefaultValues(mapOptions);
-        linkMaps.forEach(link => {
-          const k = 'link';
-          if (!link.isHidden() && link.match(cellValue, mapOptions, this.variables)) {
-            if (link.isEligible(level)) {
-              matchedRule = true;
-              this.matched = true;
-              const v = this.variables.replaceText(link.getLink());
-              this.linkState.set(k, v, level) && this.status.set(k, v);
-            }
-          }
-        });
-
-        if (matchedRule) {
-          this.currRules.push(rule.data.alias);
-          if (level > this.globalLevel) {
-            this.globalLevel = level;
-            this.highestValue = value;
-            this.highestFormattedValue = FormattedValue;
-          }
-          if (level >= rule.highestLevel) {
-            rule.highestLevel = level;
-            rule.highestValue = value;
-            rule.highestFormattedValue = FormattedValue;
-            rule.highestColor = color;
-          }
-        }
-      });
-    }
-    let endPerf = Date.now();
-    rule.execTimes += endPerf - beginPerf;
-    trc.after();
+      }
+      let endPerf = Date.now();
+      rule.execTimes += endPerf - beginPerf;
+    }),
+      trc.after();
     return this;
   }
-
-  /**
-   * Return if id is edited
-   *
-   * @returns
-   * @memberof State
-   */
-  // isEdited() {
-  //   return this.edited;
-  // }
-
-  /**
-   * Return if is in edit mode
-   *
-   * @returns
-   * @memberof State
-   */
-  // isEditMode() {
-  //   return this.edit;
-  // }
 
   /**
    * Restore initial status of state without apply display.
@@ -258,27 +247,6 @@ export class State {
     trc.after();
     return this;
   }
-
-  /**
-   *
-   *
-   * @param {string} prop - id|value
-   * @returns {string|null} return original value of id or label of cell
-   * @memberof State
-   */
-  // getCellProp(options: gf.TRuleMapOptions): string | null {
-  //   if (options.identByProp === 'id') {
-  //     return this.cellId;
-  //   }
-  //   if (options.identByProp === 'value') {
-  //     return this.originalText;
-  //   }
-  //   if (options.identByProp === 'metadata') {
-  //     // TODO
-  //     throw new Error('Metadata not implemented');
-  //   }
-  //   return null;
-  // }
 
   /**
    * Get the highest/global level
@@ -462,6 +430,24 @@ export class State {
     this.xcell.highlight(false);
     return this;
   }
+
+  //
+  // Events
+  //
+  async onDestroy() {}
+
+  async onRefresh() {
+    this.prepare();
+    this.setState();
+    this.applyState();
+  }
+
+  async onInit() {
+    this.onRefresh();
+    this.onChange();
+  }
+
+  async onChange() {}
 }
 
 /**

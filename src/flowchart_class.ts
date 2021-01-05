@@ -19,8 +19,8 @@ export class Flowchart {
   ctrl: FlowchartCtrl;
   xgraph: XGraph | undefined = undefined;
   stateHandler: StateHandler | undefined;
-  states: Map<string, State> | undefined;
-  id: string;
+  // states: Map<string, State> | undefined;
+  uid: string = $GF.utils.uniqueID();
   visible = false;
   reduce = true;
 
@@ -29,8 +29,6 @@ export class Flowchart {
     this.data.name = name;
     this.container = container;
     this.ctrl = ctrl;
-    // this.onMapping = ctrl.onMapping;
-    this.id = $GF.utils.uniqueID();
   }
 
   /**

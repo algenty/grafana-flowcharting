@@ -8,6 +8,7 @@ import _ from 'lodash';
 import { MetricHandler } from './metricHandler';
 import { DateTH, NumberTH, StringTH } from 'threshold_class';
 import { XCell } from 'cell_class';
+import { FlowchartCtrl } from 'flowchart_ctrl';
 
 /**
  * Rules tab controller
@@ -17,11 +18,11 @@ import { XCell } from 'cell_class';
  */
 export class RulesOptionsCtrl {
   $scope: gf.TRulesOptionsScope;
-  ctrl: any;
-  panel: any;
-  flowchartHandler: FlowchartHandler;
-  rulesHandler: RulesHandler;
-  metricHandler: MetricHandler;
+  ctrl: FlowchartCtrl;
+  // panel: any;
+  flowchartHandler: FlowchartHandler | undefined;
+  rulesHandler: RulesHandler | undefined;
+  metricHandler: MetricHandler | undefined;
   unitFormats: any;
   parentDiv: HTMLDivElement;
   style = $GF.CONSTANTS.COLORMETHODS;
@@ -75,7 +76,7 @@ export class RulesOptionsCtrl {
     $scope.$GF = $GF.me();
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
-    this.panel = this.ctrl.panel;
+    // this.panel = this.ctrl.panel;
     const $div = $element.find('#templateMapping');
     this.parentDiv = $div[0];
     this.rulesHandler = this.ctrl.rulesHandler;
@@ -610,7 +611,10 @@ export class RulesOptionsCtrl {
     this.rangesTable = new GFTable(this.rangesTableData, rangesTable);
 
     this.getMetricNames = (): string[] => {
-      return this.metricHandler.getNames('serie');
+      if (this.metricHandler) {
+        return this.metricHandler.getNames('serie');
+      }
+      return [];
     };
 
     this.getVariables = () => {
@@ -664,8 +668,10 @@ export class RulesOptionsCtrl {
     let values: any = [];
     if (map) {
       const options = map.getOptions();
-      const flowchart = this.flowchartHandler.getFlowchart();
-      values = flowchart.getNamesByOptions(options, 'value');
+      const flowchart = this.flowchartHandler?.getFlowchart();
+      if (flowchart) {
+        values = flowchart.getNamesByOptions(options, 'value');
+      }
     }
     return values;
   };
@@ -673,8 +679,10 @@ export class RulesOptionsCtrl {
   getCellNames4(options: gf.TRuleMapOptions) {
     let filter: any[] = [];
     if (options) {
-      const flowchart = this.flowchartHandler.getFlowchart();
-      filter = flowchart.getNamesByOptions(options);
+      const flowchart = this.flowchartHandler?.getFlowchart();
+      if (flowchart) {
+        filter = flowchart.getNamesByOptions(options);
+      }
     }
     return filter;
   }
@@ -687,18 +695,27 @@ export class RulesOptionsCtrl {
   }
 
   isOnlySeries(): boolean {
-    const bool = this.metricHandler.isTypeOf('serie') && !this.metricHandler.isTypeOf('table');
-    return bool;
+    const bool = this.metricHandler?.isTypeOf('serie') && !this.metricHandler?.isTypeOf('table');
+    if (bool !== undefined) {
+      return bool;
+    }
+    return false;
   }
 
   isOnlyTables(): boolean {
-    const bool = !this.metricHandler.isTypeOf('serie') && this.metricHandler.isTypeOf('table');
-    return bool;
+    const bool = !this.metricHandler?.isTypeOf('serie') && this.metricHandler?.isTypeOf('table');
+    if (bool !== undefined) {
+      return bool;
+    }
+    return false;
   }
 
   isMultipleType(): boolean {
-    const bool = this.metricHandler.isTypeOf('serie') && this.metricHandler.isTypeOf('table');
-    return bool;
+    const bool = this.metricHandler?.isTypeOf('serie') && this.metricHandler?.isTypeOf('table');
+    if (bool !== undefined) {
+      return bool;
+    }
+    return false;
   }
 
   initType(rule: Rule) {
@@ -710,11 +727,17 @@ export class RulesOptionsCtrl {
   }
 
   getTablesName(): string[] {
-    return this.metricHandler.getNames('table');
+    if (this.metricHandler) {
+      return this.metricHandler.getNames('table');
+    }
+    return [];
   }
 
   getColumnsForTable(tableName: string): string[] {
-    return this.metricHandler.getColumnsName(tableName, 'table');
+    if (this.metricHandler) {
+      return this.metricHandler.getColumnsName(tableName, 'table');
+    }
+    return [];
   }
 
   getFastEditMectricNames(rule: Rule): string[] {
@@ -807,20 +830,22 @@ export class RulesOptionsCtrl {
         metricName = rule.data.refId;
         columnName = rule.data.column;
       }
-      const metrics = this.metricHandler.findMetrics(metricName, metricType);
-      const length = metrics.length;
-      for (let index = 0; index < length; index++) {
-        const m = metrics[index];
-        const value = m.getValue(rule.data.aggregation, columnName);
-        if (!DateTH.isValidDate(value)) {
-          this.ctrl.notify(
-            `The value for the metric ${m.getName()} and the aggregation ${$GF.GetT4V(
-              this.aggregationTypes,
-              rule.data.aggregation
-            )} is not a valid date : ${value}`
-          );
-          return false;
-          break;
+      if (this.metricHandler) {
+        const metrics = this.metricHandler.findMetrics(metricName, metricType);
+        const length = metrics.length;
+        for (let index = 0; index < length; index++) {
+          const m = metrics[index];
+          const value = m.getValue(rule.data.aggregation, columnName);
+          if (!DateTH.isValidDate(value)) {
+            this.ctrl.notify(
+              `The value for the metric ${m.getName()} and the aggregation ${$GF.GetT4V(
+                this.aggregationTypes,
+                rule.data.aggregation
+              )} is not a valid date : ${value}`
+            );
+            return false;
+            break;
+          }
         }
       }
       return true;
@@ -836,12 +861,15 @@ export class RulesOptionsCtrl {
       metricType = 'table';
       tableName = rule.data.refId;
     }
-    return this.metricHandler.getColumnsName(tableName, metricType);
+    if (this.metricHandler) {
+      return this.metricHandler.getColumnsName(tableName, metricType);
+    }
+    return [];
   }
 
   isLastRule(index: number): boolean {
-    const count = this.rulesHandler.countRules();
-    if (index === count - 1) {
+    const count = this.rulesHandler?.countRules();
+    if (count !== undefined && index === count - 1) {
       return true;
     }
     return false;
@@ -858,7 +886,7 @@ export class RulesOptionsCtrl {
 
   onRulesChange() {
     $GF.log.info('RulesOptionsCtrl.onRulesChange()');
-    this.flowchartHandler.onRulesChange();
+    this.flowchartHandler?.onRulesChange();
     this.render();
     return true;
   }
@@ -907,8 +935,8 @@ export class RulesOptionsCtrl {
    * @param  {} pattern
    */
   highlightXCells(map: ObjectMap) {
-    const flowchart = this.flowchartHandler.getFlowchart();
-    const xgraph = flowchart.getXGraph();
+    const flowchart = this.flowchartHandler?.getFlowchart();
+    const xgraph = flowchart?.getXGraph();
     if (xgraph) {
       xgraph.highlightXCells(map.getPattern(), map.getOptions(), true);
     }
@@ -920,8 +948,8 @@ export class RulesOptionsCtrl {
    * @memberof RulesOptionsCtrl
    */
   unhighlightXCells(map: ObjectMap) {
-    const flowchart = this.flowchartHandler.getFlowchart();
-    const xgraph = flowchart.getXGraph();
+    const flowchart = this.flowchartHandler?.getFlowchart();
+    const xgraph = flowchart?.getXGraph();
     if (xgraph) {
       xgraph.highlightXCells(map.getPattern(), map.getOptions(), false);
     }
@@ -966,8 +994,8 @@ export class RulesOptionsCtrl {
    * @memberof RulesOptionsCtrl
    */
   async unhighlightAllCells() {
-    const flowchart = this.flowchartHandler.getFlowchart();
-    const xgraph = flowchart.getXGraph();
+    const flowchart = this.flowchartHandler?.getFlowchart();
+    const xgraph = flowchart?.getXGraph();
     if (xgraph) {
       xgraph.unhighlightCells();
     }
@@ -987,7 +1015,7 @@ export class RulesOptionsCtrl {
   removeRule(rule: Rule, force?: boolean) {
     if (rule.removeClick === 1 || force) {
       this.unhighlightAllCells();
-      this.rulesHandler.removeRule(rule);
+      this.rulesHandler?.removeRule(rule);
       this.onRulesChange();
     }
     rule.removeClick = 1;
@@ -1005,7 +1033,7 @@ export class RulesOptionsCtrl {
    * @memberof RulesOptionsCtrl
    */
   cloneRule(rule: Rule) {
-    this.rulesHandler.cloneRule(rule);
+    this.rulesHandler?.cloneRule(rule);
     this.onRulesChange();
   }
 
@@ -1018,9 +1046,9 @@ export class RulesOptionsCtrl {
    */
   moveRule(rule: Rule, up: boolean) {
     if (up) {
-      this.rulesHandler.moveRuleToUp(rule);
+      this.rulesHandler?.moveRuleToUp(rule);
     } else {
-      this.rulesHandler.moveRuleToDown(rule);
+      this.rulesHandler?.moveRuleToDown(rule);
     }
     this.onRulesChange();
   }
@@ -1053,7 +1081,7 @@ export class RulesOptionsCtrl {
         this.onRulesChange();
       }
     };
-    this.flowchartHandler.setMaps(_setTarget.bind(this));
+    this.flowchartHandler?.setMaps(_setTarget.bind(this));
     return this;
   }
 

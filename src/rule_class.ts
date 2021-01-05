@@ -15,6 +15,7 @@ import {
   DataMap,
   ShapeMapArray,
 } from 'mapping_class';
+import { FlowchartCtrl } from 'flowchart_ctrl';
 
 /**
  * Rule definition
@@ -39,18 +40,19 @@ export class Rule {
   stringTH: StringTH[] = [];
   dateTH: DateTH[] = [];
   FE_metricName: string | undefined;
-  uid: string;
+  uid: string = $GF.utils.uniqueID();
   removeClick = 2;
-  states: Map<string, State>;
-  shapeStates: State[] = [];
-  textStates: State[] = [];
-  linkStates: State[] = [];
-  eventStates: State[] = [];
+  states: Map<string, State> = new Map();
+  shapeStates: Map<string, State> = new Map();
+  textStates: Map<string, State> = new Map();
+  linkStates: Map<string, State> = new Map();
+  eventStates: Map<string, State> = new Map();
   highestLevel: number = -1;
   highestColor: string = '';
   highestFormattedValue: string = '';
   highestValue: any = undefined;
   execTimes: number = 0;
+  ctrl: FlowchartCtrl;
   // metricSubs$: Subscription | undefined;
 
   /**
@@ -59,17 +61,16 @@ export class Rule {
    * @param {TIRuleData} data
    * @memberof Rule
    */
-  constructor(pattern: string, data: gf.TIRuleData) {
+  constructor(pattern: string, data: gf.TIRuleData, ctrl: FlowchartCtrl) {
     this.data = data;
     this.data.pattern = pattern;
-    this.uid = $GF.utils.uniqueID();
-    this.states = new Map();
+    this.ctrl = ctrl;
   }
 
   //
   // RxJS
   //
-  getMetricObserver$(): gf.TObserver<ObjectMetric> {
+  getMetricObserver$Refresh(): gf.TObserver<ObjectMetric> {
     const self = this;
     return {
       next: metric => {
@@ -93,7 +94,7 @@ export class Rule {
     };
   }
 
-  getStateObserver$(): gf.TObserver<State> {
+  getStateObserver$Refresh(): gf.TObserver<State> {
     const self = this;
     return {
       next: state => {
@@ -101,34 +102,52 @@ export class Rule {
           if (!self.cycleMetrics) {
             self.cycleStates = true;
             self.states.clear();
-            self.shapeStates = [];
-            self.textStates = [];
-            self.linkStates = [];
-            self.textStates = [];
+            self.shapeStates.clear();
+            self.textStates.clear();
+            self.linkStates.clear();
+            self.eventStates.clear();
           }
+          let matched = false;
+
           let mapOptions = self.getShapeMapOptions();
           let cellValue = state.xcell.getDefaultValues(mapOptions);
           if (self.matchShape(cellValue, mapOptions)) {
-            self.states.set(state.uid, state);
-            self.shapeStates.push(state);
+            matched = true;
+            self.shapeStates.set(state.uid, state);
+          } else {
+            self.shapeStates.delete(state.uid);
           }
+
           mapOptions = self.getTextMapOptions();
           cellValue = state.xcell.getDefaultValues(mapOptions);
-          if (self.matchShape(cellValue, mapOptions)) {
-            self.states.set(state.uid, state);
-            self.textStates.push(state);
+          if (self.matchText(cellValue, mapOptions)) {
+            matched = true;
+            self.textStates.set(state.uid, state);
+          } else {
+            self.textStates.delete(state.uid);
           }
+
           mapOptions = self.getLinkMapOptions();
           cellValue = state.xcell.getDefaultValues(mapOptions);
-          if (self.matchShape(cellValue, mapOptions)) {
-            self.states.set(state.uid, state);
-            self.linkStates.push(state);
+          if (self.matchLink(cellValue, mapOptions)) {
+            matched = true;
+            self.linkStates.set(state.uid, state);
+          } else {
+            self.linkStates.delete(state.uid);
           }
+
           mapOptions = self.getEventMapOptions();
           cellValue = state.xcell.getDefaultValues(mapOptions);
-          if (self.matchShape(cellValue, mapOptions)) {
+          if (self.matchEvent(cellValue, mapOptions)) {
+            matched = true;
+            self.eventStates.set(state.uid, state);
+          } else {
+            self.eventStates.delete(state.uid);
+          }
+          if (matched) {
             self.states.set(state.uid, state);
-            self.eventStates.push(state);
+          } else {
+            self.states.delete(state.uid);
           }
         }
       },
@@ -690,6 +709,7 @@ export class Rule {
     }
     this.data.sanitize = obj.sanitize || false;
     this.data.newRule = false;
+    this.onInit();
     trc.after();
     return this;
   }
@@ -1224,6 +1244,38 @@ export class Rule {
     }
     if (this.data.metricType === 'table' && metric.type === 'table') {
       return metric.getName() === this.data.refId;
+    }
+    return false;
+  }
+
+  /**
+   * Return if state is matched
+   *
+   * @param {State} state
+   * @returns {boolean}
+   * @memberof Rule
+   */
+  MatchState(state: State): boolean {
+    const xcell = state.getXCell();
+    let mapOptions = this.getShapeMapOptions();
+    let value = xcell.getDefaultValues(mapOptions);
+    if (this.matchShape(value, mapOptions)) {
+      return true;
+    }
+    mapOptions = this.getTextMapOptions();
+    value = xcell.getDefaultValues(mapOptions);
+    if (this.matchText(value, mapOptions)) {
+      return true;
+    }
+    mapOptions = this.getLinkMapOptions();
+    value = xcell.getDefaultValues(mapOptions);
+    if (this.matchLink(value, mapOptions)) {
+      return true;
+    }
+    mapOptions = this.getEventMapOptions();
+    value = xcell.getDefaultValues(mapOptions);
+    if (this.matchEvent(value, mapOptions)) {
+      return true;
     }
     return false;
   }
@@ -2127,4 +2179,79 @@ export class Rule {
         (match[2] ? +match[2] : 0)
     );
   }
+
+  // Updates
+  updateMetrics() {
+    const metrics = this.ctrl.metricHandler?.getMetrics();
+    this.metrics = [];
+    metrics?.forEach(metric => {
+      if (this.matchMetric(metric)) {
+        this.metrics.push(metric);
+      }
+    });
+  }
+
+  updateStates() {
+    this.states.clear();
+    this.shapeStates.clear();
+    this.textStates.clear();
+    this.linkStates.clear();
+    this.eventStates.clear();
+    const flowcharts = this.ctrl.flowchartHandler?.getFlowcharts();
+    flowcharts?.forEach(flowchart => {
+      const states = flowchart.stateHandler?.getStates();
+      states?.forEach(state => {
+        let matched = false;
+        let mapOptions = this.getShapeMapOptions();
+        let cellValue = state.xcell.getDefaultValues(mapOptions);
+        if (this.matchShape(cellValue, mapOptions)) {
+          matched = true;
+          this.shapeStates.set(state.uid, state);
+        }
+        mapOptions = this.getTextMapOptions();
+        cellValue = state.xcell.getDefaultValues(mapOptions);
+        if (this.matchText(cellValue, mapOptions)) {
+          matched = true;
+          this.textStates.set(state.uid, state);
+        }
+        mapOptions = this.getLinkMapOptions();
+        cellValue = state.xcell.getDefaultValues(mapOptions);
+        if (this.matchLink(cellValue, mapOptions)) {
+          matched = true;
+          this.linkStates.set(state.uid, state);
+        }
+        mapOptions = this.getEventMapOptions();
+        cellValue = state.xcell.getDefaultValues(mapOptions);
+        if (this.matchEvent(cellValue, mapOptions)) {
+          matched = true;
+          this.eventStates.set(state.uid, state);
+        } else {
+          this.eventStates.delete(state.uid);
+        }
+        if (matched) {
+          this.states.set(state.uid, state);
+        } else {
+          this.states.delete(state.uid);
+        }
+      });
+    });
+  }
+
+  //
+  // Events
+  //
+  async onDestroy() {
+    this.states.forEach(state => {
+      state.rules.delete(this.uid);
+    });
+  }
+
+  async onRefresh() {}
+
+  async onInit() {
+    this.onRefresh();
+    this.onChange();
+  }
+
+  async onChange() {}
 }

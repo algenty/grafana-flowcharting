@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { $GF } from 'globals_class';
 import { InteractiveMap, ObjectMap } from 'mapping_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
+import { Subject } from 'rxjs';
 
 /**
  * Class FlowchartHandler
@@ -38,6 +39,7 @@ export class FlowchartHandler {
   onEdit = false; // editor open or not
   postedId: string | undefined = undefined; // Current ID on edit mode
   editorWindow: Window | null = null; // Window draw.io editor
+  observers$: gf.TObserver<Flowchart>[] = [];
 
   /**
    * Creates an instance of FlowchartHandler to handle flowchart
@@ -47,11 +49,10 @@ export class FlowchartHandler {
    * @param {*} data - Empty data to store
    * @memberof FlowchartHandler
    */
-  constructor(parentDiv: HTMLDivElement, data: gf.TFlowchartHandlerData, ctrl: FlowchartCtrl) {
+  constructor(data: gf.TFlowchartHandlerData, ctrl: FlowchartCtrl) {
     FlowchartHandler.getDefaultDioGraph();
     this.ctrl = ctrl;
-    this.parentDiv = parentDiv;
-    this.data = data;
+    (this.parentDiv = this.ctrl.flowchartsDiv), (this.data = data);
     this.currentFlowchartName = 'Main';
     this.onMapping = ctrl.onMapping;
 
@@ -72,6 +73,34 @@ export class FlowchartHandler {
       this.mousedown = 0;
       window.clearInterval(this.mousedownTimeout);
     };
+  }
+
+  //
+  // RXJS
+  //
+  subscribe$(object: gf.TObserver<Flowchart>): this {
+    this.observers$.push(object);
+    return this;
+  }
+
+  unsubscribe$(uid: string): this {
+    const len = this.observers$.length;
+    for (let i = 0; i < len; i++) {
+      if (this.observers$[i].uid === uid) {
+        this.observers$.splice(i, 1);
+        break;
+      }
+    }
+    return this;
+  }
+
+  getSubject$() {
+    const sub$: Subject<Flowchart> = new Subject();
+    const len = this.observers$.length;
+    for (let i = 0; i < len; i++) {
+      sub$.subscribe(this.observers$[i]);
+    }
+    return sub$;
   }
 
   static getDefaultData(): gf.TFlowchartHandlerData {
@@ -218,7 +247,7 @@ export class FlowchartHandler {
     const fcs = this.getFlowcharts();
     for (let index = 0; index < fcs.length; index++) {
       const fc = fcs[index];
-      if (fc.id === id) {
+      if (fc.uid === id) {
         return fc;
       }
     }
@@ -853,7 +882,7 @@ export class FlowchartHandler {
       if (fc !== undefined) {
         this.ctrl.notify('Sending current data to draw.io editor', 'info');
         event.source.postMessage(fc.data.xml, event.origin);
-        this.postedId = fc.id;
+        this.postedId = fc.uid;
       }
       //   }
       // }
@@ -897,7 +926,7 @@ export class FlowchartHandler {
     const fc = this.getFlowchart(name);
     const urlEditor = this.data.editorUrl;
     const theme = this.data.editorTheme;
-    const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&ready=fc-${fc.id}&src=grafana`;
+    const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&ready=fc-${fc.uid}&src=grafana`;
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;
     this.ctrl.notify(`Opening current flowchart on draw.io editor`, 'info');

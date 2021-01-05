@@ -4,16 +4,16 @@ import { $GF, GFTable } from 'globals_class';
 import { StateHandler } from 'statesHandler';
 import _ from 'lodash';
 import XGraph from 'graph_class';
-// import { MetricHandler } from './metricHandler';
+import { FlowchartCtrl } from 'flowchart_ctrl';
 
 export class InspectOptionsCtrl {
   enable = false; // enable inspector or not
-  ctrl: any; //TODO: define type
-  flowchartHandler: FlowchartHandler;
+  ctrl: FlowchartCtrl;
+  flowchartHandler: FlowchartHandler | undefined;
   stateHandler: StateHandler | undefined;
   statesTableData: gf.TTableData;
   statesTable: GFTable;
-  panel: any;
+  // panel: any;
   parentDiv: HTMLDivElement;
   headerTable: HTMLDivElement | undefined;
   bodyTable: HTMLDivElement | undefined;
@@ -121,24 +121,19 @@ export class InspectOptionsCtrl {
     const statesTable = $statesTable[0];
     this.statesTable = new GFTable(this.statesTableData, statesTable);
     this.ctrl = $scope.ctrl;
-    this.panel = this.ctrl.panel;
+    // this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
-    this.stateHandler = this.flowchartHandler.getFlowchart().getStateHandler();
+    this.stateHandler = this.flowchartHandler?.getFlowchart().getStateHandler();
   }
 
   render() {
-    this.panel.render();
+    this.ctrl.render();
   }
-
-  // onDebug() {
-  //   GFP.log.logLevel = this.logLevel;
-  //   GFP.log.logDisplay = this.logDisplay;
-  // }
 
   onChangeId(state: State) {
     const xcell = state.getXCell();
     if (xcell.getId() !== xcell.getDefaultId()) {
-      const sh = this.flowchartHandler.getFlowchart().getStateHandler();
+      const sh = this.flowchartHandler?.getFlowchart().getStateHandler();
       if (sh !== undefined) {
         sh.edited = true;
       }
@@ -149,19 +144,6 @@ export class InspectOptionsCtrl {
     const xcell = state.getXCell();
     return xcell.getId() !== xcell.getDefaultId();
   }
-
-  // onEdit(state: State) {
-  //   // state.edit = true;
-  //   // state.newcellId = state.id;
-  //   // let stateHandler = this.flowchartHandler.getFlowchart().getStateHandler();
-  //   // stateHandler.edited = true;
-  //   const elt = document.getElementById(state.id);
-  //   setTimeout(() => {
-  //     if (elt) {
-  //       elt.focus();
-  //     }
-  //   }, 100);
-  // }
 
   undo(state: State) {
     const xcell = state.getXCell();
@@ -180,11 +162,11 @@ export class InspectOptionsCtrl {
   }
 
   reset() {
-    this.flowchartHandler.draw();
-    this.flowchartHandler.refresh();
-    const flowchart = this.flowchartHandler.getFlowchart();
-    const sh = flowchart.getStateHandler();
-    if (sh !== undefined) {
+    this.flowchartHandler?.draw();
+    this.flowchartHandler?.refresh();
+    const flowchart = this.flowchartHandler?.getFlowchart();
+    const sh = flowchart?.getStateHandler();
+    if (sh) {
       const states = sh.getStates();
       states.forEach(state => {
         if (this.isEdited(state)) {
@@ -194,23 +176,15 @@ export class InspectOptionsCtrl {
       });
       sh.edited = false;
     }
-    // this.$scope.$apply();
   }
 
   apply() {
-    const flowchart = this.flowchartHandler.getFlowchart();
-    const sh = flowchart.getStateHandler();
-    if (sh !== undefined) {
-      // const states = sh.getStates();
-      // states.forEach(state => {
-      //   if (state.edited && state.previousId) {
-      //     flowchart.renameId(state.previousId, state.id);
-      //     state.edited = false;
-      //   }
-      // });
+    const flowchart = this.flowchartHandler?.getFlowchart();
+    const sh = flowchart?.getStateHandler();
+    if (sh) {
       sh.edited = false;
     }
-    flowchart.applyModel();
+    flowchart?.applyModel();
     this.ctrl.notify('Save the dashboard to apply the modifications');
   }
 
@@ -257,8 +231,8 @@ export class InspectOptionsCtrl {
   }
 
   anonymize() {
-    const fc = this.flowchartHandler.getFlowchart();
-    const xg = fc.getXGraph();
+    const fc = this.flowchartHandler?.getFlowchart();
+    const xg = fc?.getXGraph();
     if (xg) {
       xg.anonymize();
     }

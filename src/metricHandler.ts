@@ -166,7 +166,7 @@ export class MetricHandler {
    * @returns {Metric[]}
    * @memberof MetricHandler
    */
-  getMetrics(type?: gf.TMetricTypeKeys): Metric[] {
+  getMetrics(type?: gf.TMetricTypeKeys): ObjectMetric[] {
     if (type === 'serie') {
       return this.series;
     }

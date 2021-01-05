@@ -144,7 +144,7 @@ export class RulesHandler {
     this.rules.push(newRule);
     this.data.rulesData.push(data);
     newRule.setOrder(this.countRules());
-    this.ctrl.metricHandler?.subscribe$(newRule.getMetricObserver$());
+    this.ctrl.metricHandler?.subscribe$(newRule.getMetricObserver$Refresh());
     return newRule;
   }
 
