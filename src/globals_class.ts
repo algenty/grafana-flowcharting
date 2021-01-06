@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { map as _map } from 'lodash';
 import chroma from 'chroma-js';
 class GFCONSTANT {
   // CONFIG
@@ -990,7 +990,7 @@ export class $GF {
   static getGrafanaVars(): string[] {
     const templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
     if (templateSrv !== undefined && templateSrv !== null) {
-      return _.map(templateSrv.variables, variable => `\${${variable.name}}`);
+      return _map(templateSrv.variables, variable => `\${${variable.name}}`);
     }
     return [];
   }

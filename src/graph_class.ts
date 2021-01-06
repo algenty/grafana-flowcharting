@@ -1,4 +1,4 @@
-import _, { values } from 'lodash';
+import { each as _each } from 'lodash';
 import { $GF, GFTimer } from 'globals_class';
 import * as Drawio from 'drawio_custom';
 import chroma from 'chroma-js';
@@ -35,6 +35,7 @@ export class XGraph {
   animation = true;
   zoom = false;
   zoomFactor = 1.2;
+  definition: string = '';
   cumulativeZoomFactor = 1;
   grid = false;
   uid = $GF.utils.uniqueID();
@@ -63,41 +64,8 @@ export class XGraph {
     this.xcells = [];
     // this.onMapping = FlowchartHandler.getDefaultMapping();
     this.onMapping = this.ctrl.onMapping;
-    XGraph.initMxGraphLib();
-    if (type === 'xml') {
-      if ($GF.utils.isencoded(definition)) {
-        this.xmlGraph = $GF.utils.decode(definition, true, true, true);
-      } else {
-        this.xmlGraph = definition;
-      }
-    }
-    if (type === 'csv') {
-      this.csvGraph = definition;
-    }
-    this.initGraph();
-
-    // DEBUG MODE
-    const self = this;
-    if ($GF.DEBUG) {
-      console.log('DEBUG ON');
-      this.graph.addListener(mxEvent.CLICK, (_sender, _evt) => {
-        console.log('DEBUG CLICK');
-        this.eventDebug(_evt);
-        if (_evt.properties.cell) {
-          const mxcell = _evt.properties.cell;
-          const id = mxcell.id;
-          const state = $GF.getVar(`STATE_${id}`);
-          const xcell = self.getXCell(id);
-          console.log('DEBUG GF STATE', state);
-          console.log('DEBUG XCELL', xcell);
-          console.log('DEBUG MXCELL', mxcell);
-          if (xcell) {
-            const mxcellState = xcell.getMxCellState();
-            console.log('DEBUG MXCELL STATE', mxcellState);
-          }
-        }
-      });
-    }
+    this.definition = definition;
+    this.init();
     trc.after();
   }
 
@@ -319,7 +287,7 @@ export class XGraph {
     // this.defaultXCellValues.id = undefined;
     // this.defaultXCellValues.value = undefined;
     // this.defaultXCellValues.metadata = undefined;
-    _.each(cells, (mxcell: mxCell) => {
+    _each(cells, (mxcell: mxCell) => {
       const xcell = XCell.refactore(this.graph, mxcell);
       this.xcells.push(xcell);
     });
@@ -357,7 +325,7 @@ export class XGraph {
    * @return this
    * @memberof XGraph
    */
-  applyGraph(): this {
+  changeOptions(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyGraph()');
     if (!this.scale) {
       this.zoomGraph(this.zoomPercent);
@@ -376,7 +344,6 @@ export class XGraph {
     this.bgGraph(this.bgColor);
     this.graph.foldingEnabled = true;
     this.graph.cellRenderer.forceControlClickHandler = true;
-    this.refresh();
     trc.after();
     return this;
   }
@@ -392,7 +359,7 @@ export class XGraph {
     this.cumulativeZoomFactor = 1;
     if (this.graph) {
       this.graph.zoomActual();
-      this.applyGraph();
+      this.changeOptions();
     }
     this.graph.refresh();
     trc.after();
@@ -1273,6 +1240,47 @@ export class XGraph {
   }
 
   //
+  // Udates
+  //
+  init(): this {
+    XGraph.initMxGraphLib();
+    if (this.type === 'xml') {
+      if ($GF.utils.isencoded(this.definition)) {
+        this.xmlGraph = $GF.utils.decode(this.definition, true, true, true);
+      } else {
+        this.xmlGraph = this.definition;
+      }
+    }
+    if (this.type === 'csv') {
+      this.csvGraph = this.definition;
+    }
+    this.initGraph();
+    // DEBUG MODE
+    const self = this;
+    if ($GF.DEBUG) {
+      console.log('DEBUG ON');
+      this.graph.addListener(mxEvent.CLICK, (_sender, _evt) => {
+        console.log('DEBUG CLICK');
+        this.eventDebug(_evt);
+        if (_evt.properties.cell) {
+          const mxcell = _evt.properties.cell;
+          const id = mxcell.id;
+          const state = $GF.getVar(`STATE_${id}`);
+          const xcell = self.getXCell(id);
+          console.log('DEBUG GF STATE', state);
+          console.log('DEBUG XCELL', xcell);
+          console.log('DEBUG MXCELL', mxcell);
+          if (xcell) {
+            const mxcellState = xcell.getMxCellState();
+            console.log('DEBUG MXCELL STATE', mxcellState);
+          }
+        }
+      });
+    }
+    return this;
+  }
+
+  //
   // Events
   //
   async onDestroy() {
@@ -1284,8 +1292,7 @@ export class XGraph {
   }
 
   async onInit() {
-    this.xgraph.onInit();
-    this.stateHandler?.onInit();
+    this.init();
   }
 
   async onChange() {

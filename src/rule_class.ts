@@ -1,6 +1,6 @@
 import grafana from './grafana_func';
 import { State } from 'state_class';
-import _ from 'lodash';
+import { isFinite as _isFinite, isArray as _isArray, escape as _escape } from 'lodash';
 import { ObjectMetric } from 'metric_class';
 import { $GF } from 'globals_class';
 import { NumberTH, StringTH, ObjectTH, ObjectTHData, DateTH } from 'threshold_class';
@@ -90,73 +90,6 @@ export class Rule {
       },
       complete: () => {
         self.cycleMetrics = false;
-      },
-      uid: self.uid,
-    };
-  }
-
-  getStateObserver$Refresh(): gf.TObserver<State> {
-    const self = this;
-    return {
-      next: state => {
-        if (state !== null) {
-          if (!self.cycleMetrics) {
-            self.cycleStates = true;
-            self.states.clear();
-            self.shapeStates.clear();
-            self.textStates.clear();
-            self.linkStates.clear();
-            self.eventStates.clear();
-          }
-          let matched = false;
-
-          let mapOptions = self.getShapeMapOptions();
-          let cellValue = state.xcell.getDefaultValues(mapOptions);
-          if (self.matchShape(cellValue, mapOptions)) {
-            matched = true;
-            self.shapeStates.set(state.uid, state);
-          } else {
-            self.shapeStates.delete(state.uid);
-          }
-
-          mapOptions = self.getTextMapOptions();
-          cellValue = state.xcell.getDefaultValues(mapOptions);
-          if (self.matchText(cellValue, mapOptions)) {
-            matched = true;
-            self.textStates.set(state.uid, state);
-          } else {
-            self.textStates.delete(state.uid);
-          }
-
-          mapOptions = self.getLinkMapOptions();
-          cellValue = state.xcell.getDefaultValues(mapOptions);
-          if (self.matchLink(cellValue, mapOptions)) {
-            matched = true;
-            self.linkStates.set(state.uid, state);
-          } else {
-            self.linkStates.delete(state.uid);
-          }
-
-          mapOptions = self.getEventMapOptions();
-          cellValue = state.xcell.getDefaultValues(mapOptions);
-          if (self.matchEvent(cellValue, mapOptions)) {
-            matched = true;
-            self.eventStates.set(state.uid, state);
-          } else {
-            self.eventStates.delete(state.uid);
-          }
-          if (matched) {
-            self.states.set(state.uid, state);
-          } else {
-            self.states.delete(state.uid);
-          }
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {
-        self.cycleStates = false;
       },
       uid: self.uid,
     };
@@ -2095,13 +2028,13 @@ export class Rule {
   getFormattedValue(value: any) {
     // Number
     if (this.data.type === 'number') {
-      if (!_.isFinite(value)) {
+      if (!_isFinite(value)) {
         return 'null';
       }
       if (value === null || value === void 0) {
         return '-';
       }
-      let decimals = this.decimalPlaces(value);
+      let decimals = this._decimalPlaces(value);
       decimals = typeof this.data.decimals === 'number' ? Math.min(this.data.decimals, decimals) : decimals;
       return grafana.formatValue(value, this.data.unit, this.data.decimals);
     }
@@ -2111,7 +2044,7 @@ export class Rule {
         value = 'null';
       }
 
-      if (_.isArray(value)) {
+      if (_isArray(value)) {
         value = value.join(', ');
       }
       const mappingType = this.data.mappingType || 0;
@@ -2145,7 +2078,7 @@ export class Rule {
         return '-';
       }
 
-      if (_.isArray(value)) {
+      if (_isArray(value)) {
         value = value[0];
       }
 
@@ -2155,25 +2088,26 @@ export class Rule {
     return value;
   }
 
-  defaultValueFormatter(value: any) {
-    if (value === null || value === void 0 || value === undefined) {
-      return '';
-    }
+  // _defaultValueFormatter(value: any) {
+  //   if (value === null || value === void 0 || value === undefined) {
+  //     return '';
+  //   }
 
-    if (_.isArray(value)) {
-      value = value.join(', ');
-    }
+  //   if (_isArray(value)) {
+  //     value = value.join(', ');
+  //   }
 
-    if (this.data.sanitize) {
-      return this.$sanitize(value);
-    }
-    return _.escape(value);
-  }
+  //   if (this.data.sanitize) {
+  //     return this.$sanitize(value);
+  //   }
+  //   return _escape(value);
+  // }
+
   $sanitize(value: any) {
     throw new Error('Method not implemented.');
   }
 
-  decimalPlaces(num) {
+  _decimalPlaces(num) {
     const match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
     if (!match) {
       return 0;
@@ -2199,6 +2133,8 @@ export class Rule {
   }
 
   updateStates() {
+    console.log("Rule -> updateStates -> updateStates");
+    debugger
     this.states.clear();
     this.shapeStates.clear();
     this.textStates.clear();
@@ -2237,40 +2173,65 @@ export class Rule {
         }
         if (matched) {
           this.states.set(state.uid, state);
+          state.tagRule(this);
         } else {
           this.states.delete(state.uid);
+          state.untagRule(this);
         }
       });
     });
   }
 
-  initRefresh() {
+  //
+  // Updates
+  //
+  initRefreshCycle(): this {
     this.highestLevel = -1;
     this.highestFormattedValue = '';
     this.highestColor = '';
     this.highestValue = '';
     this.execTimes = 0;
+    return this;
+  }
+
+  refresh(): this {
+    this.initRefreshCycle();
+    this.updateMetrics();
+    return this;
+  }
+
+  init(): this {
+    //TODO
+    return this;
+  }
+
+  change(): this {
+    this.updateMetrics();
+    this.updateStates();
+    return this;
   }
 
   //
   // Events
   //
   async onDestroy() {
+    $GF.log.debug(this.constructor.name + "/onDestroy : " + this.uid)
     this.clear();
   }
 
   async onRefresh() {
-    this.initRefresh();
-    this.updateMetrics();
+    $GF.log.debug(this.constructor.name + "/onRefresh : " + this.uid)
+    this.refresh();
   }
 
   async onInit() {
+    $GF.log.debug(this.constructor.name + "/onInit : " + this.uid)
     this.onRefresh();
     this.onChange();
   }
 
   async onChange() {
-    this.onRefresh();
-    this.updateStates();
+    $GF.log.debug(this.constructor.name + "/onChange : " + this.uid)
+    this.change();
   }
 }

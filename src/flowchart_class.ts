@@ -284,10 +284,10 @@ export class Flowchart {
    *
    * @memberof Flowchart
    */
-  applyOptions() {
+  refreshGraphOptions() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
     if (this.xgraph) {
-      this.xgraph.applyGraph();
+      this.xgraph.changeOptions();
     }
     trc.after();
   }
@@ -297,7 +297,7 @@ export class Flowchart {
    *
    * @memberof Flowchart
    */
-  refreshXgraph(): this {
+  refreshGraph(): this {
     this.xgraph?.refresh();
     return this;
   }
@@ -307,7 +307,8 @@ export class Flowchart {
   }
 
   refresh() {
-    this.refreshXgraph();
+    this.refreshGraphOptions()
+    this.refreshGraph();
     this.refreshStates();
   }
 
@@ -757,7 +758,7 @@ export class Flowchart {
     this.visible = true;
     this.container.className = 'gf-flowchartShow';
     if (forceRefresh) {
-      this.applyOptions();
+      this.refreshGraphOptions();
     }
     return this;
   }

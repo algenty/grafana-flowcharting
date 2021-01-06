@@ -1,6 +1,5 @@
 import { SerieMetric, TableMetric, ObjectMetric } from 'metric_class';
 import { $GF } from 'globals_class';
-import { Subject } from 'rxjs';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 /**
  * Data Series/Tables handler
@@ -19,34 +18,6 @@ export class MetricHandler {
   constructor(ctrl: FlowchartCtrl) {
     this.ctrl = ctrl;
     this.init();
-  }
-
-  //
-  // RXJS
-  //
-  subscribe$(object: gf.TObserver<ObjectMetric>): this {
-    this.observers$.push(object);
-    return this;
-  }
-
-  unsubscribe$(uid: string): this {
-    const len = this.observers$.length;
-    for (let i = 0; i < len; i++) {
-      if (this.observers$[i].uid === uid) {
-        this.observers$.splice(i, 1);
-        break;
-      }
-    }
-    return this;
-  }
-
-  getSubject$() {
-    const sub$: Subject<ObjectMetric> = new Subject();
-    const len = this.observers$.length;
-    for (let i = 0; i < len; i++) {
-      sub$.subscribe(this.observers$[i]);
-    }
-    return sub$;
   }
 
   setDataList(datas: any[]) {
@@ -210,12 +181,9 @@ export class MetricHandler {
     this.tables = [];
     this.series = [];
     this.metrics = [];
-    const sub$ = this.getSubject$();
     this.dataList.forEach(dl => {
-      const metric = this.addMetric(dl);
-      sub$.next(metric);
+      this.addMetric(dl);
     });
-    sub$.complete();
     trc.after();
   }
 
@@ -225,6 +193,7 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   clear(): this {
+    this.dataList = [];
     this.tables = [];
     this.series = [];
     this.metrics = [];

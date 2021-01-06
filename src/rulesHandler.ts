@@ -1,5 +1,5 @@
 import { Rule } from 'rule_class';
-import _ from 'lodash';
+import { sortBy as _sortBy } from 'lodash';
 import { $GF } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
@@ -54,7 +54,7 @@ export class RulesHandler {
       }
       // Fix bug of grafana 6+
       if (tmpRules.length > 0 && tmpRules[0].order !== undefined) {
-        tmpRules = _.sortBy(_.sortBy(tmpRules, o => o.order));
+        tmpRules = _sortBy(_sortBy(tmpRules, o => o.order));
       }
 
       tmpRules.forEach(ruleData => {
@@ -73,7 +73,6 @@ export class RulesHandler {
    * @returns {this}
    * @memberof RulesHandler
    */
-
 
   /**
    * Return data with default value
@@ -123,7 +122,6 @@ export class RulesHandler {
     this.rules.push(newRule);
     this.data.rulesData.push(data);
     newRule.setOrder(this.countRules());
-    this.ctrl.metricHandler?.subscribe$(newRule.getMetricObserver$Refresh());
     return newRule;
   }
 
@@ -160,12 +158,12 @@ export class RulesHandler {
    * @param {number} index
    * @memberof RulesHandler
    */
-  removeRule(rule: Rule) {
-    this.ctrl.metricHandler?.unsubscribe$(rule.uid);
+  removeRule(rule: Rule): this {
     const index = rule.getOrder() - 1;
     this.rules.splice(index, 1);
     this.data.rulesData.splice(index, 1);
     this.setOrder();
+    return this;
   }
 
   /**
@@ -268,7 +266,7 @@ export class RulesHandler {
     return this;
   }
 
-  change():this {
+  change(): this {
     return this;
   }
 

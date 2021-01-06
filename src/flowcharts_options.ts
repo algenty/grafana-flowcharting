@@ -1,7 +1,7 @@
-import { FlowchartHandler } from './flowchartHandler';
-import XGraph from './graph_class';
-import { Flowchart } from './flowchart_class';
-import { $GF, GFTable } from './globals_class';
+import { FlowchartHandler } from 'flowchartHandler';
+import { XGraph } from 'graph_class';
+import { Flowchart } from 'flowchart_class';
+import { $GF, GFTable } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
 export class FlowchartsOptionsCtrl {
@@ -33,12 +33,6 @@ export class FlowchartsOptionsCtrl {
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.currentFlowchart = this.flowchartHandler?.getFlowchart();
     let index = 0;
-
-    // this.onColorChange = () => {
-    //   const name = this.flowchartHandler.getCurrentFlowchartName();
-    //   this.flowchartHandler.onOptionsChange(name);
-    //   this.render();
-    // }
 
     this.flowchartsTableData = {
       data: [],

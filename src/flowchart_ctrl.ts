@@ -8,9 +8,9 @@ import { FlowchartHandler } from 'flowchartHandler';
 import { MetricHandler } from 'metricHandler';
 // import { PanelEvents } from '@grafana/data';
 import { $GF, GFTimer } from 'globals_class';
-import XGraph from 'graph_class';
+import { XGraph } from 'graph_class';
 import grafana from 'grafana_func';
-import _ from 'lodash';
+import { defaults as _defaults, cloneDeep as _cloneDeep } from 'lodash';
 import { InteractiveMap } from 'mapping_class';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
@@ -70,7 +70,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       version: $GF.plugin.getVersion(),
     };
 
-    _.defaults(this.panel, this.panelDefaults);
+    _defaults(this.panel, this.panelDefaults);
     this.panel.graphId = `flowchart_${this.panel.id}`;
     this.containerDivId = `container_${this.panel.graphId}`;
 
@@ -158,10 +158,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();
-      const panelClone = _.cloneDeep(this.panel);
+      const panelClone = _cloneDeep(this.panel);
       this.flowchartHandler.clear();
       this.flowchartHandler.import(panelClone.flowchartsData);
-      // this.flowchartHandler.draw();
       this.rulesHandler.clear();
       this.rulesHandler.import(panelClone.rulesData);
       this.flowchartHandler.onSourceChange();
@@ -172,7 +171,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onDataReceived(dataList) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
     if (!!this.metricHandler) {
-      this.metricHandler.refresh(dataList);
+      this.metricHandler?.setDataList(dataList);
+      this.metricHandler?.onRefresh();
       if (!!this.flowchartHandler) {
         this.flowchartHandler.onDatasChange();
       }

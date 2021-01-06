@@ -9,7 +9,7 @@ export class XCell {
   isHidden: boolean = false;
   isHighlighting: boolean = false;
   isBlink: boolean = false;
-  _surroundHL: Map<string, any>;
+  _surroundHL: Map<string, any> = new Map();
   percent: number = 100;
   _mxcellHL: any = null;
   gf: gf.TXCellGF;
@@ -20,7 +20,6 @@ export class XCell {
     this.gf = this._getDefaultGFXCell();
     this.mxcell.gf = this.gf;
     this.isHidden = !this.graph.model.isVisible(this.mxcell);
-    this._surroundHL = new Map();
   }
 
   static refactore(graph: any, mxcell: mxCell): XCell {

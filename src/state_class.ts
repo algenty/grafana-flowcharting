@@ -1,7 +1,7 @@
-import XGraph from './graph_class';
-import { Rule } from './rule_class';
+import { XGraph } from 'graph_class';
+import { Rule } from 'rule_class';
 import { EventMap } from 'mapping_class';
-import { TooltipHandler } from './tooltipHandler';
+import { TooltipHandler } from 'tooltipHandler';
 import { $GF, GFVariables } from 'globals_class';
 import { XCell } from 'cell_class';
 import { ObjectMetric } from 'metric_class';
@@ -82,6 +82,7 @@ export class State {
    * @memberof State
    */
   clear(): this {
+    this.clearTag();
     return this;
   }
 
@@ -92,7 +93,21 @@ export class State {
    */
   async async_applyState() {
     // new Promise (this.applyState.bind(this));
-    this.applyState();
+    this.applyCycle();
+  }
+
+  tagRule(rule : Rule):this {
+    this.rules.set(rule.uid, rule);
+    return this;
+  }
+
+  untagRule(rule : Rule): this {
+    this.rules.delete(rule.uid);
+    return this;
+  }
+
+  clearTag() {
+    this.rules.clear();
   }
 
   /**
@@ -103,8 +118,9 @@ export class State {
    * @param {Metric} metric
    * @memberof State
    */
-  setState(): this {
+  setCycle(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setState()');
+    console.log("State -> setState -> this.rules", this.rules);
     this.rules.forEach(rule => {
       let beginPerf = Date.now();
       if (!rule.isHidden()) {
@@ -342,7 +358,7 @@ export class State {
    * @returns {this}
    * @memberof State
    */
-  applyState(): this {
+  applyCycle(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyState()');
     if (this.matched || this.changed) {
       this.changed = true;
@@ -387,7 +403,7 @@ export class State {
    * @returns {this}
    * @memberof State
    */
-  prepare(): this {
+  prepareCycle(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
     if (this.changed) {
       this.shapeState.prepare();
@@ -437,9 +453,9 @@ export class State {
   async onDestroy() {}
 
   async onRefresh() {
-    this.prepare();
-    this.setState();
-    this.applyState();
+    this.prepareCycle();
+    this.setCycle();
+    this.applyCycle();
   }
 
   async onInit() {

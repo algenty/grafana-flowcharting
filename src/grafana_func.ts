@@ -1,7 +1,7 @@
 // import { getValueFormat } from '@grafana/data';
 import kbn from 'grafana/app/core/utils/kbn';
 import TimeSeries from 'grafana/app/core/time_series2';
-import _ from 'lodash';
+// import _ from 'lodash';
 import { loadPluginCss, MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import { dateTime, PanelEvents } from '@grafana/data';
 import appEvents from 'grafana/app/core/app_events';

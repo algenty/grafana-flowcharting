@@ -1,5 +1,5 @@
 import grafana from './grafana_func';
-import _ from 'lodash';
+import { find as _find, isNumber as _isNumber } from 'lodash';
 import { $GF } from 'globals_class';
 import { DateTH } from 'threshold_class';
 
@@ -337,7 +337,7 @@ export class TableMetric extends Metric {
     });
 
     this.tableColumnOptions = table.columnNames;
-    if (!_.find(this.dataList?.columns, ['text', this.tableColumn])) {
+    if (!_find(this.dataList?.columns, ['text', this.tableColumn])) {
       this._setTableColumnToSensibleDefault();
     }
 
@@ -358,7 +358,7 @@ export class TableMetric extends Metric {
     if (this.dataList && this.dataList.columns.length === 1) {
       this.tableColumn = this.dataList?.columns[0].text;
     } else {
-      this.tableColumn = _.find(this.dataList.columns, col => {
+      this.tableColumn = _find(this.dataList.columns, col => {
         return col.type !== 'time';
       }).text;
     }
@@ -424,7 +424,7 @@ export class TableMetric extends Metric {
           }
 
           if (currentValue !== null) {
-            if (_.isNumber(currentValue)) {
+            if (_isNumber(currentValue)) {
               table.stats[currName].total += currentValue;
               this.allIsNull = false;
               nonNulls++;

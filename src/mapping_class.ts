@@ -1,6 +1,6 @@
 import { XCell } from 'cell_class';
 import { $GF, GFVariables } from 'globals_class';
-import _ from 'lodash';
+import { isString as _isString } from 'lodash';
 import { Rule } from 'rule_class';
 
 export type ObjectMap = ShapeMap | TextMap | LinkMap | EventMap;
@@ -751,7 +751,7 @@ export class ValueMap extends VMAP {
       return false;
     }
 
-    if (!_.isString(value) && Number(this.data.value) === Number(value)) {
+    if (!_isString(value) && Number(this.data.value) === Number(value)) {
       return true;
     }
     return $GF.utils.matchString(value.toString(), this.data.value);

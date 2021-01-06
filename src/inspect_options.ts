@@ -2,8 +2,8 @@ import { FlowchartHandler } from './flowchartHandler';
 import { State } from 'state_class';
 import { $GF, GFTable } from 'globals_class';
 import { StateHandler } from 'statesHandler';
-import _ from 'lodash';
-import XGraph from 'graph_class';
+import { orderBy as _orderBy } from 'lodash';
+import { XGraph } from 'graph_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
 export class InspectOptionsCtrl {
@@ -199,7 +199,7 @@ export class InspectOptionsCtrl {
   getStates(): State[] {
     if (this.stateHandler) {
       const states = this.stateHandler.getStatesForInspect();
-      return _.orderBy(states, ['cellId', 'globalLevel'], ['asc']);
+      return _orderBy(states, ['cellId', 'globalLevel'], ['asc']);
     }
     return [];
   }
