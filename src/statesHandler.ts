@@ -1,11 +1,10 @@
 import { State } from './state_class';
 import { Rule } from './rule_class';
 import { each as _each } from 'lodash';
-import XGraph from 'graph_class';
+import { XGraph } from 'graph_class';
 import { $GF } from 'globals_class';
 import { XCell } from 'cell_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
-import { Subject } from 'rxjs';
 
 /**
  * States Handler class
@@ -18,8 +17,6 @@ export class StateHandler {
   xgraph: XGraph;
   edited = false;
   ctrl: FlowchartCtrl;
-  observers$: gf.TObserver<State>[] = [];
-  sub$: Subject<State> | undefined;
 
   /**
    * Creates an instance of StateHandler.
@@ -33,34 +30,6 @@ export class StateHandler {
     this.ctrl = ctrl;
   }
 
-  //
-  // RXJS
-  //
-  subscribe$(object: gf.TObserver<State>): this {
-    this.observers$.push(object);
-    return this;
-  }
-
-  unsubscribe$(uid: string): this {
-    const len = this.observers$.length;
-    for (let i = 0; i < len; i++) {
-      if (this.observers$[i].uid === uid) {
-        this.observers$.splice(i, 1);
-        break;
-      }
-    }
-    return this;
-  }
-
-  getSubject$() {
-    const sub$: Subject<State> = new Subject();
-    const len = this.observers$.length;
-    for (let i = 0; i < len; i++) {
-      sub$.subscribe(this.observers$[i]);
-    }
-    return sub$;
-  }
-
   /**
    * Initialisation of states
    *
@@ -68,17 +37,20 @@ export class StateHandler {
    * @param {XGraph} xgraph
    * @memberof StateHandler
    */
-  initStates(xgraph: XGraph): this {
+  initStates(xgraph: XGraph = this.xgraph): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initStates()');
     this.xgraph = xgraph;
     this.states.clear();
     const xcells = xgraph.getXCells();
-    this.sub$ = this.getSubject$();
     _each(xcells, x => {
       this.addState(x);
     });
-    this.sub$.complete();
     trc.after();
+    return this;
+  }
+
+  setXGraph(xgraph: XGraph): this {
+    this.xgraph = xgraph;
     return this;
   }
 
@@ -215,7 +187,6 @@ export class StateHandler {
   addState(xcell: XCell): State {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addState()');
     const state = new State(xcell, this.xgraph);
-    this.sub$?.next(state);
     this.states.set(state.uid, state);
     if ($GF.DEBUG) {
       $GF.setVar(`STATE_${state.uid}`, state);
@@ -237,58 +208,83 @@ export class StateHandler {
   /**
    * Restore initial status and prepare states object
    */
-  prepare(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
-    this.states.forEach(state => {
-      state.prepare();
-    });
-    trc.after();
-    return this;
-  }
+  // prepare(): this {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
+  //   this.states.forEach(state => {
+  //     state.prepare();
+  //   });
+  //   trc.after();
+  //   return this;
+  // }
 
   /**
    * Change states according to rules and datas from grafana
    * @param  {Array<Rule>} rules - Array of Rule object
    * @param  {Array<Metric>} metrics - Array of serie object
    */
-  setStates(rules: Rule[]): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
-    this.prepare();
-    rules.forEach(rule => {
-      rule.highestLevel = -1;
-      rule.highestFormattedValue = '';
-      rule.highestColor = '';
-      rule.highestValue = '';
-      rule.execTimes = 0;
-      if (rule.states === undefined || rule.states.size === 0) {
-        rule.states = this.getStatesForRule(rule);
-      }
-      rule.states.forEach(state => {
-        state.setState(rule);
-      });
-    });
-    trc.after();
-    return this;
-  }
+  // setStates(rules: Rule[]): this {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
+  //   this.prepare();
+  //   rules.forEach(rule => {
+  //     rule.highestLevel = -1;
+  //     rule.highestFormattedValue = '';
+  //     rule.highestColor = '';
+  //     rule.highestValue = '';
+  //     rule.execTimes = 0;
+  //     if (rule.states === undefined || rule.states.size === 0) {
+  //       rule.states = this.getStatesForRule(rule);
+  //     }
+  //     rule.states.forEach(state => {
+  //       state.setState(rule);
+  //     });
+  //   });
+  //   trc.after();
+  //   return this;
+  // }
 
   /**
    * Apply color and text
    */
-  applyStates(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'applyStates()');
-    this.states.forEach(state => {
-      state.async_applyState();
-    });
-    trc.after();
+  // applyStates(): this {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'applyStates()');
+  //   this.states.forEach(state => {
+  //     state.async_applyState();
+  //   });
+  //   trc.after();
+  //   return this;
+  // }
+
+  // /**
+  //  * Call applyStates asynchronously
+  //  *
+  //  * @memberof StateHandler
+  //  */
+  // async async_applyStates() {
+  //   this.applyStates();
+  // }
+
+  refresh(): this {
+    this.states.forEach(s => s.onRefresh());
     return this;
   }
 
-  /**
-   * Call applyStates asynchronously
-   *
-   * @memberof StateHandler
-   */
-  async async_applyStates() {
-    this.applyStates();
+  //
+  // Events
+  //
+  async onDestroy() {
+    this.clear();
+  }
+
+  async onRefresh() {
+    this.states.forEach(s => s.onRefresh());
+  }
+
+  async onInit() {
+    this.states.forEach(s => s.onInit());
+  }
+
+  async onChange() {
+    this.initStates();
+    this.onRefresh();
   }
 }

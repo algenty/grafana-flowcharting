@@ -1,7 +1,4 @@
 import { Flowchart } from 'flowchart_class';
-import { Rule } from 'rule_class';
-import _ from 'lodash';
-// const clonedeep = require('lodash.clonedeep')
 import { $GF } from 'globals_class';
 import { InteractiveMap, ObjectMap } from 'mapping_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
@@ -13,7 +10,7 @@ import { Subject } from 'rxjs';
 export class FlowchartHandler {
   parentDiv: HTMLDivElement;
   // $scope: ng.IScope;
-  ctrl: any;
+  ctrl: FlowchartCtrl;
   flowcharts: Flowchart[] = [];
   currentFlowchartName = 'Main'; // name of current Flowchart
   currentFlowchart: Flowchart | undefined; // Current flowchart obj
@@ -201,6 +198,7 @@ export class FlowchartHandler {
     this.flowcharts.forEach((fc: Flowchart) => {
       fc.clear();
     });
+    this.ctrl.metr;
     this.flowcharts = [];
     this.data.flowcharts = [];
     return this;
@@ -500,7 +498,7 @@ export class FlowchartHandler {
           });
         }
       }
-      // this.refresh();
+      this.refresh();
     }
     this.ctrl.renderingCompleted();
     trc.after();
@@ -631,11 +629,11 @@ export class FlowchartHandler {
    * @param {Metric[]} metrics
    * @memberof FlowchartHandler
    */
-  async_refreshStates(rules: Rule[]) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'async_refreshStates()');
-    this.refreshStates(rules);
-    trc.after();
-  }
+  // async_refreshStates(rules: Rule[]) {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'async_refreshStates()');
+  //   this.refreshStates(rules);
+  //   trc.after();
+  // }
 
   /**
    * Refresh rules according new rules or data
@@ -645,17 +643,17 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  refreshStates(rules: Rule[]): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'refreshStates()');
-    if (this.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_RULES)) {
-      this.updateStates(rules);
-      this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_RULES);
-    }
-    this.setStates(rules);
-    this.applyStates();
-    trc.after();
-    return this;
-  }
+  // refreshStates(rules: Rule[]): this {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'refreshStates()');
+  //   if (this.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_RULES)) {
+  //     this.updateStates(rules);
+  //     this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_RULES);
+  //   }
+  //   this.setStates(rules);
+  //   this.applyStates();
+  //   trc.after();
+  //   return this;
+  // }
 
   /**
    * Refresh all flowchart
@@ -663,10 +661,27 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  refresh(): this {
+  refreshFlowcharts(): this {
     this.flowcharts.forEach(flowchart => {
-      flowchart.refresh();
+      flowchart.onRefresh();
     });
+    return this;
+  }
+
+  refreshMetrics(): this {
+    this.ctrl.metricHandler?.on;
+    return this;
+  }
+
+  refreshRules(): this {
+    this.ctrl.rulesHandler?.onRefresh();
+    return this;
+  }
+
+  refresh(): this {
+    this.refreshMetrics();
+    this.refreshRules();
+    this.refreshFlowcharts();
     return this;
   }
 
@@ -678,14 +693,14 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  setStates(rules: Rule[]): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
-    this.flowcharts.forEach(flowchart => {
-      flowchart.setStates(rules);
-    });
-    trc.after();
-    return this;
-  }
+  // setStates(rules: Rule[]): this {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
+  //   this.flowcharts.forEach(flowchart => {
+  //     flowchart.setStates(rules);
+  //   });
+  //   trc.after();
+  //   return this;
+  // }
 
   /**
    * Update states with rule
@@ -694,14 +709,14 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  updateStates(rules: Rule[]): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'updateStates()');
-    this.flowcharts.forEach(flowchart => {
-      flowchart.updateStates(rules);
-    });
-    trc.after();
-    return this;
-  }
+  // updateStates(rules: Rule[]): this {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'updateStates()');
+  //   this.flowcharts.forEach(flowchart => {
+  //     flowchart.updateStates(rules);
+  //   });
+  //   trc.after();
+  //   return this;
+  // }
 
   /**
    * Apply state of cell after setStates
@@ -709,18 +724,18 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  applyStates(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'applyStates()');
-    new Promise(() => {
-      this.flowcharts.forEach(flowchart => {
-        flowchart.applyStates();
-      });
-    }).then(() => {
-      this.refresh();
-    });
-    trc.after();
-    return this;
-  }
+  // applyStates(): this {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'applyStates()');
+  //   new Promise(() => {
+  //     this.flowcharts.forEach(flowchart => {
+  //       flowchart.applyStates();
+  //     });
+  //   }).then(() => {
+  //     this.refresh();
+  //   });
+  //   trc.after();
+  //   return this;
+  // }
 
   /**
    * Set and apply options
@@ -942,4 +957,19 @@ export class FlowchartHandler {
   getFlowchartNames(): string[] {
     return this.flowcharts.map(f => f.data.name);
   }
+
+  //
+  // Events
+  //
+  async onDestroy() {
+    this.clear();
+  }
+
+  async onRefresh() {
+    this.refresh();
+  }
+
+  async onInit() {}
+
+  async onChange() {}
 }

@@ -28,22 +28,8 @@ export class RulesHandler {
     this.ctrl = ctrl;
   }
 
-  //
-  // RXJS
-  //
-  subscribe$(object: gf.TObserver<Rule>): this {
-    this.observers$.push(object);
-    return this;
-  }
-
-  unsubscribe$(uid: string): this {
-    const len = this.observers$.length;
-    for (let i = 0; i < len; i++) {
-      if (this.observers$[i].uid === uid) {
-        this.observers$.splice(i, 1);
-        break;
-      }
-    }
+  setData(data: gf.TIRulesHandlerData): this {
+    this.data = data;
     return this;
   }
 
@@ -87,14 +73,7 @@ export class RulesHandler {
    * @returns {this}
    * @memberof RulesHandler
    */
-  clear(): this {
-    this.rules.forEach(r => {
-      r.clear();
-    });
-    this.rules = [];
-    this.data.rulesData = [];
-    return this;
-  }
+
 
   /**
    * Return data with default value
@@ -139,7 +118,7 @@ export class RulesHandler {
    */
   addRule(pattern: string): Rule {
     const data = Rule.getDefaultData();
-    const newRule = new Rule(pattern, data);
+    const newRule = new Rule(pattern, data, this.ctrl);
     newRule.initThresholds();
     this.rules.push(newRule);
     this.data.rulesData.push(data);
@@ -201,7 +180,7 @@ export class RulesHandler {
     const data = rule.getData();
     const newData: gf.TIRuleData = Rule.getDefaultData();
     this.reduce();
-    const newRule = new Rule(newData.pattern, newData);
+    const newRule = new Rule(newData.pattern, newData, this.ctrl);
     newRule.import(data);
     newData.alias = `Copy of ${newData.alias}`;
     this.rules.splice(index, 0, newRule);
@@ -270,5 +249,49 @@ export class RulesHandler {
       rules[index + 1] = curr;
       rules[index] = after;
     }
+  }
+
+  //
+  // Updates
+  //
+  init(): this {
+    return this;
+  }
+
+  refresh(): this {
+    return this;
+  }
+
+  clear(): this {
+    this.rules = [];
+    this.data.rulesData = [];
+    return this;
+  }
+
+  change():this {
+    return this;
+  }
+
+  //
+  // Events
+  //
+  async onDestroy() {
+    this.rules.forEach(r => r.onDestroy());
+    this.clear();
+  }
+
+  async onRefresh() {
+    this.rules.forEach(r => r.onRefresh());
+    this.refresh();
+  }
+
+  async onInit() {
+    this.rules.forEach(r => r.onInit());
+    this.init();
+  }
+
+  async onChange() {
+    this.rules.forEach(r => r.onChange());
+    this.change();
   }
 }

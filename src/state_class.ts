@@ -443,11 +443,12 @@ export class State {
   }
 
   async onInit() {
-    this.onRefresh();
     this.onChange();
   }
 
-  async onChange() {}
+  async onChange() {
+    this.onRefresh();
+  }
 }
 
 /**

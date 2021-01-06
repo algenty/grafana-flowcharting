@@ -1,8 +1,5 @@
-import XGraph from 'graph_class';
+import { XGraph } from 'graph_class';
 import { StateHandler } from 'statesHandler';
-import { State } from 'state_class';
-import { Rule } from 'rule_class';
-
 import { FlowchartHandler } from 'flowchartHandler';
 import { $GF } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
@@ -146,25 +143,25 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  updateStates(rules: Rule[]): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'updateStates()');
-    rules.forEach(rule => {
-      if (this.stateHandler !== undefined) {
-        rule.states = this.stateHandler.getStatesForRule(rule);
-        if (rule.states) {
-          rule.states.forEach((state: any) => {
-            state.unsetState();
-          });
-        } else {
-          $GF.log.warn('States not defined for this rule');
-        }
-      } else {
-        $GF.log.error('updateStates => this.stateHandler undefined');
-      }
-    });
-    trc.after();
-    return this;
-  }
+  // updateStates(rules: Rule[]): this {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'updateStates()');
+  //   rules.forEach(rule => {
+  //     if (this.stateHandler !== undefined) {
+  //       rule.states = this.stateHandler.getStatesForRule(rule);
+  //       if (rule.states) {
+  //         rule.states.forEach((state: any) => {
+  //           state.unsetState();
+  //         });
+  //       } else {
+  //         $GF.log.warn('States not defined for this rule');
+  //       }
+  //     } else {
+  //       $GF.log.error('updateStates => this.stateHandler undefined');
+  //     }
+  //   });
+  //   trc.after();
+  //   return this;
+  // }
 
   /**
    * Initialisation of flowchart class
@@ -240,16 +237,16 @@ export class Flowchart {
    * @param {Metric[]} metrics
    * @memberof Flowchart
    */
-  setStates(rules: Rule[]): this {
-    // $GF.log.info(`flowchart[${this.data.name}].setStates()`);
-    if (rules === undefined) {
-      $GF.log.warn("Rules shoudn't be null");
-    }
-    if (this.stateHandler) {
-      this.stateHandler.setStates(rules);
-    }
-    return this;
-  }
+  // setStates(rules: Rule[]): this {
+  //   // $GF.log.info(`flowchart[${this.data.name}].setStates()`);
+  //   if (rules === undefined) {
+  //     $GF.log.warn("Rules shoudn't be null");
+  //   }
+  //   if (this.stateHandler) {
+  //     this.stateHandler.setStates(rules);
+  //   }
+  //   return this;
+  // }
 
   /**
    * Init options of graph
@@ -274,13 +271,13 @@ export class Flowchart {
    *
    * @memberof Flowchart
    */
-  applyStates(): this {
-    // $GF.log.info(`flowchart[${this.data.name}].applyStates()`);
-    if (this.stateHandler) {
-      this.stateHandler.applyStates();
-    }
-    return this;
-  }
+  // applyStates(): this {
+  //   // $GF.log.info(`flowchart[${this.data.name}].applyStates()`);
+  //   if (this.stateHandler) {
+  //     this.stateHandler.applyStates();
+  //   }
+  //   return this;
+  // }
 
   /**
    * Apply options
@@ -300,10 +297,18 @@ export class Flowchart {
    *
    * @memberof Flowchart
    */
+  refreshXgraph(): this {
+    this.xgraph?.refresh();
+    return this;
+  }
+
+  refreshStates() {
+    this.stateHandler?.refresh();
+  }
+
   refresh() {
-    if (this.xgraph) {
-      this.xgraph.refresh();
-    }
+    this.refreshXgraph();
+    this.refreshStates();
   }
 
   /**
@@ -329,7 +334,7 @@ export class Flowchart {
    */
   reload() {
     if (this.xgraph !== undefined && this.xgraph !== null) {
-      this.xgraph.destroyGraph();
+      // this.xgraph.destroyGraph();
       this.xgraph = undefined;
       this.init();
     } else {
@@ -344,15 +349,8 @@ export class Flowchart {
    * @memberof Flowchart
    */
   clear(): this {
-    if (this.xgraph) {
-      this.xgraph.destroyGraph();
-      this.xgraph = undefined;
-      this.container.remove();
-    }
-    if (this.stateHandler) {
-      this.stateHandler.clear();
-      this.stateHandler = undefined;
-    }
+    this.xgraph?.clear();
+    this.stateHandler?.clear();
     return this;
   }
 
@@ -773,5 +771,27 @@ export class Flowchart {
 
   isVisible(): boolean {
     return this.visible;
+  }
+
+  //
+  // Events
+  //
+  async onDestroy() {
+    this.clear();
+  }
+
+  async onRefresh() {
+    // this.xgraph?.onChange();
+    this.stateHandler?.onRefresh();
+  }
+
+  async onInit() {
+    this.xgraph?.onInit();
+    this.stateHandler?.onInit();
+  }
+
+  async onChange() {
+    this.xgraph?.onChange();
+    this.stateHandler?.onChange();
   }
 }

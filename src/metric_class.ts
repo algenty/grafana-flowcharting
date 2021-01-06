@@ -13,19 +13,19 @@ export type ObjectMetric = SerieMetric | TableMetric;
  */
 export class Metric {
   type: gf.TMetricTypeKeys | 'unknown' = 'unknown';
+  uid: string = $GF.utils.uniqueID();
   scopedVars: any;
   metrics: any = {};
   name = '';
+  dataList: any;
   nullPointMode = 'connected';
-  constructor(dataList: any) {}
+  constructor(dataList?: any) {
+    this.dataList = dataList;
+  }
 
-  /**
-   * Reset/clear
-   *
-   * @memberof Metric
-   */
-  clear() {
-    this.metrics = {};
+  setDataList(dataList: any): this {
+    this.dataList = dataList;
+    return this;
   }
 
   /**
@@ -89,6 +89,60 @@ export class Metric {
   getColumnsName(): string[] {
     return [];
   }
+
+  //
+  // Updates
+  //
+  /**
+   * Init data with dataList
+   *
+   * @param {any} dataList
+   * @memberof MetricHandler
+   */
+
+  /**
+   * Reset/clear/destroy metrics
+   *
+   * @memberof MetricHandler
+   */
+  clear(): this {
+    this.dataList = undefined;
+    this.metrics = {};
+    return this;
+  }
+
+  refresh(): this {
+    this.metrics = {};
+    this.init();
+    return this;
+  }
+
+  change(): this {
+    return this;
+  }
+
+  init(): this {
+    return this;
+  }
+
+  //
+  // Events
+  //
+  async onDestroy() {
+    this.clear();
+  }
+
+  async onRefresh() {
+    this.refresh();
+  }
+
+  async onInit() {
+    this.init();
+  }
+
+  async onChange() {
+    this.change();
+  }
 }
 
 /**
@@ -106,23 +160,30 @@ export class Metric {
  * @extends {Metric}
  */
 export class SerieMetric extends Metric {
-  constructor(dataList: any) {
+  constructor(dataList?: any) {
     super(dataList);
     this.type = 'serie';
-    this.metrics = this.seriesHandler(dataList);
-    this.addCustomStats();
-    this.name = this.metrics.alias;
   }
 
-  seriesHandler(seriesData) {
+  init(): this {
+    this.metrics = this._seriesHandler();
+    this._addCustomStats();
+    this.name = this.metrics.alias;
+    return this;
+  }
+
+  _seriesHandler() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'seriesHandler()');
-    const series = grafana.getTimeSeries(seriesData);
-    series.flotpairs = series.getFlotPairs(this.nullPointMode);
+    let series: any = undefined;
+    if (this.dataList) {
+      series = grafana.getTimeSeries(this.dataList);
+      series.flotpairs = series.getFlotPairs(this.nullPointMode);
+    }
     trc.after();
     return series;
   }
 
-  addCustomStats() {
+  _addCustomStats() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addCustomStats()');
     try {
       let lg = this.metrics.flotpairs.length;
@@ -247,14 +308,19 @@ export class TableMetric extends Metric {
   tableColumn = '';
   allIsNull = true;
   allIsZero = true;
-  constructor(dataList: any) {
+  constructor(dataList?: any) {
     super(dataList);
     this.type = 'table';
-    this.name = dataList.refId;
-    this.metrics = this.tableHandler(dataList);
+    this.init();
   }
 
-  tableHandler(tableData: any) {
+  init(): this {
+    this.metrics = this._tableHandler();
+    this.name = this.dataList?.refId;
+    return this;
+  }
+
+  _tableHandler() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'tableHandler()');
     const table: any = {
       datapoints: [],
@@ -262,7 +328,7 @@ export class TableMetric extends Metric {
       stats: {},
     };
 
-    tableData.columns.forEach((column, columnIndex) => {
+    this.dataList?.columns.forEach((column, columnIndex) => {
       table.columnNames[columnIndex] = column.text;
       if (column.text.toString().toLowerCase() === 'time') {
         table.timeIndex = columnIndex;
@@ -271,11 +337,11 @@ export class TableMetric extends Metric {
     });
 
     this.tableColumnOptions = table.columnNames;
-    if (!_.find(tableData.columns, ['text', this.tableColumn])) {
-      this.setTableColumnToSensibleDefault(tableData);
+    if (!_.find(this.dataList?.columns, ['text', this.tableColumn])) {
+      this._setTableColumnToSensibleDefault();
     }
 
-    tableData.rows.forEach(row => {
+    this.dataList?.rows.forEach(row => {
       const datapoint = {};
       row.forEach((value, columnIndex) => {
         const key = table.columnNames[columnIndex];
@@ -283,22 +349,22 @@ export class TableMetric extends Metric {
       });
       table.datapoints.push(datapoint);
     });
-    this.metrics.flotpairs = this.getFlotPairs(this.nullPointMode, table);
+    this.metrics.flotpairs = this._getFlotPairs(this.nullPointMode, table);
     trc.after();
     return table;
   }
 
-  setTableColumnToSensibleDefault(tableData: any) {
-    if (tableData.columns.length === 1) {
-      this.tableColumn = tableData.columns[0].text;
+  _setTableColumnToSensibleDefault() {
+    if (this.dataList && this.dataList.columns.length === 1) {
+      this.tableColumn = this.dataList?.columns[0].text;
     } else {
-      this.tableColumn = _.find(tableData.columns, col => {
+      this.tableColumn = _.find(this.dataList.columns, col => {
         return col.type !== 'time';
       }).text;
     }
   }
 
-  getFlotPairs(fillStyle: string, table: any) {
+  _getFlotPairs(fillStyle: string, table: any) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'getFlotPairs()');
     const result: any[] = [];
     const ignoreNulls = fillStyle === 'connected';

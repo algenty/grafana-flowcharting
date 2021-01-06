@@ -25,7 +25,7 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
  */
 export class Rule {
   data: gf.TIRuleData;
-  metrics: ObjectMetric[] = [];
+  metrics: Map<string, ObjectMetric> = new Map();
   cycleMetrics: boolean = false;
   cycleStates: boolean = false;
   mapsObj: gf.TRuleMaps = {
@@ -77,10 +77,11 @@ export class Rule {
         if (metric !== null) {
           if (!self.cycleMetrics) {
             self.cycleMetrics = true;
-            self.metrics = [];
+            self.metrics.clear();
           }
           if (self.matchMetric(metric)) {
-            self.metrics.push(metric);
+            self.metrics.set(metric.uid, metric);
+          } else {
           }
         }
       },
@@ -161,7 +162,7 @@ export class Rule {
     };
   }
 
-  getMetrics(): ObjectMetric[] {
+  getMetrics(): Map<string, ObjectMetric> {
     return this.metrics;
   }
 
@@ -715,6 +716,12 @@ export class Rule {
   }
 
   clear(): this {
+    this.shapeStates.clear();
+    this.textStates.clear();
+    this.linkStates.clear();
+    this.states.forEach(state => {
+      state.rules.delete(this.uid);
+    });
     return this;
   }
 
@@ -2183,10 +2190,10 @@ export class Rule {
   // Updates
   updateMetrics() {
     const metrics = this.ctrl.metricHandler?.getMetrics();
-    this.metrics = [];
+    this.metrics.clear();
     metrics?.forEach(metric => {
       if (this.matchMetric(metric)) {
-        this.metrics.push(metric);
+        this.metrics.set(metric.uid, metric);
       }
     });
   }
@@ -2237,21 +2244,33 @@ export class Rule {
     });
   }
 
+  initRefresh() {
+    this.highestLevel = -1;
+    this.highestFormattedValue = '';
+    this.highestColor = '';
+    this.highestValue = '';
+    this.execTimes = 0;
+  }
+
   //
   // Events
   //
   async onDestroy() {
-    this.states.forEach(state => {
-      state.rules.delete(this.uid);
-    });
+    this.clear();
   }
 
-  async onRefresh() {}
+  async onRefresh() {
+    this.initRefresh();
+    this.updateMetrics();
+  }
 
   async onInit() {
     this.onRefresh();
     this.onChange();
   }
 
-  async onChange() {}
+  async onChange() {
+    this.onRefresh();
+    this.updateStates();
+  }
 }

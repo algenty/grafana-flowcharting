@@ -1,6 +1,6 @@
-import { Metric, SerieMetric, TableMetric, ObjectMetric } from 'metric_class';
+import { SerieMetric, TableMetric, ObjectMetric } from 'metric_class';
 import { $GF } from 'globals_class';
-import { Subject, Observer, Observable, from } from 'rxjs';
+import { Subject } from 'rxjs';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 /**
  * Data Series/Tables handler
@@ -9,8 +9,7 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
  * @class MetricHandler
  */
 export class MetricHandler {
-  // panel: any;
-  // $scope: ng.IScope;
+  dataList: any[] = [];
   tables: TableMetric[] = [];
   series: SerieMetric[] = [];
   metrics: ObjectMetric[] = [];
@@ -19,6 +18,7 @@ export class MetricHandler {
 
   constructor(ctrl: FlowchartCtrl) {
     this.ctrl = ctrl;
+    this.init();
   }
 
   //
@@ -49,45 +49,8 @@ export class MetricHandler {
     return sub$;
   }
 
-  /**
-   * Init data with dataList
-   *
-   * @param {any} dataList
-   * @memberof MetricHandler
-   */
-  async initData(dataList: any) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
-    this.tables = [];
-    this.series = [];
-    this.metrics = [];
-    const sub$ = this.getSubject$();
-    dataList.forEach(dl => {
-      const metric = this.addMetric(dl);
-      sub$.next(metric);
-    });
-    sub$.complete();
-    trc.after();
-  }
-
-  /**
-   * Reset/clear/destroy metrics
-   *
-   * @memberof MetricHandler
-   */
-  clear(): this {
-    this.tables.forEach(table => {
-      table.clear();
-    });
-    this.series.forEach(serie => {
-      serie.clear();
-    });
-    this.metrics.forEach(metric => {
-      metric.clear();
-    });
-    this.tables = [];
-    this.series = [];
-    this.metrics = [];
-    return this;
+  setDataList(datas: any[]) {
+    this.dataList = datas;
   }
 
   /**
@@ -203,19 +166,6 @@ export class MetricHandler {
    */
   findMetrics(name: string, type?: gf.TMetricTypeKeys): ObjectMetric[] {
     let metrics: ObjectMetric[] = [];
-    // < 0.9.1 strict name
-    // if (type) {
-    //   if (type === 'table') {
-    //     metrics = this.tables.filter(m => m.getName() === name);
-    //   }
-    //   if (type === 'serie') {
-    //     metrics = this.series.filter(m => m.getName() === name);
-    //   }
-    // } else {
-    //   metrics = this.metrics.filter(m => m.getName() === name);
-    // }
-
-    // >= 0.9.1 : Add RegEx on name
     if (type) {
       if (type === 'table') {
         metrics = this.tables.filter(m => $GF.utils.matchString(m.getName(), name, true));
@@ -244,5 +194,71 @@ export class MetricHandler {
       columns = columns.concat(m.getColumnsName());
     });
     return columns;
+  }
+
+  //
+  // Updates
+  //
+  /**
+   * Init data with dataList
+   *
+   * @param {any} dataList
+   * @memberof MetricHandler
+   */
+  refresh() {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
+    this.tables = [];
+    this.series = [];
+    this.metrics = [];
+    const sub$ = this.getSubject$();
+    this.dataList.forEach(dl => {
+      const metric = this.addMetric(dl);
+      sub$.next(metric);
+    });
+    sub$.complete();
+    trc.after();
+  }
+
+  /**
+   * Reset/clear/destroy metrics
+   *
+   * @memberof MetricHandler
+   */
+  clear(): this {
+    this.tables = [];
+    this.series = [];
+    this.metrics = [];
+    return this;
+  }
+
+  change(): this {
+    return this;
+  }
+
+  init(): this {
+    return this;
+  }
+
+  //
+  // Events
+  //
+  async onDestroy() {
+    this.metrics.forEach(async m => await m.onDestroy());
+    this.clear();
+  }
+
+  async onRefresh() {
+    this.metrics.forEach(async m => await m.onRefresh());
+    this.refresh();
+  }
+
+  async onInit() {
+    this.metrics.forEach(async m => await m.onInit());
+    this.init();
+  }
+
+  async onChange() {
+    this.metrics.forEach(async m => await m.onChange());
+    this.change();
   }
 }

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { values } from 'lodash';
 import { $GF, GFTimer } from 'globals_class';
 import * as Drawio from 'drawio_custom';
 import chroma from 'chroma-js';
@@ -20,7 +20,7 @@ declare interface TXGraphDefaultValues {
  * @export
  * @class XGraph
  */
-export default class XGraph {
+export class XGraph {
   static initialized = false;
   container: HTMLDivElement;
   xmlGraph = '';
@@ -40,15 +40,11 @@ export default class XGraph {
   uid = $GF.utils.uniqueID();
   bgColor: string | null = null;
   zoomPercent = '1';
-  // cells: { id: string[]; value: string[] } = {
-  //   id: [],
-  //   value: [],
+  // defaultXCellValues: TXGraphDefaultValues = {
+  //   id: undefined,
+  //   value: undefined,
+  //   metadata: undefined,
   // };
-  defaultXCellValues: TXGraphDefaultValues = {
-    id: undefined,
-    value: undefined,
-    metadata: undefined,
-  };
   xcells: XCell[];
   clickBackup: any;
   dbclickBackup: any;
@@ -302,6 +298,14 @@ export default class XGraph {
     return this;
   }
 
+  clear() {
+    this.graph.model.clear();
+    this.graph.view.scale = 1;
+    this.graph.destroy();
+    this.graph = undefined;
+    this.xcells = [];
+  }
+
   /**
    * Init XCells
    *
@@ -312,9 +316,9 @@ export default class XGraph {
     const model = this.graph.getModel();
     const cells = model.cells;
     this.xcells = [];
-    this.defaultXCellValues.id = undefined;
-    this.defaultXCellValues.value = undefined;
-    this.defaultXCellValues.metadata = undefined;
+    // this.defaultXCellValues.id = undefined;
+    // this.defaultXCellValues.value = undefined;
+    // this.defaultXCellValues.metadata = undefined;
     _.each(cells, (mxcell: mxCell) => {
       const xcell = XCell.refactore(this.graph, mxcell);
       this.xcells.push(xcell);
@@ -385,6 +389,11 @@ export default class XGraph {
    */
   refresh(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'refresh()');
+    this.cumulativeZoomFactor = 1;
+    if (this.graph) {
+      this.graph.zoomActual();
+      this.applyGraph();
+    }
     this.graph.refresh();
     trc.after();
     return this;
@@ -396,11 +405,11 @@ export default class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  destroyGraph(): this {
-    this.graph.destroy();
-    this.graph = undefined;
-    return this;
-  }
+  // destroyGraph(): this {
+  //   this.graph.destroy();
+  //   this.graph = undefined;
+  //   return this;
+  // }
 
   /**
    * lock cells
@@ -663,16 +672,18 @@ export default class XGraph {
    */
   getXCellValues(type: gf.TPropertieKey): string[] {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'getXCellValues()');
-    let values = this.defaultXCellValues[type];
-    if (values === undefined) {
-      this.initXCellValues(type);
-    }
-    values = this.defaultXCellValues[type];
-    if (values !== undefined) {
-      return Array.from(values.keys());
-    }
+    const values: string[] = [];
+    this.getXCells().forEach(c => values.push(c.getDefaultValue(type)));
+    // let values = this.defaultXCellValues[type];
+    // if (values === undefined) {
+    //   this.initXCellValues(type);
+    // }
+    // values = this.defaultXCellValues[type];
+    // if (values !== undefined) {
+    //   return Array.from(values.keys());
+    // }
     trc.after();
-    return [];
+    return values;
   }
 
   /**
@@ -681,31 +692,31 @@ export default class XGraph {
    * @param {gf.TPropertieKey} type
    * @memberof XGraph
    */
-  async initXCellValues(type: gf.TPropertieKey) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'initXCellValues()');
-    const xcells = this.getXCells();
-    let s: Set<string> = new Set();
-    xcells.forEach(x => {
-      if (type === 'id' || type === 'value') {
-        const value: any = x.getDefaultValue(type);
-        if (value !== null && value !== undefined && value.length > 0) {
-          s.add(value);
-        }
-      }
-      if (type === 'metadata') {
-        const values = x.getDefaultMetadatasKeys();
-        const length = values.length;
-        for (let i = 0; i < length; i++) {
-          const value = values[i];
-          if (value !== null && value !== undefined && value.length > 0) {
-            s.add(value);
-          }
-        }
-      }
-    });
-    this.defaultXCellValues[type] = s;
-    trc.after();
-  }
+  // async initXCellValues(type: gf.TPropertieKey) {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'initXCellValues()');
+  //   const xcells = this.getXCells();
+  //   let s: Set<string> = new Set();
+  //   xcells.forEach(x => {
+  //     if (type === 'id' || type === 'value') {
+  //       const value: any = x.getDefaultValue(type);
+  //       if (value !== null && value !== undefined && value.length > 0) {
+  //         s.add(value);
+  //       }
+  //     }
+  //     if (type === 'metadata') {
+  //       const values = x.getDefaultMetadatasKeys();
+  //       const length = values.length;
+  //       for (let i = 0; i < length; i++) {
+  //         const value = values[i];
+  //         if (value !== null && value !== undefined && value.length > 0) {
+  //           s.add(value);
+  //         }
+  //       }
+  //     }
+  //   });
+  //   this.defaultXCellValues[type] = s;
+  //   trc.after();
+  // }
 
   /**
    * Get the XCell according id
@@ -1050,11 +1061,7 @@ export default class XGraph {
    */
   eventKey(evt: KeyboardEvent) {
     if (!mxEvent.isConsumed(evt) && evt.keyCode === 27 /* Escape */) {
-      this.cumulativeZoomFactor = 1;
-      if (this.graph) {
-        this.graph.zoomActual();
-        this.applyGraph();
-      }
+      this.refresh();
     }
   }
 
@@ -1263,5 +1270,27 @@ export default class XGraph {
         $GF.log.error('Error in preview', error);
       }
     }
+  }
+
+  //
+  // Events
+  //
+  async onDestroy() {
+    this.clear();
+  }
+
+  async onRefresh() {
+    this.refresh();
+  }
+
+  async onInit() {
+    this.xgraph.onInit();
+    this.stateHandler?.onInit();
+  }
+
+  async onChange() {
+    this.clear();
+    this.initGraph();
+    this.drawGraph();
   }
 }
