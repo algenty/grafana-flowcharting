@@ -42,6 +42,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   };
   containerDivId: string;
   static templateUrl: string;
+  flags = {
+    refresh_graph: new Set<string>(),
+    change_graph: new Set<string>(),
+    refresh_datas: new Set<string>(),
+    change_datas: new Set<string>(),
+    refresh_rules: new Set<string>(),
+    change_rules: new Set<string>(),
+    refresh_graphHover: new Set<string>(),
+    // hiddenChange: new Set<string>(),
+  };
   /**@ngInject*/
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
@@ -142,19 +152,20 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRefresh() {
+    $GF.log.debug(this.constructor.name + "/onRefresh");
     this.onRender();
   }
 
   onVarChanged() {
+    $GF.log.debug(this.constructor.name + "/onVarChanged");
     if (this.flowchartHandler !== undefined) {
-      this.flowchartHandler.onSourceChange();
+      this.flowchartHandler.onChangeGraph();
       this.flowchartHandler.render();
     }
   }
 
   onRender() {
-    $GF.log.debug('EVENT : ', this.id, 'onRender', this);
-    $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
+    $GF.log.debug(this.constructor.name + "/onRender");
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();
@@ -163,21 +174,20 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.import(panelClone.flowchartsData);
       this.rulesHandler.clear();
       this.rulesHandler.import(panelClone.rulesData);
-      this.flowchartHandler.onSourceChange();
+      this.flowchartHandler.onChangeGraph();
       this.flowchartHandler.render();
     }
   }
 
   onDataReceived(dataList) {
+    $GF.log.debug(this.constructor.name + "/onDataReceived");
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
     if (!!this.metricHandler) {
       this.metricHandler?.setDataList(dataList);
-      this.metricHandler?.onRefresh();
-      if (!!this.flowchartHandler) {
-        this.flowchartHandler.onDatasChange();
-      }
+      this.flagEvent($GF.CONSTANTS.EVENT_CHG_DATAS);
+      this.flowchartHandler?.onRefresh();
     }
-    this.render();
+    // this.render();
     trc.after();
     $GF.trace.resume();
   }
@@ -322,6 +332,43 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.setPreviousFlowchart();
     }
   }
+
+  //
+  // EVENTS
+  //
+  flagEvent(type: string, name?: string): this {
+    if (name !== undefined) {
+      this.flags[type].add(name);
+    } else {
+      this.flowchartHandler?.getFlowcharts().forEach(flowchart => {
+        const name = flowchart.getName();
+        this.flags[type].add(name);
+      });
+    }
+    return this;
+  }
+
+  isFlagedEvent(type: string, name?: string): boolean {
+    if (name === undefined) {
+      return this.flags[type].size > 0;
+    }
+    return this.flags[type].has(name);
+  }
+
+  ackFlagEvent(type: string, name?: string): void {
+    $GF.log.debug('aknowledgeFlagChange', type, name);
+    if (name === undefined) {
+      this.flags[type].clear();
+    } else {
+      this.flags[type].delete(name);
+    }
+  }
+
+  // getFlagNames(type: gf.TFlowchartFlagKeys): string[] {
+  //   let result: string[] = [];
+  //   this.flags[type].forEach(value => result.push(value));
+  //   return result;
+  // }
 
   // exportSVG() {
   //   const scope = this.$scope.$new(true);

@@ -15,10 +15,6 @@ import { ObjectMetric } from 'metric_class';
 export class State {
   xcell: XCell; // mxCell State
   uid: string; // cell ID in mxcell
-  // newcellId: string | undefined; // for inspect mode
-  // previousId: string | undefined; // for inspect mode
-  // edited: boolean | undefined; // if modified in inspector
-  // edit: boolean | undefined; // if modified in inspector
   xgraph: XGraph;
   changed = false;
   matched = false;
@@ -119,7 +115,7 @@ export class State {
    * @memberof State
    */
   setCycle(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setState()');
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'setCycle()');
     console.log("State -> setState -> this.rules", this.rules);
     this.rules.forEach(rule => {
       let beginPerf = Date.now();
@@ -450,19 +446,24 @@ export class State {
   //
   // Events
   //
-  async onDestroy() {}
+  async onDestroy() {
+    $GF.log.debug(this.constructor.name + "/onDestroy : " + this.uid);
+  }
 
   async onRefresh() {
+    $GF.log.debug(this.constructor.name + "/onRefresh : " + this.uid);
     this.prepareCycle();
     this.setCycle();
     this.applyCycle();
   }
 
   async onInit() {
+    $GF.log.debug(this.constructor.name + "/onInit : " + this.uid);
     this.onChange();
   }
 
   async onChange() {
+    $GF.log.debug(this.constructor.name + "/onChange : " + this.uid);
     this.onRefresh();
   }
 }

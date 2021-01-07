@@ -284,30 +284,22 @@ export class Flowchart {
    *
    * @memberof Flowchart
    */
-  refreshGraphOptions() {
+  refreshGraph() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
     if (this.xgraph) {
-      this.xgraph.changeOptions();
+      // this.xgraph.applyOptions();
+      this.xgraph?.onRefresh();
     }
     trc.after();
   }
 
-  /**
-   * Refresh graph
-   *
-   * @memberof Flowchart
-   */
-  refreshGraph(): this {
-    this.xgraph?.refresh();
-    return this;
-  }
 
   refreshStates() {
     this.stateHandler?.refresh();
   }
 
   refresh() {
-    this.refreshGraphOptions()
+    this.refreshGraph()
     this.refreshGraph();
     this.refreshStates();
   }
@@ -318,9 +310,9 @@ export class Flowchart {
    * @param {*} xmlGraph
    * @memberof Flowchart
    */
-  redraw(content?: string) {
+  setContent(content?: string) {
     if (content !== undefined) {
-      this.setContent(content);
+      this.setGraphContent(content);
     }
     if (this.xgraph !== undefined) {
       this.xgraph.setContent(this.getContent());
@@ -617,7 +609,7 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  setContent(content: string): this {
+  setGraphContent(content: string): this {
     if (this.data.type === 'xml') {
       this.data.xml = content;
     }
@@ -655,7 +647,7 @@ export class Flowchart {
     if (this.xgraph) {
       this.data.xml = this.xgraph.getXmlModel();
     }
-    this.redraw();
+    this.setContent();
     return this;
   }
 
@@ -754,17 +746,15 @@ export class Flowchart {
   }
 
   toFront(forceRefresh: boolean = false): this {
-    $GF.log.debug('toFront', this.data.name);
     this.visible = true;
     this.container.className = 'gf-flowchartShow';
     if (forceRefresh) {
-      this.refreshGraphOptions();
+      this.refreshGraph();
     }
     return this;
   }
 
   toBack(): this {
-    $GF.log.debug('toBack', this.data.name);
     this.visible = false;
     this.container.className = 'gf-flowchartHide';
     return this;

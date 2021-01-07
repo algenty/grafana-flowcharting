@@ -49,13 +49,16 @@ class GFCONSTANT {
   VAR_STR_METRIC: gf.TVariableKeys = '_metric';
 
   // FLOWCHART CHANGE KEY FLAG
-  FLOWCHART_CHG_SOURCES: gf.TFlowchartFlagKeys = 'sources';
-  FLOWCHART_CHG_OPTIONS: gf.TFlowchartFlagKeys = 'options';
-  FLOWCHART_APL_OPTIONS: gf.TFlowchartFlagKeys = 'applyOptions';
-  FLOWCHART_CHG_DATAS: gf.TFlowchartFlagKeys = 'datas';
-  FLOWCHART_CHG_RULES: gf.TFlowchartFlagKeys = 'rules';
-  FLOWCHART_CHG_GRAPHHOVER: gf.TFlowchartFlagKeys = 'graphHover';
-  FLOWCHART_CHG_HIDDENCHANGE: gf.TFlowchartFlagKeys = 'hiddenChange';
+  EVENT_REF_FLOWCHARTS: string = 'refresh_graph';
+  EVENT_CHG_FLOWCHARTS: string = 'change_graph';
+  EVENT_REF_DATAS: string = 'refresh_datas';
+  EVENT_CHG_DATAS: string = 'change_datas';
+  EVENT_REF_RULES: string = 'refresh_rules';
+  EVENT_CHG_RULES: string = 'change_rules';
+  EVENT_REF_STATES: string = 'refresh_rules';
+  EVENT_CHG_STATES: string = 'change_rules';
+  EVENT_REF_GRAPHOVER: string = 'refresh_graphHover';
+  // FLOWCHART_CHG_HIDDENCHANGE: gf.TFlowchartFlagKeys = 'hiddenChange';
 
   // TRACE AND DEBUG
   VAR_GF_TRACE_PERF = true;
@@ -431,7 +434,7 @@ class GFLog {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  static logLevel = GFLog.WARN;
+  static logLevel = GFLog.DEBUG;
   static logDisplay = true;
   constructor() {}
 

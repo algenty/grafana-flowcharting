@@ -16,6 +16,7 @@ export class StateHandler {
   states: Map<string, State>;
   xgraph: XGraph;
   edited = false;
+  uid:string = $GF.utils.uniqueID();
   ctrl: FlowchartCtrl;
 
   /**
@@ -264,7 +265,6 @@ export class StateHandler {
   // }
 
   refresh(): this {
-    this.states.forEach(s => s.onRefresh());
     return this;
   }
 
@@ -272,18 +272,24 @@ export class StateHandler {
   // Events
   //
   async onDestroy() {
+    $GF.log.debug(this.constructor.name + "/onDestroy : " + this.uid);
+    
     this.clear();
   }
 
   async onRefresh() {
+    $GF.log.debug(this.constructor.name + "/onRefresh : " + this.uid);
     this.states.forEach(s => s.onRefresh());
+    this.refresh();
   }
 
   async onInit() {
+    $GF.log.debug(this.constructor.name + "/onInit : " + this.uid);
     this.states.forEach(s => s.onInit());
   }
 
   async onChange() {
+    $GF.log.debug(this.constructor.name + "/onChange : " + this.uid);
     this.initStates();
     this.onRefresh();
   }

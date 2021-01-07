@@ -157,7 +157,7 @@ export class FlowchartsOptionsCtrl {
    */
   onSourceChange() {
     const name = this.flowchartHandler?.getCurrentFlowchartName();
-    this.flowchartHandler?.onSourceChange(name);
+    this.flowchartHandler?.onChangeGraph(name);
     this.flowchartHandler?.onRulesChange();
     this.onOptionChange();
     this.render();

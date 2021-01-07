@@ -325,7 +325,7 @@ export class XGraph {
    * @return this
    * @memberof XGraph
    */
-  changeOptions(): this {
+  applyOptions(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyGraph()');
     if (!this.scale) {
       this.zoomGraph(this.zoomPercent);
@@ -359,7 +359,7 @@ export class XGraph {
     this.cumulativeZoomFactor = 1;
     if (this.graph) {
       this.graph.zoomActual();
-      this.changeOptions();
+      this.applyOptions();
     }
     this.graph.refresh();
     trc.after();
