@@ -1,9 +1,9 @@
 import { Flowchart } from 'flowchart_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 import { $GF } from 'globals_class';
-import { ObjectMetric, SerieMetric, TableMetric } from 'metric_class';
+import { Metric, ObjectMetric, SerieMetric, TableMetric } from 'metric_class';
 import { Rule } from 'rule_class';
-import { Subject, Subscription } from 'rxjs';
+import { Observer, Subject, Subscription } from 'rxjs';
 import { State } from 'state_class';
 
 export type TEventObject = Rule | Flowchart | ObjectMetric | State;
@@ -13,26 +13,55 @@ export type TEventName = 'changed' | 'refeshed' | 'initialized' | 'destroyed';
 //   uid?: string;
 // }
 export class EventHandler {
+  eventList: TEventList[] = ['rule', 'flowchart', 'metric', 'state'];
+  eventName: TEventName[] = ['changed', 'refeshed', 'initialized', 'destroyed'];
   ctrl: FlowchartCtrl;
-  observables: Map<string, Subject<TEventObject>> = new Map();
+  observables: Map<string, Subject<TEventObject | null>> = new Map();
   constructor(ctrl: FlowchartCtrl) {
     this.ctrl = ctrl;
   }
 
-  subscribe(object: TEventObject, list: TEventList, eventName: TEventName) {
+  subscribes(object: TEventObject) {
+    const listLen = this.eventList.length;
+    const nameLen = this.eventList.length;
+    for (let i = 0; i < listLen; i++) {
+      const list = this.eventList[i];
+      for (let j = 0; j < nameLen; j++) {
+        const eventName = this.eventName[j];
+        this.subscribe(object, list, eventName);
+      }
+    }
+  }
+
+  unsubscribes(object: TEventObject) {
+    const listLen = this.eventList.length;
+    const nameLen = this.eventList.length;
+    for (let i = 0; i < listLen; i++) {
+      const list = this.eventList[i];
+      for (let j = 0; j < nameLen; j++) {
+        const eventName = this.eventName[j];
+        this.unsubscribe(object, list, eventName);
+      }
+    }
+  }
+
+  subscribe(object: Object, list: TEventList, eventName: TEventName) {
     try {
       const mapName = `${list}$${eventName}`;
       const subscriptionName = mapName;
       const funcName = `get${list.charAt(0).toUpperCase()}${list.slice(1)}$${eventName}`;
-      if (object !== undefined && object[funcName] === undefined) {
-        throw new Error(`Object ${funcName} not found in ${object?.constructor.name}`);
+      if (object !== undefined) {
+        let funcObject = object[funcName];
+        if (funcObject === undefined) {
+          funcObject = this._getDefaultObserver;
+        }
+        let observable = this.observables.get(mapName);
+        if (observable === undefined) {
+          observable = new Subject();
+          this.observables.set(mapName, observable);
+        }
+        object[subscriptionName] = observable.subscribe(object[funcName]());
       }
-      let observable = this.observables.get(mapName);
-      if (observable === undefined) {
-        observable = new Subject();
-        this.observables.set(mapName, observable);
-      }
-      object[subscriptionName] = observable.subscribe(object[funcName]());
     } catch (error) {
       $GF.log.error(error);
     }
@@ -51,7 +80,7 @@ export class EventHandler {
     }
   }
 
-  emit(object: TEventObject, eventName: TEventName) {
+  async emit(object: TEventObject, eventName: TEventName) {
     try {
       const mapName = this._getObservableName(object, eventName);
       let observable = this.observables.get(mapName);
@@ -64,6 +93,19 @@ export class EventHandler {
     }
   }
 
+  async ack(list: TEventList, eventName: TEventName) {
+    try {
+      const mapName = `${list}$${eventName}`;
+      let observable = this.observables.get(mapName);
+      if (observable === undefined) {
+        observable = new Subject();
+      }
+      observable.next(null);
+    } catch (error) {
+      $GF.log.error(error);
+    }
+  }
+
   _getObservableName(object: TEventObject, eventName: TEventName) {
     if (object instanceof Rule) {
       return `rule$${eventName}`;
@@ -71,12 +113,20 @@ export class EventHandler {
     if (object instanceof Flowchart) {
       return `flowchart$${eventName}`;
     }
-    if (object instanceof SerieMetric || object instanceof TableMetric) {
+    if (object instanceof SerieMetric || object instanceof TableMetric || object instanceof Metric) {
       return `metric$${eventName}`;
     }
     if (object instanceof State) {
       return `state$${eventName}`;
     }
     throw new Error('Unknown object instance');
+  }
+
+  _getDefaultObserver():Observer<TEventObject> {
+    return {
+      next: () => {},
+      error: () => {},
+      complete: () => {},
+    }
   }
 }

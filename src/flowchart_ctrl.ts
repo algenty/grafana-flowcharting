@@ -12,6 +12,7 @@ import { XGraph } from 'graph_class';
 import grafana from 'grafana_func';
 import { defaults as _defaults, cloneDeep as _cloneDeep } from 'lodash';
 import { InteractiveMap } from 'mapping_class';
+import { EventHandler } from 'eventHandler';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
   $rootScope: any;
@@ -28,6 +29,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
+  eventHandler : EventHandler;
   onMapping: InteractiveMap;
   id: String;
   GHApplied = false;
@@ -67,6 +69,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.rulesHandler = undefined;
     this.flowchartHandler = undefined;
     this.metricHandler = undefined;
+    this.eventHandler = new EventHandler(this);
     this.onMapping = new InteractiveMap();
     this.parentDiv = document.createElement('div');
     this.flowchartsDiv = document.createElement('div');
