@@ -179,8 +179,8 @@ export class FlowchartsOptionsCtrl {
    * @memberof FlowchartOptionsCtrl
    */
   onOptionChange() {
-    const name = this.flowchartHandler?.getCurrentFlowchartName();
-    this.flowchartHandler?.onOptionsChange(name);
+    // const name = this.flowchartHandler?.getCurrentFlowchartName();
+    this.flowchartHandler?.onRefresh();
     this.render();
   }
 

@@ -8,7 +8,6 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
  */
 export class FlowchartHandler {
   parentDiv: HTMLDivElement;
-  // $scope: ng.IScope;
   ctrl: FlowchartCtrl;
   flowcharts: Flowchart[] = [];
   currentFlowchartName = 'Main'; // name of current Flowchart
@@ -19,7 +18,6 @@ export class FlowchartHandler {
   sequenceNumber = 0; // Sequence Number for a name
   static defaultXml: string; // Default XML
   static defaultCsv: string; // Default CSV
-  // onMapping: gf.TIOnMappingObj = FlowchartHandler.getDefaultMapping(); // For link mapping, sharing
   onMapping: InteractiveMap; // For link mapping, sharing
   mousedownTimeout = 0;
   mousedown = 0;
@@ -393,7 +391,7 @@ export class FlowchartHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
     // not repeat render if mouse down
     if (!this.mousedown) {
-      $GF.log.debug("RENDER Flags : ", this.ctrl.flags);
+      $GF.log.debug('RENDER Flags : ', this.ctrl.flags);
       // this.flagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
       // SOURCE
       // if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS)) {
@@ -576,7 +574,7 @@ export class FlowchartHandler {
   }
 
   refreshStates(): this {
-    this.flowcharts.forEach( f => {
+    this.flowcharts.forEach(f => {
       f.getStateHandler()?.onRefresh();
     });
     return this;
@@ -870,7 +868,7 @@ export class FlowchartHandler {
   }
 
   async onRefresh() {
-    $GF.log.debug(this.constructor.name + "/onRefresh");
+    $GF.log.debug(this.constructor.name + '/onRefresh');
     if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_REF_DATAS)) {
       await this.ctrl.metricHandler?.onChange();
       this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_DATAS);
@@ -881,29 +879,32 @@ export class FlowchartHandler {
       this.ctrl.flagEvent($GF.CONSTANTS.EVENT_REF_STATES);
       this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_RULES);
     }
-    if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_REF_STATES) || this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER) ) {
+    if (
+      this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_REF_STATES) ||
+      this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER)
+    ) {
       this.refreshStates();
       this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_STATES);
       this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER);
     }
     if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS)) {
       this.refreshFlowchart();
-      this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS)
+      this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS);
     }
   }
 
   async onInit() {
-    $GF.log.debug(this.constructor.name + "/onInit");
+    $GF.log.debug(this.constructor.name + '/onInit');
   }
 
   async onChange() {
-    $GF.log.debug(this.constructor.name + "/onChange");
+    $GF.log.debug(this.constructor.name + '/onChange');
     if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS)) {
       this.flowcharts.forEach(async f => await f.onChange());
       this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS);
       this.ctrl.flagEvent($GF.CONSTANTS.EVENT_CHG_RULES);
     }
-    if(this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_CHG_RULES)) {
+    if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_CHG_RULES)) {
       await this.ctrl.rulesHandler?.onChange();
       this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_CHG_RULES);
       this.ctrl.flagEvent($GF.CONSTANTS.EVENT_REF_STATES);

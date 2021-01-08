@@ -293,13 +293,12 @@ export class Flowchart {
     trc.after();
   }
 
-
   refreshStates() {
     this.stateHandler?.refresh();
   }
 
   refresh() {
-    this.refreshGraph()
+    this.refreshGraph();
     this.refreshGraph();
     this.refreshStates();
   }

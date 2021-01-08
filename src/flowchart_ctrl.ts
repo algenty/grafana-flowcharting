@@ -152,12 +152,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRefresh() {
-    $GF.log.debug(this.constructor.name + "/onRefresh");
+    $GF.log.debug(this.constructor.name + '/onRefresh');
     this.onRender();
   }
 
   onVarChanged() {
-    $GF.log.debug(this.constructor.name + "/onVarChanged");
+    $GF.log.debug(this.constructor.name + '/onVarChanged');
     if (this.flowchartHandler !== undefined) {
       this.flowchartHandler.onChangeGraph();
       this.flowchartHandler.render();
@@ -165,7 +165,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    $GF.log.debug(this.constructor.name + "/onRender");
+    $GF.log.debug(this.constructor.name + '/onRender');
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();
@@ -180,7 +180,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onDataReceived(dataList) {
-    $GF.log.debug(this.constructor.name + "/onDataReceived");
+    $GF.log.debug(this.constructor.name + '/onDataReceived');
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
     if (!!this.metricHandler) {
       this.metricHandler?.setDataList(dataList);

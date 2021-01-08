@@ -92,12 +92,12 @@ export class State {
     this.applyCycle();
   }
 
-  tagRule(rule : Rule):this {
+  tagRule(rule: Rule): this {
     this.rules.set(rule.uid, rule);
     return this;
   }
 
-  untagRule(rule : Rule): this {
+  untagRule(rule: Rule): this {
     this.rules.delete(rule.uid);
     return this;
   }
@@ -116,7 +116,7 @@ export class State {
    */
   setCycle(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setCycle()');
-    console.log("State -> setState -> this.rules", this.rules);
+    console.log('State -> setState -> this.rules', this.rules);
     this.rules.forEach(rule => {
       let beginPerf = Date.now();
       if (!rule.isHidden()) {
@@ -447,23 +447,23 @@ export class State {
   // Events
   //
   async onDestroy() {
-    $GF.log.debug(this.constructor.name + "/onDestroy : " + this.uid);
+    $GF.log.debug(this.constructor.name + '/onDestroy : ' + this.uid);
   }
 
   async onRefresh() {
-    $GF.log.debug(this.constructor.name + "/onRefresh : " + this.uid);
+    $GF.log.debug(this.constructor.name + '/onRefresh : ' + this.uid);
     this.prepareCycle();
     this.setCycle();
     this.applyCycle();
   }
 
   async onInit() {
-    $GF.log.debug(this.constructor.name + "/onInit : " + this.uid);
+    $GF.log.debug(this.constructor.name + '/onInit : ' + this.uid);
     this.onChange();
   }
 
   async onChange() {
-    $GF.log.debug(this.constructor.name + "/onChange : " + this.uid);
+    $GF.log.debug(this.constructor.name + '/onChange : ' + this.uid);
     this.onRefresh();
   }
 }

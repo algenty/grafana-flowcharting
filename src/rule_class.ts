@@ -2133,7 +2133,7 @@ export class Rule {
   }
 
   updateStates() {
-    console.log("Rule -> updateStates -> updateStates");
+    console.log('Rule -> updateStates -> updateStates');
     this.states.clear();
     this.shapeStates.clear();
     this.textStates.clear();
@@ -2214,23 +2214,23 @@ export class Rule {
   // Events
   //
   async onDestroy() {
-    $GF.log.debug(this.constructor.name + "/onDestroy : " + this.uid);
+    $GF.log.debug(this.constructor.name + '/onDestroy : ' + this.uid);
     this.clear();
   }
 
   async onRefresh() {
-    $GF.log.debug(this.constructor.name + "/onRefresh : " + this.uid);
+    $GF.log.debug(this.constructor.name + '/onRefresh : ' + this.uid);
     this.refresh();
   }
 
   async onInit() {
-    $GF.log.debug(this.constructor.name + "/onInit : " + this.uid);
+    $GF.log.debug(this.constructor.name + '/onInit : ' + this.uid);
     this.onRefresh();
     this.onChange();
   }
 
   async onChange() {
-    $GF.log.debug(this.constructor.name + "/onChange : " + this.uid);
+    $GF.log.debug(this.constructor.name + '/onChange : ' + this.uid);
     this.change();
   }
 }
