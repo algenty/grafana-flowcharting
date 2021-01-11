@@ -176,7 +176,7 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   clear(): this {
-    this.dataList = [];
+    // this.dataList = [];
     this.tables = [];
     this.series = [];
     this.metrics = [];
@@ -187,26 +187,31 @@ export class MetricHandler {
   // Updates
   //
   refresh() {
+    $GF.log.debug(this.constructor.name + '.refresh()');
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
     this.destroy();
     this.onInitialized();
     this.dataList.forEach(dl => {
       this.addMetric(dl);
     });
+    this.onRefreshed();
     trc.after();
   }
 
   change(): this {
+    $GF.log.debug(this.constructor.name + '.change()');
     this.onChanged();
     return this;
   }
 
   init(): this {
+    $GF.log.debug(this.constructor.name + '.init()');
     this.onInitialized();
     return this;
   }
 
   destroy(): this {
+    $GF.log.debug(this.constructor.name + '.destroy()');
     this.metrics.forEach(m => m.destroy());
     this.clear();
     this.onDestroyed();

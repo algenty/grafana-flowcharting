@@ -4,6 +4,7 @@ import { XGraph } from 'graph_class';
 import { $GF } from 'globals_class';
 import { XCell } from 'cell_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
+import { Observer } from 'rxjs';
 
 /**
  * States Handler class
@@ -26,8 +27,9 @@ export class StateHandler {
   constructor(xgraph: XGraph, ctrl: FlowchartCtrl) {
     this.states = new Map();
     this.xgraph = xgraph;
-    this.initStates();
+    // this.initStates();
     this.ctrl = ctrl;
+    this.init();
   }
 
   /**
@@ -261,27 +263,37 @@ export class StateHandler {
   // async async_applyStates() {
   //   this.applyStates();
   // }
+  matchXGraph(xgraph: XGraph): boolean {
+    return this.xgraph.uid === xgraph.uid;
+  }
 
   //
   // Updates
   //
   destroy(): this {
+    $GF.log.debug(this.constructor.name + '.destroy()');
+    this.states.forEach(s => s.destroy());
     this.clear();
     this.onDestroyed();
     return this;
   }
 
   refresh(): this {
+    $GF.log.debug(this.constructor.name + '.refresh()');
+    this.states.forEach(s => s.refresh());
     this.onRefreshed();
     return this;
   }
 
   change(): this {
+    $GF.log.debug(this.constructor.name + '.change()');
+    this.states.forEach(s => s.change());
     this.onChanged();
     return this;
   }
 
   init(): this {
+    $GF.log.debug(this.constructor.name + '.init()');
     this.initStates();
     this.onInitialized();
     return this;
@@ -292,6 +304,7 @@ export class StateHandler {
   //
   async onDestroyed() {
     $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    this.ctrl.eventHandler.unsubscribes(this);
   }
 
   async onRefreshed() {
@@ -299,11 +312,35 @@ export class StateHandler {
   }
 
   async onInitialized() {
-    this.ctrl.eventHandler.ack('state', 'initialized');
     $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    this.ctrl.eventHandler.subscribes(this);
+    this.ctrl.eventHandler.ack('state', 'initialized');
   }
 
   async onChanged() {
     $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
+  }
+
+  //
+  // RXJS
+  //
+  getGraph$changed(): Observer<XGraph> {
+    const self = this;
+    return {
+      next: (xgraph: XGraph) => {
+        if (xgraph !== null && this.matchXGraph(xgraph)) {
+          self.destroy();
+          self.setXGraph(xgraph);
+          self.init();
+          self.change();
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {
+        $GF.log.debug(this.constructor.name + '.getGraph$changed().complete()');
+      },
+    };
   }
 }

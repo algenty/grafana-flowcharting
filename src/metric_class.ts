@@ -119,6 +119,7 @@ export class Metric {
   }
 
   init(): this {
+    this.onInitialized();
     return this;
   }
 
@@ -137,19 +138,19 @@ export class Metric {
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
     this.ctrl.eventHandler.emit(this, 'refreshed');
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
     this.ctrl.eventHandler.subscribes(this);
     this.ctrl.eventHandler.emit(this, 'initialized');
     this.onChanged();
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
     this.ctrl.eventHandler.emit(this, 'changed');
   }
 }

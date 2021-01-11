@@ -510,23 +510,22 @@ export class State {
   // Events
   //
   async onDestroyed() {
-    $GF.log.debug(this.constructor.name + '/onDestroy : ' + this.uid);
+    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
     this.ctrl.eventHandler.unsubscribes(this);
     this.ctrl.eventHandler.emit(this, 'destroyed');
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onRefresh : ' + this.uid);
-    this.initCycle();
+    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onInit : ' + this.uid);
+    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
     this.ctrl.eventHandler.subscribes(this);
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onChange : ' + this.uid);
+    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
   }
 
   //

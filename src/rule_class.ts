@@ -2176,25 +2176,25 @@ export class Rule {
   // Events
   //
   async onDestroyed() {
-    $GF.log.debug(this.constructor.name + '/onDestroy : ' + this.uid);
+    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
     this.ctrl.eventHandler.emit(this, 'destroyed');
     this.ctrl.eventHandler.unsubscribes(this);
     this.clear();
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onRefresh : ' + this.uid);
+    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
     this.ctrl.eventHandler.emit(this, 'refreshed');
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onInit : ' + this.uid);
+    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
     this.ctrl.eventHandler.subscribes(this);
     this.ctrl.eventHandler.emit(this, 'initialized');
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onChange : ' + this.uid);
+    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
     this.ctrl.eventHandler.emit(this, 'changed');
   }
 
@@ -2205,6 +2205,7 @@ export class Rule {
     const self = this;
     return {
       next: (metric: ObjectMetric) => {
+        $GF.log.debug('RULE Metric$changed: Received : ', metric)
         if (metric !== null && self.matchMetric(metric)) {
           self.metrics.set(metric.uid, metric);
           self.onRefreshed();
@@ -2213,7 +2214,9 @@ export class Rule {
       error: err => {
         $GF.log.error(err);
       },
-      complete: () => {},
+      complete: () => {
+        $GF.log.debug(this.constructor.name + '.getMetric$changed().complete()');
+      },
     };
   }
 
@@ -2222,6 +2225,7 @@ export class Rule {
     return {
       next: (metric: ObjectMetric) => {
         if (metric === null) {
+          $GF.log.debug('RULE Metric$initialized: Received ACK', metric)
           self.metrics.clear();
           self.refresh();
         }
@@ -2229,7 +2233,9 @@ export class Rule {
       error: err => {
         $GF.log.error(err);
       },
-      complete: () => {},
+      complete: () => {
+        $GF.log.debug(this.constructor.name + '.getMetric$initialized().complete()');
+      },
     };
   }
 }

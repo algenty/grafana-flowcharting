@@ -18,7 +18,8 @@
     </gf-form-switch>
 
     <!-- STATES MAPPING -->
-    <ng-include src="$GF.plugin.getPartialPath() + 'inspect/states/statesSection.html'" ng-if="editor.enable"> </ng-include>
+    <ng-include src="$GF.plugin.getPartialPath() + 'inspect/states/statesSection.html'" ng-if="editor.enable">
+    </ng-include>
     <hr />
 
   </div>
@@ -42,8 +43,7 @@
         <button class="btn btn-inverse" ng-click="editor.anonymize()">
           <div class="css-1cvxpvr">
             <svg aria-hidden="true" focusable="false" data-prefix="fad" data-icon="mask" role="img"
-            class="svg-inline--fa fa-mask fa-w-20"
-              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"
+              class="svg-inline--fa fa-mask fa-w-20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"
               style="--fa-secondary-opacity:0.1;display: inline-block;font-size: inherit;height: 1em;overflow: visible;vertical-align: -0.125em">
               <g class="fa-group">
                 <path fill="currentColor"
@@ -56,6 +56,11 @@
             </svg>
           </div>
           &nbsp;Anonymize
+        </button>
+      </div>
+      <div class="gf-form">
+        <button class="btn btn-inverse" ng-click="editor.debugCtrl()">
+          &nbsp;DEBUG
         </button>
       </div>
     </div>

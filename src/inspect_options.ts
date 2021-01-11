@@ -237,6 +237,10 @@ export class InspectOptionsCtrl {
       xg.anonymize();
     }
   }
+
+  debugCtrl() {
+    console.log(this.ctrl);
+  }
 }
 
 /** @ngInject */

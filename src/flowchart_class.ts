@@ -26,6 +26,7 @@ export class Flowchart {
     this.data.name = name;
     this.container = container;
     this.ctrl = ctrl;
+    this.init();
   }
 
   /**
@@ -96,7 +97,7 @@ export class Flowchart {
     if (!!obj.bgColor) {
       this.data.bgColor = obj.bgColor;
     }
-    this.init();
+    this.change();
     return this;
   }
 
@@ -163,52 +164,76 @@ export class Flowchart {
   //   return this;
   // }
 
+  initStateHandler(): this {
+    if(this.xgraph) {
+      this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
+    }
+    return this;
+  }
+
   /**
    * Initialisation of flowchart class
    *
    * @return {this}
    * @memberof Flowchart
    */
-  // init(): this {
-  //   try {
-  //     const content = this.getContent();
-  //     if (this.xgraph === undefined) {
-  //       this.xgraph = new XGraph(this.container, this.data.type, content, this.ctrl);
-  //     }
-  //     if (content !== undefined && content !== null) {
-  //       if (this.data.enableAnim) {
-  //         this.xgraph.enableAnim(true);
-  //       } else {
-  //         this.xgraph.enableAnim(false);
-  //       }
-  //       this.setOptions();
-  //       this.xgraph.drawGraph();
-  //       if (this.data.tooltip) {
-  //         this.xgraph.tooltipGraph(true);
-  //       }
-  //       if (this.data.scale) {
-  //         this.xgraph.scaleGraph(true);
-  //       } else {
-  //         this.xgraph.zoomGraph(this.data.zoom);
-  //       }
-  //       if (this.data.center) {
-  //         this.xgraph.centerGraph(true);
-  //       }
-  //       if (this.data.lock) {
-  //         this.xgraph.lockGraph(true);
-  //       }
-  //       this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
-  //       this.ctrl.clearNotify();
-  //     } else {
-  //       this.ctrl.notify('Source content empty Graph not defined', 'error');
-  //       $GF.log.error('Source content empty Graph not defined');
-  //     }
-  //   } catch (error) {
-  //     this.ctrl.notify('Unable to initialize graph', 'error');
-  //     $GF.log.error('Unable to initialize graph', error);
-  //   }
-  //   return this;
-  // }
+  initGraph(): this {
+    try {
+      const content = this.getContent();
+      if (this.xgraph === undefined) {
+        this.xgraph = new XGraph(this.container, this.data.type, content, this.ctrl);
+      }
+    } catch (error) {
+      this.ctrl.notify('Unable to initialize graph', 'error');
+      $GF.log.error('Unable to initialize graph', error);
+    }
+    return this;
+  }
+
+  changeGraph(): this {
+    try {
+      const content = this.getContent();
+      if (this.xgraph === undefined) {
+        this.initGraph();
+      }
+      if (content !== undefined && content !== null) {
+        if (this.data.enableAnim) {
+          this.xgraph?.enableAnim(true);
+        } else {
+          this.xgraph?.enableAnim(false);
+        }
+        this.setGraphOptions(); //TODO :simplify
+        this.xgraph?.setContent(content);
+        this.xgraph?.change(); //TODO : move to change
+        //TODO : already in setOptions, if yes call xgraph.change();
+        // if (this.data.tooltip) {
+        //   this.xgraph?.tooltipGraph(true);
+        // }
+        // if (this.data.scale) {
+        //   this.xgraph?.scaleGraph(true);
+        // } else {
+        //   this.xgraph?.zoomGraph(this.data.zoom);
+        // }
+        // if (this.data.center) {
+        //   this.xgraph?.centerGraph(true);
+        // }
+        // if (this.data.lock) {
+        //   this.xgraph?.lockGraph(true);
+        // }
+        // if(this.xgraph) {
+        //   this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
+        // }
+        this.ctrl.clearNotify();
+      } else {
+        this.ctrl.notify('Source content empty Graph not defined', 'error');
+        $GF.log.error('Source content empty Graph not defined');
+      }
+    } catch (error) {
+      this.ctrl.notify('Unable to initialize graph', 'error');
+      $GF.log.error('Unable to initialize graph', error);
+    }
+    return this;
+  }
 
   /**
    * Get states handler
@@ -253,15 +278,17 @@ export class Flowchart {
    *
    * @memberof Flowchart
    */
-  setOptions(): this {
+  setGraphOptions(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setOptions()');
+    // TODO: simplify it
+    this.xgraph?.enableAnim(this.data.enableAnim);
     this.setScale(this.data.scale);
     this.setCenter(this.data.center);
     this.setGrid(this.data.grid);
     this.setTooltip(this.data.tooltip);
     this.setLock(this.data.lock);
     this.setZoom(this.data.zoom);
-    this.setBgColor(this.data.bgColor);
+    // this.setBgColor(this.data.bgColor);
     trc.after();
     return this;
   }
@@ -284,13 +311,13 @@ export class Flowchart {
    *
    * @memberof Flowchart
    */
-  refreshGraph() {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
-    if (this.xgraph) {
-      this.xgraph?.refresh();
-    }
-    trc.after();
-  }
+  // refreshGraph() {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
+  //   if (this.xgraph) {
+  //     this.xgraph?.refresh();
+  //   }
+  //   trc.after();
+  // }
 
   // refreshStates() {
   //   this.stateHandler?.refresh();
@@ -317,15 +344,15 @@ export class Flowchart {
    *
    * @memberof Flowchart
    */
-  reload() {
-    if (this.xgraph !== undefined && this.xgraph !== null) {
-      // this.xgraph.destroyGraph();
-      this.xgraph = undefined;
-      this.init();
-    } else {
-      this.init();
-    }
-  }
+  // reload() {
+  //   if (this.xgraph !== undefined && this.xgraph !== null) {
+  //     // this.xgraph.destroyGraph();
+  //     this.xgraph = undefined;
+  //     this.init();
+  //   } else {
+  //     this.init();
+  //   }
+  // }
 
   /**
    * Reset/empty/destroy flowchart
@@ -439,13 +466,15 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  setBgColor(bgColor: string | null): this {
-    this.data.bgColor = bgColor;
-    if (this.xgraph) {
-      this.xgraph.bgColor = bgColor;
-    }
-    return this;
-  }
+  // setBgColor(bgColor: string | null): this {
+  //   this.data.bgColor = bgColor;
+  //   if (bgColor) {
+  //     this.container.style.backgroundColor = bgColor; 
+  //   } else {
+  //     this.container.style.backgroundColor = ''; 
+  //   }
+  //   return this;
+  // }
 
   /**
    * Apply Background color
@@ -454,15 +483,15 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  ApplyBgColor(bgColor: string): this {
-    this.data.bgColor = bgColor;
-    if (bgColor) {
-      if (this.xgraph) {
-        this.xgraph.bgGraph(bgColor);
-      }
-    }
-    return this;
-  }
+  // ApplyBgColor(bgColor: string): this {
+  //   this.data.bgColor = bgColor;
+  //   if (bgColor) {
+  //     if (this.xgraph) {
+  //       this.xgraph.bgGraph(bgColor);
+  //     }
+  //   }
+  //   return this;
+  // }
 
   /**
    * Apply scale parameter
@@ -741,7 +770,7 @@ export class Flowchart {
     this.visible = true;
     this.container.className = 'gf-flowchartShow';
     if (forceRefresh) {
-      this.refreshGraph();
+      this.xgraph?.refresh();
     }
     return this;
   }
@@ -760,20 +789,34 @@ export class Flowchart {
   // Updates
   //
   destroy(): this {
+    this.xgraph?.destroy();
+    this.stateHandler?.destroy();
     this.clear();
     this.onDestroyed();
     return this;
   }
 
   refresh(): this {
-    this.refreshGraph();
+    this.xgraph?.refresh();
+    // this.stateHandler?.refresh();
     // this.refreshStates();
     this.onRefreshed();
     return this;
   }
 
+  change(): this {
+    this.changeGraph();
+    // this.xgraph?.change();
+    // this.setGraphOptions();
+    // this.xgraph?.change();
+    // this.stateHandler?.change(); // managed by RXJS event
+    this.onChanged();
+    return this;
+  }
+  
   init(): this {
-    this.setOptions();
+    this.initGraph();
+    this.initStateHandler();
     this.onInitialized();
     return this;
   }

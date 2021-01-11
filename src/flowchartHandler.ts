@@ -647,7 +647,7 @@ export class FlowchartHandler {
       });
     } else {
       const flowchart = this.getFlowchart(name);
-      flowchart.setOptions();
+      flowchart.setGraphOptions();
       // this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS, name);
       // this.flagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS, name);
       if (!flowchart.isVisible()) {

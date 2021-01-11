@@ -39,7 +39,7 @@ export class XGraph {
   cumulativeZoomFactor = 1;
   grid = false;
   uid = $GF.utils.uniqueID();
-  bgColor: string | null = null;
+  // bgColor: string | null = null;
   zoomPercent = '1';
   // defaultXCellValues: TXGraphDefaultValues = {
   //   id: undefined,
@@ -232,7 +232,9 @@ export class XGraph {
    */
   drawGraph(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'drawGraph()');
-    console.trace();
+    if(this.graph == undefined) {
+      this.initMxGraph();
+    }
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
@@ -266,10 +268,8 @@ export class XGraph {
   }
 
   clear() {
-    this.graph.model.clear();
-    this.graph.view.scale = 1;
-    this.graph.destroy();
-    this.graph = undefined;
+    // this.graph.model.clear();
+    // this.graph.view.scale = 1;
     this.xcells = [];
   }
 
@@ -283,9 +283,6 @@ export class XGraph {
     const model = this.graph.getModel();
     const cells = model.cells;
     this.xcells = [];
-    // this.defaultXCellValues.id = undefined;
-    // this.defaultXCellValues.value = undefined;
-    // this.defaultXCellValues.metadata = undefined;
     _each(cells, (mxcell: mxCell) => {
       const xcell = XCell.refactore(this.graph, mxcell);
       this.xcells.push(xcell);
@@ -340,7 +337,7 @@ export class XGraph {
       this.centerGraph(this.center);
     }
     this.gridGraph(this.grid);
-    this.bgGraph(this.bgColor);
+    // this.bgGraph(this.bgColor);
     this.graph.foldingEnabled = true;
     this.graph.cellRenderer.forceControlClickHandler = true;
     trc.after();
@@ -371,11 +368,11 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  // destroyGraph(): this {
-  //   this.graph.destroy();
-  //   this.graph = undefined;
-  //   return this;
-  // }
+  destroyGraph(): this {
+    this.graph.destroy();
+    this.graph = undefined;
+    return this;
+  }
 
   /**
    * lock cells
@@ -564,16 +561,16 @@ export class XGraph {
    * @param {this} bgColor
    * @memberof XGraph
    */
-  bgGraph(bgColor): this {
-    const $div = $(this.container);
-    if (bgColor) {
-      this.bgColor = bgColor;
-      $div.css('background-color', bgColor);
-    } else {
-      $div.css('background-color', '');
-    }
-    return this;
-  }
+  // bgGraph(bgColor): this {
+  //   const $div = $(this.container);
+  //   if (bgColor) {
+  //     this.bgColor = bgColor;
+  //     $div.css('background-color', bgColor);
+  //   } else {
+  //     $div.css('background-color', '');
+  //   }
+  //   return this;
+  // }
 
   /**
    * Return mxgraph object
@@ -614,7 +611,7 @@ export class XGraph {
     if (this.type === 'csv') {
       this.csvGraph = content;
     }
-    this.drawGraph();
+    // this.drawGraph();
     trc.after();
     return this;
   }
@@ -1272,13 +1269,16 @@ export class XGraph {
   }
 
   destroy(): this {
+    this.destroyGraph();
     this.clear();
+    this.onDestroyed();
     return this;
   }
 
   change(): this {
-    this.init();
+    // this.init();
     this.drawGraph();
+    this.onChanged();
     return this;
   }
 
@@ -1292,17 +1292,21 @@ export class XGraph {
   //
   async onDestroyed() {
     $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    this.ctrl.eventHandler.emit(this, 'destroyed');
   }
 
   async onRefreshed() {
     $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
+    this.ctrl.eventHandler.emit(this, 'refreshed');
   }
 
   async onInitialized() {
     $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    this.ctrl.eventHandler.emit(this, 'initialized');
   }
 
   async onChanged() {
     $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
+    this.ctrl.eventHandler.emit(this, 'changed');
   }
 }

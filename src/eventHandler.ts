@@ -5,15 +5,16 @@ import { Metric, ObjectMetric, SerieMetric, TableMetric } from 'metric_class';
 import { Rule } from 'rule_class';
 import { Observer, Subject, Subscription } from 'rxjs';
 import { State } from 'state_class';
+import { XGraph } from 'graph_class';
 
-export type TEventObject = Rule | Flowchart | ObjectMetric | State | Metric;
-export type TEventList = 'rule' | 'flowchart' | 'metric' | 'state';
+export type TEventObject = Rule | Flowchart | ObjectMetric | State | Metric | XGraph;
+export type TEventList = 'rule' | 'flowchart' | 'metric' | 'state' | 'graph';
 export type TEventName = 'changed' | 'refreshed' | 'initialized' | 'destroyed';
 // export interface TEventObserver extends Observer<TEventObject> {
 //   uid?: string;
 // }
 export class EventHandler {
-  eventList: TEventList[] = ['rule', 'flowchart', 'metric', 'state'];
+  eventList: TEventList[] = ['rule', 'flowchart', 'metric', 'state', 'graph'];
   eventName: TEventName[] = ['changed', 'refreshed', 'initialized', 'destroyed'];
   ctrl: FlowchartCtrl;
   observables: Map<string, Subject<TEventObject | null>> = new Map();
@@ -21,7 +22,8 @@ export class EventHandler {
     this.ctrl = ctrl;
   }
 
-  subscribes(object: TEventObject) {
+  subscribes(object: Object) {
+    $GF.log.debug(this.constructor.name +'.subscribes()', object);
     const listLen = this.eventList.length;
     const nameLen = this.eventList.length;
     for (let i = 0; i < listLen; i++) {
@@ -33,7 +35,8 @@ export class EventHandler {
     }
   }
 
-  unsubscribes(object: TEventObject) {
+  unsubscribes(object: Object) {
+    $GF.log.debug(this.constructor.name +'.unsubscribes()', object);
     const listLen = this.eventList.length;
     const nameLen = this.eventList.length;
     for (let i = 0; i < listLen; i++) {
@@ -72,7 +75,7 @@ export class EventHandler {
     }
   }
 
-  unsubscribe(object: TEventObject, list: TEventList, eventName: TEventName) {
+  unsubscribe(object: Object, list: TEventList, eventName: TEventName) {
     try {
       const subscriptionName = `${list}$${eventName}`;
       if (object[subscriptionName] !== undefined) {
@@ -126,6 +129,9 @@ export class EventHandler {
     }
     if (object instanceof State) {
       return `state$${eventName}`;
+    }
+    if (object instanceof XGraph) {
+      return `graph$${eventName}`;
     }
     throw new Error('Unknown object instance');
   }
