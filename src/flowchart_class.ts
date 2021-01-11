@@ -169,46 +169,46 @@ export class Flowchart {
    * @return {this}
    * @memberof Flowchart
    */
-  init(): this {
-    try {
-      const content = this.getContent();
-      if (this.xgraph === undefined) {
-        this.xgraph = new XGraph(this.container, this.data.type, content, this.ctrl);
-      }
-      if (content !== undefined && content !== null) {
-        if (this.data.enableAnim) {
-          this.xgraph.enableAnim(true);
-        } else {
-          this.xgraph.enableAnim(false);
-        }
-        this.setOptions();
-        this.xgraph.drawGraph();
-        if (this.data.tooltip) {
-          this.xgraph.tooltipGraph(true);
-        }
-        if (this.data.scale) {
-          this.xgraph.scaleGraph(true);
-        } else {
-          this.xgraph.zoomGraph(this.data.zoom);
-        }
-        if (this.data.center) {
-          this.xgraph.centerGraph(true);
-        }
-        if (this.data.lock) {
-          this.xgraph.lockGraph(true);
-        }
-        this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
-        this.ctrl.clearNotify();
-      } else {
-        this.ctrl.notify('Source content empty Graph not defined', 'error');
-        $GF.log.error('Source content empty Graph not defined');
-      }
-    } catch (error) {
-      this.ctrl.notify('Unable to initialize graph', 'error');
-      $GF.log.error('Unable to initialize graph', error);
-    }
-    return this;
-  }
+  // init(): this {
+  //   try {
+  //     const content = this.getContent();
+  //     if (this.xgraph === undefined) {
+  //       this.xgraph = new XGraph(this.container, this.data.type, content, this.ctrl);
+  //     }
+  //     if (content !== undefined && content !== null) {
+  //       if (this.data.enableAnim) {
+  //         this.xgraph.enableAnim(true);
+  //       } else {
+  //         this.xgraph.enableAnim(false);
+  //       }
+  //       this.setOptions();
+  //       this.xgraph.drawGraph();
+  //       if (this.data.tooltip) {
+  //         this.xgraph.tooltipGraph(true);
+  //       }
+  //       if (this.data.scale) {
+  //         this.xgraph.scaleGraph(true);
+  //       } else {
+  //         this.xgraph.zoomGraph(this.data.zoom);
+  //       }
+  //       if (this.data.center) {
+  //         this.xgraph.centerGraph(true);
+  //       }
+  //       if (this.data.lock) {
+  //         this.xgraph.lockGraph(true);
+  //       }
+  //       this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
+  //       this.ctrl.clearNotify();
+  //     } else {
+  //       this.ctrl.notify('Source content empty Graph not defined', 'error');
+  //       $GF.log.error('Source content empty Graph not defined');
+  //     }
+  //   } catch (error) {
+  //     this.ctrl.notify('Unable to initialize graph', 'error');
+  //     $GF.log.error('Unable to initialize graph', error);
+  //   }
+  //   return this;
+  // }
 
   /**
    * Get states handler
@@ -287,21 +287,14 @@ export class Flowchart {
   refreshGraph() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
     if (this.xgraph) {
-      // this.xgraph.applyOptions();
-      this.xgraph?.onRefresh();
+      this.xgraph?.refresh();
     }
     trc.after();
   }
 
-  refreshStates() {
-    this.stateHandler?.refresh();
-  }
-
-  refresh() {
-    this.refreshGraph();
-    this.refreshGraph();
-    this.refreshStates();
-  }
+  // refreshStates() {
+  //   this.stateHandler?.refresh();
+  // }
 
   /**
    * Reset and redraw graph when source changed
@@ -764,24 +757,49 @@ export class Flowchart {
   }
 
   //
+  // Updates
+  //
+  destroy(): this {
+    this.clear();
+    this.onDestroyed();
+    return this;
+  }
+
+  refresh(): this {
+    this.refreshGraph();
+    // this.refreshStates();
+    this.onRefreshed();
+    return this;
+  }
+
+  init(): this {
+    this.setOptions();
+    this.onInitialized();
+    return this;
+  }
+
+  //
   // Events
   //
-  async onDestroy() {
-    this.clear();
+  async onDestroyed() {
+    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    this.ctrl.eventHandler.emit(this, 'destroyed');
+    this.ctrl.eventHandler.unsubscribes(this);
   }
 
-  async onRefresh() {
-    // this.xgraph?.onChange();
-    this.stateHandler?.onRefresh();
+  async onRefreshed() {
+    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
+    this.ctrl.eventHandler.emit(this, 'refreshed');
   }
 
-  async onInit() {
-    this.xgraph?.onInit();
-    this.stateHandler?.onInit();
+  async onInitialized() {
+    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    this.ctrl.eventHandler.subscribes(this);
+    this.ctrl.eventHandler.emit(this, 'initialized');
   }
 
-  async onChange() {
-    this.xgraph?.onChange();
-    this.stateHandler?.onChange();
+  async onChanged() {
+    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
+    this.ctrl.eventHandler.emit(this, 'changed');
   }
 }

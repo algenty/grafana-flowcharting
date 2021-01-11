@@ -2,6 +2,7 @@ import grafana from './grafana_func';
 import { find as _find, isNumber as _isNumber } from 'lodash';
 import { $GF } from 'globals_class';
 import { DateTH } from 'threshold_class';
+import { FlowchartCtrl } from 'flowchart_ctrl';
 
 export type ObjectMetric = SerieMetric | TableMetric;
 
@@ -14,13 +15,15 @@ export type ObjectMetric = SerieMetric | TableMetric;
 export class Metric {
   type: gf.TMetricTypeKeys | 'unknown' = 'unknown';
   uid: string = $GF.utils.uniqueID();
+  ctrl: FlowchartCtrl;
   scopedVars: any;
   metrics: any = {};
   name = '';
   dataList: any;
   nullPointMode = 'connected';
-  constructor(dataList?: any) {
+  constructor(dataList: any, ctrl: FlowchartCtrl) {
     this.dataList = dataList;
+    this.ctrl = ctrl;
   }
 
   setDataList(dataList: any): this {
@@ -90,16 +93,6 @@ export class Metric {
     return [];
   }
 
-  //
-  // Updates
-  //
-  /**
-   * Init data with dataList
-   *
-   * @param {any} dataList
-   * @memberof MetricHandler
-   */
-
   /**
    * Reset/clear/destroy metrics
    *
@@ -111,13 +104,17 @@ export class Metric {
     return this;
   }
 
+  //
+  // Updates
+  //
+
   refresh(): this {
-    this.metrics = {};
-    this.init();
+    this.onRefreshed();
     return this;
   }
 
   change(): this {
+    this.onChanged();
     return this;
   }
 
@@ -125,23 +122,35 @@ export class Metric {
     return this;
   }
 
+  destroy(): this {
+    this.onDestroyed();
+    return this;
+  }
+
   //
   // Events
   //
-  async onDestroy() {
-    this.clear();
+  async onDestroyed() {
+    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    this.ctrl.eventHandler.emit(this, 'destroyed');
+    this.ctrl.eventHandler.unsubscribes(this);
   }
 
-  async onRefresh() {
-    this.refresh();
+  async onRefreshed() {
+    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    this.ctrl.eventHandler.emit(this, 'refreshed');
   }
 
-  async onInit() {
-    this.init();
+  async onInitialized() {
+    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    this.ctrl.eventHandler.subscribes(this);
+    this.ctrl.eventHandler.emit(this, 'initialized');
+    this.onChanged();
   }
 
-  async onChange() {
-    this.change();
+  async onChanged() {
+    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    this.ctrl.eventHandler.emit(this, 'changed');
   }
 }
 
@@ -160,8 +169,8 @@ export class Metric {
  * @extends {Metric}
  */
 export class SerieMetric extends Metric {
-  constructor(dataList?: any) {
-    super(dataList);
+  constructor(dataList: any, ctrl: FlowchartCtrl) {
+    super(dataList, ctrl);
     this.type = 'serie';
   }
 
@@ -169,6 +178,7 @@ export class SerieMetric extends Metric {
     this.metrics = this._seriesHandler();
     this._addCustomStats();
     this.name = this.metrics.alias;
+    super.init();
     return this;
   }
 
@@ -308,15 +318,17 @@ export class TableMetric extends Metric {
   tableColumn = '';
   allIsNull = true;
   allIsZero = true;
-  constructor(dataList?: any) {
-    super(dataList);
+  constructor(dataList: any, ctrl: FlowchartCtrl) {
+    super(dataList, ctrl);
     this.type = 'table';
     this.init();
   }
 
   init(): this {
+    super.init();
     this.metrics = this._tableHandler();
     this.name = this.dataList?.refId;
+    this.onInitialized();
     return this;
   }
 

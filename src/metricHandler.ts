@@ -9,6 +9,7 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
  */
 export class MetricHandler {
   dataList: any[] = [];
+  uid: string = $GF.utils.uniqueID();
   tables: TableMetric[] = [];
   series: SerieMetric[] = [];
   metrics: ObjectMetric[] = [];
@@ -51,7 +52,7 @@ export class MetricHandler {
    */
   addTable(data: any): TableMetric {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addTable()');
-    const table = new TableMetric(data);
+    const table = new TableMetric(data, this.ctrl);
     this.tables.push(table);
     this.metrics.push(table);
     trc.after();
@@ -67,7 +68,7 @@ export class MetricHandler {
    */
   addSerie(data: any): SerieMetric {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addSerie()');
-    const serie = new SerieMetric(data);
+    const serie = new SerieMetric(data, this.ctrl);
     this.series.push(serie);
     this.metrics.push(serie);
     trc.after();
@@ -167,26 +168,6 @@ export class MetricHandler {
     return columns;
   }
 
-  //
-  // Updates
-  //
-  /**
-   * Init data with dataList
-   *
-   * @param {any} dataList
-   * @memberof MetricHandler
-   */
-  refresh() {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
-    this.tables = [];
-    this.series = [];
-    this.metrics = [];
-    this.dataList.forEach(dl => {
-      this.addMetric(dl);
-    });
-    trc.after();
-  }
-
   /**
    * Reset/clear/destroy metrics
    *
@@ -200,34 +181,50 @@ export class MetricHandler {
     return this;
   }
 
+  //
+  // Updates
+  //
+  refresh() {
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
+    this.destroy();
+    this.dataList.forEach(dl => {
+      this.addMetric(dl);
+    });
+    trc.after();
+  }
+
   change(): this {
+    this.onChanged();
     return this;
   }
 
   init(): this {
+    this.onInitialized();
     return this;
   }
 
+  destroy(): this {
+    this.metrics.forEach(m => m.destroy());
+    this.clear();
+    this.onDestroyed();
+    return this;
+  }
   //
   // Events
   //
-  async onDestroy() {
-    this.metrics.forEach(async m => await m.onDestroy());
-    this.clear();
+  async onDestroyed() {
+    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
   }
 
-  async onRefresh() {
-    this.metrics.forEach(async m => await m.onRefresh());
-    this.refresh();
+  async onRefreshed() {
+    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
   }
 
-  async onInit() {
-    this.metrics.forEach(async m => await m.onInit());
-    this.init();
+  async onInitialized() {
+    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
   }
 
-  async onChange() {
-    this.metrics.forEach(async m => await m.onChange());
-    this.change();
+  async onChanged() {
+    $GF.log.debug(this.constructor.name + '/onChange : ' + this.uid);
   }
 }

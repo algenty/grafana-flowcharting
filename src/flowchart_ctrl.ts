@@ -29,7 +29,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
-  eventHandler : EventHandler;
+  eventHandler: EventHandler;
   onMapping: InteractiveMap;
   id: String;
   GHApplied = false;
@@ -132,7 +132,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       $GF.clearUniqTimeOut(id);
       const setGraphHover = () => {
         $GF.setGraphHover(timestamp);
-        flowchartHandler.onGraphHoverChange();
+        // flowchartHandler.onGraphHoverChange();
         self.render();
         self.GHApplied = true;
         $GF.clearUniqTimeOut(id);
@@ -149,7 +149,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.GHApplied = false;
       $GF.clearUniqTimeOut(id);
       $GF.unsetGraphHover();
-      this.flowchartHandler.onGraphHoverChange();
+      // this.flowchartHandler.onGraphHoverChange();
       this.render();
     }
   }
@@ -162,8 +162,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onVarChanged() {
     $GF.log.debug(this.constructor.name + '/onVarChanged');
     if (this.flowchartHandler !== undefined) {
-      this.flowchartHandler.onChangeGraph();
-      this.flowchartHandler.render();
+      // this.flowchartHandler.onChangeGraph();
+      // this.flowchartHandler.render();
     }
   }
 
@@ -177,7 +177,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.import(panelClone.flowchartsData);
       this.rulesHandler.clear();
       this.rulesHandler.import(panelClone.rulesData);
-      this.flowchartHandler.onChangeGraph();
+      // this.flowchartHandler.onChangeGraph();
       this.flowchartHandler.render();
     }
   }
@@ -187,8 +187,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
     if (!!this.metricHandler) {
       this.metricHandler?.setDataList(dataList);
-      this.flagEvent($GF.CONSTANTS.EVENT_CHG_DATAS);
-      this.flowchartHandler?.onRefresh();
+      this.metricHandler.refresh();
     }
     // this.render();
     trc.after();
@@ -339,33 +338,33 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   // EVENTS
   //
-  flagEvent(type: string, name?: string): this {
-    if (name !== undefined) {
-      this.flags[type].add(name);
-    } else {
-      this.flowchartHandler?.getFlowcharts().forEach(flowchart => {
-        const name = flowchart.getName();
-        this.flags[type].add(name);
-      });
-    }
-    return this;
-  }
+  // flagEvent(type: string, name?: string): this {
+  //   if (name !== undefined) {
+  //     this.flags[type].add(name);
+  //   } else {
+  //     this.flowchartHandler?.getFlowcharts().forEach(flowchart => {
+  //       const name = flowchart.getName();
+  //       this.flags[type].add(name);
+  //     });
+  //   }
+  //   return this;
+  // }
 
-  isFlagedEvent(type: string, name?: string): boolean {
-    if (name === undefined) {
-      return this.flags[type].size > 0;
-    }
-    return this.flags[type].has(name);
-  }
+  // isFlagedEvent(type: string, name?: string): boolean {
+  //   if (name === undefined) {
+  //     return this.flags[type].size > 0;
+  //   }
+  //   return this.flags[type].has(name);
+  // }
 
-  ackFlagEvent(type: string, name?: string): void {
-    $GF.log.debug('aknowledgeFlagChange', type, name);
-    if (name === undefined) {
-      this.flags[type].clear();
-    } else {
-      this.flags[type].delete(name);
-    }
-  }
+  // ackFlagEvent(type: string, name?: string): void {
+  //   $GF.log.debug('aknowledgeFlagChange', type, name);
+  //   if (name === undefined) {
+  //     this.flags[type].clear();
+  //   } else {
+  //     this.flags[type].delete(name);
+  //   }
+  // }
 
   // getFlagNames(type: gf.TFlowchartFlagKeys): string[] {
   //   let result: string[] = [];

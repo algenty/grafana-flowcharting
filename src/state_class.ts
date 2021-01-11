@@ -5,6 +5,8 @@ import { TooltipHandler } from 'tooltipHandler';
 import { $GF, GFVariables } from 'globals_class';
 import { XCell } from 'cell_class';
 import { ObjectMetric } from 'metric_class';
+import { Observer } from 'rxjs';
+import { FlowchartCtrl } from 'flowchart_ctrl';
 
 /**
  * Class for state of one cell
@@ -15,6 +17,7 @@ import { ObjectMetric } from 'metric_class';
 export class State {
   xcell: XCell; // mxCell State
   uid: string; // cell ID in mxcell
+  ctrl: FlowchartCtrl;
   xgraph: XGraph;
   changed = false;
   matched = false;
@@ -42,9 +45,10 @@ export class State {
    * @param {XGraph} xgraph
    * @memberof State
    */
-  constructor(xcell: XCell, xgraph: XGraph) {
+  constructor(xcell: XCell, xgraph: XGraph, ctrl: FlowchartCtrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
     this.xcell = xcell;
+    this.ctrl = ctrl;
     this.uid = $GF.utils.uniqueID();
     this.xgraph = xgraph;
     this.shapeState = new ShapeState(xgraph, xcell);
@@ -78,7 +82,7 @@ export class State {
    * @memberof State
    */
   clear(): this {
-    this.clearTag();
+    // this.clearTag();
     return this;
   }
 
@@ -87,7 +91,7 @@ export class State {
    *
    * @memberof State
    */
-  async async_applyState() {
+  async async_applyCycle() {
     // new Promise (this.applyState.bind(this));
     this.applyCycle();
   }
@@ -102,9 +106,9 @@ export class State {
     return this;
   }
 
-  clearTag() {
-    this.rules.clear();
-  }
+  // clearTag() {
+  //   this.rules.clear();
+  // }
 
   /**
    * Define state according to 1 rule and 1 serie without apply display
@@ -114,28 +118,29 @@ export class State {
    * @param {Metric} metric
    * @memberof State
    */
-  setCycle(): this {
+  setCycle(rule?: Rule): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setCycle()');
     console.log('State -> setState -> this.rules', this.rules);
-    this.rules.forEach(rule => {
+    const rules = rule === undefined ? this.rules : [rule];
+    rules.forEach((r: Rule) => {
       let beginPerf = Date.now();
-      if (!rule.isHidden()) {
-        const shapeMaps = rule.getShapeMaps();
-        const textMaps = rule.getTextMaps();
-        const linkMaps = rule.getLinkMaps();
-        const eventMaps = rule.getEventMaps();
-        this.variables.set($GF.CONSTANTS.VAR_STR_RULENAME, rule.data.alias);
-        rule.getMetrics().forEach(metric => {
+      if (!r.isHidden()) {
+        const shapeMaps = r.getShapeMaps();
+        const textMaps = r.getTextMaps();
+        const linkMaps = r.getLinkMaps();
+        const eventMaps = r.getEventMaps();
+        this.variables.set($GF.CONSTANTS.VAR_STR_RULENAME, r.data.alias);
+        r.getMetrics().forEach(metric => {
           try {
             this.currMetrics.push(metric.getName());
             this.variables.set($GF.CONSTANTS.VAR_STR_METRIC, metric.getName);
           } catch (error) {
             $GF.log.error(error);
           }
-          const value = rule.getValueForMetric(metric);
-          const FormattedValue = rule.getFormattedValue(value);
-          const level = rule.getThresholdLevel(value);
-          const color = rule.getThresholdColor(value);
+          const value = r.getValueForMetric(metric);
+          const FormattedValue = r.getFormattedValue(value);
+          const level = r.getThresholdLevel(value);
+          const color = r.getThresholdColor(value);
           this.variables.set($GF.CONSTANTS.VAR_NUM_VALUE, value);
           this.variables.set($GF.CONSTANTS.VAR_STR_FORMATED, FormattedValue);
           this.variables.set($GF.CONSTANTS.VAR_NUM_LEVEL, level);
@@ -144,7 +149,7 @@ export class State {
 
           // SHAPE
           let matchedRule = false;
-          let mapOptions = rule.getShapeMapOptions();
+          let mapOptions = r.getShapeMapOptions();
           let cellValue = this.xcell.getDefaultValues(mapOptions);
           shapeMaps.forEach(shape => {
             let k = shape.data.style;
@@ -157,14 +162,14 @@ export class State {
               }
 
               // TOOLTIP
-              if (rule.toTooltipize(level)) {
+              if (r.toTooltipize(level)) {
                 k = 'tooltip';
                 v = true;
                 this.tooltipState.set('tooltip', true, level) && this.status.set(k, v);
-                this.tooltipState.setTooltip(rule, metric, color, FormattedValue, this.xcell.getMetadatas());
+                this.tooltipState.setTooltip(r, metric, color, FormattedValue, this.xcell.getMetadatas());
               }
               // ICONS
-              if (rule.toIconize(level)) {
+              if (r.toIconize(level)) {
                 k = 'icon';
                 v = true;
                 this.iconState.set('icon', true, level) && this.status.set(k, v);
@@ -173,7 +178,7 @@ export class State {
           });
 
           // TEXT
-          mapOptions = rule.getTextMapOptions();
+          mapOptions = r.getTextMapOptions();
           cellValue = this.xcell.getDefaultValues(mapOptions);
           textMaps.forEach(text => {
             const k = 'label';
@@ -189,7 +194,7 @@ export class State {
           });
 
           // EVENTS
-          mapOptions = rule.getEventMapOptions();
+          mapOptions = r.getEventMapOptions();
           cellValue = this.xcell.getDefaultValues(mapOptions);
           eventMaps.forEach(event => {
             const k = event.data.style;
@@ -204,7 +209,7 @@ export class State {
           });
 
           // LINK
-          mapOptions = rule.getEventMapOptions();
+          mapOptions = r.getEventMapOptions();
           cellValue = this.xcell.getDefaultValues(mapOptions);
           linkMaps.forEach(link => {
             const k = 'link';
@@ -219,23 +224,23 @@ export class State {
           });
 
           if (matchedRule) {
-            this.currRules.push(rule.data.alias);
+            this.currRules.push(r.data.alias);
             if (level > this.globalLevel) {
               this.globalLevel = level;
               this.highestValue = value;
               this.highestFormattedValue = FormattedValue;
             }
-            if (level >= rule.highestLevel) {
-              rule.highestLevel = level;
-              rule.highestValue = value;
-              rule.highestFormattedValue = FormattedValue;
-              rule.highestColor = color;
+            if (level >= r.highestLevel) {
+              r.highestLevel = level;
+              r.highestValue = value;
+              r.highestFormattedValue = FormattedValue;
+              r.highestColor = color;
             }
           }
         });
       }
       let endPerf = Date.now();
-      rule.execTimes += endPerf - beginPerf;
+      r.execTimes += endPerf - beginPerf;
     }),
       trc.after();
     return this;
@@ -399,7 +404,7 @@ export class State {
    * @returns {this}
    * @memberof State
    */
-  prepareCycle(): this {
+  initCycle(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
     if (this.changed) {
       this.shapeState.prepare();
@@ -443,28 +448,152 @@ export class State {
     return this;
   }
 
+  /**
+   * Match rule
+   *
+   * @param {*} rule
+   * @returns {boolean}
+   * @memberof State
+   */
+  matchRule(rule: Rule): boolean {
+    let mapOptions = rule.getShapeMapOptions();
+    let cellValue = this.xcell.getDefaultValues(mapOptions);
+    if (rule.matchShape(cellValue, mapOptions)) {
+      return true;
+    }
+    mapOptions = rule.getTextMapOptions();
+    cellValue = this.xcell.getDefaultValues(mapOptions);
+    if (rule.matchText(cellValue, mapOptions)) {
+      return true;
+    }
+    mapOptions = rule.getLinkMapOptions();
+    cellValue = this.xcell.getDefaultValues(mapOptions);
+    if (rule.matchLink(cellValue, mapOptions)) {
+      return true;
+    }
+    mapOptions = rule.getEventMapOptions();
+    cellValue = this.xcell.getDefaultValues(mapOptions);
+    if (rule.matchEvent(cellValue, mapOptions)) {
+      return true;
+    }
+    return false;
+  }
+
+  //
+  // Updates
+  //
+  refresh(rule?: Rule): this {
+    this.setCycle(rule);
+    this.applyCycle();
+    this.onRefreshed();
+    return this;
+  }
+
+  init(): this {
+    this.initCycle();
+    this.onInitialized();
+    return this;
+  }
+
+  change(): this {
+    this.onChanged();
+    return this;
+  }
+
+  destroy(): this {
+    this.reset();
+    this.onDestroyed();
+    return this;
+  }
+
   //
   // Events
   //
-  async onDestroy() {
+  async onDestroyed() {
     $GF.log.debug(this.constructor.name + '/onDestroy : ' + this.uid);
+    this.ctrl.eventHandler.unsubscribes(this);
+    this.ctrl.eventHandler.emit(this, 'destroyed');
   }
 
-  async onRefresh() {
+  async onRefreshed() {
     $GF.log.debug(this.constructor.name + '/onRefresh : ' + this.uid);
-    this.prepareCycle();
-    this.setCycle();
-    this.applyCycle();
+    this.initCycle();
   }
 
-  async onInit() {
+  async onInitialized() {
     $GF.log.debug(this.constructor.name + '/onInit : ' + this.uid);
-    this.onChange();
+    this.ctrl.eventHandler.subscribes(this);
   }
 
-  async onChange() {
+  async onChanged() {
     $GF.log.debug(this.constructor.name + '/onChange : ' + this.uid);
-    this.onRefresh();
+  }
+
+  //
+  // RXJS Observers
+  //
+  getMetric$initialized(): Observer<ObjectMetric> {
+    const self = this;
+    return {
+      next: metric => {
+        if (metric === null) {
+          self.initCycle();
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {},
+    };
+  }
+
+  getRule$refreshed(): Observer<Rule> {
+    const self = this;
+    return {
+      next: rule => {
+        if (rule !== null && this.rules.has(rule.uid)) {
+          self.refresh(rule);
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {},
+    };
+  }
+
+  getRule$changed(): Observer<Rule> {
+    const self = this;
+    return {
+      next: rule => {
+        if (rule !== null) {
+          if (self.matchRule(rule)) {
+            this.rules.set(rule.uid, rule);
+          } else {
+            this.rules.delete(rule.uid);
+          }
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {},
+    };
+  }
+
+  getRule$destroyed(): Observer<Rule> {
+    const self = this;
+    return {
+      next: rule => {
+        if (rule !== null) {
+          self.rules.delete(rule.uid);
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {},
+    };
   }
 }
 

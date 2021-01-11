@@ -1,5 +1,4 @@
 import { State } from './state_class';
-import { Rule } from './rule_class';
 import { each as _each } from 'lodash';
 import { XGraph } from 'graph_class';
 import { $GF } from 'globals_class';
@@ -27,7 +26,7 @@ export class StateHandler {
   constructor(xgraph: XGraph, ctrl: FlowchartCtrl) {
     this.states = new Map();
     this.xgraph = xgraph;
-    this.initStates(this.xgraph);
+    this.initStates();
     this.ctrl = ctrl;
   }
 
@@ -38,11 +37,10 @@ export class StateHandler {
    * @param {XGraph} xgraph
    * @memberof StateHandler
    */
-  initStates(xgraph: XGraph = this.xgraph): this {
+  initStates(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initStates()');
-    this.xgraph = xgraph;
     this.states.clear();
-    const xcells = xgraph.getXCells();
+    const xcells = this.xgraph.getXCells();
     _each(xcells, x => {
       this.addState(x);
     });
@@ -78,58 +76,58 @@ export class StateHandler {
    * @returns {Array<State>}
    * @memberof StateHandler
    */
-  getStatesForRule(rule: Rule) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'getStatesForRule()');
-    const result = new Map();
-    let name: string | null;
-    this.states.forEach(state => {
-      const xcell: XCell = state.xcell;
-      const id: string = xcell.getId();
-      let found = false;
-      // SHAPES
-      let options = rule.getShapeMapOptions();
-      name = xcell.getValues(options);
-      if (name !== null && rule.matchShape(name, options)) {
-        result.set(id, state);
-        found = true;
-      }
+  // getStatesForRule(rule: Rule) {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'getStatesForRule()');
+  //   const result = new Map();
+  //   let name: string | null;
+  //   this.states.forEach(state => {
+  //     const xcell: XCell = state.xcell;
+  //     const id: string = xcell.getId();
+  //     let found = false;
+  //     // SHAPES
+  //     let options = rule.getShapeMapOptions();
+  //     name = xcell.getValues(options);
+  //     if (name !== null && rule.matchShape(name, options)) {
+  //       result.set(id, state);
+  //       found = true;
+  //     }
 
-      // TEXTS
-      if (!found) {
-        let options = rule.getTextMapOptions();
-        // name = XGraph.getValuePropOfMxCell(mxcell, options);
-        name = xcell.getValues(options);
-        if (rule.matchText(name, options)) {
-          result.set(id, state);
-          found = true;
-        }
-      }
+  //     // TEXTS
+  //     if (!found) {
+  //       let options = rule.getTextMapOptions();
+  //       // name = XGraph.getValuePropOfMxCell(mxcell, options);
+  //       name = xcell.getValues(options);
+  //       if (rule.matchText(name, options)) {
+  //         result.set(id, state);
+  //         found = true;
+  //       }
+  //     }
 
-      // LINKS
-      if (!found) {
-        let options = rule.getLinkMapOptions();
-        // name = XGraph.getValuePropOfMxCell(mxcell, options);
-        name = xcell.getValues(options);
-        if (rule.matchLink(name, options)) {
-          result.set(id, state);
-          found = true;
-        }
-      }
+  //     // LINKS
+  //     if (!found) {
+  //       let options = rule.getLinkMapOptions();
+  //       // name = XGraph.getValuePropOfMxCell(mxcell, options);
+  //       name = xcell.getValues(options);
+  //       if (rule.matchLink(name, options)) {
+  //         result.set(id, state);
+  //         found = true;
+  //       }
+  //     }
 
-      // EVENTS
-      if (!found) {
-        let options = rule.getEventMapOptions();
-        // name = XGraph.getValuePropOfMxCell(mxcell, options);
-        name = xcell.getValues(options);
-        if (rule.matchEvent(name, options)) {
-          result.set(id, state);
-          found = true;
-        }
-      }
-    });
-    trc.after();
-    return result;
-  }
+  //     // EVENTS
+  //     if (!found) {
+  //       let options = rule.getEventMapOptions();
+  //       // name = XGraph.getValuePropOfMxCell(mxcell, options);
+  //       name = xcell.getValues(options);
+  //       if (rule.matchEvent(name, options)) {
+  //         result.set(id, state);
+  //         found = true;
+  //       }
+  //     }
+  //   });
+  //   trc.after();
+  //   return result;
+  // }
 
   /**
    * Update States : Add or remove state in states when rules changed
@@ -138,12 +136,12 @@ export class StateHandler {
    * @param {Array<Rule>} rules
    * @memberof StateHandler
    */
-  updateStates(rules: Rule[]) {
-    $GF.log.info('StateHandler.updateStates()');
-    rules.forEach(rule => {
-      rule.states = this.getStatesForRule(rule);
-    });
-  }
+  // updateStates(rules: Rule[]) {
+  //   $GF.log.info('StateHandler.updateStates()');
+  //   rules.forEach(rule => {
+  //     rule.states = this.getStatesForRule(rule);
+  //   });
+  // }
 
   /**
    * Return array of state
@@ -187,7 +185,7 @@ export class StateHandler {
    */
   addState(xcell: XCell): State {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addState()');
-    const state = new State(xcell, this.xgraph);
+    const state = new State(xcell, this.xgraph, this.ctrl);
     this.states.set(state.uid, state);
     if ($GF.DEBUG) {
       $GF.setVar(`STATE_${state.uid}`, state);
@@ -202,9 +200,9 @@ export class StateHandler {
    * @returns {Number}
    * @memberof StateHandler
    */
-  countStates(): number {
-    return this.states.size;
-  }
+  // countStates(): number {
+  //   return this.states.size;
+  // }
 
   /**
    * Restore initial status and prepare states object
@@ -264,33 +262,48 @@ export class StateHandler {
   //   this.applyStates();
   // }
 
+  //
+  // Updates
+  //
+  destroy(): this {
+    this.clear();
+    this.onDestroyed();
+    return this;
+  }
+
   refresh(): this {
+    this.onRefreshed();
+    return this;
+  }
+
+  change(): this {
+    this.onChanged();
+    return this;
+  }
+
+  init(): this {
+    this.initStates();
+    this.onInitialized();
     return this;
   }
 
   //
   // Events
   //
-  async onDestroy() {
-    $GF.log.debug(this.constructor.name + '/onDestroy : ' + this.uid);
-
-    this.clear();
+  async onDestroyed() {
+    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
   }
 
-  async onRefresh() {
-    $GF.log.debug(this.constructor.name + '/onRefresh : ' + this.uid);
-    this.states.forEach(s => s.onRefresh());
-    this.refresh();
+  async onRefreshed() {
+    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
   }
 
-  async onInit() {
-    $GF.log.debug(this.constructor.name + '/onInit : ' + this.uid);
-    this.states.forEach(s => s.onInit());
+  async onInitialized() {
+    this.ctrl.eventHandler.ack('state', 'initialized');
+    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
   }
 
-  async onChange() {
-    $GF.log.debug(this.constructor.name + '/onChange : ' + this.uid);
-    this.initStates();
-    this.onRefresh();
+  async onChanged() {
+    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
   }
 }

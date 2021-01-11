@@ -12,6 +12,7 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
 export class RulesHandler {
   rules: Rule[];
   ctrl: FlowchartCtrl;
+  uid: string = $GF.utils.uniqueID();
   data: gf.TIRulesHandlerData;
   activeRuleIndex = 0;
   observers$: gf.TObserver<Rule>[] = [];
@@ -159,7 +160,9 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   removeRule(rule: Rule): this {
+    $GF.log.debug(this.constructor.name + '.removeRule()', rule);
     const index = rule.getOrder() - 1;
+    rule.destroy();
     this.rules.splice(index, 1);
     this.data.rulesData.splice(index, 1);
     this.setOrder();
@@ -174,6 +177,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   cloneRule(rule: Rule): Rule {
+    $GF.log.debug(this.constructor.name + '.cloneRule()', rule);
     const index = rule.getOrder() - 1;
     const data = rule.getData();
     const newData: gf.TIRuleData = Rule.getDefaultData();
@@ -249,47 +253,60 @@ export class RulesHandler {
     }
   }
 
-  //
-  // Updates
-  //
-  init(): this {
-    return this;
-  }
-
-  refresh(): this {
-    return this;
-  }
-
   clear(): this {
+    $GF.log.debug(this.constructor.name + '.clear()');
     this.rules = [];
     this.data.rulesData = [];
     return this;
   }
 
+  //
+  // Updates
+  //
+  init(): this {
+    $GF.log.debug(this.constructor.name + '.init()');
+    this.onInitialized();
+    return this;
+  }
+
+  refresh(): this {
+    $GF.log.debug(this.constructor.name + '.refresh()');
+    this.rules.forEach(r => r.refresh());
+    this.onRefreshed();
+    return this;
+  }
+
   change(): this {
+    $GF.log.debug(this.constructor.name + '.change()');
+    this.rules.forEach(r => r.change());
+    this.onChanged();
+    return this;
+  }
+
+  destroy(): this {
+    $GF.log.debug(this.constructor.name + '.destroy()');
+    this.rules.forEach(r => r.destroy());
+    this.clear();
+    this.onDestroyed();
     return this;
   }
 
   //
   // Events
   //
-  async onDestroy() {
-    this.rules.forEach(r => r.onDestroy());
-    this.clear();
+  async onDestroyed() {
+    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
   }
 
-  async onRefresh() {
-    this.rules.forEach(r => r.onRefresh());
-    this.refresh();
+  async onRefreshed() {
+    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
   }
 
-  async onInit() {
-    this.rules.forEach(r => r.onInit());
-    this.init();
+  async onInitialized() {
+    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
   }
 
-  async onChange() {
-    this.rules.forEach(r => r.onChange());
-    this.change();
+  async onChanged() {
+    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
   }
 }

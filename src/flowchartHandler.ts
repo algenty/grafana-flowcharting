@@ -391,7 +391,7 @@ export class FlowchartHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
     // not repeat render if mouse down
     if (!this.mousedown) {
-      $GF.log.debug('RENDER Flags : ', this.ctrl.flags);
+      // $GF.log.debug('RENDER Flags : ', this.ctrl.flags);
       // this.flagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
       // SOURCE
       // if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS)) {
@@ -442,7 +442,7 @@ export class FlowchartHandler {
       //     });
       //   }
       // }
-      // this.refresh();
+      this.refresh();
     }
     this.ctrl.renderingCompleted();
     trc.after();
@@ -454,11 +454,11 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  onChangeGraph(name?: string): this {
-    this.ctrl.flagEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS, name);
-    this.onChange();
-    return this;
-  }
+  // onChangeGraph(name?: string): this {
+  //   this.ctrl.flagEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS, name);
+  //   this.onChange();
+  //   return this;
+  // }
 
   /**
    * Flag options change
@@ -478,11 +478,11 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  onRulesChange(name?: string): this {
-    this.ctrl.flagEvent($GF.CONSTANTS.EVENT_CHG_RULES, name);
-    this.onChange();
-    return this;
-  }
+  // onRulesChange(name?: string): this {
+  //   this.ctrl.flagEvent($GF.CONSTANTS.EVENT_CHG_RULES, name);
+  //   this.onChange();
+  //   return this;
+  // }
 
   /**
    * Flag data Graph-Hover change
@@ -490,10 +490,10 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  onGraphHoverChange(): this {
-    this.ctrl.flagEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER);
-    return this;
-  }
+  // onGraphHoverChange(): this {
+  //   this.ctrl.flagEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER);
+  //   return this;
+  // }
 
   /**
    * Apply options on graphs
@@ -558,33 +558,25 @@ export class FlowchartHandler {
    */
   refreshFlowchart(): this {
     this.flowcharts.forEach(flowchart => {
-      flowchart.onRefresh();
+      flowchart.refresh();
     });
     return this;
   }
 
   refreshMetrics(): this {
-    this.ctrl.metricHandler?.onRefresh();
+    this.ctrl.metricHandler?.refresh();
     return this;
   }
 
   refreshRules(): this {
-    this.ctrl.rulesHandler?.onRefresh();
+    this.ctrl.rulesHandler?.refresh();
     return this;
   }
 
   refreshStates(): this {
     this.flowcharts.forEach(f => {
-      f.getStateHandler()?.onRefresh();
+      f.getStateHandler()?.refresh();
     });
-    return this;
-  }
-
-  refresh(): this {
-    this.refreshMetrics();
-    this.refreshRules();
-    this.refreshStates();
-    this.refreshFlowchart();
     return this;
   }
 
@@ -816,7 +808,8 @@ export class FlowchartHandler {
           if (fc !== undefined) {
             this.ctrl.notify('Received data from draw.io editor, refresh in progress', 'info');
             fc.setContent(event.data);
-            this.onChangeGraph(fc.getName());
+            // this.onChangeGraph(fc.getName());
+            fc.xgraph?.change();
             this.ctrl.$scope.$applyAsync();
             this.render();
           }
@@ -861,54 +854,49 @@ export class FlowchartHandler {
   }
 
   //
+  // updates
+  //
+  refresh(): this {
+    this.refreshMetrics();
+    this.refreshRules();
+    this.refreshStates();
+    this.refreshFlowchart();
+    this.onRefreshed();
+    return this;
+  }
+
+  change(): this {
+    this.onChanged();
+    return this;
+  }
+
+  destroy(): this {
+    this.clear();
+    this.onDestroyed();
+    return this;
+  }
+
+  init(): this {
+    this.onInitialized();
+    return this;
+  }
+
+  //
   // Events
   //
-  async onDestroy() {
-    this.clear();
+  async onDestroyed() {
+    $GF.log.debug(this.constructor.name + '/onDestroyed');
   }
 
-  async onRefresh() {
-    $GF.log.debug(this.constructor.name + '/onRefresh');
-    if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_REF_DATAS)) {
-      await this.ctrl.metricHandler?.onChange();
-      this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_DATAS);
-      this.ctrl.flagEvent($GF.CONSTANTS.EVENT_REF_RULES);
-    }
-    if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_REF_RULES)) {
-      await this.ctrl.rulesHandler?.onRefresh();
-      this.ctrl.flagEvent($GF.CONSTANTS.EVENT_REF_STATES);
-      this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_RULES);
-    }
-    if (
-      this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_REF_STATES) ||
-      this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER)
-    ) {
-      this.refreshStates();
-      this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_STATES);
-      this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER);
-    }
-    if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS)) {
-      this.refreshFlowchart();
-      this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS);
-    }
+  async onRefreshed() {
+    $GF.log.debug(this.constructor.name + '/onRefreshed');
   }
 
-  async onInit() {
-    $GF.log.debug(this.constructor.name + '/onInit');
+  async onInitialized() {
+    $GF.log.debug(this.constructor.name + '/onInitialized');
   }
 
-  async onChange() {
-    $GF.log.debug(this.constructor.name + '/onChange');
-    if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS)) {
-      this.flowcharts.forEach(async f => await f.onChange());
-      this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS);
-      this.ctrl.flagEvent($GF.CONSTANTS.EVENT_CHG_RULES);
-    }
-    if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_CHG_RULES)) {
-      await this.ctrl.rulesHandler?.onChange();
-      this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_CHG_RULES);
-      this.ctrl.flagEvent($GF.CONSTANTS.EVENT_REF_STATES);
-    }
-    this.onRefresh();
+  async onChanged() {
+    $GF.log.debug(this.constructor.name + '/onChanged');
   }
 }

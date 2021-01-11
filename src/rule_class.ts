@@ -26,6 +26,7 @@ import { Observer } from 'rxjs';
  */
 export class Rule {
   data: gf.TIRuleData;
+  initialized: boolean = false;
   metrics: Map<string, ObjectMetric> = new Map();
   // cycleMetrics: boolean = false;
   // cycleStates: boolean = false;
@@ -66,6 +67,7 @@ export class Rule {
     this.data = data;
     this.data.pattern = pattern;
     this.ctrl = ctrl;
+    this.init();
   }
 
   //
@@ -644,7 +646,7 @@ export class Rule {
     }
     this.data.sanitize = obj.sanitize || false;
     this.data.newRule = false;
-    this.onInitialized();
+    this.change();
     trc.after();
     return this;
   }
@@ -2122,7 +2124,6 @@ export class Rule {
     );
   }
 
-  // Updates
   updateMetrics() {
     const metrics = this.ctrl.metricHandler?.getMetrics();
     this.metrics.clear();
@@ -2134,59 +2135,7 @@ export class Rule {
     this.onRefreshed();
   }
 
-  // updateStates() {
-  //   console.log('Rule -> updateStates -> updateStates');
-  //   this.states.clear();
-  //   this.shapeStates.clear();
-  //   this.textStates.clear();
-  //   this.linkStates.clear();
-  //   this.eventStates.clear();
-  //   const flowcharts = this.ctrl.flowchartHandler?.getFlowcharts();
-  //   flowcharts?.forEach(flowchart => {
-  //     const states = flowchart.stateHandler?.getStates();
-  //     states?.forEach(state => {
-  //       let matched = false;
-  //       let mapOptions = this.getShapeMapOptions();
-  //       let cellValue = state.xcell.getDefaultValues(mapOptions);
-  //       if (this.matchShape(cellValue, mapOptions)) {
-  //         matched = true;
-  //         this.shapeStates.set(state.uid, state);
-  //       }
-  //       mapOptions = this.getTextMapOptions();
-  //       cellValue = state.xcell.getDefaultValues(mapOptions);
-  //       if (this.matchText(cellValue, mapOptions)) {
-  //         matched = true;
-  //         this.textStates.set(state.uid, state);
-  //       }
-  //       mapOptions = this.getLinkMapOptions();
-  //       cellValue = state.xcell.getDefaultValues(mapOptions);
-  //       if (this.matchLink(cellValue, mapOptions)) {
-  //         matched = true;
-  //         this.linkStates.set(state.uid, state);
-  //       }
-  //       mapOptions = this.getEventMapOptions();
-  //       cellValue = state.xcell.getDefaultValues(mapOptions);
-  //       if (this.matchEvent(cellValue, mapOptions)) {
-  //         matched = true;
-  //         this.eventStates.set(state.uid, state);
-  //       } else {
-  //         this.eventStates.delete(state.uid);
-  //       }
-  //       if (matched) {
-  //         this.states.set(state.uid, state);
-  //         state.tagRule(this);
-  //       } else {
-  //         this.states.delete(state.uid);
-  //         state.untagRule(this);
-  //       }
-  //     });
-  //   });
-  // }
-
-  //
-  // Updates
-  //
-  initRefreshCycle(): this {
+  initCycle(): this {
     this.highestLevel = -1;
     this.highestFormattedValue = '';
     this.highestColor = '';
@@ -2195,20 +2144,31 @@ export class Rule {
     return this;
   }
 
+  //
+  // Updates
+  //
+
   refresh(): this {
-    this.initRefreshCycle();
-    // this.updateMetrics();
+    this.initCycle();
+    this.onRefreshed();
     return this;
   }
 
   init(): this {
-    //TODO
+    this.onInitialized();
     return this;
   }
 
   change(): this {
     this.updateMetrics();
+    this.onChanged();
+    this.refresh();
     // this.updateStates();
+    return this;
+  }
+
+  destroy(): this {
+    this.onDestroyed();
     return this;
   }
 
@@ -2217,27 +2177,24 @@ export class Rule {
   //
   async onDestroyed() {
     $GF.log.debug(this.constructor.name + '/onDestroy : ' + this.uid);
-    this.ctrl.eventHandler.unsubscribes(this);
     this.ctrl.eventHandler.emit(this, 'destroyed');
+    this.ctrl.eventHandler.unsubscribes(this);
     this.clear();
   }
 
   async onRefreshed() {
     $GF.log.debug(this.constructor.name + '/onRefresh : ' + this.uid);
-    // this.refresh();
-    this.ctrl.eventHandler.emit(this, 'refeshed');
+    this.ctrl.eventHandler.emit(this, 'refreshed');
   }
 
   async onInitialized() {
     $GF.log.debug(this.constructor.name + '/onInit : ' + this.uid);
-    // this.onRefresh();
-    // this.onChange();
+    this.ctrl.eventHandler.subscribes(this);
     this.ctrl.eventHandler.emit(this, 'initialized');
   }
 
   async onChanged() {
     $GF.log.debug(this.constructor.name + '/onChange : ' + this.uid);
-    // this.change();
     this.ctrl.eventHandler.emit(this, 'changed');
   }
 
@@ -2248,12 +2205,25 @@ export class Rule {
     const self = this;
     return {
       next: (metric: ObjectMetric) => {
+        if (metric !== null && self.matchMetric(metric)) {
+          self.metrics.set(metric.uid, metric);
+          self.onRefreshed();
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {},
+    };
+  }
+
+  getMetric$initialized(): Observer<ObjectMetric> {
+    const self = this;
+    return {
+      next: (metric: ObjectMetric) => {
         if (metric === null) {
           self.metrics.clear();
           self.refresh();
-        } else if (self.matchMetric(metric)) {
-          self.metrics.set(metric.uid, metric);
-          self.onRefreshed();
         }
       },
       error: err => {

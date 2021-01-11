@@ -62,7 +62,6 @@ export class XGraph {
     this.type = type;
     this.ctrl = ctrl;
     this.xcells = [];
-    // this.onMapping = FlowchartHandler.getDefaultMapping();
     this.onMapping = this.ctrl.onMapping;
     this.definition = definition;
     this.init();
@@ -194,7 +193,7 @@ export class XGraph {
    *
    * @memberof XGraph
    */
-  initGraph(): this {
+  initMxGraph(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initGraph()');
     this.graph = new Graph(this.container);
 
@@ -250,7 +249,7 @@ export class XGraph {
       if (this.type === 'csv') {
         try {
           Drawio.importCsv(this.graph, this.csvGraph);
-          this.refresh();
+          this.refreshGraph();
         } catch (error) {
           $GF.log.error('Bad CSV format', error);
           this.ctrl.notify('Bad CSV format', 'error');
@@ -354,7 +353,7 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  refresh(): this {
+  refreshGraph(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'refresh()');
     this.cumulativeZoomFactor = 1;
     if (this.graph) {
@@ -641,14 +640,6 @@ export class XGraph {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'getXCellValues()');
     const values: string[] = [];
     this.getXCells().forEach(c => values.push(c.getDefaultValue(type)));
-    // let values = this.defaultXCellValues[type];
-    // if (values === undefined) {
-    //   this.initXCellValues(type);
-    // }
-    // values = this.defaultXCellValues[type];
-    // if (values !== undefined) {
-    //   return Array.from(values.keys());
-    // }
     trc.after();
     return values;
   }
@@ -1028,7 +1019,7 @@ export class XGraph {
    */
   eventKey(evt: KeyboardEvent) {
     if (!mxEvent.isConsumed(evt) && evt.keyCode === 27 /* Escape */) {
-      this.refresh();
+      this.refreshGraph();
     }
   }
 
@@ -1254,7 +1245,7 @@ export class XGraph {
     if (this.type === 'csv') {
       this.csvGraph = this.definition;
     }
-    this.initGraph();
+    this.initMxGraph();
     // DEBUG MODE
     const self = this;
     if ($GF.DEBUG) {
@@ -1280,24 +1271,38 @@ export class XGraph {
     return this;
   }
 
+  destroy(): this {
+    this.clear();
+    return this;
+  }
+
+  change(): this {
+    this.init();
+    this.drawGraph();
+    return this;
+  }
+
+  refresh(): this {
+    this.refreshGraph();
+    this.onRefreshed();
+    return this;
+  }
   //
   // Events
   //
-  async onDestroy() {
-    this.clear();
+  async onDestroyed() {
+    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
   }
 
-  async onRefresh() {
-    this.refresh();
+  async onRefreshed() {
+    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
   }
 
-  async onInit() {
-    this.init();
+  async onInitialized() {
+    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
   }
 
-  async onChange() {
-    this.clear();
-    this.initGraph();
-    this.drawGraph();
+  async onChanged() {
+    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
   }
 }

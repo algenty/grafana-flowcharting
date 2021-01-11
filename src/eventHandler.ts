@@ -6,15 +6,15 @@ import { Rule } from 'rule_class';
 import { Observer, Subject, Subscription } from 'rxjs';
 import { State } from 'state_class';
 
-export type TEventObject = Rule | Flowchart | ObjectMetric | State;
+export type TEventObject = Rule | Flowchart | ObjectMetric | State | Metric;
 export type TEventList = 'rule' | 'flowchart' | 'metric' | 'state';
-export type TEventName = 'changed' | 'refeshed' | 'initialized' | 'destroyed';
+export type TEventName = 'changed' | 'refreshed' | 'initialized' | 'destroyed';
 // export interface TEventObserver extends Observer<TEventObject> {
 //   uid?: string;
 // }
 export class EventHandler {
   eventList: TEventList[] = ['rule', 'flowchart', 'metric', 'state'];
-  eventName: TEventName[] = ['changed', 'refeshed', 'initialized', 'destroyed'];
+  eventName: TEventName[] = ['changed', 'refreshed', 'initialized', 'destroyed'];
   ctrl: FlowchartCtrl;
   observables: Map<string, Subject<TEventObject | null>> = new Map();
   constructor(ctrl: FlowchartCtrl) {
@@ -52,15 +52,18 @@ export class EventHandler {
       const funcName = `get${list.charAt(0).toUpperCase()}${list.slice(1)}$${eventName}`;
       if (object !== undefined) {
         let funcObject = object[funcName];
-        if (funcObject === undefined) {
-          funcObject = this._getDefaultObserver;
+        // if (funcObject === undefined) {
+        //   funcObject = this._getDefaultObserver;
+        // }
+        if (funcObject !== undefined) {
+          let observable = this.observables.get(mapName);
+          if (observable === undefined) {
+            observable = new Subject();
+            this.observables.set(mapName, observable);
+          }
+          $GF.log.debug(`Subscribe object ${object.constructor.name} for observer ${funcName} with uid ${object['uid']}`)
+          object[subscriptionName] = observable.subscribe(object[funcName]());
         }
-        let observable = this.observables.get(mapName);
-        if (observable === undefined) {
-          observable = new Subject();
-          this.observables.set(mapName, observable);
-        }
-        object[subscriptionName] = observable.subscribe(object[funcName]());
       }
     } catch (error) {
       $GF.log.error(error);
@@ -122,11 +125,11 @@ export class EventHandler {
     throw new Error('Unknown object instance');
   }
 
-  _getDefaultObserver():Observer<TEventObject> {
+  _getDefaultObserver(): Observer<TEventObject> {
     return {
       next: () => {},
       error: () => {},
       complete: () => {},
-    }
+    };
   }
 }

@@ -156,9 +156,9 @@ export class FlowchartsOptionsCtrl {
    * @memberof FlowchartOptionsCtrl
    */
   onSourceChange() {
-    const name = this.flowchartHandler?.getCurrentFlowchartName();
-    this.flowchartHandler?.onChangeGraph(name);
-    this.flowchartHandler?.onRulesChange();
+    // const name = this.flowchartHandler?.getCurrentFlowchartName();
+    this.flowchartHandler?.change();
+    // this.rulesHandler?.onRulesChange();
     this.onOptionChange();
     this.render();
   }
@@ -180,7 +180,7 @@ export class FlowchartsOptionsCtrl {
    */
   onOptionChange() {
     // const name = this.flowchartHandler?.getCurrentFlowchartName();
-    this.flowchartHandler?.onRefresh();
+    this.flowchartHandler?.refresh();
     this.render();
   }
 
