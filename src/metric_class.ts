@@ -172,6 +172,7 @@ export class SerieMetric extends Metric {
   constructor(dataList: any, ctrl: FlowchartCtrl) {
     super(dataList, ctrl);
     this.type = 'serie';
+    this.init();
   }
 
   init(): this {

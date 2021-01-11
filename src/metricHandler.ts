@@ -51,6 +51,7 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   addTable(data: any): TableMetric {
+    $GF.trace.before(this.constructor.name + '.addTable()');
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addTable()');
     const table = new TableMetric(data, this.ctrl);
     this.tables.push(table);
@@ -67,6 +68,7 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   addSerie(data: any): SerieMetric {
+    $GF.trace.before(this.constructor.name + '.addSerie()');
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addSerie()');
     const serie = new SerieMetric(data, this.ctrl);
     this.series.push(serie);
@@ -187,6 +189,7 @@ export class MetricHandler {
   refresh() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
     this.destroy();
+    this.onInitialized();
     this.dataList.forEach(dl => {
       this.addMetric(dl);
     });
@@ -222,6 +225,7 @@ export class MetricHandler {
 
   async onInitialized() {
     $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    this.ctrl.eventHandler.ack('metric', 'initialized');
   }
 
   async onChanged() {

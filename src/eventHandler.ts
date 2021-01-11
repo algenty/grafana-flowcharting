@@ -61,7 +61,9 @@ export class EventHandler {
             observable = new Subject();
             this.observables.set(mapName, observable);
           }
-          $GF.log.debug(`Subscribe object ${object.constructor.name} for observer ${funcName} with uid ${object['uid']}`)
+          $GF.log.debug(
+            `Subscribe object ${object.constructor.name} for observer ${funcName} with uid ${object['uid']}`
+          );
           object[subscriptionName] = observable.subscribe(object[funcName]());
         }
       }
@@ -84,6 +86,9 @@ export class EventHandler {
   }
 
   async emit(object: TEventObject, eventName: TEventName) {
+    if (object) {
+      $GF.log.debug(this.constructor.name + '.emit() for object ' + object.constructor.name + ' with ' + eventName);
+    }
     try {
       const mapName = this._getObservableName(object, eventName);
       let observable = this.observables.get(mapName);

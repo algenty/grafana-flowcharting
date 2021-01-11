@@ -185,11 +185,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onDataReceived(dataList) {
     $GF.log.debug(this.constructor.name + '/onDataReceived');
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
-    if (!!this.metricHandler) {
-      this.metricHandler?.setDataList(dataList);
-      this.metricHandler.refresh();
-    }
-    // this.render();
+    this.metricHandler?.setDataList(dataList);
+    this.metricHandler?.refresh();
     trc.after();
     $GF.trace.resume();
   }
