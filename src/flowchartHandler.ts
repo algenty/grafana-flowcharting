@@ -57,6 +57,7 @@ export class FlowchartHandler {
       this.mousedown = 0;
       window.clearInterval(this.mousedownTimeout);
     };
+    this.init();
   }
 
   static getDefaultData(): gf.TFlowchartHandlerData {
@@ -115,6 +116,7 @@ export class FlowchartHandler {
       });
       this.currentFlowchart = this.getFlowchart('Main');
     }
+    this.change();
     return this;
   }
 
@@ -328,6 +330,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   createContainer(): HTMLDivElement {
+    debugger
     const div = document.createElement('div');
     div.style.margin = 'auto';
     // div.style.position = 'relative';
@@ -375,6 +378,7 @@ export class FlowchartHandler {
   removeFlowchart(name: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'removeFlowchart()');
     const fc = this.getFlowchart(name);
+    fc.destroy();
     const index = this.flowcharts.indexOf(fc);
     this.flowcharts.splice(index, 1);
     this.data.flowcharts.splice(index, 1);
@@ -557,9 +561,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   refreshFlowchart(): this {
-    this.flowcharts.forEach(flowchart => {
-      flowchart.refresh();
-    });
+    this.flowcharts.forEach(f => f.refresh());
     return this;
   }
 
@@ -574,9 +576,7 @@ export class FlowchartHandler {
   }
 
   refreshStates(): this {
-    this.flowcharts.forEach(f => {
-      f.getStateHandler()?.refresh();
-    });
+    this.flowcharts.forEach(f => f.getStateHandler()?.refresh());
     return this;
   }
 
@@ -638,31 +638,31 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  setOptions(name?: string): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setOptions()');
-    if (name === undefined) {
-      this.flowcharts.forEach(flowchart => {
-        const name = flowchart.getName();
-        this.setOptions(name);
-      });
-    } else {
-      const flowchart = this.getFlowchart(name);
-      flowchart.setGraphOptions();
-      // this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS, name);
-      // this.flagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS, name);
-      if (!flowchart.isVisible()) {
-        // this.flagEvent($GF.CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
-      }
-    }
-    trc.after();
-    return this;
-  }
+  // setOptions(name?: string): this {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'setOptions()');
+  //   if (name === undefined) {
+  //     this.flowcharts.forEach(flowchart => {
+  //       const name = flowchart.getName();
+  //       this.setOptions(name);
+  //     });
+  //   } else {
+  //     const flowchart = this.getFlowchart(name);
+  //     flowchart.setGraphOptions();
+  //     // this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS, name);
+  //     // this.flagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS, name);
+  //     if (!flowchart.isVisible()) {
+  //       // this.flagEvent($GF.CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
+  //     }
+  //   }
+  //   trc.after();
+  //   return this;
+  // }
 
-  setCurrentOptions(): this {
-    const name = this.getCurrentFlowchartName();
-    this.setOptions(name);
-    return this;
-  }
+  // setCurrentOptions(): this {
+  //   const name = this.getCurrentFlowchartName();
+  //   this.setOptions(name);
+  //   return this;
+  // }
 
   /**
    * (re)draw graph
@@ -670,26 +670,26 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  draw(name?: string): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
-    if (name === undefined) {
-      this.flowcharts.forEach(flowchart => {
-        const name = flowchart.getName();
-        this.draw(name);
-      });
-    } else {
-      const flowchart = this.getFlowchart(name);
-      flowchart.setContent();
-    }
-    trc.after();
-    return this;
-  }
+  // draw(name?: string): this {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
+  //   if (name === undefined) {
+  //     this.flowcharts.forEach(flowchart => {
+  //       const name = flowchart.getName();
+  //       this.draw(name);
+  //     });
+  //   } else {
+  //     const flowchart = this.getFlowchart(name);
+  //     flowchart.setContent();
+  //   }
+  //   trc.after();
+  //   return this;
+  // }
 
-  drawCurrent(): this {
-    const name = this.getCurrentFlowchartName();
-    this.draw(name);
-    return this;
-  }
+  // drawCurrent(): this {
+  //   const name = this.getCurrentFlowchartName();
+  //   this.draw(name);
+  //   return this;
+  // }
 
   /**
    * (re)load graph,
@@ -697,23 +697,23 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  load(name?: string): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
-    if (name === undefined) {
-      this.flowcharts.forEach(flowchart => {
-        this.load(name);
-      });
-    } else {
-      const flowchart = this.getFlowchart(name);
-      if (!flowchart.isVisible()) {
-        // this.flagEvent($GF.CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
-      }
-      flowchart.reload();
-      // this.akcFlagEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS, name);
-    }
-    trc.after();
-    return this;
-  }
+  // load(name?: string): this {
+  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
+  //   if (name === undefined) {
+  //     this.flowcharts.forEach(flowchart => {
+  //       this.load(name);
+  //     });
+  //   } else {
+  //     const flowchart = this.getFlowchart(name);
+  //     if (!flowchart.isVisible()) {
+  //       // this.flagEvent($GF.CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
+  //     }
+  //     flowchart.reload();
+  //     // this.akcFlagEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS, name);
+  //   }
+  //   trc.after();
+  //   return this;
+  // }
 
   /**
    * load current flowchart
@@ -721,11 +721,11 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  loadCurrent(): this {
-    const name = this.getCurrentFlowchartName();
-    this.load(name);
-    return this;
-  }
+  // loadCurrent(): this {
+  //   const name = this.getCurrentFlowchartName();
+  //   this.load(name);
+  //   return this;
+  // }
 
   /**
    * Active option link/map
@@ -809,7 +809,8 @@ export class FlowchartHandler {
             this.ctrl.notify('Received data from draw.io editor, refresh in progress', 'info');
             fc.setContent(event.data);
             // this.onChangeGraph(fc.getName());
-            fc.xgraph?.change();
+            // fc.xgraph?.change();
+            fc.change();
             this.ctrl.$scope.$applyAsync();
             this.render();
           }
@@ -857,20 +858,23 @@ export class FlowchartHandler {
   // updates
   //
   refresh(): this {
-    this.refreshMetrics();
-    this.refreshRules();
-    this.refreshStates();
+    // this.refreshMetrics();
+    // this.refreshRules();
+    // this.refreshStates();
     this.refreshFlowchart();
     this.onRefreshed();
     return this;
   }
 
   change(): this {
+    this.flowcharts.forEach(f => f.change());
+    this.setCurrentFlowchart('Main');
     this.onChanged();
     return this;
   }
 
   destroy(): this {
+    this.flowcharts.forEach(f => f.destroy());
     this.clear();
     this.onDestroyed();
     return this;
@@ -886,6 +890,7 @@ export class FlowchartHandler {
   //
   async onDestroyed() {
     $GF.log.debug(this.constructor.name + '/onDestroyed');
+    this.ctrl.eventHandler.unsubscribes(this);
   }
 
   async onRefreshed() {
@@ -894,6 +899,7 @@ export class FlowchartHandler {
 
   async onInitialized() {
     $GF.log.debug(this.constructor.name + '/onInitialized');
+    this.ctrl.eventHandler.subscribes(this);
   }
 
   async onChanged() {

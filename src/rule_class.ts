@@ -2205,7 +2205,7 @@ export class Rule {
     const self = this;
     return {
       next: (metric: ObjectMetric) => {
-        $GF.log.debug('RULE Metric$changed: Received : ', metric)
+        $GF.log.debug(this.constructor.name + ' -> metric$changed', metric);
         if (metric !== null && self.matchMetric(metric)) {
           self.metrics.set(metric.uid, metric);
           self.onRefreshed();
@@ -2225,7 +2225,7 @@ export class Rule {
     return {
       next: (metric: ObjectMetric) => {
         if (metric === null) {
-          $GF.log.debug('RULE Metric$initialized: Received ACK', metric)
+          $GF.log.debug('RULE Metric$initialized: Received ACK', metric);
           self.metrics.clear();
           self.refresh();
         }

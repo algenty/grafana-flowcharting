@@ -23,9 +23,9 @@ export class EventHandler {
   }
 
   subscribes(object: Object) {
-    $GF.log.debug(this.constructor.name +'.subscribes()', object);
+    $GF.log.debug(this.constructor.name + '.subscribes()', object);
     const listLen = this.eventList.length;
-    const nameLen = this.eventList.length;
+    const nameLen = this.eventName.length;
     for (let i = 0; i < listLen; i++) {
       const list = this.eventList[i];
       for (let j = 0; j < nameLen; j++) {
@@ -36,9 +36,9 @@ export class EventHandler {
   }
 
   unsubscribes(object: Object) {
-    $GF.log.debug(this.constructor.name +'.unsubscribes()', object);
+    $GF.log.debug(this.constructor.name + '.unsubscribes()', object);
     const listLen = this.eventList.length;
-    const nameLen = this.eventList.length;
+    const nameLen = this.eventName.length;
     for (let i = 0; i < listLen; i++) {
       const list = this.eventList[i];
       for (let j = 0; j < nameLen; j++) {

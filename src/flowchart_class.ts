@@ -165,7 +165,7 @@ export class Flowchart {
   // }
 
   initStateHandler(): this {
-    if(this.xgraph) {
+    if (this.xgraph) {
       this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
     }
     return this;
@@ -469,9 +469,9 @@ export class Flowchart {
   // setBgColor(bgColor: string | null): this {
   //   this.data.bgColor = bgColor;
   //   if (bgColor) {
-  //     this.container.style.backgroundColor = bgColor; 
+  //     this.container.style.backgroundColor = bgColor;
   //   } else {
-  //     this.container.style.backgroundColor = ''; 
+  //     this.container.style.backgroundColor = '';
   //   }
   //   return this;
   // }
@@ -768,7 +768,7 @@ export class Flowchart {
 
   toFront(forceRefresh: boolean = false): this {
     this.visible = true;
-    this.container.className = 'gf-flowchartShow';
+    // this.container.className = 'gf-flowchartShow';
     if (forceRefresh) {
       this.xgraph?.refresh();
     }
@@ -777,7 +777,7 @@ export class Flowchart {
 
   toBack(): this {
     this.visible = false;
-    this.container.className = 'gf-flowchartHide';
+    // this.container.className = 'gf-flowchartHide';
     return this;
   }
 
@@ -813,7 +813,7 @@ export class Flowchart {
     this.onChanged();
     return this;
   }
-  
+
   init(): this {
     this.initGraph();
     this.initStateHandler();

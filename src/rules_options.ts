@@ -886,8 +886,9 @@ export class RulesOptionsCtrl {
 
   onRulesChange() {
     $GF.log.info('RulesOptionsCtrl.onRulesChange()');
-    this.flowchartHandler?.onRulesChange();
-    this.render();
+    this.ctrl.rulesHandler?.change();
+    // this.flowchartHandler?.onRulesChange();
+    // this.render();
     return true;
   }
 

@@ -60,8 +60,7 @@ export class State {
     this.variables = $GF.createLocalVars();
     this.status = new Map();
     this.tooltipHandler = null;
-    // this.xcell.GF_tooltipHandler = null;
-    // this.originalText = XGraph.getLabelCell(xcell);
+    this.init();
     trc.after();
   }
 
@@ -550,6 +549,7 @@ export class State {
     const self = this;
     return {
       next: rule => {
+        $GF.log.debug(this.constructor.name + ' -> rule$refreshed', rule);
         if (rule !== null && this.rules.has(rule.uid)) {
           self.refresh(rule);
         }
@@ -565,6 +565,7 @@ export class State {
     const self = this;
     return {
       next: rule => {
+        $GF.log.debug(this.constructor.name + ' -> rule$changed', rule);
         if (rule !== null) {
           if (self.matchRule(rule)) {
             this.rules.set(rule.uid, rule);
