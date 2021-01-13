@@ -736,14 +736,14 @@ export class Flowchart {
     this.data.xml = $GF.utils.prettify(this.data.xml);
   }
 
-  decode() {
+  _decode() {
     if ($GF.utils.isencoded(this.data.xml)) {
       this.data.xml = $GF.utils.decode(this.data.xml, true, true, true);
       // this.data.xml = XGraph.decompress(this.data.xml);
     }
   }
 
-  encode() {
+  _encode() {
     if (!$GF.utils.isencoded(this.data.xml)) {
       this.data.xml = $GF.utils.encode(this.data.xml, true, true, true);
       // this.data.xml = XGraph.compress(this.data.xml);
