@@ -119,7 +119,6 @@ export class State {
    */
   setCycle(rule?: Rule): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setCycle()');
-    console.log('State -> setState -> this.rules', this.rules);
     const rules = rule === undefined ? this.rules : [rule];
     rules.forEach((r: Rule) => {
       let beginPerf = Date.now();
@@ -483,8 +482,14 @@ export class State {
   //
   refresh(rule?: Rule): this {
     this.setCycle(rule);
-    this.applyCycle();
+    // this.applyCycle();
     this.onRefreshed();
+    return this;
+  }
+
+  complete(): this {
+    this.applyCycle();
+    this.onCompleted();
     return this;
   }
 
@@ -527,6 +532,10 @@ export class State {
     $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
   }
 
+  async onCompleted() {
+    $GF.log.debug(this.constructor.name + '/onCompleted : ' + this.uid);
+  }
+
   //
   // RXJS Observers
   //
@@ -536,6 +545,21 @@ export class State {
       next: metric => {
         if (metric === null) {
           self.initCycle();
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {},
+    };
+  }
+
+  getMetric$completed(): Observer<ObjectMetric> {
+    const self = this;
+    return {
+      next: metric => {
+        if (metric === null) {
+          self.complete();
         }
       },
       error: err => {

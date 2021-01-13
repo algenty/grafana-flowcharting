@@ -41,9 +41,9 @@ export class FlowchartHandler {
     this.onMapping = ctrl.onMapping;
 
     // Events Render
-    this.ctrl.events.on('render', () => {
-      this.render();
-    });
+    // this.ctrl.events.on('render', () => {
+    //   this.render();
+    // });
 
     document.body.onmousedown = () => {
       this.mousedown = 0;
@@ -330,7 +330,6 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   createContainer(): HTMLDivElement {
-    debugger
     const div = document.createElement('div');
     div.style.margin = 'auto';
     // div.style.position = 'relative';
@@ -391,7 +390,7 @@ export class FlowchartHandler {
    *
    * @memberof FlowchartHandler
    */
-  async render(name?: string) {
+  render(name?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
     // not repeat render if mouse down
     if (!this.mousedown) {
@@ -812,7 +811,7 @@ export class FlowchartHandler {
             // fc.xgraph?.change();
             fc.change();
             this.ctrl.$scope.$applyAsync();
-            this.render();
+            // this.render();
           }
         }
       }

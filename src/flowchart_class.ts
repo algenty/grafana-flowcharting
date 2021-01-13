@@ -844,5 +844,6 @@ export class Flowchart {
   async onChanged() {
     $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
     this.ctrl.eventHandler.emit(this, 'changed');
+    // this.refresh(); //TODO : Verify
   }
 }

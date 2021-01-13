@@ -110,6 +110,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   // EVENTS FCT
   //
+  /**
+   * Edit Mode Event
+   *
+   * @memberof FlowchartCtrl
+   */
   onInitEditMode() {
     this.addEditorTab('Flowcharts', flowchartsOptionsTab, 2);
     this.addEditorTab('Rules', rulesOptionsTab, 3);
@@ -123,6 +128,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // $GF.log.debug('EVENT : ', this.id, 'onTearDown');
   }
 
+  /**
+   * GraphHover Event
+   *
+   * @param {*} event
+   * @memberof FlowchartCtrl
+   */
   onGraphHover(event: any) {
     const self = this;
     const flowchartHandler = this.flowchartHandler;
@@ -159,6 +170,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.onRender();
   }
 
+  /**
+   * OnVar Event
+   *
+   * @memberof FlowchartCtrl
+   */
   onVarChanged() {
     $GF.log.debug(this.constructor.name + '/onVarChanged');
     if (this.flowchartHandler !== undefined) {
@@ -167,21 +183,34 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
+  /**
+   * OnRender Event
+   *
+   * @memberof FlowchartCtrl
+   */
   onRender() {
     $GF.log.debug(this.constructor.name + '/onRender');
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();
       const panelClone = _cloneDeep(this.panel);
-      this.flowchartHandler.clear();
+      this.flowchartHandler.destroy();
       this.flowchartHandler.import(panelClone.flowchartsData);
-      this.rulesHandler.clear();
+      this.rulesHandler.destroy();
       this.rulesHandler.import(panelClone.rulesData);
       // this.flowchartHandler.onChangeGraph();
-      this.flowchartHandler.render();
+      // this.flowchartHandler.refresh();
+    } else {
+      this.flowchartHandler?.render();
     }
   }
 
+  /**
+   * Data receved Event
+   *
+   * @param {*} dataList : Array of dalalist
+   * @memberof FlowchartCtrl
+   */
   onDataReceived(dataList) {
     $GF.log.debug(this.constructor.name + '/onDataReceived');
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
@@ -284,6 +313,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       );
     }
     this.panel.version = this.version;
+    this.flowchartHandler?.refresh();
     trc.after();
   }
 

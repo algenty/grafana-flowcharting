@@ -9,13 +9,13 @@ import { XGraph } from 'graph_class';
 
 export type TEventObject = Rule | Flowchart | ObjectMetric | State | Metric | XGraph;
 export type TEventList = 'rule' | 'flowchart' | 'metric' | 'state' | 'graph';
-export type TEventName = 'changed' | 'refreshed' | 'initialized' | 'destroyed';
+export type TEventName = 'changed' | 'refreshed' | 'initialized' | 'destroyed' | 'completed';
 // export interface TEventObserver extends Observer<TEventObject> {
 //   uid?: string;
 // }
 export class EventHandler {
   eventList: TEventList[] = ['rule', 'flowchart', 'metric', 'state', 'graph'];
-  eventName: TEventName[] = ['changed', 'refreshed', 'initialized', 'destroyed'];
+  eventName: TEventName[] = ['changed', 'refreshed', 'initialized', 'destroyed', 'completed'];
   ctrl: FlowchartCtrl;
   observables: Map<string, Subject<TEventObject | null>> = new Map();
   constructor(ctrl: FlowchartCtrl) {

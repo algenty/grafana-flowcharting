@@ -226,6 +226,7 @@ export class MetricHandler {
 
   async onRefreshed() {
     $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
+    this.onCompleted();
   }
 
   async onInitialized() {
@@ -235,5 +236,10 @@ export class MetricHandler {
 
   async onChanged() {
     $GF.log.debug(this.constructor.name + '/onChange : ' + this.uid);
+  }
+
+  async onCompleted() {
+    $GF.log.debug(this.constructor.name + '/onCompleted : ' + this.uid);
+    this.ctrl.eventHandler.ack('metric', 'completed');
   }
 }

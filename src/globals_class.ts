@@ -61,7 +61,7 @@ class GFCONSTANT {
   // FLOWCHART_CHG_HIDDENCHANGE: gf.TFlowchartFlagKeys = 'hiddenChange';
 
   // TRACE AND DEBUG
-  VAR_GF_TRACE_PERF = true;
+  VAR_GF_TRACE_PERF = false;
 
   // MXGRAPH
   MXGRAPH_STYLES_COLOR: gf.TStyleColorKeys[] = [
@@ -862,7 +862,7 @@ export class $GF {
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
-  static DEBUG = true;
+  static DEBUG = false;
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
