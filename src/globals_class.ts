@@ -435,7 +435,7 @@ class GFLog {
   static WARN = 2;
   static ERROR = 3;
   static logLevel = GFLog.DEBUG;
-  static logDisplay = true;
+  static logDisplay = false;
   constructor() {}
 
   static init(): GFLog {

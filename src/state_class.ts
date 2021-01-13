@@ -488,7 +488,7 @@ export class State {
   }
 
   complete(): this {
-    this.applyCycle();
+    this.async_applyCycle();
     this.onCompleted();
     return this;
   }
