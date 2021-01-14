@@ -90,9 +90,9 @@ export class State {
    *
    * @memberof State
    */
-  async async_applyCycle() {
+  async_applyCycle() {
     // new Promise (this.applyState.bind(this));
-    this.applyCycle();
+    setTimeout(() => this.applyCycle(), 0);
   }
 
   tagRule(rule: Rule): this {
@@ -488,7 +488,7 @@ export class State {
   }
 
   complete(): this {
-    this.async_applyCycle();
+    this.applyCycle();
     this.onCompleted();
     return this;
   }
@@ -557,7 +557,7 @@ export class State {
   getMetric$completed(): Observer<ObjectMetric> {
     const self = this;
     return {
-      next: metric => {
+      next: async metric => {
         if (metric === null) {
           self.complete();
         }
@@ -572,7 +572,7 @@ export class State {
   getRule$refreshed(): Observer<Rule> {
     const self = this;
     return {
-      next: rule => {
+      next: async rule => {
         $GF.log.debug(this.constructor.name + ' -> rule$refreshed', rule);
         if (rule !== null && this.rules.has(rule.uid)) {
           self.refresh(rule);
@@ -588,7 +588,7 @@ export class State {
   getRule$changed(): Observer<Rule> {
     const self = this;
     return {
-      next: rule => {
+      next: async rule => {
         $GF.log.debug(this.constructor.name + ' -> rule$changed', rule);
         if (rule !== null) {
           if (self.matchRule(rule)) {
@@ -608,7 +608,7 @@ export class State {
   getRule$destroyed(): Observer<Rule> {
     const self = this;
     return {
-      next: rule => {
+      next: async rule => {
         if (rule !== null) {
           self.rules.delete(rule.uid);
         }

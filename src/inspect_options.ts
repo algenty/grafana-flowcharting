@@ -162,8 +162,6 @@ export class InspectOptionsCtrl {
   }
 
   reset() {
-    this.flowchartHandler?.draw();
-    this.flowchartHandler?.refresh();
     const flowchart = this.flowchartHandler?.getFlowchart();
     const sh = flowchart?.getStateHandler();
     if (sh) {
@@ -175,6 +173,7 @@ export class InspectOptionsCtrl {
         }
       });
       sh.edited = false;
+      this.flowchartHandler?.change();
     }
   }
 

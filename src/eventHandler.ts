@@ -3,7 +3,7 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
 import { $GF } from 'globals_class';
 import { Metric, ObjectMetric, SerieMetric, TableMetric } from 'metric_class';
 import { Rule } from 'rule_class';
-import { Observer, Subject, Subscription } from 'rxjs';
+import { Observer, Subject, Subscription, AsyncSubject } from 'rxjs';
 import { State } from 'state_class';
 import { XGraph } from 'graph_class';
 
@@ -59,11 +59,7 @@ export class EventHandler {
         //   funcObject = this._getDefaultObserver;
         // }
         if (funcObject !== undefined) {
-          let observable = this.observables.get(mapName);
-          if (observable === undefined) {
-            observable = new Subject();
-            this.observables.set(mapName, observable);
-          }
+          let observable = this._getObservable(mapName);
           $GF.log.debug(
             `Subscribe object ${object.constructor.name} for observer ${funcName} with uid ${object['uid']}`
           );
@@ -92,25 +88,19 @@ export class EventHandler {
     if (object) {
       $GF.log.debug(this.constructor.name + '.emit() for object ' + object.constructor.name + ' with ' + eventName);
     }
-    try {
-      const mapName = this._getObservableName(object, eventName);
-      let observable = this.observables.get(mapName);
-      if (observable === undefined) {
-        observable = new Subject();
-      }
-      observable.next(object);
-    } catch (error) {
-      $GF.log.error(error);
-    }
+    // try {
+    const mapName = this._getObservableName(object, eventName);
+    let observable = this._getObservable(mapName);
+    observable.next(object);
+    // } catch (error) {
+    //   $GF.log.error(error);
+    // }
   }
 
   async ack(list: TEventList, eventName: TEventName) {
     try {
       const mapName = `${list}$${eventName}`;
-      let observable = this.observables.get(mapName);
-      if (observable === undefined) {
-        observable = new Subject();
-      }
+      let observable = this._getObservable(mapName);
       observable.next(null);
     } catch (error) {
       $GF.log.error(error);
@@ -142,5 +132,14 @@ export class EventHandler {
       error: () => {},
       complete: () => {},
     };
+  }
+
+  _getObservable(mapName: string): Subject<any> {
+    let observable = this.observables.get(mapName);
+    if (observable === undefined) {
+      observable = new Subject();
+      this.observables.set(mapName, observable);
+    }
+    return observable;
   }
 }
