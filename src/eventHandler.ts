@@ -3,7 +3,7 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
 import { $GF } from 'globals_class';
 import { Metric, ObjectMetric, SerieMetric, TableMetric } from 'metric_class';
 import { Rule } from 'rule_class';
-import { Observer, Subject, Subscription, AsyncSubject } from 'rxjs';
+import { Observer, Subject, Subscription } from 'rxjs';
 import { State } from 'state_class';
 import { XGraph } from 'graph_class';
 
@@ -88,13 +88,13 @@ export class EventHandler {
     if (object) {
       $GF.log.debug(this.constructor.name + '.emit() for object ' + object.constructor.name + ' with ' + eventName);
     }
-    // try {
-    const mapName = this._getObservableName(object, eventName);
-    let observable = this._getObservable(mapName);
-    observable.next(object);
-    // } catch (error) {
-    //   $GF.log.error(error);
-    // }
+    try {
+      const mapName = this._getObservableName(object, eventName);
+      let observable = this._getObservable(mapName);
+      observable.next(object);
+    } catch (error) {
+      $GF.log.error(error);
+    }
   }
 
   async ack(list: TEventList, eventName: TEventName) {

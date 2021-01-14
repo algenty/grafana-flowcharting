@@ -417,7 +417,7 @@ export class XGraph {
    */
   allowDrawio(bool: boolean): this {
     if (bool) {
-      mxUrlConverter.prototype.baseUrl = 'http://draw.io/';
+      mxUrlConverter.prototype.baseUrl = $GF.CONSTANTS.CONF_EDITOR_URL;
       mxUrlConverter.prototype.baseDomain = '';
     } else {
       mxUrlConverter.prototype.baseUrl = null;

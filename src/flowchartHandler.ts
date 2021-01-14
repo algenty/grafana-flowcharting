@@ -62,8 +62,8 @@ export class FlowchartHandler {
 
   static getDefaultData(): gf.TFlowchartHandlerData {
     return {
-      editorUrl: 'https://embed.diagrams.net/',
-      editorTheme: 'kennedy',
+      editorUrl: $GF.CONSTANTS.CONF_EDITOR_URL,
+      editorTheme: $GF.CONSTANTS.CONF_EDITOR_THEME,
       flowcharts: [],
       allowDrawio: true,
     };

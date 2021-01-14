@@ -2147,7 +2147,6 @@ export class Rule {
   //
   // Updates
   //
-
   refresh(): this {
     this.initCycle();
     this.onRefreshed();
@@ -2204,7 +2203,7 @@ export class Rule {
   getMetric$changed(): Observer<ObjectMetric> {
     const self = this;
     return {
-      next: (metric: ObjectMetric) => {
+      next: async (metric: ObjectMetric) => {
         $GF.log.debug(this.constructor.name + ' -> metric$changed', metric);
         if (metric !== null && self.matchMetric(metric)) {
           self.metrics.set(metric.uid, metric);

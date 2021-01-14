@@ -167,7 +167,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   onRefresh() {
     $GF.log.debug(this.constructor.name + '/onRefresh');
-    this.onRender();
+    // this.onRender();
   }
 
   /**
@@ -198,11 +198,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.import(panelClone.flowchartsData);
       this.rulesHandler.destroy();
       this.rulesHandler.import(panelClone.rulesData);
-      // this.flowchartHandler.onChangeGraph();
-      // this.flowchartHandler.refresh();
-    } else {
-      this.flowchartHandler?.render();
     }
+    this.flowchartHandler?.render();
   }
 
   /**

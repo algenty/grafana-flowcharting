@@ -26,6 +26,8 @@ class GFCONSTANT {
   CONF_GFMESSAGE_MS = 5000;
   CONF_BLINK_COLOR = '#f5f242';
   CONF_HIGHTLIGHT_COLOR = '#99ff33';
+  CONF_EDITOR_URL = 'https://embed.diagrams.net/';
+  CONF_EDITOR_THEME = 'kennedy';
 
   // GLOBAL VARIABLE
   VAR_STG_SHAPES = 'shapestext';
