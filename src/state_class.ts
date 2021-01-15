@@ -557,7 +557,7 @@ export class State {
   getMetric$completed(): Observer<ObjectMetric> {
     const self = this;
     return {
-      next: async metric => {
+      next: metric => {
         if (metric === null) {
           self.complete();
         }
@@ -572,7 +572,7 @@ export class State {
   getRule$refreshed(): Observer<Rule> {
     const self = this;
     return {
-      next: async rule => {
+      next: rule => {
         $GF.log.debug(this.constructor.name + ' -> rule$refreshed', rule);
         if (rule !== null && this.rules.has(rule.uid)) {
           self.refresh(rule);
@@ -588,7 +588,7 @@ export class State {
   getRule$changed(): Observer<Rule> {
     const self = this;
     return {
-      next: async rule => {
+      next: rule => {
         $GF.log.debug(this.constructor.name + ' -> rule$changed', rule);
         if (rule !== null) {
           if (self.matchRule(rule)) {
@@ -608,7 +608,7 @@ export class State {
   getRule$destroyed(): Observer<Rule> {
     const self = this;
     return {
-      next: async rule => {
+      next: rule => {
         if (rule !== null) {
           self.rules.delete(rule.uid);
         }
@@ -867,14 +867,14 @@ class EventState extends GFState {
     return this._get(key);
   }
 
-  async apply_core(key: gf.TTypeEventKeys, value: any) {
+  apply_core(key: gf.TTypeEventKeys, value: any) {
     if (value === undefined) {
       value = null;
     }
     this._set(key, value);
   }
 
-  async reset_core(key: gf.TTypeEventKeys, value: any) {
+  reset_core(key: gf.TTypeEventKeys, value: any) {
     if (value === undefined) {
       value = null;
     }
@@ -1046,11 +1046,11 @@ class TextState extends GFState {
     return this.xcell.getLabel();
   }
 
-  async apply_core(key: string, value: any) {
+  apply_core(key: string, value: any) {
     this.xcell.setLabel(value);
   }
 
-  async reset_core(key: string, value: any) {
+  reset_core(key: string, value: any) {
     this.xcell.restoreLabel();
   }
 }
@@ -1072,11 +1072,11 @@ class LinkState extends GFState {
     return this.xcell.getDefaultLink();
   }
 
-  async apply_core(key: string, value: any) {
+  apply_core(key: string, value: any) {
     this.xcell.setLink(value);
   }
 
-  async reset_core(key: string, value: any) {
+  reset_core(key: string, value: any) {
     // if (value === undefined || value === null || value.length === 0) {
     //   this.xgraph.removeLink(this.xcell);
     // } else {
@@ -1116,14 +1116,14 @@ class ShapeState extends GFState {
     return this.xcell.getDefaultStyle(key);
   }
 
-  async apply_core(key: gf.TStyleColorKeys, value: any) {
+  apply_core(key: gf.TStyleColorKeys, value: any) {
     if (value === undefined) {
       value = null;
     }
     this.xgraph.setAnimColorCell(this.xcell, key, value);
   }
 
-  async reset_core(key: gf.TStyleColorKeys, value: any) {
+  reset_core(key: gf.TStyleColorKeys, value: any) {
     // if (value === undefined) {
     //   value = null;
     // }
@@ -1147,7 +1147,7 @@ class TooltipState extends GFState {
     this.xcell.enableTooltip(false);
   }
 
-  async setTooltip(rule: Rule, metric: ObjectMetric, color: string, value: string, metadata: gf.TXCellMetadata) {
+  setTooltip(rule: Rule, metric: ObjectMetric, color: string, value: string, metadata: gf.TXCellMetadata) {
     let tpColor: string | null = null;
     let label: string = rule.data.tooltipLabel;
     if (this.tooltipHandler === null || this.tooltipHandler === undefined) {

@@ -84,7 +84,7 @@ export class EventHandler {
     }
   }
 
-  async emit(object: TEventObject, eventName: TEventName) {
+  emit(object: TEventObject, eventName: TEventName) {
     if (object) {
       $GF.log.debug(this.constructor.name + '.emit() for object ' + object.constructor.name + ' with ' + eventName);
     }
@@ -97,7 +97,7 @@ export class EventHandler {
     }
   }
 
-  async ack(list: TEventList, eventName: TEventName) {
+  ack(list: TEventList, eventName: TEventName) {
     try {
       const mapName = `${list}$${eventName}`;
       let observable = this._getObservable(mapName);
