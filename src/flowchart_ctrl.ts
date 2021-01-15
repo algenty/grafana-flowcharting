@@ -32,7 +32,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   eventHandler: EventHandler;
   onMapping: InteractiveMap;
   id: String;
-  GHApplied = false;
+  graphHoverTimer: GFTimer | undefined = undefined;
   mouseIn = false;
   panelDefaults: {
     newFlag: boolean;
@@ -44,16 +44,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   };
   containerDivId: string;
   static templateUrl: string;
-  flags = {
-    refresh_graph: new Set<string>(),
-    change_graph: new Set<string>(),
-    refresh_datas: new Set<string>(),
-    change_datas: new Set<string>(),
-    refresh_rules: new Set<string>(),
-    change_rules: new Set<string>(),
-    refresh_graphHover: new Set<string>(),
-    // hiddenChange: new Set<string>(),
-  };
+  // flags = {
+  //   refresh_graph: new Set<string>(),
+  //   change_graph: new Set<string>(),
+  //   refresh_datas: new Set<string>(),
+  //   change_datas: new Set<string>(),
+  //   refresh_rules: new Set<string>(),
+  //   change_rules: new Set<string>(),
+  //   refresh_graphHover: new Set<string>(),
+  //   // hiddenChange: new Set<string>(),
+  // };
   /**@ngInject*/
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
@@ -135,33 +135,38 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    * @memberof FlowchartCtrl
    */
   onGraphHover(event: any) {
-    const self = this;
     const flowchartHandler = this.flowchartHandler;
     if (this.dashboard.sharedTooltipModeEnabled() && flowchartHandler !== undefined) {
       const timestamp = event.pos.x;
-      const id = 'graph-hover';
-      $GF.clearUniqTimeOut(id);
+      const timeId = 'graph-hover';
+      // $GF.clearUniqTimeOut(timeId);
       const setGraphHover = () => {
         $GF.setGraphHover(timestamp);
         // flowchartHandler.onGraphHoverChange();
-        self.render();
-        self.GHApplied = true;
-        $GF.clearUniqTimeOut(id);
+        // self.render();
+        // $GF.clearUniqTimeOut(id);
       };
-      $GF.setUniqTimeOut(setGraphHover, $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY, id);
-    } else if (self.GHApplied) {
-      $GF.unsetGraphHover();
+      // $GF.setUniqTimeOut(setGraphHover, $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY, id);
+      if (this.graphHoverTimer === undefined) {
+        this.graphHoverTimer = GFTimer.getNewTimer(timeId);
+      }
+      const ms = $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY;
+      this.graphHoverTimer.add(setGraphHover.bind(this), ms).run();
+    } else {
+      this.graphHoverTimer?.cancel();
+      this.graphHoverTimer = undefined;
     }
   }
 
   clearCrosshair(event: any) {
-    if (this.flowchartHandler !== undefined && this.GHApplied) {
-      const id = 'graph-hover';
-      this.GHApplied = false;
-      $GF.clearUniqTimeOut(id);
+    if (this.flowchartHandler !== undefined && this.graphHoverTimer !== undefined) {
+      // const id = 'graph-hover';
+      this.graphHoverTimer?.cancel();
+      this.graphHoverTimer = undefined;
+      // $GF.clearUniqTimeOut(id);
       $GF.unsetGraphHover();
       // this.flowchartHandler.onGraphHoverChange();
-      this.render();
+      // this.render();
     }
   }
 
@@ -251,12 +256,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
       this.flowchartHandler = new FlowchartHandler(newFlowchartsData, this);
-      if (this.flowchartHandler) {
-        this.flowchartHandler.import(this.panel.flowchartsData);
-      }
+      this.flowchartHandler.import(this.panel.flowchartsData);
       this.panel.flowchartsData = newFlowchartsData;
     } else {
-      this.flowchartHandler.clear();
+      this.flowchartHandler.destroy();
       this.flowchartHandler.import(this.panel.flowchartsData);
     }
     if (this.panel.newFlag && this.flowchartHandler && this.flowchartHandler.countFlowcharts() === 0) {

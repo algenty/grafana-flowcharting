@@ -393,60 +393,60 @@ export class FlowchartHandler {
   render(name?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
     // not repeat render if mouse down
-    if (!this.mousedown) {
-      // $GF.log.debug('RENDER Flags : ', this.ctrl.flags);
-      // this.flagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
-      // SOURCE
-      // if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS)) {
-      //   this.getFlagNames($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS).forEach(name => {
-      //     this.load(name).setOptions(name);
-      //   });
-      // }
+    // if (!this.mousedown) {
+    // $GF.log.debug('RENDER Flags : ', this.ctrl.flags);
+    // this.flagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
+    // SOURCE
+    // if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS)) {
+    //   this.getFlagNames($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS).forEach(name => {
+    //     this.load(name).setOptions(name);
+    //   });
+    // }
 
-      // OPTIONS
-      // if (this.isFlagedEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS)) {
-      //   this.getFlagNames($GF.CONSTANTS.EVENT_REF_FLOWCHARTS).forEach(name => {
-      //     this.setOptions(name);
-      //   });
-      // }
+    // OPTIONS
+    // if (this.isFlagedEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS)) {
+    //   this.getFlagNames($GF.CONSTANTS.EVENT_REF_FLOWCHARTS).forEach(name => {
+    //     this.setOptions(name);
+    //   });
+    // }
 
-      // RULES or DATAS
-      // if (
-      //   this.isFlagedEvent($GF.CONSTANTS.FLOWCHART_CHG_RULES) ||
-      //   this.isFlagedEvent($GF.CONSTANTS.EVENT_REF_DATAS) ||
-      //   this.isFlagedEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER)
-      // ) {
-      //   // const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
-      //   // const rules = this.ctrl.rulesHandler?.getRules();
+    // RULES or DATAS
+    // if (
+    //   this.isFlagedEvent($GF.CONSTANTS.FLOWCHART_CHG_RULES) ||
+    //   this.isFlagedEvent($GF.CONSTANTS.EVENT_REF_DATAS) ||
+    //   this.isFlagedEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER)
+    // ) {
+    //   // const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
+    //   // const rules = this.ctrl.rulesHandler?.getRules();
 
-      //   // Change to async to optimize
-      //   // self.async_refreshStates(rules);
-      //   this.ctrl.rulesHandler?.onChange();
-      //   this.ctrl.flowchartHandler?.onRefresh();
-      //   this.akcFlagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
-      //   this.akcFlagEvent($GF.CONSTANTS.EVENT_REF_DATAS);
-      //   this.akcFlagEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER);
-      // }
+    //   // Change to async to optimize
+    //   // self.async_refreshStates(rules);
+    //   this.ctrl.rulesHandler?.onChange();
+    //   this.ctrl.flowchartHandler?.onRefresh();
+    //   this.akcFlagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
+    //   this.akcFlagEvent($GF.CONSTANTS.EVENT_REF_DATAS);
+    //   this.akcFlagEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER);
+    // }
 
-      // Current visible
-      // if (this.currentFlowchart !== undefined && !this.currentFlowchart.isVisible()) {
-      //   this.setCurrentFlowchart(this.currentFlowchart.getName());
-      //   this.akcFlagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
-      // }
+    // Current visible
+    // if (this.currentFlowchart !== undefined && !this.currentFlowchart.isVisible()) {
+    //   this.setCurrentFlowchart(this.currentFlowchart.getName());
+    //   this.akcFlagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
+    // }
 
-      // OTHER : Resize, OnLoad
-      // if (this.isFlagedEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS) || this.firstLoad) {
-      //   if (this.firstLoad) {
-      //     this.refreshGraphOptions();
-      //     this.firstLoad = false;
-      //   } else {
-      //     this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS).forEach(name => {
-      //       // self.applyOptions(name);
-      //     });
-      //   }
-      // }
-      this.refresh();
-    }
+    // OTHER : Resize, OnLoad
+    // if (this.isFlagedEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS) || this.firstLoad) {
+    //   if (this.firstLoad) {
+    //     this.refreshGraphOptions();
+    //     this.firstLoad = false;
+    //   } else {
+    //     this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS).forEach(name => {
+    //       // self.applyOptions(name);
+    //     });
+    //   }
+    // }
+    this.refresh();
+    // }
     this.ctrl.renderingCompleted();
     trc.after();
   }

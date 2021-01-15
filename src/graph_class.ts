@@ -232,7 +232,7 @@ export class XGraph {
    */
   drawGraph(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'drawGraph()');
-    if(this.graph == undefined) {
+    if (this.graph === undefined) {
       this.initMxGraph();
     }
     this.graph.getModel().beginUpdate();
@@ -640,38 +640,6 @@ export class XGraph {
     trc.after();
     return values;
   }
-
-  /**
-   * Init initials values
-   *
-   * @param {gf.TPropertieKey} type
-   * @memberof XGraph
-   */
-  // async initXCellValues(type: gf.TPropertieKey) {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'initXCellValues()');
-  //   const xcells = this.getXCells();
-  //   let s: Set<string> = new Set();
-  //   xcells.forEach(x => {
-  //     if (type === 'id' || type === 'value') {
-  //       const value: any = x.getDefaultValue(type);
-  //       if (value !== null && value !== undefined && value.length > 0) {
-  //         s.add(value);
-  //       }
-  //     }
-  //     if (type === 'metadata') {
-  //       const values = x.getDefaultMetadatasKeys();
-  //       const length = values.length;
-  //       for (let i = 0; i < length; i++) {
-  //         const value = values[i];
-  //         if (value !== null && value !== undefined && value.length > 0) {
-  //           s.add(value);
-  //         }
-  //       }
-  //     }
-  //   });
-  //   this.defaultXCellValues[type] = s;
-  //   trc.after();
-  // }
 
   /**
    * Get the XCell according id
