@@ -3,6 +3,7 @@ import { find as _find, isNumber as _isNumber } from 'lodash';
 import { $GF } from 'globals_class';
 import { DateTH } from 'threshold_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
+import { Observer } from 'rxjs';
 
 export type ObjectMetric = SerieMetric | TableMetric;
 
@@ -21,6 +22,7 @@ export class Metric {
   name = '';
   dataList: any;
   nullPointMode = 'connected';
+  GHValue: string | number | null = null;
   constructor(dataList: any, ctrl: FlowchartCtrl) {
     this.dataList = dataList;
     this.ctrl = ctrl;
@@ -108,7 +110,12 @@ export class Metric {
   // Updates
   //
 
-  refresh(): this {
+  refresh(timestamp?: number): this {
+    if (timestamp !== undefined) {
+      this.GHValue = this.findValue(timestamp);
+    } else {
+      this.GHValue = null;
+    }
     this.onRefreshed();
     return this;
   }
@@ -132,26 +139,55 @@ export class Metric {
   // Events
   //
   async onDestroyed() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    const funcName = 'onDestroyed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'destroyed');
     this.ctrl.eventHandler.unsubscribes(this);
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
+    const funcName = 'onRefreshed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'refreshed');
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    const funcName = 'onInitialized';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.subscribes(this);
     this.ctrl.eventHandler.emit(this, 'initialized');
     this.onChanged();
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
+    const funcName = 'onChanged';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'changed');
+  }
+
+  //
+  // RXJS
+  //
+  getTimestamp$refresh(): Observer<number> {
+    const funcName = 'getTimestamp$refresh';
+    const self = this;
+    return {
+      next: (timestamp: number) => {
+        $GF.log.debug(`${this.constructor.name} -> ${funcName}()`, timestamp);
+        if (timestamp !== null) {
+          self.GHValue = this.findValue(timestamp);
+        } else {
+          self.GHValue = null;
+        }
+        self.onRefreshed();
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {
+        $GF.log.debug(`${this.constructor.name} -> ${funcName}().complete()`);
+      },
+    };
   }
 }
 

@@ -19,6 +19,7 @@ export class State {
   uid: string; // cell ID in mxcell
   ctrl: FlowchartCtrl;
   xgraph: XGraph;
+  completed: boolean = true;
   changed = false;
   matched = false;
   shapeState: ShapeState;
@@ -489,6 +490,7 @@ export class State {
 
   complete(): this {
     this.applyCycle();
+    this.completed = true;
     this.onCompleted();
     return this;
   }
@@ -539,20 +541,20 @@ export class State {
   //
   // RXJS Observers
   //
-  getMetric$initialized(): Observer<ObjectMetric> {
-    const self = this;
-    return {
-      next: metric => {
-        if (metric === null) {
-          self.initCycle();
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {},
-    };
-  }
+  // getMetric$initialized(): Observer<ObjectMetric> {
+  //   const self = this;
+  //   return {
+  //     next: metric => {
+  //       if (metric === null) {
+  //         self.initCycle();
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {},
+  //   };
+  // }
 
   getMetric$completed(): Observer<ObjectMetric> {
     const self = this;
@@ -575,6 +577,10 @@ export class State {
       next: rule => {
         $GF.log.debug(this.constructor.name + ' -> rule$refreshed', rule);
         if (rule !== null && this.rules.has(rule.uid)) {
+          if (self.completed) {
+            self.completed = false;
+            self.initCycle();
+          }
           self.refresh(rule);
         }
       },

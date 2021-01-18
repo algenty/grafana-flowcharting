@@ -274,7 +274,7 @@ export class FlowchartHandler {
     if (this.currentFlowchart === undefined) {
       this.currentFlowchart = this.getFlowchart(name);
       this.currentFlowchartName = this.currentFlowchart.getName();
-      // this.currentFlowchart.toFront();
+      this.currentFlowchart.toFront();
       return this.currentFlowchart;
     }
     if (this.currentFlowchart.getName() !== name) {
@@ -390,168 +390,15 @@ export class FlowchartHandler {
    *
    * @memberof FlowchartHandler
    */
-  render(name?: string) {
+  async render(name?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
     // not repeat render if mouse down
-    // if (!this.mousedown) {
-    // $GF.log.debug('RENDER Flags : ', this.ctrl.flags);
-    // this.flagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
-    // SOURCE
-    // if (this.ctrl.isFlagedEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS)) {
-    //   this.getFlagNames($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS).forEach(name => {
-    //     this.load(name).setOptions(name);
-    //   });
-    // }
-
-    // OPTIONS
-    // if (this.isFlagedEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS)) {
-    //   this.getFlagNames($GF.CONSTANTS.EVENT_REF_FLOWCHARTS).forEach(name => {
-    //     this.setOptions(name);
-    //   });
-    // }
-
-    // RULES or DATAS
-    // if (
-    //   this.isFlagedEvent($GF.CONSTANTS.FLOWCHART_CHG_RULES) ||
-    //   this.isFlagedEvent($GF.CONSTANTS.EVENT_REF_DATAS) ||
-    //   this.isFlagedEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER)
-    // ) {
-    //   // const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
-    //   // const rules = this.ctrl.rulesHandler?.getRules();
-
-    //   // Change to async to optimize
-    //   // self.async_refreshStates(rules);
-    //   this.ctrl.rulesHandler?.onChange();
-    //   this.ctrl.flowchartHandler?.onRefresh();
-    //   this.akcFlagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
-    //   this.akcFlagEvent($GF.CONSTANTS.EVENT_REF_DATAS);
-    //   this.akcFlagEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER);
-    // }
-
-    // Current visible
-    // if (this.currentFlowchart !== undefined && !this.currentFlowchart.isVisible()) {
-    //   this.setCurrentFlowchart(this.currentFlowchart.getName());
-    //   this.akcFlagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
-    // }
-
-    // OTHER : Resize, OnLoad
-    // if (this.isFlagedEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS) || this.firstLoad) {
-    //   if (this.firstLoad) {
-    //     this.refreshGraphOptions();
-    //     this.firstLoad = false;
-    //   } else {
-    //     this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS).forEach(name => {
-    //       // self.applyOptions(name);
-    //     });
-    //   }
-    // }
-    this.refresh();
-    // }
+    if (!this.mousedown) {
+      this.refresh();
+    }
     this.ctrl.renderingCompleted();
     trc.after();
   }
-
-  /**
-   * Flag source change
-   *
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // onChangeGraph(name?: string): this {
-  //   this.ctrl.flagEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS, name);
-  //   this.onChange();
-  //   return this;
-  // }
-
-  /**
-   * Flag options change
-   *
-   * @param {string} [name]
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // onOptionsChange(name?: string): this {
-  //   this.flagEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS, name);
-  //   return this;
-  // }
-
-  /**
-   * Flag rule change
-   *
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // onRulesChange(name?: string): this {
-  //   this.ctrl.flagEvent($GF.CONSTANTS.EVENT_CHG_RULES, name);
-  //   this.onChange();
-  //   return this;
-  // }
-
-  /**
-   * Flag data Graph-Hover change
-   *
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // onGraphHoverChange(): this {
-  //   this.ctrl.flagEvent($GF.CONSTANTS.EVENT_REF_GRAPHOVER);
-  //   return this;
-  // }
-
-  /**
-   * Apply options on graphs
-   *
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // refreshFlowchart(name?: string): this {
-  //   $GF.log.debug(`${this.constructor.name}.refreshGraphOptions()`, name);
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
-  //   if (name === undefined) {
-  //     this.flowcharts.forEach(flowchart => {
-  //       const name = flowchart.getName();
-  //       this.refreshFlowchart(name);
-  //     });
-  //   } else {
-  //     const flowchart = this.getFlowchart(name);
-  //     flowchart.refreshGraph();
-  //   }
-  //   trc.after();
-  //   return this;
-  // }
-
-  /**
-   * Call refreshStates asynchronously
-   *
-   * @param {Rule[]} rules
-   * @param {Metric[]} metrics
-   * @memberof FlowchartHandler
-   */
-  // async_refreshStates(rules: Rule[]) {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'async_refreshStates()');
-  //   this.refreshStates(rules);
-  //   trc.after();
-  // }
-
-  /**
-   * Refresh rules according new rules or data
-   *
-   * @param {Rule[]} rules
-   * @param {Metric[]} metrics
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // refreshStates(rules: Rule[]): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'refreshStates()');
-  //   if (this.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_RULES)) {
-  //     this.updateStates(rules);
-  //     this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_RULES);
-  //   }
-  //   this.setStates(rules);
-  //   this.applyStates();
-  //   trc.after();
-  //   return this;
-  // }
 
   /**
    * Refresh all flowchart

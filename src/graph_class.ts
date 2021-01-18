@@ -284,8 +284,10 @@ export class XGraph {
     const cells = model.cells;
     this.xcells = [];
     _each(cells, (mxcell: mxCell) => {
-      const xcell = XCell.refactore(this.graph, mxcell);
-      this.xcells.push(xcell);
+      if (mxcell.id !== '0' && mxcell.id !== '1') {
+        const xcell = XCell.refactore(this.graph, mxcell);
+        this.xcells.push(xcell);
+      }
     });
     trc.after();
   }
@@ -306,7 +308,6 @@ export class XGraph {
         });
 
         for (var i = 0; i < extFonts.length; i++) {
-          // Drawio.addExtFont(extFonts[i].name, extFonts[i].url);
           this.graph.addExtFont(extFonts[i].name, extFonts[i].url);
         }
       } catch (e) {

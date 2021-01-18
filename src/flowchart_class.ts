@@ -97,6 +97,7 @@ export class Flowchart {
     if (!!obj.bgColor) {
       this.data.bgColor = obj.bgColor;
     }
+    // this.setBackgroundColor(this.data.bgColor);
     this.change();
     return this;
   }
@@ -466,32 +467,15 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  // setBgColor(bgColor: string | null): this {
-  //   this.data.bgColor = bgColor;
-  //   if (bgColor) {
-  //     this.container.style.backgroundColor = bgColor;
-  //   } else {
-  //     this.container.style.backgroundColor = '';
-  //   }
-  //   return this;
-  // }
-
-  /**
-   * Apply Background color
-   *
-   * @param {string} bgColor
-   * @returns {this}
-   * @memberof Flowchart
-   */
-  // ApplyBgColor(bgColor: string): this {
-  //   this.data.bgColor = bgColor;
-  //   if (bgColor) {
-  //     if (this.xgraph) {
-  //       this.xgraph.bgGraph(bgColor);
-  //     }
-  //   }
-  //   return this;
-  // }
+  setBackgroundColor(bgColor: string | null): this {
+    this.data.bgColor = bgColor;
+    if (bgColor) {
+      this.container.style.backgroundColor = bgColor;
+    } else {
+      this.container.style.backgroundColor = '';
+    }
+    return this;
+  }
 
   /**
    * Apply scale parameter
@@ -768,7 +752,7 @@ export class Flowchart {
 
   toFront(forceRefresh: boolean = false): this {
     this.visible = true;
-    // this.container.className = 'gf-flowchartShow';
+    this.container.className = 'gf-flowchartShow';
     if (forceRefresh) {
       this.xgraph?.refresh();
     }
@@ -777,7 +761,7 @@ export class Flowchart {
 
   toBack(): this {
     this.visible = false;
-    // this.container.className = 'gf-flowchartHide';
+    this.container.className = 'gf-flowchartHide';
     return this;
   }
 
@@ -800,6 +784,7 @@ export class Flowchart {
     this.xgraph?.refresh();
     // this.stateHandler?.refresh();
     // this.refreshStates();
+    this.setBackgroundColor(this.data.bgColor);
     this.onRefreshed();
     return this;
   }

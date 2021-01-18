@@ -163,13 +163,9 @@ export class FlowchartsOptionsCtrl {
     this.render();
   }
 
-  onColorChange(index: number) {
+  onColorChange(flowchart: Flowchart) {
     return (newColor: any) => {
-      if (this.flowchartHandler) {
-        const fc = this.flowchartHandler.getFlowcharts()[index];
-        fc.data.bgColor = newColor;
-        this.onOptionChange();
-      }
+      flowchart.setBackgroundColor(newColor);
     };
   }
 

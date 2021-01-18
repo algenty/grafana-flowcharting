@@ -1595,6 +1595,12 @@ declare interface GFTimerUnit {
   invalidated: boolean;
   tmId: number;
 }
+/**
+ * Async timer call func
+ *
+ * @export
+ * @class GFTimer
+ */
 export class GFTimer {
   iteration: number = 0;
   cyclic: boolean = false;

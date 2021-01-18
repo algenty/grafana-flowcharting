@@ -139,14 +139,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (this.dashboard.sharedTooltipModeEnabled() && flowchartHandler !== undefined) {
       const timestamp = event.pos.x;
       const timeId = 'graph-hover';
-      // $GF.clearUniqTimeOut(timeId);
+      const self = this;
       const setGraphHover = () => {
-        $GF.setGraphHover(timestamp);
-        // flowchartHandler.onGraphHoverChange();
-        // self.render();
-        // $GF.clearUniqTimeOut(id);
+        self.metricHandler?.refreshMetrics(timestamp);
       };
-      // $GF.setUniqTimeOut(setGraphHover, $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY, id);
       if (this.graphHoverTimer === undefined) {
         this.graphHoverTimer = GFTimer.getNewTimer(timeId);
       }
@@ -158,21 +154,23 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
+  /**
+   * Clear GraphHover
+   *
+   * @param {*} event
+   * @memberof FlowchartCtrl
+   */
   clearCrosshair(event: any) {
     if (this.flowchartHandler !== undefined && this.graphHoverTimer !== undefined) {
-      // const id = 'graph-hover';
       this.graphHoverTimer?.cancel();
       this.graphHoverTimer = undefined;
-      // $GF.clearUniqTimeOut(id);
-      $GF.unsetGraphHover();
-      // this.flowchartHandler.onGraphHoverChange();
-      // this.render();
+      this.metricHandler?.refreshMetrics();
     }
   }
 
   onRefresh() {
     $GF.log.debug(this.constructor.name + '/onRefresh');
-    // this.onRender();
+    this.onRender();
   }
 
   /**
@@ -313,7 +311,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       );
     }
     this.panel.version = this.version;
-    this.flowchartHandler?.refresh();
+    this.onRender();
+    // this.flowchartHandler?.refresh();
     trc.after();
   }
 
@@ -365,39 +364,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
   // EVENTS
   //
-  // flagEvent(type: string, name?: string): this {
-  //   if (name !== undefined) {
-  //     this.flags[type].add(name);
-  //   } else {
-  //     this.flowchartHandler?.getFlowcharts().forEach(flowchart => {
-  //       const name = flowchart.getName();
-  //       this.flags[type].add(name);
-  //     });
-  //   }
-  //   return this;
-  // }
-
-  // isFlagedEvent(type: string, name?: string): boolean {
-  //   if (name === undefined) {
-  //     return this.flags[type].size > 0;
-  //   }
-  //   return this.flags[type].has(name);
-  // }
-
-  // ackFlagEvent(type: string, name?: string): void {
-  //   $GF.log.debug('aknowledgeFlagChange', type, name);
-  //   if (name === undefined) {
-  //     this.flags[type].clear();
-  //   } else {
-  //     this.flags[type].delete(name);
-  //   }
-  // }
-
-  // getFlagNames(type: gf.TFlowchartFlagKeys): string[] {
-  //   let result: string[] = [];
-  //   this.flags[type].forEach(value => result.push(value));
-  //   return result;
-  // }
 
   // exportSVG() {
   //   const scope = this.$scope.$new(true);

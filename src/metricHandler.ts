@@ -153,6 +153,14 @@ export class MetricHandler {
     return metrics;
   }
 
+  refreshMetrics(timestamp?: number): this {
+    this.metrics.forEach(m => {
+      m.refresh(timestamp);
+    });
+    this.ctrl.eventHandler.ack('metric', 'completed');
+    return this;
+  }
+
   /**
    * Get column name for a metric
    *

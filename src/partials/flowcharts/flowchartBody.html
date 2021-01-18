@@ -176,7 +176,7 @@
                     ng-change="editor.onOptionChange()" placeholder="#000000" />
                 <button class="btn btn-secondary btn-small" style="height: 32px;" 
                     title="Remove background color">
-                    <color-picker color="flowchart.data.bgColor" onChange="editor.onColorChange($index)"></color-picker>
+                    <color-picker color="flowchart.data.bgColor" onChange="editor.onColorChange(flowchart)"></color-picker>
                 </button>
                 <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;"
                     title="Remove background color" ng-click="flowchart.getData().bgColor = null;editor.onOptionChange()">
