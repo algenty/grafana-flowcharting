@@ -1200,6 +1200,8 @@ export class XGraph {
   // Udates
   //
   init(): this {
+    const funcName = 'init';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     XGraph.initMxGraphLib();
     if (this.type === 'xml') {
       if ($GF.utils.isencoded(this.definition)) {
@@ -1238,6 +1240,8 @@ export class XGraph {
   }
 
   destroy(): this {
+    const funcName = 'destroy';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.destroyGraph();
     this.clear();
     this.onDestroyed();
@@ -1245,37 +1249,55 @@ export class XGraph {
   }
 
   change(): this {
-    // this.init();
+    const funcName = 'change';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.drawGraph();
     this.onChanged();
     return this;
   }
 
   refresh(): this {
+    const funcName = 'refresh';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.refreshGraph();
     this.onRefreshed();
     return this;
   }
+
+  complete(): this {
+    this.onCompleted();
+    return this;
+  }
+
   //
   // Events
   //
   async onDestroyed() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    const funcName = 'onDestroyed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'destroyed');
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
+    const funcName = 'onRefreshed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'refreshed');
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    const funcName = 'onInitialized';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'initialized');
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
+    const funcName = 'onChanged';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'changed');
+  }
+
+  async onCompleted() {
+    const funcName = 'onCompleted';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   }
 }

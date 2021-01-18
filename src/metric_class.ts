@@ -3,7 +3,7 @@ import { find as _find, isNumber as _isNumber } from 'lodash';
 import { $GF } from 'globals_class';
 import { DateTH } from 'threshold_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
-import { Observer } from 'rxjs';
+// import { Observer } from 'rxjs';
 
 export type ObjectMetric = SerieMetric | TableMetric;
 
@@ -168,27 +168,27 @@ export class Metric {
   //
   // RXJS
   //
-  getTimestamp$refresh(): Observer<number> {
-    const funcName = 'getTimestamp$refresh';
-    const self = this;
-    return {
-      next: (timestamp: number) => {
-        $GF.log.debug(`${this.constructor.name} -> ${funcName}()`, timestamp);
-        if (timestamp !== null) {
-          self.GHValue = this.findValue(timestamp);
-        } else {
-          self.GHValue = null;
-        }
-        self.onRefreshed();
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {
-        $GF.log.debug(`${this.constructor.name} -> ${funcName}().complete()`);
-      },
-    };
-  }
+  // getTimestamp$refresh(): Observer<number> {
+  //   const funcName = 'getTimestamp$refresh';
+  //   const self = this;
+  //   return {
+  //     next: (timestamp: number) => {
+  //       $GF.log.debug(`${this.constructor.name} -> ${funcName}()`, timestamp);
+  //       if (timestamp !== null) {
+  //         self.GHValue = this.findValue(timestamp);
+  //       } else {
+  //         self.GHValue = null;
+  //       }
+  //       self.onRefreshed();
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {
+  //       $GF.log.debug(`${this.constructor.name} -> ${funcName}().complete()`);
+  //     },
+  //   };
+  // }
 }
 
 /**

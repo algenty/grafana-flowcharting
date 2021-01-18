@@ -19,7 +19,7 @@ export class State {
   uid: string; // cell ID in mxcell
   ctrl: FlowchartCtrl;
   xgraph: XGraph;
-  completed: boolean = true;
+  completed: boolean = false;
   changed = false;
   matched = false;
   shapeState: ShapeState;
@@ -91,24 +91,9 @@ export class State {
    *
    * @memberof State
    */
-  async_applyCycle() {
-    // new Promise (this.applyState.bind(this));
-    setTimeout(() => this.applyCycle(), 0);
+  async async_applyCycle() {
+    this.applyCycle();
   }
-
-  tagRule(rule: Rule): this {
-    this.rules.set(rule.uid, rule);
-    return this;
-  }
-
-  untagRule(rule: Rule): this {
-    this.rules.delete(rule.uid);
-    return this;
-  }
-
-  // clearTag() {
-  //   this.rules.clear();
-  // }
 
   /**
    * Define state according to 1 rule and 1 serie without apply display
@@ -120,6 +105,8 @@ export class State {
    */
   setCycle(rule?: Rule): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setCycle()');
+    const funcName = 'setCycle';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     const rules = rule === undefined ? this.rules : [rule];
     rules.forEach((r: Rule) => {
       let beginPerf = Date.now();
@@ -360,6 +347,8 @@ export class State {
    */
   applyCycle(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyState()');
+    const funcName = 'applyCycle';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this.matched || this.changed) {
       this.changed = true;
       this.shapeState.apply();
@@ -405,6 +394,8 @@ export class State {
    */
   initCycle(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
+    const funcName = 'initCycle';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this.changed) {
       this.shapeState.prepare();
       this.tooltipState.prepare();
@@ -516,26 +507,31 @@ export class State {
   // Events
   //
   async onDestroyed() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    const funcName = 'onDestroyed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.unsubscribes(this);
     this.ctrl.eventHandler.emit(this, 'destroyed');
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
+    const funcName = 'onRefreshed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    const funcName = 'onInitialized';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.subscribes(this);
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
+    const funcName = 'onChanged';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   }
 
   async onCompleted() {
-    $GF.log.debug(this.constructor.name + '/onCompleted : ' + this.uid);
+    const funcName = 'onCompleted';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   }
 
   //
@@ -556,11 +552,13 @@ export class State {
   //   };
   // }
 
-  getMetric$completed(): Observer<ObjectMetric> {
+  getRule$completed(): Observer<ObjectMetric> {
     const self = this;
+    const funcName = 'getMetric$completed';
     return {
-      next: metric => {
-        if (metric === null) {
+      next: rule => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+        if (rule !== null && !self.completed && self.rules.has(rule.uid)) {
           self.complete();
         }
       },
@@ -573,9 +571,10 @@ export class State {
 
   getRule$refreshed(): Observer<Rule> {
     const self = this;
+    const funcName = 'getRule$refreshed';
     return {
       next: rule => {
-        $GF.log.debug(this.constructor.name + ' -> rule$refreshed', rule);
+        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
         if (rule !== null && this.rules.has(rule.uid)) {
           if (self.completed) {
             self.completed = false;
@@ -593,9 +592,10 @@ export class State {
 
   getRule$changed(): Observer<Rule> {
     const self = this;
+    const funcName = 'getRule$changed';
     return {
       next: rule => {
-        $GF.log.debug(this.constructor.name + ' -> rule$changed', rule);
+        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
         if (rule !== null) {
           if (self.matchRule(rule)) {
             this.rules.set(rule.uid, rule);
@@ -613,8 +613,10 @@ export class State {
 
   getRule$destroyed(): Observer<Rule> {
     const self = this;
+    const funcName = 'getRule$destroyed';
     return {
       next: rule => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
         if (rule !== null) {
           self.rules.delete(rule.uid);
         }
@@ -734,7 +736,7 @@ export class GFState {
     return false;
   }
 
-  apply(key?: string): this {
+  async apply(key?: string) {
     if (key !== undefined) {
       if (this.isMatched(key) && !this.isAcked(key)) {
         let value = this.getMatchValue(key);
@@ -743,8 +745,6 @@ export class GFState {
         } catch (error) {
           $GF.log.error('Error on reset for key ' + key, error);
         }
-        // this.changedKey.set(key, true);
-        // this.matchedKey.set(key, false);
         this.ack(key);
       } else if (this.isChanged(key) && !this.isAcked(key)) {
         this.reset(key);
@@ -755,7 +755,6 @@ export class GFState {
         this.apply(key);
       });
     }
-    return this;
   }
 
   default_core(key: any): any {
@@ -1198,7 +1197,7 @@ class TooltipState extends GFState {
     this.tooltipHandler.updateDate();
   }
 
-  apply(key?: string): this {
+  async apply(key?: string) {
     if (key !== undefined && key === 'tooltip') {
       if (this.isMatched(key) && this.getMatchValue(key) === true) {
         if (this.tooltipHandler != null && this.tooltipHandler.isChecked()) {
@@ -1212,7 +1211,6 @@ class TooltipState extends GFState {
         this.apply(key);
       });
     }
-    return this;
   }
 
   prepare(): this {

@@ -28,8 +28,7 @@ export class Rule {
   data: gf.TIRuleData;
   initialized: boolean = false;
   metrics: Map<string, ObjectMetric> = new Map();
-  // cycleMetrics: boolean = false;
-  // cycleStates: boolean = false;
+  metricCompleted: boolean = true;
   mapsObj: gf.TRuleMaps = {
     shapes: [],
     texts: [],
@@ -69,34 +68,6 @@ export class Rule {
     this.ctrl = ctrl;
     this.init();
   }
-
-  //
-  // RxJS
-  //
-  // getMetricObserver$Refresh(): gf.TObserver<ObjectMetric> {
-  //   const self = this;
-  //   return {
-  //     next: metric => {
-  //       if (metric !== null) {
-  //         if (!self.cycleMetrics) {
-  //           self.cycleMetrics = true;
-  //           self.metrics.clear();
-  //         }
-  //         if (self.matchMetric(metric)) {
-  //           self.metrics.set(metric.uid, metric);
-  //         } else {
-  //         }
-  //       }
-  //     },
-  //     error: err => {
-  //       $GF.log.error(err);
-  //     },
-  //     complete: () => {
-  //       self.cycleMetrics = false;
-  //     },
-  //     uid: self.uid,
-  //   };
-  // }
 
   getMetrics(): Map<string, ObjectMetric> {
     return this.metrics;
@@ -2171,30 +2142,47 @@ export class Rule {
     return this;
   }
 
+  complete(): this {
+    this.metricCompleted = true;
+    this.refresh();
+    this.onCompleted();
+    return this;
+  }
+
   //
   // Events
   //
   async onDestroyed() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    const funcName = 'onDestroyed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'destroyed');
     this.ctrl.eventHandler.unsubscribes(this);
     this.clear();
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
+    const funcName = 'onRefreshed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'refreshed');
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    const funcName = 'onInitialized';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.subscribes(this);
     this.ctrl.eventHandler.emit(this, 'initialized');
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
+    const funcName = 'onChanged';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'changed');
+  }
+
+  async onCompleted() {
+    const funcName = 'onCompleted';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.ctrl.eventHandler.emit(this, 'completed');
   }
 
   //
@@ -2202,39 +2190,83 @@ export class Rule {
   //
   getMetric$changed(): Observer<ObjectMetric> {
     const self = this;
+    const funcName = 'getMetric$changed';
     return {
       next: (metric: ObjectMetric) => {
-        $GF.log.debug(this.constructor.name + ' -> metric$changed', metric);
+        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+        if (self.metricCompleted) {
+          self.metricCompleted = false;
+          self.metrics.clear();
+        }
         if (metric !== null && self.matchMetric(metric)) {
           self.metrics.set(metric.uid, metric);
-          self.onRefreshed();
         }
       },
       error: err => {
         $GF.log.error(err);
       },
       complete: () => {
-        $GF.log.debug(this.constructor.name + '.getMetric$changed().complete()');
+        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
       },
     };
   }
 
-  getMetric$initialized(): Observer<ObjectMetric> {
+  getMetric$refreshed(): Observer<ObjectMetric> {
     const self = this;
+    const funcName = 'getMetric$refreshed';
     return {
       next: (metric: ObjectMetric) => {
-        if (metric === null) {
-          $GF.log.debug('RULE Metric$initialized: Received ACK', metric);
-          self.metrics.clear();
-          self.refresh();
+        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+        if (metric !== null && self.metrics.has(metric.uid)) {
+          if (self.metricCompleted) {
+            self.metricCompleted = false;
+          }
         }
       },
       error: err => {
         $GF.log.error(err);
       },
       complete: () => {
-        $GF.log.debug(this.constructor.name + '.getMetric$initialized().complete()');
+        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
       },
     };
   }
+
+  getMetric$completed(): Observer<ObjectMetric> {
+    const self = this;
+    const funcName = 'getMetric$completed';
+    return {
+      next: (metric: ObjectMetric) => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+        if (!self.metricCompleted) {
+          self.complete();
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+      },
+    };
+  }
+
+  // getMetric$initialized(): Observer<ObjectMetric> {
+  //   const self = this;
+  //   return {
+  //     next: (metric: ObjectMetric) => {
+  //       if (metric === null) {
+  //         $GF.log.debug('RULE Metric$initialized: Received ACK', metric);
+  //         self.metrics.clear();
+  //         self.refresh();
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {
+  //       $GF.log.debug(this.constructor.name + '.getMetric$initialized().complete()');
+  //     },
+  //   };
+  // }
 }

@@ -195,7 +195,8 @@ export class MetricHandler {
   // Updates
   //
   refresh() {
-    $GF.log.debug(this.constructor.name + '.refresh()');
+    const funcName = 'refresh';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
     this.destroy();
     this.onInitialized();
@@ -207,47 +208,63 @@ export class MetricHandler {
   }
 
   change(): this {
-    $GF.log.debug(this.constructor.name + '.change()');
+    const funcName = 'change';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.onChanged();
     return this;
   }
 
   init(): this {
-    $GF.log.debug(this.constructor.name + '.init()');
+    const funcName = 'init';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.onInitialized();
     return this;
   }
 
   destroy(): this {
-    $GF.log.debug(this.constructor.name + '.destroy()');
+    const funcName = 'destroy';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.metrics.forEach(m => m.destroy());
     this.clear();
     this.onDestroyed();
     return this;
   }
+
+  complete(): this {
+    const funcName = 'complete';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.onCompleted();
+    return this;
+  }
+
   //
   // Events
   //
   async onDestroyed() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    const funcName = 'onDestroyed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
+    const funcName = 'onRefreshed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.onCompleted();
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    const funcName = 'onInitialized';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.ack('metric', 'initialized');
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onChange : ' + this.uid);
+    const funcName = 'onChanged';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   }
 
   async onCompleted() {
-    $GF.log.debug(this.constructor.name + '/onCompleted : ' + this.uid);
+    const funcName = 'onCompleted';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.ack('metric', 'completed');
   }
 }

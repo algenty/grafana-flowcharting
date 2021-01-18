@@ -426,38 +426,6 @@ export class FlowchartHandler {
     return this;
   }
 
-  /**
-   * Change states of cell according to rules and metrics
-   *
-   * @param {Rule[]} rules
-   * @param {any[]} metrics
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // setStates(rules: Rule[]): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
-  //   this.flowcharts.forEach(flowchart => {
-  //     flowchart.setStates(rules);
-  //   });
-  //   trc.after();
-  //   return this;
-  // }
-
-  /**
-   * Update states with rule
-   *
-   * @param {Rule[]} rules
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // updateStates(rules: Rule[]): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'updateStates()');
-  //   this.flowcharts.forEach(flowchart => {
-  //     flowchart.updateStates(rules);
-  //   });
-  //   trc.after();
-  //   return this;
-  // }
 
   /**
    * Apply state of cell after setStates
