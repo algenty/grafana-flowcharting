@@ -5,7 +5,7 @@ import { TooltipHandler } from 'tooltipHandler';
 import { $GF, GFVariables } from 'globals_class';
 import { XCell } from 'cell_class';
 import { ObjectMetric } from 'metric_class';
-import { Observer } from 'rxjs';
+// import { Observer } from 'rxjs';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
 /**
@@ -438,6 +438,10 @@ export class State {
     return this;
   }
 
+  //
+  // Rules
+  //
+
   /**
    * Match rule
    *
@@ -469,19 +473,79 @@ export class State {
     return false;
   }
 
+  clearRules(): this {
+    this.rules.clear();
+    this.completed = false;
+    return this;
+  }
+
+  updateRule(rule?: Rule): this {
+    if (rule !== null && rule !== undefined) {
+      if (this.matchRule(rule)) {
+        this.rules.set(rule.uid, rule);
+      } else {
+        this.rules.delete(rule.uid);
+      }
+    }
+    return this;
+  }
+
+  removeRule(rule: Rule): this {
+    if (rule !== null && rule !== undefined && this.hasRule(rule)) {
+      this.rules.delete(rule.uid);
+      this.completed = false;
+      this.change();
+      this.complete();
+    }
+    return this;
+  }
+
+  hasRule(rule?: Rule): boolean {
+    if (rule) {
+      return this.rules.has(rule.uid);
+    }
+    return false;
+  }
+
+  changeWithRule(rule: Rule): this {
+    if (rule !== null && rule !== undefined && this.matchRule(rule)) {
+      if (this.completed && (this.matchRule(rule) || this.hasRule(rule))) {
+        if (this.completed) {
+          this.completed = false;
+          this.initCycle();
+        }
+        this.updateRule(rule);
+      }
+    }
+    // this.change();
+    return this;
+  }
+
+  refreshWithRule(rule: Rule): this {
+    if (this.hasRule(rule)) {
+      if (this.completed) {
+        this.completed = false;
+        this.initCycle();
+      }
+      this.setCycle(rule);
+    }
+    // this.refresh();
+    return this;
+  }
+
   //
   // Updates
   //
-  refresh(rule?: Rule): this {
-    this.setCycle(rule);
-    // this.applyCycle();
+  refresh(): this {
     this.onRefreshed();
     return this;
   }
 
   complete(): this {
-    this.applyCycle();
-    this.completed = true;
+    if (!this.completed) {
+      this.applyCycle();
+      this.completed = true;
+    }
     this.onCompleted();
     return this;
   }
@@ -552,81 +616,81 @@ export class State {
   //   };
   // }
 
-  getRule$completed(): Observer<ObjectMetric> {
-    const self = this;
-    const funcName = 'getMetric$completed';
-    return {
-      next: rule => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-        if (rule !== null && !self.completed && self.rules.has(rule.uid)) {
-          self.complete();
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {},
-    };
-  }
+  // getRule$completed(): Observer<ObjectMetric> {
+  //   const self = this;
+  //   const funcName = 'getMetric$completed';
+  //   return {
+  //     next: rule => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       if (rule !== null && !self.completed && self.rules.has(rule.uid)) {
+  //         self.complete();
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {},
+  //   };
+  // }
 
-  getRule$refreshed(): Observer<Rule> {
-    const self = this;
-    const funcName = 'getRule$refreshed';
-    return {
-      next: rule => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-        if (rule !== null && this.rules.has(rule.uid)) {
-          if (self.completed) {
-            self.completed = false;
-            self.initCycle();
-          }
-          self.refresh(rule);
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {},
-    };
-  }
+  // getRule$refreshed(): Observer<Rule> {
+  //   const self = this;
+  //   const funcName = 'getRule$refreshed';
+  //   return {
+  //     next: rule => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       if (rule !== null && this.rules.has(rule.uid)) {
+  //         if (self.completed) {
+  //           self.completed = false;
+  //           self.initCycle();
+  //         }
+  //         self.refresh(rule);
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {},
+  //   };
+  // }
 
-  getRule$changed(): Observer<Rule> {
-    const self = this;
-    const funcName = 'getRule$changed';
-    return {
-      next: rule => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-        if (rule !== null) {
-          if (self.matchRule(rule)) {
-            this.rules.set(rule.uid, rule);
-          } else {
-            this.rules.delete(rule.uid);
-          }
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {},
-    };
-  }
+  // getRule$changed(): Observer<Rule> {
+  //   const self = this;
+  //   const funcName = 'getRule$changed';
+  //   return {
+  //     next: rule => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       if (rule !== null) {
+  //         if (self.matchRule(rule)) {
+  //           this.rules.set(rule.uid, rule);
+  //         } else {
+  //           this.rules.delete(rule.uid);
+  //         }
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {},
+  //   };
+  // }
 
-  getRule$destroyed(): Observer<Rule> {
-    const self = this;
-    const funcName = 'getRule$destroyed';
-    return {
-      next: rule => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-        if (rule !== null) {
-          self.rules.delete(rule.uid);
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {},
-    };
-  }
+  // getRule$destroyed(): Observer<Rule> {
+  //   const self = this;
+  //   const funcName = 'getRule$destroyed';
+  //   return {
+  //     next: rule => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       if (rule !== null) {
+  //         self.rules.delete(rule.uid);
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {},
+  //   };
+  // }
 }
 
 /**

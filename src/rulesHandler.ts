@@ -2,6 +2,9 @@ import { Rule } from 'rule_class';
 import { sortBy as _sortBy } from 'lodash';
 import { $GF } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
+import { Observer } from 'rxjs';
+import { ObjectMetric } from 'metric_class';
+import { State } from 'state_class';
 
 /**
  * Rules Handler
@@ -16,6 +19,7 @@ export class RulesHandler {
   data: gf.TIRulesHandlerData;
   activeRuleIndex = 0;
   observers$: gf.TObserver<Rule>[] = [];
+  metricsCompleted: boolean = true;
 
   /**
    * Creates an instance of RulesHandler.
@@ -291,22 +295,140 @@ export class RulesHandler {
     return this;
   }
 
+  complete(): this {
+    this.metricsCompleted = true;
+    this.onCompleted();
+    return this;
+  }
+
   //
   // Events
   //
   async onDestroyed() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    const funcName = 'onDestroyed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.ctrl.eventHandler.unsubscribes(this);
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
+    const funcName = 'onRefreshed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    const funcName = 'onInitialized';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.ctrl.eventHandler.subscribes(this);
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
+    const funcName = 'onChanged';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  }
+
+  async onCompleted() {
+    const funcName = 'onCompleted';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.ctrl.eventHandler.ack('rule', 'completed');
+  }
+
+  //
+  // RXJS Observer
+  //
+  getMetric$changed(): Observer<ObjectMetric> {
+    const self = this;
+    const funcName = 'getMetric$changed';
+    return {
+      next: (metric: ObjectMetric) => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+        const len = this.rules.length;
+        if (self.metricsCompleted) {
+          self.metricsCompleted = false;
+          for (let i = 0; i < len; i++) {
+            this.rules[i].clearMetrics();
+          }
+        }
+        if (metric !== null) {
+          for (let i = 0; i < len; i++) {
+            this.rules[i].updateMetric(metric);
+          }
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+      },
+    };
+  }
+
+  getMetric$refreshed(): Observer<ObjectMetric> {
+    const self = this;
+    const funcName = 'getMetric$refreshed';
+    return {
+      next: (metric: ObjectMetric) => {
+        $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
+        if (metric !== null) {
+          const len = self.rules.length;
+          for (let i = 0; i < len; i++) {
+            if (self.rules[i].hasMetric(metric)) {
+              self.metricsCompleted = false;
+            }
+          }
+        }
+      },
+      error: err => {
+        $GF.log.error(`${self.constructor.name}.${funcName}().next() : ${self.uid}`, err);
+      },
+      complete: () => {
+        $GF.log.debug(`${self.constructor.name}.${funcName}().complete() : ${self.uid}`);
+      },
+    };
+  }
+
+  getMetric$Completed(): Observer<ObjectMetric> {
+    const self = this;
+    const funcName = 'getMetric$Completed';
+    return {
+      next: (metric: ObjectMetric) => {
+        $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
+        if (metric === null && !self.metricsCompleted) {
+          const len = self.rules.length;
+          for (let i = 0; i < len; i++) {
+            self.rules[i].refresh();
+          }
+          self.complete();
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+      },
+    };
+  }
+
+  getState$changed(): Observer<State> {
+    const self = this;
+    const funcName = 'getState$changed';
+    return {
+      next: (state: State) => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+        if (state !== null) {
+          const len = self.rules.length;
+          for (let i = 0; i < len; i++) {
+            state.updateRule(self.rules[i]);
+          }
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+      },
+    };
   }
 }

@@ -169,7 +169,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRefresh() {
-    $GF.log.debug(this.constructor.name + '/onRefresh');
+    const funcName = 'onRefresh';
+    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     this.onRender();
   }
 
@@ -179,7 +180,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    * @memberof FlowchartCtrl
    */
   onVarChanged() {
-    $GF.log.debug(this.constructor.name + '/onVarChanged');
+    const funcName = 'onVarChanged';
+    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     if (this.flowchartHandler !== undefined) {
       // this.flowchartHandler.onChangeGraph();
       // this.flowchartHandler.render();
@@ -192,7 +194,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    * @memberof FlowchartCtrl
    */
   onRender() {
-    $GF.log.debug(this.constructor.name + '/onRender');
+    const funcName = 'onRender';
+    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();
@@ -212,10 +215,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    * @memberof FlowchartCtrl
    */
   onDataReceived(dataList) {
-    $GF.log.debug(this.constructor.name + '/onDataReceived');
+    const funcName = 'onDataReceived';
+    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
     this.metricHandler?.setDataList(dataList);
-    this.metricHandler?.refresh();
+    this.metricHandler?.change();
     trc.after();
     $GF.trace.resume();
   }
@@ -245,6 +249,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   initHandlers() {
+    const funcName = 'initHandlers';
+    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     // METRICS / DATAS
     if (!this.metricHandler) {
       this.metricHandler = new MetricHandler(this);
@@ -279,6 +285,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   link(scope, elem, attrs, ctrl) {
+    const funcName = 'link';
+    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
     this.$panelElem = elem;
 

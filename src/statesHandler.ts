@@ -5,6 +5,7 @@ import { $GF } from 'globals_class';
 import { XCell } from 'cell_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 import { Observer } from 'rxjs';
+import { Rule } from 'rule_class';
 
 /**
  * States Handler class
@@ -16,6 +17,7 @@ export class StateHandler {
   states: Map<string, State>;
   xgraph: XGraph;
   edited = false;
+  rulesCompleted: boolean = true;
   uid: string = $GF.utils.uniqueID();
   ctrl: FlowchartCtrl;
 
@@ -270,8 +272,9 @@ export class StateHandler {
   //
   // Updates
   //
-  destroy(): this {
+  destroy(rule?: Rule): this {
     $GF.log.debug(this.constructor.name + '.destroy()');
+    this.rulesCompleted = false;
     this.states.forEach(s => s.destroy());
     this.clear();
     this.onDestroyed();
@@ -280,6 +283,7 @@ export class StateHandler {
 
   refresh(): this {
     $GF.log.debug(this.constructor.name + '.refresh()');
+    this.rulesCompleted = false;
     this.states.forEach(s => s.refresh());
     this.onRefreshed();
     return this;
@@ -287,6 +291,7 @@ export class StateHandler {
 
   change(): this {
     $GF.log.debug(this.constructor.name + '.change()');
+    this.rulesCompleted = false;
     this.states.forEach(s => s.change());
     this.onChanged();
     return this;
@@ -299,26 +304,59 @@ export class StateHandler {
     return this;
   }
 
+  complete(): this {
+    this.onCompleted();
+    return this;
+  }
+
+  //
+  // Rules
+  //
+  refreshWithRule(rule: Rule): this {
+    this.rulesCompleted = false;
+    this.states.forEach(state => state.changeWithRule(rule));
+    this.refresh();
+    return this;
+  }
+
+  changeWithRule(rule: Rule): this {
+    this.rulesCompleted = false;
+    this.states.forEach(state => state.changeWithRule(rule));
+    this.change();
+    return this;
+  }
+
   //
   // Events
   //
   async onDestroyed() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    const funcName = 'onDestroyed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.unsubscribes(this);
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
+    const funcName = 'onRefreshed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    const funcName = 'onInitialized';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.subscribes(this);
     this.ctrl.eventHandler.ack('state', 'initialized');
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
+    const funcName = 'onChanged';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.ctrl.eventHandler.ack('state', 'changed');
+  }
+
+  async onCompleted() {
+    const funcName = 'onCompleted';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.ctrl.eventHandler.ack('state', 'changed');
   }
 
   //
@@ -326,8 +364,10 @@ export class StateHandler {
   //
   getGraph$changed(): Observer<XGraph> {
     const self = this;
+    const funcName = 'getState$changed';
     return {
       next: (xgraph: XGraph) => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
         if (xgraph !== null && this.matchXGraph(xgraph)) {
           self.destroy();
           self.setXGraph(xgraph);
@@ -340,6 +380,80 @@ export class StateHandler {
       },
       complete: () => {
         $GF.log.debug(this.constructor.name + '.getGraph$changed().complete()');
+      },
+    };
+  }
+
+  getRule$Destroyed(): Observer<Rule> {
+    const self = this;
+    const funcName = 'getRule$Destroyed';
+    return {
+      next: (rule: Rule) => {
+        $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
+        self.states.forEach(state => {
+          state.removeRule(rule);
+        });
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {
+        $GF.log.debug(self.constructor.name + '.getGraph$changed().complete()');
+      },
+    };
+  }
+
+  getRule$refreshed(): Observer<Rule> {
+    const self = this;
+    const funcName = 'getRule$refreshed';
+    return {
+      next: rule => {
+        $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
+        if (rule !== null) {
+          this.refreshWithRule(rule);
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {},
+    };
+  }
+
+  getRule$changed(): Observer<Rule> {
+    const self = this;
+    const funcName = 'getRule$refreshed';
+    return {
+      next: rule => {
+        $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
+        if (rule !== null) {
+          this.changeWithRule(rule);
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {},
+    };
+  }
+
+  getRule$Completed(): Observer<Rule> {
+    const self = this;
+    const funcName = 'getRule$Completed';
+    return {
+      next: (rule: Rule) => {
+        $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
+        if (rule === null) {
+          self.states.forEach(state => {
+            state.complete();
+          });
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {
+        $GF.log.debug(self.constructor.name + '.getGraph$changed().complete()');
       },
     };
   }

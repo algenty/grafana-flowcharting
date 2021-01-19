@@ -773,6 +773,8 @@ export class Flowchart {
   // Updates
   //
   destroy(): this {
+    const funcName = 'destroy';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.xgraph?.destroy();
     this.stateHandler?.destroy();
     this.clear();
@@ -781,6 +783,8 @@ export class Flowchart {
   }
 
   refresh(): this {
+    const funcName = 'refresh';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.xgraph?.refresh();
     // this.stateHandler?.refresh();
     // this.refreshStates();
@@ -790,6 +794,8 @@ export class Flowchart {
   }
 
   change(): this {
+    const funcName = 'change';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.changeGraph();
     // this.xgraph?.change();
     // this.setGraphOptions();
@@ -800,6 +806,8 @@ export class Flowchart {
   }
 
   init(): this {
+    const funcName = 'init';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.initGraph();
     this.initStateHandler();
     this.onInitialized();
@@ -810,24 +818,28 @@ export class Flowchart {
   // Events
   //
   async onDestroyed() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed : ' + this.uid);
+    const funcName = 'onDestroyed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'destroyed');
     this.ctrl.eventHandler.unsubscribes(this);
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onRefreshed : ' + this.uid);
+    const funcName = 'onRefreshed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'refreshed');
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onInitialized : ' + this.uid);
+    const funcName = 'onInitialized';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.subscribes(this);
     this.ctrl.eventHandler.emit(this, 'initialized');
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onChanged : ' + this.uid);
+    const funcName = 'onChanged';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.emit(this, 'changed');
     // this.refresh(); //TODO : Verify
   }

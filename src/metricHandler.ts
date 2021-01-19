@@ -194,8 +194,8 @@ export class MetricHandler {
   //
   // Updates
   //
-  refresh() {
-    const funcName = 'refresh';
+  change() {
+    const funcName = 'change';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
     this.destroy();
@@ -203,14 +203,15 @@ export class MetricHandler {
     this.dataList.forEach(dl => {
       this.addMetric(dl);
     });
-    this.onRefreshed();
+    this.onChanged();
     trc.after();
   }
 
-  change(): this {
-    const funcName = 'change';
+  refresh(timestamp?: number): this {
+    const funcName = 'refresh';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.onChanged();
+    this.metrics.forEach(m => m.refresh(timestamp));
+    this.onRefreshed();
     return this;
   }
 
@@ -260,6 +261,7 @@ export class MetricHandler {
   async onChanged() {
     const funcName = 'onChanged';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.onCompleted();
   }
 
   async onCompleted() {

@@ -16,7 +16,7 @@ import {
   ShapeMapArray,
 } from 'mapping_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
-import { Observer } from 'rxjs';
+// import { Observer } from 'rxjs';
 
 /**
  * Rule definition
@@ -28,7 +28,7 @@ export class Rule {
   data: gf.TIRuleData;
   initialized: boolean = false;
   metrics: Map<string, ObjectMetric> = new Map();
-  metricCompleted: boolean = true;
+  completed: boolean = true;
   mapsObj: gf.TRuleMaps = {
     shapes: [],
     texts: [],
@@ -1142,26 +1142,6 @@ export class Rule {
     return false;
   }
 
-  //
-  // Series|Tables
-  //
-  /**
-   * Return boolean if metrics is matched by rule
-   *
-   * @param {Metric} metric
-   * @returns {boolean}
-   * @memberof Rule
-   */
-  matchMetric(metric: ObjectMetric): boolean {
-    if (this.data.metricType === 'serie' && metric.type === 'serie') {
-      return $GF.utils.matchString(metric.getName(), this.data.pattern);
-    }
-    if (this.data.metricType === 'table' && metric.type === 'table') {
-      return metric.getName() === this.data.refId;
-    }
-    return false;
-  }
-
   /**
    * Return if state is matched
    *
@@ -2143,10 +2123,56 @@ export class Rule {
   }
 
   complete(): this {
-    this.metricCompleted = true;
+    this.completed = true;
     this.refresh();
     this.onCompleted();
     return this;
+  }
+
+  //
+  // Metrics
+  //
+  /**
+   * Return boolean if metrics is matched by rule
+   *
+   * @param {Metric} metric
+   * @returns {boolean}
+   * @memberof Rule
+   */
+  matchMetric(metric: ObjectMetric): boolean {
+    if (this.data.metricType === 'serie' && metric.type === 'serie') {
+      return $GF.utils.matchString(metric.getName(), this.data.pattern);
+    }
+    if (this.data.metricType === 'table' && metric.type === 'table') {
+      return metric.getName() === this.data.refId;
+    }
+    return false;
+  }
+
+  clearMetrics(): this {
+    this.metrics.clear();
+    return this;
+  }
+
+  updateMetric(metric: ObjectMetric): this {
+    if (metric !== null && metric !== undefined) {
+      if (this.matchMetric(metric)) {
+        this.metrics.set(metric.uid, metric);
+      } else {
+        this.metrics.delete(metric.uid);
+      }
+    }
+    return this;
+  }
+
+  removeMetric(metric: ObjectMetric) {
+    if (metric !== null && metric !== undefined) {
+      this.metrics.delete(metric.uid);
+    }
+  }
+
+  hasMetric(metric: ObjectMetric): boolean {
+    return this.metrics.has(metric.uid);
   }
 
   //
@@ -2188,84 +2214,84 @@ export class Rule {
   //
   // RXJS Observer
   //
-  getMetric$changed(): Observer<ObjectMetric> {
-    const self = this;
-    const funcName = 'getMetric$changed';
-    return {
-      next: (metric: ObjectMetric) => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-        if (self.metricCompleted) {
-          self.metricCompleted = false;
-          self.metrics.clear();
-        }
-        if (metric !== null && self.matchMetric(metric)) {
-          self.metrics.set(metric.uid, metric);
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
-      },
-    };
-  }
-
-  getMetric$refreshed(): Observer<ObjectMetric> {
-    const self = this;
-    const funcName = 'getMetric$refreshed';
-    return {
-      next: (metric: ObjectMetric) => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-        if (metric !== null && self.metrics.has(metric.uid)) {
-          if (self.metricCompleted) {
-            self.metricCompleted = false;
-          }
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
-      },
-    };
-  }
-
-  getMetric$completed(): Observer<ObjectMetric> {
-    const self = this;
-    const funcName = 'getMetric$completed';
-    return {
-      next: (metric: ObjectMetric) => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-        if (!self.metricCompleted) {
-          self.complete();
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
-      },
-    };
-  }
-
-  // getMetric$initialized(): Observer<ObjectMetric> {
+  // getMetric$changed(): Observer<ObjectMetric> {
   //   const self = this;
+  //   const funcName = 'getMetric$changed';
   //   return {
   //     next: (metric: ObjectMetric) => {
-  //       if (metric === null) {
-  //         $GF.log.debug('RULE Metric$initialized: Received ACK', metric);
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       if (self.metricCompleted) {
+  //         self.metricCompleted = false;
   //         self.metrics.clear();
-  //         self.refresh();
+  //       }
+  //       if (metric !== null && self.matchMetric(metric)) {
+  //         self.metrics.set(metric.uid, metric);
   //       }
   //     },
   //     error: err => {
   //       $GF.log.error(err);
   //     },
   //     complete: () => {
-  //       $GF.log.debug(this.constructor.name + '.getMetric$initialized().complete()');
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+  //     },
+  //   };
+  // }
+
+  // getMetric$refreshed(): Observer<ObjectMetric> {
+  //   const self = this;
+  //   const funcName = 'getMetric$refreshed';
+  //   return {
+  //     next: (metric: ObjectMetric) => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       if (metric !== null && self.metrics.has(metric.uid)) {
+  //         if (self.metricCompleted) {
+  //           self.metricCompleted = false;
+  //         }
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+  //     },
+  //   };
+  // }
+
+  // getMetric$completed(): Observer<ObjectMetric> {
+  //   const self = this;
+  //   const funcName = 'getMetric$completed';
+  //   return {
+  //     next: (metric: ObjectMetric) => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       if (!self.metricCompleted) {
+  //         self.complete();
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+  //     },
+  //   };
+  // }
+
+  // getState$changed(): Observer<State> {
+  //   const self = this;
+  //   const funcName = 'getState$changed';
+  //   return {
+  //     next: (state: State) => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       if (state === null) {
+  //         self.change();
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
   //     },
   //   };
   // }

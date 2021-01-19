@@ -15,6 +15,7 @@ export class FlowchartHandler {
   data: gf.TFlowchartHandlerData; // DATA panel
   firstLoad = true; // First load
   newMode = false; // Mode if new flowchart
+  uid: string = $GF.utils.uniqueID();
   sequenceNumber = 0; // Sequence Number for a name
   static defaultXml: string; // Default XML
   static defaultCsv: string; // Default CSV
@@ -393,9 +394,11 @@ export class FlowchartHandler {
   async render(name?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
     // not repeat render if mouse down
-    if (!this.mousedown) {
-      this.refresh();
-    }
+    // if (!this.mousedown) {
+    //   this.refresh();
+    // }
+    //TODO : Update only if mouse up
+    this.refresh();
     this.ctrl.renderingCompleted();
     trc.after();
   }
@@ -425,7 +428,6 @@ export class FlowchartHandler {
     this.flowcharts.forEach(f => f.getStateHandler()?.refresh());
     return this;
   }
-
 
   /**
    * Apply state of cell after setStates
@@ -626,7 +628,7 @@ export class FlowchartHandler {
             // fc.xgraph?.change();
             fc.change();
             this.ctrl.$scope.$applyAsync();
-            // this.render();
+            this.render();
           }
         }
       }
@@ -703,20 +705,24 @@ export class FlowchartHandler {
   // Events
   //
   async onDestroyed() {
-    $GF.log.debug(this.constructor.name + '/onDestroyed');
+    const funcName = 'onDestroyed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.unsubscribes(this);
   }
 
   async onRefreshed() {
-    $GF.log.debug(this.constructor.name + '/onRefreshed');
+    const funcName = 'onRefreshed';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   }
 
   async onInitialized() {
-    $GF.log.debug(this.constructor.name + '/onInitialized');
+    const funcName = 'onInitialized';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.subscribes(this);
   }
 
   async onChanged() {
-    $GF.log.debug(this.constructor.name + '/onChanged');
+    const funcName = 'onChanged';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   }
 }
