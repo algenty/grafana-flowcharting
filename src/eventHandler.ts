@@ -23,7 +23,8 @@ export class EventHandler {
   }
 
   subscribes(object: Object) {
-    $GF.log.debug(this.constructor.name + '.subscribes()', object);
+    const funcName = 'subscribes';
+    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     const listLen = this.eventList.length;
     const nameLen = this.eventName.length;
     for (let i = 0; i < listLen; i++) {
@@ -36,7 +37,8 @@ export class EventHandler {
   }
 
   unsubscribes(object: Object) {
-    $GF.log.debug(this.constructor.name + '.unsubscribes()', object);
+    const funcName = 'unsubscribes';
+    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     const listLen = this.eventList.length;
     const nameLen = this.eventName.length;
     for (let i = 0; i < listLen; i++) {
@@ -75,6 +77,7 @@ export class EventHandler {
     try {
       const subscriptionName = `${list}$${eventName}`;
       if (object[subscriptionName] !== undefined) {
+        // $GF.log.debug(`Subscription for ${subscriptionName} found for object`, object);
         const sub: Subscription = object[subscriptionName];
         sub.unsubscribe();
         object[subscriptionName] = undefined;

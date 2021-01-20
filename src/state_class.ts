@@ -508,8 +508,8 @@ export class State {
   }
 
   changeWithRule(rule: Rule): this {
-    if (rule !== null && rule !== undefined && this.matchRule(rule)) {
-      if (this.completed && (this.matchRule(rule) || this.hasRule(rule))) {
+    if (rule !== null && rule !== undefined) {
+      if (this.matchRule(rule) || this.hasRule(rule)) {
         if (this.completed) {
           this.completed = false;
           this.initCycle();
@@ -517,7 +517,7 @@ export class State {
         this.updateRule(rule);
       }
     }
-    // this.change();
+    this.change();
     return this;
   }
 
@@ -529,7 +529,7 @@ export class State {
       }
       this.setCycle(rule);
     }
-    // this.refresh();
+    this.refresh();
     return this;
   }
 

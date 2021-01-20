@@ -31,6 +31,7 @@ export class RulesHandler {
     this.rules = [];
     this.data = data;
     this.ctrl = ctrl;
+    this.init();
   }
 
   setData(data: gf.TIRulesHandlerData): this {
@@ -69,6 +70,7 @@ export class RulesHandler {
         index += 1;
       });
     }
+    this.change();
     return this;
   }
 
@@ -387,9 +389,9 @@ export class RulesHandler {
     };
   }
 
-  getMetric$Completed(): Observer<ObjectMetric> {
+  getMetric$completed(): Observer<ObjectMetric> {
     const self = this;
-    const funcName = 'getMetric$Completed';
+    const funcName = 'getMetric$completed';
     return {
       next: (metric: ObjectMetric) => {
         $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
@@ -410,9 +412,9 @@ export class RulesHandler {
     };
   }
 
-  getState$changed(): Observer<State> {
+  getState$initialized(): Observer<State> {
     const self = this;
-    const funcName = 'getState$changed';
+    const funcName = 'getState$initialized';
     return {
       next: (state: State) => {
         $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);

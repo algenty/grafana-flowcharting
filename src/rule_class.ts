@@ -2112,7 +2112,7 @@ export class Rule {
   change(): this {
     this.updateMetrics();
     this.onChanged();
-    this.refresh();
+    // this.refresh();
     // this.updateStates();
     return this;
   }
@@ -2208,7 +2208,7 @@ export class Rule {
   async onCompleted() {
     const funcName = 'onCompleted';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'completed');
+    // this.ctrl.eventHandler.emit(this, 'completed');
   }
 
   //
