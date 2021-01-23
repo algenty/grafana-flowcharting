@@ -38,7 +38,7 @@ export class XGraph {
   definition: string = '';
   cumulativeZoomFactor = 1;
   grid = false;
-  uid = $GF.utils.uniqueID();
+  uid: string;
   // bgColor: string | null = null;
   zoomPercent = '1';
   // defaultXCellValues: TXGraphDefaultValues = {
@@ -58,6 +58,7 @@ export class XGraph {
    */
   constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string, ctrl: FlowchartCtrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
+    this.uid = $GF.uniqID(this.constructor.name);
     this.container = container;
     this.type = type;
     this.ctrl = ctrl;

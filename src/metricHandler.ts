@@ -9,7 +9,7 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
  */
 export class MetricHandler {
   dataList: any[] = [];
-  uid: string = $GF.utils.uniqueID();
+  uid: string;
   tables: TableMetric[] = [];
   series: SerieMetric[] = [];
   metrics: ObjectMetric[] = [];
@@ -17,6 +17,7 @@ export class MetricHandler {
   ctrl: FlowchartCtrl;
 
   constructor(ctrl: FlowchartCtrl) {
+    this.uid = $GF.uniqID(this.constructor.name);
     this.ctrl = ctrl;
     this.init();
   }

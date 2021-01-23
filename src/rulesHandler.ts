@@ -15,7 +15,7 @@ import { State } from 'state_class';
 export class RulesHandler {
   rules: Rule[];
   ctrl: FlowchartCtrl;
-  uid: string = $GF.utils.uniqueID();
+  uid: string;
   data: gf.TIRulesHandlerData;
   activeRuleIndex = 0;
   observers$: gf.TObserver<Rule>[] = [];
@@ -27,7 +27,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   constructor(data: gf.TIRulesHandlerData, ctrl: FlowchartCtrl) {
-    $GF.log.info('RulesHandler.constructor()');
+    this.uid = $GF.uniqID(this.constructor.name);
     this.rules = [];
     this.data = data;
     this.ctrl = ctrl;
@@ -48,7 +48,8 @@ export class RulesHandler {
    */
   import(obj: any): this {
     $GF.log.info('RuleHandler.import()');
-    this.rules = [];
+    // this.rules = [];
+    this.clear();
     let index = 1;
     if (obj !== undefined && obj !== null) {
       // For version < 0.6.0
@@ -90,7 +91,7 @@ export class RulesHandler {
    */
   static getDefaultData(): gf.TIRulesHandlerData {
     return {
-      rulesData: [],
+      rulesData: [Rule.getDefaultData()],
     };
   }
 
@@ -352,7 +353,7 @@ export class RulesHandler {
         }
         if (metric !== null) {
           for (let i = 0; i < len; i++) {
-            this.rules[i].updateMetric(metric);
+            this.rules[i].refreshWithMetric(metric);
           }
         }
       },

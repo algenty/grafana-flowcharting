@@ -15,7 +15,7 @@ export type ObjectMetric = SerieMetric | TableMetric;
  */
 export class Metric {
   type: gf.TMetricTypeKeys | 'unknown' = 'unknown';
-  uid: string = $GF.utils.uniqueID();
+  uid: string;
   ctrl: FlowchartCtrl;
   scopedVars: any;
   metrics: any = {};
@@ -24,6 +24,7 @@ export class Metric {
   nullPointMode = 'connected';
   GHValue: string | number | null = null;
   constructor(dataList: any, ctrl: FlowchartCtrl) {
+    this.uid = $GF.uniqID(this.constructor.name);
     this.dataList = dataList;
     this.ctrl = ctrl;
   }

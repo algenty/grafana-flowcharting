@@ -17,11 +17,12 @@ export class Flowchart {
   xgraph: XGraph | undefined = undefined;
   stateHandler: StateHandler | undefined;
   // states: Map<string, State> | undefined;
-  uid: string = $GF.utils.uniqueID();
+  uid: string;
   visible = false;
   reduce = true;
 
   constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData, ctrl: FlowchartCtrl) {
+    this.uid = $GF.uniqID(this.constructor.name);
     this.data = data;
     this.data.name = name;
     this.container = container;
@@ -111,7 +112,7 @@ export class Flowchart {
    */
   static getDefaultData(): gf.TFlowchartData {
     return {
-      name: 'name',
+      name: 'Main',
       xml: FlowchartHandler.getDefaultDioGraph(),
       csv: FlowchartHandler.getDefaultCsvGraph(),
       download: false,

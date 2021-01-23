@@ -18,7 +18,7 @@ export class StateHandler {
   xgraph: XGraph;
   edited = false;
   rulesCompleted: boolean = true;
-  uid: string = $GF.utils.uniqueID();
+  uid: string;
   ctrl: FlowchartCtrl;
 
   /**
@@ -27,6 +27,7 @@ export class StateHandler {
    * @memberof StateHandler
    */
   constructor(xgraph: XGraph, ctrl: FlowchartCtrl) {
+    this.uid = $GF.uniqID(this.constructor.name);
     this.states = new Map();
     this.xgraph = xgraph;
     // this.initStates();

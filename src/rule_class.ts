@@ -41,7 +41,7 @@ export class Rule {
   stringTH: StringTH[] = [];
   dateTH: DateTH[] = [];
   FE_metricName: string | undefined;
-  uid: string = $GF.utils.uniqueID();
+  uid: string;
   removeClick = 2;
   states: Map<string, State> = new Map();
   shapeStates: Map<string, State> = new Map();
@@ -63,6 +63,7 @@ export class Rule {
    * @memberof Rule
    */
   constructor(pattern: string, data: gf.TIRuleData, ctrl: FlowchartCtrl) {
+    this.uid = $GF.uniqID(this.constructor.name);
     this.data = data;
     this.data.pattern = pattern;
     this.ctrl = ctrl;
@@ -2154,7 +2155,7 @@ export class Rule {
     return this;
   }
 
-  updateMetric(metric: ObjectMetric): this {
+  refreshWithMetric(metric: ObjectMetric): this {
     if (metric !== null && metric !== undefined) {
       if (this.matchMetric(metric)) {
         this.metrics.set(metric.uid, metric);

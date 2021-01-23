@@ -7,10 +7,11 @@ class GFTH {
   data: gf.TTHData;
   hidden = false;
   validComp: string[] = [];
-  uid = $GF.utils.uniqueID();
+  uid: string;
   type = 'unknown';
   reduce = true;
   constructor(color: string, comparator: any, value: any, data: gf.TTHData) {
+    this.uid = $GF.uniqID(this.constructor.name);
     this.data = data;
     this.data.value = value;
     this.data.comparator = comparator;

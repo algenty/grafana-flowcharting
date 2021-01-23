@@ -44,16 +44,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   };
   containerDivId: string;
   static templateUrl: string;
-  // flags = {
-  //   refresh_graph: new Set<string>(),
-  //   change_graph: new Set<string>(),
-  //   refresh_datas: new Set<string>(),
-  //   change_datas: new Set<string>(),
-  //   refresh_rules: new Set<string>(),
-  //   change_rules: new Set<string>(),
-  //   refresh_graphHover: new Set<string>(),
-  //   // hiddenChange: new Set<string>(),
-  // };
+
   /**@ngInject*/
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
@@ -74,15 +65,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.parentDiv = document.createElement('div');
     this.flowchartsDiv = document.createElement('div');
     this.id = $GF.utils.uniqueID();
-    this.panelDefaults = {
-      newFlag: true,
-      format: 'short',
-      valueName: 'current',
-      rulesData: RulesHandler.getDefaultData(),
-      flowchartsData: FlowchartHandler.getDefaultData(),
-      version: $GF.plugin.getVersion(),
-    };
-
+    this.panelDefaults = FlowchartCtrl.getDefaultData();
     _defaults(this.panel, this.panelDefaults);
     this.panel.graphId = `flowchart_${this.panel.id}`;
     this.containerDivId = `container_${this.panel.graphId}`;
@@ -105,6 +88,24 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     grafana.appEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
     grafana.appEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
     this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
+  }
+
+  /**
+   * Return data with default value
+   *
+   * @static
+   * @returns PanelDatas
+   * @memberof RulesHandler
+   */
+  static getDefaultData() {
+    return {
+      newFlag: true,
+      format: 'short',
+      valueName: 'current',
+      rulesData: RulesHandler.getDefaultData(),
+      flowchartsData: FlowchartHandler.getDefaultData(),
+      version: $GF.plugin.getVersion(),
+    };
   }
 
   //

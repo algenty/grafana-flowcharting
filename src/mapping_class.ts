@@ -22,9 +22,9 @@ class GFMap {
   reduce = true;
   static methods: any[] = [];
   constructor(pattern, data: DataMap) {
+    this.uid = $GF.uniqID(this.constructor.name);
     this.data = data;
     this.data.pattern = pattern;
-    this.uid = $GF.utils.uniqueID();
   }
 
   /**
@@ -645,12 +645,12 @@ export class EventMap extends GFMap {
 
 class VMAP {
   data: DataVMap;
-  id: string;
+  uid: string;
   hidden = false;
   reduce = true;
   constructor(data: DataVMap) {
+    this.uid = $GF.uniqID(this.constructor.name);
     this.data = data;
-    this.id = $GF.utils.uniqueID();
   }
 
   import(obj: any): this {
@@ -780,9 +780,10 @@ export class ValueMap extends VMAP {
 export class RangeMap extends VMAP {
   data: gf.TRangeMapData;
   reduce = true;
-  id = $GF.utils.uniqueID();
+  uid: string;
   constructor(from: string = '', to: string = '', text: string = '', data: gf.TRangeMapData) {
     super(data);
+    this.uid = $GF.uniqID(this.constructor.name);
     this.data = data;
     this.data.from = from;
     this.data.to = to;

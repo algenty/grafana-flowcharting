@@ -15,7 +15,7 @@ export class FlowchartHandler {
   data: gf.TFlowchartHandlerData; // DATA panel
   firstLoad = true; // First load
   newMode = false; // Mode if new flowchart
-  uid: string = $GF.utils.uniqueID();
+  uid: string;
   sequenceNumber = 0; // Sequence Number for a name
   static defaultXml: string; // Default XML
   static defaultCsv: string; // Default CSV
@@ -36,6 +36,7 @@ export class FlowchartHandler {
    */
   constructor(data: gf.TFlowchartHandlerData, ctrl: FlowchartCtrl) {
     FlowchartHandler.getDefaultDioGraph();
+    this.uid = $GF.uniqID(this.constructor.name);
     this.ctrl = ctrl;
     (this.parentDiv = this.ctrl.flowchartsDiv), (this.data = data);
     this.currentFlowchartName = 'Main';
@@ -65,7 +66,7 @@ export class FlowchartHandler {
     return {
       editorUrl: $GF.CONSTANTS.CONF_EDITOR_URL,
       editorTheme: $GF.CONSTANTS.CONF_EDITOR_THEME,
-      flowcharts: [],
+      flowcharts: [Flowchart.getDefaultData()],
       allowDrawio: true,
     };
   }
@@ -361,10 +362,8 @@ export class FlowchartHandler {
     const data = Flowchart.getDefaultData();
     const container = this.createContainer();
     const flowchart = new Flowchart(name, container, data, this.ctrl);
-    // flowchart.init();
     this.flowcharts.push(flowchart);
     this.data.flowcharts.push(data);
-    // this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES, name);
     trc.after();
     return flowchart;
   }

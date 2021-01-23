@@ -48,9 +48,9 @@ export class State {
    */
   constructor(xcell: XCell, xgraph: XGraph, ctrl: FlowchartCtrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
+    this.uid = $GF.uniqID(this.constructor.name);
     this.xcell = xcell;
     this.ctrl = ctrl;
-    this.uid = $GF.utils.uniqueID();
     this.xgraph = xgraph;
     this.shapeState = new ShapeState(xgraph, xcell);
     this.tooltipState = new TooltipState(xgraph, xcell);

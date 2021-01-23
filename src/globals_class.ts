@@ -762,7 +762,7 @@ class GFTrace {
     if (GFTrace.enable && fn !== undefined) {
       this.trace = {
         Name: fn,
-        Id: $GF.utils.uniqueID(),
+        Id: $GF.uniqID(this.constructor.name),
         Args: undefined,
         Return: undefined,
         Before: Date.now(),
@@ -865,12 +865,13 @@ export class $GF {
   static graphHover = false;
   static GHTimeStamp = 0;
   static DEBUG = false;
+  static mapId = {};
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     loadJS: (fname: string) => void;
     sleep: (ms: number, mess?: string) => void;
-    uniqueID: () => string;
+    // uniqueID: () => string;
     // getRatioColor: (ratio: number, colorStart: string, colorEnd: string) => string;
     matchString: (str: string, pattern: string | undefined, regex?: boolean) => boolean;
     stringToJsRegex: (str: string) => RegExp;
@@ -904,6 +905,13 @@ export class $GF {
       this.trace = GFTrace.init();
     }
     return this;
+  }
+
+  static uniqID(name: string = 'Default'): string {
+    if ($GF.mapId[name] === undefined) {
+      $GF.mapId[name] = 1;
+    }
+    return `${name}-${$GF.mapId[name]++}`;
   }
 
   static me(): $GF {
