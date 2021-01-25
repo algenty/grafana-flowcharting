@@ -5,7 +5,7 @@ import { TooltipHandler } from 'tooltipHandler';
 export class XCell {
   graph: any;
   mxcell: mxCell;
-  uid: string = $GF.utils.uniqueID();
+  uid: string;
   isHidden: boolean = false;
   isHighlighting: boolean = false;
   isBlink: boolean = false;
@@ -14,7 +14,8 @@ export class XCell {
   _mxcellHL: any = null;
   gf: gf.TXCellGF;
 
-  constructor(graph, mxcell) {
+  constructor(graph, mxcell: mxCell) {
+    this.uid = $GF.uniqID(this.constructor.name);
     this.graph = graph;
     this.mxcell = mxcell;
     this.gf = this._getDefaultGFXCell();
