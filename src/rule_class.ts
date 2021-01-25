@@ -2125,7 +2125,7 @@ export class Rule {
 
   complete(): this {
     this.completed = true;
-    this.refresh();
+    // this.refresh();
     this.onCompleted();
     return this;
   }
@@ -2163,6 +2163,7 @@ export class Rule {
         this.metrics.delete(metric.uid);
       }
     }
+    this.onRefreshed();
     return this;
   }
 

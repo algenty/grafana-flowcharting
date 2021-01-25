@@ -262,6 +262,7 @@ export class RulesHandler {
 
   clear(): this {
     $GF.log.debug(this.constructor.name + '.clear()');
+    this.rules.forEach(r => r.clear());
     this.rules = [];
     this.data.rulesData = [];
     return this;
@@ -299,6 +300,7 @@ export class RulesHandler {
   }
 
   complete(): this {
+    this.rules.forEach(r => r.complete());
     this.metricsCompleted = true;
     this.onCompleted();
     return this;
@@ -355,6 +357,7 @@ export class RulesHandler {
           for (let i = 0; i < len; i++) {
             this.rules[i].refreshWithMetric(metric);
           }
+          this.onRefreshed();
         }
       },
       error: err => {
@@ -397,10 +400,10 @@ export class RulesHandler {
       next: (metric: ObjectMetric) => {
         $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
         if (metric === null && !self.metricsCompleted) {
-          const len = self.rules.length;
-          for (let i = 0; i < len; i++) {
-            self.rules[i].refresh();
-          }
+          // const len = self.rules.length;
+          // for (let i = 0; i < len; i++) {
+          //   self.rules[i].complete();
+          // }
           self.complete();
         }
       },

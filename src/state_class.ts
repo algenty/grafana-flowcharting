@@ -529,7 +529,7 @@ export class State {
       }
       this.setCycle(rule);
     }
-    this.refresh();
+    this.onRefreshed();
     return this;
   }
 

@@ -64,6 +64,7 @@ class GFCONSTANT {
 
   // TRACE AND DEBUG
   VAR_GF_TRACE_PERF = false;
+  // VAR_GF_LEVEL_DEBUG = 0;
 
   // MXGRAPH
   MXGRAPH_STYLES_COLOR: gf.TStyleColorKeys[] = [
@@ -436,6 +437,7 @@ class GFLog {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
+  // static logLevel = GFLog.DEBUG;
   static logLevel = GFLog.DEBUG;
   static logDisplay = true;
   constructor() {}
@@ -864,7 +866,7 @@ export class $GF {
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
-  static DEBUG = false;
+  static DEBUG = true;
   static mapId = {};
   static utils: {
     decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;

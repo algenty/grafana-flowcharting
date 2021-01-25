@@ -323,14 +323,14 @@ export class StateHandler {
   refreshWithRule(rule: Rule): this {
     this.rulesCompleted = false;
     this.states.forEach(state => state.refreshWithRule(rule));
-    this.refresh();
+    this.onRefreshed();
     return this;
   }
 
   changeWithRule(rule: Rule): this {
     this.rulesCompleted = false;
     this.states.forEach(state => state.changeWithRule(rule));
-    this.change();
+    this.onChanged();
     return this;
   }
 

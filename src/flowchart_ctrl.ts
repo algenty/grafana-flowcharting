@@ -31,7 +31,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   metricHandler: MetricHandler | undefined;
   eventHandler: EventHandler;
   onMapping: InteractiveMap;
-  id: String;
+  uid: string;
   graphHoverTimer: GFTimer | undefined = undefined;
   mouseIn = false;
   panelDefaults: {
@@ -49,6 +49,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope, $injector, $rootScope, templateSrv) {
     super($scope, $injector);
     $GF.init($scope, templateSrv, this.dashboard, this);
+    this.$scope.$GF = $GF.me();
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     $scope.editor = this;
@@ -64,11 +65,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.onMapping = new InteractiveMap();
     this.parentDiv = document.createElement('div');
     this.flowchartsDiv = document.createElement('div');
-    this.id = $GF.utils.uniqueID();
+    this.uid = $GF.uniqID(this.constructor.name);
     this.panelDefaults = FlowchartCtrl.getDefaultData();
     _defaults(this.panel, this.panelDefaults);
     this.panel.graphId = `flowchart_${this.panel.id}`;
     this.containerDivId = `container_${this.panel.graphId}`;
+
+    // If save in edited mode
+    if (!this.isEditingMode() && this.isEditedMode()) {
+      this.editModeFalse();
+    }
 
     // events
     // console.log('grafana.PanelEvents', grafana.PanelEvents);
@@ -422,6 +428,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.message.clearMessage();
     }
   }
+
+  debug() {
+    console.debug(this);
+  }
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };
@@ -430,7 +440,7 @@ FlowchartCtrl.templateUrl = './partials/module.html';
 class GFMessage {
   container: HTMLDivElement;
   message: HTMLSpanElement;
-  id: String;
+  uid: String;
   static ERROR_MESSAGE = 'error';
   static ERROR_COLOR = 'red';
   static INFO_MESSAGE = 'info';
@@ -439,7 +449,7 @@ class GFMessage {
   static WARNING_COLOR = 'yellow';
 
   constructor(parent: HTMLDivElement) {
-    this.id = $GF.utils.uniqueID();
+    this.uid = $GF.uniqID(this.constructor.name);
     this.container = parent;
     const span = this.container.querySelector<HTMLSpanElement>('#message-text');
     if (span == null) {
@@ -472,7 +482,7 @@ class GFMessage {
       $GF.setUniqTimeOut(
         this.clearMessage.bind(this),
         $GF.CONSTANTS.CONF_GFMESSAGE_MS,
-        `flowcharting-message-${this.id}`
+        `flowcharting-message-${this.uid}`
       );
     }
   }
@@ -482,6 +492,6 @@ class GFMessage {
       this.container.style.display = 'none';
       this.message.innerHTML = '';
     }
-    $GF.clearUniqTimeOut(`flowcharting-message-${this.id}`);
+    $GF.clearUniqTimeOut(`flowcharting-message-${this.uid}`);
   }
 }
