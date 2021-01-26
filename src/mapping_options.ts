@@ -329,7 +329,7 @@ export function mappingOptionsTab($q, uiSegmentSrv) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `${$GF.plugin.getPartialPath()}/mapping/index.html`,
+    templateUrl: `${$GF.plugin.getPartialPath()}mapping/index.html`,
     controller: MappingOptionsCtrl,
   };
 }
