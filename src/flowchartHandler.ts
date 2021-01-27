@@ -627,7 +627,7 @@ export class FlowchartHandler {
             // fc.xgraph?.change();
             fc.change();
             this.ctrl.$scope.$applyAsync();
-            this.render();
+            // this.render();
           }
         }
       }

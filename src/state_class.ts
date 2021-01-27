@@ -580,22 +580,26 @@ export class State {
   async onRefreshed() {
     const funcName = 'onRefreshed';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.ctrl.eventHandler.emit(this, 'refreshed');
   }
 
   async onInitialized() {
     const funcName = 'onInitialized';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.ctrl.eventHandler.subscribes(this);
+    this.ctrl.eventHandler.emit(this, 'initialized');
   }
 
   async onChanged() {
     const funcName = 'onChanged';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.ctrl.eventHandler.emit(this, 'changed');
   }
 
   async onCompleted() {
     const funcName = 'onCompleted';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.ctrl.eventHandler.emit(this, 'completed');
   }
 
   //

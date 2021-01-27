@@ -197,12 +197,13 @@ export class RulesHandler {
     newRule.data.reduce = false;
     this.activeRuleIndex = index;
     this.setOrder();
-    const elt = document.getElementById(newRule.uid);
-    if (elt) {
-      setTimeout(() => {
-        elt.focus();
-      }, 100);
-    }
+    // const elt = document.getElementById(newRule.uid);
+    // if (elt) {
+    //   setTimeout(() => {
+    //     elt.focus();
+    //   }, 100);
+    // }
+    $GF.setFocus(newRule.uid);
     return newRule;
   }
 
@@ -425,7 +426,7 @@ export class RulesHandler {
         if (state !== null) {
           const len = self.rules.length;
           for (let i = 0; i < len; i++) {
-            state.updateRule(self.rules[i]);
+            state.changeWithRule(self.rules[i]);
           }
         }
       },

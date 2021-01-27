@@ -206,7 +206,8 @@ export class Flowchart {
         }
         this.setGraphOptions(); //TODO :simplify
         this.xgraph?.setContent(content);
-        this.xgraph?.change(); //TODO : move to change
+        this.xgraph?.change();
+        this.xgraph?.refresh();
         //TODO : already in setOptions, if yes call xgraph.change();
         // if (this.data.tooltip) {
         //   this.xgraph?.tooltipGraph(true);
