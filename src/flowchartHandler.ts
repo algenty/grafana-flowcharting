@@ -626,7 +626,7 @@ export class FlowchartHandler {
             // this.onChangeGraph(fc.getName());
             // fc.xgraph?.change();
             fc.change();
-            this.ctrl.$scope.$applyAsync();
+            // this.ctrl.$scope.$applyAsync();
             // this.render();
           }
         }
