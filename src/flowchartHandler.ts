@@ -79,7 +79,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   import(obj: any): this {
-    this.clear();
+    this.destroy();
     if (obj !== undefined && obj !== null) {
       // For version 0.5.0 and under
       let tmpFc: any[];
@@ -623,11 +623,8 @@ export class FlowchartHandler {
           if (fc !== undefined) {
             this.ctrl.notify('Received data from draw.io editor, refresh in progress', 'info');
             fc.setContent(event.data);
-            // this.onChangeGraph(fc.getName());
-            // fc.xgraph?.change();
-            fc.change();
-            // this.ctrl.$scope.$applyAsync();
-            // this.render();
+            this.change();
+            this.render();
           }
         }
       }

@@ -33,9 +33,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onMapping: InteractiveMap;
   uid: string;
   graphHoverTimer: GFTimer | undefined = undefined;
-  mouseIn = false;
+  mouseIn: boolean = false;
+  firstLoad: boolean = true;
   panelDefaults: {
-    newFlag: boolean;
+    // newFlag: boolean;
     format: string;
     valueName: string;
     rulesData: gf.TIRulesHandlerData;
@@ -105,7 +106,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    */
   static getDefaultData() {
     return {
-      newFlag: true,
       format: 'short',
       valueName: 'current',
       rulesData: RulesHandler.getDefaultData(),
@@ -207,10 +207,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.notify('Configuration updating...');
       this.editModeFalse();
       const panelClone = _cloneDeep(this.panel);
-      this.flowchartHandler.destroy();
       this.flowchartHandler.import(panelClone.flowchartsData);
-      this.rulesHandler.destroy();
       this.rulesHandler.import(panelClone.rulesData);
+      this.rulesHandler.refresh();
     }
     this.flowchartHandler?.render();
   }
@@ -317,7 +316,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.initHandlers();
 
     // Versions
-    this.panel.newFlag = false;
+    // this.panel.newFlag = false;
     if (this.panel.version !== $GF.plugin.getVersion()) {
       this.notify(
         `The plugin version has changed, save the dashboard to optimize loading : ${

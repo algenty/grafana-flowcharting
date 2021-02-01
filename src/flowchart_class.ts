@@ -799,10 +799,6 @@ export class Flowchart {
     const funcName = 'change';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.changeGraph();
-    // this.xgraph?.change();
-    // this.setGraphOptions();
-    // this.xgraph?.change();
-    // this.stateHandler?.change(); // managed by RXJS event
     this.onChanged();
     return this;
   }

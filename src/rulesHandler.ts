@@ -5,6 +5,7 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
 import { Observer } from 'rxjs';
 import { ObjectMetric } from 'metric_class';
 import { State } from 'state_class';
+import { Flowchart } from 'flowchart_class';
 
 /**
  * Rules Handler
@@ -428,6 +429,25 @@ export class RulesHandler {
           for (let i = 0; i < len; i++) {
             state.changeWithRule(self.rules[i]);
           }
+        }
+      },
+      error: err => {
+        $GF.log.error(err);
+      },
+      complete: () => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+      },
+    };
+  }
+
+  getFlowchart$changed(): Observer<Flowchart> {
+    // const self = this;
+    const funcName = 'getState$initialized';
+    return {
+      next: (flowchart: Flowchart) => {
+        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+        if (flowchart !== null) {
+          this.refresh();
         }
       },
       error: err => {
