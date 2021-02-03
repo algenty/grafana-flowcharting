@@ -77,6 +77,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.editModeFalse();
     }
 
+    // Force refresh since 7.x
+    window.setTimeout(() => {
+      this.onRefresh();
+    }, 1000);
+
     // events
     // console.log('grafana.PanelEvents', grafana.PanelEvents);
     // this.events.on(grafana.PanelEvents.render, this.onRender.bind(this));
@@ -178,7 +183,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onRefresh() {
     const funcName = 'onRefresh';
     $GF.log.debug(`${this.constructor.name}.${funcName}()`);
-    this.onRender();
+    this.flowchartHandler?.refresh();
   }
 
   /**
@@ -208,6 +213,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.editModeFalse();
       const panelClone = _cloneDeep(this.panel);
       this.flowchartHandler.import(panelClone.flowchartsData);
+      this.flowchartHandler.refresh();
       this.rulesHandler.import(panelClone.rulesData);
       this.rulesHandler.refresh();
     }
@@ -325,7 +331,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       );
     }
     this.panel.version = this.version;
-    this.onRender();
+    // this.onRender();
     // this.flowchartHandler?.refresh();
     trc.after();
   }

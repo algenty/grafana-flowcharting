@@ -393,12 +393,13 @@ export class FlowchartHandler {
   async render(name?: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'render()');
     // not repeat render if mouse down
-    // if (!this.mousedown) {
-    //   this.refresh();
-    // }
+    if (!this.mousedown || this.firstLoad) {
+      this.firstLoad = false;
+      this.refresh();
+      this.ctrl.renderingCompleted();
+    }
     //TODO : Update only if mouse up
-    this.refresh();
-    this.ctrl.renderingCompleted();
+    // this.refresh();
     trc.after();
   }
 
@@ -427,120 +428,6 @@ export class FlowchartHandler {
     this.flowcharts.forEach(f => f.getStateHandler()?.refresh());
     return this;
   }
-
-  /**
-   * Apply state of cell after setStates
-   *
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // applyStates(): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'applyStates()');
-  //   new Promise(() => {
-  //     this.flowcharts.forEach(flowchart => {
-  //       flowchart.applyStates();
-  //     });
-  //   }).then(() => {
-  //     this.refresh();
-  //   });
-  //   trc.after();
-  //   return this;
-  // }
-
-  /**
-   * Set and apply options
-   *
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // setOptions(name?: string): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'setOptions()');
-  //   if (name === undefined) {
-  //     this.flowcharts.forEach(flowchart => {
-  //       const name = flowchart.getName();
-  //       this.setOptions(name);
-  //     });
-  //   } else {
-  //     const flowchart = this.getFlowchart(name);
-  //     flowchart.setGraphOptions();
-  //     // this.ctrl.ackFlagEvent($GF.CONSTANTS.EVENT_REF_FLOWCHARTS, name);
-  //     // this.flagEvent($GF.CONSTANTS.FLOWCHART_APL_OPTIONS, name);
-  //     if (!flowchart.isVisible()) {
-  //       // this.flagEvent($GF.CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
-  //     }
-  //   }
-  //   trc.after();
-  //   return this;
-  // }
-
-  // setCurrentOptions(): this {
-  //   const name = this.getCurrentFlowchartName();
-  //   this.setOptions(name);
-  //   return this;
-  // }
-
-  /**
-   * (re)draw graph
-   *
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // draw(name?: string): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
-  //   if (name === undefined) {
-  //     this.flowcharts.forEach(flowchart => {
-  //       const name = flowchart.getName();
-  //       this.draw(name);
-  //     });
-  //   } else {
-  //     const flowchart = this.getFlowchart(name);
-  //     flowchart.setContent();
-  //   }
-  //   trc.after();
-  //   return this;
-  // }
-
-  // drawCurrent(): this {
-  //   const name = this.getCurrentFlowchartName();
-  //   this.draw(name);
-  //   return this;
-  // }
-
-  /**
-   * (re)load graph,
-   *
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // load(name?: string): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
-  //   if (name === undefined) {
-  //     this.flowcharts.forEach(flowchart => {
-  //       this.load(name);
-  //     });
-  //   } else {
-  //     const flowchart = this.getFlowchart(name);
-  //     if (!flowchart.isVisible()) {
-  //       // this.flagEvent($GF.CONSTANTS.FLOWCHART_CHG_HIDDENCHANGE, name);
-  //     }
-  //     flowchart.reload();
-  //     // this.akcFlagEvent($GF.CONSTANTS.EVENT_CHG_FLOWCHARTS, name);
-  //   }
-  //   trc.after();
-  //   return this;
-  // }
-
-  /**
-   * load current flowchart
-   *
-   * @returns {this}
-   * @memberof FlowchartHandler
-   */
-  // loadCurrent(): this {
-  //   const name = this.getCurrentFlowchartName();
-  //   this.load(name);
-  //   return this;
-  // }
 
   /**
    * Active option link/map
