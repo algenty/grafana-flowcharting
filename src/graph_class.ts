@@ -147,7 +147,7 @@ export default class XGraph {
         // $GF.utils.evalRaw(code);
         mxcustom.evalCode();
         XGraph.postInitGlobalVars();
-        // code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
+        // code = $GF.utils.$loadFile(`${$GF.plugin.getLibsPath()}Graph_custom.js`);
         // $GF.utils.evalRaw(code);
         mxcustom.customize();
         mxTooltipHandler.prototype.delay = $GF.CONSTANTS.CONF_TOOLTIPS_DELAY;
@@ -171,7 +171,7 @@ export default class XGraph {
     myWindow.DRAWIO_BASE_URL = $GF.plugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
     myWindow.DRAW_MATH_URL = $GF.plugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
     myWindow.DRAWIO_VIEWER_URL = $GF.plugin.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
-    myWindow.DRAW_MATH_URL = $GF.plugin.getDrawioPath() + 'math/';
+    myWindow.DRAW_MATH_URL = $GF.plugin.getDrawioPath() + 'math';
     myWindow.DRAWIO_CONFIG = null; // Replace with your custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
     const urlParams = new Object();
     myWindow.urlParams = urlParams;

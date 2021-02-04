@@ -546,7 +546,7 @@ class GFPlugin {
    * @memberof GFPlugin
    */
   getShapesPath(): string {
-    return `${this.getDrawioPath()}/shapes/`;
+    return `${this.getDrawioPath()}shapes/`;
   }
 
   /**
@@ -566,7 +566,7 @@ class GFPlugin {
    * @memberof GFPlugin
    */
   getStencilsPath(): string {
-    return `${this.getDrawioPath()}/stencils/`;
+    return `${this.getDrawioPath()}stencils/`;
   }
 
   getMxCssPath(): string {
