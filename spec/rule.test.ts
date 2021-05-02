@@ -1,10 +1,12 @@
 import { Rule } from '../src/rule_class';
+import { FlowchartCtrl } from '../src/flowchart_ctrl';
 
 describe('Rule', () => {
   const data = Rule.getDefaultData();
+  const ctrl = null;
 
   describe('New', () => {
-    const rule = new Rule('/.*/', data);
+    const rule = new Rule('/.*/', data, ctrl);
     test('Should be equals', () => {
       expect(rule.getData()).toMatchSnapshot();
     });
@@ -15,7 +17,7 @@ describe('Rule', () => {
 
     describe('Create', () => {
       test.skip('addshape & remove', () => {
-        const rule = new Rule('/.*/', data);
+        const rule = new Rule('/.*/', data, ctrl);
         rule.addShapeMap(pattern);
         expect(rule.getShapeMaps().length).toBe(1);
         rule.removeShapeMap(0);
@@ -25,7 +27,7 @@ describe('Rule', () => {
 
     describe('Match', () => {
       test('Match on one', () => {
-        const rule = new Rule('/.*/', data);
+        const rule = new Rule('/.*/', data, ctrl);
         rule.addShapeMap(pattern);
         const sm = rule.getShapeMap(0);
         sm.match('Toto');
@@ -33,7 +35,7 @@ describe('Rule', () => {
       });
 
       test('Match on all', () => {
-        const rule = new Rule('/.*/', data);
+        const rule = new Rule('/.*/', data, ctrl);
         rule.addShapeMap(pattern);
         expect(rule.matchShape('Toto')).toBeTruthy();
         expect(rule.matchShape('Tata')).toBeFalsy();
@@ -41,10 +43,10 @@ describe('Rule', () => {
     });
 
     describe('Colorize', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       // rule.data.thresholds = [50, 80];
-      rule.addThreshold(undefined, "COLOR1", 50);
-      rule.addThreshold(undefined, "COLOR2", 80);
+      rule.addThreshold(undefined, 'COLOR1', 50);
+      rule.addThreshold(undefined, 'COLOR2', 80);
       const shape = rule.addShapeMap(pattern);
 
       test('isEligible always ERR should be true', () => {
@@ -70,7 +72,7 @@ describe('Rule', () => {
     const pattern = '/.*Toto.*/';
 
     test('addshape & remove', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       rule.addTextMap(pattern);
       expect(rule.getTextMaps().length).toBe(1);
       rule.removeTextMap(0);
@@ -78,14 +80,14 @@ describe('Rule', () => {
     });
 
     test('Match on one', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       rule.addTextMap(pattern);
       const sm = rule.getTextMap(0);
       expect(sm.match('Toto')).toBeTruthy();
     });
 
     test('Match on all', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       rule.addTextMap(pattern);
       expect(rule.matchText('Toto')).toBeTruthy();
       expect(rule.matchText('Tata')).toBeFalsy();
@@ -95,7 +97,7 @@ describe('Rule', () => {
   describe('Link', () => {
     const pattern = '/.*Toto.*/';
     test('addshape & remove', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       rule.addLinkMap(pattern);
       expect(rule.getLinkMaps().length).toBe(1);
       rule.removeLinkMap(0);
@@ -103,14 +105,14 @@ describe('Rule', () => {
     });
 
     test('Match on one', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       rule.addLinkMap(pattern);
       const sm = rule.getLinkMap(0);
       expect(sm.match('Toto')).toBeTruthy();
     });
 
     test('Match on all', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       rule.addLinkMap(pattern);
       expect(rule.matchLink('Toto')).toBeTruthy();
       expect(rule.matchLink('Tata')).toBeFalsy();
@@ -119,7 +121,7 @@ describe('Rule', () => {
 
   describe('ValueMap', () => {
     test('addshape & remove', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       rule.data.mappingType = 1;
       rule.addValueMap(1, 'This 1');
       expect(rule.getValueMaps().length).toBe(1);
@@ -128,7 +130,7 @@ describe('Rule', () => {
     });
 
     test('Mapping values', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       rule.data.mappingType = 1;
       rule.data.type = 'string';
       rule.addValueMap(1, 'This 1');
@@ -141,7 +143,7 @@ describe('Rule', () => {
 
   describe('RangeMap', () => {
     test('addshape & remove', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       rule.data.mappingType = 2;
       rule.data.type = 'string';
       rule.addRangeMap(0, 5, 'Between 0 and 5');
@@ -151,7 +153,7 @@ describe('Rule', () => {
     });
 
     test('Mapping values', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       rule.data.mappingType = 2;
       rule.data.type = 'string';
       rule.addRangeMap(0, 5, 'Between 0 and 5');
@@ -162,7 +164,7 @@ describe('Rule', () => {
     });
 
     test('Mapping values upper and lower', () => {
-      const rule = new Rule('/.*/', data);
+      const rule = new Rule('/.*/', data, ctrl);
       rule.data.mappingType = 2;
       rule.data.type = 'string';
       rule.addRangeMap(undefined, 33, 'Lower than 33');
@@ -176,7 +178,7 @@ describe('Rule', () => {
 
   describe('Text replace', () => {
     const data = Rule.getDefaultData();
-    const rule = new Rule('/.*/', data);
+    const rule = new Rule('/.*/', data, ctrl);
     const text = 'This is my value';
     const patternText = '/value/';
     const formattedValue = '12.34';
