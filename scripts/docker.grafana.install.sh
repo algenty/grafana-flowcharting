@@ -1,5 +1,5 @@
 #!/bin/bash
-HOME_PLUGINS=/home/arnaud/dev/workspace
+HOME_PLUGINS=/home/dosy07/dev/workspace
 # HOME_CONFIG=$PWD/grafana/config
 [ ! -d "$HOME_PLUGINS" ] && echo "HOME_PLUGINS=${HOME_PLUGINS} doesn't exist" && exit 1
 # [ ! -d "$HOME_CONFIG" ] && echo "HOME_CONFIG=${HOME_CONFIG} doesn't exist" && exit 1
