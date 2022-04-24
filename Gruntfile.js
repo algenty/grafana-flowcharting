@@ -60,12 +60,12 @@ module.exports = (grunt) => {
     compress: {
       main: {
         options: {
-          archive: "archives/agenty-flowcharting-panel-" + version + "-SNAPSHOT.zip",
+          archive: process.env.FLOWCHARTING_BUILT_PATH + "/agenty-flowcharting-panel-" + version + "-SNAPSHOT.zip",
         },
         expand: true,
         cwd: '.',
-        src: ['**/*', '!src/**', '!node_modules/**', '!backups/**', '!bower_components/**', '!others/**', '!.git/**', '!archives/**', '!public/**', '!backup/**', '!spec/**', '!spec/__snapshots__/**','!externals/**'],
-        dest: 'grafana-flowcharting',
+        src: ['!key.txt', '**/*', '!src/**', '!node_modules/**', '!backups/**', '!bower_components/**', '!others/**', '!.git/**', '!archives/**', '!public/**', '!backup/**', '!spec/**', '!spec/__snapshots__/**','!externals/**'],
+        dest: 'agenty-flowcharting-panel',
       },
     },
 
