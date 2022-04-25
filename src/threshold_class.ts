@@ -1,16 +1,18 @@
 import { $GF } from './globals_class';
 import { default as dayjs } from 'dayjs';
+import { FlowchartingClass } from 'flowcharting_object';
 export type ObjectTH = NumberTH | StringTH | DateTH;
 export type ObjectTHData = gf.TTHNumberData | gf.TTHStringData | gf.TTHDateData;
 
-class GFTH {
+class GFTH extends FlowchartingClass {
   data: gf.TTHData;
   hidden = false;
   validComp: string[] = [];
-  id = $GF.utils.uniqueID();
+  // id = $GF.utils.uniqueID();
   type = 'unknown';
   reduce = true;
   constructor(color: string, comparator: any, value: any, data: gf.TTHData) {
+    super();
     this.data = data;
     this.data.value = value;
     this.data.comparator = comparator;
@@ -54,10 +56,6 @@ class GFTH {
 
   isValidValue(): boolean {
     return true;
-  }
-
-  getId() {
-    return this.id;
   }
 
   getData(): any {

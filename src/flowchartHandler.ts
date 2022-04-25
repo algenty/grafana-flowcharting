@@ -219,7 +219,7 @@ export class FlowchartHandler {
     const fcs = this.getFlowcharts();
     for (let index = 0; index < fcs.length; index++) {
       const fc = fcs[index];
-      if (fc.id === id) {
+      if (fc.uid === id) {
         return fc;
       }
     }
@@ -537,7 +537,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   onGraphHoverChange(): this {
-    this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER, name);
+    this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER);
     return this;
   }
 
@@ -807,7 +807,7 @@ export class FlowchartHandler {
     this.onMapping
       .setMap(objToMap)
       .setOptions(options)
-      .setFocus(objToMap.getId());
+      .setFocus(objToMap.uid);
     flowchart.setMap();
     return this;
   }
@@ -860,7 +860,7 @@ export class FlowchartHandler {
       if (fc !== undefined) {
         this.ctrl.notify('Sending current data to draw.io editor', 'info');
         event.source.postMessage(fc.data.xml, event.origin);
-        this.postedId = fc.id;
+        this.postedId = fc.uid;
       }
       //   }
       // }
@@ -904,7 +904,7 @@ export class FlowchartHandler {
     const fc = this.getFlowchart(name);
     const urlEditor = this.data.editorUrl;
     const theme = this.data.editorTheme;
-    const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&ready=fc-${fc.id}&src=grafana`;
+    const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&ready=fc-${fc.uid}&src=grafana`;
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;
     this.ctrl.notify(`Opening current flowchart on draw.io editor`, 'info');

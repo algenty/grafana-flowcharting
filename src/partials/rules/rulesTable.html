@@ -125,17 +125,17 @@
               ng-mouseleave="rule.displayEdit[CN1] = false;" ng-mouseover="rule.displayEdit[CN1] = true;"
               ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
               <div class="gf-table-content" ng-show="rule.inEdit[CN1] !== true"
-                ng-dblclick="rule.inEdit[CN1] = true;$GF.setFocus(rule.getId() + '-' + CN1)">
+                ng-dblclick="rule.inEdit[CN1] = true;$GF.setFocus(rule.uid + '-' + CN1)">
                 {{rule.getData().alias}}
               </div>
               <div ng-show="rule.displayEdit[CN1] === true && rule.inEdit[CN1] !== true"
-                ng-click="rule.inEdit[CN1] = true;$GF.setFocus( rule.getId() + '-' + CN1 )"
+                ng-click="rule.inEdit[CN1] = true;$GF.setFocus( rule.uid + '-' + CN1 )"
                 title="Edit/Change metric name/alias"
                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
               </div>
               <div ng-show="rule.inEdit[CN1] === true">
                 <input type="text" class="gf-form-input max-width-16" ng-model="rule.getData().alias"
-                  ng-attr-id="{{rule.getId() + '-' + CN1}}" ng-blur="rule.inEdit[CN1] = false;" style="width: 100%;"
+                  ng-attr-id="{{rule.uid + '-' + CN1}}" ng-blur="rule.inEdit[CN1] = false;" style="width: 100%;"
                   ng-model-onblur ng-keydown="$event.keyCode === 13 ? rule.inEdit[CN1] = false : rule.inEdit[CN1] = true" autofocus />
               </div>
             </div>
@@ -145,18 +145,18 @@
               ng-mouseleave="rule.displayEdit[CN2] = false;" ng-mouseover="rule.displayEdit[CN2] = true;"
               ng-attr-title="{{rule.FE_metricName}}" ng-style="{'width' : editor.rulesTable.getWidth('metric')}">
               <div class="gf-table-content" ng-show="rule.inEdit[CN2] !== true"
-                ng-dblclick="rule.inEdit[CN2] = true;$GF.setFocus(rule.getId() + '-' + CN2)">
+                ng-dblclick="rule.inEdit[CN2] = true;$GF.setFocus(rule.uid + '-' + CN2)">
                 {{rule.FE_metricName}}
               </div>
               <div ng-show="rule.displayEdit[CN2] === true && rule.inEdit[CN2] !== true"
-                ng-click="rule.inEdit[CN2] = true;$GF.setFocus( rule.getId() + '-' + CN2 )"
+                ng-click="rule.inEdit[CN2] = true;$GF.setFocus( rule.uid + '-' + CN2 )"
                 title="Edit/Change metric name/alias"
                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
               </div>
               <div ng-show="rule.inEdit[CN2] === true">
                 <select style="width:100%;" convert-to-number class="gf-form-input"
                   ng-blur="editor.onRulesChange();rule.inEdit[CN2] = false;" ng-model="rule.FE_metricName"
-                  ng-attr-id="{{rule.getId() + '-' + CN2}}"
+                  ng-attr-id="{{rule.uid + '-' + CN2}}"
                   ng-change="editor.setFastEditMectricName(rule) && editor.onRulesChange();rule.inEdit[CN2] = false"
                   ng-options="m for m in editor.getFastEditMectricNames(rule)">
                   <!-- <option type="number" ng-repeat="m in editor.getFastEditMectricNames(rule);" ng-value="rule.FE_metricName">{{m}}

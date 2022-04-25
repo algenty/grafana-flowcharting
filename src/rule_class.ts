@@ -15,6 +15,7 @@ import {
   DataMap,
   ShapeMapArray,
 } from 'mapping_class';
+import { FlowchartingClass } from 'flowcharting_object';
 
 /**
  * Rule definition
@@ -22,7 +23,7 @@ import {
  * @export
  * @class Rule
  */
-export class Rule {
+export class Rule extends FlowchartingClass {
   data: gf.TIRuleData;
   mapsObj: gf.TRuleMaps = {
     shapes: [],
@@ -30,17 +31,13 @@ export class Rule {
     links: [],
     events: [],
   };
-  // shapeMaps: ShapeMap[] = [];
-  // textMaps: TextMap[] = [];
-  // linkMaps: LinkMap[] = [];
-  // eventMaps: EventMap[] = [];
   valueMaps: ValueMap[] = [];
   rangeMaps: RangeMap[] = [];
   numberTH: NumberTH[] = [];
   stringTH: StringTH[] = [];
   dateTH: DateTH[] = [];
   FE_metricName: string | undefined;
-  id: string;
+  // id: string;
   removeClick = 2;
 
   states: Map<string, State>;
@@ -57,9 +54,10 @@ export class Rule {
    * @memberof Rule
    */
   constructor(pattern: string, data: gf.TIRuleData) {
+    super();
     this.data = data;
     this.data.pattern = pattern;
-    this.id = $GF.utils.uniqueID();
+    // this.id = $GF.utils.uniqueID();
     this.states = new Map();
   }
 
@@ -629,16 +627,6 @@ export class Rule {
 
   clear(): this {
     return this;
-  }
-
-  /**
-   * Return uniq id of rule
-   *
-   * @returns
-   * @memberof Rule
-   */
-  getId(): string {
-    return this.id;
   }
 
   /**

@@ -1,11 +1,12 @@
+import { FlowchartingClass } from 'flowcharting_object';
 import { $GF, GFTimer } from 'globals_class';
 import { Rule } from 'rule_class';
 import { TooltipHandler } from 'tooltipHandler';
 
-export class XCell {
+export class XCell extends FlowchartingClass {
   graph: any;
   mxcell: mxCell;
-  uniqId: string = $GF.utils.uniqueID();
+  // uniqId: string = $GF.utils.uniqueID();
   isHidden: boolean = false;
   isHighlighting: boolean = false;
   isBlink: boolean = false;
@@ -15,6 +16,7 @@ export class XCell {
   gf: gf.TXCellGF;
 
   constructor(graph, mxcell) {
+    super();
     this.graph = graph;
     this.mxcell = mxcell;
     this.gf = this._getDefaultGFXCell();
@@ -690,7 +692,7 @@ export class XCell {
    * @memberof XCell
    */
   async blink(ms: number = 1000, bool: boolean = true) {
-    const timeId = `blink-${this.uniqId}`;
+    const timeId = `blink-${this.uid}`;
     const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
     if (bool && !this.isBlink) {
       this.isBlink = true;

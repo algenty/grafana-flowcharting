@@ -12,7 +12,7 @@
             </span>
         </info-popover>
     </label>
-    <input type="text" style="margin-right: 2px;" id="{{ shape.getId() }}" placeholder="id or regex of shape"
+    <input type="text" style="margin-right: 2px;" id="{{ shape.uid }}" placeholder="id or regex of shape"
         class="gf-form-input width-8" ng-model="shape.getData().pattern"
         title="Enter an id, label,metadata attribute or regex to identify object"
         bs-typeahead="rule.getShapeMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"

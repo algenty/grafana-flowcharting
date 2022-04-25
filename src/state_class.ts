@@ -5,6 +5,7 @@ import { Metric } from './metric_class';
 import { TooltipHandler } from './tooltipHandler';
 import { $GF, GFVariables } from 'globals_class';
 import { XCell } from 'cell_class';
+import { FlowchartingClass } from 'flowcharting_object';
 
 /**
  * Class for state of one cell
@@ -12,9 +13,9 @@ import { XCell } from 'cell_class';
  * @export
  * @class State
  */
-export class State {
+export class State extends FlowchartingClass {
   xcell: XCell; // mxCell State
-  id: string; // cell ID in mxcell
+  // id: string; // cell ID in mxcell
   // newcellId: string | undefined; // for inspect mode
   // previousId: string | undefined; // for inspect mode
   // edited: boolean | undefined; // if modified in inspector
@@ -46,9 +47,10 @@ export class State {
    * @memberof State
    */
   constructor(xcell: XCell, xgraph: XGraph) {
+    super();
     const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
     this.xcell = xcell;
-    this.id = xcell.getId();
+    this.uid = xcell.getId();
     this.xgraph = xgraph;
     this.shapeState = new ShapeState(xgraph, xcell);
     this.tooltipState = new TooltipState(xgraph, xcell);

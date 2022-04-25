@@ -184,7 +184,7 @@ export class RulesHandler {
     newRule.data.reduce = false;
     this.activeRuleIndex = index;
     this.setOrder();
-    const elt = document.getElementById(newRule.getId());
+    const elt = document.getElementById(newRule.uid);
     if (elt) {
       setTimeout(() => {
         elt.focus();

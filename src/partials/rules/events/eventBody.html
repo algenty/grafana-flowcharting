@@ -12,7 +12,7 @@
             </span>
         </info-popover>
     </label>
-    <input type="text" style="margin-right: 2px;" id="{{ elt.getId() }}" placeholder="id or regex of shape"
+    <input type="text" style="margin-right: 2px;" id="{{ elt.uid }}" placeholder="id or regex of shape"
         class="gf-form-input width-8" ng-model="elt.getData().pattern"
         title="Enter an id, label,metadata attribute or regex to identify object"
         bs-typeahead="rule.getEventMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
@@ -34,7 +34,7 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-10" ng-model="elt.getData().comparator" ng-attr-id="{{elt.getId() + '-' + CN3}}"
+    <select class="gf-form-input width-10" ng-model="elt.getData().comparator" ng-attr-id="{{elt.uid + '-' + CN3}}"
         ng-blur="editor.onRulesChange()" ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.getData().comparator)}}"
         ng-options="c.value as c.text for c in editor.comparator" ng-change="editor.onRulesChange()">
     </select>
@@ -59,7 +59,7 @@
         </info-popover>
     </label>
     <select class="gf-form-input width-10" ng-model="elt.getData().style" style="width:100%;"
-        ng-attr-id="{{elt.getId() + '-' + CN5}}" ng-blur="editor.onRulesChange();"
+        ng-attr-id="{{elt.uid + '-' + CN5}}" ng-blur="editor.onRulesChange();"
         ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.getData().style)}}"
         ng-options="c.value as c.text for c in editor.EventType" ng-change="editor.onRulesChange()">
     </select>

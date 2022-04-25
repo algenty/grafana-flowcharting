@@ -179,7 +179,7 @@ export class StateHandler {
   addState(xcell: XCell): State {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addState()');
     const state = new State(xcell, this.xgraph);
-    const id = state.id;
+    const id = state.uid;
     this.states.set(id, state);
     if ($GF.DEBUG) {
       $GF.setVar(`STATE_${id}`, state);

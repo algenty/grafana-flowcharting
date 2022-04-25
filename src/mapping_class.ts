@@ -2,6 +2,7 @@ import { XCell } from 'cell_class';
 import { $GF, GFVariables } from 'globals_class';
 import _ from 'lodash';
 import { Rule } from 'rule_class';
+import { FlowchartingClass } from 'flowcharting_object';
 
 export type ObjectMap = ShapeMap | TextMap | LinkMap | EventMap;
 export type ObjectMapArray = ShapeMapArray | TextMapArray | LinkMapArray | EventMapArray;
@@ -10,21 +11,21 @@ export type TextMapArray = TextMap[];
 export type LinkMapArray = LinkMap[];
 export type EventMapArray = EventMap[];
 export type DataMap = gf.TShapeMapData | gf.TTextMapData | gf.TlinkMapData | gf.TEventMapData;
-
 export type ObjectVMap = ValueMap | RangeMap;
 export type DataVMap = gf.TValueMapData | gf.TRangeMapData;
 
-class GFMap {
+class GFMap extends FlowchartingClass {
   data: DataMap;
-  id: string;
+  // uid: string;
   type: gf.TTypeMap = 'shape';
   options: gf.TRuleMapOptions = Rule.getDefaultMapOptions();
   reduce = true;
   static methods: any[] = [];
   constructor(pattern, data: DataMap) {
+    super();
     this.data = data;
     this.data.pattern = pattern;
-    this.id = $GF.utils.uniqueID();
+    // this.uid = $GF.utils.uniqueID();
   }
 
   /**
@@ -137,9 +138,10 @@ class GFMap {
    * @returns {string}
    * @memberof GFMap
    */
-  getId(): string {
-    return this.id;
-  }
+  // Moved to flowcharting to super
+  // getUid(): string {
+  //   return this.uid;
+  // }
 
   /**
    * Change pattern
@@ -643,14 +645,14 @@ export class EventMap extends GFMap {
   }
 }
 
-class VMAP {
+class VMAP extends FlowchartingClass {
   data: DataVMap;
-  id: string;
+  // uid: string;
   hidden = false;
   reduce = true;
   constructor(data: DataVMap) {
+    super();
     this.data = data;
-    this.id = $GF.utils.uniqueID();
   }
 
   import(obj: any): this {
@@ -660,10 +662,9 @@ class VMAP {
     return this;
   }
 
-  getId(): string {
-    return this.id;
-  }
-
+  // getUid(): string {
+  //   return this.uid;
+  // }
   getData(): DataVMap {
     return this.data;
   }
@@ -780,7 +781,7 @@ export class ValueMap extends VMAP {
 export class RangeMap extends VMAP {
   data: gf.TRangeMapData;
   reduce = true;
-  id = $GF.utils.uniqueID();
+  // uid = $GF.utils.uniqueID();
   constructor(from: string = '', to: string = '', text: string = '', data: gf.TRangeMapData) {
     super(data);
     this.data = data;

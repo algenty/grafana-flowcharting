@@ -7,6 +7,7 @@ import { FlowchartHandler } from 'flowchartHandler';
 import { Metric } from 'metric_class';
 import { $GF } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
+import { FlowchartingClass } from 'flowcharting_object';
 
 /**
  * Flowchart handler
@@ -14,7 +15,7 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
  * @export
  * @class Flowchart
  */
-export class Flowchart {
+export class Flowchart extends FlowchartingClass {
   data: gf.TFlowchartData;
   container: HTMLDivElement;
   ctrl: FlowchartCtrl;
@@ -23,18 +24,19 @@ export class Flowchart {
   // ctrl: any;
   // templateSrv: any;
   states: Map<string, State> | undefined;
-  id: string;
+  // id: string;
   visible = false;
   reduce = true;
   // onMapping : InteractiveMap;
 
   constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData, ctrl: FlowchartCtrl) {
+    super();
     this.data = data;
     this.data.name = name;
     this.container = container;
     this.ctrl = ctrl;
     // this.onMapping = ctrl.onMapping;
-    this.id = $GF.utils.uniqueID();
+    // this.id = $GF.utils.uniqueID();
   }
 
   /**
