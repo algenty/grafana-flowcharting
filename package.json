@@ -1,6 +1,6 @@
 {
   "name": "flowcharting",
-  "version": "1.0.0b",
+  "version": "1.0.0c",
   "description": "flow charting plugin for Grafana",
   "main": "src/module.js",
   "scripts": {
@@ -8,8 +8,8 @@
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch",
-    "archive": "./node_modules/.bin/grunt archive",
-    "clean" : "./node_modules/.bin/grunt clean",
+    "archive": "grunt archive",
+    "clean": "grunt clean",
     "sign": "grafana-toolkit plugin:sign"
   },
   "repository": {
@@ -61,6 +61,9 @@
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-compress": "^1.6.0",
     "grunt-git": "^1.0.14",
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-zip": "^5.1.0",
     "invariant": "^2.2.4",
     "jest": "^26.6.3",
     "jquery": "^3.4.1",

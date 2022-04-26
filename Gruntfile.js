@@ -15,7 +15,7 @@ module.exports = (grunt) => {
       dist: {
         src : ['dist/**/*']
       }
-    }
+    },
 
     // clean: {
     //   before_init: {
