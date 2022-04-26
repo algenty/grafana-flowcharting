@@ -98,11 +98,7 @@ Fix metadata event
 async methods in constructors of XGraph
 Fix edit draw.io and 3x reload graph in init 
 StateForRule not work with ${_metric}
-
-
-# effect
-https://pavenum.com/overlay-avec-hover-sur-une-image-en-html-css/
-
+Fix GraphOver
 
 #Optimize
 js-coroutines

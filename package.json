@@ -9,7 +9,8 @@
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch",
     "archive": "./node_modules/.bin/grunt archive",
-    "init": "./node_module/.bin/grunt init"
+    "init": "./node_module/.bin/grunt init",
+    "sign": "grafana-toolkit plugin:sign"
   },
   "repository": {
     "type": "git",
