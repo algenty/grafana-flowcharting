@@ -113,6 +113,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   onGraphHover(event: any) {
     const self = this;
     const flowchartHandler = this.flowchartHandler;
+    debugger
     if (this.dashboard.sharedTooltipModeEnabled() && flowchartHandler !== undefined) {
       const timestamp = event.pos.x;
       const id = 'graph-hover';
