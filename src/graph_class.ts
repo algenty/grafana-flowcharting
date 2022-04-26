@@ -342,7 +342,9 @@ export default class XGraph {
           this.graph.addExtFont(extFonts[i].name, extFonts[i].url);
         }
       } catch (e) {
-        $GF.log.error('ExtFonts format error:', e.message);
+        if (e instanceof Error) {
+          $GF.log.error('ExtFonts format error:', e.message);
+        }
       }
     }
   }

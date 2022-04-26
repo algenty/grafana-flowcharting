@@ -1,4 +1,4 @@
-import { FlowchartHandler } from './flowchartHandler';
+import { FlowchartHandler } from './flowchart_handler';
 import XGraph from './graph_class';
 import { Flowchart } from './flowchart_class';
 import { $GF, GFTable } from './globals_class';

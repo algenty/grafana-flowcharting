@@ -1,7 +1,7 @@
-import { FlowchartHandler } from './flowchartHandler';
+import { FlowchartHandler } from './flowchart_handler';
 import { State } from 'state_class';
 import { $GF, GFTable } from 'globals_class';
-import { StateHandler } from 'statesHandler';
+import { StateHandler } from 'states_handler';
 import _ from 'lodash';
 import XGraph from 'graph_class';
 // import { MetricHandler } from './metricHandler';

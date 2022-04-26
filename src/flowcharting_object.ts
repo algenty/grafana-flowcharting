@@ -1,14 +1,8 @@
 import { $GF } from 'globals_class';
 
-interface FlowchartingInterface {
-  uid: String;
+export class FlowchartingClass {
+  uid: string = $GF.utils.uniqueID();
   data: any;
-  getUid(): String;
-}
-
-export class FlowchartingClass implements FlowchartingInterface {
-  uid = $GF.utils.uniqueID();
-  data;
   constructor() {
     //NOTHING TODO
   }

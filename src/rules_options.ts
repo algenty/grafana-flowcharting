@@ -1,11 +1,11 @@
-import { FlowchartHandler } from './flowchartHandler';
-import { RulesHandler } from './rulesHandler';
+import { FlowchartHandler } from './flowchart_handler';
+import { RulesHandler } from './rules_handler';
 import { Rule } from './rule_class';
 import { EventMap, ObjectMap, ObjectMapArray } from './mapping_class';
 import { $GF, GFTable } from './globals_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
-import { MetricHandler } from './metricHandler';
+import { MetricHandler } from './metric_handler';
 import { DateTH, NumberTH, StringTH } from 'threshold_class';
 import { XCell } from 'cell_class';
 

@@ -1,9 +1,9 @@
 import XGraph from 'graph_class';
-import { StateHandler } from 'statesHandler';
+import { StateHandler } from 'states_handler';
 import { State } from 'state_class';
 import { Rule } from 'rule_class';
 
-import { FlowchartHandler } from 'flowchartHandler';
+import { FlowchartHandler } from 'flowchart_handler';
 import { Metric } from 'metric_class';
 import { $GF } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';

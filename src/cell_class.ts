@@ -1,7 +1,7 @@
 import { FlowchartingClass } from 'flowcharting_object';
 import { $GF, GFTimer } from 'globals_class';
 import { Rule } from 'rule_class';
-import { TooltipHandler } from 'tooltipHandler';
+import { TooltipHandler } from 'tooltip_handler';
 
 export class XCell extends FlowchartingClass {
   graph: any;

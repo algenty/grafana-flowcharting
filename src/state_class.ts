@@ -2,7 +2,7 @@ import XGraph from './graph_class';
 import { Rule } from './rule_class';
 import { EventMap } from 'mapping_class';
 import { Metric } from './metric_class';
-import { TooltipHandler } from './tooltipHandler';
+import { TooltipHandler } from './tooltip_handler';
 import { $GF, GFVariables } from 'globals_class';
 import { XCell } from 'cell_class';
 import { FlowchartingClass } from 'flowcharting_object';
