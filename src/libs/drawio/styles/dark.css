@@ -1,6 +1,9 @@
 html body .geDiagramContainer, html body div.geMenubarContainer, html body td.mxPopupMenuIcon, html body .geFormatContainer, html body div.geMenubarContainer .geStatus:hover {
 	background-color:#2a2a2a;
 }
+html body .mxCellEditor {
+	color: #f0f0f0;
+}
 html body.geEditor div.mxPopupMenu {
 	border:3px solid #505759;
 	background:#2a2a2a;
@@ -16,6 +19,9 @@ html body.geEditor div.mxPopupMenu hr {
 html body .geTabContainer {
 	border-top:1px solid #505759;
 	background-color:#2a2a2a;
+}
+html body .geDragPreview {
+	border: 1px dashed #cccccc;
 }
 html body .geMenubarContainer .geItem:active, html .geSidebarContainer button:active {
 	opacity: 0.7;
@@ -167,4 +173,42 @@ html body .geCommentContainer {
 	border-width: 1px;
 	box-shadow: none;
 	color: inherit;
+}
+
+.geNotification-bell * {
+  display: block;
+  margin: 0 auto;
+  background-color: #aaa !important;
+  box-shadow: 0px 0px 10px #aaa !important;
+}
+
+.geNotification-count {
+  position: absolute;
+  z-index: 1;
+  top: -5px;
+  right: 7px;
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  font-size: 10px;
+  border-radius: 50%;
+  background-color: #ff4927;
+  color: #DEEBFF !important;
+  animation: geZoomAnim 1s 1s both;
+}
+
+.geNotifPanel .header {
+  height: 30px;
+  width: 100%;
+  background: #424242 !important;
+  color: #ccc !important;
+  font-size: 15px;
+}
+
+.geNotifPanel .notifications {
+    position: relative;
+    height: 270px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #707070;
 }

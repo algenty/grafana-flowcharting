@@ -40,10 +40,6 @@ export default class XGraph {
   id = $GF.utils.uniqueID();
   bgColor: string | null = null;
   zoomPercent = '1';
-  // cells: { id: string[]; value: string[] } = {
-  //   id: [],
-  //   value: [],
-  // };
   defaultXCellValues: TXGraphDefaultValues = {
     id: undefined,
     value: undefined,
@@ -155,20 +151,9 @@ export default class XGraph {
     if (!XGraph.initialized) {
       if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
-        // Before 0.9
-        // let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
-        // $GF.utils.evalRaw(code);
-
-        // $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/viewer-static.min.js`);
-        // $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/shapes.min.js`);
-
-        // Eval Fileor Eval Code
         $GF.utils.$evalFile(`${$GF.plugin.getRootPath()}${$GF.CONSTANTS.CONF_FILE_VIEWERJS}`);
-        // mxcustom.evalCode();
         mxcustom.customize();
         XGraph.postInitGlobalVars();
-        // $GF.utils.$evalFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
-        // $GF.utils.evalRaw(code);
         mxTooltipHandler.prototype.delay = $GF.CONSTANTS.CONF_TOOLTIPS_DELAY;
       }
       XGraph.initialized = true;

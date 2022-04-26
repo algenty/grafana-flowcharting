@@ -11,8 +11,9 @@ class GFCONSTANT {
   CONF_FILE_DEFAULTDIO = 'static/defaultGraph.drawio';
   CONF_FILE_DEFAULTCSV = 'static/defaultGraph.csv';
   CONF_FILE_SHAPESTXT = 'static/shapes.txt';
-  CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
-  CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
+  // CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
+  // CONF_FILE_INTEGRATEJS = 'libs/drawio/js/app.min.js';
+  // CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
   // CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
   CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer-static.min.js';
   CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
