@@ -8,8 +8,8 @@
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch",
-    "archive": "grunt archive",
-    "clean": "grunt clean",
+    "archive": "gulp package",
+    "clean": "gulp clean",
     "sign": "grafana-toolkit plugin:sign"
   },
   "repository": {

@@ -1,3 +1,6 @@
+console.error("Flowcharting grunt obsolete, use Gulp")
+process.exit(1);
+
 const path = require("path");
 const plugin = require('./src/plugin.json');
 const version = plugin.info.version;
