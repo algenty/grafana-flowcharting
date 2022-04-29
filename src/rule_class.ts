@@ -273,7 +273,7 @@ export class Rule extends FlowchartingClass {
     if (!!obj.thresholds && !!obj.colors) {
       let i = 0;
       let j = 0;
-      obj.colors.forEach(cl => {
+      obj.colors.forEach((cl) => {
         if (i === 0) {
           this._addNumberThreshold(i++, cl);
         } else {
@@ -322,7 +322,7 @@ export class Rule extends FlowchartingClass {
     if (!!stringTH && obj.colors) {
       let i = 0;
       let j = 0;
-      obj.colors.forEach(cl => {
+      obj.colors.forEach((cl) => {
         if (i === 0) {
           this._addStringThreshold(i++, cl);
         } else {
@@ -615,7 +615,7 @@ export class Rule extends FlowchartingClass {
     // RANGE
     this.data.rangeData = [];
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
-      obj.rangeData.forEach(rangeData => {
+      obj.rangeData.forEach((rangeData) => {
         this.addRangeMap('from', 'to', 'text').import(rangeData);
       });
     }
@@ -636,7 +636,7 @@ export class Rule extends FlowchartingClass {
    */
   highlightXCells() {
     if (this.states) {
-      this.states.forEach(state => {
+      this.states.forEach((state) => {
         state.highlightCell();
       });
     }
@@ -649,7 +649,7 @@ export class Rule extends FlowchartingClass {
    */
   unhighlightXCells() {
     if (this.states) {
-      this.states.forEach(state => {
+      this.states.forEach((state) => {
         state.unhighlightCell();
       });
     }
@@ -705,12 +705,12 @@ export class Rule extends FlowchartingClass {
 
   _invertColorOrderFor(ths: ObjectTH[]): this {
     const colors: string[] = [];
-    ths.forEach(th => {
+    ths.forEach((th) => {
       colors.push(th.getColor());
     });
     colors.reverse();
     let i = 0;
-    ths.forEach(TH => {
+    ths.forEach((TH) => {
       TH.setColor(colors[i++]);
     });
     return this;

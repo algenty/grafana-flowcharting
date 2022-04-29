@@ -186,7 +186,7 @@ export class InspectOptionsCtrl {
     const sh = flowchart.getStateHandler();
     if (sh !== undefined) {
       const states = sh.getStates();
-      states.forEach(state => {
+      states.forEach((state) => {
         if (this.isEdited(state)) {
           const xcell = state.getXCell();
           xcell.restoreId();

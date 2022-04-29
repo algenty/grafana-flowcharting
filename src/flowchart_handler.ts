@@ -124,10 +124,7 @@ export class FlowchartHandler {
 
       // import data
       tmpFc.forEach((fcData: gf.TFlowchartData) => {
-        this.addFlowchart(fcData.name)
-          .toBack()
-          .import(fcData)
-          .allowDrawio(this.data.allowDrawio);
+        this.addFlowchart(fcData.name).toBack().import(fcData).allowDrawio(this.data.allowDrawio);
       });
       this.currentFlowchart = this.getFlowchart('Main');
     }
@@ -425,7 +422,7 @@ export class FlowchartHandler {
       const self = this;
       // SOURCE
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES)) {
-        this.getFlagNames($GF.CONSTANTS.FLOWCHART_CHG_SOURCES).forEach(name => {
+        this.getFlagNames($GF.CONSTANTS.FLOWCHART_CHG_SOURCES).forEach((name) => {
           self.load(name).setOptions(name);
         });
       }
@@ -433,7 +430,7 @@ export class FlowchartHandler {
 
       // OPTIONS
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS)) {
-        this.getFlagNames($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS).forEach(name => {
+        this.getFlagNames($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS).forEach((name) => {
           self.setOptions(name);
         });
       }
@@ -473,7 +470,7 @@ export class FlowchartHandler {
           self.firstLoad = false;
         } else {
           // console.log("Apply options on",this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS));
-          this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS).forEach(name => {
+          this.getFlagNames($GF.CONSTANTS.FLOWCHART_APL_OPTIONS).forEach((name) => {
             self.applyOptions(name);
           });
         }
@@ -551,7 +548,7 @@ export class FlowchartHandler {
     $GF.log.debug(`${this.constructor.name}.applyOptions()`, name);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
     if (name === undefined) {
-      this.flowcharts.forEach(flowchart => {
+      this.flowcharts.forEach((flowchart) => {
         const name = flowchart.getName();
         this.applyOptions(name);
       });
@@ -572,7 +569,7 @@ export class FlowchartHandler {
     if (name !== undefined) {
       this.flags[type].add(name);
     } else {
-      this.flowcharts.forEach(flowchart => {
+      this.flowcharts.forEach((flowchart) => {
         const name = flowchart.getName();
         this.flags[type].add(name);
       });
@@ -598,7 +595,7 @@ export class FlowchartHandler {
 
   getFlagNames(type: gf.TFlowchartFlagKeys): string[] {
     let result: string[] = [];
-    this.flags[type].forEach(value => result.push(value));
+    this.flags[type].forEach((value) => result.push(value));
     return result;
   }
 
@@ -642,7 +639,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   refresh(): this {
-    this.flowcharts.forEach(flowchart => {
+    this.flowcharts.forEach((flowchart) => {
       flowchart.refresh();
     });
     return this;
@@ -658,7 +655,7 @@ export class FlowchartHandler {
    */
   setStates(rules: Rule[], metrics: any[]): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
-    this.flowcharts.forEach(flowchart => {
+    this.flowcharts.forEach((flowchart) => {
       flowchart.setStates(rules, metrics);
     });
     trc.after();
@@ -674,7 +671,7 @@ export class FlowchartHandler {
    */
   updateStates(rules: Rule[]): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'updateStates()');
-    this.flowcharts.forEach(flowchart => {
+    this.flowcharts.forEach((flowchart) => {
       flowchart.updateStates(rules);
     });
     trc.after();
@@ -690,7 +687,7 @@ export class FlowchartHandler {
   applyStates(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyStates()');
     new Promise(() => {
-      this.flowcharts.forEach(flowchart => {
+      this.flowcharts.forEach((flowchart) => {
         flowchart.applyStates();
       });
     }).then(() => {
@@ -709,7 +706,7 @@ export class FlowchartHandler {
   setOptions(name?: string): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setOptions()');
     if (name === undefined) {
-      this.flowcharts.forEach(flowchart => {
+      this.flowcharts.forEach((flowchart) => {
         const name = flowchart.getName();
         this.setOptions(name);
       });
@@ -742,7 +739,7 @@ export class FlowchartHandler {
   draw(name?: string): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
     if (name === undefined) {
-      this.flowcharts.forEach(flowchart => {
+      this.flowcharts.forEach((flowchart) => {
         const name = flowchart.getName();
         this.draw(name);
       });
@@ -769,7 +766,7 @@ export class FlowchartHandler {
   load(name?: string): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'draw()');
     if (name === undefined) {
-      this.flowcharts.forEach(flowchart => {
+      this.flowcharts.forEach((flowchart) => {
         this.load(name);
       });
     } else {
@@ -804,10 +801,7 @@ export class FlowchartHandler {
    */
   setMap(objToMap: ObjectMap, options: gf.TRuleMapOptions): this {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
-    this.onMapping
-      .setMap(objToMap)
-      .setOptions(options)
-      .setFocus(objToMap.uid);
+    this.onMapping.setMap(objToMap).setOptions(options).setFocus(objToMap.uid);
     flowchart.setMap();
     return this;
   }
@@ -918,6 +912,6 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   getFlowchartNames(): string[] {
-    return this.flowcharts.map(f => f.data.name);
+    return this.flowcharts.map((f) => f.data.name);
   }
 }

@@ -125,7 +125,7 @@ export class State extends FlowchartingClass {
       let matchedRule = false;
       let mapOptions = rule.getShapeMapOptions();
       let cellValue = this.xcell.getDefaultValues(mapOptions);
-      shapeMaps.forEach(shape => {
+      shapeMaps.forEach((shape) => {
         let k = shape.data.style;
         if (!shape.isHidden() && shape.match(cellValue, mapOptions, this.variables)) {
           let v: any = color;
@@ -154,7 +154,7 @@ export class State extends FlowchartingClass {
       // TEXT
       mapOptions = rule.getTextMapOptions();
       cellValue = this.xcell.getDefaultValues(mapOptions);
-      textMaps.forEach(text => {
+      textMaps.forEach((text) => {
         const k = 'label';
         if (!text.isHidden() && text.match(cellValue, mapOptions, this.variables)) {
           if (text.isEligible(level)) {
@@ -170,7 +170,7 @@ export class State extends FlowchartingClass {
       // EVENTS
       mapOptions = rule.getEventMapOptions();
       cellValue = this.xcell.getDefaultValues(mapOptions);
-      eventMaps.forEach(event => {
+      eventMaps.forEach((event) => {
         const k = event.data.style;
         if (!event.isHidden() && event.match(cellValue, mapOptions, this.variables)) {
           if (event.isEligible(level)) {
@@ -185,7 +185,7 @@ export class State extends FlowchartingClass {
       // LINK
       mapOptions = rule.getEventMapOptions();
       cellValue = this.xcell.getDefaultValues(mapOptions);
-      linkMaps.forEach(link => {
+      linkMaps.forEach((link) => {
         const k = 'link';
         if (!link.isHidden() && link.match(cellValue, mapOptions, this.variables)) {
           if (link.isEligible(level)) {
@@ -586,7 +586,7 @@ export class GFState {
         this.ack(key);
       }
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.apply(key);
       });
     }
@@ -604,7 +604,7 @@ export class GFState {
       return this.matchedKey.get(key) === true;
     }
     let matched = false;
-    this.keys.forEach(key => {
+    this.keys.forEach((key) => {
       matched = this.isMatched(key) || matched;
     });
     return matched;
@@ -615,7 +615,7 @@ export class GFState {
       return this.changedKey.get(key) === true;
     }
     let changed = false;
-    this.keys.forEach(key => {
+    this.keys.forEach((key) => {
       changed = this.isChanged(key) ? true : changed;
     });
     return changed;
@@ -627,7 +627,7 @@ export class GFState {
       return level !== undefined ? level : GFState.DEFAULTLEVEL;
     }
     let level = GFState.DEFAULTLEVEL;
-    this.keys.forEach(key => (level = Math.max(this.getLevel(key))));
+    this.keys.forEach((key) => (level = Math.max(this.getLevel(key))));
     return level;
   }
 
@@ -637,7 +637,7 @@ export class GFState {
       this.matchedKey.set(key, false);
       this.matchLevel.set(key, -1);
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.unset(key);
       });
     }
@@ -656,7 +656,7 @@ export class GFState {
       this.changedKey.set(key, false);
       this.matchedKey.set(key, false);
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.reset(key);
       });
     }
@@ -1043,7 +1043,7 @@ class TooltipState extends GFState {
         super.apply(key);
       }
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.apply(key);
       });
     }
@@ -1065,7 +1065,7 @@ class TooltipState extends GFState {
       this.tooltipHandler = undefined;
       super.reset(key);
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.reset(key);
       });
     }
@@ -1101,7 +1101,7 @@ class IconState extends GFState {
         this.reset_core(key);
       }
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.apply_core(key);
       });
     }
@@ -1114,7 +1114,7 @@ class IconState extends GFState {
       // super.reset(key);
       this.xcell.removeOverlay();
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.reset_core(key);
       });
     }

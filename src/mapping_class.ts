@@ -95,7 +95,7 @@ class GFMap extends FlowchartingClass {
   }
 
   static getDefaultPlaceHolder(value: string): string | undefined {
-    const elt = this.methods.find(x => x.value === value);
+    const elt = this.methods.find((x) => x.value === value);
     if (elt !== undefined) {
       return elt.placeholder;
     }
@@ -103,7 +103,7 @@ class GFMap extends FlowchartingClass {
   }
 
   static getDefaultValue(value: string): string | undefined {
-    const elt = this.methods.find(x => x.value === value);
+    const elt = this.methods.find((x) => x.value === value);
     if (elt !== undefined) {
       return elt.default;
     }
@@ -538,7 +538,7 @@ export class EventMap extends GFMap {
   getTypeahead(): string[] {
     const self = this;
     let result = $GF.getFullAvailableVarNames();
-    const elt: gf.TTypeEventElt | undefined = EventMap.methods.find(x => x.value === self.data.style);
+    const elt: gf.TTypeEventElt | undefined = EventMap.methods.find((x) => x.value === self.data.style);
     if (elt !== undefined && elt.typeahead !== undefined) {
       result = result.concat(elt.typeahead.split('|'));
       return result;

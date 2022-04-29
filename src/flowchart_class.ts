@@ -5,7 +5,7 @@ import { Rule } from 'rule_class';
 
 import { FlowchartHandler } from 'flowchart_handler';
 import { Metric } from 'metric_class';
-import { $GF } from 'globals_class';
+import { $GF, GFDrawioTools } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 import { FlowchartingClass } from 'flowcharting_object';
 
@@ -156,7 +156,7 @@ export class Flowchart extends FlowchartingClass {
    */
   updateStates(rules: Rule[]): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'updateStates()');
-    rules.forEach(rule => {
+    rules.forEach((rule) => {
       if (this.stateHandler !== undefined) {
         rule.states = this.stateHandler.getStatesForRule(rule);
         if (rule.states) {
@@ -736,16 +736,18 @@ export class Flowchart extends FlowchartingClass {
   }
 
   decode() {
-    if ($GF.utils.isencoded(this.data.xml)) {
-      this.data.xml = $GF.utils.decode(this.data.xml, true, true, true);
+    if (GFDrawioTools.isEncoded(this.data.xml)) {
+      this.data.xml = GFDrawioTools.decode(this.data.xml);
       // this.data.xml = XGraph.decompress(this.data.xml);
     }
   }
 
   encode() {
-    if (!$GF.utils.isencoded(this.data.xml)) {
-      this.data.xml = $GF.utils.encode(this.data.xml, true, true, true);
-      // this.data.xml = XGraph.compress(this.data.xml);
+    if (!GFDrawioTools.isEncoded(this.data.xml)) {
+      let decode = GFDrawioTools.encode(this.data.xml);
+      if (decode) {
+        this.data.xml = decode;
+      }
     }
   }
 

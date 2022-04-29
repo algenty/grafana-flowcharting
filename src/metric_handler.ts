@@ -29,7 +29,7 @@ export class MetricHandler {
     this.series = [];
     this.metrics = [];
 
-    dataList.forEach(dl => {
+    dataList.forEach((dl) => {
       this.addMetric(dl);
     });
     trc.after();
@@ -41,13 +41,13 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   clear(): this {
-    this.tables.forEach(table => {
+    this.tables.forEach((table) => {
       table.clear();
     });
-    this.series.forEach(serie => {
+    this.series.forEach((serie) => {
       serie.clear();
     });
-    this.metrics.forEach(metric => {
+    this.metrics.forEach((metric) => {
       metric.clear();
     });
     this.tables = [];
@@ -116,11 +116,11 @@ export class MetricHandler {
   getNames(type?: gf.TMetricTypeKeys): string[] {
     let names: string[] = [];
     if (type === 'serie') {
-      names = this.series.map(m => m.getName());
+      names = this.series.map((m) => m.getName());
     } else if (type === 'table') {
-      names = this.tables.map(m => m.getName());
+      names = this.tables.map((m) => m.getName());
     } else {
-      names = this.metrics.map(m => m.getName());
+      names = this.metrics.map((m) => m.getName());
     }
     // GFGlobal.log.debug('getNames', names);
     return names;
@@ -185,13 +185,13 @@ export class MetricHandler {
     // >= 0.9.1 : Add RegEx on name
     if (type) {
       if (type === 'table') {
-        metrics = this.tables.filter(m => $GF.utils.matchString(m.getName(), name, true));
+        metrics = this.tables.filter((m) => $GF.utils.matchString(m.getName(), name, true));
       }
       if (type === 'serie') {
-        metrics = this.series.filter(m => $GF.utils.matchString(m.getName(), name, true));
+        metrics = this.series.filter((m) => $GF.utils.matchString(m.getName(), name, true));
       }
     } else {
-      metrics = this.metrics.filter(m => $GF.utils.matchString(m.getName(), name, true));
+      metrics = this.metrics.filter((m) => $GF.utils.matchString(m.getName(), name, true));
     }
     return metrics;
   }
@@ -207,7 +207,7 @@ export class MetricHandler {
   getColumnsName(metricName: string, type?: gf.TMetricTypeKeys): string[] {
     const metrics = this.findMetrics(metricName, type);
     let columns: string[] = [];
-    metrics.forEach(m => {
+    metrics.forEach((m) => {
       columns = columns.concat(m.getColumnsName());
     });
     return columns;

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { $GF, GFTimer } from 'globals_class';
+import { $GF, GFDrawioTools, GFTimer } from 'globals_class';
 import * as Drawio from 'drawio_custom';
 import chroma from 'chroma-js';
 import * as mxcustom from 'mxgraph_custom';
@@ -65,8 +65,8 @@ export default class XGraph {
     this.onMapping = this.ctrl.onMapping;
     XGraph.initMxGraphLib();
     if (type === 'xml') {
-      if ($GF.utils.isencoded(definition)) {
-        this.xmlGraph = $GF.utils.decode(definition, true, true, true);
+      if (GFDrawioTools.isEncoded(definition)) {
+        this.xmlGraph = GFDrawioTools.decode(definition);
       } else {
         this.xmlGraph = definition;
       }
@@ -113,8 +113,8 @@ export default class XGraph {
     try {
       const div = document.createElement('div');
       const g = new Graph(div);
-      if ($GF.utils.isencoded(source)) {
-        source = $GF.utils.decode(source, true, true, true);
+      if (GFDrawioTools.isEncoded(source)) {
+        source = GFDrawioTools.decode(source);
       }
       const xmlDoc = mxUtils.parseXml(source);
       const codec = new mxCodec(xmlDoc);
@@ -238,7 +238,7 @@ export default class XGraph {
     mxEvent.addListener(document, 'keydown', mxUtils.bind(this, this.eventKey));
 
     // CONTEXT MENU
-    this.container.addEventListener('contextmenu', e => e.preventDefault());
+    this.container.addEventListener('contextmenu', (e) => e.preventDefault());
 
     // DB CLICK
     this.graph.dblClick = this.eventDbClick.bind(this);
@@ -317,7 +317,7 @@ export default class XGraph {
     let extFonts = model.extFonts;
     if (extFonts) {
       try {
-        extFonts = extFonts.split('|').map(function(ef) {
+        extFonts = extFonts.split('|').map(function (ef) {
           var parts = ef.split('^');
           return { name: parts[0], url: parts[1] };
         });
@@ -617,8 +617,8 @@ export default class XGraph {
   setContent(content: string): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setContent()');
     if (this.type === 'xml') {
-      if ($GF.utils.isencoded(content)) {
-        this.xmlGraph = $GF.utils.decode(content, true, true, true);
+      if (GFDrawioTools.isEncoded(content)) {
+        this.xmlGraph = GFDrawioTools.decode(content);
       } else {
         this.xmlGraph = content;
       }
@@ -672,7 +672,7 @@ export default class XGraph {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initXCellValues()');
     const xcells = this.getXCells();
     let s: Set<string> = new Set();
-    xcells.forEach(x => {
+    xcells.forEach((x) => {
       if (type === 'id' || type === 'value') {
         const value: any = x.getDefaultValue(type);
         if (value !== null && value !== undefined && value.length > 0) {
@@ -744,7 +744,7 @@ export default class XGraph {
    */
   async highlightXCells(pattern: string, options?: gf.TRuleMapOptions, bool: boolean = true) {
     const xcells = this.findXCells(pattern, options);
-    xcells.forEach(x => {
+    xcells.forEach((x) => {
       x.highlight(bool);
     });
   }
@@ -794,7 +794,7 @@ export default class XGraph {
     for (let i = 0; i < length; i++) {
       const xcell = xcells[i];
       const datas = xcell.getDefaultValues(options);
-      datas.forEach(x => {
+      datas.forEach((x) => {
         if (x !== null && x !== undefined && x.length > 0) {
           values.add(x);
         }
@@ -963,10 +963,7 @@ export default class XGraph {
         const xcell = this.getXCell(state.cell.id);
         const options = this.onMapping.options !== null ? this.onMapping.options : Rule.getDefaultMapOptions();
         if (xcell !== undefined) {
-          this.onMapping
-            .setXCell(xcell)
-            .setValue(xcell.getDefaultValues(options))
-            .valide();
+          this.onMapping.setXCell(xcell).setValue(xcell.getDefaultValues(options)).valide();
           this.unsetMap();
         }
       }

@@ -221,7 +221,7 @@ export class SerieMetric extends Metric {
   }
 
   getData(column: string = '', log: boolean = false): number[] | Array<{ x: number | Date; y: number }> {
-    return this.metrics.flotpairs.map(d => {
+    return this.metrics.flotpairs.map((d) => {
       if (!!log) {
         return { x: d[0], y: Math.log10(d[1]) };
       }
@@ -275,7 +275,7 @@ export class TableMetric extends Metric {
       this.setTableColumnToSensibleDefault(tableData);
     }
 
-    tableData.rows.forEach(row => {
+    tableData.rows.forEach((row) => {
       const datapoint = {};
       row.forEach((value, columnIndex) => {
         const key = table.columnNames[columnIndex];
@@ -292,7 +292,7 @@ export class TableMetric extends Metric {
     if (tableData.columns.length === 1) {
       this.tableColumn = tableData.columns[0].text;
     } else {
-      this.tableColumn = _.find(tableData.columns, col => {
+      this.tableColumn = _.find(tableData.columns, (col) => {
         return col.type !== 'time';
       }).text;
     }
@@ -541,10 +541,10 @@ export class TableMetric extends Metric {
    */
   getData(column: string): number[] | Array<{ x: number | Date; y: number }> {
     if (this.metrics.timeColumn) {
-      return this.metrics.datapoints.map(d => {
+      return this.metrics.datapoints.map((d) => {
         return { x: d[this.metrics.timeColumn], y: d[column] };
       });
     }
-    return this.metrics.datapoints.map(d => d[column]);
+    return this.metrics.datapoints.map((d) => d[column]);
   }
 }

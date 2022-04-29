@@ -275,13 +275,13 @@ export class FlowchartsOptionsCtrl {
     try {
       url = $GF.resolveVars(url);
       fetch(url, init)
-        .then(response => {
+        .then((response) => {
           if (!(response.status >= 200 && response.status <= 299)) {
             this.errorSourceFlag = true;
             this.ctrl.notify(`Error ${response.status} : ${response.statusText}`, 'error');
             this.$scope.$applyAsync();
           } else {
-            response.text().then(text => {
+            response.text().then((text) => {
               const fc = this.flowchartHandler.getCurrentFlowchart();
               if (fc && fc.data.type === 'xml') {
                 const bool = XGraph.isValidXml(text);
@@ -300,7 +300,7 @@ export class FlowchartsOptionsCtrl {
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.errorSourceFlag = true;
           this.ctrl.notify(`Error : ${error}`, 'error');
           this.$scope.$applyAsync();

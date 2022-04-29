@@ -723,12 +723,12 @@ export class RulesOptionsCtrl {
     if (this.isMultipleType()) {
       prefix = 'Series/';
     }
-    this.getMetricNames().forEach(m => result.push(`${prefix}${m}`));
+    this.getMetricNames().forEach((m) => result.push(`${prefix}${m}`));
     if (this.isMultipleType()) {
       prefix = 'Tables/';
     }
-    this.getTablesName().forEach(t => {
-      this.getColumnsForTable(t).forEach(c => result.push(`${prefix}${t}/${c}`));
+    this.getTablesName().forEach((t) => {
+      this.getColumnsForTable(t).forEach((c) => result.push(`${prefix}${t}/${c}`));
     });
     rule.FE_metricName = this.getFastEditMectricName(rule);
     return result;
@@ -1045,7 +1045,7 @@ export class RulesOptionsCtrl {
           const maps = mapsList[index];
           const value = xcell.getDefaultValues(options);
           if (value) {
-            maps.forEach(map => {
+            maps.forEach((map) => {
               map.setPattern(value);
             });
           }

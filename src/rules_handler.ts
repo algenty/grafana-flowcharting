@@ -45,13 +45,11 @@ export class RulesHandler {
       }
       // Fix bug of grafana 6+
       if (tmpRules.length > 0 && tmpRules[0].order !== undefined) {
-        tmpRules = _.sortBy(_.sortBy(tmpRules, o => o.order));
+        tmpRules = _.sortBy(_.sortBy(tmpRules, (o) => o.order));
       }
 
-      tmpRules.forEach(ruleData => {
-        this.addRule('')
-          .import(ruleData)
-          .setOrder(index);
+      tmpRules.forEach((ruleData) => {
+        this.addRule('').import(ruleData).setOrder(index);
         index += 1;
       });
     }
@@ -65,7 +63,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   clear(): this {
-    this.rules.forEach(r => {
+    this.rules.forEach((r) => {
       r.clear();
     });
     this.rules = [];
@@ -199,7 +197,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   reduce(): this {
-    this.getRules().forEach(rule => {
+    this.getRules().forEach((rule) => {
       rule.data.reduce = true;
     });
     return this;

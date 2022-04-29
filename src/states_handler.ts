@@ -39,7 +39,7 @@ export class StateHandler {
     this.xgraph = xgraph;
     this.states.clear();
     const xcells = xgraph.getXCells();
-    _.each(xcells, x => {
+    _.each(xcells, (x) => {
       this.addState(x);
     });
     trc.after();
@@ -54,7 +54,7 @@ export class StateHandler {
    */
   clear(): this {
     if (this.states) {
-      this.states.forEach(st => {
+      this.states.forEach((st) => {
         st.clear();
       });
       this.states.clear();
@@ -73,7 +73,7 @@ export class StateHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'getStatesForRule()');
     const result = new Map();
     let name: string | null;
-    this.states.forEach(state => {
+    this.states.forEach((state) => {
       const xcell: XCell = state.xcell;
       const id: string = xcell.getId();
       let found = false;
@@ -131,7 +131,7 @@ export class StateHandler {
    */
   updateStates(rules: Rule[]) {
     $GF.log.info('StateHandler.updateStates()');
-    rules.forEach(rule => {
+    rules.forEach((rule) => {
       rule.states = this.getStatesForRule(rule);
     });
   }
@@ -154,7 +154,7 @@ export class StateHandler {
    */
   getStatesForInspect(): State[] {
     const states: State[] = [];
-    this.states.forEach(state => {
+    this.states.forEach((state) => {
       states.push(state);
     });
     return states;
@@ -203,7 +203,7 @@ export class StateHandler {
    */
   prepare(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
-    this.states.forEach(state => {
+    this.states.forEach((state) => {
       state.prepare();
     });
     trc.after();
@@ -218,7 +218,7 @@ export class StateHandler {
   setStates(rules: Rule[], metrics: Metric[]): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
     this.prepare();
-    rules.forEach(rule => {
+    rules.forEach((rule) => {
       rule.highestLevel = -1;
       rule.highestFormattedValue = '';
       rule.highestColor = '';
@@ -227,8 +227,8 @@ export class StateHandler {
       if (rule.states === undefined || rule.states.size === 0) {
         rule.states = this.getStatesForRule(rule);
       }
-      rule.states.forEach(state => {
-        metrics.forEach(metric => {
+      rule.states.forEach((state) => {
+        metrics.forEach((metric) => {
           state.setState(rule, metric);
         });
       });
@@ -242,7 +242,7 @@ export class StateHandler {
    */
   applyStates(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyStates()');
-    this.states.forEach(state => {
+    this.states.forEach((state) => {
       state.async_applyState();
     });
     trc.after();
