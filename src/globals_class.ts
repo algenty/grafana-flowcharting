@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import chroma from 'chroma-js';
-import {inflateRaw, deflateRaw} from 'pako';
+import { inflateRaw, deflateRaw } from 'pako';
 class GFCONSTANT {
   // CONFIG
   CONF_PATH_LIBS = 'libs/';
@@ -870,23 +870,19 @@ export class GFDrawioTools {
       }
     } catch (e) {
       $GF.log.error(`parseXml : Unable to decode ${data}`);
-      // return `parseXml : Unable to decode ${data}`;
+      return '';
     }
     // data = atob(data);
-    data = Buffer.from(data, 'base64').toString('binary')
+    data = Buffer.from(data, 'base64').toString('binary');
     if (data.length > 0) {
       try {
-        // data = Pako.inflateRaw(
-        //   Uint8Array.from(data, (c) => c.charCodeAt(0)),
-        //   { to: 'string' }
-        // );
         data = inflateRaw(
           Uint8Array.from(data, (c) => c.charCodeAt(0)),
           { to: 'string' }
         );
       } catch (e) {
-        // $GF.log.error(`Pako : Unable to decode ${data}`);
-        return `Pako : Unable to decode ${data},${e}`;
+        $GF.log.error(`Pako : Unable to decode ${data}`);
+        return '';
       }
     }
 
