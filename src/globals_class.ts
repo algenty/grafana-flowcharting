@@ -869,10 +869,10 @@ export class GFDrawioTools {
         }
       }
     } catch (e) {
-      $GF.log.error(`Unable to decode ${data}`);
+      $GF.log.error(`parseXml : Unable to decode ${data}`);
     }
     // data = atob(data);
-    data = Buffer.from(data, 'base64').toString('ascii');
+    data = Buffer.from(data, 'ascii').toString('base64');
 
     if (data.length > 0) {
       try {
@@ -881,7 +881,7 @@ export class GFDrawioTools {
           { to: 'string' }
         );
       } catch (e) {
-        $GF.log.error(`Unable to decode ${data}`);
+        $GF.log.error(`Pako : Unable to decode ${data}`);
         return '';
       }
     }
