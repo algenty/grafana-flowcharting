@@ -1,5 +1,4 @@
 import { $GF, GFDrawioTools, GFVariables } from '../src/globals_class';
-import { } from 'jest';
 
 jest.mock('../src/globals_class', () => {
   const originalModule = jest.requireActual('../src/globals_class');

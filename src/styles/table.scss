@@ -59,8 +59,8 @@ div.gf-table-body {
     -webkit-box-flex: 1;
     flex-grow: 1;
     flex-direction: column;
-    height: 300px; 
-    width: 100%; 
+    height: 300px;
+    width: 100%;
     overflow: hidden auto; */
   /* will-change: transform; direction: ltr; */
 }
@@ -191,7 +191,8 @@ div.gf-table-cells {
   overflow: hidden;
   height: 100%;
   user-select: auto;
-  justify-content: start;
+  // justify-content: start;
+  justify-content: flex-start;
   padding : 1px;
 }
 
