@@ -61,8 +61,8 @@ Special thanks to
 ## [[1.0.0c]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-1.0.0c-SNAPSHOT.zip) - 2022-05-01
 
 ### Known issues
-  - Graph Over not work on grafana 8.x
-  - flow animation on arrows
+  - Shared cross on grafana 8.x (minor)
+  - Flow animation on arrows (minor)
 ### Added
   - Support last version of grafana (8.5.x)
   - New initialization engine for drawio libs
