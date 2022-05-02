@@ -1,23 +1,45 @@
 ---
-title: "Getting started with the Documentation Theme for Jekyll"
-keywords: sample homepage
+title: "Getting started with Grafana Flowcharting"
+keywords: homepage grafana start plugin draw.io diagrams.net
 tags: [getting_started]
 sidebar: mydoc_sidebar
 permalink: index.html
-summary: These brief instructions will help you get started quickly with the theme. The other topics in this help provide additional information and detail about working with other aspects of this theme and Jekyll.
+summary: These brief instructions will help you get started quickly with the plugin Flowcharting for Grafana. 
 ---
 
-{% include note.html content="If you're cloning this theme, you're probably writing documentation of some kind. I have a blog on technical writing here called <a alt='technical writing blog' href='http://idratherbewriting.com'>I'd Rather Be Writing</a>. If you'd like to stay updated with the latest trends, best practices, and other methods for writing documentation, consider <a href='https://tinyletter.com/tomjoht'>subscribing</a>. I also have a site on <a href='http://idratherbewriting.com/learnapidoc'>writing API documentation</a>." %}
 
-## Build the Theme
+{% include note.html content="Grafana Flowcharting (alias GF) is free and open source, created in 2020 by Arnaud GENTY. You can create and edit your template on web with <a href='https://www.diagrams.net/'>Diagrams.net</a>. If you have confidential datas, install the <a href='https://get.diagrams.net/'>desktop version</a> or install a <a href='https://drawio-app.com/use-draw-io-offline/'>server version</a> in your local network."
+ %}
 
-Follow these instructions to build the theme.
+## About
+Flowcharting is a Grafana plugin free and open source. 
+Use it to display complexe diagrams and models with the online edit from [diagrams.net](https://www.diagrams.net//) 
+To create many types of diagrams :
+  * Technical architecture schema (Legacy, Cloud, Azure, AWS, GCP, Kubernetes, Terraform)
+  * Diagrams (network, electric, flows, ...)
+  * Industrial processes
+  * Organic plans
+  * Floorplans
+  * UML plan 
+  * Workflows (Jenkins, Ansible Tower, OpenShift, ...)  
 
-### 1. Download the theme
+Draw your artwork, feed it live data and define in flowcharting how the data will interact with the diagram.
+  * Monitor state and performance  
+  * Interact with the diagram  
+  * Change the displayed objects based on data or state  
+  * Add links to objects  
+  * Make full use of variables to modify shapes, colours, links, download paths and more.  
+  * Support for regular expressions for matching and substitutions 
 
-First, download or clone the theme from the [Github repo](https://github.com/tomjoht/documentation-theme-jekyll). Most likely you won't be pulling in updates once you start customizing the theme, so downloading the theme (instead of cloning it) probably makes the most sense. In Github, click the **Clone or download** button, and then click **Download ZIP**.
 
-### 2. Install Jekyll
+## 1. Grafana
+
+First, install Grafana from [Granafa](https://www.grafana.com) 
+
+### Supported version
+
+
+## 2. Install Flowcharting
 
 If you've never installed or run a Jekyll site locally on your computer, follow these instructions to install Jekyll:
 
