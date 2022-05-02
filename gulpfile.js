@@ -7,6 +7,7 @@ const { generate } = require('build-number-generator');
 const { exec } = require('child_process');
 const jeditor = require('gulp-json-editor');
 
+
 // Variables
 const plugin_file = './src/plugin.json';
 const plugin_json = require(plugin_file);
@@ -17,7 +18,7 @@ const package_json = require(package_file);
 const built_version = _getBuildNumber();
 const built_plugin_json = './dist/plugin.json';
 const package_version = package_json.version;
-const zip_matches = ['package.json', '!key.txt', '**/*', '!src/**', '!node_modules/**', '!backups/**', '!others/**', '!.git/**', '!archives/**', '!public/**', '!backup/**', '!spec/**', '!spec/__snapshots__/**'];
+const zip_matches = ['package.json', '!key.txt', '!blocknote.txt', '**/*', '!src/**', '!node_modules/**', '!backups/**', '!others/**', '!.git/**', '!archives/**', '!public/**', '!backup/**', '!spec/**', '!spec/__snapshots__/**'];
 const zip_filename = `${plugin_id}-${built_version}-SNAPSHOT.zip`;
 const zip_path = process.env.FLOWCHARTING_BUILT_PATH;
 const require_env = ['FLOWCHARTING_PLUGIN_HOME', 'FLOWCHARTING_BUILT_PATH',];
@@ -80,7 +81,7 @@ async function check_version() {
 // }
 
 function update_built_version() {
-  return src('./src/plugin.json').pipe(jeditor((json) => {
+  return src(built_plugin_json).pipe(jeditor((json) => {
     json.info.version = built_version;
     return json;
   }
@@ -89,7 +90,9 @@ function update_built_version() {
 
 function build() {
   info(`Building '${plugin_id}' version '${built_version}'`);
-  return exec('yarn build')
+  return exec('yarn build', (error, stdout, stderr) => {
+    info(stdout)
+  });
 }
 
 function sign() {
