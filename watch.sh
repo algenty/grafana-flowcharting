@@ -3,12 +3,13 @@
 
 echo "$0 [port]"
 
-export _JEKYLL_VERSION="${JEKYLL_VERSION:-4.0}"
+export _JEKYLL_VERSION="${JEKYLL_VERSION:-3.8}"
 export _JEKYLL_PORT=${1:-4000}
 
 docker run --rm \
-  -it --ipc=host\
-  --dns 8.8.8.8 \
+  -it \ 
+  --ipc=host \
+  --net=host \
   --publish ${_JEKYLL_PORT}:${_JEKYLL_PORT} \
   --volume="${PWD}:/srv/jekyll:Z" \
   --volume="${PWD}/vendor:/usr/local/bundle:Z" \
