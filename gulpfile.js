@@ -1,7 +1,7 @@
 // Imports
 const { src, dest, series, done } = require('gulp');
 const del = require('del');
-const { error, info } = require('fancy-log');
+const { error, info, warn } = require('fancy-log');
 const zip = require('gulp-zip');
 const { generate } = require('build-number-generator');
 const { exec } = require('child_process');
@@ -20,7 +20,7 @@ const built_plugin_json = './dist/plugin.json';
 const package_version = package_json.version;
 const zip_matches = ['package.json', '!key.txt', '!blocknote.txt', '**/*', '!src/**', '!node_modules/**', '!backups/**', '!others/**', '!.git/**', '!archives/**', '!public/**', '!backup/**', '!spec/**', '!spec/__snapshots__/**'];
 const zip_filename = `${plugin_id}-${built_version}-SNAPSHOT.zip`;
-const zip_path = process.env.FLOWCHARTING_BUILT_PATH;
+var zip_path = process.env.FLOWCHARTING_BUILT_PATH;
 const require_env = ['FLOWCHARTING_PLUGIN_HOME', 'FLOWCHARTING_BUILT_PATH',];
 
 //##### Private functions
@@ -45,11 +45,12 @@ function clean() {
 
 function buildPackage() {
   info(`File name : '${zip_filename}'`);
-  info(`Path destination : '${zip_path}'`);
   if (!_is_Set("FLOWCHARTING_BUILT_PATH")) {
-    error("variable 'FLOWCHARTING_BUILT_PATH' not set")
-    return false;
+    warn("variable 'FLOWCHARTING_BUILT_PATH' not set");
+    warn("Packaging in current path");
+    zip_path = ".";
   }
+  info(`Path destination : '${zip_path}'`);
   return src(zip_matches).pipe(zip(zip_filename)).pipe(dest(zip_path));
 }
 
