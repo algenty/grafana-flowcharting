@@ -11,5 +11,8 @@ global.$ = $;
 import angular from 'angular';
 global.angular = angular;
 
+import grafana from '../src/grafana_func';
+global.grafana = grafana;
+
 // import GFP from '../src/plugin';
 // global.GFP = GFP;

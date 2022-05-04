@@ -1,8 +1,8 @@
-import grafana from './grafana_func';
-import { State } from './state_class';
-import _ from 'lodash';
-import { Metric } from './metric_class';
-import { $GF } from './globals_class';
+import grafana from 'grafana_func';
+import { State } from 'state_class';
+const _ = require('lodash');
+import { Metric } from 'metric_class';
+import { $GF } from 'globals_class';
 import { NumberTH, StringTH, ObjectTH, ObjectTHData, DateTH } from 'threshold_class';
 import {
   EventMap,
