@@ -82,10 +82,12 @@
     "prettier": "^2.6.2",
     "safe-eval": "^0.4.1",
     "ts-jest": "^26.4.4",
-    "ts-loader": "^6.2.1",
+    "ts-loader": "^9.3.0",
     "tslint-config-airbnb": "^5.11.2",
     "typescript": "^4.4.0",
     "vkbeautify": "^0.99.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "npm-check-updates": "^12.5.11"
+  }
 }
