@@ -13,6 +13,7 @@ import grafana from 'grafana_func';
 import _ from 'lodash';
 import { InteractiveMap } from 'mapping_class';
 
+
 class FlowchartCtrl extends MetricsPanelCtrl {
   $rootScope: any;
   $scope: any;
@@ -43,7 +44,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   containerDivId: string;
   static templateUrl: string;
   /**@ngInject*/
-  constructor($scope, $injector, $rootScope, templateSrv) {
+  constructor($scope : ng.IScope, $injector : unknown, $rootScope, templateSrv) {
     super($scope, $injector);
     $GF.init($scope, templateSrv, this.dashboard, this);
     this.$rootScope = $rootScope;

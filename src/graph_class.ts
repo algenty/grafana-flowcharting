@@ -183,14 +183,22 @@ export default class XGraph {
     myWindow.DRAWIO_VIEWER_URL = $GF.plugin.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
     myWindow.DRAW_MATH_URL = $GF.plugin.getDrawioPath() + 'math/';
     myWindow.DRAWIO_CONFIG = null; // Replace with your custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
-    const urlParams = new Object();
+    // const urlParams = new Object();
+    // urlParams['sync'] = 'none'; // Disabled realtime
+    // urlParams['lightbox'] = '1'; // Uses lightbox in chromeless mode (larger zoom, no page visible, chromeless)
+    // urlParams['nav'] = '1'; // Enables folding in chromeless mode
+    // urlParams['local'] = '1'; // Uses device mode only
+    // urlParams['embed'] = '1'; // Runs in embed mode
+    // urlParams['ui'] = 'min';
+    const urlParams = {
+      sync : 'none',
+      lightbox : '1',
+      nav : '1',
+      local : '1',
+      embed : '1',
+      ui : 'min'
+    }
     myWindow.urlParams = urlParams;
-    urlParams['sync'] = 'none'; // Disabled realtime
-    urlParams['lightbox'] = '1'; // Uses lightbox in chromeless mode (larger zoom, no page visible, chromeless)
-    urlParams['nav'] = '1'; // Enables folding in chromeless mode
-    urlParams['local'] = '1'; // Uses device mode only
-    urlParams['embed'] = '1'; // Runs in embed mode
-    urlParams['ui'] = 'min';
     myWindow.mxImageBasePath = $GF.plugin.getMxImagePath();
     myWindow.mxBasePath = $GF.plugin.getMxBasePath();
     myWindow.mxLoadStylesheets = true;
