@@ -1,1 +1,4 @@
+#node mode : docker or local
+NODEJS_MODE=docker
+# Key to sign plugin
 GRAFANA_API_KEY=eyJrIjoiOWExMzNjMzVmNWQ2MzI2NTJjY2Y5YzM1NjI1NjljNWI1OGIzMWVhNCIsIm4iOiJGbG93Q2hhcnRpbmciLCJpZCI6MjQxMDAzfQ==
