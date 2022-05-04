@@ -71,17 +71,12 @@ declare module gf {
     ctrl: any;
   }
 
-  // Styles
-  // declare type TStyleArray = [
-  //   'fillColor',
-  //   'strokeColor',
-  //   'fontColor',
-  //   'gradientColor',
-  //   'imageBorder',
-  //   'imageBackground',
-  //   'shape',
-  //   'overflow'
-  // ];
+  declare interface TIFlowchartOptionsScope extends ng.IScope {
+    editor: FlowchartOptionsCtrl;
+    $GF: $GF;
+    ctrl: any;
+  }
+
   declare type TStyleColorKeys =
     | 'fillColor'
     | 'strokeColor'
