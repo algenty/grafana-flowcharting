@@ -480,7 +480,7 @@ class BarGraphTooltip extends GraphTooltip {
 }
 
 class MetadataTooltip {
-  enableMetadata: boolean = true;
+  enableMetadata = true;
   div: HTMLDivElement | undefined = undefined;
   xcell: XCell | undefined = undefined;
   constructor() {}

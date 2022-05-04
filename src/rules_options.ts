@@ -735,7 +735,7 @@ export class RulesOptionsCtrl {
   }
 
   getFastEditMectricName(rule: Rule): string {
-    let result: string = '';
+    let result = '';
     if (this.isMultipleType()) {
       if (rule.data.metricType === 'serie') {
         result += 'Series/' + rule.data.pattern;

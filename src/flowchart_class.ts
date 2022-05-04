@@ -550,7 +550,7 @@ export class Flowchart extends FlowchartingClass {
    * @returns {string}
    * @memberof Flowchart
    */
-  getXml(replaceVarBool: boolean = true): string {
+  getXml(replaceVarBool = true): string {
     if (!replaceVarBool) {
       return this.data.xml;
     }
@@ -564,7 +564,7 @@ export class Flowchart extends FlowchartingClass {
    * @returns {string}
    * @memberof Flowchart
    */
-  getCsv(replaceVarBool: boolean = true): string {
+  getCsv(replaceVarBool = true): string {
     if (!replaceVarBool) {
       return this.data.csv;
     }
@@ -578,7 +578,7 @@ export class Flowchart extends FlowchartingClass {
    * @returns
    * @memberof Flowchart
    */
-  getSource(replaceVarBool: boolean = true) {
+  getSource(replaceVarBool = true) {
     if (this.data.type === 'xml') {
       return this.getXml(replaceVarBool);
     }
@@ -602,7 +602,7 @@ export class Flowchart extends FlowchartingClass {
    * @returns
    * @memberof Flowchart
    */
-  getContent(replaceVarBool: boolean = true): string {
+  getContent(replaceVarBool = true): string {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'getContent()');
     let content: string | null = '';
     if (this.data.download) {
@@ -767,7 +767,7 @@ export class Flowchart extends FlowchartingClass {
     }
   }
 
-  toFront(forceRefresh: boolean = false): this {
+  toFront(forceRefresh = false): this {
     $GF.log.debug('toFront', this.data.name);
     this.visible = true;
     this.container.className = 'gf-flowchartShow';

@@ -248,7 +248,7 @@ export class StringTH extends GFTH {
  */
 export class DateTH extends GFTH {
   data: gf.TTHDateData;
-  pattern: RegExp = /^(?<signe>\+|\-)?(?<number>\d+\.?\d*)(?<precision>d|w|M|Q|y|h|m|s|ms)$/;
+  pattern = /^(?<signe>\+|\-)?(?<number>\d+\.?\d*)(?<precision>d|w|M|Q|y|h|m|s|ms)$/;
   matchs: RegExpMatchArray | null = [];
   testedValue: string | undefined;
   date: any;
@@ -366,7 +366,7 @@ export class DateTH extends GFTH {
     return false;
   }
 
-  static compareDates(beginDate, endDate, comparator, precision?: gf.THDatePrecision) {
+  static compareDates(beginDate: any, endDate: any, comparator: string, precision?: gf.THDatePrecision) {
     switch (comparator) {
       case 'eq':
         return dayjs(endDate).isSame(beginDate, precision);

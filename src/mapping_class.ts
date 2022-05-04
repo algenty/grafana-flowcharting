@@ -21,7 +21,7 @@ class GFMap extends FlowchartingClass {
   options: gf.TRuleMapOptions = Rule.getDefaultMapOptions();
   reduce = true;
   static methods: any[] = [];
-  constructor(pattern, data: DataMap) {
+  constructor(pattern: string, data: DataMap) {
     super();
     this.data = data;
     this.data.pattern = pattern;
@@ -700,7 +700,7 @@ class VMAP extends FlowchartingClass {
 
 export class ValueMap extends VMAP {
   data: gf.TValueMapData;
-  constructor(value: string = '', text: string = '', data: gf.TValueMapData) {
+  constructor(value = '', text = '', data: gf.TValueMapData) {
     super(data);
     this.data = data;
     this.data.value = value;
@@ -782,7 +782,7 @@ export class RangeMap extends VMAP {
   data: gf.TRangeMapData;
   reduce = true;
   // uid = $GF.utils.uniqueID();
-  constructor(from: string = '', to: string = '', text: string = '', data: gf.TRangeMapData) {
+  constructor(from = '', to = '', text = '', data: gf.TRangeMapData) {
     super(data);
     this.data = data;
     this.data.from = from;
@@ -834,7 +834,7 @@ export class RangeMap extends VMAP {
       (value !== undefined && typeof value === 'string' && value.length > 0) ||
       (value !== undefined && typeof value === 'number')
     ) {
-      let v: number = Number(value);
+      let v = Number(value);
       if (
         (this.data.from !== undefined && typeof value === 'string' && this.data.from.length > 0) ||
         (this.data.from !== undefined && typeof value === 'number')
@@ -882,7 +882,7 @@ export class RangeMap extends VMAP {
 }
 
 export class InteractiveMap {
-  active: boolean = false;
+  active = false;
   map: ObjectMap | null = null;
   xcell: XCell | null = null;
   focusId: string | null = null;

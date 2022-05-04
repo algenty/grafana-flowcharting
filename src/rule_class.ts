@@ -41,11 +41,11 @@ export class Rule extends FlowchartingClass {
   removeClick = 2;
 
   states: Map<string, State>;
-  highestLevel: number = -1;
-  highestColor: string = '';
-  highestFormattedValue: string = '';
+  highestLevel = -1;
+  highestColor = '';
+  highestFormattedValue = '';
   highestValue: any = undefined;
-  execTimes: number = 0;
+  execTimes = 0;
 
   /**
    * Creates an instance of Rule.
@@ -273,7 +273,7 @@ export class Rule extends FlowchartingClass {
     if (!!obj.thresholds && !!obj.colors) {
       let i = 0;
       let j = 0;
-      obj.colors.forEach((cl) => {
+      obj.colors.forEach((cl: string) => {
         if (i === 0) {
           this._addNumberThreshold(i++, cl);
         } else {
@@ -322,7 +322,7 @@ export class Rule extends FlowchartingClass {
     if (!!stringTH && obj.colors) {
       let i = 0;
       let j = 0;
-      obj.colors.forEach((cl) => {
+      obj.colors.forEach((cl: string) => {
         if (i === 0) {
           this._addStringThreshold(i++, cl);
         } else {
@@ -615,7 +615,7 @@ export class Rule extends FlowchartingClass {
     // RANGE
     this.data.rangeData = [];
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
-      obj.rangeData.forEach((rangeData) => {
+      obj.rangeData.forEach((rangeData: any) => {
         this.addRangeMap('from', 'to', 'text').import(rangeData);
       });
     }
@@ -1217,7 +1217,7 @@ export class Rule extends FlowchartingClass {
    * @param {string} pattern
    * @memberof Rule
    */
-  addShapeMap(pattern: string = ''): ShapeMap {
+  addShapeMap(pattern = ''): ShapeMap {
     const data = ShapeMap.getDefaultData();
     const m = new ShapeMap(pattern, data);
     m.setOptions(this.getShapeMapOptions());
@@ -1295,7 +1295,7 @@ export class Rule extends FlowchartingClass {
   //
   // TEXT MAPS
   //
-  addTextMap(pattern: string = ''): TextMap {
+  addTextMap(pattern = ''): TextMap {
     const data = TextMap.getDefaultData();
     const m = new TextMap(pattern, data);
     m.setOptions(this.getTextMapOptions());
@@ -1376,7 +1376,7 @@ export class Rule extends FlowchartingClass {
    * @returns {EventMap}
    * @memberof Rule
    */
-  addEventMap(pattern: string = ''): EventMap {
+  addEventMap(pattern = ''): EventMap {
     const data = EventMap.getDefaultData();
     const m = new EventMap(pattern, data);
     m.setOptions(this.getEventMapOptions());
@@ -1427,7 +1427,7 @@ export class Rule extends FlowchartingClass {
   //
   // LINK MAPS
   //
-  addLinkMap(pattern: string = ''): LinkMap {
+  addLinkMap(pattern = ''): LinkMap {
     const data = LinkMap.getDefaultData();
     const m = new LinkMap(pattern, data);
     m.setOptions(this.getLinkMapOptions());
@@ -1620,18 +1620,6 @@ export class Rule extends FlowchartingClass {
   getRangeMaps(): RangeMap[] {
     return this.rangeMaps;
   }
-
-  //TODO : remove
-  // hideRangeMap(index: number): this {
-  //   this.getRangeMap(index).hide();
-  //   return this;
-  // }
-
-  //TODO : remove
-  // showRangeMap(index: number): this {
-  //   this.getRangeMap(index).show();
-  //   return this;
-  // }
 
   //
   // DIVERS
@@ -2035,7 +2023,7 @@ export class Rule extends FlowchartingClass {
     throw new Error('Method not implemented.');
   }
 
-  decimalPlaces(num) {
+  decimalPlaces(num: string) {
     const match = ('' + num).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
     if (!match) {
       return 0;

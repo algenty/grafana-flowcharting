@@ -32,10 +32,10 @@ export class State extends FlowchartingClass {
   variables: GFVariables;
   status: Map<string, any>;
   globalLevel = -1;
-  highestFormattedValue: string = '';
+  highestFormattedValue = '';
   highestValue: any = undefined;
   tooltipHandler: TooltipHandler | null = null;
-  reduce: boolean = true;
+  reduce = true;
   currRules: string[] = [];
   currMetrics: string[] = [];
   // originalText: string;
@@ -476,7 +476,7 @@ export class GFState {
   changedKey: Map<string, boolean> = new Map();
   defaultValue: Map<string, any> = new Map();
   matchValue: Map<string, any> = new Map();
-  static DEFAULTLEVEL: number = -1;
+  static DEFAULTLEVEL = -1;
   matchLevel: Map<string, number> = new Map();
 
   constructor(xgraph: XGraph, mxcell: mxCell) {

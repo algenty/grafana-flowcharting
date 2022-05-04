@@ -1,9 +1,8 @@
 // setup-jest.js
-
-import lodash from 'lodash';
+const lodash = require('lodash');
 global._ = lodash;
 
-import $ from 'jquery';
+const $ = require('jquery');
 global.$ = $;
 
 // import * as moment from 'moment';

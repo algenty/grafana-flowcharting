@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { $GF, GFDrawioTools, GFTimer } from 'globals_class';
-import * as Drawio from 'drawio_custom';
+const Drawio = require('drawio_custom');
 import chroma from 'chroma-js';
-import * as mxcustom from 'mxgraph_custom';
+const mxcustom = require('mxgraph_custom');
 import { Rule } from 'rule_class';
 import { XCell } from 'cell_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
@@ -80,7 +80,7 @@ export default class XGraph {
     const self = this;
     if ($GF.DEBUG) {
       console.log('DEBUG ON');
-      this.graph.addListener(mxEvent.CLICK, (_sender, _evt) => {
+      this.graph.addListener(mxEvent.CLICK, (_sender: any, _evt: any) => {
         console.log('DEBUG CLICK');
         this.eventDebug(_evt);
         if (_evt.properties.cell) {
@@ -254,7 +254,7 @@ export default class XGraph {
    */
   drawGraph(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'drawGraph()');
-    console.trace();
+    //console.trace();
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
     try {
@@ -317,7 +317,7 @@ export default class XGraph {
     let extFonts = model.extFonts;
     if (extFonts) {
       try {
-        extFonts = extFonts.split('|').map(function (ef) {
+        extFonts = extFonts.split('|').map(function (ef: string) {
           var parts = ef.split('^');
           return { name: parts[0], url: parts[1] };
         });
@@ -576,7 +576,7 @@ export default class XGraph {
    * @param {this} bgColor
    * @memberof XGraph
    */
-  bgGraph(bgColor): this {
+  bgGraph(bgColor: string|null): this {
     const $div = $(this.container);
     if (bgColor) {
       this.bgColor = bgColor;
@@ -742,7 +742,7 @@ export default class XGraph {
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  async highlightXCells(pattern: string, options?: gf.TRuleMapOptions, bool: boolean = true) {
+  async highlightXCells(pattern: string, options?: gf.TRuleMapOptions, bool = true) {
     const xcells = this.findXCells(pattern, options);
     xcells.forEach((x) => {
       x.highlight(bool);
@@ -794,7 +794,7 @@ export default class XGraph {
     for (let i = 0; i < length; i++) {
       const xcell = xcells[i];
       const datas = xcell.getDefaultValues(options);
-      datas.forEach((x) => {
+      datas.forEach((x: string) => {
         if (x !== null && x !== undefined && x.length > 0) {
           values.add(x);
         }
@@ -1212,7 +1212,7 @@ export default class XGraph {
     return Graph.decompress(source, true);
   }
 
-  static preview(container: HTMLElement, xcell: XCell, force: boolean = false) {
+  static preview(container: HTMLElement, xcell: XCell, force = false) {
     const g = new Graph(container);
     if (g) {
       // const mxcell = xcell.getMxCell();
