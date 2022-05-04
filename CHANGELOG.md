@@ -1,6 +1,6 @@
 # Changelog
 
-## [[1.0.0c]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-1.0.0c-SNAPSHOT.zip) - 2022-05-01
+## [[1.0.0X]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-1.0.0c-SNAPSHOT.zip) - 2022-05-01
 
 ### Known issues
   - Graph Over not work on grafana 8.x
