@@ -78,6 +78,7 @@
     "lodash": "^4.17.15",
     "lodash.clonedeep": "^4.5.0",
     "pako": "^2.0.4",
+    "postcss": "^8.4.13",
     "prettier": "^2.6.2",
     "safe-eval": "^0.4.1",
     "ts-jest": "^26.4.4",
