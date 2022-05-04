@@ -2,5 +2,6 @@
 /node_modules
 /.vscode
 /dist
+coverage
 yarn-error.log
 key.txt
