@@ -1,13 +1,6 @@
-/bower_components
-/externals
-/node_modules
-/externals
-/.vscode
-/archives
-/public
-/coverage
-/archives
-/dist
 
+/node_modules
+/.vscode
+/dist
 yarn-error.log
 key.txt
