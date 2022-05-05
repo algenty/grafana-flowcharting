@@ -276,7 +276,7 @@ export class TableMetric extends Metric {
     }
 
     tableData.rows.forEach((row: any) => {
-      const datapoint = {};
+      const datapoint: any = {};
       row.forEach((value: any, columnIndex: any) => {
         const key = table.columnNames[columnIndex];
         datapoint[key] = value;

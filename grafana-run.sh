@@ -6,10 +6,11 @@ _USER_UID=$(id -u)
 _USER_GID=$(id -g)
 
 docker run \
+  --rm \
   --publish 3000:3000 \
   --user ${_USER_UID}:${_USER_GID} \
-  --volume "$(pwd)":/var/lib/grafana/plugins/agenty-flowcharting-panel:ro \
   --name=grafana-dev \
   ${_DOCKER_IMAGE}
 
 echo "http://localhost:3000/"
+# --volume "$(pwd)":/var/lib/grafana/plugins/agenty-flowcharting-panel \

@@ -226,10 +226,10 @@ export class GraphTooltip {
   data: Chartist.IChartistData = {
     series: [
       {
-        data: [{ x: 0, y: 0 }],
+        data : [{ x: 0, y: 0 }],
       },
     ],
-  };
+  }
   name: string | undefined;
   column: string | undefined;
   size: gf.TGraphSizeKeys = '100%';
@@ -345,7 +345,9 @@ class LineGraphTooltip extends GraphTooltip {
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     if (this.metric) {
       let log = this.scaleType === 'log' ? true : false;
-      this.data.series[0]['data'] = this.metric.getData(this.column, log);
+      // TODO : no found solution without any
+      let serie: any = this.data.series[0]; 
+      serie['data'] = this.metric.getData(this.column, log);
     }
     const div = document.createElement('div');
     const color = this.color;
@@ -434,7 +436,9 @@ class BarGraphTooltip extends GraphTooltip {
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     if (this.metric) {
       let log = this.scaleType === 'log' ? true : false;
-      this.data.series[0]['data'] = this.metric.getData(this.column, log);
+      // TODO : no found solution without any
+      let serie: any = this.data.series[0]; 
+      serie['data'] = this.metric.getData(this.column, log);
     }
     const div = document.createElement('div');
     const color = this.color;
@@ -455,7 +459,9 @@ class BarGraphTooltip extends GraphTooltip {
 
     this.chart = new Chartist.Bar(div, this.data, this.chartistOptions);
     let seq = 0;
-    const length = this.data.series[0]['data'].length;
+    // TODO : no found solution without any
+    let serie: any= this.data.series[0];
+    const length = serie.length;
     const delays = Math.round(50 / (length / 10));
     const durations = Math.round(250 / (length / 10));
     this.chart.on('draw', (data: any) => {
