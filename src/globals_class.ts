@@ -859,18 +859,21 @@ export class GFDrawioTools {
 
   // TODO : Check it works ?
   static getTextContent(node: Object): string {
-    const textContent = 'textContent';
-    const text = 'text';
-    if (node) {
-      if (textContent in node) {
-        return textContent;
-      }
-      return text;
-      // return node != null ? node[node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
-    }
-    else{
-      return text;
-    }
+    // TODO : fixit
+    const _node: any = node;
+    return _node != null ? _node[_node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
+    // const textContent = 'textContent';
+    // const text = 'text';
+    // if (node) {
+    //   if (textContent in node) {
+    //     return textContent;
+    //   }
+    //   return text;
+    //   // return node != null ? node[node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
+    // }
+    // else{
+    //   return text;
+    // }
   }
 
   static decode(data: string): string {
