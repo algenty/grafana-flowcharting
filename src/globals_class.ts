@@ -510,7 +510,7 @@ class GFLog {
   async error(...args: unknown[]) {
     if (GFLog.toDisplay(GFLog.ERROR)) {
       const title = args.shift();
-      console.error(`GF ERROR : ${title}`, ...args);
+      error(`GF ERROR : ${title}`, ...args);
     }
   }
 }
@@ -857,8 +857,20 @@ export class GFDrawioTools {
     return parser.parseFromString(xmlString, 'text/xml');
   }
 
+  // TODO : Check it works ?
   static getTextContent(node: Object): string {
-    return node != null ? node[node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
+    const textContent = 'textContent';
+    const text = 'text';
+    if (node) {
+      if (textContent in node) {
+        return textContent;
+      }
+      return text;
+      // return node != null ? node[node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
+    }
+    else{
+      return text;
+    }
   }
 
   static decode(data: string): string {
