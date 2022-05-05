@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import chroma from 'chroma-js';
 import { inflateRaw, deflateRaw } from 'pako';
-import { info, warn, error } from 'fancy-log';
+// import { info, warn, error } from 'fancy-log';
 class GFCONSTANT {
   // CONFIG
   CONF_PATH_LIBS = 'libs/';
@@ -457,7 +457,7 @@ class GFLog {
     }
     return false;
   }
-
+  // TODO : Replace console.log
   /**
    * Display debug message in console
    *
@@ -468,7 +468,7 @@ class GFLog {
   async debug(...args: unknown[]) {
     if (GFLog.toDisplay(GFLog.DEBUG)) {
       const title = args.shift();
-      info(`GF DEBUG : ${title}`, ...args);
+      console.log(`GF DEBUG : ${title}`, ...args);
     }
   }
 
@@ -482,7 +482,7 @@ class GFLog {
   async warn(...args: unknown[]) {
     if (GFLog.toDisplay(GFLog.WARN)) {
       const title = args.shift();
-      warn(`GF WARN : ${title}`, ...args);
+      console.log(`GF WARN : ${title}`, ...args);
     }
   }
 
@@ -496,7 +496,7 @@ class GFLog {
   async info(...args: string[]) {
     if (GFLog.toDisplay(GFLog.INFO)) {
       const title = args.shift();
-      info(`GF INFO : ${title}`, ...args);
+      console.log(`GF INFO : ${title}`, ...args);
     }
   }
 
@@ -510,7 +510,7 @@ class GFLog {
   async error(...args: unknown[]) {
     if (GFLog.toDisplay(GFLog.ERROR)) {
       const title = args.shift();
-      error(`GF ERROR : ${title}`, ...args);
+      console.log(`GF ERROR : ${title}`, ...args);
     }
   }
 }
@@ -841,11 +841,11 @@ class GFTrace {
         tb.push(trace);
       });
        // eslint-disable-line
-      info(tb, ['Indent', 'Name', 'ExecTime']);
+       console.log(tb, ['Indent', 'Name', 'ExecTime']);
       GFTrace.fn.forEach((f) => {
         fn.push(f);
       });
-      info(fn, ['Function', 'Calls', 'TotalTimes']);
+      console.log(fn, ['Function', 'Calls', 'TotalTimes']);
       this.clear();
     }
   }
