@@ -56,7 +56,8 @@
     "safe-eval": "^0.4.1",
     "vkbeautify": "^0.99.3"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "engines": {
     "node": ">=14"
   }
