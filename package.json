@@ -28,7 +28,6 @@
     "@grafana/runtime": "8.5.2",
     "@grafana/toolkit": "8.5.2",
     "@grafana/ui": "8.5.2",
-    "@grafana/tsconfig": "1.2.0-rc1",
     "@types/angular": "1.8.2",
     "@types/chartist": "^0.9.46",
     "@types/chroma-js": "^2.0.0",
@@ -42,7 +41,6 @@
     "console": "^0.7.2",
     "dayjs": "^1.9.6",
     "del": "^6.0.0",
-    "fancy-log": "^2.0.0",
     "grafana-sdk-mocks": "grafana/grafana-sdk-mocks",
     "gulp": "^4.0.2",
     "gulp-clean": "^0.4.0",
@@ -56,8 +54,7 @@
     "safe-eval": "^0.4.1",
     "vkbeautify": "^0.99.3"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "engines": {
     "node": ">=14"
   }
