@@ -341,7 +341,7 @@ export class FlowchartsOptionsCtrl {
 }
 
 /** @ngInject */
-export function flowchartsOptionsTab($q, $sce, uiSegmentSrv) {
+export function flowchartsOptionsTab($q: any, $sce: any, uiSegmentSrv: any) {
   return {
     restrict: 'E',
     scope: true,

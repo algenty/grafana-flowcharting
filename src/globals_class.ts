@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import chroma from 'chroma-js';
 import { inflateRaw, deflateRaw } from 'pako';
+// import { info, warn, error } from 'fancy-log';
 class GFCONSTANT {
   // CONFIG
   CONF_PATH_LIBS = 'libs/';
@@ -145,7 +146,7 @@ class GFCONSTANT {
     { text: 'Mobile', value: 'minimal' },
     { text: 'atlas', value: 'atlas' },
   ];
-  IDENT_TYPES: { text: string; value: gf.TPropertieKey }[] = [
+  IDENT_TYPES: Array<{ text: string; value: gf.TPropertieKey }> = [
     { text: 'Id', value: 'id' },
     { text: 'Label', value: 'value' },
     { text: 'Metadata', value: 'metadata' },
@@ -456,7 +457,7 @@ class GFLog {
     }
     return false;
   }
-
+  // TODO : Replace console.log
   /**
    * Display debug message in console
    *
@@ -464,10 +465,10 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async debug(...args) {
+  async debug(...args: unknown[]) {
     if (GFLog.toDisplay(GFLog.DEBUG)) {
       const title = args.shift();
-      console.debug(`GF DEBUG : ${title}`, ...args);
+      console.log(`GF DEBUG : ${title}`, ...args);
     }
   }
 
@@ -478,10 +479,10 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async warn(...args) {
+  async warn(...args: unknown[]) {
     if (GFLog.toDisplay(GFLog.WARN)) {
       const title = args.shift();
-      console.warn(`GF WARN : ${title}`, ...args);
+      console.log(`GF WARN : ${title}`, ...args);
     }
   }
 
@@ -492,10 +493,10 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async info(...args) {
+  async info(...args: string[]) {
     if (GFLog.toDisplay(GFLog.INFO)) {
       const title = args.shift();
-      console.info(`GF INFO : ${title}`, ...args);
+      console.log(`GF INFO : ${title}`, ...args);
     }
   }
 
@@ -506,10 +507,10 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async error(...args) {
+  async error(...args: unknown[]) {
     if (GFLog.toDisplay(GFLog.ERROR)) {
       const title = args.shift();
-      console.error(`GF ERROR : ${title}`, ...args);
+      console.log(`GF ERROR : ${title}`, ...args);
     }
   }
 }
@@ -788,7 +789,7 @@ class GFTrace {
     return { after: () => {} };
   }
 
-  static _inc(fn) {
+  static _inc(fn: string) {
     let f = GFTrace.fn.get(fn);
     if (f === undefined) {
       f = {
@@ -839,11 +840,12 @@ class GFTrace {
         f.TotalTimes += trace.ExecTime;
         tb.push(trace);
       });
-      console.table(tb, ['Indent', 'Name', 'ExecTime']);
+       // eslint-disable-line
+       console.log(tb, ['Indent', 'Name', 'ExecTime']);
       GFTrace.fn.forEach((f) => {
         fn.push(f);
       });
-      console.table(fn, ['Function', 'Calls', 'TotalTimes']);
+      console.log(fn, ['Function', 'Calls', 'TotalTimes']);
       this.clear();
     }
   }
@@ -855,8 +857,23 @@ export class GFDrawioTools {
     return parser.parseFromString(xmlString, 'text/xml');
   }
 
+  // TODO : Check it works ?
   static getTextContent(node: Object): string {
-    return node != null ? node[node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
+    // TODO : fixit
+    const _node: any = node;
+    return _node != null ? _node[_node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
+    // const textContent = 'textContent';
+    // const text = 'text';
+    // if (node) {
+    //   if (textContent in node) {
+    //     return textContent;
+    //   }
+    //   return text;
+    //   // return node != null ? node[node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
+    // }
+    // else{
+    //   return text;
+    // }
   }
 
   static decode(data: string): string {
@@ -1497,11 +1514,11 @@ export class $GF {
 export class GFTable {
   tableDiv: HTMLDivElement | undefined;
   tableData: gf.TTableData;
-  pressed: boolean = false;
+  pressed= false;
   headerTable: HTMLDivElement | undefined;
   bodyTable: HTMLDivElement | undefined;
-  indexTable: number = 0;
-  startX: number = 0;
+  indexTable = 0;
+  startX = 0;
   startWidth: any = 0;
 
   constructor(table: gf.TTableData, div?: HTMLDivElement) {
@@ -1580,13 +1597,15 @@ export class GFTable {
     return false;
   }
 
-  setColumnProperty(id: string | number, property: gf.TTableProperty, value: any): this {
+  setColumnProperty(id: string | number, property: gf.TTableProperty, value: string): this {
     const isNumber = typeof id === 'number';
     for (let index = 0; index < this.tableData.columns.length; index++) {
-      const element = this.tableData.columns[index];
+      const element: any = this.tableData.columns[index];
       if ((isNumber && id === element.index) || (!isNumber && id === element.id)) {
         const prop: string = property;
-        element[prop] = value;
+        if(prop in element) {
+          element[prop] = value;
+        }
       }
     }
     return this;
@@ -1679,9 +1698,9 @@ declare interface GFTimerUnit {
   tmId: number;
 }
 export class GFTimer {
-  iteration: number = 0;
-  cyclic: boolean = false;
-  currentStep: number = 0;
+  iteration = 0;
+  cyclic = false;
+  currentStep = 0;
   uniqId: string;
   static timers: Map<string, GFTimer>;
   units: GFTimerUnit[];
@@ -1712,13 +1731,13 @@ export class GFTimer {
     }
   }
 
-  setCyclic(bool: boolean = true): this {
+  setCyclic(bool = true): this {
     this.cyclic = bool;
     this.iteration = 0;
     return this;
   }
 
-  setIteration(it: number = 0): this {
+  setIteration(it = 0): this {
     this.iteration = it;
     this.cyclic = false;
     return this;
@@ -1769,14 +1788,17 @@ export class GFTimer {
     }
   }
 
-  static getNewTimer(uniqId): GFTimer {
+  static getNewTimer(uniqId: string | undefined): GFTimer {
+    if (! uniqId) {
+      uniqId = $GF.utils.uniqueID();
+    }
     GFTimer.stop(uniqId);
     const gftimer = new GFTimer(uniqId);
     GFTimer.timers.set(uniqId, gftimer);
     return gftimer;
   }
 
-  static getTimer(uniqId): GFTimer | undefined {
+  static getTimer(uniqId: string): GFTimer | undefined {
     if (GFTimer.timers !== undefined) {
       return GFTimer.timers.get(uniqId);
     }

@@ -76,7 +76,7 @@ export class Metric {
    * @returns {gf.TGraphCoordinate[]}
    * @memberof Metric
    */
-  getData(column?: string, log: boolean = false): number[] | Array<{ x: number | Date; y: number }> {
+  getData(column?: string, log = false): number[] | Array<{ x: number | Date; y: number }> {
     return [];
   }
 
@@ -114,7 +114,7 @@ export class SerieMetric extends Metric {
     this.name = this.metrics.alias;
   }
 
-  seriesHandler(seriesData) {
+  seriesHandler(seriesData: any) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'seriesHandler()');
     const series = grafana.getTimeSeries(seriesData);
     series.flotpairs = series.getFlotPairs(this.nullPointMode);
@@ -220,8 +220,8 @@ export class SerieMetric extends Metric {
     return value;
   }
 
-  getData(column: string = '', log: boolean = false): number[] | Array<{ x: number | Date; y: number }> {
-    return this.metrics.flotpairs.map((d) => {
+  getData(column = '', log = false): number[] | Array<{ x: number | Date; y: number }> {
+    return this.metrics.flotpairs.map((d: any) => {
       if (!!log) {
         return { x: d[0], y: Math.log10(d[1]) };
       }
@@ -262,7 +262,7 @@ export class TableMetric extends Metric {
       stats: {},
     };
 
-    tableData.columns.forEach((column, columnIndex) => {
+    tableData.columns.forEach((column: any, columnIndex: any) => {
       table.columnNames[columnIndex] = column.text;
       if (column.text.toString().toLowerCase() === 'time') {
         table.timeIndex = columnIndex;
@@ -275,9 +275,9 @@ export class TableMetric extends Metric {
       this.setTableColumnToSensibleDefault(tableData);
     }
 
-    tableData.rows.forEach((row) => {
-      const datapoint = {};
-      row.forEach((value, columnIndex) => {
+    tableData.rows.forEach((row: any) => {
+      const datapoint: any = {};
+      row.forEach((value: any, columnIndex: any) => {
         const key = table.columnNames[columnIndex];
         datapoint[key] = value;
       });
@@ -446,7 +446,7 @@ export class TableMetric extends Metric {
    * @returns {(string | number | null)}
    * @memberof Metric
    */
-  getValue(aggregator: gf.TAggregationKeys, column: string = 'Value'): string | number | null {
+  getValue(aggregator: gf.TAggregationKeys, column = 'Value'): string | number | null {
     try {
       let value: string | number | null = null;
       if ($GF.hasGraphHover()) {
@@ -541,10 +541,10 @@ export class TableMetric extends Metric {
    */
   getData(column: string): number[] | Array<{ x: number | Date; y: number }> {
     if (this.metrics.timeColumn) {
-      return this.metrics.datapoints.map((d) => {
+      return this.metrics.datapoints.map((d: any) => {
         return { x: d[this.metrics.timeColumn], y: d[column] };
       });
     }
-    return this.metrics.datapoints.map((d) => d[column]);
+    return this.metrics.datapoints.map((d: any) => d[column]);
   }
 }

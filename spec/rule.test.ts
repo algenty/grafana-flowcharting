@@ -1,4 +1,9 @@
+// jest.mock('grafana/app/core/utils/kbn');
+// jest.mock('grafana/app/core/time_series2');
+// jest.mock('grafana/app/plugins/sdk');
+
 import { Rule } from '../src/rule_class';
+
 
 describe('Rule', () => {
   const data = Rule.getDefaultData();

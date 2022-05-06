@@ -43,7 +43,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   containerDivId: string;
   static templateUrl: string;
   /**@ngInject*/
-  constructor($scope, $injector, $rootScope, templateSrv) {
+  constructor($scope: any, $injector: any, $rootScope: any, templateSrv: any) {
     super($scope, $injector);
     $GF.init($scope, templateSrv, this.dashboard, this);
     this.$rootScope = $rootScope;
@@ -169,7 +169,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-  onDataReceived(dataList) {
+  onDataReceived(dataList: any) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
     if (!!this.metricHandler) {
       this.metricHandler.initData(dataList);
@@ -242,7 +242,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-  link(scope, elem, attrs, ctrl) {
+  link(scope: any, elem: any, attrs: any, ctrl: FlowchartCtrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
     this.$panelElem = elem;
 
@@ -278,11 +278,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     trc.after();
   }
 
-  onMouseIn(event) {
+  onMouseIn(event: MouseEvent) {
     this.mouseIn = true;
   }
 
-  onMouseOut(event) {
+  onMouseOut(event: MouseEvent) {
     this.mouseIn = false;
   }
 

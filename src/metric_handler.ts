@@ -29,7 +29,7 @@ export class MetricHandler {
     this.series = [];
     this.metrics = [];
 
-    dataList.forEach((dl) => {
+    dataList.forEach((dl: any) => {
       this.addMetric(dl);
     });
     trc.after();

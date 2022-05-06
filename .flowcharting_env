@@ -1,4 +1,4 @@
 #node mode : docker or local
 NODEJS_MODE=docker
-# Key to sign plugin
-GRAFANA_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GRAFANA_API_KEY=$GRAFANA_API_KEY
+FLOWCHARTING_BUILT_PATH=./built

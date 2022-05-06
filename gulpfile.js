@@ -40,7 +40,7 @@ function _getBuildNumber(version = plugin_version) {
 
 //##### Tasks
 function clean() {
-  return del('./dist/**/*');
+  return del(['./dist/**/*', './built/*']);
 }
 
 function buildPackage() {
