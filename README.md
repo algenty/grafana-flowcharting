@@ -58,7 +58,7 @@ Special thanks to
 
 
 # Changelog
-## [[1.0.0c]](https://algenty.github.io/flowcharting-repository/archives/agenty-flowcharting-panel-1.0.0c-SNAPSHOT.zip) - 2022-05-01
+## [[1.0.0c (built 220505607)]](./built/)
 
 ### Known issues
   - Shared cross on grafana 8.x (minor)
