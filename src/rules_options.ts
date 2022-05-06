@@ -763,7 +763,7 @@ export class RulesOptionsCtrl {
             rule.data.refId = metric[1];
             rule.data.column = metric[2];
           } else {
-            this.ctrl.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
+            $GF.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
             return null;
           }
         } else if (length === 2) {
@@ -771,11 +771,11 @@ export class RulesOptionsCtrl {
             rule.data.metricType = 'serie';
             rule.data.pattern = metric[1];
           } else {
-            this.ctrl.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
+            $GF.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
             return null;
           }
         } else {
-          this.ctrl.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
+          $GF.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
           return null;
         }
       } else if (this.isOnlySeries()) {
@@ -786,7 +786,7 @@ export class RulesOptionsCtrl {
         rule.data.refId = metric[0];
         rule.data.column = metric[1];
       } else {
-        this.ctrl.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
+        $GF.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
         return null;
       }
     }
@@ -813,7 +813,7 @@ export class RulesOptionsCtrl {
         const m = metrics[index];
         const value = m.getValue(rule.data.aggregation, columnName);
         if (!DateTH.isValidDate(value)) {
-          this.ctrl.notify(
+          $GF.notify(
             `The value for the metric ${m.getName()} and the aggregation ${$GF.GetT4V(
               this.aggregationTypes,
               rule.data.aggregation

@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import chroma from 'chroma-js';
 import { inflateRaw, deflateRaw } from 'pako';
+import { FlowchartCtrl } from 'flowchart_ctrl';
+// import { FlowchartCtrl } from 'flowchart_ctrl';
 // import { info, warn, error } from 'fancy-log';
 class GFCONSTANT {
   // CONFIG
@@ -971,7 +973,11 @@ export class $GF {
   static graphHover = false;
   static GHTimeStamp = 0;
   static DEBUG = false;
+  static notify: CallableFunction = (message: string, type: string) =>{};
+  static $Refresh: CallableFunction = () => {};
+  static ctrl: FlowchartCtrl;
   static utils: {
+    // ! deprecated : Use DrawioTools
     decode_deprecated: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode_deprecated: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     loadJS: (fname: string) => void;
@@ -979,6 +985,7 @@ export class $GF {
     uniqueID: () => string;
     matchString: (str: string, pattern: string | undefined, regex?: boolean) => boolean;
     stringToJsRegex: (str: string) => RegExp;
+    // ! deprecated : Use DrawioTools
     isencoded_deprecated: (data: string) => boolean;
     minify: (text: string) => string;
     prettify: (text: string) => string;
@@ -1006,6 +1013,9 @@ export class $GF {
     if (!this.trace) {
       this.trace = GFTrace.init();
     }
+    $GF.ctrl = ctrl;
+    $GF.notify = ctrl.notify.bind(ctrl);
+    $GF.$Refresh = $scope.$applyAsync.bind($scope);
     return this;
   }
 

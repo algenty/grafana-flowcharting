@@ -6,7 +6,7 @@ import { Rule } from 'rule_class';
 import { FlowchartHandler } from 'flowchart_handler';
 import { Metric } from 'metric_class';
 import { $GF, GFDrawioTools } from 'globals_class';
-import { FlowchartCtrl } from 'flowchart_ctrl';
+// import { FlowchartCtrl } from 'flowchart_ctrl';
 import { FlowchartingClass } from 'flowcharting_object';
 
 /**
@@ -18,7 +18,7 @@ import { FlowchartingClass } from 'flowcharting_object';
 export class Flowchart extends FlowchartingClass {
   data: gf.TFlowchartData;
   container: HTMLDivElement;
-  ctrl: FlowchartCtrl;
+  // ctrl: FlowchartCtrl;
   xgraph: XGraph | undefined = undefined;
   stateHandler: StateHandler | undefined;
   // ctrl: any;
@@ -29,12 +29,12 @@ export class Flowchart extends FlowchartingClass {
   reduce = true;
   // onMapping : InteractiveMap;
 
-  constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData, ctrl: FlowchartCtrl) {
+  constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData) {
     super();
     this.data = data;
     this.data.name = name;
     this.container = container;
-    this.ctrl = ctrl;
+    // this.ctrl = ctrl;
     // this.onMapping = ctrl.onMapping;
     // this.id = $GF.utils.uniqueID();
   }
@@ -184,7 +184,7 @@ export class Flowchart extends FlowchartingClass {
     try {
       const content = this.getContent();
       if (this.xgraph === undefined) {
-        this.xgraph = new XGraph(this.container, this.data.type, content, this.ctrl);
+        this.xgraph = new XGraph(this.container, this.data.type, content);
       }
       if (content !== undefined && content !== null) {
         if (this.data.enableAnim) {
@@ -209,13 +209,13 @@ export class Flowchart extends FlowchartingClass {
           this.xgraph.lockGraph(true);
         }
         this.stateHandler = new StateHandler(this.xgraph);
-        this.ctrl.clearNotify();
+        // this.ctrl.clearNotify();
       } else {
-        this.ctrl.notify('Source content empty Graph not defined', 'error');
+        $GF.notify('Source content empty Graph not defined', 'error');
         $GF.log.error('Source content empty Graph not defined');
       }
     } catch (error) {
-      this.ctrl.notify('Unable to initialize graph', 'error');
+      $GF.notify('Unable to initialize graph', 'error');
       $GF.log.error('Unable to initialize graph', error);
     }
     return this;
@@ -607,9 +607,9 @@ export class Flowchart extends FlowchartingClass {
     let content: string | null = '';
     if (this.data.download) {
       const url = $GF.resolveVars(this.data.url);
-      this.ctrl.notify(`Loading content definition for ${this.data.name}`, 'info');
+      $GF.notify(`Loading content definition for ${this.data.name}`, 'info');
       content = this.loadContent(url);
-      this.ctrl.clearNotify();
+      // this.ctrl.clearNotify();
       if (content !== null) {
         if (replaceVarBool) {
           content = $GF.resolveVars(content);

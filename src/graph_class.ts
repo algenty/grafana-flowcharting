@@ -5,8 +5,8 @@ import chroma from 'chroma-js';
 const mxcustom = require('mxgraph_custom');
 import { Rule } from 'rule_class';
 import { XCell } from 'cell_class';
-import { FlowchartCtrl } from 'flowchart_ctrl';
-import { InteractiveMap } from 'mapping_class';
+// import { FlowchartCtrl } from 'flowchart_ctrl';
+// import { InteractiveMap } from 'mapping_class';
 
 declare interface TXGraphDefaultValues {
   id: Set<string> | undefined;
@@ -26,7 +26,7 @@ export default class XGraph {
   xmlGraph = '';
   csvGraph = '';
   type: gf.TSourceTypeKeys = 'xml';
-  ctrl: FlowchartCtrl;
+  // ctrl: FlowchartCtrl;
   graph: any = undefined;
   scale = true;
   tooltip = true;
@@ -48,21 +48,21 @@ export default class XGraph {
   xcells: XCell[];
   clickBackup: any;
   dbclickBackup: any;
-  onMapping: InteractiveMap;
+  // onMapping: InteractiveMap;
   /**
    * Creates an instance of XGraph.
    * @param {DOM} container
    * @param {string} definition
    * @memberof XGraph
    */
-  constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string, ctrl: FlowchartCtrl) {
+  constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
     this.container = container;
     this.type = type;
-    this.ctrl = ctrl;
+    // this.ctrl = ctrl;
     this.xcells = [];
     // this.onMapping = FlowchartHandler.getDefaultMapping();
-    this.onMapping = this.ctrl.onMapping;
+    // this.onMapping = this.ctrl.onMapping;
     XGraph.initMxGraphLib();
     if (type === 'xml') {
       if (GFDrawioTools.isEncoded(definition)) {
@@ -282,7 +282,7 @@ export default class XGraph {
           this.refresh();
         } catch (error) {
           $GF.log.error('Bad CSV format', error);
-          this.ctrl.notify('Bad CSV format', 'error');
+          $GF.notify('Bad CSV format', 'error');
         }
       }
     } catch (error) {
@@ -940,8 +940,8 @@ export default class XGraph {
    */
   setMap() {
     this.graph.click = this.eventClick.bind(this);
-    this.onMapping.setContainer(this.container);
-    this.onMapping.activate();
+    $GF.ctrl.onMapping.setContainer(this.container);
+    $GF.ctrl.onMapping.activate();
   }
 
   /**
@@ -951,7 +951,7 @@ export default class XGraph {
    */
   unsetMap() {
     this.graph.click = this.clickBackup;
-    this.ctrl.$scope.$applyAsync();
+    $GF.$Refresh();
   }
 
   //
@@ -965,13 +965,13 @@ export default class XGraph {
    * @memberof XGraph
    */
   eventClick(me: mxMouseEvent) {
-    if (this.onMapping.active) {
+    if ($GF.ctrl.onMapping.active) {
       const state = me.getState();
       if (state) {
         const xcell = this.getXCell(state.cell.id);
-        const options = this.onMapping.options !== null ? this.onMapping.options : Rule.getDefaultMapOptions();
+        const options = $GF.ctrl.onMapping.options !== null ? $GF.ctrl.onMapping.options : Rule.getDefaultMapOptions();
         if (xcell !== undefined) {
-          this.onMapping.setXCell(xcell).setValue(xcell.getDefaultValues(options)).valide();
+          $GF.ctrl.onMapping.setXCell(xcell).setValue(xcell.getDefaultValues(options)).valide();
           this.unsetMap();
         }
       }
@@ -1011,8 +1011,8 @@ export default class XGraph {
    */
   eventMouseWheel(evt: WheelEvent, up: boolean) {
     // console.log('eventMouseWheel', this.ctrl.id, this.ctrl.isMouseInPanel());
-    // this.ctrl.notify(`Zoom ${this.cumulativeZoomFactor}`);
-    if (this.graph.isZoomWheelEvent(evt) && this.ctrl.isMouseInPanel()) {
+    // $GF.notify(`Zoom ${this.cumulativeZoomFactor}`);
+    if (this.graph.isZoomWheelEvent(evt) && $GF.ctrl.isMouseInPanel()) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {
           up = true;

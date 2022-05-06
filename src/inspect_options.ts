@@ -211,7 +211,7 @@ export class InspectOptionsCtrl {
       sh.edited = false;
     }
     flowchart.applyModel();
-    this.ctrl.notify('Save the dashboard to apply the modifications');
+    $GF.notify('Save the dashboard to apply the modifications');
   }
 
   selectCell(state: State) {

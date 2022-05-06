@@ -191,11 +191,11 @@ export class FlowchartsOptionsCtrl {
     const bool = XGraph.isValidXml(source);
     this.errorSourceFlag = !bool;
     if (!bool) {
-      this.ctrl.notify('Invalid Xml definition', 'error');
+      $GF.notify('Invalid Xml definition', 'error');
     } else {
       this.ctrl.clearNotify();
       this.onSourceChange();
-      this.$scope.$applyAsync();
+      $GF.$Refresh();
     }
     return bool;
   }
@@ -208,7 +208,7 @@ export class FlowchartsOptionsCtrl {
     this.editMode = true;
     this.currentFlowchart = this.flowchartHandler.addFlowchart(this.flowchartHandler.getFlowchartTmpName());
     this.flowchartHandler.setCurrentFlowchart(this.currentFlowchart.getName());
-    this.ctrl.notify(this.currentFlowchart.getName());
+    $GF.notify(this.currentFlowchart.getName());
     this.newName = this.currentFlowchart.getName();
   }
 
@@ -217,7 +217,7 @@ export class FlowchartsOptionsCtrl {
     if (current !== undefined && current.getName() !== 'Main') {
       this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart();
       this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
-      this.ctrl.notify(this.currentFlowchartName);
+      $GF.notify(this.currentFlowchartName);
       this.flowchartHandler.removeFlowchart(current.getName());
     }
   }
@@ -227,7 +227,7 @@ export class FlowchartsOptionsCtrl {
     this.currentFlowchart = this.flowchartHandler.getCurrentFlowchart();
     if (this.currentFlowchart) {
       this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
-      this.ctrl.notify(this.currentFlowchartName);
+      $GF.notify(this.currentFlowchartName);
     }
   }
 
@@ -241,7 +241,7 @@ export class FlowchartsOptionsCtrl {
         this.currentFlowchartName = this.currentFlowchart.getName();
       }
     }
-    this.ctrl.notify(this.currentFlowchartName);
+    $GF.notify(this.currentFlowchartName);
   }
 
   isValideFlowchart(): boolean {
@@ -253,7 +253,7 @@ export class FlowchartsOptionsCtrl {
       return false;
     }
     if (fcs.includes(this.newName) && this.currentFlowchart && this.newName !== this.currentFlowchart.getName()) {
-      this.ctrl.notify(`Flowchart with name "${this.newName}" already exist`, 'error');
+      $GF.notify(`Flowchart with name "${this.newName}" already exist`, 'error');
       return false;
     }
     return true;
@@ -278,8 +278,8 @@ export class FlowchartsOptionsCtrl {
         .then((response) => {
           if (!(response.status >= 200 && response.status <= 299)) {
             this.errorSourceFlag = true;
-            this.ctrl.notify(`Error ${response.status} : ${response.statusText}`, 'error');
-            this.$scope.$applyAsync();
+            $GF.notify(`Error ${response.status} : ${response.statusText}`, 'error');
+            $GF.$Refresh();
           } else {
             response.text().then((text) => {
               const fc = this.flowchartHandler.getCurrentFlowchart();
@@ -287,7 +287,7 @@ export class FlowchartsOptionsCtrl {
                 const bool = XGraph.isValidXml(text);
                 this.errorSourceFlag = !bool;
                 if (this.errorSourceFlag) {
-                  this.ctrl.notify('Response is an invalid Xml definition', 'error');
+                  $GF.notify('Response is an invalid Xml definition', 'error');
                   $GF.log.error('Response is an invalid Xml definition');
                 } else {
                   this.ctrl.clearNotify();
@@ -296,18 +296,18 @@ export class FlowchartsOptionsCtrl {
               } else {
                 this.onSourceChange();
               }
-              this.$scope.$applyAsync();
+              $GF.$Refresh();
             });
           }
         })
         .catch((error) => {
           this.errorSourceFlag = true;
-          this.ctrl.notify(`Error : ${error}`, 'error');
-          this.$scope.$applyAsync();
+          $GF.notify(`Error : ${error}`, 'error');
+          $GF.$Refresh();
         });
     } catch (error) {
       this.errorDownloadFlag = true;
-      this.ctrl.notify('Error when call url', 'error');
+      $GF.notify('Error when call url', 'error');
       // this.errorDownloadMsg = 'Error when call url';
     }
     return true;
