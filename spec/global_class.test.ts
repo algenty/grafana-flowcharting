@@ -42,11 +42,11 @@ describe('Test Global $GF utils', () => {
 
   // Test if eval javascript works
   describe('Secure Eval', () => {
-    test('Math', () => {
-      expect($GF.utils.evalIt('Math.random()*101')).toBeGreaterThan(0);
-      expect($GF.utils.evalIt('Math.random()*101')).toBeLessThanOrEqual(101);
+    it('should be enable to understand Math Lib', () => {
+      expect($GF.utils.evalIt('Math.random()')).toBeGreaterThan(0);
+      expect($GF.utils.evalIt('Math.random() * 100')).toBeLessThanOrEqual(101);
     });
-    test('Simple operation', () => {
+    test('should be eval simple operation 2+2', () => {
       expect($GF.utils.evalIt('2+2')).toBe(4);
     });
   });
@@ -99,41 +99,41 @@ describe('Test Global $GF utils', () => {
   });
 
   // Test if GFTimer works
-  describe("GFTimer tests", ()=> {
+  describe('GFTimer tests', () => {
     let myTimer: GFTimer;
-    beforeEach(()=> {
-      myTimer = GFTimer.newTimer()
+    beforeEach(() => {
+      myTimer = GFTimer.newTimer();
     });
-    afterEach(() =>{
+    afterEach(() => {
       GFTimer.stop();
     });
 
-    test("Search timer", ()=> {
+    test('Search timer', () => {
       expect(GFTimer.get(myTimer.getUid())).not.toBeNull();
       expect(GFTimer.get(myTimer.getUid())).toMatchObject(myTimer);
     });
 
-    test("Stop GFTimer with object", ()=> {
+    test('Stop GFTimer with object', () => {
       GFTimer.stop(myTimer);
       expect(GFTimer.get(myTimer.getUid())).toBeNull();
     });
 
-    test("Stop GFTimer with uid", ()=> {
+    test('Stop GFTimer with uid', () => {
       GFTimer.stop(myTimer.uid);
       expect(GFTimer.get(myTimer.uid)).toBeNull();
     });
 
-    describe("Test callback", async () => {
+    describe('Test callback', async () => {
       let step = 0;
       let pauseTime = 500;
-      let stepTime = 100
+      let stepTime = 100;
       const myfunc = () => {
         step += 1;
       };
-      beforeEach( () => {
+      beforeEach(() => {
         step = 0;
       });
-      test("With 3 adds", async() => {
+      test('With 3 adds', async () => {
         myTimer.addStep(myfunc.bind(this), stepTime);
         myTimer.addStep(myfunc.bind(this), stepTime);
         myTimer.addStep(myfunc.bind(this), stepTime);
@@ -141,8 +141,8 @@ describe('Test Global $GF utils', () => {
         await new Promise((r) => setTimeout(r, pauseTime));
         expect(step).toEqual(3);
         expect(myTimer.isFinished()).toBeTruthy();
-      })
-      test("With 3 iterations", async() => {
+      });
+      test('With 3 iterations', async () => {
         myTimer.addStep(myfunc.bind(this), stepTime);
         myTimer.setIteration(3);
         expect(step).toEqual(0);
@@ -150,8 +150,8 @@ describe('Test Global $GF utils', () => {
         await new Promise((r) => setTimeout(r, pauseTime));
         expect(step).toEqual(3);
         expect(myTimer.isFinished()).toBeTruthy();
-      })
-      test("With cycle", async() => {
+      });
+      test('With cycle', async () => {
         myTimer.addStep(myfunc.bind(this), stepTime);
         myTimer.setCyclic(true);
         let currentStep = step;
@@ -167,10 +167,7 @@ describe('Test Global $GF utils', () => {
         currentStep = step;
         expect(myTimer.isFinished()).toBeTruthy();
         expect(currentStep).toEqual(step);
-      })
-
+      });
     });
-    
   });
-
 });

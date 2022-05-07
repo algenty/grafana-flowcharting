@@ -110,7 +110,7 @@ export class XCell extends FlowchartingClass {
     return def === cur;
   }
 
-   isTypeChanged(type: gf.TXCellDefaultValueKeys): boolean {
+  isTypeChanged(type: gf.TXCellDefaultValueKeys): boolean {
     const def = this.getDefaultValue(type);
     const cur = this.getValue(type);
     if (['id', 'value', 'link'].includes(type)) {
@@ -174,9 +174,7 @@ export class XCell extends FlowchartingClass {
     return this._isHidden;
   }
 
-  isSurrounded(): boolean {
-    return this._isSurrounded;
-  }
+
 
   //
   // LABEL
@@ -649,9 +647,15 @@ export class XCell extends FlowchartingClass {
   //   }
   //   return false;
   // }
-
+  
+  /**
+   * Surround or not cell with color
+   * @param  {string} color
+   * @param  {boolean} anim=true
+   * @param  {boolean} bool=true
+   * @returns this
+   */
   surround(color: string, anim = true, bool = true): this {
-    console.log("surround ", bool)
     if (bool && !this.isSurrounded()) {
       const opacity = 100;
       const state = this.getMxCellState();
@@ -664,7 +668,7 @@ export class XCell extends FlowchartingClass {
         hl.highlight(state);
         this._surroundHL.set(color, hl);
       }
-      this._isSurrounded= true;
+      this._isSurrounded = true;
     } else if (!bool) {
       const hl = this._surroundHL.get(color);
       const transition = 300;
@@ -673,8 +677,6 @@ export class XCell extends FlowchartingClass {
           mxUtils.setPrefixedStyle(hl.shape.node.style, 'transition', `all ${transition}ms ease-in-out`);
         }
         hl.shape.node.style.opacity = 0;
-        // hl.destroy();
-        // this._surroundHL = undefined;
         if (anim) {
           window.setTimeout(() => {
             hl.destroy();
@@ -684,17 +686,29 @@ export class XCell extends FlowchartingClass {
           hl.destroy();
           this._surroundHL.delete(color);
         }
-        this._isSurrounded= false;
+        this._isSurrounded = false;
       }
     }
     return this;
   }
-
+  
+  /**
+   * Unsourround cell
+   * @returns this
+   */
   unsurround(): this {
     this.surround('', false);
     return this;
   }
 
+  /**
+   * @returns boolean
+   */
+  isSurrounded(): boolean {
+    return this._isSurrounded;
+  }
+
+  // TODO : Fix in Event to unblink if condition false
   /**
    * Blink this cell
    *
@@ -718,8 +732,6 @@ export class XCell extends FlowchartingClass {
       this._isBlinked = true;
       const timer = GFTimer.newTimer(timeId);
       timer.addStep(blinkfn.bind(this), ms * 2);
-      // timer.addStep(this.surround.bind(this, color, false), ms);
-      // timer.addStep(this.surround.bind(this, color, false, false), ms * 2);
       timer.setCyclic();
       timer.start();
     } else if (!bool && this._isBlinked) {
