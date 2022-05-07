@@ -193,7 +193,7 @@ export class FlowchartsOptionsCtrl {
     if (!bool) {
       $GF.notify('Invalid Xml definition', 'error');
     } else {
-      this.ctrl.clearNotify();
+      $GF.clearNotify();
       this.onSourceChange();
       $GF.$Refresh();
     }
@@ -290,7 +290,7 @@ export class FlowchartsOptionsCtrl {
                   $GF.notify('Response is an invalid Xml definition', 'error');
                   $GF.log.error('Response is an invalid Xml definition');
                 } else {
-                  this.ctrl.clearNotify();
+                  $GF.clearNotify();
                   this.onSourceChange();
                 }
               } else {

@@ -974,6 +974,7 @@ export class $GF {
   static GHTimeStamp = 0;
   static DEBUG = false;
   static notify: CallableFunction = (message: string, type: string) =>{};
+  static clearNotify: CallableFunction = () =>{};
   static $Refresh: CallableFunction = () => {};
   static ctrl: FlowchartCtrl;
   static utils: {
@@ -1015,6 +1016,7 @@ export class $GF {
     }
     $GF.ctrl = ctrl;
     $GF.notify = ctrl.notify.bind(ctrl);
+    $GF.clearNotify= ctrl.clearNotify.bind(ctrl);
     $GF.$Refresh = $scope.$applyAsync.bind($scope);
     return this;
   }

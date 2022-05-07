@@ -209,7 +209,7 @@ export class Flowchart extends FlowchartingClass {
           this.xgraph.lockGraph(true);
         }
         this.stateHandler = new StateHandler(this.xgraph);
-        // this.ctrl.clearNotify();
+        $GF.clearNotify();
       } else {
         $GF.notify('Source content empty Graph not defined', 'error');
         $GF.log.error('Source content empty Graph not defined');
@@ -609,7 +609,7 @@ export class Flowchart extends FlowchartingClass {
       const url = $GF.resolveVars(this.data.url);
       $GF.notify(`Loading content definition for ${this.data.name}`, 'info');
       content = this.loadContent(url);
-      // this.ctrl.clearNotify();
+      $GF.clearNotify();
       if (content !== null) {
         if (replaceVarBool) {
           content = $GF.resolveVars(content);
