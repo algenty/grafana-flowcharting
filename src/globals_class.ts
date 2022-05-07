@@ -1736,8 +1736,8 @@ export class GFTimer {
    * @returns boolean
    */
   isFinished(): boolean {
-    if(this._cyclic) {return true;}
-    if(this._finished) {return this._finished;}
+    if(this._finished) {return true;}
+    if(this._cyclic) {return false;}
     let allRunned = true;
     this._steps.forEach(step => {
       allRunned = allRunned && step.runned;    
@@ -1810,6 +1810,7 @@ export class GFTimer {
     this._steps.forEach((t) => {
       GFTimer._cleanStep(t);
     });
+    this._finished = true;
     return this;
   }
 

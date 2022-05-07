@@ -125,6 +125,8 @@ describe('Test Global $GF utils', () => {
 
     describe("Test callback", async () => {
       let step = 0;
+      let pauseTime = 500;
+      let stepTime = 100
       const myfunc = () => {
         console.log("Step : ",step);
         step += 1;
@@ -133,22 +135,41 @@ describe('Test Global $GF utils', () => {
         step = 0;
       });
       test("With 3 adds", async() => {
-        myTimer.addStep(myfunc.bind(this), 100);
-        myTimer.addStep(myfunc.bind(this), 100);
-        myTimer.addStep(myfunc.bind(this), 100);
+        myTimer.addStep(myfunc.bind(this), stepTime);
+        myTimer.addStep(myfunc.bind(this), stepTime);
+        myTimer.addStep(myfunc.bind(this), stepTime);
         myTimer.start();
-        await new Promise((r) => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, pauseTime));
         expect(step).toEqual(3);
         expect(myTimer.isFinished()).toBeTruthy();
       })
       test("With 3 iterations", async() => {
-        myTimer.addStep(myfunc.bind(this), 100);
+        myTimer.addStep(myfunc.bind(this), stepTime);
         myTimer.setIteration(3);
+        expect(step).toEqual(0);
         myTimer.start();
-        await new Promise((r) => setTimeout(r, 1000));
+        await new Promise((r) => setTimeout(r, pauseTime));
         expect(step).toEqual(3);
         expect(myTimer.isFinished()).toBeTruthy();
       })
+      test("With cycle", async() => {
+        myTimer.addStep(myfunc.bind(this), stepTime);
+        myTimer.setCyclic(true);
+        let currentStep = step;
+        expect(currentStep).toEqual(0);
+        myTimer.start();
+        await new Promise((r) => setTimeout(r, pauseTime));
+        expect(step).toBeGreaterThan(currentStep);
+        currentStep = step;
+        await new Promise((r) => setTimeout(r, pauseTime));
+        expect(step).toBeGreaterThan(currentStep);
+        expect(myTimer.isFinished()).toBeFalsy();
+        GFTimer.stop(myTimer);
+        currentStep = step;
+        expect(myTimer.isFinished()).toBeTruthy();
+        expect(currentStep).toEqual(step);
+      })
+
     });
     
   });
