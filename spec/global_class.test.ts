@@ -128,7 +128,6 @@ describe('Test Global $GF utils', () => {
       let pauseTime = 500;
       let stepTime = 100
       const myfunc = () => {
-        console.log("Step : ",step);
         step += 1;
       };
       beforeEach( () => {

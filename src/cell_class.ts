@@ -4,24 +4,24 @@ import { Rule } from 'rule_class';
 import { TooltipHandler } from 'tooltip_handler';
 
 export class XCell extends FlowchartingClass {
-  graph: any;
-  mxcell: mxCell;
-  // uniqId: string = $GF.utils.uniqueID();
-  isHidden = false;
-  isHighlighting = false;
-  isBlink = false;
-  _surroundHL: Map<string, any>;
+  private _graph: any;
+  protected mxcell: mxCell;
+  private _isHidden = false;
+  private _isHighlighted = false;
+  private _isBlinked = false;
+  private _isSurrounded = false;
+  private _surroundHL: Map<string, any>;
   percent = 100;
-  _mxcellHL: any = null;
+  // private _mxcellHL: any = null;
   gf: gf.TXCellGF;
 
   constructor(graph: any, mxcell: mxCell) {
     super();
-    this.graph = graph;
+    this._graph = graph;
     this.mxcell = mxcell;
     this.gf = this._getDefaultGFXCell();
     this.mxcell.gf = this.gf;
-    this.isHidden = !this.graph.model.isVisible(this.mxcell);
+    this._isHidden = !this._graph.model.isVisible(this.mxcell);
     this._surroundHL = new Map();
   }
 
@@ -106,11 +106,11 @@ export class XCell extends FlowchartingClass {
     return value;
   }
 
-  _sameString(def: any, cur: any): boolean {
+  private _sameString(def: any, cur: any): boolean {
     return def === cur;
   }
 
-  _isTypeChanged(type: gf.TXCellDefaultValueKeys): boolean {
+   isTypeChanged(type: gf.TXCellDefaultValueKeys): boolean {
     const def = this.getDefaultValue(type);
     const cur = this.getValue(type);
     if (['id', 'value', 'link'].includes(type)) {
@@ -119,7 +119,7 @@ export class XCell extends FlowchartingClass {
     return false;
   }
 
-  _setDefaultValue(type: gf.TXCellDefaultValueKeys): gf.TXCellValueGF {
+  private _setDefaultValue(type: gf.TXCellDefaultValueKeys): gf.TXCellValueGF {
     switch (type) {
       case 'id':
         const id = this.mxcell.getId();
@@ -170,6 +170,14 @@ export class XCell extends FlowchartingClass {
     return this;
   }
 
+  isHidden(): boolean {
+    return this._isHidden;
+  }
+
+  isSurrounded(): boolean {
+    return this._isSurrounded;
+  }
+
   //
   // LABEL
   //
@@ -189,7 +197,7 @@ export class XCell extends FlowchartingClass {
 
   setLabel(label: string): this {
     this._initDefaultValue('value');
-    this.graph.cellLabelChanged(this.mxcell, label, false);
+    this._graph.cellLabelChanged(this.mxcell, label, false);
     return this;
   }
 
@@ -206,12 +214,12 @@ export class XCell extends FlowchartingClass {
   }
 
   getLink(): string | null {
-    return this.graph.getLinkForCell(this.mxcell);
+    return this._graph.getLinkForCell(this.mxcell);
   }
 
   setLink(link: string | null): this {
     this._initDefaultValue('link');
-    this.graph.setLinkForCell(this.mxcell, link);
+    this._graph.setLinkForCell(this.mxcell, link);
     return this;
   }
 
@@ -341,7 +349,7 @@ export class XCell extends FlowchartingClass {
     if (this.gf.defaultValues.styles === undefined) {
       this._setDefaultStyles();
     }
-    const state = this.graph.view.getState(this.mxcell);
+    const state = this._graph.view.getState(this.mxcell);
     let value = null;
     if (state) {
       value = state.style[style];
@@ -368,12 +376,12 @@ export class XCell extends FlowchartingClass {
 
   setStyle(style: gf.TXCellStyleKeys, value: string | null): this {
     this._initDefaultStyle(style);
-    this.graph.setCellStyles(style, value, [this.mxcell]);
+    this._graph.setCellStyles(style, value, [this.mxcell]);
     return this;
   }
 
   getStyle(style: gf.TXCellStyleKeys): string | null {
-    const state = this.graph.view.getState(this.mxcell);
+    const state = this._graph.view.getState(this.mxcell);
     if (state) {
       return state.style[style];
     }
@@ -400,11 +408,11 @@ export class XCell extends FlowchartingClass {
   }
 
   getDimension(): mxGeometry {
-    return this.graph.model.getGeometry(this.mxcell);
+    return this._graph.model.getGeometry(this.mxcell);
   }
 
   async setDimension(dim: mxGeometry) {
-    this.graph.resizeCell(this.mxcell, dim, true);
+    this._graph.resizeCell(this.mxcell, dim, true);
   }
 
   async restoreDimension() {
@@ -433,7 +441,7 @@ export class XCell extends FlowchartingClass {
    * @memberof XCell
    */
   getMxCellState(): mxCellState {
-    return this.graph.view.getState(this.mxcell);
+    return this._graph.view.getState(this.mxcell);
   }
 
   isVertex(): boolean {
@@ -463,7 +471,7 @@ export class XCell extends FlowchartingClass {
   }
 
   cloneMxCell(): any {
-    return this.graph.cloneCell(this.mxcell, true);
+    return this._graph.cloneCell(this.mxcell, true);
   }
 
   /**
@@ -493,12 +501,12 @@ export class XCell extends FlowchartingClass {
    * @memberof XCell
    */
   async hide(bool = true) {
-    if (!this.isHidden && bool) {
-      this.graph.model.setVisible(this.mxcell, false);
-    } else if (this.isHidden && !bool) {
-      this.graph.model.setVisible(this.mxcell, true);
+    if (!this._isHidden && bool) {
+      this._graph.model.setVisible(this.mxcell, false);
+    } else if (this._isHidden && !bool) {
+      this._graph.model.setVisible(this.mxcell, true);
     }
-    this.isHidden = bool;
+    this._isHidden = bool;
   }
 
   /**
@@ -519,14 +527,14 @@ export class XCell extends FlowchartingClass {
    */
   async highlight(bool = true) {
     const color = $GF.CONSTANTS.CONF_HIGHTLIGHT_COLOR;
-    if (!this.isHighlighting && bool) {
-      this.isHighlighting = true;
+    if (!this._isHighlighted && bool) {
+      this._isHighlighted = true;
       this.surround(color, true, true);
-    } else if (this.isHighlighting && !bool) {
+    } else if (this._isHighlighted && !bool) {
       this.surround(color, true, false);
-      this.isHighlighting = false;
+      this._isHighlighted = false;
     }
-    this.isHighlighting = bool;
+    this._isHighlighted = bool;
   }
 
   /**
@@ -545,11 +553,11 @@ export class XCell extends FlowchartingClass {
    * @memberof XCell
    */
   collapse(bool = true) {
-    const coll = this.graph.isCellCollapsed(this.mxcell);
+    const coll = this._graph.isCellCollapsed(this.mxcell);
     if (!coll && bool) {
-      this.graph.foldCells(true, false, [this.mxcell], null, null);
+      this._graph.foldCells(true, false, [this.mxcell], null, null);
     } else if (coll && !bool) {
-      this.graph.foldCells(false, false, [this.mxcell], null, null);
+      this._graph.foldCells(false, false, [this.mxcell], null, null);
     }
   }
 
@@ -560,7 +568,7 @@ export class XCell extends FlowchartingClass {
    * @memberof XCell
    */
   isCollapsed(): boolean {
-    return this.graph.isCellCollapsed(this.mxcell);
+    return this._graph.isCellCollapsed(this.mxcell);
   }
 
   /**
@@ -633,29 +641,31 @@ export class XCell extends FlowchartingClass {
     trc.after();
   }
 
-  isSurrounded(color: string): boolean {
-    if (this._surroundHL !== undefined) {
-      return this._surroundHL.has(color);
-    } else {
-      this._surroundHL = new Map();
-    }
-    return false;
-  }
+  // isSurrounded(color: string): boolean {
+  //   if (this._surroundHL !== undefined) {
+  //     return this._surroundHL.has(color);
+  //   } else {
+  //     this._surroundHL = new Map();
+  //   }
+  //   return false;
+  // }
 
   surround(color: string, anim = true, bool = true): this {
-    if (bool && !this.isSurrounded(color)) {
+    console.log("surround ", bool)
+    if (bool && !this.isSurrounded()) {
       const opacity = 100;
       const state = this.getMxCellState();
       if (state !== null) {
         const sw = Math.max(5, mxUtils.getValue(state.style, mxConstants.STYLE_STROKEWIDTH, 1) + 4);
-        const hl = new mxCellHighlight(this.graph, color, sw, false);
+        const hl = new mxCellHighlight(this._graph, color, sw, false);
         if (opacity !== null) {
           hl.opacity = opacity;
         }
         hl.highlight(state);
         this._surroundHL.set(color, hl);
       }
-    } else if (!bool && this.isSurrounded(color)) {
+      this._isSurrounded= true;
+    } else if (!bool) {
       const hl = this._surroundHL.get(color);
       const transition = 300;
       if (hl && hl.shape !== null && hl.shape !== undefined) {
@@ -674,6 +684,7 @@ export class XCell extends FlowchartingClass {
           hl.destroy();
           this._surroundHL.delete(color);
         }
+        this._isSurrounded= false;
       }
     }
     return this;
@@ -691,22 +702,33 @@ export class XCell extends FlowchartingClass {
    * @param {boolean} [bool=true]
    * @memberof XCell
    */
-  async blink(ms = 1000, bool = true) {
+  blink(ms = 1000, bool = true): this {
+    if (this._isBlinked) {
+      return this;
+    }
     const timeId = `blink-${this.uid}`;
     const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
-    if (bool && !this.isBlink) {
-      this.isBlink = true;
+    const blinkfn: CallableFunction = async () => {
+      this.surround(color, false);
+      await new Promise((r) => setTimeout(r, ms));
+      this.surround(color, false, false);
+    };
+    // Not blinked and blink it
+    if (bool && !this._isBlinked) {
+      this._isBlinked = true;
       const timer = GFTimer.newTimer(timeId);
-      timer.addStep(this.surround.bind(this, color, false), ms);
-      timer.addStep(this.surround.bind(this, color, false, false), ms * 2);
+      timer.addStep(blinkfn.bind(this), ms * 2);
+      // timer.addStep(this.surround.bind(this, color, false), ms);
+      // timer.addStep(this.surround.bind(this, color, false, false), ms * 2);
       timer.setCyclic();
       timer.start();
-    } else if (!bool && this.isBlink) {
+    } else if (!bool && this._isBlinked) {
       GFTimer.stop(timeId);
       this.surround(color, false, false);
-      this.isBlink = false;
+      this._isBlinked = false;
     }
-    this.isBlink = bool;
+    this._isBlinked = bool;
+    return this;
   }
 
   /**
@@ -715,11 +737,19 @@ export class XCell extends FlowchartingClass {
    * @deprecated use blink(number, false)
    * @memberof XCell
    */
-  async unblink() {
+  unblink(): this {
     this.blink(1000, false);
+    return this;
+  }
+  /**
+   * Cell blink or not
+   * @returns boolean
+   */
+  isBlinked(): boolean {
+    return this._isBlinked;
   }
 
-  async addOverlay(state: string) {
+  addOverlay(state: string): this {
     const _createOverlay = (image: any, tooltip: any) => {
       const overlay = new mxCellOverlay(image, tooltip);
       overlay.addListener(mxEvent.CLICK, (_sender: any, _evt: any) => {
@@ -727,12 +757,12 @@ export class XCell extends FlowchartingClass {
       });
       return overlay;
     };
-    this.graph.addCellOverlay(this.mxcell, _createOverlay(this.graph.warningImage, `State: ${state}`));
+    this._graph.addCellOverlay(this.mxcell, _createOverlay(this._graph.warningImage, `State: ${state}`));
     return this;
   }
 
-  async removeOverlay() {
-    this.graph.removeCellOverlays(this.mxcell);
+  removeOverlay(): this {
+    this._graph.removeCellOverlays(this.mxcell);
     return this;
   }
 }

@@ -826,7 +826,7 @@ class EventState extends GFState {
 
       case 'visibility':
         // return this.xgraph.isVisibleCell(this.xcell) === false ? '0' : '1';
-        return !this.xcell.isHidden;
+        return !this.xcell.isHidden();
         break;
 
       case 'height':
@@ -855,7 +855,7 @@ class EventState extends GFState {
         break;
 
       case 'blink':
-        return this.xcell.isBlink;
+        return this.xcell.isBlinked();
         break;
 
       default:
