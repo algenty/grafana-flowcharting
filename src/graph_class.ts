@@ -850,12 +850,12 @@ export default class XGraph {
             .scale([startColor, endColor])
             .mode('lrgb')
             .colors($GF.CONSTANTS.CONF_COLORS_STEPS + 1);
-          const timer = GFTimer.getNewTimer(timeId);
+          const timer = GFTimer.newTimer(timeId);
           const ms = $GF.CONSTANTS.CONF_COLORS_MS;
           for (let i = 1; i < steps.length; i++) {
-            timer.add(xcell.setStyle.bind(xcell, style, steps[i]), ms * i);
+            timer.addStep(xcell.setStyle.bind(xcell, style, steps[i]), ms * i);
           }
-          timer.run();
+          timer.start();
         } else {
           // let hex = Color(color).hex();
           let hex = chroma(color).hex();
@@ -900,12 +900,12 @@ export default class XGraph {
           $GF.clearUniqTimeOut(timeId);
           const steps = $GF.calculateIntervalCounter(begin, end, $GF.CONSTANTS.CONF_ANIMS_STEP);
           const length = steps.length;
-          const timer = GFTimer.getNewTimer(timeId);
+          const timer = GFTimer.newTimer(timeId);
           const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
           for (let i = 1; i < length; i++) {
-            timer.add(xcell.setStyle.bind(xcell, style, steps[i].toString()), ms * i);
+            timer.addStep(xcell.setStyle.bind(xcell, style, steps[i].toString()), ms * i);
           }
-          timer.run();
+          timer.start();
         }
       } catch (error) {
         this.graph.setCellStyles(style, endValue, [xcell]);
@@ -1127,13 +1127,13 @@ export default class XGraph {
     if (this.isAnimated()) {
       const timeId = `setAnimZoomCell-${this.id}${xcell.getId}`;
       const percents = $GF.calculateIntervalCounter(xcell.percent, percent, $GF.CONSTANTS.CONF_ANIMS_STEP);
-      const timer = GFTimer.getNewTimer(timeId);
+      const timer = GFTimer.newTimer(timeId);
       const length = percents.length;
       const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
       for (let i = 1; i < length; i++) {
-        timer.add(xcell.zoom.bind(xcell, percents[i]), ms * i);
+        timer.addStep(xcell.zoom.bind(xcell, percents[i]), ms * i);
       }
-      timer.run();
+      timer.start();
     } else {
       xcell.zoom(percent);
     }
@@ -1162,12 +1162,12 @@ export default class XGraph {
       const widths = $GF.calculateIntervalCounter(dim.width * wdir, width, $GF.CONSTANTS.CONF_ANIMS_STEP);
       const heights = $GF.calculateIntervalCounter(dim.height * hdir, height, $GF.CONSTANTS.CONF_ANIMS_STEP);
       const length = widths.length;
-      const timer = GFTimer.getNewTimer(timeId);
+      const timer = GFTimer.newTimer(timeId);
       const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
       for (let i = 1; i < length; i++) {
-        timer.add(xcell.resize.bind(xcell, widths[i], heights[i]), ms * i);
+        timer.addStep(xcell.resize.bind(xcell, widths[i], heights[i]), ms * i);
       }
-      timer.run();
+      timer.start();
     } else {
       xcell.resize(width, height);
     }

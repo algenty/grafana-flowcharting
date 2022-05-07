@@ -696,11 +696,11 @@ export class XCell extends FlowchartingClass {
     const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
     if (bool && !this.isBlink) {
       this.isBlink = true;
-      const timer = GFTimer.getNewTimer(timeId);
-      timer.add(this.surround.bind(this, color, false), ms);
-      timer.add(this.surround.bind(this, color, false, false), ms * 2);
+      const timer = GFTimer.newTimer(timeId);
+      timer.addStep(this.surround.bind(this, color, false), ms);
+      timer.addStep(this.surround.bind(this, color, false, false), ms * 2);
       timer.setCyclic();
-      timer.run();
+      timer.start();
     } else if (!bool && this.isBlink) {
       GFTimer.stop(timeId);
       this.surround(color, false, false);

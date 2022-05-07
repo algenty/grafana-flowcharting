@@ -2,8 +2,6 @@ import _ from 'lodash';
 import chroma from 'chroma-js';
 import { inflateRaw, deflateRaw } from 'pako';
 import { FlowchartCtrl } from 'flowchart_ctrl';
-// import { FlowchartCtrl } from 'flowchart_ctrl';
-// import { info, warn, error } from 'fancy-log';
 class GFCONSTANT {
   // CONFIG
   CONF_PATH_LIBS = 'libs/';
@@ -1700,7 +1698,7 @@ export class GFTable {
   }
 }
 
-declare interface GFTimerUnit {
+declare interface GFTimerStep {
   step: number;
   fn: CallableFunction;
   ms: number;
@@ -1710,70 +1708,114 @@ declare interface GFTimerUnit {
   tmId: number;
 }
 export class GFTimer {
-  iteration = 0;
-  cyclic = false;
-  currentStep = 0;
-  uniqId: string;
-  static timers: Map<string, GFTimer>;
-  units: GFTimerUnit[];
+  private _iteration = 0;
+  private _cyclic = false;
+  private _currentStep = 0;
+  readonly uid: string;
+  private static _timers: Map<string, GFTimer>;
+  private _steps: GFTimerStep[];
+  private _finished = false;
 
-  constructor(uniqId: string) {
-    if (GFTimer.timers === undefined) {
-      GFTimer.timers = new Map();
+  private constructor(uid: string) {
+    if (GFTimer._timers === undefined) {
+      GFTimer._timers = new Map();
     }
-    this.units = [];
-    this.uniqId = uniqId;
+    this._steps = [];
+    this.uid = uid;
+  }
+  /**
+   * Return id of GFTimer
+   * @returns string
+   */
+  getUid(): string {
+    return this.uid;
   }
 
-  static stop(uniqId?: string) {
-    if (GFTimer.timers === undefined) {
-      GFTimer.timers = new Map();
+  /**
+   * return true if timer is finished or not started
+   * @returns boolean
+   */
+  isFinished(): boolean {
+    if(this._cyclic) {return true;}
+    if(this._finished) {return this._finished;}
+    let allRunned = true;
+    this._steps.forEach(step => {
+      allRunned = allRunned && step.runned;    
+    });
+    return allRunned; 
+  }
+
+  static stop(timer?: string | GFTimer) {
+    if (! GFTimer._timers) {
+      GFTimer._timers = new Map();
     }
-    if (uniqId !== undefined) {
-      const gftimer = GFTimer.timers.get(uniqId);
-      if (gftimer) {
-        gftimer.cancel();
-        GFTimer.timers.delete(uniqId);
+
+    if(typeof timer === "string") {
+      let result = GFTimer.get(timer); 
+      if(!result) {
+        return;
       }
+      timer = result;
+    }
+
+    if (timer) {
+      // Remove one
+      timer.cancel();
+        GFTimer._timers.delete(timer.uid);
     } else {
-      GFTimer.timers.forEach((gftimer, key, map) => {
+      // Remove all
+      GFTimer._timers.forEach((gftimer, key, map) => {
         gftimer.cancel();
       });
-      GFTimer.timers.clear();
+      GFTimer._timers.clear();
     }
   }
 
+  /**
+   * Cyclic or not
+   * @param  {} bool=true
+   * @returns this
+   */
   setCyclic(bool = true): this {
-    this.cyclic = bool;
-    this.iteration = 0;
+    this._cyclic = bool;
+    this._iteration = 0;
     return this;
   }
 
+  /**
+   * Number of iteration
+   * @param  {} it=0
+   * @returns this
+   */
   setIteration(it = 0): this {
-    this.iteration = it;
-    this.cyclic = false;
+    this._iteration = it;
+    this._cyclic = false;
     return this;
   }
 
   _reinit(): this {
-    this.currentStep = 0;
-    this.units.forEach((u) => {
+    this._currentStep = 0;
+    this._steps.forEach((u) => {
       u.runned = false;
       u.invalidated = false;
     });
     return this;
   }
 
+  /**
+   * stop & cancel timer
+   * @returns this
+   */
   cancel(): this {
-    this.units.forEach((t) => {
-      GFTimer._cleanUnit(t);
+    this._steps.forEach((t) => {
+      GFTimer._cleanStep(t);
     });
     return this;
   }
 
-  _getDefaultTimerUnit(): GFTimerUnit {
+  _getDefaultStepOption(): GFTimerStep {
     return {
-      step: this.units.length,
+      step: this._steps.length,
       fn: () => {},
       ms: 1000,
       running: false,
@@ -1783,14 +1825,14 @@ export class GFTimer {
     };
   }
 
-  static _cleanUnit(unit: GFTimerUnit) {
-    if (unit !== undefined && unit.invalidated === false && unit.runned === false) {
-      unit.invalidated = true;
-      GFTimer._stopTimeOut(unit.tmId);
+  private static _cleanStep(step: GFTimerStep) {
+    if (step !== undefined && step.invalidated === false && step.runned === false) {
+      step.invalidated = true;
+      GFTimer._stopTimeOut(step.tmId);
     }
   }
 
-  static _stopTimeOut(id: number) {
+  private static _stopTimeOut(id: number) {
     try {
       if (id !== undefined) {
         window.clearTimeout(id);
@@ -1800,63 +1842,84 @@ export class GFTimer {
     }
   }
 
-  static getNewTimer(uniqId: string | undefined): GFTimer {
-    if (! uniqId) {
-      uniqId = $GF.utils.uniqueID();
+  /**
+   * Return a new timer
+   * @param  {string|undefined} uid : uniq id
+   * @returns GFTimer
+   */
+  static newTimer(uid?: string): GFTimer {
+    if (! uid) {
+      uid = $GF.utils.uniqueID();
     }
-    GFTimer.stop(uniqId);
-    const gftimer = new GFTimer(uniqId);
-    GFTimer.timers.set(uniqId, gftimer);
+    GFTimer.stop(uid);
+    const gftimer = new GFTimer(uid);
+    GFTimer._timers.set(uid, gftimer);
     return gftimer;
   }
-
-  static getTimer(uniqId: string): GFTimer | undefined {
-    if (GFTimer.timers !== undefined) {
-      return GFTimer.timers.get(uniqId);
+  /**
+   * Return a timer with uid if exists
+   * @param  {string} uid
+   * @returns GFTimer
+   */
+  static get(uid: string): GFTimer | null {
+    if (GFTimer._timers) {
+      const result = GFTimer._timers.get(uid);
+      if(result) {return result;}
+      return null;
     }
-    return undefined;
+    return null;
   }
 
-  add(fn: CallableFunction, ms: number): this {
-    const unit = this._getDefaultTimerUnit();
+  /**
+   * Add a step function callback
+   * @param  {CallableFunction} fn
+   * @param  {number} ms
+   * @returns this
+   */
+  addStep(fn: CallableFunction, ms: number): this {
+    const unit = this._getDefaultStepOption();
     unit.fn = fn;
     unit.ms = ms;
-    this.units.push(unit);
+    this._steps.push(unit);
     return this;
   }
-
-  run(): this {
-    const length = this.units.length;
+  
+  /**
+   * start the timer
+   * @returns this
+   */
+  start(): this {
+    const length = this._steps.length;
     for (let i = 0; i < length; i++) {
-      const u = this.units[i];
+      const u = this._steps[i];
       u.tmId = window.setTimeout(this._runnable.bind(this, u), u.ms);
     }
     return this;
   }
 
-  _runnable(unit: GFTimerUnit) {
-    if (unit.invalidated === false) {
-      unit.running = true;
+  private _runnable(step: GFTimerStep) {
+    if (step.invalidated === false) {
+      step.running = true;
       try {
-        for (let i = this.currentStep; i < unit.step; i++) {
-          GFTimer._cleanUnit(this.units[i]);
+        for (let i = this._currentStep; i < step.step; i++) {
+          GFTimer._cleanStep(this._steps[i]);
         }
-        unit.fn();
+        step.fn();
       } catch (error) {
         $GF.log.warn('Failed to run fn', error);
       }
-      this.currentStep = unit.step;
-      unit.running = false;
-      unit.runned = true;
-      if (unit.step === this.units.length - 1) {
-        if (this.cyclic || this.iteration > 0) {
+      this._currentStep = step.step;
+      step.running = false;
+      step.runned = true;
+      if (step.step === this._steps.length - 1) {
+        if (this._cyclic || this._iteration > 1) {
           this._reinit();
-          if (this.iteration > 0) {
-            this.iteration = this.iteration - 1;
+          if (this._iteration > 0) {
+            this._iteration = this._iteration - 1;
           }
-          this.run();
+          this.start();
         } else {
-          GFTimer.timers.delete(this.uniqId);
+          GFTimer._timers.delete(this.uid);
         }
       }
     }
