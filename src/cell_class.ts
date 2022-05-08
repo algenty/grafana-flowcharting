@@ -170,9 +170,7 @@ export class XCell extends FlowchartingClass {
     return this;
   }
 
-  isHidden(): boolean {
-    return this._isHidden;
-  }
+
 
 
 
@@ -296,7 +294,7 @@ export class XCell extends FlowchartingClass {
     return this.getDefaultMetadatasKeys().includes(name);
   }
 
-  _matchMetadata(pattern: string, options: gf.TRuleMapOptions): boolean {
+  private _matchMetadata(pattern: string, options: gf.TRuleMapOptions): boolean {
     const values = this.getDefaultMetadatasValues(options.metadata, options.enableRegEx);
     const length = values.length;
     for (let i = 0; i < length; i++) {
@@ -308,42 +306,44 @@ export class XCell extends FlowchartingClass {
     return false;
   }
 
-  _setDefaultMetadatas(): gf.TXCellMetadata {
-    const result: gf.TXCellMetadata = new Map();
-    if (this.mxcell && mxUtils.isNode(this.mxcell.value)) {
-      const ignored = ['label', 'tooltip', 'placeholders', 'placeholder', 'link'];
-      const attrs = this.mxcell.value.attributes;
-      const length = attrs.length;
-      for (var i = 0; i < length; i++) {
-        if (!ignored.includes(attrs[i].nodeName)) {
-          const key = attrs[i].nodeName;
-          const value = attrs[i].nodeValue;
-          result.set(key, value);
-        }
-      }
-    }
-    this.gf.defaultValues.metadata = result;
-    return result;
-  }
+  // Not used
+
+  // private _setDefaultMetadatas(): gf.TXCellMetadata {
+  //   const result: gf.TXCellMetadata = new Map();
+  //   if (this.mxcell && mxUtils.isNode(this.mxcell.value)) {
+  //     const ignored = ['label', 'tooltip', 'placeholders', 'placeholder', 'link'];
+  //     const attrs = this.mxcell.value.attributes;
+  //     const length = attrs.length;
+  //     for (var i = 0; i < length; i++) {
+  //       if (!ignored.includes(attrs[i].nodeName)) {
+  //         const key = attrs[i].nodeName;
+  //         const value = attrs[i].nodeValue;
+  //         result.set(key, value);
+  //       }
+  //     }
+  //   }
+  //   this.gf.defaultValues.metadata = result;
+  //   return result;
+  // }
 
   //
   // Styles
   //
-  _initDefaultStyle(style: gf.TXCellStyleKeys): this {
+  private _initDefaultStyle(style: gf.TXCellStyleKeys): this {
     if (this.gf.defaultValues.styles === undefined || !this.gf.defaultValues.styles.has(style)) {
       this._setDefaultStyle(style);
     }
     return this;
   }
 
-  _setDefaultStyles(): gf.TXCellStyles {
+  private _setDefaultStyles(): gf.TXCellStyles {
     if (this.gf.defaultValues.styles === undefined) {
       this.gf.defaultValues.styles = new Map();
     }
     return this.gf.defaultValues.styles;
   }
 
-  _setDefaultStyle(style: gf.TXCellStyleKeys): string | null {
+  private _setDefaultStyle(style: gf.TXCellStyleKeys): string | null {
     if (this.gf.defaultValues.styles === undefined) {
       this._setDefaultStyles();
     }
@@ -498,7 +498,7 @@ export class XCell extends FlowchartingClass {
    * @param {boolean} [bool=true]
    * @memberof XCell
    */
-  async hide(bool = true) {
+  hide(bool = true) {
     if (!this._isHidden && bool) {
       this._graph.model.setVisible(this.mxcell, false);
     } else if (this._isHidden && !bool) {
@@ -517,19 +517,24 @@ export class XCell extends FlowchartingClass {
     this.hide(false);
   }
 
+  isHidden(): boolean {
+    return this._isHidden;
+  }
+
   /**
    * Hightlight cell
    *
    * @param {boolean} [bool=true]
    * @memberof XCell
    */
-  async highlight(bool = true) {
+  highlight(bool = true) {
     const color = $GF.CONSTANTS.CONF_HIGHTLIGHT_COLOR;
-    if (!this._isHighlighted && bool) {
+    if (bool === true && this._isHighlighted === false ) {
       this._isHighlighted = true;
-      this.surround(color, true, true);
-    } else if (this._isHighlighted && !bool) {
-      this.surround(color, true, false);
+      this.surround(color, false, true);
+    } else 
+    {
+      this.surround(color, false, false);
       this._isHighlighted = false;
     }
     this._isHighlighted = bool;
@@ -540,7 +545,7 @@ export class XCell extends FlowchartingClass {
    * @deprecated
    * @memberof XCell
    */
-  async unhighlight() {
+  unhighlight() {
     this.highlight(false);
   }
 
@@ -620,7 +625,7 @@ export class XCell extends FlowchartingClass {
     trc.after();
   }
 
-  async resize(width: number | undefined, height: number | undefined) {
+  resize(width: number | undefined, height: number | undefined) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'resize()');
     this._initDefaultValue('dimension');
     const dim = this.getDimension();
@@ -669,7 +674,7 @@ export class XCell extends FlowchartingClass {
         this._surroundHL.set(color, hl);
       }
       this._isSurrounded = true;
-    } else if (!bool) {
+    } else {
       const hl = this._surroundHL.get(color);
       const transition = 300;
       if (hl && hl.shape !== null && hl.shape !== undefined) {

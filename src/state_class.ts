@@ -6,6 +6,7 @@ import { TooltipHandler } from './tooltip_handler';
 import { $GF, GFVariables } from 'globals_class';
 import { XCell } from 'cell_class';
 import { FlowchartingClass } from 'flowcharting_object';
+import { RenderInspectState } from 'state_render';
 
 /**
  * Class for state of one cell
@@ -38,6 +39,9 @@ export class State extends FlowchartingClass {
   reduce = true;
   currRules: string[] = [];
   currMetrics: string[] = [];
+  renderer =  {
+    inspect: RenderInspectState.getRender(this),
+  };
   // originalText: string;
 
   /**
@@ -61,6 +65,10 @@ export class State extends FlowchartingClass {
     this.variables = $GF.createLocalVars();
     this.status = new Map();
     this.tooltipHandler = null;
+    const r = new RenderInspectState(this); 
+    this.renderer = {
+      inspect : r.render.bind(r)
+    }
     // this.xcell.GF_tooltipHandler = null;
     // this.originalText = XGraph.getLabelCell(xcell);
     trc.after();
@@ -1121,3 +1129,5 @@ class IconState extends GFState {
     return this;
   }
 }
+
+
