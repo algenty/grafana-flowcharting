@@ -1,7 +1,34 @@
 import { State } from 'state_class'
 
 export class RenderInspectState {
-    state: State;
+    readonly state: State;
+    private readonly options = {
+      expand : {
+        width : '30px',
+      },
+      label : {
+        width : '100px',
+      },
+      id : {
+        width : '100px',
+      },
+      shape : {
+        width : '100px',
+      },
+      level : {
+        width : '100px',
+      },
+      value : {
+        width : '100px',
+      },
+      colors : {
+        width : '80px',
+      },
+      tags : {
+        width : '100px',
+      },
+
+    }
     constructor(state: State) {
       this.state = state;
     }
@@ -28,7 +55,7 @@ export class RenderInspectState {
             <!-- HIGTEST FORMATED VALUE -->
             ${this._value()}
             <!-- COLOR -->
-            ${this._color()}
+            ${this._colors()}
             <!-- TAGS -->
             <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="actions"
                 ng-style="{'width' : editor.statesTable.getWidth('tags')}">
@@ -52,7 +79,7 @@ export class RenderInspectState {
     }
     
     private _label(): string {
-      const width=  '100px';
+      const width=  this.options.label.width;
       return `
         <!-- LABEL -->
         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="label-${this.state.uid}"
@@ -65,7 +92,7 @@ export class RenderInspectState {
     }
   
     private _shape(): string {
-      const width=  '100px';
+      const width=  this.options.shape.width;
       const key = `shape-${this.state.uid}`;
       return `
         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="${key}"
@@ -78,7 +105,7 @@ export class RenderInspectState {
     }
   
     private _level(): string {
-      const width=  '100px';
+      const width=  this.options.level.width;
       const key = `level-${this.state.uid}`;
       return `
         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="${key}"
@@ -92,7 +119,7 @@ export class RenderInspectState {
   
     private _value(): string {
       const key = `value-${this.state.uid}`;
-      const width=  '100px';
+      const width=  this.options.value.width;
       return `
         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="${key}"
           ng-attr-title="${this.state.highestValue}"
@@ -104,9 +131,9 @@ export class RenderInspectState {
       `;
     }
   
-    private _color(): string {
+    private _colors(): string {
       const key = `color-${this.state.uid}`;
-      const width=  '100px';
+      const width=  this.options.colors.width;
       return `
         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="${key}"
         ng-style="{'width' : ${width}">
@@ -139,13 +166,13 @@ export class RenderInspectState {
     }
   
     private _expand() {
-      const width=  '100px';
+      const width=  this.options.expand.width;
       const key = `expand-${this.state.uid}`;
       return `
         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="${key}"
           ng-click="state.reduce=!state.reduce"
-          ng-init="CN1 = 'expand';state.displayEdit[${key}] = false;state.inEdit['${key}'] = false;"
-          ng-style="{'width' : ${width}">
+          ng-init="state.displayEdit[${key}] = false;state.inEdit['${key}'] = false;"
+          style="{'width' : ${width}">
           <div class="gf-table-content gf-unselectable" style="text-align: center; cursor: pointer;">
             <span>
                 <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
@@ -160,7 +187,7 @@ export class RenderInspectState {
   
     private _id(): string {
       const key = `id-${this.state.uid}`;
-      const width='100px';
+      const width= this.options.id.width;
   
       return `
       <!-- ID -->
