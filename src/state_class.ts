@@ -15,11 +15,6 @@ import { FlowchartingClass } from 'flowcharting_object';
  */
 export class State extends FlowchartingClass {
   xcell: XCell; // mxCell State
-  // id: string; // cell ID in mxcell
-  // newcellId: string | undefined; // for inspect mode
-  // previousId: string | undefined; // for inspect mode
-  // edited: boolean | undefined; // if modified in inspector
-  // edit: boolean | undefined; // if modified in inspector
   xgraph: XGraph;
   changed = false;
   matched = false;
