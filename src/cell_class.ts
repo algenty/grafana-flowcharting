@@ -19,6 +19,7 @@ export class XCell extends FlowchartingClass {
     super();
     this._graph = graph;
     this.mxcell = mxcell;
+    this.uid = mxcell.getId();
     this.gf = this._getDefaultGFXCell();
     this.mxcell.gf = this.gf;
     this._isHidden = !this._graph.model.isVisible(this.mxcell);
@@ -30,7 +31,7 @@ export class XCell extends FlowchartingClass {
     return xcell;
   }
 
-  _getDefaultGFXCell(): gf.TXCellGF {
+  private _getDefaultGFXCell(): gf.TXCellGF {
     return {
       defaultValues: {
         id: undefined,
@@ -48,7 +49,7 @@ export class XCell extends FlowchartingClass {
     };
   }
 
-  _getDefaultValue(type: gf.TXCellDefaultValueKeys): gf.TXCellValueGF {
+  private _getDefaultValue(type: gf.TXCellDefaultValueKeys): gf.TXCellValueGF {
     this._initDefaultValue(type);
     const value = this.gf.defaultValues[type];
     if (value === undefined) {
@@ -57,7 +58,7 @@ export class XCell extends FlowchartingClass {
     return value;
   }
 
-  _initDefaultValue(type: gf.TXCellDefaultValueKeys): this {
+  private _initDefaultValue(type: gf.TXCellDefaultValueKeys): this {
     const value = this.gf.defaultValues[type];
     if (value === undefined) {
       this._setDefaultValue(type);
