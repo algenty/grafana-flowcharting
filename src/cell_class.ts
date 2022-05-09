@@ -527,9 +527,9 @@ export class XCell extends FlowchartingClass {
     const color = $GF.CONSTANTS.CONF_HIGHTLIGHT_COLOR;
     if (!this._isHighlighted && bool) {
       this._isHighlighted = true;
-      this.surround(color, true, true);
+      this.surround(color, false, true);
     } else if (this._isHighlighted && !bool) {
-      this.surround(color, true, false);
+      this.surround(color, false, false);
       this._isHighlighted = false;
     }
     this._isHighlighted = bool;
