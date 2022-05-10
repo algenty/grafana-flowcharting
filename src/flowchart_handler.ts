@@ -418,6 +418,7 @@ export class FlowchartHandler {
 
     // not repeat render if mouse down
     if (!this.mousedown) {
+      console.log("Flags" , Object.assign({}, this.flags));
       this.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
       const self = this;
       // SOURCE
