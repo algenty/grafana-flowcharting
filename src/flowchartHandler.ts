@@ -531,7 +531,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   onGraphHoverChange(): this {
-    this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER, name);
+    this.flagChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER);
     return this;
   }
 
