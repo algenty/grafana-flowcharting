@@ -1,14 +1,9 @@
 {
   "extends": "./node_modules/@grafana/toolkit/src/config/tsconfig.plugin.json",
-  "include": ["src/**/*"],
+  "include": ["src", "types"],
   "compilerOptions": {
     "rootDir": "./src",
-    "allowSyntheticDefaultImports": true,
-    "target": "es6",
-    "moduleResolution": "node",
     "baseUrl": "./src",
-    "typeRoots": ["./node_modules/@types", "./types"],
-    "noImplicitAny": false,
-    "noImplicitThis": false
+    "typeRoots": ["./node_modules/@types"]
   }
 }

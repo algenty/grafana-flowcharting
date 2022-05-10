@@ -2,10 +2,10 @@ import grafana from './grafana_func';
 import { find as _find, isNumber as _isNumber } from 'lodash';
 import { $GF } from 'globals_class';
 import { DateTH } from 'threshold_class';
-import { FlowchartCtrl } from 'flowchart_ctrl';
-// import { Observer } from 'rxjs';
+import { flowchartingEvents } from 'flowcharting_base';
 
 export type ObjectMetric = SerieMetric | TableMetric;
+type MetricSignals = 'metric_initialized' | 'metric_updated' | 'metric_freed';
 
 /**
  * Metric parent
@@ -16,17 +16,16 @@ export type ObjectMetric = SerieMetric | TableMetric;
 export class Metric {
   type: gf.TMetricTypeKeys | 'unknown' = 'unknown';
   uid: string;
-  ctrl: FlowchartCtrl;
   scopedVars: any;
   metrics: any = {};
   name = '';
   dataList: any;
   nullPointMode = 'connected';
   GHValue: string | number | null = null;
-  constructor(dataList: any, ctrl: FlowchartCtrl) {
-    this.uid = $GF.uniqID(this.constructor.name);
+  events: flowchartingEvents<MetricSignals> = new flowchartingEvents()
+  constructor(dataList: any) {
+    this.uid = $GF.genUid(this.constructor.name);
     this.dataList = dataList;
-    this.ctrl = ctrl;
   }
 
   setDataList(dataList: any): this {
@@ -82,7 +81,7 @@ export class Metric {
    * @returns {gf.TGraphCoordinate[]}
    * @memberof Metric
    */
-  getData(column?: string, log: boolean = false): number[] | Array<{ x: number | Date; y: number }> {
+  getData(column?: string, log = false): number[] | Array<{ x: number | Date; y: number }> {
     return [];
   }
 
@@ -101,70 +100,66 @@ export class Metric {
    *
    * @memberof MetricHandler
    */
-  clear(): this {
+  clear() {
     this.dataList = undefined;
     this.metrics = {};
-    return this;
   }
 
   //
   // Updates
   //
 
-  refresh(timestamp?: number): this {
+  update(timestamp?: number) {
     if (timestamp !== undefined) {
       this.GHValue = this.findValue(timestamp);
     } else {
       this.GHValue = null;
     }
-    this.onRefreshed();
-    return this;
+    this.events.emit('metric_updated', this);
   }
 
-  change(): this {
-    this.onChanged();
-    return this;
+  change() {
   }
 
   init(): this {
-    this.onInitialized();
     return this;
   }
 
-  destroy(): this {
-    this.onDestroyed();
-    return this;
+  async free() {
+    this.clear()
+    await this.events.emit('metric_freed', this);
+    this.events.clear();
   }
 
-  //
-  // Events
-  //
-  async onDestroyed() {
-    const funcName = 'onDestroyed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'destroyed');
-    this.ctrl.eventHandler.unsubscribes(this);
-  }
+  // //
+  // // Events
+  // //
+  // async onDestroyed() {
+  //   const funcName = 'onDestroyed';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.emit(this, 'destroyed');
+  //   this.ctrl.eventHandler.unsubscribes(this);
+  // }
 
-  async onRefreshed() {
-    const funcName = 'onRefreshed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'refreshed');
-  }
+  // async onRefreshed() {
+  //   const funcName = 'onRefreshed';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.emit(this, 'refreshed');
+  // }
 
-  async onInitialized() {
-    const funcName = 'onInitialized';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.subscribes(this);
-    this.ctrl.eventHandler.emit(this, 'initialized');
-    this.onChanged();
-  }
+  // async onInitialized() {
+  //   const funcName = 'onInitialized';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.subscribes(this);
+  //   this.ctrl.eventHandler.emit(this, 'initialized');
+  //   this.onChanged();
+  // }
 
-  async onChanged() {
-    const funcName = 'onChanged';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'changed');
-  }
+  // async onChanged() {
+  //   const funcName = 'onChanged';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.emit(this, 'changed');
+  // }
 
   //
   // RXJS
@@ -207,13 +202,13 @@ export class Metric {
  * @extends {Metric}
  */
 export class SerieMetric extends Metric {
-  constructor(dataList: any, ctrl: FlowchartCtrl) {
-    super(dataList, ctrl);
+  constructor(dataList: any) {
+    super(dataList);
     this.type = 'serie';
     this.init();
   }
 
-  init(): this {
+  init() {
     this.metrics = this._seriesHandler();
     this._addCustomStats();
     this.name = this.metrics.alias;
@@ -221,7 +216,7 @@ export class SerieMetric extends Metric {
     return this;
   }
 
-  _seriesHandler() {
+  private _seriesHandler() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'seriesHandler()');
     let series: any = undefined;
     if (this.dataList) {
@@ -232,7 +227,7 @@ export class SerieMetric extends Metric {
     return series;
   }
 
-  _addCustomStats() {
+  private _addCustomStats() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addCustomStats()');
     try {
       let lg = this.metrics.flotpairs.length;
@@ -330,8 +325,8 @@ export class SerieMetric extends Metric {
     return value;
   }
 
-  getData(column: string = '', log: boolean = false): number[] | Array<{ x: number | Date; y: number }> {
-    return this.metrics.flotpairs.map(d => {
+  getData(column = '', log = false): number[] | Array<{ x: number | Date; y: number }> {
+    return this.metrics.flotpairs.map((d: any[]) => {
       if (!!log) {
         return { x: d[0], y: Math.log10(d[1]) };
       }
@@ -357,8 +352,8 @@ export class TableMetric extends Metric {
   tableColumn = '';
   allIsNull = true;
   allIsZero = true;
-  constructor(dataList: any, ctrl: FlowchartCtrl) {
-    super(dataList, ctrl);
+  constructor(dataList: any) {
+    super(dataList);
     this.type = 'table';
     this.init();
   }
@@ -367,11 +362,10 @@ export class TableMetric extends Metric {
     super.init();
     this.metrics = this._tableHandler();
     this.name = this.dataList?.refId;
-    this.onInitialized();
     return this;
   }
 
-  _tableHandler() {
+  private _tableHandler() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'tableHandler()');
     const table: any = {
       datapoints: [],
@@ -379,7 +373,7 @@ export class TableMetric extends Metric {
       stats: {},
     };
 
-    this.dataList?.columns.forEach((column, columnIndex) => {
+    this.dataList?.columns.forEach((column: { text: { toString: () => string; }; }, columnIndex: string | number) => {
       table.columnNames[columnIndex] = column.text;
       if (column.text.toString().toLowerCase() === 'time') {
         table.timeIndex = columnIndex;
@@ -392,9 +386,9 @@ export class TableMetric extends Metric {
       this._setTableColumnToSensibleDefault();
     }
 
-    this.dataList?.rows.forEach(row => {
-      const datapoint = {};
-      row.forEach((value, columnIndex) => {
+    this.dataList?.rows.forEach((row: any[]) => {
+      const datapoint: any = {};
+      row.forEach((value: any, columnIndex: string | number) => {
         const key = table.columnNames[columnIndex];
         datapoint[key] = value;
       });
@@ -563,7 +557,7 @@ export class TableMetric extends Metric {
    * @returns {(string | number | null)}
    * @memberof Metric
    */
-  getValue(aggregator: gf.TAggregationKeys, column: string = 'Value'): string | number | null {
+  getValue(aggregator: gf.TAggregationKeys, column = 'Value'): string | number | null {
     try {
       let value: string | number | null = null;
       if ($GF.hasGraphHover()) {
@@ -658,10 +652,10 @@ export class TableMetric extends Metric {
    */
   getData(column: string): number[] | Array<{ x: number | Date; y: number }> {
     if (this.metrics.timeColumn) {
-      return this.metrics.datapoints.map(d => {
+      return this.metrics.datapoints.map((d: { [x: string]: any; }) => {
         return { x: d[this.metrics.timeColumn], y: d[column] };
       });
     }
-    return this.metrics.datapoints.map(d => d[column]);
+    return this.metrics.datapoints.map((d: { [x: string]: any; }) => d[column]);
   }
 }

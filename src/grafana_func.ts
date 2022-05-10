@@ -12,7 +12,7 @@ var grafana = {
   //   const result = fmt(value, decimals).toString();
   //   return result.toString();
   // }
-  formatValue(value, unit, decimals) {
+  formatValue(value: any, unit: any, decimals: any) {
     return kbn.valueFormats[unit](value, decimals, null).toString();
   },
 
@@ -31,7 +31,7 @@ var grafana = {
     // });
   },
 
-  getTimeSeries(seriesData) {
+  getTimeSeries(seriesData: any) {
     return new TimeSeries({
       datapoints: seriesData.datapoints || [],
       alias: seriesData.target,
@@ -39,7 +39,7 @@ var grafana = {
     });
   },
 
-  getFormatedDate(value, format) {
+  getFormatedDate(value: any, format: any) {
     return dateTime(value).format(format);
   },
   appEvents: appEvents,

@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`$GF Variables Should be not null 1`] = `
+GFVariables {
+  "_variables": Map {},
+}
+`;
+
+exports[`$GF Variables Static should  1`] = `
+Array [
+  "\${_rule}",
+  "\${_date}",
+  "\${_color}",
+  "\${_value}",
+  "\${_level}",
+  "\${_formated}",
+]
+`;
+
+exports[`Test G Variables Should be not null 1`] = `
+GFVariables {
+  "_variables": Map {},
+}
+`;
+
+exports[`Test G Variables Static should  1`] = `
+Array [
+  "\${_rule}",
+  "\${_date}",
+  "\${_color}",
+  "\${_value}",
+  "\${_level}",
+  "\${_formated}",
+]
+`;
+
+exports[`Test Global $GF Variables Should be not null 1`] = `
+GFVariables {
+  "_variables": Map {},
+}
+`;
+
+exports[`Test Global $GF Variables Static should  1`] = `
+Array [
+  "\${_rule}",
+  "\${_date}",
+  "\${_color}",
+  "\${_value}",
+  "\${_level}",
+  "\${_formated}",
+]
+`;
+
+exports[`Test Global $GF utils Variables Should be not null 1`] = `
+GFVariables {
+  "_variables": Map {},
+}
+`;
+
+exports[`Test Global $GF utils Variables Static should  1`] = `
+Array [
+  "\${_rule}",
+  "\${_date}",
+  "\${_color}",
+  "\${_value}",
+  "\${_level}",
+  "\${_formated}",
+]
+`;
+
+exports[`Test Global Variables Should be not null 1`] = `
+GFVariables {
+  "_variables": Map {},
+}
+`;
+
+exports[`Test Global Variables Static should  1`] = `
+Array [
+  "\${_rule}",
+  "\${_date}",
+  "\${_color}",
+  "\${_value}",
+  "\${_level}",
+  "\${_formated}",
+]
+`;

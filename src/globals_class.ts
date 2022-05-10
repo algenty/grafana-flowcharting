@@ -1,5 +1,10 @@
-import { map as _map } from 'lodash';
+import _ from 'lodash';
 import chroma from 'chroma-js';
+import { inflateRaw, deflateRaw } from 'pako';
+import { FlowchartCtrl } from 'flowchart_ctrl';
+import { flowchartingEvents } from 'flowcharting_base';
+import { nanoid } from 'nanoid/non-secure';
+
 class GFCONSTANT {
   // CONFIG
   CONF_PATH_LIBS = 'libs/';
@@ -11,18 +16,19 @@ class GFCONSTANT {
   CONF_FILE_DEFAULTDIO = 'static/defaultGraph.drawio';
   CONF_FILE_DEFAULTCSV = 'static/defaultGraph.csv';
   CONF_FILE_SHAPESTXT = 'static/shapes.txt';
-  CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
-  CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
+  // CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
+  // CONF_FILE_INTEGRATEJS = 'libs/drawio/js/app.min.js';
+  // CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
   // CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
   CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer-static.min.js';
   CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
   CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
   CONF_TOOLTIPS_DELAY = 200;
   CONF_GRAPHHOVER_DELAY = 50;
-  CONF_COLORS_STEPS = 6;
-  CONF_COLORS_MS = 40;
-  CONF_ANIMS_STEP = 6;
-  CONF_ANIMS_MS = 40;
+  CONF_COLORS_STEPS = 5;
+  CONF_COLORS_MS = 50;
+  CONF_ANIMS_STEP = 5;
+  CONF_ANIMS_MS = 50;
   CONF_GFMESSAGE_MS = 5000;
   CONF_BLINK_COLOR = '#f5f242';
   CONF_HIGHTLIGHT_COLOR = '#99ff33';
@@ -51,20 +57,16 @@ class GFCONSTANT {
   VAR_STR_METRIC: gf.TVariableKeys = '_metric';
 
   // FLOWCHART CHANGE KEY FLAG
-  EVENT_REF_FLOWCHARTS: string = 'refresh_graph';
-  EVENT_CHG_FLOWCHARTS: string = 'change_graph';
-  EVENT_REF_DATAS: string = 'refresh_datas';
-  EVENT_CHG_DATAS: string = 'change_datas';
-  EVENT_REF_RULES: string = 'refresh_rules';
-  EVENT_CHG_RULES: string = 'change_rules';
-  EVENT_REF_STATES: string = 'refresh_rules';
-  EVENT_CHG_STATES: string = 'change_rules';
-  EVENT_REF_GRAPHOVER: string = 'refresh_graphHover';
+  // FLOWCHART_CHG_SOURCES: gf.TFlowchartFlagKeys = 'sources';
+  // FLOWCHART_CHG_OPTIONS: gf.TFlowchartFlagKeys = 'options';
+  // FLOWCHART_APL_OPTIONS: gf.TFlowchartFlagKeys = 'applyOptions';
+  // FLOWCHART_CHG_DATAS: gf.TFlowchartFlagKeys = 'datas';
+  // FLOWCHART_CHG_RULES: gf.TFlowchartFlagKeys = 'rules';
+  // FLOWCHART_CHG_GRAPHHOVER: gf.TFlowchartFlagKeys = 'graphHover';
   // FLOWCHART_CHG_HIDDENCHANGE: gf.TFlowchartFlagKeys = 'hiddenChange';
 
   // TRACE AND DEBUG
-  VAR_GF_TRACE_PERF = false;
-  // VAR_GF_LEVEL_DEBUG = 0;
+  VAR_GF_TRACE_PERF = true;
 
   // MXGRAPH
   MXGRAPH_STYLES_COLOR: gf.TStyleColorKeys[] = [
@@ -149,7 +151,7 @@ class GFCONSTANT {
     { text: 'Mobile', value: 'minimal' },
     { text: 'atlas', value: 'atlas' },
   ];
-  IDENT_TYPES: { text: string; value: gf.TPropertieKey }[] = [
+  IDENT_TYPES: Array<{ text: string; value: gf.TPropertieKey }> = [
     { text: 'Id', value: 'id' },
     { text: 'Label', value: 'value' },
     { text: 'Metadata', value: 'metadata' },
@@ -326,7 +328,7 @@ export class GFVariables {
    * @memberof GFVariables
    */
   static getAvailableLocalVarNames(): string[] {
-    return $GF.CONSTANTS.LOCALVARIABLENAMES.map(x => '${' + x.value + '}');
+    return $GF.CONSTANTS.LOCALVARIABLENAMES.map((x) => '${' + x.value + '}');
   }
 
   /**
@@ -385,7 +387,7 @@ export class GFVariables {
    * @memberof GFVariables
    */
   getVarsNames(): string[] {
-    return this.keys().map(x => '${' + x + '}');
+    return this.keys().map((x) => '${' + x + '}');
   }
 
   /**
@@ -437,8 +439,7 @@ class GFLog {
   static INFO = 1;
   static WARN = 2;
   static ERROR = 3;
-  // static logLevel = GFLog.DEBUG;
-  static logLevel = GFLog.DEBUG;
+  static logLevel = GFLog.WARN;
   static logDisplay = true;
   constructor() {}
 
@@ -461,7 +462,7 @@ class GFLog {
     }
     return false;
   }
-
+  // TODO : Replace console.log
   /**
    * Display debug message in console
    *
@@ -469,10 +470,10 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async debug(...args) {
+  async debug(...args: unknown[]) {
     if (GFLog.toDisplay(GFLog.DEBUG)) {
       const title = args.shift();
-      console.debug(`GF DEBUG : ${title}`, ...args);
+      console.log(`GF DEBUG : ${title}`, ...args);
     }
   }
 
@@ -483,10 +484,10 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async warn(...args) {
+  async warn(...args: unknown[]) {
     if (GFLog.toDisplay(GFLog.WARN)) {
       const title = args.shift();
-      console.warn(`GF WARN : ${title}`, ...args);
+      console.log(`GF WARN : ${title}`, ...args);
     }
   }
 
@@ -497,10 +498,10 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async info(...args) {
+  async info(...args: string[]) {
     if (GFLog.toDisplay(GFLog.INFO)) {
       const title = args.shift();
-      console.info(`GF INFO : ${title}`, ...args);
+      console.log(`GF INFO : ${title}`, ...args);
     }
   }
 
@@ -511,10 +512,10 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async error(...args) {
+  async error(...args: unknown[]) {
     if (GFLog.toDisplay(GFLog.ERROR)) {
       const title = args.shift();
-      console.error(`GF ERROR : ${title}`, ...args);
+      console.log(`GF ERROR : ${title}`, ...args);
     }
   }
 }
@@ -523,7 +524,6 @@ class GFPlugin {
   static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
   static contextRoot: string;
-  constructor() {}
 
   /**
    * init GFPlugin
@@ -548,8 +548,7 @@ class GFPlugin {
     $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
     $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
     $GF.setVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD, dashboard);
-    // $GF.setVar($GF.CONSTANTS.VAR_OBJ_CTRL, ctrl);
-    // $GF.setVar($GF.CONSTANTS.VAR_OBJ_SCOPE, $scope);
+
     return plug;
   }
 
@@ -677,66 +676,6 @@ class GFPlugin {
   }
 }
 
-// class GFMessage {
-//   static container: HTMLDivElement;
-//   static message: HTMLSpanElement;
-//   static ERROR_MESSAGE = 'error';
-//   static ERROR_COLOR = 'red';
-//   static INFO_MESSAGE = 'info';
-//   static INFO_COLOR = 'white';
-//   static WARNING_MESSAGE = 'warning';
-//   static WARNING_COLOR = 'yellow';
-
-//   constructor(parent: HTMLDivElement) {
-//     const container = parent;
-//     if (container !== null) {
-//       GFMessage.container = container;
-//       const span = container.querySelector<HTMLSpanElement>('#message-text');
-//       if (span === null) {
-//         GFMessage.message = document.createElement('span');
-//         GFMessage.container.appendChild(GFMessage.message);
-//       } else {
-//         GFMessage.message = span;
-//       }
-//     }
-//   }
-
-//   static init(parentDiv: HTMLDivElement): GFMessage {
-//     return new GFMessage(parentDiv);
-//   }
-
-//   async setMessage(message: string, type: string = GFMessage.INFO_MESSAGE) {
-//     if (GFMessage.container && GFMessage.message) {
-//       GFMessage.message.innerHTML = message;
-//       switch (type) {
-//         case GFMessage.INFO_MESSAGE:
-//           GFMessage.message.style.color = GFMessage.INFO_COLOR;
-//           break;
-//         case GFMessage.ERROR_MESSAGE:
-//           GFMessage.message.style.color = GFMessage.ERROR_COLOR;
-//           break;
-//         case GFMessage.WARNING_MESSAGE:
-//           GFMessage.message.style.color = GFMessage.WARNING_COLOR;
-//           break;
-
-//         default:
-//           GFMessage.message.style.color = GFMessage.INFO_COLOR;
-//           break;
-//       }
-//       GFMessage.container.style.display = '';
-//       $GF.setUniqTimeOut(this.clearMessage, $GF.CONSTANTS.CONF_GFMESSAGE_MS, 'flowcharting-message');
-//     }
-//   }
-
-//   clearMessage() {
-//     if (GFMessage.container && GFMessage.message) {
-//       GFMessage.container.style.display = 'none';
-//       GFMessage.message.innerHTML = '';
-//     }
-//     $GF.clearUniqTimeOut('flowcharting-message');
-//   }
-// }
-
 /**
  * Trace Perf class
  *
@@ -750,7 +689,7 @@ class GFTrace {
   trace:
     | {
         Name: string;
-        Id: string;
+        Uid: string;
         Args: any;
         Return: any;
         Before: number;
@@ -764,7 +703,7 @@ class GFTrace {
     if (GFTrace.enable && fn !== undefined) {
       this.trace = {
         Name: fn,
-        Id: $GF.uniqID(this.constructor.name),
+        Uid: $GF.genUid(),
         Args: undefined,
         Return: undefined,
         Before: Date.now(),
@@ -772,7 +711,7 @@ class GFTrace {
         ExecTime: undefined,
         Indent: GFTrace.indent,
       };
-      GFTrace.trc.set(this.trace.Id, this.trace);
+      GFTrace.trc.set(this.trace.Uid, this.trace);
     }
   }
 
@@ -780,9 +719,7 @@ class GFTrace {
     return new GFTrace();
   }
 
-  before(
-    fn: string | undefined
-  ):
+  before(fn: string | undefined):
     | GFTrace
     | {
         after: () => void;
@@ -796,7 +733,7 @@ class GFTrace {
     return { after: () => {} };
   }
 
-  static _inc(fn) {
+  static _inc(fn: string) {
     let f = GFTrace.fn.get(fn);
     if (f === undefined) {
       f = {
@@ -841,19 +778,149 @@ class GFTrace {
     if (GFTrace.enable) {
       let tb: any[] = [];
       let fn: any[] = [];
-      GFTrace.trc.forEach(trace => {
+      GFTrace.trc.forEach((trace) => {
         trace.ExecTime = trace.End - trace.Before;
         const f = GFTrace.fn.get(trace.Name);
         f.TotalTimes += trace.ExecTime;
         tb.push(trace);
       });
-      console.table(tb, ['Indent', 'Name', 'ExecTime']);
-      GFTrace.fn.forEach(f => {
+      // eslint-disable-line
+      console.log(tb, ['Indent', 'Name', 'ExecTime']);
+      GFTrace.fn.forEach((f) => {
         fn.push(f);
       });
-      console.table(fn, ['Function', 'Calls', 'TotalTimes']);
+      console.log(fn, ['Function', 'Calls', 'TotalTimes']);
       this.clear();
     }
+  }
+}
+
+export class GFDrawioTools {
+  static parseXml(xmlString: string): Document {
+    var parser = new DOMParser();
+    return parser.parseFromString(xmlString, 'text/xml');
+  }
+  /**
+   * drawio context source
+   * @param  {Object} node
+   * @returns string
+   */
+  static getTextContent(node: Object): string {
+    // TODO : fixit
+    const _node: any = node;
+    return _node != null ? _node[_node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
+  }
+
+  /**
+   * Valided XML definition
+   *
+   * @static
+   * @param {string} source
+   * @returns
+   * @memberof XGraph
+   */
+  static isValidXml(source: string) {
+    try {
+      const div = document.createElement('div');
+      const g = new Graph(div);
+      if (GFDrawioTools.isEncoded(source)) {
+        source = GFDrawioTools.decode(source);
+      }
+      const xmlDoc = mxUtils.parseXml(source);
+      const codec = new mxCodec(xmlDoc);
+      g.getModel().beginUpdate();
+      codec.decode(xmlDoc.documentElement, g.getModel());
+      g.getModel().endUpdate();
+      g.destroy();
+      return true;
+    } catch (error) {
+      $GF.log.error('isValidXml', error);
+      return false;
+    }
+  }
+
+  static decode(data: string): string {
+    try {
+      let node = this.parseXml(data).documentElement;
+      if (node != null && node.nodeName === 'mxfile') {
+        var diagrams = node.getElementsByTagName('diagram');
+        if (diagrams.length > 0) {
+          data = this.getTextContent(diagrams[0]);
+        }
+      }
+    } catch (e) {
+      $GF.log.error(`parseXml : Unable to decode ${data}`);
+      return '';
+    }
+    // data = atob(data);
+    data = Buffer.from(data, 'base64').toString('binary');
+    if (data.length > 0) {
+      try {
+        data = inflateRaw(
+          Uint8Array.from(data, (c) => c.charCodeAt(0)),
+          { to: 'string' }
+        );
+      } catch (e) {
+        $GF.log.error(`Pako : Unable to decode ${data}`);
+        return '';
+      }
+    }
+
+    try {
+      data = decodeURIComponent(data);
+    } catch (e) {
+      $GF.log.error(`Unable to decode ${data}`);
+      return '';
+    }
+    return data;
+  }
+
+  static encode(data: string) {
+    {
+      try {
+        data = encodeURIComponent(data);
+      } catch (e) {
+        $GF.log.error(`Unable to encode/encodeURIComponent : ${data}`, e);
+        return;
+      }
+
+      if (data.length > 0) {
+        try {
+          let deflateRaws = deflateRaw(data);
+          data = String.fromCharCode.apply(null, new Array(...deflateRaws));
+        } catch (e) {
+          console.log(e);
+          $GF.log.error(`Unable to encode ${data}`);
+          return '';
+        }
+      }
+
+      try {
+        data = Buffer.from(data, 'binary').toString('base64');
+      } catch (e) {
+        $GF.log.error(`Unable to encode ${data}`);
+        return;
+      }
+
+      return data;
+    }
+  }
+
+  static isEncoded(data: string) {
+    try {
+      const node = this.parseXml(data).documentElement;
+      if (node != null && node.nodeName === 'mxfile') {
+        const diagrams = node.getElementsByTagName('diagram');
+        if (diagrams.length > 0) {
+          return true;
+        }
+      } else {
+        return data.indexOf('mxGraphModel') === -1;
+      }
+    } catch (error) {
+      return true;
+    }
+    return false;
   }
 }
 
@@ -866,22 +933,26 @@ export class $GF {
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
-  static DEBUG = true;
-  static mapId = {};
+  static DEBUG = false;
+  static notify: CallableFunction = (message: string, type: string) => {};
+  static clearNotify: CallableFunction = () => {};
+  static $Refresh: CallableFunction = () => {};
+  static ctrl: FlowchartCtrl;
+  static events = new flowchartingEvents();
   static utils: {
-    decode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
-    encode: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
+    // ! deprecated : Use DrawioTools
+    decode_deprecated: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
+    encode_deprecated: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     loadJS: (fname: string) => void;
     sleep: (ms: number, mess?: string) => void;
-    // uniqueID: () => string;
-    // getRatioColor: (ratio: number, colorStart: string, colorEnd: string) => string;
+    // ! deprecated :  use genUdi
+    uniqueID_deprecated: () => string;
     matchString: (str: string, pattern: string | undefined, regex?: boolean) => boolean;
     stringToJsRegex: (str: string) => RegExp;
-    isencoded: (data: string) => boolean;
+    // ! deprecated : Use DrawioTools
+    isencoded_deprecated: (data: string) => boolean;
     minify: (text: string) => string;
     prettify: (text: string) => string;
-    getMarky: () => any;
-    // getStepColors: (colorStart: string, colorEnd: string, colorCount: number) => string[];
     evalIt: (code: string) => string;
     loadFile: (fname: string) => string;
     $loadFile: (fname: string) => string;
@@ -906,14 +977,20 @@ export class $GF {
     if (!this.trace) {
       this.trace = GFTrace.init();
     }
+    $GF.ctrl = ctrl;
+    $GF.notify = ctrl.notify.bind(ctrl);
+    $GF.clearNotify = ctrl.clearNotify.bind(ctrl);
+    $GF.$Refresh = $scope.$applyAsync.bind($scope);
+    $GF.events.addSignal('data_changed');
     return this;
   }
 
-  static uniqID(name: string = 'Default'): string {
-    if ($GF.mapId[name] === undefined) {
-      $GF.mapId[name] = 1;
+  static genUid(name?: string): string {
+    const id = nanoid();
+    if (name) {
+      return `${name}-${id}`;
     }
-    return `${name}-${$GF.mapId[name]++}`;
+    return id;
   }
 
   static me(): $GF {
@@ -1005,7 +1082,7 @@ export class $GF {
   static getGrafanaVars(): string[] {
     const templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
     if (templateSrv !== undefined && templateSrv !== null) {
-      return _map(templateSrv.variables, variable => `\${${variable.name}}`);
+      return _.map(templateSrv.variables, (variable) => `\${${variable.name}}`);
     }
     return [];
   }
@@ -1230,10 +1307,7 @@ export class $GF {
   static calculateColorForRatio(beginColor: string, endColor: string, ratio: number): string {
     let color = endColor;
     try {
-      color = chroma
-        .scale([beginColor, endColor])
-        .mode('lrgb')(ratio)
-        .hex();
+      color = chroma.scale([beginColor, endColor]).mode('lrgb')(ratio).hex();
     } catch (error) {
       color = endColor;
     }
@@ -1301,19 +1375,19 @@ export class $GF {
         if (!!window.fetch) {
           // exécuter ma requête fetch ici
           fetch(filePath)
-            .then(response => {
+            .then((response) => {
               if (response.ok) {
                 response
                   .text()
-                  .then(text => {
+                  .then((text) => {
                     $GF.log.info('loadLocalFile called succesfully', filePath);
                     $GF.setVar(varName, text);
                     return text;
                   })
-                  .catch(error => $GF.log.error('Error when download text file', filePath, error));
+                  .catch((error) => $GF.log.error('Error when download text file', filePath, error));
               }
             })
-            .catch(error => $GF.log.error('Error when download file', filePath, error));
+            .catch((error) => $GF.log.error('Error when download file', filePath, error));
         } else {
           // Faire quelque chose avec XMLHttpRequest?
           const txt = $GF.utils.loadFile(fileName);
@@ -1410,12 +1484,12 @@ export class $GF {
   static destroy() {
     let interval: Set<any> = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
     if (interval !== undefined) {
-      interval.forEach(x => $GF.clearUniqInterval(x));
+      interval.forEach((x) => $GF.clearUniqInterval(x));
       interval.clear();
     }
     let timeout: Set<any> = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
     if (timeout !== undefined) {
-      timeout.forEach(x => $GF.clearUniqTimeOut(x));
+      timeout.forEach((x) => $GF.clearUniqTimeOut(x));
       timeout.clear();
     }
   }
@@ -1424,11 +1498,11 @@ export class $GF {
 export class GFTable {
   tableDiv: HTMLDivElement | undefined;
   tableData: gf.TTableData;
-  pressed: boolean = false;
+  pressed = false;
   headerTable: HTMLDivElement | undefined;
   bodyTable: HTMLDivElement | undefined;
-  indexTable: number = 0;
-  startX: number = 0;
+  indexTable = 0;
+  startX = 0;
   startWidth: any = 0;
 
   constructor(table: gf.TTableData, div?: HTMLDivElement) {
@@ -1443,7 +1517,7 @@ export class GFTable {
   getLeft(id: string | number): string {
     let sizes = 0;
     let found = false;
-    this.tableData.columns.forEach(c => {
+    this.tableData.columns.forEach((c) => {
       if (c.id !== id && found === false) {
         sizes += parseInt(c.width, 10);
       }
@@ -1507,13 +1581,15 @@ export class GFTable {
     return false;
   }
 
-  setColumnProperty(id: string | number, property: gf.TTableProperty, value: any): this {
+  setColumnProperty(id: string | number, property: gf.TTableProperty, value: string): this {
     const isNumber = typeof id === 'number';
     for (let index = 0; index < this.tableData.columns.length; index++) {
-      const element = this.tableData.columns[index];
+      const element: any = this.tableData.columns[index];
       if ((isNumber && id === element.index) || (!isNumber && id === element.id)) {
         const prop: string = property;
-        element[prop] = value;
+        if (prop in element) {
+          element[prop] = value;
+        }
       }
     }
     return this;
@@ -1548,10 +1624,10 @@ export class GFTable {
       this.headerTable.style.width = `${width}px`;
       if (this.bodyTable) {
         const rows = this.bodyTable.querySelectorAll('.gf-table-rows-resizable');
-        Array.from(rows).forEach(r => {
+        Array.from(rows).forEach((r) => {
           const cells = r.querySelectorAll('.gf-table-cells-resizable');
           let index = 0;
-          cells.forEach(cell => {
+          cells.forEach((cell) => {
             // CANT BUILD WITH FORCE CASTING
             const node: any = cell;
             if (index === this.indexTable) {
@@ -1596,7 +1672,7 @@ export class GFTable {
   }
 }
 
-declare interface GFTimerUnit {
+declare interface GFTimerStep {
   step: number;
   fn: CallableFunction;
   ms: number;
@@ -1605,77 +1681,120 @@ declare interface GFTimerUnit {
   invalidated: boolean;
   tmId: number;
 }
-/**
- * Async timer call func
- *
- * @export
- * @class GFTimer
- */
 export class GFTimer {
-  iteration: number = 0;
-  cyclic: boolean = false;
-  currentStep: number = 0;
-  uniqId: string;
-  static timers: Map<string, GFTimer>;
-  units: GFTimerUnit[];
+  private _iteration = 0;
+  private _cyclic = false;
+  private _currentStep = 0;
+  readonly uid: string;
+  private static _timers: Map<string, GFTimer>;
+  private _steps: GFTimerStep[];
+  private _finished = false;
 
-  constructor(uniqId: string) {
-    if (GFTimer.timers === undefined) {
-      GFTimer.timers = new Map();
+  private constructor(uid: string) {
+    if (GFTimer._timers === undefined) {
+      GFTimer._timers = new Map();
     }
-    this.units = [];
-    this.uniqId = uniqId;
+    this._steps = [];
+    this.uid = uid;
+  }
+  /**
+   * Return id of GFTimer
+   * @returns string
+   */
+  getUid(): string {
+    return this.uid;
   }
 
-  static stop(uniqId?: string) {
-    if (GFTimer.timers === undefined) {
-      GFTimer.timers = new Map();
+  /**
+   * return true if timer is finished or not started
+   * @returns boolean
+   */
+  isFinished(): boolean {
+    if (this._finished) {
+      return true;
     }
-    if (uniqId !== undefined) {
-      const gftimer = GFTimer.timers.get(uniqId);
-      if (gftimer) {
-        gftimer.cancel();
-        GFTimer.timers.delete(uniqId);
+    if (this._cyclic) {
+      return false;
+    }
+    let allRunned = true;
+    this._steps.forEach((step) => {
+      allRunned = allRunned && step.runned;
+    });
+    return allRunned;
+  }
+
+  static stop(timer?: string | GFTimer) {
+    if (!GFTimer._timers) {
+      GFTimer._timers = new Map();
+    }
+
+    if (typeof timer === 'string') {
+      let result = GFTimer.get(timer);
+      if (!result) {
+        return;
       }
+      timer = result;
+    }
+
+    if (timer) {
+      // Remove one
+      timer.cancel();
+      GFTimer._timers.delete(timer.uid);
     } else {
-      GFTimer.timers.forEach((gftimer, key, map) => {
+      // Remove all
+      GFTimer._timers.forEach((gftimer, key, map) => {
         gftimer.cancel();
       });
-      GFTimer.timers.clear();
+      GFTimer._timers.clear();
     }
   }
 
-  setCyclic(bool: boolean = true): this {
-    this.cyclic = bool;
-    this.iteration = 0;
+  /**
+   * Cyclic or not
+   * @param  {} bool=true
+   * @returns this
+   */
+  setCyclic(bool = true): this {
+    this._cyclic = bool;
+    this._iteration = 0;
     return this;
   }
 
-  setIteration(it: number = 0): this {
-    this.iteration = it;
-    this.cyclic = false;
+  /**
+   * Number of iteration
+   * @param  {} it=0
+   * @returns this
+   */
+  setIteration(it = 0): this {
+    this._iteration = it;
+    this._cyclic = false;
     return this;
   }
 
   _reinit(): this {
-    this.currentStep = 0;
-    this.units.forEach(u => {
+    this._currentStep = 0;
+    this._steps.forEach((u) => {
       u.runned = false;
       u.invalidated = false;
     });
     return this;
   }
 
+  /**
+   * stop & cancel timer
+   * @returns this
+   */
   cancel(): this {
-    this.units.forEach(t => {
-      GFTimer._cleanUnit(t);
+    this._steps.forEach((t) => {
+      GFTimer._cleanStep(t);
     });
+    this._finished = true;
     return this;
   }
 
-  _getDefaultTimerUnit(): GFTimerUnit {
+  _getDefaultStepOption(): GFTimerStep {
     return {
-      step: this.units.length,
+      step: this._steps.length,
       fn: () => {},
       ms: 1000,
       running: false,
@@ -1685,14 +1804,14 @@ export class GFTimer {
     };
   }
 
-  static _cleanUnit(unit: GFTimerUnit) {
-    if (unit !== undefined && unit.invalidated === false && unit.runned === false) {
-      unit.invalidated = true;
-      GFTimer._stopTimeOut(unit.tmId);
+  private static _cleanStep(step: GFTimerStep) {
+    if (step !== undefined && step.invalidated === false && step.runned === false) {
+      step.invalidated = true;
+      GFTimer._stopTimeOut(step.tmId);
     }
   }
 
-  static _stopTimeOut(id: number) {
+  private static _stopTimeOut(id: number) {
     try {
       if (id !== undefined) {
         window.clearTimeout(id);
@@ -1702,60 +1821,86 @@ export class GFTimer {
     }
   }
 
-  static getNewTimer(uniqId): GFTimer {
-    GFTimer.stop(uniqId);
-    const gftimer = new GFTimer(uniqId);
-    GFTimer.timers.set(uniqId, gftimer);
+  /**
+   * Return a new timer
+   * @param  {string|undefined} uid : uniq id
+   * @returns GFTimer
+   */
+  static newTimer(uid?: string): GFTimer {
+    if (!uid) {
+      uid = $GF.genUid();
+    }
+    GFTimer.stop(uid);
+    const gftimer = new GFTimer(uid);
+    GFTimer._timers.set(uid, gftimer);
     return gftimer;
   }
-
-  static getTimer(uniqId): GFTimer | undefined {
-    if (GFTimer.timers !== undefined) {
-      return GFTimer.timers.get(uniqId);
+  /**
+   * Return a timer with uid if exists
+   * @param  {string} uid
+   * @returns GFTimer
+   */
+  static get(uid: string): GFTimer | null {
+    if (GFTimer._timers) {
+      const result = GFTimer._timers.get(uid);
+      if (result) {
+        return result;
+      }
+      return null;
     }
-    return undefined;
+    return null;
   }
 
-  add(fn: CallableFunction, ms: number): this {
-    const unit = this._getDefaultTimerUnit();
+  /**
+   * Add a step function callback
+   * @param  {CallableFunction} fn
+   * @param  {number} ms
+   * @returns this
+   */
+  addStep(fn: CallableFunction, ms: number): this {
+    const unit = this._getDefaultStepOption();
     unit.fn = fn;
     unit.ms = ms;
-    this.units.push(unit);
+    this._steps.push(unit);
     return this;
   }
 
-  run(): this {
-    const length = this.units.length;
+  /**
+   * start the timer
+   * @returns this
+   */
+  start(): this {
+    const length = this._steps.length;
     for (let i = 0; i < length; i++) {
-      const u = this.units[i];
+      const u = this._steps[i];
       u.tmId = window.setTimeout(this._runnable.bind(this, u), u.ms);
     }
     return this;
   }
 
-  _runnable(unit: GFTimerUnit) {
-    if (unit.invalidated === false) {
-      unit.running = true;
+  private _runnable(step: GFTimerStep) {
+    if (step.invalidated === false) {
+      step.running = true;
       try {
-        for (let i = this.currentStep; i < unit.step; i++) {
-          GFTimer._cleanUnit(this.units[i]);
+        for (let i = this._currentStep; i < step.step; i++) {
+          GFTimer._cleanStep(this._steps[i]);
         }
-        unit.fn();
+        step.fn();
       } catch (error) {
         $GF.log.warn('Failed to run fn', error);
       }
-      this.currentStep = unit.step;
-      unit.running = false;
-      unit.runned = true;
-      if (unit.step === this.units.length - 1) {
-        if (this.cyclic || this.iteration > 0) {
+      this._currentStep = step.step;
+      step.running = false;
+      step.runned = true;
+      if (step.step === this._steps.length - 1) {
+        if (this._cyclic || this._iteration > 1) {
           this._reinit();
-          if (this.iteration > 0) {
-            this.iteration = this.iteration - 1;
+          if (this._iteration > 0) {
+            this._iteration = this._iteration - 1;
           }
-          this.run();
+          this.start();
         } else {
-          GFTimer.timers.delete(this.uniqId);
+          GFTimer._timers.delete(this.uid);
         }
       }
     }

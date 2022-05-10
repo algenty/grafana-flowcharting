@@ -3,16 +3,15 @@ import { MetricsPanelCtrl } from 'grafana/app/plugins/sdk';
 import { rulesOptionsTab } from 'rules_options';
 import { flowchartsOptionsTab } from 'flowcharts_options';
 import { inspectOptionsTab } from 'inspect_options';
-import { RulesHandler } from 'rulesHandler';
-import { FlowchartHandler } from 'flowchartHandler';
-import { MetricHandler } from 'metricHandler';
+import { RulesHandler } from 'rules_handler';
+import { FlowchartHandler } from 'flowchart_handler';
+import { MetricHandler } from 'metric_handler';
 // import { PanelEvents } from '@grafana/data';
 import { $GF, GFTimer } from 'globals_class';
 import { XGraph } from 'graph_class';
 import grafana from 'grafana_func';
 import { defaults as _defaults, cloneDeep as _cloneDeep } from 'lodash';
 import { InteractiveMap } from 'mapping_class';
-import { EventHandler } from 'eventHandler';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
   $rootScope: any;
@@ -29,12 +28,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
-  eventHandler: EventHandler;
   onMapping: InteractiveMap;
   uid: string;
   graphHoverTimer: GFTimer | undefined = undefined;
-  mouseIn: boolean = false;
-  firstLoad: boolean = true;
+  mouseIn = false;
+  firstLoad = true;
   panelDefaults: {
     // newFlag: boolean;
     format: string;
@@ -47,7 +45,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   static templateUrl: string;
 
   /**@ngInject*/
-  constructor($scope, $injector, $rootScope, templateSrv) {
+  constructor($scope: any, $injector: any, $rootScope: any, templateSrv: any) {
     super($scope, $injector);
     $GF.init($scope, templateSrv, this.dashboard, this);
     this.$scope.$GF = $GF.me();
@@ -62,11 +60,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.rulesHandler = undefined;
     this.flowchartHandler = undefined;
     this.metricHandler = undefined;
-    this.eventHandler = new EventHandler(this);
     this.onMapping = new InteractiveMap();
     this.parentDiv = document.createElement('div');
     this.flowchartsDiv = document.createElement('div');
-    this.uid = $GF.uniqID(this.constructor.name);
+    this.uid = $GF.genUid();
     this.panelDefaults = FlowchartCtrl.getDefaultData();
     _defaults(this.panel, this.panelDefaults);
     this.panel.graphId = `flowchart_${this.panel.id}`;
@@ -79,27 +76,19 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
     // Force refresh since 7.x
     window.setTimeout(() => {
-      this.onRefresh();
+      this._on_events_refreshed();
     }, 1000);
 
-    // events
-    // console.log('grafana.PanelEvents', grafana.PanelEvents);
-    // this.events.on(grafana.PanelEvents.render, this.onRender.bind(this));
-    this.events.on('render', this.onRender.bind(this));
-    // this.events.on(grafana.PanelEvents.refresh, this.onRefresh.bind(this));
-    this.events.on('refresh', this.onRefresh.bind(this));
-    // this.events.on(grafana.PanelEvents.dataReceived, this.onDataReceived.bind(this));
-    this.events.on('data-received', this.onDataReceived.bind(this));
-    // this.events.on(grafana.PanelEvents.dataError, this.onDataError.bind(this));
-    this.events.on('data-error', this.onDataError.bind(this));
-    // this.events.on(grafana.PanelEvents.dataSnapshotLoad, this.onDataReceived.bind(this));
-    this.events.on('data-snapshot-load', this.onDataReceived.bind(this));
-    // this.events.on(grafana.PanelEvents.editModeInitialized, this.onInitEditMode.bind(this));
-    this.events.on('init-edit-mode', this.onInitEditMode.bind(this));
-    this.events.on('panel-teardown', this.onTearDown.bind(this));
-    grafana.appEvents.on('graph-hover', this.onGraphHover.bind(this), this.$scope);
-    grafana.appEvents.on('graph-hover-clear', this.clearCrosshair.bind(this), this.$scope);
-    this.dashboard.events.on('template-variable-value-updated', this.onVarChanged.bind(this), $scope);
+    this.events.on('render', this._on_events_rendered.bind(this));
+    this.events.on('refresh', this._on_events_refreshed.bind(this));
+    this.events.on('data-received', this._on_events_data_updated.bind(this));
+    this.events.on('data-error', this._on_events_data_error.bind(this));
+    this.events.on('data-snapshot-load', this._on_events_data_updated.bind(this));
+    this.events.on('init-edit-mode', this._on_events_mode_edited.bind(this));
+    this.events.on('panel-teardown', this._on_TearDown.bind(this));
+    grafana.appEvents.on('graph-hover', this._on_events_graph_shared.bind(this), this.$scope);
+    grafana.appEvents.on('graph-hover-clear', this._on_events_graph_unshared.bind(this), this.$scope);
+    this.dashboard.events.on('template-variable-value-updated', this._on_events_variables_changed.bind(this), $scope);
   }
 
   /**
@@ -127,7 +116,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    *
    * @memberof FlowchartCtrl
    */
-  onInitEditMode() {
+  _on_events_mode_edited() {
     this.addEditorTab('Flowcharts', flowchartsOptionsTab, 2);
     this.addEditorTab('Rules', rulesOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
@@ -136,7 +125,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   // 9.1 : FIX for edit mode in grafana 7.x : Not work
   // Clean edit mode
-  onTearDown() {
+  _on_TearDown() {
     // $GF.log.debug('EVENT : ', this.id, 'onTearDown');
   }
 
@@ -146,7 +135,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    * @param {*} event
    * @memberof FlowchartCtrl
    */
-  onGraphHover(event: any) {
+  _on_events_graph_shared(event: any) {
     const flowchartHandler = this.flowchartHandler;
     if (this.dashboard.sharedTooltipModeEnabled() && flowchartHandler !== undefined) {
       const timestamp = event.pos.x;
@@ -156,10 +145,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         self.metricHandler?.refreshMetrics(timestamp);
       };
       if (this.graphHoverTimer === undefined) {
-        this.graphHoverTimer = GFTimer.getNewTimer(timeId);
+        this.graphHoverTimer = GFTimer.newTimer(timeId);
       }
       const ms = $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY;
-      this.graphHoverTimer.add(setGraphHover.bind(this), ms).run();
+      this.graphHoverTimer.addStep(setGraphHover.bind(this), ms).start();
     } else {
       this.graphHoverTimer?.cancel();
       this.graphHoverTimer = undefined;
@@ -172,7 +161,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    * @param {*} event
    * @memberof FlowchartCtrl
    */
-  clearCrosshair(event: any) {
+  _on_events_graph_unshared(event: any) {
     if (this.flowchartHandler !== undefined && this.graphHoverTimer !== undefined) {
       this.graphHoverTimer?.cancel();
       this.graphHoverTimer = undefined;
@@ -180,7 +169,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-  onRefresh() {
+  _on_events_refreshed() {
     const funcName = 'onRefresh';
     $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     this.flowchartHandler?.refresh();
@@ -191,7 +180,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    *
    * @memberof FlowchartCtrl
    */
-  onVarChanged() {
+  _on_events_variables_changed() {
     const funcName = 'onVarChanged';
     $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     if (this.flowchartHandler !== undefined) {
@@ -205,7 +194,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    *
    * @memberof FlowchartCtrl
    */
-  onRender() {
+  _on_events_rendered() {
     const funcName = 'onRender';
     $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
@@ -226,7 +215,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    * @param {*} dataList : Array of dalalist
    * @memberof FlowchartCtrl
    */
-  onDataReceived(dataList) {
+  _on_events_data_updated(dataList: any) {
     const funcName = 'onDataReceived';
     $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
@@ -236,7 +225,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.trace.resume();
   }
 
-  onDataError() {
+  _on_events_data_error() {
     this.render();
   }
 
@@ -296,7 +285,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-  link(scope, elem, attrs, ctrl) {
+  link(scope: any, elem: any, attrs: any, ctrl: any) {
     const funcName = 'link';
     $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
@@ -336,11 +325,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     trc.after();
   }
 
-  onMouseIn(event) {
+  private _on_event_mouse_in(event: MouseEvent) {
     this.mouseIn = true;
   }
 
-  onMouseOut(event) {
+  private _on_event_mouse_out(event: MouseEvent) {
     this.mouseIn = false;
   }
 
@@ -385,28 +374,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // EVENTS
   //
 
-  // exportSVG() {
-  //   const scope = this.$scope.$new(true);
-  //   scope.panel = 'table';
-  //   this.publishAppEvent('show-modal', {
-  //     templateHtml: '<export-data-modal panel="panel" data="tableData"></export-data-modal>',
-  //     scope,
-  //     modalClass: 'modal--narrow',
-  //   });
-  // }
-
-  // setUnitFormat(subItem) {
-  //   this.panel.format = subItem.value;
-  //   this.refresh();
-  // }
-
-  // getVariables() {
-  //   if (this.templateSrv !== undefined && this.templateSrv !== null) {
-  //     return _.map(this.templateSrv.variables, variable => `\${${variable.name}}`);
-  //   }
-  //   return null;
-  // }
-
   $onDestroy() {
     $GF.destroy();
     GFTimer.stop();
@@ -434,9 +401,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-  debug() {
-    console.debug(this);
-  }
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };
@@ -454,7 +418,7 @@ class GFMessage {
   static WARNING_COLOR = 'yellow';
 
   constructor(parent: HTMLDivElement) {
-    this.uid = $GF.uniqID(this.constructor.name);
+    this.uid = $GF.genUid()
     this.container = parent;
     const span = this.container.querySelector<HTMLSpanElement>('#message-text');
     if (span == null) {

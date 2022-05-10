@@ -1,18 +1,21 @@
 import { each as _each } from 'lodash';
-import { $GF, GFTimer } from 'globals_class';
-import * as Drawio from 'drawio_custom';
+import { $GF, GFDrawioTools, GFTimer } from 'globals_class';
+const dioCustom = require('drawio_custom');
 import chroma from 'chroma-js';
-import * as mxcustom from 'mxgraph_custom';
+const mxcustom = require('mxgraph_custom');
 import { Rule } from 'rule_class';
 import { XCell } from 'cell_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 import { InteractiveMap } from 'mapping_class';
+import { flowchartingEvents } from 'flowcharting_base';
 
-declare interface TXGraphDefaultValues {
-  id: Set<string> | undefined;
-  value: Set<string> | undefined;
-  metadata: Set<string> | undefined;
-}
+// declare interface TXGraphDefaultValues {
+//   id: Set<string> | undefined;
+//   value: Set<string> | undefined;
+//   metadata: Set<string> | undefined;
+// }
+
+type XGraphSignals = 'graph_changed' | 'graph_freed' | 'graph_updated';
 
 /**
  * mxGraph interface class
@@ -35,21 +38,16 @@ export class XGraph {
   animation = true;
   zoom = false;
   zoomFactor = 1.2;
-  definition: string = '';
+  definition = '';
   cumulativeZoomFactor = 1;
   grid = false;
   uid: string;
-  // bgColor: string | null = null;
   zoomPercent = '1';
-  // defaultXCellValues: TXGraphDefaultValues = {
-  //   id: undefined,
-  //   value: undefined,
-  //   metadata: undefined,
-  // };
   xcells: XCell[];
   clickBackup: any;
   dbclickBackup: any;
   onMapping: InteractiveMap;
+  events: flowchartingEvents<XGraphSignals> = new flowchartingEvents();
   /**
    * Creates an instance of XGraph.
    * @param {DOM} container
@@ -58,44 +56,88 @@ export class XGraph {
    */
   constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string, ctrl: FlowchartCtrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
-    this.uid = $GF.uniqID(this.constructor.name);
+    this.uid = $GF.genUid(this.constructor.name);
     this.container = container;
     this.type = type;
     this.ctrl = ctrl;
     this.xcells = [];
     this.onMapping = this.ctrl.onMapping;
     this.definition = definition;
+    this.events.addSignal('graph_changed');
+    this.events.addSignal('graph_freed');
+    this.events.addSignal('graph_updated');
     this.init();
     trc.after();
   }
 
-  /**
-   * Valided XML definition
-   *
-   * @static
-   * @param {string} source
-   * @returns
-   * @memberof XGraph
-   */
-  static isValidXml(source: string) {
-    try {
-      const div = document.createElement('div');
-      const g = new Graph(div);
-      if ($GF.utils.isencoded(source)) {
-        source = $GF.utils.decode(source, true, true, true);
+  init() {
+    const funcName = 'init';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    XGraph.initMxGraphLib();
+    if (this.type === 'xml') {
+      if (GFDrawioTools.isEncoded(this.definition)) {
+        this.xmlGraph = GFDrawioTools.decode(this.definition);
+      } else {
+        this.xmlGraph = this.definition;
       }
-      const xmlDoc = mxUtils.parseXml(source);
-      const codec = new mxCodec(xmlDoc);
-      g.getModel().beginUpdate();
-      codec.decode(xmlDoc.documentElement, g.getModel());
-      g.getModel().endUpdate();
-      g.destroy();
-      return true;
-    } catch (error) {
-      $GF.log.error('isValidXml', error);
-      return false;
     }
+    if (this.type === 'csv') {
+      this.csvGraph = this.definition;
+    }
+    this.initMxGraph();
+    // DEBUG MODE
+    const self = this;
+    if ($GF.DEBUG) {
+      console.log('DEBUG ON');
+      this.graph.addListener(mxEvent.CLICK, (_sender: any, _evt: { properties: { cell: any } }) => {
+        console.log('DEBUG CLICK');
+        this.eventDebug(_evt);
+        if (_evt.properties.cell) {
+          const mxcell = _evt.properties.cell;
+          const id = mxcell.id;
+          const state = $GF.getVar(`STATE_${id}`);
+          const xcell = self.getXCell(id);
+          console.log('DEBUG GF STATE', state);
+          console.log('DEBUG XCELL', xcell);
+          console.log('DEBUG MXCELL', mxcell);
+          if (xcell) {
+            const mxcellState = xcell.getMxCellState();
+            console.log('DEBUG MXCELL STATE', mxcellState);
+          }
+        }
+      });
+    }
+    return this;
   }
+
+  change() {
+    const funcName = 'change';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.drawGraph();
+    // this.onChanged();
+    this.events.emit('graph_changed', this);
+    return this;
+  }
+
+  update() {
+    const funcName = 'update';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.updateGraph();
+    this.events.emit('graph_updated', this);
+    return this;
+  }
+
+  free() {
+    const funcName = 'free';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.freeGraph();
+    this.clear();
+    // this.onDestroyed();
+    this.events.emit('graph_freed', this);
+    return this;
+  }
+
+
 
   /**
    * Anonymize Graph
@@ -103,7 +145,7 @@ export class XGraph {
    * @memberof XGraph
    */
   async anonymize() {
-    Drawio.anonymize(this.graph);
+    dioCustom.anonymize(this.graph);
   }
 
   /**
@@ -162,14 +204,15 @@ export class XGraph {
     myWindow.DRAWIO_VIEWER_URL = $GF.plugin.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
     myWindow.DRAW_MATH_URL = $GF.plugin.getDrawioPath() + 'math/';
     myWindow.DRAWIO_CONFIG = null; // Replace with your custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
-    const urlParams = new Object();
+    const urlParams = {
+      sync: 'none', // Disabled realtime
+      lightbox: '1', // Uses lightbox in chromeless mode (larger zoom, no page visible, chromeless)
+      nav: '1', // Enables folding in chromeless mode
+      local: '1', // Uses device mode only
+      embed: '1', // Runs in embed mode
+      ui: 'min',
+    };
     myWindow.urlParams = urlParams;
-    urlParams['sync'] = 'none'; // Disabled realtime
-    urlParams['lightbox'] = '1'; // Uses lightbox in chromeless mode (larger zoom, no page visible, chromeless)
-    urlParams['nav'] = '1'; // Enables folding in chromeless mode
-    urlParams['local'] = '1'; // Uses device mode only
-    urlParams['embed'] = '1'; // Runs in embed mode
-    urlParams['ui'] = 'min';
     myWindow.mxImageBasePath = $GF.plugin.getMxImagePath();
     myWindow.mxBasePath = $GF.plugin.getMxBasePath();
     myWindow.mxLoadStylesheets = true;
@@ -217,7 +260,7 @@ export class XGraph {
     mxEvent.addListener(document, 'keydown', mxUtils.bind(this, this.eventKey));
 
     // CONTEXT MENU
-    this.container.addEventListener('contextmenu', e => e.preventDefault());
+    this.container.addEventListener('contextmenu', (e) => e.preventDefault());
 
     // DB CLICK
     this.graph.dblClick = this.eventDbClick.bind(this);
@@ -251,8 +294,8 @@ export class XGraph {
       }
       if (this.type === 'csv') {
         try {
-          Drawio.importCsv(this.graph, this.csvGraph);
-          this.refreshGraph();
+          dioCustom.importCsv(this.graph, this.csvGraph);
+          this.updateGraph();
         } catch (error) {
           $GF.log.error('Bad CSV format', error);
           this.ctrl.notify('Bad CSV format', 'error');
@@ -303,7 +346,7 @@ export class XGraph {
     let extFonts = model.extFonts;
     if (extFonts) {
       try {
-        extFonts = extFonts.split('|').map(function(ef) {
+        extFonts = extFonts.split('|').map(function (ef: any) {
           var parts = ef.split('^');
           return { name: parts[0], url: parts[1] };
         });
@@ -311,7 +354,7 @@ export class XGraph {
         for (var i = 0; i < extFonts.length; i++) {
           this.graph.addExtFont(extFonts[i].name, extFonts[i].url);
         }
-      } catch (e) {
+      } catch (e: any) {
         $GF.log.error('ExtFonts format error:', e.message);
       }
     }
@@ -352,7 +395,7 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  refreshGraph(): this {
+  updateGraph(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'refresh()');
     this.cumulativeZoomFactor = 1;
     if (this.graph) {
@@ -370,7 +413,7 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  destroyGraph(): this {
+  freeGraph(): this {
     this.graph.destroy();
     this.graph = undefined;
     return this;
@@ -558,23 +601,6 @@ export class XGraph {
   }
 
   /**
-   * Define background color
-   *
-   * @param {this} bgColor
-   * @memberof XGraph
-   */
-  // bgGraph(bgColor): this {
-  //   const $div = $(this.container);
-  //   if (bgColor) {
-  //     this.bgColor = bgColor;
-  //     $div.css('background-color', bgColor);
-  //   } else {
-  //     $div.css('background-color', '');
-  //   }
-  //   return this;
-  // }
-
-  /**
    * Return mxgraph object
    *
    * @returns
@@ -604,8 +630,8 @@ export class XGraph {
   setContent(content: string): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setContent()');
     if (this.type === 'xml') {
-      if ($GF.utils.isencoded(content)) {
-        this.xmlGraph = $GF.utils.decode(content, true, true, true);
+      if (GFDrawioTools.isEncoded(content)) {
+        this.xmlGraph = GFDrawioTools.decode(content);
       } else {
         this.xmlGraph = content;
       }
@@ -638,7 +664,7 @@ export class XGraph {
   getXCellValues(type: gf.TPropertieKey): string[] {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'getXCellValues()');
     const values: string[] = [];
-    this.getXCells().forEach(c => values.push(c.getDefaultValue(type)));
+    this.getXCells().forEach((c) => values.push(c.getDefaultValue(type)));
     trc.after();
     return values;
   }
@@ -691,9 +717,9 @@ export class XGraph {
    * @param {string} pattern - regex like
    * @memberof XGraph
    */
-  async highlightXCells(pattern: string, options?: gf.TRuleMapOptions, bool: boolean = true) {
+  async highlightXCells(pattern: string, options?: gf.TRuleMapOptions, bool = true) {
     const xcells = this.findXCells(pattern, options);
-    xcells.forEach(x => {
+    xcells.forEach((x) => {
       x.highlight(bool);
     });
   }
@@ -743,7 +769,7 @@ export class XGraph {
     for (let i = 0; i < length; i++) {
       const xcell = xcells[i];
       const datas = xcell.getDefaultValues(options);
-      datas.forEach(x => {
+      datas.forEach((x: string) => {
         if (x !== null && x !== undefined && x.length > 0) {
           values.add(x);
         }
@@ -791,12 +817,12 @@ export class XGraph {
             .scale([startColor, endColor])
             .mode('lrgb')
             .colors($GF.CONSTANTS.CONF_COLORS_STEPS + 1);
-          const timer = GFTimer.getNewTimer(timeId);
+          const timer = GFTimer.newTimer(timeId);
           const ms = $GF.CONSTANTS.CONF_COLORS_MS;
           for (let i = 1; i < steps.length; i++) {
-            timer.add(xcell.setStyle.bind(xcell, style, steps[i]), ms * i);
+            timer.addStep(xcell.setStyle.bind(xcell, style, steps[i]), ms * i);
           }
-          timer.run();
+          timer.start();
         } else {
           // let hex = Color(color).hex();
           let hex = chroma(color).hex();
@@ -841,12 +867,12 @@ export class XGraph {
           $GF.clearUniqTimeOut(timeId);
           const steps = $GF.calculateIntervalCounter(begin, end, $GF.CONSTANTS.CONF_ANIMS_STEP);
           const length = steps.length;
-          const timer = GFTimer.getNewTimer(timeId);
+          const timer = GFTimer.newTimer(timeId);
           const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
           for (let i = 1; i < length; i++) {
-            timer.add(xcell.setStyle.bind(xcell, style, steps[i].toString()), ms * i);
+            timer.addStep(xcell.setStyle.bind(xcell, style, steps[i].toString()), ms * i);
           }
-          timer.run();
+          timer.start();
         }
       } catch (error) {
         this.graph.setCellStyles(style, endValue, [xcell]);
@@ -912,10 +938,7 @@ export class XGraph {
         const xcell = this.getXCell(state.cell.id);
         const options = this.onMapping.options !== null ? this.onMapping.options : Rule.getDefaultMapOptions();
         if (xcell !== undefined) {
-          this.onMapping
-            .setXCell(xcell)
-            .setValue(xcell.getDefaultValues(options))
-            .valide();
+          this.onMapping.setXCell(xcell).setValue(xcell.getDefaultValues(options)).valide();
           this.unsetMap();
         }
       }
@@ -986,7 +1009,7 @@ export class XGraph {
    */
   eventKey(evt: KeyboardEvent) {
     if (!mxEvent.isConsumed(evt) && evt.keyCode === 27 /* Escape */) {
-      this.refreshGraph();
+      this.updateGraph();
     }
   }
 
@@ -1067,13 +1090,13 @@ export class XGraph {
     if (this.isAnimated()) {
       const timeId = `setAnimZoomCell-${this.uid}${xcell.getId}`;
       const percents = $GF.calculateIntervalCounter(xcell.percent, percent, $GF.CONSTANTS.CONF_ANIMS_STEP);
-      const timer = GFTimer.getNewTimer(timeId);
+      const timer = GFTimer.newTimer(timeId);
       const length = percents.length;
       const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
       for (let i = 1; i < length; i++) {
-        timer.add(xcell.zoom.bind(xcell, percents[i]), ms * i);
+        timer.addStep(xcell.zoom.bind(xcell, percents[i]), ms * i);
       }
-      timer.run();
+      timer.start();
     } else {
       xcell.zoom(percent);
     }
@@ -1102,12 +1125,12 @@ export class XGraph {
       const widths = $GF.calculateIntervalCounter(dim.width * wdir, width, $GF.CONSTANTS.CONF_ANIMS_STEP);
       const heights = $GF.calculateIntervalCounter(dim.height * hdir, height, $GF.CONSTANTS.CONF_ANIMS_STEP);
       const length = widths.length;
-      const timer = GFTimer.getNewTimer(timeId);
+      const timer = GFTimer.newTimer(timeId);
       const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
       for (let i = 1; i < length; i++) {
-        timer.add(xcell.resize.bind(xcell, widths[i], heights[i]), ms * i);
+        timer.addStep(xcell.resize.bind(xcell, widths[i], heights[i]), ms * i);
       }
-      timer.run();
+      timer.start();
     } else {
       xcell.resize(width, height);
     }
@@ -1160,7 +1183,7 @@ export class XGraph {
     return Graph.decompress(source, true);
   }
 
-  static preview(container: HTMLElement, xcell: XCell, force: boolean = false) {
+  static preview(container: HTMLElement, xcell: XCell, force = false) {
     const g = new Graph(container);
     if (g) {
       // const mxcell = xcell.getMxCell();
@@ -1197,108 +1220,40 @@ export class XGraph {
     }
   }
 
-  //
-  // Udates
-  //
-  init(): this {
-    const funcName = 'init';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    XGraph.initMxGraphLib();
-    if (this.type === 'xml') {
-      if ($GF.utils.isencoded(this.definition)) {
-        this.xmlGraph = $GF.utils.decode(this.definition, true, true, true);
-      } else {
-        this.xmlGraph = this.definition;
-      }
-    }
-    if (this.type === 'csv') {
-      this.csvGraph = this.definition;
-    }
-    this.initMxGraph();
-    // DEBUG MODE
-    const self = this;
-    if ($GF.DEBUG) {
-      console.log('DEBUG ON');
-      this.graph.addListener(mxEvent.CLICK, (_sender, _evt) => {
-        console.log('DEBUG CLICK');
-        this.eventDebug(_evt);
-        if (_evt.properties.cell) {
-          const mxcell = _evt.properties.cell;
-          const id = mxcell.id;
-          const state = $GF.getVar(`STATE_${id}`);
-          const xcell = self.getXCell(id);
-          console.log('DEBUG GF STATE', state);
-          console.log('DEBUG XCELL', xcell);
-          console.log('DEBUG MXCELL', mxcell);
-          if (xcell) {
-            const mxcellState = xcell.getMxCellState();
-            console.log('DEBUG MXCELL STATE', mxcellState);
-          }
-        }
-      });
-    }
-    return this;
-  }
-
-  destroy(): this {
-    const funcName = 'destroy';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.destroyGraph();
-    this.clear();
-    this.onDestroyed();
-    return this;
-  }
-
-  change(): this {
-    const funcName = 'change';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.drawGraph();
-    this.onChanged();
-    return this;
-  }
-
-  refresh(): this {
-    const funcName = 'refresh';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.refreshGraph();
-    this.onRefreshed();
-    return this;
-  }
-
-  complete(): this {
-    this.onCompleted();
-    return this;
-  }
-
-  //
-  // Events
-  //
-  async onDestroyed() {
-    const funcName = 'onDestroyed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'destroyed');
-  }
-
-  async onRefreshed() {
-    const funcName = 'onRefreshed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'refreshed');
-  }
-
-  async onInitialized() {
-    const funcName = 'onInitialized';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'initialized');
-  }
-
-  async onChanged() {
-    const funcName = 'onChanged';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'changed');
-  }
-
-  async onCompleted() {
-    const funcName = 'onCompleted';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  }
+  // complete(): this {
+  //   this.onCompleted();
+  //   return this;
 }
+
+//
+// Events
+//
+// async onDestroyed() {
+//   const funcName = 'onDestroyed';
+//   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+//   this.ctrl.eventHandler.emit(this, 'destroyed');
+// }
+
+// async onRefreshed() {
+//   const funcName = 'onRefreshed';
+//   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+//   this.ctrl.eventHandler.emit(this, 'refreshed');
+// }
+
+// async onInitialized() {
+//   const funcName = 'onInitialized';
+//   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+//   this.ctrl.eventHandler.emit(this, 'initialized');
+// }
+
+// async onChanged() {
+//   const funcName = 'onChanged';
+//   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+//   this.ctrl.eventHandler.emit(this, 'changed');
+// }
+
+// async onCompleted() {
+//   const funcName = 'onCompleted';
+//   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+// }
+// }

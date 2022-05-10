@@ -1,7 +1,7 @@
-import { FlowchartHandler } from 'flowchartHandler';
+import { FlowchartHandler } from 'flowchart_handler';
 import { XGraph } from 'graph_class';
 import { Flowchart } from 'flowchart_class';
-import { $GF, GFTable } from 'globals_class';
+import { $GF, GFDrawioTools, GFTable } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
 export class FlowchartsOptionsCtrl {
@@ -181,7 +181,7 @@ export class FlowchartsOptionsCtrl {
   }
 
   checkSource_onSourceChange(source: string): boolean {
-    const bool = XGraph.isValidXml(source);
+    const bool = GFDrawioTools.isValidXml(source);
     this.errorSourceFlag = !bool;
     if (!bool) {
       this.ctrl.notify('Invalid Xml definition', 'error');
@@ -284,7 +284,7 @@ export class FlowchartsOptionsCtrl {
             response.text().then(text => {
               const fc = this.flowchartHandler?.getCurrentFlowchart();
               if (fc && fc.data.type === 'xml') {
-                const bool = XGraph.isValidXml(text);
+                const bool = GFDrawioTools.isValidXml(text);
                 this.errorSourceFlag = !bool;
                 if (this.errorSourceFlag) {
                   this.ctrl.notify('Response is an invalid Xml definition', 'error');
@@ -343,7 +343,7 @@ export class FlowchartsOptionsCtrl {
 }
 
 /** @ngInject */
-export function flowchartsOptionsTab($q, $sce, uiSegmentSrv) {
+export function flowchartsOptionsTab($q: any, $sce: any, uiSegmentSrv: any) {
   return {
     restrict: 'E',
     scope: true,

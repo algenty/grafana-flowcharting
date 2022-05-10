@@ -1,4 +1,4 @@
-import { FlowchartHandler } from './flowchartHandler';
+import { FlowchartHandler } from './flowchart_handler';
 import { State } from 'state_class';
 import { $GF, GFTable } from 'globals_class';
 import { StateHandler } from 'statesHandler';
@@ -17,15 +17,15 @@ export class InspectOptionsCtrl {
   parentDiv: HTMLDivElement;
   headerTable: HTMLDivElement | undefined;
   bodyTable: HTMLDivElement | undefined;
-  indexTable: number = 0;
-  pressed: boolean = false;
+  indexTable = 0;
+  pressed = false;
   traceEnable: boolean = $GF.trace.isEnabled();
-  startX: number = 0;
+  startX = 0;
   startWidth: any = 0;
   column: any;
 
   /** @ngInject */
-  constructor($scope: gf.TInspectOptionsScope, $element) {
+  constructor($scope: gf.TInspectOptionsScope, $element: any) {
     let n = 0;
     this.statesTableData = {
       data: this.getStates(),
@@ -243,7 +243,7 @@ export class InspectOptionsCtrl {
 }
 
 /** @ngInject */
-export function inspectOptionsTab($q, uiSegmentSrv) {
+export function inspectOptionsTab($q: any, uiSegmentSrv: any) {
   'use strict';
   return {
     restrict: 'E',

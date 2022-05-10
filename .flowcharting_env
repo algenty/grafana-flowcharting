@@ -1,0 +1,4 @@
+#node mode : docker or local
+NODEJS_MODE=docker
+GRAFANA_API_KEY=$GRAFANA_API_KEY
+FLOWCHARTING_BUILT_PATH=./built

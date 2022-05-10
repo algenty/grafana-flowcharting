@@ -1,7 +1,7 @@
 import { XGraph } from 'graph_class';
 import { StateHandler } from 'statesHandler';
-import { FlowchartHandler } from 'flowchartHandler';
-import { $GF } from 'globals_class';
+import { FlowchartHandler } from 'flowchart_handler';
+import { $GF, GFDrawioTools } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
 /**
@@ -22,7 +22,7 @@ export class Flowchart {
   reduce = true;
 
   constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData, ctrl: FlowchartCtrl) {
-    this.uid = $GF.uniqID(this.constructor.name);
+    this.uid = $GF.genUid(this.constructor.name);
     this.data = data;
     this.data.name = name;
     this.container = container;
@@ -207,7 +207,7 @@ export class Flowchart {
         this.setGraphOptions(); //TODO :simplify
         this.xgraph?.setContent(content);
         this.xgraph?.change();
-        this.xgraph?.refresh();
+        this.xgraph?.update();
         //TODO : already in setOptions, if yes call xgraph.change();
         // if (this.data.tooltip) {
         //   this.xgraph?.tooltipGraph(true);
@@ -537,7 +537,7 @@ export class Flowchart {
    * @returns {string}
    * @memberof Flowchart
    */
-  getXml(replaceVarBool: boolean = true): string {
+  getXml(replaceVarBool = true): string {
     if (!replaceVarBool) {
       return this.data.xml;
     }
@@ -551,7 +551,7 @@ export class Flowchart {
    * @returns {string}
    * @memberof Flowchart
    */
-  getCsv(replaceVarBool: boolean = true): string {
+  getCsv(replaceVarBool = true): string {
     if (!replaceVarBool) {
       return this.data.csv;
     }
@@ -565,7 +565,7 @@ export class Flowchart {
    * @returns
    * @memberof Flowchart
    */
-  getSource(replaceVarBool: boolean = true) {
+  getSource(replaceVarBool = true) {
     if (this.data.type === 'xml') {
       return this.getXml(replaceVarBool);
     }
@@ -589,7 +589,7 @@ export class Flowchart {
    * @returns
    * @memberof Flowchart
    */
-  getContent(replaceVarBool: boolean = true): string {
+  getContent(replaceVarBool = true): string {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'getContent()');
     let content: string | null = '';
     if (this.data.download) {
@@ -723,16 +723,16 @@ export class Flowchart {
   }
 
   _decode() {
-    if ($GF.utils.isencoded(this.data.xml)) {
-      this.data.xml = $GF.utils.decode(this.data.xml, true, true, true);
+    if (GFDrawioTools.isEncoded(this.data.xml)) {
+      this.data.xml = GFDrawioTools.decode(this.data.xml);
       // this.data.xml = XGraph.decompress(this.data.xml);
     }
   }
 
   _encode() {
-    if (!$GF.utils.isencoded(this.data.xml)) {
-      this.data.xml = $GF.utils.encode(this.data.xml, true, true, true);
-      // this.data.xml = XGraph.compress(this.data.xml);
+    if (!GFDrawioTools.isEncoded(this.data.xml)) {
+      const xml = GFDrawioTools.encode(this.data.xml);
+      this.data.xml = xml ? xml : this.data.xml;
     }
   }
 
@@ -752,11 +752,11 @@ export class Flowchart {
     }
   }
 
-  toFront(forceRefresh: boolean = false): this {
+  toFront(forceRefresh = false): this {
     this.visible = true;
     this.container.className = 'gf-flowchartShow';
     if (forceRefresh) {
-      this.xgraph?.refresh();
+      this.xgraph?.update();
     }
     return this;
   }
@@ -777,7 +777,7 @@ export class Flowchart {
   destroy(): this {
     const funcName = 'destroy';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.xgraph?.destroy();
+    this.xgraph?.free();
     this.stateHandler?.destroy();
     this.clear();
     this.onDestroyed();
@@ -787,7 +787,7 @@ export class Flowchart {
   refresh(): this {
     const funcName = 'refresh';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.xgraph?.refresh();
+    this.xgraph?.update();
     // this.stateHandler?.refresh();
     // this.refreshStates();
     this.setBackgroundColor(this.data.bgColor);
