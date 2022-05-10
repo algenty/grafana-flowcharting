@@ -413,23 +413,25 @@ export class FlowchartHandler {
 
     // not repeat render if mouse down
     if (!this.mousedown) {
+      console.log('Render', 'DEBUT');
+      console.log('Render', 'Flags', this.flags);
       this.flagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
       const self = this;
       // SOURCE
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_SOURCES)) {
+        console.log('Render', 'Source');
         this.getFlagNames($GF.CONSTANTS.FLOWCHART_CHG_SOURCES).forEach(name => {
           self.load(name).setOptions(name);
         });
       }
-      // console.log('RENDER Flags AFTER SOURCE', clonedeep(this.flags));
 
       // OPTIONS
       if (self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS)) {
+        console.log('Render', 'Options');
         this.getFlagNames($GF.CONSTANTS.FLOWCHART_CHG_OPTIONS).forEach(name => {
           self.setOptions(name);
         });
       }
-      // console.log('RENDER Flags AFTER OPTIONS', clonedeep(this.flags));
 
       // RULES or DATAS
       if (
@@ -437,7 +439,7 @@ export class FlowchartHandler {
         self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS) ||
         self.isFlagedChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER)
       ) {
-        // const ctrl = $GF.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
+        console.log('Render', 'Rules or Datas');
         const rules = this.ctrl.rulesHandler.getRules();
         const metrics = this.ctrl.metricHandler.getMetrics();
 
