@@ -6,8 +6,7 @@ import { inspectOptionsTab } from 'inspect_options';
 import { RulesHandler } from 'rules_handler';
 import { FlowchartHandler } from 'flowchart_handler';
 import { MetricHandler } from 'metric_handler';
-// import { PanelEvents } from '@grafana/data';
-import { $GF, GFTimer } from 'globals_class';
+import { $GF } from 'globals_class';
 import XGraph from 'graph_class';
 import grafana from 'grafana_func';
 import _ from 'lodash';
@@ -57,10 +56,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.rulesHandler = undefined;
     this.flowchartHandler = undefined;
     this.metricHandler = undefined;
-    this.onMapping = new InteractiveMap();
     this.parentDiv = document.createElement('div');
     this.flowchartsDiv = document.createElement('div');
     this.id = $GF.utils.uniqueID();
+    this.onMapping = new InteractiveMap();
     this.panelDefaults = {
       newFlag: true,
       format: 'short',
@@ -153,8 +152,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   onRender() {
-    $GF.log.debug('EVENT : ', this.id, 'onRender', this);
-    $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
+    // $GF.log.debug('EVENT : ', this.id, 'onRender', this);
+    // $GF.log.debug('EDIT MODE', this.id, this.isEditedMode());
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();
@@ -242,7 +241,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-  link(scope: any, elem: any, attrs: any, ctrl: FlowchartCtrl) {
+  link(scope:  any, elem: any, attrs: any, ctrl: any) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
     this.$panelElem = elem;
 
@@ -347,7 +346,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   $onDestroy() {
     $GF.destroy();
-    GFTimer.stop();
   }
 
   /**

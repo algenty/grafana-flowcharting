@@ -447,13 +447,11 @@ export class FlowchartHandler {
           const rules = $GF.ctrl.rulesHandler.getRules();
           const metrics = $GF.ctrl.metricHandler.getMetrics();
           self.async_refreshStates(rules, metrics);
-
+          // Change to async to optimize
+          this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
+          this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS);
+          this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER);
         }
-
-        // Change to async to optimize
-        this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_APL_OPTIONS);
-        this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_DATAS);
-        this.aknowledgeFlagChange($GF.CONSTANTS.FLOWCHART_CHG_GRAPHHOVER);
       }
       // console.log('RENDER Flags AFTER DATAS', clonedeep(this.flags));
 
