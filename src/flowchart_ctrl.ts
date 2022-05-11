@@ -204,7 +204,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.import(panelClone.flowchartsData);
       this.flowchartHandler.refresh();
       this.rulesHandler.import(panelClone.rulesData);
-      this.rulesHandler.refresh();
+      this.rulesHandler.update();
     }
     this.flowchartHandler?.render();
   }

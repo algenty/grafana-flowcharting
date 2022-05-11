@@ -1,5 +1,8 @@
 import { GFEvents } from '../src/flowcharting_base';
-type TestSignals = 'number_add' | 'number_sub' | 'change_flag';
+
+const signalsArray = ['number_add', 'number_sub', 'change_flag'] as const;
+type TestSignals = typeof signalsArray[number];
+
 
 describe('Test Flowcharting Events', () => {
   const myObj = {
@@ -20,9 +23,10 @@ describe('Test Flowcharting Events', () => {
   let events: GFEvents<TestSignals>;
   beforeEach(() => {
     events = new GFEvents();
-    events.declare('number_add');
-    events.declare('number_sub');
-    events.declare('change_flag');
+    events.declare(signalsArray);
+    //events.declare('number_add');
+    //events.declare('number_sub');
+    //events.declare('change_flag');
     myObj.flag = false;
     myObj.myNumber = 0;
   });
@@ -30,7 +34,7 @@ describe('Test Flowcharting Events', () => {
     events.clear();
   });
   describe('Number of signals', () => {
-    test('Should be have 2 signals', () => {
+    test('Should be have 3 signals', () => {
       expect(events.countSignal()).toEqual(3);
     });
     test('should be have no signals', () => {
@@ -87,13 +91,15 @@ describe('Test Flowcharting Events', () => {
       events.connect('number_add', myObj2, myObj2.fnAdd.bind(myObj));
       const myPromise = events.emit('number_add', myObj);
       expect(myObj.myNumber).toEqual(1);
-      await myPromise.then(() => {
-        expect(myObj.myNumber).toEqual(2);
-        finished = true;
-      }).catch(() => {
-        // Generate an error test
-        expect(false).toBe(true);
-      });
+      await myPromise
+        .then(() => {
+          expect(myObj.myNumber).toEqual(2);
+          finished = true;
+        })
+        .catch(() => {
+          // Generate an error test
+          expect(false).toBe(true);
+        });
       expect(finished).toBeTruthy();
     });
   });

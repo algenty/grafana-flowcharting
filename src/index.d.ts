@@ -353,46 +353,47 @@ declare module gf {
     newRule: boolean;
   }
 
-  declare interface TGFMapData {
+  declare interface TDefObjMapData {
     pattern: string;
     hidden: boolean;
   }
 
-  declare interface TShapeMapData extends TGFMapData {
+  declare interface TShapeMapData extends TDefObjMapData {
     style: TStyleColor.Keys;
     colorOn: TColorOnKeys;
   }
 
-  declare interface TEventMapData extends TGFMapData {
+  declare interface TEventMapData extends TDefObjMapData {
     style: TTypeEventKeys;
     comparator: TComparatorKeys;
     eventOn: number;
     value: string;
   }
 
-  declare interface TTextMapData extends TGFMapData {
+  declare interface TTextMapData extends TDefObjMapData {
     textReplace: TTextMethodKeys;
     textPattern: string;
     textOn: TTextOnKeys;
   }
 
-  declare interface TlinkMapData extends TGFMapData {
+  declare interface TlinkMapData extends TDefObjMapData {
     linkUrl: string;
     linkParams: boolean;
     linkOn: TLinkOnKeys;
   }
 
-  declare interface TRangeMapData {
-    from: string | undefined;
-    to: string | undefined;
+// For RANGE AND VALUE MAPPING
+  declare interface TDefMapData {
     text: string | undefined;
     hidden: boolean;
   }
+  declare interface TRangeMapData extends TDefMapData{
+    from: string | undefined;
+    to: string | undefined;
+  }
 
-  declare interface TValueMapData {
+  declare interface TValueMapData extends TDefMapData{
     value: string | undefined;
-    text: string | undefined;
-    hidden: boolean;
   }
 
   // mxGraph API

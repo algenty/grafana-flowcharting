@@ -1,11 +1,14 @@
 import { Rule } from 'rule_class';
 import { sortBy as _sortBy } from 'lodash';
 import { $GF } from 'globals_class';
-import { FlowchartCtrl } from 'flowchart_ctrl';
 import { Observer } from 'rxjs';
 import { ObjectMetric } from 'metric_class';
 import { State } from 'state_class';
 import { Flowchart } from 'flowchart_class';
+import { GFEvents } from 'flowcharting_base';
+
+const ruleHandlerSignalsArray = ['rule_created'] as const;
+type RuleHandlerSignals = typeof ruleHandlerSignalsArray[number];
 
 /**
  * Rules Handler
@@ -15,23 +18,23 @@ import { Flowchart } from 'flowchart_class';
  */
 export class RulesHandler {
   rules: Rule[];
-  ctrl: FlowchartCtrl;
+  // ctrl: FlowchartCtrl;
   uid: string;
   data: gf.TIRulesHandlerData;
   activeRuleIndex = 0;
-  observers$: gf.TObserver<Rule>[] = [];
-  metricsCompleted: boolean = true;
+  events: GFEvents<RuleHandlerSignals> = new GFEvents();
+  // metricsCompleted: boolean = true;
 
   /**
    * Creates an instance of RulesHandler.
    * @param {TIRulesHandlerData} data
    * @memberof RulesHandler
    */
-  constructor(data: gf.TIRulesHandlerData, ctrl: FlowchartCtrl) {
-    this.uid = $GF.uniqID(this.constructor.name);
+  constructor(data: gf.TIRulesHandlerData) {
+    this.uid = $GF.genUid(this.constructor.name);
     this.rules = [];
     this.data = data;
-    this.ctrl = ctrl;
+    this.events.declare(ruleHandlerSignalsArray)
     this.init();
   }
 
@@ -126,7 +129,7 @@ export class RulesHandler {
    */
   addRule(pattern: string): Rule {
     const data = Rule.getDefaultData();
-    const newRule = new Rule(pattern, data, this.ctrl);
+    const newRule = new Rule(pattern, data);
     newRule.initThresholds();
     this.rules.push(newRule);
     this.data.rulesData.push(data);
@@ -170,7 +173,7 @@ export class RulesHandler {
   removeRule(rule: Rule): this {
     $GF.log.debug(this.constructor.name + '.removeRule()', rule);
     const index = rule.getOrder() - 1;
-    rule.destroy();
+    rule.free();
     this.rules.splice(index, 1);
     this.data.rulesData.splice(index, 1);
     this.setOrder();
@@ -190,7 +193,7 @@ export class RulesHandler {
     const data = rule.getData();
     const newData: gf.TIRuleData = Rule.getDefaultData();
     this.reduce();
-    const newRule = new Rule(newData.pattern, newData, this.ctrl);
+    const newRule = new Rule(newData.pattern, newData);
     newRule.import(data);
     newData.alias = `Copy of ${newData.alias}`;
     this.rules.splice(index, 0, newRule);
@@ -267,6 +270,7 @@ export class RulesHandler {
     this.rules.forEach(r => r.clear());
     this.rules = [];
     this.data.rulesData = [];
+    this.events.clear()
     return this;
   }
 
@@ -275,69 +279,72 @@ export class RulesHandler {
   //
   init(): this {
     $GF.log.debug(this.constructor.name + '.init()');
-    this.onInitialized();
+    // this.onInitialized();
     return this;
   }
 
-  refresh(): this {
+  update(): this {
     $GF.log.debug(this.constructor.name + '.refresh()');
-    this.rules.forEach(r => r.refresh());
-    this.onRefreshed();
+    this.rules.forEach(r => r.update());
+    // this.onRefreshed();
     return this;
   }
 
   change(): this {
     $GF.log.debug(this.constructor.name + '.change()');
     this.rules.forEach(r => r.change());
-    this.onChanged();
+    // this.onChanged();
     return this;
   }
 
-  destroy(): this {
+  free(): this {
     $GF.log.debug(this.constructor.name + '.destroy()');
-    this.rules.forEach(r => r.destroy());
+    this.rules.forEach(r => r.free());
     this.clear();
-    this.onDestroyed();
+    // this.onDestroyed();
     return this;
   }
 
-  complete(): this {
-    this.rules.forEach(r => r.complete());
-    this.metricsCompleted = true;
-    this.onCompleted();
-    return this;
-  }
+  // TODO : FIX
+  // complete(): this {
+  //   this.rules.forEach(r => {
+  //     return r.complete();
+  //   });
+  //   this.metricsCompleted = true;
+  //   this.onCompleted();
+  //   return this;
+  // }
 
   //
   // Events
   //
-  async onDestroyed() {
-    const funcName = 'onDestroyed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.unsubscribes(this);
-  }
+  // async onDestroyed() {
+  //   const funcName = 'onDestroyed';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.unsubscribes(this);
+  // }
 
-  async onRefreshed() {
-    const funcName = 'onRefreshed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  }
+  // async onRefreshed() {
+  //   const funcName = 'onRefreshed';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  // }
 
-  async onInitialized() {
-    const funcName = 'onInitialized';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.subscribes(this);
-  }
+  // async onInitialized() {
+  //   const funcName = 'onInitialized';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.subscribes(this);
+  // }
 
-  async onChanged() {
-    const funcName = 'onChanged';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  }
+  // async onChanged() {
+  //   const funcName = 'onChanged';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  // }
 
-  async onCompleted() {
-    const funcName = 'onCompleted';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.ack('rule', 'completed');
-  }
+  // async onCompleted() {
+  //   const funcName = 'onCompleted';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.ack('rule', 'completed');
+  // }
 
   //
   // RXJS Observer
@@ -357,7 +364,7 @@ export class RulesHandler {
         }
         if (metric !== null) {
           for (let i = 0; i < len; i++) {
-            this.rules[i].refreshWithMetric(metric);
+            this.rules[i].updateMetricList(metric);
           }
           this.onRefreshed();
         }
@@ -447,7 +454,7 @@ export class RulesHandler {
       next: (flowchart: Flowchart) => {
         $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
         if (flowchart !== null) {
-          this.refresh();
+          this.update();
         }
       },
       error: err => {

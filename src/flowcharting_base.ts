@@ -13,12 +13,28 @@ export class GFEvents<Signals> {
     // Nothing to do
   }
 
-  declare(signalName: Signals) {
-    if (!this._haveDeclaredSignal(signalName)) {
-      this._declaredSignals.push(signalName);
-      return;
+  static newGFEvents<Signals>(): GFEvents<Signals> {
+    const event: GFEvents<Signals>= new GFEvents();
+    return event;
+  }
+
+  declare(signalName: Readonly<Signals> | Readonly<Signals[]>) {
+    // Array
+    if (Array.isArray(signalName)) {
+      signalName.forEach((s) => {
+        this.declare(s);
+      });
+      return this;
     }
-    $GF.log.warn(`Signal ${signalName} already declared`);
+    // String
+    if(typeof signalName === "string") {
+      if (!this._haveDeclaredSignal(signalName)) {
+        this._declaredSignals.push(signalName);
+        return this;
+      }
+      $GF.log.warn(`Signal ${signalName} already declared`);
+    }
+    return this;
   }
 
   countSignal() {
@@ -52,8 +68,10 @@ export class GFEvents<Signals> {
 
   isConnected(signalName: Signals, objRef: CallableSignalChild): boolean {
     let childs = this._connectedChilds.get(signalName);
-    if(!childs) { return false;}
-    return childs.has(objRef.uid)
+    if (!childs) {
+      return false;
+    }
+    return childs.has(objRef.uid);
   }
 
   disconnect(signalName: Signals, objRef: CallableSignalChild) {
@@ -80,11 +98,11 @@ export class GFEvents<Signals> {
     );
   }
 
-  private _haveDeclaredSignal(signalName: Signals): boolean {
+  private _haveDeclaredSignal(signalName: Readonly<Signals>): boolean {
     return this._declaredSignals.includes(signalName);
   }
 
-  private _getCallableFunc(signalName: Signals): CallableFunction[] {
+  private _getCallableFunc(signalName: Readonly<Signals>): CallableFunction[] {
     if (!this._haveDeclaredSignal(signalName)) {
       $GF.log.error(`${this.toString()} have no declared signal ${signalName}`);
       return [];

@@ -22,10 +22,11 @@ export class Metric {
   dataList: any;
   nullPointMode = 'connected';
   GHValue: string | number | null = null;
-  events: GFEvents<MetricSignals> = new GFEvents()
+  events: GFEvents<MetricSignals> = new GFEvents();
   constructor(dataList: any) {
     this.uid = $GF.genUid(this.constructor.name);
     this.dataList = dataList;
+    this.events.declare(['metric_freed', 'metric_initialized', 'metric_updated']);
   }
 
   setDataList(dataList: any): this {
@@ -118,15 +119,14 @@ export class Metric {
     this.events.emit('metric_updated', this);
   }
 
-  change() {
-  }
+  change() {}
 
-  init(): this {
-    return this;
+  init() {
+    this.events.emit('metric_initialized', this);
   }
 
   async free() {
-    this.clear()
+    this.clear();
     await this.events.emit('metric_freed', this);
     this.events.clear();
   }
@@ -213,6 +213,7 @@ export class SerieMetric extends Metric {
     this._addCustomStats();
     this.name = this.metrics.alias;
     super.init();
+    // this.events.emit('metric_initialized', this); => super class
     return this;
   }
 
@@ -358,10 +359,10 @@ export class TableMetric extends Metric {
     this.init();
   }
 
-  init(): this {
-    super.init();
+  init() {
     this.metrics = this._tableHandler();
     this.name = this.dataList?.refId;
+    super.init();
     return this;
   }
 
@@ -373,7 +374,7 @@ export class TableMetric extends Metric {
       stats: {},
     };
 
-    this.dataList?.columns.forEach((column: { text: { toString: () => string; }; }, columnIndex: string | number) => {
+    this.dataList?.columns.forEach((column: { text: { toString: () => string } }, columnIndex: string | number) => {
       table.columnNames[columnIndex] = column.text;
       if (column.text.toString().toLowerCase() === 'time') {
         table.timeIndex = columnIndex;
@@ -399,17 +400,17 @@ export class TableMetric extends Metric {
     return table;
   }
 
-  _setTableColumnToSensibleDefault() {
+  private _setTableColumnToSensibleDefault() {
     if (this.dataList && this.dataList.columns.length === 1) {
       this.tableColumn = this.dataList?.columns[0].text;
     } else {
-      this.tableColumn = _find(this.dataList.columns, col => {
+      this.tableColumn = _find(this.dataList.columns, (col) => {
         return col.type !== 'time';
       }).text;
     }
   }
 
-  _getFlotPairs(fillStyle: string, table: any) {
+  private _getFlotPairs(fillStyle: string, table: any) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'getFlotPairs()');
     const result: any[] = [];
     const ignoreNulls = fillStyle === 'connected';
@@ -652,10 +653,10 @@ export class TableMetric extends Metric {
    */
   getData(column: string): number[] | Array<{ x: number | Date; y: number }> {
     if (this.metrics.timeColumn) {
-      return this.metrics.datapoints.map((d: { [x: string]: any; }) => {
+      return this.metrics.datapoints.map((d: { [x: string]: any }) => {
         return { x: d[this.metrics.timeColumn], y: d[column] };
       });
     }
-    return this.metrics.datapoints.map((d: { [x: string]: any; }) => d[column]);
+    return this.metrics.datapoints.map((d: { [x: string]: any }) => d[column]);
   }
 }

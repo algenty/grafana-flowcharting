@@ -13,16 +13,21 @@ export type DataMap = gf.TShapeMapData | gf.TTextMapData | gf.TlinkMapData | gf.
 
 export type ObjectVMap = ValueMap | RangeMap;
 export type DataVMap = gf.TValueMapData | gf.TRangeMapData;
+export interface MapDataCommonProp {
+  pattern: string;
+  hidden: boolean; 
+} 
 
-class GFMap {
-  data: DataMap;
+
+class GFMap<MapData extends gf.TDefObjMapData>{
+  data: MapData;
   uid: string;
   type: gf.TTypeMap = 'shape';
   options: gf.TRuleMapOptions = Rule.getDefaultMapOptions();
   reduce = true;
   static methods: any[] = [];
-  constructor(pattern, data: DataMap) {
-    this.uid = $GF.uniqID(this.constructor.name);
+  constructor(pattern: string, data: MapData) {
+    this.uid = $GF.genUid();
     this.data = data;
     this.data.pattern = pattern;
   }
@@ -52,10 +57,10 @@ class GFMap {
   /**
    * return the stored data
    *
-   * @returns {DataMap}
+   * @returns {MapData}
    * @memberof GFMap
    */
-  getData(): DataMap {
+  getData(): MapData {
     return this.data;
   }
 
@@ -214,10 +219,10 @@ class GFMap {
   /**
    * Export current data
    *
-   * @returns {gf.TGFMapData}
+   * @returns {gf.TDefObjMapData}
    * @memberof GFMap
    */
-  export(): gf.TGFMapData {
+  export(): gf.TDefObjMapData {
     return {
       pattern: this.data.pattern,
       hidden: this.data.hidden,
@@ -230,8 +235,8 @@ class GFMap {
  * @class ShapeMap
  * @extends GFMap
  */
-export class ShapeMap extends GFMap {
-  data: gf.TShapeMapData;
+export class ShapeMap extends GFMap<gf.TShapeMapData>{
+  // data: gf.TShapeMapData;
   /**
    * Creates an instance of ShapeMap.
    * @param {string} pattern
@@ -308,8 +313,8 @@ export class ShapeMap extends GFMap {
  * @class TextMap
  * @extends GFMap
  */
-export class TextMap extends GFMap {
-  data: gf.TTextMapData;
+export class TextMap extends GFMap<gf.TTextMapData>{
+  // data: gf.TTextMapData;
 
   constructor(pattern: string, data: gf.TTextMapData) {
     super(pattern, data);
@@ -415,8 +420,8 @@ export class TextMap extends GFMap {
  * @class LinkMap
  * @extends GFMap
  */
-export class LinkMap extends GFMap {
-  data: gf.TlinkMapData;
+export class LinkMap extends GFMap<gf.TlinkMapData>{
+  // data: gf.TlinkMapData;
 
   constructor(pattern: string, data: gf.TlinkMapData) {
     super(pattern, data);
@@ -486,8 +491,8 @@ export class LinkMap extends GFMap {
   }
 }
 
-export class EventMap extends GFMap {
-  data: gf.TEventMapData;
+export class EventMap extends GFMap<gf.TEventMapData>{
+  // data: gf.TEventMapData;
   static methods = $GF.CONSTANTS.EVENTMETHODS;
   validComp: gf.TEventComparator[] = ['lt', 'le', 'eq', 'ne', 'ge', 'gt', 'al'];
   // static shapes: string[] = EventMap.getFormNames();
@@ -643,13 +648,13 @@ export class EventMap extends GFMap {
   }
 }
 
-class VMAP {
-  data: DataVMap;
+class VMAP<VMAPType extends gf.TDefMapData>{
+  data: VMAPType;
   uid: string;
   hidden = false;
   reduce = true;
-  constructor(data: DataVMap) {
-    this.uid = $GF.uniqID(this.constructor.name);
+  constructor(data: VMAPType) {
+    this.uid = $GF.genUid(this.constructor.name);
     this.data = data;
   }
 
@@ -664,7 +669,7 @@ class VMAP {
   //   return this.id;
   // }
 
-  getData(): DataVMap {
+  getData(): VMAPType {
     return this.data;
   }
 
@@ -697,9 +702,9 @@ class VMAP {
   }
 }
 
-export class ValueMap extends VMAP {
-  data: gf.TValueMapData;
-  constructor(value: string = '', text: string = '', data: gf.TValueMapData) {
+export class ValueMap extends VMAP<gf.TValueMapData>{
+  // data: gf.TValueMapData;
+  constructor(value = '', text = '', data: gf.TValueMapData) {
     super(data);
     this.data = data;
     this.data.value = value;
@@ -777,13 +782,13 @@ export class ValueMap extends VMAP {
   }
 }
 
-export class RangeMap extends VMAP {
-  data: gf.TRangeMapData;
+export class RangeMap extends VMAP<gf.TRangeMapData>{
+  // data: gf.TRangeMapData;
   reduce = true;
   uid: string;
-  constructor(from: string = '', to: string = '', text: string = '', data: gf.TRangeMapData) {
+  constructor(from = '', to = '', text = '', data: gf.TRangeMapData) {
     super(data);
-    this.uid = $GF.uniqID(this.constructor.name);
+    this.uid = $GF.genUid();
     this.data = data;
     this.data.from = from;
     this.data.to = to;
@@ -834,7 +839,7 @@ export class RangeMap extends VMAP {
       (value !== undefined && typeof value === 'string' && value.length > 0) ||
       (value !== undefined && typeof value === 'number')
     ) {
-      let v: number = Number(value);
+      let v = Number(value);
       if (
         (this.data.from !== undefined && typeof value === 'string' && this.data.from.length > 0) ||
         (this.data.from !== undefined && typeof value === 'number')
@@ -882,7 +887,7 @@ export class RangeMap extends VMAP {
 }
 
 export class InteractiveMap {
-  active: boolean = false;
+  active = false;
   map: ObjectMap | null = null;
   xcell: XCell | null = null;
   focusId: string | null = null;

@@ -377,7 +377,7 @@ export class FlowchartHandler {
   removeFlowchart(name: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'removeFlowchart()');
     const fc = this.getFlowchart(name);
-    fc.destroy();
+    fc.free();
     const index = this.flowcharts.indexOf(fc);
     this.flowcharts.splice(index, 1);
     this.data.flowcharts.splice(index, 1);
@@ -410,7 +410,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   refreshFlowchart(): this {
-    this.flowcharts.forEach(f => f.refresh());
+    this.flowcharts.forEach(f => f.update());
     return this;
   }
 
@@ -420,7 +420,7 @@ export class FlowchartHandler {
   }
 
   refreshRules(): this {
-    this.ctrl.rulesHandler?.refresh();
+    this.ctrl.rulesHandler?.update();
     return this;
   }
 
@@ -573,7 +573,7 @@ export class FlowchartHandler {
   }
 
   destroy(): this {
-    this.flowcharts.forEach(f => f.destroy());
+    this.flowcharts.forEach(f => f.free());
     this.clear();
     this.onDestroyed();
     return this;

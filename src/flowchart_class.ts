@@ -3,6 +3,9 @@ import { StateHandler } from 'statesHandler';
 import { FlowchartHandler } from 'flowchart_handler';
 import { $GF, GFDrawioTools } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
+import { GFEvents } from 'flowcharting_base';
+
+type FlowchartSignals = 'flowchart_initialized' | 'flowchart_changed' | 'flowchart_freed' | 'flowchart_updated';
 
 /**
  * Flowchart handler
@@ -20,6 +23,7 @@ export class Flowchart {
   uid: string;
   visible = false;
   reduce = true;
+  events: GFEvents<FlowchartSignals> = new GFEvents();
 
   constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData, ctrl: FlowchartCtrl) {
     this.uid = $GF.genUid(this.constructor.name);
@@ -27,6 +31,7 @@ export class Flowchart {
     this.data.name = name;
     this.container = container;
     this.ctrl = ctrl;
+    this.events.declare(['flowchart_initialized', 'flowchart_changed', 'flowchart_freed', 'flowchart_updated']);
     this.init();
   }
 
@@ -103,6 +108,43 @@ export class Flowchart {
     return this;
   }
 
+  async free() {
+    const funcName = 'destroy';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.xgraph?.free();
+    this.stateHandler?.destroy();
+    await this.events.emit('flowchart_freed', this);
+    this.clear();
+  }
+
+  update() {
+    const funcName = 'refresh';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.xgraph?.update();
+    // this.stateHandler?.refresh();
+    // this.refreshStates();
+    this.setBackgroundColor(this.data.bgColor);
+    // this.onRefreshed();
+    this.events.emit('flowchart_updated', this);
+  }
+
+  change() {
+    const funcName = 'change';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.changeGraph();
+    this.events.emit('flowchart_changed', this);
+  }
+
+  init() {
+    const funcName = 'init';
+    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.initGraph();
+    this.initStateHandler();
+    this.events.emit('flowchart_initialized', this);
+    // this.onInitialized();
+  }
+
+
   /**
    * Return the default XML when new
    *
@@ -164,7 +206,7 @@ export class Flowchart {
   //   });
   //   trc.after();
   //   return this;
-  // }
+  // } 
 
   initStateHandler(): this {
     if (this.xgraph) {
@@ -774,71 +816,34 @@ export class Flowchart {
   //
   // Updates
   //
-  destroy(): this {
-    const funcName = 'destroy';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.xgraph?.free();
-    this.stateHandler?.destroy();
-    this.clear();
-    this.onDestroyed();
-    return this;
-  }
-
-  refresh(): this {
-    const funcName = 'refresh';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.xgraph?.update();
-    // this.stateHandler?.refresh();
-    // this.refreshStates();
-    this.setBackgroundColor(this.data.bgColor);
-    this.onRefreshed();
-    return this;
-  }
-
-  change(): this {
-    const funcName = 'change';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.changeGraph();
-    this.onChanged();
-    return this;
-  }
-
-  init(): this {
-    const funcName = 'init';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.initGraph();
-    this.initStateHandler();
-    this.onInitialized();
-    return this;
-  }
 
   //
   // Events
   //
-  async onDestroyed() {
-    const funcName = 'onDestroyed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'destroyed');
-    this.ctrl.eventHandler.unsubscribes(this);
-  }
+  // async onDestroyed() {
+  //   const funcName = 'onDestroyed';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.emit(this, 'destroyed');
+  //   this.ctrl.eventHandler.unsubscribes(this);
+  // }
 
-  async onRefreshed() {
-    const funcName = 'onRefreshed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'refreshed');
-  }
+  // async onRefreshed() {
+  //   const funcName = 'onRefreshed';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.emit(this, 'refreshed');
+  // }
 
-  async onInitialized() {
-    const funcName = 'onInitialized';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.subscribes(this);
-    this.ctrl.eventHandler.emit(this, 'initialized');
-  }
+  // async onInitialized() {
+  //   const funcName = 'onInitialized';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.subscribes(this);
+  //   this.ctrl.eventHandler.emit(this, 'initialized');
+  // }
 
-  async onChanged() {
-    const funcName = 'onChanged';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'changed');
-    // this.refresh(); //TODO : Verify
-  }
+  // async onChanged() {
+  //   const funcName = 'onChanged';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.emit(this, 'changed');
+  //   // this.refresh(); //TODO : Verify
+  // }
 }
