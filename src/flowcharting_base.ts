@@ -16,7 +16,6 @@ export class GFEvents<Signals> {
   declare(signalName: Signals) {
     if (!this._haveDeclaredSignal(signalName)) {
       this._declaredSignals.push(signalName);
-      console.log("🚀 ~ file: flowcharting_base.ts ~ line 19 ~ GFEvents<Signals> ~ declare ~ this._declaredSignals", this._declaredSignals)
       return;
     }
     $GF.log.warn(`Signal ${signalName} already declared`);
@@ -24,13 +23,11 @@ export class GFEvents<Signals> {
 
   countSignal() {
     return this._declaredSignals.length;
-    console.log("🚀 ~ file: flowcharting_base.ts ~ line 26 ~ GFEvents<Signals> ~ countSignal ~ this._declaredSignals", this._declaredSignals)
   }
 
   clear() {
     this._connectedChilds.clear();
     this._declaredSignals = [];
-    console.log("🚀 ~ file: flowcharting_base.ts ~ line 32 ~ GFEvents<Signals> ~ clear ~ this._declaredSignals", this._declaredSignals)
   }
 
   connect(signalName: Signals, objRef: CallableSignalChild, callfn: CallableFunction): boolean {
@@ -55,7 +52,6 @@ export class GFEvents<Signals> {
 
   isConnected(signalName: Signals, objRef: CallableSignalChild): boolean {
     let childs = this._connectedChilds.get(signalName);
-    console.log("🚀 ~ file: flowcharting_base.ts ~ line 58 ~ GFEvents<Signals> ~ isConnected ~ childs", childs)
     if(!childs) { return false;}
     return childs.has(objRef.uid)
   }
@@ -76,7 +72,6 @@ export class GFEvents<Signals> {
 
   emit(signalName: Signals, objToEmit: unknown) {
     const _childFn = this._getCallableFunc(signalName);
-    console.log("🚀 ~ file: flowcharting_base.ts ~ line 75 ~ GFEvents<Signals> ~ emit ~ _childFn", _childFn)
     return Promise.all(
       _childFn.map(async (fn) => {
         const result = fn(objToEmit);
@@ -95,7 +90,6 @@ export class GFEvents<Signals> {
       return [];
     }
     const childs = this._connectedChilds.get(signalName);
-    console.log("🚀 ~ file: flowcharting_base.ts ~ line 98 ~ GFEvents<Signals> ~ _getCallableFunc ~ childs", childs)
     if (childs) {
       return Array.from(childs.values());
     }
