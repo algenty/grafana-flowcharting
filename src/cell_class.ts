@@ -105,18 +105,18 @@ export class XCell {
     return value;
   }
 
-  private _sameString(def: any, cur: any): boolean {
-    return def === cur;
-  }
+  // private _sameString(def: any, cur: any): boolean {
+  //   return def === cur;
+  // }
 
-  private _isTypeChanged(type: gf.TXCellDefaultValueKeys): boolean {
-    const def = this.getDefaultValue(type);
-    const cur = this.getValue(type);
-    if (['id', 'value', 'link'].includes(type)) {
-      return this._sameString(def, cur);
-    }
-    return false;
-  }
+  // private _isTypeChanged(type: gf.TXCellDefaultValueKeys): boolean {
+  //   const def = this.getDefaultValue(type);
+  //   const cur = this.getValue(type);
+  //   if (['id', 'value', 'link'].includes(type)) {
+  //     return this._sameString(def, cur);
+  //   }
+  //   return false;
+  // }
 
   private _setDefaultValue(type: gf.TXCellDefaultValueKeys): gf.TXCellValueGF {
     switch (type) {

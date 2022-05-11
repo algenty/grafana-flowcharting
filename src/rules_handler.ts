@@ -1,10 +1,6 @@
 import { Rule } from 'rule_class';
 import { sortBy as _sortBy } from 'lodash';
 import { $GF } from 'globals_class';
-import { Observer } from 'rxjs';
-import { ObjectMetric } from 'metric_class';
-import { State } from 'state_class';
-import { Flowchart } from 'flowchart_class';
 import { GFEvents } from 'flowcharting_base';
 
 const ruleHandlerSignalsArray = ['rule_created'] as const;
@@ -23,7 +19,7 @@ export class RulesHandler {
   data: gf.TIRulesHandlerData;
   activeRuleIndex = 0;
   events: GFEvents<RuleHandlerSignals> = new GFEvents();
-  // metricsCompleted: boolean = true;
+  // metricsCompleted =true;
 
   /**
    * Creates an instance of RulesHandler.
@@ -349,120 +345,119 @@ export class RulesHandler {
   //
   // RXJS Observer
   //
-  getMetric$changed(): Observer<ObjectMetric> {
-    const self = this;
-    const funcName = 'getMetric$changed';
-    return {
-      next: (metric: ObjectMetric) => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-        const len = this.rules.length;
-        if (self.metricsCompleted) {
-          self.metricsCompleted = false;
-          for (let i = 0; i < len; i++) {
-            this.rules[i].clearMetrics();
-          }
-        }
-        if (metric !== null) {
-          for (let i = 0; i < len; i++) {
-            this.rules[i].updateMetricList(metric);
-          }
-          this.onRefreshed();
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
-      },
-    };
-  }
+  // getMetric$changed(): Observer<ObjectMetric> {
+  //   const funcName = 'getMetric$changed';
+  //   return {
+  //     next: (metric: ObjectMetric) => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       const len = this.rules.length;
+  //       if (this.metricsCompleted) {
+  //         this.metricsCompleted = false;
+  //         for (let i = 0; i < len; i++) {
+  //           this.rules[i].clearMetrics();
+  //         }
+  //       }
+  //       if (metric !== null) {
+  //         for (let i = 0; i < len; i++) {
+  //           this.rules[i].updateMetricList(metric);
+  //         }
+  //         this.onRefreshed();
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+  //     },
+  //   };
+  // }
 
-  getMetric$refreshed(): Observer<ObjectMetric> {
-    const self = this;
-    const funcName = 'getMetric$refreshed';
-    return {
-      next: (metric: ObjectMetric) => {
-        $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
-        if (metric !== null) {
-          const len = self.rules.length;
-          for (let i = 0; i < len; i++) {
-            if (self.rules[i].hasMetric(metric)) {
-              self.metricsCompleted = false;
-            }
-          }
-        }
-      },
-      error: err => {
-        $GF.log.error(`${self.constructor.name}.${funcName}().next() : ${self.uid}`, err);
-      },
-      complete: () => {
-        $GF.log.debug(`${self.constructor.name}.${funcName}().complete() : ${self.uid}`);
-      },
-    };
-  }
+  // getMetric$refreshed(): Observer<ObjectMetric> {
+  //   const self = this;
+  //   const funcName = 'getMetric$refreshed';
+  //   return {
+  //     next: (metric: ObjectMetric) => {
+  //       $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
+  //       if (metric !== null) {
+  //         const len = self.rules.length;
+  //         for (let i = 0; i < len; i++) {
+  //           if (self.rules[i].hasMetric(metric)) {
+  //             self.metricsCompleted = false;
+  //           }
+  //         }
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(`${self.constructor.name}.${funcName}().next() : ${self.uid}`, err);
+  //     },
+  //     complete: () => {
+  //       $GF.log.debug(`${self.constructor.name}.${funcName}().complete() : ${self.uid}`);
+  //     },
+  //   };
+  // }
 
-  getMetric$completed(): Observer<ObjectMetric> {
-    const self = this;
-    const funcName = 'getMetric$completed';
-    return {
-      next: (metric: ObjectMetric) => {
-        $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
-        if (metric === null && !self.metricsCompleted) {
-          // const len = self.rules.length;
-          // for (let i = 0; i < len; i++) {
-          //   self.rules[i].complete();
-          // }
-          self.complete();
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
-      },
-    };
-  }
+  // getMetric$completed(): Observer<ObjectMetric> {
+  //   const self = this;
+  //   const funcName = 'getMetric$completed';
+  //   return {
+  //     next: (metric: ObjectMetric) => {
+  //       $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
+  //       if (metric === null && !self.metricsCompleted) {
+  //         // const len = self.rules.length;
+  //         // for (let i = 0; i < len; i++) {
+  //         //   self.rules[i].complete();
+  //         // }
+  //         self.complete();
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+  //     },
+  //   };
+  // }
 
-  getState$initialized(): Observer<State> {
-    const self = this;
-    const funcName = 'getState$initialized';
-    return {
-      next: (state: State) => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-        if (state !== null) {
-          const len = self.rules.length;
-          for (let i = 0; i < len; i++) {
-            state.changeWithRule(self.rules[i]);
-          }
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
-      },
-    };
-  }
+  // getState$initialized(): Observer<State> {
+  //   const self = this;
+  //   const funcName = 'getState$initialized';
+  //   return {
+  //     next: (state: State) => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       if (state !== null) {
+  //         const len = self.rules.length;
+  //         for (let i = 0; i < len; i++) {
+  //           state.changeWithRule(self.rules[i]);
+  //         }
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+  //     },
+  //   };
+  // }
 
-  getFlowchart$changed(): Observer<Flowchart> {
-    // const self = this;
-    const funcName = 'getState$initialized';
-    return {
-      next: (flowchart: Flowchart) => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-        if (flowchart !== null) {
-          this.update();
-        }
-      },
-      error: err => {
-        $GF.log.error(err);
-      },
-      complete: () => {
-        $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
-      },
-    };
-  }
+  // getFlowchart$changed(): Observer<Flowchart> {
+  //   // const self = this;
+  //   const funcName = 'getState$initialized';
+  //   return {
+  //     next: (flowchart: Flowchart) => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       if (flowchart !== null) {
+  //         this.update();
+  //       }
+  //     },
+  //     error: err => {
+  //       $GF.log.error(err);
+  //     },
+  //     complete: () => {
+  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+  //     },
+  //   };
+  // }
 }

@@ -172,7 +172,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   _on_events_refreshed() {
     const funcName = 'onRefresh';
     $GF.log.debug(`${this.constructor.name}.${funcName}()`);
-    this.flowchartHandler?.refresh();
+    this.flowchartHandler?.update();
   }
 
   /**
@@ -202,7 +202,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.editModeFalse();
       const panelClone = _cloneDeep(this.panel);
       this.flowchartHandler.import(panelClone.flowchartsData);
-      this.flowchartHandler.refresh();
+      this.flowchartHandler.update();
       this.rulesHandler.import(panelClone.rulesData);
       this.rulesHandler.update();
     }
@@ -254,17 +254,17 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.log.debug(`${this.constructor.name}.${funcName}()`);
     // METRICS / DATAS
     if (!this.metricHandler) {
-      this.metricHandler = new MetricHandler(this);
+      this.metricHandler = new MetricHandler();
     }
     this.metricHandler.clear();
     // FLOWCHARTS
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
-      this.flowchartHandler = new FlowchartHandler(newFlowchartsData, this);
+      this.flowchartHandler = new FlowchartHandler(newFlowchartsData);
       this.flowchartHandler.import(this.panel.flowchartsData);
       this.panel.flowchartsData = newFlowchartsData;
     } else {
-      this.flowchartHandler.destroy();
+      this.flowchartHandler.free();
       this.flowchartHandler.import(this.panel.flowchartsData);
     }
     if (this.panel.newFlag && this.flowchartHandler && this.flowchartHandler.countFlowcharts() === 0) {
@@ -276,7 +276,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.rulesHandler.clear();
     } else {
       const newRulesData = RulesHandler.getDefaultData();
-      this.rulesHandler = new RulesHandler(newRulesData, this);
+      this.rulesHandler = new RulesHandler(newRulesData);
       this.rulesHandler.import(this.panel.rulesData);
       this.panel.rulesData = newRulesData;
     }
@@ -325,13 +325,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     trc.after();
   }
 
-  private _on_event_mouse_in(event: MouseEvent) {
-    this.mouseIn = true;
-  }
+  // onMouseIn(event: MouseEvent) {
+  //   this.mouseIn = true;
+  // }
 
-  private _on_event_mouse_out(event: MouseEvent) {
-    this.mouseIn = false;
-  }
+  // onMouseOut(event: MouseEvent) {
+  //   this.mouseIn = false;
+  // }
 
   isMouseInPanel(): boolean {
     return this.mouseIn;

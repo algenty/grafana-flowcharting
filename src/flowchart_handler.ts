@@ -1,14 +1,16 @@
 import { Flowchart } from 'flowchart_class';
 import { $GF } from 'globals_class';
 import { InteractiveMap, ObjectMap } from 'mapping_class';
-import { FlowchartCtrl } from 'flowchart_ctrl';
+import { GFEvents } from 'flowcharting_base';
+
+const flowchartHandlerSignalsArray = ['flowchart_created', 'flowchart_deleted'] as const;
+type FlowchartHandlerSignals = typeof flowchartHandlerSignalsArray[number];
 
 /**
  * Class FlowchartHandler
  */
 export class FlowchartHandler {
-  parentDiv: HTMLDivElement;
-  ctrl: FlowchartCtrl;
+  _parentDiv: HTMLDivElement;
   flowcharts: Flowchart[] = [];
   currentFlowchartName = 'Main'; // name of current Flowchart
   currentFlowchart: Flowchart | undefined; // Current flowchart obj
@@ -25,6 +27,7 @@ export class FlowchartHandler {
   onEdit = false; // editor open or not
   postedId: string | undefined = undefined; // Current ID on edit mode
   editorWindow: Window | null = null; // Window draw.io editor
+  events: GFEvents<FlowchartHandlerSignals> = GFEvents.create(flowchartHandlerSignalsArray);
 
   /**
    * Creates an instance of FlowchartHandler to handle flowchart
@@ -34,13 +37,14 @@ export class FlowchartHandler {
    * @param {*} data - Empty data to store
    * @memberof FlowchartHandler
    */
-  constructor(data: gf.TFlowchartHandlerData, ctrl: FlowchartCtrl) {
+  constructor(data: gf.TFlowchartHandlerData) {
     FlowchartHandler.getDefaultDioGraph();
-    this.uid = $GF.uniqID(this.constructor.name);
-    this.ctrl = ctrl;
-    (this.parentDiv = this.ctrl.flowchartsDiv), (this.data = data);
+    this.uid = $GF.genUid(this.constructor.name);
+    this._parentDiv = $GF.ctrl.flowchartsDiv;
+    this.data = data;
     this.currentFlowchartName = 'Main';
-    this.onMapping = ctrl.onMapping;
+    // TODO : Fix onMapping
+    this.onMapping = $GF.ctrl.onMapping;
 
     // Events Render
     // this.ctrl.events.on('render', () => {
@@ -79,7 +83,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   import(obj: any): this {
-    this.destroy();
+    this.free();
     if (obj !== undefined && obj !== null) {
       // For version 0.5.0 and under
       let tmpFc: any[];
@@ -346,7 +350,7 @@ export class FlowchartHandler {
     div.style.bottom = '0px';
     div.style.top = '0px';
     // div.style.overflow = 'none';
-    this.parentDiv.appendChild(div);
+    this._parentDiv.appendChild(div);
     return div;
   }
 
@@ -361,7 +365,7 @@ export class FlowchartHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addFlowchart()');
     const data = Flowchart.getDefaultData();
     const container = this.createContainer();
-    const flowchart = new Flowchart(name, container, data, this.ctrl);
+    const flowchart = new Flowchart(name, container, data);
     this.flowcharts.push(flowchart);
     this.data.flowcharts.push(data);
     trc.after();
@@ -395,8 +399,8 @@ export class FlowchartHandler {
     // not repeat render if mouse down
     if (!this.mousedown || this.firstLoad) {
       this.firstLoad = false;
-      this.refresh();
-      this.ctrl.renderingCompleted();
+      this.update();
+      $GF.ctrl.renderingCompleted();
     }
     //TODO : Update only if mouse up
     // this.refresh();
@@ -409,23 +413,25 @@ export class FlowchartHandler {
    * @returns {this}
    * @memberof FlowchartHandler
    */
-  refreshFlowchart(): this {
+  updateFlowchart(): this {
     this.flowcharts.forEach(f => f.update());
     return this;
   }
 
-  refreshMetrics(): this {
-    this.ctrl.metricHandler?.update();
+  updateMetrics(): this {
+    // TODO : Fix it
+    // this.ctrl.metricHandler?.update();
     return this;
   }
 
-  refreshRules(): this {
-    this.ctrl.rulesHandler?.update();
+  updateRules(): this {
+    // TODO : Fix it
+    // this.ctrl.rulesHandler?.update();
     return this;
   }
 
   refreshStates(): this {
-    this.flowcharts.forEach(f => f.getStateHandler()?.refresh());
+    this.flowcharts.forEach(f => f.getStateHandler()?.update());
     return this;
   }
 
@@ -491,7 +497,7 @@ export class FlowchartHandler {
       // if (event.source) {
       //   if (!(event.source instanceof MessagePort) && !(event.source instanceof ServiceWorker)) {
       if (fc !== undefined) {
-        this.ctrl.notify('Sending current data to draw.io editor', 'info');
+        $GF.notify('Sending current data to draw.io editor', 'info');
         event.source.postMessage(fc.data.xml, event.origin);
         this.postedId = fc.uid;
       }
@@ -508,7 +514,7 @@ export class FlowchartHandler {
         if (this.postedId !== undefined) {
           const fc = this.getFlowchartById(this.postedId);
           if (fc !== undefined) {
-            this.ctrl.notify('Received data from draw.io editor, refresh in progress', 'info');
+            $GF.notify('Received data from draw.io editor, refresh in progress', 'info');
             fc.setContent(event.data);
             this.change();
             this.render();
@@ -522,7 +528,7 @@ export class FlowchartHandler {
         this.onEdit = false;
         this.postedId = undefined;
         window.removeEventListener('message', this.listenMessage.bind(this), false);
-        this.ctrl.notify('Draw.io editor closed', 'info');
+        $GF.notify('Draw.io editor closed', 'info');
       }
     }
   }
@@ -539,7 +545,7 @@ export class FlowchartHandler {
     const urlParams = `${urlEditor}?embed=1&spin=1&libraries=1&ui=${theme}&ready=fc-${fc.uid}&src=grafana`;
     this.editorWindow = window.open(urlParams, 'MxGraph Editor', 'width=1280, height=720');
     this.onEdit = true;
-    this.ctrl.notify(`Opening current flowchart on draw.io editor`, 'info');
+    $GF.notify(`Opening current flowchart on draw.io editor`, 'info');
     window.addEventListener('message', this.listenMessage.bind(this), false);
   }
 
@@ -556,56 +562,56 @@ export class FlowchartHandler {
   //
   // updates
   //
-  refresh(): this {
+  update(): this {
     // this.refreshMetrics();
     // this.refreshRules();
     // this.refreshStates();
-    this.refreshFlowchart();
-    this.onRefreshed();
+    this.updateFlowchart();
+    // this.onRefreshed();
     return this;
   }
 
   change(): this {
     this.flowcharts.forEach(f => f.change());
     this.setCurrentFlowchart('Main');
-    this.onChanged();
+    // this.onChanged();
     return this;
   }
 
-  destroy(): this {
+  free(): this {
     this.flowcharts.forEach(f => f.free());
     this.clear();
-    this.onDestroyed();
+    // this.onDestroyed();
     return this;
   }
 
   init(): this {
-    this.onInitialized();
+    // this.onInitialized();
     return this;
   }
 
   //
   // Events
   //
-  async onDestroyed() {
-    const funcName = 'onDestroyed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.unsubscribes(this);
-  }
+  // async onDestroyed() {
+  //   const funcName = 'onDestroyed';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.unsubscribes(this);
+  // }
 
-  async onRefreshed() {
-    const funcName = 'onRefreshed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  }
+  // async onRefreshed() {
+  //   const funcName = 'onRefreshed';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  // }
 
-  async onInitialized() {
-    const funcName = 'onInitialized';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.subscribes(this);
-  }
+  // async onInitialized() {
+  //   const funcName = 'onInitialized';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.subscribes(this);
+  // }
 
-  async onChanged() {
-    const funcName = 'onChanged';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  }
+  // async onChanged() {
+  //   const funcName = 'onChanged';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  // }
 }

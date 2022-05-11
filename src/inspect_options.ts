@@ -153,7 +153,7 @@ export class InspectOptionsCtrl {
   }
 
   initPreview(state: State): boolean {
-    const div = document.getElementById(`preview-${state.xcell.getId()}`);
+    const div = document.getElementById(`preview-${state._xcell.getId()}`);
     if (div !== null) {
       div.innerHTML = '';
       XGraph.preview(div, state.getXCell());

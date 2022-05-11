@@ -1,5 +1,4 @@
 import { FlowchartHandler } from 'flowchart_handler';
-import { XGraph } from 'graph_class';
 import { Flowchart } from 'flowchart_class';
 import { $GF, GFDrawioTools, GFTable } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
@@ -176,7 +175,7 @@ export class FlowchartsOptionsCtrl {
    */
   onOptionChange() {
     // const name = this.flowchartHandler?.getCurrentFlowchartName();
-    this.flowchartHandler?.refresh();
+    this.flowchartHandler?.update();
     this.render();
   }
 

@@ -63,7 +63,7 @@ declare module gf {
   }
 
   declare type TPropertieKey = 'id' | 'value' | 'metadata'; //Type properties for finding cells
-  declare type TPropertieList = { text: string; value: TPropertieKey }[];
+  declare type TPropertieList = Array<{ text: string; value: TPropertieKey }>;
 
   declare interface TIFlowchartOptionsScope extends ng.IScope {
     editor: FlowchartOptionsCtrl;
@@ -136,9 +136,9 @@ declare module gf {
 
   // ToolTip
   declare type TDirectionKeys = 'v' | 'h';
-  declare type TDirectionList = { text: string; value: TDirectionKeys }[];
+  declare type TDirectionList = Array<{ text: string; value: TDirectionKeys }>;
   declare type TGraphTypeKeys = 'line' | 'bar';
-  declare type TGraphTypeList = { text: string; value: TGraphTypeKeys }[];
+  declare type TGraphTypeList = Array<{ text: string; value: TGraphTypeKeys }>;
   declare interface TGraphTypeInt extends TSelectString {
     value: TGraphTypeKeys;
   }
@@ -147,7 +147,7 @@ declare module gf {
   declare type TGraphScaleElt = { text: string; value: TGraphScaleKeys };
   declare type TGraphScaleList = TGraphScaleElt[];
   declare type TGraphSizeKeys = '100%' | '100px' | '200px' | '400px';
-  declare type TGraphSizeList = { text: string; value: TGraphSizeKeys }[];
+  declare type TGraphSizeList = Array<{ text: string; value: TGraphSizeKeys }>;
   declare interface TGraphSizeInt extends TSelectString {
     value: TGraphSizeKeys;
   }
@@ -166,7 +166,7 @@ declare module gf {
 
   // Range or value
   declare type TValueMappingKeys = 1 | 2;
-  declare type TValueMappingList = { text: string; value: TValueMappingKeys }[];
+  declare type TValueMappingList = Array<{ text: string; value: TValueMappingKeys }>;
   declare interface TValueMappingInt extends TSelectNumber {
     value: TValueMappingKeys;
   }
@@ -187,7 +187,7 @@ declare module gf {
     | 'diff'
     | 'last_time'
     | 'graph-hover';
-  declare type TAggregationList = { text: string; value: TAggregationKeys }[];
+  declare type TAggregationList = Array<{ text: string; value: TAggregationKeys }>;
   declare interface TSelectAggregation extends TSelectString {
     value: TAggregationKeys;
   }
@@ -224,7 +224,7 @@ declare module gf {
   declare type TTooltipOnList = TTooltipOnElt[];
 
   declare type TColorOnKeys = 'n' | 'wc' | 'a';
-  declare type TColorOnList = { text: string; value: TColorOnKeys }[];
+  declare type TColorOnList = Array<{ text: string; value: TColorOnKeys }>;
 
   declare type TTextOnKeys = 'n' | 'wmd' | 'wc' | 'co';
   declare type TTextOnElt = { text: string; value: TTextOnKeys };
@@ -251,7 +251,7 @@ declare module gf {
   declare type TComparatorList = TComparatorElt[];
 
   declare type TVariableKeys = '_rule' | '_level' | '_value' | '_color' | '_formated' | '_date' | '_metric';
-  declare type TVariableList = { text: string; value: TVariableKeys }[];
+  declare type TVariableList = Array<{ text: string; value: TVariableKeys }>;
   declare interface TIRulesHandlerData {
     rulesData: TIRuleData[];
   }

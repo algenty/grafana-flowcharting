@@ -71,7 +71,7 @@ export class RulesOptionsCtrl {
   getEventValues: string[];
 
   /** @ngInject */
-  constructor($scope: gf.TRulesOptionsScope, $element) {
+  constructor($scope: gf.TRulesOptionsScope, $element: any) {
     $scope.editor = this;
     $scope.$GF = $GF.me();
     this.$scope = $scope;
@@ -758,7 +758,7 @@ export class RulesOptionsCtrl {
   }
 
   getFastEditMectricName(rule: Rule): string {
-    let result: string = '';
+    let result = '';
     if (this.isMultipleType()) {
       if (rule.data.metricType === 'serie') {
         result += 'Series/' + rule.data.pattern;
@@ -1095,7 +1095,7 @@ export class RulesOptionsCtrl {
 }
 
 /** @ngInject */
-export function rulesOptionsTab($q, uiSegmentSrv) {
+export function rulesOptionsTab($q: any, uiSegmentSrv: any) {
   'use strict';
   return {
     restrict: 'E',

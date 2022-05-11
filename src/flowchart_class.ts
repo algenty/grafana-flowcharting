@@ -2,10 +2,10 @@ import { XGraph } from 'graph_class';
 import { StateHandler } from 'statesHandler';
 import { FlowchartHandler } from 'flowchart_handler';
 import { $GF, GFDrawioTools } from 'globals_class';
-import { FlowchartCtrl } from 'flowchart_ctrl';
 import { GFEvents } from 'flowcharting_base';
 
-type FlowchartSignals = 'flowchart_initialized' | 'flowchart_changed' | 'flowchart_freed' | 'flowchart_updated';
+const flowchartSignalsArray = ['flowchart_initialized', 'flowchart_updated', 'flowchart_changed', 'flowchart_freed'] as const;
+type FlowchartSignals = typeof flowchartSignalsArray[number];
 
 /**
  * Flowchart handler
@@ -16,22 +16,18 @@ type FlowchartSignals = 'flowchart_initialized' | 'flowchart_changed' | 'flowcha
 export class Flowchart {
   data: gf.TFlowchartData;
   container: HTMLDivElement;
-  ctrl: FlowchartCtrl;
   xgraph: XGraph | undefined = undefined;
   stateHandler: StateHandler | undefined;
-  // states: Map<string, State> | undefined;
   uid: string;
   visible = false;
   reduce = true;
-  events: GFEvents<FlowchartSignals> = new GFEvents();
+  events: GFEvents<FlowchartSignals> = GFEvents.create(flowchartSignalsArray);
 
-  constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData, ctrl: FlowchartCtrl) {
+  constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData) {
     this.uid = $GF.genUid(this.constructor.name);
     this.data = data;
     this.data.name = name;
     this.container = container;
-    this.ctrl = ctrl;
-    this.events.declare(['flowchart_initialized', 'flowchart_changed', 'flowchart_freed', 'flowchart_updated']);
     this.init();
   }
 
@@ -112,7 +108,7 @@ export class Flowchart {
     const funcName = 'destroy';
     $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.xgraph?.free();
-    this.stateHandler?.destroy();
+    this.stateHandler?.free();
     await this.events.emit('flowchart_freed', this);
     this.clear();
   }
@@ -206,11 +202,11 @@ export class Flowchart {
   //   });
   //   trc.after();
   //   return this;
-  // } 
+  // }
 
   initStateHandler(): this {
     if (this.xgraph) {
-      this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
+      this.stateHandler = new StateHandler(this.xgraph);
     }
     return this;
   }
@@ -225,10 +221,10 @@ export class Flowchart {
     try {
       const content = this.getContent();
       if (this.xgraph === undefined) {
-        this.xgraph = new XGraph(this.container, this.data.type, content, this.ctrl);
+        this.xgraph = new XGraph(this.container, this.data.type, content);
       }
     } catch (error) {
-      this.ctrl.notify('Unable to initialize graph', 'error');
+      $GF.notify('Unable to initialize graph', 'error');
       $GF.log.error('Unable to initialize graph', error);
     }
     return this;
@@ -268,13 +264,13 @@ export class Flowchart {
         // if(this.xgraph) {
         //   this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
         // }
-        this.ctrl.clearNotify();
+        $GF.clearNotify();
       } else {
-        this.ctrl.notify('Source content empty Graph not defined', 'error');
+        $GF.notify('Source content empty Graph not defined', 'error');
         $GF.log.error('Source content empty Graph not defined');
       }
     } catch (error) {
-      this.ctrl.notify('Unable to initialize graph', 'error');
+      $GF.notify('Unable to initialize graph', 'error');
       $GF.log.error('Unable to initialize graph', error);
     }
     return this;
@@ -636,9 +632,9 @@ export class Flowchart {
     let content: string | null = '';
     if (this.data.download) {
       const url = $GF.resolveVars(this.data.url);
-      this.ctrl.notify(`Loading content definition for ${this.data.name}`, 'info');
+      $GF.notify(`Loading content definition for ${this.data.name}`, 'info');
       content = this.loadContent(url);
-      this.ctrl.clearNotify();
+      $GF.clearNotify();
       if (content !== null) {
         if (replaceVarBool) {
           content = $GF.resolveVars(content);

@@ -345,7 +345,8 @@ class LineGraphTooltip extends GraphTooltip {
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     if (this.metric) {
       let log = this.scaleType === 'log' ? true : false;
-      this.data.series[0]['data'] = this.metric.getData(this.column, log);
+      let series: any = this.data.series[0];
+      series['data'] = this.metric.getData(this.column, log);
     }
     const div = document.createElement('div');
     const color = this.color;
@@ -438,7 +439,8 @@ class BarGraphTooltip extends GraphTooltip {
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement {
     if (this.metric) {
       let log = this.scaleType === 'log' ? true : false;
-      this.data.series[0]['data'] = this.metric.getData(this.column, log);
+      let series: any = this.data.series[0];
+      series['data'] = this.metric.getData(this.column, log);
     }
     const div = document.createElement('div');
     const color = this.color;
@@ -459,7 +461,8 @@ class BarGraphTooltip extends GraphTooltip {
 
     this.chart = new Chartist.Bar(div, this.data, this.chartistOptions);
     let seq = 0;
-    const length = this.data.series[0]['data'].length;
+    const series: any = this.data.series[0]
+    const length = series['data'].length;
     const delays = Math.round(50 / (length / 10));
     const durations = Math.round(250 / (length / 10));
     this.chart.on('draw', (data: any) => {
@@ -484,7 +487,7 @@ class BarGraphTooltip extends GraphTooltip {
 }
 
 class MetadataTooltip {
-  enableMetadata: boolean = true;
+  enableMetadata =true;
   div: HTMLDivElement | undefined = undefined;
   xcell: XCell | undefined = undefined;
   constructor() {}

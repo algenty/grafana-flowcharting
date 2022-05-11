@@ -636,9 +636,10 @@ export class Rule {
     this.shapeStates.clear();
     this.textStates.clear();
     this.linkStates.clear();
-    this.states.forEach(state => {
-      state.rules.delete(this.uid);
-    });
+    // TODO emit signal
+    // this.states.forEach(state => {
+    //   state._rules.delete(this.uid);
+    // });
     return this;
   }
 
@@ -2121,7 +2122,7 @@ export class Rule {
   }
 
   change() {
-    this.updateMetrics();
+    // this.updateMetrics();
     // this.onChanged();
     // this.refresh();
     // this.updateStates();
@@ -2191,9 +2192,9 @@ export class Rule {
 
 
   /******** EVENTS *******/
-  private _on_MetricUpdated(metric: ObjectMetric) {
-    this.updateMetricList(metric)
-  }
+  // private _on_MetricUpdated(metric: ObjectMetric) {
+  //   this.updateMetricList(metric)
+  // }
 
 
 

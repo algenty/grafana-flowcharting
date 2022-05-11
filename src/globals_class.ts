@@ -5,7 +5,8 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
 import { GFEvents } from 'flowcharting_base';
 import { nanoid } from 'nanoid/non-secure';
 
-type GlobalSignals = 'data_received';
+const globalSignalsArray = ['number_add', 'number_sub', 'change_flag'] as const;
+type GlobalSignals = typeof globalSignalsArray[number];
 
 class GFCONSTANT {
   // CONFIG
@@ -938,15 +939,15 @@ export class $GF {
   static DEBUG = false;
   static notify: CallableFunction = (message: string, type: string) => {};
   static clearNotify: CallableFunction = () => {};
-  static $Refresh: CallableFunction = () => {};
+  static $refresh: CallableFunction = () => {};
   static ctrl: FlowchartCtrl;
-  // static events: GFEvents<GlobalSignals> = new GFEvents();
+  static events: GFEvents<GlobalSignals> = GFEvents.create(globalSignalsArray);
   static utils: {
     // ! deprecated : Use DrawioTools
     decode_deprecated: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
     encode_deprecated: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
-    loadJS: (fname: string) => void;
-    sleep: (ms: number, mess?: string) => void;
+    loadJS_deprecated: (fname: string) => void;
+    sleep_deprecated: (ms: number, mess?: string) => void;
     // ! deprecated :  use genUdi
     uniqueID_deprecated: () => string;
     matchString: (str: string, pattern: string | undefined, regex?: boolean) => boolean;
@@ -960,7 +961,7 @@ export class $GF {
     $loadFile: (fname: string) => string;
     $evalFile: (fname: string) => void;
     evalRaw: (code: string) => void;
-    addScript: (src: string) => void;
+    addScript_deprecated: (src: string) => void;
   } = require('./utils_raw');
 
   static init($scope: any, templateSrv: any, dashboard: any, ctrl: any): $GF {
@@ -982,7 +983,7 @@ export class $GF {
     $GF.ctrl = ctrl;
     $GF.notify = ctrl.notify.bind(ctrl);
     $GF.clearNotify = ctrl.clearNotify.bind(ctrl);
-    $GF.$Refresh = $scope.$applyAsync.bind($scope);
+    $GF.$refresh = $scope.$applyAsync.bind($scope);
     // $GF.events.addSignal('data_received');
     return this;
   }

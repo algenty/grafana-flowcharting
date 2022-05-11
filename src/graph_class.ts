@@ -5,7 +5,6 @@ import chroma from 'chroma-js';
 const mxcustom = require('mxgraph_custom');
 import { Rule } from 'rule_class';
 import { XCell } from 'cell_class';
-import { FlowchartCtrl } from 'flowchart_ctrl';
 import { InteractiveMap } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
 
@@ -29,7 +28,6 @@ export class XGraph {
   xmlGraph = '';
   csvGraph = '';
   type: gf.TSourceTypeKeys = 'xml';
-  ctrl: FlowchartCtrl;
   graph: any = undefined;
   scale = true;
   tooltip = true;
@@ -54,14 +52,13 @@ export class XGraph {
    * @param {string} definition
    * @memberof XGraph
    */
-  constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string, ctrl: FlowchartCtrl) {
+  constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
     this.uid = $GF.genUid(this.constructor.name);
     this.container = container;
     this.type = type;
-    this.ctrl = ctrl;
     this.xcells = [];
-    this.onMapping = this.ctrl.onMapping;
+    this.onMapping = $GF.ctrl.onMapping;
     this.definition = definition;
     this.events.declare('graph_changed');
     this.events.declare('graph_freed');
@@ -298,7 +295,7 @@ export class XGraph {
           this.updateGraph();
         } catch (error) {
           $GF.log.error('Bad CSV format', error);
-          this.ctrl.notify('Bad CSV format', 'error');
+          $GF.notify('Bad CSV format', 'error');
         }
       }
     } catch (error) {
@@ -918,7 +915,7 @@ export class XGraph {
    */
   unsetMap() {
     this.graph.click = this.clickBackup;
-    this.ctrl.$scope.$applyAsync();
+    $GF.$refresh()
   }
 
   //
@@ -979,7 +976,7 @@ export class XGraph {
   eventMouseWheel(evt: WheelEvent, up: boolean) {
     // console.log('eventMouseWheel', this.ctrl.id, this.ctrl.isMouseInPanel());
     // this.ctrl.notify(`Zoom ${this.cumulativeZoomFactor}`);
-    if (this.graph.isZoomWheelEvent(evt) && this.ctrl.isMouseInPanel()) {
+    if (this.graph.isZoomWheelEvent(evt) && $GF.ctrl.isMouseInPanel()) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {
           up = true;

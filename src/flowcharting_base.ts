@@ -13,12 +13,15 @@ export class GFEvents<Signals> {
     // Nothing to do
   }
 
-  static newGFEvents<Signals>(): GFEvents<Signals> {
+  static create<Signals>(signalName?: Readonly<Signals> | Readonly<Signals[]>): GFEvents<Signals> {
     const event: GFEvents<Signals>= new GFEvents();
+    if(signalName) {
+      event.declare(signalName);
+    }
     return event;
   }
 
-  declare(signalName: Readonly<Signals> | Readonly<Signals[]>) {
+  declare(signalName: Readonly<Signals> | Readonly<Signals[]>): GFEvents<Signals> {
     // Array
     if (Array.isArray(signalName)) {
       signalName.forEach((s) => {
