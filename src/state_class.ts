@@ -5,7 +5,6 @@ import { TooltipHandler } from 'tooltipHandler';
 import { $GF, GFVariables } from 'globals_class';
 import { XCell } from 'cell_class';
 import { ObjectMetric } from 'metric_class';
-// import { Observer } from 'rxjs';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
 /**
@@ -19,7 +18,7 @@ export class State {
   uid: string; // cell ID in mxcell
   ctrl: FlowchartCtrl;
   xgraph: XGraph;
-  completed: boolean = false;
+  completed = false;
   changed = false;
   matched = false;
   shapeState: ShapeState;
@@ -31,10 +30,10 @@ export class State {
   variables: GFVariables;
   status: Map<string, any>;
   globalLevel = -1;
-  highestFormattedValue: string = '';
+  highestFormattedValue = '';
   highestValue: any = undefined;
   tooltipHandler: TooltipHandler | null = null;
-  reduce: boolean = true;
+  reduce = true;
   rules: Map<string, Rule> = new Map();
   currRules: string[] = [];
   currMetrics: string[] = [];
@@ -48,7 +47,7 @@ export class State {
    */
   constructor(xcell: XCell, xgraph: XGraph, ctrl: FlowchartCtrl) {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
-    this.uid = $GF.uniqID(this.constructor.name);
+    this.uid = $GF.genUid(this.constructor.name);
     this.xcell = xcell;
     this.ctrl = ctrl;
     this.xgraph = xgraph;
@@ -116,7 +115,7 @@ export class State {
         const linkMaps = r.getLinkMaps();
         const eventMaps = r.getEventMaps();
         this.variables.set($GF.CONSTANTS.VAR_STR_RULENAME, r.data.alias);
-        r.getMetrics().forEach(metric => {
+        r.getMetrics().forEach((metric) => {
           try {
             this.currMetrics.push(metric.getName());
             this.variables.set($GF.CONSTANTS.VAR_STR_METRIC, metric.getName);
@@ -137,7 +136,7 @@ export class State {
           let matchedRule = false;
           let mapOptions = r.getShapeMapOptions();
           let cellValue = this.xcell.getDefaultValues(mapOptions);
-          shapeMaps.forEach(shape => {
+          shapeMaps.forEach((shape) => {
             let k = shape.data.style;
             if (!shape.isHidden() && shape.match(cellValue, mapOptions, this.variables)) {
               let v: any = color;
@@ -166,7 +165,7 @@ export class State {
           // TEXT
           mapOptions = r.getTextMapOptions();
           cellValue = this.xcell.getDefaultValues(mapOptions);
-          textMaps.forEach(text => {
+          textMaps.forEach((text) => {
             const k = 'label';
             if (!text.isHidden() && text.match(cellValue, mapOptions, this.variables)) {
               if (text.isEligible(level)) {
@@ -182,7 +181,7 @@ export class State {
           // EVENTS
           mapOptions = r.getEventMapOptions();
           cellValue = this.xcell.getDefaultValues(mapOptions);
-          eventMaps.forEach(event => {
+          eventMaps.forEach((event) => {
             const k = event.data.style;
             if (!event.isHidden() && event.match(cellValue, mapOptions, this.variables)) {
               if (event.isEligible(level)) {
@@ -197,7 +196,7 @@ export class State {
           // LINK
           mapOptions = r.getEventMapOptions();
           cellValue = this.xcell.getDefaultValues(mapOptions);
-          linkMaps.forEach(link => {
+          linkMaps.forEach((link) => {
             const k = 'link';
             if (!link.isHidden() && link.match(cellValue, mapOptions, this.variables)) {
               if (link.isEligible(level)) {
@@ -227,8 +226,8 @@ export class State {
       }
       let endPerf = Date.now();
       r.execTimes += endPerf - beginPerf;
-    }),
-      trc.after();
+    });
+    trc.after();
     return this;
   }
 
@@ -570,37 +569,37 @@ export class State {
   //
   // Events
   //
-  async onDestroyed() {
-    const funcName = 'onDestroyed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.unsubscribes(this);
-    this.ctrl.eventHandler.emit(this, 'destroyed');
-  }
+  // async onDestroyed() {
+  //   const funcName = 'onDestroyed';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.unsubscribes(this);
+  //   this.ctrl.eventHandler.emit(this, 'destroyed');
+  // }
 
-  async onRefreshed() {
-    const funcName = 'onRefreshed';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'refreshed');
-  }
+  // async onRefreshed() {
+  //   const funcName = 'onRefreshed';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.emit(this, 'refreshed');
+  // }
 
-  async onInitialized() {
-    const funcName = 'onInitialized';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.subscribes(this);
-    this.ctrl.eventHandler.emit(this, 'initialized');
-  }
+  // async onInitialized() {
+  //   const funcName = 'onInitialized';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.subscribes(this);
+  //   this.ctrl.eventHandler.emit(this, 'initialized');
+  // }
 
-  async onChanged() {
-    const funcName = 'onChanged';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'changed');
-  }
+  // async onChanged() {
+  //   const funcName = 'onChanged';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.emit(this, 'changed');
+  // }
 
-  async onCompleted() {
-    const funcName = 'onCompleted';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.ctrl.eventHandler.emit(this, 'completed');
-  }
+  // async onCompleted() {
+  //   const funcName = 'onCompleted';
+  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   this.ctrl.eventHandler.emit(this, 'completed');
+  // }
 
   //
   // RXJS Observers
@@ -711,7 +710,7 @@ export class GFState {
   changedKey: Map<string, boolean> = new Map();
   defaultValue: Map<string, any> = new Map();
   matchValue: Map<string, any> = new Map();
-  static DEFAULTLEVEL: number = -1;
+  static DEFAULTLEVEL = -1;
   matchLevel: Map<string, number> = new Map();
 
   constructor(xgraph: XGraph, mxcell: mxCell) {
@@ -819,7 +818,7 @@ export class GFState {
         this.ack(key);
       }
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.apply(key);
       });
     }
@@ -836,7 +835,7 @@ export class GFState {
       return this.matchedKey.get(key) === true;
     }
     let matched = false;
-    this.keys.forEach(key => {
+    this.keys.forEach((key) => {
       matched = this.isMatched(key) || matched;
     });
     return matched;
@@ -847,7 +846,7 @@ export class GFState {
       return this.changedKey.get(key) === true;
     }
     let changed = false;
-    this.keys.forEach(key => {
+    this.keys.forEach((key) => {
       changed = this.isChanged(key) ? true : changed;
     });
     return changed;
@@ -859,7 +858,7 @@ export class GFState {
       return level !== undefined ? level : GFState.DEFAULTLEVEL;
     }
     let level = GFState.DEFAULTLEVEL;
-    this.keys.forEach(key => (level = Math.max(this.getLevel(key))));
+    this.keys.forEach((key) => (level = Math.max(this.getLevel(key))));
     return level;
   }
 
@@ -869,7 +868,7 @@ export class GFState {
       this.matchedKey.set(key, false);
       this.matchLevel.set(key, -1);
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.unset(key);
       });
     }
@@ -888,7 +887,7 @@ export class GFState {
       this.changedKey.set(key, false);
       this.matchedKey.set(key, false);
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.reset(key);
       });
     }
@@ -1275,7 +1274,7 @@ class TooltipState extends GFState {
         super.apply(key);
       }
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.apply(key);
       });
     }
@@ -1296,7 +1295,7 @@ class TooltipState extends GFState {
       this.tooltipHandler = undefined;
       super.reset(key);
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.reset(key);
       });
     }
@@ -1332,7 +1331,7 @@ class IconState extends GFState {
         this.reset_core(key);
       }
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.apply_core(key);
       });
     }
@@ -1345,7 +1344,7 @@ class IconState extends GFState {
       // super.reset(key);
       this.xcell.removeOverlay();
     } else {
-      this.keys.forEach(key => {
+      this.keys.forEach((key) => {
         this.reset_core(key);
       });
     }

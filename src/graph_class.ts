@@ -7,7 +7,7 @@ import { Rule } from 'rule_class';
 import { XCell } from 'cell_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 import { InteractiveMap } from 'mapping_class';
-import { flowchartingEvents } from 'flowcharting_base';
+import { GFEvents } from 'flowcharting_base';
 
 // declare interface TXGraphDefaultValues {
 //   id: Set<string> | undefined;
@@ -47,7 +47,7 @@ export class XGraph {
   clickBackup: any;
   dbclickBackup: any;
   onMapping: InteractiveMap;
-  events: flowchartingEvents<XGraphSignals> = new flowchartingEvents();
+  events: GFEvents<XGraphSignals> = new GFEvents();
   /**
    * Creates an instance of XGraph.
    * @param {DOM} container
@@ -63,9 +63,9 @@ export class XGraph {
     this.xcells = [];
     this.onMapping = this.ctrl.onMapping;
     this.definition = definition;
-    this.events.addSignal('graph_changed');
-    this.events.addSignal('graph_freed');
-    this.events.addSignal('graph_updated');
+    this.events.declare('graph_changed');
+    this.events.declare('graph_freed');
+    this.events.declare('graph_updated');
     this.init();
     trc.after();
   }

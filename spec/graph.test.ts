@@ -1,4 +1,4 @@
-import XGraph from '../src/graph_class';
+import { XGraph } from '../src/graph_class';
 import { $GF } from '../src/globals_class';
 const fs = require('fs');
 async function loadLibs() {

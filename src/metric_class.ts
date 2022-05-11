@@ -2,7 +2,7 @@ import grafana from './grafana_func';
 import { find as _find, isNumber as _isNumber } from 'lodash';
 import { $GF } from 'globals_class';
 import { DateTH } from 'threshold_class';
-import { flowchartingEvents } from 'flowcharting_base';
+import { GFEvents } from 'flowcharting_base';
 
 export type ObjectMetric = SerieMetric | TableMetric;
 type MetricSignals = 'metric_initialized' | 'metric_updated' | 'metric_freed';
@@ -22,7 +22,7 @@ export class Metric {
   dataList: any;
   nullPointMode = 'connected';
   GHValue: string | number | null = null;
-  events: flowchartingEvents<MetricSignals> = new flowchartingEvents()
+  events: GFEvents<MetricSignals> = new GFEvents()
   constructor(dataList: any) {
     this.uid = $GF.genUid(this.constructor.name);
     this.dataList = dataList;

@@ -1,9 +1,9 @@
 const customize = () => {
     mxTooltipHandler.prototype.show = function (tip, x, y) {
   // TYPE STRING
-  if (this.destroyed) return;
-  if (tip == null) return;
-  if (tip.length == 0) return;
+  if (this.destroyed) {return;}
+  if (tip == null) {return;}
+  if (tip.length === 0) {return;}
   // Initializes the DOM nodes if required
   if (this.div == null) {
     this.init();
@@ -110,7 +110,7 @@ Graph.prototype.getTooltipForCell = function (cell) {
       }
     }
   }
-  if (hasTips) return div;
+  if (hasTips) {return div;}
   return '';
 };
 
@@ -120,7 +120,7 @@ mxEvent.addMouseWheelListener = function (func, container) {
       null == container && (container = window.event);
       var c;
       c = mxClient.IS_FF ? -container.detail / 2 : container.wheelDelta / 120;
-      0 != c && func(container, 0 < c);
+      0 !== c && func(container, 0 < c);
     };
     mxClient.IS_NS && null == document.documentMode
       ? mxEvent.addListener(

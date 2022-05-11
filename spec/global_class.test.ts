@@ -17,10 +17,10 @@ const compGraph =
 describe('Test Global $GF utils', () => {
   describe('utils ID', () => {
     test('Should not Nan', () => {
-      expect($GF.utils.uniqueID()).not.toBeNaN();
+      expect($GF.genUid()).not.toBeNaN();
     });
     test('Should should be uniq', () => {
-      expect($GF.utils.uniqueID()).not.toBe($GF.utils.uniqueID());
+      expect($GF.genUid()).not.toBe($GF.genUid());
     });
   });
 
@@ -123,7 +123,7 @@ describe('Test Global $GF utils', () => {
       expect(GFTimer.get(myTimer.uid)).toBeNull();
     });
 
-    describe('Test callback', async () => {
+    describe('Test callback', () => {
       let step = 0;
       let pauseTime = 500;
       let stepTime = 100;

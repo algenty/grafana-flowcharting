@@ -491,7 +491,7 @@ export class XCell {
    * @param {boolean} [bool=true]
    * @memberof XCell
    */
-  async hide(bool = true) {
+  hide(bool = true) {
     if (!this._isHidden && bool) {
       this.graph.model.setVisible(this.mxcell, false);
     } else if (this._isHidden && !bool) {
@@ -508,6 +508,10 @@ export class XCell {
    */
   show() {
     this.hide(false);
+  }
+
+  isHidden() {
+    return this._isHidden;
   }
 
   /**
@@ -694,7 +698,7 @@ export class XCell {
    * @param {boolean} [bool=true]
    * @memberof XCell
    */
-  async blink(ms = 1000, bool = true) {
+  blink(ms = 1000, bool = true) {
     const timeId = `blink-${this.uid}`;
     const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
     if (bool && !this._isBlink) {
@@ -718,11 +722,17 @@ export class XCell {
    * @deprecated use blink(number, false)
    * @memberof XCell
    */
-  async unblink() {
+  unblink() {
     this.blink(1000, false);
   }
 
-  async addOverlay(state: string) {
+  isBlink() {
+    return this._isBlink
+  }
+
+
+
+  addOverlay(state: string) {
     const _createOverlay = (image: any, tooltip: any) => {
       const overlay = new mxCellOverlay(image, tooltip);
       overlay.addListener(mxEvent.CLICK, (_sender: any, _evt: any) => {

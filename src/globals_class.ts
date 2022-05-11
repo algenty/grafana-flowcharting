@@ -2,8 +2,10 @@ import _ from 'lodash';
 import chroma from 'chroma-js';
 import { inflateRaw, deflateRaw } from 'pako';
 import { FlowchartCtrl } from 'flowchart_ctrl';
-import { flowchartingEvents } from 'flowcharting_base';
+import { GFEvents } from 'flowcharting_base';
 import { nanoid } from 'nanoid/non-secure';
+
+type GlobalSignals = 'data_received';
 
 class GFCONSTANT {
   // CONFIG
@@ -938,7 +940,7 @@ export class $GF {
   static clearNotify: CallableFunction = () => {};
   static $Refresh: CallableFunction = () => {};
   static ctrl: FlowchartCtrl;
-  static events = new flowchartingEvents();
+  // static events: GFEvents<GlobalSignals> = new GFEvents();
   static utils: {
     // ! deprecated : Use DrawioTools
     decode_deprecated: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
@@ -981,7 +983,7 @@ export class $GF {
     $GF.notify = ctrl.notify.bind(ctrl);
     $GF.clearNotify = ctrl.clearNotify.bind(ctrl);
     $GF.$Refresh = $scope.$applyAsync.bind($scope);
-    $GF.events.addSignal('data_changed');
+    // $GF.events.addSignal('data_received');
     return this;
   }
 
