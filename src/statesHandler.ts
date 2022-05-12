@@ -352,6 +352,18 @@ export class StateHandler {
     return this;
   }
 
+  //#########################################################################
+  //### Events
+  //#########################################################################
+  private _on_global_data_recieved() {
+    const statesArray: State[] = Array.from(this.states.values())
+    statesArray.map(async (state:  State) => {
+      state.initCycle();
+    })
+  }
+
+
+
   //
   // Events
   //
