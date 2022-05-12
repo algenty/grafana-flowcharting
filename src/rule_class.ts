@@ -2118,8 +2118,8 @@ export class Rule {
   }
 
   init() {
-    $GF.metricHandler.events.connect('metric_created', this, this._on_global_metric_created.bind(this))
-    $GF.metricHandler.events.connect('metric_deleted', this, this._on_global_metric_deleted.bind(this))
+    $GF.metricHandler.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
+    $GF.metricHandler.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
     this.events.emit('rule_initalized', this);
     return this;
   }
@@ -2198,17 +2198,17 @@ export class Rule {
   //#############################################################
   //### EVENTS
   //#############################################################
-  private _on_global_metric_deleted(metric: ObjectMetric) {
-    if(this.metrics.has(metric.uid) {
+  private _on_metricHandler_metric_deleted(metric: ObjectMetric) {
+    if(this.metrics.has(metric.uid)) {
       this.metrics.delete(metric.uid)
-      this.update();
+      this.change();
     }
   }
 
-  private _on_global_metric_created(metric: ObjectMetric) {
+  private _on_metricHandler_metric_created(metric: ObjectMetric) {
     if(this.matchMetric(metric)) {
       this.metrics.set(metric.uid, metric);
-      this.update();
+      this.change();
     }
   }
 

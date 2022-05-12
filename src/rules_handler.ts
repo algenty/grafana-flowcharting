@@ -3,7 +3,7 @@ import { sortBy as _sortBy } from 'lodash';
 import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 
-const ruleHandlerSignalsArray = ['rule_created', 'rule_updated', 'rule_deleted'] as const;
+const ruleHandlerSignalsArray = ['rule_created', 'rule_updated', 'rule_changed', 'rule_deleted'] as const;
 type RuleHandlerSignals = typeof ruleHandlerSignalsArray[number];
 
 /**
@@ -131,6 +131,7 @@ export class RulesHandler {
     this.data.rulesData.push(data);
     newRule.setOrder(this.countRules());
     newRule.events.connect('rule_updated', this, this._on_rule_rule_updated.bind(this));
+    newRule.events.connect('rule_changed', this, this._on_rule_rule_changed.bind(this));
     return newRule;
   }
 
@@ -170,6 +171,7 @@ export class RulesHandler {
   removeRule(rule: Rule): this {
     GFLog.debug(this.constructor.name + '.removeRule()', rule);
     rule.events.disconnect('rule_updated', this);
+    rule.events.disconnect('rule_changed', this);
     const index = rule.getOrder() - 1;
     rule.free();
     this.rules.splice(index, 1);
@@ -308,6 +310,10 @@ export class RulesHandler {
   //#############################################################
   private _on_rule_rule_updated(rule: Rule) {
     this.events.emit('rule_updated', rule);
+  }
+
+  private _on_rule_rule_changed(rule: Rule) {
+    this.events.emit('rule_changed', rule);
   }
 
 

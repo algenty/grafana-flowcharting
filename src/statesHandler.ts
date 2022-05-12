@@ -6,7 +6,7 @@ import { XCell } from 'cell_class';
 import { Rule } from 'rule_class';
 import { GFEvents } from 'flowcharting_base';
 
-const stateHandlerSignalsArray = ['state_created', 'state_deleted'] as const;
+const stateHandlerSignalsArray = ['state_created', 'state_updated', 'state_changed', 'state_deleted'] as const;
 type stateHandlerSignals = typeof stateHandlerSignalsArray[number];
 
 
@@ -197,6 +197,7 @@ export class StateHandler {
     if ($GF.DEBUG) {
       $GF.setVar(`STATE_${state.uid}`, state);
     }
+    this.events.emit('state_created', state);
     trc.after();
     return state;
   }
@@ -279,7 +280,10 @@ export class StateHandler {
     const funcName = 'destroy';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.rulesCompleted = false;
-    this.states.forEach(s => s.free());
+    this.states.forEach(s => {
+      s.free()
+      this.events.emit('state_deleted', s);
+    });
     this.clear();
     this.events.clear();
     // this.onDestroyed();

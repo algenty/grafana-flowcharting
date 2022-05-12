@@ -8,13 +8,8 @@ import { XCell } from 'cell_class';
 import { InteractiveMap } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
 
-// declare interface TXGraphDefaultValues {
-//   id: Set<string> | undefined;
-//   value: Set<string> | undefined;
-//   metadata: Set<string> | undefined;
-// }
-
-type XGraphSignals = 'graph_changed' | 'graph_freed' | 'graph_updated';
+const xgraphSignalsArray = ['graph_initialized', 'graph_updated', 'graph_changed', 'graph_freed'] as const;
+type XGraphSignals = typeof xgraphSignalsArray[number];
 
 /**
  * mxGraph interface class
@@ -45,7 +40,7 @@ export class XGraph {
   clickBackup: any;
   dbclickBackup: any;
   onMapping: InteractiveMap;
-  events: GFEvents<XGraphSignals> = new GFEvents();
+  events: GFEvents<XGraphSignals> = GFEvents.create(xgraphSignalsArray);
   /**
    * Creates an instance of XGraph.
    * @param {DOM} container
@@ -60,9 +55,6 @@ export class XGraph {
     this.xcells = [];
     this.onMapping = $GF.ctrl.onMapping;
     this.definition = definition;
-    this.events.declare('graph_changed');
-    this.events.declare('graph_freed');
-    this.events.declare('graph_updated');
     this.init();
     trc.after();
   }
@@ -104,14 +96,14 @@ export class XGraph {
         }
       });
     }
+    this.events.emit('graph_initialized', this);
     return this;
   }
 
   change() {
     const funcName = 'change';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.drawGraph();
-    // this.onChanged();
+    this._drawGraph();
     this.events.emit('graph_changed', this);
     return this;
   }
@@ -271,7 +263,7 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  drawGraph(): this {
+  private _drawGraph(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'drawGraph()');
     if (this.graph === undefined) {
       this.initMxGraph();
