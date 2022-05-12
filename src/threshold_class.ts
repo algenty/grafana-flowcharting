@@ -175,7 +175,7 @@ export class NumberTH extends GFTH {
         return value > this.data.value;
         break;
       default:
-        // $GF.log.error('Comparator unknown : ' + this.data.comparator);
+        // GFLog.error('Comparator unknown : ' + this.data.comparator);
         throw new Error('Unknown comparator: ' + this.data.comparator);
         return false;
         break;

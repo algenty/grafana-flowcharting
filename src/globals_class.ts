@@ -437,18 +437,21 @@ export class GFVariables {
   }
 }
 
-class GFLog {
-  static DEBUG = 0;
-  static INFO = 1;
-  static WARN = 2;
-  static ERROR = 3;
-  static logLevel = GFLog.WARN;
-  static logDisplay = true;
+enum LogLevel {
+  DEBUG,
+  INFO,
+  WARN,
+  ERROR,
+}
+export class GFLog {
+  static logLevel: LogLevel = LogLevel.WARN;
+  static logEnable = true;
+  static tagEnable = false;
   constructor() {}
 
-  static init(): GFLog {
-    return new GFLog();
-  }
+  // static init(): GFLog {
+  //   return new GFLog();
+  // }
 
   /**
    * If message must be displayed
@@ -458,7 +461,7 @@ class GFLog {
    * @memberof Log
    */
   static toDisplay(level: number): boolean {
-    if (GFLog.logDisplay !== undefined && GFLog.logDisplay === true) {
+    if (GFLog.logEnable !== undefined && GFLog.logEnable === true) {
       if (GFLog.logLevel !== undefined && level >= GFLog.logLevel) {
         return true;
       }
@@ -473,8 +476,8 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async debug(...args: unknown[]) {
-    if (GFLog.toDisplay(GFLog.DEBUG)) {
+  static async debug(...args: unknown[]) {
+    if (GFLog.toDisplay(LogLevel.DEBUG)) {
       const title = args.shift();
       console.log(`GF DEBUG : ${title}`, ...args);
     }
@@ -487,8 +490,8 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async warn(...args: unknown[]) {
-    if (GFLog.toDisplay(GFLog.WARN)) {
+  static async warn(...args: unknown[]) {
+    if (GFLog.toDisplay(LogLevel.WARN)) {
       const title = args.shift();
       console.log(`GF WARN : ${title}`, ...args);
     }
@@ -501,8 +504,8 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async info(...args: string[]) {
-    if (GFLog.toDisplay(GFLog.INFO)) {
+  static async info(...args: string[]) {
+    if (GFLog.toDisplay(LogLevel.INFO)) {
       const title = args.shift();
       console.log(`GF INFO : ${title}`, ...args);
     }
@@ -515,8 +518,8 @@ class GFLog {
    * @param {((any | undefined))} obj
    * @memberof Log
    */
-  async error(...args: unknown[]) {
-    if (GFLog.toDisplay(GFLog.ERROR)) {
+  static async error(...args: unknown[]) {
+    if (GFLog.toDisplay(LogLevel.ERROR)) {
       const title = args.shift();
       console.log(`GF ERROR : ${title}`, ...args);
     }
@@ -837,7 +840,7 @@ export class GFDrawioTools {
       g.destroy();
       return true;
     } catch (error) {
-      $GF.log.error('isValidXml', error);
+      GFLog.error('isValidXml', error);
       return false;
     }
   }
@@ -852,7 +855,7 @@ export class GFDrawioTools {
         }
       }
     } catch (e) {
-      $GF.log.error(`parseXml : Unable to decode ${data}`);
+      GFLog.error(`parseXml : Unable to decode ${data}`);
       return '';
     }
     // data = atob(data);
@@ -864,7 +867,7 @@ export class GFDrawioTools {
           { to: 'string' }
         );
       } catch (e) {
-        $GF.log.error(`Pako : Unable to decode ${data}`);
+        GFLog.error(`Pako : Unable to decode ${data}`);
         return '';
       }
     }
@@ -872,7 +875,7 @@ export class GFDrawioTools {
     try {
       data = decodeURIComponent(data);
     } catch (e) {
-      $GF.log.error(`Unable to decode ${data}`);
+      GFLog.error(`Unable to decode ${data}`);
       return '';
     }
     return data;
@@ -883,7 +886,7 @@ export class GFDrawioTools {
       try {
         data = encodeURIComponent(data);
       } catch (e) {
-        $GF.log.error(`Unable to encode/encodeURIComponent : ${data}`, e);
+        GFLog.error(`Unable to encode/encodeURIComponent : ${data}`, e);
         return;
       }
 
@@ -893,7 +896,7 @@ export class GFDrawioTools {
           data = String.fromCharCode.apply(null, new Array(...deflateRaws));
         } catch (e) {
           console.log(e);
-          $GF.log.error(`Unable to encode ${data}`);
+          GFLog.error(`Unable to encode ${data}`);
           return '';
         }
       }
@@ -901,7 +904,7 @@ export class GFDrawioTools {
       try {
         data = Buffer.from(data, 'binary').toString('base64');
       } catch (e) {
-        $GF.log.error(`Unable to encode ${data}`);
+        GFLog.error(`Unable to encode ${data}`);
         return;
       }
 
@@ -930,7 +933,7 @@ export class GFDrawioTools {
 export class $GF {
   static _globalvars: GFVariables = new GFVariables();
   static CONSTANTS: GFCONSTANT = new GFCONSTANT();
-  static log: GFLog;
+  // static log: GFLog;
   static trace: GFTrace;
   // static message: GFMessage;
   static plugin: GFPlugin;
@@ -974,9 +977,7 @@ export class $GF {
         console.log('DEBUG dashboard', dashboard);
       }
     }
-    if (!this.log) {
-      this.log = GFLog.init();
-    }
+
     if (!this.trace) {
       this.trace = GFTrace.init();
     }
@@ -1224,7 +1225,7 @@ export class $GF {
           window.clearTimeout(tm);
         }
       } catch (error) {
-        $GF.log.warn('Failed to clear timeout thread', id, error);
+        GFLog.warn('Failed to clear timeout thread', id, error);
       }
     }
   }
@@ -1356,7 +1357,7 @@ export class $GF {
         interval.delete(id);
         window.clearInterval(int);
       } catch (error) {
-        $GF.log.warn('Failed to clear interval thread', id, error);
+        GFLog.warn('Failed to clear interval thread', id, error);
       }
     }
   }
@@ -1383,14 +1384,14 @@ export class $GF {
                 response
                   .text()
                   .then((text) => {
-                    $GF.log.info('loadLocalFile called succesfully', filePath);
+                    GFLog.info('loadLocalFile called succesfully', filePath);
                     $GF.setVar(varName, text);
                     return text;
                   })
-                  .catch((error) => $GF.log.error('Error when download text file', filePath, error));
+                  .catch((error) => GFLog.error('Error when download text file', filePath, error));
               }
             })
-            .catch((error) => $GF.log.error('Error when download file', filePath, error));
+            .catch((error) => GFLog.error('Error when download file', filePath, error));
         } else {
           // Faire quelque chose avec XMLHttpRequest?
           const txt = $GF.utils.loadFile(fileName);
@@ -1400,7 +1401,7 @@ export class $GF {
           }
         }
       } else {
-        $GF.log.warn('loadLocalFile Contexroot : ', contextroot);
+        GFLog.warn('loadLocalFile Contexroot : ', contextroot);
       }
     }
     return false;
@@ -1662,7 +1663,7 @@ export class GFTable {
         const body: any = this.tableDiv.getElementsByClassName('gf-table-body')[0];
         this.bodyTable = body;
       } else {
-        $GF.log.error('Unable to find table definition with class gf-table-main');
+        GFLog.error('Unable to find table definition with class gf-table-main');
       }
     }
   }
@@ -1820,7 +1821,7 @@ export class GFTimer {
         window.clearTimeout(id);
       }
     } catch (error) {
-      $GF.log.warn('Failed to clear timeout thread', id, error);
+      GFLog.warn('Failed to clear timeout thread', id, error);
     }
   }
 
@@ -1890,7 +1891,7 @@ export class GFTimer {
         }
         step.fn();
       } catch (error) {
-        $GF.log.warn('Failed to run fn', error);
+        GFLog.warn('Failed to run fn', error);
       }
       this._currentStep = step.step;
       step.running = false;

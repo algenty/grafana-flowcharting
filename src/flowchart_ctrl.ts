@@ -7,7 +7,7 @@ import { RulesHandler } from 'rules_handler';
 import { FlowchartHandler } from 'flowchart_handler';
 import { MetricHandler } from 'metric_handler';
 // import { PanelEvents } from '@grafana/data';
-import { $GF, GFTimer } from 'globals_class';
+import { $GF, GFTimer, GFLog } from 'globals_class';
 import { XGraph } from 'graph_class';
 import grafana from 'grafana_func';
 import { defaults as _defaults, cloneDeep as _cloneDeep } from 'lodash';
@@ -126,7 +126,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   // 9.1 : FIX for edit mode in grafana 7.x : Not work
   // Clean edit mode
   _on_TearDown() {
-    // $GF.log.debug('EVENT : ', this.id, 'onTearDown');
+    // GFLog.debug('EVENT : ', this.id, 'onTearDown');
   }
 
   /**
@@ -171,7 +171,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   _on_events_refreshed() {
     const funcName = 'onRefresh';
-    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
+    GFLog.debug(`${this.constructor.name}.${funcName}()`);
     this.flowchartHandler?.update();
   }
 
@@ -182,7 +182,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    */
   _on_events_variables_changed() {
     const funcName = 'onVarChanged';
-    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
+    GFLog.debug(`${this.constructor.name}.${funcName}()`);
     if (this.flowchartHandler !== undefined) {
       // this.flowchartHandler.onChangeGraph();
       // this.flowchartHandler.render();
@@ -196,7 +196,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    */
   _on_events_rendered() {
     const funcName = 'onRender';
-    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
+    GFLog.debug(`${this.constructor.name}.${funcName}()`);
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();
@@ -217,7 +217,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    */
   _on_events_data_updated(dataList: any) {
     const funcName = 'onDataReceived';
-    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
+    GFLog.debug(`${this.constructor.name}.${funcName}()`);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
     this.metricHandler?.setDataList(dataList);
     this.metricHandler?.change();
@@ -251,7 +251,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   initHandlers() {
     const funcName = 'initHandlers';
-    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
+    GFLog.debug(`${this.constructor.name}.${funcName}()`);
     // METRICS / DATAS
     if (!this.metricHandler) {
       this.metricHandler = new MetricHandler();
@@ -287,7 +287,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   link(scope: any, elem: any, attrs: any, ctrl: any) {
     const funcName = 'link';
-    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
+    GFLog.debug(`${this.constructor.name}.${funcName}()`);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
     this.$panelElem = elem;
 

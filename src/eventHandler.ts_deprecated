@@ -24,7 +24,7 @@ export class EventHandler {
 
   subscribes(object: Object) {
     const funcName = 'subscribes';
-    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
+    GFLog.debug(`${this.constructor.name}.${funcName}()`);
     const listLen = this.eventList.length;
     const nameLen = this.eventName.length;
     for (let i = 0; i < listLen; i++) {
@@ -38,7 +38,7 @@ export class EventHandler {
 
   unsubscribes(object: Object) {
     const funcName = 'unsubscribes';
-    $GF.log.debug(`${this.constructor.name}.${funcName}()`);
+    GFLog.debug(`${this.constructor.name}.${funcName}()`);
     const listLen = this.eventList.length;
     const nameLen = this.eventName.length;
     for (let i = 0; i < listLen; i++) {
@@ -62,14 +62,14 @@ export class EventHandler {
         // }
         if (funcObject !== undefined) {
           let observable = this._getObservable(mapName);
-          $GF.log.debug(
+          GFLog.debug(
             `Subscribe object ${object.constructor.name} for observer ${funcName} with uid ${object['uid']}`
           );
           object[subscriptionName] = observable.subscribe(object[funcName]());
         }
       }
     } catch (error) {
-      $GF.log.error(error);
+      GFLog.error(error);
     }
   }
 
@@ -77,26 +77,26 @@ export class EventHandler {
     try {
       const subscriptionName = `${list}$${eventName}`;
       if (object[subscriptionName] !== undefined) {
-        // $GF.log.debug(`Subscription for ${subscriptionName} found for object`, object);
+        // GFLog.debug(`Subscription for ${subscriptionName} found for object`, object);
         const sub: Subscription = object[subscriptionName];
         sub.unsubscribe();
         object[subscriptionName] = undefined;
       }
     } catch (error) {
-      $GF.log.error(error);
+      GFLog.error(error);
     }
   }
 
   emit(object: TEventObject, eventName: TEventName) {
     if (object) {
-      $GF.log.debug(this.constructor.name + '.emit() for object ' + object.constructor.name + ' with ' + eventName);
+      GFLog.debug(this.constructor.name + '.emit() for object ' + object.constructor.name + ' with ' + eventName);
     }
     try {
       const mapName = this._getObservableName(object, eventName);
       let observable = this._getObservable(mapName);
       observable.next(object);
     } catch (error) {
-      $GF.log.error(error);
+      GFLog.error(error);
     }
   }
 
@@ -106,7 +106,7 @@ export class EventHandler {
       let observable = this._getObservable(mapName);
       observable.next(null);
     } catch (error) {
-      $GF.log.error(error);
+      GFLog.error(error);
     }
   }
 

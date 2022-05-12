@@ -1,5 +1,4 @@
 import { XGraph } from '../src/graph_class';
-import { $GF } from '../src/globals_class';
 const fs = require('fs');
 async function loadLibs() {
   await fs.readFile('src/libs/drawio/js/viewer-static.min.js', 'utf8', (err, data) => {

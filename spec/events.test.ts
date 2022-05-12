@@ -16,7 +16,7 @@ describe('Test Flowcharting Events', () => {
       obj.myNumber -= 1;
     },
     fnflag: (obj) => {
-      console.log('fnflag called with args', obj);
+      // console.log('fnflag called with args', obj);
       obj.flag = !obj.flag;
     },
   };

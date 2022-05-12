@@ -1,5 +1,5 @@
 import { each as _each } from 'lodash';
-import { $GF, GFDrawioTools, GFTimer } from 'globals_class';
+import { $GF, GFDrawioTools, GFTimer, GFLog } from 'globals_class';
 const dioCustom = require('drawio_custom');
 import chroma from 'chroma-js';
 const mxcustom = require('mxgraph_custom');
@@ -69,7 +69,7 @@ export class XGraph {
 
   init() {
     const funcName = 'init';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     XGraph.initMxGraphLib();
     if (this.type === 'xml') {
       if (GFDrawioTools.isEncoded(this.definition)) {
@@ -109,7 +109,7 @@ export class XGraph {
 
   change() {
     const funcName = 'change';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.drawGraph();
     // this.onChanged();
     this.events.emit('graph_changed', this);
@@ -118,7 +118,7 @@ export class XGraph {
 
   update() {
     const funcName = 'update';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.updateGraph();
     this.events.emit('graph_updated', this);
     return this;
@@ -126,7 +126,7 @@ export class XGraph {
 
   free() {
     const funcName = 'free';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.freeGraph();
     this.clear();
     // this.onDestroyed();
@@ -294,12 +294,12 @@ export class XGraph {
           dioCustom.importCsv(this.graph, this.csvGraph);
           this.updateGraph();
         } catch (error) {
-          $GF.log.error('Bad CSV format', error);
+          GFLog.error('Bad CSV format', error);
           $GF.notify('Bad CSV format', 'error');
         }
       }
     } catch (error) {
-      $GF.log.error('Error in draw', error);
+      GFLog.error('Error in draw', error);
     } finally {
       this.graph.getModel().endUpdate();
       this.initXCells();
@@ -352,7 +352,7 @@ export class XGraph {
           this.graph.addExtFont(extFonts[i].name, extFonts[i].url);
         }
       } catch (e: any) {
-        $GF.log.error('ExtFonts format error:', e.message);
+        GFLog.error('ExtFonts format error:', e.message);
       }
     }
   }
@@ -826,7 +826,7 @@ export class XGraph {
           xcell.setStyle(style, hex);
         }
       } catch (error) {
-        $GF.log.error('Error on graduate color', error);
+        GFLog.error('Error on graduate color', error);
         xcell.setStyle(style, color);
       }
     } else {
@@ -834,7 +834,7 @@ export class XGraph {
         try {
           color = chroma(color).hex();
         } catch (error) {
-          $GF.log.error('Invalid Color', color);
+          GFLog.error('Invalid Color', color);
         }
       }
       xcell.setStyle(style, color);
@@ -1164,10 +1164,10 @@ export class XGraph {
       if (req.getStatus() >= 200 && req.getStatus() <= 299) {
         return req.getText();
       } else {
-        $GF.log.error('Cannot load ' + url, req.getStatus());
+        GFLog.error('Cannot load ' + url, req.getStatus());
       }
     } catch (error) {
-      $GF.log.error('Cannot load ' + url, error);
+      GFLog.error('Cannot load ' + url, error);
     }
     return null;
   }
@@ -1212,7 +1212,7 @@ export class XGraph {
           (margin + ch - h * s) / (2 * s) - bounds.y / g.view.scale
         );
       } catch (error) {
-        $GF.log.error('Error in preview', error);
+        GFLog.error('Error in preview', error);
       }
     }
   }
@@ -1227,30 +1227,30 @@ export class XGraph {
 //
 // async onDestroyed() {
 //   const funcName = 'onDestroyed';
-//   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+//   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
 //   this.ctrl.eventHandler.emit(this, 'destroyed');
 // }
 
 // async onRefreshed() {
 //   const funcName = 'onRefreshed';
-//   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+//   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
 //   this.ctrl.eventHandler.emit(this, 'refreshed');
 // }
 
 // async onInitialized() {
 //   const funcName = 'onInitialized';
-//   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+//   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
 //   this.ctrl.eventHandler.emit(this, 'initialized');
 // }
 
 // async onChanged() {
 //   const funcName = 'onChanged';
-//   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+//   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
 //   this.ctrl.eventHandler.emit(this, 'changed');
 // }
 
 // async onCompleted() {
 //   const funcName = 'onCompleted';
-//   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+//   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
 // }
 // }

@@ -2,7 +2,7 @@ import { FlowchartHandler } from './flowchart_handler';
 import { RulesHandler } from './rules_handler';
 import { Rule } from './rule_class';
 import { EventMap, ObjectMap, ObjectMapArray } from './mapping_class';
-import { $GF, GFTable } from './globals_class';
+import { $GF, GFTable, GFLog } from './globals_class';
 import grafana from 'grafana_func';
 // import _ from 'lodash';
 import { MetricHandler } from './metric_handler';
@@ -885,7 +885,7 @@ export class RulesOptionsCtrl {
   }
 
   onRulesChange() {
-    $GF.log.info('RulesOptionsCtrl.onRulesChange()');
+    GFLog.info('RulesOptionsCtrl.onRulesChange()');
     this.ctrl.rulesHandler?.change();
     // this.flowchartHandler?.onRulesChange();
     // this.render();

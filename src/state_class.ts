@@ -2,7 +2,7 @@ import { XGraph } from 'graph_class';
 import { Rule } from 'rule_class';
 import { EventMap } from 'mapping_class';
 import { TooltipHandler } from 'tooltipHandler';
-import { $GF, GFVariables } from 'globals_class';
+import { $GF, GFVariables, GFLog } from 'globals_class';
 import { XCell } from 'cell_class';
 import { ObjectMetric } from 'metric_class';
 import { GFEvents } from 'flowcharting_base';
@@ -107,7 +107,7 @@ export class State {
   setCycle(rule?: Rule): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setCycle()');
     const funcName = 'setCycle';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     const rules = rule === undefined ? this._rules : [rule];
     rules.forEach((r: Rule) => {
       let beginPerf = Date.now();
@@ -122,7 +122,7 @@ export class State {
             this.currMetrics.push(metric.getName());
             this._variables.set($GF.CONSTANTS.VAR_STR_METRIC, metric.getName);
           } catch (error) {
-            $GF.log.error(error);
+            GFLog.error(error);
           }
           const value = r.getValueForMetric(metric);
           const FormattedValue = r.getFormattedValue(value);
@@ -349,7 +349,7 @@ export class State {
   applyCycle(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'applyState()');
     const funcName = 'applyCycle';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this._matched || this._changed) {
       this._changed = true;
       this._shapeState.apply();
@@ -396,7 +396,7 @@ export class State {
   initCycle(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
     const funcName = 'initCycle';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this._changed) {
       this._shapeState.prepare();
       this._tooltipState.prepare();
@@ -573,33 +573,33 @@ export class State {
   //
   // async onDestroyed() {
   //   const funcName = 'onDestroyed';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.unsubscribes(this);
   //   this.ctrl.eventHandler.emit(this, 'destroyed');
   // }
 
   // async onRefreshed() {
   //   const funcName = 'onRefreshed';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.emit(this, 'refreshed');
   // }
 
   // async onInitialized() {
   //   const funcName = 'onInitialized';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.subscribes(this);
   //   this.ctrl.eventHandler.emit(this, 'initialized');
   // }
 
   // async onChanged() {
   //   const funcName = 'onChanged';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.emit(this, 'changed');
   // }
 
   // async onCompleted() {
   //   const funcName = 'onCompleted';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.emit(this, 'completed');
   // }
 
@@ -615,7 +615,7 @@ export class State {
   //       }
   //     },
   //     error: err => {
-  //       $GF.log.error(err);
+  //       GFLog.error(err);
   //     },
   //     complete: () => {},
   //   };
@@ -626,13 +626,13 @@ export class State {
   //   const funcName = 'getMetric$completed';
   //   return {
   //     next: rule => {
-  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       GFLog.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
   //       if (rule !== null && !self.completed && self.rules.has(rule.uid)) {
   //         self.complete();
   //       }
   //     },
   //     error: err => {
-  //       $GF.log.error(err);
+  //       GFLog.error(err);
   //     },
   //     complete: () => {},
   //   };
@@ -643,7 +643,7 @@ export class State {
   //   const funcName = 'getRule$refreshed';
   //   return {
   //     next: rule => {
-  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       GFLog.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
   //       if (rule !== null && this.rules.has(rule.uid)) {
   //         if (self.completed) {
   //           self.completed = false;
@@ -653,7 +653,7 @@ export class State {
   //       }
   //     },
   //     error: err => {
-  //       $GF.log.error(err);
+  //       GFLog.error(err);
   //     },
   //     complete: () => {},
   //   };
@@ -664,7 +664,7 @@ export class State {
   //   const funcName = 'getRule$changed';
   //   return {
   //     next: rule => {
-  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       GFLog.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
   //       if (rule !== null) {
   //         if (self.matchRule(rule)) {
   //           this.rules.set(rule.uid, rule);
@@ -674,7 +674,7 @@ export class State {
   //       }
   //     },
   //     error: err => {
-  //       $GF.log.error(err);
+  //       GFLog.error(err);
   //     },
   //     complete: () => {},
   //   };
@@ -685,13 +685,13 @@ export class State {
   //   const funcName = 'getRule$destroyed';
   //   return {
   //     next: rule => {
-  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       GFLog.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
   //       if (rule !== null) {
   //         self.rules.delete(rule.uid);
   //       }
   //     },
   //     error: err => {
-  //       $GF.log.error(err);
+  //       GFLog.error(err);
   //     },
   //     complete: () => {},
   //   };
@@ -812,7 +812,7 @@ export class GFState {
         try {
           this.apply_core(key, value);
         } catch (error) {
-          $GF.log.error('Error on reset for key ' + key, error);
+          GFLog.error('Error on reset for key ' + key, error);
         }
         this.ack(key);
       } else if (this.isChanged(key) && !this.isAcked(key)) {
@@ -884,7 +884,7 @@ export class GFState {
       try {
         this.reset_core(key, value);
       } catch (error) {
-        $GF.log.error('Error on reset for key ' + key, error);
+        GFLog.error('Error on reset for key ' + key, error);
       }
       this.changedKey.set(key, false);
       this.matchedKey.set(key, false);
@@ -1180,7 +1180,7 @@ class ShapeState extends GFState {
     // this.keys.forEach(key => {
     //   const value = this.xgraph.getStyleCell(this.mxcell, key);
     //   this.addValue(key, value);
-    //   $GF.log.debug('ShapeState [' + this.mxcell.id + '] Add value : ' + key, value);
+    //   GFLog.debug('ShapeState [' + this.mxcell.id + '] Add value : ' + key, value);
     // });
     // this.xcell.GF_tooltipHandler = null;
     this.xcell.enableTooltip(false);

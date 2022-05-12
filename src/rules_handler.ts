@@ -1,6 +1,6 @@
 import { Rule } from 'rule_class';
 import { sortBy as _sortBy } from 'lodash';
-import { $GF } from 'globals_class';
+import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 
 const ruleHandlerSignalsArray = ['rule_created'] as const;
@@ -47,7 +47,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   import(obj: any): this {
-    $GF.log.info('RuleHandler.import()');
+    GFLog.info('RuleHandler.import()');
     // this.rules = [];
     this.clear();
     let index = 1;
@@ -167,7 +167,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   removeRule(rule: Rule): this {
-    $GF.log.debug(this.constructor.name + '.removeRule()', rule);
+    GFLog.debug(this.constructor.name + '.removeRule()', rule);
     const index = rule.getOrder() - 1;
     rule.free();
     this.rules.splice(index, 1);
@@ -184,7 +184,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   cloneRule(rule: Rule): Rule {
-    $GF.log.debug(this.constructor.name + '.cloneRule()', rule);
+    GFLog.debug(this.constructor.name + '.cloneRule()', rule);
     const index = rule.getOrder() - 1;
     const data = rule.getData();
     const newData: gf.TIRuleData = Rule.getDefaultData();
@@ -262,7 +262,7 @@ export class RulesHandler {
   }
 
   clear(): this {
-    $GF.log.debug(this.constructor.name + '.clear()');
+    GFLog.debug(this.constructor.name + '.clear()');
     this.rules.forEach(r => r.clear());
     this.rules = [];
     this.data.rulesData = [];
@@ -274,27 +274,27 @@ export class RulesHandler {
   // Updates
   //
   init(): this {
-    $GF.log.debug(this.constructor.name + '.init()');
+    GFLog.debug(this.constructor.name + '.init()');
     // this.onInitialized();
     return this;
   }
 
   update(): this {
-    $GF.log.debug(this.constructor.name + '.refresh()');
+    GFLog.debug(this.constructor.name + '.refresh()');
     this.rules.forEach(r => r.update());
     // this.onRefreshed();
     return this;
   }
 
   change(): this {
-    $GF.log.debug(this.constructor.name + '.change()');
+    GFLog.debug(this.constructor.name + '.change()');
     this.rules.forEach(r => r.change());
     // this.onChanged();
     return this;
   }
 
   free(): this {
-    $GF.log.debug(this.constructor.name + '.destroy()');
+    GFLog.debug(this.constructor.name + '.destroy()');
     this.rules.forEach(r => r.free());
     this.clear();
     // this.onDestroyed();
@@ -316,29 +316,29 @@ export class RulesHandler {
   //
   // async onDestroyed() {
   //   const funcName = 'onDestroyed';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.unsubscribes(this);
   // }
 
   // async onRefreshed() {
   //   const funcName = 'onRefreshed';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   // }
 
   // async onInitialized() {
   //   const funcName = 'onInitialized';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.subscribes(this);
   // }
 
   // async onChanged() {
   //   const funcName = 'onChanged';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   // }
 
   // async onCompleted() {
   //   const funcName = 'onCompleted';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.ack('rule', 'completed');
   // }
 
@@ -349,7 +349,7 @@ export class RulesHandler {
   //   const funcName = 'getMetric$changed';
   //   return {
   //     next: (metric: ObjectMetric) => {
-  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       GFLog.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
   //       const len = this.rules.length;
   //       if (this.metricsCompleted) {
   //         this.metricsCompleted = false;
@@ -365,10 +365,10 @@ export class RulesHandler {
   //       }
   //     },
   //     error: err => {
-  //       $GF.log.error(err);
+  //       GFLog.error(err);
   //     },
   //     complete: () => {
-  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+  //       GFLog.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
   //     },
   //   };
   // }
@@ -378,7 +378,7 @@ export class RulesHandler {
   //   const funcName = 'getMetric$refreshed';
   //   return {
   //     next: (metric: ObjectMetric) => {
-  //       $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
+  //       GFLog.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
   //       if (metric !== null) {
   //         const len = self.rules.length;
   //         for (let i = 0; i < len; i++) {
@@ -389,10 +389,10 @@ export class RulesHandler {
   //       }
   //     },
   //     error: err => {
-  //       $GF.log.error(`${self.constructor.name}.${funcName}().next() : ${self.uid}`, err);
+  //       GFLog.error(`${self.constructor.name}.${funcName}().next() : ${self.uid}`, err);
   //     },
   //     complete: () => {
-  //       $GF.log.debug(`${self.constructor.name}.${funcName}().complete() : ${self.uid}`);
+  //       GFLog.debug(`${self.constructor.name}.${funcName}().complete() : ${self.uid}`);
   //     },
   //   };
   // }
@@ -402,7 +402,7 @@ export class RulesHandler {
   //   const funcName = 'getMetric$completed';
   //   return {
   //     next: (metric: ObjectMetric) => {
-  //       $GF.log.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
+  //       GFLog.debug(`${self.constructor.name}.${funcName}().next() : ${self.uid}`);
   //       if (metric === null && !self.metricsCompleted) {
   //         // const len = self.rules.length;
   //         // for (let i = 0; i < len; i++) {
@@ -412,10 +412,10 @@ export class RulesHandler {
   //       }
   //     },
   //     error: err => {
-  //       $GF.log.error(err);
+  //       GFLog.error(err);
   //     },
   //     complete: () => {
-  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+  //       GFLog.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
   //     },
   //   };
   // }
@@ -425,7 +425,7 @@ export class RulesHandler {
   //   const funcName = 'getState$initialized';
   //   return {
   //     next: (state: State) => {
-  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       GFLog.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
   //       if (state !== null) {
   //         const len = self.rules.length;
   //         for (let i = 0; i < len; i++) {
@@ -434,10 +434,10 @@ export class RulesHandler {
   //       }
   //     },
   //     error: err => {
-  //       $GF.log.error(err);
+  //       GFLog.error(err);
   //     },
   //     complete: () => {
-  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+  //       GFLog.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
   //     },
   //   };
   // }
@@ -447,16 +447,16 @@ export class RulesHandler {
   //   const funcName = 'getState$initialized';
   //   return {
   //     next: (flowchart: Flowchart) => {
-  //       $GF.log.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
+  //       GFLog.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
   //       if (flowchart !== null) {
   //         this.update();
   //       }
   //     },
   //     error: err => {
-  //       $GF.log.error(err);
+  //       GFLog.error(err);
   //     },
   //     complete: () => {
-  //       $GF.log.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
+  //       GFLog.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
   //     },
   //   };
   // }

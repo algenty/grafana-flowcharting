@@ -1,7 +1,7 @@
 import Chartist from 'chartist';
 // import ctAreaGradient from 'chartist-plugin-gradient';
 import { Metric } from './metric_class';
-import { $GF } from 'globals_class';
+import { $GF, GFLog } from 'globals_class';
 import { XCell } from 'cell_class';
 
 /**
@@ -205,7 +205,7 @@ export class MetricTooltip {
         graph = new BarGraphTooltip();
         break;
       default:
-        $GF.log.error('Graph type unknow', type);
+        GFLog.error('Graph type unknow', type);
         graph = new BarGraphTooltip();
         break;
     }

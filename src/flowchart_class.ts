@@ -1,7 +1,7 @@
 import { XGraph } from 'graph_class';
 import { StateHandler } from 'statesHandler';
 import { FlowchartHandler } from 'flowchart_handler';
-import { $GF, GFDrawioTools } from 'globals_class';
+import { $GF, GFDrawioTools, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 
 const flowchartSignalsArray = ['flowchart_initialized', 'flowchart_updated', 'flowchart_changed', 'flowchart_freed'] as const;
@@ -38,7 +38,7 @@ export class Flowchart {
    * @memberof Flowchart
    */
   import(obj: any): this {
-    $GF.log.info(`flowchart[${this.data.name}].import()`);
+    GFLog.info(`flowchart[${this.data.name}].import()`);
     this.clear();
     if (!!obj.download || this.data.download === false) {
       this.data.download = obj.download;
@@ -106,7 +106,7 @@ export class Flowchart {
 
   async free() {
     const funcName = 'destroy';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.xgraph?.free();
     this.stateHandler?.free();
     await this.events.emit('flowchart_freed', this);
@@ -115,7 +115,7 @@ export class Flowchart {
 
   update() {
     const funcName = 'refresh';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.xgraph?.update();
     // this.stateHandler?.refresh();
     // this.refreshStates();
@@ -126,14 +126,14 @@ export class Flowchart {
 
   change() {
     const funcName = 'change';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.changeGraph();
     this.events.emit('flowchart_changed', this);
   }
 
   init() {
     const funcName = 'init';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.initGraph();
     this.initStateHandler();
     this.events.emit('flowchart_initialized', this);
@@ -194,10 +194,10 @@ export class Flowchart {
   //           state.unsetState();
   //         });
   //       } else {
-  //         $GF.log.warn('States not defined for this rule');
+  //         GFLog.warn('States not defined for this rule');
   //       }
   //     } else {
-  //       $GF.log.error('updateStates => this.stateHandler undefined');
+  //       GFLog.error('updateStates => this.stateHandler undefined');
   //     }
   //   });
   //   trc.after();
@@ -225,7 +225,7 @@ export class Flowchart {
       }
     } catch (error) {
       $GF.notify('Unable to initialize graph', 'error');
-      $GF.log.error('Unable to initialize graph', error);
+      GFLog.error('Unable to initialize graph', error);
     }
     return this;
   }
@@ -267,11 +267,11 @@ export class Flowchart {
         $GF.clearNotify();
       } else {
         $GF.notify('Source content empty Graph not defined', 'error');
-        $GF.log.error('Source content empty Graph not defined');
+        GFLog.error('Source content empty Graph not defined');
       }
     } catch (error) {
       $GF.notify('Unable to initialize graph', 'error');
-      $GF.log.error('Unable to initialize graph', error);
+      GFLog.error('Unable to initialize graph', error);
     }
     return this;
   }
@@ -304,9 +304,9 @@ export class Flowchart {
    * @memberof Flowchart
    */
   // setStates(rules: Rule[]): this {
-  //   // $GF.log.info(`flowchart[${this.data.name}].setStates()`);
+  //   // GFLog.info(`flowchart[${this.data.name}].setStates()`);
   //   if (rules === undefined) {
-  //     $GF.log.warn("Rules shoudn't be null");
+  //     GFLog.warn("Rules shoudn't be null");
   //   }
   //   if (this.stateHandler) {
   //     this.stateHandler.setStates(rules);
@@ -340,7 +340,7 @@ export class Flowchart {
    * @memberof Flowchart
    */
   // applyStates(): this {
-  //   // $GF.log.info(`flowchart[${this.data.name}].applyStates()`);
+  //   // GFLog.info(`flowchart[${this.data.name}].applyStates()`);
   //   if (this.stateHandler) {
   //     this.stateHandler.applyStates();
   //   }
@@ -818,27 +818,27 @@ export class Flowchart {
   //
   // async onDestroyed() {
   //   const funcName = 'onDestroyed';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.emit(this, 'destroyed');
   //   this.ctrl.eventHandler.unsubscribes(this);
   // }
 
   // async onRefreshed() {
   //   const funcName = 'onRefreshed';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.emit(this, 'refreshed');
   // }
 
   // async onInitialized() {
   //   const funcName = 'onInitialized';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.subscribes(this);
   //   this.ctrl.eventHandler.emit(this, 'initialized');
   // }
 
   // async onChanged() {
   //   const funcName = 'onChanged';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.emit(this, 'changed');
   //   // this.refresh(); //TODO : Verify
   // }

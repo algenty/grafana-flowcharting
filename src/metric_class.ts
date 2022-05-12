@@ -1,6 +1,6 @@
 import grafana from './grafana_func';
 import { find as _find, isNumber as _isNumber } from 'lodash';
-import { $GF } from 'globals_class';
+import { $GF, GFLog } from 'globals_class';
 import { DateTH } from 'threshold_class';
 import { GFEvents } from 'flowcharting_base';
 
@@ -42,7 +42,7 @@ export class Metric {
    */
   getName(): string {
     if (this.name === undefined || this.name === null) {
-      $GF.log.error('Metric => getName : Name is null');
+      GFLog.error('Metric => getName : Name is null');
     }
     return this.name;
   }
@@ -136,20 +136,20 @@ export class Metric {
   // //
   // async onDestroyed() {
   //   const funcName = 'onDestroyed';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.emit(this, 'destroyed');
   //   this.ctrl.eventHandler.unsubscribes(this);
   // }
 
   // async onRefreshed() {
   //   const funcName = 'onRefreshed';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.emit(this, 'refreshed');
   // }
 
   // async onInitialized() {
   //   const funcName = 'onInitialized';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.subscribes(this);
   //   this.ctrl.eventHandler.emit(this, 'initialized');
   //   this.onChanged();
@@ -157,7 +157,7 @@ export class Metric {
 
   // async onChanged() {
   //   const funcName = 'onChanged';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.emit(this, 'changed');
   // }
 
@@ -169,7 +169,7 @@ export class Metric {
   //   const self = this;
   //   return {
   //     next: (timestamp: number) => {
-  //       $GF.log.debug(`${this.constructor.name} -> ${funcName}()`, timestamp);
+  //       GFLog.debug(`${this.constructor.name} -> ${funcName}()`, timestamp);
   //       if (timestamp !== null) {
   //         self.GHValue = this.findValue(timestamp);
   //       } else {
@@ -178,10 +178,10 @@ export class Metric {
   //       self.onRefreshed();
   //     },
   //     error: err => {
-  //       $GF.log.error(err);
+  //       GFLog.error(err);
   //     },
   //     complete: () => {
-  //       $GF.log.debug(`${this.constructor.name} -> ${funcName}().complete()`);
+  //       GFLog.debug(`${this.constructor.name} -> ${funcName}().complete()`);
   //     },
   //   };
   // }
@@ -257,7 +257,7 @@ export class SerieMetric extends Metric {
         this.metrics.stats['first_notnull'] = this.metrics.flotpairs[idx][1];
       }
     } catch (error) {
-      $GF.log.error('Unable to add custom stats', error);
+      GFLog.error('Unable to add custom stats', error);
     }
     trc.after();
   }
@@ -281,7 +281,7 @@ export class SerieMetric extends Metric {
       }
       return value;
     } catch (error) {
-      $GF.log.error('datapoint for serie is null', error);
+      GFLog.error('datapoint for serie is null', error);
       return null;
     }
   }
@@ -516,7 +516,7 @@ export class TableMetric extends Metric {
           result.push([currentTime, currentValue]);
         }
       } catch (error) {
-        $GF.log.error('Unable to aggregate data', error);
+        GFLog.error('Unable to aggregate data', error);
       }
 
       if (currentTime) {
@@ -569,7 +569,7 @@ export class TableMetric extends Metric {
       }
       return value;
     } catch (error) {
-      $GF.log.error('datapoint for table is null', error);
+      GFLog.error('datapoint for table is null', error);
       return null;
     }
   }

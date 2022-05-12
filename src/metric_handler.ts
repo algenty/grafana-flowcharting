@@ -1,5 +1,5 @@
 import { SerieMetric, TableMetric, ObjectMetric } from 'metric_class';
-import { $GF } from 'globals_class';
+import { $GF,GFLog } from 'globals_class';
 
 export class MetricHandler {
   dataList: any[] = [];
@@ -189,7 +189,7 @@ export class MetricHandler {
   //
   change() {
     const funcName = 'change';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
     this.free();
     this.dataList.forEach((dl) => {
@@ -200,20 +200,20 @@ export class MetricHandler {
 
   update(timestamp?: number): this {
     const funcName = 'refresh';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.metrics.forEach((m) => m.update(timestamp));
     return this;
   }
 
   init(): this {
     const funcName = 'init';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     return this;
   }
 
   free(): this {
     const funcName = 'destroy';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.metrics.forEach((m: ObjectMetric) => {
       m.free();
     });
@@ -223,7 +223,7 @@ export class MetricHandler {
 
   complete(): this {
     const funcName = 'complete';
-    $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     // this.onCompleted();
     return this;
   }
@@ -233,30 +233,30 @@ export class MetricHandler {
   //
   // async onDestroyed() {
   //   const funcName = 'onDestroyed';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   // }
 
   // async onRefreshed() {
   //   const funcName = 'onRefreshed';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.onCompleted();
   // }
 
   // async onInitialized() {
   //   const funcName = 'onInitialized';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.ack('metric', 'initialized');
   // }
 
   // async onChanged() {
   //   const funcName = 'onChanged';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.onCompleted();
   // }
 
   // async onCompleted() {
   //   const funcName = 'onCompleted';
-  //   $GF.log.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   this.ctrl.eventHandler.ack('metric', 'completed');
   // }
 }

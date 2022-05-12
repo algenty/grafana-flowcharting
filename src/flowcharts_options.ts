@@ -1,6 +1,6 @@
 import { FlowchartHandler } from 'flowchart_handler';
 import { Flowchart } from 'flowchart_class';
-import { $GF, GFDrawioTools, GFTable } from 'globals_class';
+import { $GF, GFDrawioTools, GFTable, GFLog } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
 export class FlowchartsOptionsCtrl {
@@ -287,7 +287,7 @@ export class FlowchartsOptionsCtrl {
                 this.errorSourceFlag = !bool;
                 if (this.errorSourceFlag) {
                   this.ctrl.notify('Response is an invalid Xml definition', 'error');
-                  $GF.log.error('Response is an invalid Xml definition');
+                  GFLog.error('Response is an invalid Xml definition');
                 } else {
                   this.ctrl.clearNotify();
                   this.onSourceChange();

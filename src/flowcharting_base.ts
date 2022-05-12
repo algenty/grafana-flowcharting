@@ -1,5 +1,3 @@
-import { $GF } from 'globals_class';
-
 interface CallableSignalChild extends Object {
   uid: string;
 }
@@ -35,7 +33,6 @@ export class GFEvents<Signals> {
         this._declaredSignals.push(signalName);
         return this;
       }
-      $GF.log.warn(`Signal ${signalName} already declared`);
     }
     return this;
   }
@@ -51,11 +48,10 @@ export class GFEvents<Signals> {
 
   connect(signalName: Signals, objRef: CallableSignalChild, callfn: CallableFunction): boolean {
     if (!('uid' in objRef)) {
-      $GF.log.error(`${objRef.toString()} have no uid property`);
-      return false;
+      throw new Error(`${objRef.toString()} have no uid property`);
     }
     if (!this._haveDeclaredSignal(signalName)) {
-      $GF.log.error(`${this.toString()} have no declared signal ${signalName}`);
+      throw new Error(`${this.toString()} have no declared signal ${signalName}`);
       return false;
     }
     const uid = objRef.uid;
@@ -79,10 +75,10 @@ export class GFEvents<Signals> {
 
   disconnect(signalName: Signals, objRef: CallableSignalChild) {
     if (!this._haveDeclaredSignal(signalName)) {
-      $GF.log.error(`${this.toString()} have no declared signal ${signalName}`);
+      return
     }
     if (!('uid' in objRef)) {
-      $GF.log.error(`${objRef.toString()} have no uid property`);
+      return;
     }
     const uid = objRef.uid;
     const childs = this._connectedChilds.get(signalName);
@@ -107,7 +103,7 @@ export class GFEvents<Signals> {
 
   private _getCallableFunc(signalName: Readonly<Signals>): CallableFunction[] {
     if (!this._haveDeclaredSignal(signalName)) {
-      $GF.log.error(`${this.toString()} have no declared signal ${signalName}`);
+      // GFLog.error(`${this.toString()} have no declared signal ${signalName}`);
       return [];
     }
     const childs = this._connectedChilds.get(signalName);
