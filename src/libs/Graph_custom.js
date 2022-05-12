@@ -1,8 +1,8 @@
 mxTooltipHandler.prototype.show = function (tip, x, y) {
   // TYPE STRING
-  if (this.destroyed) return;
-  if (tip == null) return;
-  if (tip.length == 0) return;
+  if (this.destroyed) {return;}
+  if (tip == null) {return;}
+  if (tip.length === 0) {return;}
   // Initializes the DOM nodes if required
   if (this.div == null) {
     this.init();
@@ -67,7 +67,7 @@ Graph.prototype.getTooltipForCell = function (cell) {
     // }
 
     // Attributes
-    for (var i = 0; i < attrs.length; i++) {
+    for (let i = 0; i < attrs.length; i++) {
       if (mxUtils.indexOf(ignored, attrs[i].nodeName) < 0 && attrs[i].nodeValue.length > 0) {
         temp.push({ name: attrs[i].nodeName, value: attrs[i].nodeValue });
       }
@@ -87,10 +87,10 @@ Graph.prototype.getTooltipForCell = function (cell) {
       hasTips = true;
       var attrDiv = document.createElement('div');
       var attrString = '';
-      for (var i = 0; i < temp.length; i++) {
-        if (temp[i].name != 'link' || !this.isCustomLink(temp[i].value)) {
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i].name !== 'link' || !this.isCustomLink(temp[i].value)) {
           attrString +=
-            (temp[i].name != 'link' ? '<b>' + temp[i].name + ':</b> ' : '') +
+            (temp[i].name !== 'link' ? '<b>' + temp[i].name + ':</b> ' : '') +
             mxUtils.htmlEntities(temp[i].value) +
             '\n';
         }
@@ -108,7 +108,7 @@ Graph.prototype.getTooltipForCell = function (cell) {
       hasTips = true;
     }
   }
-  if (hasTips) return div;
+  if (hasTips) {return div;}
   return '';
 };
 
@@ -118,7 +118,7 @@ mxEvent.addMouseWheelListener = function (func, container) {
       null == container && (container = window.event);
       var c;
       c = mxClient.IS_FF ? -container.detail / 2 : container.wheelDelta / 120;
-      0 != c && func(container, 0 < c);
+      0 !== c && func(container, 0 < c);
     };
     mxClient.IS_NS && null == document.documentMode
       ? mxEvent.addListener(

@@ -142,4 +142,7 @@ function loadCode() {
 
 }
 
-module.export = { customize, evalCode };
+module.exports = {
+  customize,
+  evalCode
+};
