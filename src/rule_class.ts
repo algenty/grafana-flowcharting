@@ -20,7 +20,7 @@ import { GFEvents } from 'flowcharting_base';
 
 
 // Signal definition
-const ruleSignalsArray = ['rule_initalized', 'rule_update', 'rule_changed', 'rule_freed'] as const;
+const ruleSignalsArray = ['rule_initalized', 'rule_updated', 'rule_changed', 'rule_freed'] as const;
 type RuleSignals = typeof ruleSignalsArray[number];
 
 
@@ -686,8 +686,9 @@ export class Rule {
    * @param {number} order
    * @memberof Rule
    */
-  setOrder(order: number) {
+  setOrder(order: number): this {
     this.data.order = order;
+    return this;
   }
 
   /**
@@ -1033,13 +1034,13 @@ export class Rule {
     return this;
   }
 
-  _clearNumberThresholds(): this {
+  private _clearNumberThresholds(): this {
     this.data.numberTHData = [];
     this.numberTH = [];
     return this;
   }
 
-  _initNumberThresholds(): this {
+  private _initNumberThresholds(): this {
     this._clearNumberThresholds();
     this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0);
     this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50);
@@ -1047,13 +1048,13 @@ export class Rule {
     return this;
   }
 
-  _clearStringThresholds(): this {
+  private _clearStringThresholds(): this {
     this.data.stringTHData = [];
     this.stringTH = [];
     return this;
   }
 
-  _initStringThresholds(): this {
+  private _initStringThresholds(): this {
     this._clearStringThresholds();
     this._addStringThreshold(0, 'rgba(245, 54, 54, 0.9)', '/.*/');
     this._addStringThreshold(1, 'rgba(237, 129, 40, 0.89)', '/.*warning.*/');
@@ -1061,13 +1062,13 @@ export class Rule {
     return this;
   }
 
-  _clearDateThresholds(): this {
+  private _clearDateThresholds(): this {
     this.data.dateTHData = [];
     this.dateTH = [];
     return this;
   }
 
-  _initDateThresholds(): this {
+  private _initDateThresholds(): this {
     this._clearDateThresholds();
     this._addDateThreshold(0, 'rgba(245, 54, 54, 0.9)', '0d');
     this._addDateThreshold(1, 'rgba(237, 129, 40, 0.89)', '-1d');
@@ -2112,12 +2113,14 @@ export class Rule {
   //
   update() {
     this.initCycle();
-    // this.onRefreshed();
+    this.events.emit('rule_updated', this);
     return this;
   }
 
   init() {
-    // this.onInitialized();
+    $GF.metricHandler.events.connect('metric_created', this, this._on_global_metric_created.bind(this))
+    $GF.metricHandler.events.connect('metric_deleted', this, this._on_global_metric_deleted.bind(this))
+    this.events.emit('rule_initalized', this);
     return this;
   }
 
@@ -2132,6 +2135,8 @@ export class Rule {
 
   async free() {
     await this.events.emit('rule_freed', this);
+    $GF.metricHandler.events.disconnect('metric_created', this);
+    $GF.metricHandler.events.disconnect('metric_deleted', this);
     this.events.clear();
     return this;
   }
@@ -2168,17 +2173,17 @@ export class Rule {
     return this;
   }
 
-  updateMetricList(metric: ObjectMetric): this {
-    if (metric !== null && metric !== undefined) {
-      if (this.matchMetric(metric)) {
-        this.metrics.set(metric.uid, metric);
-      } else {
-        this.metrics.delete(metric.uid);
-      }
-    }
-    // this.onRefreshed();
-    return this;
-  }
+  // updateMetricList(metric: ObjectMetric): this {
+  //   if (metric !== null && metric !== undefined) {
+  //     if (this.matchMetric(metric)) {
+  //       this.metrics.set(metric.uid, metric);
+  //     } else {
+  //       this.metrics.delete(metric.uid);
+  //     }
+  //   }
+  //   // this.onRefreshed();
+  //   return this;
+  // }
 
   // removeMetric(metric: ObjectMetric) {
   //   if (metric !== null && metric !== undefined) {
@@ -2190,12 +2195,22 @@ export class Rule {
     return this.metrics.has(metric.uid);
   }
 
+  //#############################################################
+  //### EVENTS
+  //#############################################################
+  private _on_global_metric_deleted(metric: ObjectMetric) {
+    if(this.metrics.has(metric.uid) {
+      this.metrics.delete(metric.uid)
+      this.update();
+    }
+  }
 
-  /******** EVENTS *******/
-  // private _on_MetricUpdated(metric: ObjectMetric) {
-  //   this.updateMetricList(metric)
-  // }
-
+  private _on_global_metric_created(metric: ObjectMetric) {
+    if(this.matchMetric(metric)) {
+      this.metrics.set(metric.uid, metric);
+      this.update();
+    }
+  }
 
 
 

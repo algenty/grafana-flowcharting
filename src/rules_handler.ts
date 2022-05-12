@@ -3,7 +3,7 @@ import { sortBy as _sortBy } from 'lodash';
 import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 
-const ruleHandlerSignalsArray = ['rule_created'] as const;
+const ruleHandlerSignalsArray = ['rule_created', 'rule_updated', 'rule_deleted'] as const;
 type RuleHandlerSignals = typeof ruleHandlerSignalsArray[number];
 
 /**
@@ -18,7 +18,7 @@ export class RulesHandler {
   uid: string;
   data: gf.TIRulesHandlerData;
   activeRuleIndex = 0;
-  events: GFEvents<RuleHandlerSignals> = new GFEvents();
+  events: GFEvents<RuleHandlerSignals> = GFEvents.create(ruleHandlerSignalsArray);
   // metricsCompleted =true;
 
   /**
@@ -30,7 +30,6 @@ export class RulesHandler {
     this.uid = $GF.genUid(this.constructor.name);
     this.rules = [];
     this.data = data;
-    this.events.declare(ruleHandlerSignalsArray)
     this.init();
   }
 
@@ -61,14 +60,14 @@ export class RulesHandler {
       }
       // Fix bug of grafana 6+
       if (tmpRules.length > 0 && tmpRules[0].order !== undefined) {
-        tmpRules = _sortBy(_sortBy(tmpRules, o => o.order));
+        tmpRules = _sortBy(_sortBy(tmpRules, (o) => o.order));
       }
 
-      tmpRules.forEach(ruleData => {
-        this.addRule('')
-          .import(ruleData)
-          .setOrder(index);
+      tmpRules.map(async (ruleData) => {
+        const r = this.addRule('').import(ruleData).setOrder(index);
         index += 1;
+        this.events.emit('rule_created', r);
+        // TODO : Fix to add data directly to emit good object
       });
     }
     this.change();
@@ -126,10 +125,12 @@ export class RulesHandler {
   addRule(pattern: string): Rule {
     const data = Rule.getDefaultData();
     const newRule = new Rule(pattern, data);
+    // TODO : Why initThresholds outside ???
     newRule.initThresholds();
     this.rules.push(newRule);
     this.data.rulesData.push(data);
     newRule.setOrder(this.countRules());
+    newRule.events.connect('rule_updated', this, this._on_rule_rule_updated.bind(this));
     return newRule;
   }
 
@@ -168,6 +169,7 @@ export class RulesHandler {
    */
   removeRule(rule: Rule): this {
     GFLog.debug(this.constructor.name + '.removeRule()', rule);
+    rule.events.disconnect('rule_updated', this);
     const index = rule.getOrder() - 1;
     rule.free();
     this.rules.splice(index, 1);
@@ -213,7 +215,7 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   reduce(): this {
-    this.getRules().forEach(rule => {
+    this.getRules().forEach((rule) => {
       rule.data.reduce = true;
     });
     return this;
@@ -263,10 +265,10 @@ export class RulesHandler {
 
   clear(): this {
     GFLog.debug(this.constructor.name + '.clear()');
-    this.rules.forEach(r => r.clear());
+    this.rules.forEach((r) => r.clear());
     this.rules = [];
     this.data.rulesData = [];
-    this.events.clear()
+    this.events.clear();
     return this;
   }
 
@@ -281,25 +283,33 @@ export class RulesHandler {
 
   update(): this {
     GFLog.debug(this.constructor.name + '.refresh()');
-    this.rules.forEach(r => r.update());
+    this.rules.forEach((r) => r.update());
     // this.onRefreshed();
     return this;
   }
 
   change(): this {
     GFLog.debug(this.constructor.name + '.change()');
-    this.rules.forEach(r => r.change());
+    this.rules.forEach((r) => r.change());
     // this.onChanged();
     return this;
   }
 
   free(): this {
     GFLog.debug(this.constructor.name + '.destroy()');
-    this.rules.forEach(r => r.free());
+    this.rules.forEach((r) => r.free());
     this.clear();
     // this.onDestroyed();
     return this;
   }
+
+  //#############################################################
+  //### EVENTS
+  //#############################################################
+  private _on_rule_rule_updated(rule: Rule) {
+    this.events.emit('rule_updated', rule);
+  }
+
 
   // TODO : FIX
   // complete(): this {

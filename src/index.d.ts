@@ -14,6 +14,7 @@ declare var mxCodec: any;
 declare var mxUrlConverter: any;
 declare var mxCellOverlay: any;
 declare var mxRectangle: any;
+declare var mxLog: any;
 declare var Graph: any;
 // declare interface Graph {
 //   [key: string]: any;
@@ -406,6 +407,7 @@ declare module gf {
   declare var mxConstants: any;
   declare var mxRectangle: any;
   declare var mxUrlConverter: any;
+  declare var mxLog: any;
 
   declare type mxCellOverlay = any;
 

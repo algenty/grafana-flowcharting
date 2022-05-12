@@ -5,7 +5,9 @@ import { DateTH } from 'threshold_class';
 import { GFEvents } from 'flowcharting_base';
 
 export type ObjectMetric = SerieMetric | TableMetric;
-type MetricSignals = 'metric_initialized' | 'metric_updated' | 'metric_freed';
+
+const metricSignalsArray = ['metric_initialized', 'metric_updated', 'metric_freed'] as const;
+type MetricSignals = typeof metricSignalsArray[number];
 
 /**
  * Metric parent
@@ -15,18 +17,16 @@ type MetricSignals = 'metric_initialized' | 'metric_updated' | 'metric_freed';
  */
 export class Metric {
   type: gf.TMetricTypeKeys | 'unknown' = 'unknown';
-  uid: string;
-  scopedVars: any;
+  uid: string = $GF.genUid(this.constructor.name);
+  // private _scopedVars: any;
   metrics: any = {};
   name = '';
   dataList: any;
-  nullPointMode = 'connected';
-  GHValue: string | number | null = null;
-  events: GFEvents<MetricSignals> = new GFEvents();
+  protected _nullPointMode = 'connected';
+  protected _GHValue: string | number | null = null;
+  events: GFEvents<MetricSignals> = GFEvents.create(metricSignalsArray);
   constructor(dataList: any) {
-    this.uid = $GF.genUid(this.constructor.name);
     this.dataList = dataList;
-    this.events.declare(['metric_freed', 'metric_initialized', 'metric_updated']);
   }
 
   setDataList(dataList: any): this {
@@ -112,9 +112,9 @@ export class Metric {
 
   update(timestamp?: number) {
     if (timestamp !== undefined) {
-      this.GHValue = this.findValue(timestamp);
+      this._GHValue = this.findValue(timestamp);
     } else {
-      this.GHValue = null;
+      this._GHValue = null;
     }
     this.events.emit('metric_updated', this);
   }
@@ -222,7 +222,7 @@ export class SerieMetric extends Metric {
     let series: any = undefined;
     if (this.dataList) {
       series = grafana.getTimeSeries(this.dataList);
-      series.flotpairs = series.getFlotPairs(this.nullPointMode);
+      series.flotpairs = series.getFlotPairs(this._nullPointMode);
     }
     trc.after();
     return series;
@@ -395,7 +395,7 @@ export class TableMetric extends Metric {
       });
       table.datapoints.push(datapoint);
     });
-    this.metrics.flotpairs = this._getFlotPairs(this.nullPointMode, table);
+    this.metrics.flotpairs = this._getFlotPairs(this._nullPointMode, table);
     trc.after();
     return table;
   }

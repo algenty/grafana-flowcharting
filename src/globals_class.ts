@@ -4,8 +4,11 @@ import { inflateRaw, deflateRaw } from 'pako';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 import { GFEvents } from 'flowcharting_base';
 import { nanoid } from 'nanoid/non-secure';
+import { MetricHandler } from 'metric_handler';
+import { RulesHandler } from 'rules_handler';
+import { FlowchartHandler } from 'flowchart_handler';
 
-const globalSignalsArray = ['number_add', 'number_sub', 'change_flag'] as const;
+const globalSignalsArray = ['data_updated', 'variables_changed', 'editmode_opened', 'editmode_closed'] as const;
 type GlobalSignals = typeof globalSignalsArray[number];
 
 class GFCONSTANT {
@@ -445,7 +448,7 @@ enum LogLevel {
   ERROR,
 }
 export class GFLog {
-  static logLevel: LogLevel = LogLevel.WARN;
+  static logLevel: LogLevel = LogLevel.DEBUG;
   static logEnable = true;
   static tagEnable = false;
   constructor() {}
@@ -934,9 +937,7 @@ export class GFDrawioTools {
 export class $GF {
   static _globalvars: GFVariables = new GFVariables();
   static CONSTANTS: GFCONSTANT = new GFCONSTANT();
-  // static log: GFLog;
   static trace: GFTrace;
-  // static message: GFMessage;
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
@@ -945,6 +946,9 @@ export class $GF {
   static clearNotify: CallableFunction = () => {};
   static $refresh: CallableFunction = () => {};
   static ctrl: FlowchartCtrl;
+  static metricHandler: MetricHandler;
+  static rulesHandler: RulesHandler;
+  static flowchartHandler: FlowchartHandler;
   static events: GFEvents<GlobalSignals> = GFEvents.create(globalSignalsArray);
   static utils: {
     // ! deprecated : Use DrawioTools

@@ -1,5 +1,9 @@
 import { SerieMetric, TableMetric, ObjectMetric } from 'metric_class';
 import { $GF,GFLog } from 'globals_class';
+import { GFEvents } from 'flowcharting_base';
+
+const metricHandlerSignalsArray = ['metric_created', 'metric_updated', 'metric_deleted'] as const;
+type MetricHandlerSignals = typeof metricHandlerSignalsArray[number];
 
 export class MetricHandler {
   dataList: any[] = [];
@@ -7,13 +11,64 @@ export class MetricHandler {
   tables: TableMetric[] = [];
   series: SerieMetric[] = [];
   metrics: ObjectMetric[] = [];
-  // events: flowchartingEvents<MetricSignals> = new flowchartingEvents();
+  events: GFEvents<MetricHandlerSignals> = GFEvents.create(metricHandlerSignalsArray);
 
   constructor() {
     this.uid = $GF.genUid('MetricHandler');
     this.init();
   }
 
+    //
+  // Updates
+  //
+  change() {
+    const funcName = 'change';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
+    this.free();
+    this.dataList.map( async (dl) => {
+      this.addMetric(dl);
+    });
+    this.complete();
+    trc.after();
+  }
+
+  update(timestamp?: number): this {
+    const funcName = 'refresh';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.metrics.forEach((m) => m.update(timestamp));
+    return this;
+  }
+
+  init(): this {
+    const funcName = 'init';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    $GF.events.connect('data_updated', this, this._on_global_data_updated.bind(this));
+    return this;
+  }
+
+  free(): this {
+    const funcName = 'free';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.metrics.forEach((m: ObjectMetric) => {
+      m.free();
+      this.events.emit('metric_deleted', m);
+    });
+    this.clear();
+    return this;
+  }
+
+  complete(): this {
+    const funcName = 'complete';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    return this;
+  }
+
+
+  /**
+   * setter this.data
+   * @param  {any[]} datas
+   */
   setDataList(datas: any[]) {
     this.dataList = datas;
   }
@@ -49,6 +104,7 @@ export class MetricHandler {
     const table = new TableMetric(data);
     this.tables.push(table);
     this.metrics.push(table);
+    this.events.emit('metric_created', table);
     trc.after();
     return table;
   }
@@ -66,12 +122,12 @@ export class MetricHandler {
     const serie = new SerieMetric(data);
     this.series.push(serie);
     this.metrics.push(serie);
+    this.events.emit('metric_created', serie);
     trc.after();
     return serie;
   }
 
   /**
-   * get Names of metrics (serie or table or both if type is undefined)
    *
    * @param {gf.TMetricTypeKeys} [type]
    * @returns {string[]}
@@ -184,49 +240,14 @@ export class MetricHandler {
     return this;
   }
 
-  //
-  // Updates
-  //
-  change() {
-    const funcName = 'change';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
-    this.free();
-    this.dataList.forEach((dl) => {
-      this.addMetric(dl);
-    });
-    trc.after();
+  //##############################################################
+  //### EVENTS
+  //##############################################################
+  private _on_global_data_updated(dataList: any) {
+    this.setDataList(dataList);
+    this.change();
   }
 
-  update(timestamp?: number): this {
-    const funcName = 'refresh';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.metrics.forEach((m) => m.update(timestamp));
-    return this;
-  }
-
-  init(): this {
-    const funcName = 'init';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    return this;
-  }
-
-  free(): this {
-    const funcName = 'destroy';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.metrics.forEach((m: ObjectMetric) => {
-      m.free();
-    });
-    this.clear();
-    return this;
-  }
-
-  complete(): this {
-    const funcName = 'complete';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    // this.onCompleted();
-    return this;
-  }
 
   //
   // Events

@@ -219,8 +219,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     const funcName = 'onDataReceived';
     GFLog.debug(`${this.constructor.name}.${funcName}()`);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
-    this.metricHandler?.setDataList(dataList);
-    this.metricHandler?.change();
+    $GF.events.emit('data_updated', dataList);
+    // this.metricHandler?.setDataList(dataList);
+    // this.metricHandler?.change();
     trc.after();
     $GF.trace.resume();
   }
@@ -257,6 +258,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.metricHandler = new MetricHandler();
     }
     this.metricHandler.clear();
+    $GF.metricHandler = this.metricHandler;
     // FLOWCHARTS
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
@@ -267,6 +269,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.free();
       this.flowchartHandler.import(this.panel.flowchartsData);
     }
+    $GF.flowchartHandler = this.flowchartHandler
     if (this.panel.newFlag && this.flowchartHandler && this.flowchartHandler.countFlowcharts() === 0) {
       this.flowchartHandler.addFlowchart('Main').init();
     }
@@ -280,6 +283,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.rulesHandler.import(this.panel.rulesData);
       this.panel.rulesData = newRulesData;
     }
+    $GF.rulesHandler = this.rulesHandler;
     if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
       this.rulesHandler.addRule('.*');
     }

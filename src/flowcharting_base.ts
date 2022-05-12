@@ -1,3 +1,5 @@
+// import { GFLog } from "globals_class";
+
 interface CallableSignalChild extends Object {
   uid: string;
 }
@@ -88,6 +90,7 @@ export class GFEvents<Signals> {
   }
 
   emit(signalName: Signals, objToEmit: unknown) {
+    console.log(`Emit signal ${signalName}`);
     const _childFn = this._getCallableFunc(signalName);
     return Promise.all(
       _childFn.map(async (fn) => {
