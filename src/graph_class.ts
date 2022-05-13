@@ -1,4 +1,4 @@
-import { each as _each } from 'lodash';
+// import { each as _each } from 'lodash';
 import { $GF, GFDrawioTools, GFTimer, GFLog } from 'globals_class';
 const dioCustom = require('drawio_custom');
 import chroma from 'chroma-js';
@@ -48,7 +48,6 @@ export class XGraph {
    * @memberof XGraph
    */
   constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string) {
-    console.log("🚀 ~ file: graph_class.ts ~ line 51 ~ XGraph ~ constructor ~ definition", definition)
     const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
     this.uid = $GF.genUid(this.constructor.name);
     this.container = container;
@@ -317,23 +316,22 @@ export class XGraph {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initXCells()');
     const model = this.graph.getModel();
     this.xcells = [];
-    // const cells = Object.values(model.cells);
-    const cells = model.cells;
+    // const cells = model.cells;
+    const cells = Object.values(model.cells);
     console.log('🚀 ~ file: graph_class.ts ~ line 318 ~ XGraph ~ initXCells ~ cells', cells);
     // const keys = Object.keys(cells);
-    _each(cells, (mxcell: mxCell) => {
-      if (mxcell.id !== '0' && mxcell.id !== '1') {
-        const xcell = XCell.refactore(this.graph, mxcell);
-        this.xcells.push(xcell);
-      }
-    });
-    // await Promise.all(
-    //   keys.map(async (k: string) => {
-    //     const mxcell: mxCell = cells[k];
+    // _each(cells, (mxcell: mxCell) => {
+    //   if (mxcell.id !== '0' && mxcell.id !== '1') {
     //     const xcell = XCell.refactore(this.graph, mxcell);
     //     this.xcells.push(xcell);
-    //   })
-    // );
+    //   }
+    // });
+    await Promise.all(
+      cells.map(async (mxcell: mxCell) => {
+        const xcell = XCell.refactore(this.graph, mxcell);
+        this.xcells.push(xcell);
+      })
+    );
     console.log('🚀 ~ file: graph_class.ts ~ line 327 ~ XGraph ~ keys.map ~ this.xcells', this.xcells);
 
     trc.after();
