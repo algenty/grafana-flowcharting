@@ -8,20 +8,24 @@ type ConnectedChild = Map<Uid, CallableFunction>;
 
 export class GFEvents<Signals> {
   private _declaredSignals: Signals[] = [];
+  private _owner: string | undefined;
   private _connectedChilds: Map<Signals, ConnectedChild> = new Map();
   constructor() {
     // Nothing to do
   }
 
-  static create<Signals>(signalName?: Readonly<Signals> | Readonly<Signals[]>): GFEvents<Signals> {
-    const event: GFEvents<Signals>= new GFEvents();
-    if(signalName) {
+  static create<Signals>(signalName?: Readonly<Signals> | Readonly<Signals[]>, owner?: { uid: string }): GFEvents<Signals> {
+    const event: GFEvents<Signals> = new GFEvents();
+    if (signalName) {
       event.declare(signalName);
     }
     return event;
   }
 
-  declare(signalName: Readonly<Signals> | Readonly<Signals[]>): GFEvents<Signals> {
+  declare(signalName: Readonly<Signals> | Readonly<Signals[]>, owner?: { uid: string }): GFEvents<Signals> {
+    if (owner) {
+      this._owner = owner.uid;
+    }
     // Array
     if (Array.isArray(signalName)) {
       signalName.forEach((s) => {
@@ -30,7 +34,7 @@ export class GFEvents<Signals> {
       return this;
     }
     // String
-    if(typeof signalName === "string") {
+    if (typeof signalName === 'string') {
       if (!this._haveDeclaredSignal(signalName)) {
         this._declaredSignals.push(signalName);
         return this;
@@ -44,6 +48,8 @@ export class GFEvents<Signals> {
   }
 
   clear() {
+    // Error : To fix, remove return;
+    // return;
     this._connectedChilds.clear();
     this._declaredSignals = [];
   }
@@ -55,6 +61,9 @@ export class GFEvents<Signals> {
     if (!this._haveDeclaredSignal(signalName)) {
       throw new Error(`${this.toString()} have no declared signal ${signalName}`);
       return false;
+    }
+    if(this._owner) {
+      // console.log(`${objRef.uid} connect on ${signalName} to ${this._owner}`);
     }
     const uid = objRef.uid;
     const fn = callfn;
@@ -77,7 +86,7 @@ export class GFEvents<Signals> {
 
   disconnect(signalName: Signals, objRef: CallableSignalChild) {
     if (!this._haveDeclaredSignal(signalName)) {
-      return
+      return;
     }
     if (!('uid' in objRef)) {
       return;
@@ -89,8 +98,8 @@ export class GFEvents<Signals> {
     }
   }
 
-  emit(signalName: Signals, objToEmit: unknown) {
-    console.log(`Emit signal ${signalName}`);
+  emit(signalName: Signals, objToEmit: unknown, from?: { uid: string }) {
+    // console.log(`Emit signal ${signalName}${from ? ' from ' + from.uid : ''}`);
     const _childFn = this._getCallableFunc(signalName);
     return Promise.all(
       _childFn.map(async (fn) => {

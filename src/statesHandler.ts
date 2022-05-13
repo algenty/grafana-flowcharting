@@ -3,12 +3,10 @@ import { each as _each } from 'lodash';
 import { XGraph } from 'graph_class';
 import { $GF, GFLog } from 'globals_class';
 import { XCell } from 'cell_class';
-import { Rule } from 'rule_class';
 import { GFEvents } from 'flowcharting_base';
 
 const stateHandlerSignalsArray = ['state_created', 'state_updated', 'state_changed', 'state_deleted'] as const;
 type stateHandlerSignals = typeof stateHandlerSignalsArray[number];
-
 
 /**
  * States Handler class
@@ -20,7 +18,7 @@ export class StateHandler {
   states: Map<string, State>;
   xgraph: XGraph;
   edited = false;
-  rulesCompleted =true;
+  rulesCompleted = true;
   uid: string;
   events: GFEvents<stateHandlerSignals> = GFEvents.create(stateHandlerSignalsArray);
 
@@ -44,35 +42,25 @@ export class StateHandler {
    * @param {XGraph} xgraph
    * @memberof StateHandler
    */
-  initStates(): this {
+  async initStates() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initStates()');
     this.states.clear();
     const xcells = this.xgraph.getXCells();
-    _each(xcells, x => {
-      this.addState(x);
-    });
+    console.log('🚀 ~ file: statesHandler.ts ~ line 50 ~ StateHandler ~ initStates ~ xcells', xcells);
+    await Promise.all(
+      xcells.map(async (xcell: XCell) => {
+        this.addState(xcell);
+      })
+    );
+    // _each(xcells, x => {
+    //   this.addState(x);
+    // });
     trc.after();
     return this;
   }
 
   setXGraph(xgraph: XGraph): this {
     this.xgraph = xgraph;
-    return this;
-  }
-
-  /**
-   * Reset/empty/destroy StateHandler
-   *
-   * @returns {this}
-   * @memberof StateHandler
-   */
-  clear(): this {
-    if (this.states) {
-      this.states.forEach(st => {
-        st.clear();
-      });
-      this.states.clear();
-    }
     return this;
   }
 
@@ -168,7 +156,7 @@ export class StateHandler {
    */
   getStatesForInspect(): State[] {
     const states: State[] = [];
-    this.states.forEach(state => {
+    this.states.forEach((state) => {
       states.push(state);
     });
     return states;
@@ -276,25 +264,39 @@ export class StateHandler {
   //
   // Updates
   //
-  free(rule?: Rule): this {
-    const funcName = 'destroy';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.rulesCompleted = false;
-    this.states.forEach(s => {
-      s.free()
+  /**
+   * Reset/empty/destroy StateHandler
+   *
+   * @returns {this}
+   * @memberof StateHandler
+   */
+  clear(): this {
+    // if (this.states) {
+    //   this.states.forEach((st) => {
+    //     st.clear();
+    //   });
+    //   this.states.clear();
+    // }
+    this.states.forEach((s) => {
+      s.free();
       this.events.emit('state_deleted', s);
     });
-    this.clear();
     this.events.clear();
-    // this.onDestroyed();
     return this;
   }
+
+  // free(rule?: Rule): this {
+  //   const funcName = 'destroy';
+  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+  //   // this.onDestroyed();
+  //   return this;
+  // }
 
   update(): this {
     const funcName = 'refresh';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.rulesCompleted = false;
-    this.states.forEach(s => s.update());
+    this.states.forEach((s) => s.update());
     // this.onRefreshed();
     return this;
   }
@@ -303,7 +305,7 @@ export class StateHandler {
     const funcName = 'change';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.rulesCompleted = false;
-    this.states.forEach(s => s.change());
+    this.states.forEach((s) => s.change());
     // this.onChanged();
     return this;
   }
@@ -327,42 +329,41 @@ export class StateHandler {
   //
   // Rules
   //
-  updateWithRule(rule: Rule): this {
-    this.rulesCompleted = false;
-    this.states.forEach(state => state.updateWithRule(rule));
-    // this.onRefreshed();
-    return this;
-  }
+  // updateWithRule(rule: Rule): this {
+  //   this.rulesCompleted = false;
+  //   this.states.forEach(state => state.updateWithRule(rule));
+  //   // this.onRefreshed();
+  //   return this;
+  // }
 
-  changeWithRule(rule: Rule): this {
-    this.rulesCompleted = false;
-    this.states.forEach(state => state.changeWithRule(rule));
-    // this.onChanged();
-    return this;
-  }
+  // changeWithRule(rule: Rule): this {
+  //   this.rulesCompleted = false;
+  //   this.states.forEach(state => state.changeWithRule(rule));
+  //   // this.onChanged();
+  //   return this;
+  // }
 
   //
   // XGraph
   //
   changeWithXGraph(xgraph: XGraph): this {
     this.xgraph = xgraph;
-    this.free()
-      .init()
-      .change();
+    this.clear()
+    this.init()
+    this.change();
     return this;
   }
 
   //#########################################################################
   //### Events
   //#########################################################################
-  private _on_global_data_recieved() {
-    const statesArray: State[] = Array.from(this.states.values())
-    statesArray.map(async (state:  State) => {
-      state.initCycle();
-    })
-  }
-
-
+  // Moved into state class
+  // private _on_global_data_received() {
+  //   const statesArray: State[] = Array.from(this.states.values())
+  //   statesArray.map(async (state:  State) => {
+  //     state.initCycle();
+  //   })
+  // }
 
   //
   // Events

@@ -4,11 +4,9 @@ import { inflateRaw, deflateRaw } from 'pako';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 import { GFEvents } from 'flowcharting_base';
 import { nanoid } from 'nanoid/non-secure';
-import { MetricHandler } from 'metric_handler';
-import { RulesHandler } from 'rules_handler';
-import { FlowchartHandler } from 'flowchart_handler';
 
-const globalSignalsArray = ['data_updated', 'variables_changed', 'editmode_opened', 'editmode_closed'] as const;
+
+const globalSignalsArray = ['data_updated', 'data_processed', 'variables_changed', 'editmode_opened', 'editmode_closed'] as const;
 type GlobalSignals = typeof globalSignalsArray[number];
 
 class GFCONSTANT {
@@ -448,7 +446,7 @@ enum LogLevel {
   ERROR,
 }
 export class GFLog {
-  static logLevel: LogLevel = LogLevel.DEBUG;
+  static logLevel: LogLevel = LogLevel.WARN;
   static logEnable = true;
   static tagEnable = false;
   constructor() {}
@@ -464,7 +462,7 @@ export class GFLog {
    * @returns {boolean}
    * @memberof Log
    */
-  static toDisplay(level: number): boolean {
+  static isEnable(level: number): boolean {
     if (GFLog.logEnable !== undefined && GFLog.logEnable === true) {
       if (GFLog.logLevel !== undefined && level >= GFLog.logLevel) {
         return true;
@@ -481,7 +479,7 @@ export class GFLog {
    * @memberof Log
    */
   static async debug(...args: unknown[]) {
-    if (GFLog.toDisplay(LogLevel.DEBUG)) {
+    if (GFLog.isEnable(LogLevel.DEBUG)) {
       const title = args.shift();
       console.log(`GF DEBUG : ${title}`, ...args);
     }
@@ -495,7 +493,7 @@ export class GFLog {
    * @memberof Log
    */
   static async warn(...args: unknown[]) {
-    if (GFLog.toDisplay(LogLevel.WARN)) {
+    if (GFLog.isEnable(LogLevel.WARN)) {
       const title = args.shift();
       console.log(`GF WARN : ${title}`, ...args);
     }
@@ -509,7 +507,7 @@ export class GFLog {
    * @memberof Log
    */
   static async info(...args: string[]) {
-    if (GFLog.toDisplay(LogLevel.INFO)) {
+    if (GFLog.isEnable(LogLevel.INFO)) {
       const title = args.shift();
       console.log(`GF INFO : ${title}`, ...args);
     }
@@ -523,7 +521,7 @@ export class GFLog {
    * @memberof Log
    */
   static async error(...args: unknown[]) {
-    if (GFLog.toDisplay(LogLevel.ERROR)) {
+    if (GFLog.isEnable(LogLevel.ERROR)) {
       const title = args.shift();
       console.log(`GF ERROR : ${title}`, ...args);
     }
@@ -946,9 +944,6 @@ export class $GF {
   static clearNotify: CallableFunction = () => {};
   static $refresh: CallableFunction = () => {};
   static ctrl: FlowchartCtrl;
-  static metricHandler: MetricHandler;
-  static rulesHandler: RulesHandler;
-  static flowchartHandler: FlowchartHandler;
   static events: GFEvents<GlobalSignals> = GFEvents.create(globalSignalsArray);
   static utils: {
     // ! deprecated : Use DrawioTools

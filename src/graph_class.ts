@@ -48,6 +48,7 @@ export class XGraph {
    * @memberof XGraph
    */
   constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string) {
+    console.log("🚀 ~ file: graph_class.ts ~ line 51 ~ XGraph ~ constructor ~ definition", definition)
     const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
     this.uid = $GF.genUid(this.constructor.name);
     this.container = container;
@@ -56,6 +57,8 @@ export class XGraph {
     this.onMapping = $GF.ctrl.onMapping;
     this.definition = definition;
     this.init();
+    // TODO : not good, just for test
+    // this.change();
     trc.after();
   }
 
@@ -96,6 +99,7 @@ export class XGraph {
         }
       });
     }
+    this.renderGraph();
     this.events.emit('graph_initialized', this);
     return this;
   }
@@ -103,7 +107,7 @@ export class XGraph {
   change() {
     const funcName = 'change';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this._drawGraph();
+    // this._drawGraph();
     this.events.emit('graph_changed', this);
     return this;
   }
@@ -125,8 +129,6 @@ export class XGraph {
     this.events.emit('graph_freed', this);
     return this;
   }
-
-
 
   /**
    * Anonymize Graph
@@ -263,7 +265,7 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  private _drawGraph(): this {
+  renderGraph(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'drawGraph()');
     if (this.graph === undefined) {
       this.initMxGraph();
@@ -314,14 +316,26 @@ export class XGraph {
   async initXCells() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initXCells()');
     const model = this.graph.getModel();
-    const cells = model.cells;
     this.xcells = [];
+    // const cells = Object.values(model.cells);
+    const cells = model.cells;
+    console.log('🚀 ~ file: graph_class.ts ~ line 318 ~ XGraph ~ initXCells ~ cells', cells);
+    // const keys = Object.keys(cells);
     _each(cells, (mxcell: mxCell) => {
       if (mxcell.id !== '0' && mxcell.id !== '1') {
         const xcell = XCell.refactore(this.graph, mxcell);
         this.xcells.push(xcell);
       }
     });
+    // await Promise.all(
+    //   keys.map(async (k: string) => {
+    //     const mxcell: mxCell = cells[k];
+    //     const xcell = XCell.refactore(this.graph, mxcell);
+    //     this.xcells.push(xcell);
+    //   })
+    // );
+    console.log('🚀 ~ file: graph_class.ts ~ line 327 ~ XGraph ~ keys.map ~ this.xcells', this.xcells);
+
     trc.after();
   }
 
@@ -907,7 +921,7 @@ export class XGraph {
    */
   unsetMap() {
     this.graph.click = this.clickBackup;
-    $GF.$refresh()
+    $GF.$refresh();
   }
 
   //

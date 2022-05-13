@@ -27,7 +27,7 @@ export class FlowchartHandler {
   onEdit = false; // editor open or not
   postedId: string | undefined = undefined; // Current ID on edit mode
   editorWindow: Window | null = null; // Window draw.io editor
-  events: GFEvents<FlowchartHandlerSignals> = GFEvents.create(flowchartHandlerSignalsArray);
+  static events: GFEvents<FlowchartHandlerSignals> = GFEvents.create(flowchartHandlerSignalsArray);
 
   /**
    * Creates an instance of FlowchartHandler to handle flowchart
@@ -83,6 +83,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   import(obj: any): this {
+    // TODO : why free instead init
     this.free();
     if (obj !== undefined && obj !== null) {
       // For version 0.5.0 and under
@@ -115,9 +116,8 @@ export class FlowchartHandler {
 
       // import data
       tmpFc.forEach((fcData: gf.TFlowchartData) => {
-        this.addFlowchart(fcData.name)
+        this.addFlowchart(fcData.name, fcData, fcData)
           .toBack()
-          .import(fcData)
           .allowDrawio(this.data.allowDrawio);
       });
       this.currentFlowchart = this.getFlowchart('Main');
@@ -361,11 +361,11 @@ export class FlowchartHandler {
    * @returns {Flowchart}
    * @memberof FlowchartHandler
    */
-  addFlowchart(name: string): Flowchart {
+  addFlowchart(name: string, data?: gf.TFlowchartData, previousData?: any): Flowchart {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addFlowchart()');
-    const data = Flowchart.getDefaultData();
+    data = data ? data : Flowchart.getDefaultData();
     const container = this.createContainer();
-    const flowchart = new Flowchart(name, container, data);
+    const flowchart = new Flowchart(name, container, data, previousData);
     this.flowcharts.push(flowchart);
     this.data.flowcharts.push(data);
     trc.after();
@@ -586,7 +586,6 @@ export class FlowchartHandler {
   }
 
   init(): this {
-    // this.onInitialized();
     return this;
   }
 

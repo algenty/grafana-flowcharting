@@ -258,7 +258,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.metricHandler = new MetricHandler();
     }
     this.metricHandler.clear();
-    $GF.metricHandler = this.metricHandler;
     // FLOWCHARTS
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
@@ -269,7 +268,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.free();
       this.flowchartHandler.import(this.panel.flowchartsData);
     }
-    $GF.flowchartHandler = this.flowchartHandler
     if (this.panel.newFlag && this.flowchartHandler && this.flowchartHandler.countFlowcharts() === 0) {
       this.flowchartHandler.addFlowchart('Main').init();
     }
@@ -283,7 +281,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.rulesHandler.import(this.panel.rulesData);
       this.panel.rulesData = newRulesData;
     }
-    $GF.rulesHandler = this.rulesHandler;
     if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
       this.rulesHandler.addRule('.*');
     }

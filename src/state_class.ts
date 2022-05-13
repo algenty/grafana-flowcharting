@@ -6,8 +6,9 @@ import { $GF, GFVariables, GFLog } from 'globals_class';
 import { XCell } from 'cell_class';
 import { ObjectMetric } from 'metric_class';
 import { GFEvents } from 'flowcharting_base';
+import { RulesHandler } from 'rules_handler';
 
-const stateSignalsArray = ['state_initialized', 'state_updated', 'state_changed', 'state_freed'] as const;
+const stateSignalsArray = ['state_initialized', 'state_updated', 'state_freed'] as const;
 type stateSignals = typeof stateSignalsArray[number];
 
 /**
@@ -20,7 +21,7 @@ export class State {
   _xcell: XCell; // mxCell State
   uid: string; // cell ID in mxcell
   // private _xgraph: XGraph;
-  private _completed = false;
+  // private _completed = false;
   private _changed = false;
   private _matched = false;
   private _shapeState: ShapeState;
@@ -31,6 +32,7 @@ export class State {
   private _linkState: LinkState;
   private _variables: GFVariables;
   private _status: Map<string, any>;
+  private _ObjStates: [ShapeState, TooltipState, IconState, EventState, TextState, LinkState];
   globalLevel = -1;
   highestFormattedValue = '';
   highestValue: any = undefined;
@@ -59,6 +61,7 @@ export class State {
     this._eventState = new EventState(xgraph, xcell);
     this._textState = new TextState(xgraph, xcell);
     this._linkState = new LinkState(xgraph, xcell);
+    this._ObjStates = [this._shapeState, this._tooltipState, this._iconState, this._eventState, this._textState, this._linkState];
     this._variables = $GF.createLocalVars();
     this._status = new Map();
     this.tooltipHandler = null;
@@ -66,26 +69,70 @@ export class State {
     trc.after();
   }
 
-  /**
-   * Return Xcell
-   *
-   * @returns {XCell}
-   * @memberof State
-   */
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
+  init() {
+    this.initCycle();
+    $GF.events.connect('data_updated', this, this._on_global_data_received.bind(this))
+    $GF.events.connect('data_processed', this, this._on_global_data_processed.bind(this))
+    RulesHandler.events.connect('rule_changed', this, this._on_ruleHandler_rule_changed.bind(this));
+    RulesHandler.events.connect('rule_updated', this, this._on_ruleHandler_rule_updated.bind(this));
+    RulesHandler.events.connect('rule_created', this, this._on_ruleHandler_rule_created.bind(this));
+    RulesHandler.events.connect('rule_deleted', this, this._on_ruleHandler_rule_deleted.bind(this));
+    this.events.emit('state_initialized', this);
+    return this;
+  }
+
+  update(): this {
+    this.events.emit('state_updated', this);
+    return this;
+  }
+
+  // complete(): this {
+  //   if (!this.completed) {
+  //     this.applyCycle();
+  //     this.completed = true;
+  //   }
+  //   this.onCompleted();
+  //   return this;
+  // }
+
+  change() {
+    return this;
+  }
+
+  // clear(): this {
+  //   // this.clearTag();
+  //   return this;
+  // }
+
+  async free() {
+    this.reset();
+    $GF.events.disconnect('data_updated', this)
+    $GF.events.disconnect('data_processed', this)
+    RulesHandler.events.disconnect('rule_changed', this)
+    RulesHandler.events.disconnect('rule_created', this)
+    RulesHandler.events.disconnect('rule_deleted', this)
+    this.events.clear();
+    await this.events.emit('state_freed', this);
+  }
+
+  //############################################################################
+  //### ACCESSORS
+  //############################################################################
   getXCell(): XCell {
     return this._xcell;
   }
 
-  /**
-   * Reset/empty/clear/destroy it
-   *
-   * @returns {this}
-   * @memberof State
-   */
-  clear(): this {
-    // this.clearTag();
-    return this;
+  getLevel(): number {
+    return this.globalLevel;
   }
+
+  //############################################################################
+  //### LOGIC
+  //############################################################################
+
 
   /**
    * Call applyState() asynchronously
@@ -104,12 +151,12 @@ export class State {
    * @param {Metric} metric
    * @memberof State
    */
-  setCycle(rule?: Rule): this {
+  private _setCycle(rule?: Rule): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'setCycle()');
     const funcName = 'setCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    const rules = rule === undefined ? this._rules : [rule];
-    rules.forEach((r: Rule) => {
+    const rules = rule === undefined ? Array.from(this._rules.values()) : [rule];
+    rules.map( async (r: Rule) => {
       let beginPerf = Date.now();
       if (!r.isHidden()) {
         const shapeMaps = r.getShapeMaps();
@@ -240,7 +287,10 @@ export class State {
    * @returns {this}
    * @memberof State
    */
-  unsetState(): this {
+  // TODO :
+  // [ ] : never called
+  // [ ] : How to reset state when rules unapplied
+  _unsetState(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'unsetState()');
     this._eventState.unset();
     this._textState.unset();
@@ -253,16 +303,6 @@ export class State {
   }
 
   /**
-   * Get the highest/global level
-   *
-   * @returns {number}
-   * @memberof State
-   */
-  getLevel(): number {
-    return this.globalLevel;
-  }
-
-  /**
    * Get Level in text
    *
    * @returns {number}
@@ -272,7 +312,7 @@ export class State {
     return this.globalLevel === -1 ? '' : this.globalLevel.toString();
   }
 
-  // ????
+  // TODO : what for and why ?
   getStatus(key: gf.TStyleKeys): string {
     let style: string | null | undefined = this._status.get(key);
     if (style !== undefined && style !== null) {
@@ -352,12 +392,9 @@ export class State {
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this._matched || this._changed) {
       this._changed = true;
-      this._shapeState.apply();
-      this._tooltipState.apply();
-      this._iconState.apply();
-      this._textState.apply();
-      this._eventState.apply();
-      this._linkState.apply();
+      this._ObjStates.map(async (o: {apply: CallableFunction}) => {
+        o.apply();
+      });
     }
     trc.after();
     return this;
@@ -371,12 +408,15 @@ export class State {
    */
   reset(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'reset()');
-    this._shapeState.reset();
-    this._tooltipState.reset();
-    this._iconState.reset();
-    this._textState.reset();
-    this._eventState.reset();
-    this._linkState.reset();
+    this._ObjStates.map( async(o: {reset: CallableFunction}) =>{
+      o.reset();
+    });
+    // this._shapeState.reset();
+    // this._tooltipState.reset();
+    // this._iconState.reset();
+    // this._textState.reset();
+    // this._eventState.reset();
+    // this._linkState.reset();
     this._variables.clear();
     this._status.clear();
     this.globalLevel = -1;
@@ -393,17 +433,14 @@ export class State {
    * @returns {this}
    * @memberof State
    */
-  initCycle(): this {
+  async initCycle() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
     const funcName = 'initCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this._changed) {
-      this._shapeState.prepare();
-      this._tooltipState.prepare();
-      this._iconState.prepare();
-      this._textState.prepare();
-      this._eventState.prepare();
-      this._linkState.prepare();
+      await Promise.all(this._ObjStates.map( async (o: {prepare: CallableFunction}) => {
+        o.prepare();
+      }));
       this._variables.clear();
       this._status.clear();
       this.globalLevel = -1;
@@ -450,7 +487,7 @@ export class State {
    * @returns {boolean}
    * @memberof State
    */
-  matchRule(rule: Rule): boolean {
+  private _matchRule(rule: Rule): boolean {
     let mapOptions = rule.getShapeMapOptions();
     let cellValue = this._xcell.getDefaultValues(mapOptions);
     if (rule.matchShape(cellValue, mapOptions)) {
@@ -474,15 +511,15 @@ export class State {
     return false;
   }
 
-  clearRules(): this {
-    this._rules.clear();
-    this._completed = false;
-    return this;
-  }
+  // private _clearRules(): this {
+  //   this._rules.clear();
+  //   this._completed = false;
+  //   return this;
+  // }
 
-  updateRule(rule?: Rule): this {
+  private _updateRule(rule?: Rule): this {
     if (rule !== null && rule !== undefined) {
-      if (this.matchRule(rule)) {
+      if (this._matchRule(rule)) {
         this._rules.set(rule.uid, rule);
       } else {
         this._rules.delete(rule.uid);
@@ -494,7 +531,6 @@ export class State {
   removeRule(rule: Rule): this {
     if (rule !== null && rule !== undefined && this.hasRule(rule)) {
       this._rules.delete(rule.uid);
-      this._completed = false;
       this.change();
       // this.complete();
     }
@@ -508,64 +544,58 @@ export class State {
     return false;
   }
 
-  changeWithRule(rule: Rule): this {
-    if (rule !== null && rule !== undefined) {
-      if (this.matchRule(rule) || this.hasRule(rule)) {
-        if (this._completed) {
-          this._completed = false;
-          this.initCycle();
-        }
-        this.updateRule(rule);
-      }
-    }
-    this.change();
-    return this;
-  }
-
-  updateWithRule(rule: Rule): this {
-    if (this.hasRule(rule)) {
-      if (this._completed) {
-        this._completed = false;
-        this.initCycle();
-      }
-      this.setCycle(rule);
-    }
-    this.events.emit('state_updated', this)
-    return this;
-  }
-
-  //
-  // Updates
-  //
-  update(): this {
-    this.events.emit('state_updated', this)
-    return this;
-  }
-
-  // complete(): this {
-  //   if (!this.completed) {
-  //     this.applyCycle();
-  //     this.completed = true;
+  // changeWithRule(rule: Rule): this {
+  //   if (rule !== null && rule !== undefined) {
+  //     if (this._matchRule(rule) || this.hasRule(rule)) {
+  //       if (this._completed) {
+  //         this._completed = false;
+  //         this.initCycle();
+  //       }
+  //       this._updateRule(rule);
+  //     }
   //   }
-  //   this.onCompleted();
+  //   this.change();
   //   return this;
   // }
 
-  init() {
+  // updateWithRule(rule: Rule): this {
+  //   if (this.hasRule(rule)) {
+  //     if (this._completed) {
+  //       this._completed = false;
+  //       this.initCycle();
+  //     }
+  //     this.setCycle(rule);
+  //   }
+  //   this.events.emit('state_updated', this);
+  //   return this;
+  // }
+
+  //###########################################################################
+  //### EVENTS
+  //###########################################################################
+  private _on_global_data_received() {
     this.initCycle();
-    this.events.emit('state_initialized', this);
-    return this;
   }
 
-  change() {
-    // this.onChanged();
-    return this;
+  private _on_global_data_processed() {
+    this.applyCycle();
   }
 
-  async free() {
-    this.reset();
-    this.events.clear()
-    await this.events.emit('state_freed', this);
+  private _on_ruleHandler_rule_changed(rule: Rule) {
+    this._updateRule(rule);
+  }
+
+  private _on_ruleHandler_rule_updated(rule: Rule) {
+    console.log('_on_ruleHandler_rule_updated')
+    this._setCycle(rule);
+  }
+
+  private _on_ruleHandler_rule_created(rule: Rule) {
+    this._updateRule(rule);
+  }
+
+  private _on_ruleHandler_rule_deleted(rule: Rule) {
+    this.removeRule(rule);
   }
 
   //

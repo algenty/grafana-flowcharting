@@ -11,7 +11,7 @@ export class MetricHandler {
   tables: TableMetric[] = [];
   series: SerieMetric[] = [];
   metrics: ObjectMetric[] = [];
-  events: GFEvents<MetricHandlerSignals> = GFEvents.create(metricHandlerSignalsArray);
+  static events: GFEvents<MetricHandlerSignals> = GFEvents.create(metricHandlerSignalsArray);
 
   constructor() {
     this.uid = $GF.genUid('MetricHandler');
@@ -52,7 +52,7 @@ export class MetricHandler {
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.metrics.forEach((m: ObjectMetric) => {
       m.free();
-      this.events.emit('metric_deleted', m);
+      MetricHandler.events.emit('metric_deleted', m);
     });
     this.clear();
     return this;
@@ -104,7 +104,7 @@ export class MetricHandler {
     const table = new TableMetric(data);
     this.tables.push(table);
     this.metrics.push(table);
-    this.events.emit('metric_created', table);
+    MetricHandler.events.emit('metric_created', table);
     trc.after();
     return table;
   }
@@ -122,7 +122,7 @@ export class MetricHandler {
     const serie = new SerieMetric(data);
     this.series.push(serie);
     this.metrics.push(serie);
-    this.events.emit('metric_created', serie);
+    MetricHandler.events.emit('metric_created', serie);
     trc.after();
     return serie;
   }

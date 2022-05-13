@@ -18,7 +18,7 @@ export class RulesHandler {
   uid: string;
   data: gf.TIRulesHandlerData;
   activeRuleIndex = 0;
-  events: GFEvents<RuleHandlerSignals> = GFEvents.create(ruleHandlerSignalsArray);
+  static events: GFEvents<RuleHandlerSignals> = GFEvents.create(ruleHandlerSignalsArray);
   // metricsCompleted =true;
 
   /**
@@ -30,6 +30,7 @@ export class RulesHandler {
     this.uid = $GF.genUid(this.constructor.name);
     this.rules = [];
     this.data = data;
+    console.log('🚀 ~ file: rules_handler.ts ~ line 34 ~ RulesHandler ~ constructor ~ RulesHandler.events', RulesHandler.events);
     this.init();
   }
 
@@ -66,7 +67,7 @@ export class RulesHandler {
       tmpRules.map(async (ruleData) => {
         const r = this.addRule('').import(ruleData).setOrder(index);
         index += 1;
-        this.events.emit('rule_created', r);
+        RulesHandler.events.emit('rule_created', r);
         // TODO : Fix to add data directly to emit good object
       });
     }
@@ -270,7 +271,6 @@ export class RulesHandler {
     this.rules.forEach((r) => r.clear());
     this.rules = [];
     this.data.rulesData = [];
-    this.events.clear();
     return this;
   }
 
@@ -279,7 +279,6 @@ export class RulesHandler {
   //
   init(): this {
     GFLog.debug(this.constructor.name + '.init()');
-    // this.onInitialized();
     return this;
   }
 
@@ -301,6 +300,7 @@ export class RulesHandler {
     GFLog.debug(this.constructor.name + '.destroy()');
     this.rules.forEach((r) => r.free());
     this.clear();
+    RulesHandler.events.clear();
     // this.onDestroyed();
     return this;
   }
@@ -309,13 +309,12 @@ export class RulesHandler {
   //### EVENTS
   //#############################################################
   private _on_rule_rule_updated(rule: Rule) {
-    this.events.emit('rule_updated', rule);
+    RulesHandler.events.emit('rule_updated', rule);
   }
 
   private _on_rule_rule_changed(rule: Rule) {
-    this.events.emit('rule_changed', rule);
+    RulesHandler.events.emit('rule_changed', rule, this);
   }
-
 
   // TODO : FIX
   // complete(): this {

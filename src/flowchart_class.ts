@@ -23,84 +23,83 @@ export class Flowchart {
   reduce = true;
   events: GFEvents<FlowchartSignals> = GFEvents.create(flowchartSignalsArray);
 
-  constructor(name: string, container: HTMLDivElement, data: gf.TFlowchartData) {
+  constructor(name: string, container: HTMLDivElement, newData: gf.TFlowchartData, oldData?: any) {
     this.uid = $GF.genUid(this.constructor.name);
-    this.data = data;
+    this.data = newData;
     this.data.name = name;
     this.container = container;
+    if(oldData) { this._convert(oldData)}
     this.init();
   }
 
   /**
    * Import data object in current flowchart
    *
-   * @param {Object} obj
+   * @param {Object} oldData
    * @memberof Flowchart
    */
-  import(obj: any): this {
+  private _convert(oldData: any): this {
     GFLog.info(`flowchart[${this.data.name}].import()`);
-    this.clear();
-    if (!!obj.download || this.data.download === false) {
-      this.data.download = obj.download;
+    if (!!oldData.download || this.data.download === false) {
+      this.data.download = oldData.download;
     }
     // 0.3.0
-    if (!!obj.source) {
-      this.data.type = obj.source.type;
-      this.data.xml = obj.source.xml.value;
-      this.data.url = obj.source.url.value;
+    if (!!oldData.source) {
+      this.data.type = oldData.source.type;
+      this.data.xml = oldData.source.xml.value;
+      this.data.url = oldData.source.url.value;
     }
     // 0.3.0
-    if (!!obj.options) {
-      this.data.zoom = obj.options.zoom;
-      this.data.center = obj.options.center;
-      this.data.scale = obj.options.scale;
-      this.data.lock = obj.options.lock;
-      this.data.tooltip = obj.options.tooltip;
-      this.data.grid = obj.options.grid;
-      this.data.bgColor = obj.options.bgColor;
+    if (!!oldData.options) {
+      this.data.zoom = oldData.options.zoom;
+      this.data.center = oldData.options.center;
+      this.data.scale = oldData.options.scale;
+      this.data.lock = oldData.options.lock;
+      this.data.tooltip = oldData.options.tooltip;
+      this.data.grid = oldData.options.grid;
+      this.data.bgColor = oldData.options.bgColor;
     }
-    if (!!obj.type) {
-      this.data.type = obj.type;
+    if (!!oldData.type) {
+      this.data.type = oldData.type;
     }
-    if (!!obj.xml) {
-      this.data.xml = obj.xml;
+    if (!!oldData.xml) {
+      this.data.xml = oldData.xml;
     }
 
     // 0.9.0
-    if (!!obj.csv) {
-      this.data.csv = obj.csv;
+    if (!!oldData.csv) {
+      this.data.csv = oldData.csv;
     }
-    if (!!obj.url) {
-      this.data.url = obj.url;
+    if (!!oldData.url) {
+      this.data.url = oldData.url;
     }
-    if (!!obj.zoom) {
-      this.data.zoom = obj.zoom;
+    if (!!oldData.zoom) {
+      this.data.zoom = oldData.zoom;
     }
-    if (!!obj.center || obj.center === false) {
-      this.data.center = obj.center;
+    if (!!oldData.center || oldData.center === false) {
+      this.data.center = oldData.center;
     }
-    if (!!obj.scale || obj.scale === false) {
-      this.data.scale = obj.scale;
-    }
-
-    if (!!obj.lock || obj.lock === false) {
-      this.data.lock = obj.lock;
+    if (!!oldData.scale || oldData.scale === false) {
+      this.data.scale = oldData.scale;
     }
 
-    if (!!obj.enableAnim || obj.enableAnim === false) {
-      this.data.enableAnim = obj.enableAnim;
+    if (!!oldData.lock || oldData.lock === false) {
+      this.data.lock = oldData.lock;
     }
-    if (!!obj.tooltip) {
-      this.data.tooltip = obj.tooltip;
+
+    if (!!oldData.enableAnim || oldData.enableAnim === false) {
+      this.data.enableAnim = oldData.enableAnim;
     }
-    if (!!obj.grid || obj.grid === false) {
-      this.data.grid = obj.grid;
+    if (!!oldData.tooltip) {
+      this.data.tooltip = oldData.tooltip;
     }
-    if (!!obj.bgColor) {
-      this.data.bgColor = obj.bgColor;
+    if (!!oldData.grid || oldData.grid === false) {
+      this.data.grid = oldData.grid;
+    }
+    if (!!oldData.bgColor) {
+      this.data.bgColor = oldData.bgColor;
     }
     // this.setBackgroundColor(this.data.bgColor);
-    this.change();
     return this;
   }
 
@@ -108,8 +107,9 @@ export class Flowchart {
     const funcName = 'destroy';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.xgraph?.free();
-    this.stateHandler?.free();
+    this.stateHandler?.clear();
     await this.events.emit('flowchart_freed', this);
+    this.events.clear();
     this.clear();
   }
 
@@ -127,7 +127,7 @@ export class Flowchart {
   change() {
     const funcName = 'change';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.changeGraph();
+    this.updateGraph();
     this.events.emit('flowchart_changed', this);
   }
 
@@ -230,7 +230,7 @@ export class Flowchart {
     return this;
   }
 
-  changeGraph(): this {
+  updateGraph(): this {
     try {
       const content = this.getContent();
       if (this.xgraph === undefined) {
