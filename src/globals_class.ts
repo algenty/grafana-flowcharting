@@ -30,9 +30,9 @@ class GFCONSTANT {
   CONF_FILE_VERSION = 'VERSION';
   CONF_TOOLTIPS_DELAY = 200;
   CONF_GRAPHHOVER_DELAY = 50;
-  CONF_COLORS_STEPS = 5;
+  CONF_COLORS_STEPS = 10;
   CONF_COLORS_MS = 50;
-  CONF_ANIMS_STEP = 5;
+  CONF_ANIMS_STEP = 10;
   CONF_ANIMS_MS = 50;
   CONF_GFMESSAGE_MS = 5000;
   CONF_BLINK_COLOR = '#f5f242';
@@ -1830,7 +1830,7 @@ export class GFTimer {
    * @param  {string|undefined} uid : uniq id
    * @returns GFTimer
    */
-  static newTimer(uid?: string): GFTimer {
+  static create(uid?: string): GFTimer {
     if (!uid) {
       uid = $GF.genUid();
     }
@@ -1873,12 +1873,15 @@ export class GFTimer {
    * start the timer
    * @returns this
    */
-  start(): this {
-    const length = this._steps.length;
-    for (let i = 0; i < length; i++) {
-      const u = this._steps[i];
-      u.tmId = window.setTimeout(this._runnable.bind(this, u), u.ms);
-    }
+  start() {
+    // const length = this._steps.length;
+    this._steps.map( async(step : GFTimerStep) => {
+      step.tmId = window.setTimeout(this._runnable.bind(this, step), step.ms);
+    });
+    // for (let i = 0; i < length; i++) {
+    //   const u = this._steps[i];
+    //   u.tmId = window.setTimeout(this._runnable.bind(this, u), u.ms);
+    // }
     return this;
   }
 

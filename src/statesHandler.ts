@@ -1,5 +1,5 @@
 import { State } from './state_class';
-import { each as _each } from 'lodash';
+// import { each as _each } from 'lodash';
 import { XGraph } from 'graph_class';
 import { $GF, GFLog } from 'globals_class';
 import { XCell } from 'cell_class';
@@ -46,7 +46,6 @@ export class StateHandler {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initStates()');
     this.states.clear();
     const xcells = this.xgraph.getXCells();
-    console.log('🚀 ~ file: statesHandler.ts ~ line 50 ~ StateHandler ~ initStates ~ xcells', xcells);
     await Promise.all(
       xcells.map(async (xcell: XCell) => {
         this.addState(xcell);

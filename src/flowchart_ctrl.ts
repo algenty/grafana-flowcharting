@@ -145,7 +145,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
         self.metricHandler?.refreshMetrics(timestamp);
       };
       if (this.graphHoverTimer === undefined) {
-        this.graphHoverTimer = GFTimer.newTimer(timeId);
+        this.graphHoverTimer = GFTimer.create(timeId);
       }
       const ms = $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY;
       this.graphHoverTimer.addStep(setGraphHover.bind(this), ms).start();

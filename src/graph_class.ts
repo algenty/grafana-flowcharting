@@ -815,7 +815,7 @@ export class XGraph {
             .scale([startColor, endColor])
             .mode('lrgb')
             .colors($GF.CONSTANTS.CONF_COLORS_STEPS + 1);
-          const timer = GFTimer.newTimer(timeId);
+          const timer = GFTimer.create(timeId);
           const ms = $GF.CONSTANTS.CONF_COLORS_MS;
           for (let i = 1; i < steps.length; i++) {
             timer.addStep(xcell.setStyle.bind(xcell, style, steps[i]), ms * i);
@@ -865,7 +865,7 @@ export class XGraph {
           $GF.clearUniqTimeOut(timeId);
           const steps = $GF.calculateIntervalCounter(begin, end, $GF.CONSTANTS.CONF_ANIMS_STEP);
           const length = steps.length;
-          const timer = GFTimer.newTimer(timeId);
+          const timer = GFTimer.create(timeId);
           const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
           for (let i = 1; i < length; i++) {
             timer.addStep(xcell.setStyle.bind(xcell, style, steps[i].toString()), ms * i);
@@ -1088,7 +1088,7 @@ export class XGraph {
     if (this.isAnimated()) {
       const timeId = `setAnimZoomCell-${this.uid}${xcell.getId}`;
       const percents = $GF.calculateIntervalCounter(xcell.percent, percent, $GF.CONSTANTS.CONF_ANIMS_STEP);
-      const timer = GFTimer.newTimer(timeId);
+      const timer = GFTimer.create(timeId);
       const length = percents.length;
       const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
       for (let i = 1; i < length; i++) {
@@ -1123,7 +1123,7 @@ export class XGraph {
       const widths = $GF.calculateIntervalCounter(dim.width * wdir, width, $GF.CONSTANTS.CONF_ANIMS_STEP);
       const heights = $GF.calculateIntervalCounter(dim.height * hdir, height, $GF.CONSTANTS.CONF_ANIMS_STEP);
       const length = widths.length;
-      const timer = GFTimer.newTimer(timeId);
+      const timer = GFTimer.create(timeId);
       const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
       for (let i = 1; i < length; i++) {
         timer.addStep(xcell.resize.bind(xcell, widths[i], heights[i]), ms * i);

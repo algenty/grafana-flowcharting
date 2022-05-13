@@ -703,7 +703,7 @@ export class XCell {
     const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
     if (bool && !this._isBlink) {
       this._isBlink = true;
-      const timer = GFTimer.newTimer(timeId);
+      const timer = GFTimer.create(timeId);
       timer.addStep(this.surround.bind(this, color, false), ms);
       timer.addStep(this.surround.bind(this, color, false, false), ms * 2);
       timer.setCyclic();

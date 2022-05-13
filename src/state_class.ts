@@ -160,7 +160,7 @@ export class State {
     const funcName = 'setCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     const rules = rule === undefined ? Array.from(this._rules.values()) : [rule];
-    rules.map(async (r: Rule) => {
+    rules.forEach((r: Rule) => {
       let beginPerf = Date.now();
       if (!r.isHidden()) {
         const shapeMaps = r.getShapeMaps();
@@ -168,7 +168,8 @@ export class State {
         const linkMaps = r.getLinkMaps();
         const eventMaps = r.getEventMaps();
         this._variables.set($GF.CONSTANTS.VAR_STR_RULENAME, r.data.alias);
-        r.getMetrics().forEach((metric) => {
+        const m = Array.from(r.getMetrics().values());
+        m.forEach( (metric) => {
           try {
             this.currMetrics.push(metric.getName());
             this._variables.set($GF.CONSTANTS.VAR_STR_METRIC, metric.getName);
@@ -584,16 +585,13 @@ export class State {
   }
 
   private _on_global_data_processed() {
+    this._setCycle();
     this.applyCycle();
   }
 
-  private _on_ruleHandler_rule_changed(rule: Rule) {
-    this._updateRule(rule);
-  }
+  private _on_ruleHandler_rule_changed(rule: Rule) {}
 
-  private _on_ruleHandler_rule_updated(rule: Rule) {
-    this._setCycle(rule);
-  }
+  private _on_ruleHandler_rule_updated(rule: Rule) {}
 
   private _on_ruleHandler_rule_created(rule: Rule) {
     this._updateRule(rule);
