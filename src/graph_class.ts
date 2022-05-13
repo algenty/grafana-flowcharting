@@ -318,7 +318,6 @@ export class XGraph {
     this.xcells = [];
     // const cells = model.cells;
     const cells = Object.values(model.cells);
-    console.log('🚀 ~ file: graph_class.ts ~ line 318 ~ XGraph ~ initXCells ~ cells', cells);
     // const keys = Object.keys(cells);
     // _each(cells, (mxcell: mxCell) => {
     //   if (mxcell.id !== '0' && mxcell.id !== '1') {
@@ -332,8 +331,6 @@ export class XGraph {
         this.xcells.push(xcell);
       })
     );
-    console.log('🚀 ~ file: graph_class.ts ~ line 327 ~ XGraph ~ keys.map ~ this.xcells', this.xcells);
-
     trc.after();
   }
 

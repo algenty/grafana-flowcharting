@@ -313,7 +313,7 @@ export class RulesHandler {
   }
 
   private _on_rule_rule_changed(rule: Rule) {
-    RulesHandler.events.emit('rule_changed', rule, this);
+    RulesHandler.events.emit('rule_changed', rule);
   }
 
   // TODO : FIX

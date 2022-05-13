@@ -2130,7 +2130,7 @@ export class Rule {
     // this.onChanged();
     // this.refresh();
     // this.updateStates();
-    this.events.emit('rule_changed', this, this);
+    this.events.emit('rule_changed', this);
     return this;
   }
 
@@ -2202,14 +2202,14 @@ export class Rule {
   private _on_metricHandler_metric_deleted(metric: ObjectMetric) {
     if(this.metrics.has(metric.uid)) {
       this.metrics.delete(metric.uid)
-      this.change();
+      this.update();
     }
   }
 
   private _on_metricHandler_metric_created(metric: ObjectMetric) {
     if(this.matchMetric(metric)) {
       this.metrics.set(metric.uid, metric);
-      this.change();
+      this.update();
     }
   }
 

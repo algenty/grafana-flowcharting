@@ -48,8 +48,6 @@ export class GFEvents<Signals> {
   }
 
   clear() {
-    // Error : To fix, remove return;
-    // return;
     this._connectedChilds.clear();
     this._declaredSignals = [];
   }
@@ -98,7 +96,8 @@ export class GFEvents<Signals> {
     }
   }
 
-  emit(signalName: Signals, objToEmit: unknown, from?: { uid: string }) {
+  emit(signalName: Signals, objToEmit?: unknown) {
+    //, from?: { uid: string }
     // console.log(`Emit signal ${signalName}${from ? ' from ' + from.uid : ''}`);
     const _childFn = this._getCallableFunc(signalName);
     return Promise.all(

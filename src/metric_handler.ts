@@ -29,7 +29,7 @@ export class MetricHandler {
     this.dataList.map( async (dl) => {
       this.addMetric(dl);
     });
-    this.complete();
+    $GF.events.emit('data_processed');
     trc.after();
   }
 
@@ -57,13 +57,6 @@ export class MetricHandler {
     this.clear();
     return this;
   }
-
-  complete(): this {
-    const funcName = 'complete';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    return this;
-  }
-
 
   /**
    * setter this.data

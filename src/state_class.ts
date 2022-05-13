@@ -20,8 +20,6 @@ type stateSignals = typeof stateSignalsArray[number];
 export class State {
   _xcell: XCell; // mxCell State
   uid: string; // cell ID in mxcell
-  // private _xgraph: XGraph;
-  // private _completed = false;
   private _changed = false;
   private _matched = false;
   private _shapeState: ShapeState;
@@ -61,7 +59,14 @@ export class State {
     this._eventState = new EventState(xgraph, xcell);
     this._textState = new TextState(xgraph, xcell);
     this._linkState = new LinkState(xgraph, xcell);
-    this._ObjStates = [this._shapeState, this._tooltipState, this._iconState, this._eventState, this._textState, this._linkState];
+    this._ObjStates = [
+      this._shapeState,
+      this._tooltipState,
+      this._iconState,
+      this._eventState,
+      this._textState,
+      this._linkState,
+    ];
     this._variables = $GF.createLocalVars();
     this._status = new Map();
     this.tooltipHandler = null;
@@ -73,9 +78,9 @@ export class State {
   //### INIT/UPDATE/CHANGE/FREE
   //############################################################################
   init() {
-    this.initCycle();
-    $GF.events.connect('data_updated', this, this._on_global_data_received.bind(this))
-    $GF.events.connect('data_processed', this, this._on_global_data_processed.bind(this))
+    this._initCycle();
+    $GF.events.connect('data_updated', this, this._on_global_data_received.bind(this));
+    $GF.events.connect('data_processed', this, this._on_global_data_processed.bind(this));
     RulesHandler.events.connect('rule_changed', this, this._on_ruleHandler_rule_changed.bind(this));
     RulesHandler.events.connect('rule_updated', this, this._on_ruleHandler_rule_updated.bind(this));
     RulesHandler.events.connect('rule_created', this, this._on_ruleHandler_rule_created.bind(this));
@@ -109,11 +114,11 @@ export class State {
 
   async free() {
     this.reset();
-    $GF.events.disconnect('data_updated', this)
-    $GF.events.disconnect('data_processed', this)
-    RulesHandler.events.disconnect('rule_changed', this)
-    RulesHandler.events.disconnect('rule_created', this)
-    RulesHandler.events.disconnect('rule_deleted', this)
+    $GF.events.disconnect('data_updated', this);
+    $GF.events.disconnect('data_processed', this);
+    RulesHandler.events.disconnect('rule_changed', this);
+    RulesHandler.events.disconnect('rule_created', this);
+    RulesHandler.events.disconnect('rule_deleted', this);
     this.events.clear();
     await this.events.emit('state_freed', this);
   }
@@ -132,7 +137,6 @@ export class State {
   //############################################################################
   //### LOGIC
   //############################################################################
-
 
   /**
    * Call applyState() asynchronously
@@ -156,7 +160,7 @@ export class State {
     const funcName = 'setCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     const rules = rule === undefined ? Array.from(this._rules.values()) : [rule];
-    rules.map( async (r: Rule) => {
+    rules.map(async (r: Rule) => {
       let beginPerf = Date.now();
       if (!r.isHidden()) {
         const shapeMaps = r.getShapeMaps();
@@ -392,7 +396,7 @@ export class State {
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this._matched || this._changed) {
       this._changed = true;
-      this._ObjStates.map(async (o: {apply: CallableFunction}) => {
+      this._ObjStates.map(async (o: { apply: CallableFunction }) => {
         o.apply();
       });
     }
@@ -408,7 +412,7 @@ export class State {
    */
   reset(): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'reset()');
-    this._ObjStates.map( async(o: {reset: CallableFunction}) =>{
+    this._ObjStates.map(async (o: { reset: CallableFunction }) => {
       o.reset();
     });
     // this._shapeState.reset();
@@ -433,14 +437,16 @@ export class State {
    * @returns {this}
    * @memberof State
    */
-  async initCycle() {
+  private async _initCycle() {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
     const funcName = 'initCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this._changed) {
-      await Promise.all(this._ObjStates.map( async (o: {prepare: CallableFunction}) => {
-        o.prepare();
-      }));
+      await Promise.all(
+        this._ObjStates.map(async (o: { prepare: CallableFunction }) => {
+          o.prepare();
+        })
+      );
       this._variables.clear();
       this._status.clear();
       this.globalLevel = -1;
@@ -574,7 +580,7 @@ export class State {
   //### EVENTS
   //###########################################################################
   private _on_global_data_received() {
-    this.initCycle();
+    this._initCycle();
   }
 
   private _on_global_data_processed() {
@@ -586,7 +592,6 @@ export class State {
   }
 
   private _on_ruleHandler_rule_updated(rule: Rule) {
-    console.log('_on_ruleHandler_rule_updated')
     this._setCycle(rule);
   }
 
