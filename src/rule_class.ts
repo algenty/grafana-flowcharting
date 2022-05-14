@@ -80,11 +80,12 @@ export class Rule {
       this._convert(oldData);
     }
     this.init();
+    this.change();
   }
   //############################################################################
   //### INIT/UPDATE/CHANGE/FREE
   //############################################################################
-  
+
   update() {
     this.initCycle();
     this.events.emit('rule_updated', this);
