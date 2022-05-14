@@ -81,6 +81,54 @@ export class Rule {
     }
     this.init();
   }
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
+  
+  update() {
+    this.initCycle();
+    this.events.emit('rule_updated', this);
+    return this;
+  }
+
+  init() {
+    MetricHandler.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
+    MetricHandler.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
+    this.events.emit('rule_initalized', this);
+    return this;
+  }
+
+  change() {
+    // this.updateMetrics();
+    // this.onChanged();
+    // this.refresh();
+    // this.updateStates();
+    this.events.emit('rule_changed', this);
+    return this;
+  }
+
+  async free() {
+    await this.events.emit('rule_freed', this);
+    MetricHandler.events.disconnect('metric_created', this);
+    MetricHandler.events.disconnect('metric_deleted', this);
+    this.events.clear();
+    return this;
+  }
+
+  clear(): this {
+    this.shapeStates.clear();
+    this.textStates.clear();
+    this.linkStates.clear();
+    // TODO emit signal
+    // this.states.forEach(state => {
+    //   state._rules.delete(this.uid);
+    // });
+    return this;
+  }
+
+  //############################################################################
+  //### LOGIC
+  //############################################################################
 
   getMetrics(): Map<string, ObjectMetric> {
     return this.metrics;
@@ -634,16 +682,7 @@ export class Rule {
     return this;
   }
 
-  clear(): this {
-    this.shapeStates.clear();
-    this.textStates.clear();
-    this.linkStates.clear();
-    // TODO emit signal
-    // this.states.forEach(state => {
-    //   state._rules.delete(this.uid);
-    // });
-    return this;
-  }
+
 
   /**
    * Return uniq id of rule
@@ -2110,38 +2149,7 @@ export class Rule {
     return this;
   }
 
-  //
-  // Updates
-  //
-  update() {
-    this.initCycle();
-    this.events.emit('rule_updated', this);
-    return this;
-  }
 
-  init() {
-    MetricHandler.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
-    MetricHandler.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
-    this.events.emit('rule_initalized', this);
-    return this;
-  }
-
-  change() {
-    // this.updateMetrics();
-    // this.onChanged();
-    // this.refresh();
-    // this.updateStates();
-    this.events.emit('rule_changed', this);
-    return this;
-  }
-
-  async free() {
-    await this.events.emit('rule_freed', this);
-    MetricHandler.events.disconnect('metric_created', this);
-    MetricHandler.events.disconnect('metric_deleted', this);
-    this.events.clear();
-    return this;
-  }
 
   // complete(): this {
   //   this.completed = true;

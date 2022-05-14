@@ -37,6 +37,52 @@ export class RulesHandler {
     this.init();
   }
 
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
+  clear(): this {
+    GFLog.debug(this.constructor.name + '.clear()');
+    this.rules.forEach((r) => r.clear());
+    this.rules = [];
+    this.data.rulesData = [];
+    return this;
+  }
+
+  //
+  // Updates
+  //
+  init(): this {
+    GFLog.debug(this.constructor.name + '.init()');
+    return this;
+  }
+
+  update(): this {
+    GFLog.debug(this.constructor.name + '.refresh()');
+    this.rules.forEach((r) => r.update());
+    // this.onRefreshed();
+    return this;
+  }
+
+  change(): this {
+    GFLog.debug(this.constructor.name + '.change()');
+    this.rules.forEach((r) => r.change());
+    // this.onChanged();
+    return this;
+  }
+
+  free(): this {
+    GFLog.debug(this.constructor.name + '.destroy()');
+    this.rules.forEach((r) => r.free());
+    this.clear();
+    RulesHandler.events.clear();
+    // this.onDestroyed();
+    return this;
+  }
+
+  //############################################################################
+  //### LOGIC
+  //############################################################################
+
   setData(data: gf.TIRulesHandlerData): this {
     this.data = data;
     return this;
@@ -68,7 +114,7 @@ export class RulesHandler {
       }
 
       tmpRules.map(async (ruleData) => {
-        const r = this.addRule('',Rule.getDefaultData(), ruleData);
+        const r = this.addRule('', ruleData);
         r.setOrder(index);
         index += 1;
         RulesHandler.events.emit('rule_created', r);
@@ -269,44 +315,6 @@ export class RulesHandler {
     }
   }
 
-  clear(): this {
-    GFLog.debug(this.constructor.name + '.clear()');
-    this.rules.forEach((r) => r.clear());
-    this.rules = [];
-    this.data.rulesData = [];
-    return this;
-  }
-
-  //
-  // Updates
-  //
-  init(): this {
-    GFLog.debug(this.constructor.name + '.init()');
-    return this;
-  }
-
-  update(): this {
-    GFLog.debug(this.constructor.name + '.refresh()');
-    this.rules.forEach((r) => r.update());
-    // this.onRefreshed();
-    return this;
-  }
-
-  change(): this {
-    GFLog.debug(this.constructor.name + '.change()');
-    this.rules.forEach((r) => r.change());
-    // this.onChanged();
-    return this;
-  }
-
-  free(): this {
-    GFLog.debug(this.constructor.name + '.destroy()');
-    this.rules.forEach((r) => r.free());
-    this.clear();
-    RulesHandler.events.clear();
-    // this.onDestroyed();
-    return this;
-  }
 
   //#############################################################
   //### EVENTS
