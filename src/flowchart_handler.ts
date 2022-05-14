@@ -84,8 +84,8 @@ export class FlowchartHandler {
    */
   import(obj: any): this {
     // TODO : why free instead init
-    this.free();
-    if (obj !== undefined && obj !== null) {
+    // this.free();
+    if (obj) {
       // For version 0.5.0 and under
       let tmpFc: any[];
       if (Array.isArray(obj)) {
