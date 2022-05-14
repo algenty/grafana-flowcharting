@@ -116,9 +116,7 @@ export class FlowchartHandler {
 
       // import data
       tmpFc.forEach((fcData: gf.TFlowchartData) => {
-        this.addFlowchart(fcData.name, fcData, fcData)
-          .toBack()
-          .allowDrawio(this.data.allowDrawio);
+        this.addFlowchart(fcData.name, fcData).toBack().allowDrawio(this.data.allowDrawio);
       });
       this.currentFlowchart = this.getFlowchart('Main');
     }
@@ -361,9 +359,9 @@ export class FlowchartHandler {
    * @returns {Flowchart}
    * @memberof FlowchartHandler
    */
-  addFlowchart(name: string, data?: gf.TFlowchartData, previousData?: any): Flowchart {
+  addFlowchart(name: string, previousData?: any): Flowchart {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addFlowchart()');
-    data = data ? data : Flowchart.getDefaultData();
+    const data: gf.TFlowchartData = Flowchart.getDefaultData();
     const container = this.createContainer();
     const flowchart = new Flowchart(name, container, data, previousData);
     this.flowcharts.push(flowchart);
@@ -414,7 +412,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   updateFlowchart(): this {
-    this.flowcharts.forEach(f => f.update());
+    this.flowcharts.forEach((f) => f.update());
     return this;
   }
 
@@ -431,7 +429,7 @@ export class FlowchartHandler {
   }
 
   refreshStates(): this {
-    this.flowcharts.forEach(f => f.getStateHandler()?.update());
+    this.flowcharts.forEach((f) => f.getStateHandler()?.update());
     return this;
   }
 
@@ -443,10 +441,7 @@ export class FlowchartHandler {
    */
   setMap(objToMap: ObjectMap, options: gf.TRuleMapOptions): this {
     const flowchart = this.getFlowchart(this.currentFlowchartName);
-    this.onMapping
-      .setMap(objToMap)
-      .setOptions(options)
-      .setFocus(objToMap.uid);
+    this.onMapping.setMap(objToMap).setOptions(options).setFocus(objToMap.uid);
     flowchart.setMap();
     return this;
   }
@@ -556,7 +551,7 @@ export class FlowchartHandler {
    * @memberof FlowchartHandler
    */
   getFlowchartNames(): string[] {
-    return this.flowcharts.map(f => f.data.name);
+    return this.flowcharts.map((f) => f.data.name);
   }
 
   //
@@ -572,14 +567,14 @@ export class FlowchartHandler {
   }
 
   change(): this {
-    this.flowcharts.forEach(f => f.change());
+    this.flowcharts.forEach((f) => f.change());
     this.setCurrentFlowchart('Main');
     // this.onChanged();
     return this;
   }
 
   free(): this {
-    this.flowcharts.forEach(f => f.free());
+    this.flowcharts.forEach((f) => f.free());
     this.clear();
     // this.onDestroyed();
     return this;

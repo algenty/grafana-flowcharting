@@ -61,22 +61,24 @@ export class Rule {
   highestFormattedValue = '';
   highestValue: any = undefined;
   execTimes = 0;
-  events: GFEvents<RuleSignals> = new GFEvents()
+  events: GFEvents<RuleSignals> = GFEvents.create(ruleSignalsArray);
   // ctrl: FlowchartCtrl;
   // metricSubs$: Subscription | undefined;
 
   /**
    * Creates an instance of Rule.
    * @param {string} pattern
-   * @param {TIRuleData} data
+   * @param {TIRuleData} newData
    * @memberof Rule
    */
-  constructor(pattern: string, data: gf.TIRuleData) {
+  constructor(pattern: string, newData: gf.TIRuleData, oldData?: any) {
     this.uid = $GF.genUid(this.constructor.name);
-    this.data = data;
+    this.data = newData;
     this.data.pattern = pattern;
     // this.ctrl = ctrl;
-    this.events.declare(ruleSignalsArray);
+    if(oldData) {
+      this._convert(oldData);
+    }
     this.init();
   }
 
@@ -179,7 +181,7 @@ export class Rule {
    * @param {data} obj
    * @memberof Rule
    */
-  import(obj: any): this {
+  private _convert(obj: any): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'import()');
     if (!!obj.unit) {
       this.data.unit = obj.unit;
@@ -628,7 +630,6 @@ export class Rule {
     }
     this.data.sanitize = obj.sanitize || false;
     this.data.newRule = false;
-    this.change();
     trc.after();
     return this;
   }

@@ -30,7 +30,10 @@ export class RulesHandler {
     this.uid = $GF.genUid(this.constructor.name);
     this.rules = [];
     this.data = data;
-    console.log('🚀 ~ file: rules_handler.ts ~ line 34 ~ RulesHandler ~ constructor ~ RulesHandler.events', RulesHandler.events);
+    console.log(
+      '🚀 ~ file: rules_handler.ts ~ line 34 ~ RulesHandler ~ constructor ~ RulesHandler.events',
+      RulesHandler.events
+    );
     this.init();
   }
 
@@ -65,10 +68,10 @@ export class RulesHandler {
       }
 
       tmpRules.map(async (ruleData) => {
-        const r = this.addRule('').import(ruleData).setOrder(index);
+        const r = this.addRule('',Rule.getDefaultData(), ruleData);
+        r.setOrder(index);
         index += 1;
         RulesHandler.events.emit('rule_created', r);
-        // TODO : Fix to add data directly to emit good object
       });
     }
     this.change();
@@ -123,9 +126,9 @@ export class RulesHandler {
    * @returns {Rule} New rule
    * @memberof RulesHandler
    */
-  addRule(pattern: string): Rule {
-    const data = Rule.getDefaultData();
-    const newRule = new Rule(pattern, data);
+  addRule(pattern: string, previousData?: any): Rule {
+    const data: gf.TIRuleData =  Rule.getDefaultData();
+    const newRule = new Rule(pattern, data, previousData);
     // TODO : Why initThresholds outside ???
     newRule.initThresholds();
     this.rules.push(newRule);
@@ -194,8 +197,8 @@ export class RulesHandler {
     const data = rule.getData();
     const newData: gf.TIRuleData = Rule.getDefaultData();
     this.reduce();
-    const newRule = new Rule(newData.pattern, newData);
-    newRule.import(data);
+    const newRule = new Rule(newData.pattern, newData, data);
+    // newRule._convert(data);
     newData.alias = `Copy of ${newData.alias}`;
     this.rules.splice(index, 0, newRule);
     this.data.rulesData.splice(index, 0, newData);
