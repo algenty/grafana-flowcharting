@@ -102,7 +102,7 @@ describe('Test Global $GF utils', () => {
   describe('GFTimer tests', () => {
     let myTimer: GFTimer;
     beforeEach(() => {
-      myTimer = GFTimer.newTimer();
+      myTimer = GFTimer.create();
     });
     afterEach(() => {
       GFTimer.stop();

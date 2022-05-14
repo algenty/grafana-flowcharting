@@ -5,8 +5,13 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
 import { GFEvents } from 'flowcharting_base';
 import { nanoid } from 'nanoid/non-secure';
 
-
-const globalSignalsArray = ['data_updated', 'data_processed', 'variables_changed', 'editmode_opened', 'editmode_closed'] as const;
+const globalSignalsArray = [
+  'data_updated',
+  'data_processed',
+  'variables_changed',
+  'editmode_opened',
+  'editmode_closed',
+] as const;
 type GlobalSignals = typeof globalSignalsArray[number];
 
 class GFCONSTANT {
@@ -1875,14 +1880,9 @@ export class GFTimer {
    */
   start() {
     // const length = this._steps.length;
-    this._steps.map( async(step : GFTimerStep) => {
+    return Promise.all(this._steps.map(async (step: GFTimerStep) => {
       step.tmId = window.setTimeout(this._runnable.bind(this, step), step.ms);
-    });
-    // for (let i = 0; i < length; i++) {
-    //   const u = this._steps[i];
-    //   u.tmId = window.setTimeout(this._runnable.bind(this, u), u.ms);
-    // }
-    return this;
+    }));
   }
 
   private _runnable(step: GFTimerStep) {
