@@ -1,190 +1,141 @@
 {
-  "annotations": {
-    "list": [
+  "datasource": {
+    "type": "datasource",
+    "uid": "grafana"
+  },
+  "flowchartsData": {
+    "flowcharts": [
       {
-        "builtIn": 1,
-        "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
-        },
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "name": "Annotations & Alerts",
-        "target": {
-          "limit": 100,
-          "matchAny": false,
-          "tags": [],
-          "type": "dashboard"
-        },
-        "type": "dashboard"
+        "allowDrawio": false,
+        "center": true,
+        "csv": "## See more information for the syntax at https://drawio-app.com/import-from-csv-to-drawio/\n##\n## Example CSV. Use ## for comments and # for configuration.\n## The following names are reserved and should not be used (or ignored):\n## id, tooltip, placeholder(s), link and label (see below)\n##\n#\n## Node label with placeholders and HTML.\n## Default is '%name_of_first_column%'.\n#\n# label: %name%<br><i style=\"color:gray;\">%position%</i><br><a href=\"mailto:%email%\">Email</a>\n#\n## Node style (placeholders are replaced once).\n## Default is the current style for nodes.\n#\n# style: label;image=%image%;whiteSpace=wrap;html=1;rounded=1;fillColor=%fill%;strokeColor=%stroke%;\n#\n## Parent style for nodes with child nodes (placeholders are replaced once).\n#\n# parentstyle: swimlane;whiteSpace=wrap;html=1;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;\n#\n## Optional column name that contains a reference to a named style in styles.\n## Default is the current style for nodes.\n#\n# stylename: -\n#\n## JSON for named styles of the form {\"name\": \"style\", \"name\": \"style\"} where style is a cell style with\n## placeholders that are replaced once.\n#\n# styles: -\n#\n## Optional column name that contains a reference to a named label in labels.\n## Default is the current label.\n#\n# labelname: -\n#\n## JSON for named labels of the form {\"name\": \"label\", \"name\": \"label\"} where label is a cell label with\n## placeholders.\n#\n# labels: -\n#\n## Uses the given column name as the identity for cells (updates existing cells).\n## Default is no identity (empty value or -).\n#\n# identity: -\n#\n## Uses the given column name as the parent reference for cells. Default is no parent (empty or -).\n## The identity above is used for resolving the reference so it must be specified.\n#\n# parent: -\n#\n## Adds a prefix to the identity of cells to make sure they do not collide with existing cells (whose\n## IDs are numbers from 0..n, sometimes with a GUID prefix in the context of realtime collaboration).\n## Default is csvimport-.\n#\n# namespace: csvimport-\n#\n## Connections between rows (\"from\": source colum, \"to\": target column).\n## Label, style and invert are optional. Defaults are '', current style and false.\n## If placeholders are used in the style, they are replaced with data from the source.\n## An optional placeholders can be set to target to use data from the target instead.\n## In addition to label, an optional fromlabel and tolabel can be used to name the column\n## that contains the text for the label in the edges source or target (invert ignored).\n## The label is concatenated in the form fromlabel + label + tolabel if all are defined.\n## The target column may contain a comma-separated list of values.\n## Multiple connect entries are allowed.\n#\n# connect: {\"from\": \"manager\", \"to\": \"name\", \"invert\": true, \"label\": \"manages\", \\\n#          \"style\": \"curved=1;endArrow=blockThin;endFill=1;fontSize=11;\"}\n# connect: {\"from\": \"refs\", \"to\": \"id\", \"style\": \"curved=1;fontSize=11;\"}\n#\n## Node x-coordinate. Possible value is a column name. Default is empty. Layouts will\n## override this value.\n#\n# left: \n#\n## Node y-coordinate. Possible value is a column name. Default is empty. Layouts will\n## override this value.\n#\n# top: \n#\n## Node width. Possible value is a number (in px), auto or an @ sign followed by a column\n## name that contains the value for the width. Default is auto.\n#\n# width: auto\n#\n## Node height. Possible value is a number (in px), auto or an @ sign followed by a column\n## name that contains the value for the height. Default is auto.\n#\n# height: auto\n#\n## Padding for autosize. Default is 0.\n#\n# padding: -12\n#\n## Comma-separated list of ignored columns for metadata. (These can be\n## used for connections and styles but will not be added as metadata.)\n#\n# ignore: id,image,fill,stroke,refs,manager\n#\n## Column to be renamed to link attribute (used as link).\n#\n# link: url\n#\n## Spacing between nodes. Default is 40.\n#\n# nodespacing: 40\n#\n## Spacing between levels of hierarchical layouts. Default is 100.\n#\n# levelspacing: 100\n#\n## Spacing between parallel edges. Default is 40. Use 0 to disable.\n#\n# edgespacing: 40\n#\n## Name or JSON of layout. Possible values are auto, none, verticaltree, horizontaltree,\n## verticalflow, horizontalflow, organic, circle or a JSON string as used in Layout, Apply.\n## Default is auto.\n#\n# layout: auto\n#\n## ---- CSV below this line. First line are column names. ----\nname,position,id,location,manager,email,fill,stroke,refs,url,image\nEvan Miller,CFO,emi,Office 1,,me@example.com,#dae8fc,#6c8ebf,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-9-2-128.png\nEdward Morrison,Brand Manager,emo,Office 2,Evan Miller,me@example.com,#d5e8d4,#82b366,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-10-3-128.png\nRon Donovan,System Admin,rdo,Office 3,Evan Miller,me@example.com,#d5e8d4,#82b366,\"emo,tva\",https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-2-128.png\nTessa Valet,HR Director,tva,Office 4,Evan Miller,me@example.com,#d5e8d4,#82b366,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-3-128.png\n",
+        "download": false,
+        "editorTheme": "dark",
+        "editorUrl": "https://www.draw.io",
+        "enableAnim": false,
+        "grid": false,
+        "lock": true,
+        "name": "Main",
+        "scale": true,
+        "tooltip": true,
+        "type": "xml",
+        "url": "http://<YourUrl>/<Your XML/drawio file/api>",
+        "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2022-05-14T08:07:07.270Z\" agent=\"5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.15 Safari/537.36\" etag=\"bTrBQWzR98w8GKSmh8uU\" version=\"18.0.3\" type=\"embed\"><diagram id=\"GUgWZJIkCXhg1L5ykf2g\" name=\"Page-1\">xZbRboIwFIafhnukCnqpTLdFnYma7LqhFZoVDqlVcE+/AkXAarILN3ph4D9tT8/3nxQt5Mf5q8BptAZCueXYJLfQi+U43thRv4VwqYSRN6mEUDBSSYNG2LFvqkVbqydG6LEzUQJwydKuGECS0EB2NCwEZN1pB+DdrCkOqSHsAsxN9ZMRGVXq2PEa/Y2yMKozD1xdX4zrybqSY4QJZK1d0dxCvgCQ1VOc+5QX7Gou1brFg+j1YIIm8jcLkHbijPlJF7d4X6304eSlrljAKSG0WDSw0CyLmKS7FAdFNFMWKy2SMddh8xD6XGcqJM1vq1VdQiGmUlzUlDrqakC6QwY1sKzFW0tRC3WtYe1weN25gaAeNIcHTJDBZLffbpbz3qlcy+uDytDslM3HvncmQ7tHJiODyVrtwQKDiipGdktPcFzEJEhQb0cp4Iv6wEGUC5BbDhU5MM5b+qIcSsechYnSAoWOquCsQMbUHTXVgZgRUqS/60Hjkl3kgES2ctjleFLLTrr2jEx33DvuDJ/hjmu4M5v6y9479vZuuxb7Hx3rmUw225f5tncqt3fbH1JRr80Xtoy1/qag+Q8=</diagram></mxfile>",
+        "zoom": "100%"
       }
     ]
   },
-  "editable": true,
-  "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
-  "id": 1,
-  "links": [],
-  "liveNow": false,
-  "panels": [
-    {
-      "datasource": {
-        "type": "datasource",
-        "uid": "grafana"
-      },
-      "flowchartsData": {
-        "flowcharts": [
+  "format": "short",
+  "graphId": "flowchart_2",
+  "gridPos": {
+    "h": 9,
+    "w": 12,
+    "x": 0,
+    "y": 0
+  },
+  "id": 2,
+  "newFlag": false,
+  "rulesData": {
+    "rulesData": [
+      {
+        "aggregation": "current",
+        "alias": "myRule",
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "column": "Time",
+        "dateFormat": "YYYY-MM-DD HH:mm:ss",
+        "decimals": 0,
+        "eventData": [],
+        "eventProp": "id",
+        "eventRegEx": false,
+        "gradient": false,
+        "hidden": false,
+        "invert": false,
+        "linkData": [],
+        "linkProp": "id",
+        "linkRegEx": true,
+        "mappingType": 1,
+        "metricType": "serie",
+        "order": 1,
+        "overlayIcon": false,
+        "pattern": "A-series",
+        "rangeData": [],
+        "reduce": true,
+        "refId": "A",
+        "sanitize": false,
+        "shapeData": [
           {
-            "allowDrawio": false,
-            "center": true,
-            "csv": "## See more information for the syntax at https://drawio-app.com/import-from-csv-to-drawio/\n##\n## Example CSV. Use ## for comments and # for configuration.\n## The following names are reserved and should not be used (or ignored):\n## id, tooltip, placeholder(s), link and label (see below)\n##\n#\n## Node label with placeholders and HTML.\n## Default is '%name_of_first_column%'.\n#\n# label: %name%<br><i style=\"color:gray;\">%position%</i><br><a href=\"mailto:%email%\">Email</a>\n#\n## Node style (placeholders are replaced once).\n## Default is the current style for nodes.\n#\n# style: label;image=%image%;whiteSpace=wrap;html=1;rounded=1;fillColor=%fill%;strokeColor=%stroke%;\n#\n## Parent style for nodes with child nodes (placeholders are replaced once).\n#\n# parentstyle: swimlane;whiteSpace=wrap;html=1;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;\n#\n## Optional column name that contains a reference to a named style in styles.\n## Default is the current style for nodes.\n#\n# stylename: -\n#\n## JSON for named styles of the form {\"name\": \"style\", \"name\": \"style\"} where style is a cell style with\n## placeholders that are replaced once.\n#\n# styles: -\n#\n## Optional column name that contains a reference to a named label in labels.\n## Default is the current label.\n#\n# labelname: -\n#\n## JSON for named labels of the form {\"name\": \"label\", \"name\": \"label\"} where label is a cell label with\n## placeholders.\n#\n# labels: -\n#\n## Uses the given column name as the identity for cells (updates existing cells).\n## Default is no identity (empty value or -).\n#\n# identity: -\n#\n## Uses the given column name as the parent reference for cells. Default is no parent (empty or -).\n## The identity above is used for resolving the reference so it must be specified.\n#\n# parent: -\n#\n## Adds a prefix to the identity of cells to make sure they do not collide with existing cells (whose\n## IDs are numbers from 0..n, sometimes with a GUID prefix in the context of realtime collaboration).\n## Default is csvimport-.\n#\n# namespace: csvimport-\n#\n## Connections between rows (\"from\": source colum, \"to\": target column).\n## Label, style and invert are optional. Defaults are '', current style and false.\n## If placeholders are used in the style, they are replaced with data from the source.\n## An optional placeholders can be set to target to use data from the target instead.\n## In addition to label, an optional fromlabel and tolabel can be used to name the column\n## that contains the text for the label in the edges source or target (invert ignored).\n## The label is concatenated in the form fromlabel + label + tolabel if all are defined.\n## The target column may contain a comma-separated list of values.\n## Multiple connect entries are allowed.\n#\n# connect: {\"from\": \"manager\", \"to\": \"name\", \"invert\": true, \"label\": \"manages\", \\\n#          \"style\": \"curved=1;endArrow=blockThin;endFill=1;fontSize=11;\"}\n# connect: {\"from\": \"refs\", \"to\": \"id\", \"style\": \"curved=1;fontSize=11;\"}\n#\n## Node x-coordinate. Possible value is a column name. Default is empty. Layouts will\n## override this value.\n#\n# left: \n#\n## Node y-coordinate. Possible value is a column name. Default is empty. Layouts will\n## override this value.\n#\n# top: \n#\n## Node width. Possible value is a number (in px), auto or an @ sign followed by a column\n## name that contains the value for the width. Default is auto.\n#\n# width: auto\n#\n## Node height. Possible value is a number (in px), auto or an @ sign followed by a column\n## name that contains the value for the height. Default is auto.\n#\n# height: auto\n#\n## Padding for autosize. Default is 0.\n#\n# padding: -12\n#\n## Comma-separated list of ignored columns for metadata. (These can be\n## used for connections and styles but will not be added as metadata.)\n#\n# ignore: id,image,fill,stroke,refs,manager\n#\n## Column to be renamed to link attribute (used as link).\n#\n# link: url\n#\n## Spacing between nodes. Default is 40.\n#\n# nodespacing: 40\n#\n## Spacing between levels of hierarchical layouts. Default is 100.\n#\n# levelspacing: 100\n#\n## Spacing between parallel edges. Default is 40. Use 0 to disable.\n#\n# edgespacing: 40\n#\n## Name or JSON of layout. Possible values are auto, none, verticaltree, horizontaltree,\n## verticalflow, horizontalflow, organic, circle or a JSON string as used in Layout, Apply.\n## Default is auto.\n#\n# layout: auto\n#\n## ---- CSV below this line. First line are column names. ----\nname,position,id,location,manager,email,fill,stroke,refs,url,image\nEvan Miller,CFO,emi,Office 1,,me@example.com,#dae8fc,#6c8ebf,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-9-2-128.png\nEdward Morrison,Brand Manager,emo,Office 2,Evan Miller,me@example.com,#d5e8d4,#82b366,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-10-3-128.png\nRon Donovan,System Admin,rdo,Office 3,Evan Miller,me@example.com,#d5e8d4,#82b366,\"emo,tva\",https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-2-128.png\nTessa Valet,HR Director,tva,Office 4,Evan Miller,me@example.com,#d5e8d4,#82b366,,https://www.draw.io,https://cdn3.iconfinder.com/data/icons/user-avatars-1/512/users-3-128.png\n",
-            "download": false,
-            "editorTheme": "dark",
-            "editorUrl": "https://www.draw.io",
-            "enableAnim": false,
-            "grid": false,
-            "lock": true,
-            "name": "Main",
-            "scale": true,
-            "tooltip": true,
-            "type": "xml",
-            "url": "http://<YourUrl>/<Your XML/drawio file/api>",
-            "xml": "<mxfile host=\"app.diagrams.net\" modified=\"2022-05-14T08:07:07.270Z\" agent=\"5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.15 Safari/537.36\" etag=\"bTrBQWzR98w8GKSmh8uU\" version=\"18.0.3\" type=\"embed\"><diagram id=\"GUgWZJIkCXhg1L5ykf2g\" name=\"Page-1\">xZbRboIwFIafhnukCnqpTLdFnYma7LqhFZoVDqlVcE+/AkXAarILN3ph4D9tT8/3nxQt5Mf5q8BptAZCueXYJLfQi+U43thRv4VwqYSRN6mEUDBSSYNG2LFvqkVbqydG6LEzUQJwydKuGECS0EB2NCwEZN1pB+DdrCkOqSHsAsxN9ZMRGVXq2PEa/Y2yMKozD1xdX4zrybqSY4QJZK1d0dxCvgCQ1VOc+5QX7Gou1brFg+j1YIIm8jcLkHbijPlJF7d4X6304eSlrljAKSG0WDSw0CyLmKS7FAdFNFMWKy2SMddh8xD6XGcqJM1vq1VdQiGmUlzUlDrqakC6QwY1sKzFW0tRC3WtYe1weN25gaAeNIcHTJDBZLffbpbz3qlcy+uDytDslM3HvncmQ7tHJiODyVrtwQKDiipGdktPcFzEJEhQb0cp4Iv6wEGUC5BbDhU5MM5b+qIcSsechYnSAoWOquCsQMbUHTXVgZgRUqS/60Hjkl3kgES2ctjleFLLTrr2jEx33DvuDJ/hjmu4M5v6y9479vZuuxb7Hx3rmUw225f5tncqt3fbH1JRr80Xtoy1/qag+Q8=</diagram></mxfile>",
-            "zoom": "100%"
-          }
-        ]
-      },
-      "format": "short",
-      "graphId": "flowchart_2",
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 0,
-        "y": 0
-      },
-      "id": 2,
-      "newFlag": false,
-      "rulesData": {
-        "rulesData": [
-          {
-            "aggregation": "current",
-            "alias": "myRule",
-            "colors": [
-              "rgba(245, 54, 54, 0.9)",
-              "rgba(237, 129, 40, 0.89)",
-              "rgba(50, 172, 45, 0.97)"
-            ],
-            "column": "Time",
-            "dateFormat": "YYYY-MM-DD HH:mm:ss",
-            "decimals": 0,
-            "eventData": [],
-            "eventProp": "id",
-            "eventRegEx": false,
-            "gradient": false,
+            "colorOn": "a",
             "hidden": false,
-            "invert": false,
-            "linkData": [],
-            "linkProp": "id",
-            "linkRegEx": true,
-            "mappingType": 1,
-            "metricType": "serie",
-            "order": 1,
-            "overlayIcon": false,
-            "pattern": "A-series",
-            "rangeData": [],
-            "reduce": true,
-            "refId": "A",
-            "sanitize": false,
-            "shapeData": [
-              {
-                "colorOn": "a",
-                "hidden": false,
-                "pattern": "32",
-                "style": "fillColor"
-              },
-              {
-                "colorOn": "a",
-                "hidden": false,
-                "pattern": "33",
-                "style": "strokeColor"
-              },
-              {
-                "colorOn": "a",
-                "hidden": false,
-                "pattern": "34",
-                "style": "fontColor"
-              },
-              {
-                "colorOn": "a",
-                "hidden": false,
-                "pattern": "36",
-                "style": "labelBackgroundColor"
-              },
-              {
-                "colorOn": "a",
-                "hidden": false,
-                "pattern": "37",
-                "style": "labelBorderColor"
-              }
-            ],
-            "shapeProp": "id",
-            "shapeRegEx": true,
-            "stringThresholds": [
-              "/.*/",
-              "/.*/"
-            ],
-            "textData": [
-              {
-                "hidden": false,
-                "pattern": "35",
-                "textOn": "wmd",
-                "textPattern": "/.*/",
-                "textReplace": "anl"
-              }
-            ],
-            "textProp": "id",
-            "textRegEx": true,
-            "thresholds": [
-              40,
-              70
-            ],
-            "tooltip": false,
-            "tooltipColors": false,
-            "tooltipLabel": "",
-            "tooltipOn": "a",
-            "tpDirection": "v",
-            "tpGraph": false,
-            "tpGraphScale": "linear",
-            "tpGraphSize": "100%",
-            "tpGraphType": "line",
-            "type": "number",
-            "unit": "short",
-            "valueData": []
+            "pattern": "32",
+            "style": "fillColor"
+          },
+          {
+            "colorOn": "a",
+            "hidden": false,
+            "pattern": "33",
+            "style": "strokeColor"
+          },
+          {
+            "colorOn": "a",
+            "hidden": false,
+            "pattern": "34",
+            "style": "fontColor"
+          },
+          {
+            "colorOn": "a",
+            "hidden": false,
+            "pattern": "36",
+            "style": "labelBackgroundColor"
+          },
+          {
+            "colorOn": "a",
+            "hidden": false,
+            "pattern": "37",
+            "style": "labelBorderColor"
           }
-        ]
-      },
-      "title": "Panel Title",
-      "type": "agenty-flowcharting-panel",
-      "valueName": "current",
-      "version": "0.9.0"
-    }
-  ],
-  "refresh": "",
-  "schemaVersion": 36,
-  "style": "dark",
-  "tags": [],
-  "templating": {
-    "list": []
+        ],
+        "shapeProp": "id",
+        "shapeRegEx": true,
+        "stringThresholds": [
+          "/.*/",
+          "/.*/"
+        ],
+        "textData": [
+          {
+            "hidden": false,
+            "pattern": "35",
+            "textOn": "wmd",
+            "textPattern": "/.*/",
+            "textReplace": "anl"
+          }
+        ],
+        "textProp": "id",
+        "textRegEx": true,
+        "thresholds": [
+          40,
+          70
+        ],
+        "tooltip": false,
+        "tooltipColors": false,
+        "tooltipLabel": "",
+        "tooltipOn": "a",
+        "tpDirection": "v",
+        "tpGraph": false,
+        "tpGraphScale": "linear",
+        "tpGraphSize": "100%",
+        "tpGraphType": "line",
+        "type": "number",
+        "unit": "short",
+        "valueData": []
+      }
+    ]
   },
-  "time": {
-    "from": "now-6h",
-    "to": "now"
-  },
-  "timepicker": {},
-  "timezone": "",
-  "title": "flowcharting-colors_0.9.1",
-  "uid": "EY0XAWX7k",
-  "version": 4,
-  "weekStart": ""
+  "title": "Panel Title",
+  "type": "agenty-flowcharting-panel",
+  "valueName": "current",
+  "version": "0.9.0"
 }
