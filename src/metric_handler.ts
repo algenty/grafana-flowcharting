@@ -22,15 +22,11 @@ export class MetricHandler {
   // Updates
   //
   change() {
-    const funcName = 'change';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'initData()');
-    this.free();
+    this.clear();
     this.dataList.map( async (dl) => {
       this.addMetric(dl);
     });
     $GF.events.emit('data_processed');
-    trc.after();
   }
 
   update(timestamp?: number): this {
@@ -228,11 +224,13 @@ export class MetricHandler {
    *
    * @memberof MetricHandler
    */
-  clear(): this {
-    // this.dataList = [];
+  clear() {
     this.tables = [];
     this.series = [];
+    // TODO : Not work
+    // this.metrics.map((m) => { m.free() });
     this.metrics = [];
+
     return this;
   }
 
