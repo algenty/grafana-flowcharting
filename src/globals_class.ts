@@ -11,7 +11,8 @@ const globalSignalsArray = [
   'variables_changed',
   'editmode_opened',
   'editmode_closed',
-  'debug_asked'
+  'debug_asked',
+  'panel_closed'
 ] as const;
 type GlobalSignals = typeof globalSignalsArray[number];
 
@@ -1420,17 +1421,17 @@ export class $GF {
     return false;
   }
 
-  static setGraphHover(timestamp: number) {
-    if (this.isGraphHoverEnabled()) {
-      this.graphHover = true;
-      this.GHTimeStamp = timestamp;
-    }
-  }
+  // static setGraphHover(timestamp: number) {
+  //   if (this.isGraphHoverEnabled()) {
+  //     this.graphHover = true;
+  //     this.GHTimeStamp = timestamp;
+  //   }
+  // }
 
-  static unsetGraphHover() {
-    this.graphHover = false;
-    this.GHTimeStamp = 0;
-  }
+  // static unsetGraphHover() {
+  //   this.graphHover = false;
+  //   this.GHTimeStamp = 0;
+  // }
 
   static hasGraphHover(): boolean {
     return this.graphHover && this.isGraphHoverEnabled();

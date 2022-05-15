@@ -21,6 +21,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   flowchartsDiv: HTMLDivElement;
   templateSrv: any;
   version: any;
+  graphOverTimeStamp = 0;
   message: GFMessage | undefined;
   changedSource: boolean;
   changedData: boolean;
@@ -90,179 +91,29 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     grafana.appEvents.on('graph-hover-clear', this._on_events_graph_unshared.bind(this), this.$scope);
     this.dashboard.events.on('template-variable-value-updated', this._on_events_variables_changed.bind(this), $scope);
     $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this))
-    $GF.events.emit('debug_asked');
-    //TODO : Have 2 flowchart after loaded
   }
 
-  /**
-   * Return data with default value
-   *
-   * @static
-   * @returns PanelDatas
-   * @memberof RulesHandler
-   */
-  static getDefaultData() {
-    return {
-      format: 'short',
-      valueName: 'current',
-      rulesData: RulesHandler.getDefaultData(),
-      flowchartsData: FlowchartHandler.getDefaultData(),
-      version: $GF.plugin.getVersion(),
-    };
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE/CLEAR
+  //############################################################################
+  init() {
+    this.init_connectors();
+    this.init_handlers();
   }
 
-  //
-  // EVENTS FCT
-  //
-  /**
-   * Edit Mode Event
-   *
-   * @memberof FlowchartCtrl
-   */
-  _on_events_mode_edited() {
-    this.addEditorTab('Flowcharts', flowchartsOptionsTab, 2);
-    this.addEditorTab('Rules', rulesOptionsTab, 3);
-    this.addEditorTab('Inspect', inspectOptionsTab, 4);
-    this.editModeTrue();
+  change() {
+
   }
 
-  // 9.1 : FIX for edit mode in grafana 7.x : Not work
-  // Clean edit mode
-  _on_TearDown() {
-    // GFLog.debug('EVENT : ', this.id, 'onTearDown');
+  //############################################################################
+  //### LOGIC
+  //############################################################################
+  init_connectors() {
+    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    $GF.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
   }
 
-  /**
-   * GraphHover Event
-   *
-   * @param {*} event
-   * @memberof FlowchartCtrl
-   */
-  _on_events_graph_shared(event: any) {
-    const flowchartHandler = this.flowchartHandler;
-    if (this.dashboard.sharedTooltipModeEnabled() && flowchartHandler !== undefined) {
-      const timestamp = event.pos.x;
-      const timeId = 'graph-hover';
-      const self = this;
-      const setGraphHover = () => {
-        self.metricHandler?.refreshMetrics(timestamp);
-      };
-      if (this.graphHoverTimer === undefined) {
-        this.graphHoverTimer = GFTimer.create(timeId);
-      }
-      const ms = $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY;
-      this.graphHoverTimer.addStep(setGraphHover.bind(this), ms).start();
-    } else {
-      this.graphHoverTimer?.cancel();
-      this.graphHoverTimer = undefined;
-    }
-  }
-
-  /**
-   * Clear GraphHover
-   *
-   * @param {*} event
-   * @memberof FlowchartCtrl
-   */
-  _on_events_graph_unshared(event: any) {
-    if (this.flowchartHandler !== undefined && this.graphHoverTimer !== undefined) {
-      this.graphHoverTimer?.cancel();
-      this.graphHoverTimer = undefined;
-      this.metricHandler?.refreshMetrics();
-    }
-  }
-
-  _on_events_refreshed() {
-    const funcName = 'onRefresh';
-    GFLog.debug(`${this.constructor.name}.${funcName}()`);
-    this.flowchartHandler?.update();
-  }
-
-  /**
-   * OnVar Event
-   *
-   * @memberof FlowchartCtrl
-   */
-  _on_events_variables_changed() {
-    const funcName = 'onVarChanged';
-    GFLog.debug(`${this.constructor.name}.${funcName}()`);
-    if (this.flowchartHandler !== undefined) {
-      // this.flowchartHandler.onChangeGraph();
-      // this.flowchartHandler.render();
-    }
-  }
-
-  /**
-   * OnRender Event
-   *
-   * @memberof FlowchartCtrl
-   */
-  _on_events_rendered() {
-    const funcName = 'onRender';
-    GFLog.debug(`${this.constructor.name}.${funcName}()`);
-    if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
-      this.notify('Configuration updating...');
-      this.editModeFalse();
-      // const panelClone = _cloneDeep(this.panel);
-      this.flowchartHandler.free();
-      this.flowchartHandler = undefined;
-      this.rulesHandler.free();
-      this.flowchartHandler = undefined;
-      this.initHandlers();
-      // this.flowchartHandler._covert(panelClone.flowchartsData);
-      // this.flowchartHandler.update();
-      // this.rulesHandler._convert(panelClone.rulesData);
-      // this.rulesHandler.update();
-    }
-    this.flowchartHandler?.render();
-  }
-
-  /**
-   * Data receved Event
-   *
-   * @param {*} dataList : Array of dalalist
-   * @memberof FlowchartCtrl
-   */
-  private _on_events_data_updated(dataList: any) {
-    const funcName = 'onDataReceived';
-    GFLog.debug(`${this.constructor.name}.${funcName}()`);
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
-    $GF.events.emit('data_updated', dataList);
-    // this.metricHandler?.setDataList(dataList);
-    // this.metricHandler?.change();
-    trc.after();
-    $GF.trace.resume();
-  }
-
-  private _on_events_data_error() {
-    this.render();
-  }
-
-  private _on_global_debug_asked() {
-    console.log("🧰", 'DATA', this.panel);
-  }
-
-  //
-  // Functions ----------------------------------------------------------------
-  //
-  // For Grafana 7, who to know if edit mode is actived
-  editModeTrue() {
-    this.panel.editedFlag = true;
-  }
-
-  editModeFalse() {
-    this.panel.editedFlag = false;
-  }
-
-  isEditedMode(): boolean {
-    return this.panel.editedFlag;
-  }
-
-  isEditingMode(): boolean {
-    return this.panel.isEditing === true;
-  }
-
-  initHandlers() {
+  init_handlers() {
     const funcName = 'initHandlers';
     GFLog.debug(`${this.constructor.name}.${funcName}()`);
     // METRICS / DATAS
@@ -299,6 +150,142 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
+  clear_connectors() {
+    $GF.events.disconnect('debug_asked', this);
+    $GF.events.disconnect('panel_closed', this);
+  }
+
+
+  /**
+   * Return data with default value
+   *
+   * @static
+   * @returns PanelDatas
+   * @memberof RulesHandler
+   */
+  static getDefaultData() {
+    return {
+      format: 'short',
+      valueName: 'current',
+      rulesData: RulesHandler.getDefaultData(),
+      flowchartsData: FlowchartHandler.getDefaultData(),
+      version: $GF.plugin.getVersion(),
+    };
+  }
+
+
+  private _setGraphHover() {
+    this.metricHandler?.refreshMetrics(this.graphOverTimeStamp);
+  };
+
+  //###########################################################################
+  //### EVENTS
+  //###########################################################################
+  _on_events_mode_edited() {
+    this.addEditorTab('Flowcharts', flowchartsOptionsTab, 2);
+    this.addEditorTab('Rules', rulesOptionsTab, 3);
+    this.addEditorTab('Inspect', inspectOptionsTab, 4);
+    this.editModeTrue();
+  }
+
+  _on_TearDown() {
+    $GF.events.emit('panel_closed');
+  }
+
+  _on_events_graph_shared(event: any) {
+    const flowchartHandler = this.flowchartHandler;
+    if (this.dashboard.sharedTooltipModeEnabled() && flowchartHandler !== undefined) {
+      this.graphHoverTimer = event.pos.x;
+      const timeId = 'graph-hover';
+      if (this.graphHoverTimer === undefined) {
+        this.graphHoverTimer = GFTimer.create(timeId);
+      }
+      const ms = $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY;
+      this.graphHoverTimer.addStep(this._setGraphHover.bind(this), ms).start();
+    } else {
+      this.graphHoverTimer?.cancel();
+      this.graphHoverTimer = undefined;
+    }
+  }
+
+  private _on_events_graph_unshared(event: any) {
+    if (this.flowchartHandler !== undefined && this.graphHoverTimer !== undefined) {
+      this.graphHoverTimer?.cancel();
+      this.graphHoverTimer = undefined;
+      this.metricHandler?.refreshMetrics();
+    }
+  }
+
+  private _on_events_refreshed() {
+    const funcName = 'onRefresh';
+    GFLog.debug(`${this.constructor.name}.${funcName}()`);
+    this.flowchartHandler?.update();
+  }
+
+  private _on_events_variables_changed() {
+    const funcName = 'onVarChanged';
+    GFLog.debug(`${this.constructor.name}.${funcName}()`);
+    if (this.flowchartHandler !== undefined) {
+      // this.flowchartHandler.onChangeGraph();
+      // this.flowchartHandler.render();
+    }
+  }
+
+
+  private _on_events_rendered() {
+    const funcName = 'onRender';
+    GFLog.debug(`${this.constructor.name}.${funcName}()`);
+    if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
+      this.notify('Configuration updating...');
+      this.editModeFalse();
+      // const panelClone = _cloneDeep(this.panel);
+      this.flowchartHandler.free();
+      this.flowchartHandler = undefined;
+      this.rulesHandler.free();
+      this.flowchartHandler = undefined;
+      this.init_handlers();
+    }
+    this.flowchartHandler?.render();
+  }
+
+
+  private _on_events_data_updated(dataList: any) {
+    $GF.events.emit('data_updated', dataList);
+  }
+
+  private _on_events_data_error() {
+    this.render();
+  }
+
+  private _on_global_debug_asked() {
+    console.log("🧰", 'DATA', this.panel);
+  }
+
+  private _on_global_panel_closed() {
+    console.log('Close connectors')
+    this.clear_connectors()
+  }
+
+  //
+  // Functions ----------------------------------------------------------------
+  //
+  // For Grafana 7, who to know if edit mode is actived
+  editModeTrue() {
+    this.panel.editedFlag = true;
+  }
+
+  editModeFalse() {
+    this.panel.editedFlag = false;
+  }
+
+  isEditedMode(): boolean {
+    return this.panel.editedFlag;
+  }
+
+  isEditingMode(): boolean {
+    return this.panel.isEditing === true;
+  }
+
   link(scope: any, elem: any, attrs: any, ctrl: any) {
     const funcName = 'link';
     GFLog.debug(`${this.constructor.name}.${funcName}()`);
@@ -322,7 +309,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     XGraph.initMxGraphLib();
     this.notify('Load configuration');
 
-    this.initHandlers();
+    this.init_handlers();
 
     // Versions
     // this.panel.newFlag = false;
