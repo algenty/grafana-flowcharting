@@ -1732,7 +1732,7 @@ export class GFTimer {
     return allRunned;
   }
 
-  static stop(timer?: string | GFTimer) {
+  static async stop(timer?: string | GFTimer) {
     if (!GFTimer._timers) {
       GFTimer._timers = new Map();
     }
@@ -1751,10 +1751,12 @@ export class GFTimer {
       GFTimer._timers.delete(timer.uid);
     } else {
       // Remove all
-      GFTimer._timers.forEach((gftimer, key, map) => {
+      const timers = Array.from(GFTimer._timers.values())
+      await Promise.all(timers.map(async (gftimer) => {
         gftimer.cancel();
-      });
-      GFTimer._timers.clear();
+      })).finally( () =>{
+        GFTimer._timers.clear();
+      })
     }
   }
 
