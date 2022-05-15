@@ -549,13 +549,13 @@ export class FlowchartHandler {
           }
         }
       }
-      if ((this.onEdit && event.data !== undefined) || event.data.length === 0) {
+      if ((this.onEdit && event.data) || event.data.length === 0) {
+        window.removeEventListener('message', this.listenMessage.bind(this), false);
         if (this.editorWindow) {
           this.editorWindow.close();
         }
         this.onEdit = false;
         this.postedId = undefined;
-        window.removeEventListener('message', this.listenMessage.bind(this), false);
         $GF.notify('Draw.io editor closed', 'info');
       }
     }

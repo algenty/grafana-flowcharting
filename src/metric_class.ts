@@ -401,8 +401,11 @@ export class TableMetric extends Metric {
   }
 
   private _setTableColumnToSensibleDefault() {
-    if (this.dataList && this.dataList.columns.length === 1) {
-      this.tableColumn = this.dataList?.columns[0].text;
+    if(!this.dataList) {
+      return;
+    }
+    if (this.dataList.columns.length === 1) {
+      this.tableColumn = this.dataList.columns[0].text;
     } else {
       this.tableColumn = _find(this.dataList.columns, (col) => {
         return col.type !== 'time';

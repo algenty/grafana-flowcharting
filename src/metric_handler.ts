@@ -83,8 +83,8 @@ export class MetricHandler {
     } else {
       metric = this.addSerie(data);
     }
-    return metric;
     trc.after();
+    return metric;
   }
 
   /**

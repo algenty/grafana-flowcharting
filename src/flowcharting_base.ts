@@ -58,7 +58,6 @@ export class GFEvents<Signals> {
     }
     if (!this._haveDeclaredSignal(signalName)) {
       throw new Error(`${this.toString()} have no declared signal ${signalName}`);
-      return false;
     }
     if(this._owner) {
       // console.log(`${objRef.uid} connect on ${signalName} to ${this._owner}`);

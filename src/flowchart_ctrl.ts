@@ -353,21 +353,21 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   displayMultiCursor(): boolean {
     if (this.flowchartHandler) {
-      return this.flowchartHandler?.isMultiFlowcharts();
+      return this.flowchartHandler.isMultiFlowcharts();
     }
     return false;
   }
 
   displayFirstCursor(): boolean {
     if (this.flowchartHandler) {
-      return !this.flowchartHandler?.isCurrentfirst();
+      return !this.flowchartHandler.isCurrentfirst();
     }
     return false;
   }
 
   displayLastCursor(): boolean {
     if (this.flowchartHandler) {
-      return !this.flowchartHandler?.isCurrentLast();
+      return !this.flowchartHandler.isCurrentLast();
     }
     return false;
   }

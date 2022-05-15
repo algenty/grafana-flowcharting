@@ -203,7 +203,7 @@ export class FlowchartsOptionsCtrl {
     this.editMode = true;
     this.currentFlowchart = this.flowchartHandler?.addFlowchart(this.flowchartHandler.getFlowchartTmpName());
     if (this.currentFlowchart) {
-      this.flowchartHandler?.setCurrentFlowchart(this.currentFlowchart?.getName());
+      this.flowchartHandler?.setCurrentFlowchart(this.currentFlowchart.getName());
       this.ctrl.notify(this.currentFlowchart.getName());
       this.newName = this.currentFlowchart.getName();
     }

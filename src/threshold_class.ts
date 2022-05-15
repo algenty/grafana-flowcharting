@@ -177,8 +177,6 @@ export class NumberTH extends GFTH {
       default:
         // GFLog.error('Comparator unknown : ' + this.data.comparator);
         throw new Error('Unknown comparator: ' + this.data.comparator);
-        return false;
-        break;
     }
   }
 }
@@ -237,8 +235,6 @@ export class StringTH extends GFTH {
         break;
       default:
         throw new Error('Unknown comparator: ' + this.data.comparator);
-        return false;
-        break;
     }
   }
 }

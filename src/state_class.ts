@@ -170,7 +170,7 @@ export class State {
         const eventMaps = r.getEventMaps();
         this._variables.set($GF.CONSTANTS.VAR_STR_RULENAME, r.data.alias);
         const m = Array.from(r.getMetrics().values());
-        m.forEach( (metric) => {
+        m.forEach((metric) => {
           try {
             this.currMetrics.push(metric.getName());
             this._variables.set($GF.CONSTANTS.VAR_STR_METRIC, metric.getName);
@@ -894,7 +894,9 @@ export class GFState {
       return level !== undefined ? level : GFState.DEFAULTLEVEL;
     }
     let level = GFState.DEFAULTLEVEL;
-    this.keys.forEach((key) => (level = Math.max(this.getLevel(key))));
+    this.keys.forEach((key) => {
+      level = Math.max(this.getLevel(key), level);
+    });
     return level;
   }
 
@@ -1004,7 +1006,7 @@ class EventState extends GFState {
       case 'tpMetadata':
         if (value !== null) {
           const tbl = String(value).split('@');
-          if (tbl !== undefined && tbl.length > 0) {
+          if (tbl.length > 0) {
             let k: any = tbl.shift();
             let v: any = null;
             if (tbl.length > 0) {

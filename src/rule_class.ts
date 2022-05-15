@@ -1760,7 +1760,6 @@ export class Rule {
         throw new Error('Data type unknown' + this.data.type);
         break;
     }
-    return '';
   }
 
   /**
@@ -1856,7 +1855,6 @@ export class Rule {
         throw new Error('Type of threshold unknown : ' + this.data.type);
         break;
     }
-    return -1;
   }
 
   _getIndexNumberTHForValue(value: number): number {

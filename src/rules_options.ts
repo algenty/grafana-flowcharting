@@ -844,7 +844,6 @@ export class RulesOptionsCtrl {
               )} is not a valid date : ${value}`
             );
             return false;
-            break;
           }
         }
       }

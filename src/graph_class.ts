@@ -151,7 +151,7 @@ export class XGraph {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'initMxGgraph()');
     let myWindow: any = window;
     if (!XGraph.initialized) {
-      if (myWindow.mxGraph === undefined || myWindow.mxGraph === undefined) {
+      if (myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
         // Before 0.9
         // let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
@@ -401,8 +401,8 @@ export class XGraph {
     if (this.graph) {
       this.graph.zoomActual();
       this.applyOptions();
+      this.graph.refresh();
     }
-    this.graph.refresh();
     trc.after();
     return this;
   }
