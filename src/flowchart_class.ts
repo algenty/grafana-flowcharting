@@ -86,14 +86,8 @@ export class Flowchart {
   }
 
   //############################################################################
-  //### INIT/UPDATE/CHANGE/FREE
+  //### LOGIC
   //############################################################################
-  /**
-   * Import data object in current flowchart
-   *
-   * @param {Object} oldData
-   * @memberof Flowchart
-   */
   private _convert(oldData: any): this {
     GFLog.info(`flowchart[${this.data.name}].import()`);
     if (!!oldData.download || this.data.download === false) {
@@ -815,37 +809,4 @@ export class Flowchart {
     return this.visible;
   }
 
-  //
-  // Updates
-  //
-
-  //
-  // Events
-  //
-  // async onDestroyed() {
-  //   const funcName = 'onDestroyed';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.emit(this, 'destroyed');
-  //   this.ctrl.eventHandler.unsubscribes(this);
-  // }
-
-  // async onRefreshed() {
-  //   const funcName = 'onRefreshed';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.emit(this, 'refreshed');
-  // }
-
-  // async onInitialized() {
-  //   const funcName = 'onInitialized';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.subscribes(this);
-  //   this.ctrl.eventHandler.emit(this, 'initialized');
-  // }
-
-  // async onChanged() {
-  //   const funcName = 'onChanged';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.emit(this, 'changed');
-  //   // this.refresh(); //TODO : Verify
-  // }
 }

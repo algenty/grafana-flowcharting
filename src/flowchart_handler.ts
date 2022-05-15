@@ -591,32 +591,8 @@ export class FlowchartHandler {
   //### EVENTS
   //###########################################################################
   private _on_global_debug_asked() {
+    console.log('📩', this.constructor.name, "_on_global_debug_asked");
     console.log("🧰", this.constructor.name, this);
   }
 
-
-  //
-  // Events
-  //
-  // async onDestroyed() {
-  //   const funcName = 'onDestroyed';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.unsubscribes(this);
-  // }
-
-  // async onRefreshed() {
-  //   const funcName = 'onRefreshed';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  // }
-
-  // async onInitialized() {
-  //   const funcName = 'onInitialized';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.subscribes(this);
-  // }
-
-  // async onChanged() {
-  //   const funcName = 'onChanged';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  // }
 }

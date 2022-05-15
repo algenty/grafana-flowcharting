@@ -2210,6 +2210,7 @@ export class Rule {
   //### EVENTS
   //#############################################################
   private _on_metricHandler_metric_deleted(metric: ObjectMetric) {
+    console.log('📩', this.constructor.name, "_on_metricHandler_metric_deleted");
     if(this.metrics.has(metric.uid)) {
       this.metrics.delete(metric.uid)
       this.update();
@@ -2217,140 +2218,11 @@ export class Rule {
   }
 
   private _on_metricHandler_metric_created(metric: ObjectMetric) {
+    console.log('📩', this.constructor.name, "_on_metricHandler_metric_created");
     if(this.matchMetric(metric)) {
       this.metrics.set(metric.uid, metric);
       this.update();
     }
   }
 
-
-
-
-
-
-
-
-
-//HISTORY
-
-  //
-  // Events
-  //
-  // async onDestroyed() {
-  //   const funcName = 'onDestroyed';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.emit(this, 'destroyed');
-  //   this.ctrl.eventHandler.unsubscribes(this);
-  //   this.clear();
-  // }
-
-  // async onRefreshed() {
-  //   const funcName = 'onRefreshed';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.emit(this, 'refreshed');
-  // }
-
-  // async onInitialized() {
-  //   const funcName = 'onInitialized';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.subscribes(this);
-  //   this.ctrl.eventHandler.emit(this, 'initialized');
-  // }
-
-  // async onChanged() {
-  //   const funcName = 'onChanged';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.emit(this, 'changed');
-  // }
-
-  // async onCompleted() {
-  //   const funcName = 'onCompleted';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   // this.ctrl.eventHandler.emit(this, 'completed');
-  // }
-
-  //
-  // RXJS Observer
-  //
-  // getMetric$changed(): Observer<ObjectMetric> {
-  //   const self = this;
-  //   const funcName = 'getMetric$changed';
-  //   return {
-  //     next: (metric: ObjectMetric) => {
-  //       GFLog.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-  //       if (self.metricCompleted) {
-  //         self.metricCompleted = false;
-  //         self.metrics.clear();
-  //       }
-  //       if (metric !== null && self.matchMetric(metric)) {
-  //         self.metrics.set(metric.uid, metric);
-  //       }
-  //     },
-  //     error: err => {
-  //       GFLog.error(err);
-  //     },
-  //     complete: () => {
-  //       GFLog.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
-  //     },
-  //   };
-  // }
-
-  // getMetric$refreshed(): Observer<ObjectMetric> {
-  //   const self = this;
-  //   const funcName = 'getMetric$refreshed';
-  //   return {
-  //     next: (metric: ObjectMetric) => {
-  //       GFLog.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-  //       if (metric !== null && self.metrics.has(metric.uid)) {
-  //         if (self.metricCompleted) {
-  //           self.metricCompleted = false;
-  //         }
-  //       }
-  //     },
-  //     error: err => {
-  //       GFLog.error(err);
-  //     },
-  //     complete: () => {
-  //       GFLog.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
-  //     },
-  //   };
-  // }
-
-  // getMetric$completed(): Observer<ObjectMetric> {
-  //   const self = this;
-  //   const funcName = 'getMetric$completed';
-  //   return {
-  //     next: (metric: ObjectMetric) => {
-  //       GFLog.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-  //       if (!self.metricCompleted) {
-  //         self.complete();
-  //       }
-  //     },
-  //     error: err => {
-  //       GFLog.error(err);
-  //     },
-  //     complete: () => {
-  //       GFLog.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
-  //     },
-  //   };
-  // }
-
-  // getState$changed(): Observer<State> {
-  //   const self = this;
-  //   const funcName = 'getState$changed';
-  //   return {
-  //     next: (state: State) => {
-  //       GFLog.debug(`${this.constructor.name}.${funcName}().next() : ${this.uid}`);
-  //       if (state === null) {
-  //         self.change();
-  //       }
-  //     },
-  //     error: err => {
-  //       GFLog.error(err);
-  //     },
-  //     complete: () => {
-  //       GFLog.debug(`${this.constructor.name}.${funcName}().complete() : ${this.uid}`);
-  //     },
-  //   };
-  // }
 }
