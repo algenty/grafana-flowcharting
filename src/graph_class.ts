@@ -64,6 +64,7 @@ export class XGraph {
   init() {
     const funcName = 'init';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     XGraph.initMxGraphLib();
     if (this.type === 'xml') {
       if (GFDrawioTools.isEncoded(this.definition)) {
@@ -124,8 +125,9 @@ export class XGraph {
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.freeGraph();
     this.clear();
-    // this.onDestroyed();
     this.events.emit('graph_freed', this);
+    $GF.events.disconnect('debug_asked', this);
+    this.events.clear()
     return this;
   }
 
@@ -1216,6 +1218,13 @@ export class XGraph {
         GFLog.error('Error in preview', error);
       }
     }
+  }
+
+  //#############################################################################
+  //### EVENTS
+  //#############################################################################
+  private _on_global_debug_asked() {
+    console.log('🧰', this.constructor.name, this);
   }
 
   // complete(): this {

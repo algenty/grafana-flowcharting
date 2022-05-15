@@ -66,6 +66,40 @@ export class FlowchartHandler {
     this.init();
   }
 
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE/CLEAR
+  //############################################################################
+  update() {
+    // this.refreshMetrics();
+    // this.refreshRules();
+    // this.refreshStates();
+    this.updateFlowchart();
+    // this.onRefreshed();
+    // return this;
+  }
+
+  change() {
+    this.flowcharts.forEach((f) => f.change());
+    this.setCurrentFlowchart('Main');
+    // this.onChanged();
+    // return this;
+  }
+
+  free() {
+    this.flowcharts.forEach((f) => f.free());
+    this.clear();
+    // this.onDestroyed();
+    // return this;
+  }
+
+  init() {
+    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+  }
+
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE/CLEAR
+  //############################################################################
+
   static getDefaultData(): gf.TFlowchartHandlerData {
     return {
       editorUrl: $GF.CONSTANTS.CONF_EDITOR_URL,
@@ -554,35 +588,13 @@ export class FlowchartHandler {
     return this.flowcharts.map((f) => f.data.name);
   }
 
-  //
-  // updates
-  //
-  update(): this {
-    // this.refreshMetrics();
-    // this.refreshRules();
-    // this.refreshStates();
-    this.updateFlowchart();
-    // this.onRefreshed();
-    return this;
+  //###########################################################################
+  //### EVENTS
+  //###########################################################################
+  private _on_global_debug_asked() {
+    console.log("🧰", this.constructor.name, this);
   }
 
-  change(): this {
-    this.flowcharts.forEach((f) => f.change());
-    this.setCurrentFlowchart('Main');
-    // this.onChanged();
-    return this;
-  }
-
-  free(): this {
-    this.flowcharts.forEach((f) => f.free());
-    this.clear();
-    // this.onDestroyed();
-    return this;
-  }
-
-  init(): this {
-    return this;
-  }
 
   //
   // Events

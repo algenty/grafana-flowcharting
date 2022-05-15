@@ -35,6 +35,56 @@ export class StateHandler {
     this.init();
   }
 
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
+  update(): this {
+    const funcName = 'refresh';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.rulesCompleted = false;
+    this.states.forEach((s) => s.update());
+    // this.onRefreshed();
+    return this;
+  }
+
+  change(): this {
+    const funcName = 'change';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.rulesCompleted = false;
+    this.states.forEach((s) => s.change());
+    // this.onChanged();
+    return this;
+  }
+
+  init(): this {
+    const funcName = 'init';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    this.initStates();
+    // this.onInitialized();
+    return this;
+  }
+
+  clear(): this {
+    //TODO : Why commented
+    // if (this.states) {
+    //   this.states.forEach((st) => {
+    //     st.clear();
+    //   });
+    //   this.states.clear();
+    // }
+    this.states.forEach((s) => {
+      s.free();
+      this.events.emit('state_deleted', s);
+    });
+    $GF.events.disconnect('debug_asked', this);
+    return this;
+  }
+
+  //############################################################################
+  //### LOGIC
+  //############################################################################
+
   /**
    * Initialisation of states
    *
@@ -260,62 +310,12 @@ export class StateHandler {
     return this.xgraph.uid === xgraph.uid;
   }
 
-  //
-  // Updates
-  //
-  /**
-   * Reset/empty/destroy StateHandler
-   *
-   * @returns {this}
-   * @memberof StateHandler
-   */
-  clear(): this {
-    // if (this.states) {
-    //   this.states.forEach((st) => {
-    //     st.clear();
-    //   });
-    //   this.states.clear();
-    // }
-    this.states.forEach((s) => {
-      s.free();
-      this.events.emit('state_deleted', s);
-    });
-    this.events.clear();
-    return this;
-  }
-
   // free(rule?: Rule): this {
   //   const funcName = 'destroy';
   //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
   //   // this.onDestroyed();
   //   return this;
   // }
-
-  update(): this {
-    const funcName = 'refresh';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.rulesCompleted = false;
-    this.states.forEach((s) => s.update());
-    // this.onRefreshed();
-    return this;
-  }
-
-  change(): this {
-    const funcName = 'change';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.rulesCompleted = false;
-    this.states.forEach((s) => s.change());
-    // this.onChanged();
-    return this;
-  }
-
-  init(): this {
-    const funcName = 'init';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.initStates();
-    // this.onInitialized();
-    return this;
-  }
 
   // complete(): this {
   //   const funcName = 'complete';
@@ -347,8 +347,8 @@ export class StateHandler {
   //
   changeWithXGraph(xgraph: XGraph): this {
     this.xgraph = xgraph;
-    this.clear()
-    this.init()
+    this.clear();
+    this.init();
     this.change();
     return this;
   }
@@ -356,6 +356,12 @@ export class StateHandler {
   //#########################################################################
   //### Events
   //#########################################################################
+  private _on_global_debug_asked() {
+    console.log("🧰", this.constructor.name, this);
+  }
+
+
+
   // Moved into state class
   // private _on_global_data_received() {
   //   const statesArray: State[] = Array.from(this.states.values())

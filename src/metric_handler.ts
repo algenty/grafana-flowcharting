@@ -44,6 +44,7 @@ export class MetricHandler {
     const funcName = 'init';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     $GF.events.connect('data_updated', this, this._on_global_data_updated.bind(this));
+    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     return this;
   }
 
@@ -239,6 +240,10 @@ export class MetricHandler {
   private _on_global_data_updated(dataList: any) {
     this.setDataList(dataList);
     this.change();
+  }
+
+  private _on_global_debug_asked() {
+    console.log("🧰", this.constructor.name, this);
   }
 
 

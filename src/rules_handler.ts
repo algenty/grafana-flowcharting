@@ -53,6 +53,7 @@ export class RulesHandler {
   //
   init(): this {
     GFLog.debug(this.constructor.name + '.init()');
+    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     return this;
   }
 
@@ -325,6 +326,10 @@ export class RulesHandler {
 
   private _on_rule_rule_changed(rule: Rule) {
     RulesHandler.events.emit('rule_changed', rule);
+  }
+
+  private _on_global_debug_asked() {
+    console.log("🧰", this.constructor.name, this);
   }
 
   // TODO : FIX

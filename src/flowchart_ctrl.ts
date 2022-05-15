@@ -89,6 +89,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     grafana.appEvents.on('graph-hover', this._on_events_graph_shared.bind(this), this.$scope);
     grafana.appEvents.on('graph-hover-clear', this._on_events_graph_unshared.bind(this), this.$scope);
     this.dashboard.events.on('template-variable-value-updated', this._on_events_variables_changed.bind(this), $scope);
+    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this))
+    $GF.events.emit('debug_asked');
+    //TODO : Have 2 flowchart after loaded
   }
 
   /**
@@ -215,7 +218,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
    * @param {*} dataList : Array of dalalist
    * @memberof FlowchartCtrl
    */
-  _on_events_data_updated(dataList: any) {
+  private _on_events_data_updated(dataList: any) {
     const funcName = 'onDataReceived';
     GFLog.debug(`${this.constructor.name}.${funcName}()`);
     const trc = $GF.trace.before(this.constructor.name + '.' + 'onDataReceived()');
@@ -226,8 +229,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.trace.resume();
   }
 
-  _on_events_data_error() {
+  private _on_events_data_error() {
     this.render();
+  }
+
+  private _on_global_debug_asked() {
+    console.log("🧰", 'DATA', this.panel);
   }
 
   //

@@ -20,6 +20,7 @@ export class FlowchartsOptionsCtrl {
   currentFlowchartName = 'Main';
   flowchartsTableData: gf.TTableData;
   flowchartsTable: GFTable;
+
   // onColorChange : () => any;
 
   /** @ngInject */
@@ -139,6 +140,8 @@ export class FlowchartsOptionsCtrl {
     };
     this.flowchartsTable = new GFTable(this.flowchartsTableData);
   }
+
+
 
   /**
    * Render

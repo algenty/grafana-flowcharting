@@ -11,6 +11,7 @@ const globalSignalsArray = [
   'variables_changed',
   'editmode_opened',
   'editmode_closed',
+  'debug_asked'
 ] as const;
 type GlobalSignals = typeof globalSignalsArray[number];
 
@@ -938,13 +939,14 @@ export class GFDrawioTools {
 }
 
 export class $GF {
+  static uid = 'GFGLOBAL';
   static _globalvars: GFVariables = new GFVariables();
   static CONSTANTS: GFCONSTANT = new GFCONSTANT();
   static trace: GFTrace;
   static plugin: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
-  static DEBUG = false;
+  static DEBUG = true;
   static notify: CallableFunction = (message: string, type: string) => {};
   static clearNotify: CallableFunction = () => {};
   static $refresh: CallableFunction = () => {};
@@ -972,6 +974,10 @@ export class $GF {
     addScript_deprecated: (src: string) => void;
   } = require('./utils_raw');
 
+  static debug() {
+    $GF.events.emit('debug_asked');
+  }
+
   static init($scope: any, templateSrv: any, dashboard: any, ctrl: any): $GF {
     if (!this.plugin) {
       this.plugin = GFPlugin.init($scope, templateSrv, dashboard, ctrl);
@@ -990,7 +996,7 @@ export class $GF {
     $GF.notify = ctrl.notify.bind(ctrl);
     $GF.clearNotify = ctrl.clearNotify.bind(ctrl);
     $GF.$refresh = $scope.$applyAsync.bind($scope);
-    // $GF.events.addSignal('data_received');
+    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind($GF))
     return this;
   }
 
@@ -1205,6 +1211,7 @@ export class $GF {
     return result;
   }
 
+  // ! deppretated
   static setUniqTimeOut(fc: CallableFunction, timer: number, id?: string): string {
     let timeout: Map<string, number> = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
     if (timeout === undefined) {
@@ -1220,6 +1227,7 @@ export class $GF {
     return id;
   }
 
+  // ! deprecated
   static clearUniqTimeOut(id: string) {
     const timeout: Map<string, number> = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
     if (timeout !== undefined) {
@@ -1501,6 +1509,13 @@ export class $GF {
       timeout.forEach((x) => $GF.clearUniqTimeOut(x));
       timeout.clear();
     }
+  }
+
+  //###########################################################################
+  //### EVENTS
+  //###########################################################################
+  private static _on_global_debug_asked() {
+    console.log("🧰", this.constructor.name, this);
   }
 }
 
