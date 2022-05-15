@@ -26,14 +26,13 @@ export class RulesHandler {
    * @param {TIRulesHandlerData} data
    * @memberof RulesHandler
    */
-  constructor(data: gf.TIRulesHandlerData) {
+  constructor(data: gf.TIRulesHandlerData, oldData?: any) {
     this.uid = $GF.genUid(this.constructor.name);
     this.rules = [];
     this.data = data;
-    console.log(
-      '🚀 ~ file: rules_handler.ts ~ line 34 ~ RulesHandler ~ constructor ~ RulesHandler.events',
-      RulesHandler.events
-    );
+    if(oldData) {
+      this._convert(oldData);
+    }
     this.init();
   }
 
@@ -72,7 +71,8 @@ export class RulesHandler {
   }
 
   free(): this {
-    GFLog.debug(this.constructor.name + '.destroy()');
+    GFLog.debug(this.constructor.name + '.free()');
+    $GF.events.disconnect('debug_asked', this);
     this.rules.forEach((r) => r.free());
     this.clear();
     RulesHandler.events.clear();
@@ -96,7 +96,7 @@ export class RulesHandler {
    * @param {any} obj
    * @memberof RulesHandler
    */
-  import(obj: any): this {
+  private _convert(obj: any): this {
     GFLog.info('RuleHandler.import()');
     // this.rules = [];
     this.clear();

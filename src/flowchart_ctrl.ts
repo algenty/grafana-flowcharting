@@ -203,11 +203,16 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();
-      const panelClone = _cloneDeep(this.panel);
-      this.flowchartHandler._covert(panelClone.flowchartsData);
-      this.flowchartHandler.update();
-      this.rulesHandler.import(panelClone.rulesData);
-      this.rulesHandler.update();
+      // const panelClone = _cloneDeep(this.panel);
+      this.flowchartHandler.free();
+      this.flowchartHandler = undefined;
+      this.rulesHandler.free();
+      this.flowchartHandler = undefined;
+      this.initHandlers();
+      // this.flowchartHandler._covert(panelClone.flowchartsData);
+      // this.flowchartHandler.update();
+      // this.rulesHandler._convert(panelClone.rulesData);
+      // this.rulesHandler.update();
     }
     this.flowchartHandler?.render();
   }
@@ -268,12 +273,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // FLOWCHARTS
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
-      this.flowchartHandler = new FlowchartHandler(newFlowchartsData);
-      this.flowchartHandler._covert(this.panel.flowchartsData);
+      this.flowchartHandler = new FlowchartHandler(newFlowchartsData, this.panel.flowchartsData);
+      // this.flowchartHandler._covert(this.panel.flowchartsData);
       this.panel.flowchartsData = newFlowchartsData;
     } else {
-      this.flowchartHandler.free();
-      this.flowchartHandler._covert(this.panel.flowchartsData);
+      // TODO : when exit editor
+      // this.flowchartHandler.free();
+      // this.flowchartHandler._covert(this.panel.flowchartsData, );
     }
     if (this.panel.newFlag && this.flowchartHandler && this.flowchartHandler.countFlowcharts() === 0) {
       this.flowchartHandler.addFlowchart('Main').init();
@@ -284,8 +290,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.rulesHandler.clear();
     } else {
       const newRulesData = RulesHandler.getDefaultData();
-      this.rulesHandler = new RulesHandler(newRulesData);
-      this.rulesHandler.import(this.panel.rulesData);
+      this.rulesHandler = new RulesHandler(newRulesData,this.panel.rulesData);
+      // this.rulesHandler._convert(this.panel.rulesData);
       this.panel.rulesData = newRulesData;
     }
     if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {

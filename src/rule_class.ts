@@ -62,8 +62,6 @@ export class Rule {
   highestValue: any = undefined;
   execTimes = 0;
   events: GFEvents<RuleSignals> = GFEvents.create(ruleSignalsArray);
-  // ctrl: FlowchartCtrl;
-  // metricSubs$: Subscription | undefined;
 
   /**
    * Creates an instance of Rule.
@@ -128,101 +126,8 @@ export class Rule {
   }
 
   //############################################################################
-  //### LOGIC
+  //### CONVERT/MIGRATION
   //############################################################################
-
-  getMetrics(): Map<string, ObjectMetric> {
-    return this.metrics;
-  }
-
-  /**
-   * Get default data
-   *
-   * @static
-   * @returns {gf.TIRuleData}
-   * @memberof Rule
-   */
-  static getDefaultData(): gf.TIRuleData {
-    return {
-      order: 1,
-      pattern: '.*',
-      unit: 'short',
-      type: 'number',
-      metricType: 'serie',
-      alias: 'myRule',
-      refId: 'A',
-      column: 'Time',
-      hidden: false,
-      aggregation: 'current',
-      decimals: 2,
-      // colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
-      reduce: true,
-      dateColumn: 'Time',
-      dateFormat: 'YYYY-MM-DD HH:mm:ss',
-      // thresholds: [50, 80],
-      // stringThresholds: ['/.*/', '/.*/'],
-      numberTHData: [],
-      stringTHData: [],
-      dateTHData: [],
-      invert: false,
-      gradient: false,
-      overlayIcon: false,
-      tooltip: false,
-      tooltipLabel: '',
-      tooltipColors: false,
-      tooltipOn: 'a',
-      tpDirection: 'v',
-      tpMetadata: false,
-      tpGraph: false,
-      tpGraphSize: '100%',
-      tpGraphType: 'line',
-      tpGraphLow: null,
-      tpGraphHigh: null,
-      tpGraphScale: 'linear',
-      mapsDat: {
-        shapes: {
-          options: Rule.getDefaultMapOptions(),
-          dataList: [],
-        },
-        texts: {
-          options: Rule.getDefaultMapOptions(),
-          dataList: [],
-        },
-        links: {
-          options: Rule.getDefaultMapOptions(),
-          dataList: [],
-        },
-        events: {
-          options: Rule.getDefaultMapOptions(),
-          dataList: [],
-        },
-      },
-      mappingType: 1,
-      valueData: [],
-      rangeData: [],
-      sanitize: false,
-      newRule: true,
-    };
-  }
-
-  static getDefaultMapOptions(): gf.TRuleMapOptions {
-    return {
-      identByProp: 'id',
-      metadata: '',
-      enableRegEx: true,
-    };
-  }
-
-  /**
-   * return data of rule
-   *
-   * @returns {data}
-   * @memberof Rule
-   */
-  getData(): gf.TIRuleData {
-    return this.data;
-  }
-
   /**
    * import data in rule
    *
@@ -230,7 +135,7 @@ export class Rule {
    * @param {data} obj
    * @memberof Rule
    */
-  private _convert(obj: any): this {
+   private _convert(obj: any): this {
     const trc = $GF.trace.before(this.constructor.name + '.' + 'import()');
     if (!!obj.unit) {
       this.data.unit = obj.unit;
@@ -624,7 +529,7 @@ export class Rule {
     // EVENT
     // <= 0.9.0
     if (!!obj.eventProp) {
-      this.data.mapsDat.events.options.identByProp = obj.Prop;
+      this.data.mapsDat.events.options.identByProp = obj.eventProp;
     }
     if (!!obj.eventRegEx || obj.eventRegEx === false) {
       this.data.mapsDat.events.options.enableRegEx = obj.eventRegEx;
@@ -681,6 +586,103 @@ export class Rule {
     this.data.newRule = false;
     trc.after();
     return this;
+  }
+
+
+  //############################################################################
+  //### LOGIC
+  //############################################################################
+
+  getMetrics(): Map<string, ObjectMetric> {
+    return this.metrics;
+  }
+
+  /**
+   * Get default data
+   *
+   * @static
+   * @returns {gf.TIRuleData}
+   * @memberof Rule
+   */
+  static getDefaultData(): gf.TIRuleData {
+    return {
+      order: 1,
+      pattern: '.*',
+      unit: 'short',
+      type: 'number',
+      metricType: 'serie',
+      alias: 'myRule',
+      refId: 'A',
+      column: 'Time',
+      hidden: false,
+      aggregation: 'current',
+      decimals: 2,
+      // colors: ['rgba(245, 54, 54, 0.9)', 'rgba(237, 129, 40, 0.89)', 'rgba(50, 172, 45, 0.97)'],
+      reduce: true,
+      dateColumn: 'Time',
+      dateFormat: 'YYYY-MM-DD HH:mm:ss',
+      // thresholds: [50, 80],
+      // stringThresholds: ['/.*/', '/.*/'],
+      numberTHData: [],
+      stringTHData: [],
+      dateTHData: [],
+      invert: false,
+      gradient: false,
+      overlayIcon: false,
+      tooltip: false,
+      tooltipLabel: '',
+      tooltipColors: false,
+      tooltipOn: 'a',
+      tpDirection: 'v',
+      tpMetadata: false,
+      tpGraph: false,
+      tpGraphSize: '100%',
+      tpGraphType: 'line',
+      tpGraphLow: null,
+      tpGraphHigh: null,
+      tpGraphScale: 'linear',
+      mapsDat: {
+        shapes: {
+          options: Rule.getDefaultMapOptions(),
+          dataList: [],
+        },
+        texts: {
+          options: Rule.getDefaultMapOptions(),
+          dataList: [],
+        },
+        links: {
+          options: Rule.getDefaultMapOptions(),
+          dataList: [],
+        },
+        events: {
+          options: Rule.getDefaultMapOptions(),
+          dataList: [],
+        },
+      },
+      mappingType: 1,
+      valueData: [],
+      rangeData: [],
+      sanitize: false,
+      newRule: true,
+    };
+  }
+
+  static getDefaultMapOptions(): gf.TRuleMapOptions {
+    return {
+      identByProp: 'id',
+      metadata: '',
+      enableRegEx: true,
+    };
+  }
+
+  /**
+   * return data of rule
+   *
+   * @returns {data}
+   * @memberof Rule
+   */
+  getData(): gf.TIRuleData {
+    return this.data;
   }
 
 

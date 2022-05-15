@@ -55,6 +55,8 @@ export class MetricHandler {
       m.free();
       MetricHandler.events.emit('metric_deleted', m);
     });
+    $GF.events.disconnect('data_updated', this);
+    $GF.events.disconnect('debug_asked', this);
     this.clear();
     return this;
   }

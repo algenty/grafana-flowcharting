@@ -117,6 +117,7 @@ export class State {
     $GF.events.disconnect('data_updated', this);
     $GF.events.disconnect('data_processed', this);
     RulesHandler.events.disconnect('rule_changed', this);
+    RulesHandler.events.disconnect('rule_updated', this);
     RulesHandler.events.disconnect('rule_created', this);
     RulesHandler.events.disconnect('rule_deleted', this);
     this.events.clear();

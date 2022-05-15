@@ -4,7 +4,12 @@ import { FlowchartHandler } from 'flowchart_handler';
 import { $GF, GFDrawioTools, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 
-const flowchartSignalsArray = ['flowchart_initialized', 'flowchart_updated', 'flowchart_changed', 'flowchart_freed'] as const;
+const flowchartSignalsArray = [
+  'flowchart_initialized',
+  'flowchart_updated',
+  'flowchart_changed',
+  'flowchart_freed',
+] as const;
 type FlowchartSignals = typeof flowchartSignalsArray[number];
 
 /**
@@ -28,10 +33,61 @@ export class Flowchart {
     this.data = newData;
     this.data.name = name;
     this.container = container;
-    if(oldData) { this._convert(oldData)}
+    if (oldData) {
+      this._convert(oldData);
+    }
     this.init();
   }
 
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
+
+  init() {
+    const funcName = 'init';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.initGraph();
+    this.initStateHandler();
+    this.events.emit('flowchart_initialized', this);
+  }
+
+  update() {
+    const funcName = 'refresh';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.xgraph?.update();
+    // this.stateHandler?.refresh();
+    // this.refreshStates();
+    this.setBackgroundColor(this.data.bgColor);
+    // this.onRefreshed();
+    this.events.emit('flowchart_updated', this);
+  }
+
+  change() {
+    const funcName = 'change';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.updateGraph();
+    this.events.emit('flowchart_changed', this);
+  }
+
+  async free() {
+    const funcName = 'destroy';
+    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this.xgraph?.free();
+    this.stateHandler?.clear();
+    await this.events.emit('flowchart_freed', this);
+    this.events.clear();
+    this.clear();
+  }
+
+  clear(): this {
+    this.xgraph?.clear();
+    this.stateHandler?.clear();
+    return this;
+  }
+
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
   /**
    * Import data object in current flowchart
    *
@@ -102,44 +158,6 @@ export class Flowchart {
     // this.setBackgroundColor(this.data.bgColor);
     return this;
   }
-
-  async free() {
-    const funcName = 'destroy';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.xgraph?.free();
-    this.stateHandler?.clear();
-    await this.events.emit('flowchart_freed', this);
-    this.events.clear();
-    this.clear();
-  }
-
-  update() {
-    const funcName = 'refresh';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.xgraph?.update();
-    // this.stateHandler?.refresh();
-    // this.refreshStates();
-    this.setBackgroundColor(this.data.bgColor);
-    // this.onRefreshed();
-    this.events.emit('flowchart_updated', this);
-  }
-
-  change() {
-    const funcName = 'change';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.updateGraph();
-    this.events.emit('flowchart_changed', this);
-  }
-
-  init() {
-    const funcName = 'init';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.initGraph();
-    this.initStateHandler();
-    this.events.emit('flowchart_initialized', this);
-    // this.onInitialized();
-  }
-
 
   /**
    * Return the default XML when new
@@ -394,18 +412,6 @@ export class Flowchart {
   //     this.init();
   //   }
   // }
-
-  /**
-   * Reset/empty/destroy flowchart
-   *
-   * @returns {this}
-   * @memberof Flowchart
-   */
-  clear(): this {
-    this.xgraph?.clear();
-    this.stateHandler?.clear();
-    return this;
-  }
 
   /**
    * Set the name

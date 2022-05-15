@@ -74,23 +74,17 @@ export class FlowchartHandler {
   //### INIT/UPDATE/CHANGE/FREE/CLEAR
   //############################################################################
   update() {
-    // this.refreshMetrics();
-    // this.refreshRules();
-    // this.refreshStates();
     this.updateFlowchart();
-    // this.onRefreshed();
-    // return this;
   }
 
   change() {
     this.flowcharts.forEach((f) => f.change());
     this.setCurrentFlowchart('Main');
-    // this.onChanged();
-    // return this;
   }
 
   free() {
     this.flowcharts.forEach((f) => f.free());
+    $GF.events.disconnect('debug_asked', this);
     this.clear();
   }
 
@@ -99,7 +93,7 @@ export class FlowchartHandler {
   }
 
   //############################################################################
-  //### INIT/UPDATE/CHANGE/FREE/CLEAR
+  //### LOGIC
   //############################################################################
 
   static getDefaultData(): gf.TFlowchartHandlerData {
