@@ -5,7 +5,7 @@
 import { Rule } from '../src/rule_class';
 
 
-describe.skip('Rule', () => {
+describe('Rule', () => {
   const data = Rule.getDefaultData();
 
   describe('New', () => {

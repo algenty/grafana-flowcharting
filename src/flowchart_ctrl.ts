@@ -204,7 +204,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.notify('Configuration updating...');
       this.editModeFalse();
       const panelClone = _cloneDeep(this.panel);
-      this.flowchartHandler.import(panelClone.flowchartsData);
+      this.flowchartHandler._covert(panelClone.flowchartsData);
       this.flowchartHandler.update();
       this.rulesHandler.import(panelClone.rulesData);
       this.rulesHandler.update();
@@ -269,11 +269,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
       this.flowchartHandler = new FlowchartHandler(newFlowchartsData);
-      this.flowchartHandler.import(this.panel.flowchartsData);
+      this.flowchartHandler._covert(this.panel.flowchartsData);
       this.panel.flowchartsData = newFlowchartsData;
     } else {
       this.flowchartHandler.free();
-      this.flowchartHandler.import(this.panel.flowchartsData);
+      this.flowchartHandler._covert(this.panel.flowchartsData);
     }
     if (this.panel.newFlag && this.flowchartHandler && this.flowchartHandler.countFlowcharts() === 0) {
       this.flowchartHandler.addFlowchart('Main').init();

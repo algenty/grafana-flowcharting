@@ -3,7 +3,7 @@ import { Rule } from '../src/rule_class';
 import { $GF } from '../src/globals_class';
 import { default as dayjs } from 'dayjs';
 
-describe.skip("Test thresholds", () =>{
+describe("Test thresholds", () =>{
   describe('Threshold init', () => {
     describe('on NumberTH', () => {
       const data = NumberTH.getDefaultData();
@@ -20,7 +20,7 @@ describe.skip("Test thresholds", () =>{
         expect(tn2.match(value)).toBeTruthy();
         expect(tn3.match(value)).toBeTruthy();
       });
-  
+
       test('Matched value for 80', () => {
         let tn1 = new NumberTH('Color1', 50, $GF.CONSTANTS.COMP_GE, NumberTH.getDefaultData());
         let tn2 = new NumberTH('Color2', 80, $GF.CONSTANTS.COMP_GT, NumberTH.getDefaultData());
@@ -40,7 +40,7 @@ describe.skip("Test thresholds", () =>{
         expect(tn3.match(value)).toBeFalsy();
       });
     });
-  
+
     describe('on StringTH', () => {
       test('Data should be new', () => {
         const data = StringTH.getDefaultData();
@@ -54,7 +54,7 @@ describe.skip("Test thresholds", () =>{
         expect(tn1.match(value)).toBeTruthy();
         expect(tn2.match(value)).toBeFalsy();
       });
-  
+
       test('Matched value for specific string', () => {
         let tn1 = new StringTH('Color1', 'toto', $GF.CONSTANTS.COMP_EQ, StringTH.getDefaultData());
         let tn2 = new StringTH('Color2', 'tata', $GF.CONSTANTS.COMP_NE, StringTH.getDefaultData());
@@ -63,14 +63,14 @@ describe.skip("Test thresholds", () =>{
         expect(tn2.match(value)).toBeTruthy();
       });
     });
-  
+
     describe('On DateTH', () => {
       test('dayjs format ', () => {
         expect(dayjs(new Date()).isValid()).toBeTruthy();
         expect(dayjs(1483228810000).isValid()).toBeTruthy();
         expect(dayjs('2020-11-28').isValid()).toBeTruthy();
       });
-  
+
       test('Data should be new', () => {
         const data = DateTH.getDefaultData();
         expect(data).not.toBeNaN();
@@ -90,7 +90,7 @@ describe.skip("Test thresholds", () =>{
         //1606586657059
         //1606586733
         // 1day = 86400 or 86400000
-        let now = new Date().getTime(); 
+        let now = new Date().getTime();
         let td1 = new DateTH('Color1', '-2d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
         let td2 = new DateTH('Color2', '-2d', $GF.CONSTANTS.COMP_GT, StringTH.getDefaultData());
         let td3 = new DateTH('Color3', '-6d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
@@ -110,9 +110,9 @@ describe.skip("Test thresholds", () =>{
         expect(td2.match(now)).toBeFalsy()
         expect(td3.match(now)).toBeFalsy();
       });
-  
+
       test('Should be match or not with date', () => {
-        let now = new Date().getTime(); 
+        let now = new Date().getTime();
         let date_2 = dayjs(now).subtract(2,'d').format('YYYY-MM-DD');
         let date_6 = dayjs(now).subtract(6,'d').format('YYYY-MM-DD');
         let td1 = new DateTH('Color1', date_2, $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
@@ -136,7 +136,7 @@ describe.skip("Test thresholds", () =>{
       });
     });
   });
-  
+
   describe('Thresholds Handler', () => {
     describe('on NumberTHs', () => {
       const rule = new Rule('/.*/', Rule.getDefaultData());
@@ -163,7 +163,7 @@ describe.skip("Test thresholds", () =>{
         expect(rule.getThresholdLevelForTH(th2)).toEqual(1);
         expect(rule.getThresholdLevelForTH(th3)).toEqual(0);
       });
-  
+
       test('Level with a value should be with invert == false', () => {
         expect(rule.getThresholdLevel(5)).toEqual(2);
         expect(rule.getThresholdLevel(25)).toEqual(1);

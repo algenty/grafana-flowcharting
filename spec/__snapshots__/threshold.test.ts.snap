@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test thresholds Threshold init On DateTH Data should be new 1`] = `
+Object {
+  "color": "rgba(245, 54, 54, 0.9)",
+  "comparator": "ge",
+  "level": 0,
+  "value": "-1d",
+}
+`;
+
+exports[`Test thresholds Threshold init on NumberTH Data should be new 1`] = `
+Object {
+  "color": "rgba(245, 54, 54, 0.9)",
+  "comparator": "ge",
+  "level": 0,
+  "value": 50,
+}
+`;
+
+exports[`Test thresholds Threshold init on StringTH Data should be new 1`] = `
+Object {
+  "color": "rgba(245, 54, 54, 0.9)",
+  "comparator": "eq",
+  "level": 0,
+  "value": "/.*/",
+}
+`;

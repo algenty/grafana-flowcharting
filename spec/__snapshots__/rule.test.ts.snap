@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Rule New Should be equals 1`] = `
+Object {
+  "aggregation": "current",
+  "alias": "myRule",
+  "column": "Time",
+  "dateColumn": "Time",
+  "dateFormat": "YYYY-MM-DD HH:mm:ss",
+  "dateTHData": Array [],
+  "decimals": 2,
+  "gradient": false,
+  "hidden": false,
+  "invert": false,
+  "mappingType": 1,
+  "mapsDat": Object {
+    "events": Object {
+      "dataList": Array [],
+      "options": Object {
+        "enableRegEx": true,
+        "identByProp": "id",
+        "metadata": "",
+      },
+    },
+    "links": Object {
+      "dataList": Array [],
+      "options": Object {
+        "enableRegEx": true,
+        "identByProp": "id",
+        "metadata": "",
+      },
+    },
+    "shapes": Object {
+      "dataList": Array [
+        Object {
+          "colorOn": "a",
+          "hidden": false,
+          "pattern": "/.*Toto.*/",
+          "style": "fillColor",
+        },
+      ],
+      "options": Object {
+        "enableRegEx": true,
+        "identByProp": "id",
+        "metadata": "",
+      },
+    },
+    "texts": Object {
+      "dataList": Array [],
+      "options": Object {
+        "enableRegEx": true,
+        "identByProp": "id",
+        "metadata": "",
+      },
+    },
+  },
+  "metricType": "serie",
+  "newRule": true,
+  "numberTHData": Array [
+    Object {
+      "color": "COLOR1",
+      "comparator": "ge",
+      "level": 0,
+      "value": 50,
+    },
+    Object {
+      "color": "COLOR2",
+      "comparator": "ge",
+      "level": 0,
+      "value": 80,
+    },
+  ],
+  "order": 1,
+  "overlayIcon": false,
+  "pattern": "/.*/",
+  "rangeData": Array [],
+  "reduce": true,
+  "refId": "A",
+  "sanitize": false,
+  "stringTHData": Array [],
+  "tooltip": false,
+  "tooltipColors": false,
+  "tooltipLabel": "",
+  "tooltipOn": "a",
+  "tpDirection": "v",
+  "tpGraph": false,
+  "tpGraphHigh": null,
+  "tpGraphLow": null,
+  "tpGraphScale": "linear",
+  "tpGraphSize": "100%",
+  "tpGraphType": "line",
+  "tpMetadata": false,
+  "type": "number",
+  "unit": "short",
+  "valueData": Array [],
+}
+`;

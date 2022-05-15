@@ -3,6 +3,7 @@ import { $GF } from 'globals_class';
 import { InteractiveMap, ObjectMap } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
 
+
 const flowchartHandlerSignalsArray = ['flowchart_created', 'flowchart_deleted'] as const;
 type FlowchartHandlerSignals = typeof flowchartHandlerSignalsArray[number];
 
@@ -37,7 +38,7 @@ export class FlowchartHandler {
    * @param {*} data - Empty data to store
    * @memberof FlowchartHandler
    */
-  constructor(data: gf.TFlowchartHandlerData) {
+  constructor(data: gf.TFlowchartHandlerData, oldData?: any) {
     FlowchartHandler.getDefaultDioGraph();
     this.uid = $GF.genUid(this.constructor.name);
     this._parentDiv = $GF.ctrl.flowchartsDiv;
@@ -63,6 +64,9 @@ export class FlowchartHandler {
       this.mousedown = 0;
       window.clearInterval(this.mousedownTimeout);
     };
+    if(oldData) {
+      this._covert(oldData);
+    }
     this.init();
   }
 
@@ -88,8 +92,6 @@ export class FlowchartHandler {
   free() {
     this.flowcharts.forEach((f) => f.free());
     this.clear();
-    // this.onDestroyed();
-    // return this;
   }
 
   init() {
@@ -116,9 +118,9 @@ export class FlowchartHandler {
    * @param {Object} obj
    * @memberof FlowchartHandler
    */
-  import(obj: any): this {
+  private _covert(obj: any): this {
     // TODO : why free instead init
-    // this.free();
+    // this.clear();
     if (obj) {
       // For version 0.5.0 and under
       let tmpFc: any[];
@@ -149,9 +151,12 @@ export class FlowchartHandler {
       }
 
       // import data
-      tmpFc.forEach((fcData: gf.TFlowchartData) => {
-        this.addFlowchart(fcData.name, fcData).toBack().allowDrawio(this.data.allowDrawio);
-      });
+      this.data.flowcharts = []
+      if (Array.isArray(tmpFc)) {
+        tmpFc.map(async (fcData: gf.TFlowchartData) => {
+          this.addFlowchart(fcData.name, fcData).toBack().allowDrawio(this.data.allowDrawio);
+        });
+      }
       this.currentFlowchart = this.getFlowchart('Main');
     }
     this.change();
