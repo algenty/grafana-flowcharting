@@ -1,4 +1,4 @@
-import { SerieMetric, TableMetric, ObjectMetric } from 'metric_class';
+import { SerieMetric, TableMetric, ObjectMetric, Metric } from 'metric_class';
 import { $GF,GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 
@@ -51,7 +51,7 @@ export class MetricHandler {
       m.free();
       MetricHandler.events.emit('metric_deleted', m);
     });
-    $GF.events.disconnect('data_updated', this);
+    // $GF.events.disconnect('data_updated', this);
     $GF.events.disconnect('debug_asked', this);
     this.clear();
     return this;
@@ -81,6 +81,10 @@ export class MetricHandler {
     }
     trc.after();
     return metric;
+  }
+
+  removeMetric(metric: Metric) {
+    if()
   }
 
   /**
@@ -228,7 +232,7 @@ export class MetricHandler {
     this.tables = [];
     this.series = [];
     // TODO : Not work
-    // this.metrics.map((m) => { m.free() });
+    this.metrics.map((m) => { m.free() });
     this.metrics = [];
 
     return this;

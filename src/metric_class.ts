@@ -131,60 +131,6 @@ export class Metric {
     this.events.clear();
   }
 
-  // //
-  // // Events
-  // //
-  // async onDestroyed() {
-  //   const funcName = 'onDestroyed';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.emit(this, 'destroyed');
-  //   this.ctrl.eventHandler.unsubscribes(this);
-  // }
-
-  // async onRefreshed() {
-  //   const funcName = 'onRefreshed';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.emit(this, 'refreshed');
-  // }
-
-  // async onInitialized() {
-  //   const funcName = 'onInitialized';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.subscribes(this);
-  //   this.ctrl.eventHandler.emit(this, 'initialized');
-  //   this.onChanged();
-  // }
-
-  // async onChanged() {
-  //   const funcName = 'onChanged';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.emit(this, 'changed');
-  // }
-
-  //
-  // RXJS
-  //
-  // getTimestamp$refresh(): Observer<number> {
-  //   const funcName = 'getTimestamp$refresh';
-  //   const self = this;
-  //   return {
-  //     next: (timestamp: number) => {
-  //       GFLog.debug(`${this.constructor.name} -> ${funcName}()`, timestamp);
-  //       if (timestamp !== null) {
-  //         self.GHValue = this.findValue(timestamp);
-  //       } else {
-  //         self.GHValue = null;
-  //       }
-  //       self.onRefreshed();
-  //     },
-  //     error: err => {
-  //       GFLog.error(err);
-  //     },
-  //     complete: () => {
-  //       GFLog.debug(`${this.constructor.name} -> ${funcName}().complete()`);
-  //     },
-  //   };
-  // }
 }
 
 /**
