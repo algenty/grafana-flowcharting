@@ -20,15 +20,17 @@ type FlowchartSignals = typeof flowchartSignalsArray[number];
  */
 export class Flowchart {
   data: gf.TFlowchartData;
-  container: HTMLDivElement;
-  xgraph: XGraph | undefined = undefined;
-  stateHandler: StateHandler | undefined;
+  private container: HTMLDivElement;
+  private xgraph: XGraph | undefined = undefined;
+  private stateHandler: StateHandler | undefined;
+  private readonly $gf: $GF;
   uid: string;
   visible = false;
   reduce = true;
   events: GFEvents<FlowchartSignals> = GFEvents.create(flowchartSignalsArray);
 
-  constructor(name: string, container: HTMLDivElement, newData: gf.TFlowchartData, oldData?: any) {
+  constructor($gf: $GF, name: string, container: HTMLDivElement, newData: gf.TFlowchartData, oldData?: any) {
+    this.$gf = $gf;
     this.uid = $GF.genUid(this.constructor.name);
     this.data = newData;
     this.data.name = name;
@@ -189,36 +191,9 @@ export class Flowchart {
     return this.data;
   }
 
-  /**
-   * Update states of flowchart/graph
-   *
-   * @param {*} rules
-   * @returns {this}
-   * @memberof Flowchart
-   */
-  // updateStates(rules: Rule[]): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'updateStates()');
-  //   rules.forEach(rule => {
-  //     if (this.stateHandler !== undefined) {
-  //       rule.states = this.stateHandler.getStatesForRule(rule);
-  //       if (rule.states) {
-  //         rule.states.forEach((state: any) => {
-  //           state.unsetState();
-  //         });
-  //       } else {
-  //         GFLog.warn('States not defined for this rule');
-  //       }
-  //     } else {
-  //       GFLog.error('updateStates => this.stateHandler undefined');
-  //     }
-  //   });
-  //   trc.after();
-  //   return this;
-  // }
-
   initStateHandler(): this {
     if (this.xgraph) {
-      this.stateHandler = new StateHandler(this.xgraph);
+      this.stateHandler = new StateHandler(this.$gf, this.xgraph);
     }
     return this;
   }
@@ -230,10 +205,11 @@ export class Flowchart {
    * @memberof Flowchart
    */
   initGraph(): this {
+    const $GF = this.$gf;
     try {
       const content = this.getContent();
       if (this.xgraph === undefined) {
-        this.xgraph = new XGraph(this.container, this.data.type, content);
+        this.xgraph = new XGraph(this.$gf, this.container, this.data.type, content);
       }
     } catch (error) {
       $GF.notify('Unable to initialize graph', 'error');
@@ -243,6 +219,7 @@ export class Flowchart {
   }
 
   updateGraph(): this {
+    const $GF = this.$gf;
     try {
       const content = this.getContent();
       if (this.xgraph === undefined) {
@@ -332,7 +309,6 @@ export class Flowchart {
    * @memberof Flowchart
    */
   setGraphOptions(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setOptions()');
     // TODO: simplify it
     this.xgraph?.enableAnim(this.data.enableAnim);
     this.setScale(this.data.scale);
@@ -342,7 +318,6 @@ export class Flowchart {
     this.setLock(this.data.lock);
     this.setZoom(this.data.zoom);
     // this.setBgColor(this.data.bgColor);
-    trc.after();
     return this;
   }
 
@@ -579,7 +554,7 @@ export class Flowchart {
     if (!replaceVarBool) {
       return this.data.xml;
     }
-    return $GF.resolveVars(this.data.xml);
+    return this.$gf.resolveVars(this.data.xml);
   }
 
   /**
@@ -593,7 +568,7 @@ export class Flowchart {
     if (!replaceVarBool) {
       return this.data.csv;
     }
-    return $GF.resolveVars(this.data.csv);
+    return this.$gf.resolveVars(this.data.csv);
   }
 
   /**
@@ -628,7 +603,7 @@ export class Flowchart {
    * @memberof Flowchart
    */
   getContent(replaceVarBool = true): string {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'getContent()');
+    const $GF = this.$gf;
     let content: string | null = '';
     if (this.data.download) {
       const url = $GF.resolveVars(this.data.url);
@@ -643,7 +618,6 @@ export class Flowchart {
     } else {
       content = this.getSource(replaceVarBool);
     }
-    trc.after();
     return content === null ? '' : content;
   }
 

@@ -1,5 +1,5 @@
 import { XCell } from 'cell_class';
-import { $GF, GFVariables } from 'globals_class';
+import { $GF, GFCONSTANT, GFPlugin, GFVariables } from 'globals_class';
 import { isString as _isString } from 'lodash';
 import { Rule } from 'rule_class';
 
@@ -15,22 +15,26 @@ export type ObjectVMap = ValueMap | RangeMap;
 export type DataVMap = gf.TValueMapData | gf.TRangeMapData;
 export interface MapDataCommonProp {
   pattern: string;
-  hidden: boolean; 
-} 
+  hidden: boolean;
+}
 
-
-class GFMap<MapData extends gf.TDefObjMapData>{
+abstract class GFMap<MapData extends gf.TDefObjMapData> {
+  $gf: $GF;
   data: MapData;
   uid: string;
   type: gf.TTypeMap = 'shape';
   options: gf.TRuleMapOptions = Rule.getDefaultMapOptions();
   reduce = true;
   static methods: any[] = [];
-  constructor(pattern: string, data: MapData) {
+  constructor($gf: $GF, pattern: string, data: MapData) {
+    this.$gf = $gf;
     this.uid = $GF.genUid();
     this.data = data;
     this.data.pattern = pattern;
+    this._setType();
   }
+
+  protected abstract _setType(): void;
 
   /**
    * Import data from panel
@@ -99,7 +103,7 @@ class GFMap<MapData extends gf.TDefObjMapData>{
   }
 
   static getDefaultPlaceHolder(value: string): string | undefined {
-    const elt = this.methods.find(x => x.value === value);
+    const elt = this.methods.find((x) => x.value === value);
     if (elt !== undefined) {
       return elt.placeholder;
     }
@@ -107,7 +111,7 @@ class GFMap<MapData extends gf.TDefObjMapData>{
   }
 
   static getDefaultValue(value: string): string | undefined {
-    const elt = this.methods.find(x => x.value === value);
+    const elt = this.methods.find((x) => x.value === value);
     if (elt !== undefined) {
       return elt.default;
     }
@@ -235,7 +239,7 @@ class GFMap<MapData extends gf.TDefObjMapData>{
  * @class ShapeMap
  * @extends GFMap
  */
-export class ShapeMap extends GFMap<gf.TShapeMapData>{
+export class ShapeMap extends GFMap<gf.TShapeMapData> {
   // data: gf.TShapeMapData;
   /**
    * Creates an instance of ShapeMap.
@@ -243,10 +247,14 @@ export class ShapeMap extends GFMap<gf.TShapeMapData>{
    * @param {gf.TShapeMapData} data
    * @memberof ShapeMap
    */
-  constructor(pattern: string, data: gf.TShapeMapData) {
-    super(pattern, data);
+  // constructor($gf:$GF, pattern: string, data: gf.TShapeMapData) {
+  //   super($gf, pattern, data);
+  //   this.type = 'shape';
+  //   this.data = data;
+  // }
+
+  protected _setType() {
     this.type = 'shape';
-    this.data = data;
   }
 
   /**
@@ -313,13 +321,17 @@ export class ShapeMap extends GFMap<gf.TShapeMapData>{
  * @class TextMap
  * @extends GFMap
  */
-export class TextMap extends GFMap<gf.TTextMapData>{
+export class TextMap extends GFMap<gf.TTextMapData> {
   // data: gf.TTextMapData;
 
-  constructor(pattern: string, data: gf.TTextMapData) {
-    super(pattern, data);
+  // constructor(pattern: string, data: gf.TTextMapData) {
+  //   super(pattern, data);
+  //   this.type = 'text';
+  //   this.data = data;
+  // }
+
+  protected _setType() {
     this.type = 'text';
-    this.data = data;
   }
 
   /**
@@ -420,13 +432,17 @@ export class TextMap extends GFMap<gf.TTextMapData>{
  * @class LinkMap
  * @extends GFMap
  */
-export class LinkMap extends GFMap<gf.TlinkMapData>{
+export class LinkMap extends GFMap<gf.TlinkMapData> {
   // data: gf.TlinkMapData;
 
-  constructor(pattern: string, data: gf.TlinkMapData) {
-    super(pattern, data);
+  // constructor(pattern: string, data: gf.TlinkMapData) {
+  //   super(pattern, data);
+  //   this.type = 'link';
+  //   this.data = data;
+  // }
+
+  protected _setType() {
     this.type = 'link';
-    this.data = data;
   }
 
   static getDefaultData(): gf.TlinkMapData {
@@ -491,9 +507,9 @@ export class LinkMap extends GFMap<gf.TlinkMapData>{
   }
 }
 
-export class EventMap extends GFMap<gf.TEventMapData>{
+export class EventMap extends GFMap<gf.TEventMapData> {
   // data: gf.TEventMapData;
-  static methods = $GF.CONSTANTS.EVENTMETHODS;
+  static methods = GFCONSTANT.EVENTMETHODS;
   validComp: gf.TEventComparator[] = ['lt', 'le', 'eq', 'ne', 'ge', 'gt', 'al'];
   // static shapes: string[] = EventMap.getFormNames();
   static shapes: string[] = [];
@@ -504,11 +520,15 @@ export class EventMap extends GFMap<gf.TEventMapData>{
    * @param {gf.TEventMapData} data
    * @memberof EventMap
    */
-  constructor(pattern: string, data: gf.TEventMapData) {
-    super(pattern, data);
+  // constructor(pattern: string, data: gf.TEventMapData) {
+  //   super(pattern, data);
+  //   this.type = 'event';
+  //   this.data = data;
+  //   // GFGlobal.loadFile(_GF.CONSTANTS.VAR_STG_SHAPES, _GF.CONSTANTS.CONF_FILE_SHAPES);
+  // }
+
+  protected _setType() {
     this.type = 'event';
-    this.data = data;
-    // GFGlobal.loadFile(_GF.CONSTANTS.VAR_STG_SHAPES, _GF.CONSTANTS.CONF_FILE_SHAPES);
   }
 
   /**
@@ -540,14 +560,14 @@ export class EventMap extends GFMap<gf.TEventMapData>{
 
   getTypeahead(): string[] {
     const self = this;
-    let result = $GF.getFullAvailableVarNames();
-    const elt: gf.TTypeEventElt | undefined = EventMap.methods.find(x => x.value === self.data.style);
+    let result = this.$gf.getFullAvailableVarNames();
+    const elt: gf.TTypeEventElt | undefined = EventMap.methods.find((x) => x.value === self.data.style);
     if (elt !== undefined && elt.typeahead !== undefined) {
       result = result.concat(elt.typeahead.split('|'));
       return result;
     }
     if (this.data.style === 'shape') {
-      const shapes = EventMap.getFormNames();
+      const shapes = this.getFormNames();
       Array.prototype.push.apply(result, shapes);
     }
     return result;
@@ -558,7 +578,7 @@ export class EventMap extends GFMap<gf.TEventMapData>{
     return vbd !== undefined ? vbd : '';
   }
 
-  static getFormNames(): string[] {
+  getFormNames(): string[] {
     // if (EventMap.shapes === undefined) {
     //   EventMap.shapes = [];
     // }
@@ -568,9 +588,7 @@ export class EventMap extends GFMap<gf.TEventMapData>{
     }
     // _GF.loadLocalFile(_GF.CONSTANTS.VAR_STG_SHAPES, _GF.CONSTANTS.CONF_FILE_SHAPES);
     // const shapesText: string = _GF.getVar(_GF.CONSTANTS.VAR_STG_SHAPES);
-    const shapesText = $GF.utils.loadFile(
-      $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT) + $GF.CONSTANTS.CONF_FILE_SHAPESTXT
-    );
+    const shapesText = $GF.utils.loadFile(GFPlugin.getRootPath() + GFCONSTANT.CONF_FILE_SHAPESTXT);
     if (shapesText !== undefined) {
       if (EventMap.shapes.length === 0) {
         EventMap.shapes = EventMap.shapes.concat(shapesText.split(/\n/));
@@ -648,7 +666,7 @@ export class EventMap extends GFMap<gf.TEventMapData>{
   }
 }
 
-class VMAP<VMAPType extends gf.TDefMapData>{
+class VMAP<VMAPType extends gf.TDefMapData> {
   data: VMAPType;
   uid: string;
   hidden = false;
@@ -702,7 +720,7 @@ class VMAP<VMAPType extends gf.TDefMapData>{
   }
 }
 
-export class ValueMap extends VMAP<gf.TValueMapData>{
+export class ValueMap extends VMAP<gf.TValueMapData> {
   // data: gf.TValueMapData;
   constructor(value = '', text = '', data: gf.TValueMapData) {
     super(data);
@@ -782,7 +800,7 @@ export class ValueMap extends VMAP<gf.TValueMapData>{
   }
 }
 
-export class RangeMap extends VMAP<gf.TRangeMapData>{
+export class RangeMap extends VMAP<gf.TRangeMapData> {
   // data: gf.TRangeMapData;
   reduce = true;
   uid: string;
@@ -933,8 +951,8 @@ export class InteractiveMap {
   activate(): this {
     if (this.container) {
       // this.container.style.cursor = 'crosshair';
-      $GF.plugin.getStaticPath();
-      this.container.style.cursor = `url("${$GF.plugin.getStaticPath()}cursor-marker.svg") 8 16, crosshair`;
+      GFPlugin.getStaticPath();
+      this.container.style.cursor = `url("${GFPlugin.getStaticPath()}cursor-marker.svg") 8 16, crosshair`;
       this.container.scrollIntoView();
       this.container.focus();
     }

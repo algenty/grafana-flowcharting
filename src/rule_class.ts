@@ -33,6 +33,7 @@ type RuleSignals = typeof ruleSignalsArray[number];
  * @class Rule
  */
 export class Rule {
+  $gf: $GF;
   data: gf.TIRuleData;
   initialized = false;
   metrics: Map<string, ObjectMetric> = new Map();
@@ -69,7 +70,8 @@ export class Rule {
    * @param {TIRuleData} newData
    * @memberof Rule
    */
-  constructor(pattern: string, newData: gf.TIRuleData, oldData?: any) {
+  constructor($gf: $GF, pattern: string, newData: gf.TIRuleData, oldData?: any) {
+    this.$gf = $gf;
     this.uid = $GF.genUid(this.constructor.name);
     this.data = newData;
     this.data.pattern = pattern;
@@ -136,7 +138,6 @@ export class Rule {
    * @memberof Rule
    */
    private _convert(obj: any): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'import()');
     if (!!obj.unit) {
       this.data.unit = obj.unit;
     }
@@ -581,7 +582,6 @@ export class Rule {
     }
     this.data.sanitize = obj.sanitize || false;
     this.data.newRule = false;
-    trc.after();
     return this;
   }
 
@@ -1297,7 +1297,7 @@ export class Rule {
    */
   addShapeMap(pattern = ''): ShapeMap {
     const data = ShapeMap.getDefaultData();
-    const m = new ShapeMap(pattern, data);
+    const m = new ShapeMap(this.$gf, pattern, data);
     m.setOptions(this.getShapeMapOptions());
     this._addMaps(m);
     return m;
@@ -1375,7 +1375,7 @@ export class Rule {
   //
   addTextMap(pattern = ''): TextMap {
     const data = TextMap.getDefaultData();
-    const m = new TextMap(pattern, data);
+    const m = new TextMap(this.$gf, pattern, data);
     m.setOptions(this.getTextMapOptions());
     this._addMaps(m);
     return m;
@@ -1456,7 +1456,7 @@ export class Rule {
    */
   addEventMap(pattern = ''): EventMap {
     const data = EventMap.getDefaultData();
-    const m = new EventMap(pattern, data);
+    const m = new EventMap(this.$gf, pattern, data);
     m.setOptions(this.getEventMapOptions());
     this._addMaps(m);
     return m;
@@ -1507,7 +1507,7 @@ export class Rule {
   //
   addLinkMap(pattern = ''): LinkMap {
     const data = LinkMap.getDefaultData();
-    const m = new LinkMap(pattern, data);
+    const m = new LinkMap(this.$gf, pattern, data);
     m.setOptions(this.getLinkMapOptions());
     // m.import(data);
     this._addMaps(m);

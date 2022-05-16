@@ -7,13 +7,14 @@ import { RulesHandler } from 'rules_handler';
 import { FlowchartHandler } from 'flowchart_handler';
 import { MetricHandler } from 'metric_handler';
 // import { PanelEvents } from '@grafana/data';
-import { $GF, GFTimer, GFLog } from 'globals_class';
+import { $GF, GFTimer, GFLog, GFPlugin, GFCONSTANT } from 'globals_class';
 import { XGraph } from 'graph_class';
 import grafana from 'grafana_func';
 import { defaults as _defaults, cloneDeep as _cloneDeep } from 'lodash';
 import { InteractiveMap } from 'mapping_class';
 
 class FlowchartCtrl extends MetricsPanelCtrl {
+  readonly $gf: $GF;
   $rootScope: any;
   $scope: any;
   $panelElem: any; // Type Jquery
@@ -48,12 +49,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   /**@ngInject*/
   constructor($scope: any, $injector: any, $rootScope: any, templateSrv: any) {
     super($scope, $injector);
-    $GF.init($scope, templateSrv, this.dashboard, this);
-    this.$scope.$GF = $GF.me();
+    this.$gf = $GF.create($scope, templateSrv, this.dashboard, this);
+    this.$scope.$GF = this.$gf;
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     $scope.editor = this;
-    this.version = $GF.plugin.getVersion();
+    this.version = GFPlugin.getVersion();
     this.templateSrv = templateSrv;
     this.changedSource = true;
     this.changedData = true;
@@ -112,8 +113,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //### LOGIC
   //############################################################################
   init_connectors() {
-    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
-    $GF.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
+    this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    this.$gf.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
   }
 
   init_handlers() {
@@ -121,13 +122,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     GFLog.debug(`${this.constructor.name}.${funcName}()`);
     // METRICS / DATAS
     if (!this.metricHandler) {
-      this.metricHandler = new MetricHandler();
+      this.metricHandler = new MetricHandler(this.$gf);
     }
-    this.metricHandler.clear();
+    // this.metricHandler.clear();
     // FLOWCHARTS
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
-      this.flowchartHandler = new FlowchartHandler(newFlowchartsData, this.panel.flowchartsData);
+      this.flowchartHandler = new FlowchartHandler(this.$gf, newFlowchartsData, this.panel.flowchartsData);
       this.panel.flowchartsData = newFlowchartsData;
     } else {
       // TODO : when exit editor
@@ -143,7 +144,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // RULES
     if (!this.rulesHandler) {
       const newRulesData = RulesHandler.getDefaultData();
-      this.rulesHandler = new RulesHandler(newRulesData, this.panel.rulesData);
+      this.rulesHandler = new RulesHandler(this.$gf, newRulesData, this.panel.rulesData);
       this.panel.rulesData = newRulesData;
     } else {
       // TODO : when exit editor
@@ -153,11 +154,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
       this.rulesHandler.addRule('.*');
     }
+    this.$gf.setHandlers(this.flowchartHandler, this.rulesHandler, this.metricHandler);
   }
 
   clear_connectors() {
-    $GF.events.disconnect('debug_asked', this);
-    $GF.events.disconnect('panel_closed', this);
+    this.$gf.events.disconnect('debug_asked', this);
+    this.$gf.events.disconnect('panel_closed', this);
   }
 
   /**
@@ -173,7 +175,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       valueName: 'current',
       rulesData: RulesHandler.getDefaultData(),
       flowchartsData: FlowchartHandler.getDefaultData(),
-      version: $GF.plugin.getVersion(),
+      version: GFPlugin.getVersion(),
     };
   }
 
@@ -194,7 +196,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   _on_grafana_TearDown() {
     console.log('📩', this.constructor.name, '_on_TearDown');
-    $GF.events.emit('panel_closed');
+    this.$gf.events.emit('panel_closed');
   }
 
   _on_grafana_graph_hover(event: any) {
@@ -206,7 +208,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       if (this.graphHoverTimer === undefined) {
         this.graphHoverTimer = GFTimer.create(timeId);
       }
-      const ms = $GF.CONSTANTS.CONF_GRAPHHOVER_DELAY;
+      const ms = GFCONSTANT.CONF_GRAPHHOVER_DELAY;
       this.graphHoverTimer.addStep(this._setGraphHover.bind(this), ms).start();
     } else {
       this.graphHoverTimer?.cancel();
@@ -230,7 +232,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   private _on_grafana_template_variable_value_updated() {
     console.log('📩', this.constructor.name, '_on_grafana_template_variable_value_updated');
-    $GF.events.emit('variables_changed');
+    this.$gf.events.emit('variables_changed');
     if (this.flowchartHandler !== undefined) {
       // TODO refresh with new variable
       // this.flowchartHandler.onChangeGraph();
@@ -255,7 +257,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   private _on_grafana_data_received(dataList: any) {
     console.log('📩', this.constructor.name, '_on_grafana_data_received');
-    $GF.events.emit('data_updated', dataList);
+    this.$gf.events.emit('data_updated', dataList);
   }
 
   private _on_grafana_data_error() {
@@ -297,7 +299,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   link(scope: any, elem: any, attrs: any, ctrl: any) {
     const funcName = 'link';
     GFLog.debug(`${this.constructor.name}.${funcName}()`);
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'link()');
     this.$panelElem = elem;
 
     const $section = this.$panelElem.find('#flowcharting-section');
@@ -321,7 +322,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
     // Versions
     // this.panel.newFlag = false;
-    if (this.panel.version !== $GF.plugin.getVersion()) {
+    if (this.panel.version !== GFPlugin.getVersion()) {
       //TODO : Reactive this
       // this.notify(
       //   `The plugin version has changed, save the dashboard to optimize loading : ${
@@ -332,7 +333,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.panel.version = this.version;
     // this.onRender();
     // this.flowchartHandler?.refresh();
-    trc.after();
   }
 
   // onMouseIn(event: MouseEvent) {
@@ -385,7 +385,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //
 
   $onDestroy() {
-    $GF.destroy();
+    // $GF.destroy();
     GFTimer.stop();
   }
 
@@ -456,12 +456,9 @@ class GFMessage {
           this.message.style.color = GFMessage.INFO_COLOR;
           break;
       }
+      GFTimer.create(`message-${this.uid}`).addStep(this.clearMessage.bind(this), GFCONSTANT.CONF_GFMESSAGE_MS);
       this.container.style.display = '';
-      $GF.setUniqTimeOut(
-        this.clearMessage.bind(this),
-        $GF.CONSTANTS.CONF_GFMESSAGE_MS,
-        `flowcharting-message-${this.uid}`
-      );
+
     }
   }
 
@@ -470,6 +467,6 @@ class GFMessage {
       this.container.style.display = 'none';
       this.message.innerHTML = '';
     }
-    $GF.clearUniqTimeOut(`flowcharting-message-${this.uid}`);
+    GFTimer.stop(`message-${this.uid}`);
   }
 }

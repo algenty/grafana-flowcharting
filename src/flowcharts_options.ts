@@ -1,15 +1,16 @@
 import { FlowchartHandler } from 'flowchart_handler';
 import { Flowchart } from 'flowchart_class';
-import { $GF, GFDrawioTools, GFTable, GFLog } from 'globals_class';
+import { $GF, GFDrawioTools, GFTable, GFLog, GFPlugin, GFCONSTANT } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
 export class FlowchartsOptionsCtrl {
+  $gf: $GF;
   $scope: gf.TIFlowchartOptionsScope;
   ctrl: FlowchartCtrl;
   flowchartHandler: FlowchartHandler | undefined;
   panel: any;
-  sourceTypes = $GF.CONSTANTS.SOURCE_TYPES;
-  themes = $GF.CONSTANTS.DIOTHEME_TYPES;
+  sourceTypes = GFCONSTANT.SOURCE_TYPES;
+  themes = GFCONSTANT.DIOTHEME_TYPES;
   errorSourceFlag = false;
   errorSourceMsg = '';
   errorDownloadFlag = false;
@@ -26,9 +27,10 @@ export class FlowchartsOptionsCtrl {
   /** @ngInject */
   constructor($scope: gf.TIFlowchartOptionsScope) {
     $scope.editor = this;
-    $scope.$GF = $GF.me();
-    this.$scope = $scope;
     this.ctrl = $scope.ctrl;
+    this.$gf = this.ctrl.$gf;
+    $scope.$GF = this.$gf
+    this.$scope = $scope;
     // this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.currentFlowchart = this.flowchartHandler?.getFlowchart();
@@ -275,7 +277,7 @@ export class FlowchartsOptionsCtrl {
     // this.errorDownloadMsg = '';
     const init: RequestInit = { method: 'GET', mode: 'cors', cache: 'default' };
     try {
-      url = $GF.resolveVars(url);
+      url = this.$gf.resolveVars(url);
       fetch(url, init)
         .then(response => {
           if (!(response.status >= 200 && response.status <= 299)) {
@@ -349,7 +351,7 @@ export function flowchartsOptionsTab($q: any, $sce: any, uiSegmentSrv: any) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `${$GF.plugin.getPartialPath()}/flowcharts/flowchartsTab.html`,
+    templateUrl: `${GFPlugin.getPartialPath()}/flowcharts/flowchartsTab.html`,
     controller: FlowchartsOptionsCtrl,
   };
 }

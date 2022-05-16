@@ -1,5 +1,5 @@
 // import { each as _each } from 'lodash';
-import { $GF, GFDrawioTools, GFTimer, GFLog } from 'globals_class';
+import { $GF, GFDrawioTools, GFTimer, GFLog, GFPlugin, GFCONSTANT } from 'globals_class';
 const dioCustom = require('drawio_custom');
 import chroma from 'chroma-js';
 const mxcustom = require('mxgraph_custom');
@@ -18,6 +18,7 @@ type XGraphSignals = typeof xgraphSignalsArray[number];
  * @class XGraph
  */
 export class XGraph {
+  private readonly $gf: $GF;
   static initialized = false;
   container: HTMLDivElement;
   xmlGraph = '';
@@ -47,24 +48,23 @@ export class XGraph {
    * @param {string} definition
    * @memberof XGraph
    */
-  constructor(container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
+  constructor($gf: $GF, container: HTMLDivElement, type: gf.TSourceTypeKeys, definition: string) {
+    this.$gf = $gf;
     this.uid = $GF.genUid(this.constructor.name);
     this.container = container;
     this.type = type;
     this.xcells = [];
-    this.onMapping = $GF.ctrl.onMapping;
+    this.onMapping = this.$gf.ctrl.onMapping;
     this.definition = definition;
     this.init();
     // TODO : not good, just for test
     // this.change();
-    trc.after();
   }
 
   init() {
     const funcName = 'init';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     XGraph.initMxGraphLib();
     if (this.type === 'xml') {
       if (GFDrawioTools.isEncoded(this.definition)) {
@@ -87,7 +87,7 @@ export class XGraph {
         if (_evt.properties.cell) {
           const mxcell = _evt.properties.cell;
           const id = mxcell.id;
-          const state = $GF.getVar(`STATE_${id}`);
+          const state = this.$gf.getVar(`STATE_${id}`);
           const xcell = self.getXCell(id);
           console.log('DEBUG GF STATE', state);
           console.log('DEBUG XCELL', xcell);
@@ -126,7 +126,7 @@ export class XGraph {
     this.freeGraph();
     this.clear();
     this.events.emit('graph_freed', this);
-    $GF.events.disconnect('debug_asked', this);
+    this.$gf.events.disconnect('debug_asked', this);
     this.events.clear()
     return this;
   }
@@ -148,30 +148,28 @@ export class XGraph {
    * @memberof XGraph
    */
   static async initMxGraphLib() {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'initMxGgraph()');
     let myWindow: any = window;
     if (!XGraph.initialized) {
       if (myWindow.mxGraph === undefined) {
         XGraph.preInitGlobalVars();
         // Before 0.9
-        // let code = $GF.utils.$loadFile(`${$GF.plugin.getDrawioPath()}js/viewer.min.js`);
+        // let code = $GF.utils.$loadFile(`${GFPlugin.getDrawioPath()}js/viewer.min.js`);
         // $GF.utils.evalRaw(code);
 
-        // $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/viewer-static.min.js`);
-        // $GF.utils.$evalFile(`${$GF.plugin.getDrawioPath()}js/shapes.min.js`);
+        // $GF.utils.$evalFile(`${GFPlugin.getDrawioPath()}js/viewer-static.min.js`);
+        // $GF.utils.$evalFile(`${GFPlugin.getDrawioPath()}js/shapes.min.js`);
 
         // Eval Fileor Eval Code
-        $GF.utils.$evalFile(`${$GF.plugin.getRootPath()}${$GF.CONSTANTS.CONF_FILE_VIEWERJS}`);
+        $GF.utils.$evalFile(`${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_VIEWERJS}`);
         // mxcustom.evalCode();
         mxcustom.customize();
         XGraph.postInitGlobalVars();
-        // $GF.utils.$evalFile(`${$GF.plugin.getLibsPath()}/Graph_custom.js`);
+        // $GF.utils.$evalFile(`${GFPlugin.getLibsPath()}/Graph_custom.js`);
         // $GF.utils.evalRaw(code);
-        mxTooltipHandler.prototype.delay = $GF.CONSTANTS.CONF_TOOLTIPS_DELAY;
+        mxTooltipHandler.prototype.delay = GFCONSTANT.CONF_TOOLTIPS_DELAY;
       }
       XGraph.initialized = true;
     }
-    trc.after();
   }
 
   /**
@@ -182,19 +180,19 @@ export class XGraph {
    */
   static preInitGlobalVars() {
     const myWindow: any = window;
-    myWindow.BASE_PATH = $GF.plugin.getMxBasePath();
-    myWindow.RESOURCES_PATH = $GF.plugin.getMxResourcePath();
-    myWindow.RESOURCE_BASE = $GF.plugin.getMxResourcePath();
-    myWindow.STENCIL_PATH = $GF.plugin.getStencilsPath();
-    myWindow.SHAPES_PATH = $GF.plugin.getShapesPath();
-    myWindow.IMAGE_PATH = $GF.plugin.getMxImagePath();
-    myWindow.STYLE_PATH = $GF.plugin.getMxStylePath();
-    myWindow.CSS_PATH = $GF.plugin.getMxCssPath();
+    myWindow.BASE_PATH = GFPlugin.getMxBasePath();
+    myWindow.RESOURCES_PATH = GFPlugin.getMxResourcePath();
+    myWindow.RESOURCE_BASE = GFPlugin.getMxResourcePath();
+    myWindow.STENCIL_PATH = GFPlugin.getStencilsPath();
+    myWindow.SHAPES_PATH = GFPlugin.getShapesPath();
+    myWindow.IMAGE_PATH = GFPlugin.getMxImagePath();
+    myWindow.STYLE_PATH = GFPlugin.getMxStylePath();
+    myWindow.CSS_PATH = GFPlugin.getMxCssPath();
     myWindow.mxLanguages = ['en'];
-    myWindow.DRAWIO_BASE_URL = $GF.plugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
-    myWindow.DRAW_MATH_URL = $GF.plugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
-    myWindow.DRAWIO_VIEWER_URL = $GF.plugin.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
-    myWindow.DRAW_MATH_URL = $GF.plugin.getDrawioPath() + 'math/';
+    myWindow.DRAWIO_BASE_URL = GFPlugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
+    myWindow.DRAW_MATH_URL = GFPlugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
+    myWindow.DRAWIO_VIEWER_URL = GFPlugin.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
+    myWindow.DRAW_MATH_URL = GFPlugin.getDrawioPath() + 'math/';
     myWindow.DRAWIO_CONFIG = null; // Replace with your custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
     const urlParams = {
       sync: 'none', // Disabled realtime
@@ -205,8 +203,8 @@ export class XGraph {
       ui: 'min',
     };
     myWindow.urlParams = urlParams;
-    myWindow.mxImageBasePath = $GF.plugin.getMxImagePath();
-    myWindow.mxBasePath = $GF.plugin.getMxBasePath();
+    myWindow.mxImageBasePath = GFPlugin.getMxImagePath();
+    myWindow.mxBasePath = GFPlugin.getMxBasePath();
     myWindow.mxLoadStylesheets = true;
     myWindow.mxLanguage = 'en';
     myWindow.mxLoadResources = true;
@@ -214,8 +212,8 @@ export class XGraph {
 
   static postInitGlobalVars() {
     const myWindow: any = window;
-    myWindow.mxClient.mxBasePath = $GF.plugin.getMxBasePath();
-    myWindow.mxClient.mxImageBasePath = $GF.plugin.getMxImagePath();
+    myWindow.mxClient.mxBasePath = GFPlugin.getMxBasePath();
+    myWindow.mxClient.mxImageBasePath = GFPlugin.getMxImagePath();
     myWindow.mxClient.mxLoadResources = true;
     myWindow.mxClient.mxLanguage = 'en';
     myWindow.mxClient.mxLoadStylesheets = true;
@@ -230,7 +228,6 @@ export class XGraph {
    * @memberof XGraph
    */
   initMxGraph(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'initGraph()');
     this.graph = new Graph(this.container);
 
     // /!\ What is setPannig
@@ -256,7 +253,6 @@ export class XGraph {
 
     // DB CLICK
     this.graph.dblClick = this.eventDbClick.bind(this);
-    trc.after();
     return this;
   }
 
@@ -267,7 +263,6 @@ export class XGraph {
    * @memberof XGraph
    */
   renderGraph(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'drawGraph()');
     if (this.graph === undefined) {
       this.initMxGraph();
     }
@@ -290,7 +285,7 @@ export class XGraph {
           this.updateGraph();
         } catch (error) {
           GFLog.error('Bad CSV format', error);
-          $GF.notify('Bad CSV format', 'error');
+          this.$gf.notify('Bad CSV format', 'error');
         }
       }
     } catch (error) {
@@ -299,7 +294,6 @@ export class XGraph {
       this.graph.getModel().endUpdate();
       this.initXCells();
     }
-    trc.after();
     return this;
   }
 
@@ -315,7 +309,6 @@ export class XGraph {
    * @memberof XGraph
    */
   async initXCells() {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'initXCells()');
     const model = this.graph.getModel();
     this.xcells = [];
     // const cells = model.cells;
@@ -333,7 +326,6 @@ export class XGraph {
         this.xcells.push(xcell);
       })
     );
-    trc.after();
   }
 
   /**
@@ -367,7 +359,6 @@ export class XGraph {
    * @memberof XGraph
    */
   applyOptions(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'applyGraph()');
     if (!this.scale) {
       this.zoomGraph(this.zoomPercent);
     } else {
@@ -385,7 +376,6 @@ export class XGraph {
     // this.bgGraph(this.bgColor);
     this.graph.foldingEnabled = true;
     this.graph.cellRenderer.forceControlClickHandler = true;
-    trc.after();
     return this;
   }
 
@@ -396,14 +386,12 @@ export class XGraph {
    * @memberof XGraph
    */
   updateGraph(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'refresh()');
     this.cumulativeZoomFactor = 1;
     if (this.graph) {
       this.graph.zoomActual();
       this.applyOptions();
       this.graph.refresh();
     }
-    trc.after();
     return this;
   }
 
@@ -462,7 +450,7 @@ export class XGraph {
    */
   allowDrawio(bool: boolean): this {
     if (bool) {
-      mxUrlConverter.prototype.baseUrl = $GF.CONSTANTS.CONF_EDITOR_URL;
+      mxUrlConverter.prototype.baseUrl = GFCONSTANT.CONF_EDITOR_URL;
       mxUrlConverter.prototype.baseDomain = '';
     } else {
       mxUrlConverter.prototype.baseUrl = null;
@@ -491,7 +479,6 @@ export class XGraph {
    * @memberof XGraph
    */
   centerGraph(bool: boolean): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'centerGraph()');
     this.graph.centerZoom = false;
     if (bool) {
       this.graph.center(true, true);
@@ -499,7 +486,6 @@ export class XGraph {
       this.graph.center(false, false);
     }
     this.center = bool;
-    trc.after();
     return this;
   }
 
@@ -511,14 +497,12 @@ export class XGraph {
    * @memberof XGraph
    */
   scaleGraph(bool: boolean): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'scaleGraph()');
     if (bool) {
       this.unzoomGraph();
       this.graph.fit();
       this.graph.view.rendering = true;
     }
     this.scale = bool;
-    trc.after();
     return this;
   }
 
@@ -529,7 +513,6 @@ export class XGraph {
    * @memberof XGraph
    */
   fitGraph(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'fitGraph()');
     const margin = 2;
     const max = 3;
 
@@ -545,7 +528,6 @@ export class XGraph {
       (margin + cw - w * s) / (2 * s) - bounds.x / this.graph.view.scale,
       (margin + ch - h * s) / (2 * s) - bounds.y / this.graph.view.scale
     );
-    trc.after();
     return this;
   }
 
@@ -575,7 +557,6 @@ export class XGraph {
    * @memberof XGraph
    */
   zoomGraph(percent: string): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'zoomGraph()');
     if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
       const ratio: number = Number(percent.replace('%', '')) / 100;
       this.graph.zoomTo(ratio, true);
@@ -584,7 +565,6 @@ export class XGraph {
       this.unzoomGraph();
     }
     this.zoom = true;
-    trc.after();
     return this;
   }
 
@@ -628,7 +608,6 @@ export class XGraph {
    * @memberof XGraph
    */
   setContent(content: string): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setContent()');
     if (this.type === 'xml') {
       if (GFDrawioTools.isEncoded(content)) {
         this.xmlGraph = GFDrawioTools.decode(content);
@@ -640,7 +619,6 @@ export class XGraph {
       this.csvGraph = content;
     }
     // this.drawGraph();
-    trc.after();
     return this;
   }
 
@@ -662,10 +640,8 @@ export class XGraph {
    * @memberof XGraph
    */
   getXCellValues(type: gf.TPropertieKey): string[] {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'getXCellValues()');
     const values: string[] = [];
     this.getXCells().forEach((c) => values.push(c.getDefaultValue(type)));
-    trc.after();
     return values;
   }
 
@@ -696,7 +672,6 @@ export class XGraph {
    * @memberof XGraph
    */
   findXCells(pattern: string, options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): XCell[] {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'findXCells()');
     const xcells = this.getXCells();
     const result: any[] = [];
     const length = xcells.length;
@@ -706,7 +681,6 @@ export class XGraph {
         result.push(x);
       }
     }
-    trc.after();
     return result;
   }
 
@@ -762,7 +736,6 @@ export class XGraph {
   }
 
   getDefaultValuesWithKey(options: gf.TRuleMapOptions, key: string): string[] {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'getDefaultValuesWithKey()');
     const xcells = this.getXCells();
     const length = xcells.length;
     let values: Set<string> = new Set();
@@ -775,7 +748,6 @@ export class XGraph {
         }
       });
     }
-    trc.after();
     return Array.from(values.keys());
   }
 
@@ -806,7 +778,6 @@ export class XGraph {
    * @memberof XGraph
    */
   setAnimColorCell(xcell: XCell, style: gf.TStyleColorKeys, color: string | null): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimColorCell()');
     if (this.isAnimated() && color) {
       try {
         const timeId = `${style}-${this.uid}-${xcell.uid}`;
@@ -816,9 +787,9 @@ export class XGraph {
           const steps = chroma
             .scale([startColor, endColor])
             .mode('lrgb')
-            .colors($GF.CONSTANTS.CONF_COLORS_STEPS + 1);
+            .colors(GFCONSTANT.CONF_COLORS_STEPS + 1);
           const timer = GFTimer.create(timeId);
-          const ms = $GF.CONSTANTS.CONF_COLORS_MS;
+          const ms = GFCONSTANT.CONF_COLORS_MS;
           for (let i = 1; i < steps.length; i++) {
             timer.addStep(xcell.setStyle.bind(xcell, style, steps[i]), ms * i);
           }
@@ -842,7 +813,6 @@ export class XGraph {
       }
       xcell.setStyle(style, color);
     }
-    trc.after();
     return this;
   }
 
@@ -856,7 +826,6 @@ export class XGraph {
    * @memberof XGraph
    */
   async setAnimStyleCell(xcell: XCell, style: gf.TStyleAnimKeys, endValue: string | null, beginValue?: string) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimStyleCell()');
     if (this.isAnimated() && endValue !== null) {
       try {
         const end = Number(endValue);
@@ -864,11 +833,10 @@ export class XGraph {
         if (end !== begin) {
           const timeId = `${style}-${this.uid}-${xcell.uid}`;
           // Cancel Previous anim
-          $GF.clearUniqTimeOut(timeId);
-          const steps = $GF.calculateIntervalCounter(begin, end, $GF.CONSTANTS.CONF_ANIMS_STEP);
+          const steps = $GF.calculateIntervalCounter(begin, end, GFCONSTANT.CONF_ANIMS_STEP);
           const length = steps.length;
           const timer = GFTimer.create(timeId);
-          const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
+          const ms = GFCONSTANT.CONF_ANIMS_MS;
           for (let i = 1; i < length; i++) {
             timer.addStep(xcell.setStyle.bind(xcell, style, steps[i].toString()), ms * i);
           }
@@ -881,22 +849,21 @@ export class XGraph {
       // this.graph.setCellStyles(style, endValue, [xcell]);
       xcell.setStyle(style, endValue);
     }
-    trc.after();
   }
 
   static isMxGraphStyle(type: string): boolean {
     const t: any = type;
-    return $GF.CONSTANTS.MXGRAPH_STYLES.includes(t);
+    return GFCONSTANT.MXGRAPH_STYLES.includes(t);
   }
 
   static isMxGraphAnimStyle(type: string): boolean {
     const t: any = type;
-    return $GF.CONSTANTS.MXGRAPH_STYLES_ANIM.includes(t);
+    return GFCONSTANT.MXGRAPH_STYLES_ANIM.includes(t);
   }
 
   static isMxGraphStaticStyle(type: string): boolean {
     const t: any = type;
-    return $GF.CONSTANTS.MXGRAPH_STYLES_STATIC.includes(t);
+    return GFCONSTANT.MXGRAPH_STYLES_STATIC.includes(t);
   }
 
   /**
@@ -918,7 +885,7 @@ export class XGraph {
    */
   unsetMap() {
     this.graph.click = this.clickBackup;
-    $GF.$refresh();
+    this.$gf.$refresh();
   }
 
   //
@@ -979,7 +946,7 @@ export class XGraph {
   eventMouseWheel(evt: WheelEvent, up: boolean) {
     // console.log('eventMouseWheel', this.ctrl.id, this.ctrl.isMouseInPanel());
     // this.ctrl.notify(`Zoom ${this.cumulativeZoomFactor}`);
-    if (this.graph.isZoomWheelEvent(evt) && $GF.ctrl.isMouseInPanel()) {
+    if (this.graph.isZoomWheelEvent(evt) && this.$gf.ctrl.isMouseInPanel()) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {
           up = true;
@@ -1032,7 +999,6 @@ export class XGraph {
    * @memberof XGraph
    */
   async lazyZoomPointer(factor: number, offsetX: number, offsetY: number) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'lazyZoomPointer()');
     let dx = offsetX * 2;
     let dy = offsetY * 2;
 
@@ -1051,7 +1017,6 @@ export class XGraph {
       dy *= f;
     }
     this.graph.view.scaleAndTranslate(scale, this.graph.view.translate.x + dx, this.graph.view.translate.y + dy);
-    trc.after();
   }
 
   /**
@@ -1086,13 +1051,12 @@ export class XGraph {
    * @memberof XGraph
    */
   async setAnimZoomCell(xcell: XCell, percent: number) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimZoomCell()');
     if (this.isAnimated()) {
       const timeId = `setAnimZoomCell-${this.uid}${xcell.getId}`;
-      const percents = $GF.calculateIntervalCounter(xcell.percent, percent, $GF.CONSTANTS.CONF_ANIMS_STEP);
+      const percents = $GF.calculateIntervalCounter(xcell.percent, percent, GFCONSTANT.CONF_ANIMS_STEP);
       const timer = GFTimer.create(timeId);
       const length = percents.length;
-      const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
+      const ms = GFCONSTANT.CONF_ANIMS_MS;
       for (let i = 1; i < length; i++) {
         timer.addStep(xcell.zoom.bind(xcell, percents[i]), ms * i);
       }
@@ -1100,7 +1064,6 @@ export class XGraph {
     } else {
       xcell.zoom(percent);
     }
-    trc.after();
   }
 
   /**
@@ -1113,7 +1076,6 @@ export class XGraph {
    * @memberof XGraph
    */
   async setAnimSizeCell(xcell: XCell, width: number | undefined, height: number | undefined) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setAnimSizeCell()');
     const dim = xcell.getDimension();
     const wdir = width !== undefined && width >= 0 ? 1 : -1;
     const hdir = height !== undefined && height >= 0 ? 1 : -1;
@@ -1122,11 +1084,11 @@ export class XGraph {
     // $GF.clearUniqTimeOut(timeId);
     if (this.isAnimated()) {
       const timeId = `setAnimSizeCell-${this.uid}-${xcell.getId()}`;
-      const widths = $GF.calculateIntervalCounter(dim.width * wdir, width, $GF.CONSTANTS.CONF_ANIMS_STEP);
-      const heights = $GF.calculateIntervalCounter(dim.height * hdir, height, $GF.CONSTANTS.CONF_ANIMS_STEP);
+      const widths = $GF.calculateIntervalCounter(dim.width * wdir, width, GFCONSTANT.CONF_ANIMS_STEP);
+      const heights = $GF.calculateIntervalCounter(dim.height * hdir, height, GFCONSTANT.CONF_ANIMS_STEP);
       const length = widths.length;
       const timer = GFTimer.create(timeId);
-      const ms = $GF.CONSTANTS.CONF_ANIMS_MS;
+      const ms = GFCONSTANT.CONF_ANIMS_MS;
       for (let i = 1; i < length; i++) {
         timer.addStep(xcell.resize.bind(xcell, widths[i], heights[i]), ms * i);
       }
@@ -1134,7 +1096,6 @@ export class XGraph {
     } else {
       xcell.resize(width, height);
     }
-    trc.after();
   }
 
   /**
@@ -1144,7 +1105,6 @@ export class XGraph {
    * @memberof XGraph
    */
   async lazyZoomCell(xcell: XCell) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'lazyZoomCell()');
     if (xcell.isVertex()) {
       const state = xcell.getMxCellState();
       if (state !== null) {
@@ -1158,7 +1118,6 @@ export class XGraph {
         this.cumulativeZoomFactor = this.graph.view.scale;
       }
     }
-    trc.after();
   }
 
   static loadXml(url: string): string | null {
@@ -1227,40 +1186,5 @@ export class XGraph {
     console.log('🧰', this.constructor.name, this);
   }
 
-  // complete(): this {
-  //   this.onCompleted();
-  //   return this;
 }
 
-//
-// Events
-//
-// async onDestroyed() {
-//   const funcName = 'onDestroyed';
-//   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-//   this.ctrl.eventHandler.emit(this, 'destroyed');
-// }
-
-// async onRefreshed() {
-//   const funcName = 'onRefreshed';
-//   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-//   this.ctrl.eventHandler.emit(this, 'refreshed');
-// }
-
-// async onInitialized() {
-//   const funcName = 'onInitialized';
-//   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-//   this.ctrl.eventHandler.emit(this, 'initialized');
-// }
-
-// async onChanged() {
-//   const funcName = 'onChanged';
-//   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-//   this.ctrl.eventHandler.emit(this, 'changed');
-// }
-
-// async onCompleted() {
-//   const funcName = 'onCompleted';
-//   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-// }
-// }

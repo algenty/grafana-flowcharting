@@ -42,22 +42,38 @@ describe('Test Global $GF utils', () => {
 
   // Test if eval javascript works
   describe('Secure Eval', () => {
+    let $gf: $GF;
+    const $scope = jest.fn();
+    const templateSrv = jest.fn();
+    const dashboard = jest.fn();
+    const ctrl = jest.fn();
+    beforeAll(()=>{
+      $gf = $GF.create($scope, templateSrv, dashboard, ctrl)
+    });
     it('should be enable to understand Math Lib', () => {
-      expect($GF.utils.evalIt('Math.random()')).toBeGreaterThan(0);
-      expect($GF.utils.evalIt('Math.random() * 100')).toBeLessThanOrEqual(101);
+      expect($GF.utils.evalIt_deprecated('Math.random()')).toBeGreaterThan(0);
+      expect($GF.utils.evalIt_deprecated('Math.random() * 100')).toBeLessThanOrEqual(101);
     });
     test('should be eval simple operation 2+2', () => {
-      expect($GF.utils.evalIt('2+2')).toBe(4);
+      expect($GF.utils.evalIt_deprecated('2+2')).toBe(4);
     });
   });
 
   // Test if globalvariables
-  describe('Variables', () => {
-    const variable = $GF.createLocalVars();
+  describe.skip('Variables', () => {
+    let $gf: $GF;
+    const $scope = jest.fn();
+    const templateSrv = jest.fn();
+    const dashboard = jest.fn();
+    const ctrl = jest.fn();
     const key = '_value';
     const value = 12345;
     const text_entry = 'My text is ${_value} at this time';
     const text_result = 'My text is 12345 at this time';
+    beforeAll(()=>{
+      $gf = $GF.create($scope, templateSrv, dashboard, ctrl)
+      const variable = GFVariables.createLocalVars($gf);
+    });
     test('Should be not null', () => {
       expect(variable).not.toBe(undefined);
       expect(variable).toMatchSnapshot();

@@ -2,7 +2,7 @@ import { XGraph } from 'graph_class';
 import { Rule } from 'rule_class';
 import { EventMap } from 'mapping_class';
 import { TooltipHandler } from 'tooltipHandler';
-import { $GF, GFVariables, GFLog } from 'globals_class';
+import { $GF, GFVariables, GFLog, GFCONSTANT } from 'globals_class';
 import { XCell } from 'cell_class';
 import { ObjectMetric } from 'metric_class';
 import { GFEvents } from 'flowcharting_base';
@@ -18,6 +18,7 @@ type stateSignals = typeof stateSignalsArray[number];
  * @class State
  */
 export class State {
+  private readonly $gf: $GF;
   _xcell: XCell; // mxCell State
   uid: string; // cell ID in mxcell
   private _changed = false;
@@ -48,8 +49,8 @@ export class State {
    * @param {XGraph} xgraph
    * @memberof State
    */
-  constructor(xcell: XCell, xgraph: XGraph) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'constructor()');
+  constructor($gf: $GF, xcell: XCell, xgraph: XGraph) {
+    this.$gf = $gf;
     this.uid = $GF.genUid(this.constructor.name);
     this._xcell = xcell;
     // this._xgraph = xgraph;
@@ -67,11 +68,10 @@ export class State {
       this._textState,
       this._linkState,
     ];
-    this._variables = $GF.createLocalVars();
+    this._variables = GFVariables.create();
     this._status = new Map();
     this.tooltipHandler = null;
     this.init();
-    trc.after();
   }
 
   //############################################################################
@@ -79,8 +79,8 @@ export class State {
   //############################################################################
   init() {
     this._initCycle();
-    $GF.events.connect('data_updated', this, this._on_global_data_received.bind(this));
-    $GF.events.connect('data_processed', this, this._on_global_data_processed.bind(this));
+    this.$gf.events.connect('data_updated', this, this._on_global_data_received.bind(this));
+    this.$gf.events.connect('data_processed', this, this._on_global_data_processed.bind(this));
     RulesHandler.events.connect('rule_changed', this, this._on_ruleHandler_rule_changed.bind(this));
     RulesHandler.events.connect('rule_updated', this, this._on_ruleHandler_rule_updated.bind(this));
     RulesHandler.events.connect('rule_created', this, this._on_ruleHandler_rule_created.bind(this));
@@ -114,8 +114,8 @@ export class State {
 
   async free() {
     this.reset();
-    $GF.events.disconnect('data_updated', this);
-    $GF.events.disconnect('data_processed', this);
+    this.$gf.events.disconnect('data_updated', this);
+    this.$gf.events.disconnect('data_processed', this);
     RulesHandler.events.disconnect('rule_changed', this);
     RulesHandler.events.disconnect('rule_updated', this);
     RulesHandler.events.disconnect('rule_created', this);
@@ -157,7 +157,6 @@ export class State {
    * @memberof State
    */
   private _setCycle(rule?: Rule): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'setCycle()');
     const funcName = 'setCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     const rules = rule === undefined ? Array.from(this._rules.values()) : [rule];
@@ -168,12 +167,12 @@ export class State {
         const textMaps = r.getTextMaps();
         const linkMaps = r.getLinkMaps();
         const eventMaps = r.getEventMaps();
-        this._variables.set($GF.CONSTANTS.VAR_STR_RULENAME, r.data.alias);
+        this._variables.set(GFCONSTANT.VAR_STR_RULENAME, r.data.alias);
         const m = Array.from(r.getMetrics().values());
         m.forEach((metric) => {
           try {
             this.currMetrics.push(metric.getName());
-            this._variables.set($GF.CONSTANTS.VAR_STR_METRIC, metric.getName);
+            this._variables.set(GFCONSTANT.VAR_STR_METRIC, metric.getName);
           } catch (error) {
             GFLog.error(error);
           }
@@ -181,11 +180,11 @@ export class State {
           const FormattedValue = r.getFormattedValue(value);
           const level = r.getThresholdLevel(value);
           const color = r.getThresholdColor(value);
-          this._variables.set($GF.CONSTANTS.VAR_NUM_VALUE, value);
-          this._variables.set($GF.CONSTANTS.VAR_STR_FORMATED, FormattedValue);
-          this._variables.set($GF.CONSTANTS.VAR_NUM_LEVEL, level);
-          this._variables.set($GF.CONSTANTS.VAR_STR_COLOR, color);
-          this._variables.set($GF.CONSTANTS.VAR_STR_DATE, $GF.getCurrentDate());
+          this._variables.set(GFCONSTANT.VAR_NUM_VALUE, value);
+          this._variables.set(GFCONSTANT.VAR_STR_FORMATED, FormattedValue);
+          this._variables.set(GFCONSTANT.VAR_NUM_LEVEL, level);
+          this._variables.set(GFCONSTANT.VAR_STR_COLOR, color);
+          this._variables.set(GFCONSTANT.VAR_STR_DATE, $GF.getCurrentDate());
 
           // SHAPE
           let matchedRule = false;
@@ -282,7 +281,6 @@ export class State {
       let endPerf = Date.now();
       r.execTimes += endPerf - beginPerf;
     });
-    trc.after();
     return this;
   }
 
@@ -297,14 +295,12 @@ export class State {
   // [ ] : never called
   // [ ] : How to reset state when rules unapplied
   _unsetState(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'unsetState()');
     this._eventState.unset();
     this._textState.unset();
     this._linkState.unset();
     this._tooltipState.unset();
     this._iconState.unset();
     this._matched = false;
-    trc.after();
     return this;
   }
 
@@ -393,7 +389,6 @@ export class State {
    * @memberof State
    */
   applyCycle(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'applyState()');
     const funcName = 'applyCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this._matched || this._changed) {
@@ -402,7 +397,6 @@ export class State {
         o.apply();
       });
     }
-    trc.after();
     return this;
   }
 
@@ -413,7 +407,6 @@ export class State {
    * @memberof State
    */
   reset(): this {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'reset()');
     this._ObjStates.map(async (o: { reset: CallableFunction }) => {
       o.reset();
     });
@@ -429,7 +422,6 @@ export class State {
     this.highestFormattedValue = '';
     this.highestValue = undefined;
     this._changed = false;
-    trc.after();
     return this;
   }
 
@@ -440,7 +432,6 @@ export class State {
    * @memberof State
    */
   private async _initCycle() {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
     const funcName = 'initCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this._changed) {
@@ -458,7 +449,6 @@ export class State {
       this.highestValue = undefined;
       this._matched = false;
     }
-    trc.after();
     return this;
   }
 
@@ -582,12 +572,12 @@ export class State {
   //### EVENTS
   //###########################################################################
   private _on_global_data_received() {
-    console.log('📩', this.constructor.name, "_on_global_data_received");
+    console.log('📩', this.constructor.name, '_on_global_data_received');
     this._initCycle();
   }
 
   private _on_global_data_processed() {
-    console.log('📩', this.constructor.name, "_on_global_data_processed");
+    console.log('📩', this.constructor.name, '_on_global_data_processed');
     this._setCycle();
     this.applyCycle();
   }
@@ -967,7 +957,7 @@ class EventState extends GFState {
   }
 
   init_core() {
-    // this.keys = $GF.CONSTANTS.EVENTMETHODS.map(x => x.value);
+    // this.keys = GFCONSTANT.EVENTMETHODS.map(x => x.value);
     this.geo = this.xcell.getDefaultDimension();
     // this.keys.forEach(key => {
     //   const value = this._get(key);
@@ -1213,7 +1203,7 @@ class ShapeState extends GFState {
   }
 
   init_core() {
-    // this.keys = $GF.CONSTANTS.COLORMETHODS.map(x => x.value);
+    // this.keys = GFCONSTANT.COLORMETHODS.map(x => x.value);
     // this.fullStylesString = this.mxcell.getStyle();
     // this.keys.forEach(key => {
     //   const value = this.xgraph.getStyleCell(this.mxcell, key);

@@ -1,4 +1,4 @@
-import { $GF, GFTimer } from 'globals_class';
+import { $GF, GFCONSTANT, GFTimer } from 'globals_class';
 import { XGraph } from 'graph_class';
 import { Rule } from 'rule_class';
 import { TooltipHandler } from 'tooltipHandler';
@@ -521,7 +521,7 @@ export class XCell {
    * @memberof XCell
    */
   highlight(bool = true) {
-    const color = $GF.CONSTANTS.CONF_HIGHTLIGHT_COLOR;
+    const color = GFCONSTANT.CONF_HIGHTLIGHT_COLOR;
     if (!this._isHighlighted && bool) {
       this._isHighlighted = true;
       this.surround(color, true, true);
@@ -597,7 +597,6 @@ export class XCell {
   }
 
   async zoom(percent = 100) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'zoom()');
     const dim: mxGeometry = this.getDefaultDimension();
     if (percent !== 100) {
       this._initDefaultValue('dimension');
@@ -618,11 +617,9 @@ export class XCell {
       this.setDimension(dim);
       this.percent = 100;
     }
-    trc.after();
   }
 
   async resize(width: number | undefined, height: number | undefined) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'resize()');
     this._initDefaultValue('dimension');
     const dim = this.getDimension();
     if (dim !== null) {
@@ -637,7 +634,6 @@ export class XCell {
       const _rec = new mxRectangle(_x, _y, _w, _h);
       this.setDimension(_rec);
     }
-    trc.after();
   }
 
   isSurrounded(color: string): boolean {
@@ -700,7 +696,7 @@ export class XCell {
    */
   blink(ms = 1000, bool = true) {
     const timeId = `blink-${this.uid}`;
-    const color = $GF.CONSTANTS.CONF_BLINK_COLOR;
+    const color = GFCONSTANT.CONF_BLINK_COLOR;
     if (bool && !this._isBlink) {
       this._isBlink = true;
       const timer = GFTimer.create(timeId);

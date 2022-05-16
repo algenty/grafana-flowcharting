@@ -6,6 +6,7 @@ const metricHandlerSignalsArray = ['metric_created', 'metric_updated', 'metric_d
 type MetricHandlerSignals = typeof metricHandlerSignalsArray[number];
 
 export class MetricHandler {
+  private readonly $gf: $GF;
   dataList: any[] = [];
   uid: string;
   tables: Map<string, TableMetric> = new Map();
@@ -13,7 +14,8 @@ export class MetricHandler {
   metrics: Map<string, ObjectMetric> = new Map();
   static events: GFEvents<MetricHandlerSignals> = GFEvents.create(metricHandlerSignalsArray);
 
-  constructor() {
+  constructor($gf: $GF) {
+    this.$gf = $gf
     this.uid = $GF.genUid('MetricHandler');
     this.init();
   }
@@ -22,6 +24,7 @@ export class MetricHandler {
   // Updates
   //
   change() {
+    const $GF = this.$gf;
     this.clear();
     this.dataList.map( async (dl) => {
       this.addMetric(dl);
@@ -39,6 +42,7 @@ export class MetricHandler {
   init(): this {
     const funcName = 'init';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    const $GF = this.$gf;
     $GF.events.connect('data_updated', this, this._on_global_data_updated.bind(this));
     $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     $GF.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
@@ -47,6 +51,7 @@ export class MetricHandler {
 
   free(): this {
     const funcName = 'free';
+    const $GF = this.$gf;
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.metrics.forEach((m: ObjectMetric) => {
       m.free();
@@ -73,14 +78,13 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   addMetric(data: any): ObjectMetric {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'addMetric()');
+
     let metric: ObjectMetric;
     if (data.type === 'table') {
       metric = this.addTable(data);
     } else {
       metric = this.addSerie(data);
     }
-    trc.after();
     return metric;
   }
 
@@ -106,13 +110,10 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   addTable(data: any): TableMetric {
-    $GF.trace.before(this.constructor.name + '.addTable()');
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'addTable()');
-    const table = new TableMetric(data);
+    const table = new TableMetric(this.$gf, data);
     this.tables.set(table.uid, table);
     this.metrics.set(table.uid, table);
     MetricHandler.events.emit('metric_created', table);
-    trc.after();
     return table;
   }
 
@@ -124,13 +125,10 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   addSerie(data: any): SerieMetric {
-    $GF.trace.before(this.constructor.name + '.addSerie()');
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'addSerie()');
-    const serie = new SerieMetric(data);
+    const serie = new SerieMetric(this.$gf, data);
     this.series.set(serie.uid, serie);
     this.metrics.set(serie.uid, serie);
     MetricHandler.events.emit('metric_created', serie);
-    trc.after();
     return serie;
   }
 
@@ -241,7 +239,7 @@ export class MetricHandler {
   private _on_global_debug_asked() {
     console.log("🧰", this.constructor.name, this);
   }
-  
+
   private _on_global_panel_closed() {
     console.log('📩', this.constructor.name, "_on_global_panel_close");
     this.free();

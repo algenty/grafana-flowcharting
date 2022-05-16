@@ -16,6 +16,7 @@ type MetricSignals = typeof metricSignalsArray[number];
  * @class Metric
  */
 export class Metric {
+  protected readonly $gf: $GF;
   type: gf.TMetricTypeKeys | 'unknown' = 'unknown';
   uid: string = $GF.genUid(this.constructor.name);
   // private _scopedVars: any;
@@ -25,7 +26,8 @@ export class Metric {
   protected _nullPointMode = 'connected';
   protected _GHValue: string | number | null = null;
   events: GFEvents<MetricSignals> = GFEvents.create(metricSignalsArray);
-  constructor(dataList: any) {
+  constructor($gf: $GF, dataList: any) {
+    this.$gf = $gf;
     this.dataList = dataList;
   }
 
@@ -148,8 +150,8 @@ export class Metric {
  * @extends {Metric}
  */
 export class SerieMetric extends Metric {
-  constructor(dataList: any) {
-    super(dataList);
+  constructor($gf: $GF, dataList: any) {
+    super($gf, dataList);
     this.type = 'serie';
     this.init();
   }
@@ -164,18 +166,15 @@ export class SerieMetric extends Metric {
   }
 
   private _seriesHandler() {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'seriesHandler()');
     let series: any = undefined;
     if (this.dataList) {
       series = grafana.getTimeSeries(this.dataList);
       series.flotpairs = series.getFlotPairs(this._nullPointMode);
     }
-    trc.after();
     return series;
   }
 
   private _addCustomStats() {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'addCustomStats()');
     try {
       let lg = this.metrics.flotpairs.length;
       // LAST TIME
@@ -205,7 +204,6 @@ export class SerieMetric extends Metric {
     } catch (error) {
       GFLog.error('Unable to add custom stats', error);
     }
-    trc.after();
   }
 
   /**
@@ -219,12 +217,14 @@ export class SerieMetric extends Metric {
   getValue(aggregator: gf.TAggregationKeys, column: string = this.name): string | number | null {
     try {
       let value: string | number | null = null;
-      if ($GF.hasGraphHover()) {
-        const timestamp = $GF.getGraphHover();
-        value = timestamp !== undefined ? this.findValue(timestamp) : null;
-      } else {
-        value = this.metrics.stats[aggregator];
-      }
+      //TODO : fix graphover
+      // if ($GF.hasGraphHover()) {
+      //   const timestamp = $GF.getGraphHover();
+      //   value = timestamp !== undefined ? this.findValue(timestamp) : null;
+      // } else {
+      //   value = this.metrics.stats[aggregator];
+      // }
+      value = this.metrics.stats[aggregator];
       return value;
     } catch (error) {
       GFLog.error('datapoint for serie is null', error);
@@ -240,7 +240,6 @@ export class SerieMetric extends Metric {
    * @memberof Serie
    */
   findValue(timestamp: number): string | number | null {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'findValue()');
     let low = 0;
     let high = this.metrics.flotpairs.length - 1;
     let found = !(high > 0);
@@ -268,7 +267,6 @@ export class SerieMetric extends Metric {
         found = true;
       }
     }
-    trc.after();
     return value;
   }
 
@@ -299,8 +297,8 @@ export class TableMetric extends Metric {
   tableColumn = '';
   allIsNull = true;
   allIsZero = true;
-  constructor(dataList: any) {
-    super(dataList);
+  constructor($gf: $GF, dataList: any) {
+    super($gf, dataList);
     this.type = 'table';
     this.init();
   }
@@ -313,7 +311,6 @@ export class TableMetric extends Metric {
   }
 
   private _tableHandler() {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'tableHandler()');
     const table: any = {
       datapoints: [],
       columnNames: {},
@@ -342,7 +339,6 @@ export class TableMetric extends Metric {
       table.datapoints.push(datapoint);
     });
     this.metrics.flotpairs = this._getFlotPairs(this._nullPointMode, table);
-    trc.after();
     return table;
   }
 
@@ -360,7 +356,6 @@ export class TableMetric extends Metric {
   }
 
   private _getFlotPairs(fillStyle: string, table: any) {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'getFlotPairs()');
     const result: any[] = [];
     const ignoreNulls = fillStyle === 'connected';
     const nullAsZero = fillStyle === 'null as zero';
@@ -495,7 +490,6 @@ export class TableMetric extends Metric {
 
       table.stats[currName].count = result.length;
     }
-    trc.after();
     return result;
   }
 
@@ -510,12 +504,13 @@ export class TableMetric extends Metric {
   getValue(aggregator: gf.TAggregationKeys, column = 'Value'): string | number | null {
     try {
       let value: string | number | null = null;
-      if ($GF.hasGraphHover()) {
-        const timestamp = $GF.getGraphHover();
-        value = timestamp !== undefined ? this.findValue(timestamp, column) : null;
-      } else {
-        value = this.metrics.stats[column][aggregator];
-      }
+      // if ($GF.hasGraphHover()) {
+      //   const timestamp = $GF.getGraphHover();
+      //   value = timestamp !== undefined ? this.findValue(timestamp, column) : null;
+      // } else {
+      //   value = this.metrics.stats[column][aggregator];
+      // }
+      value = this.metrics.stats[column][aggregator];
       return value;
     } catch (error) {
       GFLog.error('datapoint for table is null', error);
@@ -531,7 +526,6 @@ export class TableMetric extends Metric {
    * @memberof Serie
    */
   findValue(timestamp: number, column: string): string | number | null {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'findValue()');
     let low = 0;
     let high = this.metrics.datapoints.length - 1;
     let found = !(high > 0 && this.metrics.datapoints[low][this.metrics.timeColumn] < timestamp);
@@ -559,7 +553,6 @@ export class TableMetric extends Metric {
         found = true;
       }
     }
-    trc.after();
     return value;
   }
 

@@ -15,6 +15,7 @@ type stateHandlerSignals = typeof stateHandlerSignalsArray[number];
  * @class StateHandler
  */
 export class StateHandler {
+  private readonly $gf: $GF;
   states: Map<string, State>;
   xgraph: XGraph;
   edited = false;
@@ -27,7 +28,8 @@ export class StateHandler {
    * @param {XGraph} xgraph
    * @memberof StateHandler
    */
-  constructor(xgraph: XGraph) {
+  constructor($gf: $GF, xgraph: XGraph) {
+    this.$gf = $gf;
     this.uid = $GF.genUid(this.constructor.name);
     this.states = new Map();
     this.xgraph = xgraph;
@@ -59,7 +61,7 @@ export class StateHandler {
   init(): this {
     const funcName = 'init';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     this.initStates();
     // this.onInitialized();
     return this;
@@ -72,7 +74,7 @@ export class StateHandler {
     });
     this.clear();
     this.events.clear();
-    $GF.events.disconnect('debug_asked', this);
+    this.$gf.events.disconnect('debug_asked', this);
   }
 
   clear(): this {
@@ -96,7 +98,6 @@ export class StateHandler {
    * @memberof StateHandler
    */
   async initStates() {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'initStates()');
     this.states.clear();
     const xcells = this.xgraph.getXCells();
     await Promise.all(
@@ -107,7 +108,6 @@ export class StateHandler {
     // _each(xcells, x => {
     //   this.addState(x);
     // });
-    trc.after();
     return this;
   }
 
@@ -231,14 +231,12 @@ export class StateHandler {
    * @memberof StateHandler
    */
   addState(xcell: XCell): State {
-    const trc = $GF.trace.before(this.constructor.name + '.' + 'addState()');
-    const state = new State(xcell, this.xgraph);
+    const state = new State(this.$gf, xcell, this.xgraph);
     this.states.set(state.uid, state);
     if ($GF.DEBUG) {
-      $GF.setVar(`STATE_${state.uid}`, state);
+      this.$gf.setVar(`STATE_${state.uid}`, state);
     }
     this.events.emit('state_created', state);
-    trc.after();
     return state;
   }
 

@@ -13,6 +13,7 @@ type RuleHandlerSignals = typeof ruleHandlerSignalsArray[number];
  * @class RulesHandler
  */
 export class RulesHandler {
+  private readonly $gf: $GF;
   rules: Rule[];
   // ctrl: FlowchartCtrl;
   uid: string;
@@ -26,11 +27,12 @@ export class RulesHandler {
    * @param {TIRulesHandlerData} data
    * @memberof RulesHandler
    */
-  constructor(data: gf.TIRulesHandlerData, oldData?: any) {
+  constructor($gf: $GF, data: gf.TIRulesHandlerData, oldData?: any) {
+    this.$gf = $gf;
     this.uid = $GF.genUid(this.constructor.name);
     this.rules = [];
     this.data = data;
-    if(oldData) {
+    if (oldData) {
       this._convert(oldData);
     }
     this.init();
@@ -52,8 +54,8 @@ export class RulesHandler {
   //
   init(): this {
     GFLog.debug(this.constructor.name + '.init()');
-    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
-    $GF.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
+    this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    this.$gf.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
     return this;
   }
 
@@ -73,8 +75,8 @@ export class RulesHandler {
 
   free(): this {
     GFLog.debug(this.constructor.name + '.free()');
-    $GF.events.disconnect('debug_asked', this);
-    $GF.events.disconnect('panel_closed', this);
+    this.$gf.events.disconnect('debug_asked', this);
+    this.$gf.events.disconnect('panel_closed', this);
     this.rules.forEach((r) => r.free());
     this.clear();
     RulesHandler.events.clear();
@@ -176,8 +178,8 @@ export class RulesHandler {
    * @memberof RulesHandler
    */
   addRule(pattern: string, previousData?: any): Rule {
-    const data: gf.TIRuleData =  Rule.getDefaultData();
-    const newRule = new Rule(pattern, data, previousData);
+    const data: gf.TIRuleData = Rule.getDefaultData();
+    const newRule = new Rule(this.$gf, pattern, data, previousData);
     // TODO : Why initThresholds outside, same in _convert()
     // newRule.initThresholds();
     this.rules.push(newRule);
@@ -246,7 +248,7 @@ export class RulesHandler {
     const data = rule.getData();
     const newData: gf.TIRuleData = Rule.getDefaultData();
     this.reduce();
-    const newRule = new Rule(newData.pattern, newData, data);
+    const newRule = new Rule(this.$gf, newData.pattern, newData, data);
     // newRule._convert(data);
     newData.alias = `Copy of ${newData.alias}`;
     this.rules.splice(index, 0, newRule);
@@ -318,28 +320,25 @@ export class RulesHandler {
     }
   }
 
-
   //#############################################################
   //### EVENTS
   //#############################################################
   private _on_rule_rule_updated(rule: Rule) {
-    console.log('📩', this.constructor.name, "_on_rule_rule_updated");
+    console.log('📩', this.constructor.name, '_on_rule_rule_updated');
     RulesHandler.events.emit('rule_updated', rule);
   }
 
   private _on_rule_rule_changed(rule: Rule) {
-    console.log('📩', this.constructor.name, "_on_rule_rule_changed");
+    console.log('📩', this.constructor.name, '_on_rule_rule_changed');
     RulesHandler.events.emit('rule_changed', rule);
   }
 
   private _on_global_debug_asked() {
-    console.log('📩', this.constructor.name, "_on_rule_rule_changed");
-    console.log("🧰", this.constructor.name, this);
+    console.log('📩', this.constructor.name, '_on_rule_rule_changed');
+    console.log('🧰', this.constructor.name, this);
   }
 
   private _on_global_panel_closed() {
     this.free();
   }
-
-
 }

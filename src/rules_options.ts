@@ -2,7 +2,7 @@ import { FlowchartHandler } from './flowchart_handler';
 import { RulesHandler } from './rules_handler';
 import { Rule } from './rule_class';
 import { EventMap, ObjectMap, ObjectMapArray } from './mapping_class';
-import { $GF, GFTable, GFLog } from './globals_class';
+import { $GF, GFTable, GFLog, GFPlugin, GFCONSTANT } from './globals_class';
 import grafana from 'grafana_func';
 // import _ from 'lodash';
 import { MetricHandler } from './metric_handler';
@@ -17,6 +17,7 @@ import { FlowchartCtrl } from 'flowchart_ctrl';
  * @class RulesOptionsCtrl
  */
 export class RulesOptionsCtrl {
+  private readonly $gf: $GF;
   $scope: gf.TRulesOptionsScope;
   ctrl: FlowchartCtrl;
   // panel: any;
@@ -25,17 +26,17 @@ export class RulesOptionsCtrl {
   metricHandler: MetricHandler | undefined;
   unitFormats: any;
   parentDiv: HTMLDivElement;
-  style = $GF.CONSTANTS.COLORMETHODS;
-  metricType: gf.TSelectString[] = $GF.CONSTANTS.METRIC_TYPES;
-  colorOn = $GF.CONSTANTS.COLOR_APPLYON;
-  linkOn = $GF.CONSTANTS.LINK_APPLYON;
-  tooltipOn = $GF.CONSTANTS.TOOLTIP_APPLYON;
-  textOn = $GF.CONSTANTS.TEXT_APPLYON;
-  textReplace = $GF.CONSTANTS.TEXTMETHODS;
-  comparator = $GF.CONSTANTS.COMPARATOR_TYPES;
+  style = GFCONSTANT.COLORMETHODS;
+  metricType: gf.TSelectString[] = GFCONSTANT.METRIC_TYPES;
+  colorOn = GFCONSTANT.COLOR_APPLYON;
+  linkOn = GFCONSTANT.LINK_APPLYON;
+  tooltipOn = GFCONSTANT.TOOLTIP_APPLYON;
+  textOn = GFCONSTANT.TEXT_APPLYON;
+  textReplace = GFCONSTANT.TEXTMETHODS;
+  comparator = GFCONSTANT.COMPARATOR_TYPES;
   EventType = EventMap.getDefaultMethods();
-  tpDirection: gf.TSelectString[] = $GF.CONSTANTS.TOOLTIP_DIRECTION_TYPES;
-  propTypes: gf.TSelectString[] = $GF.CONSTANTS.IDENT_TYPES;
+  tpDirection: gf.TSelectString[] = GFCONSTANT.TOOLTIP_DIRECTION_TYPES;
+  propTypes: gf.TSelectString[] = GFCONSTANT.IDENT_TYPES;
   textPattern = '/.*/';
   rulesTableData: gf.TTableData;
   shapesTableData: gf.TTableData;
@@ -53,29 +54,25 @@ export class RulesOptionsCtrl {
   THsTable: GFTable;
   valuesTable: GFTable;
   rangesTable: GFTable;
-  metricTypes = $GF.CONSTANTS.VALUE_TYPES;
-  dateFormats: gf.TSelectString[] = $GF.CONSTANTS.VALUE_DATEFORMAT_TYPES;
-  aggregationTypes = $GF.CONSTANTS.AGGREGATION_TYPES;
-  mappingTypes = $GF.CONSTANTS.VALUEMAPPINGTYPES;
-  tpGraphType = $GF.CONSTANTS.TOOLTIP_GRAPH_TYPES;
-  tpGraphScale = $GF.CONSTANTS.TOOLTIP_GRAPH_SCALE_TYPES;
-  tpGraphSize = $GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
+  metricTypes = GFCONSTANT.VALUE_TYPES;
+  dateFormats: gf.TSelectString[] = GFCONSTANT.VALUE_DATEFORMAT_TYPES;
+  aggregationTypes = GFCONSTANT.AGGREGATION_TYPES;
+  mappingTypes = GFCONSTANT.VALUEMAPPINGTYPES;
+  tpGraphType = GFCONSTANT.TOOLTIP_GRAPH_TYPES;
+  tpGraphScale = GFCONSTANT.TOOLTIP_GRAPH_SCALE_TYPES;
+  tpGraphSize = GFCONSTANT.TOOLTIP_GRAPH_SIZE_TYPES;
   currentParams = new Map();
   getMetricNames: () => any[];
-  // getCellNames: (prop: gf.TPropertieKey) => any[];
-  // getCellNamesById: () => any[];
-  // getCellNamesByValue: () => any[];
-  // getCellNames4: (rule : Rule) => string[];
   getVariables: () => any;
-  // getEventValues: () => any;
   getEventValues: string[];
 
   /** @ngInject */
   constructor($scope: gf.TRulesOptionsScope, $element: any) {
     $scope.editor = this;
-    $scope.$GF = $GF.me();
     this.$scope = $scope;
     this.ctrl = $scope.ctrl;
+    this.$gf = this.ctrl.$gf;
+    $scope.$GF = this.$gf;
     // this.panel = this.ctrl.panel;
     const $div = $element.find('#templateMapping');
     this.parentDiv = $div[0];
@@ -84,7 +81,7 @@ export class RulesOptionsCtrl {
     this.rulesHandler = this.ctrl.rulesHandler;
     this.metricHandler = this.ctrl.metricHandler;
     this.unitFormats = grafana.getUnitFormats();
-    this.tpGraphSize = $GF.CONSTANTS.TOOLTIP_GRAPH_SIZE_TYPES;
+    this.tpGraphSize = GFCONSTANT.TOOLTIP_GRAPH_SIZE_TYPES;
     let n = 0;
     this.rulesTableData = {
       data: [],
@@ -618,7 +615,7 @@ export class RulesOptionsCtrl {
     };
 
     this.getVariables = () => {
-      return $GF.getFullAvailableVarNames();
+      return this.$gf.getFullAvailableVarNames();
     };
 
     this.getEventValues = [];
@@ -746,12 +743,12 @@ export class RulesOptionsCtrl {
     if (this.isMultipleType()) {
       prefix = 'Series/';
     }
-    this.getMetricNames().forEach(m => result.push(`${prefix}${m}`));
+    this.getMetricNames().forEach((m) => result.push(`${prefix}${m}`));
     if (this.isMultipleType()) {
       prefix = 'Tables/';
     }
-    this.getTablesName().forEach(t => {
-      this.getColumnsForTable(t).forEach(c => result.push(`${prefix}${t}/${c}`));
+    this.getTablesName().forEach((t) => {
+      this.getColumnsForTable(t).forEach((c) => result.push(`${prefix}${t}/${c}`));
     });
     rule.FE_metricName = this.getFastEditMectricName(rule);
     return result;
@@ -1073,7 +1070,7 @@ export class RulesOptionsCtrl {
           const maps = mapsList[index];
           const value = xcell.getDefaultValues(options);
           if (value) {
-            maps.forEach(map => {
+            maps.forEach((map) => {
               map.setPattern(value);
             });
           }
@@ -1099,7 +1096,7 @@ export function rulesOptionsTab($q: any, uiSegmentSrv: any) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `${$GF.plugin.getPartialPath()}/rules/rulesTab.html`,
+    templateUrl: `${GFPlugin.getPartialPath()}/rules/rulesTab.html`,
     controller: RulesOptionsCtrl,
   };
 }

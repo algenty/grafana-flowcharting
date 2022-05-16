@@ -4,6 +4,10 @@ import { inflateRaw, deflateRaw } from 'pako';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 import { GFEvents } from 'flowcharting_base';
 import { nanoid } from 'nanoid/non-secure';
+import { FlowchartHandler } from 'flowchart_handler';
+import { RulesHandler } from 'rules_handler';
+import { MetricHandler } from 'metric_handler';
+const safeEval = require('safe-eval');
 
 const globalSignalsArray = [
   'data_updated',
@@ -12,61 +16,61 @@ const globalSignalsArray = [
   'editmode_opened',
   'editmode_closed',
   'debug_asked',
-  'panel_closed'
+  'panel_closed',
 ] as const;
 type GlobalSignals = typeof globalSignalsArray[number];
 
-class GFCONSTANT {
+export class GFCONSTANT {
   // CONFIG
-  CONF_PATH_LIBS = 'libs/';
-  CONF_PATH_DRAWIO = 'libs/drawio/';
-  CONF_PATH_STATIC = 'static/';
-  CONF_PATH_PARTIALS = 'partials/';
-  CONF_PATH_STYLES = 'styles/';
-  CONF_FILE_PLUGINJSON = './plugin.json';
-  CONF_FILE_DEFAULTDIO = 'static/defaultGraph.drawio';
-  CONF_FILE_DEFAULTCSV = 'static/defaultGraph.csv';
-  CONF_FILE_SHAPESTXT = 'static/shapes.txt';
-  // CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
-  // CONF_FILE_INTEGRATEJS = 'libs/drawio/js/app.min.js';
-  // CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
-  // CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
-  CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer-static.min.js';
-  CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
-  CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
-  CONF_FILE_VERSION = 'VERSION';
-  CONF_TOOLTIPS_DELAY = 200;
-  CONF_GRAPHHOVER_DELAY = 50;
-  CONF_COLORS_STEPS = 10;
-  CONF_COLORS_MS = 50;
-  CONF_ANIMS_STEP = 10;
-  CONF_ANIMS_MS = 50;
-  CONF_GFMESSAGE_MS = 5000;
-  CONF_BLINK_COLOR = '#f5f242';
-  CONF_HIGHTLIGHT_COLOR = '#99ff33';
-  CONF_EDITOR_URL = 'https://embed.diagrams.net/';
-  CONF_EDITOR_THEME = 'kennedy';
+  static readonly CONF_PATH_LIBS = 'libs/';
+  static readonly CONF_PATH_DRAWIO = 'libs/drawio/';
+  static readonly CONF_PATH_STATIC = 'static/';
+  static readonly CONF_PATH_PARTIALS = 'partials/';
+  static readonly CONF_PATH_STYLES = 'styles/';
+  static readonly CONF_FILE_PLUGINJSON = './plugin.json';
+  static readonly CONF_FILE_DEFAULTDIO = 'static/defaultGraph.drawio';
+  static readonly CONF_FILE_DEFAULTCSV = 'static/defaultGraph.csv';
+  static readonly CONF_FILE_SHAPESTXT = 'static/shapes.txt';
+  // static readonly CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
+  // static readonly CONF_FILE_INTEGRATEJS = 'libs/drawio/js/app.min.js';
+  // static readonly CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
+  // static readonly CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
+  static readonly CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer-static.min.js';
+  static readonly CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
+  static readonly CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
+  static readonly CONF_FILE_VERSION = 'VERSION';
+  static readonly CONF_TOOLTIPS_DELAY = 200;
+  static readonly CONF_GRAPHHOVER_DELAY = 50;
+  static readonly CONF_COLORS_STEPS = 10;
+  static readonly CONF_COLORS_MS = 50;
+  static readonly CONF_ANIMS_STEP = 10;
+  static readonly CONF_ANIMS_MS = 50;
+  static readonly CONF_GFMESSAGE_MS = 5000;
+  static readonly CONF_BLINK_COLOR = '#f5f242';
+  static readonly CONF_HIGHTLIGHT_COLOR = '#99ff33';
+  static readonly CONF_EDITOR_URL = 'https://embed.diagrams.net/';
+  static readonly CONF_EDITOR_THEME = 'kennedy';
 
   // GLOBAL VARIABLE
-  VAR_STG_SHAPES = 'shapestext';
-  VAR_TBL_SHAPES = 'shapesarray';
-  VAR_STR_VIEWERJS = 'viewer.min.js';
-  VAR_STR_SHAPESJS = 'shapes.min.js';
-  VAR_STG_CTXROOT = 'contextroot';
-  VAR_NUM_GHTIMESTAMP = 'graph-hover-timestamp';
-  VAR_OBJ_TEMPLATESRV = 'templatesrv';
+  static readonly VAR_STG_SHAPES = 'shapestext';
+  static readonly VAR_TBL_SHAPES = 'shapesarray';
+  static readonly VAR_STR_VIEWERJS = 'viewer.min.js';
+  static readonly VAR_STR_SHAPESJS = 'shapes.min.js';
+  // static readonly VAR_STG_CTXROOT = 'contextroot';
+  static readonly VAR_NUM_GHTIMESTAMP = 'graph-hover-timestamp';
+  // static readonly VAR_OBJ_TEMPLATESRV = 'templatesrv';
   // VAR_OBJ_CTRL = 'ctrl';
   // VAR_OBJ_SCOPE = 'scope';
-  VAR_OBJ_DASHBOARD = 'dashboard';
-  VAR_MAP_INTERVAL = 'interval';
-  VAR_MAP_TIMEOUT = 'timeout';
-  VAR_STR_RULENAME: gf.TVariableKeys = '_rule';
-  VAR_NUM_LEVEL: gf.TVariableKeys = '_level';
-  VAR_NUM_VALUE: gf.TVariableKeys = '_value';
-  VAR_STR_FORMATED: gf.TVariableKeys = '_formated';
-  VAR_STR_COLOR: gf.TVariableKeys = '_color';
-  VAR_STR_DATE: gf.TVariableKeys = '_date';
-  VAR_STR_METRIC: gf.TVariableKeys = '_metric';
+  // static readonly VAR_OBJ_DASHBOARD = 'dashboard';
+  static readonly VAR_MAP_INTERVAL = 'interval';
+  static readonly VAR_MAP_TIMEOUT = 'timeout';
+  static readonly VAR_STR_RULENAME: gf.TVariableKeys = '_rule';
+  static readonly VAR_NUM_LEVEL: gf.TVariableKeys = '_level';
+  static readonly VAR_NUM_VALUE: gf.TVariableKeys = '_value';
+  static readonly VAR_STR_FORMATED: gf.TVariableKeys = '_formated';
+  static readonly VAR_STR_COLOR: gf.TVariableKeys = '_color';
+  static readonly VAR_STR_DATE: gf.TVariableKeys = '_date';
+  static readonly VAR_STR_METRIC: gf.TVariableKeys = '_metric';
 
   // FLOWCHART CHANGE KEY FLAG
   // FLOWCHART_CHG_SOURCES: gf.TFlowchartFlagKeys = 'sources';
@@ -78,10 +82,10 @@ class GFCONSTANT {
   // FLOWCHART_CHG_HIDDENCHANGE: gf.TFlowchartFlagKeys = 'hiddenChange';
 
   // TRACE AND DEBUG
-  VAR_GF_TRACE_PERF = true;
+  static readonly VAR_GF_TRACE_PERF = true;
 
   // MXGRAPH
-  MXGRAPH_STYLES_COLOR: gf.TStyleColorKeys[] = [
+  static readonly MXGRAPH_STYLES_COLOR: gf.TStyleColorKeys[] = [
     'fillColor',
     'strokeColor',
     'gradientColor',
@@ -91,7 +95,7 @@ class GFCONSTANT {
     'imageBorder',
     'imageBackground',
   ];
-  MXGRAPH_STYLES_EVENT_ANIM: gf.TStyleAnimEventKey[] = [
+  static readonly MXGRAPH_STYLES_EVENT_ANIM: gf.TStyleAnimEventKey[] = [
     'barPos',
     'gaugePos',
     'fontSize',
@@ -99,7 +103,7 @@ class GFCONSTANT {
     'textOpacity',
     'rotation',
   ];
-  MXGRAPH_STYLES_EVENT_STATIC: gf.TStyleStaticEventKeys[] = [
+  static readonly MXGRAPH_STYLES_EVENT_STATIC: gf.TStyleStaticEventKeys[] = [
     'shape',
     'endArrow',
     'startArrow',
@@ -108,67 +112,73 @@ class GFCONSTANT {
     'gradientDirection',
     'image',
   ];
-  MXGRAPH_STYLES_EVENT: gf.TStyleEventKeys[] = [...this.MXGRAPH_STYLES_EVENT_ANIM, ...this.MXGRAPH_STYLES_EVENT_STATIC];
-  MXGRAPH_STYLES_ANIM: gf.TStyleAnimKeys[] = [...this.MXGRAPH_STYLES_COLOR, ...this.MXGRAPH_STYLES_EVENT_ANIM];
-  MXGRAPH_STYLES_STATIC: gf.TStyleStaticKeys[] = [...this.MXGRAPH_STYLES_EVENT_STATIC];
-  MXGRAPH_STYLES: gf.TStyleKeys[] = [...this.MXGRAPH_STYLES_ANIM, ...this.MXGRAPH_STYLES_STATIC];
+  static readonly MXGRAPH_STYLES_EVENT: gf.TStyleEventKeys[] = [
+    ...this.MXGRAPH_STYLES_EVENT_ANIM,
+    ...this.MXGRAPH_STYLES_EVENT_STATIC,
+  ];
+  static readonly MXGRAPH_STYLES_ANIM: gf.TStyleAnimKeys[] = [
+    ...this.MXGRAPH_STYLES_COLOR,
+    ...this.MXGRAPH_STYLES_EVENT_ANIM,
+  ];
+  static readonly MXGRAPH_STYLES_STATIC: gf.TStyleStaticKeys[] = [...this.MXGRAPH_STYLES_EVENT_STATIC];
+  static readonly MXGRAPH_STYLES: gf.TStyleKeys[] = [...this.MXGRAPH_STYLES_ANIM, ...this.MXGRAPH_STYLES_STATIC];
 
   // COMPARATORS
-  COMP_LT: any = 'lt';
-  COMP_LE: any = 'le';
-  COMP_EQ: any = 'eq';
-  COMP_NE: any = 'ne';
-  COMP_GE: any = 'ge';
-  COMP_GT: any = 'gt';
-  COMP_AL: any = 'al';
+  static readonly COMP_LT: any = 'lt';
+  static readonly COMP_LE: any = 'le';
+  static readonly COMP_EQ: any = 'eq';
+  static readonly COMP_NE: any = 'ne';
+  static readonly COMP_GE: any = 'ge';
+  static readonly COMP_GT: any = 'gt';
+  static readonly COMP_AL: any = 'al';
 
   // CONDITIONS
-  TOOLTIP_APPLYON: gf.TTooltipOnList = [
+  static readonly TOOLTIP_APPLYON: gf.TTooltipOnList = [
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
-  COLOR_APPLYON: gf.TColorOnList = [
+  static readonly COLOR_APPLYON: gf.TColorOnList = [
     { text: 'Never', value: 'n' },
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
-  TEXT_APPLYON: gf.TTextOnList = [
+  static readonly TEXT_APPLYON: gf.TTextOnList = [
     { text: 'Never', value: 'n' },
     { text: 'When Metric Displayed', value: 'wmd' },
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Critical Only', value: 'co' },
   ];
-  LINK_APPLYON: gf.TLinkOnList = [
+  static readonly LINK_APPLYON: gf.TLinkOnList = [
     { text: 'Warning / Critical', value: 'wc' },
     { text: 'Always', value: 'a' },
   ];
 
   // TYPES
-  VALUE_TYPES: gf.TValueTypeList = [
+  static readonly VALUE_TYPES: gf.TValueTypeList = [
     { text: 'Number', value: 'number' },
     { text: 'String', value: 'string' },
     { text: 'Date', value: 'date' },
   ];
-  METRIC_TYPES: gf.TMetricTypeList = [
+  static readonly METRIC_TYPES: gf.TMetricTypeList = [
     { text: 'Series', value: 'serie' },
     { text: 'Table', value: 'table' },
   ];
-  SOURCE_TYPES: gf.TSourceTypeList = [
+  static readonly SOURCE_TYPES: gf.TSourceTypeList = [
     { text: 'XML', value: 'xml' },
     { text: 'CSV', value: 'csv' },
   ];
-  DIOTHEME_TYPES: gf.TDioThemeList = [
+  static readonly DIOTHEME_TYPES: gf.TDioThemeList = [
     { text: 'Dark', value: 'dark' },
     { text: 'Light', value: 'kennedy' },
     { text: 'Mobile', value: 'minimal' },
     { text: 'atlas', value: 'atlas' },
   ];
-  IDENT_TYPES: Array<{ text: string; value: gf.TPropertieKey }> = [
+  static readonly IDENT_TYPES: Array<{ text: string; value: gf.TPropertieKey }> = [
     { text: 'Id', value: 'id' },
     { text: 'Label', value: 'value' },
     { text: 'Metadata', value: 'metadata' },
   ];
-  AGGREGATION_TYPES: gf.TAggregationList = [
+  static readonly AGGREGATION_TYPES: gf.TAggregationList = [
     { text: 'First', value: 'first' },
     { text: 'First (not null)', value: 'first_notnull' },
     { text: 'Last', value: 'current' },
@@ -184,29 +194,29 @@ class GFCONSTANT {
     { text: 'Time of last point', value: 'last_time' },
   ];
 
-  TOOLTIP_GRAPH_TYPES: gf.TGraphTypeList = [
+  static readonly TOOLTIP_GRAPH_TYPES: gf.TGraphTypeList = [
     { text: 'Line', value: 'line' },
     { text: 'Histogram', value: 'bar' },
   ];
 
-  TOOLTIP_GRAPH_SCALE_TYPES: gf.TGraphScaleList = [
+  static readonly TOOLTIP_GRAPH_SCALE_TYPES: gf.TGraphScaleList = [
     { text: 'Linear', value: 'linear' },
     { text: 'Logarithmic', value: 'log' },
   ];
 
-  TOOLTIP_GRAPH_SIZE_TYPES: gf.TGraphSizeList = [
+  static readonly TOOLTIP_GRAPH_SIZE_TYPES: gf.TGraphSizeList = [
     { text: 'Adjustable', value: '100%' },
     { text: 'Small', value: '100px' },
     { text: 'Medium', value: '200px' },
     { text: 'Large', value: '400px' },
   ];
 
-  TOOLTIP_DIRECTION_TYPES: gf.TDirectionList = [
+  static readonly TOOLTIP_DIRECTION_TYPES: gf.TDirectionList = [
     { text: 'Vertical', value: 'v' },
     { text: 'Horizontal ', value: 'h' },
   ];
 
-  COMPARATOR_TYPES: gf.TComparatorList = [
+  static readonly COMPARATOR_TYPES: gf.TComparatorList = [
     { text: 'Always', value: 'al' },
     { text: 'Less than', value: 'lt' },
     { text: 'Less than or equal to', value: 'le' },
@@ -216,7 +226,7 @@ class GFCONSTANT {
     { text: 'Greater than ', value: 'gt' },
   ];
 
-  VALUE_DATEFORMAT_TYPES: gf.TDateFormatList = [
+  static readonly VALUE_DATEFORMAT_TYPES: gf.TDateFormatList = [
     { text: 'YYYY-MM-DD HH:mm:ss', value: 'YYYY-MM-DD HH:mm:ss' },
     { text: 'YYYY-MM-DD HH:mm:ss.SSS', value: 'YYYY-MM-DD HH:mm:ss.SSS' },
     { text: 'MM/DD/YY h:mm:ss a', value: 'MM/DD/YY h:mm:ss a' },
@@ -224,19 +234,19 @@ class GFCONSTANT {
     { text: 'YYYY-MM-DD', value: 'YYYY-MM-DD' },
   ];
 
-  VALUEMAPPINGTYPES: gf.TValueMappingList = [
+  static readonly VALUEMAPPINGTYPES: gf.TValueMappingList = [
     { text: 'Value to text', value: 1 },
     { text: 'Range to text', value: 2 },
   ];
 
   // METHODS
-  TEXTMETHODS: gf.TTextMethodList = [
+  static readonly TEXTMETHODS: gf.TTextMethodList = [
     { text: 'All content', value: 'content' },
     { text: 'Substring', value: 'pattern', placeholder: '/RegEx/' },
     { text: 'Append (Space) ', value: 'as' },
     { text: 'Append (New line) ', value: 'anl' },
   ];
-  COLORMETHODS: gf.TStyleColorList = [
+  static readonly COLORMETHODS: gf.TStyleColorList = [
     { text: 'Shape Stroke/Border', value: 'strokeColor' },
     { text: 'Shape Fill', value: 'fillColor' },
     { text: 'Shape Gradient', value: 'gradientColor' },
@@ -246,7 +256,7 @@ class GFCONSTANT {
     { text: 'Image background', value: 'imageBackground' },
     { text: 'Image border', value: 'imageBorder' },
   ];
-  EVENTMETHODS: gf.TTypeEventList = [
+  static readonly EVENTMETHODS: gf.TTypeEventList = [
     { text: 'Shape : Change form (text)', value: 'shape', type: 'text', placeholder: 'Shape name' },
     { text: 'Shape : Rotate Shape (0-360)', value: 'rotation', type: 'number', placeholder: '0-360', default: 0 },
     { text: 'Shape : Blink (frequence ms)', value: 'blink', type: 'number', placeholder: 'Number in ms', default: 500 },
@@ -316,7 +326,7 @@ class GFCONSTANT {
     },
   ];
 
-  LOCALVARIABLENAMES: gf.TVariableList = [
+  static readonly LOCALVARIABLENAMES: gf.TVariableList = [
     { text: 'Name of the rule', value: this.VAR_STR_RULENAME },
     { text: 'Current date', value: this.VAR_STR_DATE },
     { text: 'Current color according to the thresholds', value: this.VAR_STR_COLOR },
@@ -327,9 +337,14 @@ class GFCONSTANT {
 }
 
 export class GFVariables {
-  _variables: Map<string, any>;
-  constructor() {
+  private _variables: Map<string, any>;
+  private constructor() {
     this._variables = new Map();
+  }
+
+  static create(): GFVariables {
+    const g =  new GFVariables()
+    return g;
   }
 
   /**
@@ -340,7 +355,7 @@ export class GFVariables {
    * @memberof GFVariables
    */
   static getAvailableLocalVarNames(): string[] {
-    return $GF.CONSTANTS.LOCALVARIABLENAMES.map((x) => '${' + x.value + '}');
+    return GFCONSTANT.LOCALVARIABLENAMES.map((x) => '${' + x.value + '}');
   }
 
   /**
@@ -388,8 +403,8 @@ export class GFVariables {
    * @returns {string[]}
    * @memberof GFVariables
    */
-  getFullVarsNames(): string[] {
-    return $GF.getGrafanaVars().concat(this.getVarsNames());
+  getFullVarsNames($gf: $GF): string[] {
+    return $gf.getGrafanaVars().concat(this.getVarsNames());
   }
 
   /**
@@ -422,7 +437,7 @@ export class GFVariables {
    */
   replaceText(text: string): string {
     try {
-      let templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
+      let templateSrv = GFPlugin.getTemplateSrv();
       text = templateSrv !== undefined ? templateSrv.replaceWithText(text) : text;
       for (let [key, value] of this._variables) {
         text = text.replace('${' + key + '}', value);
@@ -442,7 +457,11 @@ export class GFVariables {
    */
   eval(text: string): string {
     let t = this.replaceText(text);
-    return $GF.utils.evalIt(t);
+    try {
+      return safeEval(t);
+    } catch (error) {
+      return t;
+    }
   }
 }
 
@@ -535,10 +554,15 @@ export class GFLog {
   }
 }
 
-class GFPlugin {
+export class GFPlugin {
   static data: any = require('./plugin.json');
   static defaultContextRoot = '/public/plugins/agenty-flowcharting-panel/';
-  static contextRoot: string;
+  private static contextRoot: string;
+  private static templateSrv: any;
+  static initialized = false;
+
+  private constructor() {
+  }
 
   /**
    * init GFPlugin
@@ -549,25 +573,30 @@ class GFPlugin {
    * @returns {GFPlugin}
    * @memberof GFPlugin
    */
-  static init($scope: any, templateSrv: any, dashboard: any, ctrl: any): GFPlugin {
+  static create($scope: any, templateSrv: any, $gf: $GF): GFPlugin {
     let plug = new GFPlugin();
-    this.contextRoot = GFPlugin.defaultContextRoot;
+    GFPlugin.contextRoot = GFPlugin.defaultContextRoot;
+    GFPlugin.templateSrv = templateSrv;
     if ($scope === undefined) {
-      this.contextRoot = __dirname;
-      if (this.contextRoot.length > 0) {
-        $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
-      }
+      GFPlugin.contextRoot = __dirname;
+      // if (GFPlugin.contextRoot.length > 0) {
+         // $gf.setVar(GFCONSTANT.VAR_STG_CTXROOT, this.contextRoot);
+      // }
     } else {
       this.contextRoot = $scope.$root.appSubUrl + this.defaultContextRoot;
     }
-    $GF.setVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV, templateSrv);
-    $GF.setVar($GF.CONSTANTS.VAR_STG_CTXROOT, this.contextRoot);
-    $GF.setVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD, dashboard);
+    // $gf.setVar(GFCONSTANT.VAR_OBJ_TEMPLATESRV, templateSrv);
+    // $gf.setVar(GFCONSTANT.VAR_STG_CTXROOT, this.contextRoot);
+    // $gf.setVar(GFCONSTANT.VAR_OBJ_DASHBOARD, dashboard);
 
     return plug;
   }
 
-  getRepo(): string {
+  static getTemplateSrv() {
+    return GFPlugin.templateSrv
+  }
+
+  static getRepo(): string {
     let url = '';
     GFPlugin.data.info.links.forEach((link: { name: string; url: string }) => {
       if (link.name === 'Documentation') {
@@ -583,7 +612,7 @@ class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-  getVersion(): string {
+  static getVersion(): string {
     return GFPlugin.data.info.version;
   }
 
@@ -593,8 +622,9 @@ class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-  getRootPath(): string {
-    return $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
+  static getRootPath(): string {
+    // return this.$gf.getVar(GFCONSTANT.VAR_STG_CTXROOT);
+    return GFPlugin.contextRoot;
   }
 
   /**
@@ -603,8 +633,9 @@ class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-  getLibsPath(): string {
-    return `${$GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT)}libs/`;
+  static getLibsPath(): string {
+    // return `${this.$gf.getVar(GFCONSTANT.VAR_STG_CTXROOT)}libs/`;
+    return `${GFPlugin.getRootPath()}libs`;
   }
 
   /**
@@ -613,8 +644,8 @@ class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-  getDrawioPath(): string {
-    return `${this.getLibsPath()}drawio/`;
+   static getDrawioPath(): string {
+    return `${GFPlugin.getLibsPath()}drawio/`;
   }
 
   /**
@@ -623,8 +654,8 @@ class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-  getStaticPath(): string {
-    return `${this.getRootPath()}static/`;
+   static getStaticPath(): string {
+    return `${GFPlugin.getRootPath()}static/`;
   }
 
   /**
@@ -634,8 +665,8 @@ class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-  getMxBasePath(): string {
-    return `${this.getDrawioPath()}mxgraph/`;
+  static getMxBasePath(): string {
+    return `${GFPlugin.getDrawioPath()}mxgraph/`;
   }
 
   /**
@@ -644,8 +675,8 @@ class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-  getMxStylePath(): string {
-    return `${this.getDrawioPath()}styles/`;
+  static getMxStylePath(): string {
+    return `${GFPlugin.getDrawioPath()}styles/`;
   }
 
   /**
@@ -654,8 +685,8 @@ class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-  getShapesPath(): string {
-    return `${this.getDrawioPath()}/shapes/`;
+  static getShapesPath(): string {
+    return `${GFPlugin.getDrawioPath()}/shapes/`;
   }
 
   /**
@@ -664,8 +695,8 @@ class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-  getPartialPath(): string {
-    return `${this.getRootPath()}partials/`;
+  static getPartialPath(): string {
+    return `${GFPlugin.getRootPath()}partials/`;
   }
 
   /**
@@ -674,20 +705,20 @@ class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-  getStencilsPath(): string {
-    return `${this.getDrawioPath()}/stencils/`;
+  static getStencilsPath(): string {
+    return `${GFPlugin.getDrawioPath()}/stencils/`;
   }
 
-  getMxCssPath(): string {
-    return `${this.getDrawioPath()}styles/`;
+  static getMxCssPath(): string {
+    return `${GFPlugin.getDrawioPath()}styles/`;
   }
 
-  getMxResourcePath(): string {
-    return `${this.getMxBasePath()}css/`;
+  static getMxResourcePath(): string {
+    return `${GFPlugin.getMxBasePath()}css/`;
   }
 
-  getMxImagePath(): string {
-    return `${this.getMxBasePath()}images/`;
+  static getMxImagePath(): string {
+    return `${GFPlugin.getMxBasePath()}images/`;
   }
 }
 
@@ -695,120 +726,120 @@ class GFPlugin {
  * Trace Perf class
  *
  * @class GFTrace
- */
-class GFTrace {
-  static enable = false;
-  static trc = new Map();
-  static fn = new Map();
-  static indent = 0;
-  trace:
-    | {
-        Name: string;
-        Uid: string;
-        Args: any;
-        Return: any;
-        Before: number;
-        End: number | undefined;
-        ExecTime: number | undefined;
-        Indent: number;
-      }
-    | undefined;
+//  */
+// class GFTrace {
+//   static enable = false;
+//   static trc = new Map();
+//   static fn = new Map();
+//   static indent = 0;
+//   trace:
+//     | {
+//         Name: string;
+//         Uid: string;
+//         Args: any;
+//         Return: any;
+//         Before: number;
+//         End: number | undefined;
+//         ExecTime: number | undefined;
+//         Indent: number;
+//       }
+//     | undefined;
 
-  constructor(fn?: string) {
-    if (GFTrace.enable && fn !== undefined) {
-      this.trace = {
-        Name: fn,
-        Uid: $GF.genUid(),
-        Args: undefined,
-        Return: undefined,
-        Before: Date.now(),
-        End: undefined,
-        ExecTime: undefined,
-        Indent: GFTrace.indent,
-      };
-      GFTrace.trc.set(this.trace.Uid, this.trace);
-    }
-  }
+//   constructor(fn?: string) {
+//     if (GFTrace.enable && fn !== undefined) {
+//       this.trace = {
+//         Name: fn,
+//         Uid: $GF.genUid(),
+//         Args: undefined,
+//         Return: undefined,
+//         Before: Date.now(),
+//         End: undefined,
+//         ExecTime: undefined,
+//         Indent: GFTrace.indent,
+//       };
+//       GFTrace.trc.set(this.trace.Uid, this.trace);
+//     }
+//   }
 
-  static init(): GFTrace {
-    return new GFTrace();
-  }
+//   static init(): GFTrace {
+//     return new GFTrace();
+//   }
 
-  before(fn: string | undefined):
-    | GFTrace
-    | {
-        after: () => void;
-      } {
-    if (GFTrace.enable && fn !== undefined) {
-      const t = new GFTrace(fn);
-      GFTrace.indent++;
-      GFTrace._inc(fn);
-      return t;
-    }
-    return { after: () => {} };
-  }
+//   before(fn: string | undefined):
+//     | GFTrace
+//     | {
+//         after: () => void;
+//       } {
+//     if (GFTrace.enable && fn !== undefined) {
+//       const t = new GFTrace(fn);
+//       GFTrace.indent++;
+//       GFTrace._inc(fn);
+//       return t;
+//     }
+//     return { after: () => {} };
+//   }
 
-  static _inc(fn: string) {
-    let f = GFTrace.fn.get(fn);
-    if (f === undefined) {
-      f = {
-        Calls: 0,
-        Function: fn,
-        TotalTimes: 0,
-      };
-    }
-    f.Calls++;
-    GFTrace.fn.set(fn, f);
-  }
+//   static _inc(fn: string) {
+//     let f = GFTrace.fn.get(fn);
+//     if (f === undefined) {
+//       f = {
+//         Calls: 0,
+//         Function: fn,
+//         TotalTimes: 0,
+//       };
+//     }
+//     f.Calls++;
+//     GFTrace.fn.set(fn, f);
+//   }
 
-  async after() {
-    if (GFTrace.enable && this.trace !== undefined) {
-      if (this.trace) {
-        this.trace.End = Date.now();
-        GFTrace.indent--;
-      }
-    }
-  }
+//   async after() {
+//     if (GFTrace.enable && this.trace !== undefined) {
+//       if (this.trace) {
+//         this.trace.End = Date.now();
+//         GFTrace.indent--;
+//       }
+//     }
+//   }
 
-  clear() {
-    if (GFTrace.enable) {
-      GFTrace.trc.clear();
-      GFTrace.fn.clear();
-    }
-  }
+//   clear() {
+//     if (GFTrace.enable) {
+//       GFTrace.trc.clear();
+//       GFTrace.fn.clear();
+//     }
+//   }
 
-  enable() {
-    GFTrace.enable = true;
-  }
+//   enable() {
+//     GFTrace.enable = true;
+//   }
 
-  disable() {
-    GFTrace.enable = false;
-  }
+//   disable() {
+//     GFTrace.enable = false;
+//   }
 
-  isEnabled() {
-    return GFTrace.enable;
-  }
+//   isEnabled() {
+//     return GFTrace.enable;
+//   }
 
-  async resume() {
-    if (GFTrace.enable) {
-      let tb: any[] = [];
-      let fn: any[] = [];
-      GFTrace.trc.forEach((trace) => {
-        trace.ExecTime = trace.End - trace.Before;
-        const f = GFTrace.fn.get(trace.Name);
-        f.TotalTimes += trace.ExecTime;
-        tb.push(trace);
-      });
-      // eslint-disable-line
-      console.log(tb, ['Indent', 'Name', 'ExecTime']);
-      GFTrace.fn.forEach((f) => {
-        fn.push(f);
-      });
-      console.log(fn, ['Function', 'Calls', 'TotalTimes']);
-      this.clear();
-    }
-  }
-}
+//   async resume() {
+//     if (GFTrace.enable) {
+//       let tb: any[] = [];
+//       let fn: any[] = [];
+//       GFTrace.trc.forEach((trace) => {
+//         trace.ExecTime = trace.End - trace.Before;
+//         const f = GFTrace.fn.get(trace.Name);
+//         f.TotalTimes += trace.ExecTime;
+//         tb.push(trace);
+//       });
+//       // eslint-disable-line
+//       console.log(tb, ['Indent', 'Name', 'ExecTime']);
+//       GFTrace.fn.forEach((f) => {
+//         fn.push(f);
+//       });
+//       console.log(fn, ['Function', 'Calls', 'TotalTimes']);
+//       this.clear();
+//     }
+//   }
+// }
 
 export class GFDrawioTools {
   static parseXml(xmlString: string): Document {
@@ -940,19 +971,20 @@ export class GFDrawioTools {
 }
 
 export class $GF {
-  static uid = `GFGlobal-${nanoid()}`;
-  static _globalvars: GFVariables = new GFVariables();
-  static CONSTANTS: GFCONSTANT = new GFCONSTANT();
-  static trace: GFTrace;
-  static plugin: GFPlugin;
+  uid = `GFGlobal-${nanoid()}`;
+  private _globalvars: GFVariables = GFVariables.create();
+  plugin!: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
   static DEBUG = true;
-  static notify: CallableFunction = (message: string, type: string) => {};
-  static clearNotify: CallableFunction = () => {};
-  static $refresh: CallableFunction = () => {};
-  static ctrl: FlowchartCtrl;
-  static events: GFEvents<GlobalSignals> = GFEvents.create(globalSignalsArray);
+  notify: CallableFunction = (message: string, type: string) => {};
+  clearNotify: CallableFunction = () => {};
+  $refresh: CallableFunction = () => {};
+  ctrl!: FlowchartCtrl;
+  events: GFEvents<GlobalSignals> = GFEvents.create(globalSignalsArray);
+  flowchartHandler!: FlowchartHandler;
+  rulesHandler!: RulesHandler;
+  metricHandler!: MetricHandler;
   static utils: {
     // ! deprecated : Use DrawioTools
     decode_deprecated: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
@@ -967,7 +999,7 @@ export class $GF {
     isencoded_deprecated: (data: string) => boolean;
     minify: (text: string) => string;
     prettify: (text: string) => string;
-    evalIt: (code: string) => string;
+    evalIt_deprecated: (code: string) => string;
     loadFile: (fname: string) => string;
     $loadFile: (fname: string) => string;
     $evalFile: (fname: string) => void;
@@ -975,14 +1007,24 @@ export class $GF {
     addScript_deprecated: (src: string) => void;
   } = require('./utils_raw');
 
-  static debug() {
-    $GF.events.emit('debug_asked');
+  private constructor() {
+    this.init();
   }
 
-  static init($scope: any, templateSrv: any, dashboard: any, ctrl: any): $GF {
-    if (!this.plugin) {
-      this.plugin = GFPlugin.init($scope, templateSrv, dashboard, ctrl);
-      if (this.DEBUG) {
+  debug() {
+    this.events.emit('debug_asked');
+  }
+
+  init() {
+    this.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    this.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
+  }
+
+  static create($scope: any, templateSrv: any, dashboard: any, ctrl: any): $GF {
+    const _gf = new $GF();
+    if (!_gf.plugin) {
+      _gf.plugin = GFPlugin.create($scope, templateSrv, ctrl);
+      if ($GF.DEBUG) {
         console.log('DEBUG Scope', $scope);
         console.log('DEBUG TemplateSrv', templateSrv);
         console.log('DEBUG Theme', dashboard.style);
@@ -990,21 +1032,26 @@ export class $GF {
       }
     }
 
-    if (!this.trace) {
-      this.trace = GFTrace.init();
-    }
-    $GF.ctrl = ctrl;
-    $GF.notify = ctrl.notify.bind(ctrl);
-    $GF.clearNotify = ctrl.clearNotify.bind(ctrl);
-    $GF.$refresh = $scope.$applyAsync.bind($scope);
-    $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind($GF))
-    $GF.events.connect('panel_closed', this, this._on_global_panel_closed.bind($GF))
-    return this;
+    // if (_gf.trace) {
+    //   _gf.trace = GFTrace.init();
+    // }
+    _gf.ctrl = ctrl;
+    _gf.notify = ctrl.notify.bind(ctrl);
+    _gf.clearNotify = ctrl.clearNotify.bind(ctrl);
+    _gf.$refresh = $scope.$applyAsync.bind($scope);
+
+    return _gf;
   }
 
-  static free() {
-    $GF.events.disconnect('debug_asked', this)
-    $GF.events.disconnect('panel_closed', this)
+  setHandlers(flowchartHandler: FlowchartHandler, rulesHandler: RulesHandler, metricHandler: MetricHandler) {
+    this.flowchartHandler = flowchartHandler;
+    this.rulesHandler = rulesHandler;
+    this.metricHandler = metricHandler;
+  }
+
+  free() {
+    this.events.disconnect('debug_asked', this);
+    this.events.disconnect('panel_closed', this);
   }
 
   static genUid(name?: string): string {
@@ -1015,21 +1062,6 @@ export class $GF {
     return id;
   }
 
-  static me(): $GF {
-    return this;
-  }
-
-  /**
-   * Recover Meassage div in module.html
-   *
-   * @static
-   * @param {HTMLElement} html
-   * @memberof $GF
-   */
-  // static setMessageDiv(html: HTMLDivElement) {
-  //   this.message = GFMessage.init(html);
-  // }
-
   /**
    * Replace/resolve variables
    *
@@ -1037,8 +1069,8 @@ export class $GF {
    * @param {string} text
    * @memberof $GF
    */
-  static resolveVars(text: string) {
-    return this.getGlobalVars().replaceText(text);
+  resolveVars(text: string) {
+    return this._getGlobalVars().replaceText(text);
   }
 
   /**
@@ -1048,8 +1080,8 @@ export class $GF {
    * @returns {string}
    * @memberof $GF
    */
-  static getTheme(): string {
-    let templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
+  getTheme(): string {
+    let templateSrv: any = GFPlugin.getTemplateSrv;
     let theme = templateSrv !== undefined ? templateSrv.style : 'dark';
     return theme;
   }
@@ -1060,7 +1092,7 @@ export class $GF {
    * @memberof $GF
    */
   // static async refresh() {
-  //   const scope = $GF.getVar($GF.CONSTANTS.VAR_OBJ_SCOPE);
+  //   const scope = $GF.getVar(GFCONSTANT.VAR_OBJ_SCOPE);
   //   await scope.$applyAsync();
   // }
 
@@ -1071,10 +1103,10 @@ export class $GF {
    * @returns {GFVariables}
    * @memberof GFGlobal
    */
-  static createLocalVars(): GFVariables {
-    let _v = new GFVariables();
-    return _v;
-  }
+  // static createLocalVars(): GFVariables {
+  //   let _v = GFVariables.create();
+  //   return _v;
+  // }
 
   /**
    * Return a dynamic GFTable
@@ -1094,15 +1126,12 @@ export class $GF {
    * @returns {GFVariables}
    * @memberof GFGlobal
    */
-  static getGlobalVars(): GFVariables {
-    if ($GF._globalvars === undefined) {
-      $GF._globalvars = new GFVariables();
-    }
-    return $GF._globalvars;
+  private _getGlobalVars(): GFVariables {
+    return this._globalvars;
   }
 
-  static getGrafanaVars(): string[] {
-    const templateSrv = $GF.getVar($GF.CONSTANTS.VAR_OBJ_TEMPLATESRV);
+  getGrafanaVars(): string[] {
+    const templateSrv = GFPlugin.getTemplateSrv();
     if (templateSrv !== undefined && templateSrv !== null) {
       return _.map(templateSrv.variables, (variable) => `\${${variable.name}}`);
     }
@@ -1112,13 +1141,12 @@ export class $GF {
   /**
    * Get global variable value
    *
-   * @static
    * @param {*} key
    * @returns {*}
    * @memberof GFGlobal
    */
-  static getVar(key: any): any {
-    return $GF.getGlobalVars().get(key);
+  getVar(key: any): any {
+    return this._getGlobalVars().get(key);
   }
 
   /**
@@ -1129,12 +1157,12 @@ export class $GF {
    * @param {*} value
    * @memberof GFGlobal
    */
-  static setVar(key: any, value: any) {
-    $GF.getGlobalVars().set(key, value);
+  setVar(key: any, value: any) {
+    this._getGlobalVars().set(key, value);
   }
 
-  static unsetVar(key: any) {
-    $GF.getGlobalVars().unset(key);
+  unsetVar(key: any) {
+    this._getGlobalVars().unset(key);
   }
 
   /**
@@ -1144,8 +1172,8 @@ export class $GF {
    * @returns {string[]}
    * @memberof GFGlobal
    */
-  static getFullAvailableVarNames(): string[] {
-    return GFVariables.getAvailableLocalVarNames().concat($GF.getGrafanaVars());
+  getFullAvailableVarNames(): string[] {
+    return GFVariables.getAvailableLocalVarNames().concat(this.getGrafanaVars());
   }
 
   /**
@@ -1218,37 +1246,6 @@ export class $GF {
     return result;
   }
 
-  // ! deppretated
-  static setUniqTimeOut(fc: CallableFunction, timer: number, id?: string): string {
-    let timeout: Map<string, number> = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
-    if (timeout === undefined) {
-      timeout = new Map();
-      $GF.setVar($GF.CONSTANTS.VAR_MAP_TIMEOUT, timeout);
-    }
-    if (id !== undefined) {
-      this.clearUniqTimeOut(id);
-    }
-    const thread = window.setTimeout(fc, timer);
-    id = id === undefined ? thread.toString() : id;
-    timeout.set(id, thread);
-    return id;
-  }
-
-  // ! deprecated
-  static clearUniqTimeOut(id: string) {
-    const timeout: Map<string, number> = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
-    if (timeout !== undefined) {
-      try {
-        const tm = timeout.get(id);
-        if (tm !== undefined) {
-          timeout.delete(id);
-          window.clearTimeout(tm);
-        }
-      } catch (error) {
-        GFLog.warn('Failed to clear timeout thread', id, error);
-      }
-    }
-  }
 
   static getCurrentDate(): string {
     const currentDateTime = new Date();
@@ -1347,20 +1344,20 @@ export class $GF {
    * @returns {number}
    * @memberof GFGlobal
    */
-  static setUniqInterval(fc: CallableFunction, timer: number, id?: string): string {
-    let interval: Map<string, number> = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
-    if (interval === undefined) {
-      interval = new Map();
-      $GF.setVar($GF.CONSTANTS.VAR_MAP_INTERVAL, interval);
-    }
-    if (id !== undefined) {
-      this.clearUniqInterval(id);
-    }
-    const thread = window.setInterval(fc, timer);
-    id = id === undefined ? thread.toString() : id;
-    interval.set(id, thread);
-    return id;
-  }
+  // static setUniqInterval(fc: CallableFunction, timer: number, id?: string): string {
+  //   let interval: Map<string, number> = $GF.getVar(GFCONSTANT.VAR_MAP_INTERVAL);
+  //   if (interval === undefined) {
+  //     interval = new Map();
+  //     $GF.setVar(GFCONSTANT.VAR_MAP_INTERVAL, interval);
+  //   }
+  //   if (id !== undefined) {
+  //     this.clearUniqInterval(id);
+  //   }
+  //   const thread = window.setInterval(fc, timer);
+  //   id = id === undefined ? thread.toString() : id;
+  //   interval.set(id, thread);
+  //   return id;
+  // }
 
   /**
    * Add/clear a  Intervall (window.clearInterval)
@@ -1369,18 +1366,18 @@ export class $GF {
    * @param {string} id
    * @memberof GFGlobal
    */
-  static clearUniqInterval(id: string) {
-    let interval: Map<string, number> = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
-    if (interval !== undefined) {
-      try {
-        const int = interval.get(id);
-        interval.delete(id);
-        window.clearInterval(int);
-      } catch (error) {
-        GFLog.warn('Failed to clear interval thread', id, error);
-      }
-    }
-  }
+  // static clearUniqInterval(id: string) {
+  //   let interval: Map<string, number> = $GF.getVar(GFCONSTANT.VAR_MAP_INTERVAL);
+  //   if (interval !== undefined) {
+  //     try {
+  //       const int = interval.get(id);
+  //       interval.delete(id);
+  //       window.clearInterval(int);
+  //     } catch (error) {
+  //       GFLog.warn('Failed to clear interval thread', id, error);
+  //     }
+  //   }
+  // }
 
   /**
    * Load a file into variables
@@ -1390,10 +1387,10 @@ export class $GF {
    * @param {string} fileName
    * @memberof GFGlobal
    */
-  static async loadLocalFile(varName: string, fileName: string) {
-    let v = $GF.getVar(varName);
+  async loadLocalFile(varName: string, fileName: string) {
+    let v = this.getVar(varName);
     if (v === undefined) {
-      const contextroot = $GF.getVar($GF.CONSTANTS.VAR_STG_CTXROOT);
+      const contextroot = GFPlugin.getRootPath();
       if (contextroot !== undefined) {
         const filePath = `${contextroot}/${fileName}`;
         if (!!window.fetch) {
@@ -1405,7 +1402,7 @@ export class $GF {
                   .text()
                   .then((text) => {
                     GFLog.info('loadLocalFile called succesfully', filePath);
-                    $GF.setVar(varName, text);
+                    this.setVar(varName, text);
                     return text;
                   })
                   .catch((error) => GFLog.error('Error when download text file', filePath, error));
@@ -1416,7 +1413,7 @@ export class $GF {
           // Faire quelque chose avec XMLHttpRequest?
           const txt = $GF.utils.loadFile(fileName);
           if (txt) {
-            $GF.setVar(varName, $GF.utils.loadFile(fileName));
+            this.setVar(varName, $GF.utils.loadFile(fileName));
             return txt;
           }
         }
@@ -1439,22 +1436,22 @@ export class $GF {
   //   this.GHTimeStamp = 0;
   // }
 
-  static hasGraphHover(): boolean {
-    return this.graphHover && this.isGraphHoverEnabled();
-  }
+  // hasGraphHover(): boolean {
+  //   return this.graphHover && this.isGraphHoverEnabled();
+  // }
 
-  static isGraphHoverEnabled(): boolean {
-    const dashboard = this.getVar($GF.CONSTANTS.VAR_OBJ_DASHBOARD);
-    return dashboard !== undefined && dashboard.sharedTooltipModeEnabled();
-  }
+  // isGraphHoverEnabled(): boolean {
+  //   const dashboard = this.getVar(GFCONSTANT.VAR_OBJ_DASHBOARD);
+  //   return dashboard !== undefined && dashboard.sharedTooltipModeEnabled();
+  // }
 
-  static getGraphHover(): number | undefined {
-    if (this.hasGraphHover()) {
-      // return this.getVar($GF.CONSTANTS.VAR_NUM_GHTIMESTAMP);
-      return this.GHTimeStamp;
-    }
-    return undefined;
-  }
+  // static getGraphHover(): number | undefined {
+  //   if (this.hasGraphHover()) {
+  //     // return this.getVar(GFCONSTANT.VAR_NUM_GHTIMESTAMP);
+  //     return this.GHTimeStamp;
+  //   }
+  //   return undefined;
+  // }
 
   /**
    * Return true if mouse is in panel
@@ -1464,7 +1461,7 @@ export class $GF {
    * @memberof $GF
    */
   // static isMouseInPanel(): boolean {
-  //   const ctrl = this.getVar($GF.CONSTANTS.VAR_OBJ_CTRL);
+  //   const ctrl = this.getVar(GFCONSTANT.VAR_OBJ_CTRL);
   //   if (ctrl) {
   //     return ctrl.isMouseIn();
   //   }
@@ -1480,9 +1477,9 @@ export class $GF {
    * @returns {string}
    * @memberof $GF
    */
-  static popover(text: string, tagBook: string, tagImage?: string): string {
-    const url = $GF.plugin.getRepo();
-    const images = `${this.plugin.getRepo()}images/`;
+  popover(text: string, tagBook: string, tagImage?: string): string {
+    const url = GFPlugin.getRepo();
+    const images = `${url}images/`;
     const textEncoded = String(text)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -1505,28 +1502,28 @@ export class $GF {
     </div>`;
   }
 
-  static destroy() {
-    let interval: Set<any> = $GF.getVar($GF.CONSTANTS.VAR_MAP_INTERVAL);
-    if (interval !== undefined) {
-      interval.forEach((x) => $GF.clearUniqInterval(x));
-      interval.clear();
-    }
-    let timeout: Set<any> = $GF.getVar($GF.CONSTANTS.VAR_MAP_TIMEOUT);
-    if (timeout !== undefined) {
-      timeout.forEach((x) => $GF.clearUniqTimeOut(x));
-      timeout.clear();
-    }
-  }
+  // static destroy() {
+  //   let interval: Set<any> = this.getVar(GFCONSTANT.VAR_MAP_INTERVAL);
+  //   if (interval !== undefined) {
+  //     interval.forEach((x) => $GF.clearUniqInterval(x));
+  //     interval.clear();
+  //   }
+  //   let timeout: Set<any> = $GF.getVar(GFCONSTANT.VAR_MAP_TIMEOUT);
+  //   if (timeout !== undefined) {
+  //     timeout.forEach((x) => $GF.clearUniqTimeOut(x));
+  //     timeout.clear();
+  //   }
+  // }
 
   //###########################################################################
   //### EVENTS
   //###########################################################################
-  private static _on_global_debug_asked() {
-    console.log("🧰", $GF.constructor.name, $GF.uid);
+  private _on_global_debug_asked() {
+    console.log('🧰', $GF.constructor.name, this);
   }
 
-  private static _on_global_panel_closed() {
-    console.log("🧰", $GF.constructor.name, $GF.uid);
+  private _on_global_panel_closed() {
+    console.log('📩', this.constructor.name, "_on_global_panel_closed");
     this.free();
   }
 }
@@ -1778,12 +1775,14 @@ export class GFTimer {
       GFTimer._timers.delete(timer.uid);
     } else {
       // Remove all
-      const timers = Array.from(GFTimer._timers.values())
-      await Promise.all(timers.map(async (gftimer) => {
-        gftimer.cancel();
-      })).finally( () =>{
+      const timers = Array.from(GFTimer._timers.values());
+      await Promise.all(
+        timers.map(async (gftimer) => {
+          gftimer.cancel();
+        })
+      ).finally(() => {
         GFTimer._timers.clear();
-      })
+      });
     }
   }
 
@@ -1909,9 +1908,11 @@ export class GFTimer {
    */
   start() {
     // const length = this._steps.length;
-    return Promise.all(this._steps.map(async (step: GFTimerStep) => {
-      step.tmId = window.setTimeout(this._runnable.bind(this, step), step.ms);
-    }));
+    return Promise.all(
+      this._steps.map(async (step: GFTimerStep) => {
+        step.tmId = window.setTimeout(this._runnable.bind(this, step), step.ms);
+      })
+    );
   }
 
   private _runnable(step: GFTimerStep) {

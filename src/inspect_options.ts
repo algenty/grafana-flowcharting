@@ -1,12 +1,13 @@
 import { FlowchartHandler } from './flowchart_handler';
 import { State } from 'state_class';
-import { $GF, GFTable } from 'globals_class';
+import { $GF, GFPlugin, GFTable } from 'globals_class';
 import { StateHandler } from 'statesHandler';
 import { orderBy as _orderBy } from 'lodash';
 import { XGraph } from 'graph_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
 export class InspectOptionsCtrl {
+  $gf: $GF;
   enable = false; // enable inspector or not
   ctrl: FlowchartCtrl;
   flowchartHandler: FlowchartHandler | undefined;
@@ -19,7 +20,7 @@ export class InspectOptionsCtrl {
   bodyTable: HTMLDivElement | undefined;
   indexTable = 0;
   pressed = false;
-  traceEnable: boolean = $GF.trace.isEnabled();
+  // traceEnable: boolean = $GF.trace.isEnabled();
   startX = 0;
   startWidth: any = 0;
   column: any;
@@ -114,13 +115,14 @@ export class InspectOptionsCtrl {
       ],
     };
     $scope.editor = this;
-    $scope.$GF = $GF.me();
     const $div = $element.find('#templateInspect');
     this.parentDiv = $div[0];
     const $statesTable = $div.find('#StatesTable');
     const statesTable = $statesTable[0];
     this.statesTable = new GFTable(this.statesTableData, statesTable);
     this.ctrl = $scope.ctrl;
+    this.$gf = this.ctrl.$gf;
+    $scope.$GF = this.$gf;
     // this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.stateHandler = this.flowchartHandler?.getFlowchart().getStateHandler();
@@ -221,13 +223,13 @@ export class InspectOptionsCtrl {
     }
   }
 
-  tracePerf() {
-    if (this.traceEnable) {
-      $GF.trace.enable();
-    } else {
-      $GF.trace.disable();
-    }
-  }
+  // tracePerf() {
+  //   if (this.traceEnable) {
+  //     $GF.trace.enable();
+  //   } else {
+  //     $GF.trace.disable();
+  //   }
+  // }
 
   anonymize() {
     const fc = this.flowchartHandler?.getFlowchart();
@@ -248,7 +250,7 @@ export function inspectOptionsTab($q: any, uiSegmentSrv: any) {
   return {
     restrict: 'E',
     scope: true,
-    templateUrl: `${$GF.plugin.getPartialPath()}inspect/inspectTab.html`,
+    templateUrl: `${GFPlugin.getPartialPath()}inspect/inspectTab.html`,
     controller: InspectOptionsCtrl,
   };
 }
