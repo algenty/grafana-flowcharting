@@ -645,7 +645,7 @@ export class GFPlugin {
    * @memberof GFPlugin
    */
    static getDrawioPath(): string {
-    return `${GFPlugin.getLibsPath()}drawio/`;
+    return `${GFPlugin.getLibsPath()}/drawio/`;
   }
 
   /**
@@ -655,7 +655,7 @@ export class GFPlugin {
    * @memberof GFPlugin
    */
    static getStaticPath(): string {
-    return `${GFPlugin.getRootPath()}static/`;
+    return `${GFPlugin.getRootPath()}/static/`;
   }
 
   /**
