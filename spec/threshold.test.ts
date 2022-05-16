@@ -1,6 +1,6 @@
 import { DateTH, NumberTH, StringTH } from '../src/threshold_class';
 import { Rule } from '../src/rule_class';
-import { $GF } from '../src/globals_class';
+import { $GF, GFCONSTANT } from '../src/globals_class';
 import { default as dayjs } from 'dayjs';
 
 describe("Test thresholds", () =>{
@@ -12,9 +12,9 @@ describe("Test thresholds", () =>{
         expect(data).toMatchSnapshot();
       });
       test('Matched value for 100', () => {
-        let tn1 = new NumberTH('Color1', 50, $GF.CONSTANTS.COMP_GE, NumberTH.getDefaultData());
-        let tn2 = new NumberTH('Color2', 80, $GF.CONSTANTS.COMP_GT, NumberTH.getDefaultData());
-        let tn3 = new NumberTH('Color3', 100, $GF.CONSTANTS.COMP_GE, NumberTH.getDefaultData());
+        let tn1 = new NumberTH('Color1', 50, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
+        let tn2 = new NumberTH('Color2', 80, GFCONSTANT.COMP_GT, NumberTH.getDefaultData());
+        let tn3 = new NumberTH('Color3', 100, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
         let value = 100;
         expect(tn1.match(value)).toBeTruthy();
         expect(tn2.match(value)).toBeTruthy();
@@ -22,18 +22,18 @@ describe("Test thresholds", () =>{
       });
 
       test('Matched value for 80', () => {
-        let tn1 = new NumberTH('Color1', 50, $GF.CONSTANTS.COMP_GE, NumberTH.getDefaultData());
-        let tn2 = new NumberTH('Color2', 80, $GF.CONSTANTS.COMP_GT, NumberTH.getDefaultData());
-        let tn3 = new NumberTH('Color3', 100, $GF.CONSTANTS.COMP_GE, NumberTH.getDefaultData());
+        let tn1 = new NumberTH('Color1', 50, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
+        let tn2 = new NumberTH('Color2', 80, GFCONSTANT.COMP_GT, NumberTH.getDefaultData());
+        let tn3 = new NumberTH('Color3', 100, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
         let value = 80;
         expect(tn1.match(value)).toBeTruthy();
         expect(tn2.match(value)).toBeFalsy();
         expect(tn3.match(value)).toBeFalsy();
       });
       test('Matched value for 20', () => {
-        let tn1 = new NumberTH('Color1', 50, $GF.CONSTANTS.COMP_GE, NumberTH.getDefaultData());
-        let tn2 = new NumberTH('Color2', 80, $GF.CONSTANTS.COMP_GT, NumberTH.getDefaultData());
-        let tn3 = new NumberTH('Color3', 100, $GF.CONSTANTS.COMP_GE, NumberTH.getDefaultData());
+        let tn1 = new NumberTH('Color1', 50, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
+        let tn2 = new NumberTH('Color2', 80, GFCONSTANT.COMP_GT, NumberTH.getDefaultData());
+        let tn3 = new NumberTH('Color3', 100, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
         let value = 20;
         expect(tn1.match(value)).toBeFalsy();
         expect(tn2.match(value)).toBeFalsy();
@@ -48,16 +48,16 @@ describe("Test thresholds", () =>{
         expect(data).toMatchSnapshot();
       });
       test('Matched value for every things', () => {
-        let tn1 = new StringTH('Color1', '/.*/', $GF.CONSTANTS.COMP_EQ, StringTH.getDefaultData());
-        let tn2 = new StringTH('Color2', '/.*/', $GF.CONSTANTS.COMP_NE, StringTH.getDefaultData());
+        let tn1 = new StringTH('Color1', '/.*/', GFCONSTANT.COMP_EQ, StringTH.getDefaultData());
+        let tn2 = new StringTH('Color2', '/.*/', GFCONSTANT.COMP_NE, StringTH.getDefaultData());
         let value = 'toto';
         expect(tn1.match(value)).toBeTruthy();
         expect(tn2.match(value)).toBeFalsy();
       });
 
       test('Matched value for specific string', () => {
-        let tn1 = new StringTH('Color1', 'toto', $GF.CONSTANTS.COMP_EQ, StringTH.getDefaultData());
-        let tn2 = new StringTH('Color2', 'tata', $GF.CONSTANTS.COMP_NE, StringTH.getDefaultData());
+        let tn1 = new StringTH('Color1', 'toto', GFCONSTANT.COMP_EQ, StringTH.getDefaultData());
+        let tn2 = new StringTH('Color2', 'tata', GFCONSTANT.COMP_NE, StringTH.getDefaultData());
         let value = 'toto';
         expect(tn1.match(value)).toBeTruthy();
         expect(tn2.match(value)).toBeTruthy();
@@ -77,7 +77,7 @@ describe("Test thresholds", () =>{
         expect(data).toMatchSnapshot();
       });
       test('Should be valid TH', () => {
-        let td1 = new DateTH('Color1', '5d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
+        let td1 = new DateTH('Color1', '5d', GFCONSTANT.COMP_GE, StringTH.getDefaultData());
         expect(td1.isValidValue()).toBeTruthy();
         td1.setValue('-8w');
         expect(td1.isValidValue()).toBeTruthy();
@@ -91,9 +91,9 @@ describe("Test thresholds", () =>{
         //1606586733
         // 1day = 86400 or 86400000
         let now = new Date().getTime();
-        let td1 = new DateTH('Color1', '-2d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
-        let td2 = new DateTH('Color2', '-2d', $GF.CONSTANTS.COMP_GT, StringTH.getDefaultData());
-        let td3 = new DateTH('Color3', '-6d', $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
+        let td1 = new DateTH('Color1', '-2d', GFCONSTANT.COMP_GE, StringTH.getDefaultData());
+        let td2 = new DateTH('Color2', '-2d', GFCONSTANT.COMP_GT, StringTH.getDefaultData());
+        let td3 = new DateTH('Color3', '-6d', GFCONSTANT.COMP_GE, StringTH.getDefaultData());
         expect(td1.match(now)).toBeTruthy()
         expect(td2.match(now)).toBeTruthy()
         expect(td3.match(now)).toBeTruthy();
@@ -115,9 +115,9 @@ describe("Test thresholds", () =>{
         let now = new Date().getTime();
         let date_2 = dayjs(now).subtract(2,'d').format('YYYY-MM-DD');
         let date_6 = dayjs(now).subtract(6,'d').format('YYYY-MM-DD');
-        let td1 = new DateTH('Color1', date_2, $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
-        let td2 = new DateTH('Color2', date_2, $GF.CONSTANTS.COMP_GT, StringTH.getDefaultData());
-        let td3 = new DateTH('Color3', date_6, $GF.CONSTANTS.COMP_GE, StringTH.getDefaultData());
+        let td1 = new DateTH('Color1', date_2, GFCONSTANT.COMP_GE, StringTH.getDefaultData());
+        let td2 = new DateTH('Color2', date_2, GFCONSTANT.COMP_GT, StringTH.getDefaultData());
+        let td3 = new DateTH('Color3', date_6, GFCONSTANT.COMP_GE, StringTH.getDefaultData());
         expect(td1.match(now)).toBeTruthy()
         expect(td2.match(now)).toBeTruthy()
         expect(td3.match(now)).toBeTruthy();

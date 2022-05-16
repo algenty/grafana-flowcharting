@@ -31,14 +31,7 @@ Object {
       },
     },
     "shapes": Object {
-      "dataList": Array [
-        Object {
-          "colorOn": "a",
-          "hidden": false,
-          "pattern": "/.*Toto.*/",
-          "style": "fillColor",
-        },
-      ],
+      "dataList": Array [],
       "options": Object {
         "enableRegEx": true,
         "identByProp": "id",
@@ -56,20 +49,7 @@ Object {
   },
   "metricType": "serie",
   "newRule": true,
-  "numberTHData": Array [
-    Object {
-      "color": "COLOR1",
-      "comparator": "ge",
-      "level": 0,
-      "value": 50,
-    },
-    Object {
-      "color": "COLOR2",
-      "comparator": "ge",
-      "level": 0,
-      "value": 80,
-    },
-  ],
+  "numberTHData": Array [],
   "order": 1,
   "overlayIcon": false,
   "pattern": "/.*/",

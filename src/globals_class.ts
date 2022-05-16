@@ -343,7 +343,7 @@ export class GFVariables {
   }
 
   static create(): GFVariables {
-    const g =  new GFVariables()
+    const g = new GFVariables();
     return g;
   }
 
@@ -561,8 +561,7 @@ export class GFPlugin {
   private static templateSrv: any;
   static initialized = false;
 
-  private constructor() {
-  }
+  private constructor() {}
 
   /**
    * init GFPlugin
@@ -573,27 +572,18 @@ export class GFPlugin {
    * @returns {GFPlugin}
    * @memberof GFPlugin
    */
-  static create($scope: any, templateSrv: any, $gf: $GF): GFPlugin {
-    let plug = new GFPlugin();
+  static init($scope: any, templateSrv: any, $gf: $GF) {
     GFPlugin.contextRoot = GFPlugin.defaultContextRoot;
     GFPlugin.templateSrv = templateSrv;
     if ($scope === undefined) {
       GFPlugin.contextRoot = __dirname;
-      // if (GFPlugin.contextRoot.length > 0) {
-         // $gf.setVar(GFCONSTANT.VAR_STG_CTXROOT, this.contextRoot);
-      // }
     } else {
       this.contextRoot = $scope.$root.appSubUrl + this.defaultContextRoot;
     }
-    // $gf.setVar(GFCONSTANT.VAR_OBJ_TEMPLATESRV, templateSrv);
-    // $gf.setVar(GFCONSTANT.VAR_STG_CTXROOT, this.contextRoot);
-    // $gf.setVar(GFCONSTANT.VAR_OBJ_DASHBOARD, dashboard);
-
-    return plug;
   }
 
   static getTemplateSrv() {
-    return GFPlugin.templateSrv
+    return GFPlugin.templateSrv;
   }
 
   static getRepo(): string {
@@ -644,7 +634,7 @@ export class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-   static getDrawioPath(): string {
+  static getDrawioPath(): string {
     return `${GFPlugin.getLibsPath()}/drawio/`;
   }
 
@@ -654,7 +644,7 @@ export class GFPlugin {
    * @returns {string}
    * @memberof GFPlugin
    */
-   static getStaticPath(): string {
+  static getStaticPath(): string {
     return `${GFPlugin.getRootPath()}/static/`;
   }
 
@@ -973,7 +963,6 @@ export class GFDrawioTools {
 export class $GF {
   uid = `GFGlobal-${nanoid()}`;
   private _globalvars: GFVariables = GFVariables.create();
-  plugin!: GFPlugin;
   static graphHover = false;
   static GHTimeStamp = 0;
   static DEBUG = true;
@@ -1022,19 +1011,14 @@ export class $GF {
 
   static create($scope: any, templateSrv: any, dashboard: any, ctrl: any): $GF {
     const _gf = new $GF();
-    if (!_gf.plugin) {
-      _gf.plugin = GFPlugin.create($scope, templateSrv, ctrl);
-      if ($GF.DEBUG) {
-        console.log('DEBUG Scope', $scope);
-        console.log('DEBUG TemplateSrv', templateSrv);
-        console.log('DEBUG Theme', dashboard.style);
-        console.log('DEBUG dashboard', dashboard);
-      }
+    GFPlugin.init($scope, templateSrv, ctrl);
+    if ($GF.DEBUG) {
+      console.log('DEBUG Scope', $scope);
+      console.log('DEBUG TemplateSrv', templateSrv);
+      console.log('DEBUG Theme', dashboard.style);
+      console.log('DEBUG dashboard', dashboard);
     }
 
-    // if (_gf.trace) {
-    //   _gf.trace = GFTrace.init();
-    // }
     _gf.ctrl = ctrl;
     _gf.notify = ctrl.notify.bind(ctrl);
     _gf.clearNotify = ctrl.clearNotify.bind(ctrl);
@@ -1245,7 +1229,6 @@ export class $GF {
     result[index] = end;
     return result;
   }
-
 
   static getCurrentDate(): string {
     const currentDateTime = new Date();
@@ -1523,7 +1506,7 @@ export class $GF {
   }
 
   private _on_global_panel_closed() {
-    console.log('📩', this.constructor.name, "_on_global_panel_closed");
+    console.log('📩', this.constructor.name, '_on_global_panel_closed');
     this.free();
   }
 }
