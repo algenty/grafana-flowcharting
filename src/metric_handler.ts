@@ -8,9 +8,9 @@ type MetricHandlerSignals = typeof metricHandlerSignalsArray[number];
 export class MetricHandler {
   dataList: any[] = [];
   uid: string;
-  tables: TableMetric[] = [];
-  series: SerieMetric[] = [];
-  metrics: ObjectMetric[] = [];
+  tables: Map<string, TableMetric> = new Map();
+  series: Map<string, SerieMetric> = new Map();
+  metrics: Map<string, ObjectMetric> = new Map();
   static events: GFEvents<MetricHandlerSignals> = GFEvents.create(metricHandlerSignalsArray);
 
   constructor() {
@@ -83,8 +83,18 @@ export class MetricHandler {
     return metric;
   }
 
-  removeMetric(metric: Metric) {
-    if()
+  async removeMetric(metric: Metric) {
+    const uid = metric.uid;
+    const type = metric.type;
+    metric.free();
+    if(type === 'serie') {
+      this.series.delete(uid);
+    }
+    if(type === 'table') {
+      this.tables.delete(uid);
+    }
+    this.metrics.delete(uid);
+    await MetricHandler.events.emit('metric_deleted', metric);
   }
 
   /**
@@ -98,8 +108,8 @@ export class MetricHandler {
     $GF.trace.before(this.constructor.name + '.addTable()');
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addTable()');
     const table = new TableMetric(data);
-    this.tables.push(table);
-    this.metrics.push(table);
+    this.tables.set(table.uid, table);
+    this.metrics.set(table.uid, table);
     MetricHandler.events.emit('metric_created', table);
     trc.after();
     return table;
@@ -116,8 +126,8 @@ export class MetricHandler {
     $GF.trace.before(this.constructor.name + '.addSerie()');
     const trc = $GF.trace.before(this.constructor.name + '.' + 'addSerie()');
     const serie = new SerieMetric(data);
-    this.series.push(serie);
-    this.metrics.push(serie);
+    this.series.set(serie.uid, serie);
+    this.metrics.set(serie.uid, serie);
     MetricHandler.events.emit('metric_created', serie);
     trc.after();
     return serie;
@@ -131,13 +141,7 @@ export class MetricHandler {
    */
   getNames(type?: gf.TMetricTypeKeys): string[] {
     let names: string[] = [];
-    if (type === 'serie') {
-      names = this.series.map((m) => m.getName());
-    } else if (type === 'table') {
-      names = this.tables.map((m) => m.getName());
-    } else {
-      names = this.metrics.map((m) => m.getName());
-    }
+    names = this.getMetrics(type).map((m) => m.getName());
     return names;
   }
 
@@ -150,12 +154,12 @@ export class MetricHandler {
    */
   getMetrics(type?: gf.TMetricTypeKeys): ObjectMetric[] {
     if (type === 'serie') {
-      return this.series;
+      return Array.from(this.series.values());
     }
     if (type === 'table') {
-      return this.tables;
+      return Array.from(this.tables.values());
     }
-    return this.metrics;
+    return Array.from(this.metrics.values());
   }
 
   /**
@@ -167,10 +171,10 @@ export class MetricHandler {
    */
   isTypeOf(type?: gf.TMetricTypeKeys): boolean {
     if (type === 'serie') {
-      return this.series.length > 0;
+      return this.series.size > 0;
     }
     if (type === 'table') {
-      return this.tables.length > 0;
+      return this.series.size > 0;
     }
     return false;
   }
@@ -185,16 +189,7 @@ export class MetricHandler {
    */
   findMetrics(name: string, type?: gf.TMetricTypeKeys): ObjectMetric[] {
     let metrics: ObjectMetric[] = [];
-    if (type) {
-      if (type === 'table') {
-        metrics = this.tables.filter((m) => $GF.utils.matchString(m.getName(), name, true));
-      }
-      if (type === 'serie') {
-        metrics = this.series.filter((m) => $GF.utils.matchString(m.getName(), name, true));
-      }
-    } else {
-      metrics = this.metrics.filter((m) => $GF.utils.matchString(m.getName(), name, true));
-    }
+    metrics = this.getMetrics(type).filter((m) => $GF.utils.matchString(m.getName(), name, true));
     return metrics;
   }
 
@@ -229,13 +224,9 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   clear() {
-    this.tables = [];
-    this.series = [];
-    // TODO : Not work
-    this.metrics.map((m) => { m.free() });
-    this.metrics = [];
-
-    return this;
+    this.metrics.forEach( metric => {
+      this.removeMetric(metric)
+    });
   }
 
   //##############################################################
