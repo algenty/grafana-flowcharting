@@ -65,19 +65,22 @@ export class StateHandler {
     return this;
   }
 
+  free() {
+    this.states.forEach(async (s) => {
+      s.free();
+      await this.events.emit('state_deleted', s);
+    });
+    this.clear();
+    this.events.clear();
+    $GF.events.disconnect('debug_asked', this);
+  }
+
   clear(): this {
-    //TODO : Why commented
-    // if (this.states) {
-    //   this.states.forEach((st) => {
-    //     st.clear();
-    //   });
-    //   this.states.clear();
-    // }
     this.states.forEach((s) => {
       s.free();
       this.events.emit('state_deleted', s);
     });
-    $GF.events.disconnect('debug_asked', this);
+    this.states.clear();
     return this;
   }
 

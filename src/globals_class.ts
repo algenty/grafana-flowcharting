@@ -940,7 +940,7 @@ export class GFDrawioTools {
 }
 
 export class $GF {
-  static uid = 'GFGLOBAL';
+  static uid = `GFGlobal-${nanoid()}`;
   static _globalvars: GFVariables = new GFVariables();
   static CONSTANTS: GFCONSTANT = new GFCONSTANT();
   static trace: GFTrace;
@@ -998,7 +998,13 @@ export class $GF {
     $GF.clearNotify = ctrl.clearNotify.bind(ctrl);
     $GF.$refresh = $scope.$applyAsync.bind($scope);
     $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind($GF))
+    $GF.events.connect('panel_closed', this, this._on_global_panel_closed.bind($GF))
     return this;
+  }
+
+  static free() {
+    $GF.events.disconnect('debug_asked', this)
+    $GF.events.disconnect('panel_closed', this)
   }
 
   static genUid(name?: string): string {
@@ -1516,7 +1522,12 @@ export class $GF {
   //### EVENTS
   //###########################################################################
   private static _on_global_debug_asked() {
-    console.log("🧰", this.constructor.name, this);
+    console.log("🧰", $GF.constructor.name, $GF.uid);
+  }
+
+  private static _on_global_panel_closed() {
+    console.log("🧰", $GF.constructor.name, $GF.uid);
+    this.free();
   }
 }
 

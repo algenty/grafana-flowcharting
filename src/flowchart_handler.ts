@@ -85,11 +85,13 @@ export class FlowchartHandler {
   free() {
     this.flowcharts.forEach((f) => f.free());
     $GF.events.disconnect('debug_asked', this);
+    $GF.events.disconnect('panel_closed', this);
     this.clear();
   }
 
   init() {
     $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    $GF.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
   }
 
   //############################################################################
@@ -593,6 +595,11 @@ export class FlowchartHandler {
   private _on_global_debug_asked() {
     console.log('📩', this.constructor.name, "_on_global_debug_asked");
     console.log("🧰", this.constructor.name, this);
+  }
+
+  private _on_global_panel_closed() {
+    console.log('📩', this.constructor.name, "_on_global_panel_close");
+    this.free();
   }
 
 }

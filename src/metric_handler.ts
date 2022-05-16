@@ -41,6 +41,7 @@ export class MetricHandler {
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     $GF.events.connect('data_updated', this, this._on_global_data_updated.bind(this));
     $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    $GF.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
     return this;
   }
 
@@ -239,6 +240,11 @@ export class MetricHandler {
 
   private _on_global_debug_asked() {
     console.log("🧰", this.constructor.name, this);
+  }
+  
+  private _on_global_panel_closed() {
+    console.log('📩', this.constructor.name, "_on_global_panel_close");
+    this.free();
   }
 
 

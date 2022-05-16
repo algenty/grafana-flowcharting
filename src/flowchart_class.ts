@@ -73,7 +73,7 @@ export class Flowchart {
     const funcName = 'destroy';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.xgraph?.free();
-    this.stateHandler?.clear();
+    this.stateHandler?.free();
     await this.events.emit('flowchart_freed', this);
     this.events.clear();
     this.clear();

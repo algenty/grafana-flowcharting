@@ -53,6 +53,7 @@ export class RulesHandler {
   init(): this {
     GFLog.debug(this.constructor.name + '.init()');
     $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    $GF.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
     return this;
   }
 
@@ -73,6 +74,7 @@ export class RulesHandler {
   free(): this {
     GFLog.debug(this.constructor.name + '.free()');
     $GF.events.disconnect('debug_asked', this);
+    $GF.events.disconnect('panel_closed', this);
     this.rules.forEach((r) => r.free());
     this.clear();
     RulesHandler.events.clear();
@@ -333,6 +335,10 @@ export class RulesHandler {
   private _on_global_debug_asked() {
     console.log('📩', this.constructor.name, "_on_rule_rule_changed");
     console.log("🧰", this.constructor.name, this);
+  }
+
+  private _on_global_panel_closed() {
+    this.free();
   }
 
 
