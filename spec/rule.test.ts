@@ -4,6 +4,7 @@
 
 import { $GF, GFCONSTANT } from '../src/globals_class';
 import { Rule } from '../src/rule_class';
+
 const $scope = require('$scope');
 const templateSrv = {};
 const dashboard = {};
@@ -11,6 +12,7 @@ const ctrl = {
   notify: jest.fn(),
   clearNotify: jest.fn(),
 };
+
 const $gf = $GF.create($scope, templateSrv, dashboard, ctrl);
 
 describe('Rule', () => {

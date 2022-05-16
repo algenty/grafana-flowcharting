@@ -3,6 +3,15 @@ import { Rule } from '../src/rule_class';
 import { $GF, GFCONSTANT } from '../src/globals_class';
 import { default as dayjs } from 'dayjs';
 
+const $scope = require('$scope');
+const templateSrv = {};
+const dashboard = {};
+const ctrl = {
+  notify: jest.fn(),
+  clearNotify: jest.fn(),
+};
+const $gf = $GF.create($scope, templateSrv, dashboard, ctrl);
+
 describe("Test thresholds", () =>{
   describe('Threshold init', () => {
     describe('on NumberTH', () => {
@@ -139,7 +148,7 @@ describe("Test thresholds", () =>{
 
   describe('Thresholds Handler', () => {
     describe('on NumberTHs', () => {
-      const rule = new Rule('/.*/', Rule.getDefaultData());
+      const rule = new Rule($gf,'/.*/', Rule.getDefaultData());
       let th1 = rule.addThreshold(undefined, '#111111', 10);
       let th2 = rule.addThreshold(undefined, '#222222', 20);
       let th3 = rule.addThreshold(undefined, '#333333', 30);
@@ -201,7 +210,7 @@ describe("Test thresholds", () =>{
       });
     });
     describe('on StringTHs', () => {
-      const rule = new Rule('/.*/', Rule.getDefaultData());
+      const rule = new Rule($gf, '/.*/', Rule.getDefaultData());
       rule.data.type = 'string';
       let th1 = rule.addThreshold(undefined, '#111111', 'Error');
       let th2 = rule.addThreshold(undefined, '#222222', '/.*warning.*/');
