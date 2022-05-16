@@ -232,7 +232,6 @@ export class Rule {
     /******* BEGIN THRESHOLD NUMBER **********/
     this.data.numberTHData = [];
     this.numberTH = [];
-    // if (this.data.type === 'number') {
     if (!!obj.thresholds && !!obj.colors) {
       let i = 0;
       let j = 0;
@@ -249,8 +248,6 @@ export class Rule {
       });
     } else {
       if (!!obj.numberTHData) {
-        // this.data.numberTHData = [];
-        // this.numberTH = [];
         let th: gf.TTHNumberData[] = obj.numberTHData;
         if (th !== undefined && th != null && th.length > 0) {
           th.forEach((thdata: gf.TTHNumberData) => {

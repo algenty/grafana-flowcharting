@@ -69,6 +69,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     _defaults(this.panel, this.panelDefaults);
     this.panel.graphId = `flowchart_${this.panel.id}`;
     this.containerDivId = `container_${this.panel.graphId}`;
+    // console.log('this.panel', this.panel);
+    // debugger;
 
     // If save in edited mode
     if (!this.isEditingMode() && this.isEditedMode()) {
@@ -89,7 +91,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.events.on('panel-teardown', this._on_grafana_TearDown.bind(this));
     grafana.appEvents.on('graph-hover', this._on_grafana_graph_hover.bind(this), this.$scope);
     grafana.appEvents.on('graph-hover-clear', this._on_grafana_graph_hover_clear.bind(this), this.$scope);
-    this.dashboard.events.on('template-variable-value-updated', this._on_grafana_template_variable_value_updated.bind(this), $scope);
+    this.dashboard.events.on(
+      'template-variable-value-updated',
+      this._on_grafana_template_variable_value_updated.bind(this),
+      $scope
+    );
   }
 
   //############################################################################
@@ -100,9 +106,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.init_handlers();
   }
 
-  change() {
-
-  }
+  change() {}
 
   //############################################################################
   //### LOGIC
@@ -124,26 +128,28 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
       this.flowchartHandler = new FlowchartHandler(newFlowchartsData, this.panel.flowchartsData);
-      // this.flowchartHandler._covert(this.panel.flowchartsData);
       this.panel.flowchartsData = newFlowchartsData;
     } else {
       // TODO : when exit editor
       // this.flowchartHandler.free();
       // this.flowchartHandler._covert(this.panel.flowchartsData, );
     }
+
+    // TODO : needed ?
     if (this.panel.newFlag && this.flowchartHandler && this.flowchartHandler.countFlowcharts() === 0) {
       this.flowchartHandler.addFlowchart('Main').init();
     }
 
     // RULES
-    if (this.rulesHandler) {
-      this.rulesHandler.clear();
-    } else {
+    if (!this.rulesHandler) {
       const newRulesData = RulesHandler.getDefaultData();
-      this.rulesHandler = new RulesHandler(newRulesData,this.panel.rulesData);
-      // this.rulesHandler._convert(this.panel.rulesData);
+      this.rulesHandler = new RulesHandler(newRulesData, this.panel.rulesData);
       this.panel.rulesData = newRulesData;
+    } else {
+      // TODO : when exit editor
     }
+
+    // TODO : needed ?
     if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
       this.rulesHandler.addRule('.*');
     }
@@ -153,7 +159,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     $GF.events.disconnect('debug_asked', this);
     $GF.events.disconnect('panel_closed', this);
   }
-
 
   /**
    * Return data with default value
@@ -172,16 +177,15 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     };
   }
 
-
   private _setGraphHover() {
     this.metricHandler?.refreshMetrics(this.graphOverTimeStamp);
-  };
+  }
 
   //###########################################################################
   //### EVENTS
   //###########################################################################
   _on_grafana_mode_edited() {
-    console.log('📩', this.constructor.name, "_on_grafana_mode_edited");
+    console.log('📩', this.constructor.name, '_on_grafana_mode_edited');
     this.addEditorTab('Flowcharts', flowchartsOptionsTab, 2);
     this.addEditorTab('Rules', rulesOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
@@ -189,12 +193,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   _on_grafana_TearDown() {
-    console.log('📩', this.constructor.name, "_on_TearDown");
+    console.log('📩', this.constructor.name, '_on_TearDown');
     $GF.events.emit('panel_closed');
   }
 
   _on_grafana_graph_hover(event: any) {
-    console.log('📩', this.constructor.name, "_on_grafana_graph_hover");
+    console.log('📩', this.constructor.name, '_on_grafana_graph_hover');
     const flowchartHandler = this.flowchartHandler;
     if (this.dashboard.sharedTooltipModeEnabled() && flowchartHandler !== undefined) {
       this.graphHoverTimer = event.pos.x;
@@ -211,7 +215,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   private _on_grafana_graph_hover_clear(event: any) {
-    console.log('📩', this.constructor.name, "_on_grafana_graph_hover_clear");
+    console.log('📩', this.constructor.name, '_on_grafana_graph_hover_clear');
     if (this.flowchartHandler !== undefined && this.graphHoverTimer !== undefined) {
       this.graphHoverTimer?.cancel();
       this.graphHoverTimer = undefined;
@@ -220,12 +224,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   private _on_grafana_refreshed() {
-    console.log('📩', this.constructor.name, "_on_grafana_refreshed");
+    console.log('📩', this.constructor.name, '_on_grafana_refreshed');
     this.flowchartHandler?.update();
   }
 
   private _on_grafana_template_variable_value_updated() {
-    console.log('📩', this.constructor.name, "_on_grafana_template_variable_value_updated");
+    console.log('📩', this.constructor.name, '_on_grafana_template_variable_value_updated');
     $GF.events.emit('variables_changed');
     if (this.flowchartHandler !== undefined) {
       // TODO refresh with new variable
@@ -234,9 +238,8 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-
   private _on_grafana_rendered() {
-    console.log('📩', this.constructor.name, "_on_grafana_rendered");
+    console.log('📩', this.constructor.name, '_on_grafana_rendered');
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();
@@ -250,26 +253,25 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.flowchartHandler?.render();
   }
 
-
   private _on_grafana_data_received(dataList: any) {
-    console.log('📩', this.constructor.name, "_on_grafana_data_received");
+    console.log('📩', this.constructor.name, '_on_grafana_data_received');
     $GF.events.emit('data_updated', dataList);
   }
 
   private _on_grafana_data_error() {
-    console.log('📩', this.constructor.name, "_on_grafana_data_error");
+    console.log('📩', this.constructor.name, '_on_grafana_data_error');
     this.render();
   }
 
   private _on_global_debug_asked() {
-    console.log('📩', this.constructor.name, "_on_global_debug_asked");
-    console.log("🧰", 'DATA', this.panel);
+    console.log('📩', this.constructor.name, '_on_global_debug_asked');
+    console.log('🧰', 'DATA', this.panel);
   }
 
   private _on_global_panel_closed() {
-    console.log('📩', this.constructor.name, "_on_global_panel_closed");
-    console.log('Close connectors')
-    this.clear_connectors()
+    console.log('📩', this.constructor.name, '_on_global_panel_closed');
+    console.log('Close connectors');
+    this.clear_connectors();
   }
 
   //
@@ -320,11 +322,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // Versions
     // this.panel.newFlag = false;
     if (this.panel.version !== $GF.plugin.getVersion()) {
-      this.notify(
-        `The plugin version has changed, save the dashboard to optimize loading : ${
-          this.panel.version
-        } <> ${$GF.plugin.getVersion()}`
-      );
+      //TODO : Reactive this
+      // this.notify(
+      //   `The plugin version has changed, save the dashboard to optimize loading : ${
+      //     this.panel.version
+      //   } <> ${$GF.plugin.getVersion()}`
+      // );
     }
     this.panel.version = this.version;
     // this.onRender();
@@ -407,7 +410,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.message.clearMessage();
     }
   }
-
 }
 
 export { FlowchartCtrl, FlowchartCtrl as MetricsPanelCtrl };
@@ -425,7 +427,7 @@ class GFMessage {
   static WARNING_COLOR = 'yellow';
 
   constructor(parent: HTMLDivElement) {
-    this.uid = $GF.genUid()
+    this.uid = $GF.genUid();
     this.container = parent;
     const span = this.container.querySelector<HTMLSpanElement>('#message-text');
     if (span == null) {

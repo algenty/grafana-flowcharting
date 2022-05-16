@@ -176,8 +176,8 @@ export class RulesHandler {
   addRule(pattern: string, previousData?: any): Rule {
     const data: gf.TIRuleData =  Rule.getDefaultData();
     const newRule = new Rule(pattern, data, previousData);
-    // TODO : Why initThresholds outside ???
-    newRule.initThresholds();
+    // TODO : Why initThresholds outside, same in _convert()
+    // newRule.initThresholds();
     this.rules.push(newRule);
     this.data.rulesData.push(data);
     newRule.setOrder(this.countRules());
