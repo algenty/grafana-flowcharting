@@ -98,12 +98,13 @@ describe('Test Global $GF utils', () => {
     });
 
     test('should be evaluate', () => {
+      variables.set(key, value);
       expect(variables.eval('${_value}*2')).toBe(24690);
     });
 
     test('Should be null after remove key ' + key, () => {
-      variable.unset(key);
-      expect(variable.get(key)).toBe(undefined);
+      variables.unset(key);
+      expect(variables.get(key)).toBe(undefined);
     });
 
     test('Static should ', () => {

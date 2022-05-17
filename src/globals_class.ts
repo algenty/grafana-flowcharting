@@ -438,7 +438,7 @@ export class GFVariables {
   replaceText(text: string): string {
     try {
       let templateSrv = GFPlugin.getTemplateSrv();
-      text = templateSrv !== undefined ? templateSrv.replace(text) : text;
+      text = templateSrv && templateSrv.replace ? templateSrv.replace(text) : text;
       for (let [key, value] of this._variables) {
         text = text.replace('${' + key + '}', value);
       }
