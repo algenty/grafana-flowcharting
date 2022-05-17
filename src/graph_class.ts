@@ -1,5 +1,5 @@
 // import { each as _each } from 'lodash';
-import { $GF, GFDrawioTools, GFTimer, GFLog, GFPlugin, GFCONSTANT } from 'globals_class';
+import { $GF, GFTimer, GFLog, GFPlugin, GFCONSTANT } from 'globals_class';
 const dioCustom = require('drawio_custom');
 import chroma from 'chroma-js';
 const mxcustom = require('mxgraph_custom');
@@ -7,6 +7,7 @@ import { Rule } from 'rule_class';
 import { XCell } from 'cell_class';
 import { InteractiveMap } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
+import { GFDrawio } from 'drawio_base';
 
 const xgraphSignalsArray = ['graph_initialized', 'graph_updated', 'graph_changed', 'graph_freed'] as const;
 type XGraphSignals = typeof xgraphSignalsArray[number];
@@ -67,8 +68,8 @@ export class XGraph {
     this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     XGraph.initMxGraphLib();
     if (this.type === 'xml') {
-      if (GFDrawioTools.isEncoded(this.definition)) {
-        this.xmlGraph = GFDrawioTools.decode(this.definition);
+      if (GFDrawio.isEncoded(this.definition)) {
+        this.xmlGraph = GFDrawio.decode(this.definition);
       } else {
         this.xmlGraph = this.definition;
       }
@@ -609,8 +610,8 @@ export class XGraph {
    */
   setContent(content: string): this {
     if (this.type === 'xml') {
-      if (GFDrawioTools.isEncoded(content)) {
-        this.xmlGraph = GFDrawioTools.decode(content);
+      if (GFDrawio.isEncoded(content)) {
+        this.xmlGraph = GFDrawio.decode(content);
       } else {
         this.xmlGraph = content;
       }

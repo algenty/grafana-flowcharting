@@ -1,8 +1,9 @@
 import { XGraph } from 'graph_class';
 import { StateHandler } from 'statesHandler';
 import { FlowchartHandler } from 'flowchart_handler';
-import { $GF, GFDrawioTools, GFLog } from 'globals_class';
+import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
+import { GFDrawio } from 'drawio_base';
 
 const flowchartSignalsArray = [
   'flowchart_initialized',
@@ -735,15 +736,15 @@ export class Flowchart {
   }
 
   _decode() {
-    if (GFDrawioTools.isEncoded(this.data.xml)) {
-      this.data.xml = GFDrawioTools.decode(this.data.xml);
+    if (GFDrawio.isEncoded(this.data.xml)) {
+      this.data.xml = GFDrawio.decode(this.data.xml);
       // this.data.xml = XGraph.decompress(this.data.xml);
     }
   }
 
   _encode() {
-    if (!GFDrawioTools.isEncoded(this.data.xml)) {
-      const xml = GFDrawioTools.encode(this.data.xml);
+    if (!GFDrawio.isEncoded(this.data.xml)) {
+      const xml = GFDrawio.encode(this.data.xml);
       this.data.xml = xml ? xml : this.data.xml;
     }
   }

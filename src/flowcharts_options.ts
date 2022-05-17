@@ -1,7 +1,8 @@
 import { FlowchartHandler } from 'flowchart_handler';
 import { Flowchart } from 'flowchart_class';
-import { $GF, GFDrawioTools, GFTable, GFLog, GFPlugin, GFCONSTANT } from 'globals_class';
+import { $GF, GFTable, GFLog, GFPlugin, GFCONSTANT } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
+import { GFDrawio } from 'drawio_base';
 
 export class FlowchartsOptionsCtrl {
   $gf: $GF;
@@ -185,7 +186,7 @@ export class FlowchartsOptionsCtrl {
   }
 
   checkSource_onSourceChange(source: string): boolean {
-    const bool = GFDrawioTools.isValidXml(source);
+    const bool = GFDrawio.isValidXml(source);
     this.errorSourceFlag = !bool;
     if (!bool) {
       this.ctrl.notify('Invalid Xml definition', 'error');
@@ -288,7 +289,7 @@ export class FlowchartsOptionsCtrl {
             response.text().then(text => {
               const fc = this.flowchartHandler?.getCurrentFlowchart();
               if (fc && fc.data.type === 'xml') {
-                const bool = GFDrawioTools.isValidXml(text);
+                const bool = GFDrawio.isValidXml(text);
                 this.errorSourceFlag = !bool;
                 if (this.errorSourceFlag) {
                   this.ctrl.notify('Response is an invalid Xml definition', 'error');
