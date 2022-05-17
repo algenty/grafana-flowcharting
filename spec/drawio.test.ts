@@ -45,8 +45,8 @@ describe('GFDrawio tests', () => {
           mode: 'local',
         };
         GFDrawio.init(options);
-        expect(GFDrawio.GFInitialized).toBeTruthy();
-        const result = GFDrawio.loadLibs();
+        expect(GFDrawio._GFInitialized).toBeTruthy();
+        const result = GFDrawio.loadEngine();
         expect(result).toBeInstanceOf(Promise);
         await result;
         expect(GFDrawio.libLoaded).toBeTruthy();
@@ -60,8 +60,8 @@ describe('GFDrawio tests', () => {
           mode: 'server',
         };
         GFDrawio.init(options);
-        expect(GFDrawio.GFInitialized).toBeTruthy();
-        const result = GFDrawio.loadLibs();
+        expect(GFDrawio._GFInitialized).toBeTruthy();
+        const result = GFDrawio.loadEngine();
         expect(result).toBeInstanceOf(Promise);
         await result;
         expect(GFDrawio.libLoaded).toBeTruthy();

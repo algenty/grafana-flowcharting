@@ -153,7 +153,7 @@ export class XGraph {
         XGraph.preInitGlobalVars();
         // Eval Fileor Eval Code
         // $GF.utils.$evalFile(`${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DRAWIOLIB}`);
-        return GFDrawio.loadLibs().then(()=> {
+        return GFDrawio.loadEngine().then(()=> {
           mxcustom.customize();
           XGraph.postInitGlobalVars();
           mxTooltipHandler.prototype.delay = GFCONSTANT.CONF_TOOLTIPS_DELAY;

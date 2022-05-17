@@ -28,6 +28,9 @@ export class GFDrawio {
   static libContent: string;
   static options: DrawioOptions;
   static events: GFEvents<GFDrawioSignals> = GFEvents.create(gfdrawioSignalsArray)
+  private constructor() {
+
+  }
 
   static init(options?: DrawioOptions) {
     _log('📋', this.constructor.name, options);
@@ -44,8 +47,9 @@ export class GFDrawio {
     };
   }
 
-  static async loadLibs() {
+  static async loadEngine() {
     if (!GFDrawio.GFInitialized) {
+      GFDrawio.options.libLoad = false;
       GFDrawio.init();
     }
     let result: Promise<any>;
