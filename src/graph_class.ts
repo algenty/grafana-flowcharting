@@ -161,7 +161,7 @@ export class XGraph {
         // $GF.utils.$evalFile(`${GFPlugin.getDrawioPath()}js/shapes.min.js`);
 
         // Eval Fileor Eval Code
-        $GF.utils.$evalFile(`${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_VIEWERJS}`);
+        $GF.utils.$evalFile(`${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DRAWIOLIB}`);
         // mxcustom.evalCode();
         mxcustom.customize();
         XGraph.postInitGlobalVars();

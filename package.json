@@ -48,6 +48,7 @@
     "gulp-notify": "^4.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-zip": "^5.1.0",
+    "jest-fetch-mock": "^3.0.3",
     "lodash": "^4.17.21",
     "nanoid": "^3.3.4",
     "pako": "^2.0.4",

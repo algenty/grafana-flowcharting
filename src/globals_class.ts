@@ -23,6 +23,7 @@ export class GFCONSTANT {
   // CONFIG
   static readonly CONF_PATH_LIBS = 'libs/';
   static readonly CONF_PATH_DRAWIO = 'libs/drawio/';
+  static readonly CONF_PATH_DRAWIOJS = 'libs/drawio/js';
   static readonly CONF_PATH_STATIC = 'static/';
   static readonly CONF_PATH_PARTIALS = 'partials/';
   static readonly CONF_PATH_STYLES = 'styles/';
@@ -30,20 +31,23 @@ export class GFCONSTANT {
   static readonly CONF_FILE_DEFAULTDIO = 'static/defaultGraph.drawio';
   static readonly CONF_FILE_DEFAULTCSV = 'static/defaultGraph.csv';
   static readonly CONF_FILE_SHAPESTXT = 'static/shapes.txt';
-  // static readonly CONF_FILE_APPJS = 'libs/drawio/js/app.min.js';
-  // static readonly CONF_FILE_INTEGRATEJS = 'libs/drawio/js/app.min.js';
-  // static readonly CONF_FILE_SHAPESJS = 'libs/drawio/js/shapes.min.js';
-  // static readonly CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer.min.js';
-  static readonly CONF_FILE_VIEWERJS = 'libs/drawio/js/viewer-static.min.js';
+  static readonly CONF_NAME_APPJS = 'app.min.js';
+  static readonly CONF_NAME_INTEGRATEJS = 'app.min.js';
+  static readonly CONF_NAME_SHAPESJS = 'shapes.min.js';
+  static readonly CONF_NAME_VIEWERJS = 'viewer.min.js';
+  static readonly CONF_NAME_STATIC_VIEWERJS = 'viewer-static.min.js';
+  // Used lib : CONF_NAME_APPJS | CONF_NAME_INTEGRATEJS | CONF_NAME_SHAPESJS
+  static readonly CONF_DEFAULT_DRAWIOJS = this.CONF_NAME_STATIC_VIEWERJS;
+  static readonly CONF_FILE_DRAWIOLIB = `${this.CONF_PATH_DRAWIOJS}/${this.CONF_DEFAULT_DRAWIOJS}`;
   static readonly CONF_FILE_PRECONFIGJS = 'libs/drawio/js/PreConfig.js';
   static readonly CONF_FILE_POSTCONFIGJS = 'libs/drawio/js/PostConfig.js';
   static readonly CONF_FILE_VERSION = 'VERSION';
   static readonly CONF_TOOLTIPS_DELAY = 200;
   static readonly CONF_GRAPHHOVER_DELAY = 50;
-  static readonly CONF_COLORS_STEPS = 10;
+  static readonly CONF_COLORS_STEPS = 5;
   static readonly CONF_COLORS_MS = 50;
   static readonly CONF_ANIMS_STEP = 10;
-  static readonly CONF_ANIMS_MS = 50;
+  static readonly CONF_ANIMS_MS = 100;
   static readonly CONF_GFMESSAGE_MS = 5000;
   static readonly CONF_BLINK_COLOR = '#f5f242';
   static readonly CONF_HIGHTLIGHT_COLOR = '#99ff33';

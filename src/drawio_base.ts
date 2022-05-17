@@ -1,11 +1,104 @@
-import { GFLog } from "globals_class";
+import { GFCONSTANT, GFLog, GFPlugin } from 'globals_class';
 import { inflateRaw, deflateRaw } from 'pako';
+import { readFile } from 'fs';
+import { GFEvents } from 'flowcharting_base';
 
+const _DEBUG = true;
+const _log = (...args: unknown[]) => {
+  if (_DEBUG) {
+    console.log(args);
+  }
+};
+
+const gfdrawioSignalsArray = ['drawio_initialized'] as const;
+type GFDrawioSignals = typeof gfdrawioSignalsArray[number];
+
+
+export interface DrawioOptions {
+  mode?: 'local' | 'server';
+  libLoad?: boolean;
+  libLocal?: string;
+  libServer?: string;
+}
 export class GFDrawio {
+  static GFInitialized = false;
+  static libInitialized = false;
+  static libLoaded = false;
+  static libPromize: Promise<unknown> | undefined;
+  static libContent: string;
+  static options: DrawioOptions;
+  static events: GFEvents<GFDrawioSignals> = GFEvents.create(gfdrawioSignalsArray)
+
+  static init(options?: DrawioOptions) {
+    _log('📋', this.constructor.name, options);
+    this.GFInitialized = true;
+    this.options = Object.assign(this._getDefaultOptions(), options);
+  }
+
+  private static _getDefaultOptions(): DrawioOptions {
+    return {
+      mode: 'server',
+      libLoad: true,
+      libLocal: `./src/${GFCONSTANT.CONF_FILE_DRAWIOLIB}`,
+      libServer: `${GFPlugin.getRootPath()}/${GFCONSTANT.CONF_FILE_DRAWIOLIB}`,
+    };
+  }
+
+  static async loadLibs() {
+    if (!GFDrawio.GFInitialized) {
+      GFDrawio.init();
+    }
+    let result: Promise<any>;
+    if (GFDrawio.options.mode === 'local') {
+      result = GFDrawio._loadLocal();
+    } else {
+      result = GFDrawio._loadServer();
+    }
+    return result.then((code) => {
+      GFDrawio.libLoaded = true;
+      if (typeof code === 'string') {
+        return GFDrawio._evalLib(code);
+      }
+      return;
+    });
+  }
+
+  private static async _loadLocal() {
+    let source: string = this.options.libLocal ? this.options.libLocal : '';
+    return new Promise<string>((resolve, reject) => {
+      readFile(source, (error, data) => {
+        resolve(data.toString());
+      });
+    });
+  }
+
+  private static async _evalLib(code: string) {
+    globalThis.eval(code);
+    // const evalfunc = new Function(code);
+    // evalfunc();
+    GFDrawio.libInitialized = true;
+    console.log(globalThis);
+  }
+
+  private static async _loadServer() {
+    if (!this.libInitialized && this.options.libServer) {
+      const url = this.options.libServer;
+      return fetch(url).then( (res: Response) => {
+        debugger
+        return res.text();
+      }).catch((error)=>{
+        debugger
+        _log(error)
+      })
+    }
+    return;
+  }
+
   static parseXml(xmlString: string): Document {
     var parser = new DOMParser();
     return parser.parseFromString(xmlString, 'text/xml');
   }
+
   /**
    * drawio context source
    * @param  {Object} node

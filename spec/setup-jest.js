@@ -1,9 +1,11 @@
 // setup-jest.js
+import fetchMock from 'jest-fetch-mock';
+fetchMock.enableMocks();
+
 const lodash = require('lodash');
 global._ = lodash;
 
-const $ = require('jquery');
-global.$ = $;
+global.$ = require('jquery');
 
 import angular from 'angular';
 global.angular = angular;
