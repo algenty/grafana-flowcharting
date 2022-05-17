@@ -149,7 +149,7 @@ export class XGraph {
    * @memberof XGraph
    */
   static async initMxGraphLib() {
-    if (!GFDrawio.libInitialized) {
+    if (! GFDrawio.isInitalized()) {
         XGraph.preInitGlobalVars();
         // Eval Fileor Eval Code
         // $GF.utils.$evalFile(`${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DRAWIOLIB}`);

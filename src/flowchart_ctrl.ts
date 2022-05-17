@@ -272,7 +272,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   private _on_global_panel_closed() {
     console.log('📩', this.constructor.name, '_on_global_panel_closed');
-    console.log('Close connectors');
     this.clear_connectors();
   }
 

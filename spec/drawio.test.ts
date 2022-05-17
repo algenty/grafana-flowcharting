@@ -41,16 +41,15 @@ describe('GFDrawio tests', () => {
       beforeAll(() => {});
       test('Load in local', async () => {
         options = {
-          libLoad: false,
+          libLoad: true,
           mode: 'local',
         };
         GFDrawio.init(options);
-        expect(GFDrawio._GFInitialized).toBeTruthy();
-        const result = GFDrawio.loadEngine();
+        const result = GFDrawio.init(options);
         expect(result).toBeInstanceOf(Promise);
         await result;
-        expect(GFDrawio.libLoaded).toBeTruthy();
-        expect(GFDrawio.libInitialized).toBeTruthy();
+        expect(GFDrawio.isInitalized()).toBeTruthy();
+        expect(globalThis.mxGraph).not.toBeUndefined()
         console.log(global);
       });
       test.skip('Load in distant', async () => {
@@ -60,13 +59,11 @@ describe('GFDrawio tests', () => {
           mode: 'server',
         };
         GFDrawio.init(options);
-        expect(GFDrawio._GFInitialized).toBeTruthy();
+        expect(GFDrawio.isInitalized()).toBeFalsy();
         const result = GFDrawio.loadEngine();
         expect(result).toBeInstanceOf(Promise);
         await result;
-        expect(GFDrawio.libLoaded).toBeTruthy();
-        expect(GFDrawio.libInitialized).toBeTruthy();
-        console.log(global);
+        expect(GFDrawio.isInitalized()).toBeTruthy();
       });
     });
   });

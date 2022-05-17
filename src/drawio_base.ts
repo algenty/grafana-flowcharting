@@ -13,58 +13,79 @@ const _log = (...args: unknown[]) => {
 const gfdrawioSignalsArray = ['drawio_initialized'] as const;
 type GFDrawioSignals = typeof gfdrawioSignalsArray[number];
 
-
 export interface DrawioOptions {
   mode?: 'local' | 'server';
   libLoad?: boolean;
   libLocal?: string;
   libServer?: string;
 }
+type Complete<T> = {
+  [P in keyof Required<T>]: Pick<T, P> extends Required<Pick<T, P>> ? T[P] : T[P] | undefined;
+};
+type DrawioRequiredOptions = Complete<DrawioOptions>;
+
 export class GFDrawio {
-  static GFInitialized = false;
-  static libInitialized = false;
-  static libLoaded = false;
+  private static _GFInitialized = false;
+  private static _libInitialized = false;
   static libPromize: Promise<unknown> | undefined;
-  static libContent: string;
-  static options: DrawioOptions;
-  static events: GFEvents<GFDrawioSignals> = GFEvents.create(gfdrawioSignalsArray)
-  private constructor() {
+  static options: DrawioRequiredOptions;
+  static events: GFEvents<GFDrawioSignals> = GFEvents.create(gfdrawioSignalsArray);
 
-  }
-
-  static init(options?: DrawioOptions) {
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE/CLEAR
+  //############################################################################
+  static async init(options?: DrawioOptions) {
     _log('📋', this.constructor.name, options);
-    this.GFInitialized = true;
-    this.options = Object.assign(this._getDefaultOptions(), options);
+    this._GFInitialized = true;
+    this.options = Object.assign(this._getDefaultRequiredOptions(), options);
+    if (!GFDrawio._libInitialized && GFDrawio.options.libLoad) {
+      return GFDrawio.loadEngine();
+    }
   }
 
-  private static _getDefaultOptions(): DrawioOptions {
+  //############################################################################
+  //### LOGIC
+  //############################################################################
+  static isInitalized() {
+    return GFDrawio._libInitialized;
+  }
+
+  static async loadEngine() {
+    // If not initialized
+    if (!GFDrawio._GFInitialized) {
+      GFDrawio.init({ libLoad: false });
+    }
+    let result: Promise<any> = new Promise(() => {});
+    // On local for jest
+    if (GFDrawio.options.mode === 'local') {
+      result = GFDrawio._loadLocal();
+    }
+
+    // On distant like grafana
+    if (GFDrawio.options.mode === 'server') {
+      result = GFDrawio._loadServer();
+    }
+    // eval result code
+    return result.then((code) => {
+      if (typeof code === 'string') {
+        return GFDrawio._evalLib(code);
+      }
+      return;
+    });
+
+    return;
+  }
+
+  //############################################################################
+  //### PRIVATE
+  //############################################################################
+  private static _getDefaultRequiredOptions(): DrawioRequiredOptions {
     return {
       mode: 'server',
       libLoad: true,
       libLocal: `./src/${GFCONSTANT.CONF_FILE_DRAWIOLIB}`,
       libServer: `${GFPlugin.getRootPath()}/${GFCONSTANT.CONF_FILE_DRAWIOLIB}`,
     };
-  }
-
-  static async loadEngine() {
-    if (!GFDrawio.GFInitialized) {
-      GFDrawio.options.libLoad = false;
-      GFDrawio.init();
-    }
-    let result: Promise<any>;
-    if (GFDrawio.options.mode === 'local') {
-      result = GFDrawio._loadLocal();
-    } else {
-      result = GFDrawio._loadServer();
-    }
-    return result.then((code) => {
-      GFDrawio.libLoaded = true;
-      if (typeof code === 'string') {
-        return GFDrawio._evalLib(code);
-      }
-      return;
-    });
   }
 
   private static async _loadLocal() {
@@ -80,18 +101,20 @@ export class GFDrawio {
     globalThis.eval(code);
     // const evalfunc = new Function(code);
     // evalfunc();
-    GFDrawio.libInitialized = true;
-    console.log(globalThis);
+    GFDrawio._libInitialized = true;
+    GFDrawio.events.emit('drawio_initialized');
   }
 
   private static async _loadServer() {
-    if (!this.libInitialized && this.options.libServer) {
+    if (!this._libInitialized && this.options.libServer) {
       const url = this.options.libServer;
-      return fetch(url).then( (res: Response) => {
-        return res.text();
-      }).catch((error)=>{
-        _log(error)
-      })
+      return fetch(url)
+        .then((res: Response) => {
+          return res.text();
+        })
+        .catch((error) => {
+          _log(error);
+        });
     }
     return;
   }
