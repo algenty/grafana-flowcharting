@@ -3,7 +3,11 @@ import { $GF, GFCONSTANT, GFPlugin } from 'globals_class';
 import { InteractiveMap, ObjectMap } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
 
+// Debug
+const DEBUG=true
+const _log = (...args: any) => {DEBUG && console.log(args)}
 
+// Define signals
 const flowchartHandlerSignalsArray = ['flowchart_created', 'flowchart_deleted'] as const;
 type FlowchartHandlerSignals = typeof flowchartHandlerSignalsArray[number];
 
@@ -590,12 +594,12 @@ export class FlowchartHandler {
   //### EVENTS
   //###########################################################################
   private _on_global_debug_asked() {
-    console.log('📩', this.constructor.name, "_on_global_debug_asked");
-    console.log("🧰", this.constructor.name, this);
+    _log('📩', this.constructor.name, "_on_global_debug_asked");
+    _log("🧰", this.constructor.name, this);
   }
 
   private _on_global_panel_closed() {
-    console.log('📩', this.constructor.name, "_on_global_panel_close");
+    _log('📩', this.constructor.name, "_on_global_panel_close");
     this.free();
   }
 

@@ -1,7 +1,7 @@
 import { FlowchartHandler } from './flowchart_handler';
 import { State } from 'state_class';
 import { $GF, GFPlugin, GFTable } from 'globals_class';
-import { StateHandler } from 'statesHandler';
+import { StateHandler } from 'states_handler';
 import { orderBy as _orderBy } from 'lodash';
 import { XGraph } from 'graph_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';

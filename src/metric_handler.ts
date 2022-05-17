@@ -2,6 +2,11 @@ import { SerieMetric, TableMetric, ObjectMetric, Metric } from 'metric_class';
 import { $GF,GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 
+// Debug
+const DEBUG=true
+const _log = (...args: any) => {DEBUG && console.log(args)}
+
+// Define signals
 const metricHandlerSignalsArray = ['metric_created', 'metric_updated', 'metric_deleted'] as const;
 type MetricHandlerSignals = typeof metricHandlerSignalsArray[number];
 
@@ -238,11 +243,11 @@ export class MetricHandler {
   }
 
   private _on_global_debug_asked() {
-    console.log("🧰", this.constructor.name, this);
+    _log("🧰", this.constructor.name, this);
   }
 
   private _on_global_panel_closed() {
-    console.log('📩', this.constructor.name, "_on_global_panel_close");
+    _log('📩', this.constructor.name, "_on_global_panel_close");
     this.free();
   }
 

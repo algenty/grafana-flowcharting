@@ -3,6 +3,12 @@ import { sortBy as _sortBy } from 'lodash';
 import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 
+
+// Debug
+const DEBUG=true
+const _log = (...args: any) => {DEBUG && console.log(args)}
+
+// Define signals
 const ruleHandlerSignalsArray = ['rule_created', 'rule_updated', 'rule_changed', 'rule_deleted'] as const;
 type RuleHandlerSignals = typeof ruleHandlerSignalsArray[number];
 
@@ -325,18 +331,18 @@ export class RulesHandler {
   //### EVENTS
   //#############################################################
   private _on_rule_rule_updated(rule: Rule) {
-    console.log('📩', this.constructor.name, '_on_rule_rule_updated');
+    _log('📩', this.constructor.name, '_on_rule_rule_updated');
     this.$gf.rulesHandler.events.emit('rule_updated', rule);
   }
 
   private _on_rule_rule_changed(rule: Rule) {
-    console.log('📩', this.constructor.name, '_on_rule_rule_changed');
+    _log('📩', this.constructor.name, '_on_rule_rule_changed');
     this.$gf.rulesHandler.events.emit('rule_changed', rule);
   }
 
   private _on_global_debug_asked() {
-    console.log('📩', this.constructor.name, '_on_rule_rule_changed');
-    console.log('🧰', this.constructor.name, this);
+    _log('📩', this.constructor.name, '_on_rule_rule_changed');
+    _log('🧰', this.constructor.name, this);
   }
 
   private _on_global_panel_closed() {

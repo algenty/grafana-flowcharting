@@ -1,10 +1,16 @@
 import { XGraph } from 'graph_class';
-import { StateHandler } from 'statesHandler';
+import { StateHandler } from 'states_handler';
 import { FlowchartHandler } from 'flowchart_handler';
 import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
 
+
+// Debug
+// const DEBUG=true
+// const _log = (...args: any) => {DEBUG && console.log(args)}
+
+// Define signals
 const flowchartSignalsArray = [
   'flowchart_initialized',
   'flowchart_updated',

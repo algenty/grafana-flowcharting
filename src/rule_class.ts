@@ -17,7 +17,9 @@ import {
 } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
 
-
+// Debug
+const DEBUG=true
+const _log = (...args: any) => {DEBUG && console.log(args)}
 
 // Signal definition
 const ruleSignalsArray = ['rule_initalized', 'rule_updated', 'rule_changed', 'rule_freed'] as const;
@@ -2206,7 +2208,7 @@ export class Rule {
   //### EVENTS
   //#############################################################
   private _on_metricHandler_metric_deleted(metric: ObjectMetric) {
-    console.log('📩', this.constructor.name, "_on_metricHandler_metric_deleted");
+    _log('📩', this.constructor.name, "_on_metricHandler_metric_deleted");
     if(this.metrics.has(metric.uid)) {
       this.metrics.delete(metric.uid)
       this.update();
@@ -2214,7 +2216,7 @@ export class Rule {
   }
 
   private _on_metricHandler_metric_created(metric: ObjectMetric) {
-    console.log('📩', this.constructor.name, "_on_metricHandler_metric_created");
+    _log('📩', this.constructor.name, "_on_metricHandler_metric_created");
     if(this.matchMetric(metric)) {
       this.metrics.set(metric.uid, metric);
       this.update();

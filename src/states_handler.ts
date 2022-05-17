@@ -5,6 +5,11 @@ import { $GF, GFLog } from 'globals_class';
 import { XCell } from 'cell_class';
 import { GFEvents } from 'flowcharting_base';
 
+// Debug
+const DEBUG=true
+const _log = (...args: any) => {DEBUG && console.log(args)}
+
+// Define signals
 const stateHandlerSignalsArray = ['state_created', 'state_updated', 'state_changed', 'state_deleted'] as const;
 type stateHandlerSignals = typeof stateHandlerSignalsArray[number];
 
@@ -358,8 +363,8 @@ export class StateHandler {
   //### Events
   //#########################################################################
   private _on_global_debug_asked() {
-    console.log('📩', this.constructor.name, "_on_global_debug_asked");
-    console.log("🧰", this.constructor.name, this);
+    _log('📩', this.constructor.name, "_on_global_debug_asked");
+    _log("🧰", this.constructor.name, this);
   }
 
 
