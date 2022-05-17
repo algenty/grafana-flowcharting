@@ -84,10 +84,8 @@ export class GFDrawio {
     if (!this.libInitialized && this.options.libServer) {
       const url = this.options.libServer;
       return fetch(url).then( (res: Response) => {
-        debugger
         return res.text();
       }).catch((error)=>{
-        debugger
         _log(error)
       })
     }

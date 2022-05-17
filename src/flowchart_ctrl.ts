@@ -102,7 +102,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //############################################################################
   //### INIT/UPDATE/CHANGE/FREE/CLEAR
   //############################################################################
-  init() {
+  init_ctrl() {
     this.init_connectors();
     this.init_handlers();
   }
@@ -300,25 +300,18 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     const funcName = 'link';
     GFLog.debug(`${this.constructor.name}.${funcName}()`);
     this.$panelElem = elem;
-
     const $section = this.$panelElem.find('#flowcharting-section');
     this.parentDiv = $section[0];
-
-    // const $flowchartsDiv = this.$panelElem.find('#flowcharting-panel-content');
     const $flowchartsDiv = $section.find('#flowcharting-panel-content');
     this.flowchartsDiv = $flowchartsDiv[0];
     this.onMapping.setContainer(this.flowchartsDiv);
-
-    // const $message = $section.find('#flowcharting-message');
-    // $GF.setMessageDiv($message[0]);
-    // this.message = new GFMessage($message[0]);
     this.notify('Initialisation MXGRAPH/DRAW.IO Libs');
 
     // MxGraph Init
-    XGraph.initMxGraphLib();
     this.notify('Load configuration');
-
-    this.init_handlers();
+    XGraph.initMxGraphLib().then(()=> {
+      this.init_ctrl();
+    })
 
     // Versions
     // this.panel.newFlag = false;
@@ -334,14 +327,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     // this.onRender();
     // this.flowchartHandler?.refresh();
   }
-
-  // onMouseIn(event: MouseEvent) {
-  //   this.mouseIn = true;
-  // }
-
-  // onMouseOut(event: MouseEvent) {
-  //   this.mouseIn = false;
-  // }
 
   isMouseInPanel(): boolean {
     return this.mouseIn;

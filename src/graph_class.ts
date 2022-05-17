@@ -20,7 +20,7 @@ type XGraphSignals = typeof xgraphSignalsArray[number];
  */
 export class XGraph {
   private readonly $gf: $GF;
-  static initialized = false;
+  // static initialized = false;
   container: HTMLDivElement;
   xmlGraph = '';
   csvGraph = '';
@@ -66,7 +66,7 @@ export class XGraph {
     const funcName = 'init';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
-    XGraph.initMxGraphLib();
+    // XGraph.initMxGraphLib();
     if (this.type === 'xml') {
       if (GFDrawio.isEncoded(this.definition)) {
         this.xmlGraph = GFDrawio.decode(this.definition);
@@ -149,28 +149,16 @@ export class XGraph {
    * @memberof XGraph
    */
   static async initMxGraphLib() {
-    let myWindow: any = window;
-    if (!XGraph.initialized) {
-      if (myWindow.mxGraph === undefined) {
+    if (!GFDrawio.libInitialized) {
         XGraph.preInitGlobalVars();
-        // Before 0.9
-        // let code = $GF.utils.$loadFile(`${GFPlugin.getDrawioPath()}js/viewer.min.js`);
-        // $GF.utils.evalRaw(code);
-
-        // $GF.utils.$evalFile(`${GFPlugin.getDrawioPath()}js/viewer-static.min.js`);
-        // $GF.utils.$evalFile(`${GFPlugin.getDrawioPath()}js/shapes.min.js`);
-
         // Eval Fileor Eval Code
-        $GF.utils.$evalFile(`${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DRAWIOLIB}`);
-        // mxcustom.evalCode();
-        mxcustom.customize();
-        XGraph.postInitGlobalVars();
-        // $GF.utils.$evalFile(`${GFPlugin.getLibsPath()}/Graph_custom.js`);
-        // $GF.utils.evalRaw(code);
-        mxTooltipHandler.prototype.delay = GFCONSTANT.CONF_TOOLTIPS_DELAY;
+        // $GF.utils.$evalFile(`${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DRAWIOLIB}`);
+        return GFDrawio.loadLibs().then(()=> {
+          mxcustom.customize();
+          XGraph.postInitGlobalVars();
+          mxTooltipHandler.prototype.delay = GFCONSTANT.CONF_TOOLTIPS_DELAY;
+        })
       }
-      XGraph.initialized = true;
-    }
   }
 
   /**
