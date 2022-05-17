@@ -29,7 +29,7 @@ export class FlowchartHandler {
   onEdit = false; // editor open or not
   postedId: string | undefined = undefined; // Current ID on edit mode
   editorWindow: Window | null = null; // Window draw.io editor
-  static events: GFEvents<FlowchartHandlerSignals> = GFEvents.create(flowchartHandlerSignalsArray);
+  events: GFEvents<FlowchartHandlerSignals> = GFEvents.create(flowchartHandlerSignalsArray);
 
   /**
    * Creates an instance of FlowchartHandler to handle flowchart
@@ -41,6 +41,7 @@ export class FlowchartHandler {
    */
   constructor($gf: $GF, data: gf.TFlowchartHandlerData, oldData?: any) {
     this.$gf = $gf;
+    this.$gf.flowchartHandler = this;
     FlowchartHandler.getDefaultDioGraph();
     this.uid = $GF.genUid(this.constructor.name);
     this._parentDiv = this.$gf.ctrl.flowchartsDiv;

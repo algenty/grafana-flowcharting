@@ -901,11 +901,11 @@ export class $GF {
     return _gf;
   }
 
-  setHandlers(flowchartHandler: FlowchartHandler, rulesHandler: RulesHandler, metricHandler: MetricHandler) {
-    this.flowchartHandler = flowchartHandler;
-    this.rulesHandler = rulesHandler;
-    this.metricHandler = metricHandler;
-  }
+  // setHandlers(flowchartHandler: FlowchartHandler, rulesHandler: RulesHandler, metricHandler: MetricHandler) {
+  //   this.flowchartHandler = flowchartHandler;
+  //   this.rulesHandler = rulesHandler;
+  //   this.metricHandler = metricHandler;
+  // }
 
   free() {
     this.events.disconnect('debug_asked', this);

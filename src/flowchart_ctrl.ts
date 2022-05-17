@@ -125,6 +125,21 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.metricHandler = new MetricHandler(this.$gf);
     }
     // this.metricHandler.clear();
+
+    // RULES
+    if (!this.rulesHandler) {
+      const newRulesData = RulesHandler.getDefaultData();
+      this.rulesHandler = new RulesHandler(this.$gf, newRulesData, this.panel.rulesData);
+      this.panel.rulesData = newRulesData;
+    } else {
+      // TODO : when exit editor
+    }
+
+    // TODO : needed ?
+    if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
+      this.rulesHandler.addRule('.*');
+    }
+
     // FLOWCHARTS
     if (!this.flowchartHandler) {
       const newFlowchartsData = FlowchartHandler.getDefaultData();
@@ -140,21 +155,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (this.panel.newFlag && this.flowchartHandler && this.flowchartHandler.countFlowcharts() === 0) {
       this.flowchartHandler.addFlowchart('Main').init();
     }
-
-    // RULES
-    if (!this.rulesHandler) {
-      const newRulesData = RulesHandler.getDefaultData();
-      this.rulesHandler = new RulesHandler(this.$gf, newRulesData, this.panel.rulesData);
-      this.panel.rulesData = newRulesData;
-    } else {
-      // TODO : when exit editor
-    }
-
-    // TODO : needed ?
-    if (this.panel.newFlag && this.rulesHandler.countRules() === 0) {
-      this.rulesHandler.addRule('.*');
-    }
-    this.$gf.setHandlers(this.flowchartHandler, this.rulesHandler, this.metricHandler);
   }
 
   clear_connectors() {
@@ -308,9 +308,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
     // MxGraph Init
     this.notify('Load configuration');
-    XGraph.initMxGraphLib().then(()=> {
+    XGraph.initMxGraphLib().then(() => {
       this.init_ctrl();
-    })
+    });
 
     // Versions
     // this.panel.newFlag = false;
@@ -442,7 +442,6 @@ class GFMessage {
       }
       GFTimer.create(`message-${this.uid}`).addStep(this.clearMessage.bind(this), GFCONSTANT.CONF_GFMESSAGE_MS);
       this.container.style.display = '';
-
     }
   }
 

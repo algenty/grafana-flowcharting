@@ -16,7 +16,6 @@ import {
   ShapeMapArray,
 } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
-import { MetricHandler } from 'metric_handler';
 
 
 
@@ -93,8 +92,8 @@ export class Rule {
   }
 
   init() {
-    MetricHandler.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
-    MetricHandler.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
+    this.$gf.metricHandler.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
+    this.$gf.metricHandler.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
     this.events.emit('rule_initalized', this);
     return this;
   }
@@ -110,8 +109,8 @@ export class Rule {
 
   async free() {
     await this.events.emit('rule_freed', this);
-    MetricHandler.events.disconnect('metric_created', this);
-    MetricHandler.events.disconnect('metric_deleted', this);
+    this.$gf.metricHandler.events.disconnect('metric_created', this);
+    this.$gf.metricHandler.events.disconnect('metric_deleted', this);
     this.events.clear();
     return this;
   }

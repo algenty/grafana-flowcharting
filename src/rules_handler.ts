@@ -19,7 +19,7 @@ export class RulesHandler {
   uid: string;
   data: gf.TIRulesHandlerData;
   activeRuleIndex = 0;
-  static events: GFEvents<RuleHandlerSignals> = GFEvents.create(ruleHandlerSignalsArray);
+  events: GFEvents<RuleHandlerSignals> = GFEvents.create(ruleHandlerSignalsArray);
   // metricsCompleted =true;
 
   /**
@@ -29,6 +29,7 @@ export class RulesHandler {
    */
   constructor($gf: $GF, data: gf.TIRulesHandlerData, oldData?: any) {
     this.$gf = $gf;
+    this.$gf.rulesHandler = this;
     this.uid = $GF.genUid(this.constructor.name);
     this.rules = [];
     this.data = data;
@@ -79,7 +80,7 @@ export class RulesHandler {
     this.$gf.events.disconnect('panel_closed', this);
     this.rules.forEach((r) => r.free());
     this.clear();
-    RulesHandler.events.clear();
+    this.$gf.rulesHandler.events.clear();
     // this.onDestroyed();
     return this;
   }
@@ -122,7 +123,7 @@ export class RulesHandler {
         const r = this.addRule('', ruleData);
         r.setOrder(index);
         index += 1;
-        RulesHandler.events.emit('rule_created', r);
+        this.$gf.rulesHandler.events.emit('rule_created', r);
       });
     }
     this.change();
@@ -325,12 +326,12 @@ export class RulesHandler {
   //#############################################################
   private _on_rule_rule_updated(rule: Rule) {
     console.log('📩', this.constructor.name, '_on_rule_rule_updated');
-    RulesHandler.events.emit('rule_updated', rule);
+    this.$gf.rulesHandler.events.emit('rule_updated', rule);
   }
 
   private _on_rule_rule_changed(rule: Rule) {
     console.log('📩', this.constructor.name, '_on_rule_rule_changed');
-    RulesHandler.events.emit('rule_changed', rule);
+    this.$gf.rulesHandler.events.emit('rule_changed', rule);
   }
 
   private _on_global_debug_asked() {

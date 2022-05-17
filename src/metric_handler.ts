@@ -12,10 +12,11 @@ export class MetricHandler {
   tables: Map<string, TableMetric> = new Map();
   series: Map<string, SerieMetric> = new Map();
   metrics: Map<string, ObjectMetric> = new Map();
-  static events: GFEvents<MetricHandlerSignals> = GFEvents.create(metricHandlerSignalsArray);
+  events: GFEvents<MetricHandlerSignals> = GFEvents.create(metricHandlerSignalsArray);
 
   constructor($gf: $GF) {
     this.$gf = $gf
+    this.$gf.metricHandler = this;
     this.uid = $GF.genUid('MetricHandler');
     this.init();
   }
@@ -55,7 +56,7 @@ export class MetricHandler {
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.metrics.forEach((m: ObjectMetric) => {
       m.free();
-      MetricHandler.events.emit('metric_deleted', m);
+      this.$gf.metricHandler.events.emit('metric_deleted', m);
     });
     // $GF.events.disconnect('data_updated', this);
     $GF.events.disconnect('debug_asked', this);
@@ -99,7 +100,7 @@ export class MetricHandler {
       this.tables.delete(uid);
     }
     this.metrics.delete(uid);
-    await MetricHandler.events.emit('metric_deleted', metric);
+    await this.$gf.metricHandler.events.emit('metric_deleted', metric);
   }
 
   /**
@@ -113,7 +114,7 @@ export class MetricHandler {
     const table = new TableMetric(this.$gf, data);
     this.tables.set(table.uid, table);
     this.metrics.set(table.uid, table);
-    MetricHandler.events.emit('metric_created', table);
+    this.$gf.metricHandler.events.emit('metric_created', table);
     return table;
   }
 
@@ -128,7 +129,7 @@ export class MetricHandler {
     const serie = new SerieMetric(this.$gf, data);
     this.series.set(serie.uid, serie);
     this.metrics.set(serie.uid, serie);
-    MetricHandler.events.emit('metric_created', serie);
+    this.$gf.metricHandler.events.emit('metric_created', serie);
     return serie;
   }
 

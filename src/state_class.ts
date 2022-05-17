@@ -6,10 +6,12 @@ import { $GF, GFVariables, GFLog, GFCONSTANT } from 'globals_class';
 import { XCell } from 'cell_class';
 import { ObjectMetric } from 'metric_class';
 import { GFEvents } from 'flowcharting_base';
-import { RulesHandler } from 'rules_handler';
 
 const stateSignalsArray = ['state_initialized', 'state_updated', 'state_freed'] as const;
 type stateSignals = typeof stateSignalsArray[number];
+
+const DEBUG=true
+const _log = (...args: any) => {DEBUG && console.log(args)}
 
 /**
  * Class for state of one cell
@@ -81,10 +83,10 @@ export class State {
     this._initCycle();
     this.$gf.events.connect('data_updated', this, this._on_global_data_received.bind(this));
     this.$gf.events.connect('data_processed', this, this._on_global_data_processed.bind(this));
-    RulesHandler.events.connect('rule_changed', this, this._on_ruleHandler_rule_changed.bind(this));
-    RulesHandler.events.connect('rule_updated', this, this._on_ruleHandler_rule_updated.bind(this));
-    RulesHandler.events.connect('rule_created', this, this._on_ruleHandler_rule_created.bind(this));
-    RulesHandler.events.connect('rule_deleted', this, this._on_ruleHandler_rule_deleted.bind(this));
+    this.$gf.rulesHandler.events.connect('rule_changed', this, this._on_ruleHandler_rule_changed.bind(this));
+    this.$gf.rulesHandler.events.connect('rule_updated', this, this._on_ruleHandler_rule_updated.bind(this));
+    this.$gf.rulesHandler.events.connect('rule_created', this, this._on_ruleHandler_rule_created.bind(this));
+    this.$gf.rulesHandler.events.connect('rule_deleted', this, this._on_ruleHandler_rule_deleted.bind(this));
     this.events.emit('state_initialized', this);
     return this;
   }
@@ -94,32 +96,25 @@ export class State {
     return this;
   }
 
-  // complete(): this {
-  //   if (!this.completed) {
-  //     this.applyCycle();
-  //     this.completed = true;
-  //   }
-  //   this.onCompleted();
-  //   return this;
-  // }
-
   change() {
     return this;
   }
 
-  // clear(): this {
-  //   // this.clearTag();
-  //   return this;
-  // }
+  clear(): this {
+    this.currMetrics = [];
+    this.currRules = [];
+    return this;
+  }
 
   async free() {
+    this.clear();
     this.reset();
     this.$gf.events.disconnect('data_updated', this);
     this.$gf.events.disconnect('data_processed', this);
-    RulesHandler.events.disconnect('rule_changed', this);
-    RulesHandler.events.disconnect('rule_updated', this);
-    RulesHandler.events.disconnect('rule_created', this);
-    RulesHandler.events.disconnect('rule_deleted', this);
+    this.$gf.rulesHandler.events.disconnect('rule_updated', this);
+    this.$gf.rulesHandler.events.disconnect('rule_changed', this);
+    this.$gf.rulesHandler.events.disconnect('rule_created', this);
+    this.$gf.rulesHandler.events.disconnect('rule_deleted', this);
     this.events.clear();
     await this.events.emit('state_freed', this);
   }
@@ -144,9 +139,9 @@ export class State {
    *
    * @memberof State
    */
-  async async_applyCycle() {
-    this.applyCycle();
-  }
+  // async async_applyCycle() {
+  //   this.applyCycle();
+  // }
 
   /**
    * Define state according to 1 rule and 1 serie without apply display
@@ -410,12 +405,6 @@ export class State {
     this._ObjStates.map(async (o: { reset: CallableFunction }) => {
       o.reset();
     });
-    // this._shapeState.reset();
-    // this._tooltipState.reset();
-    // this._iconState.reset();
-    // this._textState.reset();
-    // this._eventState.reset();
-    // this._linkState.reset();
     this._variables.clear();
     this._status.clear();
     this.globalLevel = -1;
@@ -572,19 +561,23 @@ export class State {
   //### EVENTS
   //###########################################################################
   private _on_global_data_received() {
-    console.log('📩', this.constructor.name, '_on_global_data_received');
+    _log('📩', this.constructor.name, '_on_global_data_received');
     this._initCycle();
   }
 
   private _on_global_data_processed() {
-    console.log('📩', this.constructor.name, '_on_global_data_processed');
+    _log('📩', this.constructor.name, '_on_global_data_processed');
     this._setCycle();
     this.applyCycle();
   }
 
-  private _on_ruleHandler_rule_changed(rule: Rule) {}
+  private _on_ruleHandler_rule_changed(rule: Rule) {
+    this._updateRule(rule);
+  }
 
-  private _on_ruleHandler_rule_updated(rule: Rule) {}
+  private _on_ruleHandler_rule_updated(rule: Rule) {
+    this._updateRule(rule);
+  }
 
   private _on_ruleHandler_rule_created(rule: Rule) {
     this._updateRule(rule);
