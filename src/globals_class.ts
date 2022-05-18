@@ -1385,7 +1385,7 @@ export class $GF {
   }
 
   private _on_global_panel_closed() {
-    _log('📩', this.constructor.name, '_on_global_panel_closed');
+    _log('📬', this.constructor.name, '_on_global_panel_closed');
     this.free();
   }
 }

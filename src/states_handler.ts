@@ -363,7 +363,7 @@ export class StateHandler {
   //### Events
   //#########################################################################
   private _on_global_debug_asked() {
-    _log('📩', this.constructor.name, "_on_global_debug_asked");
+    _log('📬', this.constructor.name, "_on_global_debug_asked");
     _log("🧰", this.constructor.name, this);
   }
 

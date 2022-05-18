@@ -2219,7 +2219,7 @@ export class Rule {
   //### EVENTS
   //#############################################################
   private _on_metricHandler_metric_deleted(metric: ObjectMetric) {
-    _log('📩', this.constructor.name, "_on_metricHandler_metric_deleted");
+    _log('📬', this.constructor.name, "_on_metricHandler_metric_deleted");
     if(this.metrics.has(metric.uid)) {
       this.metrics.delete(metric.uid)
       this.update();
@@ -2227,7 +2227,7 @@ export class Rule {
   }
 
   private _on_metricHandler_metric_created(metric: ObjectMetric) {
-    _log('📩', this.constructor.name, "_on_metricHandler_metric_created");
+    _log('📬', this.constructor.name, "_on_metricHandler_metric_created");
     if(this.matchMetric(metric)) {
       this.metrics.set(metric.uid, metric);
       this.update();

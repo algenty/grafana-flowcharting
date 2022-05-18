@@ -1,8 +1,7 @@
 // import { each as _each } from 'lodash';
-import { $GF, GFTimer, GFLog, GFPlugin, GFCONSTANT } from 'globals_class';
+import { $GF, GFTimer, GFLog, GFCONSTANT } from 'globals_class';
 const dioCustom = require('drawio_custom');
 import chroma from 'chroma-js';
-const mxcustom = require('mxgraph_custom');
 import { Rule } from 'rule_class';
 import { XCell } from 'cell_class';
 import { InteractiveMap } from 'mapping_class';
@@ -10,8 +9,10 @@ import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
 
 // Debug
-const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG = true;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 // Define signals
 const xgraphSignalsArray = ['graph_initialized', 'graph_updated', 'graph_changed', 'graph_freed'] as const;
@@ -25,7 +26,7 @@ type XGraphSignals = typeof xgraphSignalsArray[number];
  */
 export class XGraph {
   private readonly $gf: $GF;
-  // static initialized = false;
+  private _isGraphInitilized = false;
   container: HTMLDivElement;
   xmlGraph = '';
   csvGraph = '';
@@ -63,15 +64,14 @@ export class XGraph {
     this.onMapping = this.$gf.ctrl.onMapping;
     this.definition = definition;
     this.init();
-    // TODO : not good, just for test
-    // this.change();
   }
 
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
+
   init() {
-    const funcName = 'init';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
-    // XGraph.initMxGraphLib();
+    this._eventsConnect();
     if (this.type === 'xml') {
       if (GFDrawio.isEncoded(this.definition)) {
         this.xmlGraph = GFDrawio.decode(this.definition);
@@ -82,38 +82,37 @@ export class XGraph {
     if (this.type === 'csv') {
       this.csvGraph = this.definition;
     }
-    this.initMxGraph();
-    // DEBUG MODE
-    const self = this;
-    if ($GF.DEBUG) {
-      console.log('DEBUG ON');
-      this.graph.addListener(mxEvent.CLICK, (_sender: any, _evt: { properties: { cell: any } }) => {
-        console.log('DEBUG CLICK');
-        this.eventDebug(_evt);
-        if (_evt.properties.cell) {
-          const mxcell = _evt.properties.cell;
-          const id = mxcell.id;
-          const state = this.$gf.getVar(`STATE_${id}`);
-          const xcell = self.getXCell(id);
-          console.log('DEBUG GF STATE', state);
-          console.log('DEBUG XCELL', xcell);
-          console.log('DEBUG MXCELL', mxcell);
-          if (xcell) {
-            const mxcellState = xcell.getMxCellState();
-            console.log('DEBUG MXCELL STATE', mxcellState);
-          }
-        }
-      });
+    if (GFDrawio.isInitalized()) {
+      this.init_graph();
     }
-    this.renderGraph();
-    this.events.emit('graph_initialized', this);
+    // // DEBUG MODE
+    // const self = this;
+    // if ($GF.DEBUG) {
+    //   console.log('DEBUG ON');
+    //   this.graph.addListener(mxEvent.CLICK, (_sender: any, _evt: { properties: { cell: any } }) => {
+    //     console.log('DEBUG CLICK');
+    //     this.eventDebug(_evt);
+    //     if (_evt.properties.cell) {
+    //       const mxcell = _evt.properties.cell;
+    //       const id = mxcell.id;
+    //       const state = this.$gf.getVar(`STATE_${id}`);
+    //       const xcell = self.getXCell(id);
+    //       console.log('DEBUG GF STATE', state);
+    //       console.log('DEBUG XCELL', xcell);
+    //       console.log('DEBUG MXCELL', mxcell);
+    //       if (xcell) {
+    //         const mxcellState = xcell.getMxCellState();
+    //         console.log('DEBUG MXCELL STATE', mxcellState);
+    //       }
+    //     }
+    //   });
+    // }
+    // this._display();
+    // this.events.emit('graph_initialized', this);
     return this;
   }
 
   change() {
-    const funcName = 'change';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    // this._drawGraph();
     this.events.emit('graph_changed', this);
     return this;
   }
@@ -121,99 +120,53 @@ export class XGraph {
   update() {
     const funcName = 'update';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.updateGraph();
+    this.update_graph();
     this.events.emit('graph_updated', this);
     return this;
+  }
+
+  clear() {
+    this.xcells = [];
   }
 
   free() {
     const funcName = 'free';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.freeGraph();
+    this.free_graph();
     this.clear();
     this.events.emit('graph_freed', this);
-    this.$gf.events.disconnect('debug_asked', this);
-    this.events.clear()
+    this._eventsDisconnect();
+    this.events.clear();
     return this;
   }
 
-  /**
-   * Anonymize Graph
-   *
-   * @memberof XGraph
-   */
-  async anonymize() {
-    dioCustom.anonymize(this.graph);
+  //############################################################################
+  //### PRIVATE
+  //############################################################################
+  private _eventsConnect() {
+    this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    GFDrawio.events.connect('drawio_initialized', this, this._on_drawio_drawio_initialized.bind(this));
   }
 
-  /**
-   * Init Global vars an libs for mxgraph
-   *
-   * @static
-   * @returns
-   * @memberof XGraph
-   */
-  // static async initMxGraphLib() {
-  //   if (! GFDrawio.isInitalized()) {
-  //       // XGraph.preInitGlobalVars();
-  //       // Eval Fileor Eval Code
-  //       // $GF.utils.$evalFile(`${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DRAWIOLIB}`);
-  //       return GFDrawio.loadEngine().then(()=> {
-  //         // mxcustom.customize();
-  //         // XGraph.postInitGlobalVars();
-  //         mxTooltipHandler.prototype.delay = GFCONSTANT.CONF_TOOLTIPS_DELAY;
-  //       })
-  //     }
-  // }
-
-  /**
-   * Init Vars for mxGraph
-   *
-   * @static
-   * @memberof XGraph
-   */
-  static preInitGlobalVars() {
-    const myWindow: any = window;
-    myWindow.BASE_PATH = GFPlugin.getMxBasePath();
-    myWindow.RESOURCES_PATH = GFPlugin.getMxResourcePath();
-    myWindow.RESOURCE_BASE = GFPlugin.getMxResourcePath();
-    myWindow.STENCIL_PATH = GFPlugin.getStencilsPath();
-    myWindow.SHAPES_PATH = GFPlugin.getShapesPath();
-    myWindow.IMAGE_PATH = GFPlugin.getMxImagePath();
-    myWindow.STYLE_PATH = GFPlugin.getMxStylePath();
-    myWindow.CSS_PATH = GFPlugin.getMxCssPath();
-    myWindow.mxLanguages = ['en'];
-    myWindow.DRAWIO_BASE_URL = GFPlugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
-    myWindow.DRAW_MATH_URL = GFPlugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
-    myWindow.DRAWIO_VIEWER_URL = GFPlugin.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
-    myWindow.DRAW_MATH_URL = GFPlugin.getDrawioPath() + 'math/';
-    myWindow.DRAWIO_CONFIG = null; // Replace with your custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
-    const urlParams = {
-      sync: 'none', // Disabled realtime
-      lightbox: '1', // Uses lightbox in chromeless mode (larger zoom, no page visible, chromeless)
-      nav: '1', // Enables folding in chromeless mode
-      local: '1', // Uses device mode only
-      embed: '1', // Runs in embed mode
-      ui: 'min',
-    };
-    myWindow.urlParams = urlParams;
-    myWindow.mxImageBasePath = GFPlugin.getMxImagePath();
-    myWindow.mxBasePath = GFPlugin.getMxBasePath();
-    myWindow.mxLoadStylesheets = true;
-    myWindow.mxLanguage = 'en';
-    myWindow.mxLoadResources = true;
+  private _eventsDisconnect() {
+    this.$gf.events.disconnect('debug_asked', this);
+    GFDrawio.events.disconnect('drawio_initialized', this);
   }
 
-  static postInitGlobalVars() {
-    const myWindow: any = window;
-    myWindow.mxClient.mxBasePath = GFPlugin.getMxBasePath();
-    myWindow.mxClient.mxImageBasePath = GFPlugin.getMxImagePath();
-    myWindow.mxClient.mxLoadResources = true;
-    myWindow.mxClient.mxLanguage = 'en';
-    myWindow.mxClient.mxLoadStylesheets = true;
-    myWindow.VSD_CONVERT_URL = null;
-    myWindow.EMF_CONVERT_URL = null;
-    myWindow.ICONSEARCH_PATH = null;
+  //############################################################################
+  //### LOGIC
+  //############################################################################
+  async init_graph() {
+    if (!this._isGraphInitilized && GFDrawio.isInitalized()) {
+      this._isGraphInitilized = true;
+      await this._init_mxGraph();
+      await this._init_fonts();
+      await this._display();
+      await this._init_xcells();
+      this.events.emit('graph_initialized');
+      this.change();
+    }
+    return;
   }
 
   /**
@@ -221,30 +174,22 @@ export class XGraph {
    *
    * @memberof XGraph
    */
-  initMxGraph(): this {
+  private async _init_mxGraph() {
     this.graph = new Graph(this.container);
-
     // /!\ What is setPannig
     this.graph.setPanning(true);
-
     // Backup funtions of clicks
     this.clickBackup = this.graph.click;
     this.dbclickBackup = this.graph.dblClick;
-
-    // EVENTS
-
     // CTRL+MOUSEWHEEL
     mxEvent.addMouseWheelListener(mxUtils.bind(this, this.eventMouseWheel), this.container);
     if (mxClient.IS_IE || mxClient.IS_EDGE) {
       mxEvent.addListener(this.container, 'wheel', mxUtils.bind(this, this.eventMouseWheel));
     }
-
     // KEYS
     mxEvent.addListener(document, 'keydown', mxUtils.bind(this, this.eventKey));
-
     // CONTEXT MENU
     this.container.addEventListener('contextmenu', (e) => e.preventDefault());
-
     // DB CLICK
     this.graph.dblClick = this.eventDbClick.bind(this);
     return this;
@@ -256,9 +201,9 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  renderGraph(): this {
+  private _display(): this {
     if (this.graph === undefined) {
-      this.initMxGraph();
+      throw new Error('Graph class was not created');
     }
     this.graph.getModel().beginUpdate();
     this.graph.getModel().clear();
@@ -269,14 +214,14 @@ export class XGraph {
         this.graph.model.clear();
         this.graph.view.scale = 1;
         codec.decode(xmlDoc.documentElement, this.graph.getModel());
-        this.loadExtFont();
+        this._init_fonts();
         this.graph.updateCssTransform();
         this.graph.selectUnlockedLayer();
       }
       if (this.type === 'csv') {
         try {
           dioCustom.importCsv(this.graph, this.csvGraph);
-          this.updateGraph();
+          this.update_graph();
         } catch (error) {
           GFLog.error('Bad CSV format', error);
           this.$gf.notify('Bad CSV format', 'error');
@@ -286,35 +231,23 @@ export class XGraph {
       GFLog.error('Error in draw', error);
     } finally {
       this.graph.getModel().endUpdate();
-      this.initXCells();
+      this._init_xcells();
     }
     return this;
   }
 
-  clear() {
-    // this.graph.model.clear();
-    // this.graph.view.scale = 1;
-    this.xcells = [];
-  }
+
 
   /**
    * Init XCells
    *
    * @memberof XGraph
    */
-  async initXCells() {
+  private async _init_xcells() {
     const model = this.graph.getModel();
     this.xcells = [];
-    // const cells = model.cells;
     const cells = Object.values(model.cells);
-    // const keys = Object.keys(cells);
-    // _each(cells, (mxcell: mxCell) => {
-    //   if (mxcell.id !== '0' && mxcell.id !== '1') {
-    //     const xcell = XCell.refactore(this.graph, mxcell);
-    //     this.xcells.push(xcell);
-    //   }
-    // });
-    await Promise.all(
+    return Promise.all(
       cells.map(async (mxcell: mxCell) => {
         const xcell = XCell.refactore(this.graph, mxcell);
         this.xcells.push(xcell);
@@ -327,7 +260,7 @@ export class XGraph {
    *
    * @memberof XGraph
    */
-  async loadExtFont() {
+  private async _init_fonts() {
     const model = this.graph.getModel();
     let extFonts = model.extFonts;
     if (extFonts) {
@@ -379,7 +312,7 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  updateGraph(): this {
+  update_graph(): this {
     this.cumulativeZoomFactor = 1;
     if (this.graph) {
       this.graph.zoomActual();
@@ -395,7 +328,7 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  freeGraph(): this {
+  free_graph(): this {
     this.graph.destroy();
     this.graph = undefined;
     return this;
@@ -434,6 +367,17 @@ export class XGraph {
     this.tooltip = bool;
     return this;
   }
+
+  //TODO : Move to GFDrawio
+  /**
+   * Anonymize Graph
+   *
+   * @memberof XGraph
+   */
+   async anonymize() {
+    dioCustom.anonymize(this.graph);
+  }
+
 
   /**
    * Allow downloads images from site draw.io
@@ -966,7 +910,7 @@ export class XGraph {
    */
   eventKey(evt: KeyboardEvent) {
     if (!mxEvent.isConsumed(evt) && evt.keyCode === 27 /* Escape */) {
-      this.updateGraph();
+      this.update_graph();
     }
   }
 
@@ -1173,8 +1117,12 @@ export class XGraph {
   //### EVENTS
   //#############################################################################
   private _on_global_debug_asked() {
+    _log('📬', this.constructor.name, '_on_global_debug_asked');
     _log('🧰', this.constructor.name, this);
   }
 
+  private _on_drawio_drawio_initialized() {
+    _log('📬', this.constructor.name, '_on_drawio_drawio_initialized');
+    this.init_graph();
+  }
 }
-

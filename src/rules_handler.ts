@@ -331,17 +331,17 @@ export class RulesHandler {
   //### EVENTS
   //#############################################################
   private _on_rule_rule_updated(rule: Rule) {
-    _log('📩', this.constructor.name, '_on_rule_rule_updated');
+    _log('📬', this.constructor.name, '_on_rule_rule_updated');
     this.events.emit('rule_updated', rule);
   }
 
   private _on_rule_rule_changed(rule: Rule) {
-    _log('📩', this.constructor.name, '_on_rule_rule_changed');
+    _log('📬', this.constructor.name, '_on_rule_rule_changed');
     this.events.emit('rule_changed', rule);
   }
 
   private _on_global_debug_asked() {
-    _log('📩', this.constructor.name, '_on_rule_rule_changed');
+    _log('📬', this.constructor.name, '_on_rule_rule_changed');
     _log('🧰', this.constructor.name, this);
   }
 

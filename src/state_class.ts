@@ -561,12 +561,12 @@ export class State {
   //### EVENTS
   //###########################################################################
   private _on_global_data_received() {
-    _log('📩', this.constructor.name, '_on_global_data_received');
+    _log('📬', this.constructor.name, '_on_global_data_received');
     this._initCycle();
   }
 
   private _on_global_data_processed() {
-    _log('📩', this.constructor.name, '_on_global_data_processed');
+    _log('📬', this.constructor.name, '_on_global_data_processed');
     this._setCycle();
     this.applyCycle();
   }

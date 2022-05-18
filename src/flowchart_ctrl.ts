@@ -8,7 +8,6 @@ import { FlowchartHandler } from 'flowchart_handler';
 import { MetricHandler } from 'metric_handler';
 // import { PanelEvents } from '@grafana/data';
 import { $GF, GFTimer, GFLog, GFPlugin, GFCONSTANT } from 'globals_class';
-import { XGraph } from 'graph_class';
 import grafana from 'grafana_func';
 import { defaults as _defaults, cloneDeep as _cloneDeep } from 'lodash';
 import { InteractiveMap } from 'mapping_class';
@@ -196,7 +195,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //### EVENTS
   //###########################################################################
   _on_grafana_mode_edited() {
-    _log('📩', this.constructor.name, '_on_grafana_mode_edited');
+    _log('📬', this.constructor.name, '_on_grafana_mode_edited');
     this.addEditorTab('Flowcharts', flowchartsOptionsTab, 2);
     this.addEditorTab('Rules', rulesOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
@@ -204,12 +203,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   _on_grafana_TearDown() {
-    _log('📩', this.constructor.name, '_on_TearDown');
+    _log('📬', this.constructor.name, '_on_TearDown');
     this.$gf.events.emit('panel_closed');
   }
 
   _on_grafana_graph_hover(event: any) {
-    _log('📩', this.constructor.name, '_on_grafana_graph_hover');
+    _log('📬', this.constructor.name, '_on_grafana_graph_hover');
     const flowchartHandler = this.flowchartHandler;
     if (this.dashboard.sharedTooltipModeEnabled() && flowchartHandler !== undefined) {
       this.graphHoverTimer = event.pos.x;
@@ -226,7 +225,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   private _on_grafana_graph_hover_clear(event: any) {
-    _log('📩', this.constructor.name, '_on_grafana_graph_hover_clear');
+    _log('📬', this.constructor.name, '_on_grafana_graph_hover_clear');
     if (this.flowchartHandler !== undefined && this.graphHoverTimer !== undefined) {
       this.graphHoverTimer?.cancel();
       this.graphHoverTimer = undefined;
@@ -235,12 +234,12 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   private _on_grafana_refreshed() {
-    _log('📩', this.constructor.name, '_on_grafana_refreshed');
+    _log('📬', this.constructor.name, '_on_grafana_refreshed');
     this.flowchartHandler?.update();
   }
 
   private _on_grafana_template_variable_value_updated() {
-    _log('📩', this.constructor.name, '_on_grafana_template_variable_value_updated');
+    _log('📬', this.constructor.name, '_on_grafana_template_variable_value_updated');
     this.$gf.events.emit('variables_changed');
     if (this.flowchartHandler !== undefined) {
       // TODO refresh with new variable
@@ -250,7 +249,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   private _on_grafana_rendered() {
-    _log('📩', this.constructor.name, '_on_grafana_rendered');
+    _log('📬', this.constructor.name, '_on_grafana_rendered');
     if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
       this.notify('Configuration updating...');
       this.editModeFalse();
@@ -265,22 +264,22 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   private _on_grafana_data_received(dataList: any) {
-    _log('📩', this.constructor.name, '_on_grafana_data_received');
+    _log('📬', this.constructor.name, '_on_grafana_data_received');
     this.$gf.events.emit('data_updated', dataList);
   }
 
   private _on_grafana_data_error() {
-    _log('📩', this.constructor.name, '_on_grafana_data_error');
+    _log('📬', this.constructor.name, '_on_grafana_data_error');
     this.render();
   }
 
   private _on_global_debug_asked() {
-    _log('📩', this.constructor.name, '_on_global_debug_asked');
+    _log('📬', this.constructor.name, '_on_global_debug_asked');
     _log('🧰', 'DATA', this.panel);
   }
 
   private _on_global_panel_closed() {
-    _log('📩', this.constructor.name, '_on_global_panel_closed');
+    _log('📬', this.constructor.name, '_on_global_panel_closed');
     this._eventsDisconnect();
   }
 

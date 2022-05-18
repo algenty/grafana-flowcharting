@@ -11,7 +11,7 @@ const _log = (...args: unknown[]) => {
   }
 };
 
-const empty = new Promise<void>(() => {});
+// const empty = new Promise<void>(() => {});
 const gfdrawioSignalsArray = ['drawio_initialized'] as const;
 type GFDrawioSignals = typeof gfdrawioSignalsArray[number];
 

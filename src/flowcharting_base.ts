@@ -7,7 +7,7 @@ type Uid = String;
 type ConnectedChild = Map<Uid, CallableFunction>;
 
 // Debug
-const DEBUG=false
+const DEBUG=true;
 const _log = (...args: any) => {DEBUG && console.log(...args)}
 
 export class GFEvents<Signals> {
@@ -63,9 +63,7 @@ export class GFEvents<Signals> {
     if (!this._haveDeclaredSignal(signalName)) {
       throw new Error(`${this.toString()} have no declared signal ${signalName}`);
     }
-    if(this._owner) {
-      _log('📡', `[${objRef.uid}] connect on [${signalName}] to [${this._owner}]`);
-    }
+    _log('📡', `[${objRef.uid}] connect on [${signalName}] to [${this._owner ?? '?????'}]`);
     const uid = objRef.uid;
     const fn = callfn;
     let childs = this._connectedChilds.get(signalName);
@@ -101,7 +99,7 @@ export class GFEvents<Signals> {
 
   emit(signalName: Signals, objToEmit?: unknown, from?: CallableSignalChild ) {
     //, from?: { uid: string }
-    _log('🚀', `Emit signal [${signalName}]${from ? ' from [' + from.uid : ']'}`);
+    _log('📨', `Emit signal [${signalName}]${from ? ' from [' + from.uid + ']': ''}`);
     const _childFn = this._getCallableFunc(signalName);
     return Promise.all(
       _childFn.map(async (fn) => {

@@ -55,8 +55,8 @@ export class Flowchart {
   init() {
     const funcName = 'init';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.initGraph();
-    this.initStateHandler();
+    this.init_xgraph();
+    this.init_stateHandler();
     this.events.emit('flowchart_initialized', this);
   }
 
@@ -74,7 +74,7 @@ export class Flowchart {
   change() {
     const funcName = 'change';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.updateGraph();
+    this.update_xgraph();
     this.events.emit('flowchart_changed', this);
   }
 
@@ -198,7 +198,7 @@ export class Flowchart {
     return this.data;
   }
 
-  initStateHandler(): this {
+  init_stateHandler(): this {
     if (this.xgraph) {
       this.stateHandler = new StateHandler(this.$gf, this.xgraph);
     }
@@ -211,7 +211,7 @@ export class Flowchart {
    * @return {this}
    * @memberof Flowchart
    */
-  initGraph(): this {
+  init_xgraph(): this {
     const $GF = this.$gf;
     try {
       const content = this.getContent();
@@ -225,12 +225,12 @@ export class Flowchart {
     return this;
   }
 
-  updateGraph(): this {
+  update_xgraph(): this {
     const $GF = this.$gf;
     try {
       const content = this.getContent();
       if (this.xgraph === undefined) {
-        this.initGraph();
+        this.init_xgraph();
       }
       if (content !== undefined && content !== null) {
         if (this.data.enableAnim) {

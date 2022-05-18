@@ -247,7 +247,7 @@ export class MetricHandler {
   }
 
   private _on_global_panel_closed() {
-    _log('📩', this.constructor.name, "_on_global_panel_close");
+    _log('📬', this.constructor.name, "_on_global_panel_close");
     this.free();
   }
 
