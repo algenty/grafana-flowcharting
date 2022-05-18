@@ -5,7 +5,7 @@ import { GFEvents } from 'flowcharting_base';
 
 // Debug
 const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(args)}
+const _log = (...args: any) => {DEBUG && console.log(...args)}
 
 // Define signals
 const flowchartHandlerSignalsArray = ['flowchart_created', 'flowchart_deleted'] as const;

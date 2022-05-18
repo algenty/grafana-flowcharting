@@ -586,7 +586,7 @@ module.exports = {
         }
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   },
   anonymize(graph) {

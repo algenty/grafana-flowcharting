@@ -11,7 +11,7 @@ const stateSignalsArray = ['state_initialized', 'state_updated', 'state_freed'] 
 type stateSignals = typeof stateSignalsArray[number];
 
 const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(args)}
+const _log = (...args: any) => {DEBUG && console.log(...args)}
 
 /**
  * Class for state of one cell
@@ -83,10 +83,10 @@ export class State {
     this._initCycle();
     this.$gf.events.connect('data_updated', this, this._on_global_data_received.bind(this));
     this.$gf.events.connect('data_processed', this, this._on_global_data_processed.bind(this));
-    this.$gf.rulesHandler.events.connect('rule_changed', this, this._on_ruleHandler_rule_changed.bind(this));
-    this.$gf.rulesHandler.events.connect('rule_updated', this, this._on_ruleHandler_rule_updated.bind(this));
-    this.$gf.rulesHandler.events.connect('rule_created', this, this._on_ruleHandler_rule_created.bind(this));
-    this.$gf.rulesHandler.events.connect('rule_deleted', this, this._on_ruleHandler_rule_deleted.bind(this));
+    this.$gf.rulesHandler?.events.connect('rule_changed', this, this._on_ruleHandler_rule_changed.bind(this));
+    this.$gf.rulesHandler?.events.connect('rule_updated', this, this._on_ruleHandler_rule_updated.bind(this));
+    this.$gf.rulesHandler?.events.connect('rule_created', this, this._on_ruleHandler_rule_created.bind(this));
+    this.$gf.rulesHandler?.events.connect('rule_deleted', this, this._on_ruleHandler_rule_deleted.bind(this));
     this.events.emit('state_initialized', this);
     return this;
   }
@@ -111,10 +111,10 @@ export class State {
     this.reset();
     this.$gf.events.disconnect('data_updated', this);
     this.$gf.events.disconnect('data_processed', this);
-    this.$gf.rulesHandler.events.disconnect('rule_updated', this);
-    this.$gf.rulesHandler.events.disconnect('rule_changed', this);
-    this.$gf.rulesHandler.events.disconnect('rule_created', this);
-    this.$gf.rulesHandler.events.disconnect('rule_deleted', this);
+    this.$gf.rulesHandler?.events.disconnect('rule_updated', this);
+    this.$gf.rulesHandler?.events.disconnect('rule_changed', this);
+    this.$gf.rulesHandler?.events.disconnect('rule_created', this);
+    this.$gf.rulesHandler?.events.disconnect('rule_deleted', this);
     this.events.clear();
     await this.events.emit('state_freed', this);
   }

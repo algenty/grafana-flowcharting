@@ -4,7 +4,7 @@ import { GFEvents } from 'flowcharting_base';
 
 // Debug
 const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(args)}
+const _log = (...args: any) => {DEBUG && console.log(...args)}
 
 // Define signals
 const metricHandlerSignalsArray = ['metric_created', 'metric_updated', 'metric_deleted'] as const;
@@ -61,7 +61,7 @@ export class MetricHandler {
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.metrics.forEach((m: ObjectMetric) => {
       m.free();
-      this.$gf.metricHandler.events.emit('metric_deleted', m);
+      this.events.emit('metric_deleted', m);
     });
     // $GF.events.disconnect('data_updated', this);
     $GF.events.disconnect('debug_asked', this);
@@ -105,7 +105,7 @@ export class MetricHandler {
       this.tables.delete(uid);
     }
     this.metrics.delete(uid);
-    await this.$gf.metricHandler.events.emit('metric_deleted', metric);
+    await this.events.emit('metric_deleted', metric);
   }
 
   /**
@@ -119,7 +119,7 @@ export class MetricHandler {
     const table = new TableMetric(this.$gf, data);
     this.tables.set(table.uid, table);
     this.metrics.set(table.uid, table);
-    this.$gf.metricHandler.events.emit('metric_created', table);
+    this.events.emit('metric_created', table);
     return table;
   }
 
@@ -134,7 +134,7 @@ export class MetricHandler {
     const serie = new SerieMetric(this.$gf, data);
     this.series.set(serie.uid, serie);
     this.metrics.set(serie.uid, serie);
-    this.$gf.metricHandler.events.emit('metric_created', serie);
+    this.events.emit('metric_created', serie);
     return serie;
   }
 

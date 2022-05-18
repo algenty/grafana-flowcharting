@@ -9,6 +9,11 @@ import { InteractiveMap } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
 
+// Debug
+const DEBUG=true
+const _log = (...args: any) => {DEBUG && console.log(...args)}
+
+// Define signals
 const xgraphSignalsArray = ['graph_initialized', 'graph_updated', 'graph_changed', 'graph_freed'] as const;
 type XGraphSignals = typeof xgraphSignalsArray[number];
 
@@ -902,11 +907,7 @@ export class XGraph {
   }
 
   eventDebug(me: mxMouseEvent) {
-    console.log('DEBUG mxMouseEvent', me);
-    // const state = me.getState();
-    // if (state) {
-    //   console.log("DEBUG state",state);
-    // }
+    console.log('🔎', 'mxMouseEvent', me);
   }
 
   /**
@@ -1172,7 +1173,7 @@ export class XGraph {
   //### EVENTS
   //#############################################################################
   private _on_global_debug_asked() {
-    console.log('🧰', this.constructor.name, this);
+    _log('🧰', this.constructor.name, this);
   }
 
 }

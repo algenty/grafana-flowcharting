@@ -6,7 +6,7 @@ import { GFEvents } from 'flowcharting_base';
 const _DEBUG = true;
 const _log = (...args: unknown[]) => {
   if (_DEBUG) {
-    console.log(args);
+    console.log(...args);
   }
 };
 
@@ -213,7 +213,7 @@ export class GFDrawio {
           let deflateRaws = deflateRaw(data);
           data = String.fromCharCode.apply(null, new Array(...deflateRaws));
         } catch (e) {
-          console.log(e);
+          console.error(e);
           GFLog.error(`Unable to encode ${data}`);
           return '';
         }

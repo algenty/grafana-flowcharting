@@ -8,7 +8,7 @@ import { GFDrawio } from 'drawio_base';
 
 // Debug
 // const DEBUG=true
-// const _log = (...args: any) => {DEBUG && console.log(args)}
+// const _log = (...args: any) => {DEBUG && console.log(...args)}
 
 // Define signals
 const flowchartSignalsArray = [

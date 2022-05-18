@@ -6,7 +6,7 @@ import { GFEvents } from 'flowcharting_base';
 
 // Debug
 const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(args)}
+const _log = (...args: any) => {DEBUG && console.log(...args)}
 
 // Define signals
 const ruleHandlerSignalsArray = ['rule_created', 'rule_updated', 'rule_changed', 'rule_deleted'] as const;
@@ -86,8 +86,8 @@ export class RulesHandler {
     this.$gf.events.disconnect('panel_closed', this);
     this.rules.forEach((r) => r.free());
     this.clear();
-    this.$gf.rulesHandler.events.clear();
-    // this.onDestroyed();
+    this.events.clear();
+    this.$gf.rulesHandler = undefined;
     return this;
   }
 
@@ -129,7 +129,7 @@ export class RulesHandler {
         const r = this.addRule('', ruleData);
         r.setOrder(index);
         index += 1;
-        this.$gf.rulesHandler.events.emit('rule_created', r);
+        this.events.emit('rule_created', r);
       });
     }
     this.change();
@@ -332,12 +332,12 @@ export class RulesHandler {
   //#############################################################
   private _on_rule_rule_updated(rule: Rule) {
     _log('📩', this.constructor.name, '_on_rule_rule_updated');
-    this.$gf.rulesHandler.events.emit('rule_updated', rule);
+    this.events.emit('rule_updated', rule);
   }
 
   private _on_rule_rule_changed(rule: Rule) {
     _log('📩', this.constructor.name, '_on_rule_rule_changed');
-    this.$gf.rulesHandler.events.emit('rule_changed', rule);
+    this.events.emit('rule_changed', rule);
   }
 
   private _on_global_debug_asked() {

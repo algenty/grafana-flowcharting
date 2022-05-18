@@ -19,7 +19,7 @@ import { GFEvents } from 'flowcharting_base';
 
 // Debug
 const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(args)}
+const _log = (...args: any) => {DEBUG && console.log(...args)}
 
 // Signal definition
 const ruleSignalsArray = ['rule_initalized', 'rule_updated', 'rule_changed', 'rule_freed'] as const;
@@ -94,8 +94,8 @@ export class Rule {
   }
 
   init() {
-    this.$gf.metricHandler.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
-    this.$gf.metricHandler.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
+    this.$gf.metricHandler?.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
+    this.$gf.metricHandler?.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
     this.events.emit('rule_initalized', this);
     return this;
   }
@@ -111,8 +111,8 @@ export class Rule {
 
   async free() {
     await this.events.emit('rule_freed', this);
-    this.$gf.metricHandler.events.disconnect('metric_created', this);
-    this.$gf.metricHandler.events.disconnect('metric_deleted', this);
+    this.$gf.metricHandler?.events.disconnect('metric_created', this);
+    this.$gf.metricHandler?.events.disconnect('metric_deleted', this);
     this.events.clear();
     return this;
   }

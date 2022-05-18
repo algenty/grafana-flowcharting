@@ -8,6 +8,11 @@ import { RulesHandler } from 'rules_handler';
 import { MetricHandler } from 'metric_handler';
 const safeEval = require('safe-eval');
 
+// Debug
+const DEBUG=true
+const _log = (...args: any) => {DEBUG && console.log(...args)}
+
+// Define signals
 const globalSignalsArray = [
   'data_updated',
   'data_processed',
@@ -47,7 +52,7 @@ export class GFCONSTANT {
   static readonly CONF_COLORS_STEPS = 5;
   static readonly CONF_COLORS_MS = 50;
   static readonly CONF_ANIMS_STEP = 10;
-  static readonly CONF_ANIMS_MS = 100;
+  static readonly CONF_ANIMS_MS = 50;
   static readonly CONF_GFMESSAGE_MS = 5000;
   static readonly CONF_BLINK_COLOR = '#f5f242';
   static readonly CONF_HIGHTLIGHT_COLOR = '#99ff33';
@@ -845,9 +850,9 @@ export class $GF {
   $refresh: CallableFunction = () => {};
   ctrl!: FlowchartCtrl;
   events: GFEvents<GlobalSignals> = GFEvents.create(globalSignalsArray);
-  flowchartHandler!: FlowchartHandler;
-  rulesHandler!: RulesHandler;
-  metricHandler!: MetricHandler;
+  flowchartHandler: FlowchartHandler | undefined;
+  rulesHandler: RulesHandler | undefined;
+  metricHandler: MetricHandler | undefined;
   static utils: {
     // ! deprecated : Use DrawioTools
     decode_deprecated: (data: string, encode: boolean, deflate: boolean, base64: boolean) => string;
@@ -1376,11 +1381,11 @@ export class $GF {
   //### EVENTS
   //###########################################################################
   private _on_global_debug_asked() {
-    console.log('🧰', $GF.constructor.name, this);
+    _log('🧰', $GF.constructor.name, this);
   }
 
   private _on_global_panel_closed() {
-    console.log('📩', this.constructor.name, '_on_global_panel_closed');
+    _log('📩', this.constructor.name, '_on_global_panel_closed');
     this.free();
   }
 }
