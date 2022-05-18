@@ -12,6 +12,7 @@ import { XGraph } from 'graph_class';
 import grafana from 'grafana_func';
 import { defaults as _defaults, cloneDeep as _cloneDeep } from 'lodash';
 import { InteractiveMap } from 'mapping_class';
+import { GFDrawio } from 'drawio_base';
 
 // Debug
 const DEBUG=true
@@ -109,7 +110,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //### INIT/UPDATE/CHANGE/FREE/CLEAR
   //############################################################################
   init_ctrl() {
-    this.init_connectors();
+    this._eventsConnect();
     this.init_handlers();
   }
 
@@ -118,9 +119,14 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //############################################################################
   //### LOGIC
   //############################################################################
-  init_connectors() {
+  _eventsConnect() {
     this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     this.$gf.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
+  }
+
+  _eventsDisconnect() {
+    this.$gf.events.disconnect('debug_asked', this);
+    this.$gf.events.disconnect('panel_closed', this);
   }
 
   init_handlers() {
@@ -163,10 +169,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
-  clear_connectors() {
-    this.$gf.events.disconnect('debug_asked', this);
-    this.$gf.events.disconnect('panel_closed', this);
-  }
+
 
   /**
    * Return data with default value
@@ -278,7 +281,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   private _on_global_panel_closed() {
     _log('📩', this.constructor.name, '_on_global_panel_closed');
-    this.clear_connectors();
+    this._eventsDisconnect();
   }
 
   //
@@ -314,9 +317,13 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
     // MxGraph Init
     this.notify('Load configuration');
-    XGraph.initMxGraphLib().then(() => {
+    GFDrawio.init()
+      .finally( ()=> {
       this.init_ctrl();
-    });
+    })
+    // XGraph.initMxGraphLib().then(() => {
+    //   this.init_ctrl();
+    // });
 
     // Versions
     // this.panel.newFlag = false;

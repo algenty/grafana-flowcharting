@@ -50,6 +50,7 @@ describe('GFDrawio tests', () => {
         await result;
         expect(GFDrawio.isInitalized()).toBeTruthy();
         expect(globalThis.mxGraph).not.toBeUndefined()
+        expect(globalThis.Graph).not.toBeUndefined()
         console.log(global);
       });
       test.skip('Load in distant', async () => {

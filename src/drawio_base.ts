@@ -2,6 +2,7 @@ import { GFCONSTANT, GFLog, GFPlugin } from 'globals_class';
 import { inflateRaw, deflateRaw } from 'pako';
 import { readFile } from 'fs';
 import { GFEvents } from 'flowcharting_base';
+const mxcustom = require('mxgraph_custom');
 
 const _DEBUG = true;
 const _log = (...args: unknown[]) => {
@@ -10,6 +11,7 @@ const _log = (...args: unknown[]) => {
   }
 };
 
+const empty = new Promise<void>(() => {});
 const gfdrawioSignalsArray = ['drawio_initialized'] as const;
 type GFDrawioSignals = typeof gfdrawioSignalsArray[number];
 
@@ -35,12 +37,12 @@ export class GFDrawio {
   //### INIT/UPDATE/CHANGE/FREE/CLEAR
   //############################################################################
   static async init(options?: DrawioOptions) {
-    _log('📋', this.constructor.name, options);
     this._GFInitialized = true;
     this.options = Object.assign(this._getDefaultRequiredOptions(), options);
     if (!GFDrawio._libInitialized && GFDrawio.options.libLoad) {
       return GFDrawio.loadEngine();
     }
+    return;
   }
 
   //############################################################################
@@ -51,6 +53,10 @@ export class GFDrawio {
   }
 
   static async loadEngine() {
+    // const empty = new Promise<void>(() => {});
+    if(GFDrawio._libInitialized) {
+      return;
+    }
     // If not initialized
     if (!GFDrawio._GFInitialized) {
       GFDrawio.init({ libLoad: false });
@@ -66,13 +72,16 @@ export class GFDrawio {
       result = GFDrawio._loadServer();
     }
     // eval result code
-    return result.then((code) => {
-      if (typeof code === 'string') {
-        return GFDrawio._evalLib(code);
-      }
-      return;
-    });
 
+    return result.then( async (code) => {
+        if (typeof code === 'string') {
+          await GFDrawio._preLoad()
+          await GFDrawio._evalLib(code);
+          await GFDrawio._customization();
+          await GFDrawio._postLoad()
+        }
+        return;
+      });
     return;
   }
 
@@ -98,9 +107,14 @@ export class GFDrawio {
   }
 
   private static async _evalLib(code: string) {
-    globalThis.eval(code);
+    // globalThis.eval(code);
     // const evalfunc = new Function(code);
-    // evalfunc();
+    // Function.call(evalfunc)
+    if (GFDrawio.options.mode === 'local') {
+      globalThis.eval(code);
+    } else {
+      globalThis.eval(code);
+    }
     GFDrawio._libInitialized = true;
     GFDrawio.events.emit('drawio_initialized');
   }
@@ -116,9 +130,60 @@ export class GFDrawio {
           _log(error);
         });
     }
-    return;
   }
 
+  private static async _customization() {
+    mxcustom.customize();
+    mxTooltipHandler.prototype.delay = GFCONSTANT.CONF_TOOLTIPS_DELAY;
+  }
+
+  private static async _preLoad() {
+    const globalDio: any = globalThis;
+    globalDio.BASE_PATH = GFPlugin.getMxBasePath();
+    globalDio.RESOURCES_PATH = GFPlugin.getMxResourcePath();
+    globalDio.RESOURCE_BASE = GFPlugin.getMxResourcePath();
+    globalDio.STENCIL_PATH = GFPlugin.getStencilsPath();
+    globalDio.SHAPES_PATH = GFPlugin.getShapesPath();
+    globalDio.IMAGE_PATH = GFPlugin.getMxImagePath();
+    globalDio.STYLE_PATH = GFPlugin.getMxStylePath();
+    globalDio.CSS_PATH = GFPlugin.getMxCssPath();
+    globalDio.mxLanguages = ['en'];
+    globalDio.DRAWIO_BASE_URL = GFPlugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
+    globalDio.DRAW_MATH_URL = GFPlugin.getDrawioPath(); // Replace with path to base of deployment, e.g. https://www.example.com/folder
+    globalDio.DRAWIO_VIEWER_URL = GFPlugin.getDrawioPath() + 'viewer.min.js'; // Replace your path to the viewer js, e.g. https://www.example.com/js/viewer.min.js
+    globalDio.DRAW_MATH_URL = GFPlugin.getDrawioPath() + 'math/';
+    globalDio.DRAWIO_CONFIG = null; // Replace with your custom draw.io configurations. For more details, https://desk.draw.io/support/solutions/articles/16000058316
+    const urlParams = {
+      sync: 'none', // Disabled realtime
+      lightbox: '1', // Uses lightbox in chromeless mode (larger zoom, no page visible, chromeless)
+      nav: '1', // Enables folding in chromeless mode
+      local: '1', // Uses device mode only
+      embed: '1', // Runs in embed mode
+      ui: 'min',
+    };
+    globalDio.urlParams = urlParams;
+    globalDio.mxImageBasePath = GFPlugin.getMxImagePath();
+    globalDio.mxBasePath = GFPlugin.getMxBasePath();
+    globalDio.mxLoadStylesheets = true;
+    globalDio.mxLanguage = 'en';
+    globalDio.mxLoadResources = true;
+  }
+
+  private static async _postLoad() {
+    const globalDio: any = globalThis;
+    globalDio.mxClient.mxBasePath = GFPlugin.getMxBasePath();
+    globalDio.mxClient.mxImageBasePath = GFPlugin.getMxImagePath();
+    globalDio.mxClient.mxLoadResources = true;
+    globalDio.mxClient.mxLanguage = 'en';
+    globalDio.mxClient.mxLoadStylesheets = true;
+    globalDio.VSD_CONVERT_URL = null;
+    globalDio.EMF_CONVERT_URL = null;
+    globalDio.ICONSEARCH_PATH = null;
+  }
+
+  //############################################################################
+  //### UTILS
+  //############################################################################
   static parseXml(xmlString: string): Document {
     var parser = new DOMParser();
     return parser.parseFromString(xmlString, 'text/xml');

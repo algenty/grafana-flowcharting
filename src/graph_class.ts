@@ -153,18 +153,18 @@ export class XGraph {
    * @returns
    * @memberof XGraph
    */
-  static async initMxGraphLib() {
-    if (! GFDrawio.isInitalized()) {
-        XGraph.preInitGlobalVars();
-        // Eval Fileor Eval Code
-        // $GF.utils.$evalFile(`${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DRAWIOLIB}`);
-        return GFDrawio.loadEngine().then(()=> {
-          mxcustom.customize();
-          XGraph.postInitGlobalVars();
-          mxTooltipHandler.prototype.delay = GFCONSTANT.CONF_TOOLTIPS_DELAY;
-        })
-      }
-  }
+  // static async initMxGraphLib() {
+  //   if (! GFDrawio.isInitalized()) {
+  //       // XGraph.preInitGlobalVars();
+  //       // Eval Fileor Eval Code
+  //       // $GF.utils.$evalFile(`${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DRAWIOLIB}`);
+  //       return GFDrawio.loadEngine().then(()=> {
+  //         // mxcustom.customize();
+  //         // XGraph.postInitGlobalVars();
+  //         mxTooltipHandler.prototype.delay = GFCONSTANT.CONF_TOOLTIPS_DELAY;
+  //       })
+  //     }
+  // }
 
   /**
    * Init Vars for mxGraph
