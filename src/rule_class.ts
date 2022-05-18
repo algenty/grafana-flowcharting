@@ -94,11 +94,23 @@ export class Rule {
   }
 
   init() {
-    this.$gf.metricHandler?.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
-    this.$gf.metricHandler?.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
+    this._eventsConnect();
     this.events.emit('rule_initalized', this);
     return this;
   }
+
+  private _eventsConnect() {
+    this.$gf?.metricHandler?.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
+    this.$gf?.metricHandler?.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
+    return this;
+  }
+
+  private _eventsDisconnect() {
+    this.$gf?.metricHandler?.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
+    this.$gf?.metricHandler?.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
+    return this;
+  }
+
 
   change() {
     // this.updateMetrics();
@@ -111,8 +123,7 @@ export class Rule {
 
   async free() {
     await this.events.emit('rule_freed', this);
-    this.$gf.metricHandler?.events.disconnect('metric_created', this);
-    this.$gf.metricHandler?.events.disconnect('metric_deleted', this);
+    this._eventsDisconnect()
     this.events.clear();
     return this;
   }
