@@ -1,4 +1,4 @@
-<div class="section gf-form-group" ng-mouseenter="editor.setCurrentParam('currentOptions',rule.getShapeMapOptions())" 
+<div class="section gf-form-group" ng-mouseenter="editor.setCurrentParam('currentOptions',rule.getShapeMapOptions())"
     ng-mouseleave="editor.unsetCurrentParam('currentOptions')">
     <h5 class="section-heading">
         Color/Tooltip Mappings
@@ -44,6 +44,6 @@
                 tooltip="Disable this option if you don't use regular expressions in field 'What' below to improve performance">
             </gf-form-switch>
         </div>
-        <ng-include src="$GF.plugin.getPartialPath() + 'rules/shapes/shapesTable.html'"> </ng-include>
+        <ng-include src="GFPlugin.getPartialPath() + 'rules/shapes/shapesTable.html'"> </ng-include>
     </div>
 </div>

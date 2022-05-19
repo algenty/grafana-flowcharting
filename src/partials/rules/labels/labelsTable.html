@@ -106,7 +106,7 @@
                 <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" ng-repeat="text in rule.getTextMaps()"
                     ng-mouseenter="editor.setCurrentMap(text);" ng-mouseleave="editor.unsetCurrentMap();">
                     <!-- CELLS -->
-                    <div class="gf-table-row_line" 
+                    <div class="gf-table-row_line"
                         ng-mouseleave="editor.unhighlightXCells(text);"
                         ng-mouseover="editor.highlightXCells(text)">
                         <!-- EXPAND -->
@@ -132,7 +132,7 @@
                             </div>
                             <div ng-show="text.displayWhatEdit === true && text.whatEdit !== true"
                                 ng-click="text.whatEdit = true;$GF.setFocus( text.uid + '-what' )"
-                                title="Edit pattern" 
+                                title="Edit pattern"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent">
                             </div>
                             <div ng-show="text.displayWhatEdit === true && text.whatEdit !== true && !editor.flowchartHandler.isMapping(text)"
@@ -141,7 +141,7 @@
                                 title="Select a text in diagram">
                             </div>
                             <input type="text" class="gf-form-input" ng-model="text.getData().pattern"
-                                style="margin-right: 2px;width : 100%" 
+                                style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{text.uid + '-what'}}"
                                 ng-show="text.whatEdit === true" ng-model-onblur
                                 ng-blur="editor.onRulesChange();text.whatEdit = false;"
@@ -235,7 +235,7 @@
                         </div>
                     </div>
                     <div class="gf-table-row_body" ng-show="text.reduce==false">
-                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/labels/labelBody.html'"> </ng-include>
+                        <ng-include src="GFPlugin.getPartialPath() + 'rules/labels/labelBody.html'"> </ng-include>
                     </div>
                 </div>
             </div>

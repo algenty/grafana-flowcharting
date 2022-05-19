@@ -117,9 +117,9 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" 
+                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable"
                     ng-repeat="elt in rule.getEventMaps()"
-                    ng-mouseenter="editor.setCurrentMap(elt);" 
+                    ng-mouseenter="editor.setCurrentMap(elt);"
                     ng-mouseleave="editor.unsetCurrentMap();">
                     <!-- CELLS -->
                     <div class="gf-table-row_line" ng-init="elt.displayEdit = [];elt.inEdit = [];"
@@ -294,7 +294,7 @@
                         </div>
                     </div>
                     <div class="gf-table-row_body" ng-show="elt.reduce === false">
-                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/events/eventBody.html'"> </ng-include>
+                        <ng-include src="GFPlugin.getPartialPath() + 'rules/events/eventBody.html'"> </ng-include>
                     </div>
                 </div>
             </div>

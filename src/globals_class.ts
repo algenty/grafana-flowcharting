@@ -580,7 +580,9 @@ export class GFPlugin {
    * @returns {GFPlugin}
    * @memberof GFPlugin
    */
-  static init($scope: any, templateSrv: any, $gf: $GF) {
+  static init($scope: any, templateSrv: any, ctrl: any) {
+    $scope.GFPlugin = this;
+    ctrl.GFPlugin = this;
     GFPlugin.contextRoot = GFPlugin.defaultContextRoot;
     GFPlugin.templateSrv = templateSrv;
     if ($scope === undefined) {
@@ -844,7 +846,7 @@ export class $GF {
   private _globalvars: GFVariables = GFVariables.create();
   static graphHover = false;
   static GHTimeStamp = 0;
-  static DEBUG = true;
+  DEBUG = true;
   notify: CallableFunction = (message: string, type: string) => {};
   clearNotify: CallableFunction = () => {};
   $refresh: CallableFunction = () => {};
@@ -891,7 +893,8 @@ export class $GF {
   static create($scope: any, templateSrv: any, dashboard: any, ctrl: any): $GF {
     const _gf = new $GF();
     GFPlugin.init($scope, templateSrv, ctrl);
-    if ($GF.DEBUG) {
+    $scope.$GF = _gf;
+    if (_gf.DEBUG) {
       console.log('DEBUG Scope', $scope);
       console.log('DEBUG TemplateSrv', templateSrv);
       console.log('DEBUG Theme', dashboard.style);
@@ -1381,7 +1384,7 @@ export class $GF {
   //### EVENTS
   //###########################################################################
   private _on_global_debug_asked() {
-    _log('🧰', $GF.constructor.name, this);
+    _log('🗃️', $GF.constructor.name, this);
   }
 
   private _on_global_panel_closed() {
