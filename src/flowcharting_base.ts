@@ -7,7 +7,7 @@ type Uid = String;
 type ConnectedChild = Map<Uid, CallableFunction>;
 
 // Debug
-const DEBUG=true;
+const DEBUG=false;
 const _log = (...args: any) => {DEBUG && console.log(...args)}
 
 export class GFEvents<Signals> {

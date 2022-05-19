@@ -7,8 +7,8 @@ import { GFDrawio } from 'drawio_base';
 
 
 // Debug
-// const DEBUG=true
-// const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG=true
+const _log = (...args: any) => {DEBUG && console.log(...args)}
 
 // Define signals
 const flowchartSignalsArray = [
@@ -16,6 +16,7 @@ const flowchartSignalsArray = [
   'flowchart_updated',
   'flowchart_changed',
   'flowchart_freed',
+  'graph_changed'
 ] as const;
 type FlowchartSignals = typeof flowchartSignalsArray[number];
 
@@ -64,10 +65,7 @@ export class Flowchart {
     const funcName = 'refresh';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.xgraph?.update();
-    // this.stateHandler?.refresh();
-    // this.refreshStates();
     this.setBackgroundColor(this.data.bgColor);
-    // this.onRefreshed();
     this.events.emit('flowchart_updated', this);
   }
 
@@ -81,6 +79,7 @@ export class Flowchart {
   async free() {
     const funcName = 'destroy';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
+    this?.xgraph?.events.disconnect('graph_changed', this);
     this.xgraph?.free();
     this.stateHandler?.free();
     await this.events.emit('flowchart_freed', this);
@@ -217,6 +216,7 @@ export class Flowchart {
       const content = this.getContent();
       if (this.xgraph === undefined) {
         this.xgraph = new XGraph(this.$gf, this.container, this.data.type, content);
+        this.xgraph.events.connect('graph_changed', this, this._on_xgraph_graph_changed.bind(this));
       }
     } catch (error) {
       $GF.notify('Unable to initialize graph', 'error');
@@ -293,24 +293,6 @@ export class Flowchart {
   }
 
   /**
-   * Init states with rules and metrics
-   *
-   * @param {Rule[]} rules
-   * @param {Metric[]} metrics
-   * @memberof Flowchart
-   */
-  // setStates(rules: Rule[]): this {
-  //   // GFLog.info(`flowchart[${this.data.name}].setStates()`);
-  //   if (rules === undefined) {
-  //     GFLog.warn("Rules shoudn't be null");
-  //   }
-  //   if (this.stateHandler) {
-  //     this.stateHandler.setStates(rules);
-  //   }
-  //   return this;
-  // }
-
-  /**
    * Init options of graph
    *
    * @memberof Flowchart
@@ -328,35 +310,7 @@ export class Flowchart {
     return this;
   }
 
-  /**
-   * Apply new states (colors,text ...)
-   *
-   * @memberof Flowchart
-   */
-  // applyStates(): this {
-  //   // GFLog.info(`flowchart[${this.data.name}].applyStates()`);
-  //   if (this.stateHandler) {
-  //     this.stateHandler.applyStates();
-  //   }
-  //   return this;
-  // }
 
-  /**
-   * Apply options
-   *
-   * @memberof Flowchart
-   */
-  // refreshGraph() {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'applyOptions()');
-  //   if (this.xgraph) {
-  //     this.xgraph?.refresh();
-  //   }
-  //   trc.after();
-  // }
-
-  // refreshStates() {
-  //   this.stateHandler?.refresh();
-  // }
 
   /**
    * Reset and redraw graph when source changed
@@ -597,7 +551,7 @@ export class Flowchart {
 
   allowDrawio(flag: boolean): this {
     if (this.xgraph) {
-      this.xgraph.allowDrawio(flag);
+      this.xgraph.allowDrawioRessources(flag);
     }
     return this;
   }
@@ -655,13 +609,6 @@ export class Flowchart {
   loadContent(url: string): string | null {
     return $GF.utils.$loadFile(url);
   }
-
-  // renameId(oldId: string, newId: string): this {
-  //   if (this.xgraph) {
-  //     this.xgraph.renameId(oldId, newId);
-  //   }
-  //   return this;
-  // }
 
   /**
    * Apply xml to graph
@@ -789,5 +736,17 @@ export class Flowchart {
   isVisible(): boolean {
     return this.visible;
   }
+
+  //###########################################################################
+  //### EVENTS
+  //###########################################################################
+  private _on_xgraph_graph_changed() {
+    _log('📬', this.constructor.name, "_on_flowchart_graph_changed");
+    if(this.xgraph) {
+      this.stateHandler?.setXGraph(this.xgraph);
+      this.stateHandler?.init();
+    }
+  }
+
 
 }

@@ -66,8 +66,8 @@ export class StateHandler {
   init(): this {
     const funcName = 'init';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
-    this.initStates();
+    this._eventsConnect();
+    this.init_states();
     // this.onInitialized();
     return this;
   }
@@ -79,7 +79,7 @@ export class StateHandler {
     });
     this.clear();
     this.events.clear();
-    this.$gf.events.disconnect('debug_asked', this);
+    this._eventsDisconnect();
   }
 
   clear(): this {
@@ -94,6 +94,15 @@ export class StateHandler {
   //############################################################################
   //### LOGIC
   //############################################################################
+  private _eventsConnect() {
+    this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
+    // Moved to parent Flowchart
+    // this.xgraph.events.connect('graph_changed', this, this._on_flowchart_graph_changed.bind(this))
+  }
+
+  private _eventsDisconnect() {
+    this.$gf.events.disconnect('debug_asked', this);
+  }
 
   /**
    * Initialisation of states
@@ -102,17 +111,14 @@ export class StateHandler {
    * @param {XGraph} xgraph
    * @memberof StateHandler
    */
-  async initStates() {
-    this.states.clear();
+  async init_states() {
+    this.clear();
     const xcells = this.xgraph.getXCells();
-    await Promise.all(
+    Promise.all(
       xcells.map(async (xcell: XCell) => {
         this.addState(xcell);
       })
     );
-    // _each(xcells, x => {
-    //   this.addState(x);
-    // });
     return this;
   }
 
@@ -120,80 +126,6 @@ export class StateHandler {
     this.xgraph = xgraph;
     return this;
   }
-
-  /**
-   * Return states array for a rule
-   *
-   * @param {Rule} rule - rule mapping
-   * @returns {Array<State>}
-   * @memberof StateHandler
-   */
-  // getStatesForRule(rule: Rule) {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'getStatesForRule()');
-  //   const result = new Map();
-  //   let name: string | null;
-  //   this.states.forEach(state => {
-  //     const xcell: XCell = state.xcell;
-  //     const id: string = xcell.getId();
-  //     let found = false;
-  //     // SHAPES
-  //     let options = rule.getShapeMapOptions();
-  //     name = xcell.getValues(options);
-  //     if (name !== null && rule.matchShape(name, options)) {
-  //       result.set(id, state);
-  //       found = true;
-  //     }
-
-  //     // TEXTS
-  //     if (!found) {
-  //       let options = rule.getTextMapOptions();
-  //       // name = XGraph.getValuePropOfMxCell(mxcell, options);
-  //       name = xcell.getValues(options);
-  //       if (rule.matchText(name, options)) {
-  //         result.set(id, state);
-  //         found = true;
-  //       }
-  //     }
-
-  //     // LINKS
-  //     if (!found) {
-  //       let options = rule.getLinkMapOptions();
-  //       // name = XGraph.getValuePropOfMxCell(mxcell, options);
-  //       name = xcell.getValues(options);
-  //       if (rule.matchLink(name, options)) {
-  //         result.set(id, state);
-  //         found = true;
-  //       }
-  //     }
-
-  //     // EVENTS
-  //     if (!found) {
-  //       let options = rule.getEventMapOptions();
-  //       // name = XGraph.getValuePropOfMxCell(mxcell, options);
-  //       name = xcell.getValues(options);
-  //       if (rule.matchEvent(name, options)) {
-  //         result.set(id, state);
-  //         found = true;
-  //       }
-  //     }
-  //   });
-  //   trc.after();
-  //   return result;
-  // }
-
-  /**
-   * Update States : Add or remove state in states when rules changed
-   *
-   * @param {XGraph} xgraph
-   * @param {Array<Rule>} rules
-   * @memberof StateHandler
-   */
-  // updateStates(rules: Rule[]) {
-  //   GFLog.info('StateHandler.updateStates()');
-  //   rules.forEach(rule => {
-  //     rule.states = this.getStatesForRule(rule);
-  //   });
-  // }
 
   /**
    * Return array of state
@@ -245,119 +177,16 @@ export class StateHandler {
     return state;
   }
 
-  /**
-   * Count number of state
-   *
-   * @returns {Number}
-   * @memberof StateHandler
-   */
-  // countStates(): number {
-  //   return this.states.size;
-  // }
+
 
   /**
-   * Restore initial status and prepare states object
+   * @param  {XGraph} xgraph
+   * @returns boolean
    */
-  // prepare(): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'prepare()');
-  //   this.states.forEach(state => {
-  //     state.prepare();
-  //   });
-  //   trc.after();
-  //   return this;
-  // }
-
-  /**
-   * Change states according to rules and datas from grafana
-   * @param  {Array<Rule>} rules - Array of Rule object
-   * @param  {Array<Metric>} metrics - Array of serie object
-   */
-  // setStates(rules: Rule[]): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'setStates()');
-  //   this.prepare();
-  //   rules.forEach(rule => {
-  //     rule.highestLevel = -1;
-  //     rule.highestFormattedValue = '';
-  //     rule.highestColor = '';
-  //     rule.highestValue = '';
-  //     rule.execTimes = 0;
-  //     if (rule.states === undefined || rule.states.size === 0) {
-  //       rule.states = this.getStatesForRule(rule);
-  //     }
-  //     rule.states.forEach(state => {
-  //       state.setState(rule);
-  //     });
-  //   });
-  //   trc.after();
-  //   return this;
-  // }
-
-  /**
-   * Apply color and text
-   */
-  // applyStates(): this {
-  //   const trc = $GF.trace.before(this.constructor.name + '.' + 'applyStates()');
-  //   this.states.forEach(state => {
-  //     state.async_applyState();
-  //   });
-  //   trc.after();
-  //   return this;
-  // }
-
-  // /**
-  //  * Call applyStates asynchronously
-  //  *
-  //  * @memberof StateHandler
-  //  */
-  // async async_applyStates() {
-  //   this.applyStates();
-  // }
   matchXGraph(xgraph: XGraph): boolean {
     return this.xgraph.uid === xgraph.uid;
   }
 
-  // free(rule?: Rule): this {
-  //   const funcName = 'destroy';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   // this.onDestroyed();
-  //   return this;
-  // }
-
-  // complete(): this {
-  //   const funcName = 'complete';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.states.forEach(s => s.complete());
-  //   this.onCompleted();
-  //   return this;
-  // }
-
-  //
-  // Rules
-  //
-  // updateWithRule(rule: Rule): this {
-  //   this.rulesCompleted = false;
-  //   this.states.forEach(state => state.updateWithRule(rule));
-  //   // this.onRefreshed();
-  //   return this;
-  // }
-
-  // changeWithRule(rule: Rule): this {
-  //   this.rulesCompleted = false;
-  //   this.states.forEach(state => state.changeWithRule(rule));
-  //   // this.onChanged();
-  //   return this;
-  // }
-
-  //
-  // XGraph
-  //
-  changeWithXGraph(xgraph: XGraph): this {
-    this.xgraph = xgraph;
-    this.clear();
-    this.init();
-    this.change();
-    return this;
-  }
 
   //#########################################################################
   //### Events
@@ -366,6 +195,5 @@ export class StateHandler {
     _log('📬', this.constructor.name, "_on_global_debug_asked");
     _log("🧰", this.constructor.name, this);
   }
-
 
 }

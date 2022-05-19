@@ -106,11 +106,15 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   //############################################################################
-  //### INIT/UPDATE/CHANGE/FREE/CLEAR
+  //### INIT/UPDATE/CHANGE/FREE/CLEAR (DO NOT NAME INIT, Called by angular by default)
   //############################################################################
   init_ctrl() {
     this._eventsConnect();
     this.init_handlers();
+  }
+
+  free() {
+    this._eventsDisconnect()
   }
 
   change() {}
@@ -135,7 +139,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     if (!this.metricHandler) {
       this.metricHandler = new MetricHandler(this.$gf);
     }
-    // this.metricHandler.clear();
 
     // RULES
     if (!this.rulesHandler) {
@@ -280,7 +283,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   private _on_global_panel_closed() {
     _log('📬', this.constructor.name, '_on_global_panel_closed');
-    this._eventsDisconnect();
+    this.free()
   }
 
   //
@@ -316,10 +319,11 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
     // MxGraph Init
     this.notify('Load configuration');
-    GFDrawio.init()
-      .finally( ()=> {
-      this.init_ctrl();
-    })
+    GFDrawio.init();
+    this.init_ctrl();
+    //   .then( ()=> {
+    //   this.init_ctrl();
+    // })
     // XGraph.initMxGraphLib().then(() => {
     //   this.init_ctrl();
     // });

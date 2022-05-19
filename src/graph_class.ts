@@ -36,6 +36,7 @@ export class XGraph {
   tooltip = true;
   lock = true;
   center = true;
+  allowDrawio = false;
   animation = true;
   zoom = false;
   zoomFactor = 1.2;
@@ -236,8 +237,6 @@ export class XGraph {
     return this;
   }
 
-
-
   /**
    * Init XCells
    *
@@ -300,6 +299,7 @@ export class XGraph {
       this.centerGraph(this.center);
     }
     this.gridGraph(this.grid);
+    this.allowDrawioRessources(this.allowDrawio);
     // this.bgGraph(this.bgColor);
     this.graph.foldingEnabled = true;
     this.graph.cellRenderer.forceControlClickHandler = true;
@@ -374,10 +374,9 @@ export class XGraph {
    *
    * @memberof XGraph
    */
-   async anonymize() {
+  async anonymize() {
     dioCustom.anonymize(this.graph);
   }
-
 
   /**
    * Allow downloads images from site draw.io
@@ -386,14 +385,19 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  allowDrawio(bool: boolean): this {
+  allowDrawioRessources(bool: boolean): this {
+    this.allowDrawio = bool;
+    if (!this._isGraphInitilized) {
+      return this;
+    }
     if (bool) {
       mxUrlConverter.prototype.baseUrl = GFCONSTANT.CONF_EDITOR_URL;
       mxUrlConverter.prototype.baseDomain = '';
-    } else {
-      mxUrlConverter.prototype.baseUrl = null;
-      mxUrlConverter.prototype.baseDomain = null;
+      return this;
     }
+    // Else
+    mxUrlConverter.prototype.baseUrl = null;
+    mxUrlConverter.prototype.baseDomain = null;
     return this;
   }
 
