@@ -202,7 +202,6 @@ export class MetricHandler {
     this.metrics.forEach((m) => {
       m.update(timestamp);
     });
-    // this.ctrl.eventHandler.ack('metric', 'completed');
     return this;
   }
 
@@ -281,6 +280,6 @@ export class MetricHandler {
   // async onCompleted() {
   //   const funcName = 'onCompleted';
   //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.ack('metric', 'completed');
+  //   this.ctrl.eventHandler.ack('metric', '');
   // }
 }

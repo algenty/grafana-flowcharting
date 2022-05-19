@@ -24,7 +24,6 @@ export class StateHandler {
   states: Map<string, State>;
   xgraph: XGraph;
   edited = false;
-  rulesCompleted = true;
   uid: string;
   events: GFEvents<stateHandlerSignals> = GFEvents.create(stateHandlerSignalsArray);
 
@@ -48,7 +47,6 @@ export class StateHandler {
   update(): this {
     const funcName = 'refresh';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.rulesCompleted = false;
     this.states.forEach((s) => s.update());
     // this.onRefreshed();
     return this;
@@ -57,7 +55,6 @@ export class StateHandler {
   change(): this {
     const funcName = 'change';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.rulesCompleted = false;
     this.states.forEach((s) => s.change());
     // this.onChanged();
     return this;

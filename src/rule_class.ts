@@ -38,7 +38,6 @@ export class Rule {
   data: gf.TIRuleData;
   initialized = false;
   metrics: Map<string, ObjectMetric> = new Map();
-  completed = true;
   mapsObj: gf.TRuleMaps = {
     shapes: [],
     texts: [],
@@ -2160,17 +2159,6 @@ export class Rule {
   }
 
 
-
-  // complete(): this {
-  //   this.completed = true;
-  //   // this.refresh();
-  //   this.onCompleted();
-  //   return this;
-  // }
-
-  //
-  // Metrics
-  //
   /**
    * Return boolean if metrics is matched by rule
    *
