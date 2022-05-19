@@ -28,6 +28,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   flowchartsDiv: HTMLDivElement;
   templateSrv: any;
   version: any;
+  GFPlugin!: GFPlugin; // Initialized in GFPlugin.init()
   graphOverTimeStamp = 0;
   message: GFMessage | undefined;
   changedSource: boolean;
@@ -56,7 +57,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   constructor($scope: any, $injector: any, $rootScope: any, templateSrv: any) {
     super($scope, $injector);
     this.$gf = $GF.create($scope, templateSrv, this.dashboard, this);
-    this.$scope.$GF = this.$gf;
+    // this.$scope.$GF = this.$gf;
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     $scope.editor = this;
@@ -65,9 +66,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.changedSource = true;
     this.changedData = true;
     this.changedOptions = true;
-    this.rulesHandler = undefined;
-    this.flowchartHandler = undefined;
-    this.metricHandler = undefined;
     this.onMapping = new InteractiveMap();
     this.parentDiv = document.createElement('div');
     this.flowchartsDiv = document.createElement('div');
@@ -263,7 +261,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler = undefined;
       this.init_handlers();
     }
-    this.flowchartHandler?.render();
+    this.flowchartHandler?.update();
   }
 
   private _on_grafana_data_received(dataList: any) {
@@ -278,7 +276,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   private _on_global_debug_asked() {
     _log('📬', this.constructor.name, '_on_global_debug_asked');
-    _log('🧰', 'DATA', this.panel);
+    _log('🗃️', 'DATA', this.panel);
   }
 
   private _on_global_panel_closed() {

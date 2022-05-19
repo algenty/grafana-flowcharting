@@ -165,12 +165,12 @@
                                     </div>
                                 </div>
                                 <!-- <div
-                                    ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp('ge')) || elt.getData().comparator === 'ge'" 
+                                    ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp('ge')) || elt.getData().comparator === 'ge'"
                                     ng-click="elt.getData().comparator = 'ge';editor.onRulesChange();"
                                     class="gf-icon-comp-ge gf-icon-action" title="Greater or equal than"
                                     ng-class="{'gf-icon-selected' : elt.getData().comparator === 'ge'}">
                                 </div>
-                                <div 
+                                <div
                                     ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp('gt')) || elt.getData().comparator === 'gt'"
                                     ng-click="elt.getData().comparator = 'gt';editor.onRulesChange();"
                                     class="gf-icon-comp-gt gf-icon-action" title="Greater than"
@@ -274,7 +274,7 @@
                     </div>
                     <div class="gf-table-row_body" ng-show="elt.reduce === false"
                         ng-class="{ 'gf-body-hide' : elt.reduce, 'gf-body-show' : !elt.reduce}">
-                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/thresholds/thresholdBody.html'">
+                        <ng-include src="GFPlugin.getPartialPath() + 'rules/thresholds/thresholdBody.html'">
                         </ng-include>
                     </div>
                 </div>

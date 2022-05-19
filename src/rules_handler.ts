@@ -342,7 +342,7 @@ export class RulesHandler {
 
   private _on_global_debug_asked() {
     _log('📬', this.constructor.name, '_on_rule_rule_changed');
-    _log('🧰', this.constructor.name, this);
+    _log('🗃️', this.constructor.name, this);
   }
 
   private _on_global_panel_closed() {

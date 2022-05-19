@@ -86,12 +86,12 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" 
+                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable"
                     ng-repeat="shape in rule.getShapeMaps()"
-                    ng-mouseenter="editor.setCurrentMap(shape);" 
+                    ng-mouseenter="editor.setCurrentMap(shape);"
                     ng-mouseleave="editor.unsetCurrentMap();">
                     <!-- CELLS -->
-                    <div class="gf-table-row_line" 
+                    <div class="gf-table-row_line"
                         ng-mouseleave="editor.unhighlightXCells(shape);"
                         ng-mouseover="editor.highlightXCells(shape)">
                         <!-- EXPAND -->
@@ -205,7 +205,7 @@
                         </div>
                     </div>
                     <div class="gf-table-row_body" ng-show="shape.reduce==false">
-                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/shapes/shapeBody.html'"> </ng-include>
+                        <ng-include src="GFPlugin.getPartialPath() + 'rules/shapes/shapeBody.html'"> </ng-include>
                     </div>
                 </div>
             </div>

@@ -13,7 +13,7 @@
       </div>
       <!-- MAP TYPE -->
       <div class="gf-form" ng-show="rule.getData().mappingType === 1">
-        <div ng-include="$GF.plugin.getPartialPath() + 'rules/valuemaps/valuesTable.html'">
+        <div ng-include="GFPlugin.getPartialPath() + 'rules/valuemaps/valuesTable.html'">
         </div>
       </div>
       <!-- <div class="gf-form">
@@ -28,10 +28,10 @@
           </button>
         </div>
       </div> -->
-  
+
       <!-- RANGE TYPE -->
       <div class="gf-form" ng-show="rule.getData().mappingType === 2">
-        <div ng-include="$GF.plugin.getPartialPath() + 'rules/valuemaps/rangesTable.html'">
+        <div ng-include="GFPlugin.getPartialPath() + 'rules/valuemaps/rangesTable.html'">
         </div>
       </div>
       <!-- <div class="gf-form" ng-show="rule.getData().mappingType === 2">

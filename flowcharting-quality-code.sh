@@ -17,4 +17,12 @@ test_#_connect_disconnect() {
   done
 }
 
+check_partials_objects() {
+  _PARTIAL_PATH=${_FLOWCHARTING_SRC_PATH}/partials
+  _OBJ_LIST=$(ag -o '{{.+}}'|cut -f3 -d':'|tr -d '{{' |tr -d '}}'|sort|uniq)
+  for LINE in ${_OBJ_LIST}; do
+    _OBJ=$(cut -f1 -d'.')
+  done
+}
+
 test_#_connect_disconnect

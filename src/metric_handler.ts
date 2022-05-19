@@ -243,7 +243,7 @@ export class MetricHandler {
   }
 
   private _on_global_debug_asked() {
-    _log("🧰", this.constructor.name, this);
+    _log("🗃️", this.constructor.name, this);
   }
 
   private _on_global_panel_closed() {

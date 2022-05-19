@@ -103,7 +103,7 @@
       <div class="gf-table-body">
         <div role="row" class="gf-table-rows gf-table-rows-resizable"
           ng-repeat="rule in editor.rulesHandler.getRules()"
-          ng-mouseenter="editor.setCurrentParam('currentRule', rule);" 
+          ng-mouseenter="editor.setCurrentParam('currentRule', rule);"
           ng-mouseleave="editor.unsetCurrentParam('currentRule');">
           <!-- CELLS -->
           <div class="gf-table-row_line" ng-mouseenter="editor.highlightXCells4Rule(rule);"
@@ -243,7 +243,7 @@
           </div>
           <div ng-hide="rule.getData().reduce==true" class="gf-table-row_body">
             <!-- GRAPH TOOLTIP -->
-            <ng-include src="$GF.plugin.getPartialPath() + 'rules/ruleBody.html'"> </ng-include>
+            <ng-include src="GFPlugin.getPartialPath() + 'rules/ruleBody.html'"> </ng-include>
           </div>
         </div>
       </div>

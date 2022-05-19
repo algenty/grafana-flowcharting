@@ -1126,7 +1126,7 @@ export class XGraph {
   //#############################################################################
   private _on_global_debug_asked() {
     _log('📬', this.constructor.name, '_on_global_debug_asked');
-    _log('🧰', this.constructor.name, this);
+    _log('🗃️', this.constructor.name, this);
   }
 
   private _on_drawio_drawio_initialized() {

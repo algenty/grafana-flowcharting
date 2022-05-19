@@ -170,9 +170,6 @@ export class StateHandler {
   addState(xcell: XCell): State {
     const state = new State(this.$gf, xcell, this.xgraph);
     this.states.set(state.uid, state);
-    if ($GF.DEBUG) {
-      this.$gf.setVar(`STATE_${state.uid}`, state);
-    }
     this.events.emit('state_created', state);
     return state;
   }
@@ -193,7 +190,7 @@ export class StateHandler {
   //#########################################################################
   private _on_global_debug_asked() {
     _log('📬', this.constructor.name, "_on_global_debug_asked");
-    _log("🧰", this.constructor.name, this);
+    _log("🗃️", this.constructor.name, this);
   }
 
 }

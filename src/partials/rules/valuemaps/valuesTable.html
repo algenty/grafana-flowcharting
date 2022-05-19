@@ -100,7 +100,7 @@
                                 ng-attr-id="{{elt.uid + '-' + CN2 }}" title="Number or text to replace"
                                 placeholder="Number/text" ng-attr-title="{{Apply this color "
                                 class="gf-form-input"
-                                ng-model="elt.getData().value" 
+                                ng-model="elt.getData().value"
                                 ng-blur="elt.inEdit[CN2] = false;" ng-model-onblur />
                         </div>
                         <!-- TEXT -->
@@ -145,7 +145,7 @@
                         </div>
                     </div>
                     <div class="gf-table-row_body" ng-show="elt.reduce === false">
-                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/valuemaps/valueBody.html'">
+                        <ng-include src="GFPlugin.getPartialPath() + 'rules/valuemaps/valueBody.html'">
                         </ng-include>
                     </div>
                 </div>

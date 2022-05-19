@@ -26,17 +26,18 @@ export class FlowchartsOptionsCtrl {
   // onColorChange : () => any;
 
   /** @ngInject */
+  // $scope: gf.TIFlowchartOptionsScope
   constructor($scope: gf.TIFlowchartOptionsScope) {
     $scope.editor = this;
     this.ctrl = $scope.ctrl;
-    this.$gf = this.ctrl.$gf;
-    $scope.$GF = this.$gf
+    $scope.GFPlugin = this.ctrl.GFPlugin;
+    $scope.$GF = this.ctrl.$gf;
+    this.$gf = this.ctrl.$gf
     this.$scope = $scope;
     // this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.currentFlowchart = this.flowchartHandler?.getFlowchart();
     let index = 0;
-
     this.flowchartsTableData = {
       data: [],
       columns: [

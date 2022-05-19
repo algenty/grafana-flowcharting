@@ -1,4 +1,4 @@
-<!-- 
+<!--
   Value and range mapping when type = "string"
 -->
 <div class="section gf-form-group" ng-if="rule.getData().type === 'string'">
@@ -15,11 +15,11 @@
       </div>
     </div>
     <!-- MAP TYPE -->
-    <div ng-include="$GF.plugin.getPartialPath() + 'rules/valuemaps/values/valuesSection.html'">
+    <div ng-include="GFPlugin.getPartialPath() + 'rules/valuemaps/values/valuesSection.html'">
     </div>
 
     <!-- RANGE TYPE -->
-    <div ng-include="$GF.plugin.getPartialPath() + 'rules/valuemaps/ranges/rangesSection.html'">
+    <div ng-include="GFPlugin.getPartialPath() + 'rules/valuemaps/ranges/rangesSection.html'">
     </div>
   </div>
 </div>

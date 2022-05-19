@@ -16,7 +16,7 @@ export class InspectOptionsCtrl {
   statesTable: GFTable;
   // panel: any;
   parentDiv: HTMLDivElement;
-  headerTable: HTMLDivElement | undefined;
+  headerTable: HTMLDivElement | undefined ;
   bodyTable: HTMLDivElement | undefined;
   indexTable = 0;
   pressed = false;
@@ -121,11 +121,12 @@ export class InspectOptionsCtrl {
     const statesTable = $statesTable[0];
     this.statesTable = new GFTable(this.statesTableData, statesTable);
     this.ctrl = $scope.ctrl;
-    this.$gf = this.ctrl.$gf;
-    $scope.$GF = this.$gf;
-    // this.panel = this.ctrl.panel;
+    $scope.GFPlugin = this.ctrl.GFPlugin;
+    $scope.$GF = this.ctrl.$gf;
+    this.$gf = this.ctrl.$gf    // this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.stateHandler = this.flowchartHandler?.getFlowchart().getStateHandler();
+
   }
 
   render() {
@@ -186,7 +187,7 @@ export class InspectOptionsCtrl {
       sh.edited = false;
     }
     flowchart?.applyModel();
-    this.ctrl.notify('Save the dashboard to apply the modifications');
+    this.$gf.notify('Save the dashboard to apply the modifications');
   }
 
   selectCell(state: State) {

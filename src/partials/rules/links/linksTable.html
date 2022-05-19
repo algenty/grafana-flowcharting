@@ -94,9 +94,9 @@
             </div>
             <!-- TBODY -->
             <div class="gf-table-body">
-                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable" 
+                <div role="row" class="gf-table-rows-2 gf-table-rows-resizable"
                     ng-repeat="link in rule.getLinkMaps()"
-                    ng-mouseenter="editor.setCurrentMap(link);" 
+                    ng-mouseenter="editor.setCurrentMap(link);"
                     ng-mouseleave="editor.unsetCurrentMap();">
                     <!-- CELLS -->
                     <div class="gf-table-row_line"
@@ -115,7 +115,7 @@
                         </div>
                         <!-- WHAT/PATTERN -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
-                            ng-init="link.displayWhatEdit = false;link.whatEdit = false;" 
+                            ng-init="link.displayWhatEdit = false;link.whatEdit = false;"
                             ng-mouseleave="link.displayWhatEdit = false;"
                             ng-mouseover="link.displayWhatEdit = true;"
                             ng-style="{'width' : editor.linksTable.getWidth('what')}"
@@ -133,7 +133,7 @@
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a text in diagram">
                             </div>
-                            <input type="text" style="margin-right: 2px;width : 100%" 
+                            <input type="text" style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{link.uid + '-what'}}"
                                 ng-show="link.whatEdit === true"
                                 class="gf-form-input" ng-model="link.getData().pattern"
@@ -148,9 +148,9 @@
                             ng-style="{'width' : editor.linksTable.getWidth('when')}"
                             ng-attr-title="{{$GF.GetT4V( editor.linkOn, link.getData().linkOn)}}">
                             <!-- {{link.getData().LinkOn}} -->
-                            <div class="gf-table-content" 
+                            <div class="gf-table-content"
                                 style="text-align: left;"
-                                ng-dblclick="link.whenEdit = true;$GF.setFocus( link.uid + '-when' )" 
+                                ng-dblclick="link.whenEdit = true;$GF.setFocus( link.uid + '-when' )"
                                 ng-show="link.whenEdit !== true">
                                 {{$GF.GetT4V( editor.linkOn, link.getData().linkOn)}}
                             </div>
@@ -168,7 +168,7 @@
                         </div>
                         <!-- URL -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
-                            ng-init="link.displayUrlEdit = false;link.urlEdit = false;" 
+                            ng-init="link.displayUrlEdit = false;link.urlEdit = false;"
                             ng-mouseleave="link.displayUrlEdit = false;"
                             ng-mouseover="link.displayUrlEdit = true;"
                             ng-style="{'width' : editor.linksTable.getWidth('url')}"
@@ -188,7 +188,7 @@
                             </div>
                             <input style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{link.uid + '-url'}}"
-                                type="text" class="gf-form-input" 
+                                type="text" class="gf-form-input"
                                 ng-show="link.urlEdit === true"
                                 ng-change="editor.onRulesChange()"
                                 ng-model="link.getData().linkUrl" ng-blur="editor.onRulesChange();link.urlEdit = false;"
@@ -228,7 +228,7 @@
                         </div>
                     </div>
                     <div class="gf-table-row_body" ng-show="link.reduce === false">
-                        <ng-include src="$GF.plugin.getPartialPath() + 'rules/links/linkBody.html'"> </ng-include>
+                        <ng-include src="GFPlugin.getPartialPath() + 'rules/links/linkBody.html'"> </ng-include>
                     </div>
                 </div>
             </div>

@@ -30,7 +30,7 @@ type FlowchartSignals = typeof flowchartSignalsArray[number];
 export class Flowchart {
   data: gf.TFlowchartData;
   private container: HTMLDivElement;
-  private xgraph: XGraph | undefined = undefined;
+  private xgraph: XGraph | undefined;
   private stateHandler: StateHandler | undefined;
   private readonly $gf: $GF;
   uid: string;
@@ -378,7 +378,7 @@ export class Flowchart {
       this.setGraphContent(content);
     }
     if (this.xgraph !== undefined) {
-      this.xgraph.setContent(this.getContent());
+      this.xgraph?.setContent(this.getContent());
     }
     // this.applyOptions();
   }
