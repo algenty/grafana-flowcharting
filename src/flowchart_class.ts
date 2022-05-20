@@ -139,7 +139,14 @@ export class Flowchart {
     }
   }
   get source() {
-    return this.data.type === 'xml' ? this.data.xml : this.data.csv;
+    return this.data.type === 'csv' ? this.data.csv : this.data.xml;
+  }
+
+  //BACKGROUND
+  set background(value: string) {
+    if(value !== this.data.bgColor) {
+      this.data.bgColor = value;
+    }
   }
 
   //############################################################################
@@ -396,13 +403,13 @@ export class Flowchart {
    * @param {string} name
    * @memberof Flowchart
    */
-  setName(name: string) {
-    this.data.name = name;
-  }
+  // setName(name: string) {
+  //   this.data.name = name;
+  // }
 
-  getName(): string {
-    return this.data.name;
-  }
+  // getName(): string {
+  //   return this.data.name;
+  // }
 
   /**
    * Set paramater lock
