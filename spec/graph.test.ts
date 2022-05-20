@@ -22,6 +22,7 @@ describe('Xgraph class test', async () => {
       beforeAll(async ()=> {
         $gf = $GF.create($scope, templateSrv, dashboard, ctrl);
         await GFDrawio.init({mode: 'local'})
+        expect(GFDrawio.isInitalized()).toBe(true);
       });
       test('should not null', () => {
         const div = document.createElement('div');
@@ -33,9 +34,11 @@ describe('Xgraph class test', async () => {
         const div = document.createElement('div');
         const xgraph = new XGraph($gf, div, 'xml', xmlGraph);
         const cells = xgraph.getXCells();
-        expect(cells.includes('100')).toBe(true);
-        expect(cells.includes('200')).toBe(true);
+        expect(xgraph.getXCell('100')).not.toBeUndefined();
+        expect(xgraph.getXCell('200')).not.toBeUndefined();
+        expect(xgraph.getXCell('300')).toBeUndefined();
       });
     });
   });
 });
+
