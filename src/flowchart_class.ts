@@ -66,7 +66,7 @@ export class Flowchart {
     const funcName = 'refresh';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.xgraph?.update();
-    this.setBackgroundColor(this.data.bgColor);
+    this._setBackgroundColor(this.data.bgColor);
     this.events.emit('flowchart_updated', this);
   }
 
@@ -145,7 +145,8 @@ export class Flowchart {
   //BACKGROUND
   set background(value: string) {
     if(value !== this.data.bgColor) {
-      this.data.bgColor = value;
+      // this.data.bgColor = value;
+      this._setBackgroundColor(value);
     }
   }
 
@@ -497,7 +498,7 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  setBackgroundColor(bgColor: string | null): this {
+  private _setBackgroundColor(bgColor: string | null): this {
     this.data.bgColor = bgColor;
     if (bgColor) {
       this.container.style.backgroundColor = bgColor;
@@ -643,15 +644,15 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  setGraphContent(content: string): this {
-    if (this.data.type === 'xml') {
-      this.data.xml = content;
-    }
-    if (this.data.type === 'csv') {
-      this.data.csv = content;
-    }
-    return this;
-  }
+  // setGraphContent(content: string): this {
+  //   if (this.data.type === 'xml') {
+  //     this.data.xml = content;
+  //   }
+  //   if (this.data.type === 'csv') {
+  //     this.data.csv = content;
+  //   }
+  //   return this;
+  // }
 
   /**
    * Load source from url
