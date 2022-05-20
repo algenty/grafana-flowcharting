@@ -74,7 +74,7 @@ export class FlowchartHandler {
       window.clearInterval(this.mousedownTimeout);
     };
     if (oldData) {
-      this._covert(oldData);
+      this._convert(oldData);
     }
     this.init();
   }
@@ -149,7 +149,7 @@ export class FlowchartHandler {
    * @param {Object} obj
    * @memberof FlowchartHandler
    */
-  private _covert(obj: any): this {
+  private _convert(obj: any): this {
     // TODO : why free instead init
     // this.clear();
     if (obj) {

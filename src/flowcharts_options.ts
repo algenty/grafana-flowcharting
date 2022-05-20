@@ -170,7 +170,7 @@ export class FlowchartsOptionsCtrl {
 
   onColorChange(flowchart: Flowchart) {
     return (newColor: any) => {
-      flowchart.setBackgroundColor(newColor);
+      flowchart._setBackgroundColor(newColor);
     };
   }
 
