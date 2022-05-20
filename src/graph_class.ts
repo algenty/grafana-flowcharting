@@ -571,10 +571,10 @@ export class XGraph {
    * @memberof XGraph
    */
   getXCells(): XCell[] {
-    if (this._isGraphInitilized && this.xcells.length === 0) {
-      this._display();
-      this._init_xcells();
-    }
+    // if (this._isGraphInitilized && this.xcells.length === 0) {
+    //   this._display();
+    //   this._init_xcells();
+    // }
     return this.xcells;
   }
 

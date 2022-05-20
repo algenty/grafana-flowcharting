@@ -4,8 +4,10 @@ import { InteractiveMap, ObjectMap } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
 
 // Debug
-const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG = true;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 // Define signals
 const flowchartHandlerSignalsArray = ['flowchart_created', 'flowchart_deleted'] as const;
@@ -71,7 +73,7 @@ export class FlowchartHandler {
       this.mousedown = 0;
       window.clearInterval(this.mousedownTimeout);
     };
-    if(oldData) {
+    if (oldData) {
       this._covert(oldData);
     }
     this.init();
@@ -100,6 +102,30 @@ export class FlowchartHandler {
     this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     this.$gf.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
   }
+
+  //############################################################################
+  //### ACCESSORS ANGULAR (VIEW MODEL)
+  //############################################################################
+  set editorUrl(value: string) {
+    this.data.editorUrl= value;
+  }
+  get editorUrl() {
+    return this.data.editorUrl;
+  }
+  set editorTheme(value: string){
+    this.data.editorTheme = value;
+  }
+  get editorTheme(){
+    return this.data.editorTheme
+  }
+  set allowDrawio(value: boolean){
+    this.data.allowDrawio = value;
+    this.change();
+  }
+  get allowDrawio(){
+    return this.data.allowDrawio
+  }
+
 
   //############################################################################
   //### LOGIC
@@ -154,7 +180,7 @@ export class FlowchartHandler {
       }
 
       // import data
-      this.data.flowcharts = []
+      this.data.flowcharts = [];
       if (Array.isArray(tmpFc)) {
         tmpFc.map(async (fcData: gf.TFlowchartData) => {
           this.addFlowchart(fcData.name, fcData).toBack().allowDrawio(this.data.allowDrawio);
@@ -594,13 +620,12 @@ export class FlowchartHandler {
   //### EVENTS
   //###########################################################################
   private _on_global_debug_asked() {
-    _log('📬', this.constructor.name, "_on_global_debug_asked");
-    _log("🧰", this.constructor.name, this);
+    _log('📬', this.constructor.name, '_on_global_debug_asked');
+    _log('🧰', this.constructor.name, this);
   }
 
   private _on_global_panel_closed() {
-    _log('📬', this.constructor.name, "_on_global_panel_close");
+    _log('📬', this.constructor.name, '_on_global_panel_close');
     this.free();
   }
-
 }
