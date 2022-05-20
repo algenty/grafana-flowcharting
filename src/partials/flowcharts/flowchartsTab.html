@@ -23,8 +23,9 @@
             </div>
             <!-- Draw.io source -->
             <gf-form-switch class="gf-form" label="Allow draw.io source" label-class="width-12"
-                tooltip="allow downloads images from draw.io" checked="editor.flowcharthandler.allowDrawio"
-                on-change="editor.onSourceChange()">
+                ng-model-options="{ updateOn: 'default' }"
+                tooltip="allow downloads images from draw.io"
+                checked="editor.flowcharthandler.allowDrawio">
             </gf-form-switch>
         </div>
     </div>

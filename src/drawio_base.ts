@@ -54,7 +54,7 @@ export class GFDrawio {
 
   static async loadEngine() {
     // const empty = new Promise<void>(() => {});
-    if(GFDrawio._libInitialized) {
+    if (GFDrawio._libInitialized) {
       return;
     }
     // If not initialized
@@ -73,15 +73,15 @@ export class GFDrawio {
     }
     // eval result code
 
-    return result.then( async (code) => {
-        if (typeof code === 'string') {
-          await GFDrawio._preLoad()
-          await GFDrawio._evalLib(code);
-          await GFDrawio._customization();
-          await GFDrawio._postLoad()
-        }
-        return;
-      });
+    return result.then(async (code) => {
+      if (typeof code === 'string') {
+        await GFDrawio._preLoad();
+        await GFDrawio._evalLib(code);
+        await GFDrawio._customization();
+        await GFDrawio._postLoad();
+      }
+      return;
+    });
     return;
   }
 
