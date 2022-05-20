@@ -104,7 +104,7 @@ export class FlowchartHandler {
   }
 
   //############################################################################
-  //### ACCESSORS ANGULAR (VIEW MODEL)
+  //### ACCESSORS ANGULAR (MVS)
   //############################################################################
   set editorUrl(value: string) {
     this.data.editorUrl= value;
@@ -119,8 +119,10 @@ export class FlowchartHandler {
     return this.data.editorTheme
   }
   set allowDrawio(value: boolean){
-    this.data.allowDrawio = value;
-    this.change();
+    if (this.data.allowDrawio !== value) {
+      this.data.allowDrawio = value;
+      this.change();
+    }
   }
   get allowDrawio(){
     return this.data.allowDrawio

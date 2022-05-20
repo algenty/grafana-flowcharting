@@ -5,10 +5,11 @@ import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
 
-
 // Debug
-const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG = true;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 // Define signals
 const flowchartSignalsArray = [
@@ -16,7 +17,7 @@ const flowchartSignalsArray = [
   'flowchart_updated',
   'flowchart_changed',
   'flowchart_freed',
-  'graph_changed'
+  'graph_changed',
 ] as const;
 type FlowchartSignals = typeof flowchartSignalsArray[number];
 
@@ -91,6 +92,54 @@ export class Flowchart {
     this.xgraph?.clear();
     this.stateHandler?.clear();
     return this;
+  }
+
+  //############################################################################
+  //### ACCESSORS ANGULAR (MVS)
+  //############################################################################
+  // NAME
+  set name(value: string) {
+    if (!value || value.length === 0 || value === this.data.name) {
+      return;
+    }
+    var exist = this.$gf.flowchartHandler?.getFlowchart(value) !== undefined;
+    if (!exist) {
+      this.data.name = value;
+    } else {
+      this.$gf.notify(`Flowchart with name ${value} already exit`, 'error');
+    }
+  }
+  get name() {
+    return this.data.name;
+  }
+
+  // TYPE
+  set type(value: gf.TSourceTypeKeys) {
+    if (this.data.type !== value) {
+      this.data.type = value;
+      this.change();
+    }
+  }
+  get type() {
+    return this.data.type;
+  }
+
+  // SOURCE
+  set source(value: string) {
+    if (this.type === 'xml') {
+      if (this.data.xml === value) {
+        return;
+      }
+      if (GFDrawio.isValidXml(value) === false) {
+        this.$gf.notify('Invalid XML format', 'error');
+        return;
+      }
+      this.data.xml = value;
+      this.change();
+    }
+  }
+  get source() {
+    return this.data.type === 'xml' ? this.data.xml : this.data.csv;
   }
 
   //############################################################################
@@ -309,8 +358,6 @@ export class Flowchart {
     // this.setBgColor(this.data.bgColor);
     return this;
   }
-
-
 
   /**
    * Reset and redraw graph when source changed
@@ -741,12 +788,10 @@ export class Flowchart {
   //### EVENTS
   //###########################################################################
   private _on_xgraph_graph_changed() {
-    _log('📬', this.constructor.name, "_on_flowchart_graph_changed");
-    if(this.xgraph) {
+    _log('📬', this.constructor.name, '_on_flowchart_graph_changed');
+    if (this.xgraph) {
       this.stateHandler?.setXGraph(this.xgraph);
       this.stateHandler?.init();
     }
   }
-
-
 }

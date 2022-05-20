@@ -96,10 +96,10 @@
                         <!-- NAME -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="name"
                             ng-mouseleave="flowchart.displayEdit = false;" ng-mouseover="flowchart.displayEdit = true;"
-                            ng-attr-title="{{flowchart.getData().name}}"
+                            ng-attr-title="{{flowchart.name}}"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('name')}">
                             <div class="gf-table-content">
-                                {{flowchart.getData().name}}
+                                {{flowchart.name}}
                             </div>
                             <!-- <div ng-if="flowchart.displayEdit === true"
                                 style="padding:6px;float:right;" ng-click="flowchart.edit = true;flowchart.displayEdit  = false;">
@@ -118,9 +118,9 @@
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="type"
                             ng-style="{'width' : editor.flowchartsTable.getWidth('type')}">
                             <div class="gf-table-content" style="text-align: center;">
-                                <!-- {{flowchart.getData().type}} -->
-                                <div ng-attr-title="{{flowchart.getData().type === 'csv' ? 'CSV format' : 'Draw.io XML format'}}"
-                                    ng-class="{ 'gf-icon-csv' : flowchart.getData().type === 'csv' , 'gf-icon-xml' : flowchart.getData().type === 'xml' }">
+                                <!-- {{flowchart.type}} -->
+                                <div ng-attr-title="{{flowchart.type === 'csv' ? 'CSV format' : 'Draw.io XML format'}}"
+                                    ng-class="{ 'gf-icon-csv' : flowchart.type === 'csv' , 'gf-icon-xml' : flowchart.type === 'xml' }">
                                 </div>
                             </div>
                         </div>
@@ -130,8 +130,8 @@
                             <div class="gf-table-content" style="text-align: center;">
                                 <!-- {{flowchart.getData().download}} -->
                                 <div ng-click="editor.edit($index)"
-                                    ng-attr-title="{{flowchart.getData().download ? 'URL : ' + flowchart.getData().url : 'Edit diagram'}}"
-                                    ng-class="{ 'gf-icon-file-download' : flowchart.getData().download, 'gf-icon-file-text gf-icon-action': !flowchart.getData().download }">
+                                    ng-attr-title="{{flowchart.download ? 'URL : ' + flowchart.url : 'Edit diagram'}}"
+                                    ng-class="{ 'gf-icon-file-download' : flowchart.download, 'gf-icon-file-text gf-icon-action': !flowchart.getData().download }">
                                 </div>
                             </div>
                         </div>
