@@ -104,7 +104,11 @@ export class FlowchartHandler {
   }
 
   //############################################################################
+<<<<<<< HEAD
   //### ACCESSORS ANGULAR (MVS)
+=======
+  //### ACCESSORS ANGULAR (VIEW MODEL)
+>>>>>>> 7adfb4d1 (update)
   //############################################################################
   set editorUrl(value: string) {
     this.data.editorUrl= value;
