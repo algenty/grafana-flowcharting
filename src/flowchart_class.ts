@@ -78,8 +78,6 @@ export class Flowchart {
   }
 
   async free() {
-    const funcName = 'destroy';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this?.xgraph?.events.disconnect('graph_changed', this);
     this.xgraph?.free();
     this.stateHandler?.free();
@@ -395,12 +393,12 @@ export class Flowchart {
   init_xgraph(): this {
     const $GF = this.$gf;
     try {
-      // TODO when source is URL
-      const content = this.$gf.resolveVars(this.source);
-      if (this.xgraph === undefined) {
-        this.xgraph = new XGraph(this.$gf, this.container, this.data.type, content);
-        this.xgraph.events.connect('graph_changed', this, this._on_xgraph_graph_changed.bind(this));
+      const content = this.getResolvedSource();
+      if (this.xgraph !== undefined) {
+        this.xgraph.free();
       }
+      this.xgraph = new XGraph(this.$gf, this.container, this.data.type, content);
+      this.xgraph.events.connect('graph_changed', this, this._on_xgraph_graph_changed.bind(this));
     } catch (error) {
       $GF.notify('Unable to initialize graph', 'error');
       GFLog.error('Unable to initialize graph', error);
@@ -411,43 +409,17 @@ export class Flowchart {
   change_xgraph(): this {
     const $GF = this.$gf;
     try {
-      const content = this.getResolvedSource();
-      if (this.xgraph === undefined) {
-        this.init_xgraph();
-      }
-      if (content !== undefined && content !== null) {
-        if (this.data.enableAnim) {
-          this.xgraph?.enableAnimation(true);
-        } else {
-          this.xgraph?.enableAnimation(false);
-        }
-        this.setGraphOptions(); //TODO :simplify
-        // this.xgraph?.setContent(content);
-        this.xgraph?.change();
-        this.xgraph?.update();
-        //TODO : already in setOptions, if yes call xgraph.change();
-        // if (this.data.tooltip) {
-        //   this.xgraph?.tooltipGraph(true);
-        // }
-        // if (this.data.scale) {
-        //   this.xgraph?.scaleGraph(true);
-        // } else {
-        //   this.xgraph?.zoomGraph(this.data.zoom);
-        // }
-        // if (this.data.center) {
-        //   this.xgraph?.centerGraph(true);
-        // }
-        // if (this.data.lock) {
-        //   this.xgraph?.lockGraph(true);
-        // }
-        // if(this.xgraph) {
-        //   this.stateHandler = new StateHandler(this.xgraph, this.ctrl);
-        // }
-        $GF.clearNotify();
-      } else {
-        $GF.notify('Source content empty Graph not defined', 'error');
-        GFLog.error('Source content empty Graph not defined');
-      }
+      // const content = this.getResolvedSource();
+      this.init_xgraph();
+      // if (content !== undefined && content !== null) {
+      this.update_graphOptions();
+      this.xgraph?.change();
+      this.xgraph?.update();
+      $GF.clearNotify();
+      // } else {
+      //   $GF.notify('Source content empty Graph not defined', 'error');
+      //   GFLog.error('Source content empty Graph not defined');
+      // }
     } catch (error) {
       $GF.notify('Unable to initialize graph', 'error');
       GFLog.error('Unable to initialize graph', error);
@@ -480,7 +452,7 @@ export class Flowchart {
    *
    * @memberof Flowchart
    */
-  setGraphOptions(): this {
+  update_graphOptions(): this {
     // TODO: simplify it
     this.enableAnimation(this.data.enableAnim);
     this.scaleGraph();

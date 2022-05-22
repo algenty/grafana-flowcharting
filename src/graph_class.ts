@@ -339,7 +339,7 @@ export class XGraph {
    * @memberof XGraph
    */
   free_graph(): this {
-    this._graph.destroy();
+    this._graph?.destroy();
     this._graph = undefined;
     return this;
   }
