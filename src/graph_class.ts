@@ -275,6 +275,9 @@ export class XGraph {
    * @memberof XGraph
    */
   private async _init_fonts() {
+    if(!this._graph) {
+      return;
+    }
     const model = this._graph.getModel();
     let extFonts = model.extFonts;
     if (extFonts) {
@@ -285,7 +288,7 @@ export class XGraph {
         });
 
         for (var i = 0; i < extFonts.length; i++) {
-          this._graph.addExtFont(extFonts[i].name, extFonts[i].url);
+          this._graph?.addExtFont(extFonts[i].name, extFonts[i].url);
         }
       } catch (e: any) {
         GFLog.error('ExtFonts format error:', e.message);
