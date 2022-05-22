@@ -180,15 +180,15 @@ export class InspectOptionsCtrl {
     }
   }
 
-  apply() {
-    const flowchart = this.flowchartHandler?.getFlowchart();
-    const sh = flowchart?.getStateHandler();
-    if (sh) {
-      sh.edited = false;
-    }
-    flowchart?.applyModel();
-    this.$gf.notify('Save the dashboard to apply the modifications');
-  }
+  // apply() {
+  //   const flowchart = this.flowchartHandler?.getFlowchart();
+  //   const sh = flowchart?.getStateHandler();
+  //   if (sh) {
+  //     sh.edited = false;
+  //   }
+  //   flowchart?.applyModel();
+  //   this.$gf.notify('Save the dashboard to apply the modifications');
+  // }
 
   selectCell(state: State) {
     state.highlightCell();

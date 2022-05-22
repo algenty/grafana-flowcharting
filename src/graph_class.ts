@@ -26,12 +26,12 @@ type XGraphSignals = typeof xgraphSignalsArray[number];
  */
 export class XGraph {
   private readonly $gf: $GF;
-  private _isGraphInitilized = false;
+  private _isGraphIniatilized = false;
   container: HTMLDivElement;
-  xmlGraph = '';
-  csvGraph = '';
+  private _xmlGraph = '';
+  private _csvGraph = '';
   type: gf.TSourceTypeKeys = 'xml';
-  graph: any = undefined;
+  private _graph: any = undefined;
   scale = true;
   tooltip = true;
   lock = true;
@@ -75,13 +75,13 @@ export class XGraph {
     this._eventsConnect();
     if (this.type === 'xml') {
       if (GFDrawio.isEncoded(this.definition)) {
-        this.xmlGraph = GFDrawio.decode(this.definition);
+        this._xmlGraph = GFDrawio.decode(this.definition);
       } else {
-        this.xmlGraph = this.definition;
+        this._xmlGraph = this.definition;
       }
     }
     if (this.type === 'csv') {
-      this.csvGraph = this.definition;
+      this._csvGraph = this.definition;
     }
     if (GFDrawio.isInitalized()) {
       this.init_graph();
@@ -142,6 +142,21 @@ export class XGraph {
   }
 
   //############################################################################
+  //### ACCESSORS (All checks in flowchart)
+  //############################################################################
+  set source(value: string) {
+    if (this.type === 'xml') {
+      this._xmlGraph = value;
+    }
+    if (this.type === 'csv' && this._csvGraph === value) {
+      this._csvGraph = value;
+    }
+  }
+  get source() {
+    return this.type === 'csv' ? this._csvGraph : this._xmlGraph;
+  }
+
+  //############################################################################
   //### PRIVATE
   //############################################################################
   private _eventsConnect() {
@@ -158,8 +173,8 @@ export class XGraph {
   //### LOGIC
   //############################################################################
   async init_graph() {
-    if (!this._isGraphInitilized && GFDrawio.isInitalized()) {
-      this._isGraphInitilized = true;
+    if (!this._isGraphIniatilized && GFDrawio.isInitalized()) {
+      this._isGraphIniatilized = true;
       await this._init_mxGraph();
       await this._init_fonts();
       await this._display();
@@ -170,18 +185,17 @@ export class XGraph {
     return;
   }
 
-  /**
-   * Graph initilisation and reset
-   *
-   * @memberof XGraph
-   */
+  isInitialized() {
+    return this._isGraphIniatilized;
+  }
+
   private async _init_mxGraph() {
-    this.graph = new Graph(this.container);
+    this._graph = new Graph(this.container);
     // /!\ What is setPannig
-    this.graph.setPanning(true);
+    this._graph.setPanning(true);
     // Backup funtions of clicks
-    this.clickBackup = this.graph.click;
-    this.dbclickBackup = this.graph.dblClick;
+    this.clickBackup = this._graph.click;
+    this.dbclickBackup = this._graph.dblClick;
     // CTRL+MOUSEWHEEL
     mxEvent.addMouseWheelListener(mxUtils.bind(this, this.eventMouseWheel), this.container);
     if (mxClient.IS_IE || mxClient.IS_EDGE) {
@@ -192,7 +206,7 @@ export class XGraph {
     // CONTEXT MENU
     this.container.addEventListener('contextmenu', (e) => e.preventDefault());
     // DB CLICK
-    this.graph.dblClick = this.eventDbClick.bind(this);
+    this._graph.dblClick = this.eventDbClick.bind(this);
     return this;
   }
 
@@ -203,25 +217,25 @@ export class XGraph {
    * @memberof XGraph
    */
   private _display(): this {
-    if (this.graph === undefined) {
+    if (this._graph === undefined) {
       throw new Error('Graph class was not created');
     }
-    this.graph.getModel().beginUpdate();
-    this.graph.getModel().clear();
+    this._graph.getModel().beginUpdate();
+    this._graph.getModel().clear();
     try {
       if (this.type === 'xml') {
-        const xmlDoc = mxUtils.parseXml(this.xmlGraph);
+        const xmlDoc = mxUtils.parseXml(this._xmlGraph);
         const codec = new mxCodec(xmlDoc);
-        this.graph.model.clear();
-        this.graph.view.scale = 1;
-        codec.decode(xmlDoc.documentElement, this.graph.getModel());
+        this._graph.model.clear();
+        this._graph.view.scale = 1;
+        codec.decode(xmlDoc.documentElement, this._graph.getModel());
         this._init_fonts();
-        this.graph.updateCssTransform();
-        this.graph.selectUnlockedLayer();
+        this._graph.updateCssTransform();
+        this._graph.selectUnlockedLayer();
       }
       if (this.type === 'csv') {
         try {
-          dioCustom.importCsv(this.graph, this.csvGraph);
+          dioCustom.importCsv(this._graph, this._csvGraph);
           this.update_graph();
         } catch (error) {
           GFLog.error('Bad CSV format', error);
@@ -231,7 +245,7 @@ export class XGraph {
     } catch (error) {
       GFLog.error('Error in draw', error);
     } finally {
-      this.graph.getModel().endUpdate();
+      this._graph.getModel().endUpdate();
       this._init_xcells();
     }
     return this;
@@ -243,12 +257,12 @@ export class XGraph {
    * @memberof XGraph
    */
   private async _init_xcells() {
-    const model = this.graph.getModel();
+    const model = this._graph.getModel();
     this.xcells = [];
     const cells = Object.values(model.cells);
     return Promise.all(
       cells.map(async (mxcell: mxCell) => {
-        const xcell = XCell.refactore(this.graph, mxcell);
+        const xcell = XCell.refactore(this._graph, mxcell);
         this.xcells.push(xcell);
       })
     );
@@ -260,7 +274,7 @@ export class XGraph {
    * @memberof XGraph
    */
   private async _init_fonts() {
-    const model = this.graph.getModel();
+    const model = this._graph.getModel();
     let extFonts = model.extFonts;
     if (extFonts) {
       try {
@@ -270,7 +284,7 @@ export class XGraph {
         });
 
         for (var i = 0; i < extFonts.length; i++) {
-          this.graph.addExtFont(extFonts[i].name, extFonts[i].url);
+          this._graph.addExtFont(extFonts[i].name, extFonts[i].url);
         }
       } catch (e: any) {
         GFLog.error('ExtFonts format error:', e.message);
@@ -284,25 +298,27 @@ export class XGraph {
    * @return this
    * @memberof XGraph
    */
-  applyOptions(): this {
+  update_options(): this {
+    if (!this.isInitialized()) {
+      return this;
+    }
     if (!this.scale) {
-      this.zoomGraph(this.zoomPercent);
+      this.zoomDisplay();
     } else {
       this.unzoomGraph();
     }
-    this.tooltipGraph(this.tooltip);
-    this.lockGraph(this.lock);
+    this.enableTooltip();
+    this.enableLock();
     if (this.scale && this.center) {
       this.fitGraph();
     } else {
-      this.scaleGraph(this.scale);
-      this.centerGraph(this.center);
+      this.scaleDisplay();
+      this.centerDisplay();
     }
-    this.gridGraph(this.grid);
-    this.allowDrawioRessources(this.allowDrawio);
-    // this.bgGraph(this.bgColor);
-    this.graph.foldingEnabled = true;
-    this.graph.cellRenderer.forceControlClickHandler = true;
+    this.gridDisplay();
+    this.enableDioRessources();
+    this._graph.foldingEnabled = true;
+    this._graph.cellRenderer.forceControlClickHandler = true;
     return this;
   }
 
@@ -313,12 +329,13 @@ export class XGraph {
    * @memberof XGraph
    */
   update_graph(): this {
-    this.cumulativeZoomFactor = 1;
-    if (this.graph) {
-      this.graph.zoomActual();
-      this.applyOptions();
-      this.graph.refresh();
+    if (!this.isInitialized()) {
+      return this;
     }
+    this.cumulativeZoomFactor = 1;
+    this._graph.zoomActual();
+    this.update_options();
+    this._graph.refresh();
     return this;
   }
 
@@ -329,8 +346,8 @@ export class XGraph {
    * @memberof XGraph
    */
   free_graph(): this {
-    this.graph.destroy();
-    this.graph = undefined;
+    this._graph.destroy();
+    this._graph = undefined;
     return this;
   }
 
@@ -341,13 +358,16 @@ export class XGraph {
    * @param {Boolean} bool
    * @memberof XGraph
    */
-  lockGraph(bool: boolean): this {
-    if (bool) {
-      this.graph.setEnabled(false);
-    } else {
-      this.graph.setEnabled(true);
-    }
+  enableLock(bool: boolean = this.lock): this {
     this.lock = bool;
+    if (!this.isInitialized()) {
+      return this;
+    }
+    if (bool) {
+      this._graph.setEnabled(false);
+    } else {
+      this._graph.setEnabled(true);
+    }
     return this;
   }
 
@@ -358,13 +378,16 @@ export class XGraph {
    * @param {Boolean} bool
    * @memberof XGraph
    */
-  tooltipGraph(bool: boolean): this {
-    if (bool) {
-      this.graph.setTooltips(true);
-    } else {
-      this.graph.setTooltips(false);
-    }
+  enableTooltip(bool: boolean = this.tooltip): this {
     this.tooltip = bool;
+    if (!this._isGraphIniatilized) {
+      return this;
+    }
+    if (bool) {
+      this._graph.setTooltips(true);
+    } else {
+      this._graph.setTooltips(false);
+    }
     return this;
   }
 
@@ -375,7 +398,7 @@ export class XGraph {
    * @memberof XGraph
    */
   async anonymize() {
-    dioCustom.anonymize(this.graph);
+    dioCustom.anonymize(this._graph);
   }
 
   /**
@@ -385,9 +408,12 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  allowDrawioRessources(bool: boolean): this {
+  enableDioRessources(bool: boolean = this.allowDrawio): this {
+    if (!this._isGraphIniatilized) {
+      return this;
+    }
     this.allowDrawio = bool;
-    if (!this._isGraphInitilized) {
+    if (!this._isGraphIniatilized) {
       return this;
     }
     if (bool) {
@@ -408,7 +434,7 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  enableAnim(bool: boolean): this {
+  enableAnimation(bool: boolean = this.animation): this {
     this.animation = bool;
     return this;
   }
@@ -420,14 +446,17 @@ export class XGraph {
    * @param {Boolean} bool
    * @memberof XGraph
    */
-  centerGraph(bool: boolean): this {
-    this.graph.centerZoom = false;
-    if (bool) {
-      this.graph.center(true, true);
-    } else {
-      this.graph.center(false, false);
-    }
+  centerDisplay(bool: boolean = this.center): this {
     this.center = bool;
+    if (!this._isGraphIniatilized) {
+      return this;
+    }
+    this._graph.centerZoom = false;
+    if (bool) {
+      this._graph.center(true, true);
+    } else {
+      this._graph.center(false, false);
+    }
     return this;
   }
 
@@ -438,13 +467,16 @@ export class XGraph {
    * @param {boolean} bool
    * @memberof XGraph
    */
-  scaleGraph(bool: boolean): this {
+  scaleDisplay(bool: boolean = this.scale): this {
+    this.scale = bool;
+    if (!this._isGraphIniatilized) {
+      return this;
+    }
     if (bool) {
       this.unzoomGraph();
-      this.graph.fit();
-      this.graph.view.rendering = true;
+      this._graph.fit();
+      this._graph.view.rendering = true;
     }
-    this.scale = bool;
     return this;
   }
 
@@ -455,20 +487,23 @@ export class XGraph {
    * @memberof XGraph
    */
   fitGraph(): this {
+    if (!this._isGraphIniatilized) {
+      return this;
+    }
     const margin = 2;
     const max = 3;
 
-    const bounds = this.graph.getGraphBounds();
-    const cw = this.graph.container.clientWidth - margin;
-    const ch = this.graph.container.clientHeight - margin;
-    const w = bounds.width / this.graph.view.scale;
-    const h = bounds.height / this.graph.view.scale;
+    const bounds = this._graph.getGraphBounds();
+    const cw = this._graph.container.clientWidth - margin;
+    const ch = this._graph.container.clientHeight - margin;
+    const w = bounds.width / this._graph.view.scale;
+    const h = bounds.height / this._graph.view.scale;
     const s = Math.min(max, Math.min(cw / w, ch / h));
 
-    this.graph.view.scaleAndTranslate(
+    this._graph.view.scaleAndTranslate(
       s,
-      (margin + cw - w * s) / (2 * s) - bounds.x / this.graph.view.scale,
-      (margin + ch - h * s) / (2 * s) - bounds.y / this.graph.view.scale
+      (margin + cw - w * s) / (2 * s) - bounds.x / this._graph.view.scale,
+      (margin + ch - h * s) / (2 * s) - bounds.y / this._graph.view.scale
     );
     return this;
   }
@@ -480,14 +515,14 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  gridGraph(bool: boolean): this {
+  gridDisplay(bool: boolean = this.grid): this {
+    this.grid = bool;
     if (bool) {
       this.container.style.backgroundImage =
         "url('data:image/gif;base64,R0lGODlhCgAKAJEAAAAAAP///8zMzP///yH5BAEAAAMALAAAAAAKAAoAAAIJ1I6py+0Po2wFADs=')";
     } else {
       this.container.style.backgroundImage = '';
     }
-    this.grid = bool;
     return this;
   }
 
@@ -498,11 +533,14 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  zoomGraph(percent: string): this {
+  zoomDisplay(percent: string = this.zoomPercent): this {
+    this.zoomPercent = percent;
+    if (!this.isInitialized()) {
+      return this;
+    }
     if (!this.scale && percent && percent.length > 0 && percent !== '100%' && percent !== '0%') {
       const ratio: number = Number(percent.replace('%', '')) / 100;
-      this.graph.zoomTo(ratio, true);
-      this.zoomPercent = percent;
+      this._graph.zoomTo(ratio, true);
     } else {
       this.unzoomGraph();
     }
@@ -517,8 +555,11 @@ export class XGraph {
    * @memberof XGraph
    */
   unzoomGraph(): this {
+    if (!this.isInitialized()) {
+      return this;
+    }
     this.zoom = false;
-    this.graph.zoomActual();
+    this._graph.zoomActual();
     return this;
   }
 
@@ -529,7 +570,7 @@ export class XGraph {
    * @memberof XGraph
    */
   getMxGraph() {
-    return this.graph;
+    return this._graph;
   }
 
   /**
@@ -538,9 +579,9 @@ export class XGraph {
    * @returns {string}
    * @memberof XGraph
    */
-  getxmlGraph(): string {
-    return this.xmlGraph;
-  }
+  // getxmlGraph(): string {
+  //   return this._xmlGraph;
+  // }
 
   /**
    * Assign source definition and redraw graph
@@ -549,20 +590,19 @@ export class XGraph {
    * @returns {this}
    * @memberof XGraph
    */
-  setContent(content: string): this {
-    if (this.type === 'xml') {
-      if (GFDrawio.isEncoded(content)) {
-        this.xmlGraph = GFDrawio.decode(content);
-      } else {
-        this.xmlGraph = content;
-      }
-    }
-    if (this.type === 'csv') {
-      this.csvGraph = content;
-    }
-    // this.drawGraph();
-    return this;
-  }
+  // setContent(content: string): this {
+  //   if (this.type === 'xml') {
+  //     if (GFDrawio.isEncoded(content)) {
+  //       this._xmlGraph = GFDrawio.decode(content);
+  //     } else {
+  //       this._xmlGraph = content;
+  //     }
+  //   }
+  //   if (this.type === 'csv') {
+  //     this._csvGraph = content;
+  //   }
+  //   return this;
+  // }
 
   /**
    * Return XCells of graph
@@ -571,10 +611,6 @@ export class XGraph {
    * @memberof XGraph
    */
   getXCells(): XCell[] {
-    // if (this._isGraphInitilized && this.xcells.length === 0) {
-    //   this._display();
-    //   this._init_xcells();
-    // }
     return this.xcells;
   }
 
@@ -639,7 +675,7 @@ export class XGraph {
    */
   async highlightXCells(pattern: string, options?: gf.TRuleMapOptions, bool = true) {
     const xcells = this.findXCells(pattern, options);
-    xcells.forEach((x) => {
+    return xcells.map(async (x) => {
       x.highlight(bool);
     });
   }
@@ -651,7 +687,7 @@ export class XGraph {
    * @memberof XGraph
    */
   async unhighlightXCells(pattern: string, options?: gf.TRuleMapOptions) {
-    this.highlightXCells(pattern, options, false);
+    return this.highlightXCells(pattern, options, false);
   }
 
   /**
@@ -705,7 +741,7 @@ export class XGraph {
    */
   getXmlModel() {
     const encoder = new mxCodec();
-    const node = encoder.encode(this.graph.getModel());
+    const node = encoder.encode(this._graph.getModel());
     return mxUtils.getXml(node);
   }
 
@@ -789,7 +825,7 @@ export class XGraph {
           timer.start();
         }
       } catch (error) {
-        this.graph.setCellStyles(style, endValue, [xcell]);
+        this._graph.setCellStyles(style, endValue, [xcell]);
       }
     } else {
       // this.graph.setCellStyles(style, endValue, [xcell]);
@@ -819,7 +855,7 @@ export class XGraph {
    * @memberof XGraph
    */
   setMap() {
-    this.graph.click = this.eventClick.bind(this);
+    this._graph.click = this.eventClick.bind(this);
     this.onMapping.setContainer(this.container);
     this.onMapping.activate();
   }
@@ -830,7 +866,7 @@ export class XGraph {
    * @memberof XGraph
    */
   unsetMap() {
-    this.graph.click = this.clickBackup;
+    this._graph.click = this.clickBackup;
     this.$gf.$refresh();
   }
 
@@ -888,7 +924,7 @@ export class XGraph {
   eventMouseWheel(evt: WheelEvent, up: boolean) {
     // console.log('eventMouseWheel', this.ctrl.id, this.ctrl.isMouseInPanel());
     // this.ctrl.notify(`Zoom ${this.cumulativeZoomFactor}`);
-    if (this.graph.isZoomWheelEvent(evt) && this.$gf.ctrl.isMouseInPanel()) {
+    if (this._graph.isZoomWheelEvent(evt) && this.$gf.ctrl.isMouseInPanel()) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {
           up = true;
@@ -929,7 +965,7 @@ export class XGraph {
    * @memberof XGraph
    */
   async lazyZoomCenter(factor: number) {
-    this.graph.zoomTo(factor, true);
+    this._graph.zoomTo(factor, true);
   }
 
   /**
@@ -944,21 +980,21 @@ export class XGraph {
     let dx = offsetX * 2;
     let dy = offsetY * 2;
 
-    factor = Math.max(0.01, Math.min(this.graph.view.scale * factor, 160)) / this.graph.view.scale;
-    factor = this.cumulativeZoomFactor / this.graph.view.scale;
-    const scale = Math.round(this.graph.view.scale * factor * 100) / 100;
-    factor = scale / this.graph.view.scale;
+    factor = Math.max(0.01, Math.min(this._graph.view.scale * factor, 160)) / this._graph.view.scale;
+    factor = this.cumulativeZoomFactor / this._graph.view.scale;
+    const scale = Math.round(this._graph.view.scale * factor * 100) / 100;
+    factor = scale / this._graph.view.scale;
 
     if (factor > 1) {
       const f = (factor - 1) / (scale * 2);
       dx *= -f;
       dy *= -f;
     } else {
-      const f = (1 / factor - 1) / (this.graph.view.scale * 2);
+      const f = (1 / factor - 1) / (this._graph.view.scale * 2);
       dx *= f;
       dy *= f;
     }
-    this.graph.view.scaleAndTranslate(scale, this.graph.view.translate.x + dx, this.graph.view.translate.y + dy);
+    this._graph.view.scaleAndTranslate(scale, this._graph.view.translate.x + dx, this._graph.view.translate.y + dy);
   }
 
   /**
@@ -1056,8 +1092,8 @@ export class XGraph {
         } else {
           rect = state.text.boundingBox;
         }
-        this.graph.zoomToRect(rect);
-        this.cumulativeZoomFactor = this.graph.view.scale;
+        this._graph.zoomToRect(rect);
+        this.cumulativeZoomFactor = this._graph.view.scale;
       }
     }
   }

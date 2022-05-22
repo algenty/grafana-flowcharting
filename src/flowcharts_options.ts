@@ -1,8 +1,7 @@
 import { FlowchartHandler } from 'flowchart_handler';
 import { Flowchart } from 'flowchart_class';
-import { $GF, GFTable, GFLog, GFPlugin, GFCONSTANT } from 'globals_class';
+import { $GF, GFTable, GFPlugin, GFCONSTANT } from 'globals_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
-import { GFDrawio } from 'drawio_base';
 
 export class FlowchartsOptionsCtrl {
   $gf: $GF;
@@ -165,43 +164,43 @@ export class FlowchartsOptionsCtrl {
    *
    * @memberof FlowchartOptionsCtrl
    */
-  onSourceChange() {
-    // const name = this.flowchartHandler?.getCurrentFlowchartName();
-    this.flowchartHandler?.change();
-    // this.rulesHandler?.onRulesChange();
-    this.onOptionChange();
-    this.render();
-  }
+  // onSourceChange() {
+  //   // const name = this.flowchartHandler?.getCurrentFlowchartName();
+  //   this.flowchartHandler?.change();
+  //   // this.rulesHandler?.onRulesChange();
+  //   this.onOptionChange();
+  //   this.render();
+  // }
 
-  onColorChange(flowchart: Flowchart) {
-    return (newColor: any) => {
-      flowchart._setBackgroundColor(newColor);
-    };
-  }
+  // onColorChange(flowchart: Flowchart) {
+  //   return (newColor: any) => {
+  //     flowchart._setBackgroundColor(newColor);
+  //   };
+  // }
 
   /**
    * onOptionChange event when options change
    *
    * @memberof FlowchartOptionsCtrl
    */
-  onOptionChange() {
-    // const name = this.flowchartHandler?.getCurrentFlowchartName();
-    this.flowchartHandler?.update();
-    this.render();
-  }
+  // onOptionChange() {
+  //   // const name = this.flowchartHandler?.getCurrentFlowchartName();
+  //   this.flowchartHandler?.update();
+  //   this.render();
+  // }
 
-  checkSource_onSourceChange(source: string): boolean {
-    const bool = GFDrawio.isValidXml(source);
-    this.errorSourceFlag = !bool;
-    if (!bool) {
-      this.ctrl.notify('Invalid Xml definition', 'error');
-    } else {
-      this.ctrl.clearNotify();
-      this.onSourceChange();
-      this.$scope.$applyAsync();
-    }
-    return bool;
-  }
+  // checkSource_onSourceChange(source: string): boolean {
+  //   const bool = GFDrawio.isValidXml(source);
+  //   this.errorSourceFlag = !bool;
+  //   if (!bool) {
+  //     this.ctrl.notify('Invalid Xml definition', 'error');
+  //   } else {
+  //     this.ctrl.clearNotify();
+  //     this.onSourceChange();
+  //     this.$scope.$applyAsync();
+  //   }
+  //   return bool;
+  // }
 
   getFlowcharts(): Flowchart[] {
     return this.flowchartHandler ? this.flowchartHandler.getFlowcharts() : [];
@@ -211,20 +210,20 @@ export class FlowchartsOptionsCtrl {
     this.editMode = true;
     this.currentFlowchart = this.flowchartHandler?.addFlowchart(this.flowchartHandler.getFlowchartTmpName());
     if (this.currentFlowchart) {
-      this.flowchartHandler?.setCurrentFlowchart(this.currentFlowchart.getName());
-      this.ctrl.notify(this.currentFlowchart.getName());
-      this.newName = this.currentFlowchart.getName();
+      // this.flowchartHandler?.setCurrentFlowchart(this.currentFlowchart.getName());
+      // this.ctrl.notify(this.currentFlowchart.getName());
+      // this.newName = this.currentFlowchart.getName();
     }
   }
 
   removeFlowchart() {
-    const current = this.flowchartHandler?.getCurrentFlowchart();
-    if (current !== undefined && current.getName() !== 'Main' && this.flowchartHandler) {
-      this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart();
-      this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
-      this.ctrl.notify(this.currentFlowchartName);
-      this.flowchartHandler.removeFlowchart(current.getName());
-    }
+    // const current = this.flowchartHandler?.getCurrentFlowchart();
+    // if (current !== undefined && current.getName() !== 'Main' && this.flowchartHandler) {
+    //   this.currentFlowchart = this.flowchartHandler.setCurrentFlowchart();
+    //   this.currentFlowchartName = this.flowchartHandler.getCurrentFlowchartName();
+    //   this.ctrl.notify(this.currentFlowchartName);
+    //   this.flowchartHandler.removeFlowchart(current.getName());
+    // }
   }
 
   selectFlowchart() {
@@ -237,91 +236,91 @@ export class FlowchartsOptionsCtrl {
   }
 
   cancelFlowchart() {
-    this.editMode = false;
-    const canceled = this.currentFlowchart;
-    this.currentFlowchart = this.flowchartHandler?.setCurrentFlowchart('Main');
-    if (canceled && this.flowchartHandler) {
-      this.flowchartHandler.removeFlowchart(canceled.getName());
-      if (this.currentFlowchart) {
-        this.currentFlowchartName = this.currentFlowchart.getName();
-      }
-    }
-    this.ctrl.notify(this.currentFlowchartName);
+    // this.editMode = false;
+    // const canceled = this.currentFlowchart;
+    // this.currentFlowchart = this.flowchartHandler?.setCurrentFlowchart('Main');
+    // if (canceled && this.flowchartHandler) {
+    //   this.flowchartHandler.removeFlowchart(canceled.getName());
+    //   if (this.currentFlowchart) {
+    //     this.currentFlowchartName = this.currentFlowchart.getName();
+    //   }
+    // }
+    // this.ctrl.notify(this.currentFlowchartName);
   }
 
-  isValideFlowchart(): boolean {
-    const flowcharts = this.flowchartHandler?.getFlowchartNames();
-    if (this.newName === undefined) {
-      return false;
-    }
-    if (this.newName.length === 0) {
-      return false;
-    }
-    if (
-      flowcharts &&
-      flowcharts.includes(this.newName) &&
-      this.currentFlowchart &&
-      this.newName !== this.currentFlowchart.getName()
-    ) {
-      this.ctrl.notify(`Flowchart with name "${this.newName}" already exist`, 'error');
-      return false;
-    }
-    return true;
-  }
+  // isValideFlowchart(): boolean {
+  //   const flowcharts = this.flowchartHandler?.getFlowchartNames();
+  //   if (this.newName === undefined) {
+  //     return false;
+  //   }
+  //   if (this.newName.length === 0) {
+  //     return false;
+  //   }
+  //   if (
+  //     flowcharts &&
+  //     flowcharts.includes(this.newName) &&
+  //     this.currentFlowchart &&
+  //     this.newName !== this.currentFlowchart.getName()
+  //   ) {
+  //     this.ctrl.notify(`Flowchart with name "${this.newName}" already exist`, 'error');
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
-  validateFlowchart() {
-    this.editMode = false;
-    if (this.currentFlowchart) {
-      this.currentFlowchart.setName(this.newName);
-    }
-    this.currentFlowchartName = this.newName;
-    this.currentFlowchart = this.flowchartHandler?.setCurrentFlowchart(this.newName);
-  }
+  // validateFlowchart() {
+  //   this.editMode = false;
+  //   if (this.currentFlowchart) {
+  //     this.currentFlowchart.setName(this.newName);
+  //   }
+  //   this.currentFlowchartName = this.newName;
+  //   this.currentFlowchart = this.flowchartHandler?.setCurrentFlowchart(this.newName);
+  // }
 
-  checkUrl_onSourceChange(url: string): boolean {
-    this.errorDownloadFlag = false;
-    // this.errorDownloadMsg = '';
-    const init: RequestInit = { method: 'GET', mode: 'cors', cache: 'default' };
-    try {
-      url = this.$gf.resolveVars(url);
-      fetch(url, init)
-        .then(response => {
-          if (!(response.status >= 200 && response.status <= 299)) {
-            this.errorSourceFlag = true;
-            this.ctrl.notify(`Error ${response.status} : ${response.statusText}`, 'error');
-            this.$scope.$applyAsync();
-          } else {
-            response.text().then(text => {
-              const fc = this.flowchartHandler?.getCurrentFlowchart();
-              if (fc && fc.data.type === 'xml') {
-                const bool = GFDrawio.isValidXml(text);
-                this.errorSourceFlag = !bool;
-                if (this.errorSourceFlag) {
-                  this.ctrl.notify('Response is an invalid Xml definition', 'error');
-                  GFLog.error('Response is an invalid Xml definition');
-                } else {
-                  this.ctrl.clearNotify();
-                  this.onSourceChange();
-                }
-              } else {
-                this.onSourceChange();
-              }
-              this.$scope.$applyAsync();
-            });
-          }
-        })
-        .catch(error => {
-          this.errorSourceFlag = true;
-          this.ctrl.notify(`Error : ${error}`, 'error');
-          this.$scope.$applyAsync();
-        });
-    } catch (error) {
-      this.errorDownloadFlag = true;
-      this.ctrl.notify('Error when call url', 'error');
-      // this.errorDownloadMsg = 'Error when call url';
-    }
-    return true;
-  }
+  // checkUrl_onSourceChange(url: string): boolean {
+  //   this.errorDownloadFlag = false;
+  //   // this.errorDownloadMsg = '';
+  //   const init: RequestInit = { method: 'GET', mode: 'cors', cache: 'default' };
+  //   try {
+  //     url = this.$gf.resolveVars(url);
+  //     fetch(url, init)
+  //       .then(response => {
+  //         if (!(response.status >= 200 && response.status <= 299)) {
+  //           this.errorSourceFlag = true;
+  //           this.ctrl.notify(`Error ${response.status} : ${response.statusText}`, 'error');
+  //           this.$scope.$applyAsync();
+  //         } else {
+  //           response.text().then(text => {
+  //             const fc = this.flowchartHandler?.getCurrentFlowchart();
+  //             if (fc && fc.data.type === 'xml') {
+  //               const bool = GFDrawio.isValidXml(text);
+  //               this.errorSourceFlag = !bool;
+  //               if (this.errorSourceFlag) {
+  //                 this.ctrl.notify('Response is an invalid Xml definition', 'error');
+  //                 GFLog.error('Response is an invalid Xml definition');
+  //               } else {
+  //                 this.ctrl.clearNotify();
+  //                 this.onSourceChange();
+  //               }
+  //             } else {
+  //               this.onSourceChange();
+  //             }
+  //             this.$scope.$applyAsync();
+  //           });
+  //         }
+  //       })
+  //       .catch(error => {
+  //         this.errorSourceFlag = true;
+  //         this.ctrl.notify(`Error : ${error}`, 'error');
+  //         this.$scope.$applyAsync();
+  //       });
+  //   } catch (error) {
+  //     this.errorDownloadFlag = true;
+  //     this.ctrl.notify('Error when call url', 'error');
+  //     // this.errorDownloadMsg = 'Error when call url';
+  //   }
+  //   return true;
+  // }
 
   /**
    * Open graph in index in draw.io
