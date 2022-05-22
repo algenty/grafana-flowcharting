@@ -170,7 +170,7 @@
                 <input type="text" class="gf-form-input width-8" ng-model="flowchart.background" placeholder="#000000" />
                 <button class="btn btn-secondary btn-small" style="height: 32px;"
                     title="Remove background color">
-                    <color-picker color="flowchart.bgColor"></color-picker>
+                    <color-picker color="flowchart.background" onChange="editor.onColorChange(flowchart)"></color-picker>
                 </button>
                 <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;"
                     title="Remove background color" ng-click="flowchart.background = null">

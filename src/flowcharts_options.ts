@@ -172,11 +172,11 @@ export class FlowchartsOptionsCtrl {
   //   this.render();
   // }
 
-  // onColorChange(flowchart: Flowchart) {
-  //   return (newColor: any) => {
-  //     flowchart._setBackgroundColor(newColor);
-  //   };
-  // }
+  onColorChange(flowchart: Flowchart) {
+    return (newColor: any) => {
+      flowchart.background = newColor;
+    };
+  }
 
   /**
    * onOptionChange event when options change
