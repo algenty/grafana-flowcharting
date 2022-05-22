@@ -4,4 +4,4 @@
 /dist
 yarn-error.log
 key.txt
-coverage
+/coverage
