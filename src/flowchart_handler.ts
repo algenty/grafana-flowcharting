@@ -185,7 +185,7 @@ export class FlowchartHandler {
       this.data.flowcharts = [];
       if (Array.isArray(tmpFc)) {
         tmpFc.map(async (fcData: gf.TFlowchartData) => {
-          this.addFlowchart(fcData.name, fcData).toBack().allowDrawio(this.data.allowDrawio);
+          this.addFlowchart(fcData.name, fcData).toBack().enableDioREssources(this.data.allowDrawio);
         });
       }
       this.currentFlowchart = this.getFlowchart('Main');
@@ -254,7 +254,7 @@ export class FlowchartHandler {
       const lg = this.flowcharts.length;
       for (let i = 0; i < lg; i++) {
         const fc = this.flowcharts[i];
-        if (fc.getName() === name) {
+        if (fc.name === name) {
           return fc;
         }
       }
@@ -341,17 +341,17 @@ export class FlowchartHandler {
   setCurrentFlowchart(name?: string): Flowchart | undefined {
     if (name === undefined) {
       this.currentFlowchart = this.getFlowchart('Main');
-      this.currentFlowchartName = this.currentFlowchart.getName();
+      this.currentFlowchartName = this.currentFlowchart.name;
       this.currentFlowchart.toFront();
       return this.currentFlowchart;
     }
     if (this.currentFlowchart === undefined) {
       this.currentFlowchart = this.getFlowchart(name);
-      this.currentFlowchartName = this.currentFlowchart.getName();
+      this.currentFlowchartName = this.currentFlowchart.name;
       this.currentFlowchart.toFront();
       return this.currentFlowchart;
     }
-    if (this.currentFlowchart.getName() !== name) {
+    if (this.currentFlowchart.name !== name) {
       this.currentFlowchart.toBack();
     }
     this.currentFlowchart = this.getFlowchart(name);
@@ -363,7 +363,7 @@ export class FlowchartHandler {
   setNextFlowchart() {
     const index = this.getCurrentIndex();
     if (index < this.flowcharts.length - 1) {
-      const name = this.flowcharts[index + 1].getName();
+      const name = this.flowcharts[index + 1].name;
       this.setCurrentFlowchart(name);
     }
   }
@@ -371,7 +371,7 @@ export class FlowchartHandler {
   setPreviousFlowchart() {
     const index = this.getCurrentIndex();
     if (index !== 0) {
-      const name = this.flowcharts[index - 1].getName();
+      const name = this.flowcharts[index - 1].name;
       this.setCurrentFlowchart(name);
     }
   }
@@ -394,7 +394,7 @@ export class FlowchartHandler {
    */
   getCurrentFlowchartName(): string {
     const cf = this.getCurrentFlowchart();
-    return cf !== undefined ? cf.getName() : 'Main';
+    return cf !== undefined ? cf.name : 'Main';
   }
 
   /**
@@ -574,7 +574,7 @@ export class FlowchartHandler {
           const fc = this.getFlowchartById(this.postedId);
           if (fc !== undefined) {
             this.$gf.notify('Received data from draw.io editor, refresh in progress', 'info');
-            fc.setContent(event.data);
+            fc.source = event.data;
             this.change();
             this.render();
           }

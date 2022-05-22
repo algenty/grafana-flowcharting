@@ -66,14 +66,14 @@ export class Flowchart {
     const funcName = 'refresh';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.xgraph?.update();
-    this._setBackgroundColor(this.data.bgColor);
+    this._colorBackgroundContainer(this.data.bgColor);
     this.events.emit('flowchart_updated', this);
   }
 
   change() {
     const funcName = 'change';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.update_xgraph();
+    this.change_xgraph();
     this.events.emit('flowchart_changed', this);
   }
 
@@ -95,7 +95,7 @@ export class Flowchart {
   }
 
   //############################################################################
-  //### ACCESSORS ANGULAR (MVS)
+  //### ACCESSORS
   //############################################################################
   // NAME
   set name(value: string) {
@@ -130,11 +130,21 @@ export class Flowchart {
       if (this.data.xml === value) {
         return;
       }
+      value = GFDrawio.isEncoded(value) ? GFDrawio.decode(value) : value;
       if (GFDrawio.isValidXml(value) === false) {
         this.$gf.notify('Invalid XML format', 'error');
         return;
       }
       this.data.xml = value;
+    }
+    if (this.type === 'csv') {
+      if (this.data.csv === value) {
+        return;
+      }
+      this.data.csv = value;
+    }
+    if (this.xgraph) {
+      this.xgraph.source = this.getResolvedSource();
       this.change();
     }
   }
@@ -142,12 +152,128 @@ export class Flowchart {
     return this.data.type === 'csv' ? this.data.csv : this.data.xml;
   }
 
+  // DOWNLOAD
+  set download(value: boolean) {
+    if (value === this.data.download) {
+      return;
+    }
+    this.data.download = value;
+    if (value && this.xgraph) {
+      this.xgraph.source = this.getResolvedSource();
+    }
+    this.change();
+  }
+  get download() {
+    return this.data.download;
+  }
+
+  // URL
+  set url(value: string) {
+    if (value === this.data.url) {
+      return;
+    }
+    //TODO : Check url
+    this.data.url = value;
+    this.change();
+  }
+  get url() {
+    return this.data.url;
+  }
+
   //BACKGROUND
   set background(value: string) {
-    if(value !== this.data.bgColor) {
-      // this.data.bgColor = value;
-      this._setBackgroundColor(value);
+    if (value !== this.data.bgColor) {
+      this.data.bgColor = value ?? '';
+      this._colorBackgroundContainer(value);
     }
+  }
+  get background() {
+    return this.data.bgColor ?? '';
+  }
+
+  //SCALE
+  set scale(value: boolean) {
+    _log("scale", value)
+    if (value === this.data.scale || !this.xgraph) {
+      return;
+    }
+    this.data.scale = value;
+    this.scaleGraph(value);
+  }
+  get scale() {
+    return this.data.scale;
+  }
+
+  //CENTER
+  set center(value: boolean) {
+    if (value === this.data.center || !this.xgraph) {
+      return;
+    }
+    this.data.center = value;
+    this.centerGraph(value);
+  }
+  get center() {
+    return this.data.center;
+  }
+
+  //TOOLTIP
+  set tooltip(value: boolean) {
+    if (value === this.data.tooltip || !this.xgraph) {
+      return;
+    }
+    this.data.tooltip = value;
+    this.enableTooltip(value);
+  }
+  get tooltip() {
+    return this.data.tooltip;
+  }
+
+  //GRID
+  set grid(value: boolean) {
+    if (value === this.data.grid || !this.xgraph) {
+      return;
+    }
+    this.data.grid = value;
+    this.enableGrid(value);
+  }
+  get grid() {
+    return this.data.grid;
+  }
+
+  //LOCK
+  set lock(value: boolean) {
+    if (value === this.data.lock || !this.xgraph) {
+      return;
+    }
+    this.data.lock = value;
+    this.enableLock(value);
+  }
+  get lock() {
+    return this.data.lock;
+  }
+
+  //ANIMATION
+  set animation(value: boolean) {
+    if (value === this.data.enableAnim || !this.xgraph) {
+      return;
+    }
+    this.data.enableAnim = value;
+    this.enableAnimation(value);
+  }
+  get animation() {
+    return this.data.enableAnim;
+  }
+
+  //zoom
+  set zoom(value: string) {
+    if (value === this.data.zoom || !this.xgraph) {
+      return;
+    }
+    this.data.zoom = value;
+    this.zoomGraph(value);
+  }
+  get zoom() {
+    return this.data.zoom;
   }
 
   //############################################################################
@@ -270,7 +396,8 @@ export class Flowchart {
   init_xgraph(): this {
     const $GF = this.$gf;
     try {
-      const content = this.getContent();
+      // TODO when source is URL
+      const content = this.$gf.resolveVars(this.source);
       if (this.xgraph === undefined) {
         this.xgraph = new XGraph(this.$gf, this.container, this.data.type, content);
         this.xgraph.events.connect('graph_changed', this, this._on_xgraph_graph_changed.bind(this));
@@ -282,21 +409,21 @@ export class Flowchart {
     return this;
   }
 
-  update_xgraph(): this {
+  change_xgraph(): this {
     const $GF = this.$gf;
     try {
-      const content = this.getContent();
+      const content = this.getResolvedSource();
       if (this.xgraph === undefined) {
         this.init_xgraph();
       }
       if (content !== undefined && content !== null) {
         if (this.data.enableAnim) {
-          this.xgraph?.enableAnim(true);
+          this.xgraph?.enableAnimation(true);
         } else {
-          this.xgraph?.enableAnim(false);
+          this.xgraph?.enableAnimation(false);
         }
         this.setGraphOptions(); //TODO :simplify
-        this.xgraph?.setContent(content);
+        // this.xgraph?.setContent(content);
         this.xgraph?.change();
         this.xgraph?.update();
         //TODO : already in setOptions, if yes call xgraph.change();
@@ -356,13 +483,13 @@ export class Flowchart {
    */
   setGraphOptions(): this {
     // TODO: simplify it
-    this.xgraph?.enableAnim(this.data.enableAnim);
-    this.setScale(this.data.scale);
-    this.setCenter(this.data.center);
-    this.setGrid(this.data.grid);
-    this.setTooltip(this.data.tooltip);
-    this.setLock(this.data.lock);
-    this.setZoom(this.data.zoom);
+    this.xgraph?.enableAnimation(this.data.enableAnim);
+    this.scaleGraph();
+    this.centerGraph();
+    this.enableGrid();
+    this.enableTooltip();
+    this.enableLock();
+    this.zoomGraph();
     // this.setBgColor(this.data.bgColor);
     return this;
   }
@@ -373,15 +500,15 @@ export class Flowchart {
    * @param {*} xmlGraph
    * @memberof Flowchart
    */
-  setContent(content?: string) {
-    if (content !== undefined) {
-      this.setGraphContent(content);
-    }
-    if (this.xgraph !== undefined) {
-      this.xgraph?.setContent(this.getContent());
-    }
-    // this.applyOptions();
-  }
+  // setContent(content?: string) {
+  //   if (content !== undefined) {
+  //     this.setGraphContent(content);
+  //   }
+  //   if (this.xgraph !== undefined) {
+  //     this.xgraph?.setContent(this.getContent());
+  //   }
+  //   // this.applyOptions();
+  // }
 
   /**
    * Reload source of graph
@@ -419,10 +546,9 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  setLock(bool: boolean): this {
-    this.data.lock = bool;
+  enableLock(bool: boolean = this.lock): this {
     if (this.xgraph) {
-      this.xgraph.lock = bool;
+      this.xgraph.enableLock(bool);
     }
     return this;
   }
@@ -434,47 +560,39 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  applyLock(bool: boolean): this {
-    if (bool !== undefined) {
-      this.data.lock = bool;
-    }
+  // applyLock(bool: boolean): this {
+  //   if (bool !== undefined) {
+  //     this.data.lock = bool;
+  //   }
+  //   if (this.xgraph) {
+  //     this.xgraph.enableLock(this.data.lock);
+  //   }
+  //   return this;
+  // }
+
+  enableAnimation(bool: boolean = this.animation): this {
     if (this.xgraph) {
-      this.xgraph.lockGraph(this.data.lock);
+      this.xgraph.enableAnimation(bool);
     }
     return this;
   }
 
-  /**
-   * Set enable tooltip
-   *
-   * @param {boolean} bool
-   * @returns {this}
-   * @memberof Flowchart
-   */
-  setTooltip(bool: boolean): this {
-    this.data.tooltip = bool;
+  enableTooltip(bool: boolean = this.tooltip): this {
     if (this.xgraph) {
-      this.xgraph.tooltip = bool;
+      this.xgraph.enableTooltip(bool);
     }
     return this;
   }
 
-  /**
-   * Enable tooltip
-   *
-   * @param {boolean} bool
-   * @returns {this}
-   * @memberof Flowchart
-   */
-  applyTooltip(bool: boolean): this {
-    if (bool !== undefined) {
-      this.data.tooltip = bool;
-    }
-    if (this.xgraph) {
-      this.xgraph.tooltipGraph(this.data.tooltip);
-    }
-    return this;
-  }
+  // applyTooltip(bool: boolean): this {
+  //   if (bool !== undefined) {
+  //     this.data.tooltip = bool;
+  //   }
+  //   if (this.xgraph) {
+  //     this.xgraph.enableTooltip(this.data.tooltip);
+  //   }
+  //   return this;
+  // }
 
   /**
    * Set scale parameter
@@ -483,25 +601,14 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  setScale(bool: boolean): this {
-    this.data.scale = bool;
-    if (this.xgraph) {
-      this.xgraph.scale = bool;
-    }
+  scaleGraph(bool: boolean = this.scale): this {
+    this.xgraph?.scaleDisplay(bool);
     return this;
   }
 
-  /**
-   * Set BgColor
-   *
-   * @param {(string | null)} bgColor
-   * @returns {this}
-   * @memberof Flowchart
-   */
-  private _setBackgroundColor(bgColor: string | null): this {
-    this.data.bgColor = bgColor;
-    if (bgColor) {
-      this.container.style.backgroundColor = bgColor;
+  private _colorBackgroundContainer(color: string | null = this.background): this {
+    if (color) {
+      this.container.style.backgroundColor = color;
     } else {
       this.container.style.backgroundColor = '';
     }
@@ -515,15 +622,15 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  applyScale(bool: boolean): this {
-    if (bool !== undefined) {
-      this.data.scale = bool;
-    }
-    if (this.xgraph) {
-      this.xgraph.scaleGraph(this.data.scale);
-    }
-    return this;
-  }
+  // applyScale(bool: boolean): this {
+  //   if (bool !== undefined) {
+  //     this.data.scale = bool;
+  //   }
+  //   if (this.xgraph) {
+  //     this.xgraph.scaleDisplay(this.data.scale);
+  //   }
+  //   return this;
+  // }
 
   /**
    * set center parameter
@@ -566,12 +673,12 @@ export class Flowchart {
    * @returns {string}
    * @memberof Flowchart
    */
-  getXml(replaceVarBool = true): string {
-    if (!replaceVarBool) {
-      return this.data.xml;
-    }
-    return this.$gf.resolveVars(this.data.xml);
-  }
+  // getXml(replaceVarBool = true): string {
+  //   if (!replaceVarBool) {
+  //     return this.data.xml;
+  //   }
+  //   return this.$gf.resolveVars(this.data.xml);
+  // }
 
   /**
    * get CSV def with var replaced
@@ -580,12 +687,12 @@ export class Flowchart {
    * @returns {string}
    * @memberof Flowchart
    */
-  getCsv(replaceVarBool = true): string {
-    if (!replaceVarBool) {
-      return this.data.csv;
-    }
-    return this.$gf.resolveVars(this.data.csv);
-  }
+  // getCsv(replaceVarBool = true): string {
+  //   if (!replaceVarBool) {
+  //     return this.data.csv;
+  //   }
+  //   return this.$gf.resolveVars(this.data.csv);
+  // }
 
   /**
    * Get data source according type
@@ -594,19 +701,19 @@ export class Flowchart {
    * @returns
    * @memberof Flowchart
    */
-  getSource(replaceVarBool = true) {
-    if (this.data.type === 'xml') {
-      return this.getXml(replaceVarBool);
-    }
-    if (this.data.type === 'csv') {
-      return this.getCsv(replaceVarBool);
-    }
-    return '';
-  }
+  // getSource(replaceVarBool = true) {
+  //   if (this.data.type === 'xml') {
+  //     return this.getXml(replaceVarBool);
+  //   }
+  //   if (this.data.type === 'csv') {
+  //     return this.getCsv(replaceVarBool);
+  //   }
+  //   return '';
+  // }
 
-  allowDrawio(flag: boolean): this {
+  enableDioREssources(bool: boolean): this {
     if (this.xgraph) {
-      this.xgraph.allowDrawioRessources(flag);
+      this.xgraph.enableDioRessources(bool);
     }
     return this;
   }
@@ -618,10 +725,10 @@ export class Flowchart {
    * @returns
    * @memberof Flowchart
    */
-  getContent(replaceVarBool = true): string {
+  getResolvedSource(replaceVarBool = true): string {
     const $GF = this.$gf;
     let content: string | null = '';
-    if (this.data.download) {
+    if (this.download) {
       const url = $GF.resolveVars(this.data.url);
       $GF.notify(`Loading content definition for ${this.data.name}`, 'info');
       content = this.loadContent(url);
@@ -632,7 +739,7 @@ export class Flowchart {
         }
       }
     } else {
-      content = this.getSource(replaceVarBool);
+      content = $GF.resolveVars(this.source);
     }
     return content === null ? '' : content;
   }
@@ -661,6 +768,7 @@ export class Flowchart {
    * @returns
    * @memberof Flowchart
    */
+  //TODO : Transform to fetch
   loadContent(url: string): string | null {
     return $GF.utils.$loadFile(url);
   }
@@ -671,69 +779,58 @@ export class Flowchart {
    * @returns {this}
    * @memberof Flowchart
    */
-  applyModel(): this {
+  // applyModel(): this {
+  //   if (this.xgraph) {
+  //     this.data.xml = this.xgraph.getXmlModel();
+  //   }
+  //   this.setContent();
+  //   return this;
+  // }
+
+  centerGraph(bool: boolean = this.center): this {
+    this.xgraph?.centerDisplay(bool);
+    return this;
+  }
+
+  // setZoom(percent: string): this {
+  //   this.data.zoom = percent;
+  //   if (this.xgraph) {
+  //     this.xgraph.zoomPercent = percent;
+  //   }
+  //   return this;
+  // }
+
+  zoomGraph(percent: string = this.zoom): this {
     if (this.xgraph) {
-      this.data.xml = this.xgraph.getXmlModel();
+      this.xgraph.zoomDisplay(this.data.zoom);
     }
-    this.setContent();
     return this;
   }
 
-  center(bool: boolean): this {
-    if (bool !== undefined) {
-      this.data.center = bool;
-    }
+  // setGrid(bool: boolean): this {
+  //   this.data.grid = bool;
+  //   if (this.xgraph) {
+  //     this.xgraph.grid = bool;
+  //   }
+  //   return this;
+  // }
+
+  enableGrid(bool: boolean = this.grid): this {
     if (this.xgraph) {
-      this.xgraph.centerGraph(this.data.center);
+      this.xgraph.gridDisplay(this.data.grid);
     }
     return this;
   }
 
-  setZoom(percent: string): this {
-    this.data.zoom = percent;
-    if (this.xgraph) {
-      this.xgraph.zoomPercent = percent;
-    }
-    return this;
-  }
+  // setXml(xml: string): this {
+  //   this.data.xml = xml;
+  //   return this;
+  // }
 
-  zoom(percent: string): this {
-    if (percent !== undefined) {
-      this.data.zoom = percent;
-    }
-    if (this.xgraph) {
-      this.xgraph.zoomGraph(this.data.zoom);
-    }
-    return this;
-  }
-
-  setGrid(bool: boolean): this {
-    this.data.grid = bool;
-    if (this.xgraph) {
-      this.xgraph.grid = bool;
-    }
-    return this;
-  }
-
-  grid(bool: boolean): this {
-    if (bool !== undefined) {
-      this.data.grid = bool;
-    }
-    if (this.xgraph) {
-      this.xgraph.gridGraph(this.data.grid);
-    }
-    return this;
-  }
-
-  setXml(xml: string): this {
-    this.data.xml = xml;
-    return this;
-  }
-
-  setCsv(csv: string): this {
-    this.data.csv = csv;
-    return this;
-  }
+  // setCsv(csv: string): this {
+  //   this.data.csv = csv;
+  //   return this;
+  // }
 
   minify() {
     this.data.xml = $GF.utils.minify(this.data.xml);
@@ -743,14 +840,13 @@ export class Flowchart {
     this.data.xml = $GF.utils.prettify(this.data.xml);
   }
 
-  _decode() {
+  decode() {
     if (GFDrawio.isEncoded(this.data.xml)) {
       this.data.xml = GFDrawio.decode(this.data.xml);
-      // this.data.xml = XGraph.decompress(this.data.xml);
     }
   }
 
-  _encode() {
+  encode() {
     if (!GFDrawio.isEncoded(this.data.xml)) {
       const xml = GFDrawio.encode(this.data.xml);
       this.data.xml = xml ? xml : this.data.xml;

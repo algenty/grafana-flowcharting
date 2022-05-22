@@ -1,7 +1,7 @@
 <div>
     <div class="editor-row">
         <!-- Definition -->
-        <div class="section gf-form-group" style="width:100%;">
+        <div class="section gf-form-group" style="width:100%;" ng-model-options="{ updateOn: 'blur' }">
             <h5 class="section-heading">
                 Definition
                 <info-popover mode="right-normal"><span
@@ -10,7 +10,7 @@
             <!-- Flowchart Definition -->
             <div class="gf-form">
                 <gf-form-switch class="gf-form" label="Download source" label-class="width-12"
-                    checked="flowchart.getData().download" on-change="editor.onSourceChange()">
+                    checked="flowchart.download">
                 </gf-form-switch>
             </div>
 
@@ -21,14 +21,13 @@
                             ng-bind-html="$GF.popover('Source of mxgraph definition (Xml definition, Url with xml result)', 'DEFINITION_XML#Type','DEFINITION_XML')"></span>
                     </info-popover>
                 </span>
-                <div class="gf-form-select-wrapper width-12">
-                    <select class="gf-form-input" ng-model="flowchart.getData().type"
-                        ng-options="c.value as c.text for c in editor.sourceTypes"
-                        ng-change="editor.onSourceChange()"></select>
+                <div class="gf-form-select-wrapper width-12" ng-model-options="{ updateOn: 'default' }">
+                    <select class="gf-form-input" ng-model="flowchart.type"
+                        ng-options="c.value as c.text for c in editor.sourceTypes">(blank)</select>
                 </div>
             </div>
             <!-- URL -->
-            <div class="gf-form" ng-if="flowchart.getData().download">
+            <div class="gf-form" ng-if="flowchart.download">
                 <div class="gf-form">
                     <span class="gf-form-label width-12">
                         URL
@@ -36,33 +35,32 @@
                             This service should respond with a xml/plain response containing mxgraph syntax
                         </info-popover>
                     </span>
-                    <input type="text" ng-model="flowchart.getData().url"
+                    <input type="text" ng-model="flowchart.url"
                         class="gf-form-input ng-pristine ng-untouched ng-valid ng-empty" style="width: 300px"
-                        ng-change="editor.checkUrl_onSourceChange(flowchart.getData().url)" ng-model-onblur />
+                        ng-change="flowchart.url" ng-model-onblur />
                 </div>
             </div>
             <!-- XML/CSV -->
-            <div class="gf-form gf-form--v-stretch" ng-if="!flowchart.getData().download">
+            <div class="gf-form gf-form--v-stretch" ng-if="!flowchart.download">
                 <span class="gf-form-label width-12">
                     Source Content
                     <info-popover mode="right-normal"><span
                             ng-bind-html="$GF.popover('mxgraph model, edit on draw.io and select Extra menu > Edit Diagram', 'DEFINITION_XML#Type','DEFINITION_XML')"></span>
                     </info-popover>
                 </span>
-                <textarea name="options.source.xml.input"
+                <textarea name="options.source"
                     class="gf-form-input width:95% ng-pristine ng-valid ng-empty ng-touched" rows="10"
-                    placeholder="This text should respect xml/plain mxgraph syntax"
+                    placeholder="This text should respect xml/cvs/plain mxgraph syntax"
                     style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;"
-                    ng-change="editor.checkSource_onSourceChange(flowchart.getData().xml)" ng-model="flowchart.getData().xml"
-                    ng-if="flowchart.getData().type === 'xml'" ng-model-onBlur>
+                    ng-model="flowchart.source">
                 </textarea>
-                <textarea name="options.source.csv.input"
+                <!-- <textarea name="options.source.csv.input"
                     class="gf-form-input width:95% ng-pristine ng-valid ng-empty ng-touched" rows="10"
                     placeholder="This text should respect csv draw.io syntax&#10;See https://drawio-app.com/import-from-csv-to-drawio for more information"
                     style="margin-top: 0px; margin-bottom: 0px; height: 145px; width: 95%;"
                     ng-change="editor.checkSource_onSourceChange(flowchart.getData().xml)" ng-model="flowchart.getData().csv"
                     ng-if="flowchart.getData().type === 'csv'" ng-model-onBlur>
-                </textarea>
+                </textarea> -->
             </div>
             <!-- BUTTONS RULES -->
             <!-- <div class="gf-form-inline" ng-if=" flowchart.getData().type == 'xml' && !flowchart.getData().download">
@@ -110,7 +108,7 @@
                 </div>
             </div> -->
             <div class="gf-form-button-row gf-unselectable"
-                ng-if=" flowchart.getData().type == 'xml' && !flowchart.getData().download">
+                ng-if=" flowchart.type == 'xml' && !flowchart.download">
                 <!-- EDIT -->
                 <button class="btn btn-primary btn-small" ng-click="editor.edit($index)">
                     <i class="fa fa-edit pointer"></i>Edit diagram
@@ -161,38 +159,34 @@
                         ng-bind-html="$GF.popover('Change display graph options', 'ADVANCED_XML#Buttons','ADVANCED_XML2')"></span>
                 </info-popover>
             </h5>
-            <gf-form-switch class="gf-form" label="Scale" label-class="width-12" checked="flowchart.getData().scale"
-                on-change="editor.onOptionChange()">
+            <gf-form-switch class="gf-form" label="Scale" label-class="width-12" checked="flowchart.scale" ng-model-options="{ updateOn: 'default' }">
             </gf-form-switch>
-            <gf-form-switch class="gf-form" label="Center" label-class="width-12" checked="flowchart.getData().center"
-                on-change="editor.onOptionChange()">
+            <gf-form-switch class="gf-form" label="Center" label-class="width-12" checked="flowchart.center" ng-model-options="{ updateOn: 'default' }">
             </gf-form-switch>
-            <gf-form-switch class="gf-form" label="Grid" label-class="width-12" checked="flowchart.getData().grid"
-                on-change="editor.onOptionChange()">
+            <gf-form-switch class="gf-form" label="Grid" label-class="width-12" checked="flowchart.grid" ng-model-options="{ updateOn: 'default' }">
             </gf-form-switch>
             <div class="gf-form" title="Background color">
                 <label class="gf-form-label width-12">Bg Color</label>
-                <input type="text" class="gf-form-input width-8" ng-model="flowchart.getData().bgColor"
-                    ng-change="editor.onOptionChange()" placeholder="#000000" />
-                <button class="btn btn-secondary btn-small" style="height: 32px;" 
+                <input type="text" class="gf-form-input width-8" ng-model="flowchart.background" placeholder="#000000" />
+                <button class="btn btn-secondary btn-small" style="height: 32px;"
                     title="Remove background color">
-                    <color-picker color="flowchart.data.bgColor" onChange="editor.onColorChange(flowchart)"></color-picker>
+                    <color-picker color="flowchart.bgColor"></color-picker>
                 </button>
                 <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;"
-                    title="Remove background color" ng-click="flowchart.getData().bgColor = null;editor.onOptionChange()">
+                    title="Remove background color" ng-click="flowchart.background = null">
                     <div Class="gf-icon-remove" style="margin-bottom: 7px;margin-right: 2px;"></div>
                 </button>
             </div>
             <!--zoom-->
-            <div class="gf-form" title="Initial zoom" ng-show="!flowchart.getData().scale">
+            <div class="gf-form" title="Initial zoom" ng-show="!flowchart.scale">
                 <span class="gf-form-label width-12">
                     Zoom
                     <info-popover mode="right-normal"><span
                             ng-bind-html="$GF.popover('Zoom graph, if scale is unchecked. if < 100% : reduce graph, >100% increase graph', 'DEFINITION_XML#Buttons','ADVANCED_XML2')"></span>
                     </info-popover>
                 </span>
-                <input type="text" name="valueDisplayRegex" ng-model="flowchart.getData().zoom" style="text-align: right"
-                    placeholder="100%" class="gf-form-input max-width-10" ng-blur="editor.onOptionChange()" />
+                <input type="text" name="valueDisplayRegex" ng-model="flowchart.zoom" style="text-align: right"
+                    placeholder="100%" class="gf-form-input max-width-10"/>
             </div>
         </div>
         <div class="section gf-form-group">
@@ -203,17 +197,16 @@
                 </info-popover>
             </h5>
             <!-- Lock -->
-            <gf-form-switch class="gf-form" label="Lock" label-class="width-12" checked="flowchart.getData().lock"
-                on-change="editor.onOptionChange()">
+            <gf-form-switch class="gf-form" label="Lock" label-class="width-12" checked="flowchart.lock" ng-model-options="{ updateOn: 'default' }"">
             </gf-form-switch>
             <!-- Enable animation -->
-            <gf-form-switch class="gf-form" label="Enable animation" label-class="width-12"
+            <gf-form-switch class="gf-form" label="Enable animation" label-class="width-12" ng-model-options="{ updateOn: 'default' }"
                 tooltip="Enable animation in flowcharting like fade colors, disable it if you use 'Direct link rendered image' in share panel options for a best rendered or best performance"
-                checked="flowchart.getData().enableAnim" on-change="editor.onSourceChange()">
+                checked="flowchart.animation">
             </gf-form-switch>
             <!-- Tooltip -->
             <gf-form-switch class="gf-form" label="Tooltip" tooltip="Enable tooltip" label-class="width-12"
-                checked="flowchart.getData().tooltip" on-change="editor.onOptionChange()">
+                checked="flowchart.tooltip" ng-model-options="{ updateOn: 'default' }">
             </gf-form-switch>
         </div>
     </div>
