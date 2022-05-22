@@ -193,7 +193,6 @@ export class Flowchart {
 
   //SCALE
   set scale(value: boolean) {
-    _log("scale", value)
     if (value === this.data.scale || !this.xgraph) {
       return;
     }
@@ -483,7 +482,7 @@ export class Flowchart {
    */
   setGraphOptions(): this {
     // TODO: simplify it
-    this.xgraph?.enableAnimation(this.data.enableAnim);
+    this.enableAnimation(this.data.enableAnim);
     this.scaleGraph();
     this.centerGraph();
     this.enableGrid();
@@ -639,13 +638,13 @@ export class Flowchart {
    * @returns
    * @memberof Flowchart
    */
-  setCenter(bool: boolean) {
-    this.data.center = bool;
-    if (this.xgraph) {
-      this.xgraph.center = bool;
-    }
-    return this;
-  }
+  // centerGraph(bool: boolean) {
+  //   this.data.center = bool;
+  //   if (this.xgraph) {
+  //     this.xgraph.centerDisplay(bool);
+  //   }
+  //   return this;
+  // }
 
   /**
    * Get names array of names according id or value

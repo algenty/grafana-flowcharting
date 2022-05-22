@@ -14,8 +14,10 @@ import { InteractiveMap } from 'mapping_class';
 import { GFDrawio } from 'drawio_base';
 
 // Debug
-const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG = true;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 // Signal definition
 
@@ -38,7 +40,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
   onMapping: InteractiveMap;
-  uid: string;
+  uid: string = $GF.genUid(this.constructor.name);
   graphHoverTimer: GFTimer | undefined = undefined;
   mouseIn = false;
   firstLoad = true;
@@ -56,6 +58,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   /**@ngInject*/
   constructor($scope: any, $injector: any, $rootScope: any, templateSrv: any) {
     super($scope, $injector);
+    _log('FlowchartCtrl', this.uid);
     this.$gf = $GF.create($scope, templateSrv, this.dashboard, this);
     // this.$scope.$GF = this.$gf;
     this.$rootScope = $rootScope;
@@ -69,7 +72,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.onMapping = new InteractiveMap();
     this.parentDiv = document.createElement('div');
     this.flowchartsDiv = document.createElement('div');
-    this.uid = $GF.genUid();
+    // this.uid = $GF.genUid();
     this.panelDefaults = FlowchartCtrl.getDefaultData();
     _defaults(this.panel, this.panelDefaults);
     this.panel.graphId = `flowchart_${this.panel.id}`;
@@ -112,7 +115,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   }
 
   free() {
-    this._eventsDisconnect()
+    this._eventsDisconnect();
   }
 
   change() {}
@@ -168,8 +171,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       this.flowchartHandler.addFlowchart('Main').init();
     }
   }
-
-
 
   /**
    * Return data with default value
@@ -236,7 +237,10 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   private _on_grafana_refreshed() {
     _log('📬', this.constructor.name, '_on_grafana_refreshed');
+    // if(! this.firstLoad) {
     this.flowchartHandler?.update();
+    this.firstLoad = false;
+    // }
   }
 
   private _on_grafana_template_variable_value_updated() {
@@ -281,7 +285,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   private _on_global_panel_closed() {
     _log('📬', this.constructor.name, '_on_global_panel_closed');
-    this.free()
+    this.free();
   }
 
   //
