@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-${PWD}/nodejs-cmd.sh npm run build
+${PWD}/nodejs-cmd.sh yarn build

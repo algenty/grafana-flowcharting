@@ -100,11 +100,11 @@ export class Flowchart {
     if (!value || value.length === 0 || value === this.data.name) {
       return;
     }
-    var exist = this.$gf.flowchartHandler?.getFlowchart(value) !== undefined;
-    if (!exist) {
-      this.data.name = value;
-    } else {
+    const exist = this.$gf.flowchartHandler?.getFlowchart(value);
+    if (exist) {
       this.$gf.notify(`Flowchart with name ${value} already exit`, 'error');
+    } else {
+      this.data.name = value;
     }
   }
   get name() {

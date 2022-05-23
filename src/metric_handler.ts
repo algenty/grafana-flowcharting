@@ -1,10 +1,12 @@
 import { SerieMetric, TableMetric, ObjectMetric, Metric } from 'metric_class';
-import { $GF,GFLog } from 'globals_class';
+import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 
 // Debug
-const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG = true;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 // Define signals
 const metricHandlerSignalsArray = ['metric_created', 'metric_updated', 'metric_deleted'] as const;
@@ -20,19 +22,19 @@ export class MetricHandler {
   events: GFEvents<MetricHandlerSignals> = GFEvents.create(metricHandlerSignalsArray);
 
   constructor($gf: $GF) {
-    this.$gf = $gf
+    this.$gf = $gf;
     this.$gf.metricHandler = this;
     this.uid = $GF.genUid('MetricHandler');
     this.init();
   }
 
-    //
+  //
   // Updates
   //
   change() {
     const $GF = this.$gf;
     this.clear();
-    this.dataList.map( async (dl) => {
+    this.dataList.map(async (dl) => {
       this.addMetric(dl);
     });
     $GF.events.emit('data_processed');
@@ -84,7 +86,6 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   addMetric(data: any): ObjectMetric {
-
     let metric: ObjectMetric;
     if (data.type === 'table') {
       metric = this.addTable(data);
@@ -98,10 +99,10 @@ export class MetricHandler {
     const uid = metric.uid;
     const type = metric.type;
     metric.free();
-    if(type === 'serie') {
+    if (type === 'serie') {
       this.series.delete(uid);
     }
-    if(type === 'table') {
+    if (type === 'table') {
       this.tables.delete(uid);
     }
     this.metrics.delete(uid);
@@ -228,9 +229,30 @@ export class MetricHandler {
    * @memberof MetricHandler
    */
   clear() {
-    this.metrics.forEach( metric => {
-      this.removeMetric(metric)
+    this.metrics.forEach((metric) => {
+      this.removeMetric(metric);
     });
+  }
+
+  isMultipleType() {
+    return this.isTypeOf('serie') && this.isTypeOf('table');
+  }
+
+  getMetricNames(): string[] {
+    const result: string[] = [];
+    let prefix = '';
+    const multiple = this.isMultipleType();
+    if (multiple) {
+      prefix = 'Series/';
+    }
+    this.series.forEach((m) => result.push(`${prefix}${m.getName()}`));
+    if (multiple) {
+      prefix = 'Tables/';
+    }
+    this.tables.forEach((t) => {
+      t.getColumnsName().forEach((c) => result.push(`${prefix}${t}/${c}`));
+    });
+    return result;
   }
 
   //##############################################################
@@ -242,44 +264,11 @@ export class MetricHandler {
   }
 
   private _on_global_debug_asked() {
-    _log("🗃️", this.constructor.name, this);
+    _log('🗃️', this.constructor.name, this);
   }
 
   private _on_global_panel_closed() {
-    _log('📬', this.constructor.name, "_on_global_panel_close");
+    _log('📬', this.constructor.name, '_on_global_panel_close');
     this.free();
   }
-
-
-  //
-  // Events
-  //
-  // async onDestroyed() {
-  //   const funcName = 'onDestroyed';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  // }
-
-  // async onRefreshed() {
-  //   const funcName = 'onRefreshed';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.onCompleted();
-  // }
-
-  // async onInitialized() {
-  //   const funcName = 'onInitialized';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.ack('metric', 'initialized');
-  // }
-
-  // async onChanged() {
-  //   const funcName = 'onChanged';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.onCompleted();
-  // }
-
-  // async onCompleted() {
-  //   const funcName = 'onCompleted';
-  //   GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-  //   this.ctrl.eventHandler.ack('metric', '');
-  // }
 }

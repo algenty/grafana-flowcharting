@@ -167,6 +167,8 @@ export class GFCONSTANT {
     { text: 'String', value: 'string' },
     { text: 'Date', value: 'date' },
   ];
+
+
   static readonly METRIC_TYPES: gf.TMetricTypeList = [
     { text: 'Series', value: 'serie' },
     { text: 'Table', value: 'table' },

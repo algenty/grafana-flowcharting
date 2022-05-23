@@ -3,10 +3,11 @@ import { sortBy as _sortBy } from 'lodash';
 import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 
-
 // Debug
-const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG = true;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 // Define signals
 const ruleHandlerSignalsArray = ['rule_created', 'rule_updated', 'rule_changed', 'rule_deleted'] as const;
@@ -92,6 +93,10 @@ export class RulesHandler {
   }
 
   //############################################################################
+  //### ACCESSORS
+  //############################################################################
+
+  //############################################################################
   //### LOGIC
   //############################################################################
 
@@ -167,14 +172,23 @@ export class RulesHandler {
   }
 
   /**
-   * Get Rule at index
+   * Get Rule at index or alias
    *
    * @param {number} index
    * @returns {Rule}
    * @memberof RulesHandler
    */
-  getRule(index: number): Rule {
-    return this.rules[index];
+  getRule(value: number | string): Rule | null {
+    if (typeof value === 'number') {
+      return this.rules[value];
+    }
+    for (let index = 0; index < this.rules.length; index++) {
+      const r = this.rules[index];
+      if(value === r.name){
+        return r;
+      };
+    }
+    return null;
   }
 
   /**

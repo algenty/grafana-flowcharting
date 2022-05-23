@@ -100,7 +100,7 @@
         </div>
       </div>
       <!-- TBODY -->
-      <div class="gf-table-body">
+      <div class="gf-table-body" ng-model-options="{ updateOn: 'blur' }">
         <div role="row" class="gf-table-rows gf-table-rows-resizable"
           ng-repeat="rule in editor.rulesHandler.getRules()"
           ng-mouseenter="editor.setCurrentParam('currentRule', rule);"
@@ -110,11 +110,11 @@
             ng-mouseleave="editor.unhighlightXCells4Rule(rule);">
             <!-- EXPAND -->
             <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="expand"
-              ng-click="rule.getData().reduce=!rule.getData().reduce" ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
+              ng-click="rule.reduce=!rule.reduce" ng-style="{'width' : editor.rulesTable.getWidth('expand')}">
               <div class="gf-table-content gf-unselectable" style="text-align: center;cursor: pointer;">
                 <span>
                   <i class="fa fa-chevron-right" title="Expand/Collapse for detail"
-                    ng-class="{'gf-chevron-init': rule.getData().reduce, 'gf-chevron-rotate': rule.getData().reduce === false}">
+                    ng-class="{'gf-chevron-init': rule.reduce, 'gf-chevron-rotate': rule.reduce === false}">
                   </i>
                 </span>
               </div>
@@ -126,7 +126,7 @@
               ng-style="{'width' : editor.rulesTable.getWidth('rule')}">
               <div class="gf-table-content" ng-show="rule.inEdit[CN1] !== true"
                 ng-dblclick="rule.inEdit[CN1] = true;$GF.setFocus(rule.uid + '-' + CN1)">
-                {{rule.getData().alias}}
+                {{rule.name}}
               </div>
               <div ng-show="rule.displayEdit[CN1] === true && rule.inEdit[CN1] !== true"
                 ng-click="rule.inEdit[CN1] = true;$GF.setFocus( rule.uid + '-' + CN1 )"
@@ -134,33 +134,31 @@
                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
               </div>
               <div ng-show="rule.inEdit[CN1] === true">
-                <input type="text" class="gf-form-input max-width-16" ng-model="rule.getData().alias"
+                <input type="text" class="gf-form-input max-width-16" ng-model="rule.name"
                   ng-attr-id="{{rule.uid + '-' + CN1}}" ng-blur="rule.inEdit[CN1] = false;" style="width: 100%;"
                   ng-model-onblur ng-keydown="$event.keyCode === 13 ? rule.inEdit[CN1] = false : rule.inEdit[CN1] = true" autofocus />
               </div>
             </div>
             <!-- METRIC NAME -->
             <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="rule"
-              ng-init="CN2 = 'metric';rule.displayEdit[CN2] = false;rule.inEdit[CN2] = false;rule.metricName = editor.getFastEditMectricName(rule);"
+              ng-init="CN2 = 'metric';rule.displayEdit[CN2] = false;rule.inEdit[CN2] = false"
               ng-mouseleave="rule.displayEdit[CN2] = false;" ng-mouseover="rule.displayEdit[CN2] = true;"
-              ng-attr-title="{{rule.FE_metricName}}" ng-style="{'width' : editor.rulesTable.getWidth('metric')}">
+              ng-attr-title="{{rule.metric}}" ng-style="{'width' : editor.rulesTable.getWidth('metric')}">
               <div class="gf-table-content" ng-show="rule.inEdit[CN2] !== true"
                 ng-dblclick="rule.inEdit[CN2] = true;$GF.setFocus(rule.uid + '-' + CN2)">
-                {{rule.FE_metricName}}
+                {{rule.metric}}
               </div>
               <div ng-show="rule.displayEdit[CN2] === true && rule.inEdit[CN2] !== true"
                 ng-click="rule.inEdit[CN2] = true;$GF.setFocus( rule.uid + '-' + CN2 )"
                 title="Edit/Change metric name/alias"
                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
               </div>
-              <div ng-show="rule.inEdit[CN2] === true">
+              <div ng-show="rule.inEdit[CN2] === true" ng-model-options="{ updateOn: 'default' }">
                 <select style="width:100%;" convert-to-number class="gf-form-input"
-                  ng-blur="editor.onRulesChange();rule.inEdit[CN2] = false;" ng-model="rule.FE_metricName"
+                  ng-blur="editor.onRulesChange();rule.inEdit[CN2] = false;" ng-model="rule.metric"
                   ng-attr-id="{{rule.uid + '-' + CN2}}"
-                  ng-change="editor.setFastEditMectricName(rule) && editor.onRulesChange();rule.inEdit[CN2] = false"
-                  ng-options="m for m in editor.getFastEditMectricNames(rule)">
-                  <!-- <option type="number" ng-repeat="m in editor.getFastEditMectricNames(rule);" ng-value="rule.FE_metricName">{{m}}
-                  </option> -->
+                  ng-change="rule.inEdit[CN2] = false"
+                  ng-options="m for m in editor.getFastEditMectricNames()">
                 </select>
               </div>
             </div>
@@ -189,7 +187,7 @@
             <div role="cell" class="gf-table-cells gf-table-cells-resizable" id="fval"
               ng-style="{'width' : editor.rulesTable.getWidth('color')}">
               <div class="gf-table-content" style="text-align: center;" ng-attr-title="{{rule.highestColor}}">
-                <span style="color : {{rule.highestColor}}"
+                <span ng-style="{ 'color' : rule.highestColor }"
                   ng-if="rule.highestColor !== null && rule.highestColor.length > 0">
                   <i class="fa fa-w fa-square"></i>
                 </span>
@@ -204,17 +202,17 @@
                   title="Change the targets of all mapping">
                 </div>
                 <!-- TOOLTIP -->
-                <div ng-click="rule.getData().tooltip = !rule.getData().tooltip;editor.onRulesChange()"
+                <div ng-click="rule.tooltip = !rule.tooltip"
                   title="Enable/Disable tooltips" class="gf-icon-action"
-                  ng-class="{'gf-icon-comment-on': rule.getData().tooltip, 'gf-icon-comment-off': !rule.getData().tooltip}">
+                  ng-class="{'gf-icon-comment-on': rule.tooltip, 'gf-icon-comment-off': !rule.tooltip}">
                 </div>
                 <!-- CHART/GRAPH -->
-                <div ng-show="rule.getData().tooltip === false" class="gf-icon-empty">
+                <div ng-show="rule.tooltip === false" class="gf-icon-empty">
                 </div>
-                <div ng-show="rule.getData().tooltip === true"
-                  ng-click="rule.getData().tpGraph = !rule.getData().tpGraph;editor.onRulesChange()"
+                <div ng-show="rule.tooltip"
+                  ng-click="rule.tooltipForGraph = !rule.tooltipForGraph"
                   title="Enable/Disable charts with tooltips" class="gf-icon-action"
-                  ng-class="{'gf-icon-graph-off': !rule.getData().tpGraph, 'gf-icon-graph-on': rule.getData().tpGraph}">
+                  ng-class="{'gf-icon-graph-off': !rule.tooltipForGraph, 'gf-icon-graph-on': rule.tooltipForGraph}">
                 </div>
               </div>
             </div>
@@ -227,8 +225,8 @@
                 </div>
                 <div ng-click="editor.cloneRule(rule)" title="Duplicate this rule" class="gf-icon-action gf-icon-clone">
                 </div>
-                <div ng-click="editor.toggleShow(rule,!rule.getData().hidden)" title="Enable/Disable this rule"
-                  class="gf-icon-action" ng-class="{'gf-icon-hide': rule.isHidden(), 'gf-icon-show': !rule.isHidden()}">
+                <div ng-click="rule.hidden = !rule.hidden" title="Enable/Disable this rule"
+                  class="gf-icon-action" ng-class="{'gf-icon-hide': rule.hidden, 'gf-icon-show': !rule.hidden}">
                 </div>
                 <div ng-click="!editor.isFirstRule($index) && editor.moveRule(rule, true)"
                   ng-attr-title="{{!editor.isFirstRule($index) ? 'Move up' : ''}}" class="gf-icon-action"
@@ -241,7 +239,7 @@
               </div>
             </div>
           </div>
-          <div ng-hide="rule.getData().reduce==true" class="gf-table-row_body">
+          <div ng-hide="rule.reduce" class="gf-table-row_body">
             <!-- GRAPH TOOLTIP -->
             <ng-include src="GFPlugin.getPartialPath() + 'rules/ruleBody.html'"> </ng-include>
           </div>
@@ -253,7 +251,7 @@
           <div class="gf-form-inline">
             <div class="gf-form" style="margin-right: 5px;">
               <button class="btn btn-primary btn-small"
-                ng-click="editor.rulesHandler.addRule('/.*/') && editor.onRulesChange();" title="Add a new rule">
+                ng-click="editor.rulesHandler.addRule('/.*/')" title="Add a new rule">
                 <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
                   <path fill="currentColor"
                     d="M 200 450C 200 435 210 425 225 425C 225 425 425 425 425 425C 425 425 425 225 425 225C 425 210 435 200 450 200C 450 200 550 200 550 200C 565 200 575 210 575 225C 575 225 575 425 575 425C 575 425 775 425 775 425C 790 425 800 435 800 450C 800 450 800 550 800 550C 800 565 790 575 775 575C 775 575 575 575 575 575C 575 575 575 775 575 775C 575 790 565 800 550 800C 550 800 450 800 450 800C 435 800 425 790 425 775C 425 775 425 575 425 575C 425 575 225 575 225 575C 210 575 200 565 200 550C 200 550 200 450 200 450" />

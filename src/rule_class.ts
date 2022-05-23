@@ -18,14 +18,14 @@ import {
 import { GFEvents } from 'flowcharting_base';
 
 // Debug
-const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG = true;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 // Signal definition
 const ruleSignalsArray = ['rule_initalized', 'rule_updated', 'rule_changed', 'rule_freed'] as const;
 type RuleSignals = typeof ruleSignalsArray[number];
-
-
 
 /**
  * Rule definition
@@ -76,7 +76,7 @@ export class Rule {
     this.data = newData;
     this.data.pattern = pattern;
     // this.ctrl = ctrl;
-    if(oldData) {
+    if (oldData) {
       this._convert(oldData);
     }
     this.init();
@@ -99,17 +99,16 @@ export class Rule {
   }
 
   private _eventsConnect() {
-    this.$gf?.metricHandler?.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
-    this.$gf?.metricHandler?.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
+    this.$gf?.metricHandler?.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this));
+    this.$gf?.metricHandler?.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this));
     return this;
   }
 
   private _eventsDisconnect() {
-    this.$gf?.metricHandler?.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this))
-    this.$gf?.metricHandler?.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this))
+    this.$gf?.metricHandler?.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this));
+    this.$gf?.metricHandler?.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this));
     return this;
   }
-
 
   change() {
     // this.updateMetrics();
@@ -122,7 +121,7 @@ export class Rule {
 
   async free() {
     await this.events.emit('rule_freed', this);
-    this._eventsDisconnect()
+    this._eventsDisconnect();
     this.events.clear();
     return this;
   }
@@ -139,6 +138,217 @@ export class Rule {
   }
 
   //############################################################################
+  //### ACCESSORS
+  //############################################################################
+  set reduce(v: boolean) {
+    if (this.data.reduce !== v) {
+      this.data.reduce = v;
+    }
+  }
+  get reduce() {
+    return this.data.reduce;
+  }
+
+  // NAME
+  set name(v: string) {
+    if (!v || v.length === 0 || v === this.data.alias) {
+      return;
+    }
+    const exist = this.$gf.rulesHandler?.getRule(v);
+    if (exist) {
+      this.$gf.notify(`Rule with name ${v} already exit`, 'error');
+    } else {
+      this.data.alias = v;
+    }
+  }
+  get name() {
+    return this.data.alias;
+  }
+
+  //METRIC
+  set metric(v: string) {
+    if (!v && v.length === 0) {
+      return;
+    }
+    const m = v.split('/');
+    const length = m.length;
+    if (this.$gf.metricHandler?.isMultipleType()) {
+      if (length === 3) {
+        if (m[0] === 'Tables') {
+          this.data.metricType = 'table';
+          this.data.refId = m[1];
+          this.data.column = m[2];
+        } else {
+          this.$gf.notify('Invalid name metric : ' + v, 'error');
+          return;
+        }
+      } else if (length === 2) {
+        if (m[0] === 'Series') {
+          this.data.metricType = 'serie';
+          this.data.pattern = m[1];
+        } else {
+          this.$gf.notify('Invalid name metric : ' + v, 'error');
+          return;
+        }
+      } else {
+        this.$gf.notify('Invalid name metric : ' + v, 'error');
+        return;
+      }
+    } else if (this.$gf.metricHandler?.isTypeOf('serie')) {
+      this.data.metricType = 'serie';
+      this.data.pattern = m[0];
+    } else if (this.$gf.metricHandler?.isTypeOf('table')) {
+      this.data.metricType = 'table';
+      this.data.refId = m[0];
+      this.data.column = m[1];
+    } else {
+      this.$gf.notify('Invalid name metric : ' + v, 'error');
+      return;
+    }
+    this.change();
+  }
+  get metric() {
+    let result = '';
+    if (this.$gf.metricHandler?.isMultipleType()) {
+      if (this.data.metricType === 'serie') {
+        result += 'Series/' + this.data.pattern;
+      } else {
+        result += 'Tables/' + this.data.refId + '/' + this.data.column;
+      }
+    } else {
+      if (this.$gf.metricHandler?.isTypeOf('serie')) {
+        result = this.data.pattern;
+      } else {
+        result = this.data.refId + '/' + this.data.column;
+      }
+    }
+    return result;
+  }
+
+  //METRIC TYPE
+  set metricType(v: gf.TMetricTypeKeys) {
+    this.data.metricType = v;
+  }
+  get metricType() {
+    return this.data.metricType;
+  }
+
+  //METRIC PATTERN
+  set metricPattern(v: string) {
+    if (!v || v.length === 0) {
+      return;
+    }
+    if (this.metricType === 'serie') {
+      if (this.data.pattern !== v) {
+        this.data.pattern = v;
+        this.change();
+      }
+    }
+    if (this.metricType === 'table') {
+    }
+  }
+  get metricPattern() {
+      return this.data.pattern;
+  }
+
+  //METRIC TABLE
+  set metricTable(v: string) {
+    if (!v || v.length === 0 || this.data.refId === v) {
+      return;
+    }
+    this.data.refId = v
+    this.change();
+  }
+  get metricTable() {
+    return this.data.refId;
+  }
+
+  //METRIC COLUMN
+  get metricColumn(): string {
+    return this.data.column;
+  }
+  set metricColumn(v: string) {
+    if (!v && v.length === 0 && this.data.column === v) {
+      return;
+    }
+    this.data.column = v;
+    this.change();
+  }
+
+
+  //HIDDEN
+  set hidden(value: boolean) {
+    if (this.data.hidden !== value) {
+      this.data.hidden = value;
+      this.change();
+    }
+  }
+  get hidden() {
+    return this.data.hidden;
+  }
+
+  //TOOLTIP
+  set tooltip(value: boolean) {
+    if (this.data.tooltip !== value) {
+      this.data.tooltip = value;
+      this.change();
+    }
+  }
+  get tooltip(): boolean {
+    return this.data.tooltip;
+  }
+
+  //GRAPH TYPE
+  set tooltipForGraph(value: boolean) {
+    if (this.data.tpGraph !== value) {
+      this.data.tpGraph = value;
+      this.change();
+    }
+  }
+  get tooltipForGraph() {
+    return this.data.tpGraph;
+  }
+
+  //AGGREGATION
+  set aggregation(v: gf.TAggregationKeys) {
+    if (!v || this.data.aggregation === v) {
+      return;
+    }
+    this.data.aggregation = v;
+  }
+  get aggregation(): gf.TAggregationKeys {
+    return this.data.aggregation
+  }
+
+
+  // DATA TYPE (number, string or date)
+  set dataType(v: gf.TValueTypeKeys) {
+    if (!v || this.data.type === v) {
+      return;
+    }
+    this.data.type = v;
+    this.change();
+  }
+  get dataType(): gf.TValueTypeKeys {
+    return this.data.type
+  }
+
+  //DATE FORMAT
+  set value(v: gf.TDateFormatKeys) {
+    if (!v || v.length === 0 || this.data.dateFormat === v) {
+      return;
+    }
+    this.data.dateFormat = v;
+    this.change();
+  }
+  get dateFormat(): gf.TDateFormatKeys {
+    return this.data.dateFormat
+  }
+
+
+
+
+  //############################################################################
   //### CONVERT/MIGRATION
   //############################################################################
   /**
@@ -148,7 +358,7 @@ export class Rule {
    * @param {data} obj
    * @memberof Rule
    */
-   private _convert(obj: any): this {
+  private _convert(obj: any): this {
     if (!!obj.unit) {
       this.data.unit = obj.unit;
     }
@@ -596,7 +806,6 @@ export class Rule {
     return this;
   }
 
-
   //############################################################################
   //### LOGIC
   //############################################################################
@@ -693,8 +902,6 @@ export class Rule {
     return this.data;
   }
 
-
-
   /**
    * Return uniq id of rule
    *
@@ -710,12 +917,15 @@ export class Rule {
    *
    * @memberof Rule
    */
-  highlightXCells() {
+  async highlightXCells() {
     if (this.states) {
-      this.states.forEach(state => {
-        state.highlightCell();
-      });
+      return Promise.all(
+        Array.from(this.states.values()).map(async (state: State) => {
+          state.highlightCell();
+        })
+      );
     }
+    return;
   }
 
   /**
@@ -723,12 +933,15 @@ export class Rule {
    *
    * @memberof Rule
    */
-  unhighlightXCells() {
+  async unhighlightXCells() {
     if (this.states) {
-      this.states.forEach(state => {
-        state.unhighlightCell();
-      });
+      return Promise.all(
+        Array.from(this.states.values()).map(async (state: State) => {
+          state.unhighlightCell();
+        })
+      );
     }
+    return;
   }
 
   /**
@@ -782,12 +995,12 @@ export class Rule {
 
   _invertColorOrderFor(ths: ObjectTH[]): this {
     const colors: string[] = [];
-    ths.forEach(th => {
+    ths.forEach((th) => {
       colors.push(th.getColor());
     });
     colors.reverse();
     let i = 0;
-    ths.forEach(TH => {
+    ths.forEach((TH) => {
       TH.setColor(colors[i++]);
     });
     return this;
@@ -2158,7 +2371,6 @@ export class Rule {
     return this;
   }
 
-
   /**
    * Return boolean if metrics is matched by rule
    *
@@ -2207,19 +2419,18 @@ export class Rule {
   //### EVENTS
   //#############################################################
   private _on_metricHandler_metric_deleted(metric: ObjectMetric) {
-    _log('📬', this.constructor.name, "_on_metricHandler_metric_deleted");
-    if(this.metrics.has(metric.uid)) {
-      this.metrics.delete(metric.uid)
+    _log('📬', this.constructor.name, '_on_metricHandler_metric_deleted');
+    if (this.metrics.has(metric.uid)) {
+      this.metrics.delete(metric.uid);
       this.update();
     }
   }
 
   private _on_metricHandler_metric_created(metric: ObjectMetric) {
-    _log('📬', this.constructor.name, "_on_metricHandler_metric_created");
-    if(this.matchMetric(metric)) {
+    _log('📬', this.constructor.name, '_on_metricHandler_metric_created');
+    if (this.matchMetric(metric)) {
       this.metrics.set(metric.uid, metric);
       this.update();
     }
   }
-
 }

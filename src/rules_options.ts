@@ -27,7 +27,7 @@ export class RulesOptionsCtrl {
   unitFormats: any;
   parentDiv: HTMLDivElement;
   style = GFCONSTANT.COLORMETHODS;
-  metricType: gf.TSelectString[] = GFCONSTANT.METRIC_TYPES;
+  metricTypes: gf.TSelectString[] = GFCONSTANT.METRIC_TYPES;
   colorOn = GFCONSTANT.COLOR_APPLYON;
   linkOn = GFCONSTANT.LINK_APPLYON;
   tooltipOn = GFCONSTANT.TOOLTIP_APPLYON;
@@ -54,7 +54,7 @@ export class RulesOptionsCtrl {
   THsTable: GFTable;
   valuesTable: GFTable;
   rangesTable: GFTable;
-  metricTypes = GFCONSTANT.VALUE_TYPES;
+  valueTypes = GFCONSTANT.VALUE_TYPES;
   dateFormats: gf.TSelectString[] = GFCONSTANT.VALUE_DATEFORMAT_TYPES;
   aggregationTypes = GFCONSTANT.AGGREGATION_TYPES;
   mappingTypes = GFCONSTANT.VALUEMAPPINGTYPES;
@@ -739,81 +739,71 @@ export class RulesOptionsCtrl {
   }
 
   getFastEditMectricNames(rule: Rule): string[] {
-    const result: string[] = [];
-    let prefix = '';
-    if (this.isMultipleType()) {
-      prefix = 'Series/';
+    if(this.$gf.metricHandler) {
+      return this.$gf.metricHandler?.getMetricNames()
     }
-    this.getMetricNames().forEach((m) => result.push(`${prefix}${m}`));
-    if (this.isMultipleType()) {
-      prefix = 'Tables/';
-    }
-    this.getTablesName().forEach((t) => {
-      this.getColumnsForTable(t).forEach((c) => result.push(`${prefix}${t}/${c}`));
-    });
-    rule.FE_metricName = this.getFastEditMectricName(rule);
-    return result;
+    return []
   }
 
-  getFastEditMectricName(rule: Rule): string {
-    let result = '';
-    if (this.isMultipleType()) {
-      if (rule.data.metricType === 'serie') {
-        result += 'Series/' + rule.data.pattern;
-      } else {
-        result += 'Tables/' + rule.data.refId + '/' + rule.data.column;
-      }
-    } else {
-      if (this.isOnlySeries()) {
-        result = rule.data.pattern;
-      } else {
-        result = rule.data.refId + '/' + rule.data.column;
-      }
-    }
-    return result;
-  }
+  // getFastEditMectricName(rule: Rule): string {
+  //   let result = '';
+  //   if (this.isMultipleType()) {
+  //     if (rule.data.metricType === 'serie') {
+  //       result += 'Series/' + rule.data.pattern;
+  //     } else {
+  //       result += 'Tables/' + rule.data.refId + '/' + rule.data.column;
+  //     }
+  //   } else {
+  //     if (this.isOnlySeries()) {
+  //       result = rule.data.pattern;
+  //     } else {
+  //       result = rule.data.refId + '/' + rule.data.column;
+  //     }
+  //   }
+  //   return result;
+  // }
 
-  setFastEditMectricName(rule: Rule) {
-    if (rule.FE_metricName) {
-      const metric = rule.FE_metricName.split('/');
-      const length = metric.length;
-      if (this.isMultipleType()) {
-        if (length === 3) {
-          if (metric[0] === 'Tables') {
-            rule.data.metricType = 'table';
-            rule.data.refId = metric[1];
-            rule.data.column = metric[2];
-          } else {
-            this.$gf.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
-            return null;
-          }
-        } else if (length === 2) {
-          if (metric[0] === 'Series') {
-            rule.data.metricType = 'serie';
-            rule.data.pattern = metric[1];
-          } else {
-            this.$gf.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
-            return null;
-          }
-        } else {
-          this.$gf.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
-          return null;
-        }
-      } else if (this.isOnlySeries()) {
-        rule.data.metricType = 'serie';
-        rule.data.pattern = metric[0];
-      } else if (this.isOnlyTables()) {
-        rule.data.metricType = 'table';
-        rule.data.refId = metric[0];
-        rule.data.column = metric[1];
-      } else {
-        this.$gf.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
-        return null;
-      }
-    }
-    rule.FE_metricName = this.getFastEditMectricName(rule);
-    return rule.FE_metricName;
-  }
+  // setFastEditMectricName(rule: Rule) {
+  //   if (rule.FE_metricName) {
+  //     const metric = rule.FE_metricName.split('/');
+  //     const length = metric.length;
+  //     if (this.isMultipleType()) {
+  //       if (length === 3) {
+  //         if (metric[0] === 'Tables') {
+  //           rule.data.metricType = 'table';
+  //           rule.data.refId = metric[1];
+  //           rule.data.column = metric[2];
+  //         } else {
+  //           this.$gf.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
+  //           return null;
+  //         }
+  //       } else if (length === 2) {
+  //         if (metric[0] === 'Series') {
+  //           rule.data.metricType = 'serie';
+  //           rule.data.pattern = metric[1];
+  //         } else {
+  //           this.$gf.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
+  //           return null;
+  //         }
+  //       } else {
+  //         this.$gf.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
+  //         return null;
+  //       }
+  //     } else if (this.isOnlySeries()) {
+  //       rule.data.metricType = 'serie';
+  //       rule.data.pattern = metric[0];
+  //     } else if (this.isOnlyTables()) {
+  //       rule.data.metricType = 'table';
+  //       rule.data.refId = metric[0];
+  //       rule.data.column = metric[1];
+  //     } else {
+  //       this.$gf.notify('Invalid name metric : ' + rule.FE_metricName, 'error');
+  //       return null;
+  //     }
+  //   }
+  //   rule.FE_metricName = this.getFastEditMectricName(rule);
+  //   return rule.FE_metricName;
+  // }
 
   ValidateDate(rule: Rule): boolean {
     if (rule.data.type !== 'date') {
@@ -960,10 +950,10 @@ export class RulesOptionsCtrl {
    * @param {boolean} bool
    * @memberof RulesOptionsCtrl
    */
-  toggleShow(rule: Rule, bool: boolean) {
-    rule.data.hidden = bool;
-    this.onRulesChange();
-  }
+  // toggleShow(rule: Rule, bool: boolean) {
+  //   rule.data.hidden = bool;
+  //   this.onRulesChange();
+  // }
 
   /**
    * Turn Highlight on of cells in rule

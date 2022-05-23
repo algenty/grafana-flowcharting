@@ -228,7 +228,7 @@
                                     style="display:table-cell;vertical-align:middle;">
                                     <div bs-tooltip="'Text : ' + state.getStatus('fontColor')"
                                         class="gf-inspect-color-picker"
-                                        style="background-color: {{state.getStatus('fontColor')}};">
+                                        ng-style="{ 'background-color': state.getStatus('fontColor') }">
                                         <span>T</span>
                                     </div>
                                 </div>
@@ -237,7 +237,7 @@
                                     style="display:table-cell;vertical-align:middle;border-radius: 3px;">
                                     <div bs-tooltip="'Fill : ' + state.getStatus('fillColor')"
                                         class="gf-inspect-color-picker"
-                                        style="background-color: {{state.getStatus('fillColor')}};">
+                                        ng-style="{ 'background-color' : state.getStatus('fillColor') }">
                                         <span>F</span>
                                     </div>
                                 </div>
@@ -246,7 +246,7 @@
                                     style="display:table-cell;vertical-align:middle;">
                                     <div bs-tooltip="'Stroke : ' + state.getStatus('strokeColor')"
                                         class="gf-inspect-color-picker"
-                                        style="background-color: {{state.getStatus('strokeColor')}};">
+                                        ng-style="{ 'background-color' : state.getStatus('strokeColor') }">
                                         <span>S</span>
                                     </div>
                                 </div>

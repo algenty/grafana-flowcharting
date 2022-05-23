@@ -300,7 +300,7 @@ declare module gf {
     column: string;
     aggregation: TAggregationKeys;
     unit: string;
-    type: string;
+    type: TValueTypeKeys;
     hidden: boolean;
     decimals: number;
     // colors: string[];
