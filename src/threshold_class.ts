@@ -16,7 +16,7 @@ type THSignals = typeof THSignalsArray[number];
 
 abstract class GFTH<TData extends gf.TTHData> {
   data: TData;
-  hidden = false;
+  private _hidden = false;
   validComp: string[] = [];
   uid: string;
   type = 'unknown';
@@ -100,6 +100,17 @@ abstract class GFTH<TData extends gf.TTHData> {
     return this.data.comparator;
   }
 
+  // HIDDEN
+  set hidden(v: boolean) {
+    if(v !== this._hidden) {
+      this._hidden = v;
+      this.change();
+    }
+  }
+  get hidden() {
+    return this._hidden;
+  }
+
   //############################################################################
   //### LOGIC
   //############################################################################
@@ -178,19 +189,19 @@ abstract class GFTH<TData extends gf.TTHData> {
   //   return this;
   // }
 
-  hide(): this {
-    this.hidden = true;
-    return this;
-  }
+  // hide(): this {
+  //   this.hidden = true;
+  //   return this;
+  // }
 
-  show(): this {
-    this.hidden = false;
-    return this;
-  }
+  // show(): this {
+  //   this.hidden = false;
+  //   return this;
+  // }
 
-  isHidden(): boolean {
-    return this.hidden;
-  }
+  // isHidden(): boolean {
+  //   return this._hidden;
+  // }
 }
 
 /**

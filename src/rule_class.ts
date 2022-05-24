@@ -111,10 +111,6 @@ export class Rule {
   }
 
   change() {
-    // this.updateMetrics();
-    // this.onChanged();
-    // this.refresh();
-    // this.updateStates();
     this.events.emit('rule_changed', this);
     return this;
   }
@@ -130,10 +126,6 @@ export class Rule {
     this.shapeStates.clear();
     this.textStates.clear();
     this.linkStates.clear();
-    // TODO emit signal
-    // this.states.forEach(state => {
-    //   state._rules.delete(this.uid);
-    // });
     return this;
   }
 
@@ -1086,7 +1078,8 @@ export class Rule {
    * @returns {this}
    * @memberof Rule
    */
-  addThreshold(index?: number, color?: string, value?: any, previousData?: any): ObjectTH {
+  addThreshold(index?: number, color?: string, value?: any, previousData?: any) {
+    // let th: ObjectTH
     switch (this.data.type) {
       case 'number':
         return this._addNumberThreshold(index, color, value, previousData);
@@ -1101,6 +1094,8 @@ export class Rule {
         throw new Error('Type of threshold unknown : ' + this.data.type);
         break;
     }
+    // TODO : Needed change() or only in clone ?
+    // this.change();
   }
 
   /**
@@ -1130,8 +1125,9 @@ export class Rule {
   cloneThreshold(index: number): ObjectTH {
     const refth = this.getThreshold(index);
     if (refth !== undefined) {
-      return this.addThreshold(index, refth.color, refth.value, refth.getData());
+      this.addThreshold(index, refth.color, refth.value, refth.getData());
     }
+    this.change();
     return refth;
   }
 
@@ -1306,6 +1302,7 @@ export class Rule {
     const thd = this.getThresholdDatas();
     ths.splice(index, 1);
     thd.splice(index, 1);
+    this.change();
     return this;
   }
 
@@ -2135,7 +2132,7 @@ export class Rule {
       if (i === 0) {
         index = i;
       } else {
-        if (!th.isHidden()) {
+        if (!th.hidden) {
           if (th.match(value)) {
             index = i;
           } else {
@@ -2155,7 +2152,7 @@ export class Rule {
       if (i === 0) {
         index = i;
       } else {
-        if (!th.isHidden() && th.match(value)) {
+        if (!th.hidden && th.match(value)) {
           index = i;
         }
       }
@@ -2175,7 +2172,7 @@ export class Rule {
       if (i === 0) {
         index = i;
       } else {
-        if (!th.isHidden() && th.match(value)) {
+        if (!th.hidden && th.match(value)) {
           index = i;
         }
       }
