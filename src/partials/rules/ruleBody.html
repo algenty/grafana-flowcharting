@@ -128,14 +128,14 @@
 
 
     <div ng-if="rule.dataType === 'string'">
-        <gf-form-switch class="gf-form" label-class="width-14" ng-if="rule.dataType === 'string'" label="Sanitize HTML"
-            checked="rule.getData().sanitize"></gf-form-switch>
+        <gf-form-switch class="gf-form" label-class="width-14" ng-if="rule.dataType === 'string'" label="Sanitize HTML" ng-model-options="{ updateOn: 'default' }"
+            checked="rule.sanitize"></gf-form-switch>
     </div>
-    <div ng-if="rule.dataType === 'string'">
-        <gf-form-switch class="gf-form" label-class="width-14" ng-if="rule.dataType === 'string'"
-            label="Preserve Formatting" checked="rule.getData().preserveFormat" on-change="editor.onRulesChange()">
+    <!-- <div ng-if="rule.dataType === 'string'">
+        <gf-form-switch class="gf-form" label-class="width-14" ng-if="rule.dataType === 'string'" ng-model-options="{ updateOn: 'default' }"
+            label="Preserve Formatting" checked="rule.preserveFormat" on-change="editor.onRulesChange()">
         </gf-form-switch>
-    </div>
+    </div> -->
 
     <div ng-if="rule.dataType === 'number'">
         <div class="gf-form">
@@ -144,7 +144,7 @@
                         ng-bind-html="$GF.popover('Select unit of aggregated value.', 'MAPPING#Type')"></span>
                 </info-popover>
             </label>
-            <div class="gf-form-dropdown-typeahead width-12" ng-model="rule.getData().unit"
+            <div class="gf-form-dropdown-typeahead width-12" ng-model="rule.dataUnit" ng-model-options="{ updateOn: 'default' }"
                 dropdown-typeahead2="editor.unitFormats"
                 dropdown-typeahead-on-select="editor.setUnitFormat(rule, $subItem)"></div>
         </div>
@@ -154,8 +154,7 @@
                         ng-bind-html="$GF.popover('Select number of decimals', 'MAPPING#Type')"></span>
                 </info-popover>
             </label>
-            <input type="number" class="gf-form-input width-4" data-placement="right" ng-model="rule.getData().decimals"
-                ng-blur="editor.onRulesChange()" />
+            <input type="number" class="gf-form-input width-4" data-placement="right" ng-model="rule.dataDecimals"/>
         </div>
     </div>
 </div>
@@ -203,7 +202,7 @@
             </button>
         </div>
         <div class="gf-form" style="margin-right: 5px;">
-            <button class="btn btn-secondary btn-small" ng-click="rule.getData().reduce = true;" title="Refresh/Apply">
+            <button class="btn btn-secondary btn-small" ng-click="rule.reduce = true;" title="Refresh/Apply">
                 <span>
                   <i class="fa fa-chevron-up" title="Collapse rule">
                   </i>

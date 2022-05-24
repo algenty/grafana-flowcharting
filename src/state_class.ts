@@ -92,6 +92,9 @@ export class State {
   }
 
   update(): this {
+    this._initCycle();
+    this._setCycle();
+    this._applyCycle();
     this.events.emit('state_updated', this);
     return this;
   }
@@ -383,7 +386,7 @@ export class State {
    * @returns {this}
    * @memberof State
    */
-  applyCycle(): this {
+  private _applyCycle(): this {
     const funcName = 'applyCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this._matched || this._changed) {
@@ -515,6 +518,10 @@ export class State {
     return this;
   }
 
+  private _haveRule(rule: Rule): boolean {
+    return this._rules.has(rule.uid);
+  }
+
   removeRule(rule: Rule): this {
     if (rule !== null && rule !== undefined && this.hasRule(rule)) {
       this._rules.delete(rule.uid);
@@ -568,22 +575,29 @@ export class State {
   private _on_global_data_processed() {
     _log('📬', this.constructor.name, '_on_global_data_processed');
     this._setCycle();
-    this.applyCycle();
+    this._applyCycle();
   }
 
   private _on_ruleHandler_rule_changed(rule: Rule) {
-    this._updateRule(rule);
+    _log('📬', this.constructor.name, '_on_ruleHandler_rule_changed');
+    if(this._haveRule(rule) || this._matchRule(rule)) {
+      this._updateRule(rule);
+      this.update();
+    }
   }
 
   private _on_ruleHandler_rule_updated(rule: Rule) {
+    _log('📬', this.constructor.name, '_on_ruleHandler_rule_updated');
     this._updateRule(rule);
   }
 
   private _on_ruleHandler_rule_created(rule: Rule) {
+    _log('📬', this.constructor.name, '_on_ruleHandler_rule_created');
     this._updateRule(rule);
   }
 
   private _on_ruleHandler_rule_deleted(rule: Rule) {
+    _log('📬', this.constructor.name, '_on_ruleHandler_rule_deleted');
     this.removeRule(rule);
   }
 

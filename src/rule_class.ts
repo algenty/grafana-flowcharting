@@ -333,6 +333,33 @@ export class Rule {
     return this.data.type
   }
 
+  // DATA UNIT
+  set dataUnit(v: string) {
+    if (!v || v.length === 0 ||this.data.type === v) {
+      return;
+    }
+    this.data.unit = v;
+    this.change();
+  }
+  get dataUnit(): string {
+    return this.data.unit
+  }
+
+  // DATA DECIMALS
+  set dataDecimals(v: number) {
+    if (!v ) {
+      v = 0;
+    }
+    if( v === this.data.decimals ) {
+      return;
+    }
+    this.data.decimals = v;
+    this.change();
+  }
+  get dataDecimals(): number {
+    return this.data.decimals
+  }
+
   //DATE FORMAT
   set value(v: gf.TDateFormatKeys) {
     if (!v || v.length === 0 || this.data.dateFormat === v) {
@@ -345,6 +372,28 @@ export class Rule {
     return this.data.dateFormat
   }
 
+  //SANITIZE
+  set sanitize(v: boolean) {
+    if (!v || this.data.sanitize === v) {
+      return;
+    }
+    this.data.sanitize = v;
+  }
+  get sanitize() {
+    return this.data.sanitize
+  }
+
+  // PRESERVE HTML FOMAT
+  //TODO : Why does not exist
+  // set preserveFormat(v: boolean) {
+  //   if (!v || this.data.preserveFormat === v) {
+  //     return;
+  //   }
+  //   this.data.preserveFormat = v;
+  // }
+  // get preserveFormat() {
+  //   return this.data.preserveFormat
+  // }
 
 
 
