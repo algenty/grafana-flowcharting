@@ -499,7 +499,7 @@ declare module gf {
   declare interface TTHData {
     color: string;
     comparator: string;
-    value: any;
+    value: unknown;
     level: number;
   }
 
@@ -513,7 +513,7 @@ declare module gf {
   }
   declare interface TTHDateData extends TTHData {
     comparator: THDateComparator;
-    value: string;
+    value: string|number;
   }
 
   declare type THDatePrecision = 'y' | 'M' | 'w' | 'd' | 'h' | 'm' | 's';

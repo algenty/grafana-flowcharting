@@ -1,3 +1,4 @@
+
 import { XCell } from 'cell_class';
 import { $GF, GFCONSTANT, GFPlugin, GFVariables } from 'globals_class';
 import { isString as _isString } from 'lodash';
@@ -43,7 +44,7 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
    * @returns {this}
    * @memberof GFMap
    */
-  import(obj: any): this {
+  _convert(obj: any): this {
     if (!!obj.metadata) {
       this.data.pattern = obj.metadata;
     }
@@ -304,8 +305,8 @@ export class ShapeMap extends GFMap<gf.TShapeMapData> {
    * @returns {this}
    * @memberof ShapeMap
    */
-  import(obj: any): this {
-    super.import(obj);
+  _convert(obj: any): this {
+    super._convert(obj);
     if (!!obj.style) {
       this.data.style = obj.style;
     }
@@ -383,8 +384,8 @@ export class TextMap extends GFMap<gf.TTextMapData> {
    * @returns {this}
    * @memberof TextMap
    */
-  import(obj: any): this {
-    super.import(obj);
+  _convert(obj: any): this {
+    super._convert(obj);
     if (!!obj.textReplace) {
       this.data.textReplace = obj.textReplace;
     }
@@ -475,8 +476,8 @@ export class LinkMap extends GFMap<gf.TlinkMapData> {
    * @returns {this}
    * @memberof LinkMap
    */
-  import(obj: any): this {
-    super.import(obj);
+  _convert(obj: any): this {
+    super._convert(obj);
     if (!!obj.linkUrl) {
       this.data.linkUrl = obj.linkUrl;
     }
@@ -643,8 +644,8 @@ export class EventMap extends GFMap<gf.TEventMapData> {
    * @returns {this}
    * @memberof ShapeMap
    */
-  import(obj: any): this {
-    super.import(obj);
+  _convert(obj: any): this {
+    super._convert(obj);
     if (!!obj.style) {
       this.data.style = obj.style;
     }

@@ -1,23 +1,113 @@
 import { $GF } from './globals_class';
 import { default as dayjs } from 'dayjs';
+import { GFEvents } from 'flowcharting_base';
 export type ObjectTH = NumberTH | StringTH | DateTH;
 export type ObjectTHData = gf.TTHNumberData | gf.TTHStringData | gf.TTHDateData;
 
-class GFTH {
-  data: gf.TTHData;
+// Debug
+// const DEBUG = false;
+// const _log = (...args: any) => {
+//   DEBUG && console.log(...args);
+// };
+
+// Signal definition
+const THSignalsArray = ['threshold_initalized', 'threshold_changed', 'threshold_freed'] as const;
+type THSignals = typeof THSignalsArray[number];
+
+abstract class GFTH<TData extends gf.TTHData> {
+  data: TData;
   hidden = false;
   validComp: string[] = [];
   uid: string;
   type = 'unknown';
   reduce = true;
-  constructor(color: string, comparator: any, value: any, data: gf.TTHData) {
+  events: GFEvents<THSignals> = GFEvents.create(THSignalsArray);
+  constructor(color: string, comparator: string, value: TData['value'], newData: TData, oldData?: any) {
     this.uid = $GF.genUid(this.constructor.name);
-    this.data = data;
+    this.data = newData;
     this.data.value = value;
     this.data.comparator = comparator;
+    if (oldData) {
+      this._convert(oldData);
+    }
+    this._setType();
+    this.init();
   }
 
-  import(obj: any, thresholds?: number, color?: string): this {
+  protected abstract _setType(): void;
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
+  init() {
+    this._eventsConnect();
+    this.events.emit('threshold_initalized', this);
+  }
+
+  change() {
+    this.events.emit('threshold_changed', this);
+  }
+
+  clear() {
+    this.validComp = [];
+  }
+
+  async free() {
+    this.clear();
+    this._eventsDisconnect();
+    await this.events.emit('threshold_freed', this);
+  }
+  //############################################################################
+  //### ACCESSORS
+  //############################################################################
+  //VALUE
+  set value(v: TData['value']) {
+    if (typeof v === 'string') {
+      if (!v || v.length === 0) {
+        return;
+      }
+    }
+    if (this.data.value === v) {
+      return;
+    }
+    this.data.value = v;
+    this.change();
+  }
+  get value(): TData['value'] {
+    return this.data.value;
+  }
+
+  //COLOR
+  set color(v: string) {
+    if (!v || v.length === 0 || this.data.color === v) {
+      return;
+    }
+    this.data.color = v;
+    this.change();
+  }
+  get color() {
+    return this.data.color;
+  }
+
+  //COMPARATOR
+  set comparator(v: string) {
+    if (!v || v.length === 0 || this.data.comparator === v) {
+      return;
+    }
+    this.data.comparator = v;
+    this.change();
+  }
+  get comparator() {
+    return this.data.comparator;
+  }
+
+  //############################################################################
+  //### LOGIC
+  //############################################################################
+  _eventsConnect() {}
+
+  _eventsDisconnect() {}
+
+  private _convert(obj: any, thresholds?: number, color?: string): this {
     if (thresholds && color) {
       // <= 0.9.0
       this.data.color = color;
@@ -57,47 +147,34 @@ class GFTH {
     return true;
   }
 
-  // getId() {
-  //   return this.id;
-  // }
-
   getData(): any {
     return this.data;
   }
 
-  getColor() {
-    return this.data.color;
-  }
-
-  setColor(color: string): this {
-    this.data.color = color;
-    return this;
-  }
-
-  getComparator() {
-    return this.data.comparator;
-  }
-
-  setComparator(comparator: string): this {
-    this.data.comparator = comparator;
-    return this;
-  }
-
-  getValue(): any {
-    return this.data.value;
-  }
-
-  setValue(value: any): this {
-    this.data.value = value;
-    return this;
-  }
-
-  // getLevel(): number {
-  //   return this.data.level;
+  // getColor() {
+  //   return this.data.color;
   // }
 
-  // setLevel(level: number):this {
-  //   this.data.level = level;
+  // setColor(color: string): this {
+  //   this.data.color = color;
+  //   return this;
+  // }
+
+  // getComparator() {
+  //   return this.data.comparator;
+  // }
+
+  // setComparator(comparator: string): this {
+  //   this.data.comparator = comparator;
+  //   return this;
+  // }
+
+  // getValue(): any {
+  //   return this.data.value;
+  // }
+
+  // setValue(value: any): this {
+  //   this.data.value = value;
   //   return this;
   // }
 
@@ -114,15 +191,6 @@ class GFTH {
   isHidden(): boolean {
     return this.hidden;
   }
-
-  // static getDefaultData() : gf.TTHData {
-  //     return {
-  //         color : "rgba(245, 54, 54, 0.9)",
-  //         comparator :  'eq',
-  //         value : 0,
-  //         level : 0,
-  //     }
-  // }
 }
 
 /**
@@ -132,16 +200,18 @@ class GFTH {
  * @class NumberTH
  * @extends {GFTH}
  */
-export class NumberTH extends GFTH {
-  data: gf.TTHNumberData;
-  type = 'number';
+export class NumberTH extends GFTH<gf.TTHNumberData> {
   validComp: gf.TTHNumberComparator[] = ['ge', 'gt'];
-  constructor(color: string, value: number, comparator: gf.TTHNumberComparator, data: gf.TTHNumberData) {
-    super(color, value, comparator, data);
-    this.data = data;
-    this.data.color = color;
-    this.data.value = value;
-    this.data.comparator = comparator;
+  // constructor(color: string, value: number, comparator: gf.TTHNumberComparator, data: gf.TTHNumberData) {
+  //   super(color, value, comparator, data);
+  //   this.data = data;
+  //   this.data.color = color;
+  //   this.data.value = value;
+  //   this.data.comparator = comparator;
+  // }
+
+  protected _setType(): void {
+    this.type = 'number';
   }
 
   static getDefaultData(): gf.TTHNumberData {
@@ -161,22 +231,21 @@ export class NumberTH extends GFTH {
   }
 
   match(value: number | undefined): boolean {
-    if (this.data.value === undefined) {
+    if (this.value === undefined) {
       return true;
     }
     if (value === undefined) {
       return false;
     }
-    switch (this.data.comparator) {
+    switch (this.comparator) {
       case 'ge':
         return value >= this.data.value;
         break;
       case 'gt':
-        return value > this.data.value;
+        return value > this.value;
         break;
       default:
-        // GFLog.error('Comparator unknown : ' + this.data.comparator);
-        throw new Error('Unknown comparator: ' + this.data.comparator);
+        throw new Error('Unknown comparator: ' + this.comparator);
     }
   }
 }
@@ -188,16 +257,19 @@ export class NumberTH extends GFTH {
  * @class StringTH
  * @extends {GFTH}
  */
-export class StringTH extends GFTH {
-  data: gf.TTHStringData;
+export class StringTH extends GFTH<gf.TTHStringData> {
   type = 'string';
   validComp: gf.TTHDateComparator[] = ['eq', 'ne'];
-  constructor(color: string, value: string, comparator: gf.TTHStringComparator, data: gf.TTHStringData) {
-    super(color, value, comparator, data);
-    this.data = data;
-    this.data.color = color;
-    this.data.value = value;
-    this.data.comparator = comparator;
+  // constructor(color: string, value: string, comparator: gf.TTHStringComparator, data: gf.TTHStringData) {
+  //   super(color, value, comparator, data);
+  //   this.data = data;
+  //   this.data.color = color;
+  //   this.data.value = value;
+  //   this.data.comparator = comparator;
+  // }
+
+  protected _setType(): void {
+    this.type = 'string';
   }
 
   static getDefaultData(): gf.TTHStringData {
@@ -211,7 +283,7 @@ export class StringTH extends GFTH {
 
   isValidValue(): boolean {
     try {
-      new RegExp(this.data.value);
+      new RegExp(this.value);
     } catch (e) {
       return false;
     }
@@ -219,14 +291,14 @@ export class StringTH extends GFTH {
   }
 
   match(value: string | undefined): boolean {
-    if (this.data.value === undefined) {
+    if (this.value === undefined) {
       return true;
     }
     if (value === undefined) {
       return false;
     }
-    const m = $GF.utils.matchString(value, this.data.value);
-    switch (this.data.comparator) {
+    const m = $GF.utils.matchString(value, this.value);
+    switch (this.comparator) {
       case 'eq':
         return m;
         break;
@@ -234,7 +306,7 @@ export class StringTH extends GFTH {
         return !m;
         break;
       default:
-        throw new Error('Unknown comparator: ' + this.data.comparator);
+        throw new Error('Unknown comparator: ' + this.comparator);
     }
   }
 }
@@ -245,23 +317,26 @@ export class StringTH extends GFTH {
  * @class DateTH
  * @extends {GFTH}
  */
-export class DateTH extends GFTH {
-  data: gf.TTHDateData;
+export class DateTH extends GFTH<gf.TTHDateData> {
   pattern = /^(?<signe>\+|\-)?(?<number>\d+\.?\d*)(?<precision>d|w|M|Q|y|h|m|s|ms)$/;
   matchs: RegExpMatchArray | null = [];
-  testedValue: string | undefined;
+  testedValue: string | number | undefined;
   date: any;
   isValidated = false;
   isDate = false;
   isPattern = false;
   type = 'date';
   validComp: gf.TTHDateComparator[] = ['eq', 'ne', 'ge', 'gt'];
-  constructor(color: string, value: string, comparator: gf.TTHDateComparator, data: gf.TTHDateData) {
-    super(color, value, comparator, data);
-    this.data = data;
-    this.data.color = color;
-    this.data.value = value;
-    this.data.comparator = comparator;
+  // constructor(color: string, value: string, comparator: gf.TTHDateComparator, data: gf.TTHDateData) {
+  //   super(color, value, comparator, data);
+  //   this.data = data;
+  //   this.data.color = color;
+  //   this.data.value = value;
+  //   this.data.comparator = comparator;
+  // }
+
+  protected _setType(): void {
+    this.type = 'date';
   }
 
   static getDefaultData(): gf.TTHDateData {
@@ -289,15 +364,15 @@ export class DateTH extends GFTH {
   }
 
   isValidValue(): boolean {
-    if (this.testedValue === this.data.value && this.isValidated) {
+    if (this.testedValue === this.value && this.isValidated) {
       return this.isValidated;
     }
 
-    this.testedValue = this.data.value;
+    this.testedValue = this.value;
     this.isValidated = false;
     this.isPattern = false;
     this.isDate = false;
-    if (this.testedValue === undefined || this.testedValue === null || this.testedValue.length === 0) {
+    if (this.testedValue === undefined || this.testedValue === null || this.testedValue.toString().length === 0) {
       return this.isValidated;
     }
 
@@ -307,8 +382,8 @@ export class DateTH extends GFTH {
       this.isValidated = true;
       return this.isValidated;
     } else {
-      if (this.pattern.test(this.testedValue) === true) {
-        this.matchs = this.pattern.exec(this.testedValue);
+      if (this.pattern.test(this.testedValue.toString()) === true) {
+        this.matchs = this.pattern.exec(this.testedValue.toString());
         this.isValidated = true;
         this.isPattern = true;
         if (this.matchs !== null && this.matchs.groups !== undefined) {
@@ -323,7 +398,7 @@ export class DateTH extends GFTH {
   }
 
   match(value: any): boolean {
-    if (this.data.value === undefined) {
+    if (this.value === undefined) {
       return true;
     }
     if (value === undefined) {
@@ -365,7 +440,12 @@ export class DateTH extends GFTH {
     return false;
   }
 
-  static compareDates(beginDate: dayjs.Dayjs, endDate: string, comparator: gf.TTHDateComparator, precision?: gf.THDatePrecision) {
+  static compareDates(
+    beginDate: dayjs.Dayjs,
+    endDate: string,
+    comparator: gf.TTHDateComparator,
+    precision?: gf.THDatePrecision
+  ) {
     switch (comparator) {
       case 'eq':
         return dayjs(endDate).isSame(beginDate, precision);

@@ -195,7 +195,7 @@ export class GFDrawio {
    * @returns string
    */
   static getTextContent(node: Object): string {
-    // TODO : fixit
+
     const _node: any = node;
     return _node != null ? _node[_node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
   }

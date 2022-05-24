@@ -912,7 +912,7 @@ export class RulesOptionsCtrl {
    */
   onColorChange(th: NumberTH | StringTH) {
     return (newColor: any) => {
-      th.setColor(newColor);
+      th.color = newColor;
       this.onRulesChange();
     };
   }

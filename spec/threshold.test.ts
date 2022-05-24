@@ -12,18 +12,21 @@ const ctrl = {
 };
 const $gf = $GF.create($scope, templateSrv, dashboard, ctrl);
 
-describe("Test thresholds", () =>{
+describe('Test thresholds', () => {
   describe('Threshold init', () => {
     describe('on NumberTH', () => {
       const data = NumberTH.getDefaultData();
+      let tn1, tn2, tn3;
+      beforeEach(() => {
+        tn1 = new NumberTH('Color1', GFCONSTANT.COMP_GE, 50, NumberTH.getDefaultData());
+        tn2 = new NumberTH('Color2', GFCONSTANT.COMP_GT, 80, NumberTH.getDefaultData());
+        tn3 = new NumberTH('Color3', GFCONSTANT.COMP_GE, 100, NumberTH.getDefaultData());
+      });
       test('Data should be new', () => {
         expect(data).not.toBeNaN();
         expect(data).toMatchSnapshot();
       });
       test('Matched value for 100', () => {
-        let tn1 = new NumberTH('Color1', 50, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
-        let tn2 = new NumberTH('Color2', 80, GFCONSTANT.COMP_GT, NumberTH.getDefaultData());
-        let tn3 = new NumberTH('Color3', 100, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
         let value = 100;
         expect(tn1.match(value)).toBeTruthy();
         expect(tn2.match(value)).toBeTruthy();
@@ -31,18 +34,12 @@ describe("Test thresholds", () =>{
       });
 
       test('Matched value for 80', () => {
-        let tn1 = new NumberTH('Color1', 50, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
-        let tn2 = new NumberTH('Color2', 80, GFCONSTANT.COMP_GT, NumberTH.getDefaultData());
-        let tn3 = new NumberTH('Color3', 100, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
         let value = 80;
         expect(tn1.match(value)).toBeTruthy();
         expect(tn2.match(value)).toBeFalsy();
         expect(tn3.match(value)).toBeFalsy();
       });
       test('Matched value for 20', () => {
-        let tn1 = new NumberTH('Color1', 50, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
-        let tn2 = new NumberTH('Color2', 80, GFCONSTANT.COMP_GT, NumberTH.getDefaultData());
-        let tn3 = new NumberTH('Color3', 100, GFCONSTANT.COMP_GE, NumberTH.getDefaultData());
         let value = 20;
         expect(tn1.match(value)).toBeFalsy();
         expect(tn2.match(value)).toBeFalsy();
@@ -51,22 +48,23 @@ describe("Test thresholds", () =>{
     });
 
     describe('on StringTH', () => {
+      beforeEach(() => {});
       test('Data should be new', () => {
         const data = StringTH.getDefaultData();
         expect(data).not.toBeNaN();
         expect(data).toMatchSnapshot();
       });
       test('Matched value for every things', () => {
-        let tn1 = new StringTH('Color1', '/.*/', GFCONSTANT.COMP_EQ, StringTH.getDefaultData());
-        let tn2 = new StringTH('Color2', '/.*/', GFCONSTANT.COMP_NE, StringTH.getDefaultData());
+        let tn1 = new StringTH('Color1', GFCONSTANT.COMP_EQ, '/.*/', StringTH.getDefaultData());
+        let tn2 = new StringTH('Color2', GFCONSTANT.COMP_NE, '/.*/', StringTH.getDefaultData());
         let value = 'toto';
         expect(tn1.match(value)).toBeTruthy();
         expect(tn2.match(value)).toBeFalsy();
       });
 
       test('Matched value for specific string', () => {
-        let tn1 = new StringTH('Color1', 'toto', GFCONSTANT.COMP_EQ, StringTH.getDefaultData());
-        let tn2 = new StringTH('Color2', 'tata', GFCONSTANT.COMP_NE, StringTH.getDefaultData());
+        let tn1 = new StringTH('Color1', GFCONSTANT.COMP_EQ, 'toto', StringTH.getDefaultData());
+        let tn2 = new StringTH('Color2', GFCONSTANT.COMP_NE, 'tata', StringTH.getDefaultData());
         let value = 'toto';
         expect(tn1.match(value)).toBeTruthy();
         expect(tn2.match(value)).toBeTruthy();
@@ -86,13 +84,13 @@ describe("Test thresholds", () =>{
         expect(data).toMatchSnapshot();
       });
       test('Should be valid TH', () => {
-        let td1 = new DateTH('Color1', '5d', GFCONSTANT.COMP_GE, StringTH.getDefaultData());
+        let td1 = new DateTH('Color1', GFCONSTANT.COMP_GE, '5d', StringTH.getDefaultData());
         expect(td1.isValidValue()).toBeTruthy();
-        td1.setValue('-8w');
+        td1.value = '-8w';
         expect(td1.isValidValue()).toBeTruthy();
-        td1.setValue('1974-07-25');
+        td1.value = '1974-07-25';
         expect(td1.isValidValue()).toBeTruthy();
-        td1.setValue(1606586657059);
+        td1.value = 1606586657059;
         expect(td1.isValidValue()).toBeTruthy();
       });
       test('Should be match or not with pattern', () => {
@@ -100,47 +98,47 @@ describe("Test thresholds", () =>{
         //1606586733
         // 1day = 86400 or 86400000
         let now = new Date().getTime();
-        let td1 = new DateTH('Color1', '-2d', GFCONSTANT.COMP_GE, StringTH.getDefaultData());
-        let td2 = new DateTH('Color2', '-2d', GFCONSTANT.COMP_GT, StringTH.getDefaultData());
-        let td3 = new DateTH('Color3', '-6d', GFCONSTANT.COMP_GE, StringTH.getDefaultData());
-        expect(td1.match(now)).toBeTruthy()
-        expect(td2.match(now)).toBeTruthy()
+        let td2 = new DateTH('Color2', GFCONSTANT.COMP_GT, '-2d', StringTH.getDefaultData());
+        let td1 = new DateTH('Color1', GFCONSTANT.COMP_GE, '-2d', StringTH.getDefaultData());
+        let td3 = new DateTH('Color3', GFCONSTANT.COMP_GE, '-6d', StringTH.getDefaultData());
+        expect(td1.match(now)).toBeTruthy();
+        expect(td2.match(now)).toBeTruthy();
         expect(td3.match(now)).toBeTruthy();
-        now = now - 86400000*2; // now -1d
-        expect(td1.match(now)).toBeTruthy()
-        expect(td2.match(now)).toBeFalsy()
+        now = now - 86400000 * 2; // now -1d
+        expect(td1.match(now)).toBeTruthy();
+        expect(td2.match(now)).toBeFalsy();
         expect(td3.match(now)).toBeTruthy();
         now = now - 86400000; // now - 3d
-        expect(td1.match(now)).toBeFalsy()
-        expect(td2.match(now)).toBeFalsy()
+        expect(td1.match(now)).toBeFalsy();
+        expect(td2.match(now)).toBeFalsy();
         expect(td3.match(now)).toBeTruthy();
-        now = now - 86400000*5; // before 6d
-        expect(td1.match(now)).toBeFalsy()
-        expect(td2.match(now)).toBeFalsy()
+        now = now - 86400000 * 5; // before 6d
+        expect(td1.match(now)).toBeFalsy();
+        expect(td2.match(now)).toBeFalsy();
         expect(td3.match(now)).toBeFalsy();
       });
 
       test('Should be match or not with date', () => {
         let now = new Date().getTime();
-        let date_2 = dayjs(now).subtract(2,'d').format('YYYY-MM-DD');
-        let date_6 = dayjs(now).subtract(6,'d').format('YYYY-MM-DD');
-        let td1 = new DateTH('Color1', date_2, GFCONSTANT.COMP_GE, StringTH.getDefaultData());
-        let td2 = new DateTH('Color2', date_2, GFCONSTANT.COMP_GT, StringTH.getDefaultData());
-        let td3 = new DateTH('Color3', date_6, GFCONSTANT.COMP_GE, StringTH.getDefaultData());
-        expect(td1.match(now)).toBeTruthy()
-        expect(td2.match(now)).toBeTruthy()
+        let date_2 = dayjs(now).subtract(2, 'd').format('YYYY-MM-DD');
+        let date_6 = dayjs(now).subtract(6, 'd').format('YYYY-MM-DD');
+        let td1 = new DateTH('Color1', GFCONSTANT.COMP_GE,  date_2,StringTH.getDefaultData());
+        let td2 = new DateTH('Color2', GFCONSTANT.COMP_GT,  date_2,StringTH.getDefaultData());
+        let td3 = new DateTH('Color3', GFCONSTANT.COMP_GE,  date_6,StringTH.getDefaultData());
+        expect(td1.match(now)).toBeTruthy();
+        expect(td2.match(now)).toBeTruthy();
         expect(td3.match(now)).toBeTruthy();
-        now = now - 86400000*2; // now -1d
-        expect(td1.match(now)).toBeTruthy()
-        expect(td2.match(now)).toBeFalsy()
+        now = now - 86400000 * 2; // now -1d
+        expect(td1.match(now)).toBeTruthy();
+        expect(td2.match(now)).toBeFalsy();
         expect(td3.match(now)).toBeTruthy();
         now = now - 86400000; // now - 3d
-        expect(td1.match(now)).toBeFalsy()
-        expect(td2.match(now)).toBeFalsy()
+        expect(td1.match(now)).toBeFalsy();
+        expect(td2.match(now)).toBeFalsy();
         expect(td3.match(now)).toBeTruthy();
-        now = now - 86400000*5; // before 6d
-        expect(td1.match(now)).toBeFalsy()
-        expect(td2.match(now)).toBeFalsy()
+        now = now - 86400000 * 5; // before 6d
+        expect(td1.match(now)).toBeFalsy();
+        expect(td2.match(now)).toBeFalsy();
         expect(td3.match(now)).toBeFalsy();
       });
     });
@@ -148,21 +146,25 @@ describe("Test thresholds", () =>{
 
   describe('Thresholds Handler', () => {
     describe('on NumberTHs', () => {
-      const rule = new Rule($gf,'/.*/', Rule.getDefaultData());
-      let th1 = rule.addThreshold(undefined, '#111111', 10);
-      let th2 = rule.addThreshold(undefined, '#222222', 20);
-      let th3 = rule.addThreshold(undefined, '#333333', 30);
+      let rule, th1, th2, th3;
+      beforeEach(()=>{
+        rule = new Rule($gf, '/.*/', Rule.getDefaultData());
+        th1 = rule.addThreshold(0, '#111111', 10);
+        th2 = rule.addThreshold(1, '#222222', 20);
+        th3 = rule.addThreshold(2, '#333333', 30);
+      })
+
       test('th1 should be', () => {
-        expect(th1.getValue()).toEqual(10);
-        expect(th1.getColor()).toEqual('#111111');
+        expect(th1.value).toEqual(10);
+        expect(th1.color).toEqual('#111111');
       });
       test('th2 should be', () => {
-        expect(th2.getValue()).toEqual(20);
-        expect(th2.getColor()).toEqual('#222222');
+        expect(th2.value).toEqual(20);
+        expect(th2.color).toEqual('#222222');
       });
       test('th3 should be', () => {
-        expect(th3.getValue()).toEqual(30);
-        expect(th3.getColor()).toEqual('#333333');
+        expect(th3.value).toEqual(30);
+        expect(th3.color).toEqual('#333333');
       });
       test('Count Thresholds should be', () => {
         expect(rule.getThresholdCount()).toEqual(3);
@@ -189,24 +191,24 @@ describe("Test thresholds", () =>{
       });
       test('Colors should be with invert == false', () => {
         rule.invertThesholds();
-        expect(th1.getColor()).toEqual('#333333');
-        expect(th2.getColor()).toEqual('#222222');
-        expect(th3.getColor()).toEqual('#111111');
+        expect(th1.color).toEqual('#333333');
+        expect(th2.color).toEqual('#222222');
+        expect(th3.color).toEqual('#111111');
         rule.invertThesholds();
-        expect(th1.getColor()).toEqual('#111111');
-        expect(th2.getColor()).toEqual('#222222');
-        expect(th3.getColor()).toEqual('#333333');
+        expect(th1.color).toEqual('#111111');
+        expect(th2.color).toEqual('#222222');
+        expect(th3.color).toEqual('#333333');
       });
       test('should be after Add a new TH', () => {
         let thbis = rule.addThreshold();
-        expect(thbis.getValue()).toEqual(30);
-        expect(thbis.getColor()).toEqual('#333333');
+        expect(thbis.value).toEqual(30);
+        expect(thbis.color).toEqual('#333333');
         thbis = rule.addThreshold(0);
-        expect(thbis.getValue()).toEqual(20);
-        expect(thbis.getColor()).toEqual('#222222');
+        expect(thbis.value).toEqual(20);
+        expect(thbis.color).toEqual('#222222');
         thbis = rule.addThreshold(2);
-        expect(thbis.getValue()).toEqual(25);
-        expect(thbis.getColor()).toEqual('#2b2b2b');
+        expect(thbis.value).toEqual(25);
+        expect(thbis.color).toEqual('#2b2b2b');
       });
     });
     describe('on StringTHs', () => {
@@ -216,16 +218,16 @@ describe("Test thresholds", () =>{
       let th2 = rule.addThreshold(undefined, '#222222', '/.*warning.*/');
       let th3 = rule.addThreshold(undefined, '#333333', '/.*ok.*/');
       test('th1 should be', () => {
-        expect(th1.getValue()).toEqual('Error');
-        expect(th1.getColor()).toEqual('#111111');
+        expect(th1.value).toEqual('Error');
+        expect(th1.color).toEqual('#111111');
       });
       test('th2 should be', () => {
-        expect(th2.getValue()).toEqual('/.*warning.*/');
-        expect(th2.getColor()).toEqual('#222222');
+        expect(th2.value).toEqual('/.*warning.*/');
+        expect(th2.color).toEqual('#222222');
       });
       test('th3 should be', () => {
-        expect(th3.getValue()).toEqual('/.*ok.*/');
-        expect(th3.getColor()).toEqual('#333333');
+        expect(th3.value).toEqual('/.*ok.*/');
+        expect(th3.color).toEqual('#333333');
       });
       test('Count Thresholds should be', () => {
         expect(rule.getThresholdCount()).toEqual(3);
@@ -246,28 +248,25 @@ describe("Test thresholds", () =>{
       });
       test('Colors should be with invert == false', () => {
         rule.invertThesholds();
-        expect(th1.getColor()).toEqual('#333333');
-        expect(th2.getColor()).toEqual('#222222');
-        expect(th3.getColor()).toEqual('#111111');
+        expect(th1.color).toEqual('#333333');
+        expect(th2.color).toEqual('#222222');
+        expect(th3.color).toEqual('#111111');
         rule.invertThesholds();
-        expect(th1.getColor()).toEqual('#111111');
-        expect(th2.getColor()).toEqual('#222222');
-        expect(th3.getColor()).toEqual('#333333');
+        expect(th1.color).toEqual('#111111');
+        expect(th2.color).toEqual('#222222');
+        expect(th3.color).toEqual('#333333');
       });
       test('should be after Add a new TH', () => {
         let thbis = rule.addThreshold();
-        expect(thbis.getValue()).toEqual('/.*ok.*/');
-        expect(thbis.getColor()).toEqual('#333333');
+        expect(thbis.value).toEqual('/.*ok.*/');
+        expect(thbis.color).toEqual('#333333');
         thbis = rule.addThreshold(0);
-        expect(thbis.getValue()).toEqual('/.*warning.*/');
-        expect(thbis.getColor()).toEqual('#222222');
+        expect(thbis.value).toEqual('/.*warning.*/');
+        expect(thbis.color).toEqual('#222222');
         thbis = rule.addThreshold(2);
-        expect(thbis.getValue()).toEqual('/.*warning.*/');
-        expect(thbis.getColor()).toEqual('#2b2b2b');
+        expect(thbis.value).toEqual('/.*warning.*/');
+        expect(thbis.color).toEqual('#2b2b2b');
       });
     });
   });
-
 });
-
-

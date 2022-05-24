@@ -75,11 +75,11 @@ export class Rule {
     this.uid = $GF.genUid(this.constructor.name);
     this.data = newData;
     this.data.pattern = pattern;
-    // this.ctrl = ctrl;
     if (oldData) {
       this._convert(oldData);
     }
     this.init();
+    //TODO : needed ?
     this.change();
   }
   //############################################################################
@@ -522,7 +522,7 @@ export class Rule {
         let th: gf.TTHNumberData[] = obj.numberTHData;
         if (th !== undefined && th != null && th.length > 0) {
           th.forEach((thdata: gf.TTHNumberData) => {
-            this._addNumberThreshold().import(thdata);
+            this._addNumberThreshold();
           });
         }
       }
@@ -571,7 +571,7 @@ export class Rule {
         let th: gf.TTHStringData[] = obj.stringTHData;
         if (th !== undefined && th != null && th.length > 0) {
           th.forEach((thdata: gf.TTHStringData) => {
-            this._addStringThreshold().import(thdata);
+            this._addStringThreshold(undefined, undefined, undefined, thdata);
           });
         }
       }
@@ -689,7 +689,7 @@ export class Rule {
         if (!!colorOn) {
           shapeData.colorOn = colorOn;
         }
-        this.addShapeMap().import(shapeData);
+        this.addShapeMap()._convert(shapeData);
       });
     }
 
@@ -740,7 +740,7 @@ export class Rule {
           textData.textOn = textOn;
         }
 
-        this.addTextMap().import(textData);
+        this.addTextMap()._convert(textData);
       });
     }
 
@@ -790,7 +790,7 @@ export class Rule {
         if (!!linkOn) {
           linkData.linkOn = linkOn;
         }
-        this.addLinkMap().import(linkData);
+        this.addLinkMap()._convert(linkData);
       });
     }
 
@@ -829,7 +829,7 @@ export class Rule {
 
     if (maps !== undefined && maps != null && maps.length > 0) {
       maps.forEach((eventData: gf.TEventMapData) => {
-        this.addEventMap().import(eventData);
+        this.addEventMap()._convert(eventData);
       });
     }
 
@@ -1045,12 +1045,12 @@ export class Rule {
   _invertColorOrderFor(ths: ObjectTH[]): this {
     const colors: string[] = [];
     ths.forEach((th) => {
-      colors.push(th.getColor());
+      colors.push(th.color);
     });
     colors.reverse();
     let i = 0;
     ths.forEach((TH) => {
-      TH.setColor(colors[i++]);
+      TH.color = colors[i++];
     });
     return this;
   }
@@ -1086,16 +1086,16 @@ export class Rule {
    * @returns {this}
    * @memberof Rule
    */
-  addThreshold(index?: number, color?: string, value?: any): ObjectTH {
+  addThreshold(index?: number, color?: string, value?: any, previousData?: any): ObjectTH {
     switch (this.data.type) {
       case 'number':
-        return this._addNumberThreshold(index, color, value);
+        return this._addNumberThreshold(index, color, value, previousData);
         break;
       case 'string':
-        return this._addStringThreshold(index, color, value);
+        return this._addStringThreshold(index, color, value, previousData);
         break;
       case 'date':
-        return this._addDateThreshold(index, color, value);
+        return this._addDateThreshold(index, color, value, previousData);
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
@@ -1130,18 +1130,18 @@ export class Rule {
   cloneThreshold(index: number): ObjectTH {
     const refth = this.getThreshold(index);
     if (refth !== undefined) {
-      return this.addThreshold(index).import(refth.getData());
+      return this.addThreshold(index, refth.color, refth.value, refth.getData());
     }
     return refth;
   }
 
-  _addNumberThreshold(index?: number, color?: string, value?: number): NumberTH {
+  _addNumberThreshold(index?: number, color?: string, value?: number, previousData?: any): NumberTH {
     const thfTable = this.numberTH;
     const thdTable = this.data.numberTHData;
     let finalColor = color;
     let finalValue = value;
     const data = NumberTH.getDefaultData();
-    const nth = new NumberTH(data.color, data.value, data.comparator, data);
+    const nth = new NumberTH(data.color, data.comparator, data.value, data, previousData);
     const length = thdTable.length;
     if (index === undefined || length === 0) {
       index = length;
@@ -1156,13 +1156,13 @@ export class Rule {
 
     if (length > 0) {
       const lth = thfTable[ref];
-      nth.import(lth.getData());
+      // nth._convert(lth.getData());
       const ratio = 0.5;
       // Color
       if (finalColor === undefined) {
-        let beginColor = lth.getColor();
+        let beginColor = lth.color;
         if (ref < length - 1 && index !== 0) {
-          const endColor = thfTable[ref + 1].getColor();
+          const endColor = thfTable[ref + 1].color;
           finalColor = $GF.calculateColorForRatio(beginColor, endColor, ratio);
         } else {
           finalColor = beginColor;
@@ -1172,9 +1172,9 @@ export class Rule {
       }
       // Value
       if (finalValue === undefined) {
-        let beginValue = lth.getValue();
+        let beginValue = lth.value;
         if (ref < length - 1 && index !== 0) {
-          const endValue = thfTable[ref + 1].getValue();
+          const endValue = thfTable[ref + 1].value;
           finalValue = $GF.calculateValueForRatio(beginValue, endValue, ratio);
         } else {
           finalValue = beginValue;
@@ -1182,23 +1182,23 @@ export class Rule {
       }
     }
     if (finalColor !== undefined) {
-      nth.setColor(finalColor);
+      nth.color = finalColor;
     }
     if (finalValue !== undefined) {
-      nth.setValue(finalValue);
+      nth.value = finalValue;
     }
     thfTable.splice(index + 1, 0, nth);
     thdTable.splice(index + 1, 0, data);
     return nth;
   }
 
-  _addStringThreshold(index?: number, color?: string, value?: string): StringTH {
+  private _addStringThreshold(index?: number, color?: string, value?: string, previousData?: any): StringTH {
     const thfTable = this.stringTH;
     const thdTable = this.data.stringTHData;
     let finalColor = color;
     let finalValue = value;
     const data = StringTH.getDefaultData();
-    const nth = new StringTH(data.color, data.value, data.comparator, data);
+    const nth = new StringTH(data.color, data.comparator, data.value, data, previousData);
     const length = thdTable.length;
     if (index === undefined || length === 0) {
       index = length;
@@ -1213,13 +1213,13 @@ export class Rule {
 
     if (length > 0) {
       const lth = thfTable[ref];
-      nth.import(lth.getData());
+      // nth._convert(lth.getData());
       const ratio = 0.5;
       // Color
       if (finalColor === undefined) {
-        let beginColor = lth.getColor();
+        let beginColor = lth.color;
         if (ref < length - 1 && index !== 0) {
-          const endColor = thfTable[ref + 1].getColor();
+          const endColor = thfTable[ref + 1].color;
           finalColor = $GF.calculateColorForRatio(beginColor, endColor, ratio);
         } else {
           finalColor = beginColor;
@@ -1229,27 +1229,27 @@ export class Rule {
       }
       // Value
       if (finalValue === undefined) {
-        finalValue = lth.getValue();
+        finalValue = lth.value;
       }
     }
     if (finalColor !== undefined) {
-      nth.setColor(finalColor);
+      nth.color = finalColor;
     }
     if (finalValue !== undefined) {
-      nth.setValue(finalValue);
+      nth.value = finalValue;
     }
     thfTable.splice(index + 1, 0, nth);
     thdTable.splice(index + 1, 0, data);
     return nth;
   }
 
-  _addDateThreshold(index?: number, color?: string, value?: string): DateTH {
+  _addDateThreshold(index?: number, color?: string, value?: string | number, previousData?: any): DateTH {
     const thfTable = this.dateTH;
     const thdTable = this.data.dateTHData;
     let finalColor = color;
     let finalValue = value;
     const data = DateTH.getDefaultData();
-    const nth = new DateTH(data.color, data.value, data.comparator, data);
+    const nth = new DateTH(data.color, data.comparator, data.value, data, previousData);
     const length = thdTable.length;
     if (index === undefined || length === 0) {
       index = length;
@@ -1264,13 +1264,13 @@ export class Rule {
 
     if (length > 0) {
       const lth = thfTable[ref];
-      nth.import(lth.getData());
+      // nth._convert(lth.getData());
       const ratio = 0.5;
       // Color
       if (finalColor === undefined) {
-        let beginColor = lth.getColor();
+        let beginColor = lth.color;
         if (ref < length - 1 && index !== 0) {
-          const endColor = thfTable[ref + 1].getColor();
+          const endColor = thfTable[ref + 1].color;
           finalColor = $GF.calculateColorForRatio(beginColor, endColor, ratio);
         } else {
           finalColor = beginColor;
@@ -1280,14 +1280,14 @@ export class Rule {
       }
       // Value
       if (finalValue === undefined) {
-        finalValue = lth.getValue();
+        finalValue = lth.value;
       }
     }
     if (finalColor !== undefined) {
-      nth.setColor(finalColor);
+      nth.color = finalColor;
     }
     if (finalValue !== undefined) {
-      nth.setValue(finalValue);
+      nth.value = finalValue;
     }
     thfTable.splice(index + 1, 0, nth);
     thdTable.splice(index + 1, 0, data);
@@ -1584,7 +1584,7 @@ export class Rule {
    * @memberof Rule
    */
   cloneShapeMap(initial: ShapeMap): ShapeMap {
-    return this.addShapeMap().import(initial);
+    return this.addShapeMap()._convert(initial);
   }
 
   /**
@@ -1662,7 +1662,7 @@ export class Rule {
    * @memberof Rule
    */
   cloneTextMap(initial: TextMap): TextMap {
-    return this.addTextMap().import(initial);
+    return this.addTextMap()._convert(initial);
   }
 
   /**
@@ -1743,7 +1743,7 @@ export class Rule {
    * @memberof Rule
    */
   cloneEventMap(map: EventMap): EventMap {
-    return this.addEventMap().import(map.getData());
+    return this.addEventMap()._convert(map.getData());
   }
 
   removeEventMap(index: number): this {
@@ -1795,7 +1795,7 @@ export class Rule {
    * @memberof Rule
    */
   cloneLinkMap(initial: LinkMap): LinkMap {
-    return this.addLinkMap().import(initial);
+    return this.addLinkMap()._convert(initial);
   }
 
   /**
@@ -2095,19 +2095,19 @@ export class Rule {
     const index = this._getIndexNumberTHForValue(value);
     if (this.data.gradient) {
       if (index === 0) {
-        return this.numberTH[index].getColor();
+        return this.numberTH[index].color;
       }
       if (index === this.numberTH.length - 1) {
-        return this.numberTH[index].getColor();
+        return this.numberTH[index].color;
       }
-      const beginColor = this.numberTH[index].getColor();
-      const beginValue = this.numberTH[index].getValue();
-      const endColor = this.numberTH[index + 1].getColor();
-      const endValue = this.numberTH[index + 1].getValue();
+      const beginColor = this.numberTH[index].color;
+      const beginValue = this.numberTH[index].value;
+      const endColor = this.numberTH[index + 1].color;
+      const endValue = this.numberTH[index + 1].value;
       const ratio = $GF.calculateRatioForValue(beginValue, endValue, value);
       return $GF.calculateColorForRatio(beginColor, endColor, ratio);
     }
-    return this.numberTH[index].getColor();
+    return this.numberTH[index].color;
   }
 
   _getIndexTHForValue(value: any): number {
@@ -2164,7 +2164,7 @@ export class Rule {
   }
 
   _getColorForStringTH(value: string): string {
-    return this.stringTH[this._getIndexStringTHForValue(value)].getColor();
+    return this.stringTH[this._getIndexStringTHForValue(value)].color;
   }
 
   _getIndexDateTHForValue(value: string): number {
@@ -2184,7 +2184,7 @@ export class Rule {
   }
 
   _getColorForDateTH(value: string): string {
-    return this.dateTH[this._getIndexDateTHForValue(value)].getColor();
+    return this.dateTH[this._getIndexDateTHForValue(value)].color;
   }
 
   /**
@@ -2197,7 +2197,7 @@ export class Rule {
   getThresholdColorForLevel(level: number): string {
     const index = this.getThresholdIndexForLevel(level);
     const th = this.getThreshold(index);
-    return th.getColor();
+    return th.color;
   }
 
   /**

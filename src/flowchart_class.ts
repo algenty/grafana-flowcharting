@@ -453,8 +453,7 @@ export class Flowchart {
    * @memberof Flowchart
    */
   update_graphOptions(): this {
-    // TODO: simplify it
-    this.enableAnimation(this.data.enableAnim);
+    this.enableAnimation();
     this.scaleGraph();
     this.centerGraph();
     this.enableGrid();
