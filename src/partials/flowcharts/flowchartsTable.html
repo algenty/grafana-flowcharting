@@ -109,7 +109,7 @@
                             </div>
                             <div ng-show="flowchart.edit">
                                 <input type="text" id="{{state.cellId}}" class="gf-form-input"
-                                    ng-model="flowchart.name"
+                                    ng-model="flowchart.name" ng-model-onblur
                                     style="width: 100%;"
                                     ng-keydown="$event.keyCode === 13" />
                             </div> -->

@@ -13,10 +13,10 @@
                 </info-popover>
             </label>
             <input type="text" style="margin-right: 2px;" id="{{ state.uid }}" placeholder="Draw.io Id "
-                class="gf-form-input width-8" ng-model="state.xcell.mxcell.id"
+                class="gf-form-input width-8" ng-model="state.xcell.mxcell.id" ng-model-onblur
                 title="Enter an id"
                 ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
-                ng-model-onblur data-placement="right" />
+                data-placement="right" />
             <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
                 ng-show="editor.isEdited(state)"
                 title="Restore previous Id" ng-click="editor.undo(state)">

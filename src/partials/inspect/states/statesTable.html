@@ -150,7 +150,7 @@
                             </div>
                             <div ng-show="state.edit">
                                 <input type="text" ng-attr-id="{{'state-' + state.xcell.uniqId}}" class="gf-form-input"
-                                    ng-model="state.xcell.mxcell.id" ng-blur="editor.onChangeId(state)"
+                                    ng-model="state.xcell.mxcell.id" ng-model-onblur
                                     placeholder="{{state.xcell.mxcell.id}}" style="width: 100%;"
                                     ng-keydown="$event.keyCode === 13 && editor.onChangeId(state)" />
                             </div>

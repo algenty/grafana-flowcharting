@@ -42,7 +42,7 @@
           <span ng-bind-html="$GF.popover('Select the max for the scale', 'TOOLTIPS')"> </span>
         </info-popover>
       </label>
-      <input type="number" class="gf-form-input width-5" ng-model="rule.getData().tpGraphHigh"
+      <input type="number" class="gf-form-input width-5" ng-model="rule.getData().tpGraphHigh" ng-model-onblur
         ng-blur="editor.onRulesChange()" placeholder="auto" data-placement="right" />
     </div>
     <div class="gf-form" ng-if="rule.getData().tpGraph">

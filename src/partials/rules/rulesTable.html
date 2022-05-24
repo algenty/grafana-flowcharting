@@ -100,7 +100,7 @@
         </div>
       </div>
       <!-- TBODY -->
-      <div class="gf-table-body" ng-model-options="{ updateOn: 'blur' }">
+      <div class="gf-table-body">
         <div role="row" class="gf-table-rows gf-table-rows-resizable"
           ng-repeat="rule in editor.rulesHandler.getRules()"
           ng-mouseenter="editor.setCurrentParam('currentRule', rule);"
@@ -134,9 +134,9 @@
                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
               </div>
               <div ng-show="rule.inEdit[CN1] === true">
-                <input type="text" class="gf-form-input max-width-16" ng-model="rule.name"
+                <input type="text" class="gf-form-input max-width-16" ng-model="rule.name" ng-model-onblur
                   ng-attr-id="{{rule.uid + '-' + CN1}}" ng-blur="rule.inEdit[CN1] = false;" style="width: 100%;"
-                  ng-model-onblur ng-keydown="$event.keyCode === 13 ? rule.inEdit[CN1] = false : rule.inEdit[CN1] = true" autofocus />
+                  ng-keydown="$event.keyCode === 13 ? rule.inEdit[CN1] = false : rule.inEdit[CN1] = true" autofocus />
               </div>
             </div>
             <!-- METRIC NAME -->
@@ -153,7 +153,7 @@
                 title="Edit/Change metric name/alias"
                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
               </div>
-              <div ng-show="rule.inEdit[CN2] === true" ng-model-options="{ updateOn: 'default' }">
+              <div ng-show="rule.inEdit[CN2] === true">
                 <select style="width:100%;" convert-to-number class="gf-form-input"
                   ng-blur="editor.onRulesChange();rule.inEdit[CN2] = false;" ng-model="rule.metric"
                   ng-attr-id="{{rule.uid + '-' + CN2}}"

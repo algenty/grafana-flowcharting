@@ -1,6 +1,6 @@
 <div class="edit-tab-content" id="templateFlowchart">
     <div class="editor-row">
-        <div class="section gf-form-group" style="width:100%;" ng-model-options="{ updateOn: 'blur' }">
+        <div class="section gf-form-group" style="width:100%;">
             <h5 class="section-heading">
                 Global
                 <info-popover mode="right-normal"><span
@@ -14,7 +14,7 @@
                             ng-bind-html="$GF.popover('Address and theme of editor when click on button edit draw', 'FLOWCHART#address')"></span>
                     </info-popover>
                 </label>
-                <input type="text" class="gf-form-input width-30" ng-model="editor.flowchartHandler.editorUrl"
+                <input type="text" class="gf-form-input width-30" ng-model="editor.flowchartHandler.editorUrl" ng-model-onblur
                     placeholder="https://embed.diagrams.net" />
                 <div class="gf-form-select-wrapper width-8">
                     <select class="gf-form-input" ng-model="editor.flowchartHandler.editorTheme"
@@ -23,7 +23,6 @@
             </div>
             <!-- Draw.io source -->
             <gf-form-switch class="gf-form" label="Allow draw.io source" label-class="width-12"
-                ng-model-options="{ updateOn: 'default' }"
                 tooltip="allow downloads images from draw.io"
                 checked="editor.flowcharthandler.allowDrawio">
             </gf-form-switch>

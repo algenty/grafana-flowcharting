@@ -30,7 +30,7 @@
         </info-popover>
       </span>
       <input type="text" style="margin-right: 2px;" placeholder="id or regex of shape" class="gf-form-input width-8"
-        ng-model="rule.getEventMapOptions().metadata" title="Enter a metadata name or a regex"
+        ng-model="rule.getEventMapOptions().metadata" ng-model-onblur title="Enter a metadata name or a regex"
         bs-typeahead="editor.getCellNamesTypeHead" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
     </div>

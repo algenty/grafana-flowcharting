@@ -1,7 +1,7 @@
 <div>
     <div class="editor-row">
         <!-- Definition -->
-        <div class="section gf-form-group" style="width:100%;" ng-model-options="{ updateOn: 'blur' }">
+        <div class="section gf-form-group" style="width:100%;">
             <h5 class="section-heading">
                 Definition
                 <info-popover mode="right-normal"><span
@@ -9,8 +9,7 @@
             </h5>
             <!-- Flowchart Definition -->
             <div class="gf-form">
-                <gf-form-switch class="gf-form" label="Download source" label-class="width-12" ng-model-options="{ updateOn: 'default' }"
-                    checked="flowchart.download">
+                <gf-form-switch class="gf-form" label="Download source" label-class="width-12" checked="flowchart.download">
                 </gf-form-switch>
             </div>
 
@@ -21,7 +20,7 @@
                             ng-bind-html="$GF.popover('Source of mxgraph definition (Xml definition, Url with xml result)', 'DEFINITION_XML#Type','DEFINITION_XML')"></span>
                     </info-popover>
                 </span>
-                <div class="gf-form-select-wrapper width-12" ng-model-options="{ updateOn: 'default' }">
+                <div class="gf-form-select-wrapper width-12">
                     <select class="gf-form-input" ng-model="flowchart.type"
                         ng-options="c.value as c.text for c in editor.sourceTypes">(blank)</select>
                 </div>
@@ -35,7 +34,7 @@
                             This service should respond with a xml/plain response containing mxgraph syntax
                         </info-popover>
                     </span>
-                    <input type="text" ng-model="flowchart.url"
+                    <input type="text" ng-model="flowchart.url" ng-model-onblur
                         class="gf-form-input ng-pristine ng-untouched ng-valid ng-empty" style="width: 300px"
                         ng-change="flowchart.url" ng-model-onblur />
                 </div>
@@ -159,15 +158,15 @@
                         ng-bind-html="$GF.popover('Change display graph options', 'ADVANCED_XML#Buttons','ADVANCED_XML2')"></span>
                 </info-popover>
             </h5>
-            <gf-form-switch class="gf-form" label="Scale" label-class="width-12" checked="flowchart.scale" ng-model-options="{ updateOn: 'default' }">
+            <gf-form-switch class="gf-form" label="Scale" label-class="width-12" checked="flowchart.scale">
             </gf-form-switch>
-            <gf-form-switch class="gf-form" label="Center" label-class="width-12" checked="flowchart.center" ng-model-options="{ updateOn: 'default' }">
+            <gf-form-switch class="gf-form" label="Center" label-class="width-12" checked="flowchart.center">
             </gf-form-switch>
-            <gf-form-switch class="gf-form" label="Grid" label-class="width-12" checked="flowchart.grid" ng-model-options="{ updateOn: 'default' }">
+            <gf-form-switch class="gf-form" label="Grid" label-class="width-12" checked="flowchart.grid">
             </gf-form-switch>
             <div class="gf-form" title="Background color">
                 <label class="gf-form-label width-12">Bg Color</label>
-                <input type="text" class="gf-form-input width-8" ng-model="flowchart.background" placeholder="#000000" />
+                <input type="text" class="gf-form-input width-8" ng-model="flowchart.background" placeholder="#000000" ng-model-onblur/>
                 <button class="btn btn-secondary btn-small" style="height: 32px;"
                     title="Remove background color">
                     <color-picker color="flowchart.background" onChange="editor.onColorChange(flowchart)"></color-picker>
@@ -185,7 +184,7 @@
                             ng-bind-html="$GF.popover('Zoom graph, if scale is unchecked. if < 100% : reduce graph, >100% increase graph', 'DEFINITION_XML#Buttons','ADVANCED_XML2')"></span>
                     </info-popover>
                 </span>
-                <input type="text" name="valueDisplayRegex" ng-model="flowchart.zoom" style="text-align: right"
+                <input type="text" name="valueDisplayRegex" ng-model="flowchart.zoom" ng-model-onblur style="text-align: right"
                     placeholder="100%" class="gf-form-input max-width-10"/>
             </div>
         </div>
@@ -197,16 +196,16 @@
                 </info-popover>
             </h5>
             <!-- Lock -->
-            <gf-form-switch class="gf-form" label="Lock" label-class="width-12" checked="flowchart.lock" ng-model-options="{ updateOn: 'default' }"">
+            <gf-form-switch class="gf-form" label="Lock" label-class="width-12" checked="flowchart.lock">
             </gf-form-switch>
             <!-- Enable animation -->
-            <gf-form-switch class="gf-form" label="Enable animation" label-class="width-12" ng-model-options="{ updateOn: 'default' }"
+            <gf-form-switch class="gf-form" label="Enable animation" label-class="width-12"
                 tooltip="Enable animation in flowcharting like fade colors, disable it if you use 'Direct link rendered image' in share panel options for a best rendered or best performance"
                 checked="flowchart.animation">
             </gf-form-switch>
             <!-- Tooltip -->
             <gf-form-switch class="gf-form" label="Tooltip" tooltip="Enable tooltip" label-class="width-12"
-                checked="flowchart.tooltip" ng-model-options="{ updateOn: 'default' }">
+                checked="flowchart.tooltip">
             </gf-form-switch>
         </div>
     </div>

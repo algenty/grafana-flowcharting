@@ -13,10 +13,10 @@
         </info-popover>
     </label>
     <input type="text" style="margin-right: 2px;" id="{{ elt.uid }}" placeholder="id or regex of shape"
-        class="gf-form-input width-8" ng-model="elt.getData().pattern"
+        class="gf-form-input width-8" ng-model="elt.getData().pattern" ng-model-onblur
         title="Enter an id, label,metadata attribute or regex to identify object"
         bs-typeahead="rule.getEventMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
-        ng-model-onblur data-placement="right" />
+        data-placement="right" />
     <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
         ng-show="rule.getEventMapOptions().identByProp !== 'metadata'"
         title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(elt, rule.getEventMapOptions())">
