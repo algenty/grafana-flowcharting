@@ -91,12 +91,12 @@ export class State {
     return this;
   }
 
-  update(): this {
-    this._initCycle();
-    this._setCycle();
+  async update() {
+    await this._initCycle();
+    await this._setCycle();
     this._applyCycle();
     this.events.emit('state_updated', this);
-    return this;
+    return;
   }
 
   change() {
@@ -154,7 +154,7 @@ export class State {
    * @param {Metric} metric
    * @memberof State
    */
-  private _setCycle(rule?: Rule): this {
+  private async _setCycle(rule?: Rule) {
     const funcName = 'setCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     const rules = rule === undefined ? Array.from(this._rules.values()) : [rule];
@@ -279,7 +279,7 @@ export class State {
       let endPerf = Date.now();
       r.execTimes += endPerf - beginPerf;
     });
-    return this;
+    return;
   }
 
   /**
@@ -386,16 +386,16 @@ export class State {
    * @returns {this}
    * @memberof State
    */
-  private _applyCycle(): this {
+  private async _applyCycle() {
     const funcName = 'applyCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     if (this._matched || this._changed) {
       this._changed = true;
-      this._ObjStates.map(async (o: { apply: CallableFunction }) => {
+      return this._ObjStates.map(async (o: { apply: CallableFunction }) => {
         o.apply();
       });
     }
-    return this;
+    return;
   }
 
   /**
@@ -569,13 +569,14 @@ export class State {
   //###########################################################################
   private _on_global_data_received() {
     _log('📬', this.constructor.name, '_on_global_data_received');
-    this._initCycle();
+    // this._initCycle();
   }
 
   private _on_global_data_processed() {
     _log('📬', this.constructor.name, '_on_global_data_processed');
-    this._setCycle();
-    this._applyCycle();
+    // this._setCycle();
+    // this._applyCycle();
+    this.update()
   }
 
   private _on_ruleHandler_rule_changed(rule: Rule) {
