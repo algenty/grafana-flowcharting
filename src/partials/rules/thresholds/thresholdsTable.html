@@ -216,7 +216,7 @@
                             <input ng-show="elt.inEdit[CN4] === true" id="{{elt.uid + '-' + CN4 }}"
                                 type="{{rule.dataType === 'string' || rule.dataType === 'date' ? 'Text' : 'Number'}}"
                                 placeholder="{{rule.dataType === 'string' || rule.dataType === 'date' ? 'Pattern' : 'Number'}}"
-                                ng-attr-title="{{Apply this color "
+                                ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'"
                                 class="gf-form-input"
                                 ng-model="elt.value" ng-model-onblur
                                 ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" />
@@ -234,11 +234,11 @@
                             </div>
                         </div>
                         <!-- OPTIONS -->
+                        <!-- TODO : What for-->
                         <!-- <div role="cell" class="gf-table-cells"
                             ng-style="{'width' : editor.THsTable.getWidth('options')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: center;justify-content: center;">
-                                <!-- TODO : For what ?-->
                                 <div ng-click="elt.getData().eventParams = !elt.getData().eventParams;editor.onRulesChange()"
                                     title="Add/Remove the dashboad parameters with url" class="gf-icon-action"
                                     ng-class="{'gf-icon-address-on': elt.getData().eventParams, 'gf-icon-address-off': !elt.getData().eventParams}">

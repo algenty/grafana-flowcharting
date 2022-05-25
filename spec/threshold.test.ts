@@ -269,4 +269,118 @@ describe('Test thresholds', () => {
       });
     });
   });
+
+  describe('Import modele',()=> {
+    describe('Number modele', ()=> {
+      let rule,tn1, tn2, tn3;
+      beforeEach(()=>{
+        rule = new Rule($gf, '/.*/', Rule.getDefaultData());
+        rule.dataType = 'number';
+        tn1 = new NumberTH('Color1', GFCONSTANT.COMP_GE, 50, NumberTH.getDefaultData());
+        tn2 = new NumberTH('Color2', GFCONSTANT.COMP_GT, 80, NumberTH.getDefaultData());
+        tn3 = new NumberTH('Color3', GFCONSTANT.COMP_GE, 100, NumberTH.getDefaultData());
+        rule.addThreshold().import(tn1.getData())
+        rule.addThreshold().import(tn2.getData())
+        rule.addThreshold().import(tn3.getData())
+      });
+      test('Verify init', ()=>{
+        expect(rule.getThresholds().length).toBe(3);
+        expect(tn1.color).toBe("Color1");
+        expect(tn1.value).toBe(50);
+        expect(tn1.comparator).toBe(GFCONSTANT.COMP_GE);
+        expect(tn2.color).toBe("Color2");
+        expect(tn2.value).toBe(80);
+        expect(tn2.comparator).toBe(GFCONSTANT.COMP_GT);
+        expect(tn3.color).toBe("Color3");
+        expect(tn3.value).toBe(100);
+        expect(tn3.comparator).toBe(GFCONSTANT.COMP_GE);
+      })
+      test('should be same value after import', ()=> {
+        let ths = rule.getThresholds();
+        expect(ths[0].color).toBe(tn1.color);
+        expect(ths[0].value).toBe(tn1.value);
+        expect(ths[0].comparator).toBe(tn1.comparator);
+        expect(ths[1].color).toBe('Color2');
+        expect(ths[1].value).toBe(80);
+        expect(ths[1].comparator).toBe(GFCONSTANT.COMP_GT);
+        expect(ths[2].color).toBe('Color3');
+        expect(ths[2].value).toBe(100);
+        expect(ths[2].comparator).toBe(GFCONSTANT.COMP_GE);
+      })
+    });
+    describe('String modele', ()=> {
+      let rule,tn1, tn2, tn3;
+      beforeEach(()=>{
+        rule = new Rule($gf, '/.*/', Rule.getDefaultData());
+        rule.dataType = 'string';
+        tn1 = new StringTH('Color1', GFCONSTANT.COMP_GE, 'A', StringTH.getDefaultData());
+        tn2 = new StringTH('Color2', GFCONSTANT.COMP_GT, 'B', StringTH.getDefaultData());
+        tn3 = new StringTH('Color3', GFCONSTANT.COMP_GE, 'C', StringTH.getDefaultData());
+        rule.addThreshold().import(tn1.getData())
+        rule.addThreshold().import(tn2.getData())
+        rule.addThreshold().import(tn3.getData())
+      });
+      test('Verify init', ()=>{
+        expect(rule.getThresholds().length).toBe(3);
+        expect(tn1.color).toBe("Color1");
+        expect(tn1.value).toBe('A');
+        expect(tn1.comparator).toBe(GFCONSTANT.COMP_GE);
+        expect(tn2.color).toBe("Color2");
+        expect(tn2.value).toBe('B');
+        expect(tn2.comparator).toBe(GFCONSTANT.COMP_GT);
+        expect(tn3.color).toBe("Color3");
+        expect(tn3.value).toBe('C');
+        expect(tn3.comparator).toBe(GFCONSTANT.COMP_GE);
+      })
+      test('should be same value after import', ()=> {
+        let ths = rule.getThresholds();
+        expect(ths[0].color).toBe(tn1.color);
+        expect(ths[0].value).toBe(tn1.value);
+        expect(ths[0].comparator).toBe(tn1.comparator);
+        expect(ths[1].color).toBe('Color2');
+        expect(ths[1].value).toBe('B');
+        expect(ths[1].comparator).toBe(GFCONSTANT.COMP_GT);
+        expect(ths[2].color).toBe('Color3');
+        expect(ths[2].value).toBe('C');
+        expect(ths[2].comparator).toBe(GFCONSTANT.COMP_GE);
+      })
+    });
+    describe('Date modele', ()=> {
+      let rule,tn1, tn2, tn3;
+      beforeEach(()=>{
+        rule = new Rule($gf, '/.*/', Rule.getDefaultData());
+        rule.dataType = 'date';
+        tn1 = new DateTH('Color1', GFCONSTANT.COMP_GE, 'A', DateTH.getDefaultData());
+        tn2 = new DateTH('Color2', GFCONSTANT.COMP_GT, 'B', DateTH.getDefaultData());
+        tn3 = new DateTH('Color3', GFCONSTANT.COMP_GE, 'C', DateTH.getDefaultData());
+        rule.addThreshold().import(tn1.getData())
+        rule.addThreshold().import(tn2.getData())
+        rule.addThreshold().import(tn3.getData())
+      });
+      test('Verify init', ()=>{
+        expect(rule.getThresholds().length).toBe(3);
+        expect(tn1.color).toBe("Color1");
+        expect(tn1.value).toBe('A');
+        expect(tn1.comparator).toBe(GFCONSTANT.COMP_GE);
+        expect(tn2.color).toBe("Color2");
+        expect(tn2.value).toBe('B');
+        expect(tn2.comparator).toBe(GFCONSTANT.COMP_GT);
+        expect(tn3.color).toBe("Color3");
+        expect(tn3.value).toBe('C');
+        expect(tn3.comparator).toBe(GFCONSTANT.COMP_GE);
+      })
+      test('should be same value after import', ()=> {
+        let ths = rule.getThresholds();
+        expect(ths[0].color).toBe(tn1.color);
+        expect(ths[0].value).toBe(tn1.value);
+        expect(ths[0].comparator).toBe(tn1.comparator);
+        expect(ths[1].color).toBe('Color2');
+        expect(ths[1].value).toBe('B');
+        expect(ths[1].comparator).toBe(GFCONSTANT.COMP_GT);
+        expect(ths[2].color).toBe('Color3');
+        expect(ths[2].value).toBe('C');
+        expect(ths[2].comparator).toBe(GFCONSTANT.COMP_GE);
+      })
+    });
+  });
 });

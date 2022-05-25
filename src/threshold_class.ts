@@ -26,6 +26,7 @@ abstract class GFTH<TData extends gf.TTHData> {
     this.uid = $GF.genUid(this.constructor.name);
     this.data = newData;
     this.data.value = value;
+    this.data.color = color;
     this.data.comparator = comparator;
     if (oldData) {
       this.import(oldData);
