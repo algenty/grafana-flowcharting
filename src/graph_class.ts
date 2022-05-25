@@ -176,7 +176,7 @@ export class XGraph {
     if (!this._isGraphIniatilized && GFDrawio.isInitalized()) {
       this._isGraphIniatilized = true;
       await this._init_mxGraph();
-      await this._init_fonts();
+      this._init_fonts();
       await this._display();
       await this.update_options();
       await this._init_xcells();
@@ -208,7 +208,7 @@ export class XGraph {
     this.container.addEventListener('contextmenu', (e) => e.preventDefault());
     // DB CLICK
     this._graph.dblClick = this.eventDbClick.bind(this);
-    return this;
+    return;
   }
 
   /**
@@ -282,7 +282,7 @@ export class XGraph {
     let extFonts = model.extFonts;
     if (extFonts) {
       try {
-        extFonts = extFonts.split('|').map(function (ef: any) {
+        extFonts = extFonts.split('|').map( (ef: any) => {
           var parts = ef.split('^');
           return { name: parts[0], url: parts[1] };
         });
@@ -294,6 +294,7 @@ export class XGraph {
         GFLog.error('ExtFonts format error:', e.message);
       }
     }
+    return;
   }
 
   /**
