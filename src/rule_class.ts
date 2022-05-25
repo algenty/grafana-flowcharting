@@ -514,13 +514,12 @@ export class Rule {
         let th: gf.TTHNumberData[] = obj.numberTHData;
         if (th !== undefined && th != null && th.length > 0) {
           th.forEach((thdata: gf.TTHNumberData) => {
-            this._addNumberThreshold();
+            this._addNumberThreshold().import(thdata);
           });
         }
       }
     }
     // }
-
     if (this.numberTH.length === 0) {
       this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0);
       this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50);
@@ -557,13 +556,11 @@ export class Rule {
         }
       });
     } else {
-      if (!!obj.stringTHData) {
-        // this.data.stringTHData = [];
-        // this.stringTH = [];
+      if (obj.stringTHData) {
         let th: gf.TTHStringData[] = obj.stringTHData;
         if (th !== undefined && th != null && th.length > 0) {
           th.forEach((thdata: gf.TTHStringData) => {
-            this._addStringThreshold(undefined, undefined, undefined, thdata);
+            this._addStringThreshold().import(thdata);
           });
         }
       }
@@ -1078,17 +1075,17 @@ export class Rule {
    * @returns {this}
    * @memberof Rule
    */
-  addThreshold(index?: number, color?: string, value?: any, previousData?: any) {
+  addThreshold(index?: number, color?: string, value?: any) {
     // let th: ObjectTH
     switch (this.data.type) {
       case 'number':
-        return this._addNumberThreshold(index, color, value, previousData);
+        return this._addNumberThreshold(index, color, value);
         break;
       case 'string':
-        return this._addStringThreshold(index, color, value, previousData);
+        return this._addStringThreshold(index, color, value);
         break;
       case 'date':
-        return this._addDateThreshold(index, color, value, previousData);
+        return this._addDateThreshold(index, color, value);
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
@@ -1125,19 +1122,19 @@ export class Rule {
   cloneThreshold(index: number): ObjectTH {
     const refth = this.getThreshold(index);
     if (refth !== undefined) {
-      this.addThreshold(index, refth.color, refth.value, refth.getData());
+      this.addThreshold(index, refth.color, refth.value).import(refth.getData());
     }
     this.change();
     return refth;
   }
 
-  _addNumberThreshold(index?: number, color?: string, value?: number, previousData?: any): NumberTH {
+  _addNumberThreshold(index?: number, color?: string, value?: number): NumberTH {
     const thfTable = this.numberTH;
     const thdTable = this.data.numberTHData;
     let finalColor = color;
     let finalValue = value;
     const data = NumberTH.getDefaultData();
-    const nth = new NumberTH(data.color, data.comparator, data.value, data, previousData);
+    const nth = new NumberTH(data.color, data.comparator, data.value, data);
     const length = thdTable.length;
     if (index === undefined || length === 0) {
       index = length;
@@ -1152,7 +1149,7 @@ export class Rule {
 
     if (length > 0) {
       const lth = thfTable[ref];
-      // nth._convert(lth.getData());
+      nth.import(lth.getData());
       const ratio = 0.5;
       // Color
       if (finalColor === undefined) {
@@ -1188,13 +1185,13 @@ export class Rule {
     return nth;
   }
 
-  private _addStringThreshold(index?: number, color?: string, value?: string, previousData?: any): StringTH {
+  private _addStringThreshold(index?: number, color?: string, value?: string): StringTH {
     const thfTable = this.stringTH;
     const thdTable = this.data.stringTHData;
     let finalColor = color;
     let finalValue = value;
     const data = StringTH.getDefaultData();
-    const nth = new StringTH(data.color, data.comparator, data.value, data, previousData);
+    const nth = new StringTH(data.color, data.comparator, data.value, data);
     const length = thdTable.length;
     if (index === undefined || length === 0) {
       index = length;
@@ -1209,7 +1206,7 @@ export class Rule {
 
     if (length > 0) {
       const lth = thfTable[ref];
-      // nth._convert(lth.getData());
+      nth.import(lth.getData());
       const ratio = 0.5;
       // Color
       if (finalColor === undefined) {
@@ -1260,7 +1257,7 @@ export class Rule {
 
     if (length > 0) {
       const lth = thfTable[ref];
-      // nth._convert(lth.getData());
+      nth.import(lth.getData());
       const ratio = 0.5;
       // Color
       if (finalColor === undefined) {

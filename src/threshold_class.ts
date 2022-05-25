@@ -28,7 +28,7 @@ abstract class GFTH<TData extends gf.TTHData> {
     this.data.value = value;
     this.data.comparator = comparator;
     if (oldData) {
-      this._convert(oldData);
+      this.import(oldData);
     }
     this._setType();
     this.init();
@@ -118,7 +118,7 @@ abstract class GFTH<TData extends gf.TTHData> {
 
   _eventsDisconnect() {}
 
-  private _convert(obj: any, thresholds?: number, color?: string): this {
+  import(obj: any, thresholds?: number, color?: string): this {
     if (thresholds && color) {
       // <= 0.9.0
       this.data.color = color;
@@ -146,9 +146,7 @@ abstract class GFTH<TData extends gf.TTHData> {
     return this;
   }
 
-  match(value: any): boolean {
-    return true;
-  }
+  abstract match(value: any): boolean;
 
   isValidComp(comp: string): boolean {
     return this.validComp.indexOf(comp) !== -1;
@@ -161,47 +159,6 @@ abstract class GFTH<TData extends gf.TTHData> {
   getData(): any {
     return this.data;
   }
-
-  // getColor() {
-  //   return this.data.color;
-  // }
-
-  // setColor(color: string): this {
-  //   this.data.color = color;
-  //   return this;
-  // }
-
-  // getComparator() {
-  //   return this.data.comparator;
-  // }
-
-  // setComparator(comparator: string): this {
-  //   this.data.comparator = comparator;
-  //   return this;
-  // }
-
-  // getValue(): any {
-  //   return this.data.value;
-  // }
-
-  // setValue(value: any): this {
-  //   this.data.value = value;
-  //   return this;
-  // }
-
-  // hide(): this {
-  //   this.hidden = true;
-  //   return this;
-  // }
-
-  // show(): this {
-  //   this.hidden = false;
-  //   return this;
-  // }
-
-  // isHidden(): boolean {
-  //   return this._hidden;
-  // }
 }
 
 /**

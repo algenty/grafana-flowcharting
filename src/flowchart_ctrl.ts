@@ -77,8 +77,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     _defaults(this.panel, this.panelDefaults);
     this.panel.graphId = `flowchart_${this.panel.id}`;
     this.containerDivId = `container_${this.panel.graphId}`;
-    // console.log('this.panel', this.panel);
-    // debugger;
+    _log('INIT DATA', Object.assign({},this.panel));
 
     // If save in edited mode
     if (!this.isEditingMode() && this.isEditedMode()) {
