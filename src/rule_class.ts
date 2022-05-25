@@ -107,6 +107,9 @@ export class Rule {
   private _eventsDisconnect() {
     this.$gf?.metricHandler?.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this));
     this.$gf?.metricHandler?.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this));
+    this.getThresholds().map(async (th)=>{
+      th.events.disconnect('threshold_changed', this);
+    });
     return this;
   }
 
@@ -500,13 +503,15 @@ export class Rule {
       let j = 0;
       obj.colors.forEach((cl: string | undefined) => {
         if (i === 0) {
-          this._addNumberThreshold(i++, cl);
+          this._addNumberThreshold(i++, cl).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+          // this.addThreshold(i++, cl)
         } else {
           let th = obj.thresholds[j++];
           if (typeof th === 'string' && th.length > 0) {
             th = parseFloat(th);
           }
-          this._addNumberThreshold(i++, cl, th);
+          this._addNumberThreshold(i++, cl, th).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+          // this.addThreshold(i++,cl,th)
         }
       });
     } else {
@@ -514,16 +519,17 @@ export class Rule {
         let th: gf.TTHNumberData[] = obj.numberTHData;
         if (th !== undefined && th != null && th.length > 0) {
           th.forEach((thdata: gf.TTHNumberData) => {
-            this._addNumberThreshold().import(thdata);
+            this._addNumberThreshold().import(thdata).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));;
+            // this.addThreshold().import(thdata);
           });
         }
       }
     }
     // }
     if (this.numberTH.length === 0) {
-      this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0);
-      this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50);
-      this._addNumberThreshold(2, 'rgba(50, 172, 45, 0.97)', 80);
+      this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+      this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+      this._addNumberThreshold(2, 'rgba(50, 172, 45, 0.97)', 80).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
     }
     /******* END THRESHOLD NUMBER **********/
 
@@ -546,13 +552,13 @@ export class Rule {
       let j = 0;
       obj.colors.forEach((cl: string | undefined) => {
         if (i === 0) {
-          this._addStringThreshold(i++, cl);
+          this._addStringThreshold(i++, cl).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
         } else {
           let th = stringTH[j++];
           if (typeof th === 'number') {
             th = th.toString();
           }
-          this._addStringThreshold(i++, cl, th);
+          this._addStringThreshold(i++, cl, th).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
         }
       });
     } else {
@@ -560,7 +566,7 @@ export class Rule {
         let th: gf.TTHStringData[] = obj.stringTHData;
         if (th !== undefined && th != null && th.length > 0) {
           th.forEach((thdata: gf.TTHStringData) => {
-            this._addStringThreshold().import(thdata);
+            this._addStringThreshold().import(thdata).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
           });
         }
       }
@@ -568,17 +574,17 @@ export class Rule {
     // }
 
     if (this.stringTH.length === 0) {
-      this._addStringThreshold(0, 'rgba(245, 54, 54, 0.9)', '/.*/');
-      this._addStringThreshold(1, 'rgba(237, 129, 40, 0.89)', '/.*warning.*/');
-      this._addStringThreshold(2, 'rgba(50, 172, 45, 0.97)', '/.*(success|ok).*/');
+      this._addStringThreshold(0, 'rgba(245, 54, 54, 0.9)', '/.*/').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+      this._addStringThreshold(1, 'rgba(237, 129, 40, 0.89)', '/.*warning.*/').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+      this._addStringThreshold(2, 'rgba(50, 172, 45, 0.97)', '/.*(success|ok).*/').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
     }
     /******* END THRESHOLD STRING **********/
 
     /******* BEGIN THRESHOLD DATE **********/
     if (this.dateTH.length === 0) {
-      this._addDateThreshold(0, 'rgba(245, 54, 54, 0.9)', '0d');
-      this._addDateThreshold(1, 'rgba(237, 129, 40, 0.89)', '-1d');
-      this._addDateThreshold(2, 'rgba(50, 172, 45, 0.97)', '-1w');
+      this._addDateThreshold(0, 'rgba(245, 54, 54, 0.9)', '0d').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+      this._addDateThreshold(1, 'rgba(237, 129, 40, 0.89)', '-1d').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+      this._addDateThreshold(2, 'rgba(50, 172, 45, 0.97)', '-1w').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
     }
     /******* END THRESHOLD DATE **********/
 
@@ -1076,21 +1082,23 @@ export class Rule {
    * @memberof Rule
    */
   addThreshold(index?: number, color?: string, value?: any) {
-    // let th: ObjectTH
+    let th: ObjectTH
     switch (this.data.type) {
       case 'number':
-        return this._addNumberThreshold(index, color, value);
+        th = this._addNumberThreshold(index, color, value);
         break;
       case 'string':
-        return this._addStringThreshold(index, color, value);
+        th =  this._addStringThreshold(index, color, value);
         break;
       case 'date':
-        return this._addDateThreshold(index, color, value);
+        th =  this._addDateThreshold(index, color, value);
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
         break;
     }
+    th.events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+    return th;
     // TODO : Needed change() or only in clone ?
     // this.change();
   }
@@ -2393,7 +2401,7 @@ export class Rule {
     );
   }
 
-  // TODO : _On_metric_metric_updated
+
   // updateMetrics() {
   //   const metrics = this.ctrl.metricHandler?.getMetrics();
   //   this.metrics.clear();
@@ -2475,5 +2483,10 @@ export class Rule {
       this.metrics.set(metric.uid, metric);
       this.update();
     }
+  }
+
+  private _on_TH_threshold_changed() {
+    _log('📬', this.constructor.name, '_on_TH_threshold_changed');
+    this.change();
   }
 }

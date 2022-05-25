@@ -2,7 +2,7 @@ import { FlowchartHandler } from './flowchart_handler';
 import { RulesHandler } from './rules_handler';
 import { Rule } from './rule_class';
 import { EventMap, ObjectMap, ObjectMapArray } from './mapping_class';
-import { $GF, GFTable, GFLog, GFPlugin, GFCONSTANT } from './globals_class';
+import { $GF, GFTable, GFPlugin, GFCONSTANT } from './globals_class';
 import grafana from 'grafana_func';
 // import _ from 'lodash';
 import { MetricHandler } from './metric_handler';
@@ -868,14 +868,16 @@ export class RulesOptionsCtrl {
 
   setUnitFormat(rule: Rule, subItem: any) {
     rule.data.unit = subItem.value;
-    this.onRulesChange();
+    // this.onRulesChange();
   }
 
-  onRulesChange() {
-    GFLog.info('RulesOptionsCtrl.onRulesChange()');
-    this.ctrl.rulesHandler?.change();
-    // this.flowchartHandler?.onRulesChange();
-    // this.render();
+  onRulesChange(rule?: Rule) {
+    if(rule) {
+      rule.change();
+    }
+    else {
+      this.ctrl.rulesHandler?.change();
+    }
     return true;
   }
 
@@ -910,10 +912,9 @@ export class RulesOptionsCtrl {
    * @param {Number} colorIndex
    * @memberof RulesOptionsCtrl
    */
-  onColorChange(th: NumberTH | StringTH) {
+  onColorChange(th: NumberTH | StringTH | DateTH) {
     return (newColor: any) => {
       th.color = newColor;
-      this.onRulesChange();
     };
   }
 
