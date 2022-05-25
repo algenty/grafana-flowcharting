@@ -494,7 +494,7 @@ export class Rule {
     if (!!obj.dateFormat) {
       this.data.dateFormat = obj.dateFormat;
     }
-
+    // TODO : Find best method to connect to events
     /******* BEGIN THRESHOLD NUMBER **********/
     this.data.numberTHData = [];
     this.numberTH = [];
