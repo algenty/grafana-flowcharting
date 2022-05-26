@@ -724,125 +724,6 @@ export class GFPlugin {
   }
 }
 
-/**
- * Trace Perf class
- *
- * @class GFTrace
-//  */
-// class GFTrace {
-//   static enable = false;
-//   static trc = new Map();
-//   static fn = new Map();
-//   static indent = 0;
-//   trace:
-//     | {
-//         Name: string;
-//         Uid: string;
-//         Args: any;
-//         Return: any;
-//         Before: number;
-//         End: number | undefined;
-//         ExecTime: number | undefined;
-//         Indent: number;
-//       }
-//     | undefined;
-
-//   constructor(fn?: string) {
-//     if (GFTrace.enable && fn !== undefined) {
-//       this.trace = {
-//         Name: fn,
-//         Uid: $GF.genUid(),
-//         Args: undefined,
-//         Return: undefined,
-//         Before: Date.now(),
-//         End: undefined,
-//         ExecTime: undefined,
-//         Indent: GFTrace.indent,
-//       };
-//       GFTrace.trc.set(this.trace.Uid, this.trace);
-//     }
-//   }
-
-//   static init(): GFTrace {
-//     return new GFTrace();
-//   }
-
-//   before(fn: string | undefined):
-//     | GFTrace
-//     | {
-//         after: () => void;
-//       } {
-//     if (GFTrace.enable && fn !== undefined) {
-//       const t = new GFTrace(fn);
-//       GFTrace.indent++;
-//       GFTrace._inc(fn);
-//       return t;
-//     }
-//     return { after: () => {} };
-//   }
-
-//   static _inc(fn: string) {
-//     let f = GFTrace.fn.get(fn);
-//     if (f === undefined) {
-//       f = {
-//         Calls: 0,
-//         Function: fn,
-//         TotalTimes: 0,
-//       };
-//     }
-//     f.Calls++;
-//     GFTrace.fn.set(fn, f);
-//   }
-
-//   async after() {
-//     if (GFTrace.enable && this.trace !== undefined) {
-//       if (this.trace) {
-//         this.trace.End = Date.now();
-//         GFTrace.indent--;
-//       }
-//     }
-//   }
-
-//   clear() {
-//     if (GFTrace.enable) {
-//       GFTrace.trc.clear();
-//       GFTrace.fn.clear();
-//     }
-//   }
-
-//   enable() {
-//     GFTrace.enable = true;
-//   }
-
-//   disable() {
-//     GFTrace.enable = false;
-//   }
-
-//   isEnabled() {
-//     return GFTrace.enable;
-//   }
-
-//   async resume() {
-//     if (GFTrace.enable) {
-//       let tb: any[] = [];
-//       let fn: any[] = [];
-//       GFTrace.trc.forEach((trace) => {
-//         trace.ExecTime = trace.End - trace.Before;
-//         const f = GFTrace.fn.get(trace.Name);
-//         f.TotalTimes += trace.ExecTime;
-//         tb.push(trace);
-//       });
-//       // eslint-disable-line
-//       console.log(tb, ['Indent', 'Name', 'ExecTime']);
-//       GFTrace.fn.forEach((f) => {
-//         fn.push(f);
-//       });
-//       console.log(fn, ['Function', 'Calls', 'TotalTimes']);
-//       this.clear();
-//     }
-//   }
-// }
-
 export class $GF {
   uid = `GFGlobal-${nanoid()}`;
   private _globalvars: GFVariables = GFVariables.create();
@@ -898,8 +779,8 @@ export class $GF {
     $scope.$GF = _gf;
     if (_gf.DEBUG) {
       console.log('DEBUG Scope', $scope);
-      console.log('DEBUG TemplateSrv', templateSrv);
-      console.log('DEBUG Theme', dashboard.style);
+      console.log('DEBUG TemplateSrv', Object.assign({}, templateSrv));
+      // console.log('DEBUG Theme', dashboard.style);
       console.log('DEBUG dashboard', dashboard);
     }
 
@@ -910,12 +791,6 @@ export class $GF {
 
     return _gf;
   }
-
-  // setHandlers(flowchartHandler: FlowchartHandler, rulesHandler: RulesHandler, metricHandler: MetricHandler) {
-  //   this.flowchartHandler = flowchartHandler;
-  //   this.rulesHandler = rulesHandler;
-  //   this.metricHandler = metricHandler;
-  // }
 
   free() {
     this.events.disconnect('debug_asked', this);
