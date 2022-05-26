@@ -1,5 +1,6 @@
 
 import { XCell } from 'cell_class';
+import { GFEvents } from 'flowcharting_base';
 import { $GF, GFCONSTANT, GFPlugin, GFVariables } from 'globals_class';
 import { isString as _isString } from 'lodash';
 import { Rule } from 'rule_class';
@@ -19,6 +20,16 @@ export interface MapDataCommonProp {
   hidden: boolean;
 }
 
+// Debug
+// const DEBUG = true;
+// const _log = (...args: any) => {
+//   DEBUG && console.log(...args);
+// };
+
+// Signal definition
+const mappingSignalsArray = ['mapping_initalized', 'mapping_changed', 'mapping_freed'] as const;
+type MappingSignals = typeof mappingSignalsArray[number];
+
 abstract class GFMap<MapData extends gf.TDefObjMapData> {
   $gf: $GF;
   data: MapData;
@@ -26,17 +37,45 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
   type: gf.TTypeMap = 'shape';
   options: gf.TRuleMapOptions = Rule.getDefaultMapOptions();
   reduce = true;
+  events: GFEvents<MappingSignals> = GFEvents.create(mappingSignalsArray);
   static methods: any[] = [];
-  constructor($gf: $GF, pattern: string, data: MapData) {
+  constructor($gf: $GF, pattern: string, data: MapData, previousData?: any) {
     this.$gf = $gf;
     this.uid = $GF.genUid();
     this.data = data;
     this.data.pattern = pattern;
-    this._setType();
+    if (previousData) {
+      this.import(previousData);
+    }
+    this.init();
   }
 
   protected abstract _setType(): void;
 
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
+  init() {
+    this._setType();
+    this.events.emit('mapping_initalized', this);
+  }
+
+  change() {
+    this.events.emit('mapping_changed', this);
+  }
+
+  free() {
+    this.clear();
+    this.events.emit('mapping_freed', this);
+  }
+
+  clear() {
+    this.events.clear();
+  }
+
+  //############################################################################
+  //### CONVERT/MIGRATION
+  //############################################################################
   /**
    * Import data from panel
    *
@@ -44,7 +83,7 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
    * @returns {this}
    * @memberof GFMap
    */
-  _convert(obj: any): this {
+  import(obj: any): this {
     if (!!obj.metadata) {
       this.data.pattern = obj.metadata;
     }
@@ -59,6 +98,37 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
     return this;
   }
 
+  //############################################################################
+  //### ACCESSORS
+  //############################################################################
+  // PATTERN
+  get ppattern(): string {
+    return this.data.pattern;
+  }
+  set pattern(v: string) {
+    if(!v || v.length === 0 || v === this.data.pattern) {
+      return;
+    }
+    this.data.pattern = v;
+    this.change()
+  }
+
+  //HIDDEN
+  set hidden(v: boolean) {
+    if(!v || v === this.data.hidden) {
+      return;
+    }
+    this.data.hidden = v;
+    this.change();
+  }
+  get hidden(): boolean {
+    return this.data.hidden;
+  }
+
+
+  //############################################################################
+  //### LOGICS
+  //############################################################################
   /**
    * return the stored data
    *
@@ -82,15 +152,7 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
     return this.options;
   }
 
-  /**
-   * Clear object
-   *
-   * @returns {this}
-   * @memberof GFMap
-   */
-  clear(): this {
-    return this;
-  }
+
 
   /**
    * Get default stored data
@@ -190,23 +252,23 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
    * @returns {this}
    * @memberof GFMap
    */
-  hide(): this {
-    this.data.hidden = true;
-    return this;
-  }
+  // hide(): this {
+  //   this.data.hidden = true;
+  //   return this;
+  // }
 
-  /**
-   * Return if hidden
-   *
-   * @returns {boolean}
-   * @memberof GFMap
-   */
-  isHidden(): boolean {
-    if (this.data.hidden === undefined) {
-      return false;
-    }
-    return this.data.hidden;
-  }
+  // /**
+  //  * Return if hidden
+  //  *
+  //  * @returns {boolean}
+  //  * @memberof GFMap
+  //  */
+  // isHidden(): boolean {
+  //   if (this.data.hidden === undefined) {
+  //     return false;
+  //   }
+  //   return this.data.hidden;
+  // }
 
   /**
    * Toggle Visible/Hide
@@ -305,8 +367,8 @@ export class ShapeMap extends GFMap<gf.TShapeMapData> {
    * @returns {this}
    * @memberof ShapeMap
    */
-  _convert(obj: any): this {
-    super._convert(obj);
+  import(obj: any): this {
+    super.import(obj);
     if (!!obj.style) {
       this.data.style = obj.style;
     }
@@ -384,8 +446,8 @@ export class TextMap extends GFMap<gf.TTextMapData> {
    * @returns {this}
    * @memberof TextMap
    */
-  _convert(obj: any): this {
-    super._convert(obj);
+  import(obj: any): this {
+    super.import(obj);
     if (!!obj.textReplace) {
       this.data.textReplace = obj.textReplace;
     }
@@ -476,8 +538,8 @@ export class LinkMap extends GFMap<gf.TlinkMapData> {
    * @returns {this}
    * @memberof LinkMap
    */
-  _convert(obj: any): this {
-    super._convert(obj);
+  import(obj: any): this {
+    super.import(obj);
     if (!!obj.linkUrl) {
       this.data.linkUrl = obj.linkUrl;
     }
@@ -644,8 +706,8 @@ export class EventMap extends GFMap<gf.TEventMapData> {
    * @returns {this}
    * @memberof ShapeMap
    */
-  _convert(obj: any): this {
-    super._convert(obj);
+  import(obj: any): this {
+    super.import(obj);
     if (!!obj.style) {
       this.data.style = obj.style;
     }

@@ -272,9 +272,9 @@ export class Rule {
 
 
   //HIDDEN
-  set hidden(value: boolean) {
-    if (this.data.hidden !== value) {
-      this.data.hidden = value;
+  set hidden(v: boolean) {
+    if (this.data.hidden !== v) {
+      this.data.hidden = v;
       this.change();
     }
   }
@@ -283,14 +283,32 @@ export class Rule {
   }
 
   //TOOLTIP
-  set tooltip(value: boolean) {
-    if (this.data.tooltip !== value) {
-      this.data.tooltip = value;
+  set tooltip(v: boolean) {
+    if (this.data.tooltip !== v) {
+      this.data.tooltip = v;
       this.change();
     }
   }
   get tooltip(): boolean {
     return this.data.tooltip;
+  }
+  set tooltipLabel(v: string) {
+    if (this.data.tooltipLabel !== v) {
+      this.data.tooltipLabel = v;
+      this.change();
+    }
+  }
+  get tooltipLabel(): string {
+    return this.data.tooltipLabel;
+  }
+  set tooltipOn(v: gf.TTooltipOnKeys) {
+    if (!v || v.length === 0 || this.data.tooltipOn !== v) {
+      this.data.tooltipOn = v;
+      this.change();
+    }
+  }
+  get tooltipOn(): gf.TTooltipOnKeys {
+    return this.data.tooltipOn;
   }
 
   //GRAPH TYPE
@@ -390,6 +408,7 @@ export class Rule {
   //   return this.data.preserveFormat
   // }
 
+  // MAPPING OPTIONS
 
 
   //############################################################################
@@ -684,7 +703,7 @@ export class Rule {
         if (!!colorOn) {
           shapeData.colorOn = colorOn;
         }
-        this.addShapeMap()._convert(shapeData);
+        this.addShapeMap().import(shapeData);
       });
     }
 
@@ -735,7 +754,7 @@ export class Rule {
           textData.textOn = textOn;
         }
 
-        this.addTextMap()._convert(textData);
+        this.addTextMap().import(textData);
       });
     }
 
@@ -785,7 +804,7 @@ export class Rule {
         if (!!linkOn) {
           linkData.linkOn = linkOn;
         }
-        this.addLinkMap()._convert(linkData);
+        this.addLinkMap().import(linkData);
       });
     }
 
@@ -824,7 +843,7 @@ export class Rule {
 
     if (maps !== undefined && maps != null && maps.length > 0) {
       maps.forEach((eventData: gf.TEventMapData) => {
-        this.addEventMap()._convert(eventData);
+        this.addEventMap().import(eventData);
       });
     }
 
@@ -1554,11 +1573,22 @@ export class Rule {
     datas.push(map.getData());
   }
 
-  _removeMaps(index: number, type: gf.TTypeMap) {
+  _removeMaps(map: number| ObjectMap, type: gf.TTypeMap) {
     const maps = this._getMapsObjType(type);
     const datas = this._getMapsDatList(type);
-    maps.splice(index, 1);
-    datas.splice(index, 1);
+    let index = -1;
+    if(typeof map !== 'number') {
+      index = maps.indexOf(map);
+    }
+    if(typeof map === 'number') {
+      index = map;
+    }
+    if(index !== -1) {
+      maps[index].events.disconnect('mapping_changed', this);
+      maps[index].free()
+      maps.splice(index, 1);
+      datas.splice(index, 1);
+    }
   }
 
   //
@@ -1575,6 +1605,7 @@ export class Rule {
     const m = new ShapeMap(this.$gf, pattern, data);
     m.setOptions(this.getShapeMapOptions());
     this._addMaps(m);
+    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
     return m;
   }
 
@@ -1586,7 +1617,7 @@ export class Rule {
    * @memberof Rule
    */
   cloneShapeMap(initial: ShapeMap): ShapeMap {
-    return this.addShapeMap()._convert(initial);
+    return this.addShapeMap().import(initial);
   }
 
   /**
@@ -1596,8 +1627,8 @@ export class Rule {
    * @param {number} index
    * @memberof Rule
    */
-  removeShapeMap(index: number): this {
-    this._removeMaps(index, 'shape');
+  removeShapeMap(map: number | ShapeMap): this {
+    this._removeMaps(map, 'shape');
     return this;
   }
 
@@ -1653,6 +1684,7 @@ export class Rule {
     const m = new TextMap(this.$gf, pattern, data);
     m.setOptions(this.getTextMapOptions());
     this._addMaps(m);
+    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
     return m;
   }
 
@@ -1664,17 +1696,17 @@ export class Rule {
    * @memberof Rule
    */
   cloneTextMap(initial: TextMap): TextMap {
-    return this.addTextMap()._convert(initial);
+    return this.addTextMap().import(initial);
   }
 
   /**
    * Remove TextMap
    *
-   * @param {number} index
+   * @param {number} map
    * @memberof Rule
    */
-  removeTextMap(index: number) {
-    this._removeMaps(index, 'text');
+  removeTextMap(map: number| TextMap): this {
+    this._removeMaps(map, 'text');
     return this;
   }
 
@@ -1734,6 +1766,7 @@ export class Rule {
     const m = new EventMap(this.$gf, pattern, data);
     m.setOptions(this.getEventMapOptions());
     this._addMaps(m);
+    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
     return m;
   }
 
@@ -1745,10 +1778,10 @@ export class Rule {
    * @memberof Rule
    */
   cloneEventMap(map: EventMap): EventMap {
-    return this.addEventMap()._convert(map.getData());
+    return this.addEventMap().import(map.getData());
   }
 
-  removeEventMap(index: number): this {
+  removeEventMap(index: number|EventMap): this {
     this._removeMaps(index, 'event');
     return this;
   }
@@ -1786,6 +1819,7 @@ export class Rule {
     m.setOptions(this.getLinkMapOptions());
     // m.import(data);
     this._addMaps(m);
+    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
     return m;
   }
 
@@ -1797,7 +1831,7 @@ export class Rule {
    * @memberof Rule
    */
   cloneLinkMap(initial: LinkMap): LinkMap {
-    return this.addLinkMap()._convert(initial);
+    return this.addLinkMap().import(initial);
   }
 
   /**
@@ -1806,7 +1840,7 @@ export class Rule {
    * @param {number} index
    * @memberof Rule
    */
-  removeLinkMap(index: number): this {
+  removeLinkMap(index: number|LinkMap): this {
     this._removeMaps(index, 'link');
     return this;
   }
@@ -2487,6 +2521,11 @@ export class Rule {
 
   private _on_TH_threshold_changed() {
     _log('📬', this.constructor.name, '_on_TH_threshold_changed');
+    this.change();
+  }
+
+  private _on_mapping_mapping_changed() {
+    _log('📬', this.constructor.name, '_on_mapping_mapping_changed');
     this.change();
   }
 }
