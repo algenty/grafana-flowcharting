@@ -54,6 +54,7 @@ export class MetricHandler {
     $GF.events.connect('data_updated', this, this._on_global_data_updated.bind(this));
     $GF.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     $GF.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
+    // $GF.events.connect('editmode_closed', this, this._on_editmode_closed.bind(this));
     return this;
   }
 
@@ -65,8 +66,10 @@ export class MetricHandler {
       m.free();
       this.events.emit('metric_deleted', m);
     });
-    // $GF.events.disconnect('data_updated', this);
+    $GF.events.disconnect('data_updated', this);
     $GF.events.disconnect('debug_asked', this);
+    $GF.events.disconnect('panel_closed', this);
+    $GF.events.disconnect('editmode_closed', this);
     this.clear();
     return this;
   }
@@ -259,9 +262,15 @@ export class MetricHandler {
   //### EVENTS
   //##############################################################
   private _on_global_data_updated(dataList: any) {
+    _log('📬', this.constructor.name, '_on_global_data_updated');
     this.setDataList(dataList);
     this.change();
   }
+
+  // private _on_editmode_closed(dataList: any) {
+  //   _log('📬', this.constructor.name, '_on_editmode_closed');
+  //   this.change();
+  // }
 
   private _on_global_debug_asked() {
     _log('🗃️', this.constructor.name, this);

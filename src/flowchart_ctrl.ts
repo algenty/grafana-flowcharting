@@ -36,6 +36,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   changedSource: boolean;
   changedData: boolean;
   changedOptions: boolean;
+  dataList: any;
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
@@ -80,9 +81,9 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     _log('INIT DATA', Object.assign({},this.panel));
 
     // If save in edited mode
-    if (!this.isEditingMode() && this.isEditedMode()) {
-      this.editModeFalse();
-    }
+    // if (!this.isEditingMode() && this.isEditedMode()) {
+    //   this.editModeFalse();
+    // }
 
     // Force refresh since 7.x
     window.setTimeout(() => {
@@ -109,15 +110,24 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //### INIT/UPDATE/CHANGE/FREE/CLEAR (DO NOT NAME INIT, Called by angular by default)
   //############################################################################
   init_ctrl() {
+    console.log("🚀 ~ file: flowchart_ctrl.ts ~ line 112 ~ FlowchartCtrl ~ init_ctrl ~ init_ctrl", this.uid)
     this._eventsConnect();
     this.init_handlers();
   }
 
   free() {
-    this._eventsDisconnect();
+    this.free_ctrl()
   }
 
-  change() {}
+  free_ctrl() {
+    this._eventsDisconnect();
+    this.free_handlers();
+  }
+
+  change() {
+    this.free_ctrl();
+    this.init_ctrl();
+  }
 
   //############################################################################
   //### LOGIC
@@ -125,6 +135,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   _eventsConnect() {
     this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     this.$gf.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
+    this.$gf.events.connect('editmode_closed', this, this._on_global_editmode_closed.bind(this));
   }
 
   _eventsDisconnect() {
@@ -171,6 +182,15 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     }
   }
 
+  free_handlers() {
+    this.metricHandler?.free();
+    this.rulesHandler?.free();
+    this.flowchartHandler?.free();
+    this.metricHandler = undefined;
+    this.rulesHandler = undefined;
+    this.flowchartHandler = undefined;
+  }
+
   /**
    * Return data with default value
    *
@@ -196,15 +216,15 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //### EVENTS
   //###########################################################################
   _on_grafana_mode_edited() {
-    _log('📬', this.constructor.name, '_on_grafana_mode_edited');
+    _log('📬', this.constructor.name, this.uid,`isEditing=${this.panel.isEditing }`,'_on_grafana_mode_edited');
     this.addEditorTab('Flowcharts', flowchartsOptionsTab, 2);
     this.addEditorTab('Rules', rulesOptionsTab, 3);
     this.addEditorTab('Inspect', inspectOptionsTab, 4);
-    this.editModeTrue();
+    this.panel.edited = true;
   }
 
   _on_grafana_TearDown() {
-    _log('📬', this.constructor.name, '_on_TearDown');
+    _log('📬', this.constructor.name, this.uid, `isEditing=${this.panel.isEditing }`, '_on_TearDown');
     this.$gf.events.emit('panel_closed');
   }
 
@@ -254,21 +274,17 @@ class FlowchartCtrl extends MetricsPanelCtrl {
 
   private _on_grafana_rendered() {
     _log('📬', this.constructor.name, '_on_grafana_rendered');
-    if (this.flowchartHandler && this.rulesHandler && this.isEditedMode() && !this.isEditingMode()) {
-      this.notify('Configuration updating...');
-      this.editModeFalse();
-      // const panelClone = _cloneDeep(this.panel);
-      this.flowchartHandler.free();
-      this.flowchartHandler = undefined;
-      this.rulesHandler.free();
-      this.flowchartHandler = undefined;
-      this.init_handlers();
+    if(this.panel.edited && ! this.panel.isEditing) {
+      delete this.panel.edited;
+      this.$gf.events.emit('editmode_closed');
+    } else {
+      this.flowchartHandler?.update();
     }
-    this.flowchartHandler?.update();
   }
 
   private _on_grafana_data_received(dataList: any) {
     _log('📬', this.constructor.name, '_on_grafana_data_received');
+    this.dataList = dataList;
     this.$gf.events.emit('data_updated', dataList);
   }
 
@@ -287,24 +303,14 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.free();
   }
 
-  //
-  // Functions ----------------------------------------------------------------
-  //
-  // For Grafana 7, who to know if edit mode is actived
-  editModeTrue() {
-    this.panel.editedFlag = true;
-  }
-
-  editModeFalse() {
-    this.panel.editedFlag = false;
-  }
-
-  isEditedMode(): boolean {
-    return this.panel.editedFlag;
-  }
-
-  isEditingMode(): boolean {
-    return this.panel.isEditing === true;
+  private async _on_global_editmode_closed() {
+    _log('📬', this.constructor.name, '_on_global_editmode_closed');
+    this.notify('Configuration updating...');
+    this.free_ctrl();
+    this.init_ctrl();
+    await new Promise((r) => setTimeout(r, 100));
+    this.$gf.events.emit('data_updated', this.dataList);
+    return;
   }
 
   link(scope: any, elem: any, attrs: any, ctrl: any) {
@@ -322,15 +328,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.notify('Load configuration');
     GFDrawio.init();
     this.init_ctrl();
-    //   .then( ()=> {
-    //   this.init_ctrl();
-    // })
-    // XGraph.initMxGraphLib().then(() => {
-    //   this.init_ctrl();
-    // });
-
-    // Versions
-    // this.panel.newFlag = false;
     if (this.panel.version !== GFPlugin.getVersion()) {
       //TODO : Reactive this
       // this.notify(
@@ -340,8 +337,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       // );
     }
     this.panel.version = this.version;
-    // this.onRender();
-    // this.flowchartHandler?.refresh();
   }
 
   isMouseInPanel(): boolean {
