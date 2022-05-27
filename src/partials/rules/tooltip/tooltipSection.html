@@ -35,15 +35,14 @@
         </span>
       </info-popover>
     </label>
-    <!-- TODO : Finish convert -->
     <div class="gf-form-select-wrapper width-12">
-      <select class="gf-form-input" ng-model="rule.getData().tpDirection"
-        ng-options="c.value as c.text for c in editor.tpDirection" ng-change="editor.onRulesChange()"></select>
+      <select class="gf-form-input" ng-model="rule.tpDirection"
+        ng-options="c.value as c.text for c in editor.tpDirection"></select>
     </div>
   </div>
   <gf-form-switch label="Color with state" class="gf-form" label-class="width-10"
-    tooltip="Color values in tooltip with state/thresholds colors" checked="rule.getData().tooltipColors"
-    ng-if="rule.getData().tooltip">
+    tooltip="Color values in tooltip with state/thresholds colors" checked="rule.tooltipColors"
+    ng-if="rule.tooltip">
   </gf-form-switch>
 </div>
 <div class="section gf-form-group">
@@ -54,6 +53,6 @@
     </info-popover>
   </h5>
   <gf-form-switch class="gf-form" label-class="width-10" tooltip="Add metadatas into the tooltip" label="Display metadatas"
-    checked="rule.getData().tpMetadata" on-change="editor.onRulesChange()">
+    checked="rule.tpMetadata">
   </gf-form-switch>
 </div>

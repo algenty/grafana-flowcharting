@@ -107,7 +107,7 @@ export class Rule {
   private _eventsDisconnect() {
     this.$gf?.metricHandler?.events.connect('metric_created', this, this._on_metricHandler_metric_created.bind(this));
     this.$gf?.metricHandler?.events.connect('metric_deleted', this, this._on_metricHandler_metric_deleted.bind(this));
-    this.getThresholds().map(async (th)=>{
+    this.getThresholds().map(async (th) => {
       th.events.disconnect('threshold_changed', this);
     });
     return this;
@@ -243,7 +243,7 @@ export class Rule {
     }
   }
   get metricPattern() {
-      return this.data.pattern;
+    return this.data.pattern;
   }
 
   //METRIC TABLE
@@ -251,7 +251,7 @@ export class Rule {
     if (!v || v.length === 0 || this.data.refId === v) {
       return;
     }
-    this.data.refId = v
+    this.data.refId = v;
     this.change();
   }
   get metricTable() {
@@ -270,7 +270,6 @@ export class Rule {
     this.change();
   }
 
-
   //HIDDEN
   set hidden(v: boolean) {
     if (this.data.hidden !== v) {
@@ -282,7 +281,7 @@ export class Rule {
     return this.data.hidden;
   }
 
-  //TOOLTIP
+  // ENABLE TOOLTIP
   set tooltip(v: boolean) {
     if (this.data.tooltip !== v) {
       this.data.tooltip = v;
@@ -292,6 +291,7 @@ export class Rule {
   get tooltip(): boolean {
     return this.data.tooltip;
   }
+  // DISPLAY LABEL IN TOOLTIP
   set tooltipLabel(v: string) {
     if (this.data.tooltipLabel !== v) {
       this.data.tooltipLabel = v;
@@ -301,6 +301,7 @@ export class Rule {
   get tooltipLabel(): string {
     return this.data.tooltipLabel;
   }
+  // ENABLE TOOLTIP GRAPH
   set tooltipOn(v: gf.TTooltipOnKeys) {
     if (!v || v.length === 0 || this.data.tooltipOn !== v) {
       this.data.tooltipOn = v;
@@ -309,6 +310,26 @@ export class Rule {
   }
   get tooltipOn(): gf.TTooltipOnKeys {
     return this.data.tooltipOn;
+  }
+  // DISPLAY METADATA IN TOOLTIP
+  set tooltipMetadata(v: boolean) {
+    if (v !== this.data.tpMetadata) {
+      this.data.tpMetadata = v;
+      this.change();
+    }
+  }
+  get tooltipMetadata(): boolean {
+    return this.data.tpMetadata;
+  }
+  // COLORS TOOLTIP WITH COLOR
+  set tooltipColors(v: boolean) {
+    if (v !== this.data.tooltipColors) {
+      this.data.tooltipColors = v;
+      this.change();
+    }
+  }
+  get tooltipColors(): boolean {
+    return this.data.tooltipColors;
   }
 
   //GRAPH TYPE
@@ -321,6 +342,15 @@ export class Rule {
   get tooltipForGraph() {
     return this.data.tpGraph;
   }
+  set graphDirection(v: gf.TDirectionKeys) {
+    if (!v || v.length === 0 || this.data.tpDirection !== v) {
+      this.data.tpDirection = v;
+      this.change();
+    }
+  }
+  get graphDirection(): gf.TDirectionKeys {
+    return this.data.tpDirection;
+  }
 
   //AGGREGATION
   set aggregation(v: gf.TAggregationKeys) {
@@ -330,9 +360,8 @@ export class Rule {
     this.data.aggregation = v;
   }
   get aggregation(): gf.TAggregationKeys {
-    return this.data.aggregation
+    return this.data.aggregation;
   }
-
 
   // DATA TYPE (number, string or date)
   set dataType(v: gf.TValueTypeKeys) {
@@ -343,34 +372,34 @@ export class Rule {
     this.change();
   }
   get dataType(): gf.TValueTypeKeys {
-    return this.data.type
+    return this.data.type;
   }
 
   // DATA UNIT
   set dataUnit(v: string) {
-    if (!v || v.length === 0 ||this.data.type === v) {
+    if (!v || v.length === 0 || this.data.type === v) {
       return;
     }
     this.data.unit = v;
     this.change();
   }
   get dataUnit(): string {
-    return this.data.unit
+    return this.data.unit;
   }
 
   // DATA DECIMALS
   set dataDecimals(v: number) {
-    if (!v ) {
+    if (!v) {
       v = 0;
     }
-    if( v === this.data.decimals ) {
+    if (v === this.data.decimals) {
       return;
     }
     this.data.decimals = v;
     this.change();
   }
   get dataDecimals(): number {
-    return this.data.decimals
+    return this.data.decimals;
   }
 
   //DATE FORMAT
@@ -382,7 +411,7 @@ export class Rule {
     this.change();
   }
   get dateFormat(): gf.TDateFormatKeys {
-    return this.data.dateFormat
+    return this.data.dateFormat;
   }
 
   //SANITIZE
@@ -393,7 +422,7 @@ export class Rule {
     this.data.sanitize = v;
   }
   get sanitize() {
-    return this.data.sanitize
+    return this.data.sanitize;
   }
 
   // PRESERVE HTML FOMAT
@@ -409,7 +438,6 @@ export class Rule {
   // }
 
   // MAPPING OPTIONS
-
 
   //############################################################################
   //### CONVERT/MIGRATION
@@ -522,14 +550,22 @@ export class Rule {
       let j = 0;
       obj.colors.forEach((cl: string | undefined) => {
         if (i === 0) {
-          this._addNumberThreshold(i++, cl).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+          this._addNumberThreshold(i++, cl).events.connect(
+            'threshold_changed',
+            this,
+            this._on_TH_threshold_changed.bind(this)
+          );
           // this.addThreshold(i++, cl)
         } else {
           let th = obj.thresholds[j++];
           if (typeof th === 'string' && th.length > 0) {
             th = parseFloat(th);
           }
-          this._addNumberThreshold(i++, cl, th).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+          this._addNumberThreshold(i++, cl, th).events.connect(
+            'threshold_changed',
+            this,
+            this._on_TH_threshold_changed.bind(this)
+          );
           // this.addThreshold(i++,cl,th)
         }
       });
@@ -538,7 +574,9 @@ export class Rule {
         let th: gf.TTHNumberData[] = obj.numberTHData;
         if (th !== undefined && th != null && th.length > 0) {
           th.forEach((thdata: gf.TTHNumberData) => {
-            this._addNumberThreshold().import(thdata).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));;
+            this._addNumberThreshold()
+              .import(thdata)
+              .events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
             // this.addThreshold().import(thdata);
           });
         }
@@ -546,9 +584,21 @@ export class Rule {
     }
     // }
     if (this.numberTH.length === 0) {
-      this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
-      this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
-      this._addNumberThreshold(2, 'rgba(50, 172, 45, 0.97)', 80).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+      this._addNumberThreshold(0, 'rgba(245, 54, 54, 0.9)', 0).events.connect(
+        'threshold_changed',
+        this,
+        this._on_TH_threshold_changed.bind(this)
+      );
+      this._addNumberThreshold(1, 'rgba(237, 129, 40, 0.89)', 50).events.connect(
+        'threshold_changed',
+        this,
+        this._on_TH_threshold_changed.bind(this)
+      );
+      this._addNumberThreshold(2, 'rgba(50, 172, 45, 0.97)', 80).events.connect(
+        'threshold_changed',
+        this,
+        this._on_TH_threshold_changed.bind(this)
+      );
     }
     /******* END THRESHOLD NUMBER **********/
 
@@ -571,13 +621,21 @@ export class Rule {
       let j = 0;
       obj.colors.forEach((cl: string | undefined) => {
         if (i === 0) {
-          this._addStringThreshold(i++, cl).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+          this._addStringThreshold(i++, cl).events.connect(
+            'threshold_changed',
+            this,
+            this._on_TH_threshold_changed.bind(this)
+          );
         } else {
           let th = stringTH[j++];
           if (typeof th === 'number') {
             th = th.toString();
           }
-          this._addStringThreshold(i++, cl, th).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+          this._addStringThreshold(i++, cl, th).events.connect(
+            'threshold_changed',
+            this,
+            this._on_TH_threshold_changed.bind(this)
+          );
         }
       });
     } else {
@@ -585,7 +643,9 @@ export class Rule {
         let th: gf.TTHStringData[] = obj.stringTHData;
         if (th !== undefined && th != null && th.length > 0) {
           th.forEach((thdata: gf.TTHStringData) => {
-            this._addStringThreshold().import(thdata).events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+            this._addStringThreshold()
+              .import(thdata)
+              .events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
           });
         }
       }
@@ -593,17 +653,41 @@ export class Rule {
     // }
 
     if (this.stringTH.length === 0) {
-      this._addStringThreshold(0, 'rgba(245, 54, 54, 0.9)', '/.*/').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
-      this._addStringThreshold(1, 'rgba(237, 129, 40, 0.89)', '/.*warning.*/').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
-      this._addStringThreshold(2, 'rgba(50, 172, 45, 0.97)', '/.*(success|ok).*/').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+      this._addStringThreshold(0, 'rgba(245, 54, 54, 0.9)', '/.*/').events.connect(
+        'threshold_changed',
+        this,
+        this._on_TH_threshold_changed.bind(this)
+      );
+      this._addStringThreshold(1, 'rgba(237, 129, 40, 0.89)', '/.*warning.*/').events.connect(
+        'threshold_changed',
+        this,
+        this._on_TH_threshold_changed.bind(this)
+      );
+      this._addStringThreshold(2, 'rgba(50, 172, 45, 0.97)', '/.*(success|ok).*/').events.connect(
+        'threshold_changed',
+        this,
+        this._on_TH_threshold_changed.bind(this)
+      );
     }
     /******* END THRESHOLD STRING **********/
 
     /******* BEGIN THRESHOLD DATE **********/
     if (this.dateTH.length === 0) {
-      this._addDateThreshold(0, 'rgba(245, 54, 54, 0.9)', '0d').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
-      this._addDateThreshold(1, 'rgba(237, 129, 40, 0.89)', '-1d').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
-      this._addDateThreshold(2, 'rgba(50, 172, 45, 0.97)', '-1w').events.connect('threshold_changed', this, this._on_TH_threshold_changed.bind(this));
+      this._addDateThreshold(0, 'rgba(245, 54, 54, 0.9)', '0d').events.connect(
+        'threshold_changed',
+        this,
+        this._on_TH_threshold_changed.bind(this)
+      );
+      this._addDateThreshold(1, 'rgba(237, 129, 40, 0.89)', '-1d').events.connect(
+        'threshold_changed',
+        this,
+        this._on_TH_threshold_changed.bind(this)
+      );
+      this._addDateThreshold(2, 'rgba(50, 172, 45, 0.97)', '-1w').events.connect(
+        'threshold_changed',
+        this,
+        this._on_TH_threshold_changed.bind(this)
+      );
     }
     /******* END THRESHOLD DATE **********/
 
@@ -1101,16 +1185,16 @@ export class Rule {
    * @memberof Rule
    */
   addThreshold(index?: number, color?: string, value?: any) {
-    let th: ObjectTH
+    let th: ObjectTH;
     switch (this.data.type) {
       case 'number':
         th = this._addNumberThreshold(index, color, value);
         break;
       case 'string':
-        th =  this._addStringThreshold(index, color, value);
+        th = this._addStringThreshold(index, color, value);
         break;
       case 'date':
-        th =  this._addDateThreshold(index, color, value);
+        th = this._addDateThreshold(index, color, value);
         break;
       default:
         throw new Error('Type of threshold unknown : ' + this.data.type);
@@ -1573,19 +1657,19 @@ export class Rule {
     datas.push(map.getData());
   }
 
-  _removeMaps(map: number| ObjectMap, type: gf.TTypeMap) {
+  _removeMaps(map: number | ObjectMap, type: gf.TTypeMap) {
     const maps = this._getMapsObjType(type);
     const datas = this._getMapsDatList(type);
     let index = -1;
-    if(typeof map !== 'number') {
+    if (typeof map !== 'number') {
       index = maps.indexOf(map);
     }
-    if(typeof map === 'number') {
+    if (typeof map === 'number') {
       index = map;
     }
-    if(index !== -1) {
+    if (index !== -1) {
       maps[index].events.disconnect('mapping_changed', this);
-      maps[index].free()
+      maps[index].free();
       maps.splice(index, 1);
       datas.splice(index, 1);
     }
@@ -1705,7 +1789,7 @@ export class Rule {
    * @param {number} map
    * @memberof Rule
    */
-  removeTextMap(map: number| TextMap): this {
+  removeTextMap(map: number | TextMap): this {
     this._removeMaps(map, 'text');
     return this;
   }
@@ -1781,7 +1865,7 @@ export class Rule {
     return this.addEventMap().import(map.getData());
   }
 
-  removeEventMap(index: number|EventMap): this {
+  removeEventMap(index: number | EventMap): this {
     this._removeMaps(index, 'event');
     return this;
   }
@@ -1840,7 +1924,7 @@ export class Rule {
    * @param {number} index
    * @memberof Rule
    */
-  removeLinkMap(index: number|LinkMap): this {
+  removeLinkMap(index: number | LinkMap): this {
     this._removeMaps(index, 'link');
     return this;
   }
@@ -2402,21 +2486,6 @@ export class Rule {
     return value;
   }
 
-  // _defaultValueFormatter(value: any) {
-  //   if (value === null || value === void 0 || value === undefined) {
-  //     return '';
-  //   }
-
-  //   if (_isArray(value)) {
-  //     value = value.join(', ');
-  //   }
-
-  //   if (this.data.sanitize) {
-  //     return this.$sanitize(value);
-  //   }
-  //   return _escape(value);
-  // }
-
   $sanitize(value: any) {
     throw new Error('Method not implemented.');
   }
@@ -2434,18 +2503,6 @@ export class Rule {
         (match[2] ? +match[2] : 0)
     );
   }
-
-
-  // updateMetrics() {
-  //   const metrics = this.ctrl.metricHandler?.getMetrics();
-  //   this.metrics.clear();
-  //   metrics?.forEach(metric => {
-  //     if (this.matchMetric(metric)) {
-  //       this.metrics.set(metric.uid, metric);
-  //     }
-  //   });
-  //   this.onRefreshed();
-  // }
 
   initCycle(): this {
     this.highestLevel = -1;
@@ -2477,24 +2534,6 @@ export class Rule {
     this.metrics.clear();
     return this;
   }
-
-  // updateMetricList(metric: ObjectMetric): this {
-  //   if (metric !== null && metric !== undefined) {
-  //     if (this.matchMetric(metric)) {
-  //       this.metrics.set(metric.uid, metric);
-  //     } else {
-  //       this.metrics.delete(metric.uid);
-  //     }
-  //   }
-  //   // this.onRefreshed();
-  //   return this;
-  // }
-
-  // removeMetric(metric: ObjectMetric) {
-  //   if (metric !== null && metric !== undefined) {
-  //     this.metrics.delete(metric.uid);
-  //   }
-  // }
 
   hasMetric(metric: ObjectMetric): boolean {
     return this.metrics.has(metric.uid);
