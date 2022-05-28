@@ -12,7 +12,6 @@ import { XCell } from 'cell_class';
  */
 export class TooltipHandler {
   timeFormat = 'YYYY-MM-DD HH:mm:ss';
-  // mxcell: mxCell;
   checked = false;
   metrics: Set<MetricTooltip>;
   metadata: MetadataTooltip | null = null;

@@ -190,7 +190,7 @@ export class State {
           let cellValue = this._xcell.getDefaultValues(mapOptions);
           shapeMaps.forEach((shape) => {
             let k = shape.data.style;
-            if (!shape.isHidden() && shape.match(cellValue, mapOptions, this._variables)) {
+            if (!shape.hidden && shape.match(cellValue, mapOptions, this._variables)) {
               let v: any = color;
               if (shape.isEligible(level)) {
                 matchedRule = true;
@@ -219,7 +219,7 @@ export class State {
           cellValue = this._xcell.getDefaultValues(mapOptions);
           textMaps.forEach((text) => {
             const k = 'label';
-            if (!text.isHidden() && text.match(cellValue, mapOptions, this._variables)) {
+            if (!text.hidden && text.match(cellValue, mapOptions, this._variables)) {
               if (text.isEligible(level)) {
                 matchedRule = true;
                 this._matched = true;
@@ -235,7 +235,7 @@ export class State {
           cellValue = this._xcell.getDefaultValues(mapOptions);
           eventMaps.forEach((event) => {
             const k = event.data.style;
-            if (!event.isHidden() && event.match(cellValue, mapOptions, this._variables)) {
+            if (!event.hidden && event.match(cellValue, mapOptions, this._variables)) {
               if (event.isEligible(level)) {
                 matchedRule = true;
                 this._matched = true;
@@ -250,7 +250,7 @@ export class State {
           cellValue = this._xcell.getDefaultValues(mapOptions);
           linkMaps.forEach((link) => {
             const k = 'link';
-            if (!link.isHidden() && link.match(cellValue, mapOptions, this._variables)) {
+            if (!link.hidden && link.match(cellValue, mapOptions, this._variables)) {
               if (link.isEligible(level)) {
                 matchedRule = true;
                 this._matched = true;

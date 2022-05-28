@@ -2,7 +2,7 @@
 // jest.mock('grafana/app/core/time_series2');
 // jest.mock('grafana/app/plugins/sdk');
 
-import { $GF, GFCONSTANT } from '../src/globals_class';
+import { $GF } from '../src/globals_class';
 import { Rule } from '../src/rule_class';
 
 const $scope = require('$scope');
@@ -16,7 +16,6 @@ const ctrl = {
 const $gf = $GF.create($scope, templateSrv, dashboard, ctrl);
 
 describe('Rule', () => {
-
   describe('New', () => {
     let data;
     let rule;
@@ -91,11 +90,11 @@ describe('Rule', () => {
   describe('Text', () => {
     let data, $gf, rule;
     const pattern = '/.*Toto.*/';
-    beforeEach(() =>{
+    beforeEach(() => {
       data = Rule.getDefaultData();
       $gf = $GF.create($scope, templateSrv, dashboard, ctrl);
       rule = new Rule($gf, '/.*/', data);
-    })
+    });
     test('addshape & remove', () => {
       rule = new Rule($gf, '/.*/', data);
       rule.addTextMap(pattern);
@@ -121,11 +120,11 @@ describe('Rule', () => {
 
   describe('Link', () => {
     let data, $gf, rule, pattern;
-    beforeEach(() =>{
+    beforeEach(() => {
       data = Rule.getDefaultData();
       rule = new Rule($gf, '/.*/', data);
       pattern = '/.*Toto.*/';
-    })
+    });
     test('addshape & remove', () => {
       rule.addLinkMap(pattern);
       expect(rule.getLinkMaps().length).toBe(1);
@@ -148,10 +147,10 @@ describe('Rule', () => {
 
   describe('ValueMap', () => {
     let data, rule;
-    beforeEach(() =>{
+    beforeEach(() => {
       data = Rule.getDefaultData();
       rule = new Rule($gf, '/.*/', data);
-    })
+    });
     test('addshape & remove', () => {
       const rule = new Rule($gf, '/.*/', data);
       rule.data.mappingType = 1;
@@ -175,10 +174,10 @@ describe('Rule', () => {
 
   describe('RangeMap', () => {
     let data, rule;
-    beforeEach(() =>{
+    beforeEach(() => {
       data = Rule.getDefaultData();
       rule = new Rule($gf, '/.*/', data);
-    })
+    });
     test('addshape & remove', () => {
       rule.data.mappingType = 2;
       rule.data.type = 'string';
@@ -211,8 +210,8 @@ describe('Rule', () => {
   });
 
   describe('Text replace', () => {
-    let data, rule, text, patternText, formattedValue, tm
-    beforeEach(() =>{
+    let data, rule, text, patternText, formattedValue, tm;
+    beforeEach(() => {
       data = Rule.getDefaultData();
       rule = new Rule($gf, '/.*/', data);
       text = 'This is my value';
@@ -228,6 +227,20 @@ describe('Rule', () => {
       tm.data.textReplace = 'pattern';
       tm.data.textPattern = patternText;
       expect(tm.getReplaceText('This is my value', formattedValue)).toBe('This is my 12.34');
+    });
+  });
+
+  describe.skip('Tooltip', () => {
+    let rule;
+    beforeEach(() => {
+      rule = new Rule($gf, '/.*/', Rule.getDefaultData());
+    });
+    test('Tooltip value', () => {
+      expect(rule.toTooltipize()).toBeFalsy();
+      rule.tooltip = true;
+      rule.tooltipOn = 'wc';
+      expect(rule.toTooltipize(0)).toBeFalsy();
+      expect(rule.toTooltipize(1)).toBeTruthy();
     });
   });
 });

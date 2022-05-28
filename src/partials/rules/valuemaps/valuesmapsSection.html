@@ -1,4 +1,4 @@
-<div class="section gf-form-group" ng-if="rule.getData().type === 'string'">
+<div class="section gf-form-group" ng-if="rule.dataType === 'string'">
     <h5 class="section-heading">Value Mappings</h5>
     <div class="gf-form-group">
       <div class="gf-form">
@@ -6,19 +6,18 @@
           Type
         </span>
         <div class="gf-form-select-wrapper">
-          <select class="gf-form-input width-10" ng-model="rule.getData().mappingType"
-            ng-options="c.value as c.text for c in editor.mappingTypes"
-            ng-change="editor.onRulesChange()"></select>
+          <select class="gf-form-input width-10" ng-model="rule.mappingType"
+            ng-options="c.value as c.text for c in editor.mappingTypes"></select>
         </div>
       </div>
       <!-- MAP TYPE -->
-      <div class="gf-form" ng-show="rule.getData().mappingType === 1">
+      <div class="gf-form" ng-show="rule.mappingType === 1">
         <div ng-include="GFPlugin.getPartialPath() + 'rules/valuemaps/valuesTable.html'">
         </div>
       </div>
       <!-- <div class="gf-form">
         <div class="gf-form-button-row gf-unselectable">
-          <button class="btn btn-secondary btn-small" ng-click="rule.addValueMap() && editor.onRulesChange();"
+          <button class="btn btn-secondary btn-small" ng-click="rule.addValueMap()"
             title="Add value mapping">
             <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
               <path fill="currentColor"
@@ -30,13 +29,13 @@
       </div> -->
 
       <!-- RANGE TYPE -->
-      <div class="gf-form" ng-show="rule.getData().mappingType === 2">
+      <div class="gf-form" ng-show="rule.mappingType === 2">
         <div ng-include="GFPlugin.getPartialPath() + 'rules/valuemaps/rangesTable.html'">
         </div>
       </div>
-      <!-- <div class="gf-form" ng-show="rule.getData().mappingType === 2">
+      <div class="gf-form" ng-show="rule.getData().mappingType === 2">
         <div class="gf-form-button-row gf-unselectable">
-          <button class="btn btn-secondary btn-small" ng-click="rule.addRangeMap() && editor.onRulesChange();"
+          <button class="btn btn-secondary btn-small" ng-click="rule.addRangeMap()"
             title="Add range mapping">
             <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
               <path fill="currentColor"
@@ -45,6 +44,6 @@
             &nbsp;Add range mapping
           </button>
         </div>
-      </div> -->
+      </div>
     </div>
   </div>

@@ -87,10 +87,10 @@
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN2 = 'value';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
                             ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseenter="elt.displayEdit[CN2] = true;"
-                            ng-style="{'width' : editor.valuesTable.getWidth(CN2)}" ng-attr-title="{{elt.getData().value}}"
+                            ng-style="{'width' : editor.valuesTable.getWidth(CN2)}" ng-attr-title="{{elt.value}}"
                             ng-dblclick="elt.inEdit[CN2] = true;$GF.setFocus( elt.uid + '-' + CN2 )">
                             <div class="gf-table-content" style="text-align: left" ng-show="elt.inEdit[CN2] !== true">
-                                {{elt.getData().value}}
+                                {{elt.value}}
                             </div>
                             <div ng-show="elt.displayEdit[CN2] === true && elt.inEdit[CN2] !== true"
                                 ng-click="elt.inEdit[CN2] = true;$GF.setFocus( elt.uid + '-' + CN2 )" title="Edit"
@@ -98,25 +98,25 @@
                             </div>
                             <input ng-show="elt.inEdit[CN2] === true" style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{elt.uid + '-' + CN2 }}" title="Number or text to replace"
-                                placeholder="Number/text" ng-attr-title="{{Apply this color "
+                                placeholder="Number/text"
                                 class="gf-form-input"
-                                ng-model="elt.getData().value"
+                                ng-model="elt.value"
                                 ng-blur="elt.inEdit[CN2] = false;" ng-model-onblur />
                         </div>
                         <!-- TEXT -->
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable"
                             ng-init="CN3 = 'text';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
                             ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseenter="elt.displayEdit[CN3] = true;"
-                            ng-style="{'width' : editor.valuesTable.getWidth(CN3)}" ng-attr-title="{{elt.getData().text}}"
+                            ng-style="{'width' : editor.valuesTable.getWidth(CN3)}" ng-attr-title="{{elt.text}}"
                                 ng-dblclick="elt.inEdit[CN3] = true;$GF.setFocus( elt.uid + '-' + CN3 )">
                             <div class="gf-table-content" style="text-align: left" ng-show="elt.inEdit[CN3] !== true">
-                                {{elt.getData().text}}
+                                {{elt.text}}
                             </div>
                             <div ng-show="elt.displayEdit[CN3] === true && elt.inEdit[CN3] !== true"
                                 ng-click="elt.inEdit[CN3] = true;$GF.setFocus( elt.uid + '-' + CN3 )" title="Edit"
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
-                            <input type="text" class="gf-form-input" ng-model="elt.getData().text" placeholder="Text"
+                            <input type="text" class="gf-form-input" ng-model="elt.text" placeholder="Text"
                                 style="margin-right: 2px;width : 100%" ng-attr-id="{{elt.uid + '-' + CN3 }}"
                                 ng-show="elt.inEdit[CN3] === true" ng-attr-id="{{elt.uid + '-' + CN3}}"
                                 bs-typeahead="editor.getVariables" ng-blur="elt.inEdit[CN3] = false;" ng-model-onblur
@@ -128,17 +128,14 @@
                             ng-style="{'width' : editor.valuesTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
-                                <!-- <div ng-click="rule.addValueMap()" title="Add a new value mapping"
-                                    class="gf-icon-action gf-icon-new">
-                                </div> -->
-                                <div ng-click="elt.isHidden() ? elt.show(): elt.hide();editor.onRulesChange()"
+                                <div ng-click="elt.hidden=!elt.hidden"
                                     title="Hide/Disable" class="gf-icon-action"
-                                    ng-class="{'gf-icon-show': !elt.isHidden(), 'gf-icon-hide': elt.isHidden()}">
+                                    ng-class="{'gf-icon-show': !elt.hidden, 'gf-icon-hide': elt.hidden}">
                                 </div>
-                                <div ng-click="rule.removeValueMap($index);editor.onRulesChange()" title="Delete"
+                                <div ng-click="rule.removeValueMap($index)" title="Delete"
                                     class="gf-icon-action gf-icon-remove">
                                 </div>
-                                <div ng-click="rule.cloneValueMap($index);editor.onRulesChange();" title="Duplicate"
+                                <div ng-click="rule.cloneValueMap($index)" title="Duplicate"
                                     class="gf-icon-action gf-icon-clone">
                                 </div>
                             </div>
