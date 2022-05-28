@@ -358,6 +358,7 @@ export class Rule {
       return;
     }
     this.data.aggregation = v;
+    this.change();
   }
   get aggregation(): gf.TAggregationKeys {
     return this.data.aggregation;
@@ -423,6 +424,18 @@ export class Rule {
   }
   get sanitize() {
     return this.data.sanitize;
+  }
+
+  //getter setter mappingType
+  set mappingType(v: number) {
+    if(v !== this.data.mappingType) {
+      this.data.mappingType = v;
+      this.change();
+    }
+
+  }
+  get mappingType() {
+    return this.data.mappingType;
   }
 
   // PRESERVE HTML FOMAT
@@ -1979,8 +1992,10 @@ export class Rule {
   addValueMap(value?: any, text?: string): ValueMap {
     const data: gf.TValueMapData = ValueMap.getDefaultdata();
     const m = new ValueMap(value, text, data);
+    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
     this.valueMaps.push(m);
     this.data.valueData.push(data);
+    this.change();
     return m;
   }
 
@@ -2002,9 +2017,24 @@ export class Rule {
    * @param {number} index
    * @memberof Rule
    */
-  removeValueMap(index: number) {
+  removeValueMap(map: number | ValueMap): this {
+    let index = -1;
+    if(map instanceof ValueMap) {
+      index = this.valueMaps.indexOf(map);
+    }
+    if(typeof map === 'number') {
+      index = map;
+      map = this.valueMaps[index];
+    }
+    if(index === -1 ) {
+      throw new Error("map is not an instance of ValueMap");
+    }
+    map.events.disconnect('mapping_changed', this);
+    map.free();
     this.data.valueData.splice(index, 1);
     this.valueMaps.splice(index, 1);
+    this.change();
+    return this;
   }
 
   /**
@@ -2043,8 +2073,10 @@ export class Rule {
   addRangeMap(from?: any, to?: any, text?: any): RangeMap {
     const data = RangeMap.getDefaultData();
     const m = new RangeMap(from, to, text, data);
+    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
     this.rangeMaps.push(m);
     this.data.rangeData.push(data);
+    this.change();
     return m;
   }
 
@@ -2066,9 +2098,23 @@ export class Rule {
    * @param {number} index
    * @memberof Rule
    */
-  removeRangeMap(index: number) {
+  removeRangeMap(map: number | RangeMap) {
+    let index = -1;
+    if(map instanceof RangeMap) {
+      index = this.rangeMaps.indexOf(map);
+    }
+    if(typeof map === 'number') {
+      index = map;
+      map = this.rangeMaps[index];
+    }
+    if(index === -1 ) {
+      throw new Error("map is not an instance of RangeMap");
+    }
+    map.events.disconnect('mapping_changed', this);
+    map.free();
     this.data.rangeData.splice(index, 1);
     this.rangeMaps.splice(index, 1);
+    this.change();
   }
 
   /**
@@ -2449,7 +2495,7 @@ export class Rule {
       if (mappingType === 1 && this.valueMaps) {
         for (let i = 0; i < this.valueMaps.length; i += 1) {
           const map = this.valueMaps[i];
-          if (!map.isHidden() && map.match(value)) {
+          if (!map.hidden && map.match(value)) {
             return map.getFormattedText(value);
           }
         }
@@ -2459,7 +2505,7 @@ export class Rule {
       if (mappingType === 2 && this.rangeMaps) {
         for (let i = 0; i < this.rangeMaps.length; i += 1) {
           const map = this.rangeMaps[i];
-          if (!map.isHidden() && map.match(value)) {
+          if (!map.hidden && map.match(value)) {
             return map.getFormattedText(value);
           }
         }

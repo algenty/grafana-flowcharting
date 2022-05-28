@@ -31,13 +31,14 @@ export class MetricHandler {
   //
   // Updates
   //
-  change() {
+  async change() {
     const $GF = this.$gf;
     this.clear();
-    this.dataList.map(async (dl) => {
+    await Promise.all(this.dataList.map(async (dl) => {
       this.addMetric(dl);
-    });
+    }));
     $GF.events.emit('data_processed');
+    return;
   }
 
   update(timestamp?: number): this {

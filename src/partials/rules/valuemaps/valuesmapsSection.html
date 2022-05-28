@@ -6,13 +6,12 @@
           Type
         </span>
         <div class="gf-form-select-wrapper">
-          <select class="gf-form-input width-10" ng-model="rule.getData().mappingType"
-            ng-options="c.value as c.text for c in editor.mappingTypes"
-            ng-change="editor.onRulesChange()"></select>
+          <select class="gf-form-input width-10" ng-model="rule.mappingType"
+            ng-options="c.value as c.text for c in editor.mappingTypes"></select>
         </div>
       </div>
       <!-- MAP TYPE -->
-      <div class="gf-form" ng-show="rule.getData().mappingType === 1">
+      <div class="gf-form" ng-show="rule.mappingType === 1">
         <div ng-include="GFPlugin.getPartialPath() + 'rules/valuemaps/valuesTable.html'">
         </div>
       </div>
@@ -30,7 +29,7 @@
       </div> -->
 
       <!-- RANGE TYPE -->
-      <div class="gf-form" ng-show="rule.getData().mappingType === 2">
+      <div class="gf-form" ng-show="rule.mappingType === 2">
         <div ng-include="GFPlugin.getPartialPath() + 'rules/valuemaps/rangesTable.html'">
         </div>
       </div>

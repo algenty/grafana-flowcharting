@@ -102,7 +102,7 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
   //### ACCESSORS
   //############################################################################
   // PATTERN
-  get ppattern(): string {
+  get pattern(): string {
     return this.data.pattern;
   }
   set pattern(v: string) {
@@ -731,13 +731,54 @@ export class EventMap extends GFMap<gf.TEventMapData> {
 
 class VMAP<VMAPType extends gf.TDefMapData> {
   data: VMAPType;
-  uid: string;
-  hidden = false;
+  uid: string = $GF.genUid(this.constructor.name);
   reduce = true;
+  events: GFEvents<MappingSignals> = GFEvents.create(mappingSignalsArray);
   constructor(data: VMAPType) {
-    this.uid = $GF.genUid(this.constructor.name);
     this.data = data;
+    this.init()
   }
+
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
+  init(): void {
+  }
+
+  change(): void {
+    this.events.emit('mapping_changed', this);
+  }
+
+  free(): void {
+    this.events.clear();
+  }
+
+  //############################################################################
+  //### ACCESSORS GETTERS/SETTERS
+  //############################################################################
+  set hidden(v: boolean) {
+    if( v !== this.data.hidden) {
+      this.data.hidden = v;
+      this.change();
+    }
+  }
+  get hidden(): boolean {
+    return this.data.hidden
+  }
+
+  set text(v: string) {
+    if( v !== this.data.text) {
+      this.data.text = v.trim();
+      this.change();
+    }
+  }
+  get text(): string {
+    return this.data.text ?? '';
+  }
+
+  //############################################################################
+  //### LOGICS
+  //############################################################################
 
   import(obj: any): this {
     if (!!obj.text) {
@@ -759,18 +800,18 @@ class VMAP<VMAPType extends gf.TDefMapData> {
    *
    * @memberof ValueMap
    */
-  show() {
-    this.data.hidden = false;
-  }
+  // show() {
+  //   this.data.hidden = false;
+  // }
 
-  /**
-   * Hide/disable valuemap
-   *
-   * @memberof ValueMap
-   */
-  hide() {
-    this.data.hidden = true;
-  }
+  // /**
+  //  * Hide/disable valuemap
+  //  *
+  //  * @memberof ValueMap
+  //  */
+  // hide() {
+  //   this.data.hidden = true;
+  // }
 
   /**
    * Is hidden/disable
@@ -778,21 +819,41 @@ class VMAP<VMAPType extends gf.TDefMapData> {
    * @returns
    * @memberof ValueMap
    */
-  isHidden() {
-    return this.data.hidden;
-  }
+  // isHidden() {
+  //   return this.data.hidden;
+  // }
 }
 
 export class ValueMap extends VMAP<gf.TValueMapData> {
   // data: gf.TValueMapData;
   constructor(value = '', text = '', data: gf.TValueMapData) {
     super(data);
-    this.data = data;
     this.data.value = value;
     this.data.text = text;
     this.import(data);
   }
 
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
+
+
+  //############################################################################
+  //### ACCESSORS
+  //############################################################################
+  get value(): string {
+    return this.data.value ?? '';
+  }
+  set value(v: string) {
+    if( v !== this.data.value) {
+      this.data.value = v;
+      this.change();
+    }
+  }
+
+  //############################################################################
+  //### LOGICS
+  //############################################################################
   /**
    * Get default data
    *
@@ -876,7 +937,36 @@ export class RangeMap extends VMAP<gf.TRangeMapData> {
     this.data.text = text;
     this.data.hidden = false;
   }
+  //############################################################################
+  //### INIT/UPDATE/CHANGE/FREE
+  //############################################################################
 
+
+  //############################################################################
+  //### ACCESSORS
+  //############################################################################
+  get to(): string {
+    return this.data.to ?? '';
+  }
+  set to(v: string) {
+    if( v !== this.data.to) {
+      this.data.to = v;
+      this.change();
+    }
+  }
+  get from(): string {
+    return this.data.from ?? '';
+  }
+  set from(v: string) {
+    if( v !== this.data.from) {
+      this.data.from = v;
+      this.change();
+    }
+  }
+
+  //############################################################################
+  //### LOGICS
+  //############################################################################
   /**
    * import data from panel
    *
