@@ -98,7 +98,7 @@
                             </div>
                             <input ng-show="elt.inEdit[CN2] === true" style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{elt.uid + '-' + CN2 }}" title="Number or text to replace"
-                                placeholder="Number/text" ng-attr-title="{{Apply this color "
+                                placeholder="Number/text"
                                 class="gf-form-input"
                                 ng-model="elt.value"
                                 ng-blur="elt.inEdit[CN2] = false;" ng-model-onblur />
@@ -128,12 +128,9 @@
                             ng-style="{'width' : editor.valuesTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
-                                <!-- <div ng-click="rule.addValueMap()" title="Add a new value mapping"
-                                    class="gf-icon-action gf-icon-new">
-                                </div> -->
-                                <div ng-click="elt.isHidden() ? elt.show(): elt.hide();editor.onRulesChange()"
+                                <div ng-click="elt.hidden=!elt.hidden"
                                     title="Hide/Disable" class="gf-icon-action"
-                                    ng-class="{'gf-icon-show': !elt.isHidden(), 'gf-icon-hide': elt.isHidden()}">
+                                    ng-class="{'gf-icon-show': !elt.hidden, 'gf-icon-hide': elt.hidden}">
                                 </div>
                                 <div ng-click="rule.removeValueMap($index)" title="Delete"
                                     class="gf-icon-action gf-icon-remove">

@@ -2089,7 +2089,9 @@ export class Rule {
    */
   cloneRangeMap(index: number): RangeMap {
     const data = this.getRangeMap(index).getData();
-    return this.addRangeMap().import(data);
+    const range = this.addRangeMap().import(data);
+    this.change();
+    return range;
   }
 
   /**
