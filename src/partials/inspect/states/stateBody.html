@@ -7,12 +7,13 @@
         <div class="gf-form">
             <label class="gf-form-label width-10">
                 <span>Id</span>
-                <info-popover mode="right-normal">
+                <!-- <info-popover mode="right-normal">
                     <span ng-bind-html="$GF.popover('Enter shape a new Id', 'EVENTS')">
                     </span>
-                </info-popover>
+                </info-popover> -->
             </label>
-            <input type="text" style="margin-right: 2px;" id="{{ state.uid }}" placeholder="Draw.io Id "
+            <span>{{state.xcell.uid}}</span>
+            <!-- <input type="text" style="margin-right: 2px;" id="{{ state.uid }}" placeholder="Draw.io Id "
                 class="gf-form-input width-8" ng-model="state.xcell.mxcell.id" ng-model-onblur
                 title="Enter an id"
                 ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
@@ -21,7 +22,7 @@
                 ng-show="editor.isEdited(state)"
                 title="Restore previous Id" ng-click="editor.undo(state)">
                 <div Class="gf-icon-undo" style="margin-bottom: 7px;margin-right: 2px;"></div>
-            </button>
+            </button> -->
         </div>
         <div class="gf-form">
             <label class="gf-form-label width-10">
@@ -88,7 +89,7 @@
         <div
             class="gf-unselectable"
             style="width: 100px;height: 100px;right: 0px; border: none; left: 0px; top: 0px; bottom: 0px; touch-action: none; overflow: auto; cursor: default;z-index: 1;-webkit-box-sizing:content-box;box-sizing:content-box"
-            ng-attr-id="{{'preview-' + state.xcell.uniqId}}">
+            ng-attr-id="{{'preview-' + state.xcell.uid}}">
         </div>
     </div>
 </div>
