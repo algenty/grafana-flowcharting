@@ -14,7 +14,7 @@ const ctrl = {
 };
 
 // document.body.innerHTML = '<div id="MyContainer">Beer</div>';
-describe('Xgraph class test', async () => {
+describe('Xgraph class test', () => {
   // await loadLibs();
   // const xmlGraph = `<mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
   //   <root>

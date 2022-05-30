@@ -230,7 +230,7 @@ describe('Rule', () => {
     });
   });
 
-  describe.skip('Tooltip', () => {
+  describe('Tooltip', () => {
     let rule;
     beforeEach(() => {
       rule = new Rule($gf, '/.*/', Rule.getDefaultData());

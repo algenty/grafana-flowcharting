@@ -4,7 +4,7 @@ import { readFile } from 'fs';
 import { GFEvents } from 'flowcharting_base';
 const mxcustom = require('mxgraph_custom');
 
-const _DEBUG = true;
+const _DEBUG = false;
 const _log = (...args: unknown[]) => {
   if (_DEBUG) {
     console.log(...args);

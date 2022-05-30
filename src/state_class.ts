@@ -10,7 +10,7 @@ import { GFEvents } from 'flowcharting_base';
 const stateSignalsArray = ['state_initialized', 'state_updated', 'state_freed'] as const;
 type stateSignals = typeof stateSignalsArray[number];
 
-const DEBUG = true;
+const DEBUG = false;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
@@ -571,13 +571,10 @@ export class State {
   //###########################################################################
   private _on_global_data_received() {
     _log('📬', this.constructor.name, '_on_global_data_received');
-    // this._initCycle();
   }
 
   private _on_global_data_processed() {
     _log('📬', this.constructor.name, '_on_global_data_processed');
-    // this._setCycle();
-    // this._applyCycle();
     this.update();
   }
 

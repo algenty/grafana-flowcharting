@@ -9,7 +9,7 @@ import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
 
 // Debug
-const DEBUG = true;
+const DEBUG = false;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
