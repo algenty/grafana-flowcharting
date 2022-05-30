@@ -63,9 +63,6 @@ export class TooltipHandler {
 
   destroy() {
     this.metrics.clear();
-    // if (this.mxcell.GF_tooltipHandler) {
-    //   delete this.mxcell.GF_tooltipHandler;
-    // }
   }
 
   getDiv(parentDiv: HTMLDivElement): HTMLDivElement | null {
