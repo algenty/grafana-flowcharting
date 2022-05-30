@@ -1165,7 +1165,7 @@ class TooltipState extends GFState {
       }
     }
     // Metadata
-    if (rule.data.tpMetadata) {
+    if (rule.tooltipMetadata) {
       this.tooltipHandler.addMetadata().setXCell(this.xcell);
     }
     // Date

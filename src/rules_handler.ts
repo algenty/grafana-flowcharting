@@ -294,7 +294,7 @@ export class RulesHandler {
    */
   reduce(): this {
     this.getRules().forEach((rule) => {
-      rule.data.reduce = true;
+      rule.reduce = true;
     });
     return this;
   }

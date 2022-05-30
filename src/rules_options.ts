@@ -806,29 +806,29 @@ export class RulesOptionsCtrl {
   // }
 
   ValidateDate(rule: Rule): boolean {
-    if (rule.data.type !== 'date') {
+    if (rule.dataType !== 'date') {
       return true;
     }
     try {
       let metricType: gf.TMetricTypeKeys = 'serie';
-      let metricName = rule.data.pattern;
+      let metricName = rule.metricPattern;
       let columnName: string | undefined = undefined;
-      if (rule.data.metricType === 'table') {
+      if (rule.metricType === 'table') {
         metricType = 'table';
-        metricName = rule.data.refId;
-        columnName = rule.data.column;
+        metricName = rule.metricTable;
+        columnName = rule.metricColumn;
       }
       if (this.metricHandler) {
         const metrics = this.metricHandler.findMetrics(metricName, metricType);
         const length = metrics.length;
         for (let index = 0; index < length; index++) {
           const m = metrics[index];
-          const value = m.getValue(rule.data.aggregation, columnName);
+          const value = m.getValue(rule.aggregation, columnName);
           if (!DateTH.isValidDate(value)) {
             this.$gf.notify(
               `The value for the metric ${m.getName()} and the aggregation ${$GF.GetT4V(
                 this.aggregationTypes,
-                rule.data.aggregation
+                rule.aggregation
               )} is not a valid date : ${value}`
             );
             return false;
@@ -846,7 +846,7 @@ export class RulesOptionsCtrl {
     let tableName = rule.data.pattern;
     if (rule.data.metricType === 'table') {
       metricType = 'table';
-      tableName = rule.data.refId;
+      tableName = rule.metricTable;
     }
     if (this.metricHandler) {
       return this.metricHandler.getColumnsName(tableName, metricType);
