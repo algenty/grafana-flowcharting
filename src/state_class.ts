@@ -10,8 +10,10 @@ import { GFEvents } from 'flowcharting_base';
 const stateSignalsArray = ['state_initialized', 'state_updated', 'state_freed'] as const;
 type stateSignals = typeof stateSignalsArray[number];
 
-const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG = true;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 /**
  * Class for state of one cell
@@ -21,16 +23,16 @@ const _log = (...args: any) => {DEBUG && console.log(...args)}
  */
 export class State {
   private readonly $gf: $GF;
-  _xcell: XCell; // mxCell State
+  xcell: XCell; // mxCell State
   uid: string; // cell ID in mxcell
-  private _changed = false;
-  private _matched = false;
-  private _shapeState: ShapeState;
-  private _tooltipState: TooltipState;
-  private _iconState: IconState;
-  private _eventState: EventState;
-  private _textState: TextState;
-  private _linkState: LinkState;
+  changed = false;
+  matched = false;
+  shapeState: ShapeState;
+  tooltipState: TooltipState;
+  iconState: IconState;
+  eventState: EventState;
+  textState: TextState;
+  linkState: LinkState;
   private _variables: GFVariables;
   private _status: Map<string, any>;
   private _ObjStates: [ShapeState, TooltipState, IconState, EventState, TextState, LinkState];
@@ -54,21 +56,21 @@ export class State {
   constructor($gf: $GF, xcell: XCell, xgraph: XGraph) {
     this.$gf = $gf;
     this.uid = $GF.genUid(this.constructor.name);
-    this._xcell = xcell;
+    this.xcell = xcell;
     // this._xgraph = xgraph;
-    this._shapeState = new ShapeState(xgraph, xcell);
-    this._tooltipState = new TooltipState(xgraph, xcell);
-    this._iconState = new IconState(xgraph, xcell);
-    this._eventState = new EventState(xgraph, xcell);
-    this._textState = new TextState(xgraph, xcell);
-    this._linkState = new LinkState(xgraph, xcell);
+    this.shapeState = new ShapeState(xgraph, xcell);
+    this.tooltipState = new TooltipState(xgraph, xcell);
+    this.iconState = new IconState(xgraph, xcell);
+    this.eventState = new EventState(xgraph, xcell);
+    this.textState = new TextState(xgraph, xcell);
+    this.linkState = new LinkState(xgraph, xcell);
     this._ObjStates = [
-      this._shapeState,
-      this._tooltipState,
-      this._iconState,
-      this._eventState,
-      this._textState,
-      this._linkState,
+      this.shapeState,
+      this.tooltipState,
+      this.iconState,
+      this.eventState,
+      this.textState,
+      this.linkState,
     ];
     this._variables = GFVariables.create();
     this._status = new Map();
@@ -126,7 +128,7 @@ export class State {
   //### ACCESSORS
   //############################################################################
   getXCell(): XCell {
-    return this._xcell;
+    return this.xcell;
   }
 
   getLevel(): number {
@@ -187,75 +189,75 @@ export class State {
           // SHAPE
           let matchedRule = false;
           let mapOptions = r.getShapeMapOptions();
-          let cellValue = this._xcell.getDefaultValues(mapOptions);
+          let cellValue = this.xcell.getDefaultValues(mapOptions);
           shapeMaps.forEach((shape) => {
             let k = shape.data.style;
             if (!shape.hidden && shape.match(cellValue, mapOptions, this._variables)) {
               let v: any = color;
               if (shape.isEligible(level)) {
                 matchedRule = true;
-                this._matched = true;
-                this._shapeState.set(k, v, level) && this._status.set(k, v);
+                this.matched = true;
+                this.shapeState.set(k, v, level) && this._status.set(k, v);
               }
 
               // TOOLTIP
               if (r.toTooltipize(level)) {
                 k = 'tooltip';
                 v = true;
-                this._tooltipState.set('tooltip', true, level) && this._status.set(k, v);
-                this._tooltipState.setTooltip(r, metric, color, FormattedValue, this._xcell.getMetadatas());
+                this.tooltipState.set('tooltip', true, level) && this._status.set(k, v);
+                this.tooltipState.setTooltip(r, metric, color, FormattedValue, this.xcell.getMetadatas());
               }
               // ICONS
               if (r.toIconize(level)) {
                 k = 'icon';
                 v = true;
-                this._iconState.set('icon', true, level) && this._status.set(k, v);
+                this.iconState.set('icon', true, level) && this._status.set(k, v);
               }
             }
           });
 
           // TEXT
           mapOptions = r.getTextMapOptions();
-          cellValue = this._xcell.getDefaultValues(mapOptions);
+          cellValue = this.xcell.getDefaultValues(mapOptions);
           textMaps.forEach((text) => {
             const k = 'label';
             if (!text.hidden && text.match(cellValue, mapOptions, this._variables)) {
               if (text.isEligible(level)) {
                 matchedRule = true;
-                this._matched = true;
+                this.matched = true;
                 const textScoped = this._variables.replaceText(FormattedValue);
-                const v = text.getReplaceText(this._textState.getMatchValue(k), textScoped);
-                this._textState.set(k, v, level) && this._status.set(k, v);
+                const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
+                this.textState.set(k, v, level) && this._status.set(k, v);
               }
             }
           });
 
           // EVENTS
           mapOptions = r.getEventMapOptions();
-          cellValue = this._xcell.getDefaultValues(mapOptions);
+          cellValue = this.xcell.getDefaultValues(mapOptions);
           eventMaps.forEach((event) => {
             const k = event.data.style;
             if (!event.hidden && event.match(cellValue, mapOptions, this._variables)) {
               if (event.isEligible(level)) {
                 matchedRule = true;
-                this._matched = true;
+                this.matched = true;
                 const v = this._variables.eval(event.data.value);
-                this._eventState.set(k, v, level) && this._status.set(k, v);
+                this.eventState.set(k, v, level) && this._status.set(k, v);
               }
             }
           });
 
           // LINK
           mapOptions = r.getEventMapOptions();
-          cellValue = this._xcell.getDefaultValues(mapOptions);
+          cellValue = this.xcell.getDefaultValues(mapOptions);
           linkMaps.forEach((link) => {
             const k = 'link';
             if (!link.hidden && link.match(cellValue, mapOptions, this._variables)) {
               if (link.isEligible(level)) {
                 matchedRule = true;
-                this._matched = true;
+                this.matched = true;
                 const v = this._variables.replaceText(link.getLink());
-                this._linkState.set(k, v, level) && this._status.set(k, v);
+                this.linkState.set(k, v, level) && this._status.set(k, v);
               }
             }
           });
@@ -293,12 +295,12 @@ export class State {
   // [ ] : never called
   // [ ] : How to reset state when rules unapplied
   _unsetState(): this {
-    this._eventState.unset();
-    this._textState.unset();
-    this._linkState.unset();
-    this._tooltipState.unset();
-    this._iconState.unset();
-    this._matched = false;
+    this.eventState.unset();
+    this.textState.unset();
+    this.linkState.unset();
+    this.tooltipState.unset();
+    this.iconState.unset();
+    this.matched = false;
     return this;
   }
 
@@ -318,7 +320,7 @@ export class State {
     if (style !== undefined && style !== null) {
       return style;
     }
-    style = this._xcell.getStyle(key);
+    style = this.xcell.getStyle(key);
     if (style === null) {
       style = '';
     }
@@ -337,7 +339,7 @@ export class State {
    * @memberof State
    */
   isShape(): boolean {
-    return this._xcell.getMxCell().isVertex();
+    return this.xcell.getMxCell().isVertex();
   }
 
   /**
@@ -347,7 +349,7 @@ export class State {
    * @memberof State
    */
   isConnector(): boolean {
-    return this._xcell.getMxCell().isEdge();
+    return this.xcell.getMxCell().isEdge();
   }
 
   /**
@@ -357,8 +359,8 @@ export class State {
    * @memberof State
    */
   getShapeName(): string {
-    if (this._xcell) {
-      const name = this._xcell.getStyle('shape');
+    if (this.xcell) {
+      const name = this.xcell.getStyle('shape');
       if (name === null) {
         return '';
       }
@@ -374,8 +376,8 @@ export class State {
    * @memberof State
    */
   getShapeStyles(): string {
-    if (this._xcell) {
-      return this._xcell.getMxCell().style;
+    if (this.xcell) {
+      return this.xcell.getMxCell().style;
     }
     return 'Unknown';
   }
@@ -389,8 +391,8 @@ export class State {
   private async _applyCycle() {
     const funcName = 'applyCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    if (this._matched || this._changed) {
-      this._changed = true;
+    if (this.matched || this.changed) {
+      this.changed = true;
       return this._ObjStates.map(async (o: { apply: CallableFunction }) => {
         o.apply();
       });
@@ -413,7 +415,7 @@ export class State {
     this.globalLevel = -1;
     this.highestFormattedValue = '';
     this.highestValue = undefined;
-    this._changed = false;
+    this.changed = false;
     return this;
   }
 
@@ -426,7 +428,7 @@ export class State {
   private async _initCycle() {
     const funcName = 'initCycle';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    if (this._changed) {
+    if (this.changed) {
       await Promise.all(
         this._ObjStates.map(async (o: { prepare: CallableFunction }) => {
           o.prepare();
@@ -439,7 +441,7 @@ export class State {
       this.currMetrics = [];
       this.currRules = [];
       this.highestValue = undefined;
-      this._matched = false;
+      this.matched = false;
     }
     return this;
   }
@@ -451,7 +453,7 @@ export class State {
    * @memberof State
    */
   highlightCell(): this {
-    this._xcell.highlight();
+    this.xcell.highlight();
     return this;
   }
 
@@ -462,7 +464,7 @@ export class State {
    * @memberof State
    */
   unhighlightCell(): this {
-    this._xcell.highlight(false);
+    this.xcell.highlight(false);
     return this;
   }
 
@@ -479,22 +481,22 @@ export class State {
    */
   private _matchRule(rule: Rule): boolean {
     let mapOptions = rule.getShapeMapOptions();
-    let cellValue = this._xcell.getDefaultValues(mapOptions);
+    let cellValue = this.xcell.getDefaultValues(mapOptions);
     if (rule.matchShape(cellValue, mapOptions)) {
       return true;
     }
     mapOptions = rule.getTextMapOptions();
-    cellValue = this._xcell.getDefaultValues(mapOptions);
+    cellValue = this.xcell.getDefaultValues(mapOptions);
     if (rule.matchText(cellValue, mapOptions)) {
       return true;
     }
     mapOptions = rule.getLinkMapOptions();
-    cellValue = this._xcell.getDefaultValues(mapOptions);
+    cellValue = this.xcell.getDefaultValues(mapOptions);
     if (rule.matchLink(cellValue, mapOptions)) {
       return true;
     }
     mapOptions = rule.getEventMapOptions();
-    cellValue = this._xcell.getDefaultValues(mapOptions);
+    cellValue = this.xcell.getDefaultValues(mapOptions);
     if (rule.matchEvent(cellValue, mapOptions)) {
       return true;
     }
@@ -576,12 +578,12 @@ export class State {
     _log('📬', this.constructor.name, '_on_global_data_processed');
     // this._setCycle();
     // this._applyCycle();
-    this.update()
+    this.update();
   }
 
   private _on_ruleHandler_rule_changed(rule: Rule) {
     _log('📬', this.constructor.name, '_on_ruleHandler_rule_changed');
-    if(this._haveRule(rule) || this._matchRule(rule)) {
+    if (this._haveRule(rule) || this._matchRule(rule)) {
       this._updateRule(rule);
       this.update();
     }
@@ -601,7 +603,6 @@ export class State {
     _log('📬', this.constructor.name, '_on_ruleHandler_rule_deleted');
     this.removeRule(rule);
   }
-
 }
 
 /**

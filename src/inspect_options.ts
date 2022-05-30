@@ -6,6 +6,7 @@ import { orderBy as _orderBy } from 'lodash';
 import { XGraph } from 'graph_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
+
 export class InspectOptionsCtrl {
   $gf: $GF;
   enable = false; // enable inspector or not
@@ -16,7 +17,7 @@ export class InspectOptionsCtrl {
   statesTable: GFTable;
   // panel: any;
   parentDiv: HTMLDivElement;
-  headerTable: HTMLDivElement | undefined ;
+  headerTable: HTMLDivElement | undefined;
   bodyTable: HTMLDivElement | undefined;
   indexTable = 0;
   pressed = false;
@@ -24,9 +25,10 @@ export class InspectOptionsCtrl {
   startX = 0;
   startWidth: any = 0;
   column: any;
+  $sce: any;
 
   /** @ngInject */
-  constructor($scope: gf.TInspectOptionsScope, $element: any) {
+  constructor($scope: gf.TInspectOptionsScope, $element: any, $sce: any) {
     let n = 0;
     this.statesTableData = {
       data: this.getStates(),
@@ -123,40 +125,47 @@ export class InspectOptionsCtrl {
     this.ctrl = $scope.ctrl;
     $scope.GFPlugin = this.ctrl.GFPlugin;
     $scope.$GF = this.ctrl.$gf;
-    this.$gf = this.ctrl.$gf    // this.panel = this.ctrl.panel;
+    this.$sce = $sce;
+    this.$gf = this.ctrl.$gf; // this.panel = this.ctrl.panel;
     this.flowchartHandler = this.ctrl.flowchartHandler;
     this.stateHandler = this.flowchartHandler?.getFlowchart().getStateHandler();
-
+    // add unsafe to angular module
+    // console.log(angular);
+    // angular.module("grafana.filters").filter('gf_unsafe', ['$sce', ($sce: any) => {
+    //   return (input: any) =>{
+    //     return $sce.trustAs('html', input);
+    //   }
+    // }]);
   }
 
-  render() {
-    this.ctrl.render();
-  }
+  // render() {
+  //   this.ctrl.render();
+  // }
 
-  onChangeId(state: State) {
-    const xcell = state.getXCell();
-    if (xcell.getId() !== xcell.getDefaultId()) {
-      const sh = this.flowchartHandler?.getFlowchart().getStateHandler();
-      if (sh !== undefined) {
-        sh.edited = true;
-      }
-    }
-  }
+  // onChangeId(state: State) {
+  //   const xcell = state.getXCell();
+  //   if (xcell.getId() !== xcell.getDefaultId()) {
+  //     const sh = this.flowchartHandler?.getFlowchart().getStateHandler();
+  //     if (sh !== undefined) {
+  //       sh.edited = true;
+  //     }
+  //   }
+  // }
 
-  isEdited(state: State): boolean {
-    const xcell = state.getXCell();
-    return xcell.getId() !== xcell.getDefaultId();
-  }
+  // isEdited(state: State): boolean {
+  //   const xcell = state.getXCell();
+  //   return xcell.getId() !== xcell.getDefaultId();
+  // }
 
-  undo(state: State) {
-    const xcell = state.getXCell();
-    if (this.isEdited(state)) {
-      xcell.restoreId();
-    }
-  }
+  // undo(state: State) {
+  //   const xcell = state.getXCell();
+  //   if (this.isEdited(state)) {
+  //     xcell.restoreId();
+  //   }
+  // }
 
   initPreview(state: State): boolean {
-    const div = document.getElementById(`preview-${state._xcell.getId()}`);
+    const div = document.getElementById(`preview-${state.xcell.getId()}`);
     if (div !== null) {
       div.innerHTML = '';
       XGraph.preview(div, state.getXCell());
@@ -164,21 +173,67 @@ export class InspectOptionsCtrl {
     return true;
   }
 
-  reset() {
-    const flowchart = this.flowchartHandler?.getFlowchart();
-    const sh = flowchart?.getStateHandler();
-    if (sh) {
-      const states = sh.getStates();
-      states.forEach(state => {
-        if (this.isEdited(state)) {
-          const xcell = state.getXCell();
-          xcell.restoreId();
-        }
-      });
-      sh.edited = false;
-      this.flowchartHandler?.change();
-    }
+  renderStyles(state: State) {
+    let htmlStyles = '<div class="gf-table-content" style="text-align: center;">';
+    const tbl: gf.TStyleColorKeys[] = ['fontColor', 'fillColor', 'strokeColor']
+    tbl.forEach((style: gf.TStyleColorKeys) => {
+      htmlStyles = `${htmlStyles}\n
+      <div style="display:table-cell;vertical-align:middle;">
+        ${this.renderStyle(state, style)}
+      </div>
+      `;
+    });
+    htmlStyles = htmlStyles + '</div>';
+    return this.$sce.trustAsHtml(htmlStyles);
   }
+
+  renderStyle(state: State, style: gf.TStyleColorKeys) {
+    const color = state.getStatus(style);
+    const toShow = state.haveStatus(style) && color.length > 0 && color !== 'none';
+    let html = '';
+    if (!toShow) {
+      return this.$sce.trustAsHtml(html);
+    }
+    let letter, desc;
+    switch (style) {
+      case 'fillColor':
+        letter = 'F';
+        desc = 'Fill color';
+        break;
+      case 'strokeColor':
+        letter = 'S';
+        desc = 'Border/stroke color';
+        break;
+      case 'fontColor':
+        letter = 'T';
+        desc = 'Text/Font color';
+        break;
+    }
+    html = `
+      <div title="${desc} : ${color}"
+          class="gf-inspect-color-picker"
+          style="background-color: ${color};">
+          <span>${letter}</span>
+      </div>
+    `;
+    return this.$sce.trustAsHtml(html);
+  }
+
+  // reset() {
+  //   const flowchart = this.flowchartHandler?.getFlowchart();
+  //   const sh = flowchart?.getStateHandler();
+  //   if (sh) {
+  //     const states = sh.getStates();
+  //     states.forEach(state => {
+  //       if (this.isEdited(state)) {
+  //         const xcell = state.getXCell();
+  //         xcell.restoreId();
+  //       }
+  //     });
+  //     sh.edited = false;
+  //     this.flowchartHandler?.change();
+  //   }
+  // }
 
   // apply() {
   //   const flowchart = this.flowchartHandler?.getFlowchart();
@@ -190,13 +245,13 @@ export class InspectOptionsCtrl {
   //   this.$gf.notify('Save the dashboard to apply the modifications');
   // }
 
-  selectCell(state: State) {
-    state.highlightCell();
-  }
+  // selectCell(state: State) {
+  //   state.highlightCell();
+  // }
 
-  unselectCell(state: State) {
-    state.unhighlightCell();
-  }
+  // unselectCell(state: State) {
+  //   state.unhighlightCell();
+  // }
 
   getStates(): State[] {
     if (this.stateHandler) {
@@ -206,23 +261,23 @@ export class InspectOptionsCtrl {
     return [];
   }
 
-  getStateValue(state: State, col: string): string | null {
-    const xcell = state.getXCell();
-    switch (col) {
-      case 'id':
-        return xcell.getId();
-        break;
-      case 'level':
-        return state.getTextLevel();
-        break;
-      case 'label':
-        return xcell.getLabel();
-        break;
-      default:
-        return null;
-        break;
-    }
-  }
+  // getStateValue(state: State, col: string): string | null {
+  //   const xcell = state.getXCell();
+  //   switch (col) {
+  //     case 'id':
+  //       return xcell.getId();
+  //       break;
+  //     case 'level':
+  //       return state.getTextLevel();
+  //       break;
+  //     case 'label':
+  //       return xcell.getLabel();
+  //       break;
+  //     default:
+  //       return null;
+  //       break;
+  //   }
+  // }
 
   // tracePerf() {
   //   if (this.traceEnable) {
@@ -240,9 +295,9 @@ export class InspectOptionsCtrl {
     }
   }
 
-  debugCtrl() {
-    console.log(this.ctrl);
-  }
+  // debugCtrl() {
+  //   console.log(this.ctrl);
+  // }
 }
 
 /** @ngInject */

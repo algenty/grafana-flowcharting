@@ -243,21 +243,22 @@ export class FlowchartHandler {
   }
 
   /**
-   * Get flowchart with name
-   *
-   * @param {string} name
-   * @returns {Flowchart}
-   * @memberof FlowchartHandler
+   * return default flowchart or flowchart by name or index
+   * @param  {string|number} flowchart?
+   * @returns Flowchart
    */
-  getFlowchart(name?: string): Flowchart {
-    if (name) {
+  getFlowchart(flowchart?: string | number): Flowchart {
+    if (flowchart && typeof flowchart === 'string') {
       const lg = this.flowcharts.length;
       for (let i = 0; i < lg; i++) {
         const fc = this.flowcharts[i];
-        if (fc.name === name) {
+        if (fc.name === flowchart) {
           return fc;
         }
       }
+    }
+    if(flowchart && typeof flowchart === 'number'){
+      return this.flowcharts[flowchart];
     }
     const current = this.getCurrentFlowchart();
     return current !== undefined ? current : this.flowcharts[0];

@@ -19,6 +19,7 @@ export class XCell {
     this.uid = $GF.genUid('xcell');
     this.graph = graph;
     this.mxcell = mxcell;
+    this.uid = mxcell.getId();
     this.gf = this._getDefaultGFXCell();
     this.mxcell.gf = this.gf;
     this._isHidden = !this.graph.model.isVisible(this.mxcell);

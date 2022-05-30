@@ -141,11 +141,7 @@ export class StateHandler {
    * @memberof StateHandler
    */
   getStatesForInspect(): State[] {
-    const states: State[] = [];
-    this.states.forEach((state) => {
-      states.push(state);
-    });
-    return states;
+    return Array.from(this.states.values());
   }
 
   /**
