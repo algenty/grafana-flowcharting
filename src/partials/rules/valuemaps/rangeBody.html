@@ -13,8 +13,7 @@
                     <span ng-bind-html="$GF.popover('Min of value', 'MAPPING#Map')"> </span>
                 </info-popover>
             </label>
-            <input type="number" ng-model="elt.getData().from" class="gf-form-input max-width-8"
-                ng-blur="editor.onRulesChange()" ng-model-onblur placeholder="min" />
+            <input type="number" ng-model="elt.from" class="gf-form-input max-width-8" ng-model-onblur placeholder="min" />
         </div>
         <!-- TO -->
         <div class="gf-form">
@@ -23,8 +22,7 @@
                     <span ng-bind-html="$GF.popover('Max of value', 'MAPPING#Map')"> </span>
                 </info-popover>
             </label>
-            <input type="number" ng-model="elt.getData().to" class="gf-form-input max-width-8"
-                ng-blur="editor.onRulesChange()" ng-model-onblur placeholder="max" />
+            <input type="number" ng-model="elt.to" class="gf-form-input max-width-8" ng-model-onblur placeholder="max" />
         </div>
         <!-- TEXT -->
         <div class="gf-form">
@@ -33,9 +31,9 @@
                     <span ng-bind-html="$GF.popover('Value string to replace', 'MAPPING#Map')"> </span>
                 </info-popover>
             </label>
-            <input type="text" ng-model="elt.getData().text" class="gf-form-input max-width-8"
+            <input type="text" ng-model="elt.text" class="gf-form-input max-width-8"
                 bs-typeahead="editor.getVariables" bs-tooltip="'Specify string or variables to replace values'"
-                data-min-length="0" data-items="100" data-placement="right" ng-blur="editor.onRulesChange()"
+                data-min-length="0" data-items="100" data-placement="right"
                 ng-model-onblur placeholder="replace with" />
         </div>
         <!-- BUTTONS -->
@@ -49,7 +47,7 @@
                 &nbsp;Apply
             </button>
             <button class="btn btn-secondary btn-small" ng-show="$index !== 0"
-                ng-click="elt.hidden= !elt.hidden;editor.onRulesChange();" title="Enable/Disable">
+                ng-click="elt.hidden= !elt.hidden" title="Enable/Disable">
                 <svg ng-show="!elt.isHidden()" width="16" height="16" xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24" fill="currentColor" class="css-4fl056">
                     <path
@@ -64,7 +62,7 @@
                 </svg>
                 &nbsp;Enable/Disable
             </button>
-            <button class="btn btn-secondary btn-small" ng-click="rule.cloneThreshold($index);editor.onRulesChange();"
+            <button class="btn btn-secondary btn-small" ng-click="rule.cloneThreshold($index)"
                 title="Duplicate">
                 <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path fill="currentColor"
@@ -74,7 +72,7 @@
                 &nbsp;Duplicate
             </button>
             <button class="btn btn-danger btn-small"
-                ng-click="rule.removeRangeMap($index);editor.onRulesChange()" title="Delete">
+                ng-click="rule.removeRangeMap($index)" title="Delete">
                 <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                     class="css-4fl056">
                     <path
