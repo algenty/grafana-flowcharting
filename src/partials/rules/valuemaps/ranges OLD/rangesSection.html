@@ -2,7 +2,7 @@
   RANGE MAPPING WHEN type = "string" and mappingType = 2
 -->
 
-<div class="gf-form-group" ng-if="rule.getData().mappingType==2">
+<div class="gf-form-group" ng-if="rule.mappingType==2">
   <table>
     <thead>
       <tr>
@@ -42,23 +42,21 @@
           <div class="gf-form">
             <label class="gf-form-label" style="margin-right: 4px;">
               <i class="fa fa-w fa-remove pointer" bs-tooltip="'Delete this mapping object'"
-                ng-click="rule.removeRangeMap($index);editor.onRulesChange()"></i>
+                ng-click="rule.removeRangeMap($index)"></i>
             </label>
           </div>
         </td>
         <td>
-          <input type="text" ng-model="rangeMap.getData().from" class="gf-form-input max-width-8"
-            ng-blur="editor.onRulesChange()" ng-model-onblur placeholder="min" />
+          <input type="text" ng-model="rangeMap.from" class="gf-form-input max-width-8" ng-model-onblur placeholder="min" />
         </td>
         <td>
-          <input type="text" ng-model="rangeMap.getData().to" class="gf-form-input max-width-8"
-            ng-blur="editor.onRulesChange()" ng-model-onblur placeholder="max" />
+          <input type="text" ng-model="rangeMap.to" class="gf-form-input max-width-8" ng-model-onblur placeholder="max" />
         </td>
         <td>
           <div class="gf-form">
-            <input type="text" ng-model="rangeMap.getData().text" class="gf-form-input max-width-8"
+            <input type="text" ng-model="rangeMap.text" class="gf-form-input max-width-8"
               bs-typeahead="editor.getVariables" bs-tooltip="'Specify string or variables to replace values'"
-              data-min-length="0" data-items="100" data-placement="right" ng-blur="editor.onRulesChange()"
+              data-min-length="0" data-items="100" data-placement="right"
               ng-model-onblur placeholder="replace with" />
           </div>
         </td>
@@ -69,7 +67,7 @@
         <td>
           <div class="gf-form">
             <label class="gf-form-label">
-              <a class="pointer" ng-click="rule.addRangeMap('','','');editor.onRulesChange()"><i
+              <a class="pointer" ng-click="rule.addRangeMap('','','')"><i
                   class="fa fa-plus"></i></a>
             </label>
           </div>

@@ -571,13 +571,10 @@ export class State {
   //###########################################################################
   private _on_global_data_received() {
     _log('📬', this.constructor.name, '_on_global_data_received');
-    // this._initCycle();
   }
 
   private _on_global_data_processed() {
     _log('📬', this.constructor.name, '_on_global_data_processed');
-    // this._setCycle();
-    // this._applyCycle();
     this.update();
   }
 
@@ -1132,20 +1129,20 @@ class TooltipState extends GFState {
 
   setTooltip(rule: Rule, metric: ObjectMetric, color: string, value: string, metadata: gf.TXCellMetadata) {
     let tpColor: string | null = null;
-    let label: string = rule.data.tooltipLabel;
+    let label: string = rule.tooltipLabel;
     if (this.tooltipHandler === null || this.tooltipHandler === undefined) {
       this.tooltipHandler = new TooltipHandler();
     }
-    if (rule.data.tooltip) {
+    if (rule.tooltip) {
       if (label === null || label.length === 0) {
-        if (rule.data.metricType === 'serie') {
+        if (rule.metricType === 'serie') {
           label = metric.getName();
         }
-        if (rule.data.metricType === 'table') {
-          label = rule.data.column;
+        if (rule.metricType === 'table') {
+          label = rule.metricColumn;
         }
       }
-      if (rule.data.tooltipColors) {
+      if (rule.tooltipColors) {
         tpColor = color;
       }
       // METRIC
@@ -1154,21 +1151,21 @@ class TooltipState extends GFState {
         .setLabel(label)
         .setValue(value)
         .setColor(tpColor)
-        .setDirection(rule.data.tpDirection);
+        .setDirection(rule.graphDirection);
       // GRAPH
-      if (rule.data.tpGraph) {
-        const graph = metricToolip.addGraph(rule.data.tpGraphType);
+      if (rule.tooltipForGraph) {
+        const graph = metricToolip.addGraph(rule.graphType);
         graph
           .setColor(tpColor)
-          .setColumn(rule.data.column)
+          .setColumn(rule.metricColumn)
           .setMetric(metric)
-          .setSize(rule.data.tpGraphSize)
-          .setScaling(rule.data.tpGraphLow, rule.data.tpGraphHigh)
-          .setScale(rule.data.tpGraphScale);
+          .setSize(rule.graphSize)
+          .setScaling(rule.graphLow, rule.graphHigh)
+          .setScale(rule.graphScale);
       }
     }
     // Metadata
-    if (rule.data.tpMetadata) {
+    if (rule.tooltipMetadata) {
       this.tooltipHandler.addMetadata().setXCell(this.xcell);
     }
     // Date

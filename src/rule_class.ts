@@ -18,7 +18,7 @@ import {
 import { GFEvents } from 'flowcharting_base';
 
 // Debug
-const DEBUG = true;
+const DEBUG = false;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
@@ -352,6 +352,60 @@ export class Rule {
     return this.data.tpDirection;
   }
 
+  //graphtype getter setter
+  set graphType(v: gf.TGraphTypeKeys) {
+    if (!v || v.length === 0 || this.data.tpGraphType !== v) {
+      this.data.tpGraphType = v;
+      this.change();
+    }
+  }
+  get graphType(): gf.TGraphTypeKeys {
+    return this.data.tpGraphType
+  }
+
+  //graphSize getter setter
+  set graphSize(v: gf.TGraphSizeKeys) {
+    if (!v || v.length === 0 || this.data.tpGraphSize !== v) {
+      this.data.tpGraphSize = v;
+      this.change();
+    }
+  }
+  get graphSize(): gf.TGraphSizeKeys {
+    return this.data.tpGraphSize;
+  }
+  //graphLow getter setter
+  set graphLow(v: number|null) {
+    if(v !== this.data.tpGraphLow){
+      this.data.tpGraphLow = v;
+      this.change();
+    }
+  }
+  get graphLow(): number|null {
+    return this.data.tpGraphLow;
+  }
+  //graphHigh getter setter
+  set graphHigh(v: number|null) {
+    if(v !== this.data.tpGraphHigh){
+      this.data.tpGraphHigh = v;
+      this.change();
+    }
+  }
+  get graphHigh(): number|null {
+    return this.data.tpGraphHigh;
+  }
+
+  //graphScale getter setter
+  set graphScale(v: gf.TGraphScaleKeys) {
+    if (!v || v.length === 0 || this.data.tpGraphScale !== v) {
+      this.data.tpGraphScale = v;
+      this.change();
+    }
+  }
+  get graphScale(): gf.TGraphScaleKeys {
+    return this.data.tpGraphScale;
+  }
+
+
   //AGGREGATION
   set aggregation(v: gf.TAggregationKeys) {
     if (!v || this.data.aggregation === v) {
@@ -437,6 +491,41 @@ export class Rule {
   get mappingType() {
     return this.data.mappingType;
   }
+
+  //THRESHOLDS
+  //Getter setter invert
+  set invert(v: boolean) {
+    if(v !== this.data.invert) {
+      this.data.invert = v;
+      this.invertThesholdsColors()
+    }
+  }
+  get invert() {
+    return this.data.invert;
+  }
+
+  //Gradient
+  set gradient(v: boolean) {
+    if(v !== this.data.gradient) {
+      this.data.gradient = v;
+      this.change();
+    }
+  }
+  get gradient() {
+    return this.data.gradient;
+  }
+
+  //invertIcon
+  set overlayIcon(v: boolean) {
+    if(v !== this.data.overlayIcon) {
+      this.data.overlayIcon = v;
+      this.change();
+    }
+  }
+  get overlayIcon() {
+    return this.data.overlayIcon;
+  }
+
 
   // PRESERVE HTML FOMAT
   //TODO : Why does not exist
@@ -951,6 +1040,7 @@ export class Rule {
     if (obj.valueData !== undefined && obj.valueData != null && obj.valueData.length > 0) {
       obj.valueData.forEach((valueData: gf.TValueMapData) => {
         this.addValueMap('value', 'text').import(valueData);
+        this.change();
       });
     }
 
@@ -959,12 +1049,14 @@ export class Rule {
     if (obj.rangeData !== undefined && obj.rangeData != null && obj.rangeData.length > 0) {
       obj.rangeData.forEach((rangeData: any) => {
         this.addRangeMap('from', 'to', 'text').import(rangeData);
+        this.change();
       });
     }
     this.data.sanitize = obj.sanitize || false;
     this.data.newRule = false;
     return this;
   }
+
 
   //############################################################################
   //### LOGIC
@@ -1126,17 +1218,7 @@ export class Rule {
   }
 
   isHidden(): boolean {
-    return this.data.hidden;
-  }
-
-  hide(): this {
-    this.data.hidden = true;
-    return this;
-  }
-
-  show(): this {
-    this.data.hidden = false;
-    return this;
+    return this.hidden;
   }
 
   /**
@@ -1186,7 +1268,7 @@ export class Rule {
    */
   invertThesholdsColors(): this {
     this._invertColorOrder();
-    // this.data.invert = !this.data.invert;
+    this.change()
     return this;
   }
 

@@ -13,8 +13,7 @@
                     <span ng-bind-html="$GF.popover('Value string to replace', 'MAPPING#Map')"> </span>
                 </info-popover>
             </label>
-            <input type="text" class="gf-form-input max-width-10" ng-model="elt.getData().value" placeholder="Value"
-                ng-blur="editor.onRulesChange()" ng-model-onblur />
+            <input type="text" class="gf-form-input max-width-10" ng-model="elt.value" placeholder="Value" ng-model-onblur />
         </div>
         <!-- TEXT -->
         <div class="gf-form">
@@ -23,9 +22,9 @@
                     <span ng-bind-html="$GF.popover('Replace string with this text', 'MAPPING#Map')"> </span>
                 </info-popover>
             </label>
-            <input type="text" class="gf-form-input max-width-10" ng-model="elt.getData().text" placeholder="Text"
+            <input type="text" class="gf-form-input max-width-10" ng-model="elt.text" placeholder="Text"
                 bs-typeahead="editor.getVariables" bs-tooltip="'Specify string or variables to replace values'"
-                data-min-length="0" data-items="100" data-placement="right" ng-blur="editor.onRulesChange()"
+                data-min-length="0" data-items="100" data-placement="right" 
                 ng-model-onblur />
         </div>
         <!-- BUTTONS -->
@@ -39,7 +38,7 @@
                 &nbsp;Apply
             </button>
             <button class="btn btn-secondary btn-small" ng-show="$index !== 0"
-                ng-click="elt.hidden= !elt.hidden;editor.onRulesChange();" title="Enable/Disable">
+                ng-click="elt.hidden= !elt.hidden" title="Enable/Disable">
                 <svg ng-show="!elt.isHidden()" width="16" height="16" xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24" fill="currentColor" class="css-4fl056">
                     <path
@@ -54,7 +53,7 @@
                 </svg>
                 &nbsp;Enable/Disable
             </button>
-            <button class="btn btn-secondary btn-small" ng-click="rule.cloneThreshold($index);editor.onRulesChange();"
+            <button class="btn btn-secondary btn-small" ng-click="rule.cloneThreshold($index)"
                 title="Duplicate">
                 <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path fill="currentColor"
@@ -64,7 +63,7 @@
                 &nbsp;Duplicate
             </button>
             <button class="btn btn-danger btn-small" ng-show="$index !== 0"
-                ng-click="rule.removeValueMap($index);editor.onRulesChange()" title="Delete this threshold color">
+                ng-click="rule.removeValueMap($index)" title="Delete this threshold color">
                 <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                     class="css-4fl056">
                     <path

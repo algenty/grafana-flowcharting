@@ -33,7 +33,7 @@
         <div ng-include="GFPlugin.getPartialPath() + 'rules/valuemaps/rangesTable.html'">
         </div>
       </div>
-      <div class="gf-form" ng-show="rule.getData().mappingType === 2">
+      <div class="gf-form" ng-show="rule.mappingType === 2">
         <div class="gf-form-button-row gf-unselectable">
           <button class="btn btn-secondary btn-small" ng-click="rule.addRangeMap()"
             title="Add range mapping">

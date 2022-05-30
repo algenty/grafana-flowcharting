@@ -14,7 +14,7 @@ import { InteractiveMap } from 'mapping_class';
 import { GFDrawio } from 'drawio_base';
 
 // Debug
-const DEBUG = true;
+const DEBUG = false;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
@@ -110,7 +110,6 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   //### INIT/UPDATE/CHANGE/FREE/CLEAR (DO NOT NAME INIT, Called by angular by default)
   //############################################################################
   init_ctrl() {
-    console.log("🚀 ~ file: flowchart_ctrl.ts ~ line 112 ~ FlowchartCtrl ~ init_ctrl ~ init_ctrl", this.uid)
     this._eventsConnect();
     this.init_handlers();
   }

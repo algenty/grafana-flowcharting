@@ -4,7 +4,7 @@ import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 
 // Debug
-const DEBUG = true;
+const DEBUG = false;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
@@ -294,7 +294,7 @@ export class RulesHandler {
    */
   reduce(): this {
     this.getRules().forEach((rule) => {
-      rule.data.reduce = true;
+      rule.reduce = true;
     });
     return this;
   }

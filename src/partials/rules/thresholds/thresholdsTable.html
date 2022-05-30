@@ -216,7 +216,7 @@
                             <input ng-show="elt.inEdit[CN4] === true" id="{{elt.uid + '-' + CN4 }}"
                                 type="{{rule.dataType === 'string' || rule.dataType === 'date' ? 'Text' : 'Number'}}"
                                 placeholder="{{rule.dataType === 'string' || rule.dataType === 'date' ? 'Pattern' : 'Number'}}"
-                                ng-attr-title="rule.data.type === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'"
+                                ng-attr-title="rule.dataType === 'string' ? 'Specify a pattern regex for apply color' : 'Enter a number'"
                                 class="gf-form-input"
                                 ng-model="elt.value" ng-model-onblur
                                 ng-blur="elt.inEdit[CN4] = false;" />
