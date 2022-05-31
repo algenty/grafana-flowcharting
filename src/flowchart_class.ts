@@ -803,11 +803,11 @@ export class Flowchart {
   // }
 
   minify() {
-    this.data.xml = $GF.utils.minify(this.data.xml);
+    this.data.xml = $GF.minify(this.data.xml);
   }
 
   prettify() {
-    this.data.xml = $GF.utils.prettify(this.data.xml);
+    this.data.xml = $GF.prettify(this.data.xml);
   }
 
   decode() {

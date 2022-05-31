@@ -274,7 +274,7 @@ export class XCell {
       const length = keys.length;
       for (let index = 0; index < length; index++) {
         const key = keys[index];
-        if ($GF.utils.matchString(key, name, regex)) {
+        if ($GF.matchString(key, name, regex)) {
           const value = mds.get(name);
           if (value !== undefined && value !== null) {
             values.push(value);
@@ -295,7 +295,7 @@ export class XCell {
     const length = values.length;
     for (let i = 0; i < length; i++) {
       const v = values[i];
-      if ($GF.utils.matchString(v, pattern, options.enableRegEx)) {
+      if ($GF.matchString(v, pattern, options.enableRegEx)) {
         return true;
       }
     }
@@ -478,7 +478,7 @@ export class XCell {
     if (options.identByProp === 'id' || options.identByProp === 'value') {
       const v: any = this.getDefaultValue(options.identByProp);
       const value: string = v;
-      return $GF.utils.matchString(value, pattern, options.enableRegEx);
+      return $GF.matchString(value, pattern, options.enableRegEx);
     }
     if (options.identByProp === 'metadata') {
       return this._matchMetadata(pattern, options);

@@ -1,16 +1,19 @@
 import _ from 'lodash';
-import chroma from 'chroma-js';
+import { scale } from 'chroma-js';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 import { GFEvents } from 'flowcharting_base';
 import { nanoid } from 'nanoid/non-secure';
 import { FlowchartHandler } from 'flowchart_handler';
 import { RulesHandler } from 'rules_handler';
 import { MetricHandler } from 'metric_handler';
+import * as vk from 'vkbeautify';
 const safeEval = require('safe-eval');
 
 // Debug
-const DEBUG=false
-const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG = false;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 // Define signals
 const globalSignalsArray = [
@@ -167,7 +170,6 @@ export class GFCONSTANT {
     { text: 'String', value: 'string' },
     { text: 'Date', value: 'date' },
   ];
-
 
   static readonly METRIC_TYPES: gf.TMetricTypeList = [
     { text: 'Series', value: 'serie' },
@@ -746,12 +748,12 @@ export class $GF {
     sleep_deprecated: (ms: number, mess?: string) => void;
     // ! deprecated :  use genUdi
     uniqueID_deprecated: () => string;
-    matchString: (str: string, pattern: string | undefined, regex?: boolean) => boolean;
+    matchString_deprecated: (str: string, pattern: string | undefined, regex?: boolean) => boolean;
     stringToJsRegex: (str: string) => RegExp;
     // ! deprecated : Use DrawioTools
     isencoded_deprecated: (data: string) => boolean;
-    minify: (text: string) => string;
-    prettify: (text: string) => string;
+    minify_deprecated: (text: string) => string;
+    prettify_deprecated: (text: string) => string;
     evalIt_deprecated: (code: string) => string;
     loadFile: (fname: string) => string;
     $loadFile: (fname: string) => string;
@@ -939,6 +941,44 @@ export class $GF {
     return 'No text ';
   }
 
+  static minify(text: string) {
+    try {
+      return vk.xmlmin(text, false);
+    } catch (error) {
+      // this.log(3, 'Error in minify', error);
+      return text;
+    }
+  }
+
+  static prettify(text: string) {
+    try {
+      return vk.xml(text);
+    } catch (error) {
+      // this.log(3, 'Error in prettify', error);
+      return text;
+    }
+  }
+
+  static matchString(str: string, pattern: RegExp | string | undefined, enableRegExp = true): boolean {
+    if (!str || !pattern || str.length === 0 || (typeof pattern === 'string' && pattern.length === 0)) {
+      return false;
+    }
+    if (str === pattern) {
+      return true;
+    }
+    if (pattern instanceof RegExp) {
+      return pattern.test(str);
+    }
+    if (pattern && enableRegExp === true) {
+      const match = pattern.toString().match(new RegExp('^/(.*?)/(g?i?m?y?)$'));
+      if(match && match.length >= 1) {
+        const result = str.match(new RegExp(match[1], match[2]));
+        return result !==null && result.length > 0;
+      }
+    }
+    return false;
+  }
+
   /**
    * Set focus to id dom
    *
@@ -1070,7 +1110,7 @@ export class $GF {
   static calculateColorForRatio(beginColor: string, endColor: string, ratio: number): string {
     let color = endColor;
     try {
-      color = chroma.scale([beginColor, endColor]).mode('lrgb')(ratio).hex();
+      color = scale([beginColor, endColor]).mode('lrgb')(ratio).hex();
     } catch (error) {
       color = endColor;
     }

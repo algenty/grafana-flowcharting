@@ -15,6 +15,24 @@ describe('Test Global $GF utils', () => {
     test('Should should be uniq', () => {
       expect($GF.genUid()).not.toBe($GF.genUid());
     });
+
+    describe('Match string', () => {
+      test('Should match', () => {
+        expect($GF.matchString('test', 'test')).toBeTruthy();
+      });
+      test('Should not match', () => {
+        expect($GF.matchString('test', 'test2')).toBeFalsy();
+      });
+      test('Should match with string regex', () => {
+        expect($GF.matchString('test', '/t.*t/', true)).toBeTruthy();
+      });
+      test('Should match with regex', () => {
+        expect($GF.matchString('test', /t.*t/, true)).toBeTruthy();
+      });
+      test('Should match with regex', () => {
+        expect($GF.matchString('test','/pp/' , true)).toBeFalsy();
+      });
+    });
   });
 
   // Test if eval javascript works
