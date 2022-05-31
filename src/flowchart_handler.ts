@@ -201,7 +201,7 @@ export class FlowchartHandler {
    * @returns {string}
    * @memberof FlowchartHandler
    */
-  static getDefaultDioGraph(): string {
+  static getDefaultDioGraph() {
     let result = FlowchartHandler.defaultXml;
     if (!result) {
       const url = `${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DEFAULTDIO}`;

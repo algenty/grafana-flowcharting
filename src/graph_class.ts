@@ -1114,27 +1114,13 @@ export class XGraph {
     }
   }
 
-  // static loadXml(url: string): string | null {
-  //   try {
-  //     const req: any = mxUtils.load(url);
-  //     if (req.getStatus() >= 200 && req.getStatus() <= 299) {
-  //       return req.getText();
-  //     } else {
-  //       GFLog.error('Cannot load ' + url, req.getStatus());
-  //     }
-  //   } catch (error) {
-  //     GFLog.error('Cannot load ' + url, error);
-  //   }
-  //   return null;
+  // static compress(source: string): string {
+  //   return Graph.compress(source, true);
   // }
 
-  static compress(source: string): string {
-    return Graph.compress(source, true);
-  }
-
-  static decompress(source: string): string {
-    return Graph.decompress(source, true);
-  }
+  // static decompress(source: string): string {
+  //   return Graph.decompress(source, true);
+  // }
 
   static preview(container: HTMLElement, xcell: XCell, force = false) {
     const g = new Graph(container);

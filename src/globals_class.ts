@@ -950,6 +950,12 @@ export class $GF {
     }
   }
 
+  static async loadFile(fname: string) {
+    const resp = await fetch(fname);
+    const text = await resp.text();
+    return text;
+  }
+
   static prettify(text: string) {
     try {
       return vk.xml(text);
@@ -959,6 +965,21 @@ export class $GF {
     }
   }
 
+  static stringToRegEx(str: string): RegExp|null {
+    try {
+      if (str.charAt(0) !== '/') {
+        return new RegExp(`^${str}$`);
+      }
+      const match = str.match(new RegExp('^/(.*?)/(g?i?m?y?)$'));
+      if(match) {
+        return new RegExp(match[1], match[2]);
+      }
+    } catch(error) {
+      return null;
+    }
+    return null;
+  }
+
   static matchString(str: string, pattern: RegExp | string | undefined, enableRegExp = true): boolean {
     if (!str || !pattern || str.length === 0 || (typeof pattern === 'string' && pattern.length === 0)) {
       return false;
@@ -966,14 +987,16 @@ export class $GF {
     if (str === pattern) {
       return true;
     }
+    // if (enableRegExp && typeof pattern === 'string' && str.includes(pattern)) {
+    //   return true;
+    // }
     if (pattern instanceof RegExp) {
       return pattern.test(str);
     }
     if (pattern && enableRegExp === true) {
-      const match = pattern.toString().match(new RegExp('^/(.*?)/(g?i?m?y?)$'));
-      if(match && match.length >= 1) {
-        const result = str.match(new RegExp(match[1], match[2]));
-        return result !==null && result.length > 0;
+      const reg = $GF.stringToRegEx(pattern);
+      if(reg) {
+        return reg.test(str);
       }
     }
     return false;

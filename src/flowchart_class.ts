@@ -6,7 +6,7 @@ import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
 
 // Debug
-const DEBUG = false;
+const DEBUG = true;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
@@ -142,8 +142,12 @@ export class Flowchart {
       this.data.csv = value;
     }
     if (this.xgraph) {
-      this.xgraph.source = this.getResolvedSource();
-      this.change();
+      this.getResolvedSource().then((source) => {
+        if (this.xgraph) {
+          this.xgraph.source = source;
+          this.change();
+        }
+      });
     }
   }
   get source() {
@@ -157,9 +161,13 @@ export class Flowchart {
     }
     this.data.download = value;
     if (value && this.xgraph) {
-      this.xgraph.source = this.getResolvedSource();
+      this.getResolvedSource().then((source) => {
+        if (this.xgraph) {
+          this.xgraph.source = source;
+          this.change();
+        }
+      });
     }
-    this.change();
   }
   get download() {
     return this.data.download;
@@ -392,17 +400,18 @@ export class Flowchart {
    */
   init_xgraph(): this {
     const $GF = this.$gf;
-    try {
-      const content = this.getResolvedSource();
-      if (this.xgraph !== undefined) {
-        this.xgraph.free();
+    this.getResolvedSource().then((content) => {
+      try {
+        if (this.xgraph !== undefined) {
+          this.xgraph.free();
+        }
+        this.xgraph = new XGraph(this.$gf, this.container, this.type, content);
+        this.xgraph.events.connect('graph_changed', this, this._on_xgraph_graph_changed.bind(this));
+      } catch (error) {
+        $GF.notify('Unable to initialize graph', 'error');
+        GFLog.error('Unable to initialize graph', error);
       }
-      this.xgraph = new XGraph(this.$gf, this.container, this.data.type, content);
-      this.xgraph.events.connect('graph_changed', this, this._on_xgraph_graph_changed.bind(this));
-    } catch (error) {
-      $GF.notify('Unable to initialize graph', 'error');
-      GFLog.error('Unable to initialize graph', error);
-    }
+    });
     return this;
   }
 
@@ -695,13 +704,13 @@ export class Flowchart {
    * @returns
    * @memberof Flowchart
    */
-  getResolvedSource(replaceVarBool = true): string {
+  async getResolvedSource(replaceVarBool = true) {
     const $GF = this.$gf;
     let content: string | null = '';
     if (this.download) {
       const url = $GF.resolveVars(this.data.url);
       $GF.notify(`Loading content definition for ${this.data.name}`, 'info');
-      content = this.loadContent(url);
+      content = await this.loadContent(url);
       $GF.clearNotify();
       if (content !== null) {
         if (replaceVarBool) {
@@ -739,8 +748,9 @@ export class Flowchart {
    * @memberof Flowchart
    */
   //TODO : Transform to fetch
-  loadContent(url: string): string | null {
-    return $GF.utils.$loadFile(url);
+  async loadContent(url: string) {
+    const result = await $GF.loadFile(url);
+    return result;
   }
 
   /**
@@ -863,6 +873,9 @@ export class Flowchart {
   //###########################################################################
   private _on_xgraph_graph_changed() {
     _log('📬', this.constructor.name, '_on_flowchart_graph_changed');
+    if(!this.stateHandler) {
+      this.init_stateHandler()
+    }
     if (this.xgraph) {
       this.stateHandler?.setXGraph(this.xgraph);
       this.stateHandler?.init();

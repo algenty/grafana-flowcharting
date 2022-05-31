@@ -1,4 +1,3 @@
-
 import { XCell } from 'cell_class';
 import { GFEvents } from 'flowcharting_base';
 import { $GF, GFCONSTANT, GFPlugin, GFVariables } from 'globals_class';
@@ -106,16 +105,16 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
     return this.data.pattern;
   }
   set pattern(v: string) {
-    if(!v || v.length === 0 || v === this.data.pattern) {
+    if (!v || v.length === 0 || v === this.data.pattern) {
       return;
     }
     this.data.pattern = v;
-    this.change()
+    this.change();
   }
 
   //HIDDEN
   set hidden(v: boolean) {
-    if(!v || v === this.data.hidden) {
+    if (!v || v === this.data.hidden) {
       return;
     }
     this.data.hidden = v;
@@ -124,7 +123,6 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
   get hidden(): boolean {
     return this.data.hidden;
   }
-
 
   //############################################################################
   //### LOGICS
@@ -151,8 +149,6 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
   getOptions(): gf.TRuleMapOptions {
     return this.options;
   }
-
-
 
   /**
    * Get default stored data
@@ -422,8 +418,6 @@ export class TextMap extends GFMap<gf.TTextMapData> {
    * @memberof TextMap
    */
   isEligible(level: number): boolean {
-    // if (this.data.textOn === 'wmd' && level > 0) return true;
-    // if (this.data.textOn === 'wmd' && level === -1) return false;
     if (this.data.textOn === 'wmd') {
       return true;
     }
@@ -474,8 +468,8 @@ export class TextMap extends GFMap<gf.TTextMapData> {
       return FormattedValue;
     }
     if (this.data.textReplace === 'pattern') {
-      const regexVal = $GF.utils.stringToJsRegex(this.data.textPattern);
-      if (text.toString().match(regexVal)) {
+      const regexVal = $GF.stringToRegEx(this.data.textPattern);
+      if (regexVal && text.toString().match(regexVal)) {
         return text.toString().replace(regexVal, FormattedValue);
       }
       return text;
@@ -736,14 +730,13 @@ class VMAP<VMAPType extends gf.TDefMapData> {
   events: GFEvents<MappingSignals> = GFEvents.create(mappingSignalsArray);
   constructor(data: VMAPType) {
     this.data = data;
-    this.init()
+    this.init();
   }
 
   //############################################################################
   //### INIT/UPDATE/CHANGE/FREE
   //############################################################################
-  init(): void {
-  }
+  init(): void {}
 
   change(): void {
     this.events.emit('mapping_changed', this);
@@ -757,17 +750,17 @@ class VMAP<VMAPType extends gf.TDefMapData> {
   //### ACCESSORS GETTERS/SETTERS
   //############################################################################
   set hidden(v: boolean) {
-    if( v !== this.data.hidden) {
+    if (v !== this.data.hidden) {
       this.data.hidden = v;
       this.change();
     }
   }
   get hidden(): boolean {
-    return this.data.hidden
+    return this.data.hidden;
   }
 
   set text(v: string) {
-    if( v !== this.data.text) {
+    if (v !== this.data.text) {
       this.data.text = v.trim();
       this.change();
     }
@@ -837,7 +830,6 @@ export class ValueMap extends VMAP<gf.TValueMapData> {
   //### INIT/UPDATE/CHANGE/FREE
   //############################################################################
 
-
   //############################################################################
   //### ACCESSORS
   //############################################################################
@@ -845,7 +837,7 @@ export class ValueMap extends VMAP<gf.TValueMapData> {
     return this.data.value ?? '';
   }
   set value(v: string) {
-    if( v !== this.data.value) {
+    if (v !== this.data.value) {
       this.data.value = v;
       this.change();
     }
@@ -941,7 +933,6 @@ export class RangeMap extends VMAP<gf.TRangeMapData> {
   //### INIT/UPDATE/CHANGE/FREE
   //############################################################################
 
-
   //############################################################################
   //### ACCESSORS
   //############################################################################
@@ -949,7 +940,7 @@ export class RangeMap extends VMAP<gf.TRangeMapData> {
     return this.data.to ?? '';
   }
   set to(v: string) {
-    if( v !== this.data.to) {
+    if (v !== this.data.to) {
       this.data.to = v;
       this.change();
     }
@@ -958,7 +949,7 @@ export class RangeMap extends VMAP<gf.TRangeMapData> {
     return this.data.from ?? '';
   }
   set from(v: string) {
-    if( v !== this.data.from) {
+    if (v !== this.data.from) {
       this.data.from = v;
       this.change();
     }
