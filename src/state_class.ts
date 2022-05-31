@@ -570,7 +570,7 @@ export class State {
   //### EVENTS
   //###########################################################################
   private _on_global_data_received() {
-    _log('📬', this.constructor.name, '_on_global_data_received');
+    // _log('📬', this.constructor.name, '_on_global_data_received');
   }
 
   private _on_global_data_processed() {
@@ -592,8 +592,8 @@ export class State {
   }
 
   private _on_ruleHandler_rule_created(rule: Rule) {
-    _log('📬', this.constructor.name, '_on_ruleHandler_rule_created');
-    this._updateRule(rule);
+    // _log('📬', this.constructor.name, '_on_ruleHandler_rule_created');
+    // this._updateRule(rule);
   }
 
   private _on_ruleHandler_rule_deleted(rule: Rule) {

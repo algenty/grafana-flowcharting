@@ -1,6 +1,5 @@
 import { XGraph } from 'graph_class';
 import { StateHandler } from 'states_handler';
-import { FlowchartHandler } from 'flowchart_handler';
 import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
@@ -142,7 +141,7 @@ export class Flowchart {
       this.data.csv = value;
     }
     if (this.xgraph) {
-      this.getResolvedSource().then((source) => {
+      this.resolveSource().then((source) => {
         if (this.xgraph) {
           this.xgraph.source = source;
           this.change();
@@ -151,7 +150,13 @@ export class Flowchart {
     }
   }
   get source() {
-    return this.data.type === 'csv' ? this.data.csv : this.data.xml;
+    if(this.data.type ==='csv' && typeof this.data.csv === 'string') {
+      return this.data.csv;
+    }
+    if(this.data.type === 'xml' && typeof this.data.xml === 'string') {
+      return this.data.xml;
+    }
+    return '';
   }
 
   // DOWNLOAD
@@ -161,7 +166,7 @@ export class Flowchart {
     }
     this.data.download = value;
     if (value && this.xgraph) {
-      this.getResolvedSource().then((source) => {
+      this.resolveSource().then((source) => {
         if (this.xgraph) {
           this.xgraph.source = source;
           this.change();
@@ -359,8 +364,8 @@ export class Flowchart {
   static getDefaultData(): gf.TFlowchartData {
     return {
       name: 'Main',
-      xml: FlowchartHandler.getDefaultDioGraph(),
-      csv: FlowchartHandler.getDefaultCsvGraph(),
+      xml: GFDrawio.getDefaultDioGraph(),
+      csv: GFDrawio.getDefaultCsvGraph(),
       download: false,
       type: 'xml',
       url: 'http://<YourUrl>/<Your XML/drawio file/api>',
@@ -400,7 +405,7 @@ export class Flowchart {
    */
   init_xgraph(): this {
     const $GF = this.$gf;
-    this.getResolvedSource().then((content) => {
+    this.resolveSource().then((content) => {
       try {
         if (this.xgraph !== undefined) {
           this.xgraph.free();
@@ -704,13 +709,16 @@ export class Flowchart {
    * @returns
    * @memberof Flowchart
    */
-  async getResolvedSource(replaceVarBool = true) {
+  async resolveSource(replaceVarBool = true) {
     const $GF = this.$gf;
     let content: string | null = '';
     if (this.download) {
       const url = $GF.resolveVars(this.data.url);
       $GF.notify(`Loading content definition for ${this.data.name}`, 'info');
       content = await this.loadContent(url);
+      if(GFDrawio.isEncoded(content)) {
+        content = GFDrawio.decode(content);
+      }
       $GF.clearNotify();
       if (content !== null) {
         if (replaceVarBool) {
@@ -718,7 +726,26 @@ export class Flowchart {
         }
       }
     } else {
-      content = $GF.resolveVars(this.source);
+      if(this.data.type === 'xml') {
+        if(this.data.xml instanceof Promise) {
+          content = await this.data.xml;
+          this.data.xml = content;
+          if(GFDrawio.isEncoded(content)) {
+            content = GFDrawio.decode(content);
+          }
+        } else {
+          content = this.data.xml;
+        }
+      }
+      if(this.data.type === 'csv') {
+        if(this.data.csv instanceof Promise) {
+          content = await this.data.csv;
+          this.data.csv = content;
+        } else {
+          content = this.data.csv;
+        }
+      }
+      content = $GF.resolveVars(content);
     }
     return content === null ? '' : content;
   }
@@ -813,22 +840,22 @@ export class Flowchart {
   // }
 
   minify() {
-    this.data.xml = $GF.minify(this.data.xml);
+    this.source = $GF.minify(this.source);
   }
 
   prettify() {
-    this.data.xml = $GF.prettify(this.data.xml);
+    this.source = $GF.prettify(this.source);
   }
 
   decode() {
-    if (GFDrawio.isEncoded(this.data.xml)) {
-      this.data.xml = GFDrawio.decode(this.data.xml);
+    if (typeof GFDrawio.isEncoded(this.source)) {
+      this.source = GFDrawio.decode(this.source);
     }
   }
 
   encode() {
-    if (!GFDrawio.isEncoded(this.data.xml)) {
-      const xml = GFDrawio.encode(this.data.xml);
+    if (!GFDrawio.isEncoded(this.source)) {
+      const xml = GFDrawio.encode(this.source);
       this.data.xml = xml ? xml : this.data.xml;
     }
   }

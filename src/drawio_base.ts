@@ -32,12 +32,16 @@ export class GFDrawio {
   static libPromize: Promise<unknown> | undefined;
   static options: DrawioRequiredOptions;
   static events: GFEvents<GFDrawioSignals> = GFEvents.create(gfdrawioSignalsArray);
+  static xmlSrc: string | undefined;
+  static csvSrc: string | undefined;
 
   //############################################################################
   //### INIT/UPDATE/CHANGE/FREE/CLEAR
   //############################################################################
   static async init(options?: DrawioOptions) {
     this._GFInitialized = true;
+    // this.getDefaultDioGraph();
+    // this.getDefaultCsvGraph();
     this.options = Object.assign(this._getDefaultRequiredOptions(), options);
     if (!GFDrawio._libInitialized && GFDrawio.options.libLoad) {
       return GFDrawio.loadEngine();
@@ -83,6 +87,26 @@ export class GFDrawio {
       return;
     });
     return;
+  }
+
+  static async getDefaultDioGraph() {
+    if (this.xmlSrc) {
+      return this.xmlSrc;
+    }
+    const url = `${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DEFAULTDIO}`;
+    const resp = await fetch(url);
+    this.xmlSrc = await resp.text();
+    return this.xmlSrc;
+  }
+
+  static async getDefaultCsvGraph() {
+    if (this.csvSrc) {
+      return this.csvSrc;
+    }
+    const url = `${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DEFAULTCSV}`;
+    const resp = await fetch(url);
+    this.xmlSrc = await resp.text();
+    return this.xmlSrc;
   }
 
   //############################################################################
@@ -195,7 +219,6 @@ export class GFDrawio {
    * @returns string
    */
   static getTextContent(node: Object): string {
-
     const _node: any = node;
     return _node != null ? _node[_node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
   }

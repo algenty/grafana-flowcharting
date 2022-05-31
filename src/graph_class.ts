@@ -74,11 +74,7 @@ export class XGraph {
   init() {
     this._eventsConnect();
     if (this._type === 'xml') {
-      if (GFDrawio.isEncoded(this._definition)) {
-        this._xmlGraph = GFDrawio.decode(this._definition);
-      } else {
         this._xmlGraph = this._definition;
-      }
     }
     if (this._type === 'csv') {
       this._csvGraph = this._definition;

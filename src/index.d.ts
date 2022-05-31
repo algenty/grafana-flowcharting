@@ -442,8 +442,8 @@ declare module gf {
   // Flowcharts
   declare interface TFlowchartData {
     name: string;
-    xml: string;
-    csv: string;
+    xml: string | Promise<string>;
+    csv: string | Promise<string>;
     download: boolean;
     type: gf.TSourceTypeKeys;
     url: string;
