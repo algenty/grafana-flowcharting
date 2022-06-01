@@ -729,7 +729,7 @@ export class $GF {
   private _globalvars: GFVariables = GFVariables.create();
   static graphHover = false;
   static GHTimeStamp = 0;
-  DEBUG = true;
+  DEBUG = false;
   notify: CallableFunction = (message: string, type: string) => {};
   clearNotify: CallableFunction = () => {};
   $refresh: CallableFunction = () => {};
