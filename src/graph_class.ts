@@ -9,7 +9,7 @@ import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
 
 // Debug
-const DEBUG = false;
+const DEBUG = true;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
@@ -63,7 +63,7 @@ export class XGraph {
     this._type = type;
     this.xcells = [];
     this.onMapping = this.$gf.ctrl.onMapping;
-    this._definition = definition;
+    this._definition = GFDrawio.isEncoded(definition) ? GFDrawio.decode(definition) : definition;
     this.init();
   }
 

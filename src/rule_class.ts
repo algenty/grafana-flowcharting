@@ -18,7 +18,7 @@ import {
 import { GFEvents } from 'flowcharting_base';
 
 // Debug
-const DEBUG = false;
+const DEBUG = true;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };

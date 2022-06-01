@@ -273,7 +273,9 @@ export class GFDrawio {
           { to: 'string' }
         );
       } catch (e) {
-        GFLog.error(`Pako : Unable to decode ${data}`);
+        GFLog.error(`Pako : Unable to decode : ${e}`);
+        throw new Error(`Pako : Unable to decode : ${e}`);
+
         return '';
       }
     }
@@ -282,6 +284,7 @@ export class GFDrawio {
       data = decodeURIComponent(data);
     } catch (e) {
       GFLog.error(`Unable to decode ${data}`);
+      throw new Error(`Unable to decode`);
       return '';
     }
     return data;
@@ -310,28 +313,36 @@ export class GFDrawio {
       try {
         data = Buffer.from(data, 'binary').toString('base64');
       } catch (e) {
-        GFLog.error(`Unable to encode ${data}`);
-        return;
+        GFLog.error('Unable to encode', e);
+        throw new Error(`Unable to encode : ${e}`);
       }
 
       return data;
     }
   }
 
+  // static isEncoded(data: string) {
+  //   try {
+  //     const node = this.parseXml(data).documentElement;
+  //     if (node != null && node.nodeName === 'mxfile') {
+  //       const diagrams = node.getElementsByTagName('diagram');
+  //       if (diagrams.length > 0) {
+  //         return true;
+  //       }
+  //     } else {
+  //       return data.indexOf('mxGraphModel') === -1;
+  //     }
+  //   } catch (error) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
   static isEncoded(data: string) {
     try {
-      const node = this.parseXml(data).documentElement;
-      if (node != null && node.nodeName === 'mxfile') {
-        const diagrams = node.getElementsByTagName('diagram');
-        if (diagrams.length > 0) {
-          return true;
-        }
-      } else {
-        return data.indexOf('mxGraphModel') === -1;
-      }
-    } catch (error) {
+      GFDrawio.decode(data);
       return true;
+    } catch (error) {
+      return false;
     }
-    return false;
   }
 }
