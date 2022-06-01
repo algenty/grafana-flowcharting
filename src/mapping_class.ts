@@ -200,7 +200,7 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
     if (text === undefined || text === null || text.length === 0) {
       return false;
     }
-    return $GF.utils.matchString(text, pattern, options.enableRegEx);
+    return $GF.matchString(text, pattern, options.enableRegEx);
   }
 
   /**
@@ -474,8 +474,8 @@ export class TextMap extends GFMap<gf.TTextMapData> {
       return FormattedValue;
     }
     if (this.data.textReplace === 'pattern') {
-      const regexVal = $GF.utils.stringToJsRegex(this.data.textPattern);
-      if (text.toString().match(regexVal)) {
+      const regexVal = $GF.stringToRegEx(this.data.textPattern);
+      if (regexVal && text.toString().match(regexVal)) {
         return text.toString().replace(regexVal, FormattedValue);
       }
       return text;
@@ -901,7 +901,7 @@ export class ValueMap extends VMAP<gf.TValueMapData> {
     if (!_isString(value) && Number(this.data.value) === Number(value)) {
       return true;
     }
-    return $GF.utils.matchString(value.toString(), this.data.value);
+    return $GF.matchString(value.toString(), this.data.value);
   }
 
   /**

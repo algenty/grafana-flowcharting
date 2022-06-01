@@ -266,7 +266,7 @@ export class StringTH extends GFTH<gf.TTHStringData> {
     if (value === undefined) {
       return false;
     }
-    const m = $GF.utils.matchString(value, this.value);
+    const m = $GF.matchString(value, this.value);
     switch (this.comparator) {
       case 'eq':
         return m;
