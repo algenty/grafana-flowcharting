@@ -87,7 +87,8 @@ export class FlowchartHandler {
   }
 
   change() {
-    this.flowcharts.forEach((f) => f.change());
+    //TODO : Generate a conflict with addflowchart
+    // this.flowcharts.forEach((f) => f.change());
     this.setCurrentFlowchart('Main');
   }
 
@@ -184,8 +185,11 @@ export class FlowchartHandler {
       // import data
       this.data.flowcharts = [];
       if (Array.isArray(tmpFc)) {
-        tmpFc.map(async (fcData: gf.TFlowchartData) => {
-          this.addFlowchart(fcData.name, fcData).toBack().enableDioREssources(this.data.allowDrawio);
+        tmpFc.forEach( (fcData: gf.TFlowchartData) => {
+          const fc = this.addFlowchart(fcData.name, fcData)
+          fc.toBack();
+          // TODO : fix enable DIO ressources
+          // .enableDioREssources(this.data.allowDrawio);
         });
       }
       this.currentFlowchart = this.getFlowchart('Main');
