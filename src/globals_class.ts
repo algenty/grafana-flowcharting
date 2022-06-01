@@ -746,8 +746,8 @@ export class $GF {
     sleep_deprecated: (ms: number, mess?: string) => void;
     // ! deprecated :  use genUdi
     uniqueID_deprecated: () => string;
-    matchString: (str: string, pattern: string | undefined, regex?: boolean) => boolean;
-    stringToJsRegex: (str: string) => RegExp;
+    matchString_deprecated: (str: string, pattern: string | undefined, regex?: boolean) => boolean;
+    stringToJsRegex_deprecated: (str: string) => RegExp;
     // ! deprecated : Use DrawioTools
     isencoded_deprecated: (data: string) => boolean;
     minify: (text: string) => string;
@@ -937,6 +937,42 @@ export class $GF {
       }
     }
     return 'No text ';
+  }
+  static stringToRegEx(str: string): RegExp|null {
+    try {
+      if (str.charAt(0) !== '/') {
+        return new RegExp(`^${str}$`);
+      }
+      const match = str.match(new RegExp('^/(.*?)/(g?i?m?y?)$'));
+      if(match) {
+        return new RegExp(match[1], match[2]);
+      }
+    } catch(error) {
+      return null;
+    }
+    return null;
+  }
+
+  static matchString(str: string, pattern: RegExp | string | undefined, enableRegExp = true): boolean {
+    if (!str || !pattern || str.length === 0 || (typeof pattern === 'string' && pattern.length === 0)) {
+      return false;
+    }
+    if (str === pattern) {
+      return true;
+    }
+    // if (enableRegExp && typeof pattern === 'string' && str.includes(pattern)) {
+    //   return true;
+    // }
+    if (pattern instanceof RegExp) {
+      return pattern.test(str);
+    }
+    if (pattern && enableRegExp === true) {
+      const reg = $GF.stringToRegEx(pattern);
+      if(reg) {
+        return reg.test(str);
+      }
+    }
+    return false;
   }
 
   /**

@@ -199,7 +199,7 @@ export class MetricHandler {
    */
   findMetrics(name: string, type?: gf.TMetricTypeKeys): ObjectMetric[] {
     let metrics: ObjectMetric[] = [];
-    metrics = this.getMetrics(type).filter((m) => $GF.utils.matchString(m.getName(), name, true));
+    metrics = this.getMetrics(type).filter((m) => $GF.matchString(m.getName(), name, true));
     return metrics;
   }
 

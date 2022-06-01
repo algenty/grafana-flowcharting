@@ -2652,7 +2652,7 @@ export class Rule {
    */
   matchMetric(metric: ObjectMetric): boolean {
     if (this.data.metricType === 'serie' && metric.type === 'serie') {
-      return $GF.utils.matchString(metric.getName(), this.data.pattern);
+      return $GF.matchString(metric.getName(), this.data.pattern);
     }
     if (this.data.metricType === 'table' && metric.type === 'table') {
       return metric.getName() === this.data.refId;
