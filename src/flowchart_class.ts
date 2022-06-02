@@ -6,7 +6,7 @@ import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
 
 // Debug
-const DEBUG = false;
+const DEBUG = true;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
@@ -59,14 +59,14 @@ export class Flowchart {
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.init_xgraph();
     this.init_stateHandler();
+    this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     this.events.emit('flowchart_initialized', this);
   }
 
   update() {
     const funcName = 'refresh';
     GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
-    this.xgraph?.update();
-    this._colorBackgroundContainer(this.data.bgColor);
+    this.update_graph();
     this.events.emit('flowchart_updated', this);
   }
 
@@ -79,6 +79,7 @@ export class Flowchart {
 
   async free() {
     this?.xgraph?.events.disconnect('graph_changed', this);
+    this.$gf.events.disconnect('debug_asked', this);
     this.xgraph?.free();
     this.stateHandler?.free();
     await this.events.emit('flowchart_freed', this);
@@ -412,14 +413,10 @@ export class Flowchart {
       // const content = this.getResolvedSource();
       this.init_xgraph();
       // if (content !== undefined && content !== null) {
-      this.update_graphOptions();
-      this.xgraph?.change();
-      this.xgraph?.update();
+        this.xgraph?.change();
+      this.update_graph();
+      // this.xgraph?.update();
       $GF.clearNotify();
-      // } else {
-      //   $GF.notify('Source content empty Graph not defined', 'error');
-      //   GFLog.error('Source content empty Graph not defined');
-      // }
     } catch (error) {
       $GF.notify('Unable to initialize graph', 'error');
       GFLog.error('Unable to initialize graph', error);
@@ -452,15 +449,16 @@ export class Flowchart {
    *
    * @memberof Flowchart
    */
-  update_graphOptions(): this {
-    this.enableAnimation();
+  update_graph(): this {
     this.scaleGraph();
     this.centerGraph();
     this.enableGrid();
     this.enableTooltip();
     this.enableLock();
     this.zoomGraph();
-    // this.setBgColor(this.data.bgColor);
+    this.enableAnimation();
+    this._colorBackgroundContainer(this.data.bgColor);
+    this.xgraph?.update();
     return this;
   }
 
@@ -715,23 +713,6 @@ export class Flowchart {
   }
 
   /**
-   * Set the data source
-   *
-   * @param {string} content
-   * @returns {this}
-   * @memberof Flowchart
-   */
-  // setGraphContent(content: string): this {
-  //   if (this.data.type === 'xml') {
-  //     this.data.xml = content;
-  //   }
-  //   if (this.data.type === 'csv') {
-  //     this.data.csv = content;
-  //   }
-  //   return this;
-  // }
-
-  /**
    * Load source from url
    *
    * @param {*} url
@@ -762,28 +743,12 @@ export class Flowchart {
     return this;
   }
 
-  // setZoom(percent: string): this {
-  //   this.data.zoom = percent;
-  //   if (this.xgraph) {
-  //     this.xgraph.zoomPercent = percent;
-  //   }
-  //   return this;
-  // }
-
   zoomGraph(percent: string = this.zoom): this {
     if (this.xgraph) {
       this.xgraph.zoomDisplay(this.data.zoom);
     }
     return this;
   }
-
-  // setGrid(bool: boolean): this {
-  //   this.data.grid = bool;
-  //   if (this.xgraph) {
-  //     this.xgraph.grid = bool;
-  //   }
-  //   return this;
-  // }
 
   enableGrid(bool: boolean = this.grid): this {
     if (this.xgraph) {
@@ -792,15 +757,6 @@ export class Flowchart {
     return this;
   }
 
-  // setXml(xml: string): this {
-  //   this.data.xml = xml;
-  //   return this;
-  // }
-
-  // setCsv(csv: string): this {
-  //   this.data.csv = csv;
-  //   return this;
-  // }
 
   minify() {
     this.data.xml = $GF.utils.minify(this.data.xml);
@@ -843,7 +799,7 @@ export class Flowchart {
     this.visible = true;
     this.container.className = 'gf-flowchartShow';
     if (forceRefresh) {
-      this.xgraph?.update();
+      this.update_graph();
     }
     return this;
   }
@@ -867,5 +823,10 @@ export class Flowchart {
       this.stateHandler?.setXGraph(this.xgraph);
       this.stateHandler?.init();
     }
+  }
+
+  private _on_global_debug_asked() {
+    _log('📬', this.constructor.name, '_on_global_debug_asked');
+    _log('🗃️', this.constructor.name, this);
   }
 }
