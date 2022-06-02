@@ -10,7 +10,7 @@ import { GFEvents } from 'flowcharting_base';
 const stateSignalsArray = ['state_initialized', 'state_updated', 'state_freed'] as const;
 type stateSignals = typeof stateSignalsArray[number];
 
-const DEBUG = false;
+const DEBUG = true;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
