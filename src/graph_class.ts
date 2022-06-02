@@ -9,7 +9,7 @@ import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
 
 // Debug
-const DEBUG = false;
+const DEBUG = true;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
@@ -119,8 +119,6 @@ export class XGraph {
   }
 
   update() {
-    const funcName = 'update';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.update_graph();
     this.events.emit('graph_updated', this);
     return this;
@@ -314,6 +312,7 @@ export class XGraph {
     this.centerDisplay();
     this.gridDisplay();
     this.enableDioRessources();
+    this.enableAnimation();
     this._graph.foldingEnabled = true;
     this._graph.cellRenderer.forceControlClickHandler = true;
     return;
@@ -705,22 +704,6 @@ export class XGraph {
   async unhighlightXCells(pattern: string, options?: gf.TRuleMapOptions) {
     return this.highlightXCells(pattern, options, false);
   }
-
-  /**
-   * Create tooltip on image
-   *
-   * @param {*} image
-   * @param {*} tooltip
-   * @returns {mxCellOverlay}
-   * @memberof XGraph
-   */
-  // createOverlay(image, tooltip): any {
-  //   const overlay = new mxCellOverlay(image, tooltip);
-  //   overlay.addListener(mxEvent.CLICK, (_sender, _evt) => {
-  //     mxUtils.alert(`${tooltip}\nLast update: ${new Date()}`);
-  //   });
-  //   return overlay;
-  // }
 
   /**
    * Get value or id from cell source

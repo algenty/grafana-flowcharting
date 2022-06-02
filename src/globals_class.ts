@@ -9,7 +9,7 @@ import { MetricHandler } from 'metric_handler';
 const safeEval = require('safe-eval');
 
 // Debug
-const DEBUG=false
+const DEBUG=true
 const _log = (...args: any) => {DEBUG && console.log(...args)}
 
 // Define signals
@@ -729,7 +729,7 @@ export class $GF {
   private _globalvars: GFVariables = GFVariables.create();
   static graphHover = false;
   static GHTimeStamp = 0;
-  DEBUG = false;
+  DEBUG = DEBUG;
   notify: CallableFunction = (message: string, type: string) => {};
   clearNotify: CallableFunction = () => {};
   $refresh: CallableFunction = () => {};
