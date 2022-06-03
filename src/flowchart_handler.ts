@@ -1,5 +1,5 @@
 import { Flowchart } from 'flowchart_class';
-import { $GF, GFCONSTANT, GFPlugin } from 'globals_class';
+import { $GF, GFCONSTANT } from 'globals_class';
 import { InteractiveMap, ObjectMap } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
 
@@ -48,7 +48,7 @@ export class FlowchartHandler {
   constructor($gf: $GF, data: gf.TFlowchartHandlerData, oldData?: any) {
     this.$gf = $gf;
     this.$gf.flowchartHandler = this;
-    FlowchartHandler.getDefaultDioGraph();
+    // FlowchartHandler.getDefaultDioGraph();
     this.uid = $GF.genUid(this.constructor.name);
     this._parentDiv = this.$gf.ctrl.flowchartsDiv;
     this.data = data;
@@ -205,14 +205,14 @@ export class FlowchartHandler {
    * @returns {string}
    * @memberof FlowchartHandler
    */
-  static getDefaultDioGraph(): string {
-    let result = FlowchartHandler.defaultXml;
-    if (!result) {
-      const url = `${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DEFAULTDIO}`;
-      result = $GF.utils.$loadFile(url);
-    }
-    return result;
-  }
+  // static getDefaultDioGraph(): string {
+  //   let result = FlowchartHandler.defaultXml;
+  //   if (!result) {
+  //     const url = `${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DEFAULTDIO}`;
+  //     result = $GF.utils.$loadFile(url);
+  //   }
+  //   return result;
+  // }
 
   /**
    * Reset/empty flowcharts, rules and children
@@ -237,14 +237,14 @@ export class FlowchartHandler {
    * @returns {string}
    * @memberof FlowchartHandler
    */
-  static getDefaultCsvGraph(): string {
-    let result = FlowchartHandler.defaultCsv;
-    if (!result) {
-      const url = `${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DEFAULTCSV}`;
-      result = $GF.utils.$loadFile(url);
-    }
-    return result;
-  }
+  // static getDefaultCsvGraph(): string {
+  //   let result = FlowchartHandler.defaultCsv;
+  //   if (!result) {
+  //     const url = `${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DEFAULTCSV}`;
+  //     result = $GF.utils.$loadFile(url);
+  //   }
+  //   return result;
+  // }
 
   /**
    * return default flowchart or flowchart by name or index

@@ -29,6 +29,8 @@ type DrawioRequiredOptions = Complete<DrawioOptions>;
 export class GFDrawio {
   private static _GFInitialized = false;
   private static _libInitialized = false;
+  private static _xmlTemplate: string;
+  private static _csvTemplate: string;
   static libPromize: Promise<unknown> | undefined;
   static options: DrawioRequiredOptions;
   static events: GFEvents<GFDrawioSignals> = GFEvents.create(gfdrawioSignalsArray);
@@ -85,9 +87,55 @@ export class GFDrawio {
     return;
   }
 
+  static getTemplate(type: gf.TSourceTypeKeys) {
+    if(type === 'xml') {
+      return GFDrawio.getXmlTemplate();
+    }
+    if(type === 'csv') {
+      return GFDrawio.getCsvTemplate();
+    }
+    throw new Error(`Unknown type ${type}`);
+
+  }
+
+  static getXmlTemplate() {
+    if (GFDrawio._xmlTemplate) {
+      return GFDrawio._xmlTemplate;
+    }
+    const url = `${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DEFAULTDIO}`;
+    return GFDrawio.loadFile(url).then((txt) => {
+      GFDrawio._xmlTemplate = txt;
+      return txt;
+    });
+  }
+
+  static getCsvTemplate() {
+    if (GFDrawio._csvTemplate) {
+      return GFDrawio._csvTemplate;
+    }
+    const url = `${GFPlugin.getRootPath()}${GFCONSTANT.CONF_FILE_DEFAULTCSV}`;
+    return GFDrawio.loadFile(url).then((txt) => {
+      GFDrawio._csvTemplate = txt;
+      return txt;
+    });
+  }
+
+  static async loadFile(url: string) {
+    try {
+      const resp = await fetch(url);
+      const txt = await resp.text();
+      return txt;
+    } catch (error) {
+      throw new Error(`Can't load file ${url} : ${error}`);
+    }
+  }
+
+
+
   //############################################################################
   //### PRIVATE
   //############################################################################
+
   private static _getDefaultRequiredOptions(): DrawioRequiredOptions {
     return {
       mode: 'server',
@@ -195,7 +243,6 @@ export class GFDrawio {
    * @returns string
    */
   static getTextContent(node: Object): string {
-
     const _node: any = node;
     return _node != null ? _node[_node.hasOwnProperty('textContent') === undefined ? 'text' : 'textContent'] : '';
   }
@@ -238,7 +285,9 @@ export class GFDrawio {
         }
       }
     } catch (e) {
-      GFLog.error(`parseXml : Unable to decode ${data}`);
+      // GFLog.error(`parseXml : Unable to decode ${data}`);
+      throw new Error("parseXml : Unable to decode");
+
       return '';
     }
     // data = atob(data);
@@ -250,8 +299,8 @@ export class GFDrawio {
           { to: 'string' }
         );
       } catch (e) {
-        GFLog.error(`Pako : Unable to decode ${data}`);
-        return '';
+        // GFLog.error(`Pako : Unable to decode ${data}`);
+        throw new Error("Pako : Unable to decode");
       }
     }
 
@@ -272,7 +321,6 @@ export class GFDrawio {
         GFLog.error(`Unable to encode/encodeURIComponent : ${data}`, e);
         return;
       }
-
       if (data.length > 0) {
         try {
           let deflateRaws = deflateRaw(data);
@@ -297,18 +345,10 @@ export class GFDrawio {
 
   static isEncoded(data: string) {
     try {
-      const node = this.parseXml(data).documentElement;
-      if (node != null && node.nodeName === 'mxfile') {
-        const diagrams = node.getElementsByTagName('diagram');
-        if (diagrams.length > 0) {
-          return true;
-        }
-      } else {
-        return data.indexOf('mxGraphModel') === -1;
-      }
+      GFDrawio.decode(data);
     } catch (error) {
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 }

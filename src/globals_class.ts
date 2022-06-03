@@ -1113,6 +1113,16 @@ export class $GF {
     return color;
   }
 
+  static async loadFile(url: string) {
+    try {
+      const resp = await fetch(url);
+      const txt = await resp.text();
+      return txt;
+    } catch (error) {
+      throw new Error(`Can't load file ${url} : ${error}`);
+    }
+  }
+
   /**
    * Add a new Intervall (window.setInterval)
    *
@@ -1165,42 +1175,42 @@ export class $GF {
    * @param {string} fileName
    * @memberof GFGlobal
    */
-  async loadLocalFile(varName: string, fileName: string) {
-    let v = this.getVar(varName);
-    if (v === undefined) {
-      const contextroot = GFPlugin.getRootPath();
-      if (contextroot !== undefined) {
-        const filePath = `${contextroot}/${fileName}`;
-        if (!!window.fetch) {
-          // exécuter ma requête fetch ici
-          fetch(filePath)
-            .then((response) => {
-              if (response.ok) {
-                response
-                  .text()
-                  .then((text) => {
-                    GFLog.info('loadLocalFile called succesfully', filePath);
-                    this.setVar(varName, text);
-                    return text;
-                  })
-                  .catch((error) => GFLog.error('Error when download text file', filePath, error));
-              }
-            })
-            .catch((error) => GFLog.error('Error when download file', filePath, error));
-        } else {
-          // Faire quelque chose avec XMLHttpRequest?
-          const txt = $GF.utils.loadFile(fileName);
-          if (txt) {
-            this.setVar(varName, $GF.utils.loadFile(fileName));
-            return txt;
-          }
-        }
-      } else {
-        GFLog.warn('loadLocalFile Contexroot : ', contextroot);
-      }
-    }
-    return false;
-  }
+  // async loadLocalFile(varName: string, fileName: string) {
+  //   let v = this.getVar(varName);
+  //   if (v === undefined) {
+  //     const contextroot = GFPlugin.getRootPath();
+  //     if (contextroot !== undefined) {
+  //       const filePath = `${contextroot}/${fileName}`;
+  //       if (!!window.fetch) {
+  //         // exécuter ma requête fetch ici
+  //         fetch(filePath)
+  //           .then((response) => {
+  //             if (response.ok) {
+  //               response
+  //                 .text()
+  //                 .then((text) => {
+  //                   GFLog.info('loadLocalFile called succesfully', filePath);
+  //                   this.setVar(varName, text);
+  //                   return text;
+  //                 })
+  //                 .catch((error) => GFLog.error('Error when download text file', filePath, error));
+  //             }
+  //           })
+  //           .catch((error) => GFLog.error('Error when download file', filePath, error));
+  //       } else {
+  //         // Faire quelque chose avec XMLHttpRequest?
+  //         const txt = $GF.utils.loadFile(fileName);
+  //         if (txt) {
+  //           this.setVar(varName, $GF.utils.loadFile(fileName));
+  //           return txt;
+  //         }
+  //       }
+  //     } else {
+  //       GFLog.warn('loadLocalFile Contexroot : ', contextroot);
+  //     }
+  //   }
+  //   return false;
+  // }
 
   // static setGraphHover(timestamp: number) {
   //   if (this.isGraphHoverEnabled()) {

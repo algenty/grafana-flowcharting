@@ -1,6 +1,6 @@
 import { XGraph } from 'graph_class';
 import { StateHandler } from 'states_handler';
-import { FlowchartHandler } from 'flowchart_handler';
+// import { FlowchartHandler } from 'flowchart_handler';
 import { $GF, GFLog } from 'globals_class';
 import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
@@ -71,8 +71,6 @@ export class Flowchart {
   }
 
   change() {
-    const funcName = 'change';
-    GFLog.debug(`${this.constructor.name}.${funcName}() : ${this.uid}`);
     this.change_xgraph();
     this.events.emit('flowchart_changed', this);
   }
@@ -142,10 +140,7 @@ export class Flowchart {
       }
       this.data.csv = value;
     }
-    if (this.xgraph) {
-      this.xgraph.source = this.getResolvedSource();
       this.change();
-    }
   }
   get source() {
     return this.data.type === 'csv' ? this.data.csv : this.data.xml;
@@ -157,10 +152,7 @@ export class Flowchart {
       return;
     }
     this.data.download = value;
-    if (value && this.xgraph) {
-      this.xgraph.source = this.getResolvedSource();
-    }
-    this.change();
+      this.change();
   }
   get download() {
     return this.data.download;
@@ -352,8 +344,8 @@ export class Flowchart {
   static getDefaultData(): gf.TFlowchartData {
     return {
       name: 'Main',
-      xml: FlowchartHandler.getDefaultDioGraph(),
-      csv: FlowchartHandler.getDefaultCsvGraph(),
+      xml: '',
+      csv: '',
       download: false,
       type: 'xml',
       url: 'http://<YourUrl>/<Your XML/drawio file/api>',
@@ -379,6 +371,9 @@ export class Flowchart {
   }
 
   init_stateHandler(): this {
+    if(this.stateHandler) {
+      this.stateHandler.free()
+    }
     if (this.xgraph) {
       this.stateHandler = new StateHandler(this.$gf, this.xgraph);
     }
@@ -391,20 +386,23 @@ export class Flowchart {
    * @return {this}
    * @memberof Flowchart
    */
-  init_xgraph(): this {
+  async init_xgraph() {
     const $GF = this.$gf;
     try {
-      const content = this.getResolvedSource();
-      if (this.xgraph !== undefined) {
-        this.xgraph.free();
-      }
-      this.xgraph = new XGraph(this.$gf, this.container, this.data.type, content);
-      this.xgraph.events.connect('graph_changed', this, this._on_xgraph_graph_changed.bind(this));
+      return this.resolveSource().then((content) => {
+        if (this.xgraph !== undefined) {
+          this.xgraph.free();
+        }
+        this.xgraph = new XGraph(this.$gf, this.container, this.data.type, content);
+        this.xgraph.events.connect('graph_changed', this, this._on_flowchart_graph_changed.bind(this));
+        this.update_graph();
+        this.events.emit('graph_changed', this.xgraph);
+      });
     } catch (error) {
       $GF.notify('Unable to initialize graph', 'error');
       GFLog.error('Unable to initialize graph', error);
     }
-    return this;
+    return;
   }
 
   change_xgraph(): this {
@@ -412,10 +410,6 @@ export class Flowchart {
     try {
       // const content = this.getResolvedSource();
       this.init_xgraph();
-      // if (content !== undefined && content !== null) {
-        this.xgraph?.change();
-      this.update_graph();
-      // this.xgraph?.update();
       $GF.clearNotify();
     } catch (error) {
       $GF.notify('Unable to initialize graph', 'error');
@@ -693,13 +687,13 @@ export class Flowchart {
    * @returns
    * @memberof Flowchart
    */
-  getResolvedSource(replaceVarBool = true): string {
+  async resolveSource(replaceVarBool = true): Promise<string> {
     const $GF = this.$gf;
-    let content: string | null = '';
+    let content = '';
     if (this.download) {
       const url = $GF.resolveVars(this.data.url);
       $GF.notify(`Loading content definition for ${this.data.name}`, 'info');
-      content = this.loadContent(url);
+      content = await GFDrawio.loadFile(url);
       $GF.clearNotify();
       if (content !== null) {
         if (replaceVarBool) {
@@ -707,9 +701,21 @@ export class Flowchart {
         }
       }
     } else {
+      if(!this.source || this.source.length === 0) {
+        content = await GFDrawio.getTemplate(this.type);
+        if(this.type === 'xml'){
+          this.data.xml = content;
+        };
+        if(this.type === 'csv'){
+          this.data.csv = content;
+        };
+      }
+      if(GFDrawio.isEncoded(content)) {
+        content = GFDrawio.decode(content);
+      }
       content = $GF.resolveVars(this.source);
     }
-    return content === null ? '' : content;
+    return content;
   }
 
   /**
@@ -720,9 +726,9 @@ export class Flowchart {
    * @memberof Flowchart
    */
   //TODO : Transform to fetch
-  loadContent(url: string): string | null {
-    return $GF.utils.$loadFile(url);
-  }
+  // loadContent(url: string): string | null {
+  //   return $GF.utils.$loadFile(url);
+  // }
 
   /**
    * Apply xml to graph
@@ -817,11 +823,12 @@ export class Flowchart {
   //###########################################################################
   //### EVENTS
   //###########################################################################
-  private _on_xgraph_graph_changed() {
+  private _on_flowchart_graph_changed() {
     _log('📬', this.constructor.name, '_on_flowchart_graph_changed');
     if (this.xgraph) {
-      this.stateHandler?.setXGraph(this.xgraph);
-      this.stateHandler?.init();
+      this.init_stateHandler();
+      // this.stateHandler?.setXGraph(this.xgraph);
+      // this.stateHandler?.init();
     }
   }
 
