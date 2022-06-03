@@ -927,7 +927,7 @@ export class $GF {
    * @param {*} value
    * @memberof $GF
    */
-  static GetT4V(list: gf.TSelectAny[], value: any): string {
+  GetT4V(list: gf.TSelectAny[], value: any): string {
     if (list) {
       for (let i = 0; i < list.length; i++) {
         const element = list[i];

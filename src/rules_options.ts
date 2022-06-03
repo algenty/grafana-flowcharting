@@ -826,7 +826,7 @@ export class RulesOptionsCtrl {
           const value = m.getValue(rule.aggregation, columnName);
           if (!DateTH.isValidDate(value)) {
             this.$gf.notify(
-              `The value for the metric ${m.getName()} and the aggregation ${$GF.GetT4V(
+              `The value for the metric ${m.getName()} and the aggregation ${this.$gf.GetT4V(
                 this.aggregationTypes,
                 rule.aggregation
               )} is not a valid date : ${value}`
