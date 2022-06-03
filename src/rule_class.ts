@@ -1768,6 +1768,7 @@ export class Rule {
       maps.splice(index, 1);
       datas.splice(index, 1);
     }
+    this.change();
   }
 
   //
