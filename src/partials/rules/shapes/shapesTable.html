@@ -120,8 +120,8 @@
                                 title="Edit pattern"
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
-                            <div ng-show="shape.displayWhatEdit === true && shape.whatEdit !== true && !editor.flowchartHandler.isMapping(shape)"
-                                ng-click="editor.flowchartHandler.setMap(shape, rule.getShapeMapOptions())"
+                            <div ng-show="shape.displayWhatEdit === true && shape.whatEdit !== true && !shape.onMapping"
+                                ng-click="shape.enableMapping(true)"
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a shape in diagram">
                             </div>

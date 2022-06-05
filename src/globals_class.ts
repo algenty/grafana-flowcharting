@@ -9,8 +9,10 @@ import { MetricHandler } from 'metric_handler';
 const safeEval = require('safe-eval');
 
 // Debug
-const DEBUG=true
-const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG = true;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 // Define signals
 const globalSignalsArray = [
@@ -21,6 +23,9 @@ const globalSignalsArray = [
   'editmode_closed',
   'debug_asked',
   'panel_closed',
+  'mapping_enabled',
+  'mapping_disabled',
+  'xcell_clicked',
 ] as const;
 type GlobalSignals = typeof globalSignalsArray[number];
 
@@ -167,7 +172,6 @@ export class GFCONSTANT {
     { text: 'String', value: 'string' },
     { text: 'Date', value: 'date' },
   ];
-
 
   static readonly METRIC_TYPES: gf.TMetricTypeList = [
     { text: 'Series', value: 'serie' },
@@ -735,6 +739,7 @@ export class $GF {
   $refresh: CallableFunction = () => {};
   ctrl!: FlowchartCtrl;
   events: GFEvents<GlobalSignals> = GFEvents.create(globalSignalsArray);
+  callBackMapping: CallableFunction | CallableFunction[] | null = null;
   flowchartHandler: FlowchartHandler | undefined;
   rulesHandler: RulesHandler | undefined;
   metricHandler: MetricHandler | undefined;
@@ -828,6 +833,31 @@ export class $GF {
     let theme = templateSrv !== undefined ? templateSrv.style : 'dark';
     return theme;
   }
+
+  enableMapping(bool= true) {
+    // this.ctrl.onMapping modified in the ctrl when signal is received
+    if(bool !== this.ctrl.onMapping) {
+      if(bool) {
+        this.events.emit('mapping_enabled');
+      }
+      if(!bool) {
+        this.callBackMapping = null;
+        this.events.disconnect('xcell_clicked', this);
+        this.events.emit('mapping_disabled');
+      }
+    }
+  }
+
+  setMappingCallBack(callback: CallableFunction|CallableFunction[]) {
+    this.callBackMapping = callback;
+    this.events.connect('xcell_clicked', this, this._on_global_xcell_clicked.bind(this));
+    this.enableMapping(true);
+  }
+
+  isMappingMode(): boolean {
+    return this.ctrl.onMapping;
+  }
+
 
   /**
    * angular $apply
@@ -938,16 +968,16 @@ export class $GF {
     }
     return 'No text ';
   }
-  static stringToRegEx(str: string): RegExp|null {
+  static stringToRegEx(str: string): RegExp | null {
     try {
       if (str.charAt(0) !== '/') {
         return new RegExp(`^${str}$`);
       }
       const match = str.match(new RegExp('^/(.*?)/(g?i?m?y?)$'));
-      if(match) {
+      if (match) {
         return new RegExp(match[1], match[2]);
       }
-    } catch(error) {
+    } catch (error) {
       return null;
     }
     return null;
@@ -968,7 +998,7 @@ export class $GF {
     }
     if (pattern && enableRegExp === true) {
       const reg = $GF.stringToRegEx(pattern);
-      if(reg) {
+      if (reg) {
         return reg.test(str);
       }
     }
@@ -1123,94 +1153,7 @@ export class $GF {
     }
   }
 
-  /**
-   * Add a new Intervall (window.setInterval)
-   *
-   * @static
-   * @param {CallableFunction} fc
-   * @param {number} timer
-   * @returns {number}
-   * @memberof GFGlobal
-   */
-  // static setUniqInterval(fc: CallableFunction, timer: number, id?: string): string {
-  //   let interval: Map<string, number> = $GF.getVar(GFCONSTANT.VAR_MAP_INTERVAL);
-  //   if (interval === undefined) {
-  //     interval = new Map();
-  //     $GF.setVar(GFCONSTANT.VAR_MAP_INTERVAL, interval);
-  //   }
-  //   if (id !== undefined) {
-  //     this.clearUniqInterval(id);
-  //   }
-  //   const thread = window.setInterval(fc, timer);
-  //   id = id === undefined ? thread.toString() : id;
-  //   interval.set(id, thread);
-  //   return id;
-  // }
 
-  /**
-   * Add/clear a  Intervall (window.clearInterval)
-   *
-   * @static
-   * @param {string} id
-   * @memberof GFGlobal
-   */
-  // static clearUniqInterval(id: string) {
-  //   let interval: Map<string, number> = $GF.getVar(GFCONSTANT.VAR_MAP_INTERVAL);
-  //   if (interval !== undefined) {
-  //     try {
-  //       const int = interval.get(id);
-  //       interval.delete(id);
-  //       window.clearInterval(int);
-  //     } catch (error) {
-  //       GFLog.warn('Failed to clear interval thread', id, error);
-  //     }
-  //   }
-  // }
-
-  /**
-   * Load a file into variables
-   *
-   * @static
-   * @param {string} varName
-   * @param {string} fileName
-   * @memberof GFGlobal
-   */
-  // async loadLocalFile(varName: string, fileName: string) {
-  //   let v = this.getVar(varName);
-  //   if (v === undefined) {
-  //     const contextroot = GFPlugin.getRootPath();
-  //     if (contextroot !== undefined) {
-  //       const filePath = `${contextroot}/${fileName}`;
-  //       if (!!window.fetch) {
-  //         // exécuter ma requête fetch ici
-  //         fetch(filePath)
-  //           .then((response) => {
-  //             if (response.ok) {
-  //               response
-  //                 .text()
-  //                 .then((text) => {
-  //                   GFLog.info('loadLocalFile called succesfully', filePath);
-  //                   this.setVar(varName, text);
-  //                   return text;
-  //                 })
-  //                 .catch((error) => GFLog.error('Error when download text file', filePath, error));
-  //             }
-  //           })
-  //           .catch((error) => GFLog.error('Error when download file', filePath, error));
-  //       } else {
-  //         // Faire quelque chose avec XMLHttpRequest?
-  //         const txt = $GF.utils.loadFile(fileName);
-  //         if (txt) {
-  //           this.setVar(varName, $GF.utils.loadFile(fileName));
-  //           return txt;
-  //         }
-  //       }
-  //     } else {
-  //       GFLog.warn('loadLocalFile Contexroot : ', contextroot);
-  //     }
-  //   }
-  //   return false;
-  // }
 
   // static setGraphHover(timestamp: number) {
   //   if (this.isGraphHoverEnabled()) {
@@ -1313,6 +1256,20 @@ export class $GF {
   private _on_global_panel_closed() {
     _log('📬', this.constructor.name, '_on_global_panel_closed');
     this.free();
+  }
+
+  private _on_global_xcell_clicked(mxcell: mxCell) {
+    _log('📬', this.constructor.name, '_on_global_xcell_clicked');
+    if(this.ctrl.onMapping && this.callBackMapping) {
+      if(this.callBackMapping) {
+        if(Array.isArray(this.callBackMapping)) {
+          this.callBackMapping.forEach((x) => x(mxcell));
+        } else {
+          this.callBackMapping(mxcell);
+        }
+        this.enableMapping(false);
+      }
+    }
   }
 }
 
@@ -1731,3 +1688,42 @@ export class GFTimer {
     }
   }
 }
+
+// class DioMapping {
+//   readonly uid = $GF.genUid();
+//   active = false;
+//   container: HTMLElement;
+//   focus: HTMLElement | null;
+//   obj: { pattern: string } | null;
+//   option: gf.TRuleMapOptions | null;
+//   constructor(container: HTMLElement) {
+//     this.container = container;
+//     this.focus = null;
+//     this.obj = null;
+//     this.option = null;
+//   }
+
+//   activate(option: gf.TRuleMapOptions, focus?: HTMLElement, Obj?: { pattern: string }) {
+//     this.option = option;
+//     if (focus) {
+//       this.focus = focus;
+//     }
+//     this.active = true;
+//   }
+
+//   cancel() {
+//     this.active = false;
+//     this.obj = null;
+//     this.option = null;
+//   }
+
+//   _on_global_xcell_clicked(xcell: Xcel) {
+//     if (this.focus) {
+//       this.focus.focus();
+//     }
+//     if (this.obj) {
+//       this.obj.pattern = obj.pattern;
+//     }
+//     this.cancel();
+//   }
+// }

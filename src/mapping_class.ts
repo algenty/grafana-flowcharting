@@ -20,13 +20,13 @@ export interface MapDataCommonProp {
 }
 
 // Debug
-// const DEBUG = false;
-// const _log = (...args: any) => {
-//   DEBUG && console.log(...args);
-// };
+const DEBUG = true;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 // Signal definition
-const mappingSignalsArray = ['mapping_initalized', 'mapping_changed', 'mapping_freed'] as const;
+const mappingSignalsArray = ['map_initalized', 'map_changed', 'map_freed'] as const;
 type MappingSignals = typeof mappingSignalsArray[number];
 
 abstract class GFMap<MapData extends gf.TDefObjMapData> {
@@ -36,6 +36,7 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
   type: gf.TTypeMap = 'shape';
   options: gf.TRuleMapOptions = Rule.getDefaultMapOptions();
   reduce = true;
+  onMapping = false;
   events: GFEvents<MappingSignals> = GFEvents.create(mappingSignalsArray);
   static methods: any[] = [];
   constructor($gf: $GF, pattern: string, data: MapData, previousData?: any) {
@@ -56,16 +57,20 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
   //############################################################################
   init() {
     this._setType();
-    this.events.emit('mapping_initalized', this);
+    this.events.emit('map_initalized', this);
+    this.$gf.events.connect('mapping_disabled', this, this._on_global_mapping_disabled.bind(this));
+    // this.$gf.events.connect('xcell_clicked', this, this._on_global_xcell_clicked.bind(this));
   }
 
   change() {
-    this.events.emit('mapping_changed', this);
+    this.events.emit('map_changed', this);
   }
 
   free() {
     this.clear();
-    this.events.emit('mapping_freed', this);
+    this.$gf.events.disconnect('mapping_disabled', this);
+    // this.$gf.events.disconnect('xcell_clicked', this);
+    this.events.emit('map_freed', this);
   }
 
   clear() {
@@ -150,6 +155,15 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
     return this.options;
   }
 
+  setPattern(xcell: XCell) {
+    const result = xcell.getDefaultValues(this.options);
+    if (Array.isArray(result)) {
+      this.pattern = result[0];
+    } else {
+      this.pattern = result;
+    }
+  }
+
   /**
    * Get default stored data
    *
@@ -199,6 +213,11 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
     return $GF.matchString(text, pattern, options.enableRegEx);
   }
 
+  enableMapping(bool = true) {
+    this.onMapping = bool;
+    this.$gf.setMappingCallBack(this.setPattern.bind(this));
+  }
+
   /**
    * Return uniq ID
    *
@@ -216,10 +235,10 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
    * @returns {this}
    * @memberof GFMap
    */
-  setPattern(pattern: string): this {
-    this.data.pattern = pattern;
-    return this;
-  }
+  // setPattern(pattern: string): this {
+  //   this.data.pattern = pattern;
+  //   return this;
+  // }
 
   /**
    * Get target Pattern
@@ -227,9 +246,9 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
    * @readonly
    * @memberof GFMap
    */
-  getPattern() {
-    return this.data.pattern;
-  }
+  // getPattern() {
+  //   return this.data.pattern;
+  // }
 
   /**
    * Show/enable
@@ -237,10 +256,10 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
    * @returns {this}
    * @memberof GFMap
    */
-  show(): this {
-    this.data.hidden = false;
-    return this;
-  }
+  // show(): this {
+  //   this.data.hidden = false;
+  //   return this;
+  // }
 
   /**
    * Hide/disable
@@ -272,12 +291,12 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
    * @returns {boolean}
    * @memberof GFMap
    */
-  toVisible(): boolean {
-    if (this.data.hidden) {
-      return false;
-    }
-    return true;
-  }
+  // toVisible(): boolean {
+  //   if (this.data.hidden) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   /**
    * Export current data
@@ -291,6 +310,21 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
       hidden: this.data.hidden,
     };
   }
+  //############################################################################
+  //### EVENTS
+  //############################################################################
+  private _on_global_mapping_disabled() {
+    _log('📬', this.constructor.name, '_on_global_mapping_disabled');
+    this.onMapping = false;
+  }
+
+  // private _on_xgraph_xcell_clicked(xcell: XCell) {
+  //   _log('📬', this.constructor.name, '_on_global_xcell_clicked', xcell);
+  //   if (this.onMapping && xcell) {
+  //     this.setPattern(xcell);
+  //     this.onMapping = false;
+  //   }
+  // }
 }
 
 /**
@@ -319,10 +353,10 @@ export class ShapeMap extends GFMap<gf.TShapeMapData> {
   //### ACCESSORS
   //############################################################################
   set condition(v: gf.TColorOnKeys) {
-    if(!v || v.length === 0 || v === this.data.colorOn) {
+    if (!v || v.length === 0 || v === this.data.colorOn) {
       return;
     }
-    this.data.colorOn = v
+    this.data.colorOn = v;
     this.change();
   }
   get condition(): gf.TColorOnKeys {
@@ -330,10 +364,10 @@ export class ShapeMap extends GFMap<gf.TShapeMapData> {
   }
 
   set style(v: gf.TStyleColorKeys) {
-    if(!v || v.length === 0 || v === this.data.style) {
-      return
+    if (!v || v.length === 0 || v === this.data.style) {
+      return;
     }
-    this.data.style = v
+    this.data.style = v;
     this.change();
   }
   get style(): gf.TStyleColorKeys {
@@ -765,14 +799,17 @@ class VMAP<VMAPType extends gf.TDefMapData> {
   //############################################################################
   //### INIT/UPDATE/CHANGE/FREE
   //############################################################################
-  init(): void {}
+  init(): void {
+    this.events.emit('map_initalized', this);
+  }
 
   change(): void {
-    this.events.emit('mapping_changed', this);
+    this.events.emit('map_changed', this);
   }
 
   free(): void {
     this.events.clear();
+    this.events.emit('map_freed', this);
   }
 
   //############################################################################
@@ -1167,7 +1204,7 @@ export class InteractiveMap {
 
   valide(): this {
     if (this.map !== null && this.value !== null) {
-      this.map.setPattern(this.value);
+      this.map.pattern = this.value;
     }
     if (this.callback !== null) {
       this.callback(this.xcell);

@@ -1,6 +1,6 @@
 import { Flowchart } from 'flowchart_class';
 import { $GF, GFCONSTANT } from 'globals_class';
-import { InteractiveMap, ObjectMap } from 'mapping_class';
+// import { InteractiveMap, ObjectMap } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
 
 // Debug
@@ -29,7 +29,7 @@ export class FlowchartHandler {
   sequenceNumber = 0; // Sequence Number for a name
   static defaultXml: string; // Default XML
   static defaultCsv: string; // Default CSV
-  onMapping: InteractiveMap; // For link mapping, sharing
+  // onMapping: ; // For link mapping, sharing
   mousedownTimeout = 0;
   mousedown = 0;
   onEdit = false; // editor open or not
@@ -54,7 +54,7 @@ export class FlowchartHandler {
     this.data = data;
     this.currentFlowchartName = 'Main';
     // TODO : Fix onMapping
-    this.onMapping = this.$gf.ctrl.onMapping;
+    // this.onMapping = this.$gf.ctrl.onMapping;
 
     // Events Render
     // this.ctrl.events.on('render', () => {
@@ -508,31 +508,31 @@ export class FlowchartHandler {
    * @param {Object} objToMap
    * @memberof FlowchartHandler
    */
-  setMap(objToMap: ObjectMap, options: gf.TRuleMapOptions): this {
-    const flowchart = this.getFlowchart(this.currentFlowchartName);
-    this.onMapping.setMap(objToMap).setOptions(options).setFocus(objToMap.uid);
-    flowchart.setMap();
-    return this;
-  }
+  // setMap(objToMap: ObjectMap, options: gf.TRuleMapOptions): this {
+  //   const flowchart = this.getFlowchart(this.currentFlowchartName);
+  //   this.onMapping.setMap(objToMap).setOptions(options).setFocus(objToMap.uid);
+  //   flowchart.setMap();
+  //   return this;
+  // }
 
-  setMaps(fn: CallableFunction): this {
-    const flowchart = this.getFlowchart(this.currentFlowchartName);
-    this.onMapping.callback = fn;
-    flowchart.setMap();
-    return this;
-  }
+  // setMaps(fn: CallableFunction): this {
+  //   const flowchart = this.getFlowchart(this.currentFlowchartName);
+  //   this.onMapping.callback = fn;
+  //   flowchart.setMap();
+  //   return this;
+  // }
 
   /**
    * Desactivate option
    *
    * @memberof FlowchartHandler
    */
-  unsetMap(): this {
-    const flowchart = this.getFlowchart(this.currentFlowchartName);
-    flowchart.unsetMap();
-    this.onMapping.close();
-    return this;
-  }
+  // unsetMap(): this {
+  //   const flowchart = this.getFlowchart(this.currentFlowchartName);
+  //   flowchart.unsetMap();
+  //   this.onMapping.close();
+  //   return this;
+  // }
 
   /**
    * Return true if mapping object is active
@@ -541,9 +541,9 @@ export class FlowchartHandler {
    * @returns true - true if mapping mode
    * @memberof FlowchartHandler
    */
-  isMapping(): boolean {
-    return this.onMapping.isActive();
-  }
+  // isMapping(): boolean {
+  //   return this.onMapping.isActive();
+  // }
 
   /**
    * Wait for draw.io answer

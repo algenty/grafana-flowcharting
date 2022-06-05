@@ -10,11 +10,11 @@ import { MetricHandler } from 'metric_handler';
 import { $GF, GFTimer, GFLog, GFPlugin, GFCONSTANT } from 'globals_class';
 import grafana from 'grafana_func';
 import { defaults as _defaults, cloneDeep as _cloneDeep } from 'lodash';
-import { InteractiveMap } from 'mapping_class';
+// import { InteractiveMap } from 'mapping_class';
 import { GFDrawio } from 'drawio_base';
 
 // Debug
-const DEBUG = false;
+const DEBUG = true;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
@@ -40,7 +40,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
   rulesHandler: RulesHandler | undefined;
   flowchartHandler: FlowchartHandler | undefined;
   metricHandler: MetricHandler | undefined;
-  onMapping: InteractiveMap;
+  onMapping = false;
   uid: string = $GF.genUid(this.constructor.name);
   graphHoverTimer: GFTimer | undefined = undefined;
   mouseIn = false;
@@ -69,7 +69,7 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.changedSource = true;
     this.changedData = true;
     this.changedOptions = true;
-    this.onMapping = new InteractiveMap();
+    // this.onMapping = new InteractiveMap();
     this.parentDiv = document.createElement('div');
     this.flowchartsDiv = document.createElement('div');
     // this.uid = $GF.genUid();
@@ -129,11 +129,15 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     this.$gf.events.connect('debug_asked', this, this._on_global_debug_asked.bind(this));
     this.$gf.events.connect('panel_closed', this, this._on_global_panel_closed.bind(this));
     this.$gf.events.connect('editmode_closed', this, this._on_global_editmode_closed.bind(this));
+    this.$gf.events.connect('mapping_enabled', this, this._on_global_mapping_enabled.bind(this));
+    this.$gf.events.connect('mapping_disabled', this, this._on_global_mapping_disabled.bind(this));
   }
 
   _eventsDisconnect() {
     this.$gf.events.disconnect('debug_asked', this);
     this.$gf.events.disconnect('panel_closed', this);
+    this.$gf.events.disconnect('mapping_enabled', this);
+    this.$gf.events.disconnect('mapping_disabled', this);
   }
 
   init_handlers() {
@@ -216,6 +220,75 @@ class FlowchartCtrl extends MetricsPanelCtrl {
       return true;
     }
     return false;
+  }
+
+  link(scope: any, elem: any, attrs: any, ctrl: any) {
+    this.$panelElem = elem;
+    const $section = this.$panelElem.find('#flowcharting-section');
+    this.parentDiv = $section[0];
+    const $flowchartsDiv = $section.find('#flowcharting-panel-content');
+    this.flowchartsDiv = $flowchartsDiv[0];
+    // this.onMapping.setContainer(this.flowchartsDiv);
+    this.notify('Initialisation MXGRAPH/DRAW.IO Libs');
+
+    // MxGraph Init
+    this.notify('Load configuration');
+    if (this.panel.gf_isEdited) {
+      delete this.panel.gf_isEdited;
+    }
+    GFDrawio.init();
+    this.init_ctrl();
+    if (this.panel.version !== GFPlugin.getVersion()) {
+      //TODO : Reactive this
+      // this.notify(
+      //   `The plugin version has changed, save the dashboard to optimize loading : ${
+      //     this.panel.version
+      //   } <> ${$GF.plugin.getVersion()}`
+      // );
+    }
+    this.clearNotify();
+    this.panel.version = this.version;
+    // Open is edit mode
+    if (this.panel.isEditing === true) {
+      this.panel.gf_isEdited = true;
+    }
+  }
+
+  isMouseInPanel(): boolean {
+    return this.mouseIn;
+  }
+
+  displayMultiCursor(): boolean {
+    if (this.flowchartHandler) {
+      return this.flowchartHandler.isMultiFlowcharts();
+    }
+    return false;
+  }
+
+  displayFirstCursor(): boolean {
+    if (this.flowchartHandler) {
+      return !this.flowchartHandler.isCurrentfirst();
+    }
+    return false;
+  }
+
+  displayLastCursor(): boolean {
+    if (this.flowchartHandler) {
+      return !this.flowchartHandler.isCurrentLast();
+    }
+    return false;
+  }
+
+  displayNextFlowchart() {
+    if (this.flowchartHandler) {
+      this.flowchartHandler.setNextFlowchart();
+    }
+  }
+
+  displayPreviousFlowchart() {
+    if (this.flowchartHandler) {
+      this.flowchartHandler.setPreviousFlowchart();
+    }
   }
 
   //###########################################################################
@@ -314,78 +387,19 @@ class FlowchartCtrl extends MetricsPanelCtrl {
     return;
   }
 
-  link(scope: any, elem: any, attrs: any, ctrl: any) {
-    this.$panelElem = elem;
-    const $section = this.$panelElem.find('#flowcharting-section');
-    this.parentDiv = $section[0];
-    const $flowchartsDiv = $section.find('#flowcharting-panel-content');
-    this.flowchartsDiv = $flowchartsDiv[0];
-    this.onMapping.setContainer(this.flowchartsDiv);
-    this.notify('Initialisation MXGRAPH/DRAW.IO Libs');
-
-    // MxGraph Init
-    this.notify('Load configuration');
-    if (this.panel.gf_isEdited) {
-      delete this.panel.gf_isEdited;
-    }
-    GFDrawio.init();
-    this.init_ctrl();
-    if (this.panel.version !== GFPlugin.getVersion()) {
-      //TODO : Reactive this
-      // this.notify(
-      //   `The plugin version has changed, save the dashboard to optimize loading : ${
-      //     this.panel.version
-      //   } <> ${$GF.plugin.getVersion()}`
-      // );
-    }
-    this.clearNotify();
-    this.panel.version = this.version;
-    // Open is edit mode
-    if (this.panel.isEditing === true) {
-      this.panel.gf_isEdited = true;
-    }
+  private _on_global_mapping_enabled() {
+    _log('📬', this.constructor.name, this.uid, '_on_global_mapping_enabled');
+    this.onMapping = true;
+    this.flowchartsDiv.style.cursor = `url("${GFPlugin.getStaticPath()}cursor-marker.svg") 8 16, crosshair`;
+    this.flowchartsDiv.scrollIntoView();
+    this.flowchartsDiv.focus();
   }
 
-  isMouseInPanel(): boolean {
-    return this.mouseIn;
+  private _on_global_mapping_disabled() {
+    _log('📬', this.constructor.name, this.uid, '_on_global_mapping_disabled');
+    this.onMapping = false;
+    this.flowchartsDiv.style.cursor = 'auto';
   }
-
-  displayMultiCursor(): boolean {
-    if (this.flowchartHandler) {
-      return this.flowchartHandler.isMultiFlowcharts();
-    }
-    return false;
-  }
-
-  displayFirstCursor(): boolean {
-    if (this.flowchartHandler) {
-      return !this.flowchartHandler.isCurrentfirst();
-    }
-    return false;
-  }
-
-  displayLastCursor(): boolean {
-    if (this.flowchartHandler) {
-      return !this.flowchartHandler.isCurrentLast();
-    }
-    return false;
-  }
-
-  displayNextFlowchart() {
-    if (this.flowchartHandler) {
-      this.flowchartHandler.setNextFlowchart();
-    }
-  }
-
-  displayPreviousFlowchart() {
-    if (this.flowchartHandler) {
-      this.flowchartHandler.setPreviousFlowchart();
-    }
-  }
-
-  //
-  // EVENTS
-  //
 
   $onDestroy() {
     // $GF.destroy();
