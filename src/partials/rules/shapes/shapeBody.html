@@ -13,13 +13,13 @@
         </info-popover>
     </label>
     <input type="text" style="margin-right: 2px;" id="{{ shape.uid }}" placeholder="id or regex of shape"
-        class="gf-form-input width-8" ng-model="shape.getData().pattern"
+        class="gf-form-input width-8" ng-model="shape.pattern"
         title="Enter an id, label,metadata attribute or regex to identify object"
-        bs-typeahead="rule.getShapeMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+        bs-typeahead="rule.getShapeMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
     <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
         ng-show="rule.getShapeMapOptions().identByProp !== 'metadata'"
-        title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(shape, rule.getShapeMapOptions())">
+        title="Select an object in diagram/graph" ng-click="shape.enableMapping(true)">
         <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
     </button>
     <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects"
@@ -34,8 +34,8 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-8" ng-model="shape.getData().colorOn"
-        ng-options="c.value as c.text for c in editor.colorOn" ng-change="editor.onRulesChange()"></select>
+    <select class="gf-form-input width-8" ng-model="shape.condition"
+        ng-options="c.value as c.text for c in editor.colorOn"></select>
 </div>
 <div class="gf-form">
     <label class="gf-form-label width-10">How
@@ -45,6 +45,6 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-8" ng-model="shape.getData().style"
-        ng-options="c.value as c.text for c in editor.style" ng-change="editor.onRulesChange()"></select>
+    <select class="gf-form-input width-8" ng-model="shape.style"
+        ng-options="c.value as c.text for c in editor.style"></select>
 </div>

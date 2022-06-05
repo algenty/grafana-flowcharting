@@ -13,18 +13,18 @@
         </info-popover>
     </label>
     <input type="text" style="margin-right: 2px;" id="{{ text.uid }}" placeholder="id or regex of shape"
-        class="gf-form-input width-8" ng-model="text.getData().pattern"
+        class="gf-form-input width-8" ng-model="text.pattern"
         title="Enter an id, label,metadata attribute or regex to identify object"
-        bs-typeahead="rule.getTextMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+        bs-typeahead="rule.getTextMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
     <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
         ng-show="rule.getTextMapOptions().identByProp !== 'metadata'"
-        title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(text, rule.getTextMapOptions())">
+        title="Select an object in diagram/graph" ng-click="text.enableMapping(true)">
         <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
     </button>
     <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects"
-        ng-mousedown="editor.highlightXCells(text)" 
-        ng-mouseup="editor.unhighlightXCells(text)" 
+        ng-mousedown="editor.highlightXCells(text)"
+        ng-mouseup="editor.unhighlightXCells(text)"
         ng-mouseleave="editor.unhighlightXCells(text)">
         <div Class="gf-icon-location" style="margin-bottom: 7px;margin-right: 2px;"></div>
     </button>
@@ -36,8 +36,8 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-8" ng-model="text.getData().textOn"
-        ng-options="c.value as c.text for c in editor.textOn" ng-change="editor.onRulesChange()">
+    <select class="gf-form-input width-8" ng-model="text.condition"
+        ng-options="c.value as c.text for c in editor.textOn">
     </select>
 </div>
 <div class="gf-form">
@@ -47,11 +47,11 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-8" style="margin-right: 2px;" ng-model="text.getData().textReplace"
-        ng-options="c.value as c.text for c in editor.textReplace" ng-change="editor.onRulesChange()">
+    <select class="gf-form-input width-8" style="margin-right: 2px;" ng-model="text.method"
+        ng-options="c.value as c.text for c in editor.textReplace" ng-change="rule.change();">
     </select>
 </div>
-<div class="gf-form" ng-if="text.getData().textReplace == 'pattern' && text.getData().textOn != 'n'">
+<div class="gf-form" ng-if="text.method == 'pattern' && text.condition != 'n'">
     <label class="gf-form-label width-10" style="margin-right: 2px;">With
         <info-popover mode="right-normal">
             <span
@@ -59,10 +59,10 @@
             </span>
         </info-popover>
     </label>
-    <input  
+    <input
         type="text"
-        class="gf-form-input width-8" 
-        ng-model="text.getData().textPattern" 
-        ng-blur="editor.onRulesChange()"
+        class="gf-form-input width-8"
+        ng-model="text.textToReplace"
+        ng-model-onblur
         placeholder="Text or pattern to replace by metric value" />
 </div>

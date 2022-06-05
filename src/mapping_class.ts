@@ -119,7 +119,7 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
 
   //HIDDEN
   set hidden(v: boolean) {
-    if (!v || v === this.data.hidden) {
+    if (v === this.data.hidden) {
       return;
     }
     this.data.hidden = v;
@@ -453,6 +453,46 @@ export class TextMap extends GFMap<gf.TTextMapData> {
   protected _setType() {
     this.type = 'text';
   }
+
+  //############################################################################
+  //### ACCESSORS
+  //############################################################################
+  set condition(v: gf.TTextOnKeys) {
+    if (!v || v.length === 0 || v === this.data.textOn) {
+      return;
+    }
+    this.data.textOn = v;
+    this.change();
+  }
+  get condition(): gf.TTextOnKeys {
+    return this.data.textOn;
+  }
+
+  set method(v: gf.TTextMethodKeys) {
+    if (!v || v.length === 0 || v === this.data.textReplace) {
+      return;
+    }
+    this.data.textReplace = v;
+    this.change();
+  }
+  get method(): gf.TTextMethodKeys {
+    return this.data.textReplace;
+  }
+
+  set textToReplace(v: string) {
+    if (!v || v.length === 0 || v === this.data.textPattern) {
+      return;
+    }
+    this.data.textPattern = v;
+    this.change();
+  }
+  get textToReplace(): string {
+    return this.data.textPattern;
+  }
+
+  //############################################################################
+  //### ACCESSORS
+  //############################################################################
 
   /**
    * Return default data
