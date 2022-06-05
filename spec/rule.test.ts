@@ -122,6 +122,7 @@ describe('Rule', () => {
     let data, $gf, rule, pattern;
     beforeEach(() => {
       data = Rule.getDefaultData();
+      $gf = $GF.create($scope, templateSrv, dashboard, ctrl);
       rule = new Rule($gf, '/.*/', data);
       pattern = '/.*Toto.*/';
     });

@@ -4,7 +4,7 @@ const dioCustom = require('drawio_custom');
 import chroma from 'chroma-js';
 import { Rule } from 'rule_class';
 import { XCell } from 'cell_class';
-import { InteractiveMap } from 'mapping_class';
+// import { InteractiveMap } from 'mapping_class';
 import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
 
@@ -46,9 +46,9 @@ export class XGraph {
   uid: string;
   private _zoomPercent = '1';
   xcells: XCell[];
-  clickBackup: any;
-  dbclickBackup: any;
-  onMapping: InteractiveMap;
+  dioClick: any;
+  dioDbclick: any;
+  // onMapping: InteractiveMap;
   events: GFEvents<XGraphSignals> = GFEvents.create(xgraphSignalsArray);
   /**
    * Creates an instance of XGraph.
@@ -62,7 +62,7 @@ export class XGraph {
     this.container = container;
     this._type = type;
     this.xcells = [];
-    this.onMapping = this.$gf.ctrl.onMapping;
+    // this.onMapping = this.$gf.ctrl.onMapping;
     this._definition = definition;
     this.init();
   }
@@ -193,8 +193,9 @@ export class XGraph {
     // /!\ What is setPannig
     this._graph.setPanning(true);
     // Backup funtions of clicks
-    this.clickBackup = this._graph.click;
-    this.dbclickBackup = this._graph.dblClick;
+    this.dioClick = this._graph.click.bind(this._graph);
+    this._graph.click = this._on_xgraph_mxcell_clicked.bind(this);
+    this.dioDbclick = this._graph.dblClick;
     // CTRL+MOUSEWHEEL
     mxEvent.addMouseWheelListener(mxUtils.bind(this, this.eventMouseWheel), this.container);
     if (mxClient.IS_IE || mxClient.IS_EDGE) {
@@ -273,14 +274,14 @@ export class XGraph {
    * @memberof XGraph
    */
   private async _init_fonts() {
-    if(!this._graph) {
+    if (!this._graph) {
       return;
     }
     const model = this._graph.getModel();
     let extFonts = model.extFonts;
     if (extFonts) {
       try {
-        extFonts = extFonts.split('|').map( (ef: any) => {
+        extFonts = extFonts.split('|').map((ef: any) => {
           var parts = ef.split('^');
           return { name: parts[0], url: parts[1] };
         });
@@ -448,15 +449,14 @@ export class XGraph {
       return this;
     }
     this._graph.centerZoom = false;
-    if (this._center === true ){
-      if(this._scale === true){
+    if (this._center === true) {
+      if (this._scale === true) {
         this._fitDisplay();
-      }
-      else {
+      } else {
         this._graph.center(true, true);
       }
     }
-    if (this._center === false ) {
+    if (this._center === false) {
       this._graph.center(false, false);
     }
     return this;
@@ -474,12 +474,12 @@ export class XGraph {
     if (!this._isGraphIniatilized) {
       return this;
     }
-    if(this._scale === false ) {
+    if (this._scale === false) {
       this.zoomDisplay();
     }
-    if(this._scale === true) {
+    if (this._scale === true) {
       // Scale and center
-      if(this._center) {
+      if (this._center) {
         this._fitDisplay();
       }
       // Only scale
@@ -557,7 +557,7 @@ export class XGraph {
       }
       this._graph.zoomActual();
     } else {
-      this._fitDisplay()
+      this._fitDisplay();
     }
     // this._zoom = true;
     return this;
@@ -847,52 +847,6 @@ export class XGraph {
     return GFCONSTANT.MXGRAPH_STYLES_STATIC.includes(t);
   }
 
-  /**
-   * Active mapping option when user click on mapping
-   *
-   * @param {Object} onMappingObj
-   * @memberof XGraph
-   */
-  setMap() {
-    this._graph.click = this.eventClick.bind(this);
-    this.onMapping.setContainer(this.container);
-    this.onMapping.activate();
-  }
-
-  /**
-   * Disable mapping when user click on mapping
-   *
-   * @memberof XGraph
-   */
-  unsetMap() {
-    this._graph.click = this.clickBackup;
-    this.$gf.$refresh();
-  }
-
-  //
-  // GRAPH HANDLER
-  //
-
-  /**
-   * Event for click on graph
-   *
-   * @param {MouseEvent} me
-   * @memberof XGraph
-   */
-  eventClick(me: mxMouseEvent) {
-    if (this.onMapping.active) {
-      const state = me.getState();
-      if (state) {
-        const xcell = this.getXCell(state.cell.id);
-        const options = this.onMapping.options !== null ? this.onMapping.options : Rule.getDefaultMapOptions();
-        if (xcell !== undefined) {
-          this.onMapping.setXCell(xcell).setValue(xcell.getDefaultValues(options)).valide();
-          this.unsetMap();
-        }
-      }
-    }
-  }
-
   eventDebug(me: mxMouseEvent) {
     console.log('🔎', 'mxMouseEvent', me);
   }
@@ -1097,27 +1051,13 @@ export class XGraph {
     }
   }
 
-  // static loadXml(url: string): string | null {
-  //   try {
-  //     const req: any = mxUtils.load(url);
-  //     if (req.getStatus() >= 200 && req.getStatus() <= 299) {
-  //       return req.getText();
-  //     } else {
-  //       GFLog.error('Cannot load ' + url, req.getStatus());
-  //     }
-  //   } catch (error) {
-  //     GFLog.error('Cannot load ' + url, error);
-  //   }
-  //   return null;
+  // static compress(source: string): string {
+  //   return Graph.compress(source, true);
   // }
 
-  static compress(source: string): string {
-    return Graph.compress(source, true);
-  }
-
-  static decompress(source: string): string {
-    return Graph.decompress(source, true);
-  }
+  // static decompress(source: string): string {
+  //   return Graph.decompress(source, true);
+  // }
 
   static preview(container: HTMLElement, xcell: XCell, force = false) {
     const g = new Graph(container);
@@ -1166,5 +1106,15 @@ export class XGraph {
   private _on_drawio_drawio_initialized() {
     _log('📬', this.constructor.name, '_on_drawio_drawio_initialized');
     this.init_graph();
+  }
+
+  private _on_xgraph_mxcell_clicked(e: mxMouseEvent) {
+    _log('📬', this.constructor.name, '_on_xgraph_mxcell_clicked', e);
+    this.dioClick(e);
+    const state = e.getState();
+    if (state) {
+      const xcell = this.getXCell(state.cell.id);
+      this.$gf.events.emit('xcell_clicked', xcell);
+    }
   }
 }

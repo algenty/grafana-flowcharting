@@ -162,7 +162,7 @@ export class State {
     const rules = rule === undefined ? Array.from(this._rules.values()) : [rule];
     rules.forEach((r: Rule) => {
       let beginPerf = Date.now();
-      if (!r.isHidden()) {
+      if (!r.hidden) {
         const shapeMaps = r.getShapeMaps();
         const textMaps = r.getTextMaps();
         const linkMaps = r.getLinkMaps();

@@ -18,7 +18,7 @@ import {
 import { GFEvents } from 'flowcharting_base';
 
 // Debug
-const DEBUG = false;
+const DEBUG = true;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
@@ -1196,6 +1196,17 @@ export class Rule {
     return;
   }
 
+  enableMapping() {
+    const cbm: CallableFunction[] = []
+    Object.values(this.mapsObj).forEach( (map: ObjectMap[]) => {
+      map.forEach( (m: ObjectMap) => {
+        m.onMapping = true;
+        cbm.push(m.setPattern.bind(m));
+      });
+    });
+    this.$gf.setMappingCallBack(cbm);
+  }
+
   /**
    * Return the order of this rule
    * Grafana 6+ have a bug when reload dashboad, array are not in order
@@ -1217,9 +1228,9 @@ export class Rule {
     return this.data.order;
   }
 
-  isHidden(): boolean {
-    return this.hidden;
-  }
+  // isHidden(): boolean {
+  //   return this.hidden;
+  // }
 
   /**
    * Invert color order
@@ -1763,7 +1774,7 @@ export class Rule {
       index = map;
     }
     if (index !== -1) {
-      maps[index].events.disconnect('mapping_changed', this);
+      maps[index].events.disconnect('map_changed', this);
       maps[index].free();
       maps.splice(index, 1);
       datas.splice(index, 1);
@@ -1785,7 +1796,7 @@ export class Rule {
     const m = new ShapeMap(this.$gf, pattern, data);
     m.setOptions(this.getShapeMapOptions());
     this._addMaps(m);
-    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
+    m.events.connect('map_changed', this, this._on_map_map_changed.bind(this));
     return m;
   }
 
@@ -1864,7 +1875,7 @@ export class Rule {
     const m = new TextMap(this.$gf, pattern, data);
     m.setOptions(this.getTextMapOptions());
     this._addMaps(m);
-    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
+    m.events.connect('map_changed', this, this._on_map_map_changed.bind(this));
     return m;
   }
 
@@ -1946,7 +1957,7 @@ export class Rule {
     const m = new EventMap(this.$gf, pattern, data);
     m.setOptions(this.getEventMapOptions());
     this._addMaps(m);
-    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
+    m.events.connect('map_changed', this, this._on_map_map_changed.bind(this));
     return m;
   }
 
@@ -1999,7 +2010,7 @@ export class Rule {
     m.setOptions(this.getLinkMapOptions());
     // m.import(data);
     this._addMaps(m);
-    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
+    m.events.connect('map_changed', this, this._on_map_map_changed.bind(this));
     return m;
   }
 
@@ -2075,7 +2086,7 @@ export class Rule {
   addValueMap(value?: any, text?: string): ValueMap {
     const data: gf.TValueMapData = ValueMap.getDefaultdata();
     const m = new ValueMap(value, text, data);
-    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
+    m.events.connect('map_changed', this, this._on_map_map_changed.bind(this));
     this.valueMaps.push(m);
     this.data.valueData.push(data);
     this.change();
@@ -2112,7 +2123,7 @@ export class Rule {
     if(index === -1 ) {
       throw new Error("map is not an instance of ValueMap");
     }
-    map.events.disconnect('mapping_changed', this);
+    map.events.disconnect('map_changed', this);
     map.free();
     this.data.valueData.splice(index, 1);
     this.valueMaps.splice(index, 1);
@@ -2156,7 +2167,7 @@ export class Rule {
   addRangeMap(from?: any, to?: any, text?: any): RangeMap {
     const data = RangeMap.getDefaultData();
     const m = new RangeMap(from, to, text, data);
-    m.events.connect('mapping_changed', this, this._on_mapping_mapping_changed.bind(this));
+    m.events.connect('map_changed', this, this._on_map_map_changed.bind(this));
     this.rangeMaps.push(m);
     this.data.rangeData.push(data);
     this.change();
@@ -2195,7 +2206,7 @@ export class Rule {
     if(index === -1 ) {
       throw new Error("map is not an instance of RangeMap");
     }
-    map.events.disconnect('mapping_changed', this);
+    map.events.disconnect('map_changed', this);
     map.free();
     this.data.rangeData.splice(index, 1);
     this.rangeMaps.splice(index, 1);
@@ -2694,8 +2705,8 @@ export class Rule {
     this.change();
   }
 
-  private _on_mapping_mapping_changed() {
-    _log('📬', this.constructor.name, '_on_mapping_mapping_changed');
+  private _on_map_map_changed() {
+    _log('📬', this.constructor.name, '_on_map_map_changed');
     this.change();
   }
 }

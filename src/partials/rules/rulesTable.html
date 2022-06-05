@@ -198,7 +198,7 @@
               ng-style="{'width' : editor.rulesTable.getWidth('options')}">
               <div class="gf-table-content gf-unselectable">
                 <!-- TARGETS -->
-                <div ng-click="editor.setRuleMappings(rule) && editor.onRulesChange()" class="gf-icon-action gf-icon-marker-edit"
+                <div ng-click="rule.enableMapping()" class="gf-icon-action gf-icon-marker-edit"
                   title="Change the targets of all mapping">
                 </div>
                 <!-- TOOLTIP -->

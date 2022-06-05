@@ -789,17 +789,17 @@ export class Flowchart {
     return this.container;
   }
 
-  setMap() {
-    if (this.xgraph) {
-      this.xgraph.setMap();
-    }
-  }
+  // setMap() {
+  //   if (this.xgraph) {
+  //     this.xgraph.setMap();
+  //   }
+  // }
 
-  unsetMap() {
-    if (this.xgraph) {
-      this.xgraph.unsetMap();
-    }
-  }
+  // unsetMap() {
+  //   if (this.xgraph) {
+  //     this.xgraph.unsetMap();
+  //   }
+  // }
 
   toFront(forceRefresh = false): this {
     this.visible = true;

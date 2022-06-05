@@ -1,13 +1,12 @@
 import { FlowchartHandler } from './flowchart_handler';
 import { RulesHandler } from './rules_handler';
 import { Rule } from './rule_class';
-import { EventMap, ObjectMap, ObjectMapArray } from './mapping_class';
+import { EventMap, ObjectMap } from './mapping_class';
 import { $GF, GFTable, GFPlugin, GFCONSTANT } from './globals_class';
 import grafana from 'grafana_func';
 // import _ from 'lodash';
 import { MetricHandler } from './metric_handler';
 import { DateTH, NumberTH, StringTH } from 'threshold_class';
-import { XCell } from 'cell_class';
 import { FlowchartCtrl } from 'flowchart_ctrl';
 
 /**
@@ -927,7 +926,7 @@ export class RulesOptionsCtrl {
     const flowchart = this.flowchartHandler?.getFlowchart();
     const xgraph = flowchart?.getXGraph();
     if (xgraph) {
-      xgraph.highlightXCells(map.getPattern(), map.getOptions(), true);
+      xgraph.highlightXCells(map.pattern, map.getOptions(), true);
     }
   }
 
@@ -940,7 +939,7 @@ export class RulesOptionsCtrl {
     const flowchart = this.flowchartHandler?.getFlowchart();
     const xgraph = flowchart?.getXGraph();
     if (xgraph) {
-      xgraph.highlightXCells(map.getPattern(), map.getOptions(), false);
+      xgraph.highlightXCells(map.pattern, map.getOptions(), false);
     }
   }
 
@@ -1042,37 +1041,37 @@ export class RulesOptionsCtrl {
     this.onRulesChange();
   }
 
-  setRuleMappings(rule: Rule): this {
-    const _setTarget = (xcell: XCell) => {
-      if (xcell) {
-        let mapsList: ObjectMapArray[] = [
-          rule.getShapeMaps(),
-          rule.getTextMaps(),
-          rule.getLinkMaps(),
-          rule.getEventMaps(),
-        ];
-        let optionsList: gf.TRuleMapOptions[] = [
-          rule.getShapeMapOptions(),
-          rule.getTextMapOptions(),
-          rule.getLinkMapOptions(),
-          rule.getEventMapOptions(),
-        ];
-        for (let index = 0; index < optionsList.length; index++) {
-          const options = optionsList[index];
-          const maps = mapsList[index];
-          const value = xcell.getDefaultValues(options);
-          if (value) {
-            maps.forEach((map) => {
-              map.setPattern(value);
-            });
-          }
-        }
-        this.onRulesChange();
-      }
-    };
-    this.flowchartHandler?.setMaps(_setTarget.bind(this));
-    return this;
-  }
+  // setRuleMappings(rule: Rule): this {
+  //   const _setTarget = (xcell: XCell) => {
+  //     if (xcell) {
+  //       let mapsList: ObjectMapArray[] = [
+  //         rule.getShapeMaps(),
+  //         rule.getTextMaps(),
+  //         rule.getLinkMaps(),
+  //         rule.getEventMaps(),
+  //       ];
+  //       let optionsList: gf.TRuleMapOptions[] = [
+  //         rule.getShapeMapOptions(),
+  //         rule.getTextMapOptions(),
+  //         rule.getLinkMapOptions(),
+  //         rule.getEventMapOptions(),
+  //       ];
+  //       for (let index = 0; index < optionsList.length; index++) {
+  //         const options = optionsList[index];
+  //         const maps = mapsList[index];
+  //         const value = xcell.getDefaultValues(options);
+  //         if (value) {
+  //           maps.forEach((map) => {
+  //             map.setPattern(value);
+  //           });
+  //         }
+  //       }
+  //       this.onRulesChange();
+  //     }
+  //   };
+  //   this.flowchartHandler?.setMaps(_setTarget.bind(this));
+  //   return this;
+  // }
 
   //
   // Events
