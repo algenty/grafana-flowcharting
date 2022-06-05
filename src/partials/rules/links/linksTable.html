@@ -119,10 +119,10 @@
                             ng-mouseleave="link.displayWhatEdit = false;"
                             ng-mouseover="link.displayWhatEdit = true;"
                             ng-style="{'width' : editor.linksTable.getWidth('what')}"
-                            ng-attr-title="{{link.getData().pattern}}">
+                            ng-attr-title="{{link.pattern}}">
                             <div class="gf-table-content" ng-show="link.whatEdit !== true"
                                 ng-dblclick="link.whatEdit = true;">
-                                {{link.getData().pattern}}
+                                {{link.pattern}}
                             </div>
                             <div ng-show="link.displayWhatEdit === true && link.whatEdit !== true"
                                 ng-click="link.whatEdit = true;$GF.setFocus( link.uid + '-what' )" title="Edit pattern"
@@ -136,9 +136,8 @@
                             <input type="text" style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{link.uid + '-what'}}"
                                 ng-show="link.whatEdit === true"
-                                class="gf-form-input" ng-model="link.getData().pattern"
-                                ng-change="editor.onRulesChange()"
-                                ng-model-onblur ng-blur="editor.onRulesChange();link.whatEdit = false;"
+                                class="gf-form-input" ng-model="link.pattern"
+                                ng-model-onblur ng-blur="link.whatEdit = false;"
                                 bs-typeahead="rule.getLinkMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD"
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
@@ -146,24 +145,23 @@
                         <div role="cell" class="gf-table-cells gf-table-cells-resizable" ng-mouseleave="link.displayWhenEdit = false;"
                             ng-mouseover="link.displayWhenEdit = true;"
                             ng-style="{'width' : editor.linksTable.getWidth('when')}"
-                            ng-attr-title="{{$GF.GetT4V( editor.linkOn, link.getData().linkOn)}}">
-                            <!-- {{link.getData().LinkOn}} -->
+                            ng-attr-title="{{$GF.GetT4V( editor.linkOn, link.condition)}}">
+                            <!-- {{link.condition}} -->
                             <div class="gf-table-content"
                                 style="text-align: left;"
                                 ng-dblclick="link.whenEdit = true;$GF.setFocus( link.uid + '-when' )"
                                 ng-show="link.whenEdit !== true">
-                                {{$GF.GetT4V( editor.linkOn, link.getData().linkOn)}}
+                                {{$GF.GetT4V( editor.linkOn, link.condition)}}
                             </div>
                             <div ng-show="link.displayWhenEdit === true && link.whenEdit !== true"
                                 ng-click="link.whenEdit = true;$GF.setFocus( link.uid + '-when' )" class="gf-icon-action gf-icon-edit gf-icon-withcontent"
                                 title="Edit condition">
                             </div>
-                            <select class="gf-form-input" ng-model="link.getData().linkOn" style="width:100%;"
+                            <select class="gf-form-input" ng-model="link.condition" style="width:100%;"
                                 ng-show="link.whenEdit === true"
                                 ng-attr-id="{{link.uid + '-when'}}"
-                                ng-blur="editor.onRulesChange();link.whenEdit = false;"
-                                ng-options="c.value as c.text for c in editor.linkOn"
-                                ng-change="editor.onRulesChange()">
+                                ng-blur="link.whenEdit = false;"
+                                ng-options="c.value as c.text for c in editor.linkOn" ng-change="editor.onRulesChange()">
                             </select>
                         </div>
                         <!-- URL -->
@@ -172,14 +170,14 @@
                             ng-mouseleave="link.displayUrlEdit = false;"
                             ng-mouseover="link.displayUrlEdit = true;"
                             ng-style="{'width' : editor.linksTable.getWidth('url')}"
-                            ng-attr-title="{{link.getData().linkUrl}}">
-                            <!-- {{link.getData().linkUrl}} -->
+                            ng-attr-title="{{link.url}}">
+                            <!-- {{link.url}} -->
                             <div class="gf-table-content" style="text-align: left;"
-                                ng-attr-title="{{link.getData().linkUrl}}"
+                                ng-attr-title="{{link.url}}"
                                 ng-dblclick="link.urlEdit = true;$GF.setFocus( link.uid + '-url' )"
                                 ng-show="link.urlEdit !== true">
                                 <span>
-                                    {{link.getData().linkUrl}}
+                                    {{link.url}}
                                 </span>
                             </div>
                             <div ng-show="link.displayUrlEdit === true && link.urlEdit !== true"
@@ -191,7 +189,7 @@
                                 type="text" class="gf-form-input"
                                 ng-show="link.urlEdit === true"
                                 ng-change="editor.onRulesChange()"
-                                ng-model="link.getData().linkUrl" ng-blur="editor.onRulesChange();link.urlEdit = false;"
+                                ng-model="link.url" ng-blur="link.urlEdit = false;"
                                 placeholder="Text or pattern to replace by value" />
                         </div>
                         <!-- OPTIONS -->
@@ -199,9 +197,9 @@
                             ng-style="{'width' : editor.linksTable.getWidth('options')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
-                                <div ng-click="link.getData().linkParams = !link.getData().linkParams;editor.onRulesChange()"
+                                <div ng-click="link.dashboardParams = !link.dashboardParams"
                                     title="Add/Remove the dashboad parameters with url" class="gf-icon-action"
-                                    ng-class="{'gf-icon-address-on': link.getData().linkParams, 'gf-icon-address-off': !link.getData().linkParams}">
+                                    ng-class="{'gf-icon-address-on': link.dashboardParams, 'gf-icon-address-off': !link.dashboardParams}">
                                 </div>
                             </div>
                         </div>
@@ -210,18 +208,18 @@
                             ng-style="{'width' : editor.linksTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
-                                <div ng-click="editor.removeLinkMap(rule,$index);editor.onRulesChange()"
+                                <div ng-click="rule.removeLinkMap(link)"
                                     title="Delete this mapping object" class="gf-icon-action gf-icon-remove">
                                 </div>
-                                <div ng-click="link.isHidden() ? link.show(): link.hide();editor.onRulesChange()"
+                                <div ng-click="link.hidden=!link.hidden"
                                     title="Enable/Disable this mapping" class="gf-icon-action"
-                                    ng-class="{'gf-icon-show': !link.isHidden(), 'gf-icon-hide': link.isHidden()}">
+                                    ng-class="{'gf-icon-show': !link.hidden, 'gf-icon-hide': link.hidden}">
                                 </div>
-                                <div ng-click="editor.flowchartHandler.setMap(link, getLinkMapOptions())"
+                                <div ng-click="link.enableMapping(true)"
                                     title="Select a shape in diagram" class="gf-icon-action"
-                                    ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(link), 'gf-icon-empty': editor.flowchartHandler.isMapping(link)}">
+                                    ng-class="{'gf-icon-target': !link.onMapping, 'gf-icon-empty': link.onMapping}">
                                 </div>
-                                <div ng-click="rule.cloneLinkMap(link);editor.onRulesChange();"
+                                <div ng-click="rule.cloneLinkMap(link)"
                                     title="Duplicate this mapping" class="gf-icon-action gf-icon-clone">
                                 </div>
                             </div>
@@ -247,7 +245,7 @@
                         </button>
                         </div>
                         <div class="gf-form" style="margin-right: 5px;">
-                            <button class="btn btn-secondary btn-small" ng-click="editor.onRulesChange();"
+                            <button class="btn btn-secondary btn-small" ng-click="rule.change();"
                             title="Refresh/Apply">
                             <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M 535 114C 550 128 555 150 547 169C 539 188 521 200 500 200C 379 200 269 273 223 385C 186 474 194 572 242 652C 242 652 253 641 253 641C 262 632 275 626 289 627C 303 627 316 633 325 643C 332 650 336 660 337 670C 337 670 355 793 355 793C 357 809 352 825 341 836C 330 847 314 852 298 850C 298 850 175 832 175 832C 156 830 140 817 134 799C 128 781 133 761 146 747C 146 747 169 725 169 725C 94 615 78 473 130 347C 192 198 338 100 500 100C 513 100 526 105 535 114C 535 114 535 114 535 114M 852 181C 862 190 868 203 868 216C 868 230 863 243 854 253C 854 253 831 275 831 275C 906 385 922 527 870 653C 808 802 662 900 500 900C 482 900 465 891 456 875C 447 860 447 840 456 825C 465 809 482 800 500 800C 621 800 731 727 777 615C 814 526 806 428 758 348C 758 348 747 359 747 359C 733 373 712 377 693 369C 674 362 662 343 662 323C 662 323 662 217 662 217C 662 190 685 167 712 167C 712 167 818 167 818 167C 831 167 843 172 852 181C 852 181 852 181 852 181"/></svg>
                             &nbsp;Refresh
