@@ -6,7 +6,7 @@ import { GFEvents } from 'flowcharting_base';
 import { GFDrawio } from 'drawio_base';
 
 // Debug
-const DEBUG = true;
+const DEBUG = false;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
@@ -140,7 +140,7 @@ export class Flowchart {
       }
       this.data.csv = value;
     }
-      this.change();
+    this.change();
   }
   get source() {
     return this.data.type === 'csv' ? this.data.csv : this.data.xml;
@@ -152,7 +152,7 @@ export class Flowchart {
       return;
     }
     this.data.download = value;
-      this.change();
+    this.change();
   }
   get download() {
     return this.data.download;
@@ -371,8 +371,8 @@ export class Flowchart {
   }
 
   init_stateHandler(): this {
-    if(this.stateHandler) {
-      this.stateHandler.free()
+    if (this.stateHandler) {
+      this.stateHandler.free();
     }
     if (this.xgraph) {
       this.stateHandler = new StateHandler(this.$gf, this.xgraph);
@@ -701,16 +701,16 @@ export class Flowchart {
         }
       }
     } else {
-      if(!this.source || this.source.length === 0) {
+      if (!this.source || this.source.length === 0) {
         content = await GFDrawio.getTemplate(this.type);
-        if(this.type === 'xml'){
+        if (this.type === 'xml') {
           this.data.xml = content;
-        };
-        if(this.type === 'csv'){
+        }
+        if (this.type === 'csv') {
           this.data.csv = content;
-        };
+        }
       }
-      if(GFDrawio.isEncoded(content)) {
+      if (GFDrawio.isEncoded(content)) {
         content = GFDrawio.decode(content);
       }
       content = $GF.resolveVars(this.source);
@@ -762,7 +762,6 @@ export class Flowchart {
     }
     return this;
   }
-
 
   minify() {
     this.data.xml = $GF.utils.minify(this.data.xml);
