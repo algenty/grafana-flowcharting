@@ -143,25 +143,25 @@
                             ng-init="CN2 = 'what';elt.displayEdit[CN2] = false;elt.inEdit[CN2] = false;"
                             ng-mouseleave="elt.displayEdit[CN2] = false;" ng-mouseover="elt.displayEdit[CN2] = true;"
                             ng-style="{'width' : editor.eventsTable.getWidth(CN2)}"
-                            ng-attr-title="{{elt.getData().pattern}}">
+                            ng-attr-title="{{elt.pattern}}">
                             <div class="gf-table-content" ng-show="elt.inEdit[CN2] !== true"
                                 ng-dblclick="elt.inEdit[CN2] = true;$GF.setFocus( elt.uid + '-' + CN2 )">
-                                {{elt.getData().pattern}}
+                                {{elt.pattern}}
                             </div>
                             <div ng-show="elt.displayEdit[CN2] === true && elt.inEdit[CN2] !== true"
                                 ng-click="elt.inEdit[CN2] = true;$GF.setFocus( elt.uid + '-' + CN2 )"
                                 title="Edit pattern"
                                 class="gf-icon-action gf-icon-edit gf-icon-oncontent gf-icon-withcontent">
                             </div>
-                            <div ng-show="elt.displayEdit[CN2] === true && elt.inEdit[CN2] !== true && !editor.flowchartHandler.isMapping(elt)"
-                                ng-click="editor.flowchartHandler.setMap(elt, rule.getEventMapOptions())"
+                            <div ng-show="elt.displayEdit[CN2] === true && elt.inEdit[CN2] !== true && !elt.onMapping"
+                                ng-click="elt.enableMapping()"
                                 class="gf-icon-action gf-icon-target gf-icon-withcontent"
                                 title="Select a text in diagram">
                             </div>
                             <input type="text" style="margin-right: 2px;width : 100%"
                                 ng-attr-id="{{elt.uid + '-' + CN2}}" ng-show="elt.inEdit[CN2] === true"
-                                class="gf-form-input" ng-model="elt.getData().pattern" ng-change="editor.onRulesChange()"
-                                ng-model-onblur ng-blur="editor.onRulesChange();elt.inEdit[CN2] = false;"
+                                class="gf-form-input" ng-model="elt.pattern"
+                                ng-model-onblur ng-blur="elt.inEdit[CN2] = false;"
                                 bs-typeahead="rule.getEventMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD"
                                 data-min-length="0" data-items="100" data-placement="right" />
                         </div>
@@ -170,27 +170,27 @@
                             ng-init="CN3 = 'when';elt.displayEdit[CN3] = false;elt.inEdit[CN3] = false;"
                             ng-mouseleave="elt.displayEdit[CN3] = false;" ng-mouseover="elt.displayEdit[CN3] = true;"
                             ng-style="{'width' : editor.eventsTable.getWidth(CN3)}"
-                            ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.getData().comparator)}}">
-                            <!-- {{elt.getData().comparator}} -->
+                            ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.comparator)}}">
+                            <!-- {{elt.comparator}} -->
                             <div class="gf-table-content" style="text-align: center;"
-                                ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.getData().comparator)}}"
+                                ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.comparator)}}"
                                 ng-dblclick="elt.inEdit[CN3] = true;$GF.setFocus( elt.uid + '-' + CN3 )"
                                 ng-show="elt.inEdit[CN3] !== true">
-                                <!-- {{$GF.GetT4V( editor.comparator, elt.getData().comparator)}} -->
+                                <!-- {{$GF.GetT4V( editor.comparator, elt.comparator)}} -->
                                 <!-- && elt.isValidComp(comp.value) -->
                                 <div ng-repeat="comp in editor.comparator"
-                                    ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp(comp.value)) || elt.getData().comparator === comp.value"
+                                    ng-show="(elt.displayEdit[CN3] === true && elt.isValidComp(comp.value)) || elt.comparator === comp.value"
                                     ng-attr-title="{{comp.text}}"
-                                    ng-click="elt.getData().comparator = comp.value;editor.onRulesChange();"
+                                    ng-click="elt.comparator = comp.value"
                                     class="gf-icon-action {{'gf-icon-comp-' + comp.value}}"
-                                    ng-class="{'gf-icon-selected' : elt.getData().comparator === comp.value}">
+                                    ng-class="{'gf-icon-selected' : elt.comparator === comp.value}">
                                 </div>
                             </div>
                             <!-- <div ng-show="elt.displayEdit[CN3] === true && elt.inEdit[CN3] !== true"
                                 ng-click="elt.inEdit[CN3] = true;$GF.setFocus( elt.uid + '-' + CN3 )"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit condition">
                             </div>
-                            <select class="gf-form-input" ng-model="elt.getData().comparator" style="width:100%;"
+                            <select class="gf-form-input" ng-model="elt.comparator" style="width:100%;"
                                 ng-show="elt.inEdit[CN3] === true" ng-attr-id="{{elt.uid + '-' + CN3}}"
                                 ng-blur="editor.onRulesChange();elt.inEdit[CN3] = false;"
                                 ng-options="c.value as c.text for c in editor.comparator"
@@ -205,19 +205,18 @@
                             <div class="gf-table-content gf-unselectable" style="text-align: center;justify-content: center;"
                             style="cursor: pointer;"
                             ng-attr-title="Level"
-                            ng-click="elt.getData().eventOn = elt.getData().eventOn < rule.getThresholds().length - 1 ? elt.getData().eventOn + 1 : 0;editor.onRulesChange()"
+                            ng-click="elt.level = elt.level < rule.getThresholds().length - 1 ? elt.level + 1 : 0"
                             ng-show="elt.inEdit[CN4] !== true">
                             <!-- ng-dblclick="elt.inEdit[CN4] = true;$GF.setFocus( elt.uid + '-' + CN4 )" -->
-                                {{elt.getData().eventOn}}
+                                {{elt.level}}
                             </div>
                             <div ng-show="elt.displayEdit[CN4] === true && elt.inEdit[CN4] !== true"
                                 ng-click="elt.inEdit[CN4] = true;$GF.setFocus( elt.uid + '-' + CN4 )"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Edit threshold level">
                             </div>
                             <select style="width:100%;" convert-to-number class="gf-form-input"
-                                ng-blur="editor.onRulesChange();elt.inEdit[CN4] = false;" ng-model="elt.getData().eventOn"
-                                ng-show="elt.inEdit[CN4] === true" ng-attr-id="{{elt.uid + '-' + CN4}}"
-                                ng-change="editor.onRulesChange()">
+                                ng-blur="elt.inEdit[CN4] = false;" ng-model="elt.level"
+                                ng-show="elt.inEdit[CN4] === true" ng-attr-id="{{elt.uid + '-' + CN4}}">
                                 <option type="number" ng-repeat="color in rule.getThresholds();" ng-value="$index">{{$index}}
                                 </option>
                             </select>
@@ -227,25 +226,23 @@
                             ng-init="CN5 = 'then';elt.displayEdit[CN5] = false;elt.inEdit[CN5] = false;"
                             ng-mouseleave="elt.displayEdit[CN5] = false;" ng-mouseover="elt.displayEdit[CN5] = true;"
                             ng-style="{'width' : editor.eventsTable.getWidth(CN5)}"
-                            ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.getData().style)}}">
-                            <!-- {{elt.getData().EventType}} -->
+                            ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.animation)}}">
                             <div class="gf-table-content" style="text-align: left;"
                                 ng-dblclick="elt.inEdit[CN5] = true;$GF.setFocus( elt.uid + '-' + CN5 )"
                                 ng-show="elt.inEdit[CN5] !== true">
                                 <span>
-                                    {{$GF.GetT4V( editor.EventType, elt.getData().style)}}
+                                    {{$GF.GetT4V( editor.EventType, elt.animation)}}
                                 </span>
                             </div>
                             <div ng-show="elt.displayEdit[CN5] === true && elt.inEdit[CN5] !== true"
                                 ng-click="elt.inEdit[CN5] = true;$GF.setFocus( elt.uid + '-' + CN5 )"
                                 class="gf-icon-action gf-icon-edit gf-icon-withcontent" title="Select an action">
                             </div>
-                            <select class="gf-form-input" ng-model="elt.getData().style" style="width:100%;"
+                            <select class="gf-form-input" ng-model="elt.animation" style="width:100%;"
                                 ng-show="elt.inEdit[CN5] === true" ng-attr-id="{{elt.uid + '-' + CN5}}"
-                                ng-blur="editor.onRulesChange();elt.inEdit[CN5]= false;"
-                                ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.getData().style)}}"
-                                ng-options="c.value as c.text for c in editor.EventType"
-                                ng-change="editor.onRulesChange()">
+                                ng-blur="elt.inEdit[CN5]= false;"
+                                ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.animation)}}"
+                                ng-options="c.value as c.text for c in editor.EventType">
                             </select>
                         </div>
                         <!-- WITH -->
@@ -253,11 +250,11 @@
                             ng-init="CN6 = 'with';elt.displayEdit[CN6] = false;elt.inEdit[CN6] = false;"
                             ng-mouseleave="elt.displayEdit[CN6] = false;" ng-mouseover="elt.displayEdit[CN6] = true;"
                             ng-style="{'width' : editor.eventsTable.getWidth(CN6)}">
-                            <!-- {{elt.getData().value}} -->
+                            <!-- {{elt.value}} -->
                             <div class="gf-table-content" style="text-align: left;"
                                 ng-dblclick="elt.inEdit[CN6] = true;$GF.setFocus( elt.uid + '-' + CN6 )"
                                 ng-show="elt.inEdit[CN6] !== true">
-                                {{elt.getData().value}}
+                                {{elt.value}}
                             </div>
                             <div ng-show="elt.displayEdit[CN6] === true && elt.inEdit[CN6] !== true"
                                 ng-click="elt.inEdit[CN6] = true;$GF.setFocus( elt.uid + '-' + CN6 )"
@@ -265,10 +262,10 @@
                             </div>
                             <input type="text" style="margin-right: 2px;" ng-show="elt.inEdit[CN6] === true"
                                 ng-attr-id="{{elt.uid + '-' + CN6}}"
-                                class="gf-form-input" ng-model="elt.getData().value" placeholder="{{elt.getPlaceHolder()}}"
+                                class="gf-form-input" ng-model="elt.value" placeholder="{{elt.getPlaceHolder()}}"
                                 bs-typeahead="editor.getEventValues" title="Specify value for this action"
                                 data-min-length="0" data-items="100" ng-focus="editor.onEventValue(elt)"
-                                ng-blur="editor.onRulesChange();elt.inEdit[CN6] = false" data-min-length="0"
+                                ng-blur="elt.inEdit[CN6] = false" data-min-length="0"
                                 data-items="100" ng-model-onblur data-placement="right" />
                         </div>
                         <!-- ACTION -->
@@ -276,18 +273,18 @@
                             ng-style="{'width' : editor.eventsTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
-                                <div ng-click="editor.removeEventMap(rule,$index);editor.onRulesChange()"
+                                <div ng-click="rule.removeEventMap(elt)"
                                     title="Delete this mapping object" class="gf-icon-action gf-icon-remove">
                                 </div>
-                                <div ng-click="elt.isHidden() ? elt.show(): elt.hide();editor.onRulesChange()"
+                                <div ng-click="elt.hidden=!elt.hidden"
                                     title="Enable/Disable this mapping" class="gf-icon-action"
-                                    ng-class="{'gf-icon-show': !elt.isHidden(), 'gf-icon-hide': elt.isHidden()}">
+                                    ng-class="{'gf-icon-show': !elt.hidden, 'gf-icon-hide': elt.hidden}">
                                 </div>
-                                <div ng-click="editor.flowchartHandler.setMap(elt, rule.getEventMapOptions())"
+                                <div ng-click="elt.enableMapping(true)"
                                     title="Select a shape in diagram" class="gf-icon-action"
-                                    ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(elt), 'gf-icon-empty': editor.flowchartHandler.isMapping(elt)}">
+                                    ng-class="{'gf-icon-target': !elt.onMapping, 'gf-icon-empty': elt.onMapping}">
                                 </div>
-                                <div ng-click="rule.cloneEventMap(elt);editor.onRulesChange();"
+                                <div ng-click="rule.cloneEventMap(elt)"
                                     title="Duplicate this mapping" class="gf-icon-action gf-icon-clone">
                                 </div>
                             </div>
@@ -313,7 +310,7 @@
                             </button>
                         </div>
                         <div class="gf-form" style="margin-right: 5px;">
-                            <button class="btn btn-secondary btn-small" ng-click="editor.onRulesChange();"
+                            <button class="btn btn-secondary btn-small" ng-click="rule.change()"
                                 title="Refresh/Apply">
                                 <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
                                     <path fill="currentColor"

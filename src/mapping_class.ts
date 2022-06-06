@@ -119,7 +119,7 @@ abstract class GFMap<MapData extends gf.TDefObjMapData> {
 
   //HIDDEN
   set hidden(v: boolean) {
-    if (!v || v === this.data.hidden) {
+    if (v === this.data.hidden) {
       return;
     }
     this.data.hidden = v;
@@ -454,6 +454,46 @@ export class TextMap extends GFMap<gf.TTextMapData> {
     this.type = 'text';
   }
 
+  //############################################################################
+  //### ACCESSORS
+  //############################################################################
+  set condition(v: gf.TTextOnKeys) {
+    if (!v || v.length === 0 || v === this.data.textOn) {
+      return;
+    }
+    this.data.textOn = v;
+    this.change();
+  }
+  get condition(): gf.TTextOnKeys {
+    return this.data.textOn;
+  }
+
+  set method(v: gf.TTextMethodKeys) {
+    if (!v || v.length === 0 || v === this.data.textReplace) {
+      return;
+    }
+    this.data.textReplace = v;
+    this.change();
+  }
+  get method(): gf.TTextMethodKeys {
+    return this.data.textReplace;
+  }
+
+  set textToReplace(v: string) {
+    if (!v || v.length === 0 || v === this.data.textPattern) {
+      return;
+    }
+    this.data.textPattern = v;
+    this.change();
+  }
+  get textToReplace(): string {
+    return this.data.textPattern;
+  }
+
+  //############################################################################
+  //### ACCESSORS
+  //############################################################################
+
   /**
    * Return default data
    *
@@ -565,6 +605,46 @@ export class LinkMap extends GFMap<gf.TlinkMapData> {
     this.type = 'link';
   }
 
+  //############################################################################
+  //### ACCESSORS
+  //############################################################################
+  set condition(v: gf.TLinkOnKeys) {
+    if (!v || v.length === 0 || v === this.data.linkOn) {
+      return;
+    }
+    this.data.linkOn = v;
+    this.change();
+  }
+  get condition(): gf.TLinkOnKeys {
+    return this.data.linkOn;
+  }
+
+  set url(v: string) {
+    if (!v || v.length === 0 || v === this.data.linkUrl) {
+      return;
+    }
+    this.data.linkUrl = v;
+    this.change();
+  }
+  get url(): string {
+    return this.data.linkUrl;
+  }
+
+  set dasboardParams(v: boolean) {
+    if (v === this.data.linkParams) {
+      return;
+    }
+    this.data.linkParams = v;
+    this.change();
+  }
+  get dashboardParams(): boolean {
+    return this.data.linkParams;
+  }
+
+  //############################################################################
+  //### LOGICS
+  //############################################################################
+
   static getDefaultData(): gf.TlinkMapData {
     return {
       pattern: '',
@@ -650,6 +730,56 @@ export class EventMap extends GFMap<gf.TEventMapData> {
   protected _setType() {
     this.type = 'event';
   }
+
+  //############################################################################
+  //### ACCESSORS
+  //############################################################################
+  set level(v: number) {
+    if (v === this.data.eventOn) {
+      return;
+    }
+    this.data.eventOn = v;
+  }
+  get level(): number {
+    return this.data.eventOn;
+  }
+
+  set comparator(v: gf.TEventComparator) {
+    if (!v || v.length === 0 || v === this.data.comparator) {
+      return
+    }
+    this.data.comparator = v;
+    this.change();
+  }
+  get comparator(): gf.TEventComparator {
+    return this.data.comparator;
+  }
+
+  set animation(v: gf.TTypeEventKeys) {
+    if (!v || v.length === 0 || v === this.data.style) {
+      return;
+    }
+    this.data.style = v;
+    this.change();
+  }
+  get animation() {
+    return this.data.style;
+  }
+
+  set value(v: string) {
+    if (!v || v.length === 0 || v === this.data.value) {
+      return;
+    }
+    this.data.value = v;
+    this.change();
+  }
+  get value() {
+    return this.data.value;
+  }
+
+  //############################################################################
+  //### LOGIC
+  //############################################################################
 
   /**
    * Return default data

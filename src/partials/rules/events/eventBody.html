@@ -13,13 +13,13 @@
         </info-popover>
     </label>
     <input type="text" style="margin-right: 2px;" id="{{ elt.uid }}" placeholder="id or regex of shape"
-        class="gf-form-input width-8" ng-model="elt.getData().pattern" ng-model-onblur
+        class="gf-form-input width-8" ng-model="elt.pattern" ng-model-onblur
         title="Enter an id, label,metadata attribute or regex to identify object"
-        bs-typeahead="rule.getEventMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+        bs-typeahead="rule.getEventMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" data-min-length="0" data-items="100"
         data-placement="right" />
     <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
         ng-show="rule.getEventMapOptions().identByProp !== 'metadata'"
-        title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(elt, rule.getEventMapOptions())">
+        title="Select an object in diagram/graph" ng-click="elt.enableMapping(true)">
         <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
     </button>
     <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects"
@@ -34,9 +34,9 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-10" ng-model="elt.getData().comparator" ng-attr-id="{{elt.uid + '-' + CN3}}"
-        ng-blur="editor.onRulesChange()" ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.getData().comparator)}}"
-        ng-options="c.value as c.text for c in editor.comparator" ng-change="editor.onRulesChange()">
+    <select class="gf-form-input width-10" ng-model="elt.comparator" ng-attr-id="{{elt.uid + '-' + CN3}}"
+        ng-attr-title="{{$GF.GetT4V( editor.comparator, elt.comparator)}}"
+        ng-options="c.value as c.text for c in editor.comparator">
     </select>
 </div>
 <div class="gf-form">
@@ -46,8 +46,7 @@
             </span>
         </info-popover>
     </label>
-    <select convert-to-number class="gf-form-input width-10" ng-model="elt.getData().eventOn"
-        ng-change="editor.onRulesChange()">
+    <select convert-to-number class="gf-form-input width-10" ng-model="elt.level">
         <option type="number" ng-repeat="color in rule.getThresholds()" ng-value="$index">{{$index}}</option>
     </select>
 </div>
@@ -58,10 +57,10 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-10" ng-model="elt.getData().style" style="width:100%;"
-        ng-attr-id="{{elt.uid + '-' + CN5}}" ng-blur="editor.onRulesChange();"
-        ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.getData().style)}}"
-        ng-options="c.value as c.text for c in editor.EventType" ng-change="editor.onRulesChange()">
+    <select class="gf-form-input width-10" ng-model="elt.animation" style="width:100%;"
+        ng-attr-id="{{elt.uid + '-' + CN5}}"
+        ng-attr-title="{{$GF.GetT4V( editor.EventType, elt.animation)}}"
+        ng-options="c.value as c.text for c in editor.EventType">
     </select>
 </div>
 <div class="gf-form">
@@ -72,7 +71,7 @@
         </info-popover>
     </label>
     <input type="text" style="margin-right: 2px;" placeholder="{{elt.getPlaceHolder()}}"
-        class="gf-form-input width-10" ng-model="elt.getData().value" title="Specify value for this action"
+        class="gf-form-input width-10" ng-model="elt.value" title="Specify value for this action"
         bs-typeahead="editor.getEventValues" data-min-length="0" data-items="100" ng-focus="editor.onEventValue(elt)"
-        ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100" ng-model-onblur data-placement="right" />
+        data-min-length="0" data-items="100" ng-model-onblur data-placement="right" />
 </div>

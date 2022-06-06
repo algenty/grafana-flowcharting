@@ -13,13 +13,13 @@
         </info-popover>
     </label>
     <input type="text" style="margin-right: 2px;" id="{{ link.uid }}" placeholder="id or regex of shape"
-        class="gf-form-input width-8" ng-model="link.getData().pattern"
+        class="gf-form-input width-8" ng-model="link.pattern"
         title="Enter an id, label,metadata attribute or regex to identify object"
-        bs-typeahead="rule.getLinkMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" ng-blur="editor.onRulesChange()" data-min-length="0" data-items="100"
+        bs-typeahead="rule.getLinkMapOptions().identByProp !== 'metadata' ? editor.getCellNamesTypeHead : editor.getCellNamesMD" data-min-length="0" data-items="100"
         ng-model-onblur data-placement="right" />
     <button class="btn btn-secondary btn-small" style="margin-left:2px; height: 32px;"
         ng-show="rule.getLinkMapOptions().identByProp !== 'metadata'"
-        title="Select an object in diagram/graph" ng-click="editor.flowchartHandler.setMap(link, rule.getLinkMapOptions())">
+        title="Select an object in diagram/graph" ng-click="link.enableMapping()">
         <div Class="gf-icon-target" style="margin-bottom: 7px;margin-right: 2px;"></div>
     </button>
     <button class="btn btn-secondary btn-small" style="margin-left:5px; height: 32px;" title="Identify selected objects"
@@ -34,8 +34,8 @@
             </span>
         </info-popover>
     </label>
-    <select class="gf-form-input width-8" ng-model="link.getData().linkOn"
-        ng-options="c.value as c.text for c in editor.linkOn" ng-change="editor.onRulesChange()"></select>
+    <select class="gf-form-input width-8" ng-model="link.condition"
+        ng-options="c.value as c.text for c in editor.linkOn"></select>
 </div>
 <div class="gf-form">
     <label class="gf-form-label width-7" style="margin-right: 2px;">Url
@@ -44,7 +44,7 @@
         </info-popover></label>
     </label>
     <input type="text" style="margin-right: 2px;" class="gf-form-input width-10" bs-tooltip="'Enter the URL link'"
-        ng-model="link.getData().linkUrl" ng-blur="editor.onRulesChange()" data-placement="right" />
+        ng-model="link.url" data-placement="right" />
 </div>
 <div class="gf-form">
     <label class="gf-form-label width-7" style="margin-right: 2px;">Parameters
@@ -53,6 +53,6 @@
             </span>
         </info-popover>
     </label>
-    <gf-form-switch class="gf-form width-7" style="width: 66px;" checked="link.getData().linkParams">
+    <gf-form-switch class="gf-form width-7" style="width: 66px;" checked="link.dashboardParams">
     </gf-form-switch>
 </div>

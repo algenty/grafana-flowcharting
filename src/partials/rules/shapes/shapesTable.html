@@ -184,7 +184,7 @@
                             ng-style="{'width' : editor.shapesTable.getWidth('actions')}">
                             <div class="gf-table-content gf-unselectable"
                                 style="text-align: left;justify-content: center;">
-                                <div ng-click="ruleremoveShapeMap(shape)"
+                                <div ng-click="rule.removeShapeMap(shape)"
                                     title="Delete this mapping object" class="gf-icon-action gf-icon-remove">
                                 </div>
                                 <div title="Duplicate this mapping"
@@ -192,9 +192,9 @@
                                     title="Enable/Disable this mapping" class="gf-icon-action"
                                     ng-class="{'gf-icon-show': !shape.hidden, 'gf-icon-hide': shape.hidden}">
                                 </div>
-                                <div ng-click="editor.flowchartHandler.setMap(shape, rule.getShapeMapOptions())"
+                                <div ng-click="shape.enableMapping(true)"
                                     title="Select a shape in diagram" class="gf-icon-action"
-                                    ng-class="{'gf-icon-target': !editor.flowchartHandler.isMapping(shape), 'gf-icon-empty': editor.flowchartHandler.isMapping(shape)}">
+                                    ng-class="{'gf-icon-target': !shape.onMapping, 'gf-icon-empty': shape.onMapping}">
                                 </div>
                                 <div ng-click="rule.cloneShapeMap(shape)"
                                     title="Duplicate this mapping" class="gf-icon-action gf-icon-clone">
@@ -222,7 +222,7 @@
                             </button>
                         </div>
                         <div class="gf-form" style="margin-right: 5px;">
-                            <button class="btn btn-secondary btn-small" ng-click="editor.onRulesChange();"
+                            <button class="btn btn-secondary btn-small" ng-click="rule.change();"
                                 title="Refresh/Apply">
                                 <svg width="16" height="16" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
                                     <path fill="currentColor"
