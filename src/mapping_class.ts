@@ -20,7 +20,7 @@ export interface MapDataCommonProp {
 }
 
 // Debug
-const DEBUG = true;
+const DEBUG = false;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };

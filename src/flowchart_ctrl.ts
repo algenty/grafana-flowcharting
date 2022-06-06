@@ -14,7 +14,7 @@ import { defaults as _defaults, cloneDeep as _cloneDeep } from 'lodash';
 import { GFDrawio } from 'drawio_base';
 
 // Debug
-const DEBUG = true;
+const DEBUG = false;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };

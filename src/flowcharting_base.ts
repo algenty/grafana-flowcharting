@@ -7,8 +7,10 @@ type Uid = String;
 type ConnectedChild = Map<Uid, CallableFunction>;
 
 // Debug
-const DEBUG=false;
-const _log = (...args: any) => {DEBUG && console.log(...args)}
+const DEBUG = false;
+const _log = (...args: any) => {
+  DEBUG && console.log(...args);
+};
 
 export class GFEvents<Signals> {
   private _declaredSignals: Signals[] = [];
@@ -18,7 +20,10 @@ export class GFEvents<Signals> {
     // Nothing to do
   }
 
-  static create<Signals>(signalName?: Readonly<Signals> | Readonly<Signals[]>, owner?: { uid: string }): GFEvents<Signals> {
+  static create<Signals>(
+    signalName?: Readonly<Signals> | Readonly<Signals[]>,
+    owner?: { uid: string }
+  ): GFEvents<Signals> {
     const event: GFEvents<Signals> = new GFEvents();
     if (signalName) {
       event.declare(signalName);
@@ -97,9 +102,9 @@ export class GFEvents<Signals> {
     }
   }
 
-  emit(signalName: Signals, objToEmit?: unknown, from?: CallableSignalChild ) {
+  emit(signalName: Signals, objToEmit?: unknown, from?: CallableSignalChild) {
     //, from?: { uid: string }
-    _log('📨', `Emit signal [${signalName}]${from ? ' from [' + from.uid + ']': ''}`);
+    _log('📨', `Emit signal [${signalName}]${from ? ' from [' + from.uid + ']' : ''}`);
     const _childFn = this._getCallableFunc(signalName);
     return Promise.all(
       _childFn.map(async (fn) => {

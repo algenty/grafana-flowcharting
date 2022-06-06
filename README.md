@@ -58,12 +58,15 @@ Special thanks to
 
 
 # Changelog
-## [[1.0.0d (Last build 2022-05-07)]](./built/)
+## [[1.0.0d (Last build 2022-06-06)]](./built/)
 
 ### Known issues
   - Shared cross on grafana 8.x (minor)
   - Flow animation on arrows (minor)
+  - External image from diagrams.net not displayed (minor)
 ### Added
+  - Convert sync method to async : render graph before update states (speed x2) 
+  - clean dirty code
   - Support last version of grafana (8.5.x)
   - New initialization engine for drawio libs
   - New draw.io libs (17.x 2022-04-23)

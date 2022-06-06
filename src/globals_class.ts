@@ -9,7 +9,7 @@ import { MetricHandler } from 'metric_handler';
 const safeEval = require('safe-eval');
 
 // Debug
-const DEBUG = true;
+const DEBUG = false;
 const _log = (...args: any) => {
   DEBUG && console.log(...args);
 };
