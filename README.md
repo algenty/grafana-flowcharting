@@ -53,7 +53,7 @@ Special thanks to
 ## Silver
   * Ian Jones, Tobias Dorn, Matti Orrberg
 
-## Bronze sponsor
+## Bronze
   * Christopher Piggott, Tamer Salem, Gavin Smith, Roman Dodin
 
 
