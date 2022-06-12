@@ -722,7 +722,10 @@ export class XGraph {
     let values: Set<string> = new Set();
     for (let i = 0; i < length; i++) {
       const xcell = xcells[i];
-      const datas = xcell.getDefaultValues(options);
+      let datas = xcell.getDefaultValues(options);
+      if(typeof datas === 'string') {
+        datas = [datas];
+      }
       datas.forEach((x: string) => {
         if (x !== null && x !== undefined && x.length > 0) {
           values.add(x);

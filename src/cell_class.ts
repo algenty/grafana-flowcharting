@@ -98,10 +98,13 @@ export class XCell {
     return value;
   }
 
-  getDefaultValues(options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): any {
+  getDefaultValues(options: gf.TRuleMapOptions = Rule.getDefaultMapOptions()): string | string[] {
     let value: any = this.getDefaultValue(options.identByProp);
     if (options.identByProp === 'metadata') {
       value = this.getDefaultMetadatasValues(options.metadata, options.enableRegEx);
+    }
+    if(Array.isArray(value) && value.length === 1){
+      return value[0];
     }
     return value;
   }

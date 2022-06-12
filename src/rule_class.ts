@@ -1690,22 +1690,22 @@ export class Rule {
     const xcell = state.getXCell();
     let mapOptions = this.getShapeMapOptions();
     let value = xcell.getDefaultValues(mapOptions);
-    if (this.matchShape(value, mapOptions)) {
+    if (typeof value === 'string' && this.matchShape(value, mapOptions)) {
       return true;
     }
     mapOptions = this.getTextMapOptions();
     value = xcell.getDefaultValues(mapOptions);
-    if (this.matchText(value, mapOptions)) {
+    if (typeof value === 'string' && this.matchText(value, mapOptions)) {
       return true;
     }
     mapOptions = this.getLinkMapOptions();
     value = xcell.getDefaultValues(mapOptions);
-    if (this.matchLink(value, mapOptions)) {
+    if (typeof value === 'string' && this.matchLink(value, mapOptions)) {
       return true;
     }
     mapOptions = this.getEventMapOptions();
     value = xcell.getDefaultValues(mapOptions);
-    if (this.matchEvent(value, mapOptions)) {
+    if (typeof value === 'string' && this.matchEvent(value, mapOptions)) {
       return true;
     }
     return false;

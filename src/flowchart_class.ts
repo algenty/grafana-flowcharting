@@ -33,9 +33,11 @@ export class Flowchart {
   private xgraph: XGraph | undefined;
   private stateHandler: StateHandler | undefined;
   private readonly $gf: $GF;
+  private allowDioRessource = true;
   uid: string;
   visible = false;
   reduce = true;
+
   events: GFEvents<FlowchartSignals> = GFEvents.create(flowchartSignalsArray);
 
   constructor($gf: $GF, name: string, container: HTMLDivElement, newData: gf.TFlowchartData, oldData?: any) {
@@ -453,6 +455,7 @@ export class Flowchart {
     this.enableAnimation();
     this._colorBackgroundContainer(this.data.bgColor);
     this.xgraph?.update();
+    this.enableDioREssources();
     return this;
   }
 
@@ -673,8 +676,9 @@ export class Flowchart {
   //   return '';
   // }
 
-  enableDioREssources(bool: boolean): this {
+  enableDioREssources(bool = this.allowDioRessource): this {
     if (this.xgraph) {
+      this.allowDioRessource = bool;
       this.xgraph.enableDioRessources(bool);
     }
     return this;
