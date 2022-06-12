@@ -192,7 +192,7 @@ export class State {
           let cellValue = this.xcell.getDefaultValues(mapOptions);
           shapeMaps.forEach((shape) => {
             let k = shape.data.style;
-            if (!shape.hidden && shape.match(cellValue, mapOptions, this._variables)) {
+            if (!shape.hidden && typeof cellValue === 'string' && shape.match(cellValue, mapOptions, this._variables)) {
               let v: any = color;
               if (shape.isEligible(level)) {
                 matchedRule = true;
@@ -221,7 +221,7 @@ export class State {
           cellValue = this.xcell.getDefaultValues(mapOptions);
           textMaps.forEach((text) => {
             const k = 'label';
-            if (!text.hidden && text.match(cellValue, mapOptions, this._variables)) {
+            if (!text.hidden && typeof cellValue === 'string' && text.match(cellValue, mapOptions, this._variables)) {
               if (text.isEligible(level)) {
                 matchedRule = true;
                 this.matched = true;
@@ -237,7 +237,7 @@ export class State {
           cellValue = this.xcell.getDefaultValues(mapOptions);
           eventMaps.forEach((event) => {
             const k = event.data.style;
-            if (!event.hidden && event.match(cellValue, mapOptions, this._variables)) {
+            if (!event.hidden && typeof cellValue === 'string' && event.match(cellValue, mapOptions, this._variables)) {
               if (event.isEligible(level)) {
                 matchedRule = true;
                 this.matched = true;
@@ -252,7 +252,7 @@ export class State {
           cellValue = this.xcell.getDefaultValues(mapOptions);
           linkMaps.forEach((link) => {
             const k = 'link';
-            if (!link.hidden && link.match(cellValue, mapOptions, this._variables)) {
+            if (!link.hidden && typeof cellValue === 'string' && link.match(cellValue, mapOptions, this._variables)) {
               if (link.isEligible(level)) {
                 matchedRule = true;
                 this.matched = true;
@@ -482,22 +482,22 @@ export class State {
   private _matchRule(rule: Rule): boolean {
     let mapOptions = rule.getShapeMapOptions();
     let cellValue = this.xcell.getDefaultValues(mapOptions);
-    if (rule.matchShape(cellValue, mapOptions)) {
+    if (typeof cellValue === 'string' && rule.matchShape(cellValue, mapOptions)) {
       return true;
     }
     mapOptions = rule.getTextMapOptions();
     cellValue = this.xcell.getDefaultValues(mapOptions);
-    if (rule.matchText(cellValue, mapOptions)) {
+    if (typeof cellValue === 'string' && rule.matchText(cellValue, mapOptions)) {
       return true;
     }
     mapOptions = rule.getLinkMapOptions();
     cellValue = this.xcell.getDefaultValues(mapOptions);
-    if (rule.matchLink(cellValue, mapOptions)) {
+    if (typeof cellValue === 'string' && rule.matchLink(cellValue, mapOptions)) {
       return true;
     }
     mapOptions = rule.getEventMapOptions();
     cellValue = this.xcell.getDefaultValues(mapOptions);
-    if (rule.matchEvent(cellValue, mapOptions)) {
+    if (typeof cellValue === 'string' && rule.matchEvent(cellValue, mapOptions)) {
       return true;
     }
     return false;
