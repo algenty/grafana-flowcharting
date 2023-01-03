@@ -315,11 +315,12 @@ declare module gf {
     tooltip: boolean;
     tooltipLabel: string;
     tooltipIframe: string;
+    tooltipOnlyIframe: boolean;
+    tooltipWidth: string;
     tooltipColors: boolean;
     tooltipOn: TTooltipOnKeys;
     tpDirection: TDirectionKeys;
     tpMetadata: boolean;
-    tpIframe: boolean;
     tpGraph: boolean;
     tpGraphSize: TGraphSizeKeys;
     tpGraphType: TGraphTypeKeys;

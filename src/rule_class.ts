@@ -312,6 +312,26 @@ export class Rule {
     return this.data.tooltipIframe;
   }
 
+  set tooltipOnlyIframe(v: boolean) {
+    if (this.data.tooltipOnlyIframe !== v) {
+      this.data.tooltipOnlyIframe = v;
+      this.change();
+    }
+  }
+  get tooltipOnlyIframe(): boolean {
+    return this.data.tooltipOnlyIframe;
+  }
+
+  set tooltipWidth(v: string) {
+    if (this.data.tooltipWidth !== v) {
+      this.data.tooltipWidth = v;
+      this.change();
+    }
+  }
+  get tooltipWidth(): string {
+    return this.data.tooltipWidth;
+  }
+
   // ENABLE TOOLTIP GRAPH
   set tooltipOn(v: gf.TTooltipOnKeys) {
     if (!v || v.length === 0 || this.data.tooltipOn !== v) {
@@ -343,17 +363,6 @@ export class Rule {
     return this.data.tooltipColors;
   }
 
-  //IFrame
-
-  set tooltipForIframe(value: boolean) {
-    if (this.data.tpIframe !== value) {
-      this.data.tpIframe = value;
-      this.change();
-    }
-  }
-  get tooltipForIframe() {
-    return this.data.tpIframe;
-  }
   //GRAPH TYPE
   set tooltipForGraph(value: boolean) {
     if (this.data.tpGraph !== value) {
@@ -835,6 +844,12 @@ export class Rule {
     if (!!obj.tooltipIframe) {
       this.data.tooltipIframe = obj.tooltipIframe;
     }
+    if (!!obj.tooltipOnlyIframe) {
+      this.data.tooltipOnlyIframe = obj.tooltipOnlyIframe;
+    }
+    if (!!obj.tooltipWidth) {
+      this.data.tooltipWidth = obj.tooltipWidth;
+    }
     if (!!obj.tooltipColors || obj.tooltipColors === false) {
       this.data.tooltipColors = obj.tooltipColors;
     }
@@ -846,9 +861,6 @@ export class Rule {
     }
     if (!!obj.tpMetadata) {
       this.data.tpMetadata = obj.tpMetadata;
-    }
-    if (!!obj.tpIframe || this.data.tpIframe === false) {
-      this.data.tpIframe = obj.tpIframe;
     }
     if (!!obj.tpGraph || this.data.tpGraph === false) {
       this.data.tpGraph = obj.tpGraph;
@@ -1129,11 +1141,12 @@ export class Rule {
       tooltip: false,
       tooltipLabel: '',
       tooltipIframe: '',
+      tooltipOnlyIframe: false,
+      tooltipWidth: "",
       tooltipColors: false,
       tooltipOn: 'a',
       tpDirection: 'v',
       tpMetadata: false,
-      tpIframe: false,
       tpGraph: false,
       tpGraphSize: '100%',
       tpGraphType: 'line',

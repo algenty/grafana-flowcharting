@@ -18,12 +18,14 @@ export class TooltipHandler {
   lastChange: string | undefined;
   div: HTMLHeadingElement | null = null;
   iframe: string;
+  onlyIframe: boolean;
   // constructor(mxcell: any) {
   constructor() {
     // this.mxcell = mxcell;
     this.checked = false;
     this.metrics = new Set();
-    this.iframe = ""
+    this.iframe = "";
+    this.onlyIframe = false;
   }
 
   /**
@@ -56,6 +58,11 @@ export class TooltipHandler {
 
   setIframe(iframe: string): this {
     this.iframe = iframe
+    return this
+  }
+
+  setOnlyIframe(onlyIframe: boolean): this {
+    this.onlyIframe = onlyIframe
     return this
   }
 
@@ -104,11 +111,13 @@ export class TooltipHandler {
     if(this.iframe) {
       this.getIframeDiv(div)
     }
-    if (this.metrics.size > 0) {
-      this.getDateDiv(div);
-      this.metrics.forEach((metric: MetricTooltip) => {
-        metric.getDiv(div);
-      });
+    if(this.onlyIframe === false) {
+      if (this.metrics.size > 0) {
+        this.getDateDiv(div);
+        this.metrics.forEach((metric: MetricTooltip) => {
+          metric.getDiv(div);
+        });
+      }
     }
 
     // Metadatas
