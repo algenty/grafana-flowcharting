@@ -1150,10 +1150,13 @@ class TooltipState extends GFState {
       const metricToolip = this.tooltipHandler
         .addMetric()
         .setLabel(label)
-        .setIframe(iframe)
         .setValue(value)
         .setColor(tpColor)
         .setDirection(rule.graphDirection);
+
+      if(iframe) {
+        this.tooltipHandler.setIframe(iframe)
+      }
       // GRAPH
       if (rule.tooltipForGraph) {
         const graph = metricToolip.addGraph(rule.graphType);
