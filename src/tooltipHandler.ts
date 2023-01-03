@@ -82,6 +82,8 @@ export class TooltipHandler {
     // Values + Graphs
     if (this.metrics.size > 0) {
       this.getDateDiv(div);
+      var firstMetrics = [...this.metrics][0];
+      firstMetrics.getIframeDiv(div)
       this.metrics.forEach((metric: MetricTooltip) => {
         metric.getDiv(div);
       });
@@ -102,6 +104,7 @@ export class TooltipHandler {
       parentDiv.appendChild(div);
     }
     div.className = 'graph-tooltip-time tooltip-date';
+  
     div.innerHTML = `${this.lastChange}`;
     return div;
   }
@@ -116,6 +119,7 @@ export class MetricTooltip {
   color: string;
   graphs: Set<GraphTooltip>;
   label: string;
+  iframe: string;
   value: string;
   direction: gf.TDirectionKeys = 'v';
   div: HTMLDivElement | undefined;
@@ -123,12 +127,18 @@ export class MetricTooltip {
     this.color = '#8c8980';
     this.graphs = new Set();
     this.label = '';
+    this.iframe = '';
     this.value = '';
   }
 
   setLabel(label: string): this {
     this.label = label;
     return this;
+  }
+
+  setIframe(iframe: string): this {
+    this.iframe = iframe
+    return this
   }
 
   setValue(value: string): this {
@@ -173,6 +183,20 @@ export class MetricTooltip {
     if (this.label !== undefined) {
       str += `${this.label} : `;
       str += `<span style="color:${this.color}"><b>${this.value}</b></span>`;
+    }
+    div.innerHTML = str;
+    return div;
+  }
+
+  getIframeDiv(parentDiv: HTMLDivElement): HTMLDivElement {
+    const div = document.createElement('div');
+    div.className = 'tooltip-text';
+    let str = '';
+    if (parentDiv !== undefined) {
+      parentDiv.appendChild(div);
+    }
+    if (this.iframe !== undefined) {
+      str += this.iframe
     }
     div.innerHTML = str;
     return div;

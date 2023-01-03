@@ -1130,6 +1130,7 @@ class TooltipState extends GFState {
   setTooltip(rule: Rule, metric: ObjectMetric, color: string, value: string, metadata: gf.TXCellMetadata) {
     let tpColor: string | null = null;
     let label: string = rule.tooltipLabel;
+    let iframe: string = rule.tooltipIframe;
     if (this.tooltipHandler === null || this.tooltipHandler === undefined) {
       this.tooltipHandler = new TooltipHandler();
     }
@@ -1149,6 +1150,7 @@ class TooltipState extends GFState {
       const metricToolip = this.tooltipHandler
         .addMetric()
         .setLabel(label)
+        .setIframe(iframe)
         .setValue(value)
         .setColor(tpColor)
         .setDirection(rule.graphDirection);

@@ -16,7 +16,7 @@
       </info-popover>
     </label>
     <input type="text" class="gf-form-input width-12" ng-model="rule.tooltipLabel" ng-model-onblur placeholder="auto" />
-  </div>
+  </div>  
   <div class="gf-form" ng-if="rule.tooltip">
     <label class="gf-form-label width-10">When state is
       <info-popover mode="right-normal">
@@ -55,4 +55,25 @@
   <gf-form-switch class="gf-form" label-class="width-10" tooltip="Add metadatas into the tooltip" label="Display metadatas"
     checked="rule.tpMetadata">
   </gf-form-switch>
+</div>
+
+<div class="section gf-form-group">
+  <h5 class="section-heading">
+    IFrame Tooltips
+    <info-popover mode="right-normal">
+      <span
+        ng-bind-html="$GF.popover('Add/change tooltip/popup with IFrame with maximum width 200px', 'TOOLTIPS')">
+      </span>
+    </info-popover>
+  </h5>
+  <gf-form-switch class="gf-form" label-class="width-10" tooltip="Add tooltips IFrame on shapes"
+    label="Display IFrame" checked="rule.tooltipForIframe">
+  </gf-form-switch>
+  <div class="gf-form" ng-if="rule.tooltipForIframe">
+    <label class="gf-form-label width-10">IFrame
+      <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Show IFrame Code', 'TOOLTIPS')"></span>
+      </info-popover>
+    </label>
+    <textarea type="text" class="gf-form-input width-12" ng-model="rule.tooltipIframe" ng-model-onblur placeholder="IFrame with maximum width 200px" />
+  </div>  
 </div>

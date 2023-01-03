@@ -122,6 +122,7 @@
         "tooltip": false,
         "tooltipColors": false,
         "tooltipLabel": "",
+        "tooltipIframe": "",
         "tooltipOn": "a",
         "tpDirection": "v",
         "tpGraph": false,

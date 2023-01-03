@@ -301,6 +301,17 @@ export class Rule {
   get tooltipLabel(): string {
     return this.data.tooltipLabel;
   }
+  // DISPLAY IFRAME IN TOOLTIP
+  set tooltipIframe(v: string) {
+    if (this.data.tooltipIframe !== v) {
+      this.data.tooltipIframe = v;
+      this.change();
+    }
+  }
+  get tooltipIframe(): string {
+    return this.data.tooltipIframe;
+  }
+
   // ENABLE TOOLTIP GRAPH
   set tooltipOn(v: gf.TTooltipOnKeys) {
     if (!v || v.length === 0 || this.data.tooltipOn !== v) {
@@ -332,6 +343,17 @@ export class Rule {
     return this.data.tooltipColors;
   }
 
+  //IFrame
+
+  set tooltipForIframe(value: boolean) {
+    if (this.data.tpIframe !== value) {
+      this.data.tpIframe = value;
+      this.change();
+    }
+  }
+  get tooltipForIframe() {
+    return this.data.tpIframe;
+  }
   //GRAPH TYPE
   set tooltipForGraph(value: boolean) {
     if (this.data.tpGraph !== value) {
@@ -810,6 +832,9 @@ export class Rule {
     if (!!obj.tooltipLabel) {
       this.data.tooltipLabel = obj.tooltipLabel;
     }
+    if (!!obj.tooltipIframe) {
+      this.data.tooltipIframe = obj.tooltipIframe;
+    }
     if (!!obj.tooltipColors || obj.tooltipColors === false) {
       this.data.tooltipColors = obj.tooltipColors;
     }
@@ -821,6 +846,9 @@ export class Rule {
     }
     if (!!obj.tpMetadata) {
       this.data.tpMetadata = obj.tpMetadata;
+    }
+    if (!!obj.tpIframe || this.data.tpIframe === false) {
+      this.data.tpIframe = obj.tpIframe;
     }
     if (!!obj.tpGraph || this.data.tpGraph === false) {
       this.data.tpGraph = obj.tpGraph;
@@ -1100,10 +1128,12 @@ export class Rule {
       overlayIcon: false,
       tooltip: false,
       tooltipLabel: '',
+      tooltipIframe: '',
       tooltipColors: false,
       tooltipOn: 'a',
       tpDirection: 'v',
       tpMetadata: false,
+      tpIframe: false,
       tpGraph: false,
       tpGraphSize: '100%',
       tpGraphType: 'line',
