@@ -314,6 +314,8 @@ declare module gf {
     overlayIcon: boolean;
     tooltip: boolean;
     tooltipLabel: string;
+    tooltipIframe: string;
+    tooltipOnlyIframe: boolean;
     tooltipColors: boolean;
     tooltipOn: TTooltipOnKeys;
     tpDirection: TDirectionKeys;

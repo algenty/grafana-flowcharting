@@ -1130,9 +1130,15 @@ class TooltipState extends GFState {
   setTooltip(rule: Rule, metric: ObjectMetric, color: string, value: string, metadata: gf.TXCellMetadata) {
     let tpColor: string | null = null;
     let label: string = rule.tooltipLabel;
+    let iframe: string = rule.tooltipIframe;
+    let onlyIframe: boolean = rule.tooltipOnlyIframe;
     if (this.tooltipHandler === null || this.tooltipHandler === undefined) {
       this.tooltipHandler = new TooltipHandler();
-    }
+    } 
+      if(iframe) {
+        this.tooltipHandler.setIframe(iframe)
+        this.tooltipHandler.setOnlyIframe(onlyIframe)
+      }
     if (rule.tooltip) {
       if (label === null || label.length === 0) {
         if (rule.metricType === 'serie') {
@@ -1152,6 +1158,10 @@ class TooltipState extends GFState {
         .setValue(value)
         .setColor(tpColor)
         .setDirection(rule.graphDirection);
+
+      // if(iframe) {
+      //   this.tooltipHandler.setIframe(iframe)
+      // }
       // GRAPH
       if (rule.tooltipForGraph) {
         const graph = metricToolip.addGraph(rule.graphType);

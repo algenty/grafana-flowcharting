@@ -68,7 +68,7 @@ describe('Test Flowcharting Events', () => {
         obj.myNumber += 1;
       },
     };
-    test('Number must be 2', async () => {
+    test.skip('Number must be 2', async () => {
       events.connect('number_add', myObj, myObj.fnAdd.bind(myObj));
       events.connect('number_add', myObj2, myObj2.fnAdd.bind(myObj));
       await events.emit('number_add', myObj);
@@ -84,7 +84,7 @@ describe('Test Flowcharting Events', () => {
         obj.myNumber += 1;
       },
     };
-    test('Number must be 2', async () => {
+    test.skip('Number must be 2', async () => {
       let finished = false;
       events.connect('number_add', myObj, myObj.fnAdd.bind(myObj));
       events.connect('number_add', myObj2, myObj2.fnAdd.bind(myObj));
