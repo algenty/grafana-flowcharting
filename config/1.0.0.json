@@ -194,6 +194,8 @@
         "tooltip": false,
         "tooltipColors": false,
         "tooltipLabel": "",
+        "tooltipIframe": "",
+        "tooltipOnlyIframe": false,
         "tooltipOn": "a",
         "tpDirection": "v",
         "tpGraph": false,
