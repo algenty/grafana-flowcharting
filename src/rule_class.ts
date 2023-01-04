@@ -322,16 +322,6 @@ export class Rule {
     return this.data.tooltipOnlyIframe;
   }
 
-  set tooltipWidth(v: string) {
-    if (this.data.tooltipWidth !== v) {
-      this.data.tooltipWidth = v;
-      this.change();
-    }
-  }
-  get tooltipWidth(): string {
-    return this.data.tooltipWidth;
-  }
-
   // ENABLE TOOLTIP GRAPH
   set tooltipOn(v: gf.TTooltipOnKeys) {
     if (!v || v.length === 0 || this.data.tooltipOn !== v) {
@@ -847,9 +837,6 @@ export class Rule {
     if (!!obj.tooltipOnlyIframe) {
       this.data.tooltipOnlyIframe = obj.tooltipOnlyIframe;
     }
-    if (!!obj.tooltipWidth) {
-      this.data.tooltipWidth = obj.tooltipWidth;
-    }
     if (!!obj.tooltipColors || obj.tooltipColors === false) {
       this.data.tooltipColors = obj.tooltipColors;
     }
@@ -1142,7 +1129,6 @@ export class Rule {
       tooltipLabel: '',
       tooltipIframe: '',
       tooltipOnlyIframe: false,
-      tooltipWidth: "",
       tooltipColors: false,
       tooltipOn: 'a',
       tpDirection: 'v',

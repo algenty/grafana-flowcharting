@@ -21,13 +21,6 @@
   <gf-form-switch class="gf-form" label-class="width-10" tooltip="Ignore other metrics data to show"
     label="Only Show IFrame" checked="rule.tooltipOnlyIframe" ng-if="rule.tooltip">
   </gf-form-switch> 
-  <div class="gf-form" ng-if="rule.tooltip">
-    <label class="gf-form-label width-10">Width
-      <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Size of width tooltip in px', 'TOOLTIPS')"></span>
-      </info-popover>
-    </label>
-    <input type="text" class="gf-form-input width-12" ng-model="rule.tooltipWidth" ng-model-onblur placeholder="auto" />
-  </div>  
   <div class="gf-form" ng-if="rule.tooltip && rule.tooltipOnlyIframe === false">
     <label class="gf-form-label width-10">Label
       <info-popover mode="right-normal"><span ng-bind-html="$GF.popover('Label of metric in popup', 'TOOLTIPS')"></span>

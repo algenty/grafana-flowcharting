@@ -316,7 +316,6 @@ declare module gf {
     tooltipLabel: string;
     tooltipIframe: string;
     tooltipOnlyIframe: boolean;
-    tooltipWidth: string;
     tooltipColors: boolean;
     tooltipOn: TTooltipOnKeys;
     tpDirection: TDirectionKeys;

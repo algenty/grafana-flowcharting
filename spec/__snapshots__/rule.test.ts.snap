@@ -63,7 +63,6 @@ Object {
   "tooltipLabel": "",
   "tooltipIframe": "",
   "tooltipOnlyIframe": false,
-  "tooltipWidth": "",
   "tooltipOn": "a",
   "tpDirection": "v",
   "tpGraph": false,

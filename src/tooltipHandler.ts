@@ -19,7 +19,6 @@ export class TooltipHandler {
   div: HTMLHeadingElement | null = null;
   iframe: string;
   onlyIframe: boolean;
-  width: string;
   // constructor(mxcell: any) {
   constructor() {
     // this.mxcell = mxcell;
@@ -27,7 +26,6 @@ export class TooltipHandler {
     this.metrics = new Set();
     this.iframe = "";
     this.onlyIframe = false;
-    this.width = "";
   }
 
   /**
@@ -60,11 +58,6 @@ export class TooltipHandler {
 
   setIframe(iframe: string): this {
     this.iframe = iframe
-    return this
-  }
-
-  setWidth(width: string): this {
-    this.width = width
     return this
   }
 
@@ -111,10 +104,6 @@ export class TooltipHandler {
       return null;
     }
     const div = document.createElement('div');
-
-    // if(this.width || this.width !== "") {
-    //   div.style.width = this.width
-    // }
 
     if (parentDiv !== undefined) {
       parentDiv.appendChild(div);
