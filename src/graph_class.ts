@@ -874,10 +874,14 @@ export class XGraph {
    * @param {boolean} up
    * @memberof XGraph
    */
+
+  
   eventMouseWheel(evt: WheelEvent, up: boolean) {
     // console.log('eventMouseWheel', this.ctrl.id, this.ctrl.isMouseInPanel());
     // this.ctrl.notify(`Zoom ${this.cumulativeZoomFactor}`);
-    if (this._graph.isZoomWheelEvent(evt) && this.$gf.ctrl.isMouseInPanel()) {
+    let isZoomWheelEvent = this._graph.isZoomWheelEvent(evt)
+    // let isMouseInPanel = this.$gf.ctrl.isMouseInPanel()
+    if (isZoomWheelEvent) {
       if (up === null || up === undefined) {
         if (evt.deltaY < 0) {
           up = true;
