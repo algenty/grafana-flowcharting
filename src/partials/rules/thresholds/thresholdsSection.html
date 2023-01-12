@@ -12,13 +12,15 @@
     </info-popover>
   </h5>
   <div class="gf-form-group" style="width:100%;">
-    <gf-form-switch class="gf-form" label="Invert" label-class="width-8" checked="rule.invert" tooltip="Invert level state and color">
+    <gf-form-switch class="gf-form" label="Invert" label-class="width-10" checked="rule.invert" tooltip="Invert level state and color">
     </gf-form-switch>
-    <gf-form-switch class="gf-form" label="Gradient" label-class="width-8" checked="rule.gradient"
+    <gf-form-switch class="gf-form" label="Gradient" label-class="width-10" checked="rule.gradient"
       ng-if="rule.dataType === 'number'"
       tooltip="Apply gradient color according to the value">
     </gf-form-switch>
-    <gf-form-switch class="gf-form" label="Icon state" label-class="width-8" checked="rule.overlayIcon" tooltip="Display a warning icon when state > 0">
+    <gf-form-switch class="gf-form" label="Icon state" label-class="width-10" checked="rule.overlayIcon" tooltip="Display a warning icon when state > 0">
+    </gf-form-switch>
+    <gf-form-switch class="gf-form" label="Set As Global" label-class="width-10" checked="rule.globalThreshold" tooltip="Can only one rule handling it">
     </gf-form-switch>
     <div class="gf-form">
       <ng-include src="GFPlugin.getPartialPath() + 'rules/thresholds/thresholdsTable.html'"> </ng-include>
