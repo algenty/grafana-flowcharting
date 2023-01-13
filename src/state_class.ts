@@ -170,16 +170,14 @@ export class State {
         this._variables.set(GFCONSTANT.VAR_STR_RULENAME, r.data.alias);
         if(r.data.globalThreshold) {
           r.data.mapsDat.shapes.dataList.forEach(shapeData => {
-            var existingRules = rules.filter(rule => 
-                                              rule.mapsObj.texts.filter(text=> text.data.pattern === shapeData.pattern) || 
-                                              rule.mapsObj.shapes.filter(shape=> shape.pattern === shapeData.pattern))
+            var existingRules = rules.filter(rule => rule.mapsObj.shapes.filter(shape=> shape.pattern === shapeData.pattern))
             if(existingRules.length > 0) {
               const singleRule = existingRules[0]
-              this._setMapping(r, singleRule.getShapeMaps(), singleRule.getTextMaps(), singleRule.getEventMaps(), singleRule.getLinkMaps(), r.data.globalThreshold, singleRule)
+              this._setMapping(r, r.getShapeMaps().filter(shape=> shape.pattern === shapeData.pattern), r.getTextMaps(), r.getEventMaps(), r.getLinkMaps(), true, singleRule)
             }
           });
         } else {
-          this._setMapping(r, shapeMaps, textMaps, eventMaps, linkMaps, r.data.globalThreshold, r)
+          this._setMapping(r, shapeMaps, textMaps, eventMaps, linkMaps, false, r)
         }
       }
       let endPerf = Date.now();
@@ -209,7 +207,7 @@ export class State {
 
       // SHAPE
       let matchedRule = false;
-      let mapOptions = r.getShapeMapOptions();
+      let mapOptions = globalThreshold ? r2.getShapeMapOptions() : r.getShapeMapOptions();
       let cellValue = this.xcell.getDefaultValues(mapOptions);
       shapeMaps.forEach((shape) => {
         let k = shape.data.style;
@@ -238,23 +236,26 @@ export class State {
       });
 
       // TEXT
-      mapOptions = r.getTextMapOptions();
-      cellValue = this.xcell.getDefaultValues(mapOptions);
-      textMaps.forEach((text) => {
-        const k = 'label';
-        if (!text.hidden && text.match(cellValue, mapOptions, this._variables)) {
-          if (text.isEligible(level)) {
-            matchedRule = true;
-            this.matched = true;
-            const textScoped = this._variables.replaceText(FormattedValue);
-            const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
-            this.textState.set(k, v, level) && this._status.set(k, v);
+
+      if(!globalThreshold) {
+        mapOptions = globalThreshold ? r2.getTextMapOptions() : r.getTextMapOptions();
+        cellValue = this.xcell.getDefaultValues(mapOptions);
+        textMaps.forEach((text) => {
+          const k = 'label';
+          if (!text.hidden && text.match(cellValue, mapOptions, this._variables)) {
+            if (text.isEligible(level)) {
+              matchedRule = true;
+              this.matched = true;
+              const textScoped = this._variables.replaceText(FormattedValue);
+              const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
+              this.textState.set(k, v, level) && this._status.set(k, v);
+            }
           }
-        }
-      });
+        });
+      }
 
       // EVENTS
-      mapOptions = r.getEventMapOptions();
+      mapOptions = globalThreshold ? r2.getEventMapOptions() : r.getEventMapOptions();
       cellValue = this.xcell.getDefaultValues(mapOptions);
       eventMaps.forEach((event) => {
         const k = event.data.style;
@@ -269,7 +270,7 @@ export class State {
       });
 
       // LINK
-      mapOptions = r.getEventMapOptions();
+      mapOptions = globalThreshold ? r2.getEventMapOptions() : r.getEventMapOptions();
       cellValue = this.xcell.getDefaultValues(mapOptions);
       linkMaps.forEach((link) => {
         const k = 'link';
