@@ -215,7 +215,6 @@ export class State {
         let k = shape.data.style;
         if (!shape.hidden && shape.match(cellValue, mapOptions, this._variables)) {
           let v: any = color;
-          v = "#3F3E3E"
           if (shape.isEligible(level)) {
             matchedRule = true;
             this.matched = true;
