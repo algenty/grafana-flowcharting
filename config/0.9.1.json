@@ -61,6 +61,7 @@
         "metricType": "serie",
         "order": 1,
         "overlayIcon": false,
+        "globalThreshold": false,
         "pattern": "A-series",
         "rangeData": [],
         "reduce": true,

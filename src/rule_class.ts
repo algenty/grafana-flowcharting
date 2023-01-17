@@ -547,6 +547,15 @@ export class Rule {
     return this.data.overlayIcon;
   }
 
+  set globalThreshold(v: boolean) {
+    if(v !== this.data.globalThreshold) {
+      this.data.globalThreshold = v;
+      this.change();
+    }
+  }
+  get globalThreshold() {
+    return this.data.globalThreshold;
+  }
 
   // PRESERVE HTML FOMAT
   //TODO : Why does not exist
@@ -825,6 +834,10 @@ export class Rule {
     if (!!obj.overlayIcon || obj.overlayIcon === false) {
       this.data.overlayIcon = obj.overlayIcon;
     }
+    if (!!obj.globalThreshold || obj.globalThreshold === false) {
+      this.data.globalThreshold = obj.globalThreshold;
+    }
+    
     if (!!obj.tooltip || obj.tooltip === false) {
       this.data.tooltip = obj.tooltip;
     }
@@ -1125,6 +1138,7 @@ export class Rule {
       invert: false,
       gradient: false,
       overlayIcon: false,
+      globalThreshold: false,
       tooltip: false,
       tooltipLabel: '',
       tooltipIframe: '',

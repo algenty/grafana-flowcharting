@@ -312,6 +312,7 @@ declare module gf {
     invert: boolean;
     gradient: boolean;
     overlayIcon: boolean;
+    globalThreshold: boolean;
     tooltip: boolean;
     tooltipLabel: string;
     tooltipIframe: string;
