@@ -16,7 +16,7 @@ export class TooltipHandler {
   metrics: Set<MetricTooltip>;
   metadata: MetadataTooltip | null = null;
   lastChange: string | undefined;
-  div: HTMLHeadingElement | null = null;
+  div: any | null = null;
   iframe: string;
   onlyIframe: boolean;
   // constructor(mxcell: any) {
@@ -93,7 +93,7 @@ export class TooltipHandler {
     return div;
   }
 
-  getDiv(parentDiv: HTMLDivElement): HTMLDivElement | null {
+  getDiv(parentDiv: HTMLDivElement): any | null {
     if (this.div !== null && this.div !== undefined) {
       if (parentDiv && this.div) {
         parentDiv.appendChild(this.div);
@@ -126,6 +126,7 @@ export class TooltipHandler {
       this.metadata.getDiv(div);
     }
     this.div = div;
+    this.div.length = 1
     return div;
   }
 
