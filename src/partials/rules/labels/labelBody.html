@@ -66,3 +66,16 @@
         ng-model-onblur
         placeholder="Text or pattern to replace by metric value" />
 </div>
+<div ng-if="text.method === 'cu'">
+    <div class="gf-form">
+        <label class="gf-form-label width-10">Unit
+            <info-popover mode="right-normal"><span
+                    ng-bind-html="$GF.popover('Select unit of aggregated value.', 'MAPPING#Type')"></span>
+            </info-popover>
+        </label>
+        <div class="gf-form-dropdown-typeahead width-12" ng-model="text.customUnit"
+            dropdown-typeahead2="editor.unitFormats"
+            dropdown-typeahead-on-select="editor.setCustomUnit(text, $subItem)">
+        </div>
+    </div>
+</div>

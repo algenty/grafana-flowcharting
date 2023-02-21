@@ -236,7 +236,7 @@ declare module gf {
   declare type TValueTypeElt = { text: string; value: TValueTypeKeys };
   declare type TValueTypeList = TValueTypeElt[];
 
-  declare type TTextMethodKeys = 'content' | 'pattern' | 'as' | 'anl';
+  declare type TTextMethodKeys = 'content' | 'pattern' | 'as' | 'anl' | 'cu';
   declare type TTextMethodElt = { text: string; value: TTextMethodKeys; placeholder?: string };
   declare type TTextMethodList = TTextMethodElt[];
   declare type TDateFormatKeys =
@@ -379,6 +379,7 @@ declare module gf {
     textReplace: TTextMethodKeys;
     textPattern: string;
     textOn: TTextOnKeys;
+    textCustom: string;
   }
 
   declare interface TlinkMapData extends TDefObjMapData {

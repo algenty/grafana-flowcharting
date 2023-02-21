@@ -1,21 +1,22 @@
-import grafana from './grafana_func';
-import { State } from 'state_class';
-import { isFinite as _isFinite, isArray as _isArray, escape as _escape } from 'lodash';
-import { ObjectMetric } from 'metric_class';
 import { $GF, GFLog } from 'globals_class';
-import { NumberTH, StringTH, ObjectTH, ObjectTHData, DateTH } from 'threshold_class';
 import {
-  EventMap,
-  ShapeMap,
-  TextMap,
-  LinkMap,
-  ValueMap,
-  RangeMap,
-  ObjectMap,
   DataMap,
+  EventMap,
+  LinkMap,
+  ObjectMap,
+  RangeMap,
+  ShapeMap,
   ShapeMapArray,
+  TextMap,
+  ValueMap,
 } from 'mapping_class';
+import { DateTH, NumberTH, ObjectTH, ObjectTHData, StringTH } from 'threshold_class';
+import { escape as _escape, isArray as _isArray, isFinite as _isFinite } from 'lodash';
+
 import { GFEvents } from 'flowcharting_base';
+import { ObjectMetric } from 'metric_class';
+import { State } from 'state_class';
+import grafana from './grafana_func';
 
 // Debug
 const DEBUG = false;
@@ -2608,7 +2609,7 @@ export class Rule {
    * @returns
    * @memberof Rule
    */
-  getFormattedValue(value: any) {
+  getFormattedValue(value: any, customUnit?: string) {
     // Number
     if (this.data.type === 'number') {
       if (!_isFinite(value)) {
@@ -2619,7 +2620,10 @@ export class Rule {
       }
       let decimals = this._decimalPlaces(value);
       decimals = typeof this.data.decimals === 'number' ? Math.min(this.data.decimals, decimals) : decimals;
-      return grafana.formatValue(value, this.data.unit, this.data.decimals);
+
+      const unit = (!customUnit) ? this.data.unit : customUnit;
+
+      return grafana.formatValue(value, unit, this.data.decimals);
     }
 
     if (this.data.type === 'string') {

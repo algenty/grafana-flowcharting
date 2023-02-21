@@ -1,11 +1,12 @@
-import { XGraph } from 'graph_class';
-import { Rule } from 'rule_class';
+import { $GF, GFCONSTANT, GFLog, GFVariables } from 'globals_class';
 import { EventMap, EventMapArray, LinkMapArray, ShapeMapArray, TextMapArray } from 'mapping_class';
-import { TooltipHandler } from 'tooltipHandler';
-import { $GF, GFVariables, GFLog, GFCONSTANT } from 'globals_class';
-import { XCell } from 'cell_class';
-import { ObjectMetric } from 'metric_class';
+
 import { GFEvents } from 'flowcharting_base';
+import { ObjectMetric } from 'metric_class';
+import { Rule } from 'rule_class';
+import { TooltipHandler } from 'tooltipHandler';
+import { XCell } from 'cell_class';
+import { XGraph } from 'graph_class';
 
 const stateSignalsArray = ['state_initialized', 'state_updated', 'state_freed'] as const;
 type stateSignals = typeof stateSignalsArray[number];
@@ -188,7 +189,7 @@ export class State {
 
   private _setMapping(r: Rule, shapeMaps: ShapeMapArray, textMaps: TextMapArray, eventMaps: EventMapArray, linkMaps: LinkMapArray, globalThreshold: boolean, r2: Rule) {
     const m = globalThreshold ? Array.from(r2.getMetrics().values()) : Array.from(r.getMetrics().values())
-    m.forEach((metric) => {
+    m.forEach((metric, index) => {
       try {
         this.currMetrics.push(metric.getName());
         this._variables.set(GFCONSTANT.VAR_STR_METRIC, metric.getName);
@@ -196,7 +197,17 @@ export class State {
         GFLog.error(error);
       }
       const value = globalThreshold ? r2.getValueForMetric(metric) : r.getValueForMetric(metric)
-      const FormattedValue = globalThreshold ? r2.getFormattedValue(value) : r.getFormattedValue(value)
+      
+      let useCustomUnit = textMaps.at(index)?.data.textReplace;
+      let FormattedValue = '';
+
+      if(useCustomUnit === 'cu'){
+        const customUnit = textMaps.at(index)?.data.textCustom;
+        FormattedValue = globalThreshold ? r2.getFormattedValue(value, customUnit) : r.getFormattedValue(value, customUnit)
+      }else{
+        FormattedValue = globalThreshold ? r2.getFormattedValue(value) : r.getFormattedValue(value)
+      }
+      
       const level = r.getThresholdLevel(value);
       const color = r.getThresholdColor(value);
       this._variables.set(GFCONSTANT.VAR_NUM_VALUE, value);
