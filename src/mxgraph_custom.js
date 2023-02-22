@@ -76,6 +76,7 @@ const customize = () => {
       }
     }
     if (hasTips) {
+      div.length = 1
       return div;
     }
     return '';

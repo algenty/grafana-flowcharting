@@ -1,8 +1,9 @@
-import { XCell } from 'cell_class';
-import { GFEvents } from 'flowcharting_base';
 import { $GF, GFCONSTANT, GFPlugin, GFVariables } from 'globals_class';
-import { isString as _isString } from 'lodash';
+
+import { GFEvents } from 'flowcharting_base';
 import { Rule } from 'rule_class';
+import { XCell } from 'cell_class';
+import { isString as _isString } from 'lodash';
 
 export type ObjectMap = ShapeMap | TextMap | LinkMap | EventMap;
 export type ObjectMapArray = ShapeMapArray | TextMapArray | LinkMapArray | EventMapArray;
@@ -490,6 +491,18 @@ export class TextMap extends GFMap<gf.TTextMapData> {
     return this.data.textPattern;
   }
 
+  set customUnit(v: any) {
+    if (!v || v.length === 0 || v === this.data.textCustom) {
+      return;
+    }
+    this.data.textCustom = v;
+    this.change();
+  }
+
+  get customUnit(): string {
+    return this.data.textCustom;
+  }
+
   //############################################################################
   //### ACCESSORS
   //############################################################################
@@ -508,6 +521,7 @@ export class TextMap extends GFMap<gf.TTextMapData> {
       textReplace: 'content',
       textPattern: '/.*/',
       textOn: 'wmd',
+      textCustom: '',
     };
   }
 
@@ -553,6 +567,9 @@ export class TextMap extends GFMap<gf.TTextMapData> {
     }
     if (!!obj.textOn) {
       this.data.textOn = obj.textOn;
+    }
+    if(!!obj.textCustom) {
+      this.data.textCustom = obj.textCustom;
     }
 
     return this;

@@ -16,12 +16,16 @@ export class TooltipHandler {
   metrics: Set<MetricTooltip>;
   metadata: MetadataTooltip | null = null;
   lastChange: string | undefined;
-  div: HTMLHeadingElement | null = null;
+  div: any | null = null;
+  iframe: string;
+  onlyIframe: boolean;
   // constructor(mxcell: any) {
   constructor() {
     // this.mxcell = mxcell;
     this.checked = false;
     this.metrics = new Set();
+    this.iframe = "";
+    this.onlyIframe = false;
   }
 
   /**
@@ -52,6 +56,16 @@ export class TooltipHandler {
     return this.metadata;
   }
 
+  setIframe(iframe: string): this {
+    this.iframe = iframe
+    return this
+  }
+
+  setOnlyIframe(onlyIframe: boolean): this {
+    this.onlyIframe = onlyIframe
+    return this
+  }
+
   /**
    * Update date in tooltip
    *
@@ -65,7 +79,21 @@ export class TooltipHandler {
     this.metrics.clear();
   }
 
-  getDiv(parentDiv: HTMLDivElement): HTMLDivElement | null {
+  getIframeDiv(parentDiv: HTMLDivElement): HTMLDivElement {
+    const div = document.createElement('div');
+    div.className = 'tooltip-iframe';
+    let str = '';
+    if (parentDiv !== undefined) {
+      parentDiv.appendChild(div);
+    }
+    if (this.iframe !== undefined) {
+      str += this.iframe
+    }
+    div.innerHTML = str;
+    return div;
+  }
+
+  getDiv(parentDiv: HTMLDivElement): any | null {
     if (this.div !== null && this.div !== undefined) {
       if (parentDiv && this.div) {
         parentDiv.appendChild(this.div);
@@ -76,15 +104,21 @@ export class TooltipHandler {
       return null;
     }
     const div = document.createElement('div');
+
     if (parentDiv !== undefined) {
       parentDiv.appendChild(div);
     }
     // Values + Graphs
-    if (this.metrics.size > 0) {
-      this.getDateDiv(div);
-      this.metrics.forEach((metric: MetricTooltip) => {
-        metric.getDiv(div);
-      });
+    if(this.iframe) {
+      this.getIframeDiv(div)
+    }
+    if(this.onlyIframe === false) {
+      if (this.metrics.size > 0) {
+        this.getDateDiv(div);
+        this.metrics.forEach((metric: MetricTooltip) => {
+          metric.getDiv(div);
+        });
+      }
     }
 
     // Metadatas
@@ -92,6 +126,7 @@ export class TooltipHandler {
       this.metadata.getDiv(div);
     }
     this.div = div;
+    this.div.length = 1
     return div;
   }
 
@@ -102,6 +137,7 @@ export class TooltipHandler {
       parentDiv.appendChild(div);
     }
     div.className = 'graph-tooltip-time tooltip-date';
+  
     div.innerHTML = `${this.lastChange}`;
     return div;
   }

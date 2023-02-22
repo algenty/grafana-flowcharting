@@ -312,8 +312,11 @@ declare module gf {
     invert: boolean;
     gradient: boolean;
     overlayIcon: boolean;
+    globalThreshold: boolean;
     tooltip: boolean;
     tooltipLabel: string;
+    tooltipIframe: string;
+    tooltipOnlyIframe: boolean;
     tooltipColors: boolean;
     tooltipOn: TTooltipOnKeys;
     tpDirection: TDirectionKeys;
@@ -376,6 +379,7 @@ declare module gf {
     textReplace: TTextMethodKeys;
     textPattern: string;
     textOn: TTextOnKeys;
+    textCustom: string;
   }
 
   declare interface TlinkMapData extends TDefObjMapData {

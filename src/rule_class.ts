@@ -1,21 +1,22 @@
-import grafana from './grafana_func';
-import { State } from 'state_class';
-import { isFinite as _isFinite, isArray as _isArray, escape as _escape } from 'lodash';
-import { ObjectMetric } from 'metric_class';
 import { $GF, GFLog } from 'globals_class';
-import { NumberTH, StringTH, ObjectTH, ObjectTHData, DateTH } from 'threshold_class';
 import {
-  EventMap,
-  ShapeMap,
-  TextMap,
-  LinkMap,
-  ValueMap,
-  RangeMap,
-  ObjectMap,
   DataMap,
+  EventMap,
+  LinkMap,
+  ObjectMap,
+  RangeMap,
+  ShapeMap,
   ShapeMapArray,
+  TextMap,
+  ValueMap,
 } from 'mapping_class';
+import { DateTH, NumberTH, ObjectTH, ObjectTHData, StringTH } from 'threshold_class';
+import { escape as _escape, isArray as _isArray, isFinite as _isFinite } from 'lodash';
+
 import { GFEvents } from 'flowcharting_base';
+import { ObjectMetric } from 'metric_class';
+import { State } from 'state_class';
+import grafana from './grafana_func';
 
 // Debug
 const DEBUG = false;
@@ -301,6 +302,27 @@ export class Rule {
   get tooltipLabel(): string {
     return this.data.tooltipLabel;
   }
+  // DISPLAY IFRAME IN TOOLTIP
+  set tooltipIframe(v: string) {
+    if (this.data.tooltipIframe !== v) {
+      this.data.tooltipIframe = v;
+      this.change();
+    }
+  }
+  get tooltipIframe(): string {
+    return this.data.tooltipIframe;
+  }
+
+  set tooltipOnlyIframe(v: boolean) {
+    if (this.data.tooltipOnlyIframe !== v) {
+      this.data.tooltipOnlyIframe = v;
+      this.change();
+    }
+  }
+  get tooltipOnlyIframe(): boolean {
+    return this.data.tooltipOnlyIframe;
+  }
+
   // ENABLE TOOLTIP GRAPH
   set tooltipOn(v: gf.TTooltipOnKeys) {
     if (!v || v.length === 0 || this.data.tooltipOn !== v) {
@@ -526,6 +548,15 @@ export class Rule {
     return this.data.overlayIcon;
   }
 
+  set globalThreshold(v: boolean) {
+    if(v !== this.data.globalThreshold) {
+      this.data.globalThreshold = v;
+      this.change();
+    }
+  }
+  get globalThreshold() {
+    return this.data.globalThreshold;
+  }
 
   // PRESERVE HTML FOMAT
   //TODO : Why does not exist
@@ -626,6 +657,7 @@ export class Rule {
     // 0.7.0
     let textReplace: gf.TTextMethodKeys | undefined = undefined;
     let textPattern: string | undefined = undefined;
+    let textCustom: string | undefined = undefined;
     if (!!obj.textReplace) {
       textReplace = obj.textReplace;
     }
@@ -634,6 +666,9 @@ export class Rule {
     }
     if (!!obj.pattern) {
       this.data.pattern = obj.pattern;
+    }
+    if (!!obj.textCustom) {
+      textCustom = obj.textCustom;
     }
 
     if (!!obj.dateColumn) {
@@ -804,11 +839,21 @@ export class Rule {
     if (!!obj.overlayIcon || obj.overlayIcon === false) {
       this.data.overlayIcon = obj.overlayIcon;
     }
+    if (!!obj.globalThreshold || obj.globalThreshold === false) {
+      this.data.globalThreshold = obj.globalThreshold;
+    }
+    
     if (!!obj.tooltip || obj.tooltip === false) {
       this.data.tooltip = obj.tooltip;
     }
     if (!!obj.tooltipLabel) {
       this.data.tooltipLabel = obj.tooltipLabel;
+    }
+    if (!!obj.tooltipIframe) {
+      this.data.tooltipIframe = obj.tooltipIframe;
+    }
+    if (!!obj.tooltipOnlyIframe) {
+      this.data.tooltipOnlyIframe = obj.tooltipOnlyIframe;
     }
     if (!!obj.tooltipColors || obj.tooltipColors === false) {
       this.data.tooltipColors = obj.tooltipColors;
@@ -938,6 +983,9 @@ export class Rule {
         }
         if (!!textOn) {
           textData.textOn = textOn;
+        }
+        if (!!textCustom) {
+          textData.textCustom = textCustom;
         }
 
         this.addTextMap().import(textData);
@@ -1098,8 +1146,11 @@ export class Rule {
       invert: false,
       gradient: false,
       overlayIcon: false,
+      globalThreshold: false,
       tooltip: false,
       tooltipLabel: '',
+      tooltipIframe: '',
+      tooltipOnlyIframe: false,
       tooltipColors: false,
       tooltipOn: 'a',
       tpDirection: 'v',
@@ -2565,7 +2616,7 @@ export class Rule {
    * @returns
    * @memberof Rule
    */
-  getFormattedValue(value: any) {
+  getFormattedValue(value: any, customUnit?: string) {
     // Number
     if (this.data.type === 'number') {
       if (!_isFinite(value)) {
@@ -2576,7 +2627,10 @@ export class Rule {
       }
       let decimals = this._decimalPlaces(value);
       decimals = typeof this.data.decimals === 'number' ? Math.min(this.data.decimals, decimals) : decimals;
-      return grafana.formatValue(value, this.data.unit, this.data.decimals);
+
+      const unit = (!customUnit) ? this.data.unit : customUnit;
+
+      return grafana.formatValue(value, unit, this.data.decimals);
     }
 
     if (this.data.type === 'string') {
