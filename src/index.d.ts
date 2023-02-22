@@ -379,6 +379,7 @@ declare module gf {
     textReplace: TTextMethodKeys;
     textPattern: string;
     textOn: TTextOnKeys;
+    textCustom: string;
   }
 
   declare interface TlinkMapData extends TDefObjMapData {

@@ -1,11 +1,12 @@
-import { XGraph } from 'graph_class';
-import { Rule } from 'rule_class';
+import { $GF, GFCONSTANT, GFLog, GFVariables } from 'globals_class';
 import { EventMap, EventMapArray, LinkMapArray, ShapeMapArray, TextMapArray } from 'mapping_class';
-import { TooltipHandler } from 'tooltipHandler';
-import { $GF, GFVariables, GFLog, GFCONSTANT } from 'globals_class';
-import { XCell } from 'cell_class';
-import { ObjectMetric } from 'metric_class';
+
 import { GFEvents } from 'flowcharting_base';
+import { ObjectMetric } from 'metric_class';
+import { Rule } from 'rule_class';
+import { TooltipHandler } from 'tooltipHandler';
+import { XCell } from 'cell_class';
+import { XGraph } from 'graph_class';
 
 const stateSignalsArray = ['state_initialized', 'state_updated', 'state_freed'] as const;
 type stateSignals = typeof stateSignalsArray[number];
@@ -188,7 +189,9 @@ export class State {
 
   private _setMapping(r: Rule, shapeMaps: ShapeMapArray, textMaps: TextMapArray, eventMaps: EventMapArray, linkMaps: LinkMapArray, globalThreshold: boolean, r2: Rule) {
     const m = globalThreshold ? Array.from(r2.getMetrics().values()) : Array.from(r.getMetrics().values())
-    m.forEach((metric) => {
+    var isCustomUnitForTextMapping = false
+    m.forEach((metric, index) => {
+      let mIndex = index;
       try {
         this.currMetrics.push(metric.getName());
         this._variables.set(GFCONSTANT.VAR_STR_METRIC, metric.getName);
@@ -196,7 +199,19 @@ export class State {
         GFLog.error(error);
       }
       const value = globalThreshold ? r2.getValueForMetric(metric) : r.getValueForMetric(metric)
-      const FormattedValue = globalThreshold ? r2.getFormattedValue(value) : r.getFormattedValue(value)
+      
+      let FormattedValue = '';
+
+      const customUnit = textMaps.at(index)?.data.textCustom;
+
+      if(customUnit !== '' && customUnit !== undefined){
+        isCustomUnitForTextMapping = true
+        FormattedValue = globalThreshold ? r2.getFormattedValue(value, customUnit) : r.getFormattedValue(value, customUnit)
+      }else{
+        isCustomUnitForTextMapping = false
+        FormattedValue = globalThreshold ? r2.getFormattedValue(value) : r.getFormattedValue(value)
+      }
+      
       const level = r.getThresholdLevel(value);
       const color = r.getThresholdColor(value);
       this._variables.set(GFCONSTANT.VAR_NUM_VALUE, value);
@@ -240,15 +255,23 @@ export class State {
       if(!globalThreshold) {
         mapOptions = globalThreshold ? r2.getTextMapOptions() : r.getTextMapOptions();
         cellValue = this.xcell.getDefaultValues(mapOptions);
-        textMaps.forEach((text) => {
+        textMaps.forEach((text, tIndex) => {
           const k = 'label';
           if (!text.hidden && text.match(cellValue, mapOptions, this._variables)) {
             if (text.isEligible(level)) {
               matchedRule = true;
               this.matched = true;
-              const textScoped = this._variables.replaceText(FormattedValue);
-              const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
-              this.textState.set(k, v, level) && this._status.set(k, v);
+              if(isCustomUnitForTextMapping) {
+                if(tIndex === mIndex){
+                  const textScoped = this._variables.replaceText(FormattedValue);
+                  const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
+                  this.textState.set(k, v, level) && this._status.set(k, v);
+                }
+              } else {
+                const textScoped = this._variables.replaceText(FormattedValue);
+                const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
+                this.textState.set(k, v, level) && this._status.set(k, v);
+              }
             }
           }
         });

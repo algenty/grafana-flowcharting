@@ -1,13 +1,14 @@
+import { $GF, GFCONSTANT, GFPlugin, GFTable } from './globals_class';
+import { DateTH, NumberTH, StringTH } from 'threshold_class';
+import { EventMap, ObjectMap, TextMap } from './mapping_class';
+
+import { FlowchartCtrl } from 'flowchart_ctrl';
 import { FlowchartHandler } from './flowchart_handler';
-import { RulesHandler } from './rules_handler';
-import { Rule } from './rule_class';
-import { EventMap, ObjectMap } from './mapping_class';
-import { $GF, GFTable, GFPlugin, GFCONSTANT } from './globals_class';
-import grafana from 'grafana_func';
 // import _ from 'lodash';
 import { MetricHandler } from './metric_handler';
-import { DateTH, NumberTH, StringTH } from 'threshold_class';
-import { FlowchartCtrl } from 'flowchart_ctrl';
+import { Rule } from './rule_class';
+import { RulesHandler } from './rules_handler';
+import grafana from 'grafana_func';
 
 /**
  * Rules tab controller
@@ -868,6 +869,10 @@ export class RulesOptionsCtrl {
   setUnitFormat(rule: Rule, subItem: any) {
     rule.data.unit = subItem.value;
     // this.onRulesChange();
+  }
+
+  setCustomUnit(text: TextMap, subItem: any){
+    text.data.textCustom = subItem.value
   }
 
   onRulesChange(rule?: Rule) {
