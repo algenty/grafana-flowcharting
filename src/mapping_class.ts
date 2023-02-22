@@ -521,7 +521,7 @@ export class TextMap extends GFMap<gf.TTextMapData> {
       textReplace: 'content',
       textPattern: '/.*/',
       textOn: 'wmd',
-      textCustom: 'short',
+      textCustom: '',
     };
   }
 
@@ -568,6 +568,9 @@ export class TextMap extends GFMap<gf.TTextMapData> {
     if (!!obj.textOn) {
       this.data.textOn = obj.textOn;
     }
+    if(!!obj.textCustom) {
+      this.data.textCustom = obj.textCustom;
+    }
 
     return this;
   }
@@ -596,9 +599,6 @@ export class TextMap extends GFMap<gf.TTextMapData> {
     }
     if (this.data.textReplace === 'anl') {
       return `${text}\n${FormattedValue}`;
-    }
-    if (this.data.textReplace === 'cu') {
-      return `${text} ${FormattedValue}`;
     }
     return text;
   }

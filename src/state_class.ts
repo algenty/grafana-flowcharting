@@ -190,6 +190,7 @@ export class State {
   private _setMapping(r: Rule, shapeMaps: ShapeMapArray, textMaps: TextMapArray, eventMaps: EventMapArray, linkMaps: LinkMapArray, globalThreshold: boolean, r2: Rule) {
     const m = globalThreshold ? Array.from(r2.getMetrics().values()) : Array.from(r.getMetrics().values())
     m.forEach((metric, index) => {
+      let mIndex = index;
       try {
         this.currMetrics.push(metric.getName());
         this._variables.set(GFCONSTANT.VAR_STR_METRIC, metric.getName);
@@ -198,11 +199,11 @@ export class State {
       }
       const value = globalThreshold ? r2.getValueForMetric(metric) : r.getValueForMetric(metric)
       
-      let useCustomUnit = textMaps.at(index)?.data.textReplace;
       let FormattedValue = '';
 
-      if(useCustomUnit === 'cu'){
-        const customUnit = textMaps.at(index)?.data.textCustom;
+      const customUnit = textMaps.at(index)?.data.textCustom;
+
+      if(customUnit !== ''){
         FormattedValue = globalThreshold ? r2.getFormattedValue(value, customUnit) : r.getFormattedValue(value, customUnit)
       }else{
         FormattedValue = globalThreshold ? r2.getFormattedValue(value) : r.getFormattedValue(value)
@@ -251,15 +252,18 @@ export class State {
       if(!globalThreshold) {
         mapOptions = globalThreshold ? r2.getTextMapOptions() : r.getTextMapOptions();
         cellValue = this.xcell.getDefaultValues(mapOptions);
-        textMaps.forEach((text) => {
+        textMaps.forEach((text, tIndex) => {
           const k = 'label';
           if (!text.hidden && text.match(cellValue, mapOptions, this._variables)) {
             if (text.isEligible(level)) {
               matchedRule = true;
               this.matched = true;
-              const textScoped = this._variables.replaceText(FormattedValue);
-              const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
-              this.textState.set(k, v, level) && this._status.set(k, v);
+
+              if(tIndex === mIndex){
+                const textScoped = this._variables.replaceText(FormattedValue);
+                const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
+                this.textState.set(k, v, level) && this._status.set(k, v);
+              }
             }
           }
         });

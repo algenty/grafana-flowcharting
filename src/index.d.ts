@@ -236,7 +236,7 @@ declare module gf {
   declare type TValueTypeElt = { text: string; value: TValueTypeKeys };
   declare type TValueTypeList = TValueTypeElt[];
 
-  declare type TTextMethodKeys = 'content' | 'pattern' | 'as' | 'anl' | 'cu';
+  declare type TTextMethodKeys = 'content' | 'pattern' | 'as' | 'anl';
   declare type TTextMethodElt = { text: string; value: TTextMethodKeys; placeholder?: string };
   declare type TTextMethodList = TTextMethodElt[];
   declare type TDateFormatKeys =

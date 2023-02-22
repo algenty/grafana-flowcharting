@@ -657,6 +657,7 @@ export class Rule {
     // 0.7.0
     let textReplace: gf.TTextMethodKeys | undefined = undefined;
     let textPattern: string | undefined = undefined;
+    let textCustom: string | undefined = undefined;
     if (!!obj.textReplace) {
       textReplace = obj.textReplace;
     }
@@ -665,6 +666,9 @@ export class Rule {
     }
     if (!!obj.pattern) {
       this.data.pattern = obj.pattern;
+    }
+    if (!!obj.textCustom) {
+      textCustom = obj.textCustom;
     }
 
     if (!!obj.dateColumn) {
@@ -979,6 +983,9 @@ export class Rule {
         }
         if (!!textOn) {
           textData.textOn = textOn;
+        }
+        if (!!textCustom) {
+          textData.textCustom = textCustom;
         }
 
         this.addTextMap().import(textData);
