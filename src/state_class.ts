@@ -189,6 +189,7 @@ export class State {
 
   private _setMapping(r: Rule, shapeMaps: ShapeMapArray, textMaps: TextMapArray, eventMaps: EventMapArray, linkMaps: LinkMapArray, globalThreshold: boolean, r2: Rule) {
     const m = globalThreshold ? Array.from(r2.getMetrics().values()) : Array.from(r.getMetrics().values())
+    var isCustomUnitForTextMapping = false
     m.forEach((metric, index) => {
       let mIndex = index;
       try {
@@ -203,9 +204,11 @@ export class State {
 
       const customUnit = textMaps.at(index)?.data.textCustom;
 
-      if(customUnit !== ''){
+      if(customUnit !== '' && customUnit !== undefined){
+        isCustomUnitForTextMapping = true
         FormattedValue = globalThreshold ? r2.getFormattedValue(value, customUnit) : r.getFormattedValue(value, customUnit)
       }else{
+        isCustomUnitForTextMapping = false
         FormattedValue = globalThreshold ? r2.getFormattedValue(value) : r.getFormattedValue(value)
       }
       
@@ -258,8 +261,13 @@ export class State {
             if (text.isEligible(level)) {
               matchedRule = true;
               this.matched = true;
-
-              if(tIndex === mIndex){
+              if(isCustomUnitForTextMapping) {
+                if(tIndex === mIndex){
+                  const textScoped = this._variables.replaceText(FormattedValue);
+                  const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
+                  this.textState.set(k, v, level) && this._status.set(k, v);
+                }
+              } else {
                 const textScoped = this._variables.replaceText(FormattedValue);
                 const v = text.getReplaceText(this.textState.getMatchValue(k), textScoped);
                 this.textState.set(k, v, level) && this._status.set(k, v);
