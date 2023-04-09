@@ -620,7 +620,7 @@ export class LinkMap extends GFMap<gf.TlinkMapData> {
   }
 
   set url(v: string) {
-    if (!v || v.length === 0 || v === this.data.linkUrl) {
+    if (v === this.data.linkUrl) {
       return;
     }
     this.data.linkUrl = v;
