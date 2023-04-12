@@ -345,7 +345,7 @@ export class GFDrawio {
 
   static isEncoded(data: string) {
     try {
-      GFDrawio.decode(data);
+      return Boolean(GFDrawio.decode(data).trim());
     } catch (error) {
       return false;
     }
